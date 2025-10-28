@@ -47,6 +47,14 @@ const LazyBlockComponent: React.FC<{
     style?: React.CSSProperties;
 }> = ({ block, isSelected, isPreview, onUpdate, onDelete, onSelect, className, style }) => {
     const BlockComponent = useMemo(() => {
+        // ✅ FASE 3.1: Tentar obter lazy component primeiro
+        const lazyComponent = blockRegistry.getLazyComponent(block.type);
+        if (lazyComponent) {
+            appLogger.debug(`[LazyBlockComponent] Using lazy: ${block.type}`);
+            return lazyComponent;
+        }
+
+        // Fallback para componente direto (crítico)
         const component = blockRegistry.getComponent(block.type);
 
         if (!component) {

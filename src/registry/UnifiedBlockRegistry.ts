@@ -56,50 +56,42 @@ interface PerformanceMetrics {
 // ============================================================================
 // STATIC IMPORTS - COMPONENTES CRÍTICOS (Carregamento Imediato)
 // ============================================================================
+// ============================================================================
+// BLOCOS CRÍTICOS - Apenas 25 blocos essenciais carregados estaticamente
+// Os demais 90+ blocos usam lazy loading via lazyImports abaixo
+// ============================================================================
 
-// Blocos essenciais que devem estar disponíveis imediatamente
-import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
-import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
-import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
-import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
-import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
-import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
+// Blocos fundamentais (text, heading, image, button)
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
-import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
-import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
 import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
-import QuizTransitionLoaderBlock from '@/components/editor/blocks/QuizTransitionLoaderBlock';
+import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
+import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
 
-// Step 20 Modular Blocks (críticos para resultado)
-import {
-  Step20ResultHeaderBlock,
-  Step20StyleRevealBlock,
-  Step20UserGreetingBlock,
-  Step20CompatibilityBlock,
-  Step20SecondaryStylesBlock,
-  Step20PersonalizedOfferBlock,
-  Step20CompleteTemplateBlock,
-} from '@/components/editor/blocks/Step20ModularBlocks';
+// Quiz core (quiz-intro-header, options-grid, form-input)
+import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
+import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
+import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 
-// Fashion AI Generator
-import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
-
-// Blocos atômicos de transição (carregamento estático para performance)
-import TransitionTitleBlock from '@/components/editor/blocks/atomic/TransitionTitleBlock';
-import TransitionLoaderBlock from '@/components/editor/blocks/atomic/TransitionLoaderBlock';
-import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTextBlock';
-import TransitionProgressBlock from '@/components/editor/blocks/atomic/TransitionProgressBlock';
-import TransitionMessageBlock from '@/components/editor/blocks/atomic/TransitionMessageBlock';
-
-// Blocos atômicos de intro (Step 1)
+// Atomic blocks - Intro (Step 1) - 7 blocos
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
 import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
 import IntroTitleBlock from '@/components/editor/blocks/atomic/IntroTitleBlock';
 import IntroImageBlock from '@/components/editor/blocks/atomic/IntroImageBlock';
 import IntroDescriptionBlock from '@/components/editor/blocks/atomic/IntroDescriptionBlock';
 import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
-import FooterCopyrightBlock from '@/components/editor/blocks/atomic/FooterCopyrightBlock';
-import ImageDisplayInlineBlockAtomic from '@/components/editor/blocks/inline/ImageDisplayInlineBlock';
+import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
+import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
+
+// Blocos de transição (Step 12, 19) - 6 blocos
+import QuizTransitionLoaderBlock from '@/components/editor/blocks/QuizTransitionLoaderBlock';
+import TransitionTitleBlock from '@/components/editor/blocks/atomic/TransitionTitleBlock';
+import TransitionLoaderBlock from '@/components/editor/blocks/atomic/TransitionLoaderBlock';
+import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTextBlock';
+import TransitionProgressBlock from '@/components/editor/blocks/atomic/TransitionProgressBlock';
+import TransitionMessageBlock from '@/components/editor/blocks/atomic/TransitionMessageBlock';
+
+// TOTAL: 25 blocos críticos carregados estaticamente
+// Os outros 90+ blocos (Step20, ofertas, testimonials, etc.) usam lazy loading
 
 // ============================================================================
 // LAZY IMPORTS - COMPONENTES NÃO-CRÍTICOS (Code Splitting)
@@ -145,7 +137,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
 
   // Strategic Question Components (Steps 13-18)
   'strategic-question': () => import('@/components/editor/blocks/StrategicQuestionBlock'),
-  'quiz-advanced-question': () => import('@/components/editor/blocks/TextInlineBlock').then(() => ({ default: TextInlineBlock })),
+  'quiz-advanced-question': () => import('@/components/editor/blocks/TextInlineBlock'),
   'quiz-style-question': () => import('@/components/editor/blocks/StyleCardInlineBlock'),
   'style-card-inline': () => import('@/components/editor/blocks/StyleCardInlineBlock'),
   'style-cards-grid': () => import('@/components/editor/blocks/StyleCardsGridBlock'),
@@ -175,6 +167,23 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'result-progress-bars': () => import('@/components/editor/blocks/ResultProgressBarsBlock'),
   'result-secondary-styles': () => import('@/components/editor/blocks/atomic/ResultSecondaryStylesBlock'),
   'result-share': () => import('@/components/editor/blocks/atomic/ResultShareBlock'),
+
+  // Step 20 Modular Blocks (MOVIDOS DE STATIC PARA LAZY)
+  'step20-result-header': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20ResultHeaderBlock })),
+  'step20-style-reveal': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20StyleRevealBlock })),
+  'step20-user-greeting': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20UserGreetingBlock })),
+  'step20-compatibility': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20CompatibilityBlock })),
+  'step20-secondary-styles': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20SecondaryStylesBlock })),
+  'step20-personalized-offer': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20PersonalizedOfferBlock })),
+  'step20-complete-template': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20CompleteTemplateBlock })),
+
+  // Sales & AI (MOVIDOS DE STATIC PARA LAZY)
+  'sales-hero': () => import('@/components/editor/blocks/SalesHeroBlock'),
+  'fashion-ai-generator': () => import('@/components/blocks/ai').then(m => ({ default: m.FashionAIGeneratorBlock })),
+
+  // Atomic Blocks - Footer (MOVIDOS DE STATIC PARA LAZY)
+  'footer-copyright': () => import('@/components/editor/blocks/atomic/FooterCopyrightBlock'),
+  'image-display-inline': () => import('@/components/editor/blocks/inline/ImageDisplayInlineBlock'),
 
   // Offer Components (Step 21)
   'urgency-timer-inline': () => import('@/components/editor/blocks/UrgencyTimerInlineBlock'),
@@ -268,7 +277,7 @@ export class UnifiedBlockRegistry {
       'headline': HeadingInlineBlock,
       'headline-inline': HeadingInlineBlock,
       
-      // Quiz Components
+      // Quiz Components (críticos)
       'quiz-intro-header': QuizIntroHeaderBlock,
       'decorative-bar': DecorativeBarInlineBlock,
       'decorative-bar-inline': DecorativeBarInlineBlock,
@@ -276,37 +285,22 @@ export class UnifiedBlockRegistry {
       'legal-notice-inline': LegalNoticeInlineBlock,
       'quiz-transition-loader': QuizTransitionLoaderBlock,
       
-      // Sales
-      'sales-hero': SalesHeroBlock,
-      
-      // Step 20 Modular
-      'step20-result-header': Step20ResultHeaderBlock,
-      'step20-style-reveal': Step20StyleRevealBlock,
-      'step20-user-greeting': Step20UserGreetingBlock,
-      'step20-compatibility': Step20CompatibilityBlock,
-      'step20-secondary-styles': Step20SecondaryStylesBlock,
-      'step20-personalized-offer': Step20PersonalizedOfferBlock,
-      'step20-complete-template': Step20CompleteTemplateBlock,
-      
-      // AI
-      'fashion-ai-generator': FashionAIGeneratorBlock,
-      
-      // Atomic Blocks - Transition
+      // Atomic Blocks - Transition (críticos - Steps 12, 19)
       'transition-title': TransitionTitleBlock,
       'transition-loader': TransitionLoaderBlock,
       'transition-text': TransitionTextBlock,
       'transition-progress': TransitionProgressBlock,
       'transition-message': TransitionMessageBlock,
       
-      // Atomic Blocks - Intro
+      // Atomic Blocks - Intro (críticos - Step 1)
       'intro-logo': IntroLogoBlock,
       'intro-logo-header': IntroLogoHeaderBlock,
       'intro-title': IntroTitleBlock,
       'intro-image': IntroImageBlock,
       'intro-description': IntroDescriptionBlock,
       'intro-form': IntroFormBlock,
-      'footer-copyright': FooterCopyrightBlock,
-      'image-display-inline': ImageDisplayInlineBlockAtomic,
+      
+      // NOTA: Step 20 Modular, Sales, AI, footer-copyright agora usam lazy loading (ver lazyImports abaixo)
       
       // Aliases
       'cta-inline': ButtonInlineBlock,
@@ -490,6 +484,32 @@ export class UnifiedBlockRegistry {
       displayName: definition.displayName,
       category: definition.category,
     });
+  }
+
+  /**
+   * ✅ FASE 3.1: Get React.lazy() component for lazy blocks
+   * Retorna um componente lazy apenas se não for crítico
+   */
+  getLazyComponent(type: BlockType): React.ComponentType<any> | null {
+    // Se é crítico, não retornar lazy
+    if (this.criticalComponents.has(type) || this.registry.has(type)) {
+      return null;
+    }
+
+    // Se tem loader lazy, criar React.lazy()
+    const loader = this.lazyRegistry.get(type);
+    if (loader) {
+      return lazy(() => loader());
+    }
+
+    return null;
+  }
+
+  /**
+   * ✅ FASE 3.1: Check if component is critical
+   */
+  isCritical(type: BlockType): boolean {
+    return this.criticalComponents.has(type);
   }
 
   /**

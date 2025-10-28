@@ -11,7 +11,7 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-28T13:41:15.984Z
+ * Gerado em: 2025-10-28T13:57:10.109Z
  * Versão: 3.0.0
  */
 
@@ -175,49 +175,41 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             "id": "natural",
             "text": "Natural",
-            "image": "/quiz-assets/natural.webp",
             "imageUrl": "/quiz-assets/natural.webp"
           },
           {
             "id": "classico",
             "text": "Clássico",
-            "image": "/quiz-assets/classico.webp",
             "imageUrl": "/quiz-assets/classico.webp"
           },
           {
             "id": "contemporaneo",
             "text": "Contemporâneo",
-            "image": "/quiz-assets/contemporaneo.webp",
             "imageUrl": "/quiz-assets/contemporaneo.webp"
           },
           {
             "id": "elegante",
             "text": "Elegante",
-            "image": "/quiz-assets/elegante.webp",
             "imageUrl": "/quiz-assets/elegante.webp"
           },
           {
             "id": "romantico",
             "text": "Romântico",
-            "image": "/quiz-assets/romantico.webp",
             "imageUrl": "/quiz-assets/romantico.webp"
           },
           {
             "id": "sexy",
             "text": "Sexy",
-            "image": "/quiz-assets/sexy.webp",
             "imageUrl": "/quiz-assets/sexy.webp"
           },
           {
             "id": "dramatico",
             "text": "Dramático",
-            "image": "/quiz-assets/dramatico.webp",
             "imageUrl": "/quiz-assets/dramatico.webp"
           },
           {
             "id": "criativo",
             "text": "Criativo",
-            "image": "/quiz-assets/criativo.webp",
             "imageUrl": "/quiz-assets/criativo.webp"
           }
         ],
