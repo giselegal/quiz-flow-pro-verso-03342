@@ -9,6 +9,7 @@ import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizS
 import { useUnifiedQuizLoader } from '@/hooks/useUnifiedQuizLoader';
 import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
 import { supabase } from '@/integrations/supabase/customClient';
+import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
 export interface UnifiedFunnelData {
   id: string;
@@ -87,6 +88,12 @@ export class UnifiedQuizBridge {
         return quizStep ? UnifiedQuizStepAdapter.fromQuizStep(quizStep, stepId) : null;
 
       case 'templates':
+        // ⚠️ Verificar se deve tentar carregar arquivos individuais
+        if (!TEMPLATE_SOURCES.preferPublicStepJSON) {
+          console.warn('preferPublicStepJSON=false - Fallback para hardcoded');
+          return this.loadStep(stepId, 'hardcoded');
+        }
+        
         try {
           const response = await fetch(`/templates/${stepId}-v3.json`);
           if (response.ok) {

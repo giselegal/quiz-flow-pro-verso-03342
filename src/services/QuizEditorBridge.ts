@@ -10,6 +10,7 @@
 import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '@/data/quizSteps';
 import { supabase } from '@/integrations/supabase/customClient';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
+import { TEMPLATE_SOURCES } from '@/config/templateSources';
 // @TEMP: Helper para forçar reconhecimento de tabelas recém adicionadas nos tipos gerados
 type AnySupabase = typeof supabase & { from: (table: string) => any };
 const supabaseAny = supabase as AnySupabase;
@@ -486,6 +487,12 @@ class QuizEditorBridge {
      */
     private async loadAllV3Templates(): Promise<Record<string, QuizStep>> {
         const steps: Record<string, QuizStep> = {};
+
+        // ⚠️ Verificar se deve tentar carregar arquivos individuais
+        if (!TEMPLATE_SOURCES.preferPublicStepJSON) {
+            console.log('⚠️ preferPublicStepJSON=false - Usando QUIZ_STEPS hardcoded');
+            return { ...QUIZ_STEPS };
+        }
 
         console.log('📚 Carregando templates JSON v3.0...');
 

@@ -13,6 +13,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
 import { QUIZ_STEPS } from '@/data/quizSteps';
 import { supabase } from '@/integrations/supabase/customClient';
+import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
 interface UseUnifiedQuizLoaderOptions {
   funnelId?: string;
@@ -65,6 +66,16 @@ export function useUnifiedQuizLoader(
         
         case 'templates':
           // Carregar JSON v3.0 template
+          // ⚠️ Verificar se deve tentar carregar arquivos individuais
+          if (!TEMPLATE_SOURCES.preferPublicStepJSON) {
+            console.warn('preferPublicStepJSON=false - Fallback para hardcoded');
+            const hardcodedFallback = QUIZ_STEPS[stepId];
+            if (hardcodedFallback) {
+              unifiedStep = UnifiedQuizStepAdapter.fromQuizStep(hardcodedFallback, stepId);
+            }
+            break;
+          }
+          
           const response = await fetch(`/templates/${stepId}-v3.json`);
           if (response.ok) {
             const json = await response.json();
