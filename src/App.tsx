@@ -55,6 +55,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // 🔍 PÁGINAS DE DIAGNÓSTICO
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 const EditorBlocksDiagnosticPage = lazy(() => import('./pages/EditorBlocksDiagnosticPage'));
+const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 
 // 🚀 EDITOR CONFIGURATION (Sprint 1 - Consolidated)
 import QuizModularProductionEditor from '@/config/editorRoutes.config';
@@ -269,6 +270,13 @@ function AppCore() {
                                         <EditorProviderUnified enableSupabase={false}>
                                             <EditorBlocksDiagnosticPage />
                                         </EditorProviderUnified>
+                                    </div>
+                                </Route>
+
+                                {/* 🎯 FASE 2: PERFORMANCE TEST PAGE */}
+                                <Route path="/performance-test">
+                                    <div data-testid="performance-test-page">
+                                        <PerformanceTestPage />
                                     </div>
                                 </Route>
 
