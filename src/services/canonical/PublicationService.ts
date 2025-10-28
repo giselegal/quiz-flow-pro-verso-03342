@@ -191,8 +191,8 @@ export class PublicationService extends BaseCanonicalService {
       const { error } = await supabase
         .from('funnels')
         .update({
-          status: 'draft' as FunnelStatus,
-          published_at: null,
+          is_published: false,
+          updated_at: new Date().toISOString(),
         })
         .eq('id', funnelId);
 

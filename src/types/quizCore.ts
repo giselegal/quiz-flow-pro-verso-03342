@@ -119,6 +119,12 @@ export type BlockType =
   | 'quiz-result'
   | 'style-result'
 
+  // Intro blocks
+  | 'intro-logo'
+  | 'intro-title'
+  | 'intro-image'
+  | 'intro-description'
+
   // Layout blocks
   | 'text-inline'
   | 'image-display-inline'

@@ -116,6 +116,10 @@ export type BlockType =
   
   // ✅ FASE 3: Blocos atomic/modular adicionados
   | 'intro-form'
+  | 'intro-logo'
+  | 'intro-title'
+  | 'intro-image'
+  | 'intro-description'
   | 'question-progress'
   | 'question-number'
   | 'question-text'
