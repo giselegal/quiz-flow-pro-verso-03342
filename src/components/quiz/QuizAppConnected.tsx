@@ -288,6 +288,15 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     ]);
 
     // ============================================================================
+    // DYNAMIC STEP CONFIGURATION
+    // ============================================================================
+
+    const [stepConfigurations, setStepConfigurations] = useState<Record<string, any>>({});
+
+    // Carregar configurações específicas da etapa atual
+    const currentStepNumber = parseInt(state.currentStep.replace('step-', ''), 10) || 1;
+
+    // ============================================================================
     // ✅ FASE 3.3: INTELLIGENT PREFETCH
     // Pré-carrega blocos do próximo step quando próximo de avançar
     // ============================================================================
@@ -306,14 +315,6 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         currentStepNumber
     );
 
-    // ============================================================================
-    // DYNAMIC STEP CONFIGURATION
-    // ============================================================================
-
-    const [stepConfigurations, setStepConfigurations] = useState<Record<string, any>>({});
-
-    // Carregar configurações específicas da etapa atual
-    const currentStepNumber = parseInt(state.currentStep.replace('step-', ''), 10) || 1;
     const {
         properties: currentStepConfig,
         isLoading: stepLoading,
