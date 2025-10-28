@@ -13,7 +13,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
-import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 import { computeResult } from '@/utils/result/computeResult';
 import { getEffectiveRequiredSelections, shouldAutoAdvance } from '@/lib/quiz/requiredSelections';
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
@@ -23,8 +23,15 @@ import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useFeatureFlags } from './useFeatureFlags';
 import { useTemplateLoader } from './useTemplateLoader';
 import { navigationService } from '@/services/canonical/NavigationService';
-// Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
-// import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
+
+/**
+ * ✅ MIGRADO: Agora usa TemplateService.getInstance() ao invés de QUIZ_STEPS/STEP_ORDER
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ */
+
+// Constants derivados do TemplateService
+const STEP_ORDER = templateService.getStepOrder(); // ['step-01', 'step-02', ...]
+const QUIZ_STEPS_FALLBACK = templateService.getAllStepsSync(); // Fallback síncrono
 
 // Tipos do estado do quiz
 export interface QuizScores {
@@ -104,14 +111,14 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
         })
         .catch(err => {
           console.error('❌ Erro ao carregar steps:', err);
-          setLoadedSteps(QUIZ_STEPS); // Fallback
+          setLoadedSteps(QUIZ_STEPS_FALLBACK); // Fallback do TemplateService
         })
         .finally(() => setIsLoading(false));
     }
   }, [funnelId, externalSteps]);
 
-  // Determinar source dos steps (prioridade: external > loaded > default)
-  const stepsSource = externalSteps || loadedSteps || QUIZ_STEPS;
+  // Determinar source dos steps (prioridade: external > loaded > default do TemplateService)
+  const stepsSource = externalSteps || loadedSteps || QUIZ_STEPS_FALLBACK;
 
   // 🎯 FASE 1: Inicializar NavigationService com steps atuais
   const navService = useMemo(() => {
