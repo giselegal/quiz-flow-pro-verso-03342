@@ -110,7 +110,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         funnelId,
         realTimeSync: true,
         autoSave: editorMode,
-        editorMode: editorMode || previewMode, // 🎨 Modo editor/preview: carregamento instantâneo
+        // ✅ FASE 3.3: Preview é 100% offline (não faz fetches)
+        editorMode: editorMode || previewMode,
     });
 
     // Configurações de tema e visual
@@ -121,7 +122,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         componentId: 'quiz-theme-config',
         funnelId,
         realTimeSync: true,
-        editorMode: editorMode || previewMode, // 🎨 Modo editor/preview: carregamento instantâneo
+        // ✅ FASE 3.3: Preview é 100% offline (não faz fetches)
+        editorMode: editorMode || previewMode,
     });
 
     // ============================================================================
@@ -277,13 +279,32 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         } else {
             console.log(`⏸️ Auto-avanço NÃO acionado: aguardando seleções em ${state.currentStep}`);
         }
-    }, [
+    ], [
+            state.currentStep,
+            state.answers,
+            state.userProfile.strategicAnswers,
+            currentStepData,
+            nextStep,
+        ]);
+
+    // ============================================================================
+    // ✅ FASE 3.3: INTELLIGENT PREFETCH
+    // Pré-carrega blocos do próximo step quando próximo de avançar
+    // ============================================================================
+
+    // Calcular próximo stepId
+    const nextStepId = useMemo(() => {
+        const currentNum = parseInt(state.currentStep.replace('step-', ''), 10);
+        if (!currentNum || currentNum >= 21) return undefined;
+        return `step-${String(currentNum + 1).padStart(2, '0')}`;
+    }, [state.currentStep]);
+
+    // Ativar prefetch inteligente
+    useIntelligentPrefetch(
         state.currentStep,
-        state.answers,
-        state.userProfile.strategicAnswers,
-        currentStepData,
-        nextStep,
-    ]);
+        nextStepId,
+        currentStepNumber
+    );
 
     // ============================================================================
     // DYNAMIC STEP CONFIGURATION
