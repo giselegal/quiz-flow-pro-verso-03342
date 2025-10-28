@@ -22,6 +22,7 @@ import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified'
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useFeatureFlags } from './useFeatureFlags';
 import { useTemplateLoader } from './useTemplateLoader';
+import { getNavigationService } from '@/services/NavigationService';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
@@ -112,6 +113,19 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
   // Determinar source dos steps (prioridade: external > loaded > default)
   const stepsSource = externalSteps || loadedSteps || QUIZ_STEPS;
 
+  // 🎯 FASE 1: Inicializar NavigationService com steps atuais
+  const navigationService = useMemo(() => {
+    const navService = getNavigationService();
+    const steps = Object.entries(stepsSource).map(([id, step], index) => ({
+      id,
+      nextStep: (step as any).nextStep ?? (step as any).navigation?.nextStep,
+      order: index,
+      type: (step as any).type,
+    }));
+    navService.buildNavigationMap(steps);
+    return navService;
+  }, [stepsSource]);
+
   // 🎯 FASE 2: Carregar template JSON quando step mudar
   useEffect(() => {
     // Se não usar JSON ou tem externalSteps, pular
@@ -173,10 +187,20 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
         }
       }
       if (!canAdvance) return prev;
-      const next = getNextFromOrder(STEP_ORDER, prev.currentStep);
+      
+      // 🎯 FASE 1: Usar NavigationService para resolver nextStep
+      const nextStepId = navigationService.resolveNextStep(prev.currentStep, Object.entries(source).map(([id, step], index) => ({
+        id,
+        nextStep: (step as any).nextStep ?? (step as any).navigation?.nextStep,
+        order: index,
+        type: (step as any).type,
+      })));
+      
+      // Fallback para navegação linear se NavigationService não resolver
+      const next = nextStepId || getNextFromOrder(STEP_ORDER, prev.currentStep);
       return { ...prev, currentStep: next };
     });
-  }, [stepsSource]);
+  }, [stepsSource, navigationService]);
 
 
   // Navegar para etapa anterior

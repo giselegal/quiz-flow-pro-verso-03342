@@ -2,6 +2,7 @@
 import type { EditableQuizStepLite } from '@/types/editor-lite';
 import type { RuntimeStepOverride } from './QuizRuntimeRegistry';
 import { getBlockConfig, normalizeOption, extractOptions, extractQuestionText, extractQuestionNumber } from '@/utils/blockConfigMerger';
+import { getNavigationService } from '@/services/NavigationService';
 
 /**
  * Converte a lista de steps editáveis do editor para o formato consumido pelo runtime (override).
@@ -9,7 +10,17 @@ import { getBlockConfig, normalizeOption, extractOptions, extractQuestionText, e
 export function editorStepsToRuntimeMap(steps: EditableQuizStepLite[]): Record<string, RuntimeStepOverride> {
     const map: Record<string, RuntimeStepOverride> = {};
 
-    // Preparar fallback de navegação baseado em order (se disponível)
+    // 🎯 FASE 1: Usar NavigationService para construir mapa de navegação
+    const navigationService = getNavigationService();
+    const navSteps = steps.map((s, index) => ({
+        id: s.id,
+        nextStep: (s as any).nextStep,
+        order: (s as any).order ?? index,
+        type: s.type,
+    }));
+    navigationService.buildNavigationMap(navSteps);
+
+    // Preparar fallback de navegação baseado em order (se disponível) - mantido para compatibilidade
     const ordered = Array.isArray(steps)
         ? steps.slice().sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
         : [];
@@ -61,8 +72,9 @@ export function editorStepsToRuntimeMap(steps: EditableQuizStepLite[]): Record<s
             }
         }
 
-        // Fallback de nextStep com base no order quando ausente
-        const nextStep = (s as any).nextStep ?? nextById[s.id];
+        // 🎯 FASE 1: Usar NavigationService para resolver nextStep
+        const resolvedNextStep = navigationService.resolveNextStep(s.id, navSteps);
+        const nextStep = resolvedNextStep ?? (s as any).nextStep ?? nextById[s.id];
 
         map[s.id] = {
             id: s.id,
