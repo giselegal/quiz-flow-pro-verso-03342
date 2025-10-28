@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-28T02:22:05.347Z
+ * Gerado em: 2025-10-28T02:31:28.477Z
  * Versão: 3.0.0
  */
 
@@ -6314,6 +6314,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "offer_viewed"
       ],
       "trackingId": "step-20-hybrid"
+    },
+    "navigation": {
+      "nextStep": "step-21",
+      "prevStep": "step-19",
+      "allowBack": true,
+      "requiresUserInput": false,
+      "autoAdvance": false
     }
   },
 
