@@ -1,6 +1,8 @@
 /**
  * 🎯 QUIZ APP CONNECTED - Conectado ao Sistema de Configuração API
  * 
+ * ✅ FASE 3.3: OPTIMIZADO COM MEMOIZATION E PREFETCH
+ * 
  * Versão do QuizApp que busca todas as configurações via API,
  * permitindo controle total através do /editor
  */
@@ -17,7 +19,15 @@ import { useComponentConfiguration } from '../../hooks/useComponentConfiguration
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/core/unified';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry, useBlockRegistryOptional } from '@/runtime/quiz/blocks/BlockRegistry';
 import sanitizeHtml from '@/utils/sanitizeHtml';
-import React, { Suspense } from 'react';
+import React, { Suspense, useMemo, useCallback } from 'react';
+
+// ✅ FASE 3.3: Hooks de otimização
+import {
+    useMemoizedMergedConfig,
+    useIntelligentPrefetch,
+    useMemoizedCallback,
+} from '@/hooks/useQuizOptimizations';
+
 // Import lazy para evitar import estático de editor/* no runtime de produção
 const EditorProviderUnifiedLazy = React.lazy(() => import('@/components/editor-bridge/EditorProviderUnified').then(m => ({ default: m.EditorProviderUnified })));
 
@@ -339,10 +349,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     }
 
     // ============================================================================
-    // CONFIGURATION MERGER - Combina todas as configurações
+    // ✅ FASE 3.3: CONFIGURATION MERGER COM MEMOIZATION
+    // Combina todas as configurações com useMemo para prevenir re-renders
     // ============================================================================
 
-    const mergedConfig: QuizConfig = {
+    const mergedConfig: QuizConfig = useMemo(() => ({
         // Configurações globais
         ...globalConfig,
         // Configurações de tema
@@ -354,7 +365,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             showDebugInfo: true,
             allowRealTimeEditing: true,
         }),
-    };
+    }), [globalConfig, themeConfig, currentStepConfig, editorMode]);
 
     // ============================================================================
     // CURRENT STEP DATA WITH API CONFIG
