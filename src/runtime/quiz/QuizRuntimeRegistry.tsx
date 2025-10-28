@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { NavigationService } from '@/services/NavigationService';
+import { navigationService } from '@/services/canonical/NavigationService';
 
 /**
  * QuizRuntimeRegistry - FASE 2.2 REFATORADO
@@ -41,8 +41,8 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
     const [steps, setStepsState] = useState<Record<string, RuntimeStepOverride>>({});
     const [version, setVersion] = useState(0);
 
-    // ✅ FASE 2.2: NavigationService integrado
-    const navigationService = useMemo(() => new NavigationService(), []);
+    // ✅ FASE 2.2: NavigationService canonical (singleton) - use directly
+    // No need for useMemo wrapper
 
     // ✅ FASE 2.2: Calcular mapa de navegação e validação automaticamente
     const { navigationMap, isValid } = useMemo(() => {
@@ -51,19 +51,19 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
             return { navigationMap: {}, isValid: true };
         }
 
-        const navMap = navigationService.buildNavigationMap(stepArray.map(s => ({
+        const navMapResult = navigationService.buildNavigationMap(stepArray.map(s => ({
             id: s.id,
             nextStep: s.nextStep,
             type: s.type,
         })));
 
-        const validation = navigationService.validateNavigation();
+        const validationResult = navigationService.validateNavigation();
 
         return {
-            navigationMap: navMap,
-            isValid: validation.valid
+            navigationMap: navMapResult.success ? navMapResult.data : {},
+            isValid: validationResult.success ? validationResult.data.valid : false
         };
-    }, [steps, navigationService]);
+    }, [steps]);
 
     const setSteps = useCallback((map: Record<string, RuntimeStepOverride>) => {
         // ✅ FASE 2.2: Preencher nextStep automaticamente se ausente

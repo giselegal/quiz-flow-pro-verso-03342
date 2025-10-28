@@ -35,7 +35,7 @@ import { createLogger, appLogger } from '@/utils/logger';
 // ✅ FASE 2.1: Integrar serviços consolidados
 import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { templateService } from '@/services/canonical/TemplateService';
-import { NavigationService } from '@/services/NavigationService';
+import { navigationService } from '@/services/canonical/NavigationService';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -178,8 +178,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     // ✅ FASE 2.1: Instanciar serviços unificados
     const blockRegistry = useMemo(() => UnifiedBlockRegistry.getInstance(), []);
-    // const templateService = useMemo(() => templateService, []); // Não precisa - já é singleton
-    const navigationService = useMemo(() => new NavigationService(), []);
+    // templateService and navigationService are singletons - use directly
+    // No need for useMemo wrappers
 
     // Refs para debounce
     const saveTimeoutRef = useRef<NodeJS.Timeout>();
