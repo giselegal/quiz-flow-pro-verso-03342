@@ -374,7 +374,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         try {
             const normalizedKey = normalizeStepKey(step.id || '1');
             const blocks: any[] = (editor.state?.stepBlocks as any)?.[normalizedKey] || [];
-            
+
             const newBlock: any = {
                 id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
                 type: blockType as any,
@@ -392,7 +392,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         } catch (err) {
             appLogger.error('❌ Erro ao adicionar bloco:', err);
         }
-    }, [editor, normalizeStepKey, step.id]);    const renderStepComponent = () => {
+    }, [editor, normalizeStepKey, step.id]); const renderStepComponent = () => {
         switch (step.type) {
             case 'intro': {
                 return (
