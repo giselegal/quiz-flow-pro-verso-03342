@@ -80,7 +80,9 @@ export interface IFunnelEditingFacade {
     addBlock(stepId: FunnelStepID, block: Omit<FunnelBlock, 'id'> & { id?: string }): FunnelBlock | undefined;
     updateBlock(stepId: FunnelStepID, blockId: FunnelBlockID, patch: Partial<Omit<FunnelBlock, 'id'>>): FunnelBlock | undefined;
     removeBlock(stepId: FunnelStepID, blockId: FunnelBlockID): boolean;
+    // Sobrecarga: aceita tanto array de IDs quanto índices
     reorderBlocks(stepId: FunnelStepID, newOrder: FunnelBlockID[]): void;
+    reorderBlocks(stepId: FunnelStepID, oldIndex: number, newIndex: number): void;
 }
 
 // ==============================================================
@@ -256,15 +258,37 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
         this.emit('blocks/changed', { stepId, blocks: step.blocks.slice(), reason: 'remove' });
         return true;
     }
-    reorderBlocks(stepId: FunnelStepID, newOrder: FunnelBlockID[]): void {
-        const step = this.state.steps.find(s => s.id === stepId); if (!step) return;
-        const map = new Map(step.blocks.map(b => [b.id, b] as const));
-        const reordered: FunnelBlock[] = [];
-        newOrder.forEach(id => { const b = map.get(id); if (b) reordered.push(b); });
-        step.blocks.forEach(b => { if (!reordered.includes(b)) reordered.push(b); });
-        step.blocks = reordered;
-        this.setDirty(true);
-        this.emit('blocks/changed', { stepId, blocks: step.blocks.slice(), reason: 'reorder' });
+    
+    // Sobrecarga: aceita array de IDs OU índices (oldIndex, newIndex)
+    reorderBlocks(stepId: FunnelStepID, newOrderOrOldIndex: FunnelBlockID[] | number, newIndex?: number): void {
+        const step = this.state.steps.find(s => s.id === stepId); 
+        if (!step) return;
+        
+        // Caso 1: Array de IDs (implementação original)
+        if (Array.isArray(newOrderOrOldIndex)) {
+            const newOrder = newOrderOrOldIndex;
+            const map = new Map(step.blocks.map(b => [b.id, b] as const));
+            const reordered: FunnelBlock[] = [];
+            newOrder.forEach(id => { const b = map.get(id); if (b) reordered.push(b); });
+            step.blocks.forEach(b => { if (!reordered.includes(b)) reordered.push(b); });
+            step.blocks = reordered;
+            this.setDirty(true);
+            this.emit('blocks/changed', { stepId, blocks: step.blocks.slice(), reason: 'reorder' });
+        }
+        // Caso 2: Índices (oldIndex, newIndex) - compatibilidade com EditorProvider
+        else if (typeof newOrderOrOldIndex === 'number' && typeof newIndex === 'number') {
+            const oldIndex = newOrderOrOldIndex;
+            if (oldIndex < 0 || oldIndex >= step.blocks.length || newIndex < 0 || newIndex >= step.blocks.length) {
+                return; // Índices inválidos
+            }
+            // Reordenar usando splice
+            const blocks = step.blocks.slice();
+            const [moved] = blocks.splice(oldIndex, 1);
+            blocks.splice(newIndex, 0, moved);
+            step.blocks = blocks;
+            this.setDirty(true);
+            this.emit('blocks/changed', { stepId, blocks: step.blocks.slice(), reason: 'reorder' });
+        }
     }
 }
 
