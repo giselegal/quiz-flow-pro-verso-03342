@@ -35,12 +35,14 @@ const REQUIRED_FIELDS = ['templateVersion', 'metadata', 'blocks'];
 const REQUIRED_METADATA = ['id', 'name', 'category'];
 
 async function main() {
-        const jsonSummary = validateAllJsonTemplatesSafe();
-        const registrySummary = await validateEffectiveStepsAgainstRegistry();
+    const jsonSummary = validateAllJsonTemplatesSafe();
+    const registrySummary = await validateEffectiveStepsAgainstRegistry();
+    const navigationSummary = await validateNavigationCompleteness();
 
     // Resumo total
     const hasJsonErrors = jsonSummary?.invalidCount && jsonSummary.invalidCount > 0;
     const hasRegistryErrors = registrySummary.errors.length > 0;
+    const hasNavigationErrors = !navigationSummary.valid;
 
     console.log('\n====================');
     console.log('Resumo Geral');
@@ -51,10 +53,14 @@ async function main() {
         'Steps com problemas': registrySummary.stepsWithIssues,
         'Blocos totais': registrySummary.blocksTotal,
         'Tipos ausentes distintos': Object.keys(registrySummary.missingTypes).length,
+        'Navegação válida': navigationSummary.valid ? '✅' : '❌',
+        'Ciclos de navegação': navigationSummary.cycles.length,
+        'Steps órfãos': navigationSummary.orphanedSteps.length,
     });
 
     if (hasRegistryErrors) process.exit(1);
     if (hasJsonErrors) process.exit(1);
+    if (hasNavigationErrors) process.exit(1);
     process.exit(0);
 }
 
@@ -215,6 +221,94 @@ async function validateEffectiveStepsAgainstRegistry() {
     if (missingTypesList.length) console.log('Tipos ausentes:', missingTypesList.join(', '));
 
     return summary;
+}
+
+/**
+ * Parte 3: validar completude de navegação (nextStep)
+ */
+async function validateNavigationCompleteness() {
+    const projectRoot = path.join(__dirname, '..');
+    
+    // Importar NavigationService e templates
+    const navMod = await import(path.join(projectRoot, 'src/services/NavigationService.ts'));
+    const importsMod = await import(path.join(projectRoot, 'src/templates/imports.ts'));
+    
+    const NavigationService = (navMod as any).NavigationService;
+    const getQuiz21StepsTemplate = (importsMod as any).getQuiz21StepsTemplate as () => any;
+    const getStepTemplate = (importsMod as any).getStepTemplate as (id: string) => { step: any; source: string };
+    
+    const navService = new NavigationService();
+    const steps: any[] = [];
+    
+    // Coletar informações de navegação de todos os steps
+    const full = getQuiz21StepsTemplate() as any;
+    for (let i = 1; i <= 21; i++) {
+        const id = `step-${String(i).padStart(2, '0')}`;
+        try {
+            // Tentar primeiro o template completo que tem nextStep
+            const effective = full?.[id];
+            
+            if (effective) {
+                // nextStep pode estar em effective.nextStep ou effective.navigation.nextStep
+                const nextStep = effective.nextStep ?? effective.navigation?.nextStep;
+                
+                steps.push({
+                    id,
+                    nextStep,
+                    order: i - 1,
+                    type: effective.type || effective.metadata?.type,
+                });
+            }
+        } catch (e) {
+            console.warn(`⚠️  Não foi possível carregar ${id} para validação de navegação`);
+        }
+    }
+    
+    // Construir mapa e validar
+    navService.buildNavigationMap(steps);
+    const validation = navService.validateNavigation();
+    const stats = navService.getStats();
+    
+    console.log('\n====================');
+    console.log('Validação de Navegação (nextStep)');
+    console.log('====================');
+    console.table({
+        'Total de steps': validation.totalSteps,
+        'Steps com nextStep': validation.stepsWithNext,
+        'Steps terminais': validation.terminalSteps.length,
+        'Steps órfãos': validation.orphanedSteps.length,
+        'Ciclos detectados': validation.cycles.length,
+        'Targets ausentes': validation.missingTargets.length,
+        'Grafo válido': validation.valid ? '✅' : '❌',
+    });
+    
+    // Detalhes dos problemas
+    if (validation.terminalSteps.length > 0) {
+        console.log('\n📍 Steps terminais (nextStep: null):', validation.terminalSteps.join(', '));
+    }
+    
+    if (validation.orphanedSteps.length > 0) {
+        console.log('\n⚠️  Steps órfãos (nunca referenciados como nextStep):');
+        validation.orphanedSteps.forEach((stepId: string) => {
+            console.log(`   - ${stepId}`);
+        });
+    }
+    
+    if (validation.cycles.length > 0) {
+        console.log('\n🔄 Ciclos detectados:');
+        validation.cycles.forEach((cycle: string[], idx: number) => {
+            console.log(`   ${idx + 1}. ${cycle.join(' → ')}`);
+        });
+    }
+    
+    if (validation.missingTargets.length > 0) {
+        console.log('\n❌ NextStep aponta para step inexistente:');
+        validation.missingTargets.forEach(({ from, to }: { from: string; to: string }) => {
+            console.log(`   - ${from} → ${to} (não existe)`);
+        });
+    }
+    
+    return validation;
 }
 
 main().catch((e) => {
