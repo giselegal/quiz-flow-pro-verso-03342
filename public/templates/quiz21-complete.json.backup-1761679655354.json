@@ -86,7 +86,7 @@
       "blocks": [
         {
           "id": "intro-logo",
-          "type": "intro-logo",
+          "type": "image",
           "order": 0,
           "properties": {
             "padding": 16,
@@ -103,7 +103,7 @@
         },
         {
           "id": "intro-title",
-          "type": "intro-title",
+          "type": "heading-inline",
           "order": 1,
           "properties": {
             "padding": 16,
@@ -117,7 +117,7 @@
         },
         {
           "id": "intro-image",
-          "type": "intro-image",
+          "type": "image",
           "order": 2,
           "properties": {},
           "content": {
@@ -130,7 +130,7 @@
         },
         {
           "id": "intro-description",
-          "type": "intro-description",
+          "type": "text-inline",
           "order": 3,
           "properties": {},
           "content": {
@@ -2039,7 +2039,7 @@
         },
         {
           "id": "step-12-transition-text",
-          "type": "transition-text",
+          "type": "text-inline",
           "order": 1,
           "properties": {
             "type": "fade",
@@ -3082,7 +3082,7 @@
         },
         {
           "id": "step-19-transition-text",
-          "type": "transition-text",
+          "type": "text-inline",
           "order": 1,
           "properties": {
             "type": "fade",
