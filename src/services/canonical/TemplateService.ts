@@ -621,6 +621,58 @@ export class TemplateService extends BaseCanonicalService {
       return false;
     }
   }
+
+  // ==================== QUIZ HELPERS ====================
+
+  /**
+   * Obter ordem dos steps (compatibilidade com STEP_ORDER)
+   * Retorna array com IDs dos steps na ordem correta
+   */
+  getStepOrder(): string[] {
+    return Array.from({ length: 21 }, (_, i) => `step-${(i + 1).toString().padStart(2, '0')}`);
+  }
+
+  /**
+   * Obter todos os steps como objeto (compatibilidade com QUIZ_STEPS)
+   * Retorna Record<stepId, stepData> para compatibilidade com código legacy
+   * 
+   * NOTA: Este método é síncrono e retorna dados do cache.
+   * Para garantir dados frescos, chame steps.get() antes.
+   */
+  getAllStepsSync(): Record<string, any> {
+    const allSteps: Record<string, any> = {};
+    
+    for (let i = 1; i <= 21; i++) {
+      const stepId = `step-${i.toString().padStart(2, '0')}`;
+      const stepInfo = this.STEP_MAPPING[i];
+      
+      if (stepInfo) {
+        // Criar objeto compatível com QuizStep interface
+        allSteps[stepId] = {
+          id: stepId,
+          type: stepInfo.type,
+          name: stepInfo.name,
+          description: stepInfo.description,
+          multiSelect: stepInfo.multiSelect,
+          nextStep: i < 21 ? `step-${(i + 1).toString().padStart(2, '0')}` : undefined,
+          // Blocks serão carregados assincronamente quando necessário
+          blocks: [],
+        };
+      }
+    }
+    
+    return allSteps;
+  }
+
+  /**
+   * Verificar se um stepId existe
+   */
+  hasStep(stepId: string): boolean {
+    const match = stepId.match(/step-?(\d+)/i);
+    if (!match) return false;
+    const stepNumber = parseInt(match[1]);
+    return stepNumber >= 1 && stepNumber <= 21;
+  }
 }
 
 // ==================== SINGLETON EXPORT ====================
