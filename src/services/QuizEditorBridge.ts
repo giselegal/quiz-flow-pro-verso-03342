@@ -790,6 +790,151 @@ class QuizEditorBridge {
         console.log(`✅ ${steps.length} templates importados para funil ${draftId}`);
         return funnel;
     }
+
+    // ==================== FASE 4.1: VALIDAÇÃO RIGOROSA ====================
+
+    /**
+     * 🔍 Validar que todos os blocos usados existem no UnifiedBlockRegistry
+     * ✅ FASE 4.1: Validação antes de salvar/publicar
+     */
+    private async validateBlocksExist(steps: EditorQuizStep[]): Promise<void> {
+        console.log('🔍 Validando existência de blocos no registry...');
+        
+        const allBlockTypes = new Set<string>();
+        const missingTypes: Array<{ stepId: string; blockType: string }> = [];
+
+        // Coletar todos os tipos de bloco
+        for (const step of steps) {
+            const blocks = (step as any).blocks || [];
+            for (const block of blocks) {
+                if (block.type) {
+                    allBlockTypes.add(block.type);
+                    
+                    // Verificar se existe no registry
+                    if (!blockRegistry.has(block.type)) {
+                        missingTypes.push({
+                            stepId: step.id,
+                            blockType: block.type,
+                        });
+                    }
+                }
+            }
+        }
+
+        if (missingTypes.length > 0) {
+            const errorMsg = `Blocos não registrados encontrados:\n${missingTypes
+                .map(m => `  - ${m.stepId}: ${m.blockType}`)
+                .join('\n')}`;
+            
+            console.error('❌ Validação de blocos falhou:', errorMsg);
+            throw new Error(`Validação de blocos falhou: ${missingTypes.length} tipos não registrados`);
+        }
+
+        console.log(`✅ Todos os ${allBlockTypes.size} tipos de bloco estão registrados`);
+    }
+
+    /**
+     * 🧭 Validar navegação completa usando NavigationService
+     * ✅ FASE 4.1: Validação de fluxo de navegação
+     */
+    private validateNavigationFlow(steps: EditorQuizStep[]): void {
+        console.log('🧭 Validando fluxo de navegação...');
+        
+        // Converter para formato do NavigationService
+        const navSteps = steps.map(s => ({
+            id: s.id,
+            nextStep: (s as any).nextStep,
+            order: s.order,
+            type: s.type || 'question',
+        }));
+
+        // Construir e validar mapa de navegação
+        const result = navigationService.buildNavigationMap(navSteps);
+        
+        if (!result.success) {
+            console.error('❌ Erro ao construir mapa de navegação:', result.error);
+            throw new Error(`Navegação inválida: ${result.error}`);
+        }
+
+        // Validar navegação completa
+        const validation = navigationService.validateNavigation();
+        
+        if (!validation.success) {
+            console.error('❌ Erro ao validar navegação:', validation.error);
+            throw new Error(`Navegação inválida: ${validation.error}`);
+        }
+
+        const validationData = validation.data;
+        
+        if (!validationData.valid) {
+            const issues = [
+                ...validationData.orphanedSteps.map((s: string) => `Step órfão: ${s}`),
+                ...validationData.cycles.map((c: string[]) => `Ciclo detectado: ${c.join(' → ')}`),
+                ...validationData.missingTargets.map((m: { from: string; to: string }) => `nextStep inválido: ${m.from} → ${m.to}`),
+            ];
+            
+            console.error('❌ Validação de navegação falhou:', issues);
+            throw new Error(`Navegação inválida:\n${issues.join('\n')}`);
+        }
+
+        console.log(`✅ Navegação validada: ${validationData.totalSteps} steps, ${validationData.stepsWithNext} com nextStep`);
+    }
+
+    /**
+     * 📊 Validação completa para salvamento (draft)
+     * ✅ FASE 4.1: Validação rigorosa em múltiplas camadas
+     */
+    private async validateForSave(funnel: QuizFunnelData): Promise<void> {
+        console.log('📊 Iniciando validação para salvamento...');
+        
+        // 1. Validar estrutura básica
+        if (!funnel.steps || funnel.steps.length === 0) {
+            throw new Error('Funil deve ter pelo menos um step');
+        }
+
+        // 2. Validar que todos os blocos existem
+        await this.validateBlocksExist(funnel.steps);
+
+        // 3. Validar navegação
+        this.validateNavigationFlow(funnel.steps);
+
+        // 4. Validações de integridade (já existentes)
+        const validation = validateCompleteFunnel(funnel.steps as any);
+        
+        if (!validation.isValid) {
+            const offerMapOnlyErrors = validation.errors.every(e => /offerMap/i.test(e.field));
+            
+            if (!offerMapOnlyErrors) {
+                throw new Error(`Validação falhou: ${validation.errors.map(e => e.message).join('; ')}`);
+            }
+        }
+
+        console.log('✅ Validação completa passou');
+    }
+
+    /**
+     * 🚀 Validação extra rigorosa para publicação
+     * ✅ FASE 4.1: Validação pré-publicação
+     */
+    private async validateForProduction(funnel: QuizFunnelData): Promise<void> {
+        console.log('🚀 Validação rigorosa para publicação...');
+        
+        // Todas as validações de save
+        await this.validateForSave(funnel);
+
+        // Validações extras para produção
+        const validation = validateCompleteFunnel(funnel.steps as any);
+        
+        if (!validation.isValid) {
+            throw new Error(`Publicação bloqueada: ${validation.errors.map(e => e.message).join('; ')}`);
+        }
+
+        if (validation.warnings.length > 0) {
+            console.warn('⚠️ Avisos antes de publicar:', validation.warnings);
+        }
+
+        console.log('✅ Funil pronto para produção');
+    }
 }
 
 // Singleton
