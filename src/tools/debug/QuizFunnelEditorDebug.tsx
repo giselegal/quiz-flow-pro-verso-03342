@@ -21,7 +21,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
 // Imports dados
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
+import type { QuizStep } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 import { styleConfigGisele } from '@/data/styles';
 
 // Imports ícones
@@ -43,6 +44,8 @@ interface QuizFunnelEditorProps {
 
 const QuizFunnelEditorDebug: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
     const crud = useUnifiedCRUD();
+    const allSteps = templateService.getAllStepsSync();
+
     return (
         <div className="p-8 bg-white min-h-screen">
             <h1 className="text-2xl font-bold mb-4">🔍 QuizFunnelEditor Debug</h1>
@@ -54,7 +57,7 @@ const QuizFunnelEditorDebug: React.FC<QuizFunnelEditorProps> = ({ funnelId, temp
                     <p>✅ Zod</p>
                     <p>✅ UnifiedCRUD Context - funnel: {crud.currentFunnel?.name || 'nenhum'}</p>
                     <p>✅ UI Components (Button, Badge, Separator)</p>
-                    <p>✅ Data (QUIZ_STEPS: {Object.keys(QUIZ_STEPS).length} steps, styleConfig)</p>
+                    <p>✅ Data (TemplateService: {Object.keys(allSteps).length} steps, styleConfig)</p>
                     <p>✅ Props recebidas: funnelId={funnelId}, templateId={templateId}</p>
                 </div>
 
