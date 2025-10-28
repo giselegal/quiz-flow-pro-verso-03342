@@ -574,9 +574,29 @@ export class TemplateLoader {
       }
 
       console.log(`✅ [loadFromMasterJSON] Step ${normalizedKey} encontrado!`);
+      console.log('📊 [loadFromMasterJSON] Blocks no step:', stepConfig.blocks?.length || 0);
       console.log('📊 [loadFromMasterJSON] Sections no step:', stepConfig.sections?.length || 0);
 
-      if (stepConfig) {
+      // ✅ PRIORIDADE: Se step tem blocks[], usar diretamente!
+      if (Array.isArray(stepConfig.blocks) && stepConfig.blocks.length > 0) {
+        const typeMap: Record<string, string> = blockAliasMap as Record<string, string>;
+        const blocks: Block[] = stepConfig.blocks.map((b: any, idx: number) => ({
+          id: String(b.id || `${normalizedKey}-block-${idx}`),
+          type: (typeMap[b.type] || b.type || 'text-inline') as any,
+          order: (b.order ?? b.position ?? b.index ?? idx) as number,
+          properties: (b.properties || b.props || b.config || b.options || {}) as Record<string, any>,
+          content: (b.content || {}) as Record<string, any>,
+        }));
+
+        unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
+        unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+
+        console.log(`📦 Master JSON (blocks) → ${normalizedKey}: ${blocks.length} blocos`);
+        return { blocks, source: 'master-hydrated' };
+      }
+
+      // ⚠️ FALLBACK: Se step tem sections[] (formato antigo), converter
+      if (Array.isArray(stepConfig.sections) && stepConfig.sections.length > 0) {
         const hydrated = {
           ...stepConfig,
           sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections),
@@ -587,9 +607,12 @@ export class TemplateLoader {
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
-        console.log(`📦 Master JSON → ${normalizedKey}: ${blocks.length} blocos`);
+        console.log(`📦 Master JSON (sections) → ${normalizedKey}: ${blocks.length} blocos`);
         return { blocks, source: 'master-hydrated' };
       }
+
+      console.warn(`⚠️ Step ${normalizedKey} não tem blocks[] nem sections[]`);
+      return null;
     } catch (e) {
       console.error('❌ [loadFromMasterJSON] Erro crítico:', e);
       console.warn('⚠️ Erro ao carregar master JSON:', e);
