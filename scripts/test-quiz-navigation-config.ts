@@ -40,7 +40,7 @@ console.log();
 // 3. TESTE DE NAVEGAÇÃO STEP-20
 // ============================================================================
 console.log('🎯 TESTE: Navegação do step-20 (resultado)');
-const step20 = QUIZ_STEPS.find(s => s.id === 'step-20');
+const step20 = QUIZ_STEPS['step-20'];
 console.log(`  step-20.nextStep (original): ${step20?.nextStep}`);
 
 const configuredNext20 = getConfiguredNextStep('step-20', step20?.nextStep || null);
@@ -57,7 +57,7 @@ console.log();
 // 4. TESTE DE NAVEGAÇÃO STEP-21
 // ============================================================================
 console.log('🎯 TESTE: Navegação do step-21 (oferta)');
-const step21 = QUIZ_STEPS.find(s => s.id === 'step-21');
+const step21 = QUIZ_STEPS['step-21'];
 console.log(`  step-21.nextStep (original): ${step21?.nextStep ?? 'null'}`);
 
 const configuredNext21 = getConfiguredNextStep('step-21', step21?.nextStep || null);
@@ -72,7 +72,14 @@ console.log();
 // ============================================================================
 console.log('🔧 TESTE: NavigationService com configuração');
 const navService = getNavigationService();
-navService.buildNavigationMap(QUIZ_STEPS);
+// Converter objeto QUIZ_STEPS em array
+const quizStepsArray = Object.values(QUIZ_STEPS).map((step, index) => ({
+  id: step.id || `step-${String(index + 1).padStart(2, '0')}`,
+  nextStep: step.nextStep,
+  order: index,
+  type: step.type,
+}));
+navService.buildNavigationMap(quizStepsArray);
 
 const resolvedNext20 = navService.resolveNextStep('step-20');
 const resolvedNext21 = navService.resolveNextStep('step-21');

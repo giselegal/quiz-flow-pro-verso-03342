@@ -14,7 +14,7 @@ export const QUIZ_NAV_CONFIG = {
    * 
    * @default true
    */
-  ENABLE_OFFER_STEP: import.meta.env.VITE_ENABLE_OFFER_STEP !== 'false',
+  ENABLE_OFFER_STEP: typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_OFFER_STEP !== 'false',
 
   /**
    * Permite adicionar steps customizados além do step-21
@@ -22,7 +22,7 @@ export const QUIZ_NAV_CONFIG = {
    * 
    * @default false
    */
-  CUSTOM_STEPS_ENABLED: import.meta.env.VITE_CUSTOM_STEPS_ENABLED === 'true',
+  CUSTOM_STEPS_ENABLED: typeof import.meta !== 'undefined' && import.meta.env?.VITE_CUSTOM_STEPS_ENABLED === 'true',
 
   /**
    * Step ID da oferta (pode ser customizado)
