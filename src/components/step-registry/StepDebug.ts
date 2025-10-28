@@ -9,7 +9,6 @@
 import { stepRegistry } from './StepRegistry';
 import { QUIZ_STEPS, type QuizStep } from '../../data/quizSteps';
 import { getStepTemplate } from '@/templates/imports';
-import { convertSectionsToBlocks } from '@/utils/sectionToBlockConverter';
 
 type Row = {
   '#': number;
@@ -171,6 +170,7 @@ export async function printFullStepsDebugDeep() {
           blocks = step.blocks;
         } else if (Array.isArray(step?.sections)) {
           hasSections = '✅';
+          const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
           blocks = convertSectionsToBlocks(step.sections);
         }
         // Enriquecer a identificação de fonte: se veio do registry mas aparenta ser JSON v3, marcar como registry(json-v3)

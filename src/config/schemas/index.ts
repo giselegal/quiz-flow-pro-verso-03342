@@ -48,9 +48,7 @@ export {
 } from './dynamic';
 
 // Exportar schemas individuais para uso direto (opcional)
-export { headlineSchema } from './blocks/headline';
-export { imageSchema } from './blocks/image';
-export { buttonSchema } from './blocks/button';
-export { optionsGridSchema } from './blocks/options-grid';
-export { urgencyTimerInlineSchema } from './blocks/urgency-timer-inline';
-export { introLogoHeaderSchema } from './blocks/intro-logo-header';
+// Nota: Para evitar conflitos de empacotamento (módulo importado dinamicamente e estaticamente),
+// não exportamos mais schemas individuais diretamente aqui. Utilize o SchemaAPI:
+//   const schema = await SchemaAPI.get('headline');
+// Isso garante que o carregamento permaneça lazy e sem avisos do Vite.

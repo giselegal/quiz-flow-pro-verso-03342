@@ -15,7 +15,7 @@
 import React from 'react';
 import { BaseStepProps, StepComponent, StepConfig } from './StepTypes';
 import { stepRegistry } from './StepRegistry';
-import { printFullStepsDebug } from './StepDebug';
+// Debug helper será carregado sob demanda para evitar import estático duplicado
 import { normalizeStepId } from '@/utils/quizStepIds';
 
 // Import dos componentes de produção originais
@@ -650,7 +650,7 @@ export const registerProductionSteps = () => {
         // Tabela tradicional
         stepRegistry.debug();
         // Tabela completa (todas as peças)
-        printFullStepsDebug();
+        import('./StepDebug').then(m => m.printFullStepsDebug?.());
         // Tabela profunda com templates e blocos (async, pequeno atraso para estabilidade)
         setTimeout(() => {
             try {
