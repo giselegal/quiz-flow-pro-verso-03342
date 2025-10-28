@@ -273,7 +273,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       },
     }));
 
-  const sourceStep = (externalSteps || loadedSteps || QUIZ_STEPS)[stepId];
+  const sourceStep = (externalSteps || loadedSteps || QUIZ_STEPS_FALLBACK)[stepId];
     if (sourceStep?.type === 'strategic-question') {
       setTimeout(() => calculateResult(), 100);
     }

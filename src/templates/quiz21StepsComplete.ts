@@ -11,7 +11,7 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-28T18:18:15.300Z
+ * Gerado em: 2025-10-28T22:34:55.159Z
  * Versão: 3.0.0
  */
 
@@ -89,8 +89,8 @@ function generateSeedFromFunnelId(funnelId: string): number {
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   'step-01': [
     {
-      "id": "intro-title",
-      "type": "heading-inline",
+      "id": "intro-logo",
+      "type": "intro-logo",
       "order": 0,
       "properties": {
         "padding": 16,
@@ -98,32 +98,61 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "duration": 300
       },
       "content": {
-        "title": "Bem-vinda ao Quiz de Estilo"
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        "alt": "Logo Gisele Galvão",
+        "width": 132,
+        "height": 55
       }
     },
     {
-      "id": "intro-subtitle",
-      "type": "text-inline",
+      "id": "intro-title",
+      "type": "intro-title",
       "order": 1,
+      "properties": {
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      },
+      "content": {
+        "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+      }
+    },
+    {
+      "id": "intro-image",
+      "type": "intro-image",
+      "order": 2,
       "properties": {},
       "content": {
-        "text": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!"
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        "alt": "Descubra seu estilo predominante",
+        "width": 300,
+        "height": 204
+      }
+    },
+    {
+      "id": "intro-description",
+      "type": "intro-description",
+      "order": 3,
+      "properties": {},
+      "content": {
+        "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
       }
     },
     {
       "id": "intro-form",
       "type": "intro-form",
-      "order": 2,
+      "order": 4,
       "properties": {
         "padding": 16,
         "type": "slideUp",
         "duration": 300
       },
       "content": {
-        "label": "Qual é o seu nome?",
-        "placeholder": "Digite seu nome aqui",
-        "buttonText": "Começar Agora",
-        "required": true
+        "label": "Como posso te chamar?",
+        "placeholder": "Digite seu primeiro nome aqui...",
+        "buttonText": "Quero Descobrir meu Estilo Agora!",
+        "required": true,
+        "helperText": "Seu nome é necessário para personalizar sua experiência."
       }
     }
   ],
@@ -155,7 +184,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "duration": 300
       },
       "content": {
-        "text": "Pergunta 1 de 10"
+        "text": "Pergunta 1 de 10",
+        "subtitle": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
       }
     },
     {
@@ -174,43 +204,43 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "options": [
           {
             "id": "natural",
-            "text": "Natural",
-            "imageUrl": "/quiz-assets/natural.webp"
+            "text": "Conforto, leveza e praticidade no vestir",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
           },
           {
             "id": "classico",
-            "text": "Clássico",
-            "imageUrl": "/quiz-assets/classico.webp"
+            "text": "Discrição, caimento clássico e sobriedade",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
           },
           {
             "id": "contemporaneo",
-            "text": "Contemporâneo",
-            "imageUrl": "/quiz-assets/contemporaneo.webp"
+            "text": "Praticidade com um toque de estilo atual",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
           },
           {
             "id": "elegante",
-            "text": "Elegante",
-            "imageUrl": "/quiz-assets/elegante.webp"
+            "text": "Elegância refinada, moderna e sem exageros",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
           },
           {
             "id": "romantico",
-            "text": "Romântico",
-            "imageUrl": "/quiz-assets/romantico.webp"
+            "text": "Delicadeza em tecidos suaves e fluidos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp"
           },
           {
             "id": "sexy",
-            "text": "Sexy",
-            "imageUrl": "/quiz-assets/sexy.webp"
+            "text": "Sensualidade com destaque para o corpo",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp"
           },
           {
             "id": "dramatico",
-            "text": "Dramático",
-            "imageUrl": "/quiz-assets/dramatico.webp"
+            "text": "Impacto visual com peças estruturadas e assimétricas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp"
           },
           {
             "id": "criativo",
-            "text": "Criativo",
-            "imageUrl": "/quiz-assets/criativo.webp"
+            "text": "Mix criativo com formas ousadas e originais",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp"
           }
         ],
         "columns": 2,
@@ -1419,7 +1449,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     },
     {
       "id": "step-12-transition-text",
-      "type": "text-inline",
+      "type": "transition-text",
       "order": 1,
       "properties": {
         "type": "fade",
@@ -2090,7 +2120,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     },
     {
       "id": "step-19-transition-text",
-      "type": "text-inline",
+      "type": "transition-text",
       "order": 1,
       "properties": {
         "type": "fade",
