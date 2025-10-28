@@ -172,14 +172,14 @@ export interface EnvironmentConfig {
 }
 
 export const getEnvironmentConfig = (): EnvironmentConfig => {
-    const isDev = import.meta.env.DEV;
-    const isProd = import.meta.env.PROD;
+    const isDev = (import.meta as any)?.env?.DEV ?? (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development');
+    const isProd = (import.meta as any)?.env?.PROD ?? (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production');
 
     return {
         environment: isDev ? 'development' : isProd ? 'production' : 'staging',
         debug: isDev,
-        apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000',
-        cdnUrl: import.meta.env.VITE_CDN_URL || '',
+        apiUrl: (import.meta as any)?.env?.VITE_API_URL || process.env?.VITE_API_URL || 'http://localhost:3000',
+        cdnUrl: (import.meta as any)?.env?.VITE_CDN_URL || process.env?.VITE_CDN_URL || '',
         enableDevTools: isDev,
         enablePerformanceMonitoring: !isDev,
     };

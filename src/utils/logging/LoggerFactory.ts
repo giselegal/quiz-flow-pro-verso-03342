@@ -122,6 +122,11 @@ export class LoggerFactory {
      * Configura captura de erros globais
      */
     private static setupGlobalErrorHandler(logger: LoggerService): void {
+        // Skip in Node.js environment
+        if (typeof window === 'undefined') {
+            return;
+        }
+
         // Capture unhandled errors
         window.addEventListener('error', (event) => {
             logger.error('global', 'Unhandled error', {
@@ -155,8 +160,13 @@ export class LoggerFactory {
      * Configura handlers de cleanup
      */
     private static setupCleanupHandlers(logger: LoggerService): void {
+        // Skip in Node.js environment
+        if (typeof window === 'undefined') {
+            return;
+        }
+
         // Flush logs before page unload
-            window.addEventListener('pagehide', () => {
+        window.addEventListener('pagehide', () => {
             logger.flush().catch(console.warn);
         });
 

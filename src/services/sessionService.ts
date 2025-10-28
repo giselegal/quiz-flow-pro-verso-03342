@@ -2,7 +2,7 @@ import { quizSupabaseService } from '@/services/aliases';
 import { StorageService } from '@/services/core/StorageService';
 
 const isBrowser = typeof window !== 'undefined';
-const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
+const OFFLINE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true' || process.env?.VITE_DISABLE_SUPABASE === 'true';
 
 function isValidUUID(value: string | null | undefined): value is string {
   if (!value) return false;

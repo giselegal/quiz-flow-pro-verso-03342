@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/customClient';
 import { sessionService } from '@/services/sessionService';
 import { StorageService } from '@/services/core/StorageService';
 
-const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
+const OFFLINE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true' || process.env?.VITE_DISABLE_SUPABASE === 'true';
 const isBrowser = typeof window !== 'undefined';
 
 // Utilitário simples para validar UUID v1-v5

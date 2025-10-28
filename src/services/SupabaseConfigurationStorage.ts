@@ -94,6 +94,11 @@ export class SupabaseConfigurationStorage {
     // =========================================================================
 
     private setupOfflineHandling(): void {
+        // Skip in Node.js environment
+        if (typeof window === 'undefined') {
+            return;
+        }
+
         window.addEventListener('online', () => {
             this.isOnline = true;
             this.syncPendingChanges();

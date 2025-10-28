@@ -16,6 +16,11 @@ export class StorageTransport implements LogTransport {
     }
 
     async log(entry: LogEntry): Promise<void> {
+        // Skip in Node.js environment
+        if (typeof localStorage === 'undefined') {
+            return;
+        }
+
         this.buffer.push(entry);
 
         if (this.buffer.length >= (this.config.batchSize || 10)) {
@@ -24,6 +29,11 @@ export class StorageTransport implements LogTransport {
     }
 
     async flush(): Promise<void> {
+        // Skip in Node.js environment
+        if (typeof localStorage === 'undefined') {
+            return;
+        }
+
         if (this.buffer.length === 0) return;
 
         try {
