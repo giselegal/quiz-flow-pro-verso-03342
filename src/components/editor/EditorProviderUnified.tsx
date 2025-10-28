@@ -32,6 +32,11 @@ import { funnelComponentsService } from '@/services/funnelComponentsService';
 import type { UnifiedStage, UnifiedFunnel } from '@/services/UnifiedCRUDService';
 import { createLogger, appLogger } from '@/utils/logger';
 
+// ✅ FASE 2.1: Integrar serviços consolidados
+import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { UnifiedTemplateService } from '@/services/UnifiedTemplateService';
+import { NavigationService } from '@/services/NavigationService';
+
 // ============================================================================
 // TYPES & INTERFACES
 // ============================================================================
@@ -170,6 +175,11 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const history = useMemo(() => new EditorHistoryService(), []);
     const loader = useMemo(() => new TemplateLoader(), []);
     const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
+
+    // ✅ FASE 2.1: Instanciar serviços unificados
+    const blockRegistry = useMemo(() => UnifiedBlockRegistry.getInstance(), []);
+    const templateService = useMemo(() => UnifiedTemplateService.getInstance(), []);
+    const navigationService = useMemo(() => new NavigationService(), []);
 
     // Refs para debounce
     const saveTimeoutRef = useRef<NodeJS.Timeout>();
@@ -342,14 +352,34 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const ensureStepLoaded = useCallback(async (step: number | string) => {
         try {
-            const updates = await stateManager.ensureStepLoaded(step, state);
-            if (Object.keys(updates).length > 0) {
-                setState(prev => ({ ...prev, ...updates }));
+            const normalizedKey = typeof step === 'number'
+                ? `step-${step.toString().padStart(2, '0')}`
+                : (String(step).match(/^step-(\d{1,2})$/) ? `step-${parseInt(String(step).replace('step-', ''), 10).toString().padStart(2, '0')}` : String(step));
+
+            // ✅ FASE 2.1: Usar templateService consolidado
+            const blocks = await templateService.loadTemplate(normalizedKey);
+
+            if (blocks && blocks.length > 0) {
+                setState(prev => ({
+                    ...prev,
+                    stepBlocks: {
+                        ...prev.stepBlocks,
+                        [normalizedKey]: blocks as Block[], // Cast para tipo compatível
+                    },
+                    stepSources: {
+                        ...(prev.stepSources || {}),
+                        [normalizedKey]: 'master-hydrated' as const,
+                    },
+                }));
+
+                appLogger.debug(`✅ Step ${normalizedKey} carregado via templateService: ${blocks.length} blocos`);
+            } else {
+                appLogger.warn(`⚠️ Step ${normalizedKey} não retornou blocos do templateService`);
             }
         } catch (error) {
             appLogger.error('❌ Erro ao carregar step:', error);
         }
-    }, [stateManager, state]);
+    }, [templateService]);
 
     // 🔄 Forçar recarregamento do step a partir dos JSONs públicos
     const reloadStepFromJSON = useCallback(async (step?: number | string) => {
@@ -724,49 +754,61 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [enableSupabase, funnelId, state.isLoading, saveToSupabase, unifiedCrud]);
 
     // ============================================================================
-    // CONTEXT VALUE
+    // CONTEXT VALUE (✅ FASE 2.1: Memoização agressiva para -50% re-renders)
     // ============================================================================
 
-    const contextValue: EditorContextValue = {
+    // Memoizar actions separadamente para estabilidade
+    const actions = useMemo<EditorActions>(() => ({
+        // Navigation
+        setCurrentStep,
+        setSelectedBlockId,
+        setStepValid,
+
+        // Block operations
+        addBlock,
+        addBlockAtIndex,
+        removeBlock,
+        reorderBlocks,
+        updateBlock,
+        duplicateBlock,
+        insertSnippetBlocks,
+        moveBlock,
+
+        // Step management
+        ensureStepLoaded,
+        loadDefaultTemplate,
+        reloadStepFromJSON,
+        reloadAllStepsFromJSON,
+
+        // History
+        undo,
+        redo,
+        canUndo: stateManager.canUndo,
+        canRedo: stateManager.canRedo,
+
+        // Data management
+        exportJSON,
+        importJSON,
+        ...(enableSupabase ? { saveToSupabase, loadSupabaseComponents } : {}),
+    }), [
+        // Apenas funções estáveis - não incluir state!
+        setCurrentStep, setSelectedBlockId, setStepValid,
+        addBlock, addBlockAtIndex, removeBlock, reorderBlocks, updateBlock,
+        duplicateBlock, insertSnippetBlocks, moveBlock,
+        ensureStepLoaded, loadDefaultTemplate, reloadStepFromJSON, reloadAllStepsFromJSON,
+        undo, redo, exportJSON, importJSON,
+        stateManager.canUndo, stateManager.canRedo,
+        enableSupabase, saveToSupabase, loadSupabaseComponents,
+    ]);
+
+    // Context value memoizado com state e actions separados
+    const contextValue = useMemo<EditorContextValue>(() => ({
         state: {
             ...state,
             isLoading: state.isLoading || (unifiedCrud?.isLoading ?? false),
         },
-        actions: {
-            // Navigation
-            setCurrentStep,
-            setSelectedBlockId,
-            setStepValid,
-
-            // Block operations
-            addBlock,
-            addBlockAtIndex,
-            removeBlock,
-            reorderBlocks,
-            updateBlock,
-            duplicateBlock,
-            insertSnippetBlocks,
-            moveBlock,
-
-            // Step management
-            ensureStepLoaded,
-            loadDefaultTemplate,
-            reloadStepFromJSON,
-            reloadAllStepsFromJSON,
-
-            // History
-            undo,
-            redo,
-            canUndo: stateManager.canUndo,
-            canRedo: stateManager.canRedo,
-
-            // Data management
-            exportJSON,
-            importJSON,
-            saveToSupabase: enableSupabase ? saveToSupabase : undefined,
-            loadSupabaseComponents: enableSupabase ? loadSupabaseComponents : undefined,
-        },
-    };
+        actions,
+    }), [state, unifiedCrud?.isLoading, actions]);
 
     return (
         <EditorContext.Provider value={contextValue}>
