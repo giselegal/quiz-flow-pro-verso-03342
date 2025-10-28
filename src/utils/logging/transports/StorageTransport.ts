@@ -96,6 +96,11 @@ export class StorageTransport implements LogTransport {
     }
 
     private setupPeriodicFlush(): void {
+        // Skip periodic flush in Node.js environment
+        if (typeof window === 'undefined') {
+            return;
+        }
+        
         const interval = this.config.flushInterval || 5000;
         this.flushTimer = window.setInterval(() => {
             this.flush().catch(console.warn);

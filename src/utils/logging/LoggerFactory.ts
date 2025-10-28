@@ -69,7 +69,7 @@ export class LoggerFactory {
             defaultFormatter: 'json',
             batchSize: 50,
             flushInterval: 10000,
-            remoteEndpoint: import.meta.env.VITE_LOGGING_ENDPOINT,
+            remoteEndpoint: (import.meta as any)?.env?.VITE_LOGGING_ENDPOINT,
         });
     }
 
@@ -93,7 +93,8 @@ export class LoggerFactory {
      */
     private static configureGlobalLogger(logger: LoggerService): void {
         // Add sensitive data filter in production
-        if (import.meta.env.NODE_ENV === 'production') {
+        const nodeEnv = (import.meta as any)?.env?.NODE_ENV || (typeof process !== 'undefined' ? process.env?.NODE_ENV : 'development');
+        if (nodeEnv === 'production') {
             import('./filters/SensitiveDataFilter').then(({ SensitiveDataFilter }) => {
                 logger.addFilter(new SensitiveDataFilter());
             });
@@ -141,7 +142,7 @@ export class LoggerFactory {
         });
 
         // Capture console errors (optional, be careful not to create infinite loops)
-        if (import.meta.env.VITE_CAPTURE_CONSOLE_ERRORS === 'true') {
+        if ((import.meta as any)?.env?.VITE_CAPTURE_CONSOLE_ERRORS === 'true') {
             const originalError = console.error;
             console.error = (...args) => {
                 originalError.apply(console, args);
