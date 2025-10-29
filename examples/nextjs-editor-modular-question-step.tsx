@@ -3,12 +3,17 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { DndContext, SortableContext, useSortable, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
-import { validateAnswer } from '@/lib/quiz/validation';
-import { computeProgress } from '@/lib/quiz/navigation';
+// import { useEditor } from '@/components/editor/EditorProviderUnified'; // NextJS path - ajustar conforme projeto
+// import { validateAnswer } from '@/lib/quiz/validation'; // NextJS path - ajustar conforme projeto
+// import { computeProgress } from '@/lib/quiz/navigation'; // NextJS path - ajustar conforme projeto
+
+// Funções auxiliares de exemplo (substituir por imports reais em NextJS)
+const validateAnswer = (answers: string[], required: number) => answers.length >= required;
+const computeProgress = (current: number, total: number) => (current / total) * 100;
+const useEditor = (opts?: any) => null; // Mock do hook do editor
 
 // ❌ Props complexas (tudo que o editor precisa)
 interface ModularQuestionStepProps {
