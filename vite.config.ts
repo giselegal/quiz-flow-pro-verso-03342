@@ -87,10 +87,11 @@ export default defineConfig(({ mode }) => {
           // Suprimir warnings específicos que não são críticos
           if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
           if (warning.code === 'SOURCEMAP_ERROR') return;
+          if (warning.code === 'CIRCULAR_DEPENDENCY') return;
           warn(warning);
         },
-        // Evita problemas de ordem de inicialização em cenários com ciclos leves
-        preserveEntrySignatures: 'exports-only',
+        // CRÍTICO: Força todos os exports a serem preservados
+        preserveEntrySignatures: 'strict',
         input: { main: path.resolve(__dirname, 'index.html') },
         external: [
           /^supabase\/functions\/.*/,
@@ -100,19 +101,27 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🎯 FASE 6: VENDOR CHUNKS OPTIMIZATION - FIXED
-          // Estratégia CONSERVADORA para evitar problemas de exports circulares
+          // CRÍTICO: Configurar ordem de carregamento dos chunks
+          inlineDynamicImports: false,
+          // Garantir que vendor-react seja carregado PRIMEIRO
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              // React core - ISOLADO (sem Radix para evitar circular deps)
+              // React core + dependências CRÍTICAS no mesmo chunk
               if (id.includes('/react/') || id.includes('/react-dom/') || 
-                  id.includes('react-is') || id.includes('scheduler')) {
+                  id.includes('react-is') || id.includes('scheduler') ||
+                  id.includes('prop-types') || id.includes('object-assign')) {
                 return 'vendor-react';
               }
               
-              // Radix UI - SEPARADO para evitar problemas com React exports
+              // Radix UI - depende de React, mas separado
               if (id.includes('@radix-ui')) {
                 return 'vendor-radix';
+              }
+              
+              // Framer Motion e libs de animação - podem depender de React
+              if (id.includes('framer-motion') || id.includes('@react-spring') || 
+                  id.includes('@use-gesture')) {
+                return 'vendor-animation';
               }
               
               // DnD Kit - usado apenas no editor
@@ -139,7 +148,9 @@ export default defineConfig(({ mode }) => {
             }
             
             // Deixar Vite gerenciar automaticamente o resto
-          }
+          },
+          // CRÍTICO: Garantir ordem de imports
+          hoistTransitiveImports: false,
         },
       },
     },
@@ -151,8 +162,9 @@ export default defineConfig(({ mode }) => {
         'react-dom/client',
         'react-is',
         'scheduler',
+        'prop-types',
+        'object-assign',
         'wouter',
-        'recharts',
       ],
       exclude: [
         // Excluir módulos que causam problemas de bundling
@@ -162,7 +174,8 @@ export default defineConfig(({ mode }) => {
         target: 'es2020',
         loader: { '.js': 'jsx' },
       },
-      force: false, // Não forçar rebuild em dev
+      // Forçar re-otimização para garantir dependências corretas
+      force: true,
     },
     define: {
       global: 'globalThis',
