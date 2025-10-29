@@ -7,12 +7,33 @@ export default function IntroImageBlock({
   onClick,
 }: AtomicBlockProps) {
   // Compatibilidade JSON v3: content.imageUrl, imageAlt, width/height
-  const src = (block as any)?.content?.imageUrl || block.properties?.src || (block as any)?.content?.src || '';
-  const alt = (block as any)?.content?.imageAlt || block.properties?.alt || (block as any)?.content?.alt || 'Imagem';
-  const maxWidth = (block as any)?.content?.maxWidth || block.properties?.maxWidth || '500px';
+  const src = (block as any)?.content?.imageUrl || (block as any)?.content?.src || block.properties?.src || '';
+  const alt = (block as any)?.content?.imageAlt || (block as any)?.content?.alt || block.properties?.alt || 'Imagem';
+
+  // maxWidth: priorizar content.width, depois properties.maxWidth, senão default
+  const contentWidth = (block as any)?.content?.width;
+  const maxWidth = contentWidth
+    ? (typeof contentWidth === 'number' ? `${contentWidth}px` : contentWidth)
+    : (block.properties?.maxWidth || '300px');
+
   const rounded = block.properties?.rounded !== false;
 
-  if (!src) return null;
+  // Debug
+  if (import.meta.env.DEV) {
+    console.log('🖼️ [IntroImageBlock] Debug:', {
+      blockId: block.id,
+      type: (block as any).type,
+      src,
+      hasSrc: !!src,
+      content: (block as any)?.content,
+      properties: block.properties
+    });
+  }
+
+  if (!src) {
+    console.warn('⚠️ [IntroImageBlock] Sem src:', { blockId: block.id, content: (block as any)?.content });
+    return null;
+  }
 
   return (
     <div
