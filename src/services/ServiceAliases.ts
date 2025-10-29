@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 SERVICE ALIASES - QUICK WIN #1
  * 

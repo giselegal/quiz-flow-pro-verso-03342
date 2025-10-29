@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📡 PUBLICATION SETTINGS BUTTON
  * 

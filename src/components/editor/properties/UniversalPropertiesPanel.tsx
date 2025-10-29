@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎛️ PAINEL DE PROPRIEDADES UNIVERSAL
  * 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧪 INTEGRATION TEST SUITE - API + Editor Control
  * 

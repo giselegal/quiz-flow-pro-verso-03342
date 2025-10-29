@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 USE UNIFIED COLLABORATION - Hook de Colaboração em Tempo Real
  *

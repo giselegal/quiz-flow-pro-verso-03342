@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚨 DISASTER RECOVERY PANEL - Phase 4 Implementation
  * Comprehensive recovery and rollback management

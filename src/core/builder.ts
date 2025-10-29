@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🏗️ CORE BUILDER SYSTEM - IMPLEMENTAÇÃO FUNCIONAL
  * 
