@@ -1,7 +1,7 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-10-29T14:28:56.973Z
+ * Gerado automaticamente em: 2025-10-29T23:44:38.981Z
  * Total de steps: 21
  * Total de blocos: 102
  * 
@@ -26,13 +26,16 @@ const embedded: Record<string, Block[]> = {
         "properties": {
           "padding": 16,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "animationType": "fade",
+          "animationDuration": 300
         },
         "content": {
           "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
           "alt": "Logo Gisele Galvão",
-          "width": "132",
-          "height": "55"
+          "width": 132,
+          "height": 55,
+          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
         },
         "parentId": null
       },
@@ -43,7 +46,12 @@ const embedded: Record<string, Block[]> = {
         "properties": {
           "padding": 16,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "animationType": "fade",
+          "animationDuration": 300,
+          "textAlign": "center",
+          "fontSize": "28px",
+          "fontWeight": "700"
         },
         "content": {
           "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
@@ -54,12 +62,17 @@ const embedded: Record<string, Block[]> = {
         "id": "intro-image",
         "type": "intro-image",
         "order": 2,
-        "properties": {},
+        "properties": {
+          "objectFit": "contain",
+          "maxWidth": 300,
+          "borderRadius": "8px"
+        },
         "content": {
           "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
           "alt": "Descubra seu estilo predominante",
-          "width": "300",
-          "height": "204"
+          "width": 300,
+          "height": 204,
+          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png"
         },
         "parentId": null
       },
@@ -67,7 +80,12 @@ const embedded: Record<string, Block[]> = {
         "id": "intro-description",
         "type": "intro-description",
         "order": 3,
-        "properties": {},
+        "properties": {
+          "padding": 16,
+          "animationType": "fade",
+          "animationDuration": 300,
+          "textAlign": "center"
+        },
         "content": {
           "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
         },
@@ -80,7 +98,9 @@ const embedded: Record<string, Block[]> = {
         "properties": {
           "padding": 16,
           "type": "slideUp",
-          "duration": 300
+          "duration": 300,
+          "animationType": "fade",
+          "animationDuration": 300
         },
         "content": {
           "label": "Como posso te chamar?",
@@ -135,7 +155,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -196,7 +218,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -249,7 +272,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -315,7 +340,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -349,7 +375,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
@@ -390,7 +417,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -464,7 +493,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -498,7 +528,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "QUAIS DETALHES VOCÊ GOSTA?"
@@ -511,7 +542,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "4 de 10",
@@ -533,7 +565,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -599,7 +633,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -633,7 +668,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
@@ -646,7 +682,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "5 de 10",
@@ -668,7 +705,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -742,7 +781,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -776,7 +816,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "QUAL CASACO É SEU FAVORITO?"
@@ -789,7 +830,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "6 de 10",
@@ -811,7 +853,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -885,7 +929,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -919,7 +964,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "QUAL SUA CALÇA FAVORITA?"
@@ -932,7 +978,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "7 de 10",
@@ -954,7 +1001,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1028,7 +1077,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1062,7 +1112,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
@@ -1075,7 +1126,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "8 de 10",
@@ -1097,7 +1149,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1171,7 +1225,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1205,7 +1260,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?"
@@ -1218,7 +1274,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "9 de 10",
@@ -1240,7 +1297,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1314,7 +1373,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1348,7 +1408,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
@@ -1361,7 +1422,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "10 de 10",
@@ -1383,7 +1445,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1449,7 +1513,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1533,7 +1598,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
@@ -1546,7 +1612,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "Q11 - OBJETIVOS",
@@ -1568,7 +1635,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1612,7 +1681,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1646,7 +1716,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "O que mais te desafia na hora de se vestir?"
@@ -1659,7 +1730,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "Q12 - DESAFIOS",
@@ -1681,7 +1753,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1725,7 +1799,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1759,7 +1834,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
@@ -1772,7 +1848,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "Q13 - PRIORIDADES",
@@ -1794,7 +1871,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1838,7 +1917,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1872,7 +1952,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
@@ -1885,7 +1966,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "Q14 - INVESTIMENTO",
@@ -1907,7 +1989,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -1951,7 +2035,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -1985,7 +2070,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
@@ -1998,7 +2084,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "Q15 - TRANSFORMAÇÃO",
@@ -2020,7 +2107,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -2064,7 +2153,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
@@ -2098,7 +2188,8 @@ const embedded: Record<string, Block[]> = {
         "order": 1,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "text": "Qual desses resultados você mais gostaria de alcançar?"
@@ -2111,7 +2202,8 @@ const embedded: Record<string, Block[]> = {
         "order": 2,
         "properties": {
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "questionNumber": "Q16 - RESULTADO",
@@ -2133,7 +2225,9 @@ const embedded: Record<string, Block[]> = {
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
-          "easing": "ease-out"
+          "easing": "ease-out",
+          "columns": 2,
+          "gap": 16
         },
         "content": {
           "options": [
@@ -2177,7 +2271,8 @@ const embedded: Record<string, Block[]> = {
           "showBack": true,
           "showNext": true,
           "type": "fade",
-          "duration": 300
+          "duration": 300,
+          "padding": 16
         },
         "content": {
           "backLabel": "Voltar",
