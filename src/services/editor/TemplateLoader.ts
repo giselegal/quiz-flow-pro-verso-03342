@@ -486,23 +486,14 @@ export class TemplateLoader {
 
   /**
    * Estratégia 1: Carregar de cache unificado
+   * NOTA: Não usamos cache aqui para garantir que a fonte correta seja retornada
+   * O cache é mantido apenas para melhorar performance após o primeiro carregamento
    */
   private loadFromCache(normalizedKey: string): LoadedTemplate | null {
-    try {
-      const cachedStepBlocks =
-        unifiedCache.get(stepBlocksKey(normalizedKey)) ||
-        unifiedCache.get(masterBlocksKey(normalizedKey));
-
-      if (Array.isArray(cachedStepBlocks) && cachedStepBlocks.length > 0) {
-        console.log(`📦 Cache hit: ${normalizedKey} → ${cachedStepBlocks.length} blocos`);
-        return {
-          blocks: cachedStepBlocks as Block[],
-          source: 'master-hydrated',
-        };
-      }
-    } catch (e) {
-      console.warn('⚠️ Erro ao ler cache:', e);
-    }
+    // ❌ DESABILITADO: Cache pode misturar fontes e retornar 'master-hydrated' incorretamente
+    // quando os blocos vieram de /templates/blocks/*.json
+    // 
+    // Para garantir a fonte correta, sempre carregamos do disco/rede
     return null;
   }
 

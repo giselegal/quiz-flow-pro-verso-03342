@@ -480,10 +480,12 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 if (!hasLocal && !(Array.isArray(cached) && cached.length > 0)) {
                     ensureStepLoaded(next);
                 } else if (!hasLocal && Array.isArray(cached) && cached.length > 0) {
+                    // ⚠️ REMOVIDO: Não forçar source como 'master-hydrated' aqui
+                    // A fonte correta será determinada pelo TemplateLoader
                     setState(prev => ({
                         ...prev,
                         stepBlocks: { ...prev.stepBlocks, [normalizedNext]: cached as Block[] },
-                        stepSources: { ...(prev.stepSources || {}), [normalizedNext]: 'master-hydrated' },
+                        // stepSources será atualizado pelo ensureStepLoaded quando necessário
                     }));
                 }
             }, 500);
