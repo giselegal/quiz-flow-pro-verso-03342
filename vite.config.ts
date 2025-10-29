@@ -90,8 +90,8 @@ export default defineConfig(({ mode }) => {
           if (warning.code === 'CIRCULAR_DEPENDENCY') return;
           warn(warning);
         },
-        // CRÍTICO: Força todos os exports a serem preservados
-        preserveEntrySignatures: 'strict',
+        // CRÍTICO: Força todos os exports a serem preservados de forma mais permissiva
+        preserveEntrySignatures: 'allow-extension',
         input: { main: path.resolve(__dirname, 'index.html') },
         external: [
           /^supabase\/functions\/.*/,
@@ -101,56 +101,9 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // CRÍTICO: Configurar ordem de carregamento dos chunks
-          inlineDynamicImports: false,
-          // Garantir que vendor-react seja carregado PRIMEIRO
-          manualChunks: (id) => {
-            if (id.includes('node_modules')) {
-              // React core + dependências CRÍTICAS no mesmo chunk
-              if (id.includes('/react/') || id.includes('/react-dom/') || 
-                  id.includes('react-is') || id.includes('scheduler') ||
-                  id.includes('prop-types') || id.includes('object-assign')) {
-                return 'vendor-react';
-              }
-              
-              // Radix UI - depende de React, mas separado
-              if (id.includes('@radix-ui')) {
-                return 'vendor-radix';
-              }
-              
-              // Framer Motion e libs de animação - podem depender de React
-              if (id.includes('framer-motion') || id.includes('@react-spring') || 
-                  id.includes('@use-gesture')) {
-                return 'vendor-animation';
-              }
-              
-              // DnD Kit - usado apenas no editor
-              if (id.includes('@dnd-kit')) {
-                return 'vendor-dnd';
-              }
-              
-              // Supabase - separado por ser grande e isolado
-              if (id.includes('@supabase') || id.includes('postgrest-js') || id.includes('gotrue-js')) {
-                return 'vendor-supabase';
-              }
-              
-              // Resto dos vendors (utilities, charts, etc)
-              return 'vendor-misc';
-            }
-            
-            // Code splitting interno: separar editor do runtime
-            if (id.includes('/src/components/editor/')) {
-              return 'app-editor';
-            }
-            
-            if (id.includes('/src/runtime/') || id.includes('/src/components/quiz/')) {
-              return 'app-runtime';
-            }
-            
-            // Deixar Vite gerenciar automaticamente o resto
-          },
-          // CRÍTICO: Garantir ordem de imports
-          hoistTransitiveImports: false,
+          // 🎯 SOLUÇÃO DEFINITIVA: Desabilitar code splitting manual problemático
+          // Deixar Vite otimizar automaticamente baseado em imports dinâmicos
+          manualChunks: undefined,
         },
       },
     },
