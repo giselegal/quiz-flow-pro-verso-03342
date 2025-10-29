@@ -11,7 +11,7 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-29T01:21:24.203Z
+ * Gerado em: 2025-10-29T02:18:33.416Z
  * Versão: 3.0.0
  */
 
@@ -100,8 +100,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "content": {
         "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
         "alt": "Logo Gisele Galvão",
-        "width": "132",
-        "height": "55"
+        "width": 132,
+        "height": 55
       }
     },
     {
@@ -125,8 +125,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "content": {
         "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
         "alt": "Descubra seu estilo predominante",
-        "width": "300",
-        "height": "204"
+        "width": 300,
+        "height": 204
       }
     },
     {
