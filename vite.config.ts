@@ -120,10 +120,11 @@ export default defineConfig(({ mode }) => {
                 return 'vendor-dnd';
               }
               
-              // Charts - usado apenas em dashboards
-              if (id.includes('recharts') || id.includes('d3-')) {
-                return 'vendor-charts';
-              }
+              // Charts - FIXME: Recharts tem dependências circulares
+              // Temporariamente incluído no vendor-misc para evitar erro de inicialização
+              // if (id.includes('recharts') || id.includes('d3-')) {
+              //   return 'vendor-charts';
+              // }
               
               // Supabase - usado globalmente mas pode ser separado
               if (id.includes('@supabase') || id.includes('postgrest-js') || id.includes('gotrue-js')) {
@@ -140,7 +141,7 @@ export default defineConfig(({ mode }) => {
                 return 'vendor-router';
               }
               
-              // Resto dos vendors (menos críticos)
+              // Resto dos vendors (menos críticos) - INCLUI RECHARTS temporariamente
               return 'vendor-misc';
             }
             
