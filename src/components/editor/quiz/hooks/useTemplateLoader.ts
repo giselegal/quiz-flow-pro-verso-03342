@@ -124,6 +124,14 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions) {
  */
 async function loadFromFunnel(funnelId: string): Promise<EditableQuizStep[] | null> {
     try {
+        // ✅ Verificar cache primeiro
+        const cache = UnifiedCacheService.getInstance();
+        const cached = cache.get('funnels', funnelId);
+        if (cached) {
+            appLogger.debug('✅ Funnel carregado do cache:', funnelId);
+            return cached as EditableQuizStep[];
+        }
+        
         appLogger.debug('📦 Carregando funnel:', funnelId);
         const draft = await quizEditorBridge.loadFunnelForEdit(funnelId);
         
@@ -137,6 +145,9 @@ async function loadFromFunnel(funnelId: string): Promise<EditableQuizStep[] | nu
             blocks: Array.isArray(step.blocks) ? step.blocks : [],
         }));
 
+        // ✅ Salvar no cache
+        cache.set('funnels', funnelId, validSteps);
+        
         appLogger.debug('✅ Funnel carregado:', { steps: validSteps.length });
         return validSteps;
     } catch (error) {
