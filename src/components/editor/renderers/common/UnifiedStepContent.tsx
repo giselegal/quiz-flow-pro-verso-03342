@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import { appLogger } from '@/utils/logger';
 import { EditableQuizStep } from '@/components/editor/quiz/types';
 import { adaptStepData } from '@/utils/StepDataAdapter';
@@ -6,20 +6,11 @@ import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
-
-// Lazy load dos componentes modulares (reduz bundle inicial)
-const ModularIntroStep = lazy(() => import('@/components/quiz-modular').then(m => ({ default: m.ModularIntroStep })));
-const ModularQuestionStep = lazy(() => import('@/components/quiz-modular').then(m => ({ default: m.ModularQuestionStep })));
-const ModularStrategicQuestionStep = lazy(() => import('@/components/quiz-modular').then(m => ({ default: m.ModularStrategicQuestionStep })));
-const ModularTransitionStep = lazy(() => import('@/components/quiz-modular').then(m => ({ default: m.ModularTransitionStep })));
-const ModularResultStep = lazy(() => import('@/components/quiz-modular').then(m => ({ default: m.ModularResultStep })));
-const ModularOfferStep = lazy(() => import('@/components/quiz-modular').then(m => ({ default: m.ModularOfferStep })));
-
-const StepLoadingFallback = () => (
-    <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-    </div>
-);
+import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import type { Block } from '@/types/editor';
 
 export interface UnifiedStepContentProps {
     step: EditableQuizStep;
@@ -392,170 +383,291 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         } catch (err) {
             appLogger.error('❌ Erro ao adicionar bloco:', err);
         }
-    }, [editor, normalizeStepKey, step.id]); const renderStepComponent = () => {
-        switch (step.type) {
-            case 'intro': {
-                return (
-                    <ModularIntroStep
-                        data={stepData as any}
-                        blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
-                        isEditable={isEditMode}
-                        selectedBlockId={(selectedBlockId || undefined) as any}
-                        onBlockSelect={handleSelectBlock}
-                        onEdit={handleEdit}
-                        onBlocksReorder={handleBlocksReorder}
-                        onOpenProperties={handleOpenProperties}
-                        onNameSubmit={(name: string) => {
-                            if ((isEditMode && productionParityInEdit) || isPreviewMode) {
-                                onUpdateSessionData?.('userName', name);
-                            }
-                        }}
-                    />
-                );
-            }
-            case 'question': {
-                return (
-                    <ModularQuestionStep
-                        data={stepData as any}
-                        blocks={((editorState.stepBlocks as any)[stepKey] && (editorState.stepBlocks as any)[stepKey].length > 0)
-                            ? (editorState.stepBlocks as any)[stepKey]
-                            : ((step as any)?.blocks || [])}
-                        isEditable={isEditMode}
-                        selectedBlockId={(selectedBlockId || undefined) as any}
-                        onBlockSelect={handleSelectBlock}
-                        currentAnswers={(sessionData as any)[`answers_${stepKey}`] || []}
-                        enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
-                        onAnswersChange={(answers: string[]) => {
-                            if ((isEditMode && productionParityInEdit) || isPreviewMode) {
-                                onUpdateSessionData?.(`answers_${stepKey}`, answers);
-                            }
-                        }}
-                        onEdit={handleEdit}
-                        onBlocksReorder={handleBlocksReorder}
-                        onOpenProperties={handleOpenProperties}
-                    />
-                );
-            }
-            case 'strategic-question': {
-                return (
-                    <ModularStrategicQuestionStep
-                        data={stepData as any}
-                        blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
-                        isEditable={isEditMode}
-                        selectedBlockId={(selectedBlockId || undefined) as any}
-                        onBlockSelect={handleSelectBlock}
-                        currentAnswer={(sessionData as any)[`answer_${stepKey}`] || ''}
-                        onAnswerChange={(answer: string) => {
-                            if ((isEditMode && productionParityInEdit) || isPreviewMode) {
-                                onUpdateSessionData?.(`answer_${stepKey}`, answer);
-                            }
-                        }}
-                        onEdit={handleEdit}
-                        onBlocksReorder={handleBlocksReorder}
-                        onOpenProperties={handleOpenProperties}
-                    />
-                );
-            }
-            case 'transition':
-            case 'transition-result': {
-                return (
-                    <ModularTransitionStep
-                        data={{ ...stepData, type: step.type } as any}
-                        blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
-                        isEditable={isEditMode}
-                        enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
-                        selectedBlockId={(selectedBlockId || undefined) as any}
-                        onBlockSelect={handleSelectBlock}
-                        onOpenProperties={handleOpenProperties}
-                        onComplete={() => {
-                            // Mantém comportamento existente de auto-avançar quando aplicável
-                            try { (editor as any)?.actions?.nextStep?.(); } catch { }
-                        }}
-                        onBlocksReorder={handleBlocksReorder}
-                    />
-                );
-            }
-            case 'result': {
-                const answers = getPreviewAnswers();
-                const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers });
-                const hasAnyScore = !!scores && Object.values(scores as any).some((v: any) => Number(v) > 0);
-                const typedScores: QuizScores = hasAnyScore ? {
-                    natural: (scores as any).natural || 0,
-                    classico: (scores as any).classico || 0,
-                    contemporaneo: (scores as any).contemporaneo || 0,
-                    elegante: (scores as any).elegante || 0,
-                    romantico: (scores as any).romantico || 0,
-                    sexy: (scores as any).sexy || 0,
-                    dramatico: (scores as any).dramatico || 0,
-                    criativo: (scores as any).criativo || 0,
-                } : {
-                    natural: 34,
-                    classico: 22,
-                    contemporaneo: 18,
-                    elegante: 16,
-                    romantico: 6,
-                    sexy: 2,
-                    dramatico: 1,
-                    criativo: 1,
-                };
+    }, [editor, normalizeStepKey, step.id]);
 
-                return (
-                    <ModularResultStep
-                        data={stepData as any}
-                        blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
-                        isEditable={isEditMode}
-                        onBlocksReorder={handleBlocksReorder}
-                        userProfile={{
-                            userName: (sessionData as any).userName || 'Visitante',
-                            resultStyle: (primaryStyleId || (sessionData as any).resultStyle || (isEditMode ? 'natural' : '')) || 'natural',
-                            secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : ((sessionData as any).secondaryStyles || (isEditMode ? ['classico', 'contemporaneo'] : [])),
-                            scores: Object.entries(typedScores).map(([name, score]) => ({ name, score: Number(score) })),
-                        }}
-                        selectedBlockId={(selectedBlockId || undefined) as any}
-                        onBlockSelect={handleSelectBlock}
-                        onOpenProperties={handleOpenProperties}
-                    />
-                );
-            }
-            case 'offer': {
-                const answers = getPreviewAnswers();
-                const { primaryStyleId, secondaryStyleIds } = computeResult({ answers });
+    // 🎯 RENDERIZAÇÃO DIRETA DE BLOCOS (sem componentes Modular*)
+    // Pegar blocos do EditorProvider ou do step
+    const blocks: Block[] = useMemo(() => {
+        const raw = (editorState.stepBlocks as any)[stepKey] || (step as any)?.blocks || [];
+        if (!Array.isArray(raw)) return [];
+        // Filtrar blocos top-level e ordenar
+        return raw
+            .filter((b: any) => !b.parentId)
+            .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+    }, [editorState.stepBlocks, stepKey, step]);
 
-                return (
-                    <ModularOfferStep
-                        data={stepData as any}
-                        blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
-                        isEditable={isEditMode}
-                        userProfile={{
-                            userName: (sessionData as any).userName || 'Visitante',
-                            resultStyle: primaryStyleId || (sessionData as any).resultStyle || 'natural',
-                            secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : ((sessionData as any).secondaryStyles || []),
-                        }}
-                        offerKey={(sessionData as any).offerKey || 'default'}
-                        onEdit={handleEdit}
-                        onBlocksReorder={handleBlocksReorder}
-                        selectedBlockId={(selectedBlockId || undefined) as any}
-                        onBlockSelect={handleSelectBlock}
-                        onOpenProperties={handleOpenProperties}
-                    />
-                );
-            }
-            default:
-                return (
-                    <div className="p-8 text-center bg-gray-100 rounded-lg">
-                        <p className="text-gray-600">
-                            Tipo de step desconhecido: <code>{(step as any).type}</code>
-                        </p>
-                    </div>
-                );
+    // DnD setup
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+    );
+
+    const handleDragEnd = useCallback((event: any) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+
+        const ids = blocks.map(b => b.id);
+        const oldIndex = ids.indexOf(String(active.id));
+        const newIndex = ids.indexOf(String(over.id));
+
+        if (oldIndex >= 0 && newIndex >= 0) {
+            const newOrder = arrayMove(ids, oldIndex, newIndex);
+            handleBlocksReorder(stepKey, newOrder);
         }
+    }, [blocks, handleBlocksReorder, stepKey]);
+
+    // Sortable wrapper para cada bloco
+    const SortableBlock: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+            opacity: isDragging ? 0.7 : 1,
+        } as React.CSSProperties;
+
+        return (
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                {children}
+            </div>
+        );
     };
 
-    return (
-        <Suspense fallback={<StepLoadingFallback />}>
-            {renderStepComponent()}
-        </Suspense>
-    );
+    // Context data para blocos específicos (intro-form, question-navigation, etc.)
+    const contextData = useMemo(() => {
+        const base: any = {
+            userName: (sessionData as any)?.userName,
+            currentAnswers: (sessionData as any)?.[`answers_${stepKey}`] || [],
+            currentAnswer: (sessionData as any)?.[`answer_${stepKey}`] || '',
+            onNameSubmit: (name: string) => {
+                if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                    onUpdateSessionData?.('userName', name);
+                }
+            },
+            onAnswersChange: (answers: string[]) => {
+                if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                    onUpdateSessionData?.(`answers_${stepKey}`, answers);
+                }
+            },
+            onAnswerChange: (answer: string) => {
+                if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                    onUpdateSessionData?.(`answer_${stepKey}`, answer);
+                }
+            },
+        };
+
+        // Adicionar dados de resultado quando aplicável
+        if (step.type === 'result' || step.type === 'offer') {
+            const answers = getPreviewAnswers();
+            const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers });
+            const hasAnyScore = !!scores && Object.values(scores as any).some((v: any) => Number(v) > 0);
+            const typedScores: QuizScores = hasAnyScore ? {
+                natural: (scores as any).natural || 0,
+                classico: (scores as any).classico || 0,
+                contemporaneo: (scores as any).contemporaneo || 0,
+                elegante: (scores as any).elegante || 0,
+                romantico: (scores as any).romantico || 0,
+                sexy: (scores as any).sexy || 0,
+                dramatico: (scores as any).dramatico || 0,
+                criativo: (scores as any).criativo || 0,
+            } : {
+                natural: 34,
+                classico: 22,
+                contemporaneo: 18,
+                elegante: 16,
+                romantico: 6,
+                sexy: 2,
+                dramatico: 1,
+                criativo: 1,
+            };
+
+            base.userProfile = {
+                userName: (sessionData as any).userName || 'Visitante',
+                resultStyle: primaryStyleId || (sessionData as any).resultStyle || 'natural',
+                secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : ((sessionData as any).secondaryStyles || []),
+                scores: Object.entries(typedScores).map(([name, score]) => ({ name, score: Number(score) })),
+            };
+
+            if (step.type === 'offer') {
+                base.offerKey = (sessionData as any).offerKey || 'default';
+            }
+        }
+
+        return base;
+    }, [
+        sessionData,
+        stepKey,
+        isEditMode,
+        isPreviewMode,
+        productionParityInEdit,
+        onUpdateSessionData,
+        step.type,
+        getPreviewAnswers,
+    ]);
+
+// ❌ DEPRECATED - Código antigo comentado para referência
+/* const renderStepComponent = () => {
+    switch (step.type) {
+        case 'intro': {
+            return (
+                <ModularIntroStep
+                    data={stepData as any}
+                    blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
+                    isEditable={isEditMode}
+                    selectedBlockId={(selectedBlockId || undefined) as any}
+                    onBlockSelect={handleSelectBlock}
+                    onEdit={handleEdit}
+                    onBlocksReorder={handleBlocksReorder}
+                    onOpenProperties={handleOpenProperties}
+                    onNameSubmit={(name: string) => {
+                        if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                            onUpdateSessionData?.('userName', name);
+                        }
+                    }}
+                />
+            );
+        }
+        case 'question': {
+            return (
+                <ModularQuestionStep
+                    data={stepData as any}
+                    blocks={((editorState.stepBlocks as any)[stepKey] && (editorState.stepBlocks as any)[stepKey].length > 0)
+                        ? (editorState.stepBlocks as any)[stepKey]
+                        : ((step as any)?.blocks || [])}
+                    isEditable={isEditMode}
+                    selectedBlockId={(selectedBlockId || undefined) as any}
+                    onBlockSelect={handleSelectBlock}
+                    currentAnswers={(sessionData as any)[`answers_${stepKey}`] || []}
+                    enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
+                    onAnswersChange={(answers: string[]) => {
+                        if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                            onUpdateSessionData?.(`answers_${stepKey}`, answers);
+                        }
+                    }}
+                    onEdit={handleEdit}
+                    onBlocksReorder={handleBlocksReorder}
+                    onOpenProperties={handleOpenProperties}
+                />
+            );
+        }
+        case 'strategic-question': {
+            return (
+                <ModularStrategicQuestionStep
+                    data={stepData as any}
+                    blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
+                    isEditable={isEditMode}
+                    selectedBlockId={(selectedBlockId || undefined) as any}
+                    onBlockSelect={handleSelectBlock}
+                    currentAnswer={(sessionData as any)[`answer_${stepKey}`] || ''}
+                    onAnswerChange={(answer: string) => {
+                        if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                            onUpdateSessionData?.(`answer_${stepKey}`, answer);
+                        }
+                    }}
+                    onEdit={handleEdit}
+                    onBlocksReorder={handleBlocksReorder}
+                    onOpenProperties={handleOpenProperties}
+                />
+            );
+        }
+        case 'transition':
+        case 'transition-result': {
+            return (
+                <ModularTransitionStep
+                    data={{ ...stepData, type: step.type } as any}
+                    blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
+                    isEditable={isEditMode}
+                    enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
+                    selectedBlockId={(selectedBlockId || undefined) as any}
+                    onBlockSelect={handleSelectBlock}
+                    onOpenProperties={handleOpenProperties}
+                    onComplete={() => {
+                        // Mantém comportamento existente de auto-avançar quando aplicável
+                        try { (editor as any)?.actions?.nextStep?.(); } catch { }
+                    }}
+                    onBlocksReorder={handleBlocksReorder}
+                />
+            );
+        }
+        case 'result': {
+            const answers = getPreviewAnswers();
+            const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers });
+            const hasAnyScore = !!scores && Object.values(scores as any).some((v: any) => Number(v) > 0);
+            const typedScores: QuizScores = hasAnyScore ? {
+                natural: (scores as any).natural || 0,
+                classico: (scores as any).classico || 0,
+                contemporaneo: (scores as any).contemporaneo || 0,
+                elegante: (scores as any).elegante || 0,
+                romantico: (scores as any).romantico || 0,
+                sexy: (scores as any).sexy || 0,
+                dramatico: (scores as any).dramatico || 0,
+                criativo: (scores as any).criativo || 0,
+            } : {
+                natural: 34,
+                classico: 22,
+                contemporaneo: 18,
+                elegante: 16,
+                romantico: 6,
+                sexy: 2,
+                dramatico: 1,
+                criativo: 1,
+            };
+
+            return (
+                <ModularResultStep
+                    data={stepData as any}
+                    blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
+                    isEditable={isEditMode}
+                    onBlocksReorder={handleBlocksReorder}
+                    userProfile={{
+                        userName: (sessionData as any).userName || 'Visitante',
+                        resultStyle: (primaryStyleId || (sessionData as any).resultStyle || (isEditMode ? 'natural' : '')) || 'natural',
+                        secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : ((sessionData as any).secondaryStyles || (isEditMode ? ['classico', 'contemporaneo'] : [])),
+                        scores: Object.entries(typedScores).map(([name, score]) => ({ name, score: Number(score) })),
+                    }}
+                    selectedBlockId={(selectedBlockId || undefined) as any}
+                    onBlockSelect={handleSelectBlock}
+                    onOpenProperties={handleOpenProperties}
+                />
+            );
+        }
+        case 'offer': {
+            const answers = getPreviewAnswers();
+            const { primaryStyleId, secondaryStyleIds } = computeResult({ answers });
+
+            return (
+                <ModularOfferStep
+                    data={stepData as any}
+                    blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
+                    isEditable={isEditMode}
+                    userProfile={{
+                        userName: (sessionData as any).userName || 'Visitante',
+                        resultStyle: primaryStyleId || (sessionData as any).resultStyle || 'natural',
+                        secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : ((sessionData as any).secondaryStyles || []),
+                    }}
+                    offerKey={(sessionData as any).offerKey || 'default'}
+                    onEdit={handleEdit}
+                    onBlocksReorder={handleBlocksReorder}
+                    selectedBlockId={(selectedBlockId || undefined) as any}
+                    onBlockSelect={handleSelectBlock}
+                    onOpenProperties={handleOpenProperties}
+                />
+            );
+        }
+        default:
+            return (
+                <div className="p-8 text-center bg-gray-100 rounded-lg">
+                    <p className="text-gray-600">
+                        Tipo de step desconhecido: <code>{(step as any).type}</code>
+                    </p>
+                </div>
+            );
+    }
+};
+
+return (
+    <Suspense fallback={<StepLoadingFallback />}>
+        {renderStepComponent()}
+    </Suspense>
+);
 });
 
 UnifiedStepContent.displayName = 'UnifiedStepContent';
