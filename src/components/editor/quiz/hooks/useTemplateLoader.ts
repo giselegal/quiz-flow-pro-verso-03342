@@ -176,24 +176,39 @@ async function loadFromMasterJSON(funnelId?: string): Promise<EditableQuizStep[]
             const stepId = `step-${String(i + 1).padStart(2, '0')}`;
             const stepConf = master?.steps?.[stepId];
             
-            // Hidratar sections com QUIZ_STEPS
-            const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
-            
-            // Tentar template modular primeiro
+            // ✅ CORREÇÃO: Usar blocos diretamente do master JSON
             let blocks: any[] = [];
-            try {
-                const staticBlocks = loadStepTemplate(stepId);
-                if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
-                    blocks = blocksToBlockComponents(staticBlocks as any);
+            
+            // 1. Primeiro: tentar blocos do master JSON (fonte primária)
+            if (stepConf?.blocks && Array.isArray(stepConf.blocks) && stepConf.blocks.length > 0) {
+                blocks = stepConf.blocks.map((block: any, idx: number) => ({
+                    id: block.id || `${stepId}-block-${idx}`,
+                    type: block.type,
+                    order: block.order ?? idx,
+                    properties: block.properties || {},
+                    content: block.content || {},
+                    parentId: block.parentId || null,
+                }));
+                appLogger.debug(`✅ Blocos do master JSON: ${stepId} (${blocks.length} blocos)`);
+            } else {
+                // 2. Fallback: tentar template modular
+                try {
+                    const staticBlocks = loadStepTemplate(stepId);
+                    if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
+                        blocks = blocksToBlockComponents(staticBlocks as any);
+                        appLogger.debug(`✅ Template modular: ${stepId} (${blocks.length} blocos)`);
+                    }
+                } catch {
+                    // 3. Último fallback: hidratar sections (legado)
+                    const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
+                    blocks = convertTemplateToBlocks({ [stepId]: { sections } });
+                    appLogger.debug(`⚠️ Fallback sections: ${stepId} (${blocks.length} blocos)`);
                 }
-            } catch {
-                // Fallback: converter sections
-                blocks = convertTemplateToBlocks({ [stepId]: { sections } });
             }
 
             steps.push({
                 id: stepId,
-                type: getStepType(i),
+                type: stepConf?.type || getStepType(i),
                 order: i + 1,
                 blocks,
                 nextStep: i < 20 ? `step-${String(i + 2).padStart(2, '0')}` : undefined,
