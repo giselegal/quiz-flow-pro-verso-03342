@@ -30,9 +30,9 @@ import blockAliasMap from '@/config/block-aliases.json';
 export type TemplateSource =
   | 'normalized-json'
   | 'modular-json'
-  | 'individual-json'
-  | 'master-hydrated'
-  | 'ts-template';
+  | 'individual-json'      // JSON público em /templates/blocks/step-XX.json
+  | 'master-json'          // Carregado de quiz21-complete.json
+  | 'ts-template';         // Fallback TypeScript
 
 export interface LoadedTemplate {
   blocks: Block[];
@@ -587,7 +587,7 @@ export class TemplateLoader {
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
         console.log(`📦 Master JSON (blocks) → ${normalizedKey}: ${blocks.length} blocos`);
-        return { blocks, source: 'master-hydrated' };
+        return { blocks, source: 'master-json' };
       }
 
       // ⚠️ FALLBACK: Se step tem sections[] (formato antigo), converter
@@ -604,7 +604,7 @@ export class TemplateLoader {
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
         console.log(`📦 Master JSON (sections) → ${normalizedKey}: ${blocks.length} blocos`);
-        return { blocks, source: 'master-hydrated' };
+        return { blocks, source: 'master-json' };
       }
 
       console.warn(`⚠️ Step ${normalizedKey} não tem blocks[] nem sections[]`);

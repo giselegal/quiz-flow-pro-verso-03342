@@ -8,8 +8,8 @@ const SourceBadge: React.FC<{ source?: string }> = ({ source }) => {
     switch (source) {
         case 'modular-json':
             return <Badge className="bg-emerald-600">modular-json</Badge>;
-        case 'master-hydrated':
-            return <Badge className="bg-indigo-600">master-hydrated</Badge>;
+        case 'master-json':
+            return <Badge className="bg-indigo-600">master-json</Badge>;
         case 'ts-template':
             return <Badge className="bg-gray-600">ts-template</Badge>;
         default:

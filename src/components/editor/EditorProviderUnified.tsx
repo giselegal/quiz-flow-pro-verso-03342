@@ -26,7 +26,7 @@ import { loadStepTemplate, hasModularTemplate } from '@/utils/loadStepTemplates'
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
-import { TemplateLoader } from '@/services/editor/TemplateLoader';
+import { TemplateLoader, type TemplateSource } from '@/services/editor/TemplateLoader';
 import EditorStateManager from '@/services/editor/EditorStateManager';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import type { UnifiedStage, UnifiedFunnel } from '@/services/UnifiedCRUDService';
@@ -45,7 +45,7 @@ export interface EditorState {
     /** Blocos organizados por step */
     stepBlocks: Record<string, Block[]>;
     /** Origem dos blocos por step (diagnóstico) */
-    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-hydrated' | 'ts-template'>;
+    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-json' | 'ts-template'>;
     /** Step atual selecionado */
     currentStep: number;
     /** Bloco selecionado para edição */
@@ -367,19 +367,30 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             const blocks = result.data;
 
             if (blocks && blocks.length > 0) {
+                // ✅ CORREÇÃO: Obter source real do loader ao invés de forçar 'master-hydrated'
+                let actualSource: TemplateSource = 'individual-json'; // default
+                try {
+                    const loaderResult = await (stateManager as any).loader?.loadStep(normalizedKey);
+                    if (loaderResult?.source) {
+                        actualSource = loaderResult.source;
+                    }
+                } catch {
+                    // fallback ao default
+                }
+
                 setState(prev => ({
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
-                        [normalizedKey]: blocks as Block[], // Cast para tipo compatível
+                        [normalizedKey]: blocks as Block[],
                     },
                     stepSources: {
                         ...(prev.stepSources || {}),
-                        [normalizedKey]: 'master-hydrated' as const,
+                        [normalizedKey]: actualSource,
                     },
                 }));
 
-                appLogger.debug(`✅ Step ${normalizedKey} carregado via templateService: ${blocks.length} blocos`);
+                appLogger.debug(`✅ Step ${normalizedKey} carregado via templateService: ${blocks.length} blocos (source: ${actualSource})`);
             } else {
                 appLogger.warn(`⚠️ Step ${normalizedKey} não retornou blocos do templateService`);
             }
@@ -496,7 +507,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const loadDefaultTemplate = useCallback(async () => {
         appLogger.debug('🎨 Loading default template via TemplateLoader/Registry');
         const newStepBlocks: Record<string, Block[]> = {};
-        const newStepSources: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'> = {};
+        const newStepSources: Record<string, 'modular-json' | 'master-json' | 'ts-template'> = {};
         let totalBlocks = 0;
 
         // 20 etapas step-01..step-20
