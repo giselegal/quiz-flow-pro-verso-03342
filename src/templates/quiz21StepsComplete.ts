@@ -11,7 +11,7 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-29T02:18:33.416Z
+ * Gerado em: 2025-10-29T12:04:34.934Z
  * Versão: 3.0.0
  */
 
@@ -100,8 +100,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "content": {
         "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
         "alt": "Logo Gisele Galvão",
-        "width": "132",
-        "height": "55"
+        "width": 132,
+        "height": 55
       }
     },
     {
@@ -125,8 +125,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "content": {
         "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
         "alt": "Descubra seu estilo predominante",
-        "width": "300",
-        "height": "204"
+        "width": 300,
+        "height": 204
       }
     },
     {
@@ -249,6 +249,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "maxSelections": 3,
         "showImages": true
       }
+    },
+    {
+      "id": "navigation-step-02",
+      "type": "question-navigation",
+      "order": 3,
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      }
     }
   ],
 
@@ -350,15 +367,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-03-cta-next",
-      "type": "button",
+      "id": "navigation-step-03",
+      "type": "question-navigation",
       "order": 3,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -490,15 +512,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-04-cta-next",
-      "type": "button",
+      "id": "navigation-step-04",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -616,15 +643,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-05-cta-next",
-      "type": "button",
+      "id": "navigation-step-05",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -750,15 +782,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-06-cta-next",
-      "type": "button",
+      "id": "navigation-step-06",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -884,15 +921,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-07-cta-next",
-      "type": "button",
+      "id": "navigation-step-07",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1018,15 +1060,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-08-cta-next",
-      "type": "button",
+      "id": "navigation-step-08",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1152,15 +1199,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-09-cta-next",
-      "type": "button",
+      "id": "navigation-step-09",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1286,15 +1338,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-10-cta-next",
-      "type": "button",
+      "id": "navigation-step-10",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1412,15 +1469,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-11-cta-next",
-      "type": "button",
+      "id": "navigation-step-11",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1564,15 +1626,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-13-cta-next",
-      "type": "button",
+      "id": "navigation-step-13",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1668,15 +1735,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-14-cta-next",
-      "type": "button",
+      "id": "navigation-step-14",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1772,15 +1844,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-15-cta-next",
-      "type": "button",
+      "id": "navigation-step-15",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1876,15 +1953,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-16-cta-next",
-      "type": "button",
+      "id": "navigation-step-16",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -1980,15 +2062,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-17-cta-next",
-      "type": "button",
+      "id": "navigation-step-17",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
@@ -2084,15 +2171,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       }
     },
     {
-      "id": "step-18-cta-next",
-      "type": "button",
+      "id": "navigation-step-18",
+      "type": "question-navigation",
       "order": 4,
-      "properties": {},
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],

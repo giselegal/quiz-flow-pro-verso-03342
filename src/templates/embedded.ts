@@ -1,9 +1,9 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-10-29T02:18:33.418Z
+ * Gerado automaticamente em: 2025-10-29T12:04:34.936Z
  * Total de steps: 21
- * Total de blocos: 101
+ * Total de blocos: 102
  * 
  * ⚠️ NÃO EDITAR MANUALMENTE - executar: npm run build:templates
  */
@@ -187,6 +187,24 @@ const embedded: Record<string, Block[]> = {
           "showImages": true
         },
         "parentId": null
+      },
+      {
+        "id": "navigation-step-02",
+        "type": "question-navigation",
+        "order": 3,
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
+        "content": {
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
+        },
+        "parentId": null
       }
     ],
     "step-03": [
@@ -290,15 +308,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-03-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-03",
+        "type": "question-navigation",
         "order": 3,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -434,15 +457,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-04-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-04",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -564,15 +592,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-05-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-05",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -702,15 +735,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-06-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-06",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -840,15 +878,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-07-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-07",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -978,15 +1021,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-08-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-08",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1116,15 +1164,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-09-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-09",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1254,15 +1307,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-10-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-10",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1384,15 +1442,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-11-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-11",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1542,15 +1605,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-13-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-13",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Continuar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Continuar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1650,15 +1718,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-14-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-14",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Continuar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Continuar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1758,15 +1831,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-15-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-15",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Continuar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Continuar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1866,15 +1944,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-16-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-16",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Continuar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Continuar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -1974,15 +2057,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-17-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-17",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Continuar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Continuar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
@@ -2082,15 +2170,20 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
-        "id": "step-18-cta-next",
-        "type": "CTAButton",
+        "id": "navigation-step-18",
+        "type": "question-navigation",
         "order": 4,
-        "properties": {},
+        "properties": {
+          "showBack": true,
+          "showNext": true,
+          "type": "fade",
+          "duration": 300
+        },
         "content": {
-          "label": "Continuar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Continuar",
+          "backVariant": "outline",
+          "nextVariant": "default"
         },
         "parentId": null
       }
