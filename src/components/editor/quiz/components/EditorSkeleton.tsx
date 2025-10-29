@@ -19,7 +19,7 @@ export const EditorSkeleton: React.FC = () => {
                     <Skeleton key={i} className="h-10 w-full" />
                 ))}
             </div>
-            
+
             {/* Coluna 2: Component Library */}
             <div className="w-80 border-r bg-white p-4 space-y-2">
                 <Skeleton className="h-8 w-full mb-4" />
@@ -27,7 +27,7 @@ export const EditorSkeleton: React.FC = () => {
                     <Skeleton key={i} className="h-12 w-full" />
                 ))}
             </div>
-            
+
             {/* Coluna 3: Canvas */}
             <div className="flex-1 p-6 space-y-4">
                 <Skeleton className="h-12 w-full" />
@@ -37,7 +37,7 @@ export const EditorSkeleton: React.FC = () => {
                     ))}
                 </div>
             </div>
-            
+
             {/* Coluna 4: Properties Panel */}
             <div className="w-96 border-l bg-white p-4 space-y-4">
                 <Skeleton className="h-8 w-full mb-4" />
