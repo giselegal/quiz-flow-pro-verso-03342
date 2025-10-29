@@ -169,11 +169,38 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
             case 'navigation':
                 return <QuestionNavigationBlock block={block} {...rest} contextData={rest.contextData} />;
             // ===== TRANSITION (Steps 12, 19) =====
+            case 'transition-hero':
+                // Hero image/section da transição
+                return <ImageInlineAtomic block={block} {...rest} />;
             case 'transition-title':
                 return <TransitionTitleBlock block={block as any} {...rest} />;
             case 'transition-text':
                 return <TransitionTextBlock block={block as any} {...rest} />;
             // ===== RESULT (Step 20) =====
+            case 'result-main':
+                // Título principal do resultado
+                return <TextInlineAtomic block={block} {...rest} />;
+            case 'result-congrats':
+                // Mensagem de congratulações
+                return <TextInlineAtomic block={block} {...rest} />;
+            case 'result-image':
+                // Imagem do estilo predominante
+                return <ImageInlineAtomic block={block} {...rest} />;
+            case 'result-description':
+                // Descrição do estilo
+                return <TextInlineAtomic block={block} {...rest} />;
+            case 'result-progress-bars':
+                // Barras de progresso dos estilos
+                return <GenericBlock block={block} {...rest} />;
+            case 'result-secondary-styles':
+                // Estilos secundários
+                return <GenericBlock block={block} {...rest} />;
+            case 'result-share':
+                // Botões de compartilhamento social
+                return <GenericBlock block={block} {...rest} />;
+            case 'result-cta':
+                // CTA do resultado
+                return <CTAButtonAtomic block={block} {...rest} />;
             case 'HeroSection':
                 // Step 20: Hero do resultado → usar GenericBlock temporariamente
                 return <GenericBlock block={block} {...rest} />;
