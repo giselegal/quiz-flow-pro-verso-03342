@@ -1,0 +1,481 @@
+[
+  {
+    "stepId": "step-01",
+    "component": "ModularIntroStep",
+    "componentType": "intro",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "intro-logo",
+      "intro-title",
+      "intro-image",
+      "intro-description",
+      "intro-form"
+    ],
+    "unsupported": [],
+    "missing": [
+      "intro-logo-header",
+      "quiz-intro-header"
+    ],
+    "status": "✅"
+  },
+  {
+    "stepId": "step-02",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 4,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "✅"
+  },
+  {
+    "stepId": "step-03",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 4,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "✅"
+  },
+  {
+    "stepId": "step-04",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-05",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-06",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-07",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-08",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-09",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-10",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-11",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-12",
+    "component": "ModularTransitionStep",
+    "componentType": "transition",
+    "blocksCount": 3,
+    "uniqueTypes": [
+      "transition-hero",
+      "transition-text",
+      "CTAButton"
+    ],
+    "unsupported": [
+      "transition-hero",
+      "CTAButton"
+    ],
+    "missing": [
+      "transition-title",
+      "transition-loader",
+      "transition-progress",
+      "transition-message",
+      "text-inline",
+      "cta-inline"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-13",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-14",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-15",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-16",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-17",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-18",
+    "component": "ModularQuestionStep",
+    "componentType": "question",
+    "blocksCount": 5,
+    "uniqueTypes": [
+      "question-progress",
+      "question-title",
+      "question-hero",
+      "options-grid",
+      "question-navigation"
+    ],
+    "unsupported": [
+      "question-hero"
+    ],
+    "missing": [
+      "question-number",
+      "question-text",
+      "quiz-options",
+      "quiz-navigation"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-19",
+    "component": "ModularTransitionStep",
+    "componentType": "transition",
+    "blocksCount": 3,
+    "uniqueTypes": [
+      "transition-hero",
+      "transition-text",
+      "CTAButton"
+    ],
+    "unsupported": [
+      "transition-hero",
+      "CTAButton"
+    ],
+    "missing": [
+      "transition-title",
+      "transition-loader",
+      "transition-progress",
+      "transition-message",
+      "text-inline",
+      "cta-inline"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-20",
+    "component": "ModularResultStep",
+    "componentType": "result",
+    "blocksCount": 11,
+    "uniqueTypes": [
+      "result-congrats",
+      "result-main",
+      "result-progress-bars",
+      "result-secondary-styles",
+      "result-image",
+      "result-description",
+      "result-cta",
+      "result-share",
+      "text-inline"
+    ],
+    "unsupported": [
+      "text-inline"
+    ],
+    "missing": [
+      "result-header",
+      "result-style",
+      "result-characteristics",
+      "result-secondaryList",
+      "result-cta-primary",
+      "result-cta-secondary"
+    ],
+    "status": "⚠️"
+  },
+  {
+    "stepId": "step-21",
+    "component": "ModularOfferStep",
+    "componentType": "offer",
+    "blocksCount": 2,
+    "uniqueTypes": [
+      "offer-hero",
+      "pricing"
+    ],
+    "unsupported": [],
+    "missing": [
+      "offer-header",
+      "offer-description",
+      "benefits",
+      "guarantee",
+      "urgency-timer",
+      "urgency-timer-inline",
+      "offer-cta"
+    ],
+    "status": "✅"
+  }
+]
