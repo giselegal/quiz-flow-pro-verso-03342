@@ -1716,6 +1716,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const renderBlockPreview = (block: EditorBlockComponent, all: EditorBlockComponent[]) => {
         const { type, content, properties, id } = block;
         const children = getChildren(all, id);
+
+        // DEBUG: Log todos os blocos sendo renderizados
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`🎨 [renderBlockPreview] Renderizando bloco:`, { id, type });
+        }
+
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
         const expanded = type === 'container' ? (expandedContainers ? expandedContainers.has(id) : false) : false; // guarda defensiva
         // Para containers, fingerprint hierárquico leve dos filhos (id, ordem, props, content)
@@ -1833,6 +1839,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             // Suportar tanto content.src quanto content.imageUrl (intro-image usa imageUrl)
             const imageSrc = content.src || content.imageUrl || properties?.src || INLINE_IMG_PLACEHOLDER;
             const objectFit = properties?.objectFit || 'contain'; // intro-image usa 'contain'
+
+            // DEBUG: Log para verificar renderização
+            if (process.env.NODE_ENV === 'development' && type === 'intro-image') {
+                console.log('🖼️ [renderBlockPreview] Renderizando intro-image:', {
+                    id,
+                    imageSrc,
+                    width,
+                    height,
+                    objectFit,
+                    contentSrc: content.src,
+                    contentImageUrl: content.imageUrl,
+                });
+            }
+
             node = (
                 <div className={cn('w-full flex', justify)}>
                     {/* img tag permitido: projeto Vite/React, regra de Next não se aplica */}
