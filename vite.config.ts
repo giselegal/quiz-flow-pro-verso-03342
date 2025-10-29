@@ -63,9 +63,9 @@ export default defineConfig(({ mode }) => {
       },
       hmr: {
         overlay: false,
-        // HMR via porta do Vite (5173). O acesso legacy via 8080 é apenas um redirect HTTP.
-        clientPort: 5173,
-        port: 5173,
+        // HMR habilitado via mesma porta do servidor
+        clientPort: 8080,
+        port: 8080,
       },
     },
     preview: {

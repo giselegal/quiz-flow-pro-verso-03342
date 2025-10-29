@@ -36,7 +36,7 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 // 🚀 EDITOR
-const QuizModularProductionEditor = lazy(() => import('./config/editorRoutes.config'));
+import QuizModularProductionEditor from './config/editorRoutes.config';
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));

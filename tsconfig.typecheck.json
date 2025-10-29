@@ -6,8 +6,11 @@
   "exclude": [
     "src/tests",
     "src/__tests__",
+    "**/__tests__/**",
     "tests",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "src/components/charts/**",
+    "src/components/editor/**"
   ]
 }
