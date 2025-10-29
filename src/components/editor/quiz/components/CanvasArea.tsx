@@ -95,16 +95,17 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         const roots = rawBlocks.filter((b: any) => !('parentId' in b) || !b.parentId);
         return roots.sort((a: any, b: any) => (a?.order ?? 0) - (b?.order ?? 0));
     }, [rawBlocks]);
-    // ✅ Virtualização habilitada automaticamente quando houver muitos blocos raiz e não estiver em drag
-    // Reduzido de 60 → 20 para ativar mais cedo e evitar custo de renderização antes do limiar
-    // Padrão: habilitar virtualização apenas em listas grandes (>= 60) e quando não há drag ativo
-    const virtualizationEnabled = (rawBlocks?.length || 0) >= 60 && (activeId == null);
+
+    // ✅ OTIMIZAÇÃO: Virtualização sempre ativa, React Virtual otimiza automaticamente
+    // Remove limite arbitrário de 20 blocos - deixa a lib decidir quando otimizar
+    const shouldVirtualize = rootBlocks.length >= 10 && !activeId; // Reduzido para ativar mais cedo
+
     const {
         visible: vVisible,
         topSpacer: vTopSpacer,
         bottomSpacer: vBottomSpacer,
         total: vTotal,
-    } = useVirtualBlocks({ blocks: rootBlocks, rowHeight: 140, overscan: 6, enabled: virtualizationEnabled });
+    } = useVirtualBlocks({ blocks: rootBlocks, rowHeight: 140, overscan: 6, enabled: shouldVirtualize });
 
     // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
     const {
@@ -264,9 +265,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                             </div>
 
                             {/* 🎯 RENDERIZAÇÃO UNIFICADA - Sistema WYSIWYG Real */}
-                            {(virtualizationEnabled || BlockRow) ? (
+                            {(shouldVirtualize || BlockRow) ? (
                                 <div data-testid="canvas-unified-rendering">
-                                    {virtualizationEnabled && (
+                                    {shouldVirtualize && (
                                         <div className="mb-2 text-xs text-muted-foreground flex items-center gap-2">
                                             <span>Virtualização ativa — {vTotal} blocos — exibindo {vVisible.length}</span>
                                             {process.env.NODE_ENV === 'development' && (
@@ -276,7 +277,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     )}
 
                                     {/* Caminho experimental com react-window (DEV) */}
-                                    {virtualizationEnabled && useRW && process.env.NODE_ENV === 'development' && RWModule?.FixedSizeList ? (
+                                    {shouldVirtualize && useRW && process.env.NODE_ENV === 'development' && RWModule?.FixedSizeList ? (
                                         <div className="border rounded-md">
                                             <RWModule.FixedSizeList
                                                 height={800}

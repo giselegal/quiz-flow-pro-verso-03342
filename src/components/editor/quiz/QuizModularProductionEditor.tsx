@@ -584,8 +584,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Vista unificada de steps: quando Provider está presente, ler blocos diretamente do Provider (fonte única)
     const providerStepsMap = editorCtx?.state?.stepBlocks as Record<string, any[]> | undefined;
+
+    // ✅ OTIMIZAÇÃO: Selector granular - só atualiza o step atual, não todos os steps
+    const currentStepBlocks = useMemo(() => {
+        if (!providerStepsMap || !effectiveSelectedStepId) return [];
+        return providerStepsMap[effectiveSelectedStepId] || [];
+    }, [providerStepsMap, effectiveSelectedStepId]);
+
     const stepsView = useMemo(() => {
         if (!providerStepsMap) return steps;
+
+        // Adapter rápido para blocos
         const adaptBlocks = (arr: any[]) => (arr || []).map(b => ({
             id: b.id,
             type: b.type,
@@ -594,34 +603,50 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             order: b.order || 0,
             parentId: b.parentId || null,
         }));
+
+        // Se não há steps locais, construir do provider
         if (!steps || steps.length === 0) {
             const keys = Object.keys(providerStepsMap).sort();
             return keys.map((key, idx) => ({
                 id: key,
-                type: 'question',
+                type: 'question' as const,
                 order: idx + 1,
                 blocks: adaptBlocks(providerStepsMap[key]),
             })) as EditableQuizStep[];
         }
-        return steps.map(s => ({
-            ...s,
-            blocks: adaptBlocks(providerStepsMap[s.id] || s.blocks || []),
-        }));
-    }, [providerStepsMap, steps]);
+
+        // ✅ OTIMIZAÇÃO: Só adapta blocos para o step selecionado, mantém os outros inalterados
+        return steps.map(s => {
+            if (s.id === effectiveSelectedStepId && providerStepsMap[s.id]) {
+                return {
+                    ...s,
+                    blocks: adaptBlocks(providerStepsMap[s.id]),
+                };
+            }
+            return s;
+        });
+    }, [providerStepsMap, steps, effectiveSelectedStepId]);
     const navAnalysis = useMemo(() => buildNavigationMap(stepsView.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [stepsView]);
 
-    // Componente de cabeçalho fixo
-    const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
+    // ✅ Componente de cabeçalho fixo - MEMOIZADO para evitar re-renders
+    const FixedProgressHeader = React.memo<{ config: any; steps: EditableQuizStep[]; currentStepId: string }>(({ config, steps, currentStepId }) => {
         if (!config.showLogo && !config.progressEnabled) return null;
-        const currentIndex = steps.findIndex(s => s.id === currentStepId);
+
+        const currentIndex = useMemo(() => steps.findIndex(s => s.id === currentStepId), [steps, currentStepId]);
         // Filtrar etapas que contam (exclui result e offer)
-        const counted = steps.filter(s => !['result', 'offer'].includes(s.type));
-        const idxCounted = counted.findIndex(s => s.id === currentStepId);
-        let percent = config.manualPercent;
-        if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
-            percent = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
-        }
+        const counted = useMemo(() => steps.filter(s => !['result', 'offer'].includes(s.type)), [steps]);
+        const idxCounted = useMemo(() => counted.findIndex(s => s.id === currentStepId), [counted, currentStepId]);
+
+        const percent = useMemo(() => {
+            let p = config.manualPercent;
+            if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
+                p = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
+            }
+            return p;
+        }, [config.manualPercent, config.progressEnabled, config.autoProgress, idxCounted, counted.length]);
+
         const justify = config.align === 'center' ? 'justify-center' : config.align === 'right' ? 'justify-end' : 'justify-between';
+
         return (
             <div className={cn('w-full flex items-center gap-4', justify)}>
                 <div className={cn('flex items-center gap-4', config.align === 'center' && 'justify-center', config.align === 'right' && 'justify-end')}>
@@ -647,7 +672,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 )}
             </div>
         );
-    };
+    }, (prev, next) =>
+        prev.currentStepId === next.currentStepId &&
+        prev.steps.length === next.steps.length &&
+        prev.config.progressEnabled === next.config.progressEnabled &&
+        prev.config.showLogo === next.config.showLogo
+    );
 
     // Validação em tempo real (fase inicial - regras básicas)
     const { byStep, byBlock } = useValidation(stepsView || steps);
