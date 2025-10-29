@@ -39,14 +39,14 @@ export interface UseTemplateLoaderOptions {
 
 export function useTemplateLoader(options: UseTemplateLoaderOptions) {
     const { templateId, funnelId, onSuccess, onError } = options;
-    
+
     const [state, setState] = useState<TemplateLoaderState>({
         loading: true,
         steps: null,
         error: null,
         source: null,
     });
-    
+
     const isMountedRef = useRef(true);
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -102,7 +102,7 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions) {
             } catch (error) {
                 const err = error instanceof Error ? error : new Error(String(error));
                 appLogger.error('❌ useTemplateLoader: Erro ao carregar template', err);
-                
+
                 if (!isMountedRef.current) return;
                 setState({ loading: false, steps: null, error: err, source: null });
                 onError?.(err);
@@ -131,10 +131,10 @@ async function loadFromFunnel(funnelId: string): Promise<EditableQuizStep[] | nu
             appLogger.debug('✅ Funnel carregado do cache:', funnelId);
             return cached as EditableQuizStep[];
         }
-        
+
         appLogger.debug('📦 Carregando funnel:', funnelId);
         const draft = await quizEditorBridge.loadFunnelForEdit(funnelId);
-        
+
         if (!draft || !Array.isArray(draft.steps) || draft.steps.length === 0) {
             appLogger.warn('⚠️ Funnel vazio ou inválido:', funnelId);
             return null;
@@ -147,7 +147,7 @@ async function loadFromFunnel(funnelId: string): Promise<EditableQuizStep[] | nu
 
         // ✅ Salvar no cache
         cache.set('funnels', funnelId, validSteps);
-        
+
         appLogger.debug('✅ Funnel carregado:', { steps: validSteps.length });
         return validSteps;
     } catch (error) {
@@ -163,7 +163,7 @@ async function loadFromMasterJSON(funnelId?: string): Promise<EditableQuizStep[]
     try {
         appLogger.debug('📦 Carregando master JSON...');
         const resp = await fetch('/templates/quiz21-complete.json');
-        
+
         if (!resp.ok) {
             appLogger.warn('⚠️ Master JSON não encontrado:', resp.status);
             return null;
@@ -175,10 +175,16 @@ async function loadFromMasterJSON(funnelId?: string): Promise<EditableQuizStep[]
         for (let i = 0; i < 21; i++) {
             const stepId = `step-${String(i + 1).padStart(2, '0')}`;
             const stepConf = master?.steps?.[stepId];
-            
+
+            // 🔍 DEBUG: Verificar o que existe em stepConf
+            console.log(`🔍 [${stepId}] stepConf exists:`, !!stepConf);
+            console.log(`🔍 [${stepId}] stepConf.blocks exists:`, !!stepConf?.blocks);
+            console.log(`🔍 [${stepId}] stepConf.blocks is Array:`, Array.isArray(stepConf?.blocks));
+            console.log(`🔍 [${stepId}] stepConf.blocks length:`, stepConf?.blocks?.length);
+
             // ✅ CORREÇÃO: Usar blocos diretamente do master JSON
             let blocks: any[] = [];
-            
+
             // 1. Primeiro: tentar blocos do master JSON (fonte primária)
             if (stepConf?.blocks && Array.isArray(stepConf.blocks) && stepConf.blocks.length > 0) {
                 blocks = stepConf.blocks.map((block: any, idx: number) => ({
@@ -189,20 +195,25 @@ async function loadFromMasterJSON(funnelId?: string): Promise<EditableQuizStep[]
                     content: block.content || {},
                     parentId: block.parentId || null,
                 }));
-                appLogger.debug(`✅ Blocos do master JSON: ${stepId} (${blocks.length} blocos)`);
+                console.log(`✅ [${stepId}] Blocos do master JSON: ${blocks.length} blocos`);
             } else {
+                console.warn(`⚠️ [${stepId}] SEM blocos no master JSON, tentando fallback...`);
+                console.warn(`⚠️ [${stepId}] SEM blocos no master JSON, tentando fallback...`);
                 // 2. Fallback: tentar template modular
                 try {
                     const staticBlocks = loadStepTemplate(stepId);
+                    console.log(`🔍 [${stepId}] loadStepTemplate retornou:`, staticBlocks?.length || 0, 'blocos');
                     if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
                         blocks = blocksToBlockComponents(staticBlocks as any);
-                        appLogger.debug(`✅ Template modular: ${stepId} (${blocks.length} blocos)`);
+                        console.log(`✅ [${stepId}] Template modular: ${blocks.length} blocos`);
                     }
-                } catch {
+                } catch (err) {
+                    console.warn(`⚠️ [${stepId}] loadStepTemplate falhou:`, err);
                     // 3. Último fallback: hidratar sections (legado)
                     const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
+                    console.log(`🔍 [${stepId}] sections hidratadas:`, sections?.length || 0);
                     blocks = convertTemplateToBlocks({ [stepId]: { sections } });
-                    appLogger.debug(`⚠️ Fallback sections: ${stepId} (${blocks.length} blocos)`);
+                    console.log(`⚠️ [${stepId}] Fallback sections: ${blocks.length} blocos`);
                 }
             }
 
@@ -229,7 +240,7 @@ async function loadFromMasterJSON(funnelId?: string): Promise<EditableQuizStep[]
  */
 function loadFromTSTemplate(funnelId?: string): EditableQuizStep[] {
     appLogger.debug('📦 Usando fallback TypeScript template');
-    
+
     const quizTemplate = getQuiz21StepsTemplate();
     const steps: EditableQuizStep[] = [];
 
