@@ -1761,10 +1761,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         };
         let node: React.ReactNode = null;
         // Heading
-        if (type === 'heading') {
+        if (type === 'heading' || type === 'intro-title') {
             const level = properties?.level ?? 2;
             const Tag = (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'][Math.min(Math.max(level - 1, 0), 5)]) as any;
-            const rawText = content.text || 'Título';
+            // intro-title pode ter content.title ou content.titleHtml
+            const rawText = content.titleHtml || content.title || content.text || 'Título';
             const allowHtml = properties?.allowHtml && looksLikeHtml(rawText);
             let inner: React.ReactNode;
             if (allowHtml) {
@@ -1787,28 +1788,60 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
-        // Text
-        if (type === 'text') {
-            node = <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{replacePlaceholders(content.text || properties?.text || 'Texto', placeholderContext)}</p>;
+        // Text (suporte a 'text' e 'intro-description')
+        if (type === 'text' || type === 'intro-description') {
+            const textContent = content.text || properties?.text || 'Texto';
+            const allowHtml = type === 'intro-description' || (properties?.allowHtml && looksLikeHtml(textContent));
+            let inner: React.ReactNode;
+            if (allowHtml) {
+                const safe = sanitizeInlineHtml(replacePlaceholders(textContent, placeholderContext));
+                inner = <span dangerouslySetInnerHTML={{ __html: safe }} />;
+            } else {
+                inner = replacePlaceholders(textContent, placeholderContext);
+            }
+            node = <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{inner}</p>;
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
-        // Image
-        if (type === 'image') {
+        // Logo (intro-logo)
+        if (type === 'intro-logo') {
+            const logoSrc = content.src || content.logoUrl || properties?.src || INLINE_IMG_PLACEHOLDER;
+            const size = properties?.size || content.size || 80;
+            node = (
+                <div className="w-full flex justify-center mb-4">
+                    <img
+                        src={logoSrc}
+                        alt={content.alt || 'Logo'}
+                        className="object-contain"
+                        style={{
+                            width: typeof size === 'number' ? `${size}px` : size,
+                            height: typeof size === 'number' ? `${size}px` : size,
+                        }}
+                    />
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Image (suporte a 'image' e 'intro-image')
+        if (type === 'image' || type === 'intro-image') {
             const align = properties?.alignment || 'center';
             const justify = align === 'left' ? 'justify-start' : align === 'right' ? 'justify-end' : 'justify-center';
             const width = properties?.width || content.width;
             const height = properties?.height || content.height;
             const borderRadius = properties?.borderRadius || content.borderRadius || '8px';
+            // Suportar tanto content.src quanto content.imageUrl (intro-image usa imageUrl)
+            const imageSrc = content.src || content.imageUrl || properties?.src || INLINE_IMG_PLACEHOLDER;
+            const objectFit = properties?.objectFit || 'contain'; // intro-image usa 'contain'
             node = (
                 <div className={cn('w-full flex', justify)}>
                     {/* img tag permitido: projeto Vite/React, regra de Next não se aplica */}
                     <img
-                        src={content.src || properties?.src || INLINE_IMG_PLACEHOLDER}
+                        src={imageSrc}
                         alt={content.alt || properties?.alt || 'Imagem'}
                         className="border shadow-sm"
                         style={{
-                            objectFit: 'cover',
+                            objectFit,
                             width: typeof width === 'number' ? `${width}px` : (width || '100%'),
                             height: typeof height === 'number' ? `${height}px` : (height || 'auto'),
                             borderRadius,
