@@ -20,15 +20,9 @@ export const QuizModularProductionEditor = lazy(() =>
   ).then(module => ({ default: module.default })),
 );
 
-// ⚠️ EDITORES DEPRECADOS (apenas para compatibilidade temporária)
-// Serão removidos no Sprint 2 (TK-ED-04)
-export const deprecatedEditors = {
-  modern: lazy(() => 
-    import(
-      /* webpackChunkName: "editor-deprecated-modern" */
-      '@/pages/editor/deprecated/ModernUnifiedEditor'
-    ).then(module => ({ default: module.default })),
-  ),
-};
+// ⚠️ EDITORES DEPRECADOS REMOVIDOS (cleanup 2025-10-29)
+// Todos os editores legados foram excluídos durante a limpeza
+// Use apenas QuizModularProductionEditor acima
 
 export default QuizModularProductionEditor;
+
