@@ -1852,6 +1852,30 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
+        // Form (intro-form)
+        if (type === 'intro-form') {
+            const inputPlaceholder = content.inputPlaceholder || properties?.inputPlaceholder || 'Digite seu nome...';
+            const buttonText = content.buttonText || properties?.buttonText || 'Começar';
+            node = (
+                <div className="w-full max-w-md mx-auto space-y-3">
+                    <input
+                        type="text"
+                        placeholder={inputPlaceholder}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:border-transparent"
+                        disabled
+                    />
+                    <button
+                        type="button"
+                        className="w-full px-4 py-3 rounded-lg text-base font-medium bg-[#B89B7A] hover:bg-[#a08464] text-white shadow-sm transition-colors"
+                        disabled
+                    >
+                        {buttonText}
+                    </button>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
         // Button
         if (type === 'button') {
             node = (
