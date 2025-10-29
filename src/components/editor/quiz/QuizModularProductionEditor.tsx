@@ -1889,6 +1889,423 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
+        // ===== QUESTIONS (Steps 02-18) =====
+        // Question Progress
+        if (type === 'question-progress') {
+            const currentQuestion = content.currentQuestion || properties?.currentQuestion || 1;
+            const totalQuestions = content.totalQuestions || properties?.totalQuestions || 18;
+            const percent = Math.round((currentQuestion / totalQuestions) * 100);
+            node = (
+                <div className="w-full mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs text-slate-600">Questão {currentQuestion} de {totalQuestions}</span>
+                        <span className="text-xs text-slate-600">{percent}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-[#B89B7A] transition-all duration-300"
+                            style={{ width: `${percent}%` }}
+                        />
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Question Title
+        if (type === 'question-title') {
+            const title = content.title || content.text || properties?.title || 'Título da pergunta';
+            const subtitle = content.subtitle || properties?.subtitle;
+            node = (
+                <div className="mb-6">
+                    <h2 className="text-xl font-bold text-slate-800 mb-2">
+                        {replacePlaceholders(title, placeholderContext)}
+                    </h2>
+                    {subtitle && (
+                        <p className="text-sm text-slate-600">
+                            {replacePlaceholders(subtitle, placeholderContext)}
+                        </p>
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Question Hero
+        if (type === 'question-hero') {
+            const imageUrl = content.imageUrl || content.image || properties?.imageUrl;
+            const imageAlt = content.alt || properties?.alt || 'Imagem da pergunta';
+            const imageHeight = properties?.imageHeight || content.height || 300;
+            node = (
+                <div className="w-full mb-6">
+                    {imageUrl && (
+                        <img
+                            src={imageUrl}
+                            alt={imageAlt}
+                            className="w-full object-cover rounded-lg shadow-md"
+                            style={{ height: `${imageHeight}px` }}
+                        />
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Question Navigation
+        if (type === 'question-navigation') {
+            const backText = content.backText || properties?.backText || 'Voltar';
+            const nextText = content.nextText || properties?.nextText || 'Continuar';
+            const showBack = properties?.showBack !== false;
+            node = (
+                <div className="flex justify-between items-center mt-6 gap-4">
+                    {showBack && (
+                        <button
+                            type="button"
+                            className="px-6 py-3 rounded-lg text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                            disabled
+                        >
+                            {backText}
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        className="flex-1 px-6 py-3 rounded-lg text-sm font-medium bg-[#B89B7A] hover:bg-[#a08464] text-white shadow-sm transition-colors"
+                        disabled
+                    >
+                        {nextText}
+                    </button>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // ===== TRANSITIONS (Steps 12, 19) =====
+        // Transition Hero
+        if (type === 'transition-hero') {
+            const imageUrl = content.imageUrl || content.image || properties?.imageUrl;
+            const imageAlt = content.alt || properties?.alt || 'Imagem de transição';
+            const imageHeight = properties?.imageHeight || content.height || 400;
+            const showImage = properties?.showImage !== false && imageUrl;
+            node = (
+                <div className="w-full mb-8">
+                    {showImage && (
+                        <img
+                            src={imageUrl}
+                            alt={imageAlt}
+                            className="w-full object-cover rounded-lg shadow-lg"
+                            style={{ height: `${imageHeight}px` }}
+                        />
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Transition Text
+        if (type === 'transition-text') {
+            const title = content.title || properties?.title || 'Estamos preparando seu resultado...';
+            const description = content.description || content.text || properties?.description || 'Aguarde um momento';
+            const allowHtml = properties?.allowHtml !== false;
+            node = (
+                <div className="text-center py-8">
+                    <h2 className="text-2xl font-bold text-slate-800 mb-4">
+                        {allowHtml && looksLikeHtml(title)
+                            ? <span dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(title) }} />
+                            : replacePlaceholders(title, placeholderContext)
+                        }
+                    </h2>
+                    {description && (
+                        <p className="text-base text-slate-600 max-w-2xl mx-auto">
+                            {allowHtml && looksLikeHtml(description)
+                                ? <span dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(description) }} />
+                                : replacePlaceholders(description, placeholderContext)
+                            }
+                        </p>
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // CTA Button (usado em transições)
+        if (type === 'CTAButton') {
+            const buttonText = content.text || content.label || properties?.text || 'Ver meu resultado';
+            const buttonBg = properties?.backgroundColor || '#B89B7A';
+            const buttonColor = properties?.textColor || '#FFFFFF';
+            node = (
+                <div className="flex justify-center mt-8">
+                    <button
+                        type="button"
+                        className="px-8 py-4 rounded-lg text-base font-semibold shadow-lg transition-transform hover:scale-105"
+                        style={{ backgroundColor: buttonBg, color: buttonColor }}
+                        disabled
+                    >
+                        {replacePlaceholders(buttonText, placeholderContext)}
+                    </button>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // ===== RESULT (Step 20) =====
+        // Result Main
+        if (type === 'result-main') {
+            const title = content.title || properties?.title || 'Seu resultado principal';
+            const styleName = content.styleName || placeholderContext.resultStyle;
+            node = (
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-slate-800 mb-2">
+                        {replacePlaceholders(title, placeholderContext)}
+                    </h1>
+                    <div className="inline-block px-6 py-2 bg-[#B89B7A] text-white rounded-full text-lg font-semibold">
+                        {styleName}
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result Congrats
+        if (type === 'result-congrats') {
+            const message = content.message || content.text || properties?.message || 'Parabéns! Descobrimos seu estilo único.';
+            node = (
+                <div className="bg-gradient-to-r from-[#B89B7A] to-[#D4AF37] text-white rounded-lg p-6 text-center mb-6">
+                    <p className="text-lg font-medium">
+                        {replacePlaceholders(message, placeholderContext)}
+                    </p>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result Image
+        if (type === 'result-image') {
+            const imageUrl = content.imageUrl || content.image || properties?.imageUrl;
+            const imageAlt = content.alt || properties?.alt || 'Imagem do resultado';
+            const imageHeight = properties?.imageHeight || content.height || 400;
+            node = (
+                <div className="w-full mb-6">
+                    {imageUrl && (
+                        <img
+                            src={imageUrl}
+                            alt={imageAlt}
+                            className="w-full object-cover rounded-lg shadow-lg"
+                            style={{ height: `${imageHeight}px` }}
+                        />
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result Description
+        if (type === 'result-description') {
+            const description = content.description || content.text || properties?.description || 'Descrição do seu resultado';
+            const allowHtml = properties?.allowHtml !== false;
+            node = (
+                <div className="prose prose-sm max-w-none mb-6">
+                    {allowHtml && looksLikeHtml(description)
+                        ? <div dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(description) }} />
+                        : <p className="text-slate-700 leading-relaxed">{replacePlaceholders(description, placeholderContext)}</p>
+                    }
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result Progress Bars
+        if (type === 'result-progress-bars') {
+            const scores = content.scores || previewResult?.scores || { classico: 75, natural: 60, romantico: 85 };
+            const showPercentage = properties?.showPercentage !== false;
+            node = (
+                <div className="space-y-4 mb-6">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-3">Sua análise de estilo:</h3>
+                    {Object.entries(scores).map(([style, score]) => {
+                        const percent = typeof score === 'number' ? Math.round(score) : 0;
+                        const styleTitle = stylesMap[style]?.title || style;
+                        return (
+                            <div key={style}>
+                                <div className="flex justify-between items-center mb-1">
+                                    <span className="text-sm font-medium text-slate-700 capitalize">{styleTitle}</span>
+                                    {showPercentage && <span className="text-sm text-slate-600">{percent}%</span>}
+                                </div>
+                                <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-[#B89B7A] transition-all duration-500"
+                                        style={{ width: `${percent}%` }}
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result Secondary Styles
+        if (type === 'result-secondary-styles') {
+            const secondaryStyles = content.styles || [];
+            const showScores = properties?.showScores !== false;
+            node = (
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-3">Estilos secundários:</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                        {secondaryStyles.length > 0 ? secondaryStyles.map((style: any, idx: number) => (
+                            <div key={idx} className="border border-gray-200 rounded-lg p-4 bg-white text-center">
+                                <div className="text-base font-medium text-slate-800">{style.name || style}</div>
+                                {showScores && style.score && (
+                                    <div className="text-sm text-slate-600 mt-1">{style.score}%</div>
+                                )}
+                            </div>
+                        )) : (
+                            <div className="col-span-2 text-sm text-slate-400 italic text-center">
+                                Estilos secundários serão exibidos aqui
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result Share
+        if (type === 'result-share') {
+            const shareText = content.shareText || properties?.shareText || 'Compartilhe seu resultado:';
+            const platforms = content.platforms || properties?.platforms || ['facebook', 'twitter', 'whatsapp'];
+            node = (
+                <div className="text-center mb-6">
+                    <p className="text-sm text-slate-600 mb-3">{shareText}</p>
+                    <div className="flex justify-center gap-3">
+                        {platforms.includes('facebook') && (
+                            <button className="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center" disabled>
+                                <span className="text-xs">f</span>
+                            </button>
+                        )}
+                        {platforms.includes('twitter') && (
+                            <button className="w-10 h-10 rounded-full bg-[#1DA1F2] text-white flex items-center justify-center" disabled>
+                                <span className="text-xs">𝕏</span>
+                            </button>
+                        )}
+                        {platforms.includes('whatsapp') && (
+                            <button className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center" disabled>
+                                <span className="text-xs">W</span>
+                            </button>
+                        )}
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result CTA
+        if (type === 'result-cta') {
+            const ctaText = content.text || content.label || properties?.ctaText || 'Ver oferta especial';
+            const ctaBg = properties?.backgroundColor || '#B89B7A';
+            const ctaColor = properties?.textColor || '#FFFFFF';
+            node = (
+                <div className="flex justify-center mt-8">
+                    <button
+                        type="button"
+                        className="px-8 py-4 rounded-lg text-base font-semibold shadow-lg transition-transform hover:scale-105"
+                        style={{ backgroundColor: ctaBg, color: ctaColor }}
+                        disabled
+                    >
+                        {replacePlaceholders(ctaText, placeholderContext)}
+                    </button>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // ===== OFFER (Step 21) =====
+        // Offer Hero
+        if (type === 'offer-hero') {
+            const title = content.title || properties?.title || 'Oferta Especial para Você';
+            const subtitle = content.subtitle || properties?.subtitle || 'Transforme seu estilo hoje mesmo';
+            const imageUrl = content.imageUrl || content.image || properties?.imageUrl;
+            const imageHeight = properties?.imageHeight || content.height || 400;
+            node = (
+                <div className="mb-8">
+                    {imageUrl && (
+                        <img
+                            src={imageUrl}
+                            alt={title}
+                            className="w-full object-cover rounded-lg shadow-lg mb-6"
+                            style={{ height: `${imageHeight}px` }}
+                        />
+                    )}
+                    <div className="text-center">
+                        <h1 className="text-3xl font-bold text-slate-800 mb-3">
+                            {replacePlaceholders(title, placeholderContext)}
+                        </h1>
+                        {subtitle && (
+                            <p className="text-lg text-slate-600">
+                                {replacePlaceholders(subtitle, placeholderContext)}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Pricing
+        if (type === 'pricing') {
+            const originalPrice = content.originalPrice || properties?.originalPrice || 497;
+            const currentPrice = content.currentPrice || properties?.currentPrice || 297;
+            const currency = content.currency || properties?.currency || 'R$';
+            const installments = content.installments || properties?.installments || 12;
+            const installmentValue = Math.round(currentPrice / installments);
+            const discount = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+            const features = content.features || properties?.features || [
+                'Acesso vitalício',
+                'Suporte premium',
+                'Atualizações gratuitas'
+            ];
+            node = (
+                <div className="bg-gradient-to-br from-white to-slate-50 border-2 border-[#B89B7A] rounded-lg p-8 shadow-xl max-w-md mx-auto mb-8">
+                    {discount > 0 && (
+                        <div className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-4">
+                            {discount}% OFF
+                        </div>
+                    )}
+                    <div className="text-center mb-6">
+                        {originalPrice > currentPrice && (
+                            <div className="text-slate-400 line-through text-lg mb-1">
+                                {currency} {originalPrice.toFixed(2)}
+                            </div>
+                        )}
+                        <div className="text-4xl font-bold text-[#B89B7A] mb-2">
+                            {currency} {currentPrice.toFixed(2)}
+                        </div>
+                        <div className="text-sm text-slate-600">
+                            ou {installments}x de {currency} {installmentValue.toFixed(2)}
+                        </div>
+                    </div>
+                    <ul className="space-y-3 mb-6">
+                        {features.map((feature: string, idx: number) => (
+                            <li key={idx} className="flex items-center text-sm text-slate-700">
+                                <span className="text-green-500 mr-2">✓</span>
+                                {feature}
+                            </li>
+                        ))}
+                    </ul>
+                    <button
+                        type="button"
+                        className="w-full py-4 bg-[#B89B7A] hover:bg-[#a08464] text-white font-semibold rounded-lg shadow-lg transition-colors"
+                        disabled
+                    >
+                        Garantir minha vaga
+                    </button>
+                    <p className="text-xs text-slate-500 text-center mt-4">
+                        Pagamento 100% seguro
+                    </p>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
         // Quiz Options
         if (type === 'quiz-options') {
             node = (
