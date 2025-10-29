@@ -100,14 +100,19 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🎯 FASE 6: VENDOR CHUNKS OPTIMIZATION - SIMPLIFIED
-          // Estratégia simplificada para evitar problemas de dependências circulares
+          // 🎯 FASE 6: VENDOR CHUNKS OPTIMIZATION - FIXED
+          // Estratégia CONSERVADORA para evitar problemas de exports circulares
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              // React ecosystem + UI - JUNTOS para evitar problemas de exports
-              if (id.includes('react') || id.includes('react-dom') || id.includes('react-is') || 
-                  id.includes('scheduler') || id.includes('@radix-ui')) {
+              // React core - ISOLADO (sem Radix para evitar circular deps)
+              if (id.includes('/react/') || id.includes('/react-dom/') || 
+                  id.includes('react-is') || id.includes('scheduler')) {
                 return 'vendor-react';
+              }
+              
+              // Radix UI - SEPARADO para evitar problemas com React exports
+              if (id.includes('@radix-ui')) {
+                return 'vendor-radix';
               }
               
               // DnD Kit - usado apenas no editor
@@ -120,7 +125,7 @@ export default defineConfig(({ mode }) => {
                 return 'vendor-supabase';
               }
               
-              // Resto dos vendors (utilities, charts, etc) - TUDO JUNTO
+              // Resto dos vendors (utilities, charts, etc)
               return 'vendor-misc';
             }
             
