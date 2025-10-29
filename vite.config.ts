@@ -149,16 +149,18 @@ export default defineConfig(({ mode }) => {
         'react-dom',
         'react/jsx-runtime',
         'react-dom/client',
+        'react-is',
+        'scheduler',
         'wouter',
         'recharts',
+      ],
+      exclude: [
+        // Excluir módulos que causam problemas de bundling
+        '@supabase/functions-js',
       ],
       esbuildOptions: {
         target: 'es2020',
         loader: { '.js': 'jsx' },
-        define: {
-          // Garantir que React seja definido globalmente
-          'process.env.NODE_ENV': '"development"'
-        }
       },
       force: false, // Não forçar rebuild em dev
     },
