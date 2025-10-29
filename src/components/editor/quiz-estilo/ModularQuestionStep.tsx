@@ -86,7 +86,7 @@ export default function ModularQuestionStep({
         ? `Selecione ${safeData.requiredSelections} opções`
         : 'Selecione uma opção';
 
-    const stepNumber = parseInt(data.questionNumber?.replace(/\\D/g, '') || '1');
+    const stepNumber = parseInt(String(data.questionNumber || '1').replace(/\D/g, '') || '1');
     const progress = Math.round((stepNumber / 21) * 100);
     // Passo atual real do quiz (parse do id ex.: "step-02") para navegação global
     const currentStepReal = React.useMemo(() => {

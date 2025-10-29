@@ -61,8 +61,22 @@ export function validateQuizAnswer(
 
 /**
  * Alias para compatibilidade com exemplo Next.js
+ * Aceita número de seleções requeridas ou objeto ValidationRule
  */
-export const validateAnswer = validateQuizAnswer;
+export function validateAnswer(
+  answer: any,
+  requiredOrRules?: number | ValidationRule
+): boolean | ValidationResult {
+  // Se for número, criar ValidationRule simples e retornar apenas boolean
+  if (typeof requiredOrRules === 'number') {
+    const required = requiredOrRules;
+    if (!Array.isArray(answer)) return false;
+    return answer.length === required;
+  }
+  
+  // Se for ValidationRule, usar validateQuizAnswer
+  return validateQuizAnswer(answer, requiredOrRules);
+}
 
 /**
  * Valida todas as respostas de um quiz
