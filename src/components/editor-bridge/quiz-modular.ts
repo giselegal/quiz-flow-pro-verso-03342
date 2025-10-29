@@ -7,19 +7,14 @@
 // - Antes: UnifiedStepContent → Modular* → BlockTypeRenderer → Blocos atômicos
 // - Agora: UnifiedStepContent → BlockTypeRenderer → Blocos atômicos
 //
-// ⚠️ EXPORTS DESABILITADOS - Os componentes foram movidos para archived-deprecated/
-// e não são mais acessíveis via TypeScript. Use BlockTypeRenderer diretamente.
+// ⚠️ AVISO: Exports removidos. Use BlockTypeRenderer diretamente.
+// Os componentes Modular* foram movidos para archived-deprecated/ e não devem mais ser importados.
 
-// /**
-//  * @deprecated Use BlockTypeRenderer diretamente para renderizar blocos.
-//  * Os componentes Modular* foram movidos para archived-deprecated/
-//  */
-// export { default as ModularIntroStep } from '../../archived-deprecated/quiz-estilo/ModularIntroStep';
-// export { default as ModularQuestionStep } from '../../archived-deprecated/quiz-estilo/ModularQuestionStep';
-// export { default as ModularStrategicQuestionStep } from '../../archived-deprecated/quiz-estilo/ModularStrategicQuestionStep';
-// export { default as ModularTransitionStep } from '../../archived-deprecated/quiz-estilo/ModularTransitionStep';
-// export { default as ModularResultStep } from '../../archived-deprecated/quiz-estilo/ModularResultStep';
-// export { default as ModularOfferStep } from '../../archived-deprecated/quiz-estilo/ModularOfferStep';
+/**
+ * @deprecated Este arquivo não exporta mais componentes.
+ * Use BlockTypeRenderer diretamente em UnifiedStepContent.
+ */
+export const DEPRECATED_MESSAGE = 'Use BlockTypeRenderer para renderizar blocos atômicos diretamente';
 
 // Exports vazios para manter compatibilidade de importação (evitar quebrar código antigo)
 // Retornam componentes placeholder que exibem mensagem de deprecation
