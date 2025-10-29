@@ -287,15 +287,54 @@ Uncaught ReferenceError: Cannot access 'A' before initialization
 var J = A.forwardRef(function(e, t) { ... })
 ```
 
-**Causa:**
-- Minificador do Lovable tentando otimizar React hooks
-- Ordem de inicialização de módulos diferente no preview
-- **NÃO é um bug do código fonte** ✅
+**Causa Raiz:**
+O erro ocorre quando o minificador (no preview do Lovable) tenta otimizar código React e acaba criando uma referência antes da inicialização. Especificamente:
+- `A` = React (após minificação)
+- `J` = Componente com forwardRef
+- Erro: `J` tenta usar `A.forwardRef` antes de `A` estar disponível
 
-**Solução:**
-1. Verificar que build local funciona
-2. Fazer novo deploy no Lovable
-3. Aguardar rebuild completo do preview
+**Arquivos Potencialmente Afetados:**
+1. `src/components/ui/chart.tsx` (usa `React.forwardRef` + `recharts`)
+2. Outros componentes UI com `forwardRef`
+3. Qualquer componente que usa `import * as React from 'react'`
+
+**Por que não acontece localmente:**
+- Build local (Vite) mantém ordem correta de módulos
+- Preview Lovable usa minificação agressiva que pode alterar ordem
+- Tree-shaking diferente entre ambientes
+
+**Solução Definitiva:**
+
+**Opção 1: Forçar React como external (Recomendado)**
+```javascript
+// vite.config.ts
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+      // Ou garantir que React seja sempre o primeiro chunk
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react/jsx-runtime'],
+        }
+      }
+    }
+  }
+})
+```
+
+**Opção 2: Remover chart.tsx do bundle (Imediato)**
+Como `chart.tsx` só é usado em `archived/dead-code/`, podemos movê-lo para lá:
+
+```bash
+mv src/components/ui/chart.tsx archived/dead-code/src/components/ui/
+```
+
+**Opção 3: Lazy load chart.tsx**
+```typescript
+// Se chart.tsx for necessário no futuro
+const Chart = lazy(() => import('@/components/ui/chart'));
+```
 
 ---
 
