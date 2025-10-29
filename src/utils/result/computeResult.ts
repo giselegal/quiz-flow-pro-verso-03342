@@ -3,6 +3,20 @@
  * Cálculo simples (determinístico) do resultado do quiz baseado nas respostas.
  * Mantém compatibilidade com a lógica atual de `useQuizState` mas isolado e testável.
  *
+ * ⚠️ MIGRAÇÃO EM ANDAMENTO:
+ * - DEPRECATED: import de QUIZ_STEPS (fonte antiga)
+ * - NOVO: Aceita steps via parâmetro (fonte: quiz21-complete.json via TemplateService)
+ * - FALLBACK: Mantém QUIZ_STEPS temporariamente durante migração
+ * 
+ * USO RECOMENDADO:
+ * ```ts
+ * // Passar steps do template ao invés de usar fallback
+ * const result = computeResult({ 
+ *   answers, 
+ *   steps: convertedStepsFromTemplate 
+ * });
+ * ```
+ *
  * Regras:
  * - Considera apenas steps do tipo 'question'.
  * - Cada seleção vale 1 ponto para o estilo (option id). (Sem pesos avançados aqui.)
@@ -11,7 +25,7 @@
  * - Normaliza ids de estilo via `resolveStyleId` para garantir acentos corretos quando possível.
  */
 
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
+import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps'; // ⚠️ DEPRECATED - use steps via parâmetro
 import { styleMapping } from '@/data/styles';
 import { toUnaccentedStyleId } from '@/utils/styleIds';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
