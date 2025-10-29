@@ -10,10 +10,9 @@ import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { UnifiedStepRenderer } from './UnifiedStepRenderer';
 import { smartMigration } from '@/utils/stepDataMigration';
-import MemoBlockRow from './BlockRow';
+import UnifiedBlockRenderer from './UnifiedBlockRenderer';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Badge } from '@/components/ui/badge';
-// react-window será carregado dinamicamente em DEV para avaliação
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -32,7 +31,10 @@ export interface CanvasAreaProps {
     headerConfig: any;
     liveScores: Record<string, number>;
     topStyle?: string;
-    BlockRow: React.ComponentType<any>;
+    /**
+     * @deprecated BlockRow agora é substituído por UnifiedBlockRenderer internamente
+     */
+    BlockRow?: React.ComponentType<any>;
     byBlock: Record<string, any[]>;
     selectedBlockId: string;
     isMultiSelected: (id: string) => boolean;
@@ -261,9 +263,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 )}
                             </div>
 
-                            {/* Se BlockRow for fornecido, usar caminho de renderização virtualizado simples */}
+                            {/* 🎯 RENDERIZAÇÃO UNIFICADA - Sistema WYSIWYG Real */}
                             {(virtualizationEnabled || BlockRow) ? (
-                                <div data-testid="canvas-legacy-virtualized">
+                                <div data-testid="canvas-unified-rendering">
                                     {virtualizationEnabled && (
                                         <div className="mb-2 text-xs text-muted-foreground flex items-center gap-2">
                                             <span>Virtualização ativa — {vTotal} blocos — exibindo {vVisible.length}</span>
@@ -285,26 +287,23 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                             >
                                                 {({ index, style }: { index: number; style: React.CSSProperties }) => {
                                                     const block = rootBlocks[index];
-                                                    const RowComp = (BlockRow as any) || (MemoBlockRow as any);
                                                     return (
                                                         <div style={style}>
-                                                            <RowComp
+                                                            <UnifiedBlockRenderer
                                                                 key={block.id}
                                                                 block={block}
                                                                 allBlocks={rootBlocks}
-                                                                byBlock={{}}
-                                                                selectedBlockId={selectedBlockId || ''}
-                                                                isMultiSelected={isMultiSelected || ((id: string) => false)}
-                                                                handleBlockClick={handleBlockClick || ((e: any) => { })}
-                                                                renderBlockPreview={renderBlockPreview || ((b: any) => null)}
-                                                                removeBlock={removeBlock || (() => { })}
-                                                                stepId={migratedStep.id}
-                                                                setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
-                                                                setTargetStepId={setTargetStepId || (() => { })}
-                                                                setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
-                                                                hoverContainerId={hoverContainerId}
-                                                                setHoverContainerId={setHoverContainerId}
-                                                                activeId={activeId}
+                                                                mode="edit"
+                                                                isSelected={selectedBlockId === block.id}
+                                                                isMultiSelected={isMultiSelected?.(block.id)}
+                                                                onBlockClick={(e) => handleBlockClick?.(e, block)}
+                                                                onDelete={() => removeBlock?.(migratedStep.id, block.id)}
+                                                                onDuplicate={() => {
+                                                                    setBlockPendingDuplicate?.(block);
+                                                                    setTargetStepId?.(migratedStep.id);
+                                                                    setDuplicateModalOpen?.(true);
+                                                                }}
+                                                                renderBlockPreview={(blk) => renderBlockPreview?.(blk, rootBlocks) || null}
                                                             />
                                                         </div>
                                                     );
@@ -314,29 +313,24 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     ) : (
                                         <>
                                             {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
-                                            {vVisible.map((block: any) => {
-                                                const RowComp = (BlockRow as any) || (MemoBlockRow as any);
-                                                return (
-                                                    <RowComp
-                                                        key={block.id}
-                                                        block={block}
-                                                        allBlocks={rootBlocks}
-                                                        // Defaults defensivos para compat com testes
-                                                        byBlock={{}}
-                                                        selectedBlockId={selectedBlockId || ''}
-                                                        isMultiSelected={isMultiSelected || ((id: string) => false)}
-                                                        handleBlockClick={handleBlockClick || ((e: any) => { })}
-                                                        renderBlockPreview={renderBlockPreview || ((b: any) => null)}
-                                                        removeBlock={removeBlock || (() => { })}
-                                                        stepId={migratedStep.id}
-                                                        setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
-                                                        setTargetStepId={setTargetStepId || (() => { })}
-                                                        setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
-                                                        hoverContainerId={hoverContainerId}
-                                                        setHoverContainerId={setHoverContainerId}
-                                                        activeId={activeId}
-                                                    />);
-                                            })}
+                                            {vVisible.map((block: any) => (
+                                                <UnifiedBlockRenderer
+                                                    key={block.id}
+                                                    block={block}
+                                                    allBlocks={rootBlocks}
+                                                    mode="edit"
+                                                    isSelected={selectedBlockId === block.id}
+                                                    isMultiSelected={isMultiSelected?.(block.id)}
+                                                    onBlockClick={(e) => handleBlockClick?.(e, block)}
+                                                    onDelete={() => removeBlock?.(migratedStep.id, block.id)}
+                                                    onDuplicate={() => {
+                                                        setBlockPendingDuplicate?.(block);
+                                                        setTargetStepId?.(migratedStep.id);
+                                                        setDuplicateModalOpen?.(true);
+                                                    }}
+                                                    renderBlockPreview={(blk) => renderBlockPreview?.(blk, rootBlocks) || null}
+                                                />
+                                            ))}
                                             {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
                                         </>
                                     )}
