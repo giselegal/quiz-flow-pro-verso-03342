@@ -101,18 +101,14 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🎯 FASE 6: VENDOR CHUNKS OPTIMIZATION (-100 kB estimado)
-          // Estratégia granular para melhor code splitting e caching
+          // 🎯 FASE 6: VENDOR CHUNKS OPTIMIZATION - SIMPLIFIED
+          // Estratégia simplificada para evitar problemas de dependências circulares
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              // React ecosystem (core) - mais estável, melhor cache
-              if (id.includes('react') || id.includes('react-dom') || id.includes('react-is') || id.includes('scheduler')) {
+              // React ecosystem + UI - JUNTOS para evitar problemas de exports
+              if (id.includes('react') || id.includes('react-dom') || id.includes('react-is') || 
+                  id.includes('scheduler') || id.includes('@radix-ui')) {
                 return 'vendor-react';
-              }
-              
-              // UI Libraries - carregadas em quase todas as páginas
-              if (id.includes('@radix-ui') || id.includes('class-variance-authority') || id.includes('clsx') || id.includes('tailwind-merge')) {
-                return 'vendor-ui';
               }
               
               // DnD Kit - usado apenas no editor
@@ -120,28 +116,12 @@ export default defineConfig(({ mode }) => {
                 return 'vendor-dnd';
               }
               
-              // Charts - FIXME: Recharts tem dependências circulares
-              // Temporariamente incluído no vendor-misc para evitar erro de inicialização
-              // if (id.includes('recharts') || id.includes('d3-')) {
-              //   return 'vendor-charts';
-              // }
-              
-              // Supabase - usado globalmente mas pode ser separado
+              // Supabase - separado por ser grande e isolado
               if (id.includes('@supabase') || id.includes('postgrest-js') || id.includes('gotrue-js')) {
                 return 'vendor-supabase';
               }
               
-              // Utilities - lodash, date-fns, etc
-              if (id.includes('lodash') || id.includes('date-fns') || id.includes('dayjs')) {
-                return 'vendor-utils';
-              }
-              
-              // Routing
-              if (id.includes('wouter') || id.includes('regexparam')) {
-                return 'vendor-router';
-              }
-              
-              // Resto dos vendors (menos críticos) - INCLUI RECHARTS temporariamente
+              // Resto dos vendors (utilities, charts, etc) - TUDO JUNTO
               return 'vendor-misc';
             }
             
