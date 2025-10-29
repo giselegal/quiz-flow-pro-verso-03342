@@ -81,3 +81,40 @@ test-*.js
 *.trae.log
 .env.trae
 trae-workspace/
+
+# ============================================================================
+# Cleanup - Arquivos a Ignorar (Adicionado em 2025-10-29)
+# ============================================================================
+
+# Coverage e test results (regeneráveis)
+coverage/
+test-results/
+.nyc_output/
+
+# Arquivos temporários
+tmp/
+temp/
+test/
+
+# Logs
+*.log
+*.txt
+
+# Reports (exceto README)
+reports/
+
+# Notebooks Jupyter (análises pontuais)
+*.ipynb
+
+# Arquivos de backup
+*.backup
+*.bak
+*.old
+*~
+
+# Assets temporários
+attached_assets/
+
+# Scripts archived
+scripts/archive/
+
