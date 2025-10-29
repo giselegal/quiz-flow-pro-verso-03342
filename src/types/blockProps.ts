@@ -139,4 +139,16 @@ export interface AtomicBlockProps {
    * @example <div onClick={onClick}>...</div>
    */
   onClick?: () => void;
+  
+  /** 
+   * Dados de contexto adicionais (userName, userProfile, currentAnswers, etc.)
+   * Usado para passar dados dinâmicos para blocos (ex: result blocks, question navigation)
+   * @example 
+   * contextData: { 
+   *   userName: 'Maria', 
+   *   userProfile: { resultStyle: 'natural', scores: [...] },
+   *   currentAnswers: ['opt1', 'opt2']
+   * }
+   */
+  contextData?: Record<string, any>;
 }
