@@ -1,5 +1,10 @@
 // 🎯 EXEMPLO PRÁTICO: QuestionStep - Versão Pública (SSR-Safe)
 // Localização: components/quiz/steps/QuestionStep.tsx
+//
+// ⚠️ NOTA: Este arquivo está em examples/ que é excluído do tsconfig.json
+// Os erros de import são esperados e não afetam o build do projeto.
+// Os módulos @/lib/quiz/* existem mas não são verificados para exemplos.
+//
 'use client';
 
 import React, { useMemo } from 'react';
