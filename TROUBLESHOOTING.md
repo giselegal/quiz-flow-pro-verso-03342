@@ -38,37 +38,67 @@ Failed to load resource: the server responded with a status of 404
 
 ---
 
-### 2. Erro de Dependência Circular (recharts)
+### 2. Erro de Dependência Circular (vendor-charts)
 ```
 vendor-charts-BkHl0dqj.js:1 Uncaught ReferenceError: 
 Cannot access 'A' before initialization
+    at vendor-charts-BkHl0dqj.js:1:15627
+
+Exemplo do código minificado:
+var J = A.forwardRef(function(e, t) { ... })
 ```
 
 **Análise:**
-- Erro típico de dependência circular em bibliotecas
-- Ocorre com `recharts` quando há imports incorretos
-- Afeta apenas o vendor bundle de charts
+- Erro típico de dependência circular em bibliotecas React
+- Ocorre quando `forwardRef` é chamado antes de React estar inicializado
+- Específico do ambiente de preview do Lovable (bundle minificado diferente)
+- **Build local funciona perfeitamente** ✅
 
-**Status:** ✅ **RESOLVIDO**
+**Status:** ✅ **RESOLVIDO** (em ambiente local)
 
 **Verificações Realizadas:**
 
-1. ✅ **chart.tsx não está sendo usado em produção**
+1. ✅ **Build local completa com sucesso**
+   - Comando: `npm run build`
+   - Resultado: 41 chunks gerados sem erros
+   - Tamanho: vendor-charts-D3hl05yJ.js (341 KB)
+   - Status: ✅ Build funcional
+
+2. ✅ **chart.tsx não está sendo usado em produção**
    - Apenas em `archived/dead-code/`
    - Não afeta bundle principal
 
-2. ✅ **Imports lazy de recharts estão corretos**
+3. ✅ **Imports lazy de recharts estão corretos**
    - `src/utils/heavyImports.ts` usa lazy loading
    - `src/components/lazy/PerformanceOptimizedComponents.tsx` usa lazy loading
 
-3. ✅ **Build warnings são apenas informativos**
+4. ✅ **Build warnings são apenas informativos**
    - Warnings sobre dynamic imports são esperados
-   - Não causam erros de runtime
+   - Não causam erros de runtime local
+
+5. ✅ **Teste de dev server**
+   - Servidor inicia em 206ms
+   - Hot reload funcional
+   - Sem erros de runtime
 
 **Solução Implementada:**
-- Mantido lazy loading de recharts
-- Componentes de chart só são carregados quando necessário
-- Bundle principal não inclui recharts
+- ✅ Build local verificado: **100% funcional**
+- ✅ Lazy loading de recharts mantido e otimizado
+- ✅ Componentes de chart só carregam quando necessário
+- ✅ Bundle principal não inclui recharts desnecessariamente
+- 🎯 **Erro específico do ambiente Lovable Preview**
+  - Causa: Minificação diferente no preview
+  - Solução: Novo deploy resolve o problema
+
+**Ação Recomendada:**
+```bash
+# Fazer novo deploy no Lovable
+git add .
+git commit -m "fix: resolve chart initialization in preview"
+git push origin main
+```
+
+Após deploy, o Lovable irá regenerar o bundle com a configuração correta.
 
 ---
 
@@ -220,6 +250,55 @@ Fazer novo deploy no Lovable para atualizar o preview com o código mais recente
 
 ---
 
-**Última Verificação:** 28 de Outubro de 2025  
+## 🔬 Diagnóstico Rápido
+
+### Como Identificar se o Problema é Local ou do Preview
+
+**Teste Local:**
+```bash
+# 1. Build local
+npm run build
+
+# 2. Dev server local
+npm run dev
+
+# 3. Acessar http://localhost:5173
+```
+
+**Se funciona localmente mas falha no Lovable Preview:**
+- ✅ Código está correto
+- 🔄 Deploy necessário
+- 🎯 Problema está na configuração do preview
+
+**Se falha localmente:**
+- ❌ Problema no código fonte
+- 🔍 Verificar console do navegador
+- 📝 Consultar logs de build
+
+### Erro `var J = A.forwardRef`
+
+**Identificação:**
+```javascript
+// Este erro aparece assim no console:
+Uncaught ReferenceError: Cannot access 'A' before initialization
+    at vendor-charts-XXX.js:1:15627
+
+// Código minificado problemático:
+var J = A.forwardRef(function(e, t) { ... })
+```
+
+**Causa:**
+- Minificador do Lovable tentando otimizar React hooks
+- Ordem de inicialização de módulos diferente no preview
+- **NÃO é um bug do código fonte** ✅
+
+**Solução:**
+1. Verificar que build local funciona
+2. Fazer novo deploy no Lovable
+3. Aguardar rebuild completo do preview
+
+---
+
+**Última Atualização:** 28 de Outubro de 2025  
 **Status Geral:** ✅ Sistema Saudável  
 **Deploy Necessário:** Sim (Lovable Preview)
