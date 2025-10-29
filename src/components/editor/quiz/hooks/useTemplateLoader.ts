@@ -4,13 +4,19 @@
  * Carrega templates de forma assíncrona e não-bloqueante
  * Substitui o useEffect gigante (360 linhas) por lógica isolada e testável
  * 
+ * 📊 HIERARQUIA DE FONTES (ordem de prioridade):
+ * 1. 🎯 Funnel existente (rascunho salvo do usuário)
+ * 2. 📄 Per-Step JSONs individuais (public/templates/blocks/step-XX.json) ← PRIORIDADE!
+ * 3. 📦 Master JSON consolidado (public/templates/quiz21-complete.json) ← FALLBACK
+ * 4. 💾 TypeScript template (src/templates/quiz21StepsComplete.ts) ← ÚLTIMO RECURSO
+ * 
  * Features:
  * - Loading states com Suspense support
  * - Error handling robusto
  * - Retry automático
  * - Cache unificado integrado
  * 
- * @version 1.0.0
+ * @version 2.0.0 - Prioridade corrigida: Per-Step JSONs > Master JSON
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -27,7 +33,7 @@ export interface TemplateLoaderState {
     loading: boolean;
     steps: EditableQuizStep[] | null;
     error: Error | null;
-    source: 'funnel' | 'master-json' | 'fallback-ts' | null;
+    source: 'funnel' | 'per-step-json' | 'master-json' | 'fallback-ts' | null;
 }
 
 export interface UseTemplateLoaderOptions {
@@ -71,7 +77,7 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions) {
 
                 appLogger.debug('🎯 useTemplateLoader: Iniciando carregamento', { templateId, funnelId });
 
-                // Estratégia 1: Carregar funnel existente
+                // Estratégia 1: Carregar funnel existente (rascunho salvo)
                 if (funnelId) {
                     const result = await loadFromFunnel(funnelId);
                     if (result) {
@@ -82,7 +88,19 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions) {
                     }
                 }
 
-                // Estratégia 2: Carregar do Master JSON
+                // Estratégia 2: Carregar de Per-Step JSONs individuais (PRIORIDADE!)
+                // Cada step tem seu próprio arquivo em public/templates/blocks/step-XX.json
+                if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
+                    const result = await loadFromPerStepJSONs();
+                    if (result) {
+                        if (!isMountedRef.current) return;
+                        setState({ loading: false, steps: result, error: null, source: 'per-step-json' });
+                        onSuccess?.(result);
+                        return;
+                    }
+                }
+
+                // Estratégia 3: Carregar do Master JSON (FALLBACK se per-step falhar)
                 if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
                     const result = await loadFromMasterJSON(funnelId);
                     if (result) {
@@ -93,7 +111,7 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions) {
                     }
                 }
 
-                // Estratégia 3: Fallback TypeScript template
+                // Estratégia 4: Fallback TypeScript template
                 const result = loadFromTSTemplate(funnelId);
                 if (!isMountedRef.current) return;
                 setState({ loading: false, steps: result, error: null, source: 'fallback-ts' });
@@ -157,7 +175,84 @@ async function loadFromFunnel(funnelId: string): Promise<EditableQuizStep[] | nu
 }
 
 /**
- * Carrega do Master JSON público
+ * Carrega de Per-Step JSONs individuais (PRIORIDADE!)
+ * Cada step tem seu próprio arquivo em public/templates/blocks/step-XX.json
+ */
+async function loadFromPerStepJSONs(): Promise<EditableQuizStep[] | null> {
+    try {
+        appLogger.debug('📦 Carregando per-step JSONs individuais...');
+        const steps: EditableQuizStep[] = [];
+        let successCount = 0;
+        let failCount = 0;
+
+        for (let i = 0; i < 21; i++) {
+            const stepId = `step-${String(i + 1).padStart(2, '0')}`;
+
+            try {
+                const resp = await fetch(`/templates/blocks/${stepId}.json`);
+                
+                if (!resp.ok) {
+                    appLogger.warn(`⚠️ Per-step JSON não encontrado: ${stepId}`);
+                    failCount++;
+                    continue;
+                }
+
+                const stepData = await resp.json();
+                
+                if (!stepData || !Array.isArray(stepData.blocks) || stepData.blocks.length === 0) {
+                    appLogger.warn(`⚠️ Per-step JSON inválido ou vazio: ${stepId}`);
+                    failCount++;
+                    continue;
+                }
+
+                // Converter blocos para formato EditableQuizStep
+                const blocks = stepData.blocks.map((block: any, idx: number) => ({
+                    id: block.id || `${stepId}-block-${idx}`,
+                    type: block.type,
+                    order: block.order ?? idx,
+                    properties: block.properties || {},
+                    content: block.content || {},
+                    parentId: block.parentId || null,
+                }));
+
+                steps.push({
+                    id: stepId,
+                    type: getStepType(i),
+                    order: i + 1,
+                    blocks,
+                    nextStep: i < 20 ? `step-${String(i + 2).padStart(2, '0')}` : undefined,
+                    metadata: stepData.metadata || {},
+                });
+
+                successCount++;
+                console.log(`✅ [${stepId}] Per-step JSON carregado: ${blocks.length} blocos`);
+
+            } catch (error) {
+                appLogger.warn(`⚠️ Erro ao carregar ${stepId}:`, error);
+                failCount++;
+            }
+        }
+
+        if (successCount === 0) {
+            appLogger.warn('❌ Nenhum per-step JSON foi carregado com sucesso');
+            return null;
+        }
+
+        if (failCount > 0) {
+            appLogger.warn(`⚠️ ${failCount}/21 per-step JSONs falharam ao carregar`);
+        }
+
+        appLogger.debug(`✅ Per-step JSONs carregados: ${successCount}/21 steps, ${steps.reduce((sum, s) => sum + s.blocks.length, 0)} blocos`);
+        return steps;
+
+    } catch (error) {
+        appLogger.warn('⚠️ Falha ao carregar per-step JSONs:', error);
+        return null;
+    }
+}
+
+/**
+ * Carrega do Master JSON público (FALLBACK)
  */
 async function loadFromMasterJSON(funnelId?: string): Promise<EditableQuizStep[] | null> {
     try {
