@@ -41,8 +41,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: '0.0.0.0',
-      // Vite padrão em dev é 5173. Mantemos 5173 para coexistir com o redirecionador 8080 -> 5173.
-      port: 5173,
+      port: 8080,
       open: false,
       cors: true,
       strictPort: true,
