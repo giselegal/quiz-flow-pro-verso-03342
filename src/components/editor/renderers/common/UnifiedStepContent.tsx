@@ -653,21 +653,54 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             );
         }
         default:
-            return (
-                <div className="p-8 text-center bg-gray-100 rounded-lg">
-                    <p className="text-gray-600">
-                        Tipo de step desconhecido: <code>{(step as any).type}</code>
-                    </p>
-                </div>
-            );
+            return null;
     }
-};
+}; */
 
-return (
-    <Suspense fallback={<StepLoadingFallback />}>
-        {renderStepComponent()}
-    </Suspense>
-);
+    // 🎯 RENDERIZAÇÃO FINAL - Blocos diretos
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+            {isEditMode ? (
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                        {blocks.map((block) => (
+                            <SortableBlock key={block.id} id={block.id}>
+                                <BlockTypeRenderer
+                                    block={block}
+                                    isSelected={selectedBlockId === block.id}
+                                    isEditable={isEditMode}
+                                    onSelect={handleSelectBlock}
+                                    onOpenProperties={handleOpenProperties}
+                                    contextData={contextData}
+                                />
+                            </SortableBlock>
+                        ))}
+                    </SortableContext>
+                </DndContext>
+            ) : (
+                <>
+                    {blocks.map((block) => (
+                        <BlockTypeRenderer
+                            key={block.id}
+                            block={block}
+                            isSelected={false}
+                            isEditable={false}
+                            contextData={contextData}
+                        />
+                    ))}
+                </>
+            )}
+
+            {blocks.length === 0 && (
+                <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="text-center text-muted-foreground">
+                        <p className="text-sm">Nenhum bloco configurado</p>
+                        <p className="text-xs mt-1">Adicione blocos via editor</p>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 });
 
 UnifiedStepContent.displayName = 'UnifiedStepContent';
