@@ -2,95 +2,232 @@
   "templateVersion": "3.1",
   "metadata": {
     "id": "step-11",
-    "name": "Pergunta (Blocos)",
-    "description": "Pergunta de múltipla escolha com grid de opções",
-    "category": "question",
-    "tags": [
-      "question",
-      "options"
-    ]
+    "name": "Q10 - Peças-chave",
+    "description": "Questão 10 sobre preferências de estilo",
+    "category": "quiz-question"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
   },
   "blocks": [
     {
-      "id": "q-11",
-      "type": "question-block",
+      "id": "progress-bar-step-11",
+      "type": "question-progress",
+      "config": {
+        "stepNumber": 11,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      },
+      "properties": {
+        "stepNumber": 11,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      }
+    },
+    {
+      "id": "step-11-question-title",
+      "type": "question-title",
+      "config": {
+        "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "question-hero-11",
+      "type": "question-hero",
       "config": {
         "questionNumber": "10 de 10",
         "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
-        "requiredSelections": 3,
-        "options": [
-          {
-            "id": "natural",
-            "text": "São fáceis de cuidar"
-          },
-          {
-            "id": "classico",
-            "text": "São de excelente qualidade"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "São fáceis de cuidar e modernos"
-          },
-          {
-            "id": "elegante",
-            "text": "São sofisticados"
-          },
-          {
-            "id": "romantico",
-            "text": "São delicados"
-          },
-          {
-            "id": "sexy",
-            "text": "São perfeitos ao meu corpo"
-          },
-          {
-            "id": "dramatico",
-            "text": "São diferentes, e trazem um efeito para minha roupa"
-          },
-          {
-            "id": "criativo",
-            "text": "São exclusivos, criam identidade no look"
-          }
-        ]
+        "currentQuestion": 10,
+        "totalQuestions": 13,
+        "progressValue": 52,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "type": "fade",
+        "duration": 300
       },
       "properties": {
         "questionNumber": "10 de 10",
         "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
-        "requiredSelections": 3,
+        "currentQuestion": 10,
+        "totalQuestions": 13,
+        "progressValue": 52,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "options-grid-11",
+      "type": "options-grid",
+      "config": {
         "options": [
           {
             "id": "natural",
-            "text": "São fáceis de cuidar"
+            "text": "São fáceis de cuidar",
+            "value": "natural"
           },
           {
             "id": "classico",
-            "text": "São de excelente qualidade"
+            "text": "São de excelente qualidade",
+            "value": "classico"
           },
           {
             "id": "contemporaneo",
-            "text": "São fáceis de cuidar e modernos"
+            "text": "São fáceis de cuidar e modernos",
+            "value": "contemporaneo"
           },
           {
             "id": "elegante",
-            "text": "São sofisticados"
+            "text": "São sofisticados",
+            "value": "elegante"
           },
           {
             "id": "romantico",
-            "text": "São delicados"
+            "text": "São delicados",
+            "value": "romantico"
           },
           {
             "id": "sexy",
-            "text": "São perfeitos ao meu corpo"
+            "text": "São perfeitos ao meu corpo",
+            "value": "sexy"
           },
           {
             "id": "dramatico",
-            "text": "São diferentes, e trazem um efeito para minha roupa"
+            "text": "São diferentes, e trazem um efeito para minha roupa",
+            "value": "dramatico"
           },
           {
             "id": "criativo",
-            "text": "São exclusivos, criam identidade no look"
+            "text": "São exclusivos, criam identidade no look",
+            "value": "criativo"
           }
-        ]
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      },
+      "properties": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "São fáceis de cuidar",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "São de excelente qualidade",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "São fáceis de cuidar e modernos",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "São sofisticados",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "São delicados",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "São perfeitos ao meu corpo",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "São diferentes, e trazem um efeito para minha roupa",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "São exclusivos, criam identidade no look",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "id": "navigation-step-11",
+      "type": "question-navigation",
+      "config": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
       }
     }
   ],

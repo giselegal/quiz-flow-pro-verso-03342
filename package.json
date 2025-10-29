@@ -14,6 +14,7 @@
     "generate:templates": "tsx scripts/generate-templates.ts",
     "build:templates": "tsx scripts/build-templates-from-master.ts",
     "normalize:templates": "tsx scripts/normalize-quiz21-complete.ts",
+  "blocks:from-master": "tsx scripts/generate-blocks-from-master.ts",
     "prebuild": "npm run build:templates",
     "dev": "vite --host 0.0.0.0",
     "dev:server": "cross-env NODE_ENV=development tsx server/index.ts",

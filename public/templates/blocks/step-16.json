@@ -2,63 +2,188 @@
   "templateVersion": "3.1",
   "metadata": {
     "id": "step-16",
-    "name": "Pergunta (Blocos)",
-    "description": "Pergunta de múltipla escolha com grid de opções",
-    "category": "question",
-    "tags": [
-      "question",
-      "options"
-    ]
+    "name": "Q14 - Investimento (Estratégica)",
+    "description": "Questão estratégica 4 sobre objetivos e resultados",
+    "category": "strategic-question"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
   },
   "blocks": [
     {
-      "id": "q-16",
-      "type": "question-block",
+      "id": "progress-bar-step-16",
+      "type": "question-progress",
       "config": {
-        "questionNumber": "4 de 6",
-        "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
-        "requiredSelections": 1,
-        "options": [
-          {
-            "id": "sim-quero",
-            "text": "Sim! Se existisse algo assim, eu quero"
-          },
-          {
-            "id": "sim-momento-certo",
-            "text": "Sim, mas teria que ser no momento certo"
-          },
-          {
-            "id": "tenho-duvidas",
-            "text": "Tenho dúvidas se funcionaria pra mim"
-          },
-          {
-            "id": "nao-prefiro-continuar",
-            "text": "Não, prefiro continuar como estou"
-          }
-        ]
+        "stepNumber": 16,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
       },
       "properties": {
-        "questionNumber": "4 de 6",
+        "stepNumber": 16,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      }
+    },
+    {
+      "id": "step-16-question-title",
+      "type": "question-title",
+      "config": {
+        "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "question-hero-16",
+      "type": "question-hero",
+      "config": {
+        "questionNumber": "Q14 - INVESTIMENTO",
         "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
-        "requiredSelections": 1,
+        "currentQuestion": 14,
+        "totalQuestions": 13,
+        "progressValue": 71,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "questionNumber": "Q14 - INVESTIMENTO",
+        "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
+        "currentQuestion": 14,
+        "totalQuestions": 13,
+        "progressValue": 71,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "options-grid-16",
+      "type": "options-grid",
+      "config": {
         "options": [
           {
             "id": "sim-quero",
-            "text": "Sim! Se existisse algo assim, eu quero"
+            "text": "Sim! Se existisse algo assim, eu quero",
+            "value": "sim-quero"
           },
           {
             "id": "sim-momento-certo",
-            "text": "Sim, mas teria que ser no momento certo"
+            "text": "Sim, mas teria que ser no momento certo",
+            "value": "sim-momento-certo"
           },
           {
             "id": "tenho-duvidas",
-            "text": "Tenho dúvidas se funcionaria pra mim"
+            "text": "Tenho dúvidas se funcionaria pra mim",
+            "value": "tenho-duvidas"
           },
           {
             "id": "nao-prefiro-continuar",
-            "text": "Não, prefiro continuar como estou"
+            "text": "Não, prefiro continuar como estou",
+            "value": "nao-prefiro-continuar"
           }
-        ]
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      },
+      "properties": {
+        "options": [
+          {
+            "id": "sim-quero",
+            "text": "Sim! Se existisse algo assim, eu quero",
+            "value": "sim-quero"
+          },
+          {
+            "id": "sim-momento-certo",
+            "text": "Sim, mas teria que ser no momento certo",
+            "value": "sim-momento-certo"
+          },
+          {
+            "id": "tenho-duvidas",
+            "text": "Tenho dúvidas se funcionaria pra mim",
+            "value": "tenho-duvidas"
+          },
+          {
+            "id": "nao-prefiro-continuar",
+            "text": "Não, prefiro continuar como estou",
+            "value": "nao-prefiro-continuar"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "id": "navigation-step-16",
+      "type": "question-navigation",
+      "config": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
       }
     }
   ],
