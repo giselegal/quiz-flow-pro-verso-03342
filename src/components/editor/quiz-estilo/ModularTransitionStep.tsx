@@ -13,7 +13,7 @@ import { appLogger } from '@/utils/logger';
 import { DndContext, closestCenter, PointerSensor, useSensors, useSensor, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Block } from '@/types/editor';
 
@@ -222,12 +222,12 @@ export default function ModularTransitionStep({
                             <SortableContext items={localOrder} strategy={verticalListSortingStrategy}>
                                 {orderedBlocks.map((block: Block, index: number) => (
                                     <SortableBlock key={block.id} id={block.id} index={index}>
-                                        <UniversalBlockRenderer
+                                        <BlockTypeRenderer
                                             block={block}
-                                            mode="editor"
                                             isSelected={selectedBlockId === block.id}
+                                            isEditable={isEditable}
                                             onSelect={() => handleBlockClick(block.id)}
-                                            onClick={() => handleBlockClick(block.id)}
+                                            onOpenProperties={() => onOpenProperties(block.id)}
                                         />
                                     </SortableBlock>
                                 ))}
@@ -238,10 +238,11 @@ export default function ModularTransitionStep({
                     ) : (
                         <>
                             {orderedBlocks.map((block: Block) => (
-                                <UniversalBlockRenderer
+                                <BlockTypeRenderer
                                     key={block.id}
                                     block={block}
-                                    mode="preview"
+                                    isSelected={false}
+                                    isEditable={false}
                                 />
                             ))}
                         </>
