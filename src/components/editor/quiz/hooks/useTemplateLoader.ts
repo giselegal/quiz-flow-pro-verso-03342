@@ -8,7 +8,7 @@
  * - Loading states com Suspense support
  * - Error handling robusto
  * - Retry automático
- * - Cache integrado
+ * - Cache unificado integrado
  * 
  * @version 1.0.0
  */
@@ -20,6 +20,7 @@ import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { convertTemplateToBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { loadStepTemplate } from '@/utils/loadStepTemplates';
+import { UnifiedCacheService } from '@/services/UnifiedCacheService';
 import type { EditableQuizStep } from '../types';
 
 export interface TemplateLoaderState {
