@@ -39,6 +39,13 @@ import QuestionProgressBlock from '@/components/editor/blocks/atomic/QuestionPro
 import QuestionNumberBlock from '@/components/editor/blocks/atomic/QuestionNumberBlock';
 import QuestionTextBlock from '@/components/editor/blocks/atomic/QuestionTextBlock';
 import QuestionInstructionsBlock from '@/components/editor/blocks/atomic/QuestionInstructionsBlock';
+// Result blocks (atômicos)
+import ResultMainBlock from '@/components/editor/blocks/atomic/ResultMainBlock';
+import ResultImageBlock from '@/components/editor/blocks/atomic/ResultImageBlock';
+import ResultDescriptionBlock from '@/components/editor/blocks/atomic/ResultDescriptionBlock';
+import ResultSecondaryStylesBlock from '@/components/editor/blocks/atomic/ResultSecondaryStylesBlock';
+import ResultShareBlock from '@/components/editor/blocks/atomic/ResultShareBlock';
+import ResultCTABlock from '@/components/editor/blocks/atomic/ResultCTABlock';
 // (já importado acima)
 
 export interface BlockRendererProps {
@@ -179,28 +186,28 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
             // ===== RESULT (Step 20) =====
             case 'result-main':
                 // Título principal do resultado
-                return <TextInlineAtomic block={block} {...rest} />;
+                return <ResultMainBlock block={block} {...rest} />;
             case 'result-congrats':
                 // Mensagem de congratulações
                 return <TextInlineAtomic block={block} {...rest} />;
             case 'result-image':
                 // Imagem do estilo predominante
-                return <ImageInlineAtomic block={block} {...rest} />;
+                return <ResultImageBlock block={block} {...rest} />;
             case 'result-description':
                 // Descrição do estilo
-                return <TextInlineAtomic block={block} {...rest} />;
+                return <ResultDescriptionBlock block={block} {...rest} />;
             case 'result-progress-bars':
-                // Barras de progresso dos estilos
-                return <GenericBlock block={block} {...rest} />;
+                // Barras de progresso dos estilos (usar ResultSecondaryStylesBlock que já tem barras)
+                return <ResultSecondaryStylesBlock block={block} {...rest} />;
             case 'result-secondary-styles':
                 // Estilos secundários
-                return <GenericBlock block={block} {...rest} />;
+                return <ResultSecondaryStylesBlock block={block} {...rest} />;
             case 'result-share':
                 // Botões de compartilhamento social
-                return <GenericBlock block={block} {...rest} />;
+                return <ResultShareBlock block={block} {...rest} />;
             case 'result-cta':
                 // CTA do resultado
-                return <CTAButtonAtomic block={block} {...rest} />;
+                return <ResultCTABlock block={block} {...rest} />;
             case 'HeroSection':
                 // Step 20: Hero do resultado → usar GenericBlock temporariamente
                 return <GenericBlock block={block} {...rest} />;
