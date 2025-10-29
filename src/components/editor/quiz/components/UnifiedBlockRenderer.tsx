@@ -1,6 +1,12 @@
 /**
  * 🎯 UNIFIED BLOCK RENDERER - WYSIWYG Real
  * 
+ * ⚠️ DEPRECATED: Este componente está sendo substituído por BlockTypeRenderer
+ * @see src/components/editor/quiz/renderers/BlockTypeRenderer.tsx
+ * 
+ * Motivo: BlockTypeRenderer oferece registry unificado e elimina duplicação de lógica.
+ * Use BlockTypeRenderer para novos componentes.
+ * 
  * Renderiza blocos de forma IDÊNTICA em Edit Mode e Preview Mode.
  * A ÚNICA diferença é:
  * - Edit Mode: Overlay de edição (drag handles, botões)
@@ -19,25 +25,25 @@ import { PreviewInteractionLayer } from './PreviewInteractionLayer';
 interface UnifiedBlockRendererProps {
   block: BlockComponent;
   allBlocks: BlockComponent[];
-  
+
   // Modo de operação
   mode: 'edit' | 'preview';
-  
+
   // Estado (Edit Mode)
   isSelected?: boolean;
   isMultiSelected?: boolean;
   hasErrors?: boolean;
   errors?: any[];
-  
+
   // Handlers (Edit Mode)
   onBlockClick?: (e: React.MouseEvent, block: BlockComponent) => void;
   onDelete?: () => void;
   onDuplicate?: () => void;
-  
+
   // Preview props
   sessionData?: Record<string, any>;
   onUpdateSessionData?: (key: string, value: any) => void;
-  
+
   // Renderização
   renderBlockPreview: (block: BlockComponent, allBlocks: BlockComponent[]) => React.ReactNode;
 }
@@ -57,23 +63,23 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
   onUpdateSessionData,
   renderBlockPreview,
 }) => {
-  
+
   // 🎯 DRAG & DROP (apenas Edit Mode)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     disabled: mode === 'preview',
   });
-  
+
   const style = mode === 'edit' ? {
     transform: transform ? CSS.Transform.toString(transform) : undefined,
     transition,
   } : undefined;
-  
+
   // 🎯 INTERATIVIDADE CONDICIONAL
-  const clickHandler = mode === 'edit' 
+  const clickHandler = mode === 'edit'
     ? (e: React.MouseEvent) => onBlockClick?.(e, block)
     : undefined;
-  
+
   return (
     <div
       ref={mode === 'edit' ? setNodeRef : undefined}
@@ -104,7 +110,7 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
           {errors.length}
         </div>
       )}
-      
+
       {/* 🎯 DRAG HANDLE - Apenas Edit Mode */}
       {mode === 'edit' && (
         <div className="absolute left-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -113,7 +119,7 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
           </div>
         </div>
       )}
-      
+
       {/* 🎯 CONTEÚDO VISUAL - IDÊNTICO EM AMBOS OS MODOS */}
       <div className={cn(
         mode === 'edit' && 'pl-8 pr-10',
@@ -122,7 +128,7 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
         {/* 🔑 CHAVE: Renderizar preview visual (sempre igual) */}
         {renderBlockPreview(block, allBlocks)}
       </div>
-      
+
       {/* 🎯 ACTION BUTTONS - Apenas Edit Mode */}
       {mode === 'edit' && (
         <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -130,9 +136,9 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
             variant="ghost"
             size="icon"
             className="h-7 w-7 bg-muted/80 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground"
-            onClick={(e) => { 
-              e.stopPropagation(); 
-              onDelete?.(); 
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete?.();
             }}
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -141,16 +147,16 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
             variant="ghost"
             size="icon"
             className="h-7 w-7 bg-muted/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground"
-            onClick={(e) => { 
-              e.stopPropagation(); 
-              onDuplicate?.(); 
+            onClick={(e) => {
+              e.stopPropagation();
+              onDuplicate?.();
             }}
           >
             <Copy className="w-3.5 h-3.5" />
           </Button>
         </div>
       )}
-      
+
       {/* 🎯 PREVIEW INTERACTION LAYER - Apenas Preview Mode */}
       {mode === 'preview' && (
         <PreviewInteractionLayer
