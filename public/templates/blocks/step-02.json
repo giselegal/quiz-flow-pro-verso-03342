@@ -23,39 +23,28 @@
     {
       "id": "progress-bar-step-02",
       "type": "question-progress",
-      "config": {
-        "stepNumber": 2,
-        "totalSteps": 21,
-        "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
-      },
+      "order": 0,
+      "content": {},
       "properties": {
+        "padding": 8,
+        "backgroundColor": "#e5e7eb",
         "stepNumber": 2,
         "totalSteps": 21,
         "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
+        "barColor": "#B89B7A"
       }
     },
     {
       "id": "step-02-title",
       "type": "question-title",
-      "config": {
-        "text": "Pergunta 1 de 10",
-        "subtitle": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
-        "backgroundColor": "transparent",
-        "padding": 16,
-        "type": "fade",
-        "duration": 300
+      "order": 1,
+      "content": {
+        "text": "Pergunta 1 de 10"
       },
       "properties": {
-        "text": "Pergunta 1 de 10",
-        "subtitle": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
-        "backgroundColor": "transparent",
         "padding": 16,
+        "backgroundColor": "transparent",
+        "subtitle": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
         "type": "fade",
         "duration": 300
       }
@@ -63,7 +52,8 @@
     {
       "id": "step-02-options",
       "type": "options-grid",
-      "config": {
+      "order": 2,
+      "content": {
         "options": [
           {
             "id": "natural",
@@ -106,68 +96,15 @@
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp"
           }
         ],
-        "columns": 2,
-        "multipleSelection": true,
         "minSelections": 3,
-        "maxSelections": 3,
-        "showImages": true,
-        "backgroundColor": "transparent",
-        "padding": 16,
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
+        "maxSelections": 3
       },
       "properties": {
-        "options": [
-          {
-            "id": "natural",
-            "text": "Conforto, leveza e praticidade no vestir",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
-          },
-          {
-            "id": "classico",
-            "text": "Discrição, caimento clássico e sobriedade",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "Praticidade com um toque de estilo atual",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
-          },
-          {
-            "id": "elegante",
-            "text": "Elegância refinada, moderna e sem exageros",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
-          },
-          {
-            "id": "romantico",
-            "text": "Delicadeza em tecidos suaves e fluidos",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp"
-          },
-          {
-            "id": "sexy",
-            "text": "Sensualidade com destaque para o corpo",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp"
-          },
-          {
-            "id": "dramatico",
-            "text": "Impacto visual com peças estruturadas e assimétricas",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp"
-          },
-          {
-            "id": "criativo",
-            "text": "Mix criativo com formas ousadas e originais",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp"
-          }
-        ],
+        "padding": 16,
+        "backgroundColor": "transparent",
+        "showImages": true,
         "columns": 2,
         "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "showImages": true,
-        "backgroundColor": "transparent",
-        "padding": 16,
         "type": "slideUp",
         "duration": 300,
         "delay": 100,
@@ -177,16 +114,8 @@
     {
       "id": "navigation-step-02",
       "type": "question-navigation",
-      "config": {
-        "backLabel": "Voltar",
-        "nextLabel": "Avançar",
-        "backVariant": "outline",
-        "nextVariant": "default",
-        "showBack": true,
-        "showNext": true,
-        "type": "fade",
-        "duration": 300
-      },
+      "order": 3,
+      "content": {},
       "properties": {
         "backLabel": "Voltar",
         "nextLabel": "Avançar",

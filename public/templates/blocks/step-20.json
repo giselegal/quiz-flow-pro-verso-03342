@@ -31,28 +31,8 @@
     {
       "id": "result-congrats",
       "type": "result-congrats",
-      "config": {
-        "enabled": true,
-        "order": 1,
-        "props": {
-          "showCelebration": true,
-          "celebrationEmoji": "🎉",
-          "celebrationAnimation": "bounce",
-          "greetingFormat": "Olá, {userName}!",
-          "titleFormat": "Seu Estilo Predominante é:",
-          "styleNameDisplay": "{styleName}",
-          "colors": {
-            "greeting": "#432818",
-            "greetingHighlight": "#B89B7A",
-            "title": "#432818",
-            "styleName": "#B89B7A"
-          },
-          "spacing": {
-            "padding": "3rem 1.5rem",
-            "marginBottom": "2.5rem"
-          }
-        }
-      },
+      "order": 0,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 1,
@@ -79,24 +59,8 @@
     {
       "id": "result-main",
       "type": "result-main",
-      "config": {
-        "enabled": true,
-        "order": 2,
-        "props": {
-          "layout": "two-column",
-          "imagePosition": "left",
-          "showStyleImage": true,
-          "styleImage": {
-            "aspectRatio": "4/5",
-            "showDecorations": true,
-            "decorationColor": "#B89B7A",
-            "fallbackEnabled": true
-          },
-          "showIntroText": true,
-          "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
-          "showDescription": true
-        }
-      },
+      "order": 1,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 2,
@@ -119,22 +83,8 @@
     {
       "id": "result-progress-bars",
       "type": "result-progress-bars",
-      "config": {
-        "enabled": true,
-        "order": 3,
-        "props": {
-          "topCount": 3,
-          "showPercentage": true,
-          "percentageFormat": "{percentage}%",
-          "animationDelay": 200,
-          "colors": {
-            "primary": "#B89B7A",
-            "secondary": "#a08966",
-            "tertiary": "#8c7757"
-          },
-          "titleFormat": "Além do {primaryStyle}, você também tem traços de:"
-        }
-      },
+      "order": 2,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 3,
@@ -155,16 +105,8 @@
     {
       "id": "result-secondary-styles",
       "type": "result-secondary-styles",
-      "config": {
-        "enabled": true,
-        "order": 4,
-        "props": {
-          "showKeywords": true,
-          "keywordsTitle": "Palavras que te definem:",
-          "tagColor": "#B89B7A",
-          "tagStyle": "rounded-full"
-        }
-      },
+      "order": 3,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 4,
@@ -179,17 +121,8 @@
     {
       "id": "result-image",
       "type": "result-image",
-      "config": {
-        "enabled": true,
-        "order": 5,
-        "props": {
-          "position": "center",
-          "aspectRatio": "4/5",
-          "maxWidth": "28rem",
-          "centered": true,
-          "showDecorations": false
-        }
-      },
+      "order": 4,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 5,
@@ -205,19 +138,8 @@
     {
       "id": "result-description",
       "type": "result-description",
-      "config": {
-        "enabled": true,
-        "order": 6,
-        "props": {
-          "showTransitionText": true,
-          "transitionText": "Mas lembre-se: você não é só um estilo.",
-          "showPersuasiveQuestions": true,
-          "persuasiveQuestionsTitle": "💭 Você já se perguntou...",
-          "persuasiveQuestionsIcon": "❓",
-          "showClosingMessage": true,
-          "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
-        }
-      },
+      "order": 5,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 6,
@@ -235,25 +157,15 @@
     {
       "id": "button-cta-primary",
       "type": "result-cta",
-      "config": {
-        "text": "{ctaPrimaryText}",
-        "url": "{ctaPrimaryUrl}",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "hoverColor": "#a08966",
-        "enabled": true,
-        "order": 7
-      },
+      "order": 6,
+      "content": {},
       "properties": {
+        "backgroundColor": "#B89B7A",
         "text": "{ctaPrimaryText}",
         "url": "{ctaPrimaryUrl}",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
-        "backgroundColor": "#B89B7A",
         "textColor": "#ffffff",
         "hoverColor": "#a08966",
         "enabled": true,
@@ -263,18 +175,8 @@
     {
       "id": "result-share",
       "type": "result-share",
-      "config": {
-        "title": "Compartilhe seu resultado",
-        "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
-        "platforms": [
-          "facebook",
-          "twitter",
-          "whatsapp",
-          "linkedin"
-        ],
-        "enabled": true,
-        "order": 8
-      },
+      "order": 7,
+      "content": {},
       "properties": {
         "title": "Compartilhe seu resultado",
         "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
@@ -291,15 +193,8 @@
     {
       "id": "transformation-benefits",
       "type": "text-inline",
-      "config": {
-        "enabled": true,
-        "order": 8,
-        "props": {
-          "content": "<h3>Transforme Sua Imagem, Revele Sua Essência</h3><p>Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.</p><ul><li>🎯 Clareza de estilo para se vestir com facilidade todos os dias</li><li>🎨 Cores e formas que comunicam quem você é e o que você quer</li><li>💼 Imagem que chega primeiro: autoridade sem perder autenticidade</li><li>👗 Guarda-roupa estratégico que conversa entre si</li></ul>",
-          "align": "left",
-          "style": "rich-text"
-        }
-      },
+      "order": 8,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 8,
@@ -313,15 +208,8 @@
     {
       "id": "method-steps",
       "type": "text-inline",
-      "config": {
-        "enabled": true,
-        "order": 9,
-        "props": {
-          "content": "<h3>O que você vai aprender no Método 5 Passos</h3><div><h4>🪞 Passo 1 — Estilo de Ser</h4><p>Descubra seus 3 estilos predominantes e entenda como traduzir sua personalidade no vestir.</p></div><div><h4>🎨 Passo 2 — Cores</h4><p>As cores são uma linguagem emocional. Aprenda como escolher tons que valorizam sua beleza natural.</p></div><div><h4>🧍‍♀️ Passo 3 — Biotipo</h4><p>Entenda as linhas e proporções do seu corpo e como se vestir para equilibrar formas.</p></div><div><h4>🧹 Passo 4 — Detox do Guarda-Roupa</h4><p>Um processo de autoconhecimento através do desapego.</p></div><div><h4>👗 Passo 5 — Guarda-Roupa de Sucesso</h4><p>Monte um guarda-roupa funcional e inteligente, com peças-chave e combinações rápidas.</p></div>",
-          "align": "left",
-          "style": "rich-text"
-        }
-      },
+      "order": 9,
+      "content": {},
       "properties": {
         "enabled": true,
         "order": 9,
@@ -335,25 +223,15 @@
     {
       "id": "button-cta-final",
       "type": "result-cta",
-      "config": {
-        "text": "{ctaSecondaryText}",
-        "url": "{ctaSecondaryUrl}",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "hoverColor": "#a08966",
-        "enabled": true,
-        "order": 10
-      },
+      "order": 10,
+      "content": {},
       "properties": {
+        "backgroundColor": "#B89B7A",
         "text": "{ctaSecondaryText}",
         "url": "{ctaSecondaryUrl}",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
-        "backgroundColor": "#B89B7A",
         "textColor": "#ffffff",
         "hoverColor": "#a08966",
         "enabled": true,

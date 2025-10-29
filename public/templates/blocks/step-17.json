@@ -27,33 +27,25 @@
     {
       "id": "progress-bar-step-17",
       "type": "question-progress",
-      "config": {
-        "stepNumber": 17,
-        "totalSteps": 21,
-        "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
-      },
+      "order": 0,
+      "content": {},
       "properties": {
+        "padding": 8,
+        "backgroundColor": "#e5e7eb",
         "stepNumber": 17,
         "totalSteps": 21,
         "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
+        "barColor": "#B89B7A"
       }
     },
     {
       "id": "step-17-question-title",
       "type": "question-title",
-      "config": {
-        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
-        "type": "fade",
-        "duration": 300
+      "order": 1,
+      "content": {
+        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
       },
       "properties": {
-        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
         "type": "fade",
         "duration": 300
       }
@@ -61,25 +53,15 @@
     {
       "id": "question-hero-17",
       "type": "question-hero",
-      "config": {
-        "questionNumber": "Q15 - TRANSFORMAÇÃO",
-        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
-        "currentQuestion": 15,
-        "totalQuestions": 13,
-        "progressValue": 76,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "type": "fade",
-        "duration": 300
-      },
+      "order": 2,
+      "content": {},
       "properties": {
+        "showProgress": true,
         "questionNumber": "Q15 - TRANSFORMAÇÃO",
         "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
         "currentQuestion": 15,
         "totalQuestions": 13,
         "progressValue": 76,
-        "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
         "type": "fade",
@@ -89,7 +71,8 @@
     {
       "id": "options-grid-17",
       "type": "options-grid",
-      "config": {
+      "order": 3,
+      "content": {
         "options": [
           {
             "id": "sim-vale-muito",
@@ -112,49 +95,15 @@
             "value": "nao-nao-pronta"
           }
         ],
-        "columns": 2,
-        "multipleSelection": false,
         "minSelections": 1,
-        "maxSelections": 1,
-        "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
+        "maxSelections": 1
       },
       "properties": {
-        "options": [
-          {
-            "id": "sim-vale-muito",
-            "text": "Sim! Por esse resultado, vale muito",
-            "value": "sim-vale-muito"
-          },
-          {
-            "id": "sim-se-certeza",
-            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
-            "value": "sim-se-certeza"
-          },
-          {
-            "id": "talvez-depende",
-            "text": "Talvez — depende do que está incluso",
-            "value": "talvez-depende"
-          },
-          {
-            "id": "nao-nao-pronta",
-            "text": "Não, ainda não estou pronta para investir",
-            "value": "nao-nao-pronta"
-          }
-        ],
+        "autoAdvance": true,
+        "imageSize": 256,
+        "showImages": true,
         "columns": 2,
         "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
         "autoAdvanceDelay": 1500,
         "type": "slideUp",
         "duration": 300,
@@ -165,16 +114,8 @@
     {
       "id": "navigation-step-17",
       "type": "question-navigation",
-      "config": {
-        "backLabel": "Voltar",
-        "nextLabel": "Continuar",
-        "backVariant": "outline",
-        "nextVariant": "default",
-        "showBack": true,
-        "showNext": true,
-        "type": "fade",
-        "duration": 300
-      },
+      "order": 4,
+      "content": {},
       "properties": {
         "backLabel": "Voltar",
         "nextLabel": "Continuar",

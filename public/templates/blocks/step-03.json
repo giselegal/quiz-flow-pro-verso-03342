@@ -23,37 +23,27 @@
     {
       "id": "progress-bar-step-03",
       "type": "question-progress",
-      "config": {
-        "stepNumber": 3,
-        "totalSteps": 21,
-        "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
-      },
+      "order": 0,
+      "content": {},
       "properties": {
+        "padding": 8,
+        "backgroundColor": "#e5e7eb",
         "stepNumber": 3,
         "totalSteps": 21,
         "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
+        "barColor": "#B89B7A"
       }
     },
     {
       "id": "step-03-title",
       "type": "question-title",
-      "config": {
-        "text": "Pergunta 2 de 10",
-        "backgroundColor": "transparent",
-        "padding": 16,
-        "type": "fade",
-        "duration": 300
+      "order": 1,
+      "content": {
+        "text": "Pergunta 2 de 10"
       },
       "properties": {
-        "text": "Pergunta 2 de 10",
-        "backgroundColor": "transparent",
         "padding": 16,
+        "backgroundColor": "transparent",
         "type": "fade",
         "duration": 300
       }
@@ -61,7 +51,8 @@
     {
       "id": "options-grid-03",
       "type": "options-grid",
-      "config": {
+      "order": 2,
+      "content": {
         "options": [
           {
             "id": "natural",
@@ -104,78 +95,20 @@
             "value": "criativo"
           }
         ],
-        "columns": 2,
-        "multipleSelection": true,
         "minSelections": 3,
-        "maxSelections": 3,
-        "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "requiredSelections": 3,
-        "backgroundColor": "transparent",
-        "padding": 16,
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
+        "maxSelections": 3
       },
       "properties": {
-        "options": [
-          {
-            "id": "natural",
-            "text": "Informal, espontânea, alegre, essencialista",
-            "value": "natural"
-          },
-          {
-            "id": "classico",
-            "text": "Conservadora, séria, organizada",
-            "value": "classico"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "Informada, ativa, prática",
-            "value": "contemporaneo"
-          },
-          {
-            "id": "elegante",
-            "text": "Exigente, sofisticada, seletiva",
-            "value": "elegante"
-          },
-          {
-            "id": "romantico",
-            "text": "Feminina, meiga, delicada, sensível",
-            "value": "romantico"
-          },
-          {
-            "id": "sexy",
-            "text": "Glamorosa, vaidosa, sensual",
-            "value": "sexy"
-          },
-          {
-            "id": "dramatico",
-            "text": "Cosmopolita, moderna e audaciosa",
-            "value": "dramatico"
-          },
-          {
-            "id": "criativo",
-            "text": "Exótica, aventureira, livre",
-            "value": "criativo"
-          }
-        ],
+        "padding": 16,
+        "backgroundColor": "transparent",
+        "autoAdvance": true,
+        "imageSize": 256,
+        "showImages": true,
         "columns": 2,
         "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3,
-        "backgroundColor": "transparent",
-        "padding": 16,
         "type": "slideUp",
         "duration": 300,
         "delay": 100,
@@ -185,16 +118,8 @@
     {
       "id": "navigation-step-03",
       "type": "question-navigation",
-      "config": {
-        "backLabel": "Voltar",
-        "nextLabel": "Avançar",
-        "backVariant": "outline",
-        "nextVariant": "default",
-        "showBack": true,
-        "showNext": true,
-        "type": "fade",
-        "duration": 300
-      },
+      "order": 3,
+      "content": {},
       "properties": {
         "backLabel": "Voltar",
         "nextLabel": "Avançar",

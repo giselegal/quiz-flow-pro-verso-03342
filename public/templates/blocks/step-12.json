@@ -28,29 +28,18 @@
     {
       "id": "transition-hero-12",
       "type": "transition-hero",
-      "config": {
+      "order": 0,
+      "content": {
         "title": "🕐 Enquanto calculamos o seu resultado...",
-        "subtitle": "Estamos montando seu perfil de estilo personalizado",
-        "message": "Continue para descobrir ainda mais sobre seu estilo único!",
-        "autoAdvanceDelay": 3500,
-        "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.",
-        "backgroundColor": "#FAF9F7",
-        "textColor": "#432818",
-        "padding": 32,
-        "type": "scale",
-        "duration": 500,
-        "delay": 0,
-        "easing": "ease-out"
+        "subtitle": "Estamos montando seu perfil de estilo personalizado"
       },
       "properties": {
-        "title": "🕐 Enquanto calculamos o seu resultado...",
-        "subtitle": "Estamos montando seu perfil de estilo personalizado",
+        "padding": 32,
+        "backgroundColor": "#FAF9F7",
         "message": "Continue para descobrir ainda mais sobre seu estilo único!",
         "autoAdvanceDelay": 3500,
         "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.",
-        "backgroundColor": "#FAF9F7",
         "textColor": "#432818",
-        "padding": 32,
         "type": "scale",
         "duration": 500,
         "delay": 0,
@@ -60,13 +49,11 @@
     {
       "id": "step-12-transition-text",
       "type": "transition-text",
-      "config": {
-        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.",
-        "type": "fade",
-        "duration": 300
+      "order": 1,
+      "content": {
+        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
       },
       "properties": {
-        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.",
         "type": "fade",
         "duration": 300
       }
@@ -74,14 +61,11 @@
     {
       "id": "step-12-transition-cta",
       "type": "CTAButton",
-      "config": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "medium"
+      "order": 2,
+      "content": {
+        "label": "Continuar"
       },
       "properties": {
-        "label": "Continuar",
         "href": "#next",
         "variant": "primary",
         "size": "medium"

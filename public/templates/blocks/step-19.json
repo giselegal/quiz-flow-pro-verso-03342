@@ -29,27 +29,17 @@
     {
       "id": "transition-hero-19",
       "type": "transition-hero",
-      "config": {
+      "order": 0,
+      "content": {
         "title": "Obrigada por compartilhar.",
-        "subtitle": "Preparando seu resultado personalizado",
-        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
-        "autoAdvanceDelay": 3000,
-        "backgroundColor": "#FAF9F7",
-        "textColor": "#432818",
-        "padding": 32,
-        "type": "scale",
-        "duration": 500,
-        "delay": 0,
-        "easing": "ease-out"
+        "subtitle": "Preparando seu resultado personalizado"
       },
       "properties": {
-        "title": "Obrigada por compartilhar.",
-        "subtitle": "Preparando seu resultado personalizado",
+        "padding": 32,
+        "backgroundColor": "#FAF9F7",
         "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
         "autoAdvanceDelay": 3000,
-        "backgroundColor": "#FAF9F7",
         "textColor": "#432818",
-        "padding": 32,
         "type": "scale",
         "duration": 500,
         "delay": 0,
@@ -59,10 +49,8 @@
     {
       "id": "step-19-transition-text",
       "type": "transition-text",
-      "config": {
-        "type": "fade",
-        "duration": 300
-      },
+      "order": 1,
+      "content": {},
       "properties": {
         "type": "fade",
         "duration": 300
@@ -71,13 +59,11 @@
     {
       "id": "step-19-transition-cta",
       "type": "CTAButton",
-      "config": {
-        "label": "...",
-        "variant": "outline",
-        "size": "small"
+      "order": 2,
+      "content": {
+        "label": "..."
       },
       "properties": {
-        "label": "...",
         "variant": "outline",
         "size": "small"
       }

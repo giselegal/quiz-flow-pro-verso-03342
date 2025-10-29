@@ -27,33 +27,25 @@
     {
       "id": "progress-bar-step-14",
       "type": "question-progress",
-      "config": {
-        "stepNumber": 14,
-        "totalSteps": 21,
-        "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
-      },
+      "order": 0,
+      "content": {},
       "properties": {
+        "padding": 8,
+        "backgroundColor": "#e5e7eb",
         "stepNumber": 14,
         "totalSteps": 21,
         "showPercentage": true,
-        "barColor": "#B89B7A",
-        "backgroundColor": "#e5e7eb",
-        "padding": 8
+        "barColor": "#B89B7A"
       }
     },
     {
       "id": "step-14-question-title",
       "type": "question-title",
-      "config": {
-        "text": "O que mais te desafia na hora de se vestir?",
-        "type": "fade",
-        "duration": 300
+      "order": 1,
+      "content": {
+        "text": "O que mais te desafia na hora de se vestir?"
       },
       "properties": {
-        "text": "O que mais te desafia na hora de se vestir?",
         "type": "fade",
         "duration": 300
       }
@@ -61,25 +53,15 @@
     {
       "id": "question-hero-14",
       "type": "question-hero",
-      "config": {
-        "questionNumber": "Q12 - DESAFIOS",
-        "questionText": "O que mais te desafia na hora de se vestir?",
-        "currentQuestion": 12,
-        "totalQuestions": 13,
-        "progressValue": 62,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "type": "fade",
-        "duration": 300
-      },
+      "order": 2,
+      "content": {},
       "properties": {
+        "showProgress": true,
         "questionNumber": "Q12 - DESAFIOS",
         "questionText": "O que mais te desafia na hora de se vestir?",
         "currentQuestion": 12,
         "totalQuestions": 13,
         "progressValue": 62,
-        "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
         "type": "fade",
@@ -89,7 +71,8 @@
     {
       "id": "options-grid-14",
       "type": "options-grid",
-      "config": {
+      "order": 3,
+      "content": {
         "options": [
           {
             "id": "combinar-pecas",
@@ -112,49 +95,15 @@
             "value": "perco-tempo"
           }
         ],
-        "columns": 2,
-        "multipleSelection": false,
         "minSelections": 1,
-        "maxSelections": 1,
-        "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
+        "maxSelections": 1
       },
       "properties": {
-        "options": [
-          {
-            "id": "combinar-pecas",
-            "text": "Tenho peças, mas não sei como combiná-las",
-            "value": "combinar-pecas"
-          },
-          {
-            "id": "comprar-impulso",
-            "text": "Compro por impulso e me arrependo depois",
-            "value": "comprar-impulso"
-          },
-          {
-            "id": "imagem-nao-reflete",
-            "text": "Minha imagem não reflete quem eu sou",
-            "value": "imagem-nao-reflete"
-          },
-          {
-            "id": "perco-tempo",
-            "text": "Perco tempo e acabo usando sempre os mesmos looks",
-            "value": "perco-tempo"
-          }
-        ],
+        "autoAdvance": true,
+        "imageSize": 256,
+        "showImages": true,
         "columns": 2,
         "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
         "autoAdvanceDelay": 1500,
         "type": "slideUp",
         "duration": 300,
@@ -165,16 +114,8 @@
     {
       "id": "navigation-step-14",
       "type": "question-navigation",
-      "config": {
-        "backLabel": "Voltar",
-        "nextLabel": "Continuar",
-        "backVariant": "outline",
-        "nextVariant": "default",
-        "showBack": true,
-        "showNext": true,
-        "type": "fade",
-        "duration": 300
-      },
+      "order": 4,
+      "content": {},
       "properties": {
         "backLabel": "Voltar",
         "nextLabel": "Continuar",
