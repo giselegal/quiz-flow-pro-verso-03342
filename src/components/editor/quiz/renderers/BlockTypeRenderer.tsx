@@ -134,8 +134,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 return <QuestionNavigationBlock block={block} {...rest} contextData={rest.contextData} />;
             // ===== QUESTIONS (Steps 02-18) =====
             case 'question-title':
-                // Usar bloco atômico de texto
-                return <TextInlineAtomic block={block} {...rest} />;
+                // ✅ CORRIGIDO: Usar QuestionTextBlock dedicado para título + subtítulo
+                return <QuestionTextBlock block={block} {...rest} />;
             case 'question-hero':
                 // Template v3: question-hero section → header completo
                 return <QuizQuestionHeaderBlock block={block} {...rest} />;

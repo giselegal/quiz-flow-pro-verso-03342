@@ -83,21 +83,58 @@ export default function DynamicPropertiesPanel({
     }
 
     // ============================================================================
-    // ERROR STATE
+    // ERROR STATE WITH FALLBACK
     // ============================================================================
 
     if (error || !componentDefinition) {
+        // ✅ FASE 1.4: Fallback para editor básico de propriedades
+        const [localProps, setLocalProps] = useState<Record<string, any>>({});
+
         return (
-            <div className="p-6">
+            <div className="p-6 space-y-4">
                 <Alert>
                     <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
-                        {error || 'Definição do componente não encontrada'}
-                        <div className="mt-2 text-xs text-gray-500">
-                            Component ID: {componentId}
-                        </div>
+                        API indisponível - Modo offline
                     </AlertDescription>
                 </Alert>
+
+                <div className="space-y-4">
+                    <h3 className="text-sm font-medium">Propriedades Básicas</h3>
+                    
+                    {/* Editor genérico para propriedades locais */}
+                    <div className="space-y-3">
+                        {Object.entries(localProps).map(([key, value]) => (
+                            <div key={key} className="space-y-1">
+                                <label className="text-xs font-medium text-gray-700">{key}</label>
+                                <input
+                                    type="text"
+                                    value={String(value)}
+                                    onChange={(e) => {
+                                        const newProps = { ...localProps, [key]: e.target.value };
+                                        setLocalProps(newProps);
+                                        onPropertyChange?.(key, e.target.value);
+                                    }}
+                                    className="w-full px-3 py-2 text-sm border rounded-md"
+                                />
+                            </div>
+                        ))}
+                        
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                                const key = prompt('Nome da propriedade:');
+                                if (key) {
+                                    setLocalProps({ ...localProps, [key]: '' });
+                                }
+                            }}
+                            className="w-full"
+                        >
+                            + Adicionar Propriedade
+                        </Button>
+                    </div>
+                </div>
             </div>
         );
     }
