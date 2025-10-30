@@ -18,7 +18,8 @@ describe('IntroLogoBlock - aliases', () => {
 
         const img = screen.getByRole('img', { name: /logo alt/i });
         expect(img).toBeInTheDocument();
-        expect((img as HTMLImageElement).src).toBe(URL + '/'); // jsdom appends '/'
+        // Compare diretamente o atributo para evitar normalizações do JSDOM
+        expect(img.getAttribute('src')).toBe(URL);
     });
 
     it('renderiza quando content.imageUrl é usado (fallback)', () => {
@@ -34,6 +35,6 @@ describe('IntroLogoBlock - aliases', () => {
 
         const img = screen.getByRole('img', { name: /minha logo/i });
         expect(img).toBeInTheDocument();
-        expect((img as HTMLImageElement).src).toBe(URL + '/');
+        expect(img.getAttribute('src')).toBe(URL);
     });
 });
