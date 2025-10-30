@@ -106,16 +106,16 @@ export class TemplateService extends BaseCanonicalService {
   // Mapeamento das 21 etapas do Quiz de Estilo
   private readonly STEP_MAPPING: Record<number, Omit<StepInfo, 'id' | 'order' | 'blocksCount' | 'hasTemplate'>> = {
     1: { name: 'Introdução', type: 'intro', description: 'Apresentação do Quiz de Estilo' },
-    2: { name: 'Coleta de Nome', type: 'intro', description: 'Captura do nome do participante' },
-    3: { name: 'Q1: Tipo de Roupa', type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
-    4: { name: 'Q2: Personalidade', type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
-    5: { name: 'Q3: Estampas', type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-    6: { name: 'Q4: Casacos', type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
-    7: { name: 'Q5: Calças', type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
-    8: { name: 'Q6: Calças (2)', type: 'question', description: 'QUAL SUA CALÇA FAVORITA? (Continuação)', multiSelect: 3 },
-    9: { name: 'Q7: Sapatos', type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
-    10: { name: 'Q8: Acessórios', type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
-    11: { name: 'Q9: Tecidos', type: 'question', description: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...', multiSelect: 3 },
+    2: { name: 'Q1: Tipo de Roupa', type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
+    3: { name: 'Q2: Personalidade', type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
+    4: { name: 'Q3: Estampas', type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
+    5: { name: 'Q4: Casacos', type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
+    6: { name: 'Q5: Calças', type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
+    7: { name: 'Q6: Calças (2)', type: 'question', description: 'QUAL SUA CALÇA FAVORITA? (Continuação)', multiSelect: 3 },
+    8: { name: 'Q7: Sapatos', type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
+    9: { name: 'Q8: Acessórios', type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
+    10: { name: 'Q9: Tecidos', type: 'question', description: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...', multiSelect: 3 },
+    11: { name: 'Q10: Preferências', type: 'question', description: 'PERGUNTA ADICIONAL DE PREFERÊNCIAS', multiSelect: 3 },
     12: { name: 'Transição Principal', type: 'transition', description: 'Análise dos resultados parciais' },
     13: { name: 'S1: Guarda-roupa', type: 'strategic', description: 'Percepção sobre o guarda-roupa atual', multiSelect: 1 },
     14: { name: 'S2: Problemas', type: 'strategic', description: 'Principais problemas com roupas', multiSelect: 1 },
@@ -161,7 +161,7 @@ export class TemplateService extends BaseCanonicalService {
       if (stepMatch) {
         const stepNumber = parseInt(stepMatch[1]);
         const blocks = await this.registry.getStep(`step-${stepNumber.toString().padStart(2, '0')}`);
-        
+
         if (blocks && blocks.length > 0) {
           const stepInfo = this.STEP_MAPPING[stepNumber];
           const template: Template = {
@@ -175,7 +175,7 @@ export class TemplateService extends BaseCanonicalService {
               funnelType: 'quiz21StepsComplete',
             },
           };
-          
+
           return this.createResult(template);
         }
       }
@@ -195,7 +195,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       CanonicalServicesMonitor.trackUsage(this.name, 'getStep');
       const blocks = await this.registry.getStep(stepId);
-      
+
       if (!blocks || blocks.length === 0) {
         return this.createError(new Error(`Step not found or empty: ${stepId}`));
       }
@@ -221,7 +221,7 @@ export class TemplateService extends BaseCanonicalService {
       // Salvar no cache (UnifiedTemplateRegistry não tem setStep, apenas cache)
       // Usar CacheService diretamente
       cacheService.templates.set(template.id, template.blocks);
-      
+
       this.log(`Template saved: ${template.id}`);
       return this.createResult(undefined);
     } catch (error) {
@@ -264,7 +264,7 @@ export class TemplateService extends BaseCanonicalService {
       // Invalidar todos os caches
       cacheService.templates.invalidate(id);
       await this.registry.invalidate(id);
-      
+
       this.log(`Template deleted: ${id}`);
       return this.createResult(undefined);
     } catch (error) {
@@ -282,7 +282,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       // Por enquanto, retornar lista dos 21 steps do quiz
       const templates: Template[] = [];
-      
+
       for (let i = 1; i <= 21; i++) {
         const stepInfo = this.STEP_MAPPING[i];
         if (!stepInfo) continue;
@@ -327,7 +327,7 @@ export class TemplateService extends BaseCanonicalService {
       }
 
       const lowerQuery = query.toLowerCase();
-      const results = allTemplates.data.filter(t => 
+      const results = allTemplates.data.filter(t =>
         t.name.toLowerCase().includes(lowerQuery) ||
         t.description.toLowerCase().includes(lowerQuery) ||
         t.id.toLowerCase().includes(lowerQuery),
@@ -364,10 +364,10 @@ export class TemplateService extends BaseCanonicalService {
    */
   async preloadTemplates(ids: string[]): Promise<void> {
     this.log(`Preloading ${ids.length} templates...`);
-    
+
     const promises = ids.map(id => this.getTemplate(id));
     await Promise.allSettled(promises);
-    
+
     this.log(`Preload completed for ${ids.length} templates`);
   }
 
@@ -487,7 +487,7 @@ export class TemplateService extends BaseCanonicalService {
     list: (): ServiceResult<StepInfo[]> => {
       try {
         const steps: StepInfo[] = [];
-        
+
         for (let i = 1; i <= 21; i++) {
           const info = this.STEP_MAPPING[i];
           if (!info) continue;
@@ -641,11 +641,11 @@ export class TemplateService extends BaseCanonicalService {
    */
   getAllStepsSync(): Record<string, any> {
     const allSteps: Record<string, any> = {};
-    
+
     for (let i = 1; i <= 21; i++) {
       const stepId = `step-${i.toString().padStart(2, '0')}`;
       const stepInfo = this.STEP_MAPPING[i];
-      
+
       if (stepInfo) {
         // Criar objeto compatível com QuizStep interface
         allSteps[stepId] = {
@@ -660,7 +660,7 @@ export class TemplateService extends BaseCanonicalService {
         };
       }
     }
-    
+
     return allSteps;
   }
 
