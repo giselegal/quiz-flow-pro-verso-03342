@@ -51,6 +51,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({ block, isSelected, 
                     <button
                         key={opt.id}
                         type="button"
+                        data-testid={`option-${opt.id}`}
                         className={`border rounded-md p-2 text-sm transition ${currentAnswers.includes(opt.id) ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}`}
                         onClick={() => toggle(opt.id)}
                     >

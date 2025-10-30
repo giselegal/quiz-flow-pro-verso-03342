@@ -447,6 +447,17 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
     // Context data para blocos específicos (intro-form, question-navigation, etc.)
     const contextData = useMemo(() => {
+        // Determinar regra de validação mínima para o step atual (min seleções)
+        let minSelections = 1;
+        try {
+            const rawBlocks: any[] = ((editorState.stepBlocks as any)[stepKey] || []) as any[];
+            const qBlock = rawBlocks.find(b => ['quiz-options', 'options-grid'].includes(String(b?.type)));
+            const props = (qBlock?.properties || {}) as any;
+            const content = (qBlock?.content || {}) as any;
+            const inferred = Number(props.requiredSelections ?? props.minSelections ?? content.requiredSelections ?? 1);
+            if (!isNaN(inferred) && inferred > 0) minSelections = inferred;
+        } catch { /* noop */ }
+
         const base: any = {
             userName: (sessionData as any)?.userName,
             currentAnswers: (sessionData as any)?.[`answers_${stepKey}`] || [],
@@ -471,9 +482,9 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             // Navegação para blocos de pergunta
             onNext: () => { try { goToNext?.(); } catch { /* noop */ } },
             onBack: () => { try { goToPrevious?.(); } catch { /* noop */ } },
-            // Habilitação básica do botão "Próxima": pelo menos 1 resposta
+            // Habilitação do botão "Próxima": respeita minSelections inferido do bloco de opções
             canProceed: Array.isArray((sessionData as any)?.[`answers_${stepKey}`])
-                ? ((sessionData as any)[`answers_${stepKey}`] as any[]).length > 0
+                ? (((sessionData as any)[`answers_${stepKey}`] as any[]).length >= minSelections)
                 : !!(sessionData as any)?.[`answer_${stepKey}`],
         };
 

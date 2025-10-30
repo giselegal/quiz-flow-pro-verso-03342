@@ -190,14 +190,15 @@ test.describe('Editor - Modo PREVIEW', () => {
         });
 
         test('deve exigir 3 seleções no step-02 (minSelections=3)', async ({ page }) => {
+            const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]');
             // Verificar que está no step-02
-            await expect(page.locator('text=/QUAL O SEU TIPO DE ROUPA/i')).toBeVisible();
+            await expect(previewCanvas.locator('[data-step-id="step-02"]').first()).toBeVisible();
 
             // Botão Avançar deve estar desabilitado inicialmente
-            const nextButton = page.locator('button:has-text("Avançar")').first();
+            const nextButton = previewCanvas.locator('button:has-text("Avançar")').first();
             
             // Selecionar apenas 1 opção
-            const firstOption = page.locator('[data-testid*="option"], .option-card, button[role="checkbox"]').first();
+            const firstOption = previewCanvas.locator('[data-testid^="option-"]').first();
             await firstOption.click();
             await page.waitForTimeout(300);
 
@@ -206,7 +207,7 @@ test.describe('Editor - Modo PREVIEW', () => {
             expect(isDisabled).toBe(true);
 
             // Selecionar 2ª opção
-            const secondOption = page.locator('[data-testid*="option"], .option-card, button[role="checkbox"]').nth(1);
+            const secondOption = previewCanvas.locator('[data-testid^="option-"]').nth(1);
             await secondOption.click();
             await page.waitForTimeout(300);
 
@@ -215,7 +216,7 @@ test.describe('Editor - Modo PREVIEW', () => {
             expect(isDisabled).toBe(true);
 
             // Selecionar 3ª opção
-            const thirdOption = page.locator('[data-testid*="option"], .option-card, button[role="checkbox"]').nth(2);
+            const thirdOption = previewCanvas.locator('[data-testid^="option-"]').nth(2);
             await thirdOption.click();
             await page.waitForTimeout(300);
 
@@ -225,22 +226,23 @@ test.describe('Editor - Modo PREVIEW', () => {
         });
 
         test('deve navegar para step-03 após selecionar 3 opções', async ({ page }) => {
+            const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]');
             // Selecionar 3 opções
-            const options = page.locator('[data-testid*="option"], .option-card, button[role="checkbox"]');
+            const options = previewCanvas.locator('[data-testid^="option-"]');
             for (let i = 0; i < 3; i++) {
                 await options.nth(i).click();
                 await page.waitForTimeout(200);
             }
 
             // Clicar em Avançar
-            const nextButton = page.locator('button:has-text("Avançar")').first();
+            const nextButton = previewCanvas.locator('button:has-text("Avançar")').first();
             await nextButton.click();
 
             // Aguardar navegação
             await page.waitForTimeout(1000);
 
             // Verificar que está no step-03 (Pergunta 2 de 10)
-            const progressText = page.locator('text=/Pergunta 2.*10|3.*21/i');
+            const progressText = previewCanvas.locator('text=/Pergunta 2.*10|3.*21/i');
             await expect(progressText).toBeVisible({ timeout: TIMEOUT_NAVIGATION });
         });
 
@@ -253,7 +255,9 @@ test.describe('Editor - Modo PREVIEW', () => {
             await page.waitForTimeout(1000);
 
             // Verificar que voltou para step-01
-            const nameInput = page.locator('input[placeholder*="nome"], input[type="text"]').first();
+            const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]');
+            await expect(previewCanvas.locator('[data-step-id="step-01"]').first()).toBeVisible({ timeout: TIMEOUT_NAVIGATION });
+            const nameInput = previewCanvas.locator('[data-step-id="step-01"] input[placeholder*="nome"], [data-step-id="step-01"] input[type="text"]').first();
             await expect(nameInput).toBeVisible({ timeout: TIMEOUT_NAVIGATION });
 
             // Nome deve estar mantido
@@ -281,18 +285,20 @@ test.describe('Editor - Modo PREVIEW', () => {
             // Simplificado: selecionar sempre as 3 primeiras opções
             for (let step = 2; step <= 11; step++) {
                 await page.waitForTimeout(500);
-                
+                const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]');
+
                 // Selecionar 3 opções
-                const options = page.locator('[data-testid*="option"], .option-card, button[role="checkbox"]');
+                const options = previewCanvas.locator('[data-testid^="option-"]');
                 const count = await options.count();
                 
                 for (let i = 0; i < Math.min(3, count); i++) {
+                    await options.nth(i).scrollIntoViewIfNeeded();
                     await options.nth(i).click();
                     await page.waitForTimeout(200);
                 }
 
                 // Avançar
-                await page.locator('button:has-text("Avançar")').first().click();
+                await previewCanvas.locator('button:has-text("Avançar")').first().click();
                 await page.waitForTimeout(800);
             }
 
@@ -362,7 +368,7 @@ test.describe('Editor - Modo PREVIEW', () => {
             // Não deve haver múltiplos flashes de conteúdo
             // (difícil de testar diretamente, mas podemos verificar que renderiza uma vez)
             await page.waitForTimeout(1000);
-            await expect(canvas).toBeVisible();
+            await expect(canvas.first()).toBeVisible();
         });
 
         test('deve carregar step-01 em menos de 3 segundos', async ({ page }) => {
