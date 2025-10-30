@@ -176,14 +176,15 @@ test.describe('Editor - Modo PREVIEW', () => {
 
     test.describe('TC4: Validação de Seleções (minSelections/maxSelections)', () => {
         test.beforeEach(async ({ page }) => {
-            // Entrar no modo Preview e navegar para step-02
-            await page.locator('button:has-text("Preview")').first().click();
+            // Entrar no modo Preview via API estável e navegar para step-02
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('preview'));
             await page.waitForTimeout(500);
 
-            const nameInput = page.locator('input[placeholder*="nome"], input[type="text"]').first();
+            const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]');
+            const nameInput = previewCanvas.locator('input[placeholder*="nome"], input[type="text"]').first();
             await nameInput.fill('Maria Teste');
 
-            const submitButton = page.locator('button:has-text("Quero Descobrir"), button:has-text("Começar")').first();
+            const submitButton = previewCanvas.locator('button:has-text("Quero Descobrir"), button:has-text("Começar"), button:has-text("Avançar")').first();
             await submitButton.click();
             await page.waitForTimeout(1000);
         });
@@ -266,13 +267,14 @@ test.describe('Editor - Modo PREVIEW', () => {
             // Este teste simula a navegação completa até step-20
             // Nota: Pode ser substituído por navegação direta se disponível
 
-            // Entrar no modo Preview
-            await page.locator('button:has-text("Preview")').first().click();
+            // Entrar no modo Preview via API estável
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('preview'));
             await page.waitForTimeout(500);
 
-            // Completar step-01
-            await page.locator('input[placeholder*="nome"]').first().fill('Teste Result');
-            await page.locator('button:has-text("Quero Descobrir"), button:has-text("Começar")').first().click();
+            // Completar step-01 (no container de preview)
+            const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]');
+            await previewCanvas.locator('input[placeholder*="nome"], input[type="text"]').first().fill('Teste Result');
+            await previewCanvas.locator('button:has-text("Quero Descobrir"), button:has-text("Começar"), button:has-text("Avançar")').first().click();
             await page.waitForTimeout(1000);
 
             // Completar steps 02-11 (perguntas de estilo)
@@ -353,9 +355,9 @@ test.describe('Editor - Modo PREVIEW', () => {
             await page.reload();
             await page.waitForLoadState('networkidle');
 
-            // Editor deve aparecer rapidamente
-            const canvas = page.locator('[data-testid="canvas-editor"], .canvas-area');
-            await expect(canvas).toBeVisible({ timeout: 3000 });
+            // Editor deve aparecer rapidamente (usar testids dos canvases atuais)
+            const canvas = page.locator('[data-testid="canvas-edit-mode"], [data-testid="canvas-preview-mode"]');
+            await expect(canvas.first()).toBeVisible({ timeout: 3000 });
 
             // Não deve haver múltiplos flashes de conteúdo
             // (difícil de testar diretamente, mas podemos verificar que renderiza uma vez)
