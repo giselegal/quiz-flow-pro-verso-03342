@@ -11,6 +11,9 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from 
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Block } from '@/types/editor';
+// Steps modulares (edição com paridade de produção)
+import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
+import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 
 export interface UnifiedStepContentProps {
     step: EditableQuizStep;
@@ -504,7 +507,38 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     ]);
 
 
-    // 🎯 RENDERIZAÇÃO FINAL - Blocos diretos
+    // 🎯 RENDERIZAÇÃO FINAL
+    // Caminho modular no modo edição com paridade de produção
+    if (isEditMode && productionParityInEdit) {
+        if (step.type === 'transition' || step.type === 'transition-result') {
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+                    <ModularTransitionStep
+                        data={{ id: step.id }}
+                        blocks={blocks as any}
+                        editor={editor as any}
+                        isEditable
+                    />
+                </div>
+            );
+        }
+
+        if (step.type === 'result') {
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+                    <ModularResultStep
+                        data={{ id: step.id }}
+                        blocks={blocks as any}
+                        editor={editor as any}
+                        isEditable
+                        userProfile={(contextData as any)?.userProfile}
+                    />
+                </div>
+            );
+        }
+    }
+
+    // Caminho de blocos diretos (genérico)
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
             {isEditMode ? (
