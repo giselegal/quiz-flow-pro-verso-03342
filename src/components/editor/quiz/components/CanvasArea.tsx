@@ -98,7 +98,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // ✅ OTIMIZAÇÃO: Virtualização sempre ativa, React Virtual otimiza automaticamente
     // Remove limite arbitrário de 20 blocos - deixa a lib decidir quando otimizar
-    const shouldVirtualize = rootBlocks.length >= 10 && !activeId; // Reduzido para ativar mais cedo
+    // ⚠️ AJUSTADO: Threshold aumentado para 15 para evitar ativação em steps médios (step-20 tem 11)
+    const shouldVirtualize = rootBlocks.length >= 15 && !activeId;
 
     const {
         visible: vVisible,

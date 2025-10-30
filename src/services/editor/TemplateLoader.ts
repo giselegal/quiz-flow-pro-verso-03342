@@ -186,14 +186,16 @@ export class TemplateLoader {
   private async loadFromPublicStepJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
       const base = `/templates/${normalizedKey}`;
+      // ✅ OTIMIZADO: Priorizar /templates/blocks/ que é a fonte primária atual
       // Ordem de tentativa (SEM -v3.json que foi arquivado):
-      // 1) v3.1 blocks (public/templates/blocks/step-XX.json)
-      // 2) canônico (public/templates/step-XX.json)
+      // 1) v3.1 blocks (public/templates/blocks/step-XX.json) ← FONTE PRIMÁRIA
+      // 2) canônico (public/templates/step-XX.json) ← FALLBACK
       const urls = [
         `/templates/blocks/${normalizedKey}.json`,
         `${base}.json`,
       ];
       let data: any | null = null;
+      let successUrl: string | null = null;
 
       for (const url of urls) {
         try {
@@ -201,6 +203,7 @@ export class TemplateLoader {
           const resp = await fetch(url + bust, { cache: 'no-store' });
           if (resp.ok) {
             data = await resp.json();
+            successUrl = url;
             break;
           }
         } catch (e) {

@@ -188,8 +188,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 // Título principal do resultado
                 return <ResultMainBlock block={block} {...rest} />;
             case 'result-congrats':
-                // Mensagem de congratulações
-                return <TextInlineAtomic block={block} {...rest} />;
+                // Mensagem de congratulações → usar ResultMainBlock para manter consistência
+                return <ResultMainBlock block={block} {...rest} />;
             case 'result-image':
                 // Imagem do estilo predominante
                 return <ResultImageBlock block={block} {...rest} />;
