@@ -31,7 +31,8 @@ async function enterPreview(page: import('@playwright/test').Page) {
     await page.waitForSelector('[data-testid="canvas-preview-mode"]', { timeout: 5000 });
 }
 
-const EDITOR_URL = '/editor?template=quiz21StepsComplete';
+// Usa URL absoluta para evitar dependência do baseURL do Playwright
+const EDITOR_URL = 'http://localhost:8080/editor?template=quiz21StepsComplete';
 
 test.describe('Editor Preview - Testes Visuais', () => {
     test.beforeEach(async ({ page }) => {
