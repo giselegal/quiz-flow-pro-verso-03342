@@ -373,7 +373,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(9), // < 10 blocos desabilita virtualização
+                blocks: createBlocks(9), // < 15 blocos desabilita virtualização (threshold ajustado)
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -629,17 +629,17 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             expect(calledBlocks[3].order).toBe(8);
         });
 
-        it('TC-H025: deve lidar com threshold exato de 10 blocos', () => {
+        it('TC-H025: deve lidar com threshold exato de 15 blocos', () => {
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(10),
+                blocks: createBlocks(15),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
 
-            // Exatamente 10 blocos deve HABILITAR virtualização
+            // Exatamente 15 blocos deve HABILITAR virtualização (threshold ajustado)
             expect(mockUseVirtualBlocks).toHaveBeenCalledWith(
                 expect.objectContaining({ enabled: true }),
             );
