@@ -1,77 +1,70 @@
 {
-  "templateVersion": "3.1",
-  "metadata": {
-    "id": "step-11",
-    "name": "Q10 - Peças-chave",
-    "description": "Questão 10 sobre preferências de estilo",
-    "category": "quiz-question"
-  },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB",
-      "selected": "#B89B7A",
-      "hover": "#F3E8D3"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
-    }
-  },
+  "id": "step-11",
+  "title": "Q10 - Peças-chave",
   "blocks": [
     {
       "id": "progress-bar-step-11",
       "type": "question-progress",
       "order": 0,
-      "content": {},
       "properties": {
-        "padding": 8,
-        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      },
+      "content": {
         "stepNumber": 11,
         "totalSteps": 21,
         "showPercentage": true,
-        "barColor": "#B89B7A"
-      }
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "parentId": null
     },
     {
       "id": "step-11-question-title",
       "type": "question-title",
       "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
       "content": {
         "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
       },
-      "properties": {
-        "type": "fade",
-        "duration": 300
-      }
+      "parentId": null
     },
     {
       "id": "question-hero-11",
       "type": "question-hero",
       "order": 2,
-      "content": {},
       "properties": {
-        "showProgress": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
         "questionNumber": "10 de 10",
         "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
         "currentQuestion": 10,
         "totalQuestions": 13,
         "progressValue": 52,
+        "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "type": "fade",
-        "duration": 300
-      }
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "parentId": null
     },
     {
       "id": "options-grid-11",
       "type": "options-grid",
       "order": 3,
+      "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
       "content": {
         "options": [
           {
@@ -115,47 +108,42 @@
             "value": "criativo"
           }
         ],
-        "minSelections": 3,
-        "maxSelections": 3
-      },
-      "properties": {
-        "autoAdvance": true,
-        "imageSize": 256,
-        "showImages": true,
         "columns": 2,
         "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
-        "requiredSelections": 3,
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
-      }
+        "requiredSelections": 3
+      },
+      "parentId": null
     },
     {
       "id": "navigation-step-11",
       "type": "question-navigation",
       "order": 4,
-      "content": {},
       "properties": {
-        "backLabel": "Voltar",
-        "nextLabel": "Avançar",
-        "backVariant": "outline",
-        "nextVariant": "default",
         "showBack": true,
         "showNext": true,
         "type": "fade",
-        "duration": 300
-      }
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      },
+      "parentId": null
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "option_selected",
-      "step_completed"
-    ],
-    "trackingId": "step-11-blocks"
+  "metadata": {
+    "version": "3.0.0",
+    "generatedFrom": "master",
+    "generatedAt": "2025-10-30T11:27:34.179Z"
   }
 }

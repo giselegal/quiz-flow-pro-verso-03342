@@ -1,38 +1,11 @@
 {
-  "templateVersion": "3.1",
-  "metadata": {
-    "id": "step-20",
-    "name": "Resultado Personalizado - Atomic v3",
-    "description": "Step 20 com blocos atômicos reordenáveis",
-    "category": "quiz-result",
-    "tags": [
-      "quiz",
-      "style",
-      "result",
-      "offer",
-      "conversion"
-    ]
-  },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "secondary": "#432818",
-      "background": "#fffaf7",
-      "text": "#432818",
-      "accent": "#a08966",
-      "success": "#2d5f3f"
-    },
-    "fonts": {
-      "heading": "Playfair Display",
-      "body": "Inter"
-    }
-  },
+  "id": "step-20",
+  "title": "Resultado Personalizado - Atomic v3",
   "blocks": [
     {
       "id": "result-congrats",
       "type": "result-congrats",
       "order": 0,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 1,
@@ -54,13 +27,14 @@
             "marginBottom": "2.5rem"
           }
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "result-main",
       "type": "result-main",
       "order": 1,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 2,
@@ -78,13 +52,14 @@
           "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
           "showDescription": true
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "result-progress-bars",
       "type": "result-progress-bars",
       "order": 2,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 3,
@@ -100,13 +75,14 @@
           },
           "titleFormat": "Além do {primaryStyle}, você também tem traços de:"
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "result-secondary-styles",
       "type": "result-secondary-styles",
       "order": 3,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 4,
@@ -116,13 +92,14 @@
           "tagColor": "#B89B7A",
           "tagStyle": "rounded-full"
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "result-image",
       "type": "result-image",
       "order": 4,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 5,
@@ -133,13 +110,14 @@
           "centered": true,
           "showDecorations": false
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "result-description",
       "type": "result-description",
       "order": 5,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 6,
@@ -152,32 +130,39 @@
           "showClosingMessage": true,
           "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "button-cta-primary",
       "type": "result-cta",
       "order": 6,
-      "content": {},
       "properties": {
-        "backgroundColor": "#B89B7A",
+        "enabled": true,
+        "order": 7
+      },
+      "content": {
         "text": "{ctaPrimaryText}",
         "url": "{ctaPrimaryUrl}",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
+        "backgroundColor": "#B89B7A",
         "textColor": "#ffffff",
-        "hoverColor": "#a08966",
-        "enabled": true,
-        "order": 7
-      }
+        "hoverColor": "#a08966"
+      },
+      "parentId": null
     },
     {
       "id": "result-share",
       "type": "result-share",
       "order": 7,
-      "content": {},
       "properties": {
+        "enabled": true,
+        "order": 8
+      },
+      "content": {
         "title": "Compartilhe seu resultado",
         "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
         "platforms": [
@@ -185,16 +170,14 @@
           "twitter",
           "whatsapp",
           "linkedin"
-        ],
-        "enabled": true,
-        "order": 8
-      }
+        ]
+      },
+      "parentId": null
     },
     {
       "id": "transformation-benefits",
       "type": "text-inline",
       "order": 8,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 8,
@@ -203,13 +186,14 @@
           "align": "left",
           "style": "rich-text"
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "method-steps",
       "type": "text-inline",
       "order": 9,
-      "content": {},
       "properties": {
         "enabled": true,
         "order": 9,
@@ -218,34 +202,34 @@
           "align": "left",
           "style": "rich-text"
         }
-      }
+      },
+      "content": {},
+      "parentId": null
     },
     {
       "id": "button-cta-final",
       "type": "result-cta",
       "order": 10,
-      "content": {},
       "properties": {
-        "backgroundColor": "#B89B7A",
+        "enabled": true,
+        "order": 10
+      },
+      "content": {
         "text": "{ctaSecondaryText}",
         "url": "{ctaSecondaryUrl}",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
+        "backgroundColor": "#B89B7A",
         "textColor": "#ffffff",
-        "hoverColor": "#a08966",
-        "enabled": true,
-        "order": 10
-      }
+        "hoverColor": "#a08966"
+      },
+      "parentId": null
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "section_viewed",
-      "offer_viewed",
-      "cta_primary_click"
-    ],
-    "trackingId": "step-20-blocks"
+  "metadata": {
+    "version": "3.0.0",
+    "generatedFrom": "master",
+    "generatedAt": "2025-10-30T11:27:34.183Z"
   }
 }

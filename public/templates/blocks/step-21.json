@@ -1,54 +1,32 @@
 {
-  "templateVersion": "3.1",
-  "metadata": {
-    "id": "step-21",
-    "name": "Oferta Final - 5 Passos Vista-se de Você",
-    "description": "Página de oferta final do produto após resultado do quiz",
-    "category": "offer",
-    "tags": [
-      "quiz",
-      "offer",
-      "conversion",
-      "product",
-      "cta"
-    ]
-  },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
-    }
-  },
+  "id": "step-21",
+  "title": "Oferta Final - 5 Passos Vista-se de Você",
   "blocks": [
     {
       "id": "offer-hero-21",
       "type": "offer-hero",
       "order": 0,
-      "content": {},
       "properties": {
+        "type": "scale",
+        "duration": 500
+      },
+      "content": {
         "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
         "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
         "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
-        "urgencyMessage": "Oferta por tempo limitado!",
-        "type": "scale",
-        "duration": 500
-      }
+        "urgencyMessage": "Oferta por tempo limitado!"
+      },
+      "parentId": null
     },
     {
       "id": "pricing-21",
       "type": "pricing",
       "order": 1,
-      "content": {},
       "properties": {
+        "type": "slideUp",
+        "duration": 500
+      },
+      "content": {
         "pricing": {
           "originalPrice": 447,
           "salePrice": 97,
@@ -60,18 +38,14 @@
         },
         "title": "Investimento que Transforma",
         "ctaText": "Quero Transformar Meu Estilo Agora!",
-        "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj",
-        "type": "slideUp",
-        "duration": 500
-      }
+        "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj"
+      },
+      "parentId": null
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "offer_viewed",
-      "cta_primary_click"
-    ],
-    "trackingId": "step-21-blocks"
+  "metadata": {
+    "version": "3.0.0",
+    "generatedFrom": "master",
+    "generatedAt": "2025-10-30T11:27:34.183Z"
   }
 }

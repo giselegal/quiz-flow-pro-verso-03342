@@ -1,93 +1,75 @@
 {
-  "templateVersion": "3.1",
-  "metadata": {
-    "id": "step-04",
-    "name": "Q3 - Estilo pessoal",
-    "description": "Questão 3 sobre preferências de estilo",
-    "category": "quiz-question"
-  },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB",
-      "selected": "#B89B7A",
-      "hover": "#F3E8D3"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
-    },
-    "spacing": {
-      "sm": 8,
-      "md": 16,
-      "lg": 24,
-      "xl": 32
-    },
-    "borderRadius": {
-      "sm": 4,
-      "md": 8,
-      "lg": 12,
-      "xl": 16
-    }
-  },
+  "id": "step-04",
+  "title": "Q3 - Estilo pessoal",
   "blocks": [
     {
       "id": "progress-bar-step-04",
       "type": "question-progress",
       "order": 0,
-      "content": {},
       "properties": {
-        "padding": 8,
-        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      },
+      "content": {
         "stepNumber": 4,
         "totalSteps": 21,
         "showPercentage": true,
-        "barColor": "#B89B7A"
-      }
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "parentId": null
     },
     {
       "id": "step-04-question-title",
       "type": "question-title",
       "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
       "content": {
         "text": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
       },
-      "properties": {
-        "type": "fade",
-        "duration": 300
-      }
+      "parentId": null
     },
     {
       "id": "question-hero-04",
       "type": "question-hero",
       "order": 2,
-      "content": {},
       "properties": {
-        "padding": 16,
         "backgroundColor": "transparent",
-        "showProgress": true,
+        "padding": 16,
+        "type": "fade",
+        "duration": 300,
+        "delay": 0,
+        "easing": "ease-out"
+      },
+      "content": {
         "questionNumber": "3 de 10",
         "questionText": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
         "currentQuestion": 3,
         "totalQuestions": 13,
         "progressValue": 19,
+        "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "type": "fade",
-        "duration": 300,
-        "delay": 0,
-        "easing": "ease-out"
-      }
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "parentId": null
     },
     {
       "id": "options-grid-04",
       "type": "options-grid",
       "order": 3,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
       "content": {
         "options": [
           {
@@ -139,49 +121,42 @@
             "value": "criativo"
           }
         ],
-        "minSelections": 3,
-        "maxSelections": 3
-      },
-      "properties": {
-        "padding": 16,
-        "backgroundColor": "transparent",
-        "autoAdvance": true,
-        "imageSize": 256,
-        "showImages": true,
         "columns": 2,
         "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
-        "requiredSelections": 3,
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
-      }
+        "requiredSelections": 3
+      },
+      "parentId": null
     },
     {
       "id": "navigation-step-04",
       "type": "question-navigation",
       "order": 4,
-      "content": {},
       "properties": {
-        "backLabel": "Voltar",
-        "nextLabel": "Avançar",
-        "backVariant": "outline",
-        "nextVariant": "default",
         "showBack": true,
         "showNext": true,
         "type": "fade",
-        "duration": 300
-      }
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      },
+      "parentId": null
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "option_selected",
-      "step_completed"
-    ],
-    "trackingId": "step-04-blocks"
+  "metadata": {
+    "version": "3.0.0",
+    "generatedFrom": "master",
+    "generatedAt": "2025-10-30T11:27:34.175Z"
   }
 }
