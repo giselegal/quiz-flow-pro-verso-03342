@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { EditableField } from './EditableField';
 
 interface EditableIntroStepProps {
@@ -156,8 +156,8 @@ export default function EditableIntroStep({
                             type={isEditable ? 'button' : 'submit'}
                             onClick={isEditable ? () => { } : handleSubmit}
                             className={`w-full py-4 px-6 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 ${isEditable
-                                    ? 'bg-blue-500 hover:bg-blue-600 cursor-default'
-                                    : 'bg-[#B89B7A] hover:bg-[#A08965] transform hover:scale-[1.02] hover:shadow-xl'
+                                ? 'bg-blue-500 hover:bg-blue-600 cursor-default'
+                                : 'bg-[#B89B7A] hover:bg-[#A08965] transform hover:scale-[1.02] hover:shadow-xl'
                                 }`}
                         >
                             <EditableField

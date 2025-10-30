@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { EditableField } from './EditableField';
 import { Plus, Trash2, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -143,10 +143,10 @@ export default function EditableQuestionStep({
                             return (
                                 <div
                                     className={`relative group cursor-pointer p-4 border-2 rounded-lg transition-all duration-200 ${isSelected && !isEditable
-                                            ? 'border-[#deac6d] bg-[#deac6d]/10'
-                                            : isEditable
-                                                ? 'border-blue-200 bg-blue-50 hover:border-blue-400'
-                                                : 'border-gray-200 hover:border-[#deac6d] hover:bg-gray-50'
+                                        ? 'border-[#deac6d] bg-[#deac6d]/10'
+                                        : isEditable
+                                            ? 'border-blue-200 bg-blue-50 hover:border-blue-400'
+                                            : 'border-gray-200 hover:border-[#deac6d] hover:bg-gray-50'
                                         } ${isDragging ? 'opacity-50 scale-95' : ''}`}
                                     onClick={() => !isDragging && handleOptionClick(option.id)}
                                 >
@@ -221,8 +221,8 @@ export default function EditableQuestionStep({
                                 <div
                                     key={option.id}
                                     className={`relative group cursor-pointer p-4 border-2 rounded-lg transition-all duration-200 ${isSelected && !isEditable
-                                            ? 'border-[#deac6d] bg-[#deac6d]/10'
-                                            : 'border-gray-200 hover:border-[#deac6d] hover:bg-gray-50'
+                                        ? 'border-[#deac6d] bg-[#deac6d]/10'
+                                        : 'border-gray-200 hover:border-[#deac6d] hover:bg-gray-50'
                                         }`}
                                     onClick={() => handleOptionClick(option.id)}
                                 >
