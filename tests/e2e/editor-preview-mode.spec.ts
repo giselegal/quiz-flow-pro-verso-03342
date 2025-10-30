@@ -25,7 +25,7 @@ test.describe('Editor - Modo PREVIEW', () => {
         // Aguardar carregamento do editor
         await page.waitForLoadState('networkidle');
         // Compat: nossos containers usam data-testid específicos por modo
-        await expect(page.locator('[data-testid="canvas-edit-mode"], [data-testid="canvas-preview-mode"]')).toBeVisible({ timeout: TIMEOUT_RENDER });
+    await expect(page.locator('[data-testid="canvas-edit-mode"], [data-testid="canvas-preview-mode"]').first()).toBeVisible({ timeout: TIMEOUT_RENDER });
     });
 
     test.describe('TC1: Validação de Renderização Inicial', () => {
