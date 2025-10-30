@@ -23,7 +23,7 @@ import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQ
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
-import { templateService } from '@/services/canonical/TemplateService';
+import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import blockAliasMap from '@/config/block-aliases.json';
 
@@ -32,6 +32,7 @@ export type TemplateSource =
   | 'modular-json'
   | 'individual-json'      // JSON público em /templates/blocks/step-XX.json
   | 'master-json'          // Carregado de quiz21-complete.json
+  | 'consolidated'         // Consolidated service (prioriza per-step JSON)
   | 'ts-template';         // Fallback TypeScript
 
 export interface LoadedTemplate {
@@ -117,6 +118,10 @@ export class TemplateLoader {
           const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
           if (fromPublic) return fromPublic;
         }
+
+        // Estratégia 0: Consolidated service (prioriza per-step JSON de forma unificada)
+        const fromConsolidated = await this.loadFromConsolidated(normalizedKey);
+        if (fromConsolidated) return fromConsolidated;
 
         // Estratégia 1: Cache unificado (somente se não forçar público)
         const cached = this.loadFromCache(normalizedKey);
@@ -444,6 +449,24 @@ export class TemplateLoader {
       return { blocks, source: 'individual-json' };
     } catch (e) {
       console.warn('⚠️ Erro ao carregar JSON público individual:', normalizedKey, e);
+      return null;
+    }
+  }
+
+  /**
+   * Estratégia 0: ConsolidatedTemplateService → prioriza per-step JSON automaticamente
+   */
+  private async loadFromConsolidated(normalizedKey: string): Promise<LoadedTemplate | null> {
+    try {
+      const blocks = await consolidatedTemplateService.getStepBlocks(normalizedKey);
+      if (Array.isArray(blocks) && blocks.length > 0) {
+        unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+        console.log(`📦 Consolidated → ${normalizedKey}: ${blocks.length} blocos`);
+        return { blocks: blocks as Block[], source: 'consolidated' };
+      }
+      return null;
+    } catch (e) {
+      console.warn('⚠️ Erro ao carregar via consolidatedTemplateService:', normalizedKey, e);
       return null;
     }
   }
