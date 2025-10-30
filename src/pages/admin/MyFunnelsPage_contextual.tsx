@@ -7,7 +7,7 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
 // TemplateManager import removed - commented out to prevent unused import error
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { publishFunnel } from '@/services/funnelPublishing';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useMyFunnelsPersistence } from '@/hooks/editor/useContextualEditorPersistence';
@@ -166,6 +166,25 @@ const MyFunnelsPage: React.FC = () => {
             const newId = `${templateId}-${Date.now()}`;
             const name = 'Funil Quiz 21 Etapas';
 
+            // Obter steps do consolidated service (prioriza per-step JSON)
+            let steps: Record<string, any[]> = {};
+            try {
+                const full = await consolidatedTemplateService.getTemplate('quiz21StepsComplete');
+                if (full?.steps?.length) {
+                    steps = full.steps.reduce((acc, s) => {
+                        acc[`step-${s.stepNumber}`] = s.blocks || [];
+                        return acc;
+                    }, {} as Record<string, any[]>);
+                } else {
+                    for (let i = 1; i <= 21; i++) {
+                        const blocks = await consolidatedTemplateService.getStepBlocks(`step-${i}`);
+                        steps[`step-${i}`] = blocks || [];
+                    }
+                }
+            } catch (e) {
+                console.warn('⚠️ Falha ao obter steps via consolidatedTemplateService. Continuando com steps vazios.', e);
+            }
+
             const newFunnel = {
                 id: newId,
                 name,
@@ -173,7 +192,7 @@ const MyFunnelsPage: React.FC = () => {
                 isPublished: false,
                 version: 1,
                 settings: {
-                    steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+                    steps,
                     metadata: {
                         collectUserName: true,
                     },
