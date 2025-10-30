@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Simple smoke test for Step 01 (Intro) modular path and DnD wiring
+// Simple smoke test for Step 01 (Intro) editor rendering path and DnD wiring
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -14,23 +14,14 @@ function assert(condition, message) {
 
 try {
     const unifiedPath = 'src/components/editor/renderers/common/UnifiedStepContent.tsx';
-    const introPath = 'src/components/editor/quiz-estilo/ModularIntroStep.tsx';
-
     assert(existsSync(join(ROOT, unifiedPath)), `Missing file: ${unifiedPath}`);
-    assert(existsSync(join(ROOT, introPath)), `Missing file: ${introPath}`);
 
     const unified = read(unifiedPath);
-    const intro = read(introPath);
-
-    // Unified should render ModularIntroStep and pass onBlocksReorder
-    assert(/<ModularIntroStep/.test(unified), 'UnifiedStepContent does not render <ModularIntroStep>');
-    assert(/onBlocksReorder=\{handleBlocksReorder\}/.test(unified), 'UnifiedStepContent does not pass onBlocksReorder to Intro');
-
-    // Intro step should have local DnD context and sortable
-    assert(/DndContext/.test(intro), 'ModularIntroStep missing DndContext');
-    assert(/SortableContext/.test(intro), 'ModularIntroStep missing SortableContext');
-    const hasOnBlocksReorder = /onBlocksReorder\?\./.test(intro) || /onBlocksReorder\(/.test(intro);
-    assert(hasOnBlocksReorder, 'ModularIntroStep missing onBlocksReorder usage');
+    // Unified should render BlockTypeRenderer and wrap with local DnD
+    assert(/<BlockTypeRenderer/.test(unified), 'UnifiedStepContent does not render <BlockTypeRenderer>');
+    assert(/DndContext/.test(unified), 'UnifiedStepContent missing DnDContext');
+    assert(/SortableContext/.test(unified), 'UnifiedStepContent missing SortableContext');
+    assert(/handleBlocksReorder/.test(unified), 'UnifiedStepContent missing handleBlocksReorder wiring');
 
     console.log('✅ Smoke Step 01: OK');
 } catch (err) {
