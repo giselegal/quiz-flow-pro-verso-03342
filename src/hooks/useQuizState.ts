@@ -232,7 +232,8 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
   // Calcular resultado do quiz
   const calculateResult = useCallback(() => {
     console.log('🔄 [useQuizState] Calculando resultado via computeResult util...');
-    const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers: state.answers });
+    // Passa steps explicitamente a partir da fonte atual para evitar fallback legado
+    const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers: state.answers, steps: stepsSource as any });
 
     // Mapear estilos canônicos para objetos completos
     const primaryStyle = (styleMapping as any)[resolveStyleId(primaryStyleId) as StyleId] || (styleMapping as any)[primaryStyleId as StyleId];
@@ -255,7 +256,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       secondaryStyles: secondaryStylesObjects,
       scores,
     };
-  }, [state.answers]);
+  }, [state.answers, stepsSource]);
 
   // Adicionar resposta para etapa
   const addAnswer = useCallback((stepId: string, selections: string[]) => {
