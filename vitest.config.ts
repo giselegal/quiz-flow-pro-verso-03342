@@ -56,7 +56,8 @@ export default defineConfig({
     },
     include: [
       'src/**/*.{test,spec}.{js,ts,jsx,tsx}',
-      'src/**/__tests__/**/*.{js,ts,jsx,tsx}',
+      // Somente arquivos com sufixo .test/.spec dentro de __tests__
+      'src/**/__tests__/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'src/tests/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'src/testing/**/*.test.ts', // Nossos testes consolidados
     ],
@@ -69,6 +70,15 @@ export default defineConfig({
       '**/worktrees/**',
       // Ignora suites e2e/placeholders fora de src
       'tests/**',
+      // Isola Playwright specs do Vitest
+      'src/tests/e2e/**',
+      // Ignora arquivos de setup utilitários sem suites
+      'src/**/__tests__/setup/**',
+      'src/__tests__/setup/**',
+      // Ignora coleções de schemas sem suite real
+      'src/__tests__/schemas/**',
+      // Ignora placeholders que ainda não possuem suites
+      'src/core/errors/__tests__/**',
     ],
     coverage: {
       provider: 'v8', // Melhor performance
