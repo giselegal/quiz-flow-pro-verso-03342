@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import * as quizStateModule from '@/hooks/useQuizState';
 import QuizApp from '@/components/quiz/QuizApp';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 
 // Testa se após a correção do simplified template a step-2 não vira mais intro.
 
@@ -13,7 +13,7 @@ describe('Fluxo quiz-estilo - Step 2 não deve ser intro', () => {
         // Estratégia: mock leve do hook para injetar estado atual em step-2 e currentStepData de QUIZ_STEPS.
 
         const realHook = quizStateModule.useQuizState;
-        const mockStep2 = QUIZ_STEPS['step-2'];
+        const mockStep2 = (templateService.getAllStepsSync() as any)['step-02'];
         expect(mockStep2).toBeTruthy();
         expect(mockStep2.type).toBe('question');
 
