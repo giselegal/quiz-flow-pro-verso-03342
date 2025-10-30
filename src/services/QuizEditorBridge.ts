@@ -8,7 +8,7 @@
  * ✅ FASE 6.5: Integrado com utilitários testados (91 testes)
  */
 
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+// Legacy sources removidos: usar TemplateService como fonte canônica
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { supabase } from '@/integrations/supabase/customClient';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
@@ -93,8 +93,10 @@ class QuizEditorBridge {
      * 📦 Carregar funil de produção (QUIZ_STEPS atual)
      */
     private loadProductionFunnel(): QuizFunnelData {
-        const steps: EditorQuizStep[] = STEP_ORDER.map((stepId, index) => {
-            const stepData = QUIZ_STEPS[stepId];
+        const ORDER = templateService.getStepOrder();
+        const STEPS_FALLBACK = templateService.getAllStepsSync();
+        const steps: EditorQuizStep[] = ORDER.map((stepId, index) => {
+            const stepData = (STEPS_FALLBACK as any)[stepId];
             return {
                 id: stepId,
                 order: index + 1,
@@ -463,8 +465,8 @@ class QuizEditorBridge {
 
         // ⚠️ Verificar se deve tentar carregar arquivos individuais
         if (!TEMPLATE_SOURCES.preferPublicStepJSON) {
-            console.log('⚠️ preferPublicStepJSON=false - Usando QUIZ_STEPS hardcoded');
-            return { ...QUIZ_STEPS };
+            console.log('⚠️ preferPublicStepJSON=false - Usando TemplateService fallback');
+            return { ...templateService.getAllStepsSync() } as Record<string, QuizStep>;
         }
 
         console.log('📚 Carregando templates JSON v3.0...');
@@ -492,7 +494,7 @@ class QuizEditorBridge {
                 }));
 
                 // Inferir tipo do step baseado no stepId ou usar fallback
-                const fallbackStep = QUIZ_STEPS[stepId];
+                const fallbackStep = (templateService.getAllStepsSync() as any)[stepId];
                 const stepType = fallbackStep?.type || 'question';
 
                 // Converter blocks[] para QuizStep
@@ -507,9 +509,9 @@ class QuizEditorBridge {
 
                 console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
             } catch (error) {
-                // Fallback para QUIZ_STEPS hardcoded
+                // Fallback para TemplateService fallback
                 console.warn(`⚠️  Fallback para ${stepId}:`, error);
-                steps[stepId] = QUIZ_STEPS[stepId];
+                steps[stepId] = (templateService.getAllStepsSync() as any)[stepId];
             }
         }
 
