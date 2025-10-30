@@ -6,9 +6,7 @@
  * 
  * 📊 HIERARQUIA DE FONTES (ordem de prioridade):
  * 1. 🎯 Funnel existente (rascunho salvo do usuário)
- * 2. 📄 Per-Step JSONs individuais (public/templates/blocks/step-XX.json) ← PRIORIDADE!
- * 3. 📦 Master JSON consolidado (public/templates/quiz21-complete.json) ← FALLBACK
- * 4. 💾 TypeScript template (src/templates/quiz21StepsComplete.ts) ← ÚLTIMO RECURSO
+ * 2. 📄 Per-Step JSONs individuais (public/templates/blocks/step-XX.json)
  * 
  * Features:
  * - Loading states com Suspense support
@@ -22,10 +20,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { appLogger } from '@/utils/logger';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
-import { getQuiz21StepsTemplate } from '@/templates/imports';
-import { convertTemplateToBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
-import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
-import { loadStepTemplate } from '@/utils/loadStepTemplates';
 import { UnifiedCacheService } from '@/services/UnifiedCacheService';
 import type { EditableQuizStep } from '../types';
 
@@ -33,7 +27,7 @@ export interface TemplateLoaderState {
     loading: boolean;
     steps: EditableQuizStep[] | null;
     error: Error | null;
-    source: 'funnel' | 'per-step-json' | 'master-json' | 'fallback-ts' | null;
+    source: 'funnel' | 'per-step-json' | null;
 }
 
 export interface UseTemplateLoaderOptions {
@@ -100,22 +94,11 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions) {
                     }
                 }
 
-                // Estratégia 3: Carregar do Master JSON (FALLBACK se per-step falhar)
-                if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
-                    const result = await loadFromMasterJSON(funnelId);
-                    if (result) {
-                        if (!isMountedRef.current) return;
-                        setState({ loading: false, steps: result, error: null, source: 'master-json' });
-                        onSuccess?.(result);
-                        return;
-                    }
-                }
-
-                // Estratégia 4: Fallback TypeScript template
-                const result = loadFromTSTemplate(funnelId);
+                // Falha geral
                 if (!isMountedRef.current) return;
-                setState({ loading: false, steps: result, error: null, source: 'fallback-ts' });
-                onSuccess?.(result);
+                const err = new Error('Nenhuma fonte de template disponível (funnel ou per-step json)');
+                setState({ loading: false, steps: null, error: err, source: null });
+                onError?.(err);
 
             } catch (error) {
                 const err = error instanceof Error ? error : new Error(String(error));
@@ -251,110 +234,7 @@ async function loadFromPerStepJSONs(): Promise<EditableQuizStep[] | null> {
     }
 }
 
-/**
- * Carrega do Master JSON público (FALLBACK)
- */
-async function loadFromMasterJSON(funnelId?: string): Promise<EditableQuizStep[] | null> {
-    try {
-        appLogger.debug('📦 Carregando master JSON...');
-        const resp = await fetch('/templates/quiz21-complete.json');
-
-        if (!resp.ok) {
-            appLogger.warn('⚠️ Master JSON não encontrado:', resp.status);
-            return null;
-        }
-
-        const master = await resp.json();
-        const steps: EditableQuizStep[] = [];
-
-        for (let i = 0; i < 21; i++) {
-            const stepId = `step-${String(i + 1).padStart(2, '0')}`;
-            const stepConf = master?.steps?.[stepId];
-
-            // 🔍 DEBUG: Verificar o que existe em stepConf
-            console.log(`🔍 [${stepId}] stepConf exists:`, !!stepConf);
-            console.log(`🔍 [${stepId}] stepConf.blocks exists:`, !!stepConf?.blocks);
-            console.log(`🔍 [${stepId}] stepConf.blocks is Array:`, Array.isArray(stepConf?.blocks));
-            console.log(`🔍 [${stepId}] stepConf.blocks length:`, stepConf?.blocks?.length);
-
-            // ✅ CORREÇÃO: Usar blocos diretamente do master JSON
-            let blocks: any[] = [];
-
-            // 1. Primeiro: tentar blocos do master JSON (fonte primária)
-            if (stepConf?.blocks && Array.isArray(stepConf.blocks) && stepConf.blocks.length > 0) {
-                blocks = stepConf.blocks.map((block: any, idx: number) => ({
-                    id: block.id || `${stepId}-block-${idx}`,
-                    type: block.type,
-                    order: block.order ?? idx,
-                    properties: block.properties || {},
-                    content: block.content || {},
-                    parentId: block.parentId || null,
-                }));
-                console.log(`✅ [${stepId}] Blocos do master JSON: ${blocks.length} blocos`);
-            } else {
-                console.warn(`⚠️ [${stepId}] SEM blocos no master JSON, tentando fallback...`);
-                console.warn(`⚠️ [${stepId}] SEM blocos no master JSON, tentando fallback...`);
-                // 2. Fallback: tentar template modular
-                try {
-                    const staticBlocks = loadStepTemplate(stepId);
-                    console.log(`🔍 [${stepId}] loadStepTemplate retornou:`, staticBlocks?.length || 0, 'blocos');
-                    if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
-                        blocks = blocksToBlockComponents(staticBlocks as any);
-                        console.log(`✅ [${stepId}] Template modular: ${blocks.length} blocos`);
-                    }
-                } catch (err) {
-                    console.warn(`⚠️ [${stepId}] loadStepTemplate falhou:`, err);
-                    // 3. Último fallback: hidratar sections (legado)
-                    const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
-                    console.log(`🔍 [${stepId}] sections hidratadas:`, sections?.length || 0);
-                    blocks = convertTemplateToBlocks({ [stepId]: { sections } });
-                    console.log(`⚠️ [${stepId}] Fallback sections: ${blocks.length} blocos`);
-                }
-            }
-
-            steps.push({
-                id: stepId,
-                type: stepConf?.type || getStepType(i),
-                order: i + 1,
-                blocks,
-                nextStep: i < 20 ? `step-${String(i + 2).padStart(2, '0')}` : undefined,
-                metadata: stepConf?.metadata || {},
-            });
-        }
-
-        appLogger.debug('✅ Master JSON carregado:', { steps: steps.length, blocks: steps.reduce((sum, s) => sum + s.blocks.length, 0) });
-        return steps;
-    } catch (error) {
-        appLogger.warn('⚠️ Falha ao carregar master JSON:', error);
-        return null;
-    }
-}
-
-/**
- * Fallback: Template TypeScript
- */
-function loadFromTSTemplate(funnelId?: string): EditableQuizStep[] {
-    appLogger.debug('📦 Usando fallback TypeScript template');
-
-    const quizTemplate = getQuiz21StepsTemplate();
-    const steps: EditableQuizStep[] = [];
-
-    for (let i = 0; i < 21; i++) {
-        const stepId = `step-${String(i + 1).padStart(2, '0')}`;
-        const blocks = convertTemplateToBlocks(quizTemplate);
-
-        steps.push({
-            id: stepId,
-            type: getStepType(i),
-            order: i + 1,
-            blocks,
-            nextStep: i < 20 ? `step-${String(i + 2).padStart(2, '0')}` : undefined,
-        });
-    }
-
-    appLogger.debug('✅ TS Template carregado:', { steps: steps.length });
-    return steps;
-}
+// Master JSON e TS fallback removidos — per design: apenas 2 fontes confiáveis
 
 /**
  * Determina o tipo do step baseado no índice

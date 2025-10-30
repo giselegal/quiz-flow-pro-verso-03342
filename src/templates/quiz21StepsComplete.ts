@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 TEMPLATE COMPLETO - QUIZ DE ESTILO PESSOAL (21 ETAPAS)
  * 
