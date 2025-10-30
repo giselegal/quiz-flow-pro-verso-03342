@@ -72,7 +72,7 @@ test.describe('Editor - Modo PREVIEW', () => {
             await expect(page.locator('[data-testid="canvas-edit-mode"]')).toBeVisible();
 
             // Clicar no botão Preview
-            const previewButton = page.locator('button:has-text("Preview")').first();
+            const previewButton = page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first();
             await previewButton.click();
 
             // Aguardar mudança de modo
@@ -89,11 +89,11 @@ test.describe('Editor - Modo PREVIEW', () => {
 
         test('deve alternar de Preview de volta para Edit', async ({ page }) => {
             // Ir para Preview
-            await page.locator('button:has-text("Preview")').first().click();
+            await page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first().click();
             await page.waitForTimeout(500);
 
             // Voltar para Edit
-            await page.locator('button:has-text("Editor"), button:has-text("Edit"), button:has-text("Editar")').first().click();
+            await page.locator('[data-testid="canvas-preview-mode"] button:has-text("Editor"), [data-testid="canvas-preview-mode"] button:has-text("Edit"), [data-testid="canvas-preview-mode"] button:has-text("Editar")').first().click();
             await page.waitForTimeout(500);
 
             // Validar que modo Edit está ativo novamente
@@ -102,7 +102,7 @@ test.describe('Editor - Modo PREVIEW', () => {
 
         test('deve manter estado ao alternar entre modos', async ({ page }) => {
             // Ir para Preview
-            await page.locator('button:has-text("Preview")').first().click();
+            await page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first().click();
             await page.waitForTimeout(500);
 
             // Preencher nome no preview
@@ -114,7 +114,7 @@ test.describe('Editor - Modo PREVIEW', () => {
             await page.waitForTimeout(500);
 
             // Voltar para Preview
-            await page.locator('button:has-text("Preview")').first().click();
+            await page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first().click();
             await page.waitForTimeout(500);
 
             // Validar que nome ainda está preenchido (se sessionData persiste)
