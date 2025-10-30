@@ -1,6 +1,5 @@
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import * as BridgeModule from '@/services/QuizEditorBridge';
-import type { QuizStep } from '@/data/quizSteps';
 import { vi, expect, it, describe } from 'vitest';
 
 // Mock supabase (draft + production tables)
