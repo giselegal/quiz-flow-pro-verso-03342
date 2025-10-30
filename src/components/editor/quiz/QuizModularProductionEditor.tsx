@@ -1657,7 +1657,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const previewResult = useMemo(() => {
         try {
             const scoring = (unifiedConfig?.runtime as any)?.scoring;
-            return computeResult({ answers: previewAnswers, scoring });
+            // Usar fonte canônica de steps para cálculo de resultado
+            return computeResult({ answers: previewAnswers, scoring, steps: templateService.getAllStepsSync() as any });
         } catch {
             return null;
         }
