@@ -8,7 +8,8 @@
  * ✅ FASE 6.5: Integrado com utilitários testados (91 testes)
  */
 
-import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '@/data/quizSteps';
+import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { supabase } from '@/integrations/supabase/customClient';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';

@@ -7,7 +7,7 @@
  * Suporta todas as 21 etapas do /quiz-estilo com 100% de fidelidade.
  */
 
-import { QuizStep, QuizOption } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep, QuizOptionV3 as QuizOption } from '@/types/quiz';
 
 // ================================
 // TIPOS

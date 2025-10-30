@@ -9,7 +9,7 @@
  * @todo Migrar para Block[] de TemplateService
  */
 
-import { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 /**
  * 📋 PROPS BASE PARA COMPONENTES EDITÁVEIS

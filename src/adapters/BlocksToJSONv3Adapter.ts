@@ -6,7 +6,7 @@
  */
 
 import { Block } from '@/types/editor';
-import { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
 import { normalizeBlockType } from '@/utils/blockNormalization';
 

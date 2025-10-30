@@ -9,7 +9,6 @@
  * @todo Migrar para Block[] de TemplateService
  */
 
-import { QuizStep } from '@/data/quizSteps';
 
 /**
  * 🎯 INTERFACE PRINCIPAL DO ADAPTER

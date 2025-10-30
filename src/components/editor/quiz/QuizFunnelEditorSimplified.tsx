@@ -9,7 +9,8 @@ import { appLogger } from '@/utils/logger';
 import { useUnifiedCRUD } from '@/contexts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
+import { QUIZ_STEPS } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy } from 'lucide-react';
 import './QuizEditorStyles.css';
 

@@ -25,7 +25,8 @@
  * - Normaliza ids de estilo via `resolveStyleId` para garantir acentos corretos quando possível.
  */
 
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps'; // ⚠️ DEPRECATED - use steps via parâmetro
+import { QUIZ_STEPS } from '@/data/quizSteps'; // ⚠️ DEPRECATED - use steps via parâmetro
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { styleMapping } from '@/data/styles';
 import { toUnaccentedStyleId } from '@/utils/styleIds';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';

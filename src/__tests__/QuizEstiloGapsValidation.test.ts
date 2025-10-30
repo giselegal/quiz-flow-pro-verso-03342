@@ -10,7 +10,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { QUIZ_STEPS, STEP_ORDER, type QuizStep, type QuizOption } from '@/data/quizSteps';
+import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep, QuizOptionV3 as QuizOption } from '@/types/quiz';
 import { styleMapping, type StyleId } from '@/data/styles';
 
 // Mock do editor bridge

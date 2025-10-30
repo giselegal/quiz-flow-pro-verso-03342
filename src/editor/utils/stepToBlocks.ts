@@ -12,7 +12,7 @@
  */
 
 import { BlockData, StepData } from '@/types/blockTypes';
-import { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 type EditableQuizStep = QuizStep & { id: string };
 

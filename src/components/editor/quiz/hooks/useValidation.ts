@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import type { QuizStep as BaseQuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as BaseQuizStep } from '@/types/quiz';
 
 // BlockComponent typing simplificado local (ajustar se existir tipo centralizado)
 export interface BlockComponent {

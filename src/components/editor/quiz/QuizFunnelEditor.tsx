@@ -25,7 +25,7 @@ import { useUnifiedCRUD } from '@/contexts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { templateService } from '@/services/canonical/TemplateService';
 import { styleConfigGisele } from '@/data/styles';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, RefreshCw, ListTree } from 'lucide-react';

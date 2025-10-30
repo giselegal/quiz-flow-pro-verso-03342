@@ -4,7 +4,8 @@
  * @todo Migrar para TemplateService.getInstance()
  */
 
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
+import { QUIZ_STEPS } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
 
 export interface ComputeResultOutput {

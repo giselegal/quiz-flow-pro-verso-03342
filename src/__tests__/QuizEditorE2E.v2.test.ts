@@ -15,7 +15,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
+import { QUIZ_STEPS } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 // Helper: Converter Record para Array
 const QUIZ_STEPS_ARRAY = Object.entries(QUIZ_STEPS).map(([id, step]) => ({
