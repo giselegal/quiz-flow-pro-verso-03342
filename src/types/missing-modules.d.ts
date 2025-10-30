@@ -43,3 +43,31 @@ declare module '@/services/aliases' {
   export const funnelValidationService: any;
 }
 
+// Shims para módulos de passos modulares ausentes em ambientes de checagem
+declare module '@/components/core/quiz-modular/ModularIntroStep' {
+  const Component: any;
+  export default Component;
+}
+
+// Shims relativos usados por testes de autoload (arquivos podem estar arquivados/pendentes)
+declare module '../ModularTransitionStep' {
+  const Component: any;
+  export default Component;
+}
+declare module '../ModularResultStep' {
+  const Component: any;
+  export default Component;
+}
+declare module '../ModularIntroStep' {
+  const Component: any;
+  export default Component;
+}
+declare module '../ModularQuestionStep' {
+  const Component: any;
+  export default Component;
+}
+declare module '../ModularStrategicQuestionStep' {
+  const Component: any;
+  export default Component;
+}
+
