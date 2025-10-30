@@ -22,6 +22,7 @@ import { appLogger } from '@/utils/logger';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { UnifiedCacheService } from '@/services/UnifiedCacheService';
 import type { EditableQuizStep } from '../types';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 export interface TemplateLoaderState {
     loading: boolean;
@@ -82,14 +83,22 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions) {
                     }
                 }
 
-                // Estratégia 2: Carregar de Per-Step JSONs individuais (PRIORIDADE!)
-                // Cada step tem seu próprio arquivo em public/templates/blocks/step-XX.json
+                // Estratégia 2 (preferencial): Carregar via TemplateService (per-step canonical)
                 if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
-                    const result = await loadFromPerStepJSONs();
-                    if (result) {
+                    const svcResult = await loadFromTemplateService();
+                    if (svcResult) {
                         if (!isMountedRef.current) return;
-                        setState({ loading: false, steps: result, error: null, source: 'per-step-json' });
-                        onSuccess?.(result);
+                        setState({ loading: false, steps: svcResult, error: null, source: 'per-step-json' });
+                        onSuccess?.(svcResult);
+                        return;
+                    }
+
+                    // Fallback: Per-Step JSONs individuais (public/templates/blocks/step-XX.json)
+                    const jsonResult = await loadFromPerStepJSONs();
+                    if (jsonResult) {
+                        if (!isMountedRef.current) return;
+                        setState({ loading: false, steps: jsonResult, error: null, source: 'per-step-json' });
+                        onSuccess?.(jsonResult);
                         return;
                     }
                 }
@@ -235,6 +244,56 @@ async function loadFromPerStepJSONs(): Promise<EditableQuizStep[] | null> {
 }
 
 // Master JSON e TS fallback removidos — per design: apenas 2 fontes confiáveis
+
+/**
+ * Carrega via TemplateService canônico (prioritário)
+ * Constrói EditableQuizStep[] a partir de Block[] por etapa
+ */
+async function loadFromTemplateService(): Promise<EditableQuizStep[] | null> {
+    try {
+        const templateService = TemplateService.getInstance();
+        const steps: EditableQuizStep[] = [];
+        let successCount = 0;
+
+        for (let i = 0; i < 21; i++) {
+            const stepId = `step-${String(i + 1).padStart(2, '0')}`;
+            try {
+                const res = await templateService.getStep(stepId);
+                if (!res.success || !Array.isArray(res.data)) {
+                    appLogger.warn(`⚠️ [TemplateService] Step sem dados: ${stepId}`);
+                    continue;
+                }
+
+                const blocks = (res.data as any[]).map((block: any, idx: number) => ({
+                    id: block.id || `${stepId}-block-${idx}`,
+                    type: block.type,
+                    order: block.order ?? idx,
+                    properties: block.properties || {},
+                    content: block.content || {},
+                    parentId: block.parentId || null,
+                }));
+
+                steps.push({
+                    id: stepId,
+                    type: getStepType(i),
+                    order: i + 1,
+                    blocks,
+                    nextStep: i < 20 ? `step-${String(i + 2).padStart(2, '0')}` : undefined,
+                    metadata: {},
+                });
+                successCount++;
+            } catch (e) {
+                appLogger.warn(`⚠️ [TemplateService] Erro ao carregar ${stepId}:`, e);
+            }
+        }
+
+        if (successCount === 0) return null;
+        return steps;
+    } catch (error) {
+        appLogger.warn('⚠️ Falha geral TemplateService:', error);
+        return null;
+    }
+}
 
 /**
  * Determina o tipo do step baseado no índice
