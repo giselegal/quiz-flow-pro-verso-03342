@@ -177,8 +177,48 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private async loadFromTypeScript(templateId: string): Promise<FullTemplate | null> {
     try {
+      // Caso 1: template completo identificado por quiz21StepsComplete
       if (templateId === 'quiz21StepsComplete') {
         return this.convertLegacyTemplate(QUIZ_STYLE_21_STEPS_TEMPLATE, templateId);
+      }
+
+      // Caso 2: pedido diretamente por uma etapa específica (ex.: step-02)
+      // Nessa situação, retornamos um FullTemplate sintético contendo apenas aquela etapa,
+      // utilizando os blocos presentes no QUIZ_STYLE_21_STEPS_TEMPLATE.
+      const stepMatch = templateId.match(/^step-(\d{1,2})$/i);
+      if (stepMatch) {
+        const stepNum = parseInt(stepMatch[1], 10);
+        const normalized = `step-${String(stepNum).padStart(2, '0')}`;
+        const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[normalized as keyof typeof QUIZ_STYLE_21_STEPS_TEMPLATE];
+
+        if (Array.isArray(blocks) && blocks.length > 0) {
+          const full: FullTemplate = {
+            id: templateId,
+            name: `Template ${templateId}`,
+            description: 'Template gerado a partir do TS canônico por etapa',
+            category: 'quiz',
+            version: '1.0.0',
+            stepCount: 1,
+            tags: ['quiz', 'ts', 'by-step'],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            isOfficial: true,
+            usageCount: 0,
+            steps: [
+              {
+                stepNumber: stepNum,
+                blocks: blocks as unknown as Block[],
+                metadata: { type: 'step' },
+              },
+            ],
+            globalConfig: {
+              theme: { primaryColor: '#007bff' },
+              navigation: { allowBack: true },
+              analytics: { enabled: true },
+            },
+          };
+          return full;
+        }
       }
       return null;
     } catch (error) {

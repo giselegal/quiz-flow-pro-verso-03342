@@ -3,7 +3,8 @@ import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
 import { EditorProviderUnified, useEditor } from '@/components/editor/EditorProviderUnified';
-import * as loadStepTemplates from '@/utils/loadStepTemplates';
+import { templateService } from '@/services/canonical/TemplateService';
+import TemplateLoader from '@/services/editor/TemplateLoader';
 
 const MasterJSONFixture = {
     templateVersion: '3.0',
@@ -33,10 +34,10 @@ function TestConsumer({ onReady }: { onReady: (ctx: ReturnType<typeof useEditor>
 describe('EditorProviderUnified.ensureStepLoaded', () => {
     beforeEach(() => {
         vi.restoreAllMocks();
-        // Mock global fetch para retornar o master JSON fixture
+        // Mock global fetch neutro (não usado diretamente após migração)
         vi.spyOn(global, 'fetch' as any).mockResolvedValue({
             ok: true,
-            json: async () => MasterJSONFixture,
+            json: async () => ({}),
         } as any);
     });
 
@@ -49,6 +50,16 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
                 <TestConsumer onReady={onReady} />
             </EditorProviderUnified>,
         );
+
+        // Mock TemplateService para devolver blocos esperados para step-03
+        vi.spyOn(templateService, 'getStep').mockResolvedValue({
+            success: true,
+            data: [
+                { id: 'hero-03', type: 'quiz-question-header', order: 0, properties: {}, content: {} } as any,
+                { id: 'grid-03', type: 'options-grid', order: 1, properties: {}, content: {} } as any,
+            ],
+            error: undefined,
+        } as any);
 
         await actions.ensureStepLoaded('step-03');
 
@@ -73,6 +84,14 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
             </EditorProviderUnified>,
         );
 
+        vi.spyOn(templateService, 'getStep').mockResolvedValue({
+            success: true,
+            data: [
+                { id: 'offer-hero-21', type: 'offer-hero', order: 0, properties: {}, content: {} } as any,
+            ],
+            error: undefined,
+        } as any);
+
         await actions.ensureStepLoaded('step-21');
 
         await waitFor(() => {
@@ -94,15 +113,26 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
             </EditorProviderUnified>,
         );
 
-        const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
+        // Espionar TemplateLoader interno para verificar a origem detectada
+        const loaderSpy = vi.spyOn(TemplateLoader.prototype as any, 'loadStep');
+
+        vi.spyOn(templateService, 'getStep').mockResolvedValue({
+            success: true,
+            data: [
+                { id: 'result-main', type: 'result-main', order: 0, properties: {}, content: {} } as any,
+            ],
+            error: undefined,
+        } as any);
+
         await actions.ensureStepLoaded('step-20');
 
         await waitFor(() => {
             const blocks = state.stepBlocks['step-20'];
             expect(Array.isArray(blocks)).toBe(true);
             expect(blocks.length).toBeGreaterThan(0);
-            // confirma que veio do JSON modular
-            expect(spy).toHaveBeenCalledWith('step-20');
+            // confirma que o loader foi consultado para detectar a source
+            expect(loaderSpy).toHaveBeenCalledWith('step-20');
+            expect(state.stepSources['step-20']).toBeTruthy();
         });
     });
 
@@ -116,14 +146,24 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
             </EditorProviderUnified>,
         );
 
-        const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
+        const loaderSpy = vi.spyOn(TemplateLoader.prototype as any, 'loadStep');
+
+        vi.spyOn(templateService, 'getStep').mockResolvedValue({
+            success: true,
+            data: [
+                { id: 'transition-title', type: 'transition-title', order: 0, properties: {}, content: {} } as any,
+            ],
+            error: undefined,
+        } as any);
+
         await actions.ensureStepLoaded('step-12');
 
         await waitFor(() => {
             const blocks = state.stepBlocks['step-12'];
             expect(Array.isArray(blocks)).toBe(true);
             expect(blocks.length).toBeGreaterThan(0);
-            expect(spy).toHaveBeenCalledWith('step-12');
+            expect(loaderSpy).toHaveBeenCalledWith('step-12');
+            expect(state.stepSources['step-12']).toBeTruthy();
         });
     });
 
@@ -137,14 +177,24 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
             </EditorProviderUnified>,
         );
 
-        const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
+        const loaderSpy = vi.spyOn(TemplateLoader.prototype as any, 'loadStep');
+
+        vi.spyOn(templateService, 'getStep').mockResolvedValue({
+            success: true,
+            data: [
+                { id: 'transition-text', type: 'transition-text', order: 0, properties: {}, content: {} } as any,
+            ],
+            error: undefined,
+        } as any);
+
         await actions.ensureStepLoaded('step-19');
 
         await waitFor(() => {
             const blocks = state.stepBlocks['step-19'];
             expect(Array.isArray(blocks)).toBe(true);
             expect(blocks.length).toBeGreaterThan(0);
-            expect(spy).toHaveBeenCalledWith('step-19');
+            expect(loaderSpy).toHaveBeenCalledWith('step-19');
+            expect(state.stepSources['step-19']).toBeTruthy();
         });
     });
 });

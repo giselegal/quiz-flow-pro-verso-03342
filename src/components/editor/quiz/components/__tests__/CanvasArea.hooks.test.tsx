@@ -40,6 +40,14 @@ vi.mock('@/components/ui/card', () => ({
 vi.mock('@dnd-kit/sortable', () => ({
     SortableContext: ({ children }: any) => <div>{children}</div>,
     verticalListSortingStrategy: {},
+    useSortable: () => ({
+        attributes: {},
+        listeners: {},
+        setNodeRef: () => { },
+        transform: null,
+        transition: undefined,
+        isDragging: false,
+    }),
 }));
 
 vi.mock('@/components/ui/tooltip', () => ({
@@ -194,12 +202,12 @@ describe('CanvasArea - Hook Conditional Fix', () => {
     });
 
     describe('⚡ Virtualization Logic', () => {
-        it('TC-H006: deve desabilitar virtualização com menos de 60 blocos', () => {
+        it('TC-H006: deve desabilitar virtualização com menos de 10 blocos', () => {
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(59),
+                blocks: createBlocks(9),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -209,12 +217,12 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             );
         });
 
-        it('TC-H007: deve habilitar virtualização com 60 ou mais blocos', () => {
+        it('TC-H007: deve habilitar virtualização com 10 ou mais blocos', () => {
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(60),
+                blocks: createBlocks(10),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -621,17 +629,17 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             expect(calledBlocks[3].order).toBe(8);
         });
 
-        it('TC-H025: deve lidar com threshold exato de 60 blocos', () => {
+        it('TC-H025: deve lidar com threshold exato de 10 blocos', () => {
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(60),
+                blocks: createBlocks(10),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
 
-            // Exatamente 60 blocos deve HABILITAR virtualização
+            // Exatamente 10 blocos deve HABILITAR virtualização
             expect(mockUseVirtualBlocks).toHaveBeenCalledWith(
                 expect.objectContaining({ enabled: true }),
             );

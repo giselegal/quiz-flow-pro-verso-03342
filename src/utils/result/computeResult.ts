@@ -26,6 +26,7 @@
  */
 
 import { QUIZ_STEPS } from '@/data/quizSteps'; // Fallback legado mantido para compatibilidade nos testes
+import { templateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { styleMapping } from '@/data/styles';
 import { toUnaccentedStyleId } from '@/utils/styleIds';
@@ -46,7 +47,9 @@ export interface ComputeResultOutputBasic {
     totalAnswers: number;                 // total de seleções consideradas
 }
 
-export function computeResult({ answers, steps = QUIZ_STEPS, scoring }: ComputeResultInput): ComputeResultOutputBasic {
+export function computeResult({ answers, steps, scoring }: ComputeResultInput): ComputeResultOutputBasic {
+    // Fonte de steps: preferir TemplateService (canônico) quando não informado explicitamente
+    const stepsSource = steps || templateService.getAllStepsSync() || (QUIZ_STEPS as any);
     // Inicializa scores com todos estilos em 0 para consistência de UI
     const scores: Record<string, number> = {};
     Object.keys(styleMapping).forEach(id => { scores[id] = 0; });
@@ -59,7 +62,7 @@ export function computeResult({ answers, steps = QUIZ_STEPS, scoring }: ComputeR
     const optionWeights: Record<string, Record<string, number>> | undefined = (scoring as any)?.optionWeights;
 
     for (const [stepId, selections] of Object.entries(answers)) {
-        const step = (steps as any)[stepId];
+        const step = (stepsSource as any)[stepId];
         if (!step || step.type !== 'question' || !Array.isArray(selections)) continue;
         for (const rawOptId of selections) {
             if (!rawOptId) continue;
