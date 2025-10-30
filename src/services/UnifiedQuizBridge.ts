@@ -67,6 +67,10 @@ export class UnifiedQuizBridge {
         const blocksRes = await templateService.steps.get(stepNumber);
         if (blocksRes.success && Array.isArray(blocksRes.data) && blocksRes.data.length > 0) {
           unified = UnifiedQuizStepAdapter.fromBlocks(blocksRes.data as any, stepId);
+          // Compat: manter source como 'quizstep' para não quebrar testes/consumidores
+          if (unified?.metadata) {
+            unified.metadata.source = 'quizstep';
+          }
         }
       }
 
