@@ -123,9 +123,13 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private async loadTemplateInternal(templateId: string): Promise<FullTemplate | null> {
     const loadMethods = [
-      () => this.loadFromRegistry(templateId),
-      () => this.loadFromTypeScript(templateId),
+      // ✅ Priorizar JSON por etapa como fonte canônica
       () => this.loadFromJSON(templateId),
+      // Depois consultar o registry consolidado
+      () => this.loadFromRegistry(templateId),
+      // Por fim, fallback para TypeScript legado se necessário
+      () => this.loadFromTypeScript(templateId),
+      // Último recurso: gerar fallback sintético
       () => this.generateFallback(templateId),
     ];
 
