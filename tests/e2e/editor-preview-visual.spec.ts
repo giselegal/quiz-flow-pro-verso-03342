@@ -10,6 +10,27 @@
 
 import { test, expect } from '@playwright/test';
 
+// Helper: entrar em modo preview de forma determinística
+async function enterPreview(page: import('@playwright/test').Page) {
+    // Tenta via API exposta no window (mais estável)
+    await page.evaluate(() => {
+        // @ts-ignore
+        const api = (window as any).__editorMode;
+        if (api && typeof api.setViewMode === 'function') {
+            api.setViewMode('preview');
+        }
+    });
+    // Se o canvas de preview não aparecer, usa o botão como fallback
+    const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]').first();
+    if (!(await previewCanvas.isVisible().catch(() => false))) {
+        const previewBtn = page.locator('button:has-text("Preview")').first();
+        if (await previewBtn.isVisible().catch(() => false)) {
+            await previewBtn.click();
+        }
+    }
+    await page.waitForSelector('[data-testid="canvas-preview-mode"]', { timeout: 5000 });
+}
+
 const EDITOR_URL = '/editor?template=quiz21StepsComplete';
 
 test.describe('Editor Preview - Testes Visuais', () => {
@@ -32,8 +53,8 @@ test.describe('Editor Preview - Testes Visuais', () => {
         });
 
         test('step-01: modo preview', async ({ page }) => {
-            // Entrar no modo preview
-            await page.locator('button:has-text("Preview")').first().click();
+            // Entrar no modo preview de forma determinística
+            await enterPreview(page);
             await page.waitForTimeout(500);
 
             // Capturar screenshot do preview
@@ -45,7 +66,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
         test('step-02: grid de opções com imagens', async ({ page }) => {
             // Navegar para step-02 no preview
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
 
             await page.locator('input[placeholder*="nome"]').first().fill('Teste Visual');
@@ -65,7 +86,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
         test('step-02: opções selecionadas (estado visual)', async ({ page }) => {
             // Setup
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
             await page.locator('input[placeholder*="nome"]').first().fill('Teste Visual');
             await page.locator('button:has-text("Quero Descobrir"), button:has-text("Começar")').first().click();
@@ -109,7 +130,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
         test('progress-bar: barra de progresso', async ({ page }) => {
             // Navegar para step-02 para ter progresso visível
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
             await page.locator('input[placeholder*="nome"]').first().fill('Teste');
             await page.locator('button:has-text("Quero Descobrir"), button:has-text("Começar")').first().click();
@@ -125,7 +146,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
         test('navigation-buttons: botões de navegação', async ({ page }) => {
             // Entrar no preview e ir para step-02
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
             await page.locator('input[placeholder*="nome"]').first().fill('Teste');
             await page.locator('button:has-text("Quero Descobrir")').first().click();
@@ -147,7 +168,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
     test.describe('Estados de Validação', () => {
         test('formulário: campo vazio (estado inicial)', async ({ page }) => {
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
 
             const form = page.locator('input[placeholder*="nome"]').first();
@@ -159,7 +180,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
         });
 
         test('formulário: campo preenchido', async ({ page }) => {
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
 
             const input = page.locator('input[placeholder*="nome"]').first();
@@ -174,7 +195,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
         test('botão desabilitado: sem seleções suficientes', async ({ page }) => {
             // Setup para step-02
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
             await page.locator('input[placeholder*="nome"]').first().fill('Teste');
             await page.locator('button:has-text("Quero Descobrir")').first().click();
@@ -193,7 +214,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
         test('botão habilitado: validação satisfeita', async ({ page }) => {
             // Setup para step-02
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
             await page.locator('input[placeholder*="nome"]').first().fill('Teste');
             await page.locator('button:has-text("Quero Descobrir")').first().click();
@@ -228,7 +249,6 @@ test.describe('Editor Preview - Testes Visuais', () => {
                 const canvas = page.locator('[data-testid="canvas-editor"], .canvas-area').first();
                 await expect(canvas).toHaveScreenshot(`step-01-${name}.png`, {
                     maxDiffPixels: 150,
-                    fullPage: false,
                 });
             });
         });
@@ -244,7 +264,7 @@ test.describe('Editor Preview - Testes Visuais', () => {
 
         test('cores de marca: verificação visual', async ({ page }) => {
             // Verificar se cores da marca (#B89B7A, #432818) são aplicadas
-            await page.locator('button:has-text("Preview")').first().click();
+            await enterPreview(page);
             await page.waitForTimeout(500);
 
             const title = page.locator('text=/Chega.*guarda-roupa/i').first();
@@ -267,7 +287,7 @@ test.describe('Acessibilidade Visual', () => {
     });
 
     test('contraste: botão primário', async ({ page }) => {
-        await page.locator('button:has-text("Preview")').first().click();
+        await enterPreview(page);
         await page.waitForTimeout(500);
 
         const primaryButton = page.locator('button:has-text("Quero Descobrir")').first();
@@ -285,7 +305,7 @@ test.describe('Acessibilidade Visual', () => {
 
     test('espaçamento: toque em mobile', async ({ page }) => {
         await page.setViewportSize({ width: 375, height: 667 });
-        await page.locator('button:has-text("Preview")').first().click();
+        await enterPreview(page);
         await page.waitForTimeout(500);
         await page.locator('input[placeholder*="nome"]').first().fill('Teste');
         await page.locator('button:has-text("Quero Descobrir")').first().click();
