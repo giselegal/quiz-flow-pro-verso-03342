@@ -1,6 +1,5 @@
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { QuizDataService } from '@/services/core/QuizDataService';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
 import { TemplateManager } from '@/utils/TemplateManager';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -203,8 +202,7 @@ export const useQuizFlow = ({
 
   // Buscar dados da etapa atual
   const getStepData = useCallback(() => {
-    const stepKey = `step-${currentStep}`;
-    return QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
+    return QuizDataService.getStepData(currentStep);
   }, [currentStep]);
 
   // Helpers derivados
