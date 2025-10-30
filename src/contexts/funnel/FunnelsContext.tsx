@@ -1,10 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { StorageService } from '@/services/core/StorageService';
-import {
-  QUIZ_QUESTIONS_COMPLETE,
-  QUIZ_STYLE_21_STEPS_TEMPLATE,
-} from '../../templates/quiz21StepsComplete';
+// Removido uso direto do template monolítico; usar QuizDataService para obter blocos por etapa
 import { QuizDataService } from '@/services/core/QuizDataService';
 // No imports needed for this context - legacy file
 
@@ -130,14 +127,24 @@ const buildDefaultStepsFromSections = (
 ) => {
   const useGeneratedDescription = !!options?.useGeneratedDescription;
 
-  return Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
-    const stepNumber = parseInt(stepNum);
+  const steps: Array<{
+    id: string;
+    name: string;
+    order: number;
+    blocksCount: number;
+    isActive: boolean;
+    type: string;
+    description: string;
+  }> = [];
+
+  // Mantemos 21 etapas como padrão do quiz de estilo
+  for (let stepNumber = 1; stepNumber <= 21; stepNumber++) {
     const stepId = `step-${stepNumber}`;
-    const templateSections = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+    const templateSections = QuizDataService.getStepData(stepNumber) || [];
     const questionText = extractQuestionTextFromTemplateSections(templateSections) || 'Pergunta';
     const stepType = inferStepTypeFromTemplate(stepId, stepNumber, templateSections || []);
 
-    return {
+    steps.push({
       id: stepId,
       name: `Etapa ${stepNumber}`,
       order: stepNumber,
@@ -147,8 +154,10 @@ const buildDefaultStepsFromSections = (
       description: useGeneratedDescription
         ? generateStepDescription(stepType, stepNumber, questionText)
         : questionText,
-    };
-  });
+    });
+  }
+
+  return steps;
 };
 
 // 🧠 Cache de blocos determinístico por template/funnel/step
@@ -722,14 +731,12 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     }
 
     const safeFunnelTemplates = FUNNEL_TEMPLATES || ({} as typeof FUNNEL_TEMPLATES);
-    const safeQuizTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE || ({} as typeof QUIZ_STYLE_21_STEPS_TEMPLATE);
 
     if (debug) {
       console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
       console.log('📂 currentFunnelId:', currentFunnelId);
       if (verbose) {
         try { console.log('📊 FUNNEL_TEMPLATES keys:', Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
-        try { console.log('📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:', Object.keys(safeQuizTemplate)); } catch { console.warn('⚠️ Não foi possível ler keys de QUIZ_STYLE_21_STEPS_TEMPLATE'); }
       }
     }
     // Resolver ID base quando for sessão ad-hoc (ex.: funnel-quiz21StepsComplete-<timestamp>)
