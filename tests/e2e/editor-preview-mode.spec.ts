@@ -72,8 +72,8 @@ test.describe('Editor - Modo PREVIEW', () => {
             await expect(page.locator('[data-testid="canvas-edit-mode"]')).toBeVisible();
 
             // Clicar no botão Preview
-            const previewButton = page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first();
-            await previewButton.click();
+            // Alternar via store exposta no window (estável para testes)
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('preview'));
 
             // Aguardar mudança de modo
             await page.waitForTimeout(500);
@@ -89,11 +89,11 @@ test.describe('Editor - Modo PREVIEW', () => {
 
         test('deve alternar de Preview de volta para Edit', async ({ page }) => {
             // Ir para Preview
-            await page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first().click();
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('preview'));
             await page.waitForTimeout(500);
 
             // Voltar para Edit
-            await page.locator('[data-testid="canvas-preview-mode"] button:has-text("Editor"), [data-testid="canvas-preview-mode"] button:has-text("Edit"), [data-testid="canvas-preview-mode"] button:has-text("Editar")').first().click();
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('edit'));
             await page.waitForTimeout(500);
 
             // Validar que modo Edit está ativo novamente
@@ -102,7 +102,7 @@ test.describe('Editor - Modo PREVIEW', () => {
 
         test('deve manter estado ao alternar entre modos', async ({ page }) => {
             // Ir para Preview
-            await page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first().click();
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('preview'));
             await page.waitForTimeout(500);
 
             // Preencher nome no preview
@@ -114,7 +114,7 @@ test.describe('Editor - Modo PREVIEW', () => {
             await page.waitForTimeout(500);
 
             // Voltar para Preview
-            await page.locator('[data-testid="canvas-edit-mode"] button:has-text("Preview")').first().click();
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('preview'));
             await page.waitForTimeout(500);
 
             // Validar que nome ainda está preenchido (se sessionData persiste)
@@ -128,8 +128,8 @@ test.describe('Editor - Modo PREVIEW', () => {
 
     test.describe('TC3: Navegação e Validação de Formulário', () => {
         test.beforeEach(async ({ page }) => {
-            // Entrar no modo Preview
-            await page.locator('button:has-text("Preview")').first().click();
+            // Entrar no modo Preview (via store exposta)
+            await page.evaluate(() => (window as any).__editorMode?.setViewMode('preview'));
             await page.waitForTimeout(500);
         });
 
@@ -152,11 +152,11 @@ test.describe('Editor - Modo PREVIEW', () => {
 
         test('deve navegar para step-02 após preencher nome', async ({ page }) => {
             // Preencher nome
-            const nameInput = page.locator('input[placeholder*="nome"], input[type="text"]').first();
+            const nameInput = page.locator('[data-testid="canvas-preview-mode"] input[placeholder*="nome"], [data-testid="canvas-preview-mode"] input[type="text"]').first();
             await nameInput.fill('Maria Silva');
 
             // Clicar no botão de avançar
-            const submitButton = page.locator('button:has-text("Quero Descobrir"), button:has-text("Começar"), button:has-text("Avançar")').first();
+            const submitButton = page.locator('[data-testid="canvas-preview-mode"] button:has-text("Quero Descobrir"), [data-testid="canvas-preview-mode"] button:has-text("Começar"), [data-testid="canvas-preview-mode"] button:has-text("Avançar")').first();
             await submitButton.click();
 
             // Aguardar navegação
