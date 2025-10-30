@@ -217,12 +217,12 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             );
         });
 
-        it('TC-H007: deve habilitar virtualização com 10 ou mais blocos', () => {
+        it('TC-H007: deve habilitar virtualização com 15 ou mais blocos', () => {
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(10),
+                blocks: createBlocks(15),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
