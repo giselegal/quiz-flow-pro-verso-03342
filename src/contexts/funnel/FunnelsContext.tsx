@@ -5,6 +5,7 @@ import {
   QUIZ_QUESTIONS_COMPLETE,
   QUIZ_STYLE_21_STEPS_TEMPLATE,
 } from '../../templates/quiz21StepsComplete';
+import { QuizDataService } from '@/services/core/QuizDataService';
 // No imports needed for this context - legacy file
 
 // Adaptação temporária para compatibilidade
@@ -681,7 +682,8 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
     // Verifica se é o template optimized (que existe)
     if (templateId === 'template-optimized-21-steps-funnel' || templateId === 'optimized-21-steps-funnel') {
-      const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      const n = parseInt(stepId.replace(/\D+/g, ''), 10) || 0;
+      const originalBlocks = n ? QuizDataService.getStepData(n) : [];
       const clonedBlocks = buildDeterministicBlocks(originalBlocks, currentFunnelId, templateId, stepId);
       blocksCache.set(cacheKey, clonedBlocks);
       console.log(`🔄 [${currentFunnelId}] Template quiz-estilo-completo: ${clonedBlocks.length} blocos únicos para ${stepId}`);
@@ -691,7 +693,8 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     // ✅ CORREÇÃO: Template funil-21-etapas também deve usar QUIZ_STYLE_21_STEPS_TEMPLATE
     if (templateId === 'funil-21-etapas' || templateId === 'template-optimized-21-steps-funnel') {
       console.log(`🔄 [${currentFunnelId}] Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
-      const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      const n = parseInt(stepId.replace(/\D+/g, ''), 10) || 0;
+      const originalBlocks = n ? QuizDataService.getStepData(n) : [];
       const clonedBlocks = buildDeterministicBlocks(originalBlocks, currentFunnelId, templateId, stepId);
       blocksCache.set(cacheKey, clonedBlocks);
       console.log(`📦 [${currentFunnelId}] Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
