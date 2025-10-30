@@ -32,7 +32,7 @@
 if (typeof console !== 'undefined' && console.warn) {
   console.warn(
     '⚠️ DEPRECATED: quizSteps.ts is deprecated. Use TemplateService.getInstance().getStep(stepId) instead.\n' +
-    'See: src/services/canonical/TemplateService.ts'
+    'See: src/services/canonical/TemplateService.ts',
   );
 }
 

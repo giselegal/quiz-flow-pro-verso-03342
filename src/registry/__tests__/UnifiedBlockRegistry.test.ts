@@ -28,7 +28,7 @@ describe('UnifiedBlockRegistry', () => {
       expect(stats.registry.criticalTypes).toBeGreaterThan(0);
       expect(stats.registry.lazyTypes).toBeGreaterThan(0);
       expect(stats.registry.totalTypes).toBe(
-        stats.registry.criticalTypes + stats.registry.lazyTypes
+        stats.registry.criticalTypes + stats.registry.lazyTypes,
       );
     });
   });
@@ -269,7 +269,7 @@ describe('UnifiedBlockRegistry', () => {
 
     it('should not throw on async errors', async () => {
       await expect(
-        blockRegistry.getComponentAsync('definitely-does-not-exist-xyz-123')
+        blockRegistry.getComponentAsync('definitely-does-not-exist-xyz-123'),
       ).resolves.not.toThrow();
     });
   });

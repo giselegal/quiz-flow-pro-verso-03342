@@ -34,7 +34,7 @@ export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
 
     if (enableWarnings) {
         console.warn(
-            '⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditor diretamente.'
+            '⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditor diretamente.',
         );
     }
 

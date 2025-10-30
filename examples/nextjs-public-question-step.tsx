@@ -51,12 +51,12 @@ export default function QuestionStep({
     // ✅ Lógica pura (sem editor, sem DnD)
     const progress = useMemo(
         () => computeProgress(currentStepNumber, totalSteps),
-        [currentStepNumber, totalSteps]
+        [currentStepNumber, totalSteps],
     );
 
     const isValid = useMemo(
         () => validateAnswer(currentAnswers, data.requiredSelections),
-        [currentAnswers, data.requiredSelections]
+        [currentAnswers, data.requiredSelections],
     );
 
     const handleOptionClick = (optionId: string) => {

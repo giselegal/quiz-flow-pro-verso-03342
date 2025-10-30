@@ -20,22 +20,22 @@ import { Copy, Trash2, Eye, EyeOff } from 'lucide-react';
 
 // Lazy load dos editores especializados (mesmo do SinglePropertiesPanel)
 const HeaderPropertyEditor = lazy(() =>
-    import('../editors/HeaderPropertyEditor').then(m => ({ default: m.HeaderPropertyEditor }))
+    import('../editors/HeaderPropertyEditor').then(m => ({ default: m.HeaderPropertyEditor })),
 );
 const QuestionPropertyEditor = lazy(() =>
-    import('../editors/QuestionPropertyEditor').then(m => ({ default: m.QuestionPropertyEditor }))
+    import('../editors/QuestionPropertyEditor').then(m => ({ default: m.QuestionPropertyEditor })),
 );
 const ButtonPropertyEditor = lazy(() =>
-    import('../editors/ButtonPropertyEditor').then(m => ({ default: m.ButtonPropertyEditor }))
+    import('../editors/ButtonPropertyEditor').then(m => ({ default: m.ButtonPropertyEditor })),
 );
 const TextPropertyEditor = lazy(() =>
-    import('../editors/TextPropertyEditor')
+    import('../editors/TextPropertyEditor'),
 );
 const OptionsGridPropertyEditor = lazy(() =>
-    import('../editors/OptionsGridPropertyEditor')
+    import('../editors/OptionsGridPropertyEditor'),
 );
 const ImagePropertyEditor = lazy(() =>
-    import('../editors/ImagePropertyEditor')
+    import('../editors/ImagePropertyEditor'),
 );
 
 // ============================================================================
@@ -190,7 +190,7 @@ interface SpecializedBlockEditorProps {
 function SpecializedBlockEditor({
     blockType,
     blockData,
-    onUpdate
+    onUpdate,
 }: SpecializedBlockEditorProps) {
 
     // Switch baseado no tipo do bloco (mesmo do SinglePropertiesPanel)
@@ -301,7 +301,7 @@ function EditorSkeleton() {
 
 function GenericBlockEditor({
     blockData,
-    onUpdate
+    onUpdate,
 }: {
     blockData: any;
     onUpdate: (updates: any) => void;

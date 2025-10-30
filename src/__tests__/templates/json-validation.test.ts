@@ -203,7 +203,7 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
         return { file, ...validation };
       });
 
-      console.log(`\n📊 Normalized Steps:`);
+      console.log('\n📊 Normalized Steps:');
       results.forEach((r) => {
         const status = r.valid ? '✅' : '❌';
         console.log(`${status} ${r.file}: ${r.errors.length} erros, ${r.warnings.length} avisos`);
@@ -230,7 +230,7 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
         .filter((f) => f.startsWith('step-') && f.endsWith('.json'))
         .sort();
 
-      console.log(`\n🔍 Comparando Normalized vs Master:`);
+      console.log('\n🔍 Comparando Normalized vs Master:');
 
       files.forEach((file) => {
         const stepId = file.replace('.json', '');
@@ -298,7 +298,7 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
         return { file, ...validation };
       });
 
-      console.log(`\n📊 Quiz-steps Etapas:`);
+      console.log('\n📊 Quiz-steps Etapas:');
       results.forEach((r) => {
         const status = r.valid ? '✅' : '❌';
         console.log(`${status} ${r.file}: ${r.errors.length} erros, ${r.warnings.length} avisos`);
@@ -331,17 +331,17 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
             .length
         : 0;
 
-      console.log(`\n📊 ANÁLISE COMPARATIVA:`);
+      console.log('\n📊 ANÁLISE COMPARATIVA:');
       console.log(`   Master (quiz21-complete.json): ${stepIds.length} steps`);
       console.log(`   Normalized: ${normalizedCount} steps individuais`);
       console.log(`   Quiz-steps: ${quizStepsCount} etapas individuais`);
 
-      console.log(`\n🏆 RECOMENDAÇÃO:`);
+      console.log('\n🏆 RECOMENDAÇÃO:');
       if (stepIds.length === 21) {
         console.log(
-          `   ✅ USAR: public/templates/quiz21-complete.json (fonte canônica completa)`,
+          '   ✅ USAR: public/templates/quiz21-complete.json (fonte canônica completa)',
         );
-        console.log(`   ✅ Estrutura: Objeto com 21 chaves (step-01 a step-21)`);
+        console.log('   ✅ Estrutura: Objeto com 21 chaves (step-01 a step-21)');
       } else {
         console.log(`   ⚠️ Master incompleto (${stepIds.length}/21), verificar steps individuais`);
       }
@@ -354,7 +354,7 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
       const masterSteps = master.steps;
       const stepIds = Object.keys(masterSteps);
 
-      console.log(`\n🔍 DETECTANDO INCONSISTÊNCIAS:`);
+      console.log('\n🔍 DETECTANDO INCONSISTÊNCIAS:');
 
       // Verificar steps faltando
       const missingSteps = [];
@@ -368,11 +368,11 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
       if (missingSteps.length > 0) {
         console.warn(`   ⚠️ Steps faltando: ${missingSteps.join(', ')}`);
       } else {
-        console.log(`   ✅ Todos os 21 steps presentes`);
+        console.log('   ✅ Todos os 21 steps presentes');
       }
 
       // Verificar duplicatas (não aplicável para objeto, mas verificar estrutura)
-      console.log(`   ✅ Estrutura de objeto garante sem duplicatas`);
+      console.log('   ✅ Estrutura de objeto garante sem duplicatas');
 
       expect(missingSteps.length).toBe(0);
     });
@@ -382,20 +382,20 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
       const masterSteps = master.steps;
       const stepIds = Object.keys(masterSteps);
 
-      console.log(`\n📋 RELATÓRIO FINAL - JSONs CORRETOS:`);
-      console.log(`\n1️⃣ FONTE PRIMÁRIA (RECOMENDADA):`);
-      console.log(`   📄 public/templates/quiz21-complete.json`);
+      console.log('\n📋 RELATÓRIO FINAL - JSONs CORRETOS:');
+      console.log('\n1️⃣ FONTE PRIMÁRIA (RECOMENDADA):');
+      console.log('   📄 public/templates/quiz21-complete.json');
       console.log(`   ✅ Contém: ${stepIds.length} steps completos`);
       console.log(`   ✅ Estrutura: Objeto com chaves step-01 até step-${stepIds.length}`);
       console.log(`   ✅ Versão: ${master.templateVersion || '3.0'}`);
 
-      console.log(`\n2️⃣ FONTES SECUNDÁRIAS (para referência):`);
+      console.log('\n2️⃣ FONTES SECUNDÁRIAS (para referência):');
 
       if (existsSync(NORMALIZED_DIR)) {
         const normalizedFiles = readdirSync(NORMALIZED_DIR).filter((f) =>
           f.endsWith('.json'),
         ).length;
-        console.log(`   📁 public/templates/normalized/`);
+        console.log('   📁 public/templates/normalized/');
         console.log(`      ${normalizedFiles} arquivos JSON individuais`);
       }
 
@@ -403,15 +403,15 @@ describe('🔍 Validação de JSONs Individuais de Templates', () => {
         const quizStepsFiles = readdirSync(QUIZ_STEPS_DIR).filter((f) =>
           f.endsWith('.json'),
         ).length;
-        console.log(`   📁 public/templates/quiz-steps/`);
+        console.log('   📁 public/templates/quiz-steps/');
         console.log(`      ${quizStepsFiles} arquivos JSON individuais`);
       }
 
-      console.log(`\n✅ CONCLUSÃO:`);
+      console.log('\n✅ CONCLUSÃO:');
       console.log(
-        `   Use quiz21-complete.json como fonte única de verdade para os 21 steps.`,
+        '   Use quiz21-complete.json como fonte única de verdade para os 21 steps.',
       );
-      console.log(`   Estrutura: master.steps["step-01"] até master.steps["step-21"]`);
+      console.log('   Estrutura: master.steps["step-01"] até master.steps["step-21"]');
 
       expect(stepIds.length).toBe(21);
     });

@@ -16,7 +16,7 @@ interface BlockSkeletonProps {
 export const BlockSkeleton: React.FC<BlockSkeletonProps> = ({
     height = '60px',
     variant = 'default',
-    className = ''
+    className = '',
 }) => {
     const getSkeletonContent = () => {
         switch (variant) {
@@ -73,7 +73,7 @@ export const BlockSkeleton: React.FC<BlockSkeletonProps> = ({
         <div
             className={`block-skeleton ${className}`}
             style={{
-                minHeight: typeof height === 'number' ? `${height}px` : height
+                minHeight: typeof height === 'number' ? `${height}px` : height,
             }}
             role="status"
             aria-label="Loading block..."

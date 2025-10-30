@@ -53,7 +53,7 @@ export function UniversalPropertiesPanel() {
         // Prioridade 1: Bloco selecionado
         if (editor.state?.selectedBlockId) {
             const block = editor.state.stepBlocks?.find(
-                (b: any) => b.id === editor.state.selectedBlockId
+                (b: any) => b.id === editor.state.selectedBlockId,
             );
 
             return {

@@ -231,7 +231,7 @@ export const funnelComponentsService = {
       // ✅ FASE 4.2: Tentar usar RPC function (se migration foi aplicada)
       // @ts-ignore - RPC function ainda não nos types gerados (aguardando regeneração)
       const { data, error } = await supabase.rpc('batch_update_components', {
-        updates: rpcPayload
+        updates: rpcPayload,
       });
 
       if (!error && data) {
@@ -240,7 +240,7 @@ export const funnelComponentsService = {
         return { 
           success: true, 
           updated: result?.updated_count || updates.length, 
-          errors: result?.errors || [] 
+          errors: result?.errors || [], 
         };
       }
 

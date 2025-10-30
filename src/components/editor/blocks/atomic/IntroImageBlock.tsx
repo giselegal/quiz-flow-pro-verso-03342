@@ -26,7 +26,7 @@ export default function IntroImageBlock({
       src,
       hasSrc: !!src,
       content: (block as any)?.content,
-      properties: block.properties
+      properties: block.properties,
     });
   }
 

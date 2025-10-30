@@ -161,7 +161,7 @@ export abstract class BaseCanonicalService implements ICanonicalService {
   protected failure<T>(errorCode: string, message: string): ServiceResult<T> {
     return { 
       success: false, 
-      error: new Error(`[${errorCode}] ${message}`)
+      error: new Error(`[${errorCode}] ${message}`),
     };
   }
 

@@ -451,7 +451,7 @@ export function validatePublicationSettings(settings: unknown) {
  */
 export function validateSection<T extends keyof PublicationSettings>(
   section: T,
-  data: unknown
+  data: unknown,
 ) {
   const schemas = {
     domain: DomainSchema,

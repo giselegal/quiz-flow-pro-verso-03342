@@ -67,7 +67,7 @@ export default function ModularIntroStep({
             propsBlocks: blocks?.length || 0,
             fallbackBlocks: fallbackBlocks.length,
             effectiveBlocks: effectiveBlocks.length,
-            stepId: STEP_ID
+            stepId: STEP_ID,
         });
     }, [blocks, fallbackBlocks, effectiveBlocks, STEP_ID]);
 
@@ -106,7 +106,7 @@ export default function ModularIntroStep({
             hasRealBlocks,
             topLevelBlocksCount: topLevelBlocks.length,
             topLevelBlocksIds: topLevelBlocks.map(b => b.id),
-            topLevelBlocksTypes: topLevelBlocks.map(b => (b as any).type)
+            topLevelBlocksTypes: topLevelBlocks.map(b => (b as any).type),
         });
     }, [hasRealBlocks, topLevelBlocks]);
 

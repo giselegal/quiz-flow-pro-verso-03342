@@ -92,7 +92,7 @@ function injectDynamicData(block: Block, userProfile?: ModularResultStepProps['u
         // Converter IDs de estilo em nomes legíveis nos scores
         const scoresWithNames = userProfile.scores.map(s => ({
             name: getStyleDisplayName(s.name),
-            score: s.score
+            score: s.score,
         }));
         (injectedBlock as any).content = {
             ...(injectedBlock as any).content,

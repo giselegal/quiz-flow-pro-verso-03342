@@ -289,7 +289,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                     metadata: {
                         ...((stepData as any).metadata || {}),
                         [field]: value,
-                    }
+                    },
                 });
                 appLogger.debug('✅ handleEdit persistido:', { field, value, stepKey, blockId: stepData.id });
             } catch (err) {
@@ -401,7 +401,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
     // DnD setup
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     );
 
     const handleDragEnd = useCallback((event: any) => {

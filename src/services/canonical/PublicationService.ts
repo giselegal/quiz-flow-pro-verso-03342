@@ -99,7 +99,7 @@ export class PublicationService extends BaseCanonicalService {
 
   async publish(
     funnelId: string,
-    options: PublishOptions = {}
+    options: PublishOptions = {},
   ): Promise<ServiceResult<PublishResult>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'publish');
 
@@ -142,7 +142,7 @@ export class PublicationService extends BaseCanonicalService {
         const conflict = conflictResult.data;
         return this.failure(
           'URL_CONFLICT',
-          `URL já está em uso pelo funil "${conflict.existingFunnelName}" (ID: ${conflict.existingFunnelId})`
+          `URL já está em uso pelo funil "${conflict.existingFunnelName}" (ID: ${conflict.existingFunnelId})`,
         );
       }
 
@@ -389,7 +389,7 @@ export class PublicationService extends BaseCanonicalService {
 
   async checkUrlConflicts(
     funnelId: string,
-    settings: PublicationSettings
+    settings: PublicationSettings,
   ): Promise<ServiceResult<UrlConflict | null>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'checkUrlConflicts');
 

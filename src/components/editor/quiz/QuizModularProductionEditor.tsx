@@ -670,7 +670,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         prev.currentStepId === next.currentStepId &&
         prev.steps.length === next.steps.length &&
         prev.config.progressEnabled === next.config.progressEnabled &&
-        prev.config.showLogo === next.config.showLogo
+        prev.config.showLogo === next.config.showLogo,
     );
 
     // Validação em tempo real (fase inicial - regras básicas)
@@ -1714,7 +1714,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         // DEBUG: Log todos os blocos sendo renderizados
         if (process.env.NODE_ENV === 'development') {
-            console.log(`🎨 [renderBlockPreview] Renderizando bloco:`, { id, type });
+            console.log('🎨 [renderBlockPreview] Renderizando bloco:', { id, type });
         }
 
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
@@ -2276,7 +2276,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const features = content.features || properties?.features || [
                 'Acesso vitalício',
                 'Suporte premium',
-                'Atualizações gratuitas'
+                'Atualizações gratuitas',
             ];
             node = (
                 <div className="bg-gradient-to-br from-white to-slate-50 border-2 border-[#B89B7A] rounded-lg p-8 shadow-xl max-w-md mx-auto mb-8">

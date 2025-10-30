@@ -304,7 +304,7 @@ const TransitionBlock: React.FC<{
             >
                 <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                     className="w-16 h-16 border-4 border-white border-t-transparent rounded-full mx-auto mb-6"
                 />
                 <h2 className="text-3xl font-bold mb-4">{message}</h2>

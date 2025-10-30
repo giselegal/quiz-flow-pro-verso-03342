@@ -152,7 +152,7 @@ const PerformanceTestPage: React.FC = () => {
                                 padding: '10px',
                                 background: '#d4edda',
                                 borderRadius: '5px',
-                                borderLeft: '4px solid #28a745'
+                                borderLeft: '4px solid #28a745',
                             }}>
                                 <strong>✅ Meta Fase 2:</strong> Redução de 50% nos re-renders em comparação
                                 com arquitetura anterior (5 níveis de providers)

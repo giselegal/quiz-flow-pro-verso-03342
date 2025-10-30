@@ -52,7 +52,7 @@ export const RenderProfiler: React.FC<RenderProfilerProps> = ({
         actualDuration,
         baseDuration,
         startTime,
-        commitTime
+        commitTime,
     ) => {
         renderCountRef.current += 1;
 

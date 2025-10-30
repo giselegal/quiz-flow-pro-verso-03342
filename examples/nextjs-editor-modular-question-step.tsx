@@ -84,22 +84,22 @@ export default function ModularQuestionStep({
 
     // ✅ DnD setup (só no editor)
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     );
 
     const [localBlockOrder, setLocalBlockOrder] = useState<string[]>(
-        blocks.map(b => b.id)
+        blocks.map(b => b.id),
     );
 
     // Lógica pura (compartilhada com versão pública)
     const progress = useMemo(
         () => computeProgress(currentStepNumber, totalSteps),
-        [currentStepNumber, totalSteps]
+        [currentStepNumber, totalSteps],
     );
 
     const isValid = useMemo(
         () => validateAnswer(currentAnswers, data.requiredSelections),
-        [currentAnswers, data.requiredSelections]
+        [currentAnswers, data.requiredSelections],
     );
 
     const handleOptionClick = (optionId: string) => {

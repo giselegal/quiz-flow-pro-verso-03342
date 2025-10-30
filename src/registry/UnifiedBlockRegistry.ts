@@ -500,7 +500,7 @@ export class UnifiedBlockRegistry {
    */
   registerLazy(
     type: BlockType, 
-    loader: () => Promise<{ default: React.ComponentType<any> }>
+    loader: () => Promise<{ default: React.ComponentType<any> }>,
   ): void {
     this.lazyRegistry.set(type, loader);
     appLogger.info(`[UnifiedBlockRegistry] Registered lazy: ${type}`);
@@ -617,7 +617,7 @@ export class UnifiedBlockRegistry {
     type: BlockType, 
     loadTime: number, 
     isError: boolean,
-    isCacheHit: boolean
+    isCacheHit: boolean,
   ): void {
     const existing = this.metrics.get(type) || {
       loads: 0,

@@ -25,7 +25,7 @@ import {
     TrendingUp,
     Search,
     Lock,
-    AlertCircle
+    AlertCircle,
 } from 'lucide-react';
 
 import { CollapsibleSection } from '../components/CollapsibleSection';

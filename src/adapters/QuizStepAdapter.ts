@@ -466,7 +466,7 @@ export class QuizStepAdapter {
         const titleBlock = blocks.find(b => 
             b.type === 'intro-title' || 
             b.type === 'heading-inline' || 
-            b.type === 'question-text'
+            b.type === 'question-text',
         );
         
         const questionBlock = blocks.find(b => b.type === 'quiz-question');

@@ -29,15 +29,15 @@ describe('Provider Deprecation Warnings', () => {
             render(
                 <ConsolidatedProvider>
                     <div>Test Content</div>
-                </ConsolidatedProvider>
+                </ConsolidatedProvider>,
             );
 
             expect(consoleWarnSpy).toHaveBeenCalled();
             expect(consoleWarnSpy).toHaveBeenCalledWith(
-                expect.stringContaining('ConsolidatedProvider is deprecated')
+                expect.stringContaining('ConsolidatedProvider is deprecated'),
             );
             expect(consoleWarnSpy).toHaveBeenCalledWith(
-                expect.stringContaining('UnifiedAppProvider')
+                expect.stringContaining('UnifiedAppProvider'),
             );
         });
 
@@ -45,7 +45,7 @@ describe('Provider Deprecation Warnings', () => {
             const { getByText } = render(
                 <ConsolidatedProvider>
                     <div>Test Content</div>
-                </ConsolidatedProvider>
+                </ConsolidatedProvider>,
             );
 
             expect(getByText('Test Content')).toBeTruthy();
@@ -57,15 +57,15 @@ describe('Provider Deprecation Warnings', () => {
             render(
                 <FunnelMasterProvider>
                     <div>Test Content</div>
-                </FunnelMasterProvider>
+                </FunnelMasterProvider>,
             );
 
             expect(consoleWarnSpy).toHaveBeenCalled();
             expect(consoleWarnSpy).toHaveBeenCalledWith(
-                expect.stringContaining('FunnelMasterProvider is deprecated')
+                expect.stringContaining('FunnelMasterProvider is deprecated'),
             );
             expect(consoleWarnSpy).toHaveBeenCalledWith(
-                expect.stringContaining('UnifiedAppProvider')
+                expect.stringContaining('UnifiedAppProvider'),
             );
         });
 
@@ -73,7 +73,7 @@ describe('Provider Deprecation Warnings', () => {
             const { getByText } = render(
                 <FunnelMasterProvider>
                     <div>Test Content</div>
-                </FunnelMasterProvider>
+                </FunnelMasterProvider>,
             );
 
             expect(getByText('Test Content')).toBeTruthy();
@@ -85,12 +85,12 @@ describe('Provider Deprecation Warnings', () => {
             render(
                 <UnifiedAppProvider context={FunnelContext.EDITOR}>
                     <div>Test Content</div>
-                </UnifiedAppProvider>
+                </UnifiedAppProvider>,
             );
 
             // Pode haver outros warnings, mas não sobre depreciação
             const deprecationWarnings = consoleWarnSpy.mock.calls.filter((call: any) =>
-                call[0]?.includes('deprecated')
+                call[0]?.includes('deprecated'),
             );
             expect(deprecationWarnings).toHaveLength(0);
         });
@@ -99,7 +99,7 @@ describe('Provider Deprecation Warnings', () => {
             const { getByText } = render(
                 <UnifiedAppProvider context={FunnelContext.EDITOR}>
                     <div>Test Content</div>
-                </UnifiedAppProvider>
+                </UnifiedAppProvider>,
             );
 
             expect(getByText('Test Content')).toBeTruthy();
@@ -117,7 +117,7 @@ describe('Provider Deprecation Warnings', () => {
                 const { getByText } = render(
                     <UnifiedAppProvider context={context}>
                         <div>Context: {context}</div>
-                    </UnifiedAppProvider>
+                    </UnifiedAppProvider>,
                 );
 
                 expect(getByText(`Context: ${context}`)).toBeTruthy();
@@ -138,10 +138,10 @@ describe('Provider Deprecation Warnings', () => {
             render(
                 <ConsolidatedProvider>
                     <div>1</div>
-                </ConsolidatedProvider>
+                </ConsolidatedProvider>,
             );
             results.consolidated = consoleWarnSpy.mock.calls.some((call: any) =>
-                call[0]?.includes('deprecated')
+                call[0]?.includes('deprecated'),
             );
 
             // Test FunnelMasterProvider
@@ -149,10 +149,10 @@ describe('Provider Deprecation Warnings', () => {
             render(
                 <FunnelMasterProvider>
                     <div>2</div>
-                </FunnelMasterProvider>
+                </FunnelMasterProvider>,
             );
             results.funnelMaster = consoleWarnSpy.mock.calls.some((call: any) =>
-                call[0]?.includes('deprecated')
+                call[0]?.includes('deprecated'),
             );
 
             // Test UnifiedAppProvider
@@ -160,10 +160,10 @@ describe('Provider Deprecation Warnings', () => {
             render(
                 <UnifiedAppProvider>
                     <div>3</div>
-                </UnifiedAppProvider>
+                </UnifiedAppProvider>,
             );
             results.unified = consoleWarnSpy.mock.calls.some((call: any) =>
-                call[0]?.includes('deprecated')
+                call[0]?.includes('deprecated'),
             );
 
             // Assertions

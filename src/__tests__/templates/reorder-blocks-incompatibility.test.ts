@@ -28,7 +28,7 @@ import { describe, it, expect } from 'vitest';
 
 describe('❌ INCOMPATIBILIDADE: reorderBlocks Signatures', () => {
   it('documenta o problema de assinaturas incompatíveis', () => {
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${  '='.repeat(80)}`);
     console.log('❌ PROBLEMA: facade.reorderBlocks NÃO está sendo usado corretamente');
     console.log('='.repeat(80));
     
@@ -58,14 +58,14 @@ describe('❌ INCOMPATIBILIDADE: reorderBlocks Signatures', () => {
     console.log('   • NÃO chama facade em nenhum momento');
     console.log('   • Facade e EditorProvider operam INDEPENDENTEMENTE');
     
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${  '='.repeat(80)}`);
     
     // Este teste sempre passa - é documentação do problema
     expect(true).toBe(true);
   });
   
   it('demonstra como DEVERIA funcionar', () => {
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${  '='.repeat(80)}`);
     console.log('✅ SOLUÇÃO: Como integrar corretamente');
     console.log('='.repeat(80));
     
@@ -144,7 +144,7 @@ describe('❌ INCOMPATIBILIDADE: reorderBlocks Signatures', () => {
     console.log('   • Não precisa modificar EditorProvider');
     console.log('   • Mais flexível para diferentes casos de uso');
     
-    console.log('\n' + '='.repeat(80) + '\n');
+    console.log(`\n${  '='.repeat(80)  }\n`);
     
     expect(true).toBe(true);
   });

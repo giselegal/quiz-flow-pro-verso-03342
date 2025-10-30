@@ -25,13 +25,13 @@ describe('🔄 reorderBlocks - Sobrecarga (Array de IDs vs Índices)', () => {
           { id: 'blk-2', type: 'text', data: { text: 'Bloco 2' } },
           { id: 'blk-3', type: 'button', data: { text: 'Bloco 3' } },
           { id: 'blk-4', type: 'image', data: { url: 'test.jpg' } },
-        ]
+        ],
       }],
       meta: {
         id: 'test-funnel',
         createdAt: Date.now(),
         updatedAt: Date.now(),
-      }
+      },
     };
     
     facade = new QuizFunnelEditingFacade(initialSnapshot, mockPersist);
@@ -191,13 +191,13 @@ describe('🔄 reorderBlocks - Sobrecarga (Array de IDs vs Índices)', () => {
             { id: 'blk-2', type: 'text', data: { text: 'Bloco 2' } },
             { id: 'blk-3', type: 'button', data: { text: 'Bloco 3' } },
             { id: 'blk-4', type: 'image', data: { url: 'test.jpg' } },
-          ]
+          ],
         }],
         meta: {
           id: 'test-funnel-2',
           createdAt: Date.now(),
           updatedAt: Date.now(),
-        }
+        },
       };
       facade = new QuizFunnelEditingFacade(freshSnapshot, mockPersist);
       
@@ -254,7 +254,7 @@ describe('🔄 reorderBlocks - Sobrecarga (Array de IDs vs Índices)', () => {
     });
 
     it('documenta fluxo completo de integração', () => {
-      console.log('\n' + '='.repeat(70));
+      console.log(`\n${  '='.repeat(70)}`);
       console.log('✅ INTEGRAÇÃO: EditorProvider → Facade → Save');
       console.log('='.repeat(70));
       console.log('\n1️⃣ EditorProvider recebe: (stepKey, oldIndex, newIndex)');
@@ -267,7 +267,7 @@ describe('🔄 reorderBlocks - Sobrecarga (Array de IDs vs Índices)', () => {
       console.log('\n4️⃣ Facade marca dirty=true e emite evento');
       console.log('\n5️⃣ Save atualiza updatedAt e persiste');
       console.log('\n✅ RESULTADO: Integração transparente e sem conflitos!');
-      console.log('='.repeat(70) + '\n');
+      console.log(`${'='.repeat(70)  }\n`);
       
       expect(true).toBe(true);
     });

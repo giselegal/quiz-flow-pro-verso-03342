@@ -8,7 +8,7 @@ import { QuizFunnelEditingFacade, FunnelSnapshot } from '@/editor/facade/FunnelE
 
 describe('📋 DEMONSTRAÇÃO: Atualização de Versão ao Editar Blocos', () => {
   it('🎯 RESPOSTA COMPLETA À PERGUNTA DO USUÁRIO', async () => {
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${  '='.repeat(80)}`);
     console.log('❓ PERGUNTA: "quando os blocos são reordenados e editados');
     console.log('   a versão de publicação é atualizada???"');
     console.log('='.repeat(80));
@@ -23,13 +23,13 @@ describe('📋 DEMONSTRAÇÃO: Atualização de Versão ao Editar Blocos', () =>
         blocks: [
           { id: 'blk-1', type: 'heading', data: { text: 'Título' } },
           { id: 'blk-2', type: 'text', data: { text: 'Descrição' } },
-        ]
+        ],
       }],
       meta: {
         id: 'test-funnel',
         createdAt: 1000,
         updatedAt: 1000, // Versão inicial
-      }
+      },
     };
     
     const facade = new QuizFunnelEditingFacade(initialSnapshot, mockPersist);
@@ -69,7 +69,7 @@ describe('📋 DEMONSTRAÇÃO: Atualização de Versão ao Editar Blocos', () =>
     await new Promise(r => setTimeout(r, 50));
     
     facade.updateBlock('step-01', 'blk-1', {
-      data: { text: 'Título Modificado' }
+      data: { text: 'Título Modificado' },
     });
     console.log('   ✓ Bloco editado');
     console.log('   isDirty após editar:', facade.isDirty());
@@ -94,7 +94,7 @@ describe('📋 DEMONSTRAÇÃO: Atualização de Versão ao Editar Blocos', () =>
     
     facade.addBlock('step-01', {
       type: 'button',
-      data: { text: 'Clique aqui' }
+      data: { text: 'Clique aqui' },
     });
     console.log('   ✓ Bloco adicionado');
     expect(facade.isDirty()).toBe(true);
@@ -134,7 +134,7 @@ describe('📋 DEMONSTRAÇÃO: Atualização de Versão ao Editar Blocos', () =>
     // RESUMO FINAL
     // ========================================================================
     
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${  '='.repeat(80)}`);
     console.log('✅ RESPOSTA: SIM, a versão de publicação É ATUALIZADA!');
     console.log('='.repeat(80));
     console.log('\n📋 EVIDÊNCIAS COMPROVADAS:');
@@ -166,9 +166,9 @@ describe('📋 DEMONSTRAÇÃO: Atualização de Versão ao Editar Blocos', () =>
     console.log(`   Remover:    ${afterSave4} (+${afterSave4! - afterSave3!}ms)`);
     console.log(`   Total:      +${afterSave4! - initialSnapshot.meta.updatedAt!}ms desde o início`);
     
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${  '='.repeat(80)}`);
     console.log('🎉 CONCLUSÃO: Sistema de versionamento FUNCIONANDO CORRETAMENTE!');
-    console.log('='.repeat(80) + '\n');
+    console.log(`${'='.repeat(80)  }\n`);
     
     // Validação final
     expect(afterSave4).toBeGreaterThan(initialSnapshot.meta.updatedAt!);

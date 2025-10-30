@@ -25,7 +25,7 @@ export interface NavigationState {
 export function getNavigationState(
   currentStep: number,
   totalSteps: number,
-  config?: NavigationConfig
+  config?: NavigationConfig,
 ): NavigationState {
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep >= totalSteps;
@@ -45,7 +45,7 @@ export function getNavigationState(
  */
 export function getNextStep(
   currentStep: number,
-  totalSteps: number
+  totalSteps: number,
 ): number | null {
   if (currentStep >= totalSteps) {
     return null;

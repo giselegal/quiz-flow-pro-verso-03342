@@ -313,7 +313,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     useIntelligentPrefetch(
         state.currentStep,
         nextStepId,
-        currentStepNumber
+        currentStepNumber,
     );
 
     const {
@@ -716,8 +716,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                             ...state.userProfile,
                             scores: Object.entries(state.scores).map(([name, score]) => ({
                                 name,
-                                score
-                            }))
+                                score,
+                            })),
                         } as any}
                     />
                 );

@@ -244,7 +244,7 @@ export class FunnelSettingsService extends BaseCanonicalService {
 
   async updateSettings(
     funnelId: string,
-    updates: Partial<PublicationSettings>
+    updates: Partial<PublicationSettings>,
   ): Promise<ServiceResult<PublicationSettings>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'updateSettings');
 

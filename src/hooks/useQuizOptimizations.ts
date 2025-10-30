@@ -29,7 +29,7 @@ import { appLogger } from '@/utils/logger';
 export function useMemoizedMergedConfig(
     globalConfig?: any,
     themeConfig?: any,
-    stepConfig?: any
+    stepConfig?: any,
 ) {
     return useMemo(() => {
         const merged = {
@@ -75,7 +75,7 @@ export function useMemoizedMergedConfig(
 export function useIntelligentPrefetch(
     currentStepId: string,
     nextStepId?: string,
-    currentStepNumber?: number
+    currentStepNumber?: number,
 ) {
     const hasPrefetched = useRef<Set<string>>(new Set());
 
@@ -129,7 +129,7 @@ export function useLoadingDeduplication() {
 
     const load = useCallback(async <T,>(
         key: string,
-        loader: () => Promise<T>
+        loader: () => Promise<T>,
     ): Promise<T> => {
         // Verificar se já está carregando
         const existing = loadingRef.current.get(key);
@@ -181,7 +181,7 @@ export function useLoadingDeduplication() {
 export function useOfflineFirstConfig(
     previewMode: boolean,
     initialConfig?: any,
-    onlineFetcher?: () => Promise<any>
+    onlineFetcher?: () => Promise<any>,
 ) {
     const [config, setConfig] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -261,7 +261,7 @@ export function useOfflineFirstConfig(
 export function useMemoizedCallback<T extends (...args: any[]) => any>(
     callback: T,
     deps: React.DependencyList,
-    debugName?: string
+    debugName?: string,
 ): T {
     const callCount = useRef(0);
 

@@ -64,7 +64,7 @@ describe('🧩 Validação de Blocos Modulares', () => {
 
       const stepsWithDuplicates = results.filter((r) => r.hasDuplicates);
 
-      console.log(`\n📊 Análise de IDs únicos:`);
+      console.log('\n📊 Análise de IDs únicos:');
       console.log(`   ✅ Steps sem duplicatas: ${results.length - stepsWithDuplicates.length}/21`);
       if (stepsWithDuplicates.length > 0) {
         console.log(`   ❌ Steps com duplicatas: ${stepsWithDuplicates.length}`);
@@ -90,7 +90,7 @@ describe('🧩 Validação de Blocos Modulares', () => {
         });
       });
 
-      console.log(`\n📊 Análise de tipos:`);
+      console.log('\n📊 Análise de tipos:');
       console.log(`   ✅ Blocos com tipo definido: ${blocksWithoutType === 0 ? 'TODOS' : 'ALGUNS'}`);
       if (blocksWithoutType > 0) {
         console.log(`   ❌ Blocos sem tipo: ${blocksWithoutType}`);
@@ -136,12 +136,12 @@ describe('🧩 Validação de Blocos Modulares', () => {
         });
       });
 
-      console.log(`\n📊 Análise de convenção de nomenclatura:`);
+      console.log('\n📊 Análise de convenção de nomenclatura:');
       if (invalidBlocks.length === 0) {
-        console.log(`   ✅ Todos os blocos seguem convenção de nomenclatura`);
+        console.log('   ✅ Todos os blocos seguem convenção de nomenclatura');
       } else {
         console.log(`   ⚠️ Blocos com nomenclatura não convencional: ${invalidBlocks.length}`);
-        console.log(`   📋 Primeiros 10 exemplos:`);
+        console.log('   📋 Primeiros 10 exemplos:');
         invalidBlocks.slice(0, 10).forEach((b) => {
           console.log(`      ${b.stepId} (${b.blockId}): "${b.type}"`);
         });
@@ -185,9 +185,9 @@ describe('🧩 Validação de Blocos Modulares', () => {
         });
       });
 
-      console.log(`\n📊 Análise de dependências:`);
+      console.log('\n📊 Análise de dependências:');
       if (blocksWithDependencies.length === 0) {
-        console.log(`   ✅ Nenhum bloco tem dependências hard-coded`);
+        console.log('   ✅ Nenhum bloco tem dependências hard-coded');
       } else {
         console.log(`   ⚠️ Blocos com possíveis dependências: ${blocksWithDependencies.length}`);
       }
@@ -220,9 +220,9 @@ describe('🧩 Validação de Blocos Modulares', () => {
         });
       });
 
-      console.log(`\n📊 Análise de estrutura auto-contida:`);
+      console.log('\n📊 Análise de estrutura auto-contida:');
       if (incompleteBlocks.length === 0) {
-        console.log(`   ✅ Todos os blocos têm estrutura auto-contida`);
+        console.log('   ✅ Todos os blocos têm estrutura auto-contida');
       } else {
         console.log(`   ⚠️ Blocos com estrutura incompleta: ${incompleteBlocks.length}`);
         incompleteBlocks.slice(0, 3).forEach((b) => {
@@ -255,8 +255,8 @@ describe('🧩 Validação de Blocos Modulares', () => {
         });
       });
 
-      console.log(`\n📊 Análise de ordenação:`);
-      console.log(`   Estratégia de ordenação detectada:`);
+      console.log('\n📊 Análise de ordenação:');
+      console.log('   Estratégia de ordenação detectada:');
 
       const explicitOrderCount = results.filter((r) => r.hasExplicitOrder).length;
       const arrayOrderCount = results.filter((r) => r.usesArrayOrder && !r.hasExplicitOrder).length;
@@ -270,7 +270,7 @@ describe('🧩 Validação de Blocos Modulares', () => {
     });
 
     it('reordenar blocos não deve quebrar referências', () => {
-      console.log(`\n🔄 Teste de reordenação simulada:`);
+      console.log('\n🔄 Teste de reordenação simulada:');
 
       // Testar em um step específico (step-01)
       const testStepId = 'step-01';
@@ -294,7 +294,7 @@ describe('🧩 Validação de Blocos Modulares', () => {
     });
 
     it('deve ser possível adicionar/remover blocos sem quebrar step', () => {
-      console.log(`\n➕ Teste de adição/remoção de blocos:`);
+      console.log('\n➕ Teste de adição/remoção de blocos:');
 
       const testStepId = 'step-01';
       const step: StepData = stepsObj[testStepId];
@@ -341,9 +341,9 @@ describe('🧩 Validação de Blocos Modulares', () => {
         });
       });
 
-      console.log(`\n📊 Catálogo de tipos de blocos:`);
+      console.log('\n📊 Catálogo de tipos de blocos:');
       console.log(`   Total de tipos únicos: ${blockTypes.size}`);
-      console.log(`\n   Top 10 tipos mais usados:`);
+      console.log('\n   Top 10 tipos mais usados:');
 
       const sortedTypes = Array.from(blockTypes.entries())
         .sort((a, b) => b[1] - a[1])
@@ -374,7 +374,7 @@ describe('🧩 Validação de Blocos Modulares', () => {
         stepPatterns.push(pattern);
       });
 
-      console.log(`\n🎨 Padrões de composição detectados:`);
+      console.log('\n🎨 Padrões de composição detectados:');
 
       // Agrupar por padrão
       const patternGroups = new Map<string, string[]>();
@@ -385,7 +385,7 @@ describe('🧩 Validação de Blocos Modulares', () => {
       });
 
       console.log(`   Total de padrões únicos: ${patternGroups.size}`);
-      console.log(`\n   Padrões mais comuns:`);
+      console.log('\n   Padrões mais comuns:');
 
       const sortedPatterns = Array.from(patternGroups.entries())
         .sort((a, b) => b[1].length - a[1].length)
@@ -402,7 +402,7 @@ describe('🧩 Validação de Blocos Modulares', () => {
 
   describe('5. CONCLUSÃO: Avaliação Final', () => {
     it('deve gerar relatório final sobre modularidade', () => {
-      console.log(`\n📋 RELATÓRIO FINAL - MODULARIDADE DOS BLOCOS:\n`);
+      console.log('\n📋 RELATÓRIO FINAL - MODULARIDADE DOS BLOCOS:\n');
 
       // Calcular métricas gerais
       let totalBlocks = 0;
@@ -417,37 +417,37 @@ describe('🧩 Validação de Blocos Modulares', () => {
 
       const avgBlocksPerStep = (totalBlocks / stepIds.length).toFixed(1);
 
-      console.log(`   📊 ESTATÍSTICAS GERAIS:`);
-      console.log(`      Total de steps: 21`);
+      console.log('   📊 ESTATÍSTICAS GERAIS:');
+      console.log('      Total de steps: 21');
       console.log(`      Total de blocos: ${totalBlocks}`);
       console.log(`      Média de blocos por step: ${avgBlocksPerStep}`);
       console.log(`      Tipos de blocos únicos: ${allBlockTypes.size}`);
 
-      console.log(`\n   ✅ MODULARIDADE:`);
-      console.log(`      ✓ Cada bloco tem ID único`);
-      console.log(`      ✓ Cada bloco tem tipo definido`);
-      console.log(`      ✓ Blocos seguem estrutura consistente`);
+      console.log('\n   ✅ MODULARIDADE:');
+      console.log('      ✓ Cada bloco tem ID único');
+      console.log('      ✓ Cada bloco tem tipo definido');
+      console.log('      ✓ Blocos seguem estrutura consistente');
 
-      console.log(`\n   ✅ INDEPENDÊNCIA:`);
-      console.log(`      ✓ Blocos são auto-contidos`);
-      console.log(`      ✓ Mínimas dependências entre blocos`);
-      console.log(`      ✓ Cada bloco tem dados necessários`);
+      console.log('\n   ✅ INDEPENDÊNCIA:');
+      console.log('      ✓ Blocos são auto-contidos');
+      console.log('      ✓ Mínimas dependências entre blocos');
+      console.log('      ✓ Cada bloco tem dados necessários');
 
-      console.log(`\n   ✅ REORDENABILIDADE:`);
-      console.log(`      ✓ Blocos usam ordem do array`);
-      console.log(`      ✓ Reordenação não quebra integridade`);
-      console.log(`      ✓ Adição/remoção é segura`);
+      console.log('\n   ✅ REORDENABILIDADE:');
+      console.log('      ✓ Blocos usam ordem do array');
+      console.log('      ✓ Reordenação não quebra integridade');
+      console.log('      ✓ Adição/remoção é segura');
 
-      console.log(`\n   🏆 CONCLUSÃO:`);
+      console.log('\n   🏆 CONCLUSÃO:');
       console.log(
-        `      ✅ SIM, as etapas funcionam com blocos modulares, independentes e reordenáveis!`,
+        '      ✅ SIM, as etapas funcionam com blocos modulares, independentes e reordenáveis!',
       );
-      console.log(`\n      Os blocos seguem princípios de composição modular:`);
-      console.log(`      • Cada bloco é uma unidade independente`);
-      console.log(`      • Blocos podem ser reordenados sem quebrar funcionalidade`);
-      console.log(`      • Novos blocos podem ser adicionados facilmente`);
-      console.log(`      • Blocos podem ser removidos sem afetar outros`);
-      console.log(`      • Sistema suporta composição flexível de steps`);
+      console.log('\n      Os blocos seguem princípios de composição modular:');
+      console.log('      • Cada bloco é uma unidade independente');
+      console.log('      • Blocos podem ser reordenados sem quebrar funcionalidade');
+      console.log('      • Novos blocos podem ser adicionados facilmente');
+      console.log('      • Blocos podem ser removidos sem afetar outros');
+      console.log('      • Sistema suporta composição flexível de steps');
 
       expect(totalBlocks).toBeGreaterThan(0);
       expect(allBlockTypes.size).toBeGreaterThan(0);

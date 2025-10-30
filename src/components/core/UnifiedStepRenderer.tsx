@@ -304,7 +304,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = React.mem
 
         // 7. Nenhuma mudança relevante -> Skip re-render ✅
         return true;
-    }
+    },
 );
 
 UnifiedStepRenderer.displayName = 'UnifiedStepRenderer';
@@ -321,7 +321,7 @@ export function useStepBlockCallbacks(
     onUpdate?: (stepId: string, blockId: string, updates: Partial<Block>) => void,
     onDelete?: (stepId: string, blockId: string) => void,
     onSelect?: (stepId: string, blockId: string) => void,
-    stepId?: string
+    stepId?: string,
 ) {
     const handleBlockUpdate = useCallback(
         (blockId: string, updates: Partial<Block>) => {
@@ -329,7 +329,7 @@ export function useStepBlockCallbacks(
                 onUpdate?.(stepId, blockId, updates);
             }
         },
-        [onUpdate, stepId]
+        [onUpdate, stepId],
     );
 
     const handleBlockDelete = useCallback(
@@ -338,7 +338,7 @@ export function useStepBlockCallbacks(
                 onDelete?.(stepId, blockId);
             }
         },
-        [onDelete, stepId]
+        [onDelete, stepId],
     );
 
     const handleBlockSelect = useCallback(
@@ -347,7 +347,7 @@ export function useStepBlockCallbacks(
                 onSelect?.(stepId, blockId);
             }
         },
-        [onSelect, stepId]
+        [onSelect, stepId],
     );
 
     return useMemo(
@@ -356,7 +356,7 @@ export function useStepBlockCallbacks(
             onBlockDelete: handleBlockDelete,
             onBlockSelect: handleBlockSelect,
         }),
-        [handleBlockUpdate, handleBlockDelete, handleBlockSelect]
+        [handleBlockUpdate, handleBlockDelete, handleBlockSelect],
     );
 }
 

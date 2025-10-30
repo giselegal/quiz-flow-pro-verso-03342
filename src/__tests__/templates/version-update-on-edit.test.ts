@@ -18,7 +18,7 @@ import {
   QuizFunnelEditingFacade, 
   FunnelStep, 
   FunnelBlock,
-  FunnelSnapshot 
+  FunnelSnapshot, 
 } from '@/editor/facade/FunnelEditingFacade';
 
 describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () => {
@@ -43,7 +43,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
           blocks: [
             { id: 'blk-1', type: 'heading', data: { text: 'Título 1' } },
             { id: 'blk-2', type: 'text', data: { text: 'Texto 1' } },
-          ]
+          ],
         },
         {
           id: 'step-02',
@@ -52,7 +52,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
           blocks: [
             { id: 'blk-3', type: 'question', data: { text: 'Pergunta 1?' } },
             { id: 'blk-4', type: 'options', data: { options: ['A', 'B'] } },
-          ]
+          ],
         },
         {
           id: 'step-03',
@@ -61,15 +61,15 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
           blocks: [
             { id: 'blk-5', type: 'result', data: { text: 'Resultado final' } },
             { id: 'blk-6', type: 'button', data: { text: 'Finalizar' } },
-          ]
-        }
+          ],
+        },
       ],
       meta: {
         id: 'funnel-test',
         templateId: 'quiz-21-steps',
         createdAt: Date.now() - 10000, // 10 segundos atrás
         updatedAt: Date.now() - 10000,
-      }
+      },
     };
 
     facade = new QuizFunnelEditingFacade(initialSnapshot, mockPersistFn);
@@ -160,7 +160,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
       
       // Editar conteúdo de um bloco
       facade.updateBlock('step-01', 'blk-1', {
-        data: { text: 'Título Atualizado' }
+        data: { text: 'Título Atualizado' },
       });
       
       expect(facade.isDirty()).toBe(true);
@@ -184,7 +184,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
       });
       
       facade.updateBlock('step-01', 'blk-1', {
-        data: { text: 'Novo texto' }
+        data: { text: 'Novo texto' },
       });
     });
 
@@ -192,7 +192,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
       const blockBefore = facade.getStep('step-01')?.blocks.find(b => b.id === 'blk-1');
       
       facade.updateBlock('step-01', 'blk-1', {
-        data: { text: 'Texto atualizado', newField: 'novo' }
+        data: { text: 'Texto atualizado', newField: 'novo' },
       });
       
       const blockAfter = facade.getStep('step-01')?.blocks.find(b => b.id === 'blk-1');
@@ -216,7 +216,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
       
       facade.addBlock('step-01', {
         type: 'image',
-        data: { url: 'https://example.com/image.jpg' }
+        data: { url: 'https://example.com/image.jpg' },
       });
       
       expect(facade.isDirty()).toBe(true);
@@ -236,7 +236,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
       
       facade.addBlock('step-01', {
         type: 'text',
-        data: { text: 'Novo bloco' }
+        data: { text: 'Novo bloco' },
       });
       
       const stepAfter = facade.getStep('step-01');
@@ -384,7 +384,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
   
   describe('📊 Resumo Final', () => {
     it('RESPOSTA À PERGUNTA DO USUÁRIO', () => {
-      console.log('\n' + '='.repeat(70));
+      console.log(`\n${  '='.repeat(70)}`);
       console.log('❓ PERGUNTA: "quando os blocos são reordenados e editados');
       console.log('   a versão de publicação é atualizada???"');
       console.log('='.repeat(70));
@@ -407,7 +407,7 @@ describe('🔄 Version Update on Edit - Atualização de Versão ao Editar', () 
       console.log('   • Sistema suporta rastreamento de última modificação');
       console.log('   • Possibilita versionamento e histórico de mudanças');
       console.log('   • UI pode mostrar "Última atualização: X tempo atrás"');
-      console.log('='.repeat(70) + '\n');
+      console.log(`${'='.repeat(70)  }\n`);
       
       expect(true).toBe(true); // Sempre passa - este é um teste de documentação
     });

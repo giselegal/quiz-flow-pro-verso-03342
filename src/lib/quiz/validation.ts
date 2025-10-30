@@ -20,7 +20,7 @@ export interface ValidationResult {
  */
 export function validateQuizAnswer(
   answer: any,
-  rules?: ValidationRule
+  rules?: ValidationRule,
 ): ValidationResult {
   if (!rules) {
     return { isValid: true };
@@ -65,7 +65,7 @@ export function validateQuizAnswer(
  */
 export function validateAnswer(
   answer: any,
-  requiredOrRules?: number | ValidationRule
+  requiredOrRules?: number | ValidationRule,
 ): boolean | ValidationResult {
   // Se for número, criar ValidationRule simples e retornar apenas boolean
   if (typeof requiredOrRules === 'number') {
@@ -83,7 +83,7 @@ export function validateAnswer(
  */
 export function validateAllAnswers(
   answers: Record<string, any>,
-  rules: Record<string, ValidationRule>
+  rules: Record<string, ValidationRule>,
 ): Record<string, ValidationResult> {
   const results: Record<string, ValidationResult> = {};
 

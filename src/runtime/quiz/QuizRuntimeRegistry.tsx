@@ -61,7 +61,7 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
 
         return {
             navigationMap: navMapResult.success ? navMapResult.data : {},
-            isValid: validationResult.success ? validationResult.data.valid : false
+            isValid: validationResult.success ? validationResult.data.valid : false,
         };
     }, [steps]);
 
