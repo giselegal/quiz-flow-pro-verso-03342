@@ -238,8 +238,13 @@ export class UnifiedTemplateRegistry {
    */
   private async loadFromServer(stepId: string): Promise<Block[] | null> {
     try {
-      // Prioridade: tentar arquivos -v3.json primeiro, depois fallback para .json
-      const urls = [`/templates/${stepId}-v3.json`, `/templates/${stepId}.json`];
+      // Prioridade: per-step JSON consolidado em public/templates/blocks
+      // Depois tentar variantes -v3 e plano B em /templates
+      const urls = [
+        `/templates/blocks/${stepId}.json`,
+        `/templates/${stepId}-v3.json`,
+        `/templates/${stepId}.json`,
+      ];
       let template: any | null = null;
 
       for (const url of urls) {

@@ -1,4 +1,54 @@
 /**
+ * Tipos canônicos para o Quiz de 21 etapas
+ * Extraídos do antigo src/data/quizSteps.ts (DEPRECATED) para evitar dependência de arquivo legado.
+ */
+
+export interface QuizOptionV3 {
+  id: string;
+  text: string;
+  image?: string;
+}
+
+export interface OfferContentV3 {
+  title: string;
+  description: string;
+  buttonText: string;
+  testimonial: {
+    quote: string;
+    author: string;
+  };
+}
+
+export interface QuizStepV3 {
+  id?: string; // ex.: 'step-02'
+  type:
+    | 'intro'
+    | 'question'
+    | 'strategic-question'
+    | 'transition'
+    | 'transition-result'
+    | 'result'
+    | 'offer';
+  title?: string;
+  questionNumber?: string;
+  questionText?: string;
+  formQuestion?: string;
+  placeholder?: string;
+  buttonText?: string;
+  text?: string;
+  image?: string;
+  requiredSelections?: number;
+  options?: QuizOptionV3[];
+  nextStep?: string;
+  offerMap?: Record<string, OfferContentV3>;
+  // Propriedades opcionais para transição
+  showContinueButton?: boolean;
+  continueButtonText?: string;
+  duration?: number; // ms
+}
+
+export type StepsRecordV3 = Record<string, QuizStepV3>;
+/**
  * 🎯 QUIZ TYPES - Type Safety para Quiz Components
  */
 

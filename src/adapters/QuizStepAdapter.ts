@@ -1,6 +1,6 @@
 // src/adapters/QuizStepAdapter.ts
 
-import type { QuizStep, QuizOption } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep, QuizOptionV3 as QuizOption } from '@/types/quiz';
 
 interface JSONTemplate {
     templateVersion: string;

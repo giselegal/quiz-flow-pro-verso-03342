@@ -2,7 +2,7 @@ import { getStepTemplate } from '@/config/templates/templates';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 } from '@/types/quiz';
 import { TemplateService } from '@/services/canonical/TemplateService';
 import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
@@ -19,7 +19,7 @@ interface TemplateMetadata {
 }
 
 interface TemplateCache {
-  [key: string]: QuizStep;
+  [key: string]: QuizStepV3;
 }
 
 const templateCache: TemplateCache = {};
@@ -29,10 +29,10 @@ interface UseTemplateLoaderResult {
   loadTemplate: (stageId: string) => Promise<StageTemplate | null>;
   loadTemplateBlocks: (stageId: string) => Promise<Block[]>;
   getTemplateMetadata: (stageId: string) => TemplateMetadata | null;
-  loadQuizEstiloTemplate: (stepNumber: number) => Promise<QuizStep>; // 🎯 ATUALIZADO
+  loadQuizEstiloTemplate: (stepNumber: number) => Promise<QuizStepV3>; // 🎯 ATUALIZADO
 
   // 🎯 NOVOS métodos para JSON templates
-  loadAllTemplates: () => Promise<Record<string, QuizStep>>;
+  loadAllTemplates: () => Promise<Record<string, QuizStepV3>>;
   prefetchNextSteps: (currentStep: number, count?: number) => Promise<void>;
   clearCache: () => void;
 
@@ -59,7 +59,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
    * 🎯 MIGRADO: Carrega template usando TemplateService canonical
    */
   const loadQuizEstiloTemplate = useCallback(
-    async (stepNumber: number): Promise<QuizStep> => {
+    async (stepNumber: number): Promise<QuizStepV3> => {
       const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
 
       // 1. Verificar cache
@@ -84,7 +84,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         // 3. Adaptar blocos para QuizStep
         console.log(`🔄 Adaptando template ${stepId} para QuizStep`);
         const blocks = result.data;
-        const adapted = QuizStepAdapter.fromBlocks(blocks, stepId);
+  const adapted = QuizStepAdapter.fromBlocks(blocks, stepId);
 
         // 4. Salvar no cache
         templateCache[stepId] = adapted;
@@ -109,7 +109,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
    * 🎯 MIGRADO: Carrega todos os templates via TemplateService
    */
   const loadAllTemplates = useCallback(
-    async (): Promise<Record<string, QuizStep>> => {
+    async (): Promise<Record<string, QuizStepV3>> => {
       setIsLoading(true);
       setError(null);
 
@@ -127,8 +127,8 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
             });
         });
 
-        const results = await Promise.all(promises);
-        const validResults = results.filter(Boolean) as [string, QuizStep][];
+  const results = await Promise.all(promises);
+  const validResults = results.filter(Boolean) as [string, QuizStepV3][];
 
         const stepsMap = Object.fromEntries(validResults);
 

@@ -117,7 +117,9 @@
     "audit:sources": "tsx scripts/audit/compare-sources.ts",
     "audit:v3-props": "tsx scripts/audit/v3-sections-props-audit.ts",
     "validate:typescript": "bash scripts/validar-typescript.sh",
-    "hydrate:blocks": "node tools/hydrate-blocks-from-v3.mjs"
+    "hydrate:blocks": "node tools/hydrate-blocks-from-v3.mjs",
+    "blocks:sync-master": "node scripts/sync-master-to-per-step.js",
+    "blocks:validate": "node scripts/validate-per-step-blocks.js"
   },
   "lintCoverage": {
     "blocks": "node scripts/dev/check-block-coverage.mjs"
