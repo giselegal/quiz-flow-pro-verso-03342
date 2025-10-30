@@ -6,8 +6,14 @@ export default function IntroLogoBlock({
   isSelected,
   onClick,
 }: AtomicBlockProps) {
-  const logoUrl = block.properties?.logoUrl || block.content?.logoUrl || '';
-  const logoAlt = block.properties?.logoAlt || block.content?.logoAlt || 'Logo';
+  // Compatibilidade JSON v3 e variações: aceitar logoUrl, src, imageUrl
+  const logoUrl =
+    block.properties?.logoUrl ||
+    (block as any)?.content?.logoUrl ||
+    (block as any)?.content?.src ||
+    (block as any)?.content?.imageUrl ||
+    '';
+  const logoAlt = block.properties?.logoAlt || (block as any)?.content?.logoAlt || (block as any)?.content?.alt || 'Logo';
   const height = block.properties?.height || '60px';
 
   if (!logoUrl) return null;

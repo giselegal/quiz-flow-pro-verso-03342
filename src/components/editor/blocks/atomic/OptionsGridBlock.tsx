@@ -16,7 +16,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({ block, isSelected, 
     const ensureArray = <T,>(val: unknown): T[] => Array.isArray(val) ? (val as T[]) : [];
     const props = block?.properties || {};
     const content = (block as any)?.content || {};
-    const options = ensureArray<{ id: string; text: string; imageUrl?: string; value?: string }>(props.options || content.options);
+    // Normalizar opções aceitando alias 'image' -> 'imageUrl'
+    const rawOptions = ensureArray<{ id: string; text: string; imageUrl?: string; image?: string; value?: string }>(props.options || content.options);
+    const options = rawOptions.map(opt => ({
+        ...opt,
+        imageUrl: opt.imageUrl || (opt as any).image || undefined,
+    }));
     const currentAnswers = ensureArray<string>(contextData?.currentAnswers);
     const onAnswersChange: ((answers: string[]) => void) | undefined = contextData?.onAnswersChange;
     const result = useResultOptional();

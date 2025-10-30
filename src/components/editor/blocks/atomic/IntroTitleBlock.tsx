@@ -41,6 +41,12 @@ export default function IntroTitleBlock({
       return <span dangerouslySetInnerHTML={{ __html: safe }} />;
     }
 
+    // Compat: se title (não titleHtml) contiver HTML, renderizar como HTML sanitizado
+    if (typeof titleText === 'string' && /<\w+[^>]*>/.test(titleText)) {
+      const safe = sanitizeHtml(titleText);
+      return <span dangerouslySetInnerHTML={{ __html: safe }} />;
+    }
+
     if (!titleText.includes('[#')) {
       return titleText;
     }
