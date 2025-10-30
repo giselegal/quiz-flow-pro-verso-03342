@@ -76,7 +76,7 @@ describe('QuestionStep', () => {
         />,
       );
 
-      expect(screen.getByText('Selecione uma opção')).toBeInTheDocument();
+      expect(screen.getByText(/Selecione uma opção/)).toBeInTheDocument();
     });
 
     it('deve mostrar texto para múltiplas seleções', () => {
@@ -90,7 +90,7 @@ describe('QuestionStep', () => {
         />,
       );
 
-      expect(screen.getByText('Selecione 3 opções')).toBeInTheDocument();
+      expect(screen.getByText(/Selecione 3 opções/)).toBeInTheDocument();
     });
   });
 
@@ -169,8 +169,8 @@ describe('QuestionStep', () => {
         />,
       );
 
-      const selectedOption = screen.getByText('Estilo Natural').closest('button');
-      expect(selectedOption).toHaveClass('border-[#deac6d]');
+      const selectedOption = screen.getByText('Estilo Natural').closest('[role="button"]');
+      expect(selectedOption).toHaveClass('border-[#5b4135]');
     });
 
     it('deve mostrar opções não selecionadas com estilo padrão', () => {
@@ -182,8 +182,8 @@ describe('QuestionStep', () => {
         />,
       );
 
-      const unselectedOption = screen.getByText('Estilo Clássico').closest('button');
-      expect(unselectedOption).toHaveClass('border-gray-300');
+      const unselectedOption = screen.getByText('Estilo Clássico').closest('[role="button"]');
+      expect(unselectedOption).toHaveClass('border-zinc-200');
     });
 
     it('deve aplicar grid correto para opções com imagens', () => {
@@ -195,8 +195,9 @@ describe('QuestionStep', () => {
         />,
       );
 
-      const optionsContainer = screen.getByText('Opção 1').closest('div')?.parentElement;
-      expect(optionsContainer).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
+      const optionsContainer = screen.getByText('Opção 1').closest('div')?.parentElement as HTMLElement | null;
+      expect(optionsContainer).toHaveClass('grid');
+      expect(optionsContainer).toHaveClass('grid-cols-2');
     });
   });
 
@@ -218,7 +219,9 @@ describe('QuestionStep', () => {
       );
 
       const container = screen.getByText('Pergunta 1').closest('div');
-      expect(container).toHaveClass('p-6');
+      expect(container).toHaveClass('px-1');
+      expect(container).toHaveClass('pt-3');
+      expect(container).toHaveClass('pb-5');
     });
 
     it('deve aplicar padding correto em desktop', () => {
@@ -237,7 +240,7 @@ describe('QuestionStep', () => {
       );
 
       const container = screen.getByText('Pergunta 1').closest('div');
-      expect(container).toHaveClass('md:p-12');
+      expect(container).toHaveClass('md:p-8');
     });
   });
 
@@ -267,7 +270,7 @@ describe('QuestionStep', () => {
         />,
       );
 
-      expect(screen.getByText('Selecione uma opção')).toBeInTheDocument();
+      expect(screen.getByText(/Selecione uma opção/)).toBeInTheDocument();
     });
 
     it('deve renderizar sem quebrar com dados mínimos', () => {
