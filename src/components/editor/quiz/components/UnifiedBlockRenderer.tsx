@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { GripVertical, Trash2, Copy } from 'lucide-react';
 import { BlockComponent } from '../types';
 import { PreviewInteractionLayer } from './PreviewInteractionLayer';
+import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 
 interface UnifiedBlockRendererProps {
   block: BlockComponent;
@@ -44,8 +45,9 @@ interface UnifiedBlockRendererProps {
   sessionData?: Record<string, any>;
   onUpdateSessionData?: (key: string, value: any) => void;
 
-  // Renderização
-  renderBlockPreview: (block: BlockComponent, allBlocks: BlockComponent[]) => React.ReactNode;
+  // Renderização (DEPRECATED): ignorado em favor de BlockTypeRenderer
+  // Mantido por compatibilidade tipada com CanvasArea
+  renderBlockPreview?: (block: BlockComponent, allBlocks: BlockComponent[]) => React.ReactNode;
 }
 
 const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
@@ -120,13 +122,22 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
         </div>
       )}
 
-      {/* 🎯 CONTEÚDO VISUAL - IDÊNTICO EM AMBOS OS MODOS */}
+      {/* 🎯 CONTEÚDO VISUAL - IDÊNTICO EM AMBOS OS MODOS (BlockTypeRenderer canônico) */}
       <div className={cn(
         mode === 'edit' && 'pl-8 pr-10',
         mode === 'preview' && 'px-0',
       )}>
-        {/* 🔑 CHAVE: Renderizar preview visual (sempre igual) */}
-        {renderBlockPreview(block, allBlocks)}
+        <BlockTypeRenderer
+          // Tipagem de BlockTypeRenderer usa `Block`; aqui BlockComponent é compatível estruturalmente
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          block={block as any}
+          isSelected={isSelected}
+          isEditable={mode === 'edit'}
+          onSelect={() => onBlockClick?.({} as any, block)}
+          onOpenProperties={() => onBlockClick?.({} as any, block)}
+          // Passa sessionData como contextData para blocos que dependem de estado dinâmico
+          contextData={sessionData || {}}
+        />
       </div>
 
       {/* 🎯 ACTION BUTTONS - Apenas Edit Mode */}
