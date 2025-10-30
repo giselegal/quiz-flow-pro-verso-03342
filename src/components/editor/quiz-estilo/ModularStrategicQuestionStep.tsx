@@ -9,7 +9,7 @@ interface Props {
     editor?: { actions?: { ensureStepLoaded?: (stepId: string) => Promise<void> | void } };
 }
 
-export default function ModularQuestionStep({ data, blocks, editor }: Props) {
+export default function ModularStrategicQuestionStep({ data, blocks, editor }: Props) {
     const stepId = data?.id || '';
 
     useEffect(() => {
