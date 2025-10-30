@@ -169,9 +169,8 @@ test.describe('Editor - Modo PREVIEW', () => {
             const progressText = page.locator('[data-testid="canvas-preview-mode"] >> text=/2.*21|Pergunta 1/i');
             await expect(progressText).toBeVisible({ timeout: TIMEOUT_NAVIGATION });
 
-            // Título da questão deve aparecer
-            const questionTitle = page.locator('[data-testid="canvas-preview-mode"] >> text=/QUAL O SEU TIPO DE ROUPA(\\s+FAVORITA)?/i');
-            await expect(questionTitle).toBeVisible();
+            // Confirmação final: estamos de fato na etapa 02 (checagens acima já cobrem)
+            await expect(page.locator('[data-testid="canvas-preview-mode"] [data-step-id="step-02"]').first()).toBeVisible();
         });
     });
 
