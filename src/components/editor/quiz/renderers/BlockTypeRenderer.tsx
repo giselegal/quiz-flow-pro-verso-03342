@@ -8,6 +8,7 @@ import ImageInlineAtomic from '@/components/editor/blocks/atomic/ImageInlineBloc
 // Preferir bloco atômico para grid de opções
 import OptionsGridAtomic from '@/components/editor/blocks/atomic/OptionsGridBlock';
 import CTAButtonAtomic from '@/components/editor/blocks/atomic/CTAButtonBlock';
+import TransitionHeroBlock from '@/components/editor/blocks/atomic/TransitionHeroBlock';
 // Formulário de boas-vindas (atômico)
 import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
 import QuizQuestionHeaderBlock from './blocks/QuizQuestionHeaderBlock';
@@ -154,8 +155,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 // Template v3: question-hero section → header completo
                 return <QuizQuestionHeaderBlock block={block} {...rest} />;
             case 'CTAButton':
-                // Versão atômica do CTA
-                return <CTAButtonAtomic block={block} {...rest} />;
+                // Versão atômica do CTA (passa contextData para navegação)
+                return <CTAButtonAtomic block={block} {...rest} contextData={rest.contextData} />;
             // ===== HEADER/TÍTULO GENÉRICO =====
             case 'heading-inline':
                 return <TextInlineAtomic block={block} {...rest} />;
@@ -184,8 +185,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 return <QuestionNavigationBlock block={block} {...rest} contextData={rest.contextData} />;
             // ===== TRANSITION (Steps 12, 19) =====
             case 'transition-hero':
-                // Hero image/section da transição
-                return <ImageInlineAtomic block={block} {...rest} />;
+                // Hero de transição com auto-advance
+                return <TransitionHeroBlock block={block} {...rest} contextData={rest.contextData} />;
             case 'transition-title':
                 return <TransitionTitleBlock block={block as any} {...rest} />;
             case 'transition-text':
