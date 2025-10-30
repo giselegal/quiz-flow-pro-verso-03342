@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { templateRegistry } from '../UnifiedTemplateRegistry';
+
+// Mock the embedded templates to force L3 to be empty, ensuring server path is exercised
+vi.mock('@templates/embedded', () => ({ default: {} }));
+
+async function getRegistry() {
+  const mod = await import('../UnifiedTemplateRegistry');
+  return mod.templateRegistry as typeof mod.templateRegistry;
+}
 
 // Minimal Block type align for test assertions
 interface Block {
@@ -10,17 +17,11 @@ interface Block {
   content?: Record<string, any>;
 }
 
-declare global {
-  // eslint-disable-next-line no-var
-  var fetch: typeof fetch;
-}
-
 describe('UnifiedTemplateRegistry', () => {
   const originalFetch = global.fetch;
 
   beforeEach(() => {
-    // Clean L1 cache per test to avoid state leakage between tests
-    templateRegistry.clearL1();
+    // fetch is set per test case
   });
 
   afterEach(() => {
@@ -30,6 +31,10 @@ describe('UnifiedTemplateRegistry', () => {
   });
 
   it('loads step from per-step JSON and caches in L1', async () => {
+    const templateRegistry = await getRegistry();
+    // Ensure clean caches
+    await templateRegistry.clearAll();
+
     const stepId = 'step-01';
     const blocks: Block[] = [
       { id: 'b1', type: 'text', order: 0, properties: {}, content: {} },
@@ -63,6 +68,9 @@ describe('UnifiedTemplateRegistry', () => {
   });
 
   it('falls back to -v3 and plain /templates when blocks file missing', async () => {
+    const templateRegistry = await getRegistry();
+    await templateRegistry.clearAll();
+
     const stepId = 'step-02';
     const blocks: Block[] = [
       { id: 'x1', type: 'text', order: 0 },
