@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import { useResultOptional } from '@/contexts/ResultContext';
@@ -26,11 +26,71 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({ block, isSelected, 
     const onAnswersChange: ((answers: string[]) => void) | undefined = contextData?.onAnswersChange;
     const result = useResultOptional();
 
+    // Auto-advance configuration
+    const autoAdvance = content.autoAdvance === true;
+    const autoAdvanceDelay = content.autoAdvanceDelay || 1500;
+    const minSelections = content.minSelections || content.requiredSelections || 1;
+    const maxSelections = content.maxSelections || options.length;
+    const multipleSelection = content.multipleSelection !== false;
+
+    // Track if minimum selections are met
+    const hasMinimumSelections = currentAnswers.length >= minSelections;
+    const hasMaximumSelections = currentAnswers.length >= maxSelections;
+    const canProceed = hasMinimumSelections;
+
+    // Timer ref for auto-advance
+    const autoAdvanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Auto-advance effect
+    useEffect(() => {
+        // Clear any existing timer
+        if (autoAdvanceTimerRef.current) {
+            clearTimeout(autoAdvanceTimerRef.current);
+            autoAdvanceTimerRef.current = null;
+        }
+
+        // Only auto-advance if enabled, user can proceed, and we have navigation
+        if (autoAdvance && canProceed && !isEditable) {
+            const goToNext = contextData?.goToNext || contextData?.onNext;
+
+            if (goToNext && typeof goToNext === 'function') {
+                autoAdvanceTimerRef.current = setTimeout(() => {
+                    goToNext();
+                }, autoAdvanceDelay);
+            }
+        }
+
+        // Cleanup on unmount or when dependencies change
+        return () => {
+            if (autoAdvanceTimerRef.current) {
+                clearTimeout(autoAdvanceTimerRef.current);
+                autoAdvanceTimerRef.current = null;
+            }
+        };
+    }, [autoAdvance, canProceed, autoAdvanceDelay, contextData, isEditable]);
+
     const toggle = (id: string) => {
         if (!onAnswersChange) return;
         const exists = currentAnswers.includes(id);
-        const next = exists ? currentAnswers.filter(a => a !== id) : [...currentAnswers, id];
-        onAnswersChange(next);
+
+        // Handle single vs multiple selection
+        if (!multipleSelection) {
+            // Single selection: replace current selection
+            onAnswersChange([id]);
+        } else {
+            // Multiple selection: toggle with max limit
+            if (exists) {
+                // Remove selection
+                const next = currentAnswers.filter(a => a !== id);
+                onAnswersChange(next);
+            } else {
+                // Add selection if under max limit
+                if (currentAnswers.length < maxSelections) {
+                    const next = [...currentAnswers, id];
+                    onAnswersChange(next);
+                }
+            }
+        }
     };
 
     return (
