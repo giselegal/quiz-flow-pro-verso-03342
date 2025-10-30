@@ -15,6 +15,7 @@ import type { Block } from '@/types/editor';
 import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
 import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
+import { templateService } from '@/services/canonical/TemplateService';
 
 export interface UnifiedStepContentProps {
     step: EditableQuizStep;
@@ -456,6 +457,13 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             const content = (qBlock?.content || {}) as any;
             const inferred = Number(props.requiredSelections ?? props.minSelections ?? content.requiredSelections ?? 1);
             if (!isNaN(inferred) && inferred > 0) minSelections = inferred;
+        } catch { /* noop */ }
+        // Fallback: usar metadata canônica do step (multiSelect)
+        try {
+            const all = templateService.getAllStepsSync();
+            const meta = (all as any)[stepKey];
+            const ms = Number(meta?.multiSelect);
+            if (!isNaN(ms) && ms > minSelections) minSelections = ms;
         } catch { /* noop */ }
 
         const base: any = {
