@@ -18,17 +18,17 @@ interface EditorModeState {
   // Core state
   viewMode: ViewMode;
   previewDevice: PreviewDevice;
-  
+
   // 🆕 Preview session data (para quiz interativo)
   previewSessionData: Record<string, any>;
-  
+
   // Actions
   setViewMode: (mode: ViewMode) => void;
   setPreviewDevice: (device: PreviewDevice) => void;
   toggleViewMode: () => void;
   updatePreviewSessionData: (key: string, value: any) => void;
   resetPreviewSession: () => void;
-  
+
   // Computed properties (getters)
   isEditMode: () => boolean;
   isPreviewMode: () => boolean;
@@ -45,7 +45,7 @@ export const useEditorMode = create<EditorModeState>()(
       viewMode: 'edit',
       previewDevice: 'desktop',
       previewSessionData: {},
-      
+
       // Actions
       setViewMode: (mode) => {
         console.log('🔄 EditorMode: Mudando para', mode);
@@ -56,19 +56,19 @@ export const useEditorMode = create<EditorModeState>()(
           set({ viewMode: mode });
         }
       },
-      
+
       setPreviewDevice: (device) => {
         console.log('📱 EditorMode: Mudando device para', device);
         set({ previewDevice: device });
       },
-      
+
       toggleViewMode: () => {
         const current = get().viewMode;
         const next = current === 'edit' ? 'preview' : 'edit';
         console.log('🔄 EditorMode: Toggle', current, '→', next);
         get().setViewMode(next);
       },
-      
+
       updatePreviewSessionData: (key, value) => {
         console.log('💾 EditorMode: Atualizando preview session', { key, value });
         set(state => ({
@@ -78,12 +78,12 @@ export const useEditorMode = create<EditorModeState>()(
           },
         }));
       },
-      
+
       resetPreviewSession: () => {
         console.log('🔄 EditorMode: Resetando preview session');
         set({ previewSessionData: {} });
       },
-      
+
       // Computed properties
       isEditMode: () => get().viewMode === 'edit',
       isPreviewMode: () => get().viewMode === 'preview',
@@ -116,3 +116,17 @@ export const useIsEditMode = () => useEditorMode((state) => state.viewMode === '
 export const useIsPreviewMode = () => useEditorMode((state) => state.viewMode === 'preview');
 
 export default useEditorMode;
+
+// 🔧 Expor utilitários no window em ambiente de desenvolvimento/testes para facilitar automação (Playwright)
+if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+  try {
+    // Evitar sobrescrever se já definido
+    (window as any).__editorMode = (window as any).__editorMode || {
+      setViewMode: (mode: ViewMode) => useEditorMode.getState().setViewMode(mode),
+      toggle: () => useEditorMode.getState().toggleViewMode(),
+      get viewMode() { return useEditorMode.getState().viewMode; },
+    };
+  } catch {
+    // noop
+  }
+}
