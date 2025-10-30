@@ -7,7 +7,7 @@
 
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
 import { useUnifiedQuizLoader } from '@/hooks/useUnifiedQuizLoader';
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 import { supabase } from '@/integrations/supabase/customClient';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
@@ -53,11 +53,33 @@ export class UnifiedQuizBridge {
 
     const steps: Record<string, UnifiedQuizStep> = {};
 
-    // Converter QUIZ_STEPS para UnifiedQuizStep
-    for (const stepId of STEP_ORDER) {
-      const quizStep = QUIZ_STEPS[stepId];
-      if (quizStep) {
-        steps[stepId] = UnifiedQuizStepAdapter.fromQuizStep(quizStep, stepId);
+    // Usar TemplateService como fonte canônica (com fallback síncrono compatível ao formato QUIZ_STEPS)
+    const ORDER = templateService.getStepOrder();
+    const QUIZ_STEPS_FALLBACK = templateService.getAllStepsSync();
+
+    for (const stepId of ORDER) {
+      // 1) Tentar carregar blocks canônicos via TemplateService (per-step JSON/registry)
+      const match = stepId.match(/step-?(\d+)/i);
+      const stepNumber = match ? parseInt(match[1], 10) : null;
+      let unified: UnifiedQuizStep | null = null;
+
+      if (stepNumber) {
+        const blocksRes = await templateService.steps.get(stepNumber);
+        if (blocksRes.success && Array.isArray(blocksRes.data) && blocksRes.data.length > 0) {
+          unified = UnifiedQuizStepAdapter.fromBlocks(blocksRes.data as any, stepId);
+        }
+      }
+
+      // 2) Fallback: usar estrutura estilo QUIZ_STEPS do TemplateService
+      if (!unified) {
+        const quizStep = (QUIZ_STEPS_FALLBACK as any)[stepId];
+        if (quizStep) {
+          unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, stepId);
+        }
+      }
+
+      if (unified) {
+        steps[stepId] = unified;
       }
     }
 
@@ -84,7 +106,9 @@ export class UnifiedQuizBridge {
   async loadStep(stepId: string, source: 'database' | 'templates' | 'hardcoded' = 'hardcoded'): Promise<UnifiedQuizStep | null> {
     switch (source) {
       case 'hardcoded':
-        const quizStep = QUIZ_STEPS[stepId];
+        // Fallback compatível via TemplateService (dados mínimos suficientes para adapter)
+        const QUIZ_STEPS_FALLBACK = templateService.getAllStepsSync();
+        const quizStep = (QUIZ_STEPS_FALLBACK as any)[stepId];
         return quizStep ? UnifiedQuizStepAdapter.fromQuizStep(quizStep, stepId) : null;
 
       case 'templates':

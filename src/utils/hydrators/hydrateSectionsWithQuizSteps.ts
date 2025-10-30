@@ -35,9 +35,13 @@ function mapOptions(options: any[] | undefined) {
  * Hidrata sections v3 com dados canônicos do QUIZ_STEPS (titulos, perguntas, opções, CTA...)
  * Sem efeitos colaterais: retorna novo array de sections.
  */
-export function hydrateSectionsWithQuizSteps(stepId: string, sections: Section[] | undefined): Section[] {
+export function hydrateSectionsWithQuizSteps(
+  stepId: string,
+  sections: Section[] | undefined,
+  stepsSource: Record<string, any> = QUIZ_STEPS as any,
+): Section[] {
   if (!Array.isArray(sections)) return [];
-  const step = (QUIZ_STEPS as any)[stepId];
+  const step = (stepsSource as any)[stepId];
   if (!step) return sections;
 
   const type = step.type as
