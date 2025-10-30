@@ -69,6 +69,60 @@
 
 ---
 
+## ✅ HOTFIX APLICADO (2025-10-30): Virtualização do Canvas do Editor
+
+Para melhorar a performance imediata na renderização de muitos blocos no canvas do editor, aplicamos otimizações puntuais na virtualização.
+
+### 🎯 O que mudou
+
+- Threshold de ativação agora é dinâmico por largura de tela:
+  - Mobile (<640px): 10 blocos
+  - Tablet (<1024px): 15 blocos
+  - Desktop (≥1024px): 20 blocos
+- Virtualização passa a funcionar também no modo edição (antes: apenas preview), mantendo salvaguardas para drag & drop.
+- Ajustes finos:
+  - Altura média estimada por item reduzida: 120 → 100 px
+  - Overscan reduzido: 8 → 6 itens
+
+### 🗂️ Arquivo alterado
+
+- `src/components/editor/canvas/CanvasDropZone.simple.tsx`
+
+Trechos relevantes:
+
+```ts
+// Threshold dinâmico (mobile/tablet/desktop)
+const VIRTUALIZE_THRESHOLD = React.useMemo(() => {
+  if (typeof window === 'undefined') return 20;
+  const w = window.innerWidth || 1280;
+  if (w < 640) return 10;
+  if (w < 1024) return 15;
+  return 20;
+}, []);
+
+// Permite virtualização também no modo edição (se seguro)
+const enableVirtualization = React.useMemo(() => {
+  const safeToVirtualize = !isDraggingAnyValidComponent && !virtDisabledDynamic;
+  const hasEnoughBlocks = blocks.length > VIRTUALIZE_THRESHOLD;
+  return safeToVirtualize && hasEnoughBlocks;
+}, [isDraggingAnyValidComponent, virtDisabledDynamic, blocks.length, VIRTUALIZE_THRESHOLD]);
+```
+
+### 📈 Benefícios esperados
+
+- Renderização mais fluida em steps com 10–20+ blocos
+- Menor consumo de memória e menos re-renderizações
+- Sem impacto no DnD (virtualização desativa durante drag)
+
+### 🔁 Rollback rápido
+
+Caso necessário, reverter para comportamento anterior:
+
+1. Restaurar `VIRTUALIZE_THRESHOLD` fixo para `120` e recolocar a checagem `isPreviewing &&` na expressão `enableVirtualization`.
+2. Ajustar `AVG_ITEM_HEIGHT` para `120` e `OVERSCAN` para `8`.
+
+---
+
 ## 🎯 FASE 1: CONSOLIDAÇÃO DE FONTES DE DADOS
 
 **Prioridade:** 🔴 CRÍTICA  

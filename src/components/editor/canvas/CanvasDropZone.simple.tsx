@@ -376,10 +376,20 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   // Modo preview controlado por prop (default: false)
   const isPreviewing = !!isPreviewingProp;
 
-  // 🚀 OTIMIZAÇÃO: Constantes de virtualização
-  const VIRTUALIZE_THRESHOLD = React.useMemo(() => 120, []);
-  const AVG_ITEM_HEIGHT = React.useMemo(() => 120, []); // px (estimativa)
-  const OVERSCAN = React.useMemo(() => 8, []); // itens
+  // 🚀 OTIMIZAÇÃO: Parâmetros de virtualização (mais agressivos e dinâmicos)
+  // Threshold dinâmico por largura de tela (mobile/tablet/desktop)
+  const VIRTUALIZE_THRESHOLD = React.useMemo(() => {
+    if (typeof window === 'undefined') return 20; // SSR fallback
+    const w = window.innerWidth || 1280;
+    if (w < 640) return 10;      // mobile
+    if (w < 1024) return 15;     // tablet
+    return 20;                   // desktop
+  }, []);
+
+  // Altura média estimada de item (reduzida para renderizar mais itens por viewport)
+  const AVG_ITEM_HEIGHT = React.useMemo(() => 100, []); // px (estimativa)
+  // Overscan reduzido para equilibrar performance x suavidade
+  const OVERSCAN = React.useMemo(() => 6, []); // itens
 
   // 🚀 OTIMIZAÇÃO: Flag dinâmica para permitir alternância em tempo real (memoizada)
   const [virtDisabledDynamic, setVirtDisabledDynamic] = React.useState<boolean>(() => {
@@ -420,13 +430,13 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     return;
   }, []);
   // 🚀 OTIMIZAÇÃO: Memoizar enableVirtualization para evitar recálculos
-  const enableVirtualization = React.useMemo(() =>
-    isPreviewing &&
-    !isDraggingAnyValidComponent &&
-    !virtDisabledDynamic &&
-    blocks.length > VIRTUALIZE_THRESHOLD,
-    [isPreviewing, isDraggingAnyValidComponent, virtDisabledDynamic, blocks.length, VIRTUALIZE_THRESHOLD],
-  );
+  const enableVirtualization = React.useMemo(() => {
+    // ✅ Permitir virtualização também no modo edição (quando não há drag em curso)
+    // Mantemos salvaguardas para evitar conflito com DnD e flags dinâmicas.
+    const safeToVirtualize = !isDraggingAnyValidComponent && !virtDisabledDynamic;
+    const hasEnoughBlocks = blocks.length > VIRTUALIZE_THRESHOLD;
+    return safeToVirtualize && hasEnoughBlocks;
+  }, [isDraggingAnyValidComponent, virtDisabledDynamic, blocks.length, VIRTUALIZE_THRESHOLD]);
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const [scrollTop, setScrollTop] = React.useState(0);
