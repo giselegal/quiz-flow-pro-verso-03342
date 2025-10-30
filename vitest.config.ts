@@ -73,7 +73,15 @@ export default defineConfig({
       // Isola Playwright specs do Vitest
       'src/tests/e2e/**',
       // Ignora arquivos de setup utilitários sem suites
-      'src/**/__tests__/setup/**',
+      // Ignora suites e2e/placeholders fora de src
+      'tests/**',
+      // Isola Playwright specs para não serem pegos pelo Vitest
+      'src/tests/e2e/**',
+      // Evita arquivos de setup/auxiliares sem suite serem coletados como testes
+      'src/__tests__/setup/**',
+      'src/__tests__/schemas/**',
+      // Arquivo sem suite conhecido (pode ser reativado quando possuir testes)
+      'src/core/errors/__tests__/FunnelErrorSystem.test.ts',
       'src/__tests__/setup/**',
       // Ignora coleções de schemas sem suite real
       'src/__tests__/schemas/**',
