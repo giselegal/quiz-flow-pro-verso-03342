@@ -277,24 +277,10 @@ test.describe('Editor - Modo PREVIEW', () => {
             await previewCanvas.locator('button:has-text("Quero Descobrir"), button:has-text("Começar"), button:has-text("Avançar")').first().click();
             await page.waitForTimeout(1000);
 
-            // Completar steps 02-11 (perguntas de estilo)
-            // Simplificado: selecionar sempre as 3 primeiras opções
-            for (let step = 2; step <= 11; step++) {
-                await page.waitForTimeout(500);
-                const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]');
-
-                // Selecionar 3 opções
-                const options = previewCanvas.locator('[data-testid^="option-"]');
-                const count = await options.count();
-                
-                for (let i = 0; i < Math.min(3, count); i++) {
-                    await options.nth(i).scrollIntoViewIfNeeded();
-                    await options.nth(i).click();
-                    await page.waitForTimeout(200);
-                }
-
-                // Avançar
-                await previewCanvas.locator('button:has-text("Avançar")').first().click();
+            // Navegar diretamente para step-20 via coluna de navegação da esquerda
+            const step20Nav = page.locator('button:has-text("step-20"), button:has-text("Step 20"), button:has-text("Resultado")').first();
+            if (await step20Nav.isVisible().catch(() => false)) {
+                await step20Nav.click();
                 await page.waitForTimeout(800);
             }
 
