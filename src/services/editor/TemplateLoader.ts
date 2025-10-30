@@ -26,6 +26,7 @@ import { TemplateRegistry } from '@/services/TemplateRegistry';
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import blockAliasMap from '@/config/block-aliases.json';
+import { templateService } from '@/services/canonical/TemplateService';
 
 export type TemplateSource =
   | 'normalized-json'
@@ -432,7 +433,7 @@ export class TemplateLoader {
         try {
           const hydrated = {
             ...data,
-            sections: hydrateSectionsWithQuizSteps(normalizedKey, data.sections),
+            sections: hydrateSectionsWithQuizSteps(normalizedKey, data.sections, templateService.getAllStepsSync()),
           };
           const blocksComponents = convertTemplateToBlocks({ [normalizedKey]: hydrated });
           blocks = blockComponentsToBlocks(blocksComponents);
@@ -618,7 +619,7 @@ export class TemplateLoader {
       if (Array.isArray(stepConfig.sections) && stepConfig.sections.length > 0) {
         const hydrated = {
           ...stepConfig,
-          sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections),
+          sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections, templateService.getAllStepsSync()),
         };
         const blockComponents = convertTemplateToBlocks({ [normalizedKey]: hydrated });
         const blocks = blockComponentsToBlocks(blockComponents);

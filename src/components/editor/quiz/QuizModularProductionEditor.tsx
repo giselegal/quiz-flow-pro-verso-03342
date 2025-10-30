@@ -97,6 +97,7 @@ import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
 import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import type { StepType } from '@/types/quiz-schema';
+import { templateService } from '@/services/canonical/TemplateService';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
@@ -796,7 +797,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     const built: EditableQuizStep[] = stepIds.map((stepId, idx) => {
                                         const stepConf = master?.steps?.[stepId];
                                         // Hidratar sections com QUIZ_STEPS (titulos, perguntas, opções, CTA...)
-                                        const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
+                                        const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections, templateService.getAllStepsSync());
                                         // Converter sections → BlockComponent[] usando o mapeador central
                                         const blocks = convertTemplateToBlocks({ [stepId]: { sections } });
 
