@@ -112,7 +112,14 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 );
             case 'intro-form':
                 // Novo bloco atômico de formulário com visual completo
-                return <IntroFormBlock block={block} {...rest} />;
+                // Encaminhar explicitamente onNameSubmit do contextData, quando disponível
+                return (
+                    <IntroFormBlock
+                        block={block}
+                        {...rest}
+                        onNameSubmit={(rest as any)?.contextData?.onNameSubmit}
+                    />
+                );
             case 'intro-title':
                 // Novo bloco atômico de título (com suporte a content.titleHtml/title)
                 return <IntroTitleBlock block={block as any} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />;

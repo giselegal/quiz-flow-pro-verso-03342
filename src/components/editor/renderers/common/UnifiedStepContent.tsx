@@ -14,6 +14,7 @@ import type { Block } from '@/types/editor';
 // Steps modulares (edição com paridade de produção)
 import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
 import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
+import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
 
 export interface UnifiedStepContentProps {
     step: EditableQuizStep;
@@ -44,6 +45,16 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     autoAdvanceInEdit = false,
 }) => {
     const { ui, togglePropertiesPanel } = useGlobalUI();
+    // Hook de navegação unificada (EditorProvider)
+    let goToNext: (() => void) | undefined;
+    let goToPrevious: (() => void) | undefined;
+    try {
+        const nav = useUnifiedStepNavigation();
+        goToNext = nav.goToNext;
+        goToPrevious = nav.goToPrevious;
+    } catch {
+        // Se não estiver dentro do EditorProvider, navegação fica inativa
+    }
 
     // ✅ ORDENAR BLOCOS ANTES DE ADAPTAR - Fix para renderização fora de ordem
     const sortedStep = useMemo(() => {
@@ -443,6 +454,8 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             onNameSubmit: (name: string) => {
                 if ((isEditMode && productionParityInEdit) || isPreviewMode) {
                     onUpdateSessionData?.('userName', name);
+                    // Avançar para a próxima etapa ao enviar o nome (paridade com produção)
+                    try { goToNext?.(); } catch { /* noop */ }
                 }
             },
             onAnswersChange: (answers: string[]) => {
@@ -455,6 +468,13 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                     onUpdateSessionData?.(`answer_${stepKey}`, answer);
                 }
             },
+            // Navegação para blocos de pergunta
+            onNext: () => { try { goToNext?.(); } catch { /* noop */ } },
+            onBack: () => { try { goToPrevious?.(); } catch { /* noop */ } },
+            // Habilitação básica do botão "Próxima": pelo menos 1 resposta
+            canProceed: Array.isArray((sessionData as any)?.[`answers_${stepKey}`])
+                ? ((sessionData as any)[`answers_${stepKey}`] as any[]).length > 0
+                : !!(sessionData as any)?.[`answer_${stepKey}`],
         };
 
         // Adicionar dados de resultado quando aplicável
@@ -504,6 +524,8 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         onUpdateSessionData,
         step.type,
         getPreviewAnswers,
+        goToNext,
+        goToPrevious,
     ]);
 
 
