@@ -162,13 +162,15 @@ test.describe('Editor - Modo PREVIEW', () => {
             // Aguardar navegação
             await page.waitForTimeout(1000);
 
-            // Verificar que está no step-02
-            // Barra de progresso deve mostrar 2/21
-            const progressText = page.locator('text=/2.*21|Pergunta 1/i');
+            // Verificar que está no step-02 (escopado ao container de preview)
+            await expect(page.locator('[data-testid="canvas-preview-mode"] [data-step-id="step-02"]').first()).toBeVisible({ timeout: TIMEOUT_NAVIGATION });
+
+            // Barra de progresso deve mostrar 2/21 (ou "Pergunta 1 de 10")
+            const progressText = page.locator('[data-testid="canvas-preview-mode"] >> text=/2.*21|Pergunta 1/i');
             await expect(progressText).toBeVisible({ timeout: TIMEOUT_NAVIGATION });
 
             // Título da questão deve aparecer
-            const questionTitle = page.locator('text=/QUAL O SEU TIPO DE ROUPA/i');
+            const questionTitle = page.locator('[data-testid="canvas-preview-mode"] >> text=/QUAL O SEU TIPO DE ROUPA(\\s+FAVORITA)?/i');
             await expect(questionTitle).toBeVisible();
         });
     });
