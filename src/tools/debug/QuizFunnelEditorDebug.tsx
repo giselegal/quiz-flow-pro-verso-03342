@@ -21,7 +21,6 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
 // Imports dados
-import type { QuizStep } from '@/data/quizSteps';
 import { templateService } from '@/services/canonical/TemplateService';
 import { styleConfigGisele } from '@/data/styles';
 

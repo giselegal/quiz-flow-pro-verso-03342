@@ -6,7 +6,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import QuestionStep from '@/components/quiz/QuestionStep';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 describe('QuestionStep', () => {
   const mockOnAnswersChange = vi.fn();
@@ -81,7 +81,7 @@ describe('QuestionStep', () => {
 
     it('deve mostrar texto para múltiplas seleções', () => {
       const multiSelectData = { ...mockQuestionData, requiredSelections: 3 };
-      
+
       render(
         <QuestionStep
           data={multiSelectData}
@@ -127,7 +127,7 @@ describe('QuestionStep', () => {
 
     it('deve permitir múltiplas seleções até o limite', () => {
       const multiSelectData = { ...mockQuestionData, requiredSelections: 2 };
-      
+
       render(
         <QuestionStep
           data={multiSelectData}
@@ -244,7 +244,7 @@ describe('QuestionStep', () => {
   describe('🔧 Edge cases', () => {
     it('deve lidar com opções vazias', () => {
       const emptyOptionsData = { ...mockQuestionData, options: [] };
-      
+
       render(
         <QuestionStep
           data={emptyOptionsData}
@@ -258,7 +258,7 @@ describe('QuestionStep', () => {
 
     it('deve lidar com requiredSelections undefined', () => {
       const noRequiredData = { ...mockQuestionData, requiredSelections: undefined };
-      
+
       render(
         <QuestionStep
           data={noRequiredData}

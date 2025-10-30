@@ -1,4 +1,4 @@
-import type { QuizStep } from '../../data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 interface QuestionStepProps {
     data: QuizStep;
