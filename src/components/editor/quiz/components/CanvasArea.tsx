@@ -289,7 +289,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                 {({ index, style }: { index: number; style: React.CSSProperties }) => {
                                                     const block = rootBlocks[index];
                                                     return (
-                                                        <div style={style}>
+                                                        <div style={style} data-testid={`block-${block.id}`}>
                                                             <UnifiedBlockRenderer
                                                                 key={block.id}
                                                                 block={block}
@@ -315,22 +315,23 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                         <>
                                             {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
                                             {vVisible.map((block: any) => (
-                                                <UnifiedBlockRenderer
-                                                    key={block.id}
-                                                    block={block}
-                                                    allBlocks={rootBlocks}
-                                                    mode="edit"
-                                                    isSelected={selectedBlockId === block.id}
-                                                    isMultiSelected={isMultiSelected?.(block.id)}
-                                                    onBlockClick={(e) => handleBlockClick?.(e, block)}
-                                                    onDelete={() => removeBlock?.(migratedStep.id, block.id)}
-                                                    onDuplicate={() => {
-                                                        setBlockPendingDuplicate?.(block);
-                                                        setTargetStepId?.(migratedStep.id);
-                                                        setDuplicateModalOpen?.(true);
-                                                    }}
-                                                    renderBlockPreview={(blk) => renderBlockPreview?.(blk, rootBlocks) || null}
-                                                />
+                                                <div key={block.id} data-testid={`block-${block.id}`}>
+                                                    <UnifiedBlockRenderer
+                                                        block={block}
+                                                        allBlocks={rootBlocks}
+                                                        mode="edit"
+                                                        isSelected={selectedBlockId === block.id}
+                                                        isMultiSelected={isMultiSelected?.(block.id)}
+                                                        onBlockClick={(e) => handleBlockClick?.(e, block)}
+                                                        onDelete={() => removeBlock?.(migratedStep.id, block.id)}
+                                                        onDuplicate={() => {
+                                                            setBlockPendingDuplicate?.(block);
+                                                            setTargetStepId?.(migratedStep.id);
+                                                            setDuplicateModalOpen?.(true);
+                                                        }}
+                                                        renderBlockPreview={(blk) => renderBlockPreview?.(blk, rootBlocks) || null}
+                                                    />
+                                                </div>
                                             ))}
                                             {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
                                         </>

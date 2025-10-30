@@ -360,10 +360,10 @@ describe('CanvasArea - Hook Conditional Fix', () => {
 
         it('TC-H013: não deve renderizar badge quando virtualização está desabilitada', () => {
             mockUseVirtualBlocks.mockReturnValue({
-                visible: createBlocks(30),
+                visible: createBlocks(9),
                 topSpacer: 0,
                 bottomSpacer: 0,
-                total: 30,
+                total: 9,
                 scrollTop: 0,
                 setScrollTop: vi.fn(),
                 containerRef: { current: null },
@@ -373,7 +373,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(30),
+                blocks: createBlocks(9), // < 10 blocos desabilita virtualização
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
