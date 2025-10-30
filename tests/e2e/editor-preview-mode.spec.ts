@@ -24,13 +24,14 @@ test.describe('Editor - Modo PREVIEW', () => {
         
         // Aguardar carregamento do editor
         await page.waitForLoadState('networkidle');
-        await expect(page.locator('[data-testid="canvas-editor"], .canvas-area')).toBeVisible({ timeout: TIMEOUT_RENDER });
+        // Compat: nossos containers usam data-testid específicos por modo
+        await expect(page.locator('[data-testid="canvas-edit-mode"], [data-testid="canvas-preview-mode"]')).toBeVisible({ timeout: TIMEOUT_RENDER });
     });
 
     test.describe('TC1: Validação de Renderização Inicial', () => {
         test('deve renderizar step-01 com logo, título e formulário', async ({ page }) => {
             // Step-01 deve estar ativo por padrão
-            await expect(page.getByTestId('step-01')).toBeVisible({ timeout: TIMEOUT_RENDER });
+            await expect(page.locator('[data-step-id="step-01"]').first()).toBeVisible({ timeout: TIMEOUT_RENDER });
 
             // Validar logo (intro-logo)
             const logo = page.locator('img[alt*="Logo"], img[src*="LOGO_DA_MARCA"]').first();
@@ -64,7 +65,7 @@ test.describe('Editor - Modo PREVIEW', () => {
     test.describe('TC2: Alternância Edit ↔ Preview', () => {
         test('deve alternar do modo Edit para Preview', async ({ page }) => {
             // Verificar que está no modo Edit (blocos selecionáveis)
-            await expect(page.locator('[data-testid="canvas-editor"]')).toBeVisible();
+            await expect(page.locator('[data-testid="canvas-edit-mode"]')).toBeVisible();
 
             // Clicar no botão Preview
             const previewButton = page.locator('button:has-text("Preview")').first();
@@ -88,11 +89,11 @@ test.describe('Editor - Modo PREVIEW', () => {
             await page.waitForTimeout(500);
 
             // Voltar para Edit
-            await page.locator('button:has-text("Edit"), button:has-text("Editar")').first().click();
+            await page.locator('button:has-text("Editor"), button:has-text("Edit"), button:has-text("Editar")').first().click();
             await page.waitForTimeout(500);
 
             // Validar que modo Edit está ativo novamente
-            await expect(page.locator('[data-testid="canvas-editor"]')).toBeVisible();
+            await expect(page.locator('[data-testid="canvas-edit-mode"]')).toBeVisible();
         });
 
         test('deve manter estado ao alternar entre modos', async ({ page }) => {
@@ -105,7 +106,7 @@ test.describe('Editor - Modo PREVIEW', () => {
             await nameInput.fill('Maria Teste');
 
             // Voltar para Edit
-            await page.locator('button:has-text("Edit"), button:has-text("Editar")').first().click();
+            await page.locator('button:has-text("Editor"), button:has-text("Edit"), button:has-text("Editar")').first().click();
             await page.waitForTimeout(500);
 
             // Voltar para Preview
