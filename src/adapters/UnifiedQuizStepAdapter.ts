@@ -9,7 +9,7 @@
  * FASE 2: Solução arquitetural para eliminar fragmentação
  */
 
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import type { Block } from '@/types/editor';
 import { BlocksToJSONv3Adapter, type JSONv3Template } from './BlocksToJSONv3Adapter';
 import { QuizStepAdapter } from './QuizStepAdapter';

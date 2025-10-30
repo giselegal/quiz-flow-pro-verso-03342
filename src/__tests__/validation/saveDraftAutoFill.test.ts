@@ -1,5 +1,5 @@
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { vi } from 'vitest';
 
 // Mock supabase to avoid real network

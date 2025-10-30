@@ -1,5 +1,5 @@
 import { validateNextStep, validateCompleteFunnel } from '@/utils/quizValidationUtils';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 describe('validateNextStep (dinâmico / normalização)', () => {
     function mk(step: Partial<QuizStep> & { id: string }): QuizStep & { id: string } {

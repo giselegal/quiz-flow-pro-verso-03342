@@ -33,7 +33,7 @@ import {
  * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
  * @todo Migrar para Block[] de TemplateService
  */
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 // ✅ Mesmo tipo usado no QuizFunnelEditorWYSIWYG
 type EditableQuizStep = QuizStep & { id: string };

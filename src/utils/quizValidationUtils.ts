@@ -11,7 +11,7 @@
  * 4. FormInput obrigatório no step-01
  */
 
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { styleMapping, type StyleId } from '@/data/styles';
 import { templateService } from '@/services/canonical/TemplateService';
 
