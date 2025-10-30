@@ -10,7 +10,7 @@
  */
 
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
 import { IndexedDBStorageService, StorageConfig } from '@/utils/storage/IndexedDBStorageService';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
@@ -324,8 +324,49 @@ export class BlockPropertiesAPI {
 
         // Buscar dados REAIS do template (questões, opções, imagens)
         if (templateId === 'quiz21StepsComplete') {
-            console.log('✅ Carregando dados COMPLETOS do QUIZ_STYLE_21_STEPS_TEMPLATE');
-            return QUIZ_STYLE_21_STEPS_TEMPLATE;
+            console.log('✅ Carregando dados do consolidatedTemplateService (per-step JSON prioritário)');
+            try {
+                const full = await consolidatedTemplateService.getTemplate('quiz21StepsComplete');
+                if (full && Array.isArray(full.steps)) {
+                    // Converter para Record<string, any[]>
+                    const map: Record<string, any[]> = {};
+                    full.steps.forEach(step => {
+                        const key = `step-${step.stepNumber}`;
+                        map[key] = step.blocks || [];
+                    });
+                    // Garantir 21 chaves conhecidas se aplicável
+                    if (full.stepCount && full.stepCount >= 1) {
+                        for (let i = 1; i <= Math.max(full.stepCount, 21); i++) {
+                            const key = `step-${i}`;
+                            if (!map[key]) map[key] = [];
+                        }
+                    }
+                    return map;
+                }
+
+                // Fallback: tentar buscar blocos por etapa diretamente
+                const map: Record<string, any[]> = {};
+                for (let i = 1; i <= 21; i++) {
+                    try {
+                        const blocks = await consolidatedTemplateService.getStepBlocks(`step-${i}`);
+                        map[`step-${i}`] = blocks || [];
+                    } catch (e) {
+                        map[`step-${i}`] = [];
+                    }
+                }
+                return map;
+            } catch (error) {
+                console.warn('⚠️ Falha ao carregar via consolidatedTemplateService, usando fallback legado:', error);
+            }
+
+            // Fallback final (legado): manter compatibilidade se existir o template TS
+            try {
+                const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+                console.log('✅ Fallback legado QUIZ_STYLE_21_STEPS_TEMPLATE carregado');
+                return QUIZ_STYLE_21_STEPS_TEMPLATE as unknown as Record<string, any[]>;
+            } catch {
+                // Ignorar se não existir
+            }
         }
 
         console.warn(`⚠️ Dados reais não implementados para template: ${templateId}`);
