@@ -555,12 +555,19 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         if (step.type === 'transition' || step.type === 'transition-result') {
             return (
                 <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+                    {/* ❌ DEPRECATED: ModularTransitionStep movido para .archive/
                     <ModularTransitionStep
                         data={{ id: step.id }}
                         blocks={blocks as any}
                         editor={editor as any}
                         isEditable
-                    />
+                    /> */}
+                    <div className="p-8 text-center">
+                        <p className="text-muted-foreground">Transition Step (componente em migração)</p>
+                        {blocks.map((block, idx) => (
+                            <BlockTypeRenderer key={block.id || idx} block={block} />
+                        ))}
+                    </div>
                 </div>
             );
         }
@@ -568,13 +575,20 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         if (step.type === 'result') {
             return (
                 <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+                    {/* ❌ DEPRECATED: ModularResultStep movido para .archive/
                     <ModularResultStep
                         data={{ id: step.id }}
                         blocks={blocks as any}
                         editor={editor as any}
                         isEditable
                         userProfile={(contextData as any)?.userProfile}
-                    />
+                    /> */}
+                    <div className="p-8 text-center">
+                        <p className="text-muted-foreground">Result Step (componente em migração)</p>
+                        {blocks.map((block, idx) => (
+                            <BlockTypeRenderer key={block.id || idx} block={block} />
+                        ))}
+                    </div>
                 </div>
             );
         }
