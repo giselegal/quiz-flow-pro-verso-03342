@@ -54,10 +54,21 @@ export const SaveAsFunnelButton: React.FC = () => {
       const { data: userData } = await supabase.auth.getUser();
       const userId = userData?.user?.id || 'anonymous';
 
+      // Gerar ID se a tabela não tiver default (evita erro de NOT NULL em id)
+      const safeUuid = (() => {
+        try {
+          if (typeof crypto !== 'undefined' && (crypto as any).randomUUID) {
+            return (crypto as any).randomUUID();
+          }
+        } catch { }
+        return 'funnel-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      })();
+
       // Inserir funil com payload mínimo para compatibilidade entre esquemas
       const { data: funnel, error: funnelError } = await supabase
         .from('funnels')
         .insert({
+          id: safeUuid,
           name: name.trim(),
           user_id: userId,
           // Campos opcionais (evitar falhas quando não existem no schema atual)
@@ -153,6 +164,7 @@ export const SaveAsFunnelButton: React.FC = () => {
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

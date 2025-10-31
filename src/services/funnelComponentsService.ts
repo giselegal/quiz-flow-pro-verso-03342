@@ -1,5 +1,26 @@
 import { supabase } from '@/integrations/supabase/customClient';
 
+// Cache simples de tipos conhecidos para reduzir chamadas
+let __knownTypeKeys: Set<string> | null = null;
+async function ensureKnownTypes(): Promise<Set<string>> {
+  if (__knownTypeKeys && __knownTypeKeys.size > 0) return __knownTypeKeys;
+  try {
+    const { data, error } = await supabase.from('component_types').select('type_key');
+    if (!error && Array.isArray(data)) {
+      __knownTypeKeys = new Set(data.map((r: any) => r.type_key));
+      return __knownTypeKeys;
+    }
+  } catch {}
+  __knownTypeKeys = new Set<string>();
+  return __knownTypeKeys;
+}
+
+function pickFallbackType(types: Set<string>, preferred: string | null = 'text-inline'): string | null {
+  if (preferred && types.has(preferred)) return preferred;
+  const first = types.values().next();
+  return first.done ? null : first.value;
+}
+
 export type ComponentInstance = {
   id: string;
   instance_key: string;
@@ -68,7 +89,7 @@ export const funnelComponentsService = {
     }
 
     console.log(`✅ Encontrados ${data?.length || 0} componentes`);
-    return (data || []) as ComponentInstance[];
+  return (data || []) as unknown as ComponentInstance[];
   },
 
   /**
@@ -86,30 +107,97 @@ export const funnelComponentsService = {
     } = input;
 
     console.log(`➕ Adicionando componente: ${componentTypeKey} na posição ${orderIndex}`);
+    
+    // garantir que o tipo exista quando usando schema novo
+    const knownTypes = await ensureKnownTypes();
+    let typeKeyToUse = componentTypeKey;
+    if (knownTypes.size > 0 && !knownTypes.has(typeKeyToUse)) {
+      const fallback = pickFallbackType(knownTypes, 'text-inline');
+      if (fallback) {
+        console.warn(`⚠️ Tipo desconhecido "${typeKeyToUse}". Usando fallback "${fallback}"`);
+        typeKeyToUse = fallback;
+      }
+    }
 
-    const payload = {
+    const payloadNew = {
       funnel_id: funnelId,
       step_number: stepNumber,
       stage_id: stageId,
       instance_key: instanceKey,
-      component_type_key: componentTypeKey,
+      component_type_key: typeKeyToUse,
       order_index: orderIndex,
       properties,
-    };
+    } as any;
 
-    const { data, error } = await supabase
-      .from('component_instances')
-      .insert(payload)
-      .select('*')
-      .single();
-
-    if (error) {
-      console.error('❌ Erro ao adicionar componente:', error);
-      throw error;
+    // Insert com schema novo e fallbacks controlados
+    let insertError: any | null = null;
+    let inserted: any | null = null;
+    try {
+      const { data, error } = await supabase
+        .from('component_instances')
+        .insert(payloadNew)
+        .select('*')
+        .single();
+      if (error) throw error;
+      inserted = data;
+    } catch (err: any) {
+      insertError = err;
     }
 
-    console.log(`✅ Componente adicionado: ${data.id}`);
-    return data as ComponentInstance;
+    // Fallbacks: 1) Se erro de FK do tipo, tenta outro type_key; 2) Se erro de coluna (schema antigo), usa payload legado
+    if (insertError) {
+      const msg = String(insertError?.message || '');
+      const code = String((insertError as any)?.code || '');
+
+      // 1) FK de tipo inválido (23503) → tentar com fallback garantido
+      if (code === '23503' || msg.includes('component_type_key_fkey')) {
+        const types = await ensureKnownTypes();
+        const alt = pickFallbackType(types, 'text-inline') || pickFallbackType(types, null);
+        if (alt) {
+          console.warn(`🔁 Retentando insert com type_key fallback: ${alt}`);
+          const { data, error } = await supabase
+            .from('component_instances')
+            .insert({ ...payloadNew, component_type_key: alt })
+            .select('*')
+            .single();
+          if (!error && data) {
+            inserted = data;
+          } else {
+            insertError = error;
+          }
+        }
+      }
+
+      // 2) Coluna desconhecida (schema antigo) → usar payload legado
+      if (!inserted && (code === '42703' || msg.includes('column') || msg.includes('properties'))) {
+        console.warn('🔁 Schema antigo detectado, tentando insert legado...');
+        const legacyPayload = {
+          funnel_id: funnelId,
+          component_type_id: null,
+          config: { ...properties, blockType: typeKeyToUse, stepNumber },
+          position: orderIndex - 1,
+          is_active: true,
+        } as any;
+        const { data, error } = await supabase
+          .from('component_instances')
+          .insert(legacyPayload)
+          .select('*')
+          .single();
+        if (!error && data) {
+          inserted = data;
+        } else {
+          insertError = error;
+        }
+      }
+    }
+
+    if (insertError) {
+      console.error('❌ Erro ao adicionar componente:', insertError);
+      throw insertError;
+    }
+
+  console.log(`✅ Componente adicionado: ${inserted.id}`);
+  return inserted as unknown as ComponentInstance;
   },
 
   /**
@@ -132,8 +220,8 @@ export const funnelComponentsService = {
       throw error;
     }
 
-    console.log(`✅ Componente atualizado: ${data.id}`);
-    return data as ComponentInstance;
+  console.log(`✅ Componente atualizado: ${data.id}`);
+  return data as unknown as ComponentInstance;
   },
 
   /**
@@ -235,12 +323,12 @@ export const funnelComponentsService = {
       });
 
       if (!error && data) {
-        const result = Array.isArray(data) ? data[0] : data;
-        console.log(`✅ Batch update (RPC) concluído: ${result?.updated_count || updates.length} componentes`);
+        const resultAny: any = Array.isArray(data) ? data[0] : data;
+        console.log(`✅ Batch update (RPC) concluído: ${resultAny?.updated_count || updates.length} componentes`);
         return { 
           success: true, 
-          updated: result?.updated_count || updates.length, 
-          errors: result?.errors || [], 
+          updated: resultAny?.updated_count || updates.length, 
+          errors: resultAny?.errors || [], 
         };
       }
 

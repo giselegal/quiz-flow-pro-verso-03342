@@ -800,6 +800,14 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // ============================================================================
 
     useEffect(() => {
+        // Se o editor já está controlando auto-save (hook), não agendar o interval aqui
+        try {
+            if (typeof window !== 'undefined' && (window as any).__EDITOR_AUTOSAVE_ACTIVE) {
+                appLogger.debug('⏭️ [EditorProviderUnified] Auto-save interval pulado (hook ativo)');
+                return;
+            }
+        } catch { }
+
         if (!enableSupabase || !funnelId) {
             if (enableSupabase && !funnelId) {
                 appLogger.warn('⚠️ [EditorProviderUnified] Auto-save desabilitado: funnelId não fornecido');

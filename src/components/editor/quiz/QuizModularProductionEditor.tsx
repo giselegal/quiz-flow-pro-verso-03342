@@ -491,29 +491,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         enabled: !!funnelId, // Apenas em funnel mode
         debounceMs: 2000,
         maxRetries: 3,
+        suppressToast: true,
         onSave: () => {
+            // Sucesso silencioso: indicador visual já cobre (SaveStatusIndicator)
             console.log('✅ Auto-save completado');
-            toast({
-                title: 'Alterações salvas',
-                description: 'Todas as alterações foram salvas no Supabase',
-            });
         },
         onError: (error, retryInfo) => {
-            console.error('❌ Auto-save error:', error);
-
-            const isRetrying = retryInfo && retryInfo.attempt < retryInfo.maxAttempts;
-
-            if (!isRetrying) {
-                // Erro final após esgotar tentativas
-                toast({
-                    variant: 'destructive',
-                    title: 'Erro ao salvar',
-                    description: error.message || 'Não foi possível salvar as alterações. Verifique sua conexão com a internet.',
-                    duration: 5000,
-                });
-            }
+            // Erro silencioso (status no SaveStatusIndicator). Evita spam de toasts.
+            console.error('❌ Auto-save error:', error, retryInfo);
         },
     });
+
+    // Sinalizar que o auto-save local está ativo (para o Provider não agendar outro)
+    try {
+        (window as any).__EDITOR_AUTOSAVE_ACTIVE = true;
+    } catch { }
 
     // Histórico leve por etapa (diff de step) – incremental (P0-4)
     const stepHistoryRef = useRef(new StepHistoryService<any>());

@@ -34,6 +34,8 @@ export interface UseAutoSaveOptions {
   funnelId?: string;
   /** Habilitar auto-save (default: true em funnel mode) */
   enabled?: boolean;
+  /** Suprimir toasts internos do hook (default: false) */
+  suppressToast?: boolean;
   /** Callback quando save completa */
   onSave?: () => void;
   /** Callback quando save falha */
@@ -63,6 +65,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
     debounceMs = 2000,
     funnelId,
     enabled = !!funnelId,
+    suppressToast = false,
     onSave,
     onError,
     maxRetries = 3,
@@ -216,11 +219,13 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
 
       console.error('❌ [useAutoSave] Erro crítico:', err);
 
-      toast({
-        variant: 'destructive',
-        title: 'Erro ao salvar',
-        description: err.message || 'Verifique sua conexão e tente novamente',
-      });
+      if (!suppressToast) {
+        toast({
+          variant: 'destructive',
+          title: 'Erro ao salvar',
+          description: err.message || 'Verifique sua conexão e tente novamente',
+        });
+      }
 
       onError?.(err, retryInfo || undefined);
 
