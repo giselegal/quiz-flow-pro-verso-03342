@@ -26,7 +26,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useUserName } from '@/hooks/useUserName';
 
 // Componentes lazy-loaded
-const AdminDashboard = React.lazy(() => import('@/pages/dashboard/AdminDashboard'));
+const ConsolidatedOverviewPage = React.lazy(() => import('@/pages/admin/ConsolidatedOverviewPage'));
 const MeusFunisPageReal = React.lazy(() => import('@/pages/dashboard/MeusFunisPageReal'));
 const AnalyticsPage = React.lazy(() => import('@/pages/dashboard/AnalyticsPage'));
 const QuizModularProductionEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularProductionEditor').then(m => ({ default: m.default })));
@@ -62,7 +62,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     const [syncStats, setSyncStats] = useState(EditorDashboardSyncService.getSyncStats());
     const { state } = useSuperUnified();
     const displayName = useUserName();
-    
+
     // Map SuperUnifiedProvider theme to expected format
     const theme = React.useMemo(() => ({
         colors: {
@@ -166,7 +166,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     const renderContent = () => {
         switch (activeView) {
             case 'dashboard':
-                return <AdminDashboard />;
+                return <ConsolidatedOverviewPage />;
             case 'funnels':
                 return <MeusFunisPageReal />;
             case 'analytics':
@@ -361,7 +361,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                 backgroundColor: `${theme.colors.background}60`,
                                 borderColor: activeView === 'current-funnel' ? theme.colors.detailsMinor : `${theme.colors.detailsMinor}40`,
                                 color: theme.colors.text,
-                                background: activeView === 'current-funnel' 
+                                background: activeView === 'current-funnel'
                                     ? `linear-gradient(135deg, ${theme.colors.buttons}20, ${theme.colors.detailsMinor}20)`
                                     : `${theme.colors.background}60`,
                                 boxShadow: activeView === 'current-funnel'
@@ -372,7 +372,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             <Target className="w-4 h-4 mr-2" />
                             Funil Atual
                         </Button>
-                        
+
                         <ThemeToggle size="sm" />
 
                         {/* User Identity */}
