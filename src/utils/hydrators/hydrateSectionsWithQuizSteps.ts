@@ -1,4 +1,4 @@
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 type Section = any;
 
@@ -32,16 +32,19 @@ function mapOptions(options: any[] | undefined) {
 }
 
 /**
- * Hidrata sections v3 com dados canônicos do QUIZ_STEPS (titulos, perguntas, opções, CTA...)
+ * Hidrata sections v3 com dados canônicos do TemplateService (titulos, perguntas, opções, CTA...)
  * Sem efeitos colaterais: retorna novo array de sections.
  */
 export function hydrateSectionsWithQuizSteps(
   stepId: string,
   sections: Section[] | undefined,
-  stepsSource: Record<string, any> = QUIZ_STEPS as any,
+  stepsSource?: Record<string, any>,
 ): Section[] {
   if (!Array.isArray(sections)) return [];
-  const step = (stepsSource as any)[stepId];
+  // Use stepsSource se fornecido (para testes), senão TemplateService
+  const step = stepsSource 
+    ? (stepsSource as any)[stepId]
+    : TemplateService.getInstance().getStep(stepId);
   if (!step) return sections;
 
   const type = step.type as

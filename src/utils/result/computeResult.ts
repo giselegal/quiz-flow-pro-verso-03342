@@ -3,10 +3,7 @@
  * Cálculo simples (determinístico) do resultado do quiz baseado nas respostas.
  * Mantém compatibilidade com a lógica atual de `useQuizState` mas isolado e testável.
  *
- * ⚠️ MIGRAÇÃO EM ANDAMENTO:
- * - DEPRECATED: import de QUIZ_STEPS (fonte antiga)
- * - NOVO: Aceita steps via parâmetro (fonte: quiz21-complete.json via TemplateService)
- * - FALLBACK: Mantém QUIZ_STEPS temporariamente durante migração
+ * ✅ MIGRADO: usa TemplateService como fonte canônica
  * 
  * USO RECOMENDADO:
  * ```ts
@@ -25,7 +22,6 @@
  * - Normaliza ids de estilo via `resolveStyleId` para garantir acentos corretos quando possível.
  */
 
-import { QUIZ_STEPS } from '@/data/quizSteps'; // Fallback legado mantido para compatibilidade nos testes
 import { templateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { styleMapping } from '@/data/styles';
