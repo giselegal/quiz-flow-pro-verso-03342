@@ -140,10 +140,10 @@ export interface EditorProviderUnifiedProps {
     quizId?: string;
     storageKey?: string;
     initial?: Partial<EditorState>;
-    enableSupabase?: boolean;
+    enableSupabase?: boolean; // ✅ FASE 3.0: Habilitado por padrão
 }
 
-const getInitialState = (enableSupabase: boolean = false): EditorState => ({
+const getInitialState = (enableSupabase: boolean = true): EditorState => ({
     stepBlocks: {},
     stepSources: {},
     currentStep: 1,
@@ -160,7 +160,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     quizId,
     storageKey = 'unified-editor',
     initial = {},
-    enableSupabase = false,
+    enableSupabase = true, // ✅ FASE 3.0: Habilitado por padrão
 }) => {
     // ============================================================================
     // STATE MANAGEMENT

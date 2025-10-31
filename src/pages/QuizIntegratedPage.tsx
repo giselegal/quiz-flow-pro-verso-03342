@@ -173,7 +173,7 @@ const QuizPage: React.FC = () => {
         enableAnalytics: true,
       }}
     >
-      <EditorProvider>
+      <EditorProvider enableSupabase={true} funnelId="quiz-21-steps-integrated">
         <QuizIntegratedRenderer />
       </EditorProvider>
     </UnifiedAppProvider>

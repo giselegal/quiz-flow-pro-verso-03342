@@ -52,7 +52,7 @@ export interface EditorCompositeProviderProps {
 export const EditorCompositeProvider: React.FC<EditorCompositeProviderProps> = ({
     children,
     funnelId,
-    enableSupabase = false,
+    enableSupabase = true, // ✅ FASE 3.0: Habilitado por padrão
     storageKey,
     debugMode = false,
 }) => {
