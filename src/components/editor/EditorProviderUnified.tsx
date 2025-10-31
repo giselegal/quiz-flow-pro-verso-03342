@@ -745,18 +745,40 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [enableSupabase, funnelId, unifiedCrud]);
 
     const exportJSON = useCallback(() => {
-        return JSON.stringify({
-            version: '5.0.0-unified',
-            timestamp: new Date().toISOString(),
-            state,
-            funnelId,
-            quizId,
-            meta: {
-                stepsCount: Object.keys(state.stepBlocks).length,
-                totalBlocks: Object.values(state.stepBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
-            },
-        }, null, 2);
-    }, [state, funnelId, quizId]);
+        // ✅ CORRIGIDO: Exportar os blocos REAIS do editor ao invés de estrutura vazia
+        const templates: Record<string, any> = {};
+
+        for (const [stepKey, blocks] of Object.entries(state.stepBlocks)) {
+            if (!blocks || blocks.length === 0) continue;
+
+            // Normalizar stepKey para formato step-XX
+            const stepId = stepKey.startsWith('step-') ? stepKey : `step-${stepKey}`;
+            const stepNumber = parseInt(stepId.replace('step-', ''), 10);
+
+            // Metadata básica
+            const metadata = {
+                id: stepId,
+                name: `Etapa ${stepId}`,
+                description: `Etapa ${stepId} do quiz`,
+                category: 'question',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                author: 'Quiz Flow Builder',
+                version: '3.0.1',
+            };
+
+            templates[stepId] = {
+                id: stepId,
+                type: 'question',
+                order: stepNumber,
+                blocks: blocks,
+                nextStep: `step-${stepNumber + 1}`,
+                metadata: metadata,
+            };
+        }
+
+        return JSON.stringify(Object.values(templates), null, 2);
+    }, [state.stepBlocks]);
 
     const importJSON = useCallback((json: string) => {
         try {
