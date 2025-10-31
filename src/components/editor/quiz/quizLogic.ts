@@ -1,12 +1,11 @@
 /**
- * ⚠️ DEPRECATED: Este arquivo usa quizSteps.ts (obsoleto)
+ * ✅ MIGRADO: Usa TemplateService como fonte canônica
  * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
- * @todo Migrar para TemplateService.getInstance()
  */
 
-import { QUIZ_STEPS } from '@/data/quizSteps';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 export interface ComputeResultOutput {
     primary?: string;
@@ -124,7 +123,8 @@ export function persistOffer(offer: any) {
 
 // Util para obter steps default (pode ser usado em testes de integração simples)
 export function getDefaultSteps(): QuizStep[] {
-    return Object.entries(QUIZ_STEPS).map(([id, st]) => ({ id, ...st })) as any;
+    const stepsMap = TemplateService.getInstance().getAllStepsSync();
+    return Object.entries(stepsMap).map(([id, st]) => ({ id, ...st })) as any;
 }
 
 export default {
