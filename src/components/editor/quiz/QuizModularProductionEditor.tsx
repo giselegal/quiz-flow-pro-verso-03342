@@ -101,6 +101,8 @@ import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templa
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { SaveAsFunnelButton } from '@/components/editor/SaveAsFunnelButton';
 import { EditorDiagnostics } from '@/components/editor/EditorDiagnostics';
+import { useStepPrefetch } from '@/hooks/useStepPrefetch';
+import { PerformanceMetrics } from '@/components/editor/PerformanceMetrics';
 import { SaveStatusIndicator } from '@/components/editor/SaveStatusIndicator';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import type { StepType } from '@/types/quiz-schema';
@@ -526,6 +528,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         return selectedStepId;
     }, [editorCtx?.state?.currentStep, selectedStepId, stepIdFromNumber]);
+
+    // ✅ FASE 2.4: Prefetch de steps adjacentes para melhorar UX
+    useStepPrefetch({
+        currentStepId: effectiveSelectedStepId,
+        funnelId,
+        totalSteps: steps.length || 21,
+        enabled: !!funnelId, // Apenas em funnel mode
+        radius: 1, // Prefetch N-1 e N+1
+        debounceMs: 500,
+    });
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
@@ -3715,6 +3727,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 retryInfo={autoSave.retryInfo}
                 onRetry={autoSave.saveNow}
             />
+
+            {/* 📊 Performance Metrics - DEV only */}
+            {/* ✅ FASE 2.4: Métricas de cache, load times, prefetch */}
+            <PerformanceMetrics />
 
             {import.meta.env.DEV && (
                 <button

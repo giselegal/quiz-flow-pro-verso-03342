@@ -89,7 +89,7 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
       console.log(`🚀 [useStepPrefetch] Prefetching ${stepId}...`);
 
       // Carregar step em background (usa cache se disponível)
-      await loaderRef.current.load(stepId, mode, id);
+      await loaderRef.current.loadStep(stepId);
 
       prefetchedRef.current.add(stepId);
       console.log(`✅ [useStepPrefetch] ${stepId} prefetched`);

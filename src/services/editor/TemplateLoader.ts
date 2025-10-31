@@ -140,6 +140,19 @@ export class TemplateLoader {
    */
   async loadStep(step: number | string): Promise<LoadedTemplate> {
     const normalizedKey = this.normalizeStepKey(step);
+    const startTime = performance.now();
+
+    // ✅ FASE 2.4: Verificar cache primeiro
+    const cacheKey = stepBlocksKey(normalizedKey);
+    if (unifiedCache.has(cacheKey)) {
+      this.metrics.cacheHits++;
+      console.log(`⚡ [Cache HIT] ${normalizedKey}`);
+      
+      const blocks = unifiedCache.get(cacheKey);
+      return { blocks: blocks || [], source: 'normalized-json' }; // source genérico para cache
+    }
+    
+    this.metrics.cacheMisses++;
 
     // De-dup: se já existe um carregamento em andamento para esse step, reutiliza a mesma promise
     const existing = this.inFlightLoads.get(normalizedKey);
@@ -286,6 +299,15 @@ export class TemplateLoader {
 
     try {
       const result = await loadPromise;
+      
+      // ✅ FASE 2.4: Track load time
+      const loadTime = performance.now() - startTime;
+      this.metrics.loadTimes.push(loadTime);
+      
+      if (import.meta.env.DEV) {
+        console.log(`📊 [loadStep] ${normalizedKey} carregado em ${loadTime.toFixed(0)}ms (source: ${result.source})`);
+      }
+      
       return result;
     } finally {
       // Limpa a referência independentemente de sucesso ou erro, permitindo novos loads futuros
@@ -929,11 +951,11 @@ export class TemplateLoader {
    * 
    * @param stepIds - Array de step IDs (ex: ['step-01', 'step-02'])
    * @param mode - Modo de carregamento ('template' ou 'funnel')
-   * @param id - Template ID ou Funnel ID
+   * @param id - Template ID ou Funnel ID (não usado diretamente, mas detectado via URL)
    */
   async warmCache(
     stepIds: string[],
-    mode: 'template' | 'funnel',
+    mode?: 'template' | 'funnel',
     id?: string
   ): Promise<{ loaded: number; cached: number; failed: number }> {
     const startTime = performance.now();
@@ -950,8 +972,8 @@ export class TemplateLoader {
           return;
         }
 
-        // Carregar step
-        await this.load(stepId, mode, id);
+        // Carregar step (detecta modo automaticamente se não fornecido)
+        await this.loadStep(stepId);
         results.loaded++;
       } catch (error) {
         console.warn(`⚠️ [warmCache] Falha ao carregar ${stepId}:`, error);
