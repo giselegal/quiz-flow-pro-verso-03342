@@ -152,56 +152,162 @@ export default defineConfig(({ mode }) => {
               if (id.includes('HeaderBlock') || 
                   id.includes('TextBlock') || 
                   id.includes('ImageBlock') || 
-                  id.includes('ButtonBlock')) {
+                  id.includes('ButtonBlock') ||
+                  id.includes('BlockRenderer') ||
+                  id.includes('BlockRegistry')) {
                 return 'blocks-core';
               }
               
-              // Intro blocks (lazy) ~80KB
+              // 🚀 FASE 3B.3: Intro blocks (lazy, step 1) ~80KB
               if (id.includes('IntroFormBlock') || 
                   id.includes('IntroLogoBlock') || 
                   id.includes('IntroTitleBlock') ||
                   id.includes('IntroImageBlock') ||
-                  id.includes('IntroDescriptionBlock')) {
+                  id.includes('IntroDescriptionBlock') ||
+                  id.includes('IntroLogoHeaderBlock') ||
+                  id.includes('/atomic/Intro')) {
                 return 'blocks-intro';
               }
               
-              // Question blocks (lazy) ~100KB
+              // Question blocks (lazy, steps 2-11) ~100KB
               if (id.includes('QuestionProgressBlock') || 
                   id.includes('QuestionTextBlock') ||
                   id.includes('QuestionNumberBlock') ||
                   id.includes('QuestionNavigationBlock') ||
                   id.includes('QuestionInstructionsBlock') ||
-                  id.includes('OptionsGridBlock')) {
+                  id.includes('OptionsGridBlock') ||
+                  id.includes('QuizNavigationBlock') ||
+                  id.includes('QuizProgressBlock') ||
+                  id.includes('QuizBackButtonBlock') ||
+                  id.includes('/atomic/Question')) {
                 return 'blocks-question';
               }
               
-              // Result blocks (lazy) ~90KB
+              // Result blocks (lazy, step 20) ~90KB
               if (id.includes('ResultMainBlock') || 
                   id.includes('ResultImageBlock') ||
                   id.includes('ResultDescriptionBlock') ||
                   id.includes('ResultSecondaryStylesBlock') ||
                   id.includes('ResultShareBlock') ||
-                  id.includes('ResultCTABlock')) {
+                  id.includes('ResultCTABlock') ||
+                  id.includes('ResultHeaderBlock') ||
+                  id.includes('ResultCharacteristicsBlock') ||
+                  id.includes('ResultStyleBlock') ||
+                  id.includes('ResultProgressBarsBlock') ||
+                  id.includes('ResultHeaderInlineBlock') ||
+                  id.includes('ResultCongratsBlock') ||
+                  id.includes('ResultCalculatedBlock') ||
+                  id.includes('/atomic/Result') ||
+                  id.includes('/result/')) {
                 return 'blocks-result';
               }
               
-              // Offer blocks (lazy) ~120KB
+              // Offer blocks (lazy, step 21) ~120KB
               if (id.includes('QuizOfferHeroBlock') || 
                   id.includes('ValueAnchoringBlock') ||
                   id.includes('TestimonialsBlock') ||
                   id.includes('BenefitsListBlock') ||
+                  id.includes('BenefitsBlock') ||
                   id.includes('SecurePurchaseBlock') ||
-                  id.includes('GuaranteeBlock')) {
+                  id.includes('GuaranteeBlock') ||
+                  id.includes('PricingSectionBlock') ||
+                  id.includes('PricingInlineBlock') ||
+                  id.includes('FAQSectionBlock') ||
+                  id.includes('CountdownTimerBlock') ||
+                  id.includes('UrgencyTimerInlineBlock') ||
+                  id.includes('LegalNoticeBlock') ||
+                  id.includes('SocialProofBlock') ||
+                  id.includes('TestimonialsCarouselInlineBlock') ||
+                  id.includes('MentorSectionInlineBlock') ||
+                  id.includes('BeforeAfterInlineBlock') ||
+                  id.includes('/offer/')) {
                 return 'blocks-offer';
               }
               
-              // Transition blocks (lazy) ~40KB
+              // Transition blocks (lazy, steps 12, 19) ~40KB
               if (id.includes('TransitionTitleBlock') ||
-                  id.includes('TransitionTextBlock')) {
+                  id.includes('TransitionTextBlock') ||
+                  id.includes('TransitionMessageBlock') ||
+                  id.includes('TransitionHeroBlock') ||
+                  id.includes('TransitionLoaderBlock') ||
+                  id.includes('TransitionProgressBlock') ||
+                  id.includes('TransitionDescriptionBlock') ||
+                  id.includes('QuizTransitionLoaderBlock') ||
+                  id.includes('LoadingTransitionBlock') ||
+                  id.includes('/atomic/Transition')) {
                 return 'blocks-transition';
               }
               
-              // Outros blocks
+              // Form blocks (lazy, usado em intro/offer) ~60KB
+              if (id.includes('FormInputBlock') ||
+                  id.includes('FormContainerBlock') ||
+                  id.includes('LeadFormBlock') ||
+                  id.includes('ConnectedLeadFormBlock') ||
+                  id.includes('SimpleFormContainerBlock')) {
+                return 'blocks-form';
+              }
+              
+              // Inline/Simple blocks (lazy, variados) ~50KB
+              if (id.includes('/inline/') ||
+                  id.includes('/simple/') ||
+                  id.includes('InlineBlock') ||
+                  id.includes('CTAInlineBlock') ||
+                  id.includes('BadgeInlineBlock') ||
+                  id.includes('StatInlineBlock') ||
+                  id.includes('ProgressInlineBlock') ||
+                  id.includes('DecorativeBarBlock')) {
+                return 'blocks-inline';
+              }
+              
+              // Wrapper/Container blocks (core utility) ~30KB
+              if (id.includes('BlockWrapper') ||
+                  id.includes('SortableBlock') ||
+                  id.includes('EditableBlock') ||
+                  id.includes('PreviewBlock') ||
+                  id.includes('SelectableBlock') ||
+                  id.includes('UnifiedBlockWrappers') ||
+                  id.includes('UniversalBlockRenderer') ||
+                  id.includes('BlockSkeleton') ||
+                  id.includes('OptimizedBlockRenderer') ||
+                  id.includes('BasicContainerBlock')) {
+                return 'blocks-core';
+              }
+              
+              // Editor-specific blocks (lazy quando não em editor) ~40KB
+              if (id.includes('/editor/blocks/') ||
+                  id.includes('EditorOptionsGridBlock') ||
+                  id.includes('EditorBlockItem') ||
+                  id.includes('BlockPropertiesIntegration') ||
+                  id.includes('EditBlockContent') ||
+                  id.includes('AddBlockButton') ||
+                  id.includes('DeleteBlockButton') ||
+                  id.includes('DuplicateBlockDialog') ||
+                  id.includes('BlockRow') ||
+                  id.includes('BlockValidator') ||
+                  id.includes('BlockPropertyPanel')) {
+                return 'editor-components';
+              }
+              
+              // AI/Advanced blocks (lazy, uso esporádico) ~30KB
+              if (id.includes('/ai/') ||
+                  id.includes('FashionAIGeneratorBlock') ||
+                  id.includes('StyleCardsGridBlock') ||
+                  id.includes('StyleCardBlock')) {
+                return 'blocks-ai';
+              }
+              
+              // Quiz-specific blocks (lazy) ~40KB  
+              if (id.includes('QuizIntroBlock') ||
+                  id.includes('QuizResultsBlock') ||
+                  id.includes('QuizBenefitsBlock') ||
+                  id.includes('QuizMultipleChoiceBlock') ||
+                  id.includes('StrategicQuestionBlock') ||
+                  id.includes('QuizTransitionBlock') ||
+                  id.includes('StartButtonBlock')) {
+                return 'blocks-quiz';
+              }
+              
+              // Outros blocks (fallback)
               return 'blocks-misc';
             }
 
