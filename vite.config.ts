@@ -205,27 +205,18 @@ export default defineConfig(({ mode }) => {
               return 'blocks-misc';
             }
 
-            // 🎯 EDITOR: Split por arquivo específico (melhor granularidade)
-            if (id.includes('/editor/')) {
-              // Editor Core - rotas e layout básico (~20KB)
-              if (id.includes('editor/index.tsx') || 
-                  id.includes('EditorHeader') ||
-                  id.includes('FunnelHeader')) {
-                return 'editor-core';
+            // 🎯 EDITOR: Split detalhado (381KB → múltiplos chunks específicos)
+            if (id.includes('/editor/') || id.includes('/pages/editor/')) {
+              // 🚀 FASE 3B.1: Detectar lazy components PRIMEIRO
+              
+              // Painel de Propriedades (lazy ~70KB)
+              if (id.includes('EditorPropertiesPanel') || 
+                  id.includes('/editor/components/EditorPropertiesPanel')) {
+                return 'editor-advanced';
               }
               
-              // Editor Principal - FORÇAR para app-editor apenas arquivos principais
-              // UniversalVisualEditor, ModernUnifiedEditor, QuizEditorIntegratedPage
-              if (id.includes('UniversalVisualEditor') || 
-                  id.includes('ModernUnifiedEditor') ||
-                  id.includes('QuizEditorIntegratedPage')) {
-                return 'app-editor';
-              }
-              
-              // Editor Avançado - componentes DnD e properties (lazy ~150KB)
-              // NOTA: Precisa ser checado ANTES de app-editor para interceptar
+              // Componentes DnD e advanced (lazy ~100KB)
               if (id.includes('DragDropSystem') ||
-                  id.includes('PropertiesPanel') ||
                   id.includes('ComponentsSidebar') ||
                   id.includes('DynamicPropertiesForm') ||
                   id.includes('BuilderSystemPanel') ||
@@ -234,7 +225,35 @@ export default defineConfig(({ mode }) => {
                 return 'editor-advanced';
               }
               
-              // Fallback para outros componentes de editor
+              // Headers e navegação (~10KB)
+              if (id.includes('EditorHeader') ||
+                  id.includes('FunnelHeader') ||
+                  id.includes('editor/index.tsx')) {
+                return 'editor-core';
+              }
+              
+              // Páginas principais do editor (NÃO lazy)
+              if (id.includes('UniversalVisualEditor.tsx') || 
+                  id.includes('ModernUnifiedEditor.tsx') ||
+                  id.includes('QuizEditorIntegratedPage.tsx')) {
+                return 'app-editor';
+              }
+              
+              // Componentes helper do editor (Canvas, Toolbar, etc)
+              if (id.includes('/editor/components/') ||
+                  id.includes('/editor/helpers/') ||
+                  id.includes('/editor/hooks/')) {
+                return 'editor-components';
+              }
+              
+              // Tipos e utils do editor
+              if (id.includes('/editor/types') ||
+                  id.includes('/editor/utils')) {
+                return 'editor-core';
+              }
+              
+              // Fallback: outros arquivos de editor
+              console.warn(`⚠️ Editor file não categorizado: ${id}`);
               return 'editor-misc';
             }
 
