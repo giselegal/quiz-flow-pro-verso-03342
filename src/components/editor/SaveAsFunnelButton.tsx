@@ -54,16 +54,17 @@ export const SaveAsFunnelButton: React.FC = () => {
       const { data: userData } = await supabase.auth.getUser();
       const userId = userData?.user?.id || 'anonymous';
 
+      // Inserir funil com payload mínimo para compatibilidade entre esquemas
       const { data: funnel, error: funnelError } = await supabase
         .from('funnels')
         .insert({
           name: name.trim(),
           user_id: userId,
-          type: 'quiz',
-          status: 'draft',
-          category: 'quiz',
-          context: 'editor',
-          is_active: true,
+          // Campos opcionais (evitar falhas quando não existem no schema atual)
+          // type: 'quiz',
+          // status: 'draft',
+          // context: 'editor',
+          // is_active: true,
         })
         .select()
         .single();
@@ -74,14 +75,16 @@ export const SaveAsFunnelButton: React.FC = () => {
 
       // 2. Salvar todos os steps como component_instances (schema alinhado)
       const allBlocks = editor.state.stepBlocks || {};
-      const componentInstances: any[] = [];
+      const componentInstancesNew: any[] = [];
+      const componentInstancesLegacy: any[] = [];
 
       for (const [stepKey, blocks] of Object.entries(allBlocks)) {
         const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10);
 
         for (let i = 0; i < blocks.length; i++) {
           const block = blocks[i];
-          componentInstances.push({
+          // Novo schema (preferido)
+          componentInstancesNew.push({
             funnel_id: funnel.id,
             step_number: stepNumber,
             order_index: i + 1,
@@ -95,16 +98,38 @@ export const SaveAsFunnelButton: React.FC = () => {
             is_active: true,
             created_by: userId,
           });
+
+          // Schema legado (fallback)
+          componentInstancesLegacy.push({
+            funnel_id: funnel.id,
+            component_type_id: null,
+            config: {
+              ...(block.properties || {}),
+              blockType: String(block.type),
+              stepNumber,
+              ...(block.content ? { __content: block.content } : {}),
+            },
+            position: i,
+            is_active: true,
+            created_by: userId,
+          });
         }
       }
 
-      if (componentInstances.length > 0) {
-        const { error: instancesError } = await supabase
+      if (componentInstancesNew.length > 0) {
+        // Tenta primeiro com o schema novo; em caso de erro, cai para o legado
+        const { error: instancesErrorNew } = await supabase
           .from('component_instances')
-          .insert(componentInstances);
+          .insert(componentInstancesNew);
 
-        if (instancesError) {
-          console.warn('⚠️ Erro ao salvar component_instances:', instancesError);
+        if (instancesErrorNew) {
+          console.warn('⚠️ Insert (novo schema) falhou, tentando fallback legado...', instancesErrorNew);
+          const { error: instancesErrorLegacy } = await supabase
+            .from('component_instances')
+            .insert(componentInstancesLegacy);
+          if (instancesErrorLegacy) {
+            console.warn('⚠️ Insert (schema legado) também falhou:', instancesErrorLegacy);
+          }
         }
       }
 
