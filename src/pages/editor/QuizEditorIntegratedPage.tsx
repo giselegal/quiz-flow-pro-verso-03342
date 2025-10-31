@@ -20,8 +20,8 @@ import {
 
 // Providers necessários
 import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
-import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
-import { UnifiedCRUDProvider } from '@/contexts';
+import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // Components especializados
 import QuizEditorMode from '@/components/editor/modes/QuizEditorMode';
@@ -272,22 +272,29 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 // Wrapped component with providers
 const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props) => {
   return (
-    <UnifiedCRUDProvider>
-      <FunnelMasterProvider>
-        <EditorProvider>
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-screen">
-              <div className="text-center">
-                <div className="w-12 h-12 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-muted-foreground">Carregando Quiz Editor...</p>
-              </div>
+    <UnifiedAppProvider
+      context={FunnelContext.EDITOR}
+      autoLoad={true}
+      debugMode={false}
+      initialFeatures={{
+        enableCache: true,
+        enableAnalytics: true,
+        enableAdvancedEditor: true,
+      }}
+    >
+      <EditorProvider enableSupabase={true} funnelId={props.funnelId}>
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-muted-foreground">Carregando Quiz Editor...</p>
             </div>
-          }>
-            <QuizEditorIntegratedPageCore {...props} />
-          </Suspense>
-        </EditorProvider>
-      </FunnelMasterProvider>
-    </UnifiedCRUDProvider>
+          </div>
+        }>
+          <QuizEditorIntegratedPageCore {...props} />
+        </Suspense>
+      </EditorProvider>
+    </UnifiedAppProvider>
   );
 };
 

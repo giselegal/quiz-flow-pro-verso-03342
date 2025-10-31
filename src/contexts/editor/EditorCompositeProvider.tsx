@@ -1,28 +1,29 @@
 /**
- * 🎯 EDITOR COMPOSITE PROVIDER (Sprint 1 - TK-ED-02) ✅ FASE 2.3 ATUALIZADO
+ * 🎯 EDITOR COMPOSITE PROVIDER (Sprint 1 - TK-ED-02) ✅ FASE 3.0 MIGRADO
  * 
  * Consolida múltiplos providers em uma hierarquia otimizada de 2 níveis
  * 
  * ANTES (5 níveis):
- * - FunnelMasterProvider
+ * - FunnelMasterProvider ❌ DEPRECATED
  * - EditorProvider  
  * - LegacyCompatibilityWrapper ❌ REMOVIDO
  * - UnifiedCRUDProvider (implícito)
  * - EditorQuizProvider (implícito)
  * 
  * DEPOIS (2 níveis) ✅:
- * - EditorCompositeProvider (dados + lógica)
- * - EditorUIProvider (UI state)
+ * - UnifiedAppProvider (auth + theme + CRUD consolidado)
+ * - EditorProvider (UI state)
  * 
  * Benefícios:
  * - 70% redução em re-renders
  * - 60% redução em overhead de contexto
  * - API mais limpa e previsível
- * - ✅ FASE 2.3: Removido LegacyCompatibilityWrapper (substituído por hook)
+ * - ✅ FASE 3.0: Migrado para UnifiedAppProvider (remove FunnelMasterProvider)
  */
 
 import React, { ReactNode, useMemo } from 'react';
-import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
+import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
 
 export interface EditorCompositeProviderProps {
@@ -37,9 +38,9 @@ export interface EditorCompositeProviderProps {
  * EditorCompositeProvider
  * 
  * Provider consolidado que gerencia:
- * - State de funil (FunnelMasterProvider)
+ * - State global (UnifiedAppProvider - auth, theme, CRUD)
  * - State de editor (EditorProvider)
- * - ✅ FASE 2.3: Compatibilidade legada via hook (useLegacyEditor)
+ * - ✅ FASE 3.0: Compatibilidade legada via hook (useLegacyEditor)
  * 
  * Uso:
  * ```tsx
@@ -64,10 +65,15 @@ export const EditorCompositeProvider: React.FC<EditorCompositeProviderProps> = (
     }), [funnelId, enableSupabase, storageKey, debugMode]);
 
     return (
-        <FunnelMasterProvider
-            funnelId={providerConfig.funnelId}
+        <UnifiedAppProvider
+            context={FunnelContext.EDITOR}
+            autoLoad={true}
             debugMode={providerConfig.debugMode}
-            enableCache={true}
+            initialFeatures={{
+                enableCache: true,
+                enableAnalytics: true,
+                enableAdvancedEditor: true,
+            }}
         >
             <EditorProvider
                 enableSupabase={providerConfig.enableSupabase}
@@ -76,7 +82,7 @@ export const EditorCompositeProvider: React.FC<EditorCompositeProviderProps> = (
             >
                 {children}
             </EditorProvider>
-        </FunnelMasterProvider>
+        </UnifiedAppProvider>
     );
 };
 
