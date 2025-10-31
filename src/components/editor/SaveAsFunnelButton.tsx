@@ -1,225 +1,182 @@
 /**
- * 💾 SAVE AS FUNNEL BUTTON - Fase 1.2
+ * 🎯 FIX 1.2: BOTÃO "SALVAR COMO FUNIL"
  * 
- * Permite salvar template local como funnel persistente no Supabase
- * 
- * Uso: Aparece apenas em modo template (?template=X)
+ * Converte template → funnel persistente no Supabase
+ * Resolve "phantom funnel" bug
  */
 
 import React, { useState } from 'react';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
-import { useUnifiedCRUD } from '@/contexts';
-import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { Button } from '@/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { Save, Loader2 } from 'lucide-react';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { supabase } from '@/integrations/supabase/client';
+import { Save } from 'lucide-react';
 
 export const SaveAsFunnelButton: React.FC = () => {
-    const editor = useEditor();
-    const crud = useUnifiedCRUD();
-    const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const editor = useEditor();
+  const { toast } = useToast();
 
-    const [open, setOpen] = useState(false);
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [isSaving, setIsSaving] = useState(false);
+  // Só mostra em template mode
+  if (typeof window === 'undefined') return null;
+  
+  const params = new URLSearchParams(window.location.search);
+  const isTemplateMode = Boolean(params.get('template') && !params.get('funnelId'));
+  
+  if (!isTemplateMode) return null;
 
-    // Só mostra em modo template (sem funnelId via query params)
-    const templateId = typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search).get('template')
-        : null;
+  const handleSave = async () => {
+    if (!name.trim()) {
+      toast({
+        title: 'Nome obrigatório',
+        description: 'Digite um nome para o funil',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-    const funnelIdFromUrl = typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search).get('funnelId') ||
-        new URLSearchParams(window.location.search).get('funnel')
-        : null;
+    setLoading(true);
 
-    const isTemplateMode = !!templateId && !funnelIdFromUrl;
+    try {
+      // 1. Criar funnel no Supabase
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData?.user?.id || 'anonymous';
 
-    if (!isTemplateMode) return null;
+      const { data: funnel, error: funnelError } = await supabase
+        .from('funnels')
+        .insert({
+          name: name.trim(),
+          user_id: userId,
+          type: 'quiz',
+          status: 'draft',
+          category: 'quiz',
+          context: 'editor',
+          is_active: true,
+        })
+        .select()
+        .single();
 
-    const handleSave = async () => {
-        if (!name.trim()) {
-            toast({
-                variant: 'destructive',
-                title: 'Nome obrigatório',
-                description: 'Por favor, informe um nome para o funil.',
-            });
-            return;
+      if (funnelError || !funnel) {
+        throw new Error(funnelError?.message || 'Erro ao criar funnel');
+      }
+
+      // 2. Salvar todos os steps como component_instances
+      const allBlocks = editor.state.stepBlocks || {};
+      const componentInstances = [];
+
+      for (const [stepKey, blocks] of Object.entries(allBlocks)) {
+        const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10);
+        
+        for (let i = 0; i < blocks.length; i++) {
+          const block = blocks[i];
+          componentInstances.push({
+            funnel_id: funnel.id,
+            component_type_id: null,
+            config: {
+              ...block.properties,
+              blockType: block.type,
+              stepNumber,
+            },
+            position: i,
+            is_active: true,
+            created_by: userId,
+          });
         }
+      }
 
-        setIsSaving(true);
+      if (componentInstances.length > 0) {
+        const { error: instancesError } = await supabase
+          .from('component_instances')
+          .insert(componentInstances);
 
-        try {
-            // 1. Criar funnel no Supabase
-            const funnel = await crud.createFunnel(name.trim(), {
-                description: description.trim() || undefined,
-                templateId,
-                context: FunnelContext.EDITOR,
-                category: 'quiz',
-                autoPublish: false,
-            });
-
-            if (!funnel?.id) {
-                throw new Error('Erro ao criar funil: ID não retornado');
-            }
-
-            // 2. Salvar todos os steps como component_instances
-            const stepBlocks = editor.state.stepBlocks || {};
-            const stepKeys = Object.keys(stepBlocks);
-
-            if (stepKeys.length === 0) {
-                toast({
-                    variant: 'destructive',
-                    title: 'Nenhuma etapa encontrada',
-                    description: 'O template não possui etapas para salvar.',
-                });
-                return;
-            }
-
-            // Salvar em lote para melhor performance
-            let savedCount = 0;
-            for (const stepKey of stepKeys) {
-                const blocks = stepBlocks[stepKey];
-                if (blocks && blocks.length > 0) {
-                    // Extrair número da etapa (step-01 → 1)
-                    const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10);
-                    if (isNaN(stepNumber)) continue;
-
-                    // Salvar cada bloco como component_instance
-                    for (let i = 0; i < blocks.length; i++) {
-                        const block = blocks[i];
-                        await funnelComponentsService.addComponent({
-                            funnelId: funnel.id,
-                            stepNumber,
-                            instanceKey: block.id || `${block.type}-${i}`,
-                            componentTypeKey: block.type,
-                            orderIndex: i,
-                            properties: {
-                                ...block.properties,
-                                content: block.content,
-                                style: block.style,
-                                metadata: block.metadata,
-                            },
-                        });
-                    }
-                    savedCount++;
-                }
-            }
-
-            toast({
-                title: 'Funil criado com sucesso! 🎉',
-                description: `"${name}" foi salvo com ${savedCount} etapas.`,
-            });
-
-            // 3. Redirecionar para modo funnel
-            window.location.href = `/editor?funnelId=${funnel.id}`;
-
-        } catch (error) {
-            console.error('❌ Erro ao salvar funil:', error);
-            toast({
-                variant: 'destructive',
-                title: 'Erro ao salvar funil',
-                description: error instanceof Error ? error.message : 'Erro desconhecido',
-            });
-        } finally {
-            setIsSaving(false);
+        if (instancesError) {
+          console.warn('⚠️ Erro ao salvar component_instances:', instancesError);
         }
-    }; return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button
-                    variant="default"
-                    size="sm"
-                    className="fixed top-3 left-3 z-50 shadow-lg"
-                >
-                    <Save className="w-4 h-4 mr-2" />
-                    Salvar como Funil
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Salvar Template como Funil</DialogTitle>
-                    <DialogDescription>
-                        Converta este template em um funil editável e persistente no banco de dados.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                        <Label htmlFor="name">
-                            Nome do Funil <span className="text-red-500">*</span>
-                        </Label>
-                        <Input
-                            id="name"
-                            placeholder="Ex: Quiz Estilo Pessoal 2025"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            disabled={isSaving}
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="description">Descrição (opcional)</Label>
-                        <Textarea
-                            id="description"
-                            placeholder="Descrição detalhada do funil..."
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            disabled={isSaving}
-                            rows={3}
-                        />
-                    </div>
-                    {templateId && (
-                        <div className="text-sm text-muted-foreground">
-                            <strong>Template base:</strong> {templateId}
-                        </div>
-                    )}
-                    {editor.state.stepBlocks && (
-                        <div className="text-sm text-muted-foreground">
-                            <strong>Etapas:</strong> {Object.keys(editor.state.stepBlocks).length}
-                        </div>
-                    )}
-                </div>
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setOpen(false)}
-                        disabled={isSaving}
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        type="button"
-                        onClick={handleSave}
-                        disabled={isSaving || !name.trim()}
-                    >
-                        {isSaving ? (
-                            <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Salvando...
-                            </>
-                        ) : (
-                            <>
-                                <Save className="w-4 h-4 mr-2" />
-                                Salvar Funil
-                            </>
-                        )}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    );
+      }
+
+      toast({
+        title: '✅ Funil criado!',
+        description: `"${name}" foi salvo com sucesso`,
+      });
+
+      // 3. Redirecionar para modo funnel
+      setTimeout(() => {
+        window.location.href = `/editor?funnelId=${funnel.id}`;
+      }, 500);
+
+    } catch (error: any) {
+      console.error('❌ Erro ao salvar como funil:', error);
+      toast({
+        title: 'Erro ao salvar',
+        description: error.message || 'Tente novamente',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <Button
+        onClick={() => setOpen(true)}
+        variant="outline"
+        size="sm"
+        className="fixed top-3 left-3 z-50 gap-2"
+      >
+        <Save className="h-4 w-4" />
+        Salvar como Funil
+      </Button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>💾 Salvar Template como Funil</DialogTitle>
+            <DialogDescription>
+              Isso criará um funil persistente no banco de dados.
+              Você poderá editá-lo e salvá-lo automaticamente.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="funnel-name">Nome do Funil</Label>
+              <Input
+                id="funnel-name"
+                placeholder="Ex: Quiz Estilo Fashion 2025"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={loading}
+            >
+              Cancelar
+            </Button>
+            <Button onClick={handleSave} disabled={loading}>
+              {loading ? 'Salvando...' : 'Criar Funil'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };

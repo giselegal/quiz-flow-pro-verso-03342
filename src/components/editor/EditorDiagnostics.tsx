@@ -1,183 +1,148 @@
 /**
- * 🔍 EDITOR DIAGNOSTICS - Fase 1.5
+ * 🔍 FIX 1.5: DIAGNÓSTICO VISUAL
  * 
- * Painel de diagnóstico visual para debug do editor (DEV only)
- * 
- * Mostra:
- * - Modo atual (template vs funnel)
- * - Status Supabase (local vs database)
- * - Etapas carregadas e suas origens
- * - Parâmetros da URL
- * 
- * Uso: Sempre visível em DEV mode (fixed bottom-right)
+ * Painel debug para observabilidade do editor (DEV only)
  */
 
 import React, { useState } from 'react';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Bug, ChevronDown, ChevronUp, Database, FileJson } from 'lucide-react';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { Bug, X } from 'lucide-react';
 
 export const EditorDiagnostics: React.FC = () => {
-    const editor = useEditor({ optional: true });
-    const [isExpanded, setIsExpanded] = useState(false);
+  const [show, setShow] = useState(false);
+  const editor = useEditor();
 
-    // Apenas em modo DEV
-    if (import.meta.env.PROD) return null;
+  // Só em desenvolvimento
+  if (!import.meta.env.DEV) return null;
 
-    // URL params
-    const params = typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search)
-        : new URLSearchParams();
+  const stepBlocks = editor.state.stepBlocks || {};
+  const stepCount = Object.keys(stepBlocks).length;
+  const totalBlocks = Object.values(stepBlocks).reduce((sum, blocks) => sum + blocks.length, 0);
 
-    const templateId = params.get('template') || params.get('id');
-    const funnelId = params.get('funnelId') || params.get('funnel');
-    const mode = templateId ? 'template' : funnelId ? 'funnel' : 'unknown';
+  // Detectar modo
+  let mode = 'unknown';
+  let modeLabel = '❓ Desconhecido';
+  let modeColor = 'bg-gray-500';
 
-    // Editor state
-    const stepBlocks = editor?.state.stepBlocks || {};
-    const stepSources = editor?.state.stepSources || {};
-    const databaseMode = editor?.state.databaseMode || 'local';
-    const isSupabaseEnabled = editor?.state.isSupabaseEnabled ?? false;
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const hasTemplate = Boolean(params.get('template'));
+    const hasFunnel = Boolean(params.get('funnelId'));
 
-    const stepKeys = Object.keys(stepBlocks);
-    const totalBlocks = stepKeys.reduce((sum, key) => sum + (stepBlocks[key]?.length || 0), 0);
+    if (hasTemplate && !hasFunnel) {
+      mode = 'template';
+      modeLabel = '🎨 Template (Local)';
+      modeColor = 'bg-blue-500';
+    } else if (hasFunnel) {
+      mode = 'funnel';
+      modeLabel = '💾 Funnel (Supabase)';
+      modeColor = 'bg-green-500';
+    }
+  }
 
-    return (
-        <Card className="fixed bottom-4 right-4 z-[9999] w-80 shadow-xl border-2 border-blue-500 bg-white/95 backdrop-blur">
-            {/* Header */}
-            <div
-                className="flex items-center justify-between p-3 border-b cursor-pointer hover:bg-gray-50"
-                onClick={() => setIsExpanded(!isExpanded)}
+  const supabaseStatus = editor.state.databaseMode === 'supabase' ? '✅ Ativo' : '❌ Local';
+
+  return (
+    <>
+      <Button
+        onClick={() => setShow(!show)}
+        size="sm"
+        variant="outline"
+        className="fixed bottom-4 right-4 z-50 gap-2 shadow-lg"
+      >
+        <Bug className="h-4 w-4" />
+        Diagnóstico
+      </Button>
+
+      {show && (
+        <Card className="fixed bottom-16 right-4 z-50 w-96 max-h-[600px] shadow-xl">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-base">🔍 Editor Diagnostics</CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShow(false)}
+              className="h-8 w-8 p-0"
             >
-                <div className="flex items-center gap-2">
-                    <Bug className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm font-semibold">Editor Debug</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Badge
-                        variant={mode === 'template' ? 'secondary' : mode === 'funnel' ? 'default' : 'outline'}
-                        className="text-xs"
-                    >
-                        {mode}
-                    </Badge>
-                    {isExpanded ? (
-                        <ChevronUp className="w-4 h-4 text-gray-500" />
-                    ) : (
-                        <ChevronDown className="w-4 h-4 text-gray-500" />
-                    )}
-                </div>
+              <X className="h-4 w-4" />
+            </Button>
+          </CardHeader>
+          
+          <CardContent className="space-y-3 text-xs overflow-auto max-h-[500px]">
+            {/* Modo */}
+            <div className="space-y-1">
+              <div className="font-semibold">Modo de Operação</div>
+              <Badge className={`${modeColor} text-white`}>
+                {modeLabel}
+              </Badge>
             </div>
 
-            {/* Content (expandable) */}
-            {isExpanded && (
-                <div className="p-3 space-y-3 text-xs">
-                    {/* Mode Section */}
-                    <div>
-                        <div className="font-semibold mb-1 flex items-center gap-1">
-                            {mode === 'template' ? (
-                                <>
-                                    <FileJson className="w-3 h-3" />
-                                    Modo Template
-                                </>
-                            ) : (
-                                <>
-                                    <Database className="w-3 h-3" />
-                                    Modo Funnel
-                                </>
-                            )}
-                        </div>
-                        <div className="space-y-1 text-gray-600">
-                            {templateId && (
-                                <div className="flex justify-between">
-                                    <span>Template ID:</span>
-                                    <code className="text-blue-600">{templateId}</code>
-                                </div>
-                            )}
-                            {funnelId && (
-                                <div className="flex justify-between">
-                                    <span>Funnel ID:</span>
-                                    <code className="text-green-600">{funnelId}</code>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+            {/* Supabase */}
+            <div className="space-y-1">
+              <div className="font-semibold">Supabase Status</div>
+              <div className="font-mono">{supabaseStatus}</div>
+            </div>
 
-                    {/* Database Status */}
-                    <div className="border-t pt-2">
-                        <div className="font-semibold mb-1">Status Supabase</div>
-                        <div className="space-y-1 text-gray-600">
-                            <div className="flex justify-between">
-                                <span>Modo:</span>
-                                <Badge
-                                    variant={databaseMode === 'supabase' ? 'default' : 'secondary'}
-                                    className="text-xs"
-                                >
-                                    {databaseMode}
-                                </Badge>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Habilitado:</span>
-                                <Badge
-                                    variant={isSupabaseEnabled ? 'default' : 'secondary'}
-                                    className="text-xs"
-                                >
-                                    {isSupabaseEnabled ? 'Sim' : 'Não'}
-                                </Badge>
-                            </div>
-                        </div>
-                    </div>
+            {/* Database Mode */}
+            <div className="space-y-1">
+              <div className="font-semibold">Database Mode</div>
+              <div className="font-mono">{editor.state.databaseMode || 'local'}</div>
+            </div>
 
-                    {/* Steps Info */}
-                    <div className="border-t pt-2">
-                        <div className="font-semibold mb-1">Etapas Carregadas</div>
-                        <div className="space-y-1 text-gray-600">
-                            <div className="flex justify-between">
-                                <span>Total:</span>
-                                <span className="font-mono">{stepKeys.length} steps</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Blocos:</span>
-                                <span className="font-mono">{totalBlocks} blocks</span>
-                            </div>
-                        </div>
-                    </div>
+            {/* Steps Carregados */}
+            <div className="space-y-1">
+              <div className="font-semibold">Steps Carregados</div>
+              <div className="font-mono">
+                {stepCount} steps / {totalBlocks} blocos
+              </div>
+            </div>
 
-                    {/* Step Sources */}
-                    {Object.keys(stepSources).length > 0 && (
-                        <div className="border-t pt-2">
-                            <div className="font-semibold mb-1">Fontes por Etapa</div>
-                            <div className="max-h-32 overflow-y-auto space-y-1">
-                                {stepKeys.slice(0, 5).map(stepKey => {
-                                    const source = stepSources[stepKey];
-                                    const blockCount = stepBlocks[stepKey]?.length || 0;
-                                    return (
-                                        <div key={stepKey} className="flex justify-between text-gray-600">
-                                            <span className="font-mono text-[10px]">{stepKey}</span>
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-mono text-[10px]">{blockCount}x</span>
-                                                <Badge variant="outline" className="text-[9px] px-1 py-0">
-                                                    {source || 'unknown'}
-                                                </Badge>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                                {stepKeys.length > 5 && (
-                                    <div className="text-gray-400 text-center pt-1">
-                                        +{stepKeys.length - 5} mais...
-                                    </div>
-                                )}
-                            </div>
+            {/* Fontes por Step */}
+            <div className="space-y-1">
+              <div className="font-semibold">Fontes de Dados</div>
+              <div className="space-y-1 max-h-40 overflow-auto">
+                {Object.keys(stepBlocks).length > 0 ? (
+                  Object.keys(stepBlocks)
+                    .sort()
+                    .map((stepKey) => {
+                      const blocks = stepBlocks[stepKey];
+                      
+                      return (
+                        <div key={stepKey} className="flex items-center justify-between py-1 border-b">
+                          <span className="font-mono text-xs">{stepKey}</span>
+                          <Badge variant="outline" className="text-xs">
+                            {blocks.length} blocos
+                          </Badge>
                         </div>
-                    )}
+                      );
+                    })
+                ) : (
+                  <div className="text-muted-foreground italic">
+                    Nenhum step carregado
+                  </div>
+                )}
+              </div>
+            </div>
 
-                    {/* Footer */}
-                    <div className="border-t pt-2 text-[10px] text-gray-400 text-center">
-                        🔍 Diagnóstico ativo apenas em DEV
-                    </div>
-                </div>
-            )}
+            {/* Estado do Editor */}
+            <div className="space-y-1">
+              <div className="font-semibold">Estado</div>
+              <div className="space-y-0.5 font-mono text-xs">
+                <div>Loading: {editor.state.isLoading ? '⏳' : '✅'}</div>
+              </div>
+            </div>
+
+            {/* Info Adicional */}
+            <div className="pt-2 border-t text-muted-foreground text-xs">
+              <div>Use este painel para debug rápido</div>
+              <div className="mt-1">💡 Disponível apenas em DEV</div>
+            </div>
+          </CardContent>
         </Card>
-    );
+      )}
+    </>
+  );
 };
