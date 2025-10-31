@@ -389,6 +389,50 @@ export default defineConfig(({ mode }) => {
                 return 'app-editor';
               }
               
+              // Quiz Editor Components (lazy quando não em quiz editor) ~80KB
+              if (id.includes('/quiz/components/') ||
+                  id.includes('StepNavigator') ||
+                  id.includes('ComponentLibraryPanel') ||
+                  id.includes('CanvasArea') ||
+                  id.includes('PropertiesPanel') ||
+                  id.includes('ThemeEditorPanel') ||
+                  id.includes('StyleResultCard') ||
+                  id.includes('OfferMap') ||
+                  id.includes('DuplicateBlockDialog') ||
+                  id.includes('UnsavedChangesIndicator') ||
+                  id.includes('DirtyBadge') ||
+                  id.includes('ImageUploadField') ||
+                  id.includes('AdvancedArrayEditor')) {
+                return 'editor-quiz';
+              }
+              
+              // Quiz Preview (lazy) ~50KB
+              if (id.includes('QuizProductionPreview') ||
+                  id.includes('ModularPreviewContainer')) {
+                return 'app-runtime';
+              }
+              
+              // Editor UI Components (lazy) ~30KB
+              if (id.includes('SaveAsFunnelButton') ||
+                  id.includes('EditorDiagnostics') ||
+                  id.includes('PerformanceMetrics') ||
+                  id.includes('SaveStatusIndicator') ||
+                  id.includes('SelectableBlock')) {
+                return 'editor-ui';
+              }
+              
+              // Editor Schema/Validation (lazy) ~20KB
+              if (id.includes('/quiz/schema/') ||
+                  id.includes('blockSchema')) {
+                return 'editor-validation';
+              }
+              
+              // Editor Auto-save hooks (lazy) ~10KB
+              if (id.includes('useAutoSaveWithDebounce') ||
+                  id.includes('/hooks/editor/')) {
+                return 'editor-hooks';
+              }
+              
               // Componentes helper do editor (Canvas, Toolbar, etc)
               if (id.includes('/editor/components/') ||
                   id.includes('/editor/helpers/')) {
