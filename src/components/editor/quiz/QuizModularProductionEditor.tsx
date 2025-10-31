@@ -142,6 +142,7 @@ import { validateEditorFunnelSteps } from '@/services/canonical/EditorFunnelVali
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { useUnifiedCRUD } from '@/contexts';
 import { createLogger, appLogger } from '@/utils/logger';
+import { performanceProfiler } from '@/utils/performanceProfiler';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -448,6 +449,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     funnelId: initialFunnelId,
 }) => {
     logModule.debug('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
+
+    // 🎯 Performance tracking
+    if (import.meta.env.DEV) {
+        performanceProfiler.trackRender('QuizModularProductionEditor', { funnelId: initialFunnelId });
+    }
 
     // 🎯 FASE 5: Cache Service para otimização
     // Cache unificado disponível para futuras otimizações locais do editor
@@ -1463,6 +1469,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Reordenar / mover blocos (nested)
     const handleDragEnd = useCallback((event: any) => {
+        performanceProfiler.start('handleDragEnd', 'operation');
+
         const { active, over } = event;
         const curStepId = editorCtx ? effectiveSelectedStepId : selectedStepId;
         if (!curStepId) { setActiveId(null); return; }
@@ -1543,6 +1551,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             reorderOrMove(curStepId, active.id, targetContainerId, overId);
         }
         setActiveId(null); setHoverContainerId(null);
+
+        performanceProfiler.end('handleDragEnd');
     }, [editorCtx, effectiveSelectedStepId, selectedStepId, steps, setSelectedBlockIdUnified, pushHistory, reorderOrMove]);
 
     const handleUndo = useCallback(() => {
@@ -3120,6 +3130,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Salvar
     const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
     const handleSave = useCallback(async () => {
+        performanceProfiler.start('handleSave', 'operation');
         setIsSaving(true);
         try {
             const { steps: filledSteps, adjusted } = autoFillNextSteps(steps);
@@ -3180,6 +3191,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             }
         } finally {
             setIsSaving(false);
+            performanceProfiler.end('handleSave');
         }
     }, [steps, funnelId, toast]);
 
