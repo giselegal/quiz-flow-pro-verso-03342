@@ -6,6 +6,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TemplateService } from '@/services/canonical/TemplateService';
+import { STEP_ORDER } from '@/data/quizStepsLazy';
 
 describe('Editor Performance - Step Loading', () => {
     it('should load TemplateService.getInstance().getAllStepsSync() data structure quickly', () => {
@@ -27,7 +28,7 @@ describe('Editor Performance - Step Loading', () => {
     it('should build enriched blocks structure efficiently', () => {
         const start = performance.now();
 
-        const enrichedSteps = STEP_ORDER.map((stepId, idx) => {
+        const enrichedSteps = STEP_ORDER.map((stepId: string, idx: number) => {
             const quizStep: any = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
 
             if (!quizStep) {
@@ -86,10 +87,10 @@ describe('Editor Performance - Step Loading', () => {
         console.log(`Total time: ${totalDuration.toFixed(2)}ms`);
         console.log(`Average per step: ${(totalDuration / 21).toFixed(2)}ms`);
 
-        const slowSteps = enrichedSteps.filter(s => s.time > 1);
+        const slowSteps = enrichedSteps.filter((s: any) => s.time > 1);
         if (slowSteps.length > 0) {
             console.log('\n⚠️ Slow steps (>1ms):');
-            slowSteps.forEach(s => {
+            slowSteps.forEach((s: any) => {
                 console.log(`  - ${s.stepId} (${s.type}): ${s.time.toFixed(2)}ms, ${s.blocks.length} blocks`);
             });
         }
@@ -101,7 +102,7 @@ describe('Editor Performance - Step Loading', () => {
     it('should measure JSON stringification overhead', () => {
         const start = performance.now();
 
-        const enrichedSteps = STEP_ORDER.map((stepId) => {
+        const enrichedSteps = STEP_ORDER.map((stepId: string) => {
             const quizStep: any = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
             return {
                 id: stepId,
@@ -204,10 +205,10 @@ describe('Editor Performance - Block Rendering', () => {
         const start = performance.now();
 
         const questionSteps = STEP_ORDER
-            .map(id => (TemplateService.getInstance().getAllStepsSync() as any)[id])
-            .filter(step => step?.type === 'question' || step?.type === 'strategic-question');
+            .map((id: string) => (TemplateService.getInstance().getAllStepsSync() as any)[id])
+            .filter((step: any) => step?.type === 'question' || step?.type === 'strategic-question');
 
-        const optionsCounts = questionSteps.map(step => ({
+        const optionsCounts = questionSteps.map((step: any) => ({
             id: step.id || 'unknown',
             type: step.type,
             optionsCount: step.options?.length || 0,
@@ -220,11 +221,11 @@ describe('Editor Performance - Block Rendering', () => {
         console.log(`Question steps: ${questionSteps.length}`);
         console.log(`Time to analyze: ${(end - start).toFixed(2)}ms`);
 
-        optionsCounts.forEach(info => {
+        optionsCounts.forEach((info: any) => {
             console.log(`  ${info.type}: ${info.optionsCount} options, images: ${info.hasImages}`);
         });
 
-        const totalOptions = optionsCounts.reduce((sum, info) => sum + info.optionsCount, 0);
+        const totalOptions = optionsCounts.reduce((sum: number, info: any) => sum + info.optionsCount, 0);
         const avgOptions = totalOptions / optionsCounts.length;
 
         console.log(`\nTotal options across all questions: ${totalOptions}`);
@@ -242,7 +243,7 @@ describe('Editor Performance - Block Rendering', () => {
             totalBlocks: 0,
         };
 
-        STEP_ORDER.forEach(stepId => {
+        STEP_ORDER.forEach((stepId: string) => {
             const step: any = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
             if (!step) return;
 

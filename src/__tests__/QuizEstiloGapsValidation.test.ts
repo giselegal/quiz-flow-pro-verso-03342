@@ -13,6 +13,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep, QuizOptionV3 as QuizOption } from '@/types/quiz';
 import { styleMapping, type StyleId } from '@/data/styles';
+import { STEP_ORDER } from '@/data/quizStepsLazy';
 
 // Mock do editor bridge
 vi.mock('@/services/QuizEditorBridge');
@@ -200,7 +201,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
             const step = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             // Verificar que offerMap tem testimonials
-            const firstOffer = Object.values(step.offerMap || {})[0];
+            const firstOffer = Object.values(step.offerMap || {})[0] as any;
             expect(firstOffer?.testimonial).toBeDefined();
 
             // TODO: Editor precisa de componente "testimonial" com:
@@ -552,7 +553,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
             expect(step20.title).toContain('{userName}');
 
             // Verificar em todas as ofertas
-            Object.values(step21.offerMap || {}).forEach(offer => {
+            Object.values(step21.offerMap || {}).forEach((offer: any) => {
                 expect(offer.title).toContain('{userName}');
             });
         });

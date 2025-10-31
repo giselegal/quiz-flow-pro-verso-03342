@@ -16,7 +16,7 @@ describe('Layout responsivo QuestionStep', () => {
 
     it('step-2 (com imagens) utiliza classes de múltiplas colunas', async () => {
         const mockStep2 = TemplateService.getInstance().getAllStepsSync()['step-2'];
-        expect(mockStep2.options?.some(o => o.image)).toBe(true);
+        expect(mockStep2.options?.some((o: any) => o.image)).toBe(true);
 
         vi.spyOn(quizStateModule, 'useQuizState').mockImplementation(() => {
             const base = realHook('quiz-estilo-21-steps');
@@ -50,7 +50,7 @@ describe('Layout responsivo QuestionStep', () => {
     it('step-3 (somente texto) utiliza 1 coluna', async () => {
         vi.restoreAllMocks();
         const mockStep3 = TemplateService.getInstance().getAllStepsSync()['step-3'];
-        expect(mockStep3.options?.some(o => o.image)).toBe(false);
+        expect(mockStep3.options?.some((o: any) => o.image)).toBe(false);
 
         vi.spyOn(quizStateModule, 'useQuizState').mockImplementation(() => {
             const base = realHook('quiz-estilo-21-steps');

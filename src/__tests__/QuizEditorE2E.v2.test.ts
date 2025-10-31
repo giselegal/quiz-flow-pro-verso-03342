@@ -193,7 +193,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve ter todas as options com ID válido', () => {
             QUIZ_STEPS_ARRAY.forEach(step => {
                 if (step.options) {
-                    step.options.forEach(option => {
+                    step.options.forEach((option: any) => {
                         expect(option.id).toBeDefined();
                         expect(typeof option.id).toBe('string');
                         expect(option.id.length).toBeGreaterThan(0);
@@ -224,7 +224,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             expect(offerKeys.length).toBeGreaterThan(0);
 
             offerKeys.forEach(key => {
-                const offer = step21.offerMap![key];
+                const offer = step21.offerMap![key] as any;
                 expect(offer).toHaveProperty('title');
                 expect(offer).toHaveProperty('description');
                 expect(offer).toHaveProperty('buttonText');
@@ -236,7 +236,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             const step21 = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             if (step21.offerMap) {
-                Object.values(step21.offerMap).forEach(offer => {
+                Object.values(step21.offerMap).forEach((offer: any) => {
                     expect(offer.testimonial).toBeDefined();
                     expect(offer.testimonial.quote).toBeDefined();
                     expect(offer.testimonial.author).toBeDefined();
@@ -275,7 +275,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
 
                 expect(deserialized).toHaveLength(step.options!.length);
 
-                step.options!.forEach((opt, idx) => {
+                step.options!.forEach((opt: any, idx: number) => {
                     expect(deserialized[idx].id).toBe(opt.id);
                     expect(deserialized[idx].text).toBe(opt.text);
                 });

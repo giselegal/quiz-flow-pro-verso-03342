@@ -156,7 +156,8 @@ export class HybridCacheStrategy {
 
     try {
       // L1: Memory (síncrono, rápido)
-      unifiedCacheService.set(memoryStore, key, value);
+      const cache = UnifiedCacheService.getInstance();
+      cache.set(memoryStore, key, value);
       appLogger.debug(`💾 [L1 SET] ${memoryStore}:${key}`);
 
       // L2: IndexedDB (assíncrono, persistente)
@@ -190,7 +191,8 @@ export class HybridCacheStrategy {
 
     try {
       // L1
-      unifiedCacheService.delete(memoryStore, key);
+      const cache = UnifiedCacheService.getInstance();
+      cache.delete(memoryStore, key);
       appLogger.debug(`💾 [L1 DEL] ${memoryStore}:${key}`);
 
       // L2
@@ -226,11 +228,13 @@ export class HybridCacheStrategy {
 
     let warmedUp = 0;
 
+    const cache = UnifiedCacheService.getInstance();
+    
     for (const key of keys) {
       try {
         const value = await indexedDBCache.get(diskStore, key);
         if (value !== null) {
-          unifiedCacheService.set(memoryStore, key, value);
+          cache.set(memoryStore, key, value);
           warmedUp++;
         }
       } catch (error) {
@@ -262,7 +266,8 @@ export class HybridCacheStrategy {
       diskStore = 'funnels',
     } = options;
 
-    unifiedCacheService.clear(memoryStore);
+    const cache = UnifiedCacheService.getInstance();
+    cache.clear(memoryStore);
     await indexedDBCache.clear(diskStore);
     appLogger.debug(`🧹 [HybridCache] Cleared ${memoryStore} + ${diskStore}`);
   }

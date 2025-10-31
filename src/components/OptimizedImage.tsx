@@ -3,10 +3,12 @@
  * 
  * Componente React para exibir imagens otimizadas do IndexedDB
  * com loading states, fallbacks e lazy loading
+ * 
+ * @deprecated - OptimizedImageStorage foi arquivado. Este componente está desabilitado.
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useOptimizedImage } from '../services/OptimizedImageStorage';
+// import { useOptimizedImage } from '../services/OptimizedImageStorage'; // Deprecated
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -148,16 +150,21 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         }
     }, [lazy, isInView]);
 
-    // Hook para imagem otimizada
-    const { imageUrl, loading, error, reload } = useOptimizedImage(
-        shouldLoad ? src : '',
-        {
-            quality,
-            format,
-            maxWidth: width,
-            maxHeight: height,
-        },
-    );
+    // Hook para imagem otimizada (deprecated)
+    const imageUrl = shouldLoad ? src : '';
+    const loading = false;
+    const error = '';
+    const reload = () => { };
+
+    // const { imageUrl, loading, error, reload } = useOptimizedImage(
+    //     shouldLoad ? src : '',
+    //     {
+    //         quality,
+    //         format,
+    //         maxWidth: width,
+    //         maxHeight: height,
+    //     },
+    // );
 
     // Callbacks
     useEffect(() => {
