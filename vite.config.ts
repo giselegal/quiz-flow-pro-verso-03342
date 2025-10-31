@@ -111,44 +111,20 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🚀 FASE 3.2: Code Splitting Agressivo Otimizado
-          // Objetivo: app-blocks 502KB → ~150KB, app-editor 253KB → ~100KB
+          // 🚀 CODE SPLITTING SIMPLIFICADO - Evitar circular dependencies
           manualChunks: (id) => {
-            // ========== VENDOR CHUNKS ==========
+            // Apenas separar node_modules em vendor único
             if (id.includes('node_modules')) {
-              // React ecosystem (DEVE SER CARREGADO PRIMEIRO)
-              if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
-                return 'vendor-react';
-              }
-              // UI libraries - dependem de React
-              if (id.includes('@radix-ui') || id.includes('cmdk')) {
-                return 'vendor-ui';
-              }
-              // DnD
-              if (id.includes('@dnd-kit')) {
-                return 'vendor-dnd';
-              }
-              // Supabase
-              if (id.includes('@supabase') || id.includes('postgrest-js')) {
-                return 'vendor-supabase';
-              }
-              // Icons - separar lucide-react para tree shaking
-              if (id.includes('lucide-react')) {
-                return 'vendor-icons';
-              }
-              // Charts - NÃO SEPARAR (causa circular dependency)
-              // Incluir no vendor-react para garantir ordem de inicialização
-              if (id.includes('recharts') || id.includes('d3-')) {
-                return 'vendor-react';
-              }
-              // Outras libs pequenas
-              return 'vendor-misc';
+              return 'vendor';
             }
-
-            // ========== APPLICATION CHUNKS - FASE 3.2 ==========
-            
-            // 🎯 BLOCKS: Split por categoria (502KB → 5x100KB)
-            if (id.includes('/blocks/')) {
+            // Deixar Vite gerenciar o resto automaticamente
+          },
+        },
+      },
+    },
+    optimizeDeps: {
+      include: [
+        'react',
               // Core blocks (sempre carregados) ~50KB
               if (id.includes('HeaderBlock') || 
                   id.includes('TextBlock') || 
