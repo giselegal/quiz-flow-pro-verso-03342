@@ -37,13 +37,19 @@ export const SaveAsFunnelButton: React.FC = () => {
     const [description, setDescription] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
-    // Só mostra em modo template (sem funnelId)
-    const isTemplateMode = !editor.state.funnelId;
+    // Só mostra em modo template (sem funnelId via query params)
     const templateId = typeof window !== 'undefined'
         ? new URLSearchParams(window.location.search).get('template')
         : null;
 
-    if (!isTemplateMode || !templateId) return null;
+    const funnelIdFromUrl = typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('funnelId') ||
+        new URLSearchParams(window.location.search).get('funnel')
+        : null;
+
+    const isTemplateMode = !!templateId && !funnelIdFromUrl;
+
+    if (!isTemplateMode) return null;
 
     const handleSave = async () => {
         if (!name.trim()) {
@@ -102,7 +108,12 @@ export const SaveAsFunnelButton: React.FC = () => {
                             instanceKey: block.id || `${block.type}-${i}`,
                             componentTypeKey: block.type,
                             orderIndex: i,
-                            properties: block.props || {},
+                            properties: {
+                                ...block.properties,
+                                content: block.content,
+                                style: block.style,
+                                metadata: block.metadata,
+                            },
                         });
                     }
                     savedCount++;
@@ -127,9 +138,7 @@ export const SaveAsFunnelButton: React.FC = () => {
         } finally {
             setIsSaving(false);
         }
-    };
-
-    return (
+    }; return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button
