@@ -2,24 +2,30 @@
  * Editor Components Index
  * Exportações centralizadas dos componentes do editor
  * 
- * 🎯 FASE 4 - SISTEMAS UNIFICADOS:
- * ✅ OptimizedEditorProvider (novo sistema principal)
+ * 🎯 FASE 5 - ARQUITETURA LIMPA (DEPRECATED REMOVIDO):
+ * ✅ EditorProviderUnified (único provider recomendado)
  * ✅ useEditor unificado (@/hooks/useUnifiedEditor)
- * ✅ Compatibilidade com legacy providers
+ * ❌ OptimizedEditorProvider - REMOVIDO (usar EditorProviderUnified)
+ * ❌ PureBuilderProvider - REMOVIDO (usar EditorProviderUnified)
  */
 
 // ============================================================================
-// FASE 4 - PROVIDERS OTIMIZADOS
+// FASE 5 - PROVIDER ÚNICO CANÔNICO
 // ============================================================================
 
-// Provider principal otimizado (recomendado)
-export { EditorProviderUnified as OptimizedEditorProvider, useEditor as useOptimizedEditor, useEditorOptional } from './EditorProviderUnified';
+// ✅ Provider único recomendado (use este!)
+export { 
+    EditorProviderUnified, 
+    EditorProviderUnified as EditorProvider,
+    useEditor, 
+    useEditorOptional 
+} from './EditorProviderUnified';
 
-// Hook unificado canônico
-export { useEditor, useEditorOptional as useUnifiedEditorOptional } from '@/hooks/useUnifiedEditor';
+// Alias para compatibilidade
+export { useEditorOptional as useUnifiedEditorOptional } from './EditorProviderUnified';
 
-// Legacy providers (manter durante transição)
-export { MigrationEditorProvider, EditorProvider as LegacyEditorProvider } from './EditorProviderMigrationAdapter';
+// Adapter para migração (mantido temporariamente)
+export { MigrationEditorProvider } from './EditorProviderMigrationAdapter';
 
 // 🆕 FASE 3: Compatibility hooks
 export { usePureBuilder, usePureBuilderCompat } from '@/hooks/usePureBuilderCompat';
@@ -31,16 +37,10 @@ export { usePureBuilder, usePureBuilderCompat } from '@/hooks/usePureBuilderComp
 // Principais componentes do editor - APENAS OS ESSENCIAIS
 export { default as ComponentList } from './ComponentList';
 export { default as QuizEditorSteps } from './QuizEditorSteps';
-// ✅ EDITORES PRINCIPAIS UNIFICADOS
-export { default as PureBuilderProvider } from './PureBuilderProvider';
 
 // Componentes com named exports
 export { AddBlockButton } from './AddBlockButton';
-// export { ComponentsPanel } from "./ComponentsPanel";
-// export { DeleteBlockButton } from "./DeleteBlockButton";
 export { default as EditBlockContent } from './EditBlockContent';
-// export { EditorBlockItem } from "./EditorBlockItem";
-// ✅ EDITORES CONSOLIDADOS - apenas essenciais mantidos
 export { StepsPanel } from './StepsPanel';
 
 // 🎯 PAINEL DE PROPRIEDADES RECOMENDADO (use este!)
@@ -61,9 +61,6 @@ export { default as UniversalStepEditorPro } from './universal/UniversalStepEdit
 export { default as UniversalStepEditor } from './universal/UniversalStepEditor';
 export type { UniversalStepEditorProps } from './universal/UniversalStepEditor';
 
-// Demos e exemplos (importações serão adicionadas conforme necessário)
-// export { UniversalStepEditorDemo } from '../demos/UniversalStepEditorDemo';
-
 // Integração com sistema modular existente
 export {
     HeaderSection,
@@ -81,28 +78,6 @@ export type {
     MainImageSectionProps,
     ModularResultHeaderProps,
 } from './modules';
-
-// ============================================================================
-// HOOKS E UTILITÁRIOS (serão adicionados conforme necessário)
-// ============================================================================
-
-// TODO: Adicionar quando hooks estiverem implementados
-// export { 
-//     useUniversalStepEditor,
-//     useSimpleStepEditor 
-// } from '../../hooks/useUniversalStepEditor';
-
-// ============================================================================
-// ADAPTADORES (serão adicionados conforme necessário)
-// ============================================================================
-
-// TODO: Adicionar quando adaptadores estiverem implementados  
-// export { 
-//     Quiz21StepsToFunnelAdapter,
-//     quiz21StepsAdapter,
-//     convertStepToFunnelFormat,
-//     convertCompleteFunnel
-// } from '../../adapters/Quiz21StepsToFunnelAdapter';
 
 // ============================================================================
 // CONFIGURAÇÕES E CONSTANTES
