@@ -92,11 +92,13 @@ export class HybridCacheStrategy {
       promoteOnHit = true,
     } = options;
 
+    const cache = UnifiedCacheService.getInstance();
+
     performanceProfiler.start(`hybridCache.get:${key}`, 'cache');
 
     try {
       // L1: Memory cache
-      const l1Value = unifiedCacheService.get<T>(memoryStore, key);
+      const l1Value = cache.get<T>(memoryStore, key);
       if (l1Value !== null) {
         this.metrics.l1Hits++;
         performanceProfiler.end(`hybridCache.get:${key}`);
@@ -115,7 +117,7 @@ export class HybridCacheStrategy {
 
         // Promover para L1
         if (promoteOnHit) {
-          unifiedCacheService.set(memoryStore, key, l2Value);
+          cache.set(memoryStore, key, l2Value);
           appLogger.debug(`💾 [L2→L1] Promoted ${key} to memory`);
         }
 
