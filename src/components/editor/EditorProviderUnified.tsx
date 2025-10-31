@@ -45,7 +45,7 @@ export interface EditorState {
     /** Blocos organizados por step */
     stepBlocks: Record<string, Block[]>;
     /** Origem dos blocos por step (diagnóstico) */
-    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-json' | 'consolidated' | 'ts-template'>;
+    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-json' | 'consolidated' | 'supabase' | 'ts-template'>;
     /** Step atual selecionado */
     currentStep: number;
     /** Bloco selecionado para edição */
