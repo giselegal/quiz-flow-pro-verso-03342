@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 // import { Button } from '@/components/ui/button'; // Commented - not used
-import type { QuizStep } from '../../data/quizSteps';
+import type { QuizStep } from '@/types/quiz';
 
 interface TransitionStepProps {
     data: QuizStep;

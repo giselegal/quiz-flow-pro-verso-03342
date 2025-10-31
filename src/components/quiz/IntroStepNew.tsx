@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import type { QuizStep } from '../../data/quizSteps';
+import type { QuizStep } from '@/types/quiz';
 
 interface IntroStepProps {
     data: QuizStep;

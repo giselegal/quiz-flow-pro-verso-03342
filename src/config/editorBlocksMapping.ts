@@ -1,12 +1,12 @@
 /**
  * SISTEMA UNIFICADO DE MAPEAMENTO DE BLOCOS - Pós Limpeza 2025
  *
- * Integra EnhancedBlockRegistry como sistema principal
- * Mantém apenas componentes validados e funcionais
+ * Integra blocos validados e funcionais
+ * Mantém apenas componentes essenciais
  */
 
 import { ComponentType } from 'react';
-import { getEnhancedBlockComponent as getEnhancedComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+// import { getEnhancedBlockComponent as getEnhancedComponent } from '@/components/editor/blocks/EnhancedBlockRegistry'; // Deprecated
 
 // Import the new LeadFormBlock for direct mapping
 import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
@@ -37,14 +37,11 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
   QuizResultCalculatedBlock,
 };
 
-// FUNÇÃO PRINCIPAL - Busca primeiro no Enhanced Registry, depois no Unified Map
+// FUNÇÃO PRINCIPAL - Busca no Unified Map
 export const getBlockComponent = (blockType: string): ComponentType<any> | undefined => {
-  // 1. Tentar Enhanced Registry primeiro (sistema principal)
-  const enhancedComponent = getEnhancedComponent(blockType);
-  if (enhancedComponent) {
-    return enhancedComponent;
-  }
-
+  // 1. Enhanced Registry foi deprecado - usando apenas Unified Map
+  // const enhancedComponent = getEnhancedComponent(blockType); // Deprecated
+  
   // 2. Fallback para componentes validados
   return UNIFIED_BLOCK_MAP[blockType];
 };

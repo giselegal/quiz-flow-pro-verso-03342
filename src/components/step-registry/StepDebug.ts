@@ -3,12 +3,13 @@
  *
  * Gera uma tabela unificada no console com dados provenientes de:
  * - StepRegistry (nome, categoria/metadata, navegação, validação)
- * - quizSteps.ts (tipo da etapa, requiredSelections, nextStep)
+ * - TemplateService (tipo da etapa, requiredSelections, nextStep)
  * - Derivações úteis (número, auto-avanço sugerido)
  */
 import { stepRegistry } from './StepRegistry';
-import { QUIZ_STEPS, type QuizStep } from '../../data/quizSteps';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { getStepTemplate } from '@/templates/imports';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 type Row = {
   '#': number;
@@ -45,11 +46,12 @@ export function printFullStepsDebug() {
   try {
     const rows: Row[] = [];
     const ids = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+    const allSteps = TemplateService.getInstance().getAllStepsSync();
 
     for (const id of ids) {
       const n = getStepNumber(id);
       const reg = stepRegistry.get(id);
-      const quiz: QuizStep | undefined = QUIZ_STEPS[id as keyof typeof QUIZ_STEPS];
+      const quiz: QuizStep | undefined = allSteps[id as keyof typeof allSteps];
 
       const tipo = quiz?.type ?? 'N/A';
       const categoria = reg?.config?.metadata?.category ?? 'N/A';
@@ -123,15 +125,16 @@ type DeepRow = Row & {
  * Versão completa: inclui origem do template, blocos e nomes dos componentes
  * e imprime o JSON efetivo de cada step em grupos colapsados no console.
  */
-export async function printFullStepsDebugDeep() {
+export function printDeepDebug() {
   try {
     const ids = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+    const allSteps = TemplateService.getInstance().getAllStepsSync();
 
     const rows: DeepRow[] = [];
     for (const id of ids) {
       const n = getStepNumber(id);
       const reg = stepRegistry.get(id);
-      const quiz: QuizStep | undefined = QUIZ_STEPS[id as keyof typeof QUIZ_STEPS];
+      const quiz: QuizStep | undefined = allSteps[id as keyof typeof allSteps];
 
       const tipo = quiz?.type ?? 'N/A';
       const categoria = reg?.config?.metadata?.category ?? 'N/A';

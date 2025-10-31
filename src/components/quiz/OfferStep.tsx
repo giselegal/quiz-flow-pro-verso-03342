@@ -1,6 +1,6 @@
 import { styleConfigGisele } from '../../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
-import type { QuizStep } from '../../data/quizSteps';
+import type { QuizStep } from '@/types/quiz';
 
 interface OfferStepProps {
     data: QuizStep;
