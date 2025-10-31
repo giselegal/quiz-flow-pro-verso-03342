@@ -95,7 +95,8 @@ import { StepHistoryService } from '@/services/canonical/StepHistoryService';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
-import { getQuiz21StepsTemplate } from '@/templates/imports';
+// ❌ REMOVIDO: Eager loading de templates completos
+// import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
 import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
@@ -113,9 +114,11 @@ import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 // ✅ FASE 6: Lazy load de componentes pesados do editor
 const BuilderSystemPanel = React.lazy(() => import('@/components/editor/BuilderSystemPanel').then(m => ({ default: m.BuilderSystemPanel })));
-import { loadStepTemplate } from '@/utils/loadStepTemplates';
+// ❌ REMOVIDO: Eager loading de templates completos
+// import { loadStepTemplate } from '@/utils/loadStepTemplates';
 // Dados canônicos das etapas (lazy loading para performance)
-import { loadQuizStep, loadAllQuizSteps, STEP_ORDER, preloadAdjacentSteps } from '@/data/quizStepsLazy';
+// ❌ REMOVIDO: Eager loading (mesmo rotulado como lazy)
+// import { loadQuizStep, loadAllQuizSteps, STEP_ORDER, preloadAdjacentSteps } from '@/data/quizStepsLazy';
 
 import CanvasArea from './components/CanvasArea';
 // ✅ FASE 1.2: Migrado safeGetTemplateBlocks → convertTemplateToBlocks
@@ -791,38 +794,40 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     } catch (e) {
                         appLogger.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
 
-                        // Forçar carregamento do template como fallback
-                        // ✅ FASE 1.2: Migrado para convertTemplateToBlocks
-                        const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
-                            const stepNumber = idx + 1;
-                            const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
-                            const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                            const blocks = convertTemplateToBlocks(quizTemplate);
+                        // Forçar carregamento do template como fallback usando lazy loading real
+                        (async () => {
+                            const initial: EditorEditableQuizStep[] = await Promise.all(Array.from({ length: 21 }).map(async (_, idx) => {
+                                const stepNumber = idx + 1;
+                                const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
+                                const stepData = await templateService.lazyLoadStep(stepId, false).catch(() => ({ blocks: [] }));
+                                const canonicalBlocks = (stepData?.blocks || []) as any;
+                                const blocks = blocksToBlockComponents(canonicalBlocks);
 
-                            // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
-                            const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
-                                if (index === 0) return 'intro';
-                                if (index >= 1 && index <= 10) return 'question';
-                                if (index === 11) return 'transition';
-                                if (index >= 12 && index <= 17) return 'strategic-question';
-                                if (index === 18) return 'transition-result';
-                                if (index === 19) return 'result';
-                                return 'offer'; // index === 20
-                            };
+                                // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
+                                const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
+                                    if (index === 0) return 'intro';
+                                    if (index >= 1 && index <= 10) return 'question';
+                                    if (index === 11) return 'transition';
+                                    if (index >= 12 && index <= 17) return 'strategic-question';
+                                    if (index === 18) return 'transition-result';
+                                    if (index === 19) return 'result';
+                                    return 'offer'; // index === 20
+                                };
 
-                            return {
-                                id: stepId,
-                                type: getStepType(idx),
-                                order: stepNumber,
-                                blocks,
-                                nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined,
-                            };
-                        });
+                                return {
+                                    id: stepId,
+                                    type: getStepType(idx),
+                                    order: stepNumber,
+                                    blocks,
+                                    nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined,
+                                };
+                            }));
 
-                        appLogger.debug(`✅ Template fallback carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
-                        setSteps(initial);
-                        setSelectedStepIdUnified(initial[0]?.id || '');
-                        setIsLoading(false);
+                            appLogger.debug(`✅ Template fallback carregado (lazy): ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
+                            setSteps(initial);
+                            setSelectedStepIdUnified(initial[0]?.id || '');
+                            setIsLoading(false);
+                        })();
                     }
                 })();
             }
@@ -877,19 +882,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     // Preferir SEMPRE o template modular (quando disponível) para TODOS os steps
                                     // Mantém fallback para conversão master→sections→blocks quando indisponível
                                     try {
-                                        built.forEach((s, i) => {
+                                        await Promise.all(built.map(async (s, i) => {
                                             try {
-                                                const staticBlocks = loadStepTemplate(s.id);
+                                                const stepData = await templateService.lazyLoadStep(s.id, false);
+                                                const staticBlocks = (stepData?.blocks || []) as any[];
                                                 if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
                                                     const asComponents = blocksToBlockComponents(staticBlocks as any);
                                                     built[i] = { ...s, blocks: asComponents };
                                                     appLogger.debug(`✅ Template modular aplicado: ${s.id} (${asComponents.length} blocos)`);
                                                 }
                                             } catch (inner) {
-                                                // Silencioso: manter fallback para este step
                                                 if (import.meta.env.DEV) appLogger.debug('ℹ️ Sem template modular para', s.id);
                                             }
-                                        });
+                                        }));
                                     } catch (e) {
                                         appLogger.warn('⚠️ Falha ao aplicar templates modulares (all-steps):', e);
                                     }
@@ -925,16 +930,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 });
                             };
 
-                            // 0) Tentar template modular para QUALQUER step (fonte canônica ou JSON)
+                            // 0) Tentar carregar blocks canônicos via TemplateService (lazy, sem eager-loading)
                             try {
-                                const templateBlocks = await loadStepTemplate(stepId);
-                                if (Array.isArray(templateBlocks) && templateBlocks.length > 0) {
-                                    return templateBlocks.map((block: any, idx: number) => ({
-                                        ...block,
-                                        id: block.id || `${stepId}-block-${idx + 1}`,
-                                        order: idx,
-                                        parentId: null,
-                                    }));
+                                const stepData = await templateService.lazyLoadStep(stepId, false);
+                                const canonicalBlocks = (stepData && Array.isArray(stepData.blocks)) ? stepData.blocks : [];
+                                if (canonicalBlocks.length > 0) {
+                                    return blocksToBlockComponents(canonicalBlocks as any);
                                 }
                             } catch {
                                 // segue para fallback por tipo
@@ -1041,11 +1042,32 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     break;
                                 }
                                 default: {
-                                    // fallback genérico preservando blocks antigos se existirem
-                                    // ✅ FASE 1.2: Migrado para convertTemplateToBlocks
-                                    const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                                    const legacyBlocks = convertTemplateToBlocks(quizTemplate);
-                                    return legacyBlocks;
+                                    // Tentativa final: carregar blocks canônicos novamente (pode ter sido populado após cache)
+                                    try {
+                                        const stepData = await templateService.lazyLoadStep(stepId, false);
+                                        const canonicalBlocks = (stepData && Array.isArray(stepData.blocks)) ? stepData.blocks : [];
+                                        if (canonicalBlocks.length > 0) {
+                                            return blocksToBlockComponents(canonicalBlocks as any);
+                                        }
+                                    } catch { }
+                                    // Fallback genérico: usa metadados do quizStep para construir algo mínimo
+                                    if (blocks.length === 0) {
+                                        if (quizStep?.title) {
+                                            push({
+                                                type: 'heading',
+                                                content: { text: quizStep.title },
+                                                properties: { level: 3, allowHtml: false, textAlign: 'center' },
+                                            });
+                                        }
+                                        if (quizStep?.text) {
+                                            push({
+                                                type: 'text',
+                                                content: { text: quizStep.text },
+                                                properties: { textAlign: 'center' },
+                                            });
+                                        }
+                                    }
+                                    return blocks;
                                 }
                             }
                             return blocks;
@@ -1055,27 +1077,23 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         (async () => {
                             try {
                                 const __t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
-                                const stepsMap = await loadAllQuizSteps();
+                                const ORDER = templateService.getStepOrder();
+                                const ALL_STEPS = templateService.getAllStepsSync();
                                 const __t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
-                                appLogger.debug('⚡ Lazy load all steps', { ms: Math.round(__t1 - __t0) });
+                                appLogger.debug('⚡ Lazy load all steps (order fetched)', { ms: Math.round(__t1 - __t0), count: ORDER.length });
 
-                                const enriched: EditableQuizStep[] = await Promise.all(STEP_ORDER.map(async (stepId, idx) => {
-                                    const quizStep = stepsMap.get(stepId);
+                                const enriched: EditableQuizStep[] = await Promise.all(ORDER.map(async (stepId: string, idx: number) => {
+                                    const quizStep: any = (ALL_STEPS as any)[stepId];
                                     const legacyType = buildStepType(idx);
-                                    const next = quizStep?.nextStep || (idx < STEP_ORDER.length - 1 ? STEP_ORDER[idx + 1] : undefined);
+                                    const next = quizStep?.nextStep || (idx < ORDER.length - 1 ? ORDER[idx + 1] : undefined);
                                     let blocks: any[] = [];
-                                    // ✅ FASE 1.2: Migrado para convertTemplateToBlocks
                                     try {
-                                        if (quizStep) {
-                                            blocks = await buildEnrichedBlocksForStep(stepId, quizStep);
-                                        } else {
-                                            const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                                            blocks = convertTemplateToBlocks(quizTemplate);
-                                        }
+                                        blocks = await buildEnrichedBlocksForStep(stepId, quizStep || {});
                                     } catch (e) {
                                         appLogger.warn('⚠️ Falha ao construir blocks enriquecidos para', { stepId, error: e });
-                                        const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                                        blocks = convertTemplateToBlocks(quizTemplate);
+                                        const stepData = await templateService.lazyLoadStep(stepId, false).catch(() => ({ blocks: [] }));
+                                        const canonicalBlocks = (stepData && Array.isArray(stepData.blocks)) ? stepData.blocks : [];
+                                        blocks = blocksToBlockComponents(canonicalBlocks as any);
                                     }
                                     return {
                                         id: stepId,
@@ -1269,6 +1287,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         [stepsView, effectiveSelectedStepId, selectedStepId, editorCtx],
     );
 
+    // 🔎 Pré-carregamento leve dos steps vizinhos usando TemplateService (sem imports legacy)
+    const preloadNeighbors = useCallback((currentId: string, windowSize: number = 2) => {
+        try {
+            const order = templateService.getStepOrder();
+            const index = order.indexOf(currentId);
+            if (index === -1) return;
+            const toPreload: string[] = [];
+            for (let d = 1; d <= windowSize; d++) {
+                if (index - d >= 0) toPreload.push(order[index - d]);
+                if (index + d < order.length) toPreload.push(order[index + d]);
+            }
+            toPreload.forEach((id) => {
+                // fire-and-forget, ignora erros de rede
+                templateService.lazyLoadStep(id, true).catch(() => { });
+            });
+        } catch { /* noop */ }
+    }, []);
+
     const setSelectedStepIdUnified = useCallback((id: string) => {
         setSelectedStepId(id);
         if (editorCtx?.actions?.setCurrentStep) {
@@ -1276,8 +1312,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             if (!isNaN(n)) editorCtx.actions.setCurrentStep(n);
         }
         // 🚀 Pré-carregar steps adjacentes para melhorar UX
-        preloadAdjacentSteps(id, 2);
-    }, [setSelectedStepId, editorCtx, stepNumberFromId]);
+        preloadNeighbors(id, 2);
+    }, [setSelectedStepId, editorCtx, stepNumberFromId, preloadNeighbors]);
 
     // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
     const selectionApi = useSelectionClipboard({
