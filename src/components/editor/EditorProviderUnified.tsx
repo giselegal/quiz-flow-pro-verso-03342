@@ -26,15 +26,17 @@ import { loadStepTemplate, hasModularTemplate } from '@/utils/loadStepTemplates'
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
+// ✅ MANTIDO temporariamente para EditorStateManager, mas com monkey-patch para usar templateService
 import { TemplateLoader, type TemplateSource } from '@/services/editor/TemplateLoader';
 import EditorStateManager from '@/services/editor/EditorStateManager';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import type { UnifiedStage, UnifiedFunnel } from '@/services/UnifiedCRUDService';
 import { createLogger, appLogger } from '@/utils/logger';
 
-// ✅ FASE 1.2 & 2.1: Integrar serviços consolidados (removido safeGetTemplateBlocks)
+// ✅ FASE 1.2 & 2.1: Integrar serviços consolidados
+// ✅ NOVO: TemplateService com lazyLoadStep ativo!
 import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService, TemplateService } from '@/services/canonical/TemplateService';
 import { navigationService } from '@/services/canonical/NavigationService';
 
 // ============================================================================
@@ -173,7 +175,21 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     // Services initialization (memoized)
     const history = useMemo(() => new EditorHistoryService(), []);
-    const loader = useMemo(() => new TemplateLoader(), []);
+
+    // ✅ NOVO: Criar wrapper do TemplateLoader que usa TemplateService internamente
+    const loader = useMemo(() => {
+        const originalLoader = new TemplateLoader();
+        // Monkey-patch loadStep para usar templateService.lazyLoadStep
+        const originalLoadStep = originalLoader.loadStep.bind(originalLoader);
+        originalLoader.loadStep = async (stepId: string) => {
+            console.log(`🔄 [EditorProviderUnified] lazyLoadStep ativado para step: ${stepId}`);
+            const result = await templateService.lazyLoadStep(stepId, true);
+            console.log(`✅ [EditorProviderUnified] lazyLoadStep concluído:`, result);
+            return result || originalLoadStep(stepId);
+        };
+        return originalLoader;
+    }, []);
+
     const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
 
     // ✅ FASE 2.1: Instanciar serviços unificados

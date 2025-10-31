@@ -14,6 +14,9 @@ Foi descoberto que existe um **sistema completo de lazy loading** já implementa
 
 **Status:** ⚠️ Implementado mas não ativado - requer investigação urgente!
 
+📄 **ATUALIZAÇÃO:** Ver análise completa em [ANALISE_ESTRUTURAS_REAIS_VS_CORRETAS.md](./ANALISE_ESTRUTURAS_REAIS_VS_CORRETAS.md)  
+**Descoberta:** TemplateLoader JÁ TENTA carregar os JSONs! 6 sistemas paralelos encontrados, apenas 2 ativos.
+
 ---
 
 ## �📖 ÍNDICE
