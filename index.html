@@ -17,6 +17,13 @@
   <!-- Permissions Policy para suprimir warnings -->
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 
+  <!-- 🚀 FASE 3.5: PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="QuizFlow">
+
   <!-- Minimal head for maximum compatibility -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -144,22 +151,7 @@
     })();
   </script>
 
-  <script>
-    // Unregister any existing service workers to avoid caching/fetch conflicts
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(regs => {
-        for (const reg of regs) {
-          reg.unregister().catch(() => { });
-        }
-      });
-      if (typeof caches !== 'undefined') {
-        caches
-          .keys()
-          .then(keys => keys.forEach(k => caches.delete(k)))
-          .catch(() => { });
-      }
-    }
-  </script>
+  <!-- 🚀 FASE 3.5: Service Worker Registration (handled in main.tsx for production) -->
 
   <!-- Canvas-Preview Sync Test -->
   <script type="text/javascript">

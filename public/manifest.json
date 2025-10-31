@@ -1,31 +1,49 @@
 {
-  "name": "Quiz Builder",
-  "short_name": "QuizBuilder",
-  "description": "Create interactive quizzes with advanced visual editor",
+  "name": "Quiz Flow Pro",
+  "short_name": "QuizFlow",
+  "description": "Plataforma profissional de criação de quizzes e funis interativos",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#432818",
+  "theme_color": "#4F46E5",
   "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "512x512",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
     }
   ],
   "categories": ["productivity", "business", "education"],
   "shortcuts": [
     {
-      "name": "Create Quiz",
-      "short_name": "New Quiz",
+      "name": "Criar Quiz",
+      "short_name": "Novo Quiz",
       "url": "/editor",
       "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
     },
     {
-      "name": "View Funnels",
-      "short_name": "Funnels",
+      "name": "Ver Funis",
+      "short_name": "Funis",
       "url": "/admin/funis",
+      "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "/dashboard",
       "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
     }
   ]

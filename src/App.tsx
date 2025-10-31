@@ -36,6 +36,8 @@ import { PageLoadingFallback } from './components/LoadingSpinner';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
 import { loadTemplateOverrides } from '@/bootstrap/loadTemplateOverrides';
+// 🚀 FASE 3.5: PWA Notifications
+import { PWANotifications } from './components/PWANotifications';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
 // 🚀 FASE 2: Unified Provider (arquitetura consolidada)
@@ -438,6 +440,8 @@ function AppCore() {
                     {/* 🍞 TOAST NOTIFICATIONS */}
                     <Toaster />
 
+                    {/* 🚀 FASE 3.5: PWA Notifications (offline/update) */}
+                    <PWANotifications />
 
                 </UnifiedAppProvider>
             </GlobalErrorBoundary>

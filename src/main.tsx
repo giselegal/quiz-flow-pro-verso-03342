@@ -236,6 +236,37 @@ if (typeof window !== 'undefined') {
   }
 }
 
+// 🚀 FASE 3.5: Service Worker para Offline Support e PWA
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('✅ Service Worker registrado:', registration.scope);
+
+        // Verificar atualizações a cada hora
+        setInterval(() => {
+          registration.update();
+        }, 60 * 60 * 1000);
+
+        // Monitorar nova versão disponível
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('🔄 Nova versão do app disponível! Recarregue para atualizar.');
+                // Notificar usuário (pode implementar toast/banner depois)
+              }
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('❌ Erro ao registrar Service Worker:', error);
+      });
+  });
+}
+
 // O serviço é inicializado automaticamente na importação
 
 console.log('🔧 DEBUG: Criando root do React...');
