@@ -1,6 +1,7 @@
 import React from 'react';
 
 // TESTE: Carregando imports um por um para identificar problema
+// ✅ FASE 4: BlockRegistry removido (migrado para UnifiedBlockRegistry)
 
 // Imports básicos do React
 // ✅ React funcionando
@@ -32,9 +33,6 @@ import { styleConfigGisele } from '@/data/styles';
 import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import QuizAppConnected from '@/components/quiz/QuizAppConnected';
-import { useBlockRegistry } from '@/runtime/quiz/blocks/BlockRegistry';
-import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
-import { BlockRegistryProvider as BRP, useBlockRegistry as useBR } from '@/runtime/quiz/blocks/BlockRegistry';
 
 interface QuizFunnelEditorProps {
     funnelId?: string;

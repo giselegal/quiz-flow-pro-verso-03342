@@ -124,11 +124,9 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                         </div>
                     ) : facade ? (
                         <FunnelFacadeContext.Provider value={facade}>
-                            <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
-                                <div data-testid="quiz-editor-container" className="h-full">
-                                    <ModularEditorLayout />
-                                </div>
-                            </BlockRegistryProvider>
+                            <div data-testid="quiz-editor-container" className="h-full">
+                                <ModularEditorLayout />
+                            </div>
                         </FunnelFacadeContext.Provider>
                     ) : null}
                 </Suspense>
