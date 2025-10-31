@@ -80,6 +80,10 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       cssMinify: 'lightningcss',
       cssCodeSplit: true,
+      // 🎯 FASE 3 TASK 7: Otimizações de bundle
+      minify: 'esbuild', // esbuild é mais rápido que terser
+      target: 'es2020',
+      sourcemap: false, // Desabilitar sourcemaps em produção para reduzir tamanho
       // 🎯 FASE 6: Chunk size limits otimizados
       chunkSizeWarningLimit: 500, // Warning em 500 kB (antes era padrão 500)
       rollupOptions: {
@@ -98,6 +102,12 @@ export default defineConfig(({ mode }) => {
           /^https:\/\/deno\.land\/.*/,
           /^https:\/\/esm\.sh\/.*/
         ],
+        // 🎯 FASE 3 TASK 7: Tree shaking agressivo
+        treeshake: {
+          moduleSideEffects: 'no-external', // Remover side effects de node_modules
+          propertyReadSideEffects: false, // Assumir que property reads não têm side effects
+          tryCatchDeoptimization: false, // Não desotimizar try-catch
+        },
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
