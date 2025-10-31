@@ -23,7 +23,6 @@ import { Block } from '@/types/editor';
 // ❌ REMOVIDO: import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 // Motivo: Carregamento EAGER do bundle completo - agora usamos lazyLoadStep() para carregar JSONs individuais
 import { blockComponentsToBlocks } from '@/utils/templateConverter';
-import { loadStepTemplate, hasModularTemplate } from '@/utils/loadStepTemplates';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';

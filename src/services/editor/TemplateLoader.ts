@@ -18,7 +18,7 @@
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
-import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
+// 🔧 Removido dependência de utils/loadStepTemplates para evitar eager-loading de bundles
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
@@ -259,7 +259,7 @@ export class TemplateLoader {
 
         // Estratégia 5: Templates modulares (controlado por flag)
         if (TEMPLATE_SOURCES.useModularTemplates) {
-          const modular = this.loadModular(normalizedKey);
+          const modular = await this.loadModular(normalizedKey);
           if (modular) return modular;
         }
 
@@ -875,19 +875,21 @@ export class TemplateLoader {
   /**
    * Estratégia 4: Carregar templates modulares
    */
-  private loadModular(normalizedKey: string): LoadedTemplate | null {
+  private async loadModular(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
-      if (!hasModularTemplate(normalizedKey)) {
+      // Usar TemplateService canônico para obter blocos do step
+      const result = await templateService.getStep(normalizedKey);
+      if (!result.success || !result.data || result.data.length === 0) {
         return null;
       }
 
-      const blocks = loadStepTemplate(normalizedKey);
-      console.log(`📦 Modular template → ${normalizedKey}: ${blocks.length} blocos`);
+      const blocks = result.data as Block[];
+      console.log(`📦 Modular (TemplateService) → ${normalizedKey}: ${blocks.length} blocos`);
 
       unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
       return { blocks, source: 'modular-json' };
     } catch (e) {
-      console.warn('⚠️ Erro ao carregar template modular:', normalizedKey, e);
+      console.warn('⚠️ Erro ao carregar template modular (TemplateService):', normalizedKey, e);
       return null;
     }
   }
