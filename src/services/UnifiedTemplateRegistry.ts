@@ -292,40 +292,63 @@ export class UnifiedTemplateRegistry {
    */
   private async loadFromServer(stepId: string): Promise<Block[] | null> {
     try {
-      // Prioridade: per-step JSON consolidado em public/templates/blocks
-      // Depois tentar variantes -v3 e plano B em /templates
-      const urls = [
-        `/templates/blocks/${stepId}.json`,
+      console.log(`🌐 [loadFromServer] Tentando carregar ${stepId}...`);
+      
+      // PRIORIDADE 1: JSON individual em /templates/blocks/ (ESTRUTURA CORRETA)
+      try {
+        const url = `/templates/blocks/${stepId}.json`;
+        console.log(`   → Tentando: ${url} (prioridade 1)`);
+        const resp = await fetch(url);
+        if (resp.ok) {
+          const template = await resp.json();
+          console.log(`   ✅ SUCESSO: ${url} (${Array.isArray(template?.blocks) ? template.blocks.length : 'unknown'} blocos)`);
+          
+          // Converter para Block[] se necessário
+          if (template.blocks && Array.isArray(template.blocks)) {
+            return template.blocks as Block[];
+          }
+          
+          if (template.sections && Array.isArray(template.sections)) {
+            console.warn(`   ⚠️ Formato antigo (sections[]) detectado em ${url}, convertendo...`);
+            return this.convertSectionsToBlocks(template.sections, stepId);
+          }
+        }
+        console.warn(`   ❌ Não encontrado: ${url} (${resp.status})`);
+      } catch (error) {
+        console.warn(`   ❌ Erro ao carregar JSON individual: ${error}`);
+      }
+      
+      // PRIORIDADE 2: Fallback para formatos antigos (apenas se prioridade 1 falhar)
+      console.log(`   → Tentando fallbacks (formatos antigos)...`);
+      const fallbackUrls = [
         `/templates/${stepId}-v3.json`,
         `/templates/${stepId}.json`,
       ];
-      let template: any | null = null;
-
-      for (const url of urls) {
+      
+      for (const url of fallbackUrls) {
         try {
+          console.log(`   → Tentando: ${url} (fallback)`);
           const resp = await fetch(url);
           if (resp.ok) {
-            template = await resp.json();
-            console.log(`🌐 SERVER HIT: ${url} (${Array.isArray(template?.blocks) ? template.blocks.length : (Array.isArray(template?.sections) ? template.sections.length : 'unknown')} itens)`);
-            break;
+            const template = await resp.json();
+            console.log(`   ✅ SUCESSO (fallback): ${url}`);
+            
+            // Converter para Block[] se necessário
+            if (template.blocks && Array.isArray(template.blocks)) {
+              return template.blocks as Block[];
+            }
+            
+            if (template.sections && Array.isArray(template.sections)) {
+              console.warn(`   ⚠️ Formato antigo (sections[]) detectado, convertendo...`);
+              return this.convertSectionsToBlocks(template.sections, stepId);
+            }
           }
-        } catch (e) {
-          // tenta próxima URL
+        } catch (error) {
+          // Continua tentando próximo fallback
         }
       }
-
-      if (!template) return null;
-
-      // Converter para Block[] se necessário
-      if (template.blocks && Array.isArray(template.blocks)) {
-        return template.blocks as Block[];
-      }
       
-      if (template.sections && Array.isArray(template.sections)) {
-        // Conversão mínima (última vez!)
-        return this.convertSectionsToBlocks(template.sections, stepId);
-      }
-      
+      console.error(`❌ [loadFromServer] ${stepId} não encontrado em nenhum path`);
       return null;
     } catch (error) {
       console.error(`❌ Falha ao carregar ${stepId} do servidor:`, error);
