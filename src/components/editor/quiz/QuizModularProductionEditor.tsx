@@ -99,6 +99,7 @@ import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
 import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
+import { SaveAsFunnelButton } from '@/components/editor/SaveAsFunnelButton';
 import type { StepType } from '@/types/quiz-schema';
 import { templateService } from '@/services/canonical/TemplateService';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
