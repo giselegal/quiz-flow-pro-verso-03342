@@ -327,8 +327,51 @@ export default defineConfig(({ mode }) => {
                   id.includes('DynamicPropertiesForm') ||
                   id.includes('BuilderSystemPanel') ||
                   id.includes('FieldControl') ||
-                  id.includes('ConfigurationPanel')) {
+                  id.includes('ConfigurationPanel') ||
+                  id.includes('/editor/dnd/')) {
                 return 'editor-advanced';
+              }
+              
+              // Canvas components (lazy quando não em editor) ~40KB
+              if (id.includes('/editor/canvas/') ||
+                  id.includes('CanvasDropZone') ||
+                  id.includes('SortableBlockWrapper') ||
+                  id.includes('EmptyCanvasInterface')) {
+                return 'editor-canvas';
+              }
+              
+              // Editor Providers e Contexts (core, sempre carregado) ~60KB
+              if (id.includes('EditorProvider') ||
+                  id.includes('EditorContext') ||
+                  id.includes('EditorCompositeProvider') ||
+                  id.includes('EditorRuntimeProviders') ||
+                  id.includes('/contexts/editor/')) {
+                return 'editor-core';
+              }
+              
+              // Editor Services (lazy) ~40KB
+              if (id.includes('/services/editor/') ||
+                  id.includes('HistoryService') ||
+                  id.includes('TemplateLoader') ||
+                  id.includes('EditorStateManager')) {
+                return 'services-editor';
+              }
+              
+              // Editor Hooks (lazy quando não em uso) ~30KB
+              if (id.includes('/editor/hooks/') ||
+                  id.includes('/quiz/hooks/') ||
+                  id.includes('useValidation') ||
+                  id.includes('usePanelWidths') ||
+                  id.includes('useEditorHistory') ||
+                  id.includes('useStepsBlocks')) {
+                return 'editor-hooks';
+              }
+              
+              // Editor Modules (lazy) ~30KB
+              if (id.includes('/editor/modules/') ||
+                  id.includes('ModularResultHeader') ||
+                  id.includes('LayoutShell')) {
+                return 'editor-modules';
               }
               
               // Headers e navegação (~10KB)
@@ -341,14 +384,14 @@ export default defineConfig(({ mode }) => {
               // Páginas principais do editor (NÃO lazy)
               if (id.includes('UniversalVisualEditor.tsx') || 
                   id.includes('ModernUnifiedEditor.tsx') ||
-                  id.includes('QuizEditorIntegratedPage.tsx')) {
+                  id.includes('QuizEditorIntegratedPage.tsx') ||
+                  id.includes('QuizModularProductionEditor')) {
                 return 'app-editor';
               }
               
               // Componentes helper do editor (Canvas, Toolbar, etc)
               if (id.includes('/editor/components/') ||
-                  id.includes('/editor/helpers/') ||
-                  id.includes('/editor/hooks/')) {
+                  id.includes('/editor/helpers/')) {
                 return 'editor-components';
               }
               
