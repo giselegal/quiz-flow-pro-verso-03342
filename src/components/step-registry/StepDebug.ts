@@ -125,7 +125,7 @@ type DeepRow = Row & {
  * Versão completa: inclui origem do template, blocos e nomes dos componentes
  * e imprime o JSON efetivo de cada step em grupos colapsados no console.
  */
-export function printDeepDebug() {
+export async function printDeepDebug() {
   try {
     const ids = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
     const allSteps = TemplateService.getInstance().getAllStepsSync();
@@ -236,5 +236,5 @@ export function printDeepDebug() {
 }
 
 if (typeof window !== 'undefined') {
-  (window as any).printFullStepsDebugDeep = printFullStepsDebugDeep;
+  (window as any).printFullStepsDebugDeep = printDeepDebug;
 }
