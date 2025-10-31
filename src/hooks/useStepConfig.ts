@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { masterTemplateService } from '@/services/templates/MasterTemplateService';
-import { getQuiz21StepsTemplate } from '@/templates/imports';
+import { templateService } from '@/services/canonical/TemplateService';
 
 // Interface para configuração de step (adaptada do HybridTemplateService)
 interface StepConfig {
@@ -71,31 +71,14 @@ export const useStepConfig = ({
             try {
                 setIsLoading(true);
                 
-                // Obter template canônico (v3: objeto com sections/blocks)
-                const template = getQuiz21StepsTemplate();
+                // Derivar comportamento por tipo de etapa (evita importar bundle canônico)
                 const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
-                const stepTemplate = (template as any)[stepId];
-
-                // Se não tiver o step no template, retornar null
-                if (!stepTemplate) {
-                    if (mounted) {
-                        setConfig(null);
-                        console.warn(`⚠️ useStepConfig: Step ${stepId} não encontrado no template`);
-                    }
-                    return;
-                }
-
-                // Extrair lista de componentes do step (suporta arrays diretos, blocks ou sections)
-                const normalizeToArray = (val: any): any[] => (Array.isArray(val) ? val : []);
+                // Tentar obter blocks canônicos via TemplateService (não obrigatório)
                 let components: any[] = [];
-                if (Array.isArray(stepTemplate)) {
-                    components = stepTemplate;
-                } else if (stepTemplate && typeof stepTemplate === 'object') {
-                    // v3 templates usam sections; alguns templates podem ter blocks
-                    const sections = normalizeToArray((stepTemplate as any).sections);
-                    const blocks = normalizeToArray((stepTemplate as any).blocks);
-                    components = sections.length > 0 ? sections : blocks;
-                }
+                try {
+                    const stepData = await templateService.lazyLoadStep(stepId, false);
+                    components = Array.isArray(stepData?.blocks) ? stepData.blocks : [];
+                } catch { /* noop */ }
 
                 // Determinar o tipo de step baseado no índice
                 const getStepType = (index: number) => {
@@ -143,14 +126,28 @@ export const useStepConfig = ({
                         showProgress: true,
                         allowBack: stepNumber > 1, // Não permitir voltar na primeira etapa
                     },
-                    validation: {
-                        type: optionsGrid ? 'selection' : 'none',
-                        required: Boolean(optionsGrid),
-                        requiredSelections,
-                        minSelections,
-                        maxSelections,
-                        message: 'Por favor, complete esta etapa para continuar',
-                    },
+                    validation: (() => {
+                        // Regras por tipo quando não conseguir extrair grid
+                        const type = getStepType(stepNumber);
+                        const byType = {
+                            'intro': { type: 'input', required: true, requiredSelections: 0, minSelections: 0, maxSelections: 0 },
+                            'question': { type: 'selection', required: true, requiredSelections: 1, minSelections: 1, maxSelections: 3 },
+                            'strategic-question': { type: 'selection', required: true, requiredSelections: 1, minSelections: 1, maxSelections: 1 },
+                            'transition': { type: 'none', required: false, requiredSelections: 0, minSelections: 0, maxSelections: 0 },
+                            'transition-result': { type: 'none', required: false, requiredSelections: 0, minSelections: 0, maxSelections: 0 },
+                            'result': { type: 'none', required: false, requiredSelections: 0, minSelections: 0, maxSelections: 0 },
+                            'offer': { type: 'none', required: false, requiredSelections: 0, minSelections: 0, maxSelections: 0 },
+                        } as any;
+                        const fallback = byType[type] || byType['offer'];
+                        return {
+                            type: optionsGrid ? 'selection' : fallback.type,
+                            required: optionsGrid ? true : fallback.required,
+                            requiredSelections: optionsGrid ? requiredSelections : fallback.requiredSelections,
+                            minSelections: optionsGrid ? minSelections : fallback.minSelections,
+                            maxSelections: optionsGrid ? maxSelections : fallback.maxSelections,
+                            message: 'Por favor, complete esta etapa para continuar',
+                        };
+                    })(),
                     ui: {
                         theme: 'default',
                     },

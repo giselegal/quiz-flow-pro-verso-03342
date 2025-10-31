@@ -1,5 +1,5 @@
 import { supabase } from '../integrations/supabase/client';
-import { getQuiz21StepsTemplate } from '../templates/imports';
+import { templateService } from '@/services/canonical/TemplateService';
 
 /**
  * Script para popular templates iniciais no Supabase
@@ -23,7 +23,7 @@ export async function populateInitialTemplates() {
         hasQuestions: true,
         hasResult: true,
         hasOffer: true,
-        stepsData: getQuiz21StepsTemplate(),
+  stepsData: templateService.getAllStepsSync(),
       },
       tags: ['quiz', 'personalidade', 'estilo', '21-etapas'],
       is_public: true,

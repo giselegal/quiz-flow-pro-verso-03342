@@ -7,7 +7,7 @@ import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
-import { getQuiz21StepsTemplate } from '@/templates/imports';
+import { templateService } from '@/services/canonical/TemplateService';
 import { useStepConfig } from '@/hooks/useStepConfig'; // ✅ USAR HOOK DE CONFIGURAÇÃO
 
 interface Option {
@@ -260,7 +260,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     } catch { }
   }
 
-  // Fallback final: resolver opções canônicas do template para a etapa atual
+  // Fallback final: resolver opções canônicas para a etapa atual (sem importar bundle canônico)
   try {
     // 1) Editor: usar etapa do editor quando disponível
     const stepNum = Number(currentStepFromEditor ?? NaN);
@@ -268,39 +268,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       block?.type === 'options-grid' && (!options || options.length === 0) &&
       Number.isFinite(stepNum) && stepNum >= 1
     ) {
-      const key = `step-${String(stepNum).padStart(2, '0')}`;
-      const canonicalTemplate = getQuiz21StepsTemplate();
-      const rawStep = (canonicalTemplate as any)[key] || [];
-      const components: any[] = Array.isArray(rawStep)
-        ? rawStep
-        : Array.isArray((rawStep as any)?.blocks)
-          ? (rawStep as any).blocks
-          : Array.isArray((rawStep as any)?.sections)
-            ? (rawStep as any).sections
-            : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
-      if (import.meta?.env?.DEV) {
-        appLogger.debug('🔎 OptionsGridBlock:getStepBehavior components shape', {
-          // stepNumber is available conceptually; logged via surrounding scope
-          rawType: typeof rawStep,
-          hasBlocks: !!(rawStep as any)?.blocks,
-          hasSections: !!(rawStep as any)?.sections,
-          isArray: Array.isArray(components),
-          length: Array.isArray(components) ? components.length : 0,
-          sample: Array.isArray(components) ? components.slice(0, 2) : undefined,
-        });
-      }
-      const canonicalGrid = safeFind<any>(components, (b: any) => {
-        const t = String(b?.type || '').toLowerCase();
-        return t === 'options-grid' || t === 'options grid' || t.includes('options');
-      });
-      const canonicalOptions = Array.isArray(canonicalGrid?.content?.options)
-        ? canonicalGrid?.content?.options
-        : Array.isArray(canonicalGrid?.properties?.options)
-          ? canonicalGrid?.properties?.options
-          : undefined;
-      if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
-        options = canonicalOptions as Option[];
-      }
+      // Fallback desativado para evitar eager-loading; confiar em props/options ou configs do hook
     }
 
     // 2) Produção: se ainda vazio, usar etapa corrente do runtime (/quiz)
@@ -319,28 +287,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       if (runtimeStep != null && Number.isFinite(Number(runtimeStep)) && Number(runtimeStep) >= 1) {
-        const key = `step-${String(runtimeStep).padStart(2, '0')}`;
-        const canonicalTemplate = getQuiz21StepsTemplate();
-        const rawStep = (canonicalTemplate as any)[key] || [];
-        const components: any[] = Array.isArray(rawStep)
-          ? rawStep
-          : Array.isArray((rawStep as any)?.blocks)
-            ? (rawStep as any).blocks
-            : Array.isArray((rawStep as any)?.sections)
-              ? (rawStep as any).sections
-              : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
-        const canonicalGrid = safeFind<any>(components, (b: any) => {
-          const t = String(b?.type || '').toLowerCase();
-          return t === 'options-grid' || t === 'options grid' || t.includes('options');
-        });
-        const canonicalOptions = Array.isArray(canonicalGrid?.content?.options)
-          ? canonicalGrid?.content?.options
-          : Array.isArray(canonicalGrid?.properties?.options)
-            ? canonicalGrid?.properties?.options
-            : undefined;
-        if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
-          options = canonicalOptions as Option[];
-        }
+        // Fallback desativado para evitar eager-loading; confiar em props/options ou configs do hook
       }
     }
   } catch { /* noop */ }
@@ -405,16 +352,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       // Se o hook não tiver a config para este step específico ou não carregou ainda,
-      // usar o template canônico diretamente
-      const template = getQuiz21StepsTemplate();
+      // derivar comportamento por tipo e tentar blocks canônicos via TemplateService
       const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
-      const rawStep = (template as any)[stepId];
-
-      // Se não tiver o step no template, retornar fallback
-      if (!rawStep) {
-        appLogger.warn(`⚠️ OptionsGridBlock: Step ${stepId} não encontrado no template`);
-        return getHardcodedStepBehavior(stepNumber);
-      }
 
       // Determinar o tipo de step baseado no índice
       const getStepType = (index: number) => {
@@ -427,17 +366,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         return 'offer'; // index === 21
       };
 
-      // Normalizar componentes do step (array direto, blocks, ou sections)
-      const componentsRaw = Array.isArray(rawStep)
-        ? rawStep
-        : Array.isArray((rawStep as any)?.blocks)
-          ? (rawStep as any).blocks
-          : Array.isArray((rawStep as any)?.sections)
-            ? (rawStep as any).sections
-            : null;
-      const components: any[] = Array.isArray(componentsRaw)
-        ? componentsRaw
-        : ensureArray((rawStep as any)?.blocks).concat(ensureArray((rawStep as any)?.sections));
+      // Tentar obter blocks canônicos via TemplateService
+      let components: any[] = [];
+      try {
+        const stepData = await templateService.lazyLoadStep(stepId, false);
+        components = Array.isArray(stepData?.blocks) ? stepData.blocks : [];
+      } catch { /* noop */ }
 
       // Encontrar grids de opções para determinar validação
       const optionsGrid = safeFind<any>(components, (b: any) => {
@@ -482,19 +416,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       };
     } catch (error) {
       appLogger.error(`❌ OptionsGridBlock: Erro ao carregar configuração para step ${stepNumber}:`, error);
-      try {
-        // Log detalhado para depuração sem quebrar execução
-        const template = getQuiz21StepsTemplate();
-        const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
-        const rawStep = (template as any)[stepId];
-        appLogger.debug('🧪 Debug getStepBehavior fallback context', {
-          stepId,
-          hasRawStep: !!rawStep,
-          rawType: typeof rawStep,
-          blocksType: typeof (rawStep as any)?.blocks,
-          sectionsType: typeof (rawStep as any)?.sections,
-        });
-      } catch { /* noop */ }
+      // Log leve sem carregar template pesado
+      appLogger.debug('🧪 Debug getStepBehavior fallback context (sem template canônico)', {
+        stepId: `step-${String(stepNumber).padStart(2, '0')}`,
+      });
       // Fallback para regras hardcoded
       return getHardcodedStepBehavior(stepNumber);
     }
