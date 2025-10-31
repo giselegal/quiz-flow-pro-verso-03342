@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 type Section = { type: string; id?: string; content?: any; style?: any; animation?: any };
 
@@ -26,12 +26,12 @@ describe('hydrateSectionsWithQuizSteps', () => {
     expect(grid).toBeTruthy();
 
     // Textos do hero
-    expect(hero!.content?.questionText).toBe(QUIZ_STEPS[stepId].questionText);
+    expect(hero!.content?.questionText).toBe(TemplateService.getInstance().getAllStepsSync()[stepId].questionText);
     // step-03 possui questionNumber '2 de 10'
-    expect(hero!.content?.questionNumber).toBe(QUIZ_STEPS[stepId].questionNumber);
+    expect(hero!.content?.questionNumber).toBe(TemplateService.getInstance().getAllStepsSync()[stepId].questionNumber);
 
     // Opções mapeadas
-    const stepOptions = QUIZ_STEPS[stepId].options || [];
+    const stepOptions = TemplateService.getInstance().getAllStepsSync()[stepId].options || [];
     const mappedOptions = grid!.content?.options || [];
     expect(mappedOptions.length).toBe(stepOptions.length);
     // Verifica que cada opção tem id/text e imageUrl (quando imagem não existe, pode ficar undefined)
@@ -64,13 +64,13 @@ describe('hydrateSectionsWithQuizSteps', () => {
     expect(grid).toBeTruthy();
 
     // Textos do hero (questionText obrigatório)
-    expect(hero!.content?.questionText).toBe(QUIZ_STEPS[stepId].questionText);
+    expect(hero!.content?.questionText).toBe(TemplateService.getInstance().getAllStepsSync()[stepId].questionText);
     // strategic-question normalmente não tem questionNumber — se ausente, não deve quebrar
     // Apenas verifica que não inserimos um valor inválido
     expect(hero!.content?.questionNumber === undefined || typeof hero!.content?.questionNumber === 'string').toBe(true);
 
     // Opções mapeadas
-    const stepOptions = QUIZ_STEPS[stepId].options || [];
+    const stepOptions = TemplateService.getInstance().getAllStepsSync()[stepId].options || [];
     const mappedOptions = grid!.content?.options || [];
     expect(mappedOptions.length).toBe(stepOptions.length);
     mappedOptions.forEach((opt: any, idx: number) => {

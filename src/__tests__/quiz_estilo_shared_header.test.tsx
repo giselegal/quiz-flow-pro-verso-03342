@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import * as quizStateModule from '@/hooks/useQuizState';
 import QuizApp from '@/components/quiz/QuizApp';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 /**
  * Testes para o SharedProgressHeader (steps 2-19).
@@ -13,7 +13,7 @@ describe('SharedProgressHeader', () => {
     const realHook = quizStateModule.useQuizState;
 
     it('exibe header compartilhado na step-2 com progresso e logo', async () => {
-        const mockStep2 = QUIZ_STEPS['step-2'];
+        const mockStep2 = TemplateService.getInstance().getAllStepsSync()['step-2'];
 
         vi.spyOn(quizStateModule, 'useQuizState').mockImplementation(() => {
             const base = realHook('quiz-estilo-21-steps');
@@ -48,7 +48,7 @@ describe('SharedProgressHeader', () => {
 
     it('não exibe header compartilhado na step-20 (resultado)', async () => {
         vi.restoreAllMocks();
-        const mockStep20 = QUIZ_STEPS['step-20'];
+        const mockStep20 = TemplateService.getInstance().getAllStepsSync()['step-20'];
 
         vi.spyOn(quizStateModule, 'useQuizState').mockImplementation(() => {
             const base = realHook('quiz-estilo-21-steps');

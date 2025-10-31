@@ -1,16 +1,19 @@
 /**
  * 🚀 LAZY LOADING STRATEGY FOR QUIZ STEPS
  * 
+ * ✅ MIGRADO: Usa TemplateService como fonte canônica
+ * 
  * Virtualiza o carregamento dos dados de quiz steps para melhorar
  * performance inicial do editor.
  * 
  * Estratégia:
- * - Import dinâmico sob demanda
+ * - Import dinâmico sob demanda via TemplateService
  * - Cache de steps carregados
  * - Pré-carregamento inteligente de steps adjacentes
  */
 
-import type { QuizStep } from './quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
+import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 // Cache em memória dos steps já carregados
 const stepsCache = new Map<string, QuizStep>();
@@ -32,15 +35,16 @@ export async function loadQuizStep(stepId: string): Promise<QuizStep | null> {
         return loadingPromises.get(stepId)!;
     }
 
-    // 3. Carregar dinamicamente
+    // 3. Carregar dinamicamente via TemplateService (síncrono para cache, assíncrono disponível)
     const loadPromise = (async () => {
         try {
-            const { QUIZ_STEPS } = await import('./quizSteps');
-            const step = (QUIZ_STEPS as any)[stepId];
+            const templateService = TemplateService.getInstance();
+            const allSteps = templateService.getAllStepsSync();
+            const step = allSteps[stepId];
 
             if (step) {
-                stepsCache.set(stepId, step);
-                return step;
+                stepsCache.set(stepId, step as any);
+                return step as any;
             }
 
             return null;
@@ -105,14 +109,15 @@ export function preloadAdjacentSteps(currentStepId: string, range: number = 2) {
  */
 export async function loadAllQuizSteps(): Promise<Map<string, QuizStep>> {
     try {
-        const { QUIZ_STEPS, STEP_ORDER } = await import('./quizSteps');
+        const templateService = TemplateService.getInstance();
+        const allSteps = templateService.getAllStepsSync();
 
         const stepsMap = new Map<string, QuizStep>();
-        STEP_ORDER.forEach(stepId => {
-            const step = (QUIZ_STEPS as any)[stepId];
+        Object.keys(allSteps).forEach(stepId => {
+            const step = allSteps[stepId];
             if (step) {
-                stepsCache.set(stepId, step);
-                stepsMap.set(stepId, step);
+                stepsCache.set(stepId, step as QuizStep);
+                stepsMap.set(stepId, step as QuizStep);
             }
         });
 

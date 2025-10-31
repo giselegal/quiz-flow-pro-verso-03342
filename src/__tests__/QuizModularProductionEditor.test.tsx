@@ -21,7 +21,7 @@ import { QuizModularProductionEditor } from '@/components/editor/quiz/QuizModula
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useQuizState } from '@/hooks/useQuizState';
 import QuizApp from '@/components/quiz/QuizApp';
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 // Mocks
 vi.mock('@/services/QuizEditorBridge');

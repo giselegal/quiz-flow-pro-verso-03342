@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useQuizState } from '@/hooks/useQuizState';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 /**
  * 🔗 TESTE DE INTEGRAÇÃO - FLUXO COMPLETO 21 ETAPAS

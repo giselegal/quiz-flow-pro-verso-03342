@@ -11,7 +11,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
 
@@ -32,7 +32,7 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 id: 'test-funnel',
                 name: 'Test Funnel',
                 slug: 'test',
-                steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
+                steps: Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step], index) => ({
                     ...step,
                     id,
                     order: index + 1,
@@ -55,9 +55,9 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
             expect(Array.isArray(result.warnings)).toBe(true);
         });
 
-        it('deve validar QUIZ_STEPS com validateCompleteFunnel', () => {
-            // Criar array de steps a partir do QUIZ_STEPS
-            const stepsArray = Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
+        it('deve validar TemplateService.getInstance().getAllStepsSync() com validateCompleteFunnel', () => {
+            // Criar array de steps a partir do TemplateService.getInstance().getAllStepsSync()
+            const stepsArray = Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step], index) => ({
                 ...step,
                 id,
                 order: index + 1,
@@ -112,7 +112,7 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 id: 'test-valid',
                 name: 'Test Valid',
                 slug: 'test-valid',
-                steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
+                steps: Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step], index) => ({
                     ...step,
                     id,
                     order: index + 1,
@@ -200,7 +200,7 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 id: 'test',
                 name: 'Test',
                 slug: 'test',
-                steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
+                steps: Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step], index) => ({
                     ...step,
                     id,
                     order: index + 1,
@@ -261,7 +261,7 @@ describe('6. Logs de Integração', () => {
             id: 'test-log',
             name: 'Test Log',
             slug: 'test-log',
-            steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
+            steps: Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step], index) => ({
                 ...step,
                 id,
                 order: index + 1,

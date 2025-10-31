@@ -9,12 +9,12 @@
 
 import { describe, it, expect } from 'vitest';
 import { UnifiedQuizStepAdapter, type UnifiedQuizStep } from '@/adapters/UnifiedQuizStepAdapter';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 describe('UnifiedQuizStepAdapter', () => {
   describe('QuizStep → UnifiedQuizStep', () => {
     it('deve converter step intro corretamente', () => {
-      const quizStep = QUIZ_STEPS['step-01'];
+      const quizStep = TemplateService.getInstance().getAllStepsSync()['step-01'];
       const unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, 'step-01');
 
       expect(unified.id).toBe('step-01');
@@ -27,7 +27,7 @@ describe('UnifiedQuizStepAdapter', () => {
     });
 
     it('deve converter step question corretamente', () => {
-      const quizStep = QUIZ_STEPS['step-02'];
+      const quizStep = TemplateService.getInstance().getAllStepsSync()['step-02'];
       const unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, 'step-02');
 
       expect(unified.id).toBe('step-02');
@@ -37,7 +37,7 @@ describe('UnifiedQuizStepAdapter', () => {
     });
 
     it('deve preservar dados originais em raw.quizStep', () => {
-      const quizStep = QUIZ_STEPS['step-13'];
+      const quizStep = TemplateService.getInstance().getAllStepsSync()['step-13'];
       const unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, 'step-13');
 
       expect(unified.raw.quizStep).toEqual(quizStep);
@@ -104,7 +104,7 @@ describe('UnifiedQuizStepAdapter', () => {
 
   describe('UnifiedQuizStep → QuizStep', () => {
     it('deve retornar QuizStep original se disponível', () => {
-      const quizStep = QUIZ_STEPS['step-01'];
+      const quizStep = TemplateService.getInstance().getAllStepsSync()['step-01'];
       const unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, 'step-01');
       const reconstructed = UnifiedQuizStepAdapter.toQuizStep(unified);
 
@@ -169,7 +169,7 @@ describe('UnifiedQuizStepAdapter', () => {
 
   describe('Round-trip conversions', () => {
     it('QuizStep → Unified → QuizStep preserva dados', () => {
-      const original = QUIZ_STEPS['step-01'];
+      const original = TemplateService.getInstance().getAllStepsSync()['step-01'];
       const unified = UnifiedQuizStepAdapter.fromQuizStep(original, 'step-01');
       const reconstructed = UnifiedQuizStepAdapter.toQuizStep(unified);
 
@@ -204,14 +204,14 @@ describe('UnifiedQuizStepAdapter', () => {
       ];
 
       tests.forEach(({ id, expected }) => {
-        const quizStep = QUIZ_STEPS['step-01'];
+        const quizStep = TemplateService.getInstance().getAllStepsSync()['step-01'];
         const unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, id);
         expect(unified.stepNumber).toBe(expected);
       });
     });
 
     it('deve manter versão e source', () => {
-      const quizStep = QUIZ_STEPS['step-01'];
+      const quizStep = TemplateService.getInstance().getAllStepsSync()['step-01'];
       const unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, 'step-01');
 
       expect(unified.metadata.version).toBe('1.0');
@@ -221,7 +221,7 @@ describe('UnifiedQuizStepAdapter', () => {
 
   describe('Error handling', () => {
     it('deve lidar com stepId inválido', () => {
-      const quizStep = QUIZ_STEPS['step-01'];
+      const quizStep = TemplateService.getInstance().getAllStepsSync()['step-01'];
       const unified = UnifiedQuizStepAdapter.fromQuizStep(quizStep, 'invalid-id');
 
       expect(unified.id).toBe('invalid-id');

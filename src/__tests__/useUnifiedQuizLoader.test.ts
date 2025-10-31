@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useUnifiedQuizLoader } from '@/hooks/useUnifiedQuizLoader';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 // Mock do Supabase
 vi.mock('@/integrations/supabase/client', () => ({
@@ -23,7 +23,7 @@ describe('useUnifiedQuizLoader', () => {
   });
 
   describe('Hardcoded source', () => {
-    it('deve carregar step individual do QUIZ_STEPS', async () => {
+    it('deve carregar step individual do TemplateService.getInstance().getAllStepsSync()', async () => {
       const { result } = renderHook(() =>
         useUnifiedQuizLoader({ source: 'hardcoded' }),
       );

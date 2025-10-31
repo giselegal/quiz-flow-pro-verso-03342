@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import * as quizStateModule from '@/hooks/useQuizState';
 import QuizApp from '@/components/quiz/QuizApp';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 /**
  * Testes de layout responsivo para etapas de perguntas:
@@ -15,7 +15,7 @@ describe('Layout responsivo QuestionStep', () => {
     const realHook = quizStateModule.useQuizState;
 
     it('step-2 (com imagens) utiliza classes de múltiplas colunas', async () => {
-        const mockStep2 = QUIZ_STEPS['step-2'];
+        const mockStep2 = TemplateService.getInstance().getAllStepsSync()['step-2'];
         expect(mockStep2.options?.some(o => o.image)).toBe(true);
 
         vi.spyOn(quizStateModule, 'useQuizState').mockImplementation(() => {
@@ -49,7 +49,7 @@ describe('Layout responsivo QuestionStep', () => {
 
     it('step-3 (somente texto) utiliza 1 coluna', async () => {
         vi.restoreAllMocks();
-        const mockStep3 = QUIZ_STEPS['step-3'];
+        const mockStep3 = TemplateService.getInstance().getAllStepsSync()['step-3'];
         expect(mockStep3.options?.some(o => o.image)).toBe(false);
 
         vi.spyOn(quizStateModule, 'useQuizState').mockImplementation(() => {

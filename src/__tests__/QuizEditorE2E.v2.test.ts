@@ -15,11 +15,11 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 // Helper: Converter Record para Array
-const QUIZ_STEPS_ARRAY = Object.entries(QUIZ_STEPS).map(([id, step]) => ({
+const TemplateService.getInstance().getAllStepsSync()_ARRAY = Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step]) => ({
     ...step,
     id,
 }));
@@ -33,21 +33,21 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
     describe('1. Carregar Funnel Existente de Produção', () => {
 
         it('deve carregar todos os 21 steps do quiz-estilo', () => {
-            expect(QUIZ_STEPS).toBeDefined();
-            expect(typeof QUIZ_STEPS).toBe('object');
+            expect(TemplateService.getInstance().getAllStepsSync()).toBeDefined();
+            expect(typeof TemplateService.getInstance().getAllStepsSync()).toBe('object');
 
-            const stepsArray = Object.keys(QUIZ_STEPS);
+            const stepsArray = Object.keys(TemplateService.getInstance().getAllStepsSync());
             expect(stepsArray).toHaveLength(21);
 
             // Verifica que todos os steps têm IDs corretos (step-01 a step-21)
             for (let i = 1; i <= 21; i++) {
                 const expectedId = `step-${String(i).padStart(2, '0')}`;
-                expect(QUIZ_STEPS[expectedId]).toBeDefined();
+                expect(TemplateService.getInstance().getAllStepsSync()[expectedId]).toBeDefined();
             }
         });
 
         it('deve ter estrutura válida em cada step', () => {
-            QUIZ_STEPS_ARRAY.forEach(step => {
+            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
                 expect(step).toHaveProperty('id');
                 expect(step).toHaveProperty('type');
                 expect(step.id).toMatch(/^step-\d{2}$/);
@@ -57,7 +57,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve ter step-01 como introdução com formulário', () => {
-            const step01 = QUIZ_STEPS['step-01'];
+            const step01 = TemplateService.getInstance().getAllStepsSync()['step-01'];
 
             expect(step01.type).toBe('intro');
             expect(step01.title).toBeDefined();
@@ -70,7 +70,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve ter steps 2-11 como perguntas principais do quiz', () => {
             for (let i = 2; i <= 11; i++) {
                 const stepId = `step-${String(i).padStart(2, '0')}`;
-                const step = QUIZ_STEPS[stepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[stepId];
 
                 expect(step.type).toBe('question');
                 expect(step.questionNumber).toBeDefined();
@@ -82,7 +82,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve ter step-21 como oferta com offerMap', () => {
-            const step21 = QUIZ_STEPS['step-21'];
+            const step21 = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             expect(step21.type).toBe('offer');
             expect(step21.offerMap).toBeDefined();
@@ -98,7 +98,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
     describe('2. Editar Steps no Editor - Simulação de Usuário', () => {
 
         it('CASO 1: Usuário edita título do step-01', () => {
-            const step01 = { ...QUIZ_STEPS['step-01'] };
+            const step01 = { ...TemplateService.getInstance().getAllStepsSync()['step-01'] };
             const originalTitle = step01.title;
 
             // Simular edição
@@ -111,7 +111,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('CASO 2: Usuário edita texto de pergunta no step-02', () => {
-            const step02 = { ...QUIZ_STEPS['step-02'] };
+            const step02 = { ...TemplateService.getInstance().getAllStepsSync()['step-02'] };
             const originalQuestionText = step02.questionText;
 
             // Simular edição
@@ -124,7 +124,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('CASO 3: Usuário adiciona nova opção em step-03', () => {
-            const step03 = { ...QUIZ_STEPS['step-03'] };
+            const step03 = { ...TemplateService.getInstance().getAllStepsSync()['step-03'] };
             const originalOptionsLength = step03.options?.length || 0;
 
             // Simular adição de opção
@@ -140,7 +140,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('CASO 4: Usuário atualiza buttonText do step-01', () => {
-            const step01 = { ...QUIZ_STEPS['step-01'] };
+            const step01 = { ...TemplateService.getInstance().getAllStepsSync()['step-01'] };
 
             // Simular edição
             step01.buttonText = 'Começar Agora Mesmo!';
@@ -150,7 +150,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('CASO 5: Usuário edita placeholder do formulário', () => {
-            const step01 = { ...QUIZ_STEPS['step-01'] };
+            const step01 = { ...TemplateService.getInstance().getAllStepsSync()['step-01'] };
 
             // Simular edição
             step01.placeholder = 'Seu nome aqui...';
@@ -159,7 +159,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('CASO 6: Usuário altera requiredSelections em pergunta', () => {
-            const step02 = { ...QUIZ_STEPS['step-02'] };
+            const step02 = { ...TemplateService.getInstance().getAllStepsSync()['step-02'] };
             const originalRequired = step02.requiredSelections;
 
             // Simular edição
@@ -178,20 +178,20 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
     describe('3. Validar Integridade da Estrutura dos Steps', () => {
 
         it('deve ter cadeia de navegação válida (nextStep)', () => {
-            const stepsWithNextStep = QUIZ_STEPS_ARRAY.filter(step => step.nextStep);
+            const stepsWithNextStep = TemplateService.getInstance().getAllStepsSync()_ARRAY.filter(step => step.nextStep);
 
             stepsWithNextStep.forEach(step => {
                 const nextStepId = step.nextStep;
 
                 if (nextStepId) {
-                    const nextStepExists = QUIZ_STEPS[nextStepId];
+                    const nextStepExists = TemplateService.getInstance().getAllStepsSync()[nextStepId];
                     expect(nextStepExists).toBeDefined();
                 }
             });
         });
 
         it('deve ter todas as options com ID válido', () => {
-            QUIZ_STEPS_ARRAY.forEach(step => {
+            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
                 if (step.options) {
                     step.options.forEach(option => {
                         expect(option.id).toBeDefined();
@@ -206,7 +206,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve ter questionNumber sequencial nas perguntas principais', () => {
             for (let i = 2; i <= 11; i++) {
                 const stepId = `step-${String(i).padStart(2, '0')}`;
-                const step = QUIZ_STEPS[stepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[stepId];
 
                 if (step.type === 'question') {
                     expect(step.questionNumber).toContain(`${i - 1} de 10`);
@@ -215,7 +215,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve ter offerMap completo em step-21', () => {
-            const step21 = QUIZ_STEPS['step-21'];
+            const step21 = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             expect(step21.offerMap).toBeDefined();
 
@@ -233,7 +233,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve ter structure consistente de testimonials', () => {
-            const step21 = QUIZ_STEPS['step-21'];
+            const step21 = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             if (step21.offerMap) {
                 Object.values(step21.offerMap).forEach(offer => {
@@ -253,7 +253,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
     describe('4. Round-Trip e Serialização de Dados', () => {
 
         it('deve preservar dados após JSON.stringify/parse em todos os steps', () => {
-            QUIZ_STEPS_ARRAY.forEach(step => {
+            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
                 const serialized = JSON.stringify(step);
                 const deserialized = JSON.parse(serialized);
 
@@ -267,7 +267,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve preservar opções após serialização', () => {
-            const stepsWithOptions = QUIZ_STEPS_ARRAY.filter(s => s.options && s.options.length > 0);
+            const stepsWithOptions = TemplateService.getInstance().getAllStepsSync()_ARRAY.filter(s => s.options && s.options.length > 0);
 
             stepsWithOptions.forEach(step => {
                 const serialized = JSON.stringify(step.options);
@@ -283,7 +283,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve preservar offerMap após serialização', () => {
-            const step21 = QUIZ_STEPS['step-21'];
+            const step21 = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             const serialized = JSON.stringify(step21.offerMap);
             const deserialized = JSON.parse(serialized);
@@ -296,7 +296,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve manter tipos corretos após round-trip', () => {
-            QUIZ_STEPS_ARRAY.forEach(step => {
+            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
                 const serialized = JSON.stringify(step);
                 const deserialized = JSON.parse(serialized);
 
@@ -326,7 +326,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
 
         beforeEach(() => {
             // Simular salvamento como rascunho
-            draftSteps = JSON.parse(JSON.stringify(QUIZ_STEPS));
+            draftSteps = JSON.parse(JSON.stringify(TemplateService.getInstance().getAllStepsSync()));
 
             // Simular edições no rascunho
             draftSteps['step-01'].title = 'RASCUNHO: Título Editado';
@@ -341,7 +341,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             expect(draftSteps['step-02'].questionText).toBe('RASCUNHO: Pergunta Editada');
 
             // Verificar que outros steps não foram afetados
-            expect(draftSteps['step-03'].type).toBe(QUIZ_STEPS['step-03'].type);
+            expect(draftSteps['step-03'].type).toBe(TemplateService.getInstance().getAllStepsSync()['step-03'].type);
         });
 
         it('deve publicar rascunho para produção', () => {
@@ -365,7 +365,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve preservar todas as opções após publicação', () => {
             for (let i = 2; i <= 11; i++) {
                 const stepId = `step-${String(i).padStart(2, '0')}`;
-                const originalOptions = QUIZ_STEPS[stepId].options || [];
+                const originalOptions = TemplateService.getInstance().getAllStepsSync()[stepId].options || [];
                 const publishedOptions = publishedSteps[stepId].options || [];
 
                 expect(publishedOptions).toHaveLength(originalOptions.length);
@@ -383,8 +383,8 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve carregar todos os 21 steps rapidamente', () => {
             const start = performance.now();
 
-            const steps = Object.keys(QUIZ_STEPS);
-            const stepsData = steps.map(id => QUIZ_STEPS[id]);
+            const steps = Object.keys(TemplateService.getInstance().getAllStepsSync());
+            const stepsData = steps.map(id => TemplateService.getInstance().getAllStepsSync()[id]);
 
             const end = performance.now();
             const duration = end - start;
@@ -394,7 +394,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve suportar múltiplas edições consecutivas sem degradação', () => {
-            let tempStep = { ...QUIZ_STEPS['step-01'] };
+            let tempStep = { ...TemplateService.getInstance().getAllStepsSync()['step-01'] };
 
             const start = performance.now();
 
@@ -418,7 +418,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve serializar todos os steps rapidamente', () => {
             const start = performance.now();
 
-            const serialized = JSON.stringify(QUIZ_STEPS);
+            const serialized = JSON.stringify(TemplateService.getInstance().getAllStepsSync());
             const deserialized = JSON.parse(serialized);
 
             const end = performance.now();
@@ -431,14 +431,14 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve lidar com clonagem profunda de todos os steps', () => {
             const start = performance.now();
 
-            const cloned = JSON.parse(JSON.stringify(QUIZ_STEPS));
+            const cloned = JSON.parse(JSON.stringify(TemplateService.getInstance().getAllStepsSync()));
 
             const end = performance.now();
             const duration = end - start;
 
             expect(Object.keys(cloned)).toHaveLength(21);
-            expect(cloned).toEqual(QUIZ_STEPS);
-            expect(cloned).not.toBe(QUIZ_STEPS); // Diferentes referências
+            expect(cloned).toEqual(TemplateService.getInstance().getAllStepsSync());
+            expect(cloned).not.toBe(TemplateService.getInstance().getAllStepsSync()); // Diferentes referências
             expect(duration).toBeLessThan(100);
         });
 
@@ -452,7 +452,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
 
         it('FLUXO 1: Carregar → Editar → Validar → Salvar', () => {
             // 1. Carregar
-            const step = { ...QUIZ_STEPS['step-02'] };
+            const step = { ...TemplateService.getInstance().getAllStepsSync()['step-02'] };
             expect(step.type).toBe('question');
 
             // 2. Editar
@@ -471,7 +471,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
 
         it('FLUXO 2: Criar novo funnel baseado no template', () => {
             // 1. Clonar template
-            const newFunnel = JSON.parse(JSON.stringify(QUIZ_STEPS));
+            const newFunnel = JSON.parse(JSON.stringify(TemplateService.getInstance().getAllStepsSync()));
 
             // 2. Personalizar títulos
             newFunnel['step-01'].title = 'Novo Funnel Personalizado';
@@ -482,7 +482,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             expect(newFunnel['step-01'].title).toBe('Novo Funnel Personalizado');
 
             // 4. Verificar independência (não afetou original)
-            expect(QUIZ_STEPS['step-01'].title).not.toBe('Novo Funnel Personalizado');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-01'].title).not.toBe('Novo Funnel Personalizado');
         });
 
         it('FLUXO 3: Editar múltiplos steps e publicar em lote', () => {
@@ -493,7 +493,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             // 2. Editar cada um
             stepsToEdit.forEach(id => {
                 editedSteps[id] = {
-                    ...QUIZ_STEPS[id],
+                    ...TemplateService.getInstance().getAllStepsSync()[id],
                     title: `${id} - EDITADO`,
                 };
             });
@@ -505,7 +505,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
 
             // 4. Publicar (merge com original)
             const published = {
-                ...QUIZ_STEPS,
+                ...TemplateService.getInstance().getAllStepsSync(),
                 ...editedSteps,
             };
 
@@ -515,7 +515,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
 
         it('FLUXO 4: Rollback de edições (desfazer)', () => {
             // 1. Estado original
-            const original = JSON.parse(JSON.stringify(QUIZ_STEPS['step-01']));
+            const original = JSON.parse(JSON.stringify(TemplateService.getInstance().getAllStepsSync()['step-01']));
 
             // 2. Editar
             const edited = { ...original, title: 'EDITADO' };
@@ -529,7 +529,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
 
         it('FLUXO 5: Validar funnel antes de publicar', () => {
             // 1. Preparar para publicação
-            const toPublish = JSON.parse(JSON.stringify(QUIZ_STEPS));
+            const toPublish = JSON.parse(JSON.stringify(TemplateService.getInstance().getAllStepsSync()));
 
             // 2. Executar validações
             let isValid = true;
@@ -569,21 +569,21 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve ter todos os steps de step-01 a step-21', () => {
             for (let i = 1; i <= 21; i++) {
                 const stepId = `step-${String(i).padStart(2, '0')}`;
-                expect(QUIZ_STEPS[stepId]).toBeDefined();
-                expect(QUIZ_STEPS[stepId].type).toBeDefined();
+                expect(TemplateService.getInstance().getAllStepsSync()[stepId]).toBeDefined();
+                expect(TemplateService.getInstance().getAllStepsSync()[stepId].type).toBeDefined();
             }
         });
 
         it('deve ter tipos corretos em cada step', () => {
-            expect(QUIZ_STEPS['step-01'].type).toBe('intro');
-            expect(QUIZ_STEPS['step-02'].type).toBe('question');
-            expect(QUIZ_STEPS['step-21'].type).toBe('offer');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-01'].type).toBe('intro');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-02'].type).toBe('question');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-21'].type).toBe('offer');
         });
 
         it('deve poder iterar sobre todos os steps sem erros', () => {
             let count = 0;
 
-            Object.entries(QUIZ_STEPS).forEach(([id, step]) => {
+            Object.entries(TemplateService.getInstance().getAllStepsSync()).forEach(([id, step]) => {
                 expect(id).toBeDefined();
                 expect(step).toBeDefined();
                 expect(step.type).toBeDefined();
@@ -596,7 +596,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         it('deve ter nextStep definido em todos os steps exceto o último', () => {
             for (let i = 1; i < 21; i++) {
                 const stepId = `step-${String(i).padStart(2, '0')}`;
-                const step = QUIZ_STEPS[stepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[stepId];
 
                 if (step.nextStep) {
                     expect(step.nextStep).toBeDefined();

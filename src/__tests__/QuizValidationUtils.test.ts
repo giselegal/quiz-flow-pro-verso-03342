@@ -13,14 +13,14 @@ import {
     getValidNextSteps,
     OFFER_MAP_KEYS,
 } from '@/utils/quizValidationUtils';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 describe('🛡️ Quiz Validation Utils', () => {
 
     describe('1. validateStyleIds - IDs de estilos válidos', () => {
 
         it('deve passar para step-02 com IDs válidos', () => {
-            const step = { ...QUIZ_STEPS['step-02'], id: 'step-02' };
+            const step = { ...TemplateService.getInstance().getAllStepsSync()['step-02'], id: 'step-02' };
             const result = validateStyleIds(step);
 
             // Debug: mostrar erros se houver
@@ -79,7 +79,7 @@ describe('🛡️ Quiz Validation Utils', () => {
     describe('2. validateNextStep - Validação de nextStep', () => {
 
         it('deve passar para step-01 com nextStep válido', () => {
-            const step = { ...QUIZ_STEPS['step-01'], id: 'step-01' };
+            const step = { ...TemplateService.getInstance().getAllStepsSync()['step-01'], id: 'step-01' };
             const result = validateNextStep(step);
 
             expect(result.isValid).toBe(true);
@@ -153,7 +153,7 @@ describe('🛡️ Quiz Validation Utils', () => {
     describe('3. validateOfferMap - Validação do mapa de ofertas', () => {
 
         it('deve passar para step-21 com offerMap completo', () => {
-            const step = { ...QUIZ_STEPS['step-21'], id: 'step-21' };
+            const step = { ...TemplateService.getInstance().getAllStepsSync()['step-21'], id: 'step-21' };
             const result = validateOfferMap(step);
 
             expect(result.isValid).toBe(true);
@@ -279,7 +279,7 @@ describe('🛡️ Quiz Validation Utils', () => {
     describe('4. validateFormInput - Validação do formulário', () => {
 
         it('deve passar para step-01 com formInput completo', () => {
-            const step = { ...QUIZ_STEPS['step-01'], id: 'step-01' };
+            const step = { ...TemplateService.getInstance().getAllStepsSync()['step-01'], id: 'step-01' };
             const result = validateFormInput(step);
 
             expect(result.isValid).toBe(true);
@@ -334,12 +334,12 @@ describe('🛡️ Quiz Validation Utils', () => {
 
     describe('5. validateCompleteFunnel - Validação completa', () => {
 
-        it('deve passar para QUIZ_STEPS completo', () => {
-            const result = validateCompleteFunnel(QUIZ_STEPS);
+        it('deve passar para TemplateService.getInstance().getAllStepsSync() completo', () => {
+            const result = validateCompleteFunnel(TemplateService.getInstance().getAllStepsSync());
 
             // Debug: mostrar primeiros 10 erros
             if (result.errors.length > 0) {
-                console.log('\n📊 Erros encontrados no QUIZ_STEPS:');
+                console.log('\n📊 Erros encontrados no TemplateService.getInstance().getAllStepsSync():');
                 result.errors.slice(0, 10).forEach(e => {
                     console.log(`  - [${e.stepId}] ${e.field}: ${e.message}`);
                 });
@@ -364,8 +364,8 @@ describe('🛡️ Quiz Validation Utils', () => {
             expect(criticalErrors.length).toBe(0);
         }); it('deve detectar funnel incompleto', () => {
             const incompleteFunnel = {
-                'step-01': QUIZ_STEPS['step-01'],
-                'step-02': QUIZ_STEPS['step-02'],
+                'step-01': TemplateService.getInstance().getAllStepsSync()['step-01'],
+                'step-02': TemplateService.getInstance().getAllStepsSync()['step-02'],
                 // Faltam 19 etapas
             };
 

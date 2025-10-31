@@ -5,19 +5,19 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 describe('Editor Performance - Step Loading', () => {
-    it('should load QUIZ_STEPS data structure quickly', () => {
+    it('should load TemplateService.getInstance().getAllStepsSync() data structure quickly', () => {
         const start = performance.now();
 
-        const stepsData = { ...QUIZ_STEPS };
+        const stepsData = { ...TemplateService.getInstance().getAllStepsSync() };
         const order = [...STEP_ORDER];
 
         const end = performance.now();
         const duration = end - start;
 
-        console.log(`✅ QUIZ_STEPS load time: ${duration.toFixed(2)}ms`);
+        console.log(`✅ TemplateService.getInstance().getAllStepsSync() load time: ${duration.toFixed(2)}ms`);
 
         expect(Object.keys(stepsData)).toHaveLength(21);
         expect(order).toHaveLength(21);
@@ -28,7 +28,7 @@ describe('Editor Performance - Step Loading', () => {
         const start = performance.now();
 
         const enrichedSteps = STEP_ORDER.map((stepId, idx) => {
-            const quizStep: any = (QUIZ_STEPS as any)[stepId];
+            const quizStep: any = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
 
             if (!quizStep) {
                 return { stepId, blocks: [], time: 0 };
@@ -102,7 +102,7 @@ describe('Editor Performance - Step Loading', () => {
         const start = performance.now();
 
         const enrichedSteps = STEP_ORDER.map((stepId) => {
-            const quizStep: any = (QUIZ_STEPS as any)[stepId];
+            const quizStep: any = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
             return {
                 id: stepId,
                 type: quizStep?.type,
@@ -134,7 +134,7 @@ describe('Editor Performance - Step Loading', () => {
         const largeArrays: any[] = [];
         for (let i = 0; i < 21; i++) {
             const stepId = STEP_ORDER[i];
-            const quizStep = (QUIZ_STEPS as any)[stepId];
+            const quizStep = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
 
             // Simular clonagem profunda (operação comum em setState)
             const cloned = JSON.parse(JSON.stringify(quizStep));
@@ -163,7 +163,7 @@ describe('Editor Performance - Step Loading', () => {
         STEP_ORDER.forEach((stepId) => {
             const stepStart = performance.now();
 
-            const quizStep: any = (QUIZ_STEPS as any)[stepId];
+            const quizStep: any = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
 
             // Simular operações de mount
             const state = {
@@ -204,7 +204,7 @@ describe('Editor Performance - Block Rendering', () => {
         const start = performance.now();
 
         const questionSteps = STEP_ORDER
-            .map(id => (QUIZ_STEPS as any)[id])
+            .map(id => (TemplateService.getInstance().getAllStepsSync() as any)[id])
             .filter(step => step?.type === 'question' || step?.type === 'strategic-question');
 
         const optionsCounts = questionSteps.map(step => ({
@@ -243,7 +243,7 @@ describe('Editor Performance - Block Rendering', () => {
         };
 
         STEP_ORDER.forEach(stepId => {
-            const step: any = (QUIZ_STEPS as any)[stepId];
+            const step: any = (TemplateService.getInstance().getAllStepsSync() as any)[stepId];
             if (!step) return;
 
             // Contar blocks potenciais

@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep, QuizOptionV3 as QuizOption } from '@/types/quiz';
 import { styleMapping, type StyleId } from '@/data/styles';
 
@@ -22,7 +22,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
     describe('1. Validar Estrutura Completa (21 Etapas)', () => {
         it('deve ter exatamente 21 etapas', () => {
             expect(STEP_ORDER).toHaveLength(21);
-            expect(Object.keys(QUIZ_STEPS)).toHaveLength(21);
+            expect(Object.keys(TemplateService.getInstance().getAllStepsSync())).toHaveLength(21);
         });
 
         it('deve ter todas as etapas em sequência step-01 a step-21', () => {
@@ -36,31 +36,31 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
 
         it('deve ter tipos de etapa corretos por faixa', () => {
             // Step-01: intro
-            expect(QUIZ_STEPS['step-01'].type).toBe('intro');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-01'].type).toBe('intro');
 
             // Steps 02-11: question (10 perguntas principais)
             for (let i = 2; i <= 11; i++) {
                 const stepId = `step-${i.toString().padStart(2, '0')}`;
-                expect(QUIZ_STEPS[stepId].type).toBe('question');
+                expect(TemplateService.getInstance().getAllStepsSync()[stepId].type).toBe('question');
             }
 
             // Step-12: transition
-            expect(QUIZ_STEPS['step-12'].type).toBe('transition');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-12'].type).toBe('transition');
 
             // Steps 13-18: strategic-question (6 perguntas estratégicas)
             for (let i = 13; i <= 18; i++) {
                 const stepId = `step-${i.toString().padStart(2, '0')}`;
-                expect(QUIZ_STEPS[stepId].type).toBe('strategic-question');
+                expect(TemplateService.getInstance().getAllStepsSync()[stepId].type).toBe('strategic-question');
             }
 
             // Step-19: transition-result
-            expect(QUIZ_STEPS['step-19'].type).toBe('transition-result');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-19'].type).toBe('transition-result');
 
             // Step-20: result
-            expect(QUIZ_STEPS['step-20'].type).toBe('result');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-20'].type).toBe('result');
 
             // Step-21: offer
-            expect(QUIZ_STEPS['step-21'].type).toBe('offer');
+            expect(TemplateService.getInstance().getAllStepsSync()['step-21'].type).toBe('offer');
         });
 
         it('deve ter nextStep correto em cada etapa (exceto última)', () => {
@@ -68,19 +68,19 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                 const currentStepId = `step-${i.toString().padStart(2, '0')}`;
                 const expectedNextStepId = `step-${(i + 1).toString().padStart(2, '0')}`;
 
-                const step = QUIZ_STEPS[currentStepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[currentStepId];
                 expect(step.nextStep).toBe(expectedNextStepId);
             }
 
             // Step-21 não deve ter nextStep
-            expect(QUIZ_STEPS['step-21'].nextStep).toBeUndefined();
+            expect(TemplateService.getInstance().getAllStepsSync()['step-21'].nextStep).toBeUndefined();
         });
     });
 
     describe('2. Validar Componentes Necessários por Etapa', () => {
 
         it('step-01 (intro) deve ter: title HTML, formQuestion, placeholder, buttonText, image', () => {
-            const step = QUIZ_STEPS['step-01'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-01'];
 
             expect(step.title).toBeDefined();
             expect(step.title).toContain('<span'); // HTML
@@ -94,7 +94,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         it('steps 02-11 (questions) devem ter: questionNumber, questionText, requiredSelections=3, 8 options com id de estilo', () => {
             for (let i = 2; i <= 11; i++) {
                 const stepId = `step-${i.toString().padStart(2, '0')}`;
-                const step = QUIZ_STEPS[stepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[stepId];
 
                 expect(step.questionNumber).toBeDefined();
                 expect(step.questionText).toBeDefined();
@@ -111,7 +111,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('step-12 (transition) deve ter: title, text, showContinueButton, continueButtonText, duration', () => {
-            const step = QUIZ_STEPS['step-12'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-12'];
 
             expect(step.title).toBe('🕐 Enquanto calculamos o seu resultado...');
             expect(step.text).toContain('perguntas que vão tornar');
@@ -123,7 +123,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         it('steps 13-18 (strategic-questions) devem ter: questionText, 4 options sem imagem', () => {
             for (let i = 13; i <= 18; i++) {
                 const stepId = `step-${i.toString().padStart(2, '0')}`;
-                const step = QUIZ_STEPS[stepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[stepId];
 
                 expect(step.questionText).toBeDefined();
                 expect(step.options).toHaveLength(4);
@@ -136,7 +136,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('step-18 (última strategic) deve ter opções com IDs específicos para offerMap', () => {
-            const step = QUIZ_STEPS['step-18'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-18'];
 
             expect(step.questionText).toContain('resultados você mais gostaria');
 
@@ -152,7 +152,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('step-19 (transition-result) deve ter: title apenas', () => {
-            const step = QUIZ_STEPS['step-19'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-19'];
 
             expect(step.title).toBe('Obrigada por compartilhar.');
             expect(step.text).toBeUndefined();
@@ -160,14 +160,14 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('step-20 (result) deve ter: title com {userName} placeholder', () => {
-            const step = QUIZ_STEPS['step-20'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-20'];
 
             expect(step.title).toContain('{userName}');
             expect(step.title).toContain('seu estilo predominante é');
         });
 
         it('step-21 (offer) deve ter: image, offerMap com 4 chaves específicas', () => {
-            const step = QUIZ_STEPS['step-21'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             expect(step.image).toContain('cloudinary');
             expect(step.offerMap).toBeDefined();
@@ -197,7 +197,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
     describe('3. ❌ GAP: Componentes Faltando no Editor', () => {
 
         it('GAP 1: Componente "testimonial" não existe (usado em step-21)', () => {
-            const step = QUIZ_STEPS['step-21'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             // Verificar que offerMap tem testimonials
             const firstOffer = Object.values(step.offerMap || {})[0];
@@ -213,7 +213,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('GAP 2: Componente "style-result-card" não existe (usado em step-20)', () => {
-            const step = QUIZ_STEPS['step-20'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-20'];
 
             // Step-20 precisa renderizar o estilo calculado
             expect(step.type).toBe('result');
@@ -228,7 +228,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('GAP 3: Componente "offer-map" não existe (usado em step-21)', () => {
-            const step = QUIZ_STEPS['step-21'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             expect(step.offerMap).toBeDefined();
             expect(Object.keys(step.offerMap || {})).toHaveLength(4);
@@ -246,8 +246,8 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
     describe('4. ❌ GAP: Propriedades Críticas Faltando', () => {
 
         it('GAP 4: QuizOptions precisa de "requiredSelections" (usado em todas as perguntas)', () => {
-            const step02 = QUIZ_STEPS['step-02'];
-            const step13 = QUIZ_STEPS['step-13'];
+            const step02 = TemplateService.getInstance().getAllStepsSync()['step-02'];
+            const step13 = TemplateService.getInstance().getAllStepsSync()['step-13'];
 
             expect(step02.requiredSelections).toBe(3); // Perguntas principais
             expect(step13.requiredSelections).toBeUndefined(); // Strategic = 1 por padrão
@@ -261,8 +261,8 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('GAP 5: QuizOptions precisa de "showImages" (perguntas principais têm, estratégicas não)', () => {
-            const step02 = QUIZ_STEPS['step-02'];
-            const step13 = QUIZ_STEPS['step-13'];
+            const step02 = TemplateService.getInstance().getAllStepsSync()['step-02'];
+            const step13 = TemplateService.getInstance().getAllStepsSync()['step-13'];
 
             const hasImages = step02.options?.some((o: QuizOption) => o.image) || false;
             const noImages = step13.options?.every((o: QuizOption) => !o.image) || false;
@@ -279,7 +279,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('GAP 6: Heading precisa de "fontFamily" (usado em step-01 com playfair-display)', () => {
-            const step = QUIZ_STEPS['step-01'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-01'];
 
             expect(step.title).toContain('playfair-display');
 
@@ -292,7 +292,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('GAP 7: Transition precisa de "showContinueButton", "continueButtonText", "duration"', () => {
-            const step = QUIZ_STEPS['step-12'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-12'];
 
             expect(step.showContinueButton).toBe(true);
             expect(step.continueButtonText).toBe('Continuar');
@@ -317,7 +317,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
             // Verificar que todos os IDs são válidos
             for (let i = 2; i <= 11; i++) {
                 const stepId = `step-${i.toString().padStart(2, '0')}`;
-                const step = QUIZ_STEPS[stepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[stepId];
 
                 step.options?.forEach((option: QuizOption) => {
                     expect(validStyleIds).toContain(option.id);
@@ -334,8 +334,8 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('GAP 9: Validar step-18 deve ter opções com IDs específicos para offerMap', () => {
-            const step18 = QUIZ_STEPS['step-18'];
-            const step21 = QUIZ_STEPS['step-21'];
+            const step18 = TemplateService.getInstance().getAllStepsSync()['step-18'];
+            const step21 = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             const step18OptionIds = step18.options?.map((o: QuizOption) => o.id) || [];
 
@@ -363,7 +363,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
         });
 
         it('GAP 10: Validar step-01 deve ter FormInput (obrigatório para coletar nome)', () => {
-            const step = QUIZ_STEPS['step-01'];
+            const step = TemplateService.getInstance().getAllStepsSync()['step-01'];
 
             expect(step.formQuestion).toBeDefined();
             expect(step.placeholder).toBeDefined();
@@ -379,14 +379,14 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
 
         it('GAP 11: Validar nextStep aponta para etapa válida', () => {
             STEP_ORDER.forEach((stepId, index) => {
-                const step = QUIZ_STEPS[stepId];
+                const step = TemplateService.getInstance().getAllStepsSync()[stepId];
 
                 if (index < STEP_ORDER.length - 1) {
                     // Não é a última etapa, deve ter nextStep
                     expect(step.nextStep).toBeDefined();
 
-                    // nextStep deve existir em QUIZ_STEPS
-                    expect(QUIZ_STEPS).toHaveProperty(step.nextStep!);
+                    // nextStep deve existir em TemplateService.getInstance().getAllStepsSync()
+                    expect(TemplateService.getInstance().getAllStepsSync()).toHaveProperty(step.nextStep!);
                 } else {
                     // Última etapa não deve ter nextStep
                     expect(step.nextStep).toBeUndefined();
@@ -466,7 +466,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
     describe('7. ❌ GAP: Conversão Bidirecional (Editor ↔ Runtime)', () => {
 
         it('GAP 12: Converter QuizStep → EditableBlocks', () => {
-            const step02 = QUIZ_STEPS['step-02'];
+            const step02 = TemplateService.getInstance().getAllStepsSync()['step-02'];
 
             // O que deve ser convertido:
             // step02.questionNumber → não usado em blocos (metadata)
@@ -528,7 +528,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
 
         it('GAP 14: Round-trip deve preservar dados (editor → runtime → editor)', () => {
             // Testar ida e volta completa:
-            // 1. Carregar QUIZ_STEPS['step-02']
+            // 1. Carregar TemplateService.getInstance().getAllStepsSync()['step-02']
             // 2. Converter para blocos (convertStepToBlocks)
             // 3. Converter de volta (convertBlocksToStep)
             // 4. Comparar com original
@@ -546,8 +546,8 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
     describe('8. ✅ Variáveis Dinâmicas ({userName})', () => {
 
         it('deve encontrar placeholders {userName} em step-20 e step-21', () => {
-            const step20 = QUIZ_STEPS['step-20'];
-            const step21 = QUIZ_STEPS['step-21'];
+            const step20 = TemplateService.getInstance().getAllStepsSync()['step-20'];
+            const step21 = TemplateService.getInstance().getAllStepsSync()['step-21'];
 
             expect(step20.title).toContain('{userName}');
 
