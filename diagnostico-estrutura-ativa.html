@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico - Estrutura de Template Ativa</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .section {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #569cd6;
+            margin-top: 0;
+        }
+
+        .test {
+            margin: 15px 0;
+            padding: 15px;
+            background: #1e1e1e;
+            border-left: 4px solid #007acc;
+            border-radius: 4px;
+        }
+
+        .test.success {
+            border-left-color: #4ec9b0;
+        }
+
+        .test.error {
+            border-left-color: #f48771;
+        }
+
+        .test.warning {
+            border-left-color: #dcdcaa;
+        }
+
+        .status {
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .status.success {
+            background: #4ec9b0;
+            color: #000;
+        }
+
+        .status.error {
+            background: #f48771;
+            color: #000;
+        }
+
+        .status.warning {
+            background: #dcdcaa;
+            color: #000;
+        }
+
+        .status.info {
+            background: #569cd6;
+            color: #000;
+        }
+
+        pre {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .network-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .network-table th,
+        .network-table td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #3e3e42;
+        }
+
+        .network-table th {
+            background: #37373d;
+            color: #4ec9b0;
+        }
+
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #1177bb;
+        }
+
+        .timestamp {
+            color: #858585;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Diagnóstico - Estrutura de Template Ativa</h1>
+
+    <div class="section">
+        <h2>📋 Controles</h2>
+        <button onclick="runAllTests()">▶️ Executar Todos os Testes</button>
+        <button onclick="clearResults()">🗑️ Limpar Resultados</button>
+        <button onclick="location.reload()">🔄 Recarregar Página</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        let testResults = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            console.log(`[${timestamp}] ${message}`);
+            testResults.push({ timestamp, message, type });
+        }
+
+        function clearResults() {
+            results.innerHTML = '';
+            testResults = [];
+            console.clear();
+        }
+
+        function renderResults() {
+            results.innerHTML = testResults.map(r => `
+                <div class="test ${r.type}">
+                    <span class="status ${r.type}">${r.type.toUpperCase()}</span>
+                    <span class="timestamp">${r.timestamp}</span>
+                    <div style="margin-top: 10px;">${r.message}</div>
+                </div>
+            `).join('');
+        }
+
+        async function runAllTests() {
+            clearResults();
+            log('Iniciando diagnóstico completo...', 'info');
+
+            await test1_CheckMonkeyPatch();
+            await test2_CheckTemplateService();
+            await test3_CheckUnifiedRegistry();
+            await test4_LoadStepDirectly();
+            await test5_CheckNetworkRequests();
+            await test6_CheckCacheLayers();
+            await test7_VerifyJSONStructure();
+
+            renderResults();
+            log('✅ Diagnóstico completo!', 'success');
+        }
+
+        // TEST 1: Verificar se monkey-patch está ativo
+        async function test1_CheckMonkeyPatch() {
+            log('TEST 1: Verificando monkey-patch no TemplateLoader...', 'info');
+
+            try {
+                // Verificar se window tem acesso aos módulos
+                const hasTemplateLoader = typeof window.TemplateLoader !== 'undefined';
+
+                if (hasTemplateLoader) {
+                    log('✅ TemplateLoader acessível globalmente', 'success');
+                } else {
+                    log('⚠️ TemplateLoader não está no escopo global (esperado no dev)', 'warning');
+                    log('   Verificar console do navegador para logs de monkey-patch', 'info');
+                }
+
+                // Verificar console logs anteriores
+                log('   Procure no console por: "🔄 [EditorProviderUnified] lazyLoadStep ativado"', 'info');
+
+            } catch (error) {
+                log(`❌ Erro ao verificar monkey-patch: ${error.message}`, 'error');
+            }
+        }
+
+        // TEST 2: Verificar TemplateService
+        async function test2_CheckTemplateService() {
+            log('TEST 2: Verificando TemplateService...', 'info');
+
+            try {
+                const response = await fetch('/src/services/canonical/TemplateService.ts');
+                if (response.ok) {
+                    const content = await response.text();
+
+                    const hasLazyLoadStep = content.includes('lazyLoadStep');
+                    const hasPreload = content.includes('preloadNeighborsAndCritical');
+                    const hasRegistry = content.includes('this.registry.getStep');
+
+                    log(`   ✅ lazyLoadStep implementado: ${hasLazyLoadStep}`, hasLazyLoadStep ? 'success' : 'error');
+                    log(`   ✅ Preload implementado: ${hasPreload}`, hasPreload ? 'success' : 'error');
+                    log(`   ✅ Registry integration: ${hasRegistry}`, hasRegistry ? 'success' : 'error');
+                } else {
+                    log('⚠️ Não foi possível ler TemplateService.ts', 'warning');
+                }
+            } catch (error) {
+                log(`❌ Erro ao verificar TemplateService: ${error.message}`, 'error');
+            }
+        }
+
+        // TEST 3: Verificar UnifiedTemplateRegistry
+        async function test3_CheckUnifiedRegistry() {
+            log('TEST 3: Verificando UnifiedTemplateRegistry...', 'info');
+
+            try {
+                const response = await fetch('/src/services/UnifiedTemplateRegistry.ts');
+                if (response.ok) {
+                    const content = await response.text();
+
+                    const hasL1Cache = content.includes('l1Cache');
+                    const hasL2Cache = content.includes('l2Cache');
+                    const hasL3Embedded = content.includes('l3Embedded');
+                    const hasLoadFromServer = content.includes('loadFromServer');
+                    const usesBlocksPath = content.includes('/templates/blocks/');
+
+                    log(`   ✅ L1 Cache (Memory): ${hasL1Cache}`, hasL1Cache ? 'success' : 'error');
+                    log(`   ✅ L2 Cache (IndexedDB): ${hasL2Cache}`, hasL2Cache ? 'success' : 'error');
+                    log(`   ✅ L3 Embedded: ${hasL3Embedded}`, hasL3Embedded ? 'success' : 'error');
+                    log(`   ✅ LoadFromServer: ${hasLoadFromServer}`, hasLoadFromServer ? 'success' : 'error');
+                    log(`   ✅ Usa /templates/blocks/: ${usesBlocksPath}`, usesBlocksPath ? 'success' : 'error');
+                } else {
+                    log('⚠️ Não foi possível ler UnifiedTemplateRegistry.ts', 'warning');
+                }
+            } catch (error) {
+                log(`❌ Erro ao verificar UnifiedTemplateRegistry: ${error.message}`, 'error');
+            }
+        }
+
+        // TEST 4: Tentar carregar step diretamente
+        async function test4_LoadStepDirectly() {
+            log('TEST 4: Testando carregamento de step-01...', 'info');
+
+            const paths = [
+                '/templates/blocks/step-01.json',
+                '/templates/step-01-v3.json',
+                '/templates/step-01.json',
+                '/public/templates/blocks/step-01.json'
+            ];
+
+            for (const path of paths) {
+                try {
+                    const response = await fetch(path);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const hasBlocks = data.blocks && Array.isArray(data.blocks);
+                        const blockCount = hasBlocks ? data.blocks.length : 0;
+
+                        log(`   ✅ ENCONTRADO: ${path}`, 'success');
+                        log(`      → ${blockCount} blocos no formato correto`, 'success');
+                        log(`      → Estrutura: ${JSON.stringify(Object.keys(data)).substring(0, 100)}`, 'info');
+                        return;
+                    }
+                } catch (error) {
+                    // Continua tentando próximo path
+                }
+            }
+
+            log(`   ❌ Nenhum JSON encontrado nos caminhos testados`, 'error');
+            log(`      Paths testados: ${paths.join(', ')}`, 'info');
+        }
+
+        // TEST 5: Verificar requisições de rede
+        async function test5_CheckNetworkRequests() {
+            log('TEST 5: Monitorando requisições de rede...', 'info');
+
+            if (window.performance && window.performance.getEntriesByType) {
+                const resources = window.performance.getEntriesByType('resource');
+                const templateRequests = resources.filter(r =>
+                    r.name.includes('/templates/') || r.name.includes('.json')
+                );
+
+                if (templateRequests.length > 0) {
+                    log(`   ✅ ${templateRequests.length} requisições de template detectadas`, 'success');
+                    templateRequests.forEach(req => {
+                        const url = new URL(req.name);
+                        const path = url.pathname;
+                        log(`      → ${path} (${Math.round(req.duration)}ms)`, 'info');
+                    });
+                } else {
+                    log('   ⚠️ Nenhuma requisição de template detectada ainda', 'warning');
+                    log('      Isso é normal se o editor não foi aberto ainda', 'info');
+                }
+            } else {
+                log('   ⚠️ Performance API não disponível', 'warning');
+            }
+        }
+
+        // TEST 6: Verificar camadas de cache
+        async function test6_CheckCacheLayers() {
+            log('TEST 6: Verificando IndexedDB (L2 Cache)...', 'info');
+
+            try {
+                if ('indexedDB' in window) {
+                    const dbs = await indexedDB.databases();
+                    const quizDB = dbs.find(db => db.name?.includes('quiz-templates-cache'));
+
+                    if (quizDB) {
+                        log(`   ✅ IndexedDB encontrado: ${quizDB.name}`, 'success');
+                        log(`      → Versão: ${quizDB.version}`, 'info');
+
+                        // Tentar abrir e verificar conteúdo
+                        const request = indexedDB.open(quizDB.name);
+                        request.onsuccess = (event) => {
+                            const db = event.target.result;
+                            const objectStoreNames = Array.from(db.objectStoreNames);
+                            log(`      → Object Stores: ${objectStoreNames.join(', ')}`, 'info');
+                            db.close();
+                            renderResults();
+                        };
+                    } else {
+                        log('   ⚠️ IndexedDB não inicializado ainda', 'warning');
+                    }
+                } else {
+                    log('   ❌ IndexedDB não suportado', 'error');
+                }
+            } catch (error) {
+                log(`   ⚠️ Erro ao verificar IndexedDB: ${error.message}`, 'warning');
+            }
+        }
+
+        // TEST 7: Verificar estrutura dos JSONs
+        async function test7_VerifyJSONStructure() {
+            log('TEST 7: Verificando estrutura dos JSONs individuais...', 'info');
+
+            const stepsToTest = ['step-01', 'step-02', 'step-12', 'step-20', 'step-21'];
+
+            for (const stepId of stepsToTest) {
+                try {
+                    const response = await fetch(`/templates/blocks/${stepId}.json`);
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        // Validar estrutura
+                        const isValid =
+                            data.blocks &&
+                            Array.isArray(data.blocks) &&
+                            data.blocks.length > 0 &&
+                            data.blocks[0].id &&
+                            data.blocks[0].type;
+
+                        if (isValid) {
+                            log(`   ✅ ${stepId}: ${data.blocks.length} blocos válidos`, 'success');
+                        } else {
+                            log(`   ⚠️ ${stepId}: estrutura inválida`, 'warning');
+                            log(`      → Estrutura: ${JSON.stringify(data).substring(0, 200)}`, 'info');
+                        }
+                    } else {
+                        log(`   ❌ ${stepId}: não encontrado (${response.status})`, 'error');
+                    }
+                } catch (error) {
+                    log(`   ❌ ${stepId}: erro ao carregar - ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // Auto-executar ao carregar
+        window.addEventListener('load', () => {
+            log('Página carregada. Clique em "Executar Todos os Testes" para iniciar.', 'info');
+            renderResults();
+        });
+    </script>
+</body>
+
+</html>

@@ -78,13 +78,53 @@ export class UnifiedTemplateRegistry {
     loads: 0,
   };
   
-  private readonly CACHE_VERSION = '1.0.0';
+  // Flags de depuração/controladas por query params
+  private debugFlags = {
+    disableL1: false,
+    disableL2: false,
+    disableL3: false,
+    forceServer: false,
+  } as const;
+  
+  // Bump na versão para invalidar L2 quando alteramos estratégia de carregamento
+  private readonly CACHE_VERSION = '1.0.1';
   private readonly DB_NAME = 'quiz-templates-cache';
   private readonly DB_VERSION = 1;
   private readonly L2_TTL = 7 * 24 * 60 * 60 * 1000; // 7 dias
 
   private constructor() {
     this.initializeL2();
+    this.initializeDebugFlags();
+  }
+
+  /**
+   * Ler query params para controlar estratégia de cache (útil para testes)
+   * ?nocache=1 → ignora L1/L2/L3 e carrega do servidor
+   * ?forceServer=1 → ignora L3 e tenta servidor antes
+   * ?noL2=1 → ignora IndexedDB
+   * ?noL3=1 → ignora embedded
+   */
+  private initializeDebugFlags(): void {
+    try {
+      if (typeof window !== 'undefined' && window.location) {
+        const params = new URLSearchParams(window.location.search);
+        const noCache = params.get('nocache') === '1';
+        const forceServer = params.get('forceServer') === '1';
+        const noL2 = params.get('noL2') === '1';
+        const noL3 = params.get('noL3') === '1';
+        (this as any).debugFlags = {
+          disableL1: noCache,
+          disableL2: noCache || noL2,
+          disableL3: noCache || noL3,
+          forceServer: noCache || forceServer,
+        };
+        if (noCache || forceServer || noL2 || noL3) {
+          console.warn('🛠️ Registry debug flags:', (this as any).debugFlags);
+        }
+      }
+    } catch {
+      // ignore
+    }
   }
 
   static getInstance(): UnifiedTemplateRegistry {
@@ -142,9 +182,23 @@ export class UnifiedTemplateRegistry {
     const _timeLabel = `${_timeBase}#${typeof performance !== 'undefined' && typeof performance.now === 'function' ? Math.floor(performance.now()) : Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     console.time(_timeLabel);
     this.stats.loads++;
+    const flags = (this as any).debugFlags as { disableL1: boolean; disableL2: boolean; disableL3: boolean; forceServer: boolean };
+    
+    // Caminho rápido: forçar servidor (ignora caches)
+    if (flags?.forceServer) {
+      console.log(`🚩 FORCE SERVER ativo para ${stepId}`);
+      const serverResult = await this.loadFromServer(stepId);
+      if (serverResult) {
+        // Mesmo com forceServer, ainda promovemos para L1/L2 para próximas navegações
+        this.l1Cache.set(stepId, serverResult);
+        await this.saveToL2(stepId, serverResult);
+      }
+      console.timeEnd(_timeLabel);
+      return serverResult || [];
+    }
     
     // L1: Memory Cache (5ms)
-    const l1Result = this.l1Cache.get(stepId);
+    const l1Result = flags?.disableL1 ? null : this.l1Cache.get(stepId);
     if (l1Result) {
       this.stats.l1Hits++;
       console.log(`⚡ L1 HIT: ${stepId} (${l1Result.length} blocos)`);
@@ -154,7 +208,7 @@ export class UnifiedTemplateRegistry {
     
     // L2: IndexedDB (50ms)
     await this.initializeL2();
-    if (this.l2Cache) {
+    if (!flags?.disableL2 && this.l2Cache) {
       try {
         const l2Entry = await this.l2Cache.get('templates', stepId);
         if (l2Entry && this.isL2Valid(l2Entry.timestamp)) {
@@ -172,7 +226,7 @@ export class UnifiedTemplateRegistry {
     }
     
     // L3: Build-time embedded (10ms)
-    const l3Result = await this.loadFromL3(stepId);
+    const l3Result = flags?.disableL3 ? null : await this.loadFromL3(stepId);
     if (l3Result) {
       this.stats.l3Hits++;
       console.log(`📦 L3 HIT: ${stepId} (${l3Result.length} blocos)`);
@@ -187,7 +241,7 @@ export class UnifiedTemplateRegistry {
     // MISS: Tentar carregar dinamicamente do servidor
     this.stats.misses++;
     console.warn(`❌ MISS: ${stepId} - carregando do servidor...`);
-    const serverResult = await this.loadFromServer(stepId);
+  const serverResult = await this.loadFromServer(stepId);
     
     if (serverResult) {
       // Cachear em todos os níveis
@@ -207,7 +261,7 @@ export class UnifiedTemplateRegistry {
     if (!this.l3Embedded) {
       try {
         // Lazy load do módulo embedded (gerado em build time)
-        const module = await import('@templates/embedded');
+  const module = await import('@templates/embedded');
         // Usar named export para evitar problemas de inicialização circular
         const embeddedData = module.embedded || module.default || {};
         // Normalizar blocks: position → order se necessário
@@ -252,6 +306,7 @@ export class UnifiedTemplateRegistry {
           const resp = await fetch(url);
           if (resp.ok) {
             template = await resp.json();
+            console.log(`🌐 SERVER HIT: ${url} (${Array.isArray(template?.blocks) ? template.blocks.length : (Array.isArray(template?.sections) ? template.sections.length : 'unknown')} itens)`);
             break;
           }
         } catch (e) {
