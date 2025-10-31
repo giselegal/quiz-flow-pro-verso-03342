@@ -36,7 +36,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import DynamicPropertiesForm from './components/DynamicPropertiesForm';
+// ⚡ LAZY: DynamicPropertiesForm (painel de propriedades - só carrega quando necessário)
+const DynamicPropertiesForm = React.lazy(() => import('./components/DynamicPropertiesForm'));
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -64,14 +65,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { cn } from '@/lib/utils';
 import { shouldAutoAdvance } from '@/lib/quiz/requiredSelections';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
-import QuizProductionPreview from './QuizProductionPreview';
-import QuizAppConnected from '@/components/quiz/QuizAppConnected';
+// ⚡ LAZY: QuizProductionPreview (preview pesado - só carrega quando tab preview ativado)
+const QuizProductionPreview = React.lazy(() => import('./QuizProductionPreview'));
+// ⚡ LAZY: QuizAppConnected (runtime completo - só carrega quando necessário)
+const QuizAppConnected = React.lazy(() => import('@/components/quiz/QuizAppConnected'));
 import { useToast } from '@/hooks/use-toast';
 import { replacePlaceholders } from '@/utils/placeholderParser';
 import { useLiveScoring } from '@/hooks/useLiveScoring';
 import { HistoryManager } from '@/utils/historyManager';
 import { snippetsManager, BlockSnippet as ExternalBlockSnippet } from '@/utils/snippetsManager';
-import ThemeEditorPanel from './components/ThemeEditorPanel';
+// ⚡ LAZY: ThemeEditorPanel (editor de tema - só carrega quando necessário)
+const ThemeEditorPanel = React.lazy(() => import('./components/ThemeEditorPanel'));
 import { EditorThemeProvider, DesignTokens } from '@/theme/editorTheme';
 import { useValidation } from './hooks/useValidation';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -4042,11 +4046,18 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ 
         <div className="flex flex-col h-full">
             <div className="flex-1 overflow-hidden">
                 {mode === 'production' ? (
-                    <QuizProductionPreview
-                        funnelId={funnelId}
-                        className="h-full"
-                        editorSteps={debouncedSteps}
-                    />
+                    <Suspense fallback={
+                        <div className="flex items-center justify-center h-full">
+                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                            <span className="ml-2 text-sm text-muted-foreground">Carregando preview...</span>
+                        </div>
+                    }>
+                        <QuizProductionPreview
+                            funnelId={funnelId}
+                            className="h-full"
+                            editorSteps={debouncedSteps}
+                        />
+                    </Suspense>
                 ) : (
                     <QuizRuntimeRegistryProvider>
                         <LiveRuntimePreview
@@ -4158,17 +4169,24 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
-                {/* 🎯 previewMode: Sincroniza com Canvas + usa comportamento de produção */}
-                <QuizAppConnected
-                    funnelId={funnelId}
-                    previewMode
-                    initialStepId={selectedStepId}
-                    initialConfig={{
-                        steps,
-                        global: {},
-                        scoring: {},
-                    }}
-                />
+                <Suspense fallback={
+                    <div className="flex items-center justify-center h-full">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                        <span className="ml-2 text-sm text-muted-foreground">Carregando runtime...</span>
+                    </div>
+                }>
+                    {/* 🎯 previewMode: Sincroniza com Canvas + usa comportamento de produção */}
+                    <QuizAppConnected
+                        funnelId={funnelId}
+                        previewMode
+                        initialStepId={selectedStepId}
+                        initialConfig={{
+                            steps,
+                            global: {},
+                            scoring: {},
+                        }}
+                    />
+                </Suspense>
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
                 <div className="flex items-center gap-2">
