@@ -205,26 +205,37 @@ export default defineConfig(({ mode }) => {
               return 'blocks-misc';
             }
 
-            // 🎯 EDITOR: Split básico vs avançado (253KB → 100KB+150KB lazy)
+            // 🎯 EDITOR: Split por arquivo específico (melhor granularidade)
             if (id.includes('/editor/')) {
-              // Editor Core (sempre carregado) ~100KB
-              if (id.includes('EditorCanvas') || 
-                  id.includes('BlockRenderer') ||
+              // Editor Core - rotas e layout básico (~20KB)
+              if (id.includes('editor/index.tsx') || 
                   id.includes('EditorHeader') ||
                   id.includes('FunnelHeader')) {
                 return 'editor-core';
               }
               
-              // Editor Avançado (lazy) ~150KB
+              // Editor Principal - FORÇAR para app-editor apenas arquivos principais
+              // UniversalVisualEditor, ModernUnifiedEditor, QuizEditorIntegratedPage
+              if (id.includes('UniversalVisualEditor') || 
+                  id.includes('ModernUnifiedEditor') ||
+                  id.includes('QuizEditorIntegratedPage')) {
+                return 'app-editor';
+              }
+              
+              // Editor Avançado - componentes DnD e properties (lazy ~150KB)
+              // NOTA: Precisa ser checado ANTES de app-editor para interceptar
               if (id.includes('DragDropSystem') ||
                   id.includes('PropertiesPanel') ||
                   id.includes('ComponentsSidebar') ||
                   id.includes('DynamicPropertiesForm') ||
-                  id.includes('BuilderSystemPanel')) {
+                  id.includes('BuilderSystemPanel') ||
+                  id.includes('FieldControl') ||
+                  id.includes('ConfigurationPanel')) {
                 return 'editor-advanced';
               }
               
-              return 'app-editor';
+              // Fallback para outros componentes de editor
+              return 'editor-misc';
             }
 
             // Preview/Runtime chunk
