@@ -185,18 +185,19 @@ export const funnelComponentsService = {
           .single();
         if (!error && data) {
           inserted = data;
+          insertError = null;
         } else {
           insertError = error;
         }
       }
     }
 
-    if (insertError) {
+    if (!inserted) {
       console.error('❌ Erro ao adicionar componente:', insertError);
-      throw insertError;
+      throw insertError || new Error('Insert falhou');
     }
 
-  console.log(`✅ Componente adicionado: ${inserted.id}`);
+    console.log(`✅ Componente adicionado: ${inserted.id}`);
   return inserted as unknown as ComponentInstance;
   },
 

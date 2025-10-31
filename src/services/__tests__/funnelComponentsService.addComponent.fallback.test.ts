@@ -8,15 +8,18 @@ vi.mock('@/integrations/supabase/customClient', () => {
       select: () => ({ data: [], error: null }),
     },
     component_instances: {
-      // Primeiro insert falha com schema antigo (coluna desconhecida)
-      insert: vi
-        .fn()
-        .mockImplementationOnce((_payload: any) => ({
-          select: () => ({ single: () => Promise.resolve({ data: null, error: { code: '42703', message: 'column properties does not exist' } }) }),
-        }))
-        .mockImplementationOnce((payload: any) => ({
-          select: () => ({ single: () => Promise.resolve({ data: { id: 'legacy-1', ...payload }, error: null }) }),
-        })),
+      insert: vi.fn((payload: any) => ({
+        select: () => ({
+          single: () => {
+            // Se payload contém 'properties', simulamos erro de coluna (schema novo indisponível)
+            if (payload && Object.prototype.hasOwnProperty.call(payload, 'properties')) {
+              return Promise.resolve({ data: null, error: { code: '42703', message: 'column properties does not exist' } });
+            }
+            // Caso contrário, sucesso como legado
+            return Promise.resolve({ data: { id: 'legacy-1', ...payload }, error: null });
+          },
+        }),
+      })),
     },
   };
 
