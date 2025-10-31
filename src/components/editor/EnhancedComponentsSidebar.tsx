@@ -1,4 +1,4 @@
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +6,13 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown, ChevronRight, HelpCircle, Layers, Search, Settings } from 'lucide-react';
 import React, { useState, useCallback, useMemo } from 'react';
 import { PerformanceProfiler } from '@/utils/performance/PerformanceProfiler';
+
+// Obter componentes disponíveis do UnifiedBlockRegistry
+const AVAILABLE_COMPONENTS = blockRegistry.getAllTypes().map(type => ({
+  type,
+  label: type.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+  category: 'Componentes de Conteúdo', // Categoria padrão
+}));
 
 interface EnhancedComponentsSidebarProps {
   searchTerm?: string;

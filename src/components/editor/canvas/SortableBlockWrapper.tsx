@@ -1,4 +1,4 @@
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -107,8 +107,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     containerBackgroundColor = 'transparent',
   } = block.properties || {};
 
-  // Buscar componente no registry (eliminando UniversalBlockRenderer)
-  const Component = getEnhancedBlockComponent(block.type);
+  // Buscar componente no UnifiedBlockRegistry
+  const Component = blockRegistry.getComponent(block.type);
 
   const uniqueId = React.useMemo(
     () => generateUniqueId({ stepNumber: numericStep, blockId: String(block.id), type: 'block' }),

@@ -1,4 +1,4 @@
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import React from 'react';
 
@@ -43,7 +43,7 @@ const BasicContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
         <div id={elementId} className={combinedClassName} style={containerStyle}>
             {Array.isArray(childrenList) &&
                 childrenList.map((child: any, index: number) => {
-                    const Component = getEnhancedBlockComponent(child.type);
+                    const Component = blockRegistry.getComponent(child.type);
                     if (!Component) return null;
 
                     const childBlock: BlockData = {

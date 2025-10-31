@@ -11,7 +11,7 @@
 import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { useLogger } from '@/utils/logger/SmartLogger';
 import { Trash2, GripVertical, Copy } from 'lucide-react';
 import { blockPropsAreEqual, MemoizationMetrics } from '@/utils/performance/memoization';
@@ -28,19 +28,19 @@ export interface EditableBlockProps {
 }
 
 /**
- * Hook para resolver componente de bloco (sem cache aqui, cache fica no registry)
+ * Hook para resolver componente de bloco (delega para UnifiedBlockRegistry)
  */
 const useBlockComponent = (blockType: string): React.ComponentType<any> | null => {
   const logger = useLogger('EditableBlock');
 
   return useMemo(() => {
-    const component = getEnhancedBlockComponent(blockType);
+    const component = blockRegistry.getComponent(blockType);
 
     if (!component) {
       logger.warn(`Componente não encontrado para tipo: ${blockType}`);
     }
 
-    return component as React.ComponentType<any> | null;
+    return component;
   }, [blockType, logger]);
 };
 

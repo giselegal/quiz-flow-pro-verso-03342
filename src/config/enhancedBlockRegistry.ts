@@ -1,29 +1,35 @@
-// Canonical re-export shim for the block registry
+/**
+ * ✅ MIGRADO: Wrapper de compatibilidade para UnifiedBlockRegistry
+ * 
+ * Este arquivo mantém a API legada para código que ainda importa de @/config/enhancedBlockRegistry
+ * mas delega tudo para o UnifiedBlockRegistry canônico.
+ */
 import { Heading, Image, Minus, MousePointer, Type } from 'lucide-react';
 import React from 'react';
 import type { BlockDefinition } from '../types/editor';
+import { blockRegistry, getRegistryStats as getUnifiedStats } from '@/registry/UnifiedBlockRegistry';
 
-// Importar o registry canônico do editor
-import {
-  ENHANCED_BLOCK_REGISTRY as CANONICAL_REGISTRY,
-  getRegistryStats as getCanonicalRegistryStats,
-  getEnhancedBlockComponent,
-} from '../components/editor/blocks/EnhancedBlockRegistry';
-
-// Reexportar o map canônico
-export const ENHANCED_BLOCK_REGISTRY = CANONICAL_REGISTRY as Record<
-  string,
-  React.ComponentType<any>
->;
+// Criar proxy object para compatibilidade com código que acessa ENHANCED_BLOCK_REGISTRY[type]
+export const ENHANCED_BLOCK_REGISTRY = new Proxy({} as Record<string, React.ComponentType<any>>, {
+  get(_target, prop: string) {
+    return blockRegistry.getComponent(prop);
+  },
+  has(_target, prop: string) {
+    return blockRegistry.has(prop);
+  },
+  ownKeys() {
+    return blockRegistry.getAllTypes();
+  },
+});
 
 // Wrapper compatível
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
-  return getEnhancedBlockComponent(type) as unknown as React.ComponentType<any>;
+  return blockRegistry.getComponent(type);
 };
 
-export const getAvailableBlockTypes = (): string[] => Object.keys(ENHANCED_BLOCK_REGISTRY);
+export const getAvailableBlockTypes = (): string[] => blockRegistry.getAllTypes();
 export const getAllBlockTypes = getAvailableBlockTypes;
-export const blockTypeExists = (type: string): boolean => type in ENHANCED_BLOCK_REGISTRY;
+export const blockTypeExists = (type: string): boolean => blockRegistry.has(type);
 
 // Gerador simples de definições para sidebar (cobre os tipos base mais usados)
 export const generateBlockDefinitions = (): BlockDefinition[] => {
@@ -34,7 +40,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Type,
       category: 'content',
       description: 'Adicionar texto formatado',
-      component: ENHANCED_BLOCK_REGISTRY['text-inline'],
+      component: blockRegistry.getComponent('text-inline')!,
       label: 'Texto',
       properties: {},
       defaultProps: {},
@@ -45,7 +51,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Heading,
       category: 'content',
       description: 'Adicionar título',
-      component: ENHANCED_BLOCK_REGISTRY['heading-inline'],
+      component: blockRegistry.getComponent('heading-inline')!,
       label: 'Título',
       properties: {},
       defaultProps: {},
@@ -56,7 +62,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: MousePointer,
       category: 'interactive',
       description: 'Botão clicável',
-      component: ENHANCED_BLOCK_REGISTRY['button-inline'],
+      component: blockRegistry.getComponent('button-inline')!,
       label: 'Botão',
       properties: {},
       defaultProps: {},
@@ -67,7 +73,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Image,
       category: 'media',
       description: 'Exibir imagem',
-      component: ENHANCED_BLOCK_REGISTRY['image-inline'] || ENHANCED_BLOCK_REGISTRY['image'],
+      component: blockRegistry.getComponent('image-inline') || blockRegistry.getComponent('image')!,
       label: 'Imagem',
       properties: {},
       defaultProps: {},
@@ -78,19 +84,18 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Minus,
       category: 'design',
       description: 'Barra decorativa colorida',
-      component: ENHANCED_BLOCK_REGISTRY['decorative-bar-inline'],
+      component: blockRegistry.getComponent('decorative-bar-inline')!,
       label: 'Barra Decorativa',
       properties: {},
       defaultProps: {},
     },
-    // Blocos de página de vendas
     {
       type: 'sales-hero',
       name: 'Sales Hero',
       icon: Image,
       category: 'result',
       description: 'Seção Hero para páginas de venda',
-      component: ENHANCED_BLOCK_REGISTRY['sales-hero'],
+      component: blockRegistry.getComponent('sales-hero')!,
       label: 'Sales Hero',
       properties: {},
       defaultProps: {},
@@ -103,6 +108,6 @@ export const getBlockDefinition = (type: string) => {
   return definitions.find(def => def.type === type) || null;
 };
 
-export const getRegistryStats = () => getCanonicalRegistryStats();
+export const getRegistryStats = () => getUnifiedStats();
 
 export default ENHANCED_BLOCK_REGISTRY;

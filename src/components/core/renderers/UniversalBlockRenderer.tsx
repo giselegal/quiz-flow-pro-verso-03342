@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
-import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 
 export interface UniversalBlockRendererProps {
   block: Block;
@@ -38,7 +38,7 @@ class BlockErrorBoundary extends React.Component<{ block: Block; children?: Reac
 
   componentDidCatch(error: any, info: any) {
     // Log não-invasivo para diagnóstico
-     
+
     console.error('[UniversalBlockRenderer] erro ao renderizar bloco', {
       block: this.props.block,
       error,
@@ -49,7 +49,7 @@ class BlockErrorBoundary extends React.Component<{ block: Block; children?: Reac
   componentDidUpdate(prevProps: Readonly<{ block: Block }>) {
     // Ao trocar de bloco, resetar estado de erro
     if (prevProps.block.id !== this.props.block.id && this.state.hasError) {
-       
+
       this.setState({ hasError: false, error: undefined });
     }
   }
@@ -80,8 +80,8 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   style,
   onClick,
 }) => {
-  // Resolver componente via enhanced registry (neutro via config)
-  const EnhancedComponent = getBlockComponent(block.type) as unknown as React.ComponentType<any> | undefined;
+  // Resolver componente via UnifiedBlockRegistry
+  const EnhancedComponent = blockRegistry.getComponent(block.type);
 
   const handleClick = React.useMemo(() => {
     if (onSelect) return () => onSelect(block.id);

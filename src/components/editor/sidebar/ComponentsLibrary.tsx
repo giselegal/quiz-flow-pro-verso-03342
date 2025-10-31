@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { cn } from '@/lib/utils';
 import {
   Award,
@@ -239,7 +239,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
 
   const renderComponentCard = (component: any, showCategory: boolean = false) => {
     const Icon = component.icon;
-    const isAvailable = getEnhancedBlockComponent(component.type) !== null;
+    const isAvailable = blockRegistry.has(component.type);
 
     return (
       <TooltipProvider key={component.type}>

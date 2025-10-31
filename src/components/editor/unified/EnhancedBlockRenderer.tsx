@@ -6,7 +6,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -164,7 +164,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
   enableAutoAdvance = true,
   realExperienceProps,
 }) => {
-  const Component = getEnhancedBlockComponent(block.type);
+  const Component = blockRegistry.getComponent(block.type);
   const { simulateValidation } = useMockData();
   const stepData = useMockStepData(currentStep, funnelId);
 

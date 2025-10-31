@@ -2,10 +2,12 @@
  * 🎣 USE DYNAMIC BLOCK HOOK
  * 
  * React hook for lazy loading blocks with suspense support
+ * 
+ * ✅ MIGRADO: Agora usa UnifiedBlockRegistry ao invés de DynamicBlockRegistry
  */
 
 import { ComponentType, useMemo } from 'react';
-import { dynamicBlockRegistry, BlockType } from '@/config/registry/DynamicBlockRegistry';
+import { blockRegistry, type BlockType, prefetchBlock, prefetchBlocks, getRegistryStats } from '@/registry/UnifiedBlockRegistry';
 
 export interface UseDynamicBlockOptions {
   preload?: boolean;
@@ -22,14 +24,14 @@ export function useDynamicBlock(
 
   // Preload if requested
   if (preload) {
-    dynamicBlockRegistry.getBlock(type).catch(err => {
+    prefetchBlock(type).catch(err => {
       console.warn(`[useDynamicBlock] Preload failed for ${type}:`, err);
     });
   }
 
-  // Return lazy component
+  // Return component from unified registry
   return useMemo(
-    () => dynamicBlockRegistry.getLazyBlock(type),
+    () => blockRegistry.getComponent(type) || (() => null),
     [type],
   );
 }
@@ -39,7 +41,7 @@ export function useDynamicBlock(
  */
 export function usePreloadBlocks(types: BlockType[]): void {
   useMemo(() => {
-    dynamicBlockRegistry.preloadBlocks(types);
+    prefetchBlocks(types);
   }, [types]);
 }
 
@@ -47,5 +49,5 @@ export function usePreloadBlocks(types: BlockType[]): void {
  * Hook to get registry stats
  */
 export function useDynamicBlockStats() {
-  return dynamicBlockRegistry.getCacheStats();
+  return getRegistryStats();
 }

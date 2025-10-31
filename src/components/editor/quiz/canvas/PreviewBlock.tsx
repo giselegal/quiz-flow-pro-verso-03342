@@ -12,7 +12,7 @@
 import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { useLogger } from '@/utils/logger/SmartLogger';
 import { shallowEqual, MemoizationMetrics } from '@/utils/performance/memoization';
 
@@ -30,13 +30,13 @@ const useBlockComponent = (blockType: string): React.ComponentType<any> | null =
   const logger = useLogger('PreviewBlock');
 
   return useMemo(() => {
-    const component = getEnhancedBlockComponent(blockType);
+    const component = blockRegistry.getComponent(blockType);
 
     if (!component) {
       logger.warn(`Componente não encontrado para tipo: ${blockType}`);
     }
 
-    return component as React.ComponentType<any> | null;
+    return component;
   }, [blockType, logger]);
 };
 

@@ -1,5 +1,5 @@
 import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import type { BlockData } from '@/types/blocks';
 import { cn } from '@/lib/utils';
 import React from 'react';
@@ -83,7 +83,7 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
           {/* Renderizar filhos declarados via template (properties.children) */}
           {Array.isArray(childrenList) && childrenList.length > 0
             ? childrenList.map((child: any, index: number) => {
-              const Component = getEnhancedBlockComponent(child.type);
+              const Component = blockRegistry.getComponent(child.type);
               if (!Component) return null;
 
               const childBlock: BlockData = {
@@ -109,7 +109,7 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
         <div className="template-wrapper-fallback">
           {Array.isArray(childrenList) && childrenList.length > 0
             ? childrenList.map((child: any, index: number) => {
-              const Component = getEnhancedBlockComponent(child.type);
+              const Component = blockRegistry.getComponent(child.type);
               if (!Component) return null;
 
               const childBlock: BlockData = {

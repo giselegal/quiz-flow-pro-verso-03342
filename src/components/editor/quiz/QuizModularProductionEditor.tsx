@@ -146,10 +146,17 @@ const OfferMap = React.lazy(() => import('@/components/editor/quiz/components/Of
 
 // Tipos centrais importados de ./types (removidas definições locais duplicadas)
 
-// Import da biblioteca de componentes do registry
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/EnhancedBlockRegistry';
-// Import direto da função para evitar uso de require() no ambiente ESM do browser
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+// Import do UnifiedBlockRegistry
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+
+/**
+ * Obter componentes disponíveis do UnifiedBlockRegistry
+ */
+const AVAILABLE_COMPONENTS = blockRegistry.getAllTypes().map(type => ({
+    type,
+    label: type.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+    category: 'content', // Categoria padrão
+}));
 
 /**
  * Mapeia categorias para ícones React
@@ -2454,9 +2461,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
-        // Quiz Intro Header → delegar ao EnhancedBlockRegistry (render completo)
+        // Quiz Intro Header → delegar ao UnifiedBlockRegistry (render completo)
         if (type === 'quiz-intro-header') {
-            const EnhancedComponent = getEnhancedBlockComponent(type);
+            const EnhancedComponent = blockRegistry.getComponent(type);
             if (EnhancedComponent) {
                 node = (
                     <div className="relative">
@@ -2930,9 +2937,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
-        // Fallback: usar EnhancedBlockRenderer para tipos não suportados nativamente
-        // Usar função importada (ESM) para evitar require() no bundle do cliente
-        const EnhancedComponent = getEnhancedBlockComponent(type);
+        // Fallback: usar UnifiedBlockRegistry para tipos não suportados nativamente
+        const EnhancedComponent = blockRegistry.getComponent(type);
 
         if (EnhancedComponent) {
             // Componente existe no registry - renderizar diretamente (evitar Suspense duplicado)
