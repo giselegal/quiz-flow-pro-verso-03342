@@ -400,6 +400,7 @@ export class TemplateLoader {
       let data: any | null = null;
       let successUrl: string | null = null;
 
+      // ✅ FIX 1.4: SEM RETRY - arquivos locais ou existem ou não
       for (const url of urls) {
         try {
           const bust = (typeof window !== 'undefined' && import.meta.env?.DEV) ? `?ts=${Date.now()}` : '';
@@ -410,7 +411,7 @@ export class TemplateLoader {
             break;
           }
         } catch (e) {
-          // tenta próxima URL
+          // Falha imediata, sem retry
         }
       }
 

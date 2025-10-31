@@ -19,7 +19,7 @@ import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 // Helper: Converter Record para Array
-const TemplateService.getInstance().getAllStepsSync()_ARRAY = Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step]) => ({
+const QUIZ_STEPS_ARRAY = Object.entries(TemplateService.getInstance().getAllStepsSync()).map(([id, step]) => ({
     ...step,
     id,
 }));
@@ -47,7 +47,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve ter estrutura válida em cada step', () => {
-            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
+            QUIZ_STEPS_ARRAY.forEach(step => {
                 expect(step).toHaveProperty('id');
                 expect(step).toHaveProperty('type');
                 expect(step.id).toMatch(/^step-\d{2}$/);
@@ -178,7 +178,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
     describe('3. Validar Integridade da Estrutura dos Steps', () => {
 
         it('deve ter cadeia de navegação válida (nextStep)', () => {
-            const stepsWithNextStep = TemplateService.getInstance().getAllStepsSync()_ARRAY.filter(step => step.nextStep);
+            const stepsWithNextStep = QUIZ_STEPS_ARRAY.filter(step => step.nextStep);
 
             stepsWithNextStep.forEach(step => {
                 const nextStepId = step.nextStep;
@@ -191,7 +191,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve ter todas as options com ID válido', () => {
-            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
+            QUIZ_STEPS_ARRAY.forEach(step => {
                 if (step.options) {
                     step.options.forEach(option => {
                         expect(option.id).toBeDefined();
@@ -253,7 +253,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
     describe('4. Round-Trip e Serialização de Dados', () => {
 
         it('deve preservar dados após JSON.stringify/parse em todos os steps', () => {
-            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
+            QUIZ_STEPS_ARRAY.forEach(step => {
                 const serialized = JSON.stringify(step);
                 const deserialized = JSON.parse(serialized);
 
@@ -267,7 +267,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve preservar opções após serialização', () => {
-            const stepsWithOptions = TemplateService.getInstance().getAllStepsSync()_ARRAY.filter(s => s.options && s.options.length > 0);
+            const stepsWithOptions = QUIZ_STEPS_ARRAY.filter(s => s.options && s.options.length > 0);
 
             stepsWithOptions.forEach(step => {
                 const serialized = JSON.stringify(step.options);
@@ -296,7 +296,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
         });
 
         it('deve manter tipos corretos após round-trip', () => {
-            TemplateService.getInstance().getAllStepsSync()_ARRAY.forEach(step => {
+            QUIZ_STEPS_ARRAY.forEach(step => {
                 const serialized = JSON.stringify(step);
                 const deserialized = JSON.parse(serialized);
 
