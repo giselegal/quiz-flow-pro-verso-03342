@@ -79,8 +79,34 @@ export class TemplateLoader {
   }
 
   /**
+   * 🎯 FIX 1.3: Detecção de modo (template vs funnel)
+   * Evita tentativas de Supabase em modo template
+   */
+  private detectMode(): { mode: 'template' | 'funnel' | 'unknown'; id: string | null } {
+    if (typeof window === 'undefined') {
+      return { mode: 'unknown', id: null };
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const templateId = params.get('template') || params.get('id');
+    const funnelId = params.get('funnelId') || params.get('funnel');
+
+    if (templateId && !funnelId) {
+      console.log('🎨 [TemplateLoader] Modo TEMPLATE detectado:', templateId);
+      return { mode: 'template', id: templateId };
+    }
+
+    if (funnelId) {
+      console.log('💾 [TemplateLoader] Modo FUNNEL detectado:', funnelId);
+      return { mode: 'funnel', id: funnelId };
+    }
+
+    return { mode: 'unknown', id: null };
+  }
+
+  /**
    * Carrega blocos para um step específico
-   * Usa estratégias em cascata com retry logic
+   * 🎯 FIX 1.3: Priorização clara baseada em modo (template vs funnel)
    */
   async loadStep(step: number | string): Promise<LoadedTemplate> {
     const normalizedKey = this.normalizeStepKey(step);
@@ -96,7 +122,64 @@ export class TemplateLoader {
     const loadPromise = (async (): Promise<LoadedTemplate> => {
       try {
         console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
-        console.log('🎯 TEMPLATE_SOURCES:', TEMPLATE_SOURCES);
+        
+        // 🎯 FIX 1.3: DETECTAR MODO PRIMEIRO
+        const { mode, id } = this.detectMode();
+        console.log(`🎯 Modo detectado: ${mode} (ID: ${id || 'N/A'})`);
+
+        // ============================================================
+        // � MODO TEMPLATE: Prioriza fontes locais (JSON público)
+        // ============================================================
+        if (mode === 'template') {
+          console.log('🎨 [MODO TEMPLATE] Usando estratégia LOCAL-FIRST');
+
+          // 1. JSON público individual (PRIORIDADE MÁXIMA em template mode)
+          const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
+          if (fromPublic) {
+            console.log('✅ Template mode: Carregado de JSON público');
+            return fromPublic;
+          }
+
+          // 2. Master JSON (fallback)
+          if (TEMPLATE_SOURCES.useMasterJSON) {
+            const fromMaster = await this.loadFromMasterJSON(normalizedKey);
+            if (fromMaster) {
+              console.log('✅ Template mode: Carregado de Master JSON');
+              return fromMaster;
+            }
+          }
+
+          // 3. TypeScript template (fallback final)
+          console.log('🔄 Template mode: Usando fallback TypeScript');
+          return this.loadFromTypescript(normalizedKey);
+        }
+
+        // ============================================================
+        // 💾 MODO FUNNEL: Prioriza Supabase (quando implementado)
+        // ============================================================
+        if (mode === 'funnel') {
+          console.log('💾 [MODO FUNNEL] Usando estratégia SUPABASE-FIRST');
+
+          // TODO: Fase 1.4 - Implementar carregamento de component_instances do Supabase
+          // const fromSupabase = await this.loadFromSupabase(id!, normalizedKey);
+          // if (fromSupabase) return fromSupabase;
+
+          // Fallback: JSON público (para funnels que ainda não têm dados no Supabase)
+          const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
+          if (fromPublic) {
+            console.log('⚠️ Funnel mode: Carregado de JSON público (fallback)');
+            return fromPublic;
+          }
+
+          // Fallback: TypeScript
+          console.log('🔄 Funnel mode: Usando fallback TypeScript');
+          return this.loadFromTypescript(normalizedKey);
+        }
+
+        // ============================================================
+        // ❓ MODO DESCONHECIDO: Usa estratégia cascata original
+        // ============================================================
+        console.log('❓ [MODO DESCONHECIDO] Usando estratégia cascata');
 
         // Preferência explícita: quando ?template=quiz21StepsComplete estiver na URL do /editor,
         // priorizamos os JSONs individuais gerados em public/templates/step-XX.json
