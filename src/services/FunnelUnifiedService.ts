@@ -1,6 +1,10 @@
 /**
  * 🎯 FUNNEL UNIFIED SERVICE
  * 
+ * ⚠️ DEPRECATED: Migrar para @/services/canonical/FunnelService
+ * Este serviço será removido em 2025-12-01
+ * Veja: DEPRECATED_FunnelUnifiedService.md para guia de migração
+ * 
  * Serviço único e centralizado para TODAS as operações de funis:
  * - CRUD completo (Create, Read, Update, Delete)
  * - Deep clone automático para isolamento de instâncias
@@ -8,6 +12,8 @@
  * - Validação robusta integrada
  * - Sincronização entre contextos
  * - Fallbacks e recuperação de erro
+ * 
+ * @deprecated Use `import { funnelService } from '@/services/canonical/FunnelService'`
  */
 
 import { supabase } from '@/integrations/supabase/customClient';
