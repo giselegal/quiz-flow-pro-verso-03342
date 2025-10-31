@@ -227,21 +227,6 @@ export function useRenderTracking(componentName: string, props?: Record<string, 
   }
 }
 
-/**
- * HOC para tracking de renders
- */
-export function withRenderTracking<P extends object>(
-  Component: React.ComponentType<P>,
-  componentName?: string
-): React.ComponentType<P> {
-  const name = componentName || Component.displayName || Component.name || 'Component';
-  
-  return (props: P) => {
-    performanceProfiler.trackRender(name, props as any);
-    return <Component {...props} />;
-  };
-}
-
 // Exportar para uso em console/debugging
 if (typeof window !== 'undefined') {
   (window as any).__performanceProfiler = performanceProfiler;
