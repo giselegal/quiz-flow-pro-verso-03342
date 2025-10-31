@@ -97,6 +97,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
       saveInProgressRef.current = true;
       setStatus('saving');
       setLastError(null);
+      setRetryInfo(null);
 
       const stepBlocks = editor.state.stepBlocks;
       if (!stepBlocks || Object.keys(stepBlocks).length === 0) {
@@ -123,15 +124,34 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
         }
 
         try {
-          // 1. Buscar componentes existentes
-          const existing = await funnelComponentsService.getComponents({
-            funnelId,
-            stepNumber,
-          });
+          // 1. Buscar componentes existentes (COM RETRY)
+          const existing = await retryWithBackoff(
+            () => funnelComponentsService.getComponents({ funnelId, stepNumber }),
+            {
+              maxAttempts: maxRetries,
+              baseDelayMs: 1000,
+              onRetry: (attempt, error) => {
+                console.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (getComponents):`, error.message);
+                setRetryInfo({ attempt, maxAttempts: maxRetries });
+              },
+              shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
+            }
+          );
 
-          // 2. Deletar componentes existentes
+          // 2. Deletar componentes existentes (COM RETRY)
           for (const component of existing) {
-            await funnelComponentsService.deleteComponent(component.id);
+            await retryWithBackoff(
+              () => funnelComponentsService.deleteComponent(component.id),
+              {
+                maxAttempts: maxRetries,
+                baseDelayMs: 1000,
+                onRetry: (attempt, error) => {
+                  console.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (deleteComponent):`, error.message);
+                  setRetryInfo({ attempt, maxAttempts: maxRetries });
+                },
+                shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
+              }
+            );
           }
 
           // 3. Converter blocos para component_instances
@@ -141,16 +161,27 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
             stepNumber
           );
 
-          // 4. Salvar novos componentes
+          // 4. Salvar novos componentes (COM RETRY)
           for (const instance of instances) {
-            await funnelComponentsService.addComponent({
-              funnelId: instance.funnel_id,
-              stepNumber: instance.step_number,
-              instanceKey: instance.instance_key,
-              componentTypeKey: instance.component_type_key,
-              orderIndex: instance.order_index,
-              properties: instance.properties,
-            });
+            await retryWithBackoff(
+              () => funnelComponentsService.addComponent({
+                funnelId: instance.funnel_id,
+                stepNumber: instance.step_number,
+                instanceKey: instance.instance_key,
+                componentTypeKey: instance.component_type_key,
+                orderIndex: instance.order_index,
+                properties: instance.properties,
+              }),
+              {
+                maxAttempts: maxRetries,
+                baseDelayMs: 1000,
+                onRetry: (attempt, error) => {
+                  console.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (addComponent):`, error.message);
+                  setRetryInfo({ attempt, maxAttempts: maxRetries });
+                },
+                shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
+              }
+            );
           }
 
           savedCount++;
@@ -160,6 +191,9 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
           console.error(`❌ [useAutoSave] Erro ao salvar step ${stepNumber}:`, err);
         }
       }
+
+      // Limpar retry info após loop completo
+      setRetryInfo(null);
 
       if (errorCount === 0) {
         setStatus('saved');
@@ -178,16 +212,17 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
       const err = error instanceof Error ? error : new Error(String(error));
       setStatus('error');
       setLastError(err);
+      setRetryInfo(null); // Limpar retry info em erro final
 
       console.error('❌ [useAutoSave] Erro crítico:', err);
 
       toast({
         variant: 'destructive',
         title: 'Erro ao salvar',
-        description: err.message,
+        description: err.message || 'Verifique sua conexão e tente novamente',
       });
 
-      onError?.(err);
+      onError?.(err, retryInfo || undefined);
 
       // Resetar para idle após 3s
       setTimeout(() => {
@@ -277,5 +312,6 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
     saveNow,
     cancel,
     lastError,
+    retryInfo,
   };
 }
