@@ -10,17 +10,35 @@ import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EditorProviderUnified, { useEditor } from '@/components/editor/EditorProviderUnified';
 
+/**
+ * 🔧 CORREÇÃO CRÍTICA (Fase 1.1): Template não é Funnel!
+ * 
+ * ANTES: ?template=quiz21StepsComplete era tratado como funnelId
+ * PROBLEMA: Criava "funnel fantasma" que não existe no Supabase
+ * 
+ * DEPOIS: Separar template mode (local) vs funnel mode (Supabase)
+ */
 function useFunnelIdFromLocation(): string | undefined {
     if (typeof window === 'undefined') return undefined;
     const params = new URLSearchParams(window.location.search);
-    // Prioridade: funnelId → funnel → template → id
-    return (
-        params.get('funnelId') ||
-        params.get('funnel') ||
-        params.get('template') ||
-        params.get('id') ||
-        undefined
-    ) || undefined;
+
+    // ✅ NOVO: Template não é funnel!
+    const funnelId = params.get('funnelId') || params.get('funnel');
+    const templateId = params.get('template') || params.get('id');
+
+    // Se tem template mas não tem funnelId, forçar modo local
+    if (templateId && !funnelId) {
+        console.log('🎨 Modo Template Ativado:', templateId, '- Trabalhando 100% local');
+        return undefined; // Forçar modo local (sem Supabase)
+    }
+
+    // Se tem funnelId explícito, usar modo funnel (com Supabase)
+    if (funnelId) {
+        console.log('💾 Modo Funnel Ativado:', funnelId, '- Persistência no Supabase');
+        return funnelId;
+    }
+
+    return undefined;
 }
 
 export const EditorRoutes: React.FC = () => (
