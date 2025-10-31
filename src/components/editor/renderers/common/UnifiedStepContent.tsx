@@ -12,8 +12,9 @@ import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } 
 import { CSS } from '@dnd-kit/utilities';
 import type { Block } from '@/types/editor';
 // Steps modulares (edição com paridade de produção)
-import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
-import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
+// ❌ DEPRECATED: Componentes movidos para .archive/
+// import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
+// import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
 import { templateService } from '@/services/canonical/TemplateService';
 
