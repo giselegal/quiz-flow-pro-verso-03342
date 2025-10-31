@@ -116,8 +116,8 @@ export async function loadAllQuizSteps(): Promise<Map<string, QuizStep>> {
         Object.keys(allSteps).forEach(stepId => {
             const step = allSteps[stepId];
             if (step) {
-                stepsCache.set(stepId, step as QuizStep);
-                stepsMap.set(stepId, step as QuizStep);
+                stepsCache.set(stepId, step as any);
+                stepsMap.set(stepId, step as any);
             }
         });
 
