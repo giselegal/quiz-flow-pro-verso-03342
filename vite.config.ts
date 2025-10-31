@@ -281,9 +281,64 @@ export default defineConfig(({ mode }) => {
               return 'app-registry';
             }
 
-            // Services chunk (~400KB → keep consolidado)
+            // 🚀 FASE 3B.2: Services split por domínio (387KB → 3x ~120KB lazy)
             if (id.includes('/services/') && !id.includes('node_modules')) {
-              return 'app-services';
+              // Template services (lazy quando não em uso)
+              if (id.includes('/services/templates/') ||
+                  id.includes('TemplateService') ||
+                  id.includes('TemplateRegistry') ||
+                  id.includes('stepTemplateService') ||
+                  id.includes('MasterTemplateService')) {
+                return 'services-template';
+              }
+              
+              // Funnel services (lazy quando não em uso)
+              if (id.includes('/services/funnel') ||
+                  id.includes('FunnelService') ||
+                  id.includes('FunnelValidation') ||
+                  id.includes('FunnelAIAgent') ||
+                  id.includes('FunnelTypesRegistry')) {
+                return 'services-funnel';
+              }
+              
+              // Data & Analytics services (lazy)
+              if (id.includes('/services/canonical/data/') ||
+                  id.includes('AnalyticsService') ||
+                  id.includes('DataService') ||
+                  id.includes('ResultDataService') ||
+                  id.includes('ParticipantDataService') ||
+                  id.includes('realTimeAnalytics')) {
+                return 'services-data';
+              }
+              
+              // Editor services (lazy quando não em editor)
+              if (id.includes('/services/editor/') ||
+                  id.includes('EditorService') ||
+                  id.includes('QuizEditorBridge') ||
+                  id.includes('PropertyExtraction')) {
+                return 'services-editor';
+              }
+              
+              // Performance & Monitoring (lazy)
+              if (id.includes('/services/performance/') ||
+                  id.includes('/services/monitoring/') ||
+                  id.includes('performanceOptimizer') ||
+                  id.includes('ErrorTracking') ||
+                  id.includes('HealthCheck')) {
+                return 'services-monitoring';
+              }
+              
+              // Core services (sempre carregados)
+              if (id.includes('/services/core/') ||
+                  id.includes('/services/canonical/CacheService') ||
+                  id.includes('/services/canonical/NavigationService') ||
+                  id.includes('UnifiedCacheService') ||
+                  id.includes('StorageService')) {
+                return 'services-core';
+              }
+              
+              // Outros services
+              return 'services-misc';
             }
 
             // 🎯 TEMPLATES: Smart lazy loading aplicado (310KB → 50KB inicial)
