@@ -924,6 +924,87 @@ export class TemplateLoader {
   }
 
   /**
+   * ✅ FASE 2.4: Cache warming - carrega múltiplos steps em background
+   * Útil para prefetch estratégico
+   * 
+   * @param stepIds - Array de step IDs (ex: ['step-01', 'step-02'])
+   * @param mode - Modo de carregamento ('template' ou 'funnel')
+   * @param id - Template ID ou Funnel ID
+   */
+  async warmCache(
+    stepIds: string[],
+    mode: 'template' | 'funnel',
+    id?: string
+  ): Promise<{ loaded: number; cached: number; failed: number }> {
+    const startTime = performance.now();
+    const results = { loaded: 0, cached: 0, failed: 0 };
+
+    console.log(`🔥 [warmCache] Warming ${stepIds.length} steps...`);
+
+    const promises = stepIds.map(async (stepId) => {
+      try {
+        // Verificar se já está em cache
+        const cacheKey = stepBlocksKey(stepId);
+        if (unifiedCache.has(cacheKey)) {
+          results.cached++;
+          return;
+        }
+
+        // Carregar step
+        await this.load(stepId, mode, id);
+        results.loaded++;
+      } catch (error) {
+        console.warn(`⚠️ [warmCache] Falha ao carregar ${stepId}:`, error);
+        results.failed++;
+      }
+    });
+
+    await Promise.allSettled(promises);
+
+    const duration = performance.now() - startTime;
+    console.log(
+      `✅ [warmCache] Completo em ${duration.toFixed(0)}ms:`,
+      `${results.loaded} loaded, ${results.cached} cached, ${results.failed} failed`
+    );
+
+    return results;
+  }
+
+  /**
+   * Obtém métricas de performance (dev only)
+   */
+  getMetrics() {
+    const avgLoadTime = this.metrics.loadTimes.length > 0
+      ? this.metrics.loadTimes.reduce((a, b) => a + b, 0) / this.metrics.loadTimes.length
+      : 0;
+
+    const cacheHitRate = (this.metrics.cacheHits + this.metrics.cacheMisses) > 0
+      ? (this.metrics.cacheHits / (this.metrics.cacheHits + this.metrics.cacheMisses)) * 100
+      : 0;
+
+    return {
+      cacheHits: this.metrics.cacheHits,
+      cacheMisses: this.metrics.cacheMisses,
+      cacheHitRate: cacheHitRate.toFixed(1) + '%',
+      avgLoadTime: avgLoadTime.toFixed(0) + 'ms',
+      prefetchCount: this.metrics.prefetchCount,
+      totalLoads: this.metrics.loadTimes.length,
+    };
+  }
+
+  /**
+   * Reset métricas (dev only)
+   */
+  resetMetrics(): void {
+    this.metrics = {
+      cacheHits: 0,
+      cacheMisses: 0,
+      loadTimes: [],
+      prefetchCount: 0,
+    };
+  }
+
+  /**
    * Limpa estado interno
    */
   clear(): void {
