@@ -1,7 +1,8 @@
 // @ts-nocheck
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import * as LucideIcons from 'lucide-react';
+// 🚀 FASE 3.4: Tree Shaking - Import apenas ícones usados
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { dynamicIconImport } from '@/utils/dynamicIconImport';
 
 interface MetricCardProps {
@@ -11,7 +12,7 @@ interface MetricCardProps {
   className?: string;
   trend?: 'up' | 'down' | 'flat';
   change?: string;
-  icon?: keyof typeof LucideIcons;
+  icon?: string; // Changed from keyof typeof LucideIcons to string
   compact?: boolean;
 }
 
@@ -56,11 +57,11 @@ export const MetricCard = ({
                     )}
                   >
                     {trend === 'up' ? (
-                      <LucideIcons.TrendingUp className="mr-1 h-3 w-3" />
+                      <TrendingUp className="mr-1 h-3 w-3" />
                     ) : trend === 'down' ? (
-                      <LucideIcons.TrendingDown className="mr-1 h-3 w-3" />
+                      <TrendingDown className="mr-1 h-3 w-3" />
                     ) : (
-                      <LucideIcons.Minus className="mr-1 h-3 w-3" />
+                      <Minus className="mr-1 h-3 w-3" />
                     )}
                     {change}
                   </div>
@@ -101,11 +102,11 @@ export const MetricCard = ({
                   )}
                 >
                   {trend === 'up' ? (
-                    <LucideIcons.TrendingUp className="mr-1 h-3 w-3" />
+                    <TrendingUp className="mr-1 h-3 w-3" />
                   ) : trend === 'down' ? (
-                    <LucideIcons.TrendingDown className="mr-1 h-3 w-3" />
+                    <TrendingDown className="mr-1 h-3 w-3" />
                   ) : (
-                    <LucideIcons.Minus className="mr-1 h-3 w-3" />
+                    <Minus className="mr-1 h-3 w-3" />
                   )}
                   {change}
                 </div>
