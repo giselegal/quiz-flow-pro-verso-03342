@@ -399,7 +399,7 @@ export class TemplateService extends BaseCanonicalService {
       // 4. Preload vizinhos e críticos em background (não bloqueia)
       if (preloadNeighbors) {
         this.preloadNeighborsAndCritical(stepId).catch(err => 
-          this.warn(`Preload failed for neighbors of ${stepId}:`, err)
+          this.log(`⚠️ Preload failed for neighbors of ${stepId}:`, err)
         );
       }
       

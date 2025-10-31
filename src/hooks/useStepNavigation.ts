@@ -100,22 +100,25 @@ export const useStepNavigation = (initialStep: number = 1) => {
   const loadStepData = useCallback(
     async (stepNumber: number) => {
       try {
-        // Fallback: Use getTemplate instead of getTemplateByStep  
-        const template = await templateService.getTemplate(`step-${stepNumber}`);
+        // Buscar template canônico para a etapa
+        const result = await templateService.getTemplate(`step-${stepNumber}`);
 
-        if (!template) {
-          // Try fallback template for the step
-          const fallbackTemplate = { blocks: [] };
-          return fallbackTemplate;
+        if (!result.success || !result.data) {
+          // Fallback mínimo: step sem blocks
+          const fallbackTemplate = { id: `step-${stepNumber}`, blocks: [] };
+          return fallbackTemplate as any;
         }
 
-        // Verificar se é etapa de quiz (tem perguntas)
-        const isQuizStep =
-          template.templateData?.steps?.some((step: any) =>
-            step.blocks?.some((block: any) =>
-              ['multiple-choice', 'single-choice', 'text-input', 'rating'].includes(block.type),
-            ),
-          ) || false;
+        const template = result.data;
+
+        // Verificar se é etapa de quiz (tem blocos de pergunta/opções)
+        const questionLikeTypes = new Set([
+          'multiple-choice', 'single-choice', 'text-input', 'rating',
+          'quiz-options', 'options-grid', 'quiz-question',
+        ]);
+        const isQuizStep = Array.isArray(template.blocks)
+          ? template.blocks.some((block: any) => questionLikeTypes.has(block.type))
+          : false;
 
         const data: StepData = {
           stepNumber,
@@ -129,7 +132,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
         console.log(`✅ Dados da etapa ${stepNumber} carregados:`, {
           isQuizStep,
-          stepsCount: template.templateData?.steps?.length || 0,
+          stepsCount: Array.isArray(template.blocks) ? template.blocks.length : 0,
         });
 
         return data;
