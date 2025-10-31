@@ -2,22 +2,32 @@
  * 💾 SAVE STATUS INDICATOR
  * 
  * Fase 2.2 - Visual indicator de auto-save
+ * Fase 2.3 - Retry info display
  */
 
 import React from 'react';
-import { Loader2, Check, X, Clock } from 'lucide-react';
+import { Loader2, Check, X, Clock, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'error';
 
+export interface RetryInfo {
+  attempt: number;
+  maxAttempts: number;
+}
+
 export interface SaveStatusIndicatorProps {
   status: SaveStatus;
   className?: string;
+  retryInfo?: RetryInfo | null;
+  onRetry?: () => void;
 }
 
 export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
   status,
   className,
+  retryInfo,
+  onRetry,
 }) => {
   if (status === 'idle') return null;
 
@@ -45,7 +55,15 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
       {status === 'saving' && (
         <>
           <Loader2 className="w-4 h-4 animate-spin" />
-          <span>Salvando...</span>
+          <span>
+            {retryInfo
+              ? `Tentativa ${retryInfo.attempt}/${retryInfo.maxAttempts}...`
+              : 'Salvando...'
+            }
+          </span>
+          {retryInfo && retryInfo.attempt > 1 && (
+            <AlertTriangle className="w-4 h-4 ml-1" />
+          )}
         </>
       )}
 
@@ -59,7 +77,17 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
       {status === 'error' && (
         <>
           <X className="w-4 h-4" />
-          <span>Erro ao salvar</span>
+          <div className="flex items-center gap-2">
+            <span>Erro ao salvar</span>
+            {onRetry && (
+              <button
+                onClick={onRetry}
+                className="ml-2 px-2 py-1 text-xs bg-white/20 hover:bg-white/30 rounded transition-colors"
+              >
+                Tentar novamente
+              </button>
+            )}
+          </div>
         </>
       )}
     </div>

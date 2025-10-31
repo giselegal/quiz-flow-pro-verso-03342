@@ -480,15 +480,33 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const editorCtx = useEditor({ optional: true } as any);
 
     // ✅ FASE 2.2: Auto-save com debounce (apenas em funnel mode)
+    // ✅ FASE 2.3: Retry logic com exponential backoff
     const autoSave = useAutoSave({
         funnelId,
         enabled: !!funnelId, // Apenas em funnel mode
         debounceMs: 2000,
+        maxRetries: 3,
         onSave: () => {
             console.log('✅ Auto-save completado');
+            toast({
+                title: 'Alterações salvas',
+                description: 'Todas as alterações foram salvas no Supabase',
+            });
         },
-        onError: (error) => {
+        onError: (error, retryInfo) => {
             console.error('❌ Auto-save error:', error);
+            
+            const isRetrying = retryInfo && retryInfo.attempt < retryInfo.maxAttempts;
+            
+            if (!isRetrying) {
+                // Erro final após esgotar tentativas
+                toast({
+                    variant: 'destructive',
+                    title: 'Erro ao salvar',
+                    description: error.message || 'Não foi possível salvar as alterações. Verifique sua conexão com a internet.',
+                    duration: 5000,
+                });
+            }
         },
     });
 
