@@ -27,6 +27,8 @@ import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateSer
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import blockAliasMap from '@/config/block-aliases.json';
 import { templateService } from '@/services/canonical/TemplateService';
+import { funnelComponentsService } from '@/services/funnelComponentsService';
+import { convertComponentInstancesToBlocks, filterValidInstances } from '@/utils/componentInstanceConverter';
 
 export type TemplateSource =
   | 'normalized-json'
@@ -34,6 +36,7 @@ export type TemplateSource =
   | 'individual-json'      // JSON público em /templates/blocks/step-XX.json
   | 'master-json'          // Carregado de quiz21-complete.json
   | 'consolidated'         // Consolidated service (prioriza per-step JSON)
+  | 'supabase'             // ✅ FASE 2.1: Carregado do Supabase (component_instances)
   | 'ts-template';         // Fallback TypeScript
 
 export interface LoadedTemplate {
@@ -160,9 +163,12 @@ export class TemplateLoader {
         if (mode === 'funnel') {
           console.log('💾 [MODO FUNNEL] Usando estratégia SUPABASE-FIRST');
 
-          // TODO: Fase 1.4 - Implementar carregamento de component_instances do Supabase
-          // const fromSupabase = await this.loadFromSupabase(id!, normalizedKey);
-          // if (fromSupabase) return fromSupabase;
+          // ✅ FASE 2.1: Implementado carregamento do Supabase
+          const fromSupabase = await this.loadFromSupabase(id!, normalizedKey);
+          if (fromSupabase) {
+            console.log('✅ Funnel mode: Carregado do Supabase');
+            return fromSupabase;
+          }
 
           // Fallback: JSON público (para funnels que ainda não têm dados no Supabase)
           const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
@@ -257,6 +263,63 @@ export class TemplateLoader {
     } finally {
       // Limpa a referência independentemente de sucesso ou erro, permitindo novos loads futuros
       this.inFlightLoads.delete(normalizedKey);
+    }
+  }
+
+  /**
+   * ✅ FASE 2.1: Carregar blocos do Supabase (component_instances)
+   * Estratégia SUPABASE-FIRST para modo funnel
+   */
+  private async loadFromSupabase(funnelId: string, normalizedKey: string): Promise<LoadedTemplate | null> {
+    try {
+      console.log(`💾 [loadFromSupabase] Carregando: funnel=${funnelId}, step=${normalizedKey}`);
+
+      // Extrair número da etapa (step-01 → 1)
+      const stepNumber = parseInt(normalizedKey.replace(/\D/g, ''), 10);
+      if (isNaN(stepNumber)) {
+        console.warn(`⚠️ [loadFromSupabase] Step number inválido: ${normalizedKey}`);
+        return null;
+      }
+
+      // Buscar component_instances do Supabase
+      const instances = await funnelComponentsService.getComponents({
+        funnelId,
+        stepNumber,
+      });
+
+      if (!instances || instances.length === 0) {
+        console.log(`⚠️ [loadFromSupabase] Nenhum component_instance encontrado para step ${stepNumber}`);
+        return null;
+      }
+
+      console.log(`✅ [loadFromSupabase] ${instances.length} component_instances encontrados`);
+
+      // Filtrar instâncias inválidas
+      const validInstances = filterValidInstances(instances);
+
+      if (validInstances.length === 0) {
+        console.warn(`⚠️ [loadFromSupabase] Todas as instâncias eram inválidas`);
+        return null;
+      }
+
+      // Converter ComponentInstance[] → Block[]
+      const blocks = convertComponentInstancesToBlocks(validInstances);
+
+      if (blocks.length === 0) {
+        console.warn(`⚠️ [loadFromSupabase] Conversão resultou em 0 blocos`);
+        return null;
+      }
+
+      // Cache os blocos
+      unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+
+      console.log(`📦 Supabase → ${normalizedKey}: ${blocks.length} blocos`);
+
+      return { blocks, source: 'supabase' };
+    } catch (error) {
+      console.error(`❌ [loadFromSupabase] Erro ao carregar do Supabase:`, error);
+      // Retornar null para permitir fallback
+      return null;
     }
   }
 

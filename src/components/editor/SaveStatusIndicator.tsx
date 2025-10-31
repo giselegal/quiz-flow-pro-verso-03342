@@ -1,17 +1,164 @@
-import React, { useState, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
-import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
-import { toast } from '@/hooks/use-toast';
+/**/**
 
-interface SaveStatusIndicatorProps {
-  funnelId?: string;
-  autoSaveEnabled?: boolean;
-  lastSaved?: Date | null;
-  isSaving?: boolean;
-  onManualSave?: () => void;
-}
+ * 💾 SAVE STATUS INDICATOR * 💾 SAVE STATUS INDICATOR
 
-type SaveStatus = 'saved' | 'saving' | 'unsaved' | 'error';
+  *  * 
+
+ * Fase 2.2 - Visual indicator de auto - save * Fase 2.2 - Visual indicator de auto - save
+
+  *  * 
+
+ * Mostra status do save em tempo real: * Mostra status do save em tempo real:
+
+ * - "Salvando..."(azul, spinner) * - "Salvando..."(azul, spinner)
+
+  * - "Salvo"(verde, checkmark) * - "Salvo"(verde, checkmark)
+
+  * - "Erro ao salvar"(vermelho, X) * - "Erro ao salvar"(vermelho, X)
+
+  * - Oculto quando idle * - Oculto quando idle
+
+    *  * 
+
+ * @version 2.0 - Simplificado para Fase 2 * @version 2.0 - Simplificado para Fase 2
+
+  * / */
+
+
+
+import React from 'react'; import React from 'react';
+
+import { Loader2, Check, X, Clock } from 'lucide-react'; import { Loader2, Check, X, Clock } from 'lucide-react';
+
+import { cn } from '@/lib/utils'; import { cn } from '@/lib/utils';
+
+
+
+export type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'error'; export type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'error';
+
+
+
+export interface SaveStatusIndicatorProps {export interface SaveStatusIndicatorProps {
+
+  status: SaveStatus; status: SaveStatus;
+
+  className?: string; className?: string;
+
+}}
+
+
+
+export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
+  export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
+
+    status, status,
+
+    className, className,
+
+  }) => { }) => {
+
+  // Não mostrar quando idle  // Não mostrar quando idle
+
+  if (status === 'idle') return null; if (status === 'idle') return null;
+
+
+
+  return (  return (
+
+    <div    <div
+
+      className={cn(className = {
+      cn(
+
+        'fixed top-16 right-4 z-[9998] px-3 py-2 rounded-lg shadow-lg transition-all',        'fixed top-16 right-4 z-[9998] px-3 py-2 rounded-lg shadow-lg transition-all',
+
+        'flex items-center gap-2 text-sm font-medium',        'flex items-center gap-2 text-sm font-medium',
+
+        {        {
+
+          'bg-blue-50 text-blue-700 border border-blue-200': status === 'pending', 'bg-blue-50 text-blue-700 border border-blue-200': status === 'pending',
+
+      'bg-blue-500 text-white': status === 'saving', 'bg-blue-500 text-white': status === 'saving',
+
+      'bg-green-500 text-white': status === 'saved', 'bg-green-500 text-white': status === 'saved',
+
+      'bg-red-500 text-white': status === 'error', 'bg-red-500 text-white': status === 'error',
+
+        },        },
+
+        className        className
+
+      )}      )}
+
+    >    >
+
+  { status === 'pending' && ({ status === 'pending' && (
+
+    <>        <>
+
+      <Clock className="w-4 h-4" />          <Clock className="w-4 h-4" />
+
+      <span>Pendente...</span>          <span>Pendente...</span>
+
+    </>        </>
+
+  )}      )}
+
+
+
+{
+  status === 'saving' && ({ status === 'saving' && (
+
+    <>        <>
+
+      <Loader2 className="w-4 h-4 animate-spin" />          <Loader2 className="w-4 h-4 animate-spin" />
+
+      <span>Salvando...</span>          <span>Salvando...</span>
+
+    </>        </>
+
+  )}      )}
+
+
+
+{
+  status === 'saved' && ({ status === 'saved' && (
+
+    <>        <>
+
+      <Check className="w-4 h-4" />          <Check className="w-4 h-4" />
+
+      <span>Salvo</span>          <span>Salvo</span>
+
+    </>        </>
+
+  )}      )}
+
+
+
+{
+  status === 'error' && ({ status === 'error' && (
+
+    <>        <>
+
+      <X className="w-4 h-4" />          <X className="w-4 h-4" />
+
+      <span>Erro ao salvar</span>          <span>Erro ao salvar</span>
+
+    </>        </>
+
+  )}      )}
+
+    </div >    </div >
+
+  );  );
+
+};};
+
+
+
+export default SaveStatusIndicator; export default SaveStatusIndicator;
+
 
 /**
  * 🔄 INDICADOR DE STATUS DE SALVAMENTO
