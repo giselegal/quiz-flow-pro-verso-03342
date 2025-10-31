@@ -3668,6 +3668,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     return (
         <EditorThemeProvider tokens={themeOverrides}>
+            {/* 💾 Botão "Salvar como Funil" - Aparece apenas em modo template */}
+            <SaveAsFunnelButton />
+
             {import.meta.env.DEV && (
                 <button
                     type="button"

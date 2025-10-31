@@ -9,6 +9,7 @@
 import React, { useState } from 'react';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { useUnifiedCRUD } from '@/contexts';
+import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -88,8 +89,22 @@ export const SaveAsFunnelButton: React.FC = () => {
             for (const stepKey of stepKeys) {
                 const blocks = stepBlocks[stepKey];
                 if (blocks && blocks.length > 0) {
-                    // Usar bulk save do funnelComponentsService
-                    await crud.bulkSaveComponents?.(funnel.id, stepKey, blocks);
+                    // Extrair número da etapa (step-01 → 1)
+                    const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10);
+                    if (isNaN(stepNumber)) continue;
+
+                    // Salvar cada bloco como component_instance
+                    for (let i = 0; i < blocks.length; i++) {
+                        const block = blocks[i];
+                        await funnelComponentsService.addComponent({
+                            funnelId: funnel.id,
+                            stepNumber,
+                            instanceKey: block.id || `${block.type}-${i}`,
+                            componentTypeKey: block.type,
+                            orderIndex: i,
+                            properties: block.props || {},
+                        });
+                    }
                     savedCount++;
                 }
             }
