@@ -101,9 +101,82 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🎯 SOLUÇÃO DEFINITIVA: Desabilitar code splitting manual problemático
-          // Deixar Vite otimizar automaticamente baseado em imports dinâmicos
-          manualChunks: undefined,
+          // 🎯 FASE 3 TASK 7: Manual chunks otimizados para reduzir bundle principal
+          manualChunks: (id) => {
+            // Vendor chunks (bibliotecas grandes separadas)
+            if (id.includes('node_modules')) {
+              // React ecosystem
+              if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+                return 'vendor-react';
+              }
+              // UI libraries
+              if (id.includes('@radix-ui') || id.includes('cmdk')) {
+                return 'vendor-ui';
+              }
+              // Data/Charts
+              if (id.includes('recharts') || id.includes('d3-')) {
+                return 'vendor-charts';
+              }
+              // DnD
+              if (id.includes('@dnd-kit')) {
+                return 'vendor-dnd';
+              }
+              // Supabase
+              if (id.includes('@supabase') || id.includes('postgrest-js')) {
+                return 'vendor-supabase';
+              }
+              // Icons - separar lucide-react em chunk próprio para tree shaking
+              if (id.includes('lucide-react')) {
+                return 'vendor-icons';
+              }
+              // Outras libs pequenas no chunk vendor-misc
+              return 'vendor-misc';
+            }
+
+            // Application chunks (código da aplicação)
+            // Editor chunk (já otimizado com lazy loading)
+            if (id.includes('QuizModularProductionEditor') || 
+                id.includes('DynamicPropertiesForm') ||
+                id.includes('PropertiesPanel')) {
+              return 'app-editor';
+            }
+
+            // Preview/Runtime chunk
+            if (id.includes('QuizProductionPreview') || 
+                id.includes('QuizAppConnected') ||
+                id.includes('UnifiedStepRenderer')) {
+              return 'app-runtime';
+            }
+
+            // Analytics chunk
+            if (id.includes('ParticipantsPage') || 
+                id.includes('AnalyticsPage') ||
+                id.includes('FacebookMetricsPage')) {
+              return 'app-analytics';
+            }
+
+            // Dashboard chunk
+            if (id.includes('Dashboard') && !id.includes('node_modules')) {
+              return 'app-dashboard';
+            }
+
+            // Blocks/Registry chunk
+            if (id.includes('/blocks/') || 
+                id.includes('Registry') ||
+                id.includes('BlockComponent')) {
+              return 'app-blocks';
+            }
+
+            // Services chunk
+            if (id.includes('/services/') && !id.includes('node_modules')) {
+              return 'app-services';
+            }
+
+            // Templates chunk
+            if (id.includes('/templates/') || id.includes('Template')) {
+              return 'app-templates';
+            }
+          },
         },
       },
     },
