@@ -1670,45 +1670,44 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                 })}
                                             </div>
                                         </div>
-                                        </>
-                            )}
-                            <Separator />
-                            <div>
-                                <label className="block mb-1 font-medium">Próximo Step (nextStep)</label>
-                                <select
-                                    value={selectedStep.nextStep || ''}
-                                    onChange={e => updateStep(selectedStep.id, { nextStep: e.target.value || '' })}
-                                    className="w-full border rounded px-2 py-1 text-[11px]"
-                                >
-                                    <option value="">-- (sem) --</option>
-                                    {steps.filter(s => s.id !== selectedStep.id).map(s => (
-                                        <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
-                                    ))}
-                                </select>
-                                {(() => {
-                                    const idx = steps.findIndex(s => s.id === selectedStep.id);
-                                    const st = getNextStepStatus(selectedStep, idx);
-                                    if (st === 'invalid') return <p className="text-[10px] mt-1 text-red-500">ID informado não existe entre as etapas.</p>;
-                                    if (st === 'missing') return <p className="text-[10px] mt-1 text-amber-600">Sem nextStep: fluxo pode parar aqui.</p>;
-                                    return <p className="text-[10px] mt-1 text-muted-foreground">OK</p>;
-                                })()}
+                                    )}
+                                    <Separator />
+                                    {selectedStep && (
+                                        <div>
+                                            <label className="block mb-1 font-medium">Próximo Step (nextStep)</label>
+                                            <select
+                                                value={selectedStep.nextStep || ''}
+                                                onChange={e => updateStep(selectedStep.id, { nextStep: e.target.value || '' })}
+                                                className="w-full border rounded px-2 py-1 text-[11px]"
+                                            >
+                                                <option value="">-- (sem) --</option>
+                                                {steps.filter(s => s.id !== selectedStep.id).map(s => (
+                                                    <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
+                                                ))}
+                                            </select>
+                                            {(() => {
+                                                const idx = steps.findIndex(s => s.id === selectedStep.id);
+                                                const st = getNextStepStatus(selectedStep, idx);
+                                                if (st === 'invalid') return <p className="text-[10px] mt-1 text-red-500">ID informado não existe entre as etapas.</p>;
+                                                if (st === 'missing') return <p className="text-[10px] mt-1 text-amber-600">Sem nextStep: fluxo pode parar aqui.</p>;
+                                                return <p className="text-[10px] mt-1 text-muted-foreground">OK</p>;
+                                            })()}
+                                        </div>
+                                    )}
+                                </div>
+                            <div className="p-2 border-t flex gap-2">
+                                <Button size="sm" className="flex-1" onClick={handleSave} disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar'}</Button>
                             </div>
-                        </>
-                            )}
-                    </div>
-                    <div className="p-2 border-t flex gap-2">
-                        <Button size="sm" className="flex-1" onClick={handleSave} disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar'}</Button>
-                    </div>
+                        </div>
+                        {/* COL 5 - RUNTIME PREVIEW */}
+                        <div className="w-80 flex flex-col border-l bg-muted/10">
+                            <div className="p-3 border-b text-xs font-semibold">Runtime</div>
+                            <div className="flex-1 overflow-hidden">
+                                <RuntimePreview />
+                            </div>
+                        </div>
+                    </div>{/* fecha wrapper flex-1 */}
                 </div>
-                {/* COL 5 - RUNTIME PREVIEW */}
-                <div className="w-80 flex flex-col border-l bg-muted/10">
-                    <div className="p-3 border-b text-xs font-semibold">Runtime</div>
-                    <div className="flex-1 overflow-hidden">
-                        <RuntimePreview />
-                    </div>
-                </div>
-            </div>{/* fecha wrapper flex-1 */}
-        </div>
         </QuizRuntimeRegistryProvider >
     );
 };
