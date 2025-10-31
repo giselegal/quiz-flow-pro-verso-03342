@@ -3,6 +3,7 @@
  * 🎯 QUIZ APP CONNECTED - Conectado ao Sistema de Configuração API
  * 
  * ✅ FASE 3.3: OPTIMIZADO COM MEMOIZATION E PREFETCH
+ * ✅ FASE 4: BlockRegistry removido (migrado para UnifiedBlockRegistry)
  * 
  * Versão do QuizApp que busca todas as configurações via API,
  * permitindo controle total através do /editor
@@ -18,7 +19,6 @@ import { useComponentConfiguration } from '../../hooks/useComponentConfiguration
 
 // Sistema unificado de renderização (Fase 3)
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/core/unified';
-import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry, useBlockRegistryOptional } from '@/runtime/quiz/blocks/BlockRegistry';
 import sanitizeHtml from '@/utils/sanitizeHtml';
 import React, { Suspense, useMemo, useCallback } from 'react';
 
@@ -727,9 +727,6 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         }
     };
 
-    // Se já existe um BlockRegistryProvider acima (ex.: Editor), não sobrescrever; caso contrário, usar defaults
-    const existingRegistry = useBlockRegistryOptional();
-
     const AppContent = (
         <div className="min-h-screen" style={dynamicStyles}>
             <div className="quiz-container mx-auto">
@@ -892,25 +889,16 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         </div>
     );
 
-    // Montar árvore com BlockRegistry se necessário
-    const WithBlocks = existingRegistry ? (
-        AppContent
-    ) : (
-        <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
-            {AppContent}
-        </BlockRegistryProvider>
-    );
-
     // Permitir edição inline: envolver com EditorProviderUnified quando editorMode=true (lazy, sem import estático)
     if (editorMode) {
         return (
-            <Suspense fallback={WithBlocks}>
+            <Suspense fallback={AppContent}>
                 <EditorProviderUnifiedLazy>
-                    {WithBlocks}
+                    {AppContent}
                 </EditorProviderUnifiedLazy>
             </Suspense>
         );
     }
 
-    return WithBlocks;
+    return AppContent;
 }

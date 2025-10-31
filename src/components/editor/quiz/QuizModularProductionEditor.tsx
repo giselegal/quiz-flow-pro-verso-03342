@@ -81,7 +81,6 @@ import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNavigation';
 import { SchemaAPI } from '@/config/schemas';
 import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
-import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, EXTENDED_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
@@ -4159,19 +4158,17 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
-                <BlockRegistryProvider definitions={EXTENDED_BLOCK_DEFINITIONS}>
-                    {/* 🎯 previewMode: Sincroniza com Canvas + usa comportamento de produção */}
-                    <QuizAppConnected
-                        funnelId={funnelId}
-                        previewMode
-                        initialStepId={selectedStepId}
-                        initialConfig={{
-                            steps,
-                            global: {},
-                            scoring: {},
-                        }}
-                    />
-                </BlockRegistryProvider>
+                {/* 🎯 previewMode: Sincroniza com Canvas + usa comportamento de produção */}
+                <QuizAppConnected
+                    funnelId={funnelId}
+                    previewMode
+                    initialStepId={selectedStepId}
+                    initialConfig={{
+                        steps,
+                        global: {},
+                        scoring: {},
+                    }}
+                />
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
                 <div className="flex items-center gap-2">
