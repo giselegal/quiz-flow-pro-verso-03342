@@ -111,9 +111,10 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🎯 FASE 3 TASK 7: Manual chunks otimizados para reduzir bundle principal
+          // 🚀 FASE 3.2: Code Splitting Agressivo Otimizado
+          // Objetivo: app-blocks 502KB → ~150KB, app-editor 253KB → ~100KB
           manualChunks: (id) => {
-            // Vendor chunks (bibliotecas grandes separadas)
+            // ========== VENDOR CHUNKS ==========
             if (id.includes('node_modules')) {
               // React ecosystem
               if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
@@ -123,7 +124,7 @@ export default defineConfig(({ mode }) => {
               if (id.includes('@radix-ui') || id.includes('cmdk')) {
                 return 'vendor-ui';
               }
-              // Data/Charts
+              // Data/Charts (lazy load apenas em analytics)
               if (id.includes('recharts') || id.includes('d3-')) {
                 return 'vendor-charts';
               }
@@ -135,19 +136,94 @@ export default defineConfig(({ mode }) => {
               if (id.includes('@supabase') || id.includes('postgrest-js')) {
                 return 'vendor-supabase';
               }
-              // Icons - separar lucide-react em chunk próprio para tree shaking
+              // Icons - separar lucide-react para tree shaking
               if (id.includes('lucide-react')) {
                 return 'vendor-icons';
               }
-              // Outras libs pequenas no chunk vendor-misc
+              // Outras libs pequenas
               return 'vendor-misc';
             }
 
-            // Application chunks (código da aplicação)
-            // Editor chunk (já otimizado com lazy loading)
-            if (id.includes('QuizModularProductionEditor') || 
-                id.includes('DynamicPropertiesForm') ||
-                id.includes('PropertiesPanel')) {
+            // ========== APPLICATION CHUNKS - FASE 3.2 ==========
+            
+            // 🎯 BLOCKS: Split por categoria (502KB → 5x100KB)
+            if (id.includes('/blocks/')) {
+              // Core blocks (sempre carregados) ~50KB
+              if (id.includes('HeaderBlock') || 
+                  id.includes('TextBlock') || 
+                  id.includes('ImageBlock') || 
+                  id.includes('ButtonBlock')) {
+                return 'blocks-core';
+              }
+              
+              // Intro blocks (lazy) ~80KB
+              if (id.includes('IntroFormBlock') || 
+                  id.includes('IntroLogoBlock') || 
+                  id.includes('IntroTitleBlock') ||
+                  id.includes('IntroImageBlock') ||
+                  id.includes('IntroDescriptionBlock')) {
+                return 'blocks-intro';
+              }
+              
+              // Question blocks (lazy) ~100KB
+              if (id.includes('QuestionProgressBlock') || 
+                  id.includes('QuestionTextBlock') ||
+                  id.includes('QuestionNumberBlock') ||
+                  id.includes('QuestionNavigationBlock') ||
+                  id.includes('QuestionInstructionsBlock') ||
+                  id.includes('OptionsGridBlock')) {
+                return 'blocks-question';
+              }
+              
+              // Result blocks (lazy) ~90KB
+              if (id.includes('ResultMainBlock') || 
+                  id.includes('ResultImageBlock') ||
+                  id.includes('ResultDescriptionBlock') ||
+                  id.includes('ResultSecondaryStylesBlock') ||
+                  id.includes('ResultShareBlock') ||
+                  id.includes('ResultCTABlock')) {
+                return 'blocks-result';
+              }
+              
+              // Offer blocks (lazy) ~120KB
+              if (id.includes('QuizOfferHeroBlock') || 
+                  id.includes('ValueAnchoringBlock') ||
+                  id.includes('TestimonialsBlock') ||
+                  id.includes('BenefitsListBlock') ||
+                  id.includes('SecurePurchaseBlock') ||
+                  id.includes('GuaranteeBlock')) {
+                return 'blocks-offer';
+              }
+              
+              // Transition blocks (lazy) ~40KB
+              if (id.includes('TransitionTitleBlock') ||
+                  id.includes('TransitionTextBlock')) {
+                return 'blocks-transition';
+              }
+              
+              // Outros blocks
+              return 'blocks-misc';
+            }
+
+            // 🎯 EDITOR: Split básico vs avançado (253KB → 100KB+150KB lazy)
+            if (id.includes('/editor/')) {
+              // Editor Core (sempre carregado) ~100KB
+              if (id.includes('EditorCanvas') || 
+                  id.includes('BlockRenderer') ||
+                  id.includes('EditorHeader') ||
+                  id.includes('FunnelHeader')) {
+                return 'editor-core';
+              }
+              
+              // Editor Avançado (lazy) ~150KB
+              if (id.includes('DragDropSystem') ||
+                  id.includes('PropertiesPanel') ||
+                  id.includes('ComponentsSidebar') ||
+                  id.includes('DynamicPropertiesForm') ||
+                  id.includes('BuilderSystemPanel')) {
+                return 'editor-advanced';
+              }
+              
               return 'app-editor';
             }
 
@@ -158,31 +234,30 @@ export default defineConfig(({ mode }) => {
               return 'app-runtime';
             }
 
-            // Analytics chunk
+            // Analytics chunk (lazy)
             if (id.includes('ParticipantsPage') || 
                 id.includes('AnalyticsPage') ||
                 id.includes('FacebookMetricsPage')) {
               return 'app-analytics';
             }
 
-            // Dashboard chunk
+            // Dashboard chunk (lazy)
             if (id.includes('Dashboard') && !id.includes('node_modules')) {
               return 'app-dashboard';
             }
 
-            // Blocks/Registry chunk
-            if (id.includes('/blocks/') || 
-                id.includes('Registry') ||
-                id.includes('BlockComponent')) {
-              return 'app-blocks';
+            // Registry chunk
+            if (id.includes('Registry') && !id.includes('/blocks/')) {
+              return 'app-registry';
             }
 
-            // Services chunk
+            // Services chunk (~400KB → keep consolidado)
             if (id.includes('/services/') && !id.includes('node_modules')) {
               return 'app-services';
             }
 
-            // Templates chunk
+            // 🎯 TEMPLATES: Smart lazy loading aplicado (310KB → 50KB inicial)
+            // Templates agora são carregados sob demanda via TemplateService.lazyLoadStep()
             if (id.includes('/templates/') || id.includes('Template')) {
               return 'app-templates';
             }

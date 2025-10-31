@@ -102,6 +102,12 @@ export interface ValidationResult {
 export class TemplateService extends BaseCanonicalService {
   private static instance: TemplateService;
   private registry: UnifiedTemplateRegistry;
+  
+  // 🚀 FASE 3.1: Smart Lazy Loading
+  private readonly CRITICAL_STEPS = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
+  private readonly PRELOAD_NEIGHBORS = 1; // Preload ±1 step
+  private stepLoadPromises = new Map<string, Promise<any>>();
+  private loadedSteps = new Set<string>();
 
   // Mapeamento das 21 etapas do Quiz de Estilo
   private readonly STEP_MAPPING: Record<number, Omit<StepInfo, 'id' | 'order' | 'blocksCount' | 'hasTemplate'>> = {
@@ -360,6 +366,135 @@ export class TemplateService extends BaseCanonicalService {
   // ==================== CACHE OPERATIONS ====================
 
   /**
+   * 🚀 FASE 3.1: Smart Lazy Loading de Steps
+   * Carrega step sob demanda + preload inteligente de vizinhos e críticos
+   * 
+   * @param stepId - ID do step (ex: 'step-01')
+   * @param preloadNeighbors - Precarregar steps vizinhos (default: true)
+   * @returns Promise<Step data>
+   */
+  async lazyLoadStep(stepId: string, preloadNeighbors = true): Promise<any> {
+    // 1. Verificar se já está carregando
+    if (this.stepLoadPromises.has(stepId)) {
+      return this.stepLoadPromises.get(stepId);
+    }
+
+    // 2. Verificar se já está carregado
+    if (this.loadedSteps.has(stepId)) {
+      const cached = await this.getStep(stepId);
+      if (cached.success && cached.data) {
+        return { id: stepId, blocks: cached.data };
+      }
+    }
+
+    // 3. Iniciar carregamento
+    this.log(`🔄 Lazy loading step: ${stepId}`);
+    const loadPromise = this.loadStepData(stepId);
+    this.stepLoadPromises.set(stepId, loadPromise);
+
+    try {
+      const stepData = await loadPromise;
+      this.loadedSteps.add(stepId);
+      
+      // 4. Preload vizinhos e críticos em background (não bloqueia)
+      if (preloadNeighbors) {
+        this.preloadNeighborsAndCritical(stepId).catch(err => 
+          this.warn(`Preload failed for neighbors of ${stepId}:`, err)
+        );
+      }
+      
+      return stepData;
+    } finally {
+      this.stepLoadPromises.delete(stepId);
+    }
+  }
+
+  /**
+   * Carregar dados do step (implementação real)
+   */
+  private async loadStepData(stepId: string): Promise<any> {
+    // Buscar no cache primeiro
+    const cached = await this.getStep(stepId);
+    if (cached.success && cached.data) {
+      return { id: stepId, blocks: cached.data };
+    }
+
+    // Fallback: carregar da fonte
+    const stepNum = this.extractStepNumber(stepId);
+    if (stepNum) {
+      const stepInfo = this.STEP_MAPPING[stepNum];
+      return {
+        id: stepId,
+        ...stepInfo,
+        blocks: [], // Será populado pelo registry
+      };
+    }
+
+    throw new Error(`Step not found: ${stepId}`);
+  }
+
+  /**
+   * Precarregar steps vizinhos e críticos em background
+   */
+  private async preloadNeighborsAndCritical(currentStepId: string): Promise<void> {
+    const stepNum = this.extractStepNumber(currentStepId);
+    if (!stepNum) return;
+
+    const toPreload = new Set<string>();
+
+    // Vizinhos (±1)
+    for (let i = -this.PRELOAD_NEIGHBORS; i <= this.PRELOAD_NEIGHBORS; i++) {
+      if (i === 0) continue; // Skip current
+      const neighborNum = stepNum + i;
+      if (neighborNum >= 1 && neighborNum <= 21) {
+        const neighborId = `step-${String(neighborNum).padStart(2, '0')}`;
+        if (!this.loadedSteps.has(neighborId)) {
+          toPreload.add(neighborId);
+        }
+      }
+    }
+
+    // Steps críticos
+    for (const criticalId of this.CRITICAL_STEPS) {
+      if (!this.loadedSteps.has(criticalId) && criticalId !== currentStepId) {
+        toPreload.add(criticalId);
+      }
+    }
+
+    if (toPreload.size > 0) {
+      this.log(`⚡ Preloading ${toPreload.size} steps in background:`, Array.from(toPreload));
+      
+      // Preload em paralelo (não bloqueia)
+      const promises = Array.from(toPreload).map(id => 
+        this.lazyLoadStep(id, false).catch(() => null) // Silently fail
+      );
+      
+      await Promise.allSettled(promises);
+    }
+  }
+
+  /**
+   * Extrair número do step ID
+   */
+  private extractStepNumber(stepId: string): number | null {
+    const match = stepId.match(/step-(\d{1,2})/i);
+    return match ? parseInt(match[1], 10) : null;
+  }
+
+  /**
+   * Descarregar steps não utilizados (liberar memória)
+   * Remove steps que não foram acessados há mais de X minutos
+   */
+  unloadInactiveSteps(inactiveMinutes = 5): void {
+    // TODO: Implementar tracking de último acesso
+    // Por enquanto, apenas limpa o Set
+    const beforeCount = this.loadedSteps.size;
+    this.loadedSteps.clear();
+    this.stepLoadPromises.clear();
+    this.log(`🧹 Unloaded ${beforeCount} inactive steps`);
+  }
+
+  /**
    * Pré-carregar múltiplos templates
    */
   async preloadTemplates(ids: string[]): Promise<void> {
@@ -377,6 +512,7 @@ export class TemplateService extends BaseCanonicalService {
   invalidateTemplate(id: string): void {
     cacheService.templates.invalidate(id);
     this.registry.invalidate(id);
+    this.loadedSteps.delete(id); // 🚀 FASE 3.1: Limpar do lazy load
     this.log(`Template invalidated: ${id}`);
   }
 
@@ -387,6 +523,8 @@ export class TemplateService extends BaseCanonicalService {
     cacheService.clearStore('templates');
     // UnifiedTemplateRegistry tem clearL1()
     this.registry.clearL1();
+    this.loadedSteps.clear(); // 🚀 FASE 3.1: Limpar lazy load
+    this.stepLoadPromises.clear();
     this.log('Template cache cleared');
   }
 
