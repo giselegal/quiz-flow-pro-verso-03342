@@ -136,11 +136,11 @@ export default defineConfig(({ mode }) => {
               if (id.includes('lucide-react')) {
                 return 'vendor-icons';
               }
-              // Charts - REMOVER chunk separado para evitar circular dependency
-              // Deixar no vendor-misc para carregamento junto com outras deps
-              // if (id.includes('recharts') || id.includes('d3-')) {
-              //   return 'vendor-charts';
-              // }
+              // Charts - NÃO SEPARAR (causa circular dependency)
+              // Incluir no vendor-react para garantir ordem de inicialização
+              if (id.includes('recharts') || id.includes('d3-')) {
+                return 'vendor-react';
+              }
               // Outras libs pequenas
               return 'vendor-misc';
             }
