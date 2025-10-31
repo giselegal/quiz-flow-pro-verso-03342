@@ -45,7 +45,7 @@ export interface ComputeResultOutputBasic {
 
 export function computeResult({ answers, steps, scoring }: ComputeResultInput): ComputeResultOutputBasic {
     // Fonte de steps: preferir TemplateService (canônico) quando não informado explicitamente
-    const stepsSource = steps || templateService.getAllStepsSync() || (QUIZ_STEPS as any);
+    const stepsSource = steps || templateService.getAllStepsSync() || {};
     // Inicializa scores com todos estilos em 0 para consistência de UI
     const scores: Record<string, number> = {};
     Object.keys(styleMapping).forEach(id => { scores[id] = 0; });
