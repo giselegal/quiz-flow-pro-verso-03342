@@ -46,9 +46,35 @@ export interface LoadedTemplate {
 }
 
 export class TemplateLoader {
+  private static instance: TemplateLoader | null = null;
   private masterTemplateRef: any | null = null;
   // Mantém promessas em voo por step, evitando concorrência e erros "already loading"
   private inFlightLoads = new Map<string, Promise<LoadedTemplate>>();
+
+  // Performance metrics (dev only)
+  private metrics = {
+    cacheHits: 0,
+    cacheMisses: 0,
+    loadTimes: [] as number[],
+    prefetchCount: 0,
+  };
+
+  /**
+   * Singleton pattern
+   */
+  static getInstance(): TemplateLoader {
+    if (!TemplateLoader.instance) {
+      TemplateLoader.instance = new TemplateLoader();
+    }
+    return TemplateLoader.instance;
+  }
+
+  /**
+   * Reset singleton (útil para testes)
+   */
+  static resetInstance(): void {
+    TemplateLoader.instance = null;
+  }
 
   /**
    * Utilitário: executa uma função assíncrona com retry + backoff exponencial simples.
