@@ -120,12 +120,7 @@ export default defineConfig(({ mode }) => {
               if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
                 return 'vendor-react';
               }
-              // Charts - depende de React, mas separado para lazy loading
-              // Será carregado apenas quando necessário, mas React já estará disponível
-              if (id.includes('recharts') || id.includes('d3-')) {
-                return 'vendor-charts';
-              }
-              // UI libraries
+              // UI libraries - dependem de React
               if (id.includes('@radix-ui') || id.includes('cmdk')) {
                 return 'vendor-ui';
               }
@@ -141,6 +136,11 @@ export default defineConfig(({ mode }) => {
               if (id.includes('lucide-react')) {
                 return 'vendor-icons';
               }
+              // Charts - REMOVER chunk separado para evitar circular dependency
+              // Deixar no vendor-misc para carregamento junto com outras deps
+              // if (id.includes('recharts') || id.includes('d3-')) {
+              //   return 'vendor-charts';
+              // }
               // Outras libs pequenas
               return 'vendor-misc';
             }
