@@ -18,8 +18,14 @@ import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { convertBlocksToComponentInstances } from '@/utils/componentInstanceConverter';
 import { useToast } from '@/hooks/use-toast';
+import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/utils/retryWithBackoff';
 
 export type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'error';
+
+export interface RetryInfo {
+  attempt: number;
+  maxAttempts: number;
+}
 
 export interface UseAutoSaveOptions {
   /** Tempo de debounce em ms (default: 2000) */
@@ -31,7 +37,9 @@ export interface UseAutoSaveOptions {
   /** Callback quando save completa */
   onSave?: () => void;
   /** Callback quando save falha */
-  onError?: (error: Error) => void;
+  onError?: (error: Error, retryInfo?: RetryInfo) => void;
+  /** Número máximo de tentativas de retry (default: 3) */
+  maxRetries?: number;
 }
 
 export interface UseAutoSaveReturn {
@@ -43,6 +51,8 @@ export interface UseAutoSaveReturn {
   cancel: () => void;
   /** Último erro (se houver) */
   lastError: Error | null;
+  /** Info de retry (se em progresso) */
+  retryInfo: RetryInfo | null;
 }
 
 /**
@@ -55,6 +65,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
     enabled = !!funnelId,
     onSave,
     onError,
+    maxRetries = 3,
   } = options;
 
   const editor = useEditor({ optional: true });
@@ -62,6 +73,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
 
   const [status, setStatus] = useState<SaveStatus>('idle');
   const [lastError, setLastError] = useState<Error | null>(null);
+  const [retryInfo, setRetryInfo] = useState<RetryInfo | null>(null);
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const saveInProgressRef = useRef(false);
