@@ -101,6 +101,8 @@ import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templa
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { SaveAsFunnelButton } from '@/components/editor/SaveAsFunnelButton';
 import { EditorDiagnostics } from '@/components/editor/EditorDiagnostics';
+import { SaveStatusIndicator } from '@/components/editor/SaveStatusIndicator';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import type { StepType } from '@/types/quiz-schema';
 import { templateService } from '@/services/canonical/TemplateService';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
@@ -476,6 +478,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Editor unified provider (opcional durante migração)
     const editorCtx = useEditor({ optional: true } as any);
+
+    // ✅ FASE 2.2: Auto-save com debounce (apenas em funnel mode)
+    const autoSave = useAutoSave({
+        funnelId,
+        enabled: !!funnelId, // Apenas em funnel mode
+        debounceMs: 2000,
+        onSave: () => {
+            console.log('✅ Auto-save completado');
+        },
+        onError: (error) => {
+            console.error('❌ Auto-save error:', error);
+        },
+    });
 
     // Histórico leve por etapa (diff de step) – incremental (P0-4)
     const stepHistoryRef = useRef(new StepHistoryService<any>());
@@ -3674,6 +3689,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
             {/* 🔍 Diagnóstico Visual - DEV only */}
             <EditorDiagnostics />
+
+            {/* 💾 Status de Auto-save - Aparece apenas em funnel mode */}
+            <SaveStatusIndicator status={autoSave.status} />
 
             {import.meta.env.DEV && (
                 <button
