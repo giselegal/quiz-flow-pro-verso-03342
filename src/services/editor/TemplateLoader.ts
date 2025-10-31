@@ -29,6 +29,7 @@ import blockAliasMap from '@/config/block-aliases.json';
 import { templateService } from '@/services/canonical/TemplateService';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { convertComponentInstancesToBlocks, filterValidInstances } from '@/utils/componentInstanceConverter';
+import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/utils/retryWithBackoff';
 
 export type TemplateSource =
   | 'normalized-json'
@@ -268,6 +269,7 @@ export class TemplateLoader {
 
   /**
    * ✅ FASE 2.1: Carregar blocos do Supabase (component_instances)
+   * ✅ FASE 2.3: Retry com exponential backoff
    * Estratégia SUPABASE-FIRST para modo funnel
    */
   private async loadFromSupabase(funnelId: string, normalizedKey: string): Promise<LoadedTemplate | null> {
@@ -281,11 +283,18 @@ export class TemplateLoader {
         return null;
       }
 
-      // Buscar component_instances do Supabase
-      const instances = await funnelComponentsService.getComponents({
-        funnelId,
-        stepNumber,
-      });
+      // Buscar component_instances do Supabase (COM RETRY)
+      const instances = await retryWithBackoff(
+        () => funnelComponentsService.getComponents({ funnelId, stepNumber }),
+        {
+          maxAttempts: 3,
+          baseDelayMs: 1000,
+          onRetry: (attempt, error) => {
+            console.warn(`🔄 [loadFromSupabase] Retry ${attempt}/3 para step ${stepNumber}:`, error.message);
+          },
+          shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
+        }
+      );
 
       if (!instances || instances.length === 0) {
         console.log(`⚠️ [loadFromSupabase] Nenhum component_instance encontrado para step ${stepNumber}`);
@@ -317,7 +326,7 @@ export class TemplateLoader {
 
       return { blocks, source: 'supabase' };
     } catch (error) {
-      console.error(`❌ [loadFromSupabase] Erro ao carregar do Supabase:`, error);
+      console.error(`❌ [loadFromSupabase] Erro ao carregar do Supabase após retries:`, error);
       // Retornar null para permitir fallback
       return null;
     }

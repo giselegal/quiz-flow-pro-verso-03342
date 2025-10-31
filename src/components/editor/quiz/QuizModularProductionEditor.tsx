@@ -495,9 +495,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         },
         onError: (error, retryInfo) => {
             console.error('❌ Auto-save error:', error);
-            
+
             const isRetrying = retryInfo && retryInfo.attempt < retryInfo.maxAttempts;
-            
+
             if (!isRetrying) {
                 // Erro final após esgotar tentativas
                 toast({
@@ -3709,7 +3709,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             <EditorDiagnostics />
 
             {/* 💾 Status de Auto-save - Aparece apenas em funnel mode */}
-            <SaveStatusIndicator status={autoSave.status} />
+            {/* ✅ FASE 2.3: Retry info e botão de retry */}
+            <SaveStatusIndicator
+                status={autoSave.status}
+                retryInfo={autoSave.retryInfo}
+                onRetry={autoSave.saveNow}
+            />
 
             {import.meta.env.DEV && (
                 <button
