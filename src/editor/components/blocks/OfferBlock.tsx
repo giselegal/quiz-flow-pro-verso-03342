@@ -22,7 +22,7 @@ interface OfferBlockProps {
     highlight?: boolean;
 }
 
-export const OfferBlock: React.FC<BlockComponentProps> = ({
+export const OfferBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -128,6 +128,6 @@ export const OfferBlock: React.FC<BlockComponentProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export default OfferBlock;

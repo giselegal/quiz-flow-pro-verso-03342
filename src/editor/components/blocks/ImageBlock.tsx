@@ -9,7 +9,7 @@ import React from 'react';
 import { BlockComponentProps } from '@/types/blockTypes';
 import { cn } from '@/lib/utils';
 
-export const ImageBlock: React.FC<BlockComponentProps> = ({
+export const ImageBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -90,6 +90,6 @@ export const ImageBlock: React.FC<BlockComponentProps> = ({
             />
         </div>
     );
-};
+});
 
 export default ImageBlock;

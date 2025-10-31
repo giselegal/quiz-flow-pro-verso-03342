@@ -9,7 +9,7 @@ import React from 'react';
 import { BlockComponentProps } from '@/editor/registry/BlockRegistry';
 import { cn } from '@/lib/utils';
 
-const TextBlock: React.FC<BlockComponentProps> = ({
+const TextBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -67,6 +67,6 @@ const TextBlock: React.FC<BlockComponentProps> = ({
             )}
         </div>
     );
-};
+});
 
 export default TextBlock;

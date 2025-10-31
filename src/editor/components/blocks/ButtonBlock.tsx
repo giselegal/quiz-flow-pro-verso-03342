@@ -18,7 +18,7 @@ const ICONS = {
     'check': CheckCircle,
 };
 
-const ButtonBlock: React.FC<BlockComponentProps> = ({
+const ButtonBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     onSelect,
@@ -82,6 +82,6 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export default ButtonBlock;

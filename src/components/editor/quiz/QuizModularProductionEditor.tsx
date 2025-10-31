@@ -1462,7 +1462,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
 
     // Reordenar / mover blocos (nested)
-    const handleDragEnd = (event: any) => {
+    const handleDragEnd = useCallback((event: any) => {
         const { active, over } = event;
         const curStepId = editorCtx ? effectiveSelectedStepId : selectedStepId;
         if (!curStepId) { setActiveId(null); return; }
@@ -1543,9 +1543,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             reorderOrMove(curStepId, active.id, targetContainerId, overId);
         }
         setActiveId(null); setHoverContainerId(null);
-    };
+    }, [editorCtx, effectiveSelectedStepId, selectedStepId, steps, setSelectedBlockIdUnified, pushHistory, reorderOrMove]);
 
-    const handleUndo = () => {
+    const handleUndo = useCallback(() => {
         const applied = stepHistoryRef.current.undoApply((entry) => {
             setSteps(prev => prev.map(st => st.id === entry.stepId ? (entry.prev as any) : st));
         });
@@ -1553,15 +1553,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             // fallback para snapshot global
             applyHistorySnapshot(undo());
         }
-    };
-    const handleRedo = () => {
+    }, [undo, applyHistorySnapshot]);
+
+    const handleRedo = useCallback(() => {
         const applied = stepHistoryRef.current.redoApply((entry) => {
             setSteps(prev => prev.map(st => st.id === entry.stepId ? (entry.next as any) : st));
         });
         if (!applied) {
             applyHistorySnapshot(redo());
         }
-    };
+    }, [redo, applyHistorySnapshot]);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {

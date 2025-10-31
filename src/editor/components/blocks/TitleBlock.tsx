@@ -9,7 +9,7 @@ import React from 'react';
 import { BlockComponentProps } from '@/types/blockTypes';
 import { cn } from '@/lib/utils';
 
-export const TitleBlock: React.FC<BlockComponentProps> = ({
+export const TitleBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -62,6 +62,6 @@ export const TitleBlock: React.FC<BlockComponentProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export default TitleBlock;

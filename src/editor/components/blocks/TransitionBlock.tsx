@@ -16,7 +16,7 @@ interface TransitionBlockProps {
     textColor?: string;
 }
 
-export const TransitionBlock: React.FC<BlockComponentProps> = ({
+export const TransitionBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -71,6 +71,6 @@ export const TransitionBlock: React.FC<BlockComponentProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export default TransitionBlock;

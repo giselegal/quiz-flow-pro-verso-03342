@@ -15,7 +15,7 @@ interface QuizOption {
     image?: string;
 }
 
-export const OptionsBlock: React.FC<BlockComponentProps> = ({
+export const OptionsBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -149,6 +149,6 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
             )}
         </div>
     );
-};
+});
 
 export default OptionsBlock;

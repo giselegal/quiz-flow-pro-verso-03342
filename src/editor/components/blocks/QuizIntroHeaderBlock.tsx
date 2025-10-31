@@ -10,7 +10,7 @@ import React from 'react';
 import { BlockComponentProps } from '@/editor/registry/BlockRegistry';
 import { cn } from '@/lib/utils';
 
-const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
+const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -75,6 +75,6 @@ const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
             )}
         </div>
     );
-};
+});
 
 export default QuizIntroHeaderBlock;

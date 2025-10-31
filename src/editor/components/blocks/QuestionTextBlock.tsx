@@ -10,7 +10,7 @@ import { BlockComponentProps } from '@/types/blockTypes';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
-export const QuestionTextBlock: React.FC<BlockComponentProps> = ({
+export const QuestionTextBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -67,6 +67,6 @@ export const QuestionTextBlock: React.FC<BlockComponentProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export default QuestionTextBlock;

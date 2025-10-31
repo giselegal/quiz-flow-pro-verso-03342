@@ -60,7 +60,7 @@ const getMarginClass = (
   return `${prefix}-32`; // Máximo suportado
 };
 
-const FormInputBlock: React.FC<FormInputBlockProps> = ({
+const FormInputBlock: React.FC<FormInputBlockProps> = React.memo(({
   block,
   isSelected = false,
   onClick,
@@ -338,6 +338,6 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default FormInputBlock;

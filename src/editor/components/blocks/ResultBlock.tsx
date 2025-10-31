@@ -18,7 +18,7 @@ interface ResultBlockProps {
     color?: string;
 }
 
-export const ResultBlock: React.FC<BlockComponentProps> = ({
+export const ResultBlock: React.FC<BlockComponentProps> = React.memo(({
     data,
     isSelected,
     isEditable,
@@ -94,6 +94,6 @@ export const ResultBlock: React.FC<BlockComponentProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export default ResultBlock;
