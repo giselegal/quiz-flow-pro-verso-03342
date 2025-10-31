@@ -762,15 +762,38 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // ============================================================================
 
     useEffect(() => {
-        if (!enableSupabase || !funnelId) return;
+        if (!enableSupabase || !funnelId) {
+            if (enableSupabase && !funnelId) {
+                appLogger.warn('⚠️ [EditorProviderUnified] Auto-save desabilitado: funnelId não fornecido');
+            }
+            return;
+        }
+
+        appLogger.info('✅ [EditorProviderUnified] Auto-save habilitado', {
+            funnelId,
+            enableSupabase,
+            interval: '30s'
+        });
 
         const autoSaveInterval = setInterval(() => {
             if (!state.isLoading && unifiedCrud && !unifiedCrud.isSaving) {
-                saveToSupabase();
+                appLogger.debug('⏰ [EditorProviderUnified] Executando auto-save...');
+                saveToSupabase().catch((error) => {
+                    appLogger.error('❌ [EditorProviderUnified] Erro no auto-save:', error);
+                });
+            } else {
+                appLogger.debug('⏸️ [EditorProviderUnified] Auto-save pulado', {
+                    isLoading: state.isLoading,
+                    hasUnifiedCrud: !!unifiedCrud,
+                    isSaving: unifiedCrud?.isSaving,
+                });
             }
         }, 30000); // Auto-save every 30 seconds
 
-        return () => clearInterval(autoSaveInterval);
+        return () => {
+            appLogger.debug('🛑 [EditorProviderUnified] Auto-save desabilitado (cleanup)');
+            clearInterval(autoSaveInterval);
+        };
     }, [enableSupabase, funnelId, state.isLoading, saveToSupabase, unifiedCrud]);
 
     // ============================================================================
