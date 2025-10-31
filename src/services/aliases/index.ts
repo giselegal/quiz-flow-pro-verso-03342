@@ -72,5 +72,7 @@ export { funnelValidationService } from '@/services/funnelValidationService';
 export { AnalyticsService } from '@/services/AnalyticsService';
 
 // Config API e serviço
-export { ConfigurationAPI } from '@/services/ConfigurationAPI';
+// export { ConfigurationAPI } from '@/services/ConfigurationAPI'; // DEPRECATED: Removido em 31/out/2025
 export { ConfigurationService } from '@/services/ConfigurationService';
+// Alias de compatibilidade para migração
+export { ConfigurationService as ConfigurationAPI } from '@/services/ConfigurationService';
