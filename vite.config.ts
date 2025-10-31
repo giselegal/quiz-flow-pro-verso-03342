@@ -116,17 +116,18 @@ export default defineConfig(({ mode }) => {
           manualChunks: (id) => {
             // ========== VENDOR CHUNKS ==========
             if (id.includes('node_modules')) {
-              // React ecosystem
+              // React ecosystem (DEVE SER CARREGADO PRIMEIRO)
               if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
                 return 'vendor-react';
+              }
+              // Charts - depende de React, mas separado para lazy loading
+              // Será carregado apenas quando necessário, mas React já estará disponível
+              if (id.includes('recharts') || id.includes('d3-')) {
+                return 'vendor-charts';
               }
               // UI libraries
               if (id.includes('@radix-ui') || id.includes('cmdk')) {
                 return 'vendor-ui';
-              }
-              // Data/Charts (lazy load apenas em analytics)
-              if (id.includes('recharts') || id.includes('d3-')) {
-                return 'vendor-charts';
               }
               // DnD
               if (id.includes('@dnd-kit')) {
