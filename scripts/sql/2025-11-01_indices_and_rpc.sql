@@ -31,7 +31,16 @@ begin
       order_index    = coalesce(nullif((rec->>'order_index'),'')::int, order_index),
       is_active      = coalesce(nullif((rec->>'is_active'),'')::boolean, is_active),
       is_locked      = coalesce(nullif((rec->>'is_locked'),'')::boolean, is_locked)
-    where id = (rec->>'id');
+    where id = (rec->>'id')::uuid
+      and exists (
+        select 1 from public.funnels f
+        where f.id = component_instances.funnel_id
+          and (
+            -- permitir service_role; caso contrário, exigir ownership do usuário
+            coalesce((current_setting('request.jwt.claims', true)::jsonb->>'role'),'') = 'service_role'
+            or f.user_id = auth.uid()
+          )
+      );
 
     if found then
       updated_count := updated_count + 1;
