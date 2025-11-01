@@ -164,7 +164,12 @@ function AppCore() {
                                     }}
                                 </Route>
 
-                                {/* 🚀 EDITOR EXPERIMENTAL (DEV ONLY) */}
+                                {/* � Compatibilidade: /home → / */}
+                                <Route path="/home">
+                                    <RedirectRoute to="/" />
+                                </Route>
+
+                                {/* �🚀 EDITOR EXPERIMENTAL (DEV ONLY) */}
                                 <Route path="/editor-new">
                                     <EditorErrorBoundary>
                                         <div data-testid="quiz-editor-wysiwyg-page">
