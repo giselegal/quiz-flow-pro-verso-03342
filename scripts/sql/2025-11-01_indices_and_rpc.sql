@@ -110,3 +110,97 @@ $$;
 
 -- Permissões de execução para roles padrão do Supabase
 grant execute on function public.batch_update_components(jsonb) to anon, authenticated, service_role;
+
+-- Índice único para idempotência por etapa (evita duplicações por instance_key)
+create unique index if not exists uniq_component_instances_funnel_step_instance
+on public.component_instances (funnel_id, step_number, instance_key);
+
+-- RPC para sincronizar uma etapa inteira de forma atômica (delete + insert)
+-- Espera payload no formato do schema atual (component_instances):
+-- items = [
+--   { instance_key, component_type_key, order_index, properties }
+-- ]
+create or replace function public.batch_sync_components_for_step(p_funnel_id uuid, p_step_number int, items jsonb)
+returns jsonb
+language plpgsql
+security definer
+as $$
+declare
+  rec jsonb;
+  inserted_count integer := 0;
+  has_properties boolean := false;
+  has_component_type_key boolean := false;
+  has_order_index boolean := false;
+  has_step_number boolean := false;
+begin
+  if p_funnel_id is null or p_step_number is null then
+    return jsonb_build_object('inserted_count', 0, 'errors', jsonb_build_array('MISSING_FUNNEL_OR_STEP'));
+  end if;
+
+  if items is null or jsonb_typeof(items) <> 'array' then
+    return jsonb_build_object('inserted_count', 0, 'errors', jsonb_build_array('INVALID_ITEMS_PAYLOAD'));
+  end if;
+
+  -- Checar colunas do schema atual
+  select exists(select 1 from information_schema.columns where table_schema = 'public' and table_name = 'component_instances' and column_name = 'properties')
+    into has_properties;
+  select exists(select 1 from information_schema.columns where table_schema = 'public' and table_name = 'component_instances' and column_name = 'component_type_key')
+    into has_component_type_key;
+  select exists(select 1 from information_schema.columns where table_schema = 'public' and table_name = 'component_instances' and column_name = 'order_index')
+    into has_order_index;
+  select exists(select 1 from information_schema.columns where table_schema = 'public' and table_name = 'component_instances' and column_name = 'step_number')
+    into has_step_number;
+
+  if not (has_properties and has_component_type_key and has_order_index and has_step_number) then
+    -- Schema legado não suportado por esta RPC (use fallback no app)
+    return jsonb_build_object('inserted_count', 0, 'errors', jsonb_build_array('SCHEMA_NOT_SUPPORTED'));
+  end if;
+
+  -- Autorização: garantir que o usuário tem acesso ao funil
+  if not exists (
+    select 1 from public.funnels f
+    where f.id = p_funnel_id
+      and (
+        coalesce((current_setting(''request.jwt.claims'', true)::jsonb->>''role''), '''') = 'service_role'
+        or f.user_id = auth.uid()
+      )
+  ) then
+    return jsonb_build_object('inserted_count', 0, 'errors', jsonb_build_array('UNAUTHORIZED'));
+  end if;
+
+  -- Transação: remover existentes da etapa e inserir novos
+  perform 1; -- no-op para manter estrutura
+  begin
+    -- Limpar etapa
+    delete from public.component_instances
+    where funnel_id = p_funnel_id and step_number = p_step_number;
+
+    -- Inserir novos itens
+    for rec in select jsonb_array_elements(items) loop
+      insert into public.component_instances (
+        funnel_id, step_number, instance_key, component_type_key, order_index, properties
+      ) values (
+        p_funnel_id,
+        p_step_number,
+        (rec->> 'instance_key'),
+        (rec->> 'component_type_key'),
+        COALESCE(NULLIF((rec->> 'order_index'), '')::int, 1),
+        COALESCE((rec-> 'properties')::jsonb, '{}'::jsonb)
+      )
+      on conflict (funnel_id, step_number, instance_key) do update
+        set component_type_key = excluded.component_type_key,
+            order_index = excluded.order_index,
+            properties = excluded.properties;
+
+      inserted_count := inserted_count + 1;
+    end loop;
+  exception when others then
+    -- Em caso de erro, tentar retornar mensagem amigável
+    return jsonb_build_object('inserted_count', inserted_count, 'errors', jsonb_build_array(SQLERRM));
+  end;
+
+  return jsonb_build_object('inserted_count', inserted_count);
+end;
+$$;
+
+grant execute on function public.batch_sync_components_for_step(uuid, int, jsonb) to anon, authenticated, service_role;
