@@ -4,6 +4,9 @@
  * Verifica a disponibilidade e o funcionamento da RPC batch_update_components
  * - Autentica via SUPABASE_EMAIL/SUPABASE_PASSWORD
  * - Recebe --funnel <id> e opcionalmente --step <n>
+ * - Flags opcionais:
+ *   --require-rpc  => falhar (exit code 3) se a função RPC não existir
+ *   --measure      => medir e exibir o tempo (ms) de execução do caminho usado
  * - Seleciona 2 componentes do step e tenta inverter a ordem usando a RPC
  * - Se a RPC não existir (42883) ou falhar, relata o status e não altera nada
  *
@@ -37,17 +40,19 @@ function parseArgs() {
   const args = process.argv.slice(2);
   const idxF = args.findIndex(a => a === '--funnel' || a === '-f');
   const idxS = args.findIndex(a => a === '--step' || a === '-s');
+  const requireRpc = args.includes('--require-rpc');
+  const measure = args.includes('--measure');
   const funnelId = idxF !== -1 ? args[idxF + 1] : null;
   const step = idxS !== -1 ? parseInt(args[idxS + 1], 10) : 1;
   if (!funnelId) {
-    console.log('Uso: node scripts/audit/verifyRpcBatchUpdate.mjs --funnel <ID> [--step 1]');
+    console.log('Uso: node scripts/audit/verifyRpcBatchUpdate.mjs --funnel <ID> [--step 1] [--require-rpc] [--measure]');
     process.exit(2);
   }
-  return { funnelId, step: Number.isFinite(step) ? step : 1 };
+  return { funnelId, step: Number.isFinite(step) ? step : 1, requireRpc, measure };
 }
 
 async function main() {
-  const { funnelId, step } = parseArgs();
+  const { funnelId, step, requireRpc, measure } = parseArgs();
   const creds = await resolveSupabaseCreds();
   const supabase = createClient(creds.url, creds.key);
 
@@ -82,6 +87,9 @@ async function main() {
   ];
 
   console.log('🧪 Testando RPC batch_update_components com swap simples...', updates);
+  let usedRpc = false;
+  let usedFallback = false;
+  const t0 = Date.now();
 
   try {
     // @ts-ignore
@@ -89,7 +97,10 @@ async function main() {
     if (error) {
       const missingFn = (error.code === '42883') || /function .* does not exist/i.test(error.message) || /schema cache/i.test(error.message);
       if (!missingFn) throw error;
-
+      if (requireRpc) {
+        console.error('❌ RPC não disponível e --require-rpc foi informado. Abortando.');
+        process.exit(3);
+      }
       console.log('⚠️ RPC não disponível. Executando fallback com updates diretos...');
       // Fallback: swap em 3 passos para evitar conflito de índices iguais
       const tempIndex = 999999;
@@ -99,10 +110,12 @@ async function main() {
       if (u2.error) throw u2.error;
       const u3 = await supabase.from('component_instances').update({ order_index: b.order_index }).eq('id', a.id);
       if (u3.error) throw u3.error;
-      console.log('✅ Fallback executado com sucesso (Promise.all sequencial).');
+      usedFallback = true;
+      console.log('✅ Fallback executado com sucesso (swap em 3 updates).');
       // continuar para leitura "after"
     }
     else {
+      usedRpc = true;
       console.log('✅ RPC executada com sucesso:', data);
     }
 
@@ -113,8 +126,27 @@ async function main() {
       .in('id', [a.id, b.id])
       .order('order_index');
     console.log('🔎 Após RPC:', after);
+
+    const dt = Date.now() - t0;
+    if (measure) {
+      console.log(`⏱️ Tempo total (${usedRpc ? 'RPC' : usedFallback ? 'fallback' : 'desconhecido'}): ${dt} ms`);
+    }
+
+    // Resumo PASS/FAIL para uso em CI
+    if (usedRpc) {
+      console.log('RESULT: PASS (RPC)');
+      process.exit(0);
+    } else if (usedFallback) {
+      console.log('RESULT: PASS (FALLBACK)');
+      process.exit(0);
+    } else {
+      console.log('RESULT: FAIL (no path used)');
+      process.exit(1);
+    }
   } catch (e) {
     console.error('❌ Falha ao executar RPC:', e.message || e);
+    console.log('RESULT: FAIL');
+    process.exit(1);
   }
 }
 
