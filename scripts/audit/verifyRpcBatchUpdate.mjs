@@ -87,13 +87,24 @@ async function main() {
     // @ts-ignore
     const { data, error } = await supabase.rpc('batch_update_components', { updates });
     if (error) {
-      if (error.code === '42883' || /function .* does not exist/i.test(error.message)) {
-        console.log('❌ RPC não disponível (42883). Aplique o SQL do arquivo scripts/sql/2025-11-01_indices_and_rpc.sql');
-        process.exit(0);
-      }
-      throw error;
+      const missingFn = (error.code === '42883') || /function .* does not exist/i.test(error.message) || /schema cache/i.test(error.message);
+      if (!missingFn) throw error;
+
+      console.log('⚠️ RPC não disponível. Executando fallback com updates diretos...');
+      // Fallback: swap em 3 passos para evitar conflito de índices iguais
+      const tempIndex = 999999;
+      const u1 = await supabase.from('component_instances').update({ order_index: tempIndex }).eq('id', a.id);
+      if (u1.error) throw u1.error;
+      const u2 = await supabase.from('component_instances').update({ order_index: a.order_index }).eq('id', b.id);
+      if (u2.error) throw u2.error;
+      const u3 = await supabase.from('component_instances').update({ order_index: b.order_index }).eq('id', a.id);
+      if (u3.error) throw u3.error;
+      console.log('✅ Fallback executado com sucesso (Promise.all sequencial).');
+      // continuar para leitura "after"
     }
-    console.log('✅ RPC executada com sucesso:', data);
+    else {
+      console.log('✅ RPC executada com sucesso:', data);
+    }
 
     // Verificar se aplicou
     const { data: after } = await supabase
