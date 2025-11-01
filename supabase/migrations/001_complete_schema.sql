@@ -223,7 +223,9 @@ $$ language 'plpgsql';
 -- Triggers para updated_at (idempotentes)
 DO $$ BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM pg_trigger WHERE tgname = 'update_funnels_updated_at'
+        SELECT 1 FROM pg_trigger 
+        WHERE tgname = 'update_funnels_updated_at'
+          AND tgrelid = 'public.funnels'::regclass
     ) THEN
         CREATE TRIGGER update_funnels_updated_at 
             BEFORE UPDATE ON public.funnels 
@@ -233,7 +235,9 @@ END $$;
 
 DO $$ BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM pg_trigger WHERE tgname = 'update_admin_goals_updated_at'
+        SELECT 1 FROM pg_trigger 
+        WHERE tgname = 'update_admin_goals_updated_at'
+          AND tgrelid = 'public.admin_goals'::regclass
     ) THEN
         CREATE TRIGGER update_admin_goals_updated_at 
             BEFORE UPDATE ON public.admin_goals 
@@ -243,7 +247,9 @@ END $$;
 
 DO $$ BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM pg_trigger WHERE tgname = 'update_ai_optimization_recommendations_updated_at'
+        SELECT 1 FROM pg_trigger 
+        WHERE tgname = 'update_ai_optimization_recommendations_updated_at'
+          AND tgrelid = 'public.ai_optimization_recommendations'::regclass
     ) THEN
         CREATE TRIGGER update_ai_optimization_recommendations_updated_at 
             BEFORE UPDATE ON public.ai_optimization_recommendations 
@@ -253,7 +259,9 @@ END $$;
 
 DO $$ BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM pg_trigger WHERE tgname = 'update_rate_limits_updated_at'
+        SELECT 1 FROM pg_trigger 
+        WHERE tgname = 'update_rate_limits_updated_at'
+          AND tgrelid = 'public.rate_limits'::regclass
     ) THEN
         CREATE TRIGGER update_rate_limits_updated_at 
             BEFORE UPDATE ON public.rate_limits 
