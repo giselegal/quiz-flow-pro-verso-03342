@@ -17,6 +17,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/customClient';
+import { appLogger } from '@/utils/logger';
 import { indexedDBService } from './storage/IndexedDBService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // MIGRATED: Using new validation service
@@ -215,6 +216,10 @@ export class FunnelUnifiedService {
     private eventEmitter = new FunnelEventEmitter();
 
     private constructor() {
+        // Aviso de depreciação em desenvolvimento (uma vez por sessão)
+        if (import.meta?.env?.DEV) {
+            appLogger.warn('[DEPRECATION] FunnelUnifiedService está obsoleto. Migre para \'@/services/canonical/FunnelService\'.');
+        }
         // Setup cache invalidation listeners
         this.setupEventListeners();
 
