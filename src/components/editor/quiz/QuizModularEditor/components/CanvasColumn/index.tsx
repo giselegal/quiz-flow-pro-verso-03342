@@ -4,16 +4,24 @@ import type { Block } from '@/services/UnifiedTemplateRegistry';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
+    blocks?: Block[] | null;
 };
 
-export default function CanvasColumn({ currentStepKey }: CanvasColumnProps) {
-    const [blocks, setBlocks] = useState<Block[] | null>(null);
+export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps }: CanvasColumnProps) {
+    const [blocks, setBlocks] = useState<Block[] | null>(blocksFromProps ?? null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         let cancelled = false;
         const load = async () => {
+            // Se blocos forem fornecidos via props, priorizar essa fonte e não carregar do serviço
+            if (blocksFromProps) {
+                setBlocks(blocksFromProps);
+                setLoading(false);
+                setError(null);
+                return;
+            }
             if (!currentStepKey) {
                 setBlocks(null);
                 return;
@@ -40,7 +48,7 @@ export default function CanvasColumn({ currentStepKey }: CanvasColumnProps) {
         };
         load();
         return () => { cancelled = true; };
-    }, [currentStepKey]);
+    }, [currentStepKey, blocksFromProps]);
 
     if (!currentStepKey) {
         return (
@@ -50,7 +58,7 @@ export default function CanvasColumn({ currentStepKey }: CanvasColumnProps) {
         );
     }
 
-    if (loading) {
+    if (!blocksFromProps && loading) {
         return <div className="p-3 text-sm">Carregando blocos de {currentStepKey}…</div>;
     }
 
