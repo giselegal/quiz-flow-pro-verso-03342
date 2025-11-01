@@ -1,0 +1,130 @@
+{
+  "summary": {},
+  "modules": {
+    "QuizModularEditor (New)": {
+      "status": "in_progress",
+      "exists": true,
+      "lines": 191,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "QuizModularProductionEditor (Current)": {
+      "status": "in_progress",
+      "exists": true,
+      "lines": 4318,
+      "has_todo": true,
+      "has_deprecated": false,
+      "has_tests": false
+    }
+  },
+  "contexts": {
+    "EditorContext": {
+      "status": "completed",
+      "exists": true,
+      "lines": 28,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "QuizProvider": {
+      "status": "not_started",
+      "exists": true,
+      "lines": 1,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "ABTestContext": {
+      "status": "not_found",
+      "exists": false
+    }
+  },
+  "hooks": {
+    "useEditorState": {
+      "status": "completed",
+      "exists": true,
+      "lines": 74,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "useBlockOperations": {
+      "status": "completed",
+      "exists": true,
+      "lines": 96,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "useDndSystem": {
+      "status": "completed",
+      "exists": true,
+      "lines": 82,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "useEditorPersistence": {
+      "status": "in_progress",
+      "exists": true,
+      "lines": 160,
+      "has_todo": true,
+      "has_deprecated": false,
+      "has_tests": false
+    }
+  },
+  "components": {
+    "StepNavigatorColumn": {
+      "status": "completed",
+      "exists": true,
+      "lines": 63,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "CanvasColumn": {
+      "status": "completed",
+      "exists": true,
+      "lines": 189,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "ComponentLibraryColumn": {
+      "status": "completed",
+      "exists": true,
+      "lines": 63,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "PropertiesColumn": {
+      "status": "completed",
+      "exists": true,
+      "lines": 344,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    },
+    "BlockPreview": {
+      "status": "completed",
+      "exists": true,
+      "lines": 18,
+      "has_todo": false,
+      "has_deprecated": false,
+      "has_tests": false
+    }
+  },
+  "overall_status": {
+    "total_modules": 14,
+    "status_counts": {
+      "not_started": 1,
+      "in_progress": 3,
+      "completed": 9,
+      "deprecated": 0,
+      "not_found": 1
+    },
+    "completion_percentage": 64
+  }
+}

@@ -1,0 +1,517 @@
+{
+  "summary": {
+    "total_steps": 21,
+    "template_version": "3.0"
+  },
+  "issues": [],
+  "hierarchy": {
+    "step-01": {
+      "type": "intro",
+      "expected_type": "intro",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "intro-logo",
+        "intro-title",
+        "intro-image",
+        "intro-description",
+        "intro-form"
+      ],
+      "block_types": [
+        "intro-logo",
+        "intro-title",
+        "intro-image",
+        "intro-description",
+        "intro-form"
+      ]
+    },
+    "step-02": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 4,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-02",
+        "step-02-title",
+        "step-02-options",
+        "navigation-step-02"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-03": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 4,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-03",
+        "step-03-title",
+        "options-grid-03",
+        "navigation-step-03"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-04": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-04",
+        "step-04-question-title",
+        "question-hero-04",
+        "options-grid-04",
+        "navigation-step-04"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-05": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-05",
+        "step-05-question-title",
+        "question-hero-05",
+        "options-grid-05",
+        "navigation-step-05"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-06": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-06",
+        "step-06-question-title",
+        "question-hero-06",
+        "options-grid-06",
+        "navigation-step-06"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-07": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-07",
+        "step-07-question-title",
+        "question-hero-07",
+        "options-grid-07",
+        "navigation-step-07"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-08": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-08",
+        "step-08-question-title",
+        "question-hero-08",
+        "options-grid-08",
+        "navigation-step-08"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-09": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-09",
+        "step-09-question-title",
+        "question-hero-09",
+        "options-grid-09",
+        "navigation-step-09"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-10": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-10",
+        "step-10-question-title",
+        "question-hero-10",
+        "options-grid-10",
+        "navigation-step-10"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-11": {
+      "type": "question",
+      "expected_type": "question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-11",
+        "step-11-question-title",
+        "question-hero-11",
+        "options-grid-11",
+        "navigation-step-11"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-12": {
+      "type": "transition",
+      "expected_type": "transition",
+      "blocks_count": 3,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "transition-hero-12",
+        "step-12-transition-text",
+        "step-12-transition-cta"
+      ],
+      "block_types": [
+        "transition-hero",
+        "transition-text",
+        "CTAButton"
+      ]
+    },
+    "step-13": {
+      "type": "strategic-question",
+      "expected_type": "strategic-question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-13",
+        "step-13-question-title",
+        "question-hero-13",
+        "options-grid-13",
+        "navigation-step-13"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-14": {
+      "type": "strategic-question",
+      "expected_type": "strategic-question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-14",
+        "step-14-question-title",
+        "question-hero-14",
+        "options-grid-14",
+        "navigation-step-14"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-15": {
+      "type": "strategic-question",
+      "expected_type": "strategic-question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-15",
+        "step-15-question-title",
+        "question-hero-15",
+        "options-grid-15",
+        "navigation-step-15"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-16": {
+      "type": "strategic-question",
+      "expected_type": "strategic-question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-16",
+        "step-16-question-title",
+        "question-hero-16",
+        "options-grid-16",
+        "navigation-step-16"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-17": {
+      "type": "strategic-question",
+      "expected_type": "strategic-question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-17",
+        "step-17-question-title",
+        "question-hero-17",
+        "options-grid-17",
+        "navigation-step-17"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-18": {
+      "type": "strategic-question",
+      "expected_type": "strategic-question",
+      "blocks_count": 5,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "progress-bar-step-18",
+        "step-18-question-title",
+        "question-hero-18",
+        "options-grid-18",
+        "navigation-step-18"
+      ],
+      "block_types": [
+        "question-progress",
+        "question-title",
+        "question-hero",
+        "options-grid",
+        "question-navigation"
+      ]
+    },
+    "step-19": {
+      "type": "transition-result",
+      "expected_type": "transition-result",
+      "blocks_count": 3,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "transition-hero-19",
+        "step-19-transition-text",
+        "step-19-transition-cta"
+      ],
+      "block_types": [
+        "transition-hero",
+        "transition-text",
+        "CTAButton"
+      ]
+    },
+    "step-20": {
+      "type": "result",
+      "expected_type": "result",
+      "blocks_count": 11,
+      "has_validation": false,
+      "has_navigation": false,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "result-congrats",
+        "result-main",
+        "result-progress-bars",
+        "result-secondary-styles",
+        "result-image",
+        "result-description",
+        "button-cta-primary",
+        "result-share",
+        "transformation-benefits",
+        "method-steps",
+        "button-cta-final"
+      ],
+      "block_types": [
+        "result-congrats",
+        "result-main",
+        "result-progress-bars",
+        "result-secondary-styles",
+        "result-image",
+        "result-description",
+        "result-cta",
+        "result-share",
+        "text-inline",
+        "text-inline",
+        "result-cta"
+      ]
+    },
+    "step-21": {
+      "type": "offer",
+      "expected_type": "offer",
+      "blocks_count": 2,
+      "has_validation": true,
+      "has_navigation": true,
+      "has_metadata": true,
+      "status": "ok",
+      "block_ids": [
+        "offer-hero-21",
+        "pricing-21"
+      ],
+      "block_types": [
+        "offer-hero",
+        "pricing"
+      ]
+    }
+  },
+  "block_analysis": {
+    "type_statistics": {
+      "intro-logo": 1,
+      "intro-title": 1,
+      "intro-image": 1,
+      "intro-description": 1,
+      "intro-form": 1,
+      "question-progress": 16,
+      "question-title": 16,
+      "options-grid": 16,
+      "question-navigation": 16,
+      "question-hero": 14,
+      "transition-hero": 2,
+      "transition-text": 2,
+      "CTAButton": 2,
+      "result-congrats": 1,
+      "result-main": 1,
+      "result-progress-bars": 1,
+      "result-secondary-styles": 1,
+      "result-image": 1,
+      "result-description": 1,
+      "result-cta": 2,
+      "result-share": 1,
+      "text-inline": 2,
+      "offer-hero": 1,
+      "pricing": 1
+    },
+    "total_blocks": 102
+  },
+  "duplicates": [],
+  "missing_fields": []
+}
