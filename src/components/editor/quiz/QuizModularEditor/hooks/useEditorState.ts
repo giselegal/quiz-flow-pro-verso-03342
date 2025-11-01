@@ -1,7 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
-
 // Hook leve de estado do editor (Fase 1.3)
 // Próximos incrementos: desfazer/refazer, seleção, dirty-state, persistência.
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 export type EditorState = {
   currentStepKey: string | null;

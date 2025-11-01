@@ -1,3 +1,5 @@
+// Hook de operações de blocos — versão inicial conectada ao TemplateService canônico
+// Mantida isolada para migração incremental durante a subfase 1.3
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/services/UnifiedTemplateRegistry';

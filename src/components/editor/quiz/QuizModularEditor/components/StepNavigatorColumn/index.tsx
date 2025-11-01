@@ -1,3 +1,4 @@
+// Coluna de navegação de steps — versão inicial usando TemplateService canônico
 import React, { useEffect, useMemo } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 

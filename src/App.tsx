@@ -60,6 +60,9 @@ const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 // ✅ FASE 6: Lazy load do editor completo (-1.3 MB do bundle inicial)
 import QuizModularProductionEditor from '@/config/editorRoutes.config';
 
+// 🧪 EDITOR MODULAR EXPERIMENTAL (FASE 1.3 - Subfase em andamento)
+const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
+
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
@@ -190,6 +193,17 @@ function AppCore() {
                                             </div>
                                         </EditorErrorBoundary>
                                     )}
+                                </Route>
+
+                                {/* 🧪 EDITOR MODULAR - FASE 1.3 (Experimental) */}
+                                <Route path="/editor-modular">
+                                    <EditorErrorBoundary>
+                                        <div data-testid="quiz-modular-editor-experimental">
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando editor modular experimental..." />}>
+                                                <QuizModularEditor />
+                                            </Suspense>
+                                        </div>
+                                    </EditorErrorBoundary>
                                 </Route>
 
                                 {/* 🎯 EDITOR CANÔNICO (QuizModularProductionEditor) */}

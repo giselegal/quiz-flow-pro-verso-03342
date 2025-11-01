@@ -1,4 +1,6 @@
+// Coluna de Canvas — implementação inicial conectada ao TemplateService e renderizador canônico
 import React, { useEffect, useState } from 'react';
+import { useDroppable } from '@dnd-kit/core';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
@@ -15,6 +17,11 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     const [blocks, setBlocks] = useState<Block[] | null>(blocksFromProps ?? null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Configurar como drop zone para DnD
+    const { setNodeRef, isOver } = useDroppable({
+        id: 'canvas',
+    });
 
     useEffect(() => {
         let cancelled = false;
@@ -75,8 +82,14 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     }
 
     return (
-        <div className="p-3 space-y-2">
-            <div className="text-sm font-medium mb-2">{currentStepKey}</div>
+        <div
+            ref={setNodeRef}
+            className={`p-3 space-y-2 min-h-[400px] ${isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : ''}`}
+        >
+            <div className="text-sm font-medium mb-2">
+                {currentStepKey}
+                {isOver && <span className="text-blue-600 text-xs ml-2">Solte aqui</span>}
+            </div>
             <ul className="space-y-1">
                 {blocks.map((b, idx) => (
                     <li key={b.id} className="border rounded p-2 relative">
