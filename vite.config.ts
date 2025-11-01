@@ -8,6 +8,7 @@ import { loadEnv } from 'vite';
 // Única configuração Vite do projeto (inline e original deprecados)
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
+  const isStaging = mode === 'staging';
 
   return {
     base: '/',
@@ -83,7 +84,8 @@ export default defineConfig(({ mode }) => {
       // 🎯 FASE 3 TASK 7: Otimizações de bundle
       minify: 'esbuild', // esbuild é mais rápido que terser
       target: 'es2020',
-      sourcemap: false, // Desabilitar sourcemaps em produção para reduzir tamanho
+      // Ativar sourcemaps somente em staging para facilitar diagnóstico (React #418, vendor chunks)
+      sourcemap: isStaging ? true : false,
       // 🎯 FASE 6: Chunk size limits otimizados
       chunkSizeWarningLimit: 500, // Warning em 500 kB (antes era padrão 500)
       rollupOptions: {
@@ -102,11 +104,14 @@ export default defineConfig(({ mode }) => {
           /^https:\/\/deno\.land\/.*/,
           /^https:\/\/esm\.sh\/.*/
         ],
-        // 🎯 FASE 3 TASK 7: Tree shaking agressivo
+        // ⚠️ Treeshake mais conservador para evitar quebras em vendors (ex.: recharts)
         treeshake: {
-          moduleSideEffects: 'no-external', // Remover side effects de node_modules
-          propertyReadSideEffects: false, // Assumir que property reads não têm side effects
-          tryCatchDeoptimization: false, // Não desotimizar try-catch
+          // Preservar efeitos de módulos externos (node_modules) para não reordenar inicializações internas
+          moduleSideEffects: true,
+          // Preservar possíveis side effects em leituras de propriedades
+          propertyReadSideEffects: true,
+          // Manter deotimização padrão em try/catch
+          tryCatchDeoptimization: true,
         },
         output: {
           // Nomes de arquivos para chunks
