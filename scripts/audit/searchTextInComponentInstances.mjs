@@ -140,7 +140,7 @@ async function main() {
   for (const f of funnels) {
     const { data, error } = await supabase
       .from('component_instances')
-      .select('id,funnel_id,step_number,order_index,instance_key,component_type_key,properties,config,updated_at')
+      .select('*')
       .eq('funnel_id', f.id)
       .order('step_number', { ascending: true })
       .order('order_index', { ascending: true });
