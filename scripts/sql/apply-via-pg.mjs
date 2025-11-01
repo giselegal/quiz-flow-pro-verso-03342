@@ -13,6 +13,17 @@ import fs from 'fs'
 import path from 'path'
 import process from 'process'
 import postgres from 'postgres'
+import dotenv from 'dotenv'
+
+// Carrega variáveis de ambiente de arquivos locais, se existirem
+try {
+  const root = process.cwd()
+  const envLocal = path.join(root, '.env.local')
+  const env = path.join(root, '.env')
+  if (fs.existsSync(envLocal)) dotenv.config({ path: envLocal })
+  else if (fs.existsSync(env)) dotenv.config({ path: env })
+  else dotenv.config()
+} catch {}
 
 function parseArgs() {
   const args = process.argv.slice(2)
