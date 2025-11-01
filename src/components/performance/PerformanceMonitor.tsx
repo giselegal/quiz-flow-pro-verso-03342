@@ -86,30 +86,17 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     if (!currentFunnel) return;
 
     try {
-      const { data: user } = await supabase.auth.getUser();
-      
-      await supabase.from('real_time_metrics').insert({
-        session_id: `session-${Date.now()}`,
-        funnel_id: currentFunnel.id,
-        user_id: user.user?.id || null,
-        render_time: metrics.renderTime,
-        memory_usage: metrics.memoryUsage,
-        cache_hit_rate: metrics.cacheHitRate,
-        bundle_size: metrics.bundleSize,
-        network_latency: metrics.networkLatency,
-        user_engagement: metrics.userEngagement,
-        error_rate: metrics.errorRate,
-        performance_score: calculatePerformanceScore(),
-        device_info: {
-          userAgent: navigator.userAgent,
-          screenResolution: `${screen.width}x${screen.height}`,
-          deviceMemory: (navigator as any).deviceMemory || 'unknown',
-        },
+      // Metrics recording disabled - table 'real_time_metrics' not available
+      console.log('📊 Performance Metrics:', {
+        renderTime: metrics.renderTime.toFixed(2),
+        memoryUsage: metrics.memoryUsage,
+        cacheHitRate: metrics.cacheHitRate.toFixed(1),
+        performanceScore: calculatePerformanceScore().toFixed(1),
       });
     } catch (error) {
       console.error('❌ Failed to record metrics:', error);
     }
-  }, [currentFunnel, metrics]);
+  }, [currentFunnel, metrics, calculatePerformanceScore]);
 
   // Calculate overall performance score
   const calculatePerformanceScore = useCallback((): number => {

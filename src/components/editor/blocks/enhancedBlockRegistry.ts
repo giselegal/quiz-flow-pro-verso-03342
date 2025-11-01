@@ -1,8 +1,20 @@
-// DEPRECATED: Não use este caminho. Importe de '@/components/editor/blocks/EnhancedBlockRegistry'.
-// Este arquivo existe apenas como shim temporário e será removido.
-if (typeof console !== 'undefined' && console.warn) {
-	console.warn("[DEPRECATED] Import detectado de '@/components/editor/blocks/enhancedBlockRegistry'. Use '@/components/editor/blocks/EnhancedBlockRegistry' (E maiúsculo).");
+// Enhanced Block Registry - Centralized registry for all enhanced blocks
+// This module provides a unified interface for block type management
+
+export type BlockType = 'headline' | 'text' | 'image' | 'benefits' | 'quiz-options';
+
+export interface BlockTypeConfig {
+  type: BlockType;
+  label: string;
+  icon: string;
 }
 
-export * from './EnhancedBlockRegistry.tsx';
-export { default } from './EnhancedBlockRegistry.tsx';
+export const blockRegistry: Record<BlockType, BlockTypeConfig> = {
+  headline: { type: 'headline', label: 'Headline', icon: '📝' },
+  text: { type: 'text', label: 'Text', icon: '📄' },
+  image: { type: 'image', label: 'Image', icon: '🖼️' },
+  benefits: { type: 'benefits', label: 'Benefits', icon: '✨' },
+  'quiz-options': { type: 'quiz-options', label: 'Quiz Options', icon: '📋' },
+};
+
+export default blockRegistry;

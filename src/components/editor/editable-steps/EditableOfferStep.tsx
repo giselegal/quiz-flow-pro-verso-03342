@@ -122,7 +122,7 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
         >
             {/* 🎯 Renderizar componente de produção com dados mock */}
             <OfferStep
-                data={safeData}
+                data={{ ...safeData, id: safeData.id || `offer-${Date.now()}` }}
                 userProfile={mockUserProfile}
                 offerKey={mockOfferKey}
             />

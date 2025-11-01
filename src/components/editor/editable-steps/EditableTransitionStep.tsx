@@ -86,7 +86,7 @@ const EditableTransitionStep: React.FC<EditableTransitionStepProps> = ({
         >
             {/* 🎯 Renderizar componente de produção com mock callback */}
             <TransitionStep
-                data={safeData}
+                data={{ ...safeData, id: data.id || `transition-${Date.now()}` }}
                 onComplete={mockOnComplete}
             />
 

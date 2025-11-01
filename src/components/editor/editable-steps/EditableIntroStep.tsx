@@ -91,7 +91,7 @@ const EditableIntroStep: React.FC<EditableIntroStepProps> = ({
         >
             {/* 🎯 Renderizar componente de produção original com dados editáveis */}
             <IntroStep
-                data={safeData}
+                data={{ ...safeData, id: safeData.id || `intro-${Date.now()}` }}
                 onNameSubmit={mockNameSubmit}
             />
         </EditableBlockWrapper>

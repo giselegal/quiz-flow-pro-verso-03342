@@ -27,7 +27,7 @@ import TransitionStep from '../../quiz/TransitionStep';
  * Definindo as interfaces das props de cada componente
  */
 export interface IntroStepProps {
-    data: QuizStep;
+    data: QuizStep & { id: string };
     onNameSubmit: (name: string) => void;
 }
 
@@ -38,7 +38,7 @@ export interface QuestionStepProps {
 }
 
 export interface ResultStepProps {
-    data: QuizStep;
+    data: QuizStep & { id: string };
     userProfile: {
         userName: string;
         resultStyle: string;
@@ -48,7 +48,7 @@ export interface ResultStepProps {
 }
 
 export interface OfferStepProps {
-    data: QuizStep;
+    data: QuizStep & { id: string };
     userProfile: {
         userName: string;
         resultStyle: string;
@@ -57,13 +57,13 @@ export interface OfferStepProps {
 }
 
 export interface StrategicQuestionStepProps {
-    data: QuizStep;
+    data: QuizStep & { id: string };
     currentAnswer: string;
     onAnswerChange: (answer: string) => void;
 }
 
 export interface TransitionStepProps {
-    data: QuizStep;
+    data: QuizStep & { id: string };
     onComplete: () => void;
 }
 

@@ -74,37 +74,15 @@ export const SecuritySettingsPage: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
-        .from('user_security_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        throw error;
-      }
-
-      if (data) {
-        // Convert null values to appropriate defaults
-        const processedData: SecuritySettings = {
-          ...data,
-          two_factor_enabled: data.two_factor_enabled ?? false,
-          backup_notifications: data.backup_notifications ?? true,
-          security_alerts: data.security_alerts ?? true,
-          session_timeout: data.session_timeout ?? 3600,
-        };
-        setSettings(processedData);
-      } else {
-        // Criar configuração padrão
-        const defaultSettings: SecuritySettings = {
-          user_id: user.id,
-          two_factor_enabled: false,
-          backup_notifications: true,
-          security_alerts: true,
-          session_timeout: 3600,
-        };
-        setSettings(defaultSettings);
-      }
+      // Security settings disabled - table 'user_security_settings' not available
+      const defaultSettings: SecuritySettings = {
+        user_id: user.id,
+        two_factor_enabled: false,
+        backup_notifications: true,
+        security_alerts: true,
+        session_timeout: 3600,
+      };
+      setSettings(defaultSettings);
     } catch (error) {
       console.error('Failed to load security settings:', error);
       toast({

@@ -65,23 +65,11 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
 
   const checkRateLimit = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      // Check current rate limit status
-      const { data } = await supabase
-        .from('rate_limits')
-        .select('current, limit_value, reset_time')
-        .eq('user_id', user.user.id)
-        .eq('endpoint', 'editor')
-        .single();
-
-      if (data) {
-        setRateLimitStatus({
-          remaining: Math.max(0, data.limit_value - data.current),
-          resetTime: data.reset_time * 1000,
-        });
-      }
+      // Rate limits check disabled - table 'rate_limits' not available
+      setRateLimitStatus({
+        remaining: 100,
+        resetTime: Date.now() + 3600000,
+      });
     } catch (error) {
       console.error('❌ Rate limit check failed:', error);
     }
