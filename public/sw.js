@@ -8,9 +8,16 @@
  * - Update automático
  */
 
-const CACHE_NAME = 'editor-consolidated-v1';
-const STATIC_CACHE = 'editor-static-v1';
-const DYNAMIC_CACHE = 'editor-dynamic-v1';
+// 🔒 Kill-switch/No-op em ambiente de desenvolvimento local (localhost/127.0.0.1)
+let IS_LOCAL = false;
+try {
+  const SW_URL = new URL(self.location.href);
+  IS_LOCAL = SW_URL.hostname === 'localhost' || SW_URL.hostname === '127.0.0.1';
+} catch (_) { /* ignore */ }
+
+const CACHE_NAME = 'editor-consolidated-v2';
+const STATIC_CACHE = 'editor-static-v2';
+const DYNAMIC_CACHE = 'editor-dynamic-v2';
 
 // 🎯 RECURSOS PARA CACHE ESTÁTICO
 const STATIC_ASSETS = [
@@ -33,7 +40,12 @@ const CACHE_STRATEGIES = {
 // 🎯 INSTALL EVENT
 self.addEventListener('install', (event) => {
   console.log('SW: Installing...');
-  
+  if (IS_LOCAL) {
+    // Não faz pre-cache em dev/local; apenas ativa imediatamente
+    event.waitUntil(self.skipWaiting());
+    return;
+  }
+
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => {
@@ -50,7 +62,11 @@ self.addEventListener('install', (event) => {
 // 🎯 ACTIVATE EVENT
 self.addEventListener('activate', (event) => {
   console.log('SW: Activating...');
-  
+  if (IS_LOCAL) {
+    event.waitUntil(self.clients.claim());
+    return;
+  }
+
   event.waitUntil(
     caches.keys()
       .then(cacheNames => {
@@ -72,6 +88,8 @@ self.addEventListener('activate', (event) => {
 
 // 🎯 FETCH EVENT
 self.addEventListener('fetch', (event) => {
+  // No-op em ambiente local: não intercepta nada
+  if (IS_LOCAL) return;
   const { request } = event;
   const { url, method } = request;
 
@@ -99,7 +117,7 @@ self.addEventListener('fetch', (event) => {
 
   // Determine cache strategy
   let strategy = CACHE_STRATEGIES.fallback;
-  
+
   if (url.includes('/api/')) {
     strategy = CACHE_STRATEGIES.api;
   } else if (url.match(/\.(js|css|html)$/)) {
@@ -124,6 +142,10 @@ self.addEventListener('fetch', (event) => {
 
 // 🎯 SPA navigation handler
 async function handleNavigationRequest(request) {
+  if (IS_LOCAL) {
+    // Em dev, não intercepta navegação; deixa seguir normal
+    return fetch(request);
+  }
   try {
     const networkResponse = await fetch(request);
     if (networkResponse && networkResponse.ok) {
@@ -148,6 +170,9 @@ async function handleNavigationRequest(request) {
 
 // 🎯 CACHE FIRST STRATEGY
 async function cacheFirst(request) {
+  if (IS_LOCAL) {
+    return fetch(request);
+  }
   try {
     const cachedResponse = await caches.match(request, { ignoreSearch: true });
     if (cachedResponse) {
@@ -162,25 +187,28 @@ async function cacheFirst(request) {
         cache.put(request, networkResponse.clone());
       }
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.log('SW: Cache first failed:', error);
-    
+
     // Return offline fallback if available
     if (request.destination === 'document') {
       return caches.match('/');
     }
-    
+
     throw error;
   }
 }
 
 // 🎯 NETWORK FIRST STRATEGY
 async function networkFirst(request) {
+  if (IS_LOCAL) {
+    return fetch(request);
+  }
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse.ok) {
       const u = new URL(request.url);
       if (u.protocol === 'http:' || u.protocol === 'https:') {
@@ -188,7 +216,7 @@ async function networkFirst(request) {
         cache.put(request, networkResponse.clone());
       }
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.log('SW: Network first failed, trying cache:', error);
@@ -196,7 +224,7 @@ async function networkFirst(request) {
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     throw error;
   }
 }
