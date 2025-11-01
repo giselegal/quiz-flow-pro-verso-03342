@@ -37,6 +37,40 @@ declare global {
 }
 
 /**
+ * Carrega dinamicamente o script do Cloudinary Upload Widget apenas quando necessário.
+ * Evita inserir iframes de terceiros no carregamento inicial e reduz warnings de sandbox/segurança.
+ */
+export function ensureCloudinaryLoaded(): Promise<void> {
+    // Já carregado
+    if (typeof window !== 'undefined' && (window as any).cloudinary) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+        if (typeof document === 'undefined') {
+            return reject(new Error('Documento indisponível para carregar Cloudinary'));
+        }
+
+        // Evita múltiplas inserções
+        const existing = document.getElementById('cloudinary-upload-widget');
+        if (existing) {
+            existing.addEventListener('load', () => resolve());
+            existing.addEventListener('error', () => reject(new Error('Falha ao carregar Cloudinary')));
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.id = 'cloudinary-upload-widget';
+        script.src = 'https://upload-widget.cloudinary.com/global/all.js';
+        script.async = true;
+        script.type = 'text/javascript';
+        script.addEventListener('load', () => resolve());
+        script.addEventListener('error', () => reject(new Error('Falha ao carregar script do Cloudinary')));
+        document.head.appendChild(script);
+    });
+}
+
+/**
  * 🔧 Configurações padrão otimizadas para upload de imagens
  */
 export const DEFAULT_UPLOAD_OPTIONS: Partial<CloudinaryOptions> = {
@@ -61,10 +95,13 @@ export function openCloudinaryWidget(
     opts: CloudinaryOptions,
     onProgress?: (progress: CloudinaryUploadProgress) => void,
 ): Promise<CloudinaryUploadResult> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
+            // Garante que o script foi carregado sob demanda
+            await ensureCloudinaryLoaded();
+
             if (!window.cloudinary) {
-                return reject(new Error('Cloudinary widget indisponível. Verifique se o script foi carregado.'));
+                return reject(new Error('Cloudinary widget indisponível após carregamento.'));
             }
 
             // Mesclar opções padrão com as fornecidas
