@@ -236,6 +236,19 @@ if (typeof window !== 'undefined') {
   }
 }
 
+// 🧹 DEV: Garantir que nenhum Service Worker legado interfira em localhost
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator && !import.meta.env.PROD) {
+  // Desregistrar SWs antigos e limpar caches em ambiente de desenvolvimento
+  navigator.serviceWorker.getRegistrations().then((regs) => {
+    regs.forEach((reg) => {
+      reg.unregister().catch(() => void 0);
+    });
+  }).catch(() => void 0);
+  if (typeof caches !== 'undefined') {
+    caches.keys().then((keys) => Promise.all(keys.map((k) => caches.delete(k)))).catch(() => void 0);
+  }
+}
+
 // 🚀 FASE 3.5: Service Worker para Offline Support e PWA
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
