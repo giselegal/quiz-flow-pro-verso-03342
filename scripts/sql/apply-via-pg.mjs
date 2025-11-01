@@ -49,6 +49,11 @@ async function main() {
     console.error('Erro: SUPABASE_DB_URL não definido. Cole a connection string do Postgres do seu projeto Supabase nessa variável e tente novamente.')
     process.exit(2)
   }
+  // Garante SSL em ambientes Supabase (se faltar sslmode na URL)
+  let conn = SUPABASE_DB_URL
+  if (!/sslmode=/i.test(conn)) {
+    conn += (conn.includes('?') ? '&' : '?') + 'sslmode=require'
+  }
 
   const { files } = parseArgs()
   let sqlText = ''
@@ -62,7 +67,7 @@ async function main() {
     sqlText = readSql('scripts/sql/2025-11-01_indices_and_rpc.sql')
   }
 
-  const sql = postgres(SUPABASE_DB_URL, { max: 1, idle_timeout: 5, connect_timeout: 10 })
+  const sql = postgres(conn, { max: 1, idle_timeout: 5, connect_timeout: 10 })
   try {
     console.log('Conectado. Aplicando SQL...')
     await sql.unsafe(sqlText)

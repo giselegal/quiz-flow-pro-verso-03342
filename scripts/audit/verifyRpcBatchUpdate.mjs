@@ -5,8 +5,9 @@
  * - Autentica via SUPABASE_EMAIL/SUPABASE_PASSWORD
  * - Recebe --funnel <id> e opcionalmente --step <n>
  * - Flags opcionais:
- *   --require-rpc  => falhar (exit code 3) se a função RPC não existir
- *   --measure      => medir e exibir o tempo (ms) de execução do caminho usado
+ *   --require-rpc    => falhar (exit code 3) se a função RPC não existir
+ *   --measure        => medir e exibir o tempo (ms) de execução do caminho usado
+ *   --no-auto-step   => não tentar detectar automaticamente um step com >=2 itens
  * - Seleciona 2 componentes do step e tenta inverter a ordem usando a RPC
  * - Se a RPC não existir (42883) ou falhar, relata o status e não altera nada
  *
@@ -42,17 +43,18 @@ function parseArgs() {
   const idxS = args.findIndex(a => a === '--step' || a === '-s');
   const requireRpc = args.includes('--require-rpc');
   const measure = args.includes('--measure');
+  const noAutoStep = args.includes('--no-auto-step');
   const funnelId = idxF !== -1 ? args[idxF + 1] : null;
   const step = idxS !== -1 ? parseInt(args[idxS + 1], 10) : 1;
   if (!funnelId) {
     console.log('Uso: node scripts/audit/verifyRpcBatchUpdate.mjs --funnel <ID> [--step 1] [--require-rpc] [--measure]');
     process.exit(2);
   }
-  return { funnelId, step: Number.isFinite(step) ? step : 1, requireRpc, measure };
+  return { funnelId, step: Number.isFinite(step) ? step : 1, requireRpc, measure, noAutoStep };
 }
 
 async function main() {
-  const { funnelId, step, requireRpc, measure } = parseArgs();
+  let { funnelId, step, requireRpc, measure, noAutoStep } = parseArgs();
   const creds = await resolveSupabaseCreds();
   const supabase = createClient(creds.url, creds.key);
 
@@ -66,7 +68,7 @@ async function main() {
   }
 
   // Selecionar 2 componentes do step
-  const { data: rows, error: selErr } = await supabase
+  let { data: rows, error: selErr } = await supabase
     .from('component_instances')
     .select('id,order_index,step_number')
     .eq('funnel_id', funnelId)
@@ -75,8 +77,40 @@ async function main() {
     .limit(2);
   if (selErr) throw new Error('Erro ao buscar componentes: ' + selErr.message);
   if (!rows || rows.length < 2) {
-    console.log(`⚠️ Menos de 2 componentes no step ${step}; nada para testar.`);
-    process.exit(0);
+    if (!noAutoStep) {
+      // Detectar automaticamente um step com >= 2 componentes
+      const { data: allRows, error: allErr } = await supabase
+        .from('component_instances')
+        .select('id,step_number,order_index')
+        .eq('funnel_id', funnelId);
+      if (allErr) throw new Error('Erro ao buscar componentes (auto-step): ' + allErr.message);
+      const counts = new Map();
+      for (const r of allRows || []) {
+        const k = r.step_number ?? 0;
+        counts.set(k, (counts.get(k) || 0) + 1);
+      }
+      let bestStep = null;
+      for (const [k, c] of counts.entries()) {
+        if (c >= 2 && (bestStep === null || c > counts.get(bestStep))) bestStep = k;
+      }
+      if (bestStep !== null) {
+        console.log(`ℹ️ Auto-selecionado step ${bestStep} (>=2 componentes) para o teste.`);
+        step = bestStep;
+        const retry = await supabase
+          .from('component_instances')
+          .select('id,order_index,step_number')
+          .eq('funnel_id', funnelId)
+          .eq('step_number', step)
+          .order('order_index', { ascending: true })
+          .limit(2);
+        if (retry.error) throw new Error('Erro ao buscar componentes (retry): ' + retry.error.message);
+        rows = retry.data || [];
+      }
+    }
+    if (!rows || rows.length < 2) {
+      console.log(`⚠️ Menos de 2 componentes no step ${step}; nada para testar.`);
+      process.exit(0);
+    }
   }
 
   const a = rows[0];

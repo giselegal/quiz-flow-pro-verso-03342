@@ -4,6 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+  "rpc:verify": "node -r dotenv/config scripts/audit/verifyRpcBatchUpdate.mjs",
+  "rpc:steps": "node -r dotenv/config scripts/audit/listStepCounts.mjs",
   "db:apply:pg": "node scripts/sql/apply-via-pg.mjs --file scripts/sql/2025-11-01_indices_and_rpc.sql",
   "db:apply:pg:with-rls": "node scripts/sql/apply-via-pg.mjs --file scripts/sql/2025-11-01_indices_and_rpc.sql --file scripts/sql/2025-11-01_rls_policies_template.sql",
   "db:apply-remote": "bash scripts/sql/apply-remote.sh",
