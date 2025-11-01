@@ -50,6 +50,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         blocks={blocks}
                         onRemoveBlock={(id) => ops.removeBlock(editor.state.currentStepKey, id)}
                         onMoveBlock={(from, to) => ops.reorderBlock(editor.state.currentStepKey, from, to)}
+                        onUpdateBlock={(id, patch) => ops.updateBlock(editor.state.currentStepKey, id, patch)}
                     />
                 </div>
             </Suspense>

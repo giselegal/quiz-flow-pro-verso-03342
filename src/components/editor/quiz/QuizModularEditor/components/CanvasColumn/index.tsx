@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
+import BlockPreview from './BlockPreview';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
     blocks?: Block[] | null;
     onRemoveBlock?: (blockId: string) => void;
     onMoveBlock?: (fromIndex: number, toIndex: number) => void;
+    onUpdateBlock?: (blockId: string, patch: Partial<Block>) => void;
 };
 
-export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, onRemoveBlock, onMoveBlock }: CanvasColumnProps) {
+export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, onRemoveBlock, onMoveBlock, onUpdateBlock }: CanvasColumnProps) {
     const [blocks, setBlocks] = useState<Block[] | null>(blocksFromProps ?? null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -106,8 +108,23 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
                                 )}
                             </div>
                         </div>
-                        {/* Placeholder de preview simples */}
-                        <pre className="text-[10px] whitespace-pre-wrap break-all opacity-70">{JSON.stringify(b.properties || b.content || {}, null, 2)}</pre>
+                        {/* Preview amigável por tipo */}
+                        <BlockPreview
+                            block={b as any}
+                            onQuickInsert={onUpdateBlock ? (id) => {
+                                // Patches rápidos por tipo
+                                const type = String((b as any).type);
+                                if (type === 'intro-title' || type === 'heading' || type === 'text-inline') {
+                                    onUpdateBlock(id, { content: { text: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você</span>.' } as any });
+                                } else if (type === 'intro-description' || type === 'text') {
+                                    onUpdateBlock(id, { content: { description: 'Em poucos minutos, descubra seu <span class="font-semibold text-[#B89B7A]">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class="font-semibold text-[#432818]">essência</span>, com praticidade e <span class="font-semibold text-[#432818]">confiança</span>.' } as any });
+                                } else if (type === 'intro-logo' || type === 'intro-image' || type === 'image') {
+                                    onUpdateBlock(id, { content: { imageUrl: '/favicon.ico', alt: 'logo' } as any });
+                                } else if (type === 'intro-form' || type === 'form-container') {
+                                    onUpdateBlock(id, { content: { fields: [] } as any });
+                                }
+                            } : undefined}
+                        />
                     </li>
                 ))}
             </ul>

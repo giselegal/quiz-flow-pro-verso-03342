@@ -8,6 +8,7 @@ export type UseBlockOperations = {
   addBlock: (stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => void;
   removeBlock: (stepKey: string | null, blockId: string) => void;
   reorderBlock: (stepKey: string | null, fromIndex: number, toIndex: number) => void;
+  updateBlock: (stepKey: string | null, blockId: string, patch: Partial<Block>) => void;
 };
 
 function genId(prefix = 'blk'): string {
@@ -75,5 +76,18 @@ export function useBlockOperations(): UseBlockOperations {
     });
   }, []);
 
-  return useMemo(() => ({ getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock }), [getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock]);
+  const updateBlock = useCallback((stepKey: string | null, blockId: string, patch: Partial<Block>) => {
+    if (!stepKey) return;
+    setByStep((prev) => {
+      const list = prev[stepKey] || [];
+      const idx = list.findIndex((b) => b.id === blockId);
+      if (idx === -1) return prev;
+      const updated = { ...list[idx], ...patch, content: { ...(list[idx] as any).content, ...(patch as any).content }, properties: { ...(list[idx] as any).properties, ...(patch as any).properties } } as Block;
+      const next = [...list];
+      next[idx] = updated;
+      return { ...prev, [stepKey]: next };
+    });
+  }, []);
+
+  return useMemo(() => ({ getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock, updateBlock }), [getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock, updateBlock]);
 }
