@@ -7,20 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabase';
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
-    AreaChart,
-    Area,
-} from 'recharts';
+import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
 import {
     Users,
     Target,
@@ -155,6 +142,7 @@ export const AnalyticsDashboard: React.FC = () => {
         timeDistribution: [],
     });
     const [loading, setLoading] = useState(true);
+    const [charts, setCharts] = useState<Awaited<ReturnType<typeof loadRecharts>> | null>(null);
 
     // ========================================================================
     // FETCH DE DADOS
@@ -254,7 +242,7 @@ export const AnalyticsDashboard: React.FC = () => {
             );
 
             return {
-                date: `${date.split('-')[2]  }/${  date.split('-')[1]}`,
+                date: `${date.split('-')[2]}/${date.split('-')[1]}`,
                 participants: dayParticipants.length,
                 completed: dayCompleted.length,
             };
@@ -311,6 +299,15 @@ export const AnalyticsDashboard: React.FC = () => {
         // Auto-refresh a cada 2 minutos
         const interval = setInterval(fetchAnalyticsData, 120000);
         return () => clearInterval(interval);
+    }, []);
+
+    // Lazy-load Recharts bundle
+    useEffect(() => {
+        let mounted = true;
+        getCachedImport('recharts-bundle', loadRecharts)
+            .then((mod) => { if (mounted) setCharts(mod); })
+            .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+        return () => { mounted = false; };
     }, []);
 
     if (loading) {
@@ -375,32 +372,36 @@ export const AnalyticsDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <AreaChart data={analytics.dailyActivity}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Area
-                                    type="monotone"
-                                    dataKey="participants"
-                                    stackId="1"
-                                    stroke={COLORS.primary}
-                                    fill={COLORS.primary}
-                                    fillOpacity={0.6}
-                                    name="Participantes"
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="completed"
-                                    stackId="2"
-                                    stroke={COLORS.success}
-                                    fill={COLORS.success}
-                                    fillOpacity={0.8}
-                                    name="Completaram"
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
+                        {charts ? (
+                            <charts.ResponsiveContainer width="100%" height={300}>
+                                <charts.AreaChart data={analytics.dailyActivity}>
+                                    <charts.CartesianGrid strokeDasharray="3 3" />
+                                    <charts.XAxis dataKey="date" />
+                                    <charts.YAxis />
+                                    <charts.Tooltip content={<CustomTooltip />} />
+                                    <charts.Area
+                                        type="monotone"
+                                        dataKey="participants"
+                                        stackId="1"
+                                        stroke={COLORS.primary}
+                                        fill={COLORS.primary}
+                                        fillOpacity={0.6}
+                                        name="Participantes"
+                                    />
+                                    <charts.Area
+                                        type="monotone"
+                                        dataKey="completed"
+                                        stackId="2"
+                                        stroke={COLORS.success}
+                                        fill={COLORS.success}
+                                        fillOpacity={0.8}
+                                        name="Completaram"
+                                    />
+                                </charts.AreaChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div style={{ height: 300 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+                        )}
                     </CardContent>
                 </Card>
 
@@ -413,28 +414,32 @@ export const AnalyticsDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={analytics.deviceDistribution}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={({ device, percentage }) => `${device}: ${percentage.toFixed(1)}%`}
-                                    outerRadius={100}
-                                    fill={COLORS.primary}
-                                    dataKey="count"
-                                >
-                                    {analytics.deviceDistribution.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={DEVICE_COLORS[entry.device as keyof typeof DEVICE_COLORS] || COLORS.info}
-                                        />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        {charts ? (
+                            <charts.ResponsiveContainer width="100%" height={300}>
+                                <charts.PieChart>
+                                    <charts.Pie
+                                        data={analytics.deviceDistribution}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={({ device, percentage }) => `${device}: ${percentage.toFixed(1)}%`}
+                                        outerRadius={100}
+                                        fill={COLORS.primary}
+                                        dataKey="count"
+                                    >
+                                        {analytics.deviceDistribution.map((entry, index) => (
+                                            <charts.Cell
+                                                key={`cell-${index}`}
+                                                fill={DEVICE_COLORS[entry.device as keyof typeof DEVICE_COLORS] || COLORS.info}
+                                            />
+                                        ))}
+                                    </charts.Pie>
+                                    <charts.Tooltip />
+                                </charts.PieChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div style={{ height: 300 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+                        )}
                     </CardContent>
                 </Card>
             </div>
@@ -450,19 +455,23 @@ export const AnalyticsDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={analytics.abandonmentByStep}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="step" />
-                                <YAxis />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Bar
-                                    dataKey="count"
-                                    fill={COLORS.danger}
-                                    name="Abandonos"
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
+                        {charts ? (
+                            <charts.ResponsiveContainer width="100%" height={300}>
+                                <charts.BarChart data={analytics.abandonmentByStep}>
+                                    <charts.CartesianGrid strokeDasharray="3 3" />
+                                    <charts.XAxis dataKey="step" />
+                                    <charts.YAxis />
+                                    <charts.Tooltip content={<CustomTooltip />} />
+                                    <charts.Bar
+                                        dataKey="count"
+                                        fill={COLORS.danger}
+                                        name="Abandonos"
+                                    />
+                                </charts.BarChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div style={{ height: 300 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+                        )}
                     </CardContent>
                 </Card>
 
@@ -475,19 +484,23 @@ export const AnalyticsDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={analytics.timeDistribution}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="range" />
-                                <YAxis />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Bar
-                                    dataKey="count"
-                                    fill={COLORS.warning}
-                                    name="Participantes"
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
+                        {charts ? (
+                            <charts.ResponsiveContainer width="100%" height={300}>
+                                <charts.BarChart data={analytics.timeDistribution}>
+                                    <charts.CartesianGrid strokeDasharray="3 3" />
+                                    <charts.XAxis dataKey="range" />
+                                    <charts.YAxis />
+                                    <charts.Tooltip content={<CustomTooltip />} />
+                                    <charts.Bar
+                                        dataKey="count"
+                                        fill={COLORS.warning}
+                                        name="Participantes"
+                                    />
+                                </charts.BarChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div style={{ height: 300 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+                        )}
                     </CardContent>
                 </Card>
             </div>
@@ -502,19 +515,23 @@ export const AnalyticsDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={analytics.styleDistribution} layout="horizontal">
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis type="number" />
-                                <YAxis dataKey="style" type="category" width={120} />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Bar
-                                    dataKey="count"
-                                    fill={COLORS.purple}
-                                    name="Descobertas"
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
+                        {charts ? (
+                            <charts.ResponsiveContainer width="100%" height={300}>
+                                <charts.BarChart data={analytics.styleDistribution} layout="horizontal">
+                                    <charts.CartesianGrid strokeDasharray="3 3" />
+                                    <charts.XAxis type="number" />
+                                    <charts.YAxis dataKey="style" type="category" width={120} />
+                                    <charts.Tooltip content={<CustomTooltip />} />
+                                    <charts.Bar
+                                        dataKey="count"
+                                        fill={COLORS.purple}
+                                        name="Descobertas"
+                                    />
+                                </charts.BarChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div style={{ height: 300 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+                        )}
                     </CardContent>
                 </Card>
             )}

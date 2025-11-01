@@ -13,20 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-} from 'recharts';
+import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
 import {
   TrendingUp,
   TrendingDown,
@@ -76,6 +63,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
     B: ABTestMetrics;
   } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [charts, setCharts] = useState<Awaited<ReturnType<typeof loadRecharts>> | null>(null);
   const [selectedMetric, setSelectedMetric] = useState<'conversion' | 'engagement' | 'revenue'>(
     'conversion',
   );
@@ -86,6 +74,15 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
   useEffect(() => {
     loadABTestData();
   }, [timeRange]);
+
+  // Lazy-load Recharts para evitar quebras do vendor chunk
+  useEffect(() => {
+    let mounted = true;
+    getCachedImport('recharts-bundle', loadRecharts)
+      .then((mod) => { if (mounted) setCharts(mod); })
+      .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+    return () => { mounted = false; };
+  }, []);
 
   const loadABTestData = async () => {
     setLoading(true);
@@ -279,6 +276,9 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
 
   const renderTrendsCharts = () => {
     if (!metrics) return null;
+    if (!charts) return (
+      <div className="flex items-center justify-center h-72 text-sm text-muted-foreground">Carregando gráficos…</div>
+    );
 
     // Criar dados simulados de tendência baseados nos eventos
     const events = getAnalyticsEvents();
@@ -338,70 +338,70 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
         {/* Gráfico de Visitantes por Dia */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Visitantes por Dia</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={dailyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip />
-              <Line
+          <charts.ResponsiveContainer width="100%" height={300}>
+            <charts.LineChart data={dailyData}>
+              <charts.CartesianGrid strokeDasharray="3 3" />
+              <charts.XAxis dataKey="day" />
+              <charts.YAxis />
+              <charts.Tooltip />
+              <charts.Line
                 type="monotone"
                 dataKey="Visitantes A"
                 stroke="#3b82f6"
                 strokeWidth={2}
                 dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
               />
-              <Line
+              <charts.Line
                 type="monotone"
                 dataKey="Visitantes B"
                 stroke="#10b981"
                 strokeWidth={2}
                 dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
               />
-            </LineChart>
-          </ResponsiveContainer>
+            </charts.LineChart>
+          </charts.ResponsiveContainer>
         </div>
 
         {/* Gráfico de Taxa de Conversão por Dia */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Taxa de Conversão por Dia</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={dailyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip formatter={value => [`${Number(value).toFixed(1)}%`, '']} />
-              <Line
+          <charts.ResponsiveContainer width="100%" height={300}>
+            <charts.LineChart data={dailyData}>
+              <charts.CartesianGrid strokeDasharray="3 3" />
+              <charts.XAxis dataKey="day" />
+              <charts.YAxis />
+              <charts.Tooltip formatter={value => [`${Number(value).toFixed(1)}%`, '']} />
+              <charts.Line
                 type="monotone"
                 dataKey="Conversão A"
                 stroke="#ef4444"
                 strokeWidth={2}
                 dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
               />
-              <Line
+              <charts.Line
                 type="monotone"
                 dataKey="Conversão B"
                 stroke="#22c55e"
                 strokeWidth={2}
                 dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
               />
-            </LineChart>
-          </ResponsiveContainer>
+            </charts.LineChart>
+          </charts.ResponsiveContainer>
         </div>
 
         {/* Gráfico de Leads por Dia */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Leads Gerados por Dia</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={dailyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="Leads A" fill="#3b82f6" name="Versão A" />
-              <Bar dataKey="Leads B" fill="#10b981" name="Versão B" />
-            </BarChart>
-          </ResponsiveContainer>
+          <charts.ResponsiveContainer width="100%" height={300}>
+            <charts.BarChart data={dailyData}>
+              <charts.CartesianGrid strokeDasharray="3 3" />
+              <charts.XAxis dataKey="day" />
+              <charts.YAxis />
+              <charts.Tooltip />
+              <charts.Bar dataKey="Leads A" fill="#3b82f6" name="Versão A" />
+              <charts.Bar dataKey="Leads B" fill="#10b981" name="Versão B" />
+            </charts.BarChart>
+          </charts.ResponsiveContainer>
         </div>
 
         {/* Resumo de Tendências */}
@@ -720,16 +720,20 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
               <CardDescription>Comparação step-by-step entre as duas versões</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="Versão A" fill="#8884d8" />
-                  <Bar dataKey="Versão B" fill="#82ca9d" />
-                </BarChart>
-              </ResponsiveContainer>
+              {charts ? (
+                <charts.ResponsiveContainer width="100%" height={400}>
+                  <charts.BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <charts.CartesianGrid strokeDasharray="3 3" />
+                    <charts.XAxis dataKey="name" />
+                    <charts.YAxis />
+                    <charts.Tooltip />
+                    <charts.Bar dataKey="Versão A" fill="#8884d8" />
+                    <charts.Bar dataKey="Versão B" fill="#82ca9d" />
+                  </charts.BarChart>
+                </charts.ResponsiveContainer>
+              ) : (
+                <div style={{ height: 400 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

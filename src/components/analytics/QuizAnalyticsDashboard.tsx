@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
 import { getQuizEvents, getQuizMetrics, clearQuizEvents, flushQuizEvents, flushQuizEventsWithRetry } from '@/utils/quizAnalytics';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -20,6 +20,7 @@ const QuizAnalyticsDashboard: React.FC = () => {
     const [useRetryFlush, setUseRetryFlush] = useState(true);
     const [flushLog, setFlushLog] = useState<string[]>([]);
     const [lastFlushResult, setLastFlushResult] = useState<{ flushed: number; batches?: number } | null>(null);
+    const [charts, setCharts] = useState<Awaited<ReturnType<typeof loadRecharts>> | null>(null);
     const appendLog = (line: string) => setFlushLog(l => [...l.slice(-200), `[${new Date().toLocaleTimeString()}] ${line}`]);
     const [autoRefresh, setAutoRefresh] = useState(false);
     const [refreshInterval, setRefreshInterval] = useState(15000); // default 15s
@@ -27,6 +28,15 @@ const QuizAnalyticsDashboard: React.FC = () => {
 
     const load = () => setEvents(getQuizEvents());
     useEffect(() => { load(); }, []);
+
+    // Lazy-load Recharts bundle para o mini gráfico
+    useEffect(() => {
+        let mounted = true;
+        getCachedImport('recharts-bundle', loadRecharts)
+            .then((mod) => { if (mounted) setCharts(mod); })
+            .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+        return () => { mounted = false; };
+    }, []);
 
     // Auto refresh effect
     useEffect(() => {
@@ -170,7 +180,7 @@ const QuizAnalyticsDashboard: React.FC = () => {
                                 }
                                 load();
                             } catch (err: any) {
-                                appendLog(`Erro: ${  err?.message || String(err)}`);
+                                appendLog(`Erro: ${err?.message || String(err)}`);
                             } finally { setIsFlushing(false); }
                         }}>{isFlushing ? 'Enviando...' : 'Flush'}</Button>
                     </div>
@@ -192,21 +202,25 @@ const QuizAnalyticsDashboard: React.FC = () => {
                 <h2 className="text-sm font-semibold">Eventos ({filteredEvents.length})</h2>
                 <div className="h-48 border rounded bg-muted/30 p-2">
                     {timeSeries.length ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={timeSeries} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                                <defs>
-                                    <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="var(--color-primary, hsl(var(--primary)))" stopOpacity={0.6} />
-                                        <stop offset="95%" stopColor="var(--color-primary, hsl(var(--primary)))" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                                <XAxis dataKey="time" tick={{ fontSize: 10 }} />
-                                <YAxis tick={{ fontSize: 10 }} allowDecimals={false} />
-                                <Tooltip contentStyle={{ fontSize: 10 }} />
-                                <Area type="monotone" dataKey="views" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorViews)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
+                        charts ? (
+                            <charts.ResponsiveContainer width="100%" height="100%">
+                                <charts.AreaChart data={timeSeries} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="var(--color-primary, hsl(var(--primary)))" stopOpacity={0.6} />
+                                            <stop offset="95%" stopColor="var(--color-primary, hsl(var(--primary)))" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <charts.CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                                    <charts.XAxis dataKey="time" tick={{ fontSize: 10 }} />
+                                    <charts.YAxis tick={{ fontSize: 10 }} allowDecimals={false} />
+                                    <charts.Tooltip contentStyle={{ fontSize: 10 }} />
+                                    <charts.Area type="monotone" dataKey="views" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorViews)" />
+                                </charts.AreaChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[11px] text-muted-foreground">Carregando gráficos…</div>
+                        )
                     ) : <div className="text-[11px] text-muted-foreground flex items-center justify-center h-full">Sem dados de step_view para gráfico.</div>}
                 </div>
                 <div className="flex gap-2">

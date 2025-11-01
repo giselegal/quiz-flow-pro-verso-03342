@@ -1,18 +1,8 @@
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MetricCard } from '../MetricCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  BarChart,
-  Bar,
-} from 'recharts';
+import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
 
 interface OverviewTabProps {
   analyticsData: any;
@@ -20,6 +10,16 @@ interface OverviewTabProps {
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading = false }) => {
+  const [charts, setCharts] = useState<Awaited<ReturnType<typeof loadRecharts>> | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getCachedImport('recharts-bundle', loadRecharts)
+      .then((mod) => { if (mounted) setCharts(mod); })
+      .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+    return () => { mounted = false; };
+  }, []);
+
   if (loading || !analyticsData) {
     return (
       <div className="space-y-4">
@@ -180,54 +180,58 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
         </CardHeader>
         <CardContent className="px-2">
           <div className={`w-full ${compactView ? 'h-[250px]' : 'h-[400px]'}`}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={chartData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" tickFormatter={formatDate} />
-                <YAxis />
-                <Tooltip
-                  formatter={(value, name) => [
-                    value,
-                    name === 'quiz_start'
-                      ? 'Início do Quiz'
-                      : name === 'quiz_complete'
-                        ? 'Quiz Completo'
-                        : name === 'result_view'
-                          ? 'Visualizações'
-                          : name === 'lead_generated'
-                            ? 'Leads'
-                            : 'Vendas',
-                  ]}
-                  labelFormatter={label => `Data: ${formatDate(label)}`}
-                />
-                <Legend
-                  formatter={value =>
-                    value === 'quiz_start'
-                      ? 'Início do Quiz'
-                      : value === 'quiz_complete'
-                        ? 'Quiz Completo'
-                        : value === 'result_view'
-                          ? 'Visualizações'
-                          : value === 'lead_generated'
-                            ? 'Leads'
-                            : 'Vendas'
-                  }
-                />
-                <Line type="monotone" dataKey="quiz_start" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="quiz_complete" stroke="#82ca9d" />
-                <Line type="monotone" dataKey="result_view" stroke="#ffc658" />
-                <Line type="monotone" dataKey="lead_generated" stroke="#ff7300" />
-                <Line type="monotone" dataKey="sale" stroke="#ff0000" />
-              </LineChart>
-            </ResponsiveContainer>
+            {charts ? (
+              <charts.ResponsiveContainer width="100%" height="100%">
+                <charts.LineChart
+                  data={chartData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <charts.CartesianGrid strokeDasharray="3 3" />
+                  <charts.XAxis dataKey="date" tickFormatter={formatDate} />
+                  <charts.YAxis />
+                  <charts.Tooltip
+                    formatter={(value, name) => [
+                      value,
+                      name === 'quiz_start'
+                        ? 'Início do Quiz'
+                        : name === 'quiz_complete'
+                          ? 'Quiz Completo'
+                          : name === 'result_view'
+                            ? 'Visualizações'
+                            : name === 'lead_generated'
+                              ? 'Leads'
+                              : 'Vendas',
+                    ]}
+                    labelFormatter={label => `Data: ${formatDate(label)}`}
+                  />
+                  <charts.Legend
+                    formatter={value =>
+                      value === 'quiz_start'
+                        ? 'Início do Quiz'
+                        : value === 'quiz_complete'
+                          ? 'Quiz Completo'
+                          : value === 'result_view'
+                            ? 'Visualizações'
+                            : value === 'lead_generated'
+                              ? 'Leads'
+                              : 'Vendas'
+                    }
+                  />
+                  <charts.Line type="monotone" dataKey="quiz_start" stroke="#8884d8" activeDot={{ r: 8 }} />
+                  <charts.Line type="monotone" dataKey="quiz_complete" stroke="#82ca9d" />
+                  <charts.Line type="monotone" dataKey="result_view" stroke="#ffc658" />
+                  <charts.Line type="monotone" dataKey="lead_generated" stroke="#ff7300" />
+                  <charts.Line type="monotone" dataKey="sale" stroke="#ff0000" />
+                </charts.LineChart>
+              </charts.ResponsiveContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -239,26 +243,30 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
         </CardHeader>
         <CardContent>
           <div className={`w-full ${compactView ? 'h-[200px]' : 'h-[300px]'}`}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={conversionMetrics}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="title" />
-                <YAxis tickFormatter={value => `${value}%`} />
-                <Tooltip
-                  formatter={value => [value, 'Taxa']}
-                  labelFormatter={label => `${label}`}
-                />
-                <Bar dataKey="value" name="Taxa" fill="#4f46e5" />
-              </BarChart>
-            </ResponsiveContainer>
+            {charts ? (
+              <charts.ResponsiveContainer width="100%" height="100%">
+                <charts.BarChart
+                  data={conversionMetrics}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <charts.CartesianGrid strokeDasharray="3 3" />
+                  <charts.XAxis dataKey="title" />
+                  <charts.YAxis tickFormatter={value => `${value}%`} />
+                  <charts.Tooltip
+                    formatter={value => [value, 'Taxa']}
+                    labelFormatter={label => `${label}`}
+                  />
+                  <charts.Bar dataKey="value" name="Taxa" fill="#4f46e5" />
+                </charts.BarChart>
+              </charts.ResponsiveContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+            )}
           </div>
         </CardContent>
       </Card>

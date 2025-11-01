@@ -8,17 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabase';
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    Cell,
-    ReferenceLine,
-} from 'recharts';
+import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
 import {
     TrendingDown,
     AlertTriangle,
@@ -158,6 +148,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
     const [funnelData, setFunnelData] = useState<FunnelStep[]>([]);
     const [heatmapData, setHeatmapData] = useState<HeatmapData[]>([]);
     const [loading, setLoading] = useState(true);
+    const [charts, setCharts] = useState<Awaited<ReturnType<typeof loadRecharts>> | null>(null);
 
     // ========================================================================
     // FETCH DE DADOS
@@ -301,6 +292,15 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
         fetchAdvancedData();
     }, [filters]);
 
+    // Lazy-load Recharts para reduzir risco de crash do vendor chunk
+    useEffect(() => {
+        let mounted = true;
+        getCachedImport('recharts-bundle', loadRecharts)
+            .then((mod) => { if (mounted) setCharts(mod); })
+            .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+        return () => { mounted = false; };
+    }, []);
+
     if (loading) {
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -380,31 +380,35 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
                         </p>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer width="100%" height={400}>
-                            <BarChart data={funnelData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis
-                                    dataKey="step"
-                                    tick={{ fontSize: 12 }}
-                                />
-                                <YAxis tick={{ fontSize: 12 }} />
-                                <Tooltip content={<CustomFunnelTooltip />} />
-                                <Bar dataKey="participants" name="Participantes">
-                                    {funnelData.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={DIFFICULTY_COLORS[entry.difficulty]}
-                                        />
-                                    ))}
-                                </Bar>
-                                <ReferenceLine
-                                    y={funnelData[0]?.participants * 0.7}
-                                    stroke="#10b981"
-                                    strokeDasharray="5 5"
-                                    label="Meta 70%"
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
+                        {charts ? (
+                            <charts.ResponsiveContainer width="100%" height={400}>
+                                <charts.BarChart data={funnelData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <charts.CartesianGrid strokeDasharray="3 3" />
+                                    <charts.XAxis
+                                        dataKey="step"
+                                        tick={{ fontSize: 12 }}
+                                    />
+                                    <charts.YAxis tick={{ fontSize: 12 }} />
+                                    <charts.Tooltip content={<CustomFunnelTooltip />} />
+                                    <charts.Bar dataKey="participants" name="Participantes">
+                                        {funnelData.map((entry, index) => (
+                                            <charts.Cell
+                                                key={`cell-${index}`}
+                                                fill={DIFFICULTY_COLORS[entry.difficulty]}
+                                            />
+                                        ))}
+                                    </charts.Bar>
+                                    <charts.ReferenceLine
+                                        y={funnelData[0]?.participants * 0.7}
+                                        stroke="#10b981"
+                                        strokeDasharray="5 5"
+                                        label="Meta 70%"
+                                    />
+                                </charts.BarChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div style={{ height: 400 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+                        )}
 
                         {/* LEGENDA DE DIFICULDADE */}
                         <div className="flex flex-wrap gap-4 mt-4 justify-center">
@@ -437,31 +441,35 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
                         </p>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer width="100%" height={400}>
-                            <BarChart data={heatmapData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis
-                                    dataKey="step"
-                                    tick={{ fontSize: 12 }}
-                                />
-                                <YAxis tick={{ fontSize: 12 }} />
-                                <Tooltip content={<HeatmapTooltip />} />
-                                <Bar dataKey="difficulty" name="Dificuldade">
-                                    {heatmapData.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={entry.color}
-                                        />
-                                    ))}
-                                </Bar>
-                                <ReferenceLine
-                                    y={50}
-                                    stroke="#f59e0b"
-                                    strokeDasharray="5 5"
-                                    label="Limite Aceitável"
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
+                        {charts ? (
+                            <charts.ResponsiveContainer width="100%" height={400}>
+                                <charts.BarChart data={heatmapData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <charts.CartesianGrid strokeDasharray="3 3" />
+                                    <charts.XAxis
+                                        dataKey="step"
+                                        tick={{ fontSize: 12 }}
+                                    />
+                                    <charts.YAxis tick={{ fontSize: 12 }} />
+                                    <charts.Tooltip content={<HeatmapTooltip />} />
+                                    <charts.Bar dataKey="difficulty" name="Dificuldade">
+                                        {heatmapData.map((entry, index) => (
+                                            <charts.Cell
+                                                key={`cell-${index}`}
+                                                fill={entry.color}
+                                            />
+                                        ))}
+                                    </charts.Bar>
+                                    <charts.ReferenceLine
+                                        y={50}
+                                        stroke="#f59e0b"
+                                        strokeDasharray="5 5"
+                                        label="Limite Aceitável"
+                                    />
+                                </charts.BarChart>
+                            </charts.ResponsiveContainer>
+                        ) : (
+                            <div style={{ height: 400 }} className="flex items-center justify-center text-sm text-muted-foreground">Carregando gráficos…</div>
+                        )}
 
                         {/* ETAPAS MAIS CRÍTICAS */}
                         <div className="mt-4">

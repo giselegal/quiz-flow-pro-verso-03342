@@ -12,7 +12,7 @@
  */
 export const loadRecharts = async () => {
   const [
-    { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell },
+    { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, ReferenceLine },
     { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer },
   ] = await Promise.all([
     import('recharts').then(m => ({
@@ -25,6 +25,7 @@ export const loadRecharts = async () => {
       PieChart: m.PieChart,
       Pie: m.Pie,
       Cell: m.Cell,
+      ReferenceLine: m.ReferenceLine,
     })),
     import('recharts').then(m => ({
       XAxis: m.XAxis,
@@ -37,7 +38,7 @@ export const loadRecharts = async () => {
   ]);
 
   return {
-    LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
+    LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, ReferenceLine,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   };
 };
