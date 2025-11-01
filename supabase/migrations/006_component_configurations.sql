@@ -74,9 +74,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger para atualizar automaticamente
-CREATE TRIGGER trigger_component_configurations_timestamp
-  BEFORE UPDATE ON public.component_configurations
-  FOR EACH ROW EXECUTE FUNCTION update_component_configuration_timestamp();
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_component_configurations_timestamp'
+  ) THEN
+    CREATE TRIGGER trigger_component_configurations_timestamp
+      BEFORE UPDATE ON public.component_configurations
+      FOR EACH ROW EXECUTE FUNCTION update_component_configuration_timestamp();
+  END IF;
+END $$;
 
 -- =============================================================================
 -- ROW LEVEL SECURITY (RLS)

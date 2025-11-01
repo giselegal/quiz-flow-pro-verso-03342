@@ -164,13 +164,25 @@ CREATE POLICY "Enable read access for all users" ON public.facebook_sync_logs FO
 CREATE POLICY "Enable insert for all users" ON public.facebook_sync_logs FOR INSERT WITH CHECK (true);
 
 -- Trigger para updated_at
-CREATE TRIGGER update_facebook_metrics_updated_at 
-    BEFORE UPDATE ON public.facebook_metrics 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_facebook_metrics_updated_at'
+    ) THEN
+        CREATE TRIGGER update_facebook_metrics_updated_at 
+            BEFORE UPDATE ON public.facebook_metrics 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
-CREATE TRIGGER update_facebook_api_config_updated_at 
-    BEFORE UPDATE ON public.facebook_api_config 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_facebook_api_config_updated_at'
+    ) THEN
+        CREATE TRIGGER update_facebook_api_config_updated_at 
+            BEFORE UPDATE ON public.facebook_api_config 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
 -- Função para calcular métricas agregadas
 CREATE OR REPLACE FUNCTION calculate_facebook_campaign_summary(campaign_id_param text, date_start_param date, date_end_param date)

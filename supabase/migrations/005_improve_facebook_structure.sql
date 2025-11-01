@@ -229,12 +229,24 @@ CREATE POLICY "Enable update for all users" ON public.facebook_campaign_funnel_m
 -- 7. TRIGGERS PARA UPDATED_AT
 -- ============================================================================
 
-CREATE TRIGGER update_funnel_tracking_config_updated_at 
-    BEFORE UPDATE ON public.funnel_tracking_config 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_funnel_tracking_config_updated_at'
+    ) THEN
+        CREATE TRIGGER update_funnel_tracking_config_updated_at 
+            BEFORE UPDATE ON public.funnel_tracking_config 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
-CREATE TRIGGER update_facebook_campaign_funnel_mapping_updated_at 
-    BEFORE UPDATE ON public.facebook_campaign_funnel_mapping 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_facebook_campaign_funnel_mapping_updated_at'
+    ) THEN
+        CREATE TRIGGER update_facebook_campaign_funnel_mapping_updated_at 
+            BEFORE UPDATE ON public.facebook_campaign_funnel_mapping 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
 SELECT 'Facebook metrics structure improved! Now funnels have isolated tracking configurations.' AS status;

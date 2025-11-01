@@ -54,7 +54,13 @@ CREATE INDEX idx_templates_user_slug ON public.templates(user_id, slug);
 CREATE INDEX idx_templates_updated ON public.templates(updated_at DESC);
 
 -- Trigger para atualizar updated_at
-CREATE TRIGGER update_templates_updated_at
-  BEFORE UPDATE ON public.templates
-  FOR EACH ROW
-  EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger WHERE tgname = 'update_templates_updated_at'
+  ) THEN
+    CREATE TRIGGER update_templates_updated_at
+      BEFORE UPDATE ON public.templates
+      FOR EACH ROW
+      EXECUTE FUNCTION public.update_updated_at_column();
+  END IF;
+END $$;
