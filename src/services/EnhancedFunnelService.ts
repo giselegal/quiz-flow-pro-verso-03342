@@ -1,16 +1,22 @@
 /**
- * @deprecated Use FunnelUnifiedService directly
- * 
  * Enhanced Funnel Service - Compatibility Wrapper
- * Provides getFunnelWithFallback and createFallbackFunnel methods
+ *
+ * Objetivo: manter compatibilidade com chamadores legados enquanto
+ * delega operações ao serviço CANÔNICO de funil.
+ *
+ * Status: ponte de migração. Preferir importar diretamente
+ * `funnelService` de `@/services/canonical/FunnelService` em novos códigos.
  */
 
-import { FunnelUnifiedService, UnifiedFunnelData } from './FunnelUnifiedService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { funnelService as canonicalFunnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import { appLogger } from '@/utils/logger';
+import type { UnifiedFunnelData } from './FunnelUnifiedService';
 
 export class EnhancedFunnelService {
   private static instance: EnhancedFunnelService;
-  private funnelService = FunnelUnifiedService.getInstance();
+  // Delegação ao serviço canônico
+  private funnelService = canonicalFunnelService;
 
   private constructor() {}
 
@@ -30,14 +36,18 @@ export class EnhancedFunnelService {
     context: FunnelContext = FunnelContext.EDITOR,
   ): Promise<UnifiedFunnelData | null> {
     try {
-      // Try to get funnel
+      if (import.meta?.env?.DEV) {
+        appLogger.warn('[EnhancedFunnelService] Ponte de compatibilidade ativa. Migre para o serviço canônico diretamente.');
+      }
+
+      // Buscar via serviço canônico
       const funnel = await this.funnelService.getFunnel(funnelId);
-      if (funnel) return funnel;
+      if (funnel) return this.mapCanonicalToUnified(funnel);
 
       // If not found, create fallback
       return await this.createFallbackFunnel(funnelId, context);
     } catch (error) {
-      console.error('Error in getFunnelWithFallback:', error);
+      appLogger.error('Error in getFunnelWithFallback:', error);
       return fallback || null;
     }
   }
@@ -52,18 +62,41 @@ export class EnhancedFunnelService {
     try {
       const created = await this.funnelService.createFunnel({
         name: `Funil ${funnelId}`,
-        description: 'Funnel created automatically',
+        type: 'quiz',
         category: 'quiz',
         context,
-        userId: 'anonymous',
-        autoPublish: false,
+        status: 'draft',
+        config: { createdBy: 'enhanced-fallback' },
+        metadata: { reason: 'auto-created', source: 'EnhancedFunnelService' },
       });
 
-      return created;
+      return this.mapCanonicalToUnified(created);
     } catch (error) {
-      console.error('Error creating fallback funnel:', error);
+      appLogger.error('Error creating fallback funnel:', error);
       return null;
     }
+  }
+
+  // ================================================================
+  // Mappers
+  // ================================================================
+  private mapCanonicalToUnified(meta: FunnelMetadata): UnifiedFunnelData {
+    return {
+      id: meta.id,
+      name: meta.name,
+      description: (meta.metadata && (meta.metadata as any).description) || '',
+      category: meta.category || 'quiz',
+      context: (meta.context as FunnelContext) || FunnelContext.EDITOR,
+      userId: (meta.metadata && (meta.metadata as any).userId) || 'unknown',
+      settings: meta.config || {},
+      pages: [],
+      isPublished: meta.status === 'published',
+      version: (meta as any).version ?? 1,
+      createdAt: new Date(meta.createdAt),
+      updatedAt: new Date(meta.updatedAt),
+      templateId: (meta as any).templateId,
+      isFromTemplate: Boolean((meta as any).templateId),
+    };
   }
 }
 
