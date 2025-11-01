@@ -72,6 +72,27 @@ async function fetchComponentTypes(supabase) {
   return new Set(ensureArray(data).map(row => row.type_key));
 }
 
+// Optional auth using env (SUPABASE_EMAIL/SUPABASE_PASSWORD)
+async function tryAuth(supabase) {
+  const email = process.env.SUPABASE_EMAIL;
+  const password = process.env.SUPABASE_PASSWORD;
+  if (!email || !password) {
+    return null;
+  }
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      console.warn('⚠️ Auth failed (env credentials):', error.message);
+      return null;
+    }
+    console.log('🔑 Auth OK (user):', data.user?.id || 'unknown');
+    return data.user || null;
+  } catch (e) {
+    console.warn('⚠️ Auth exception:', e?.message || e);
+    return null;
+  }
+}
+
 function analyzeStep(stepInstances) {
   const issues = { ordering: [], duplicateInstanceKeys: [], unknownTypes: [] };
 
@@ -156,6 +177,7 @@ async function main() {
 
   const creds = await resolveSupabaseCreds();
   const supabase = createClient(creds.url, creds.key);
+  await tryAuth(supabase);
 
   // Fetch recent funnels (or specific funnel)
   let funnels = [];

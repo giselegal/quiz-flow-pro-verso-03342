@@ -85,6 +85,21 @@ async function main() {
 
   const creds = await resolveSupabaseCreds();
   const supabase = createClient(creds.url, creds.key);
+  // Optional auth with env (SUPABASE_EMAIL/SUPABASE_PASSWORD)
+  try {
+    const email = process.env.SUPABASE_EMAIL;
+    const password = process.env.SUPABASE_PASSWORD;
+    if (email && password) {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (!error) {
+        console.log('🔑 Auth OK (user):', data.user?.id || 'unknown');
+      } else {
+        console.warn('⚠️ Auth failed:', error.message);
+      }
+    }
+  } catch (e) {
+    console.warn('⚠️ Auth exception:', e?.message || e);
+  }
 
   let funnels = [];
   if (funnelId) {
