@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 
 // 🚀 INTEGRAÇÕES COM SISTEMA EXISTENTE
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { useAutosave } from '@/hooks/useAutosave';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { useHistory } from '@/hooks/useHistory';
 
 // ===============================
@@ -321,20 +321,16 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
     const analytics = enableAnalytics ? useAnalytics() : null;
 
     // Inicialização de hooks para funcionalidades futuras
-    if (enableAutosave && onSave) {
-        useAutosave({
-            data: funnel,
-            onSave: async (data: any) => {
-                if (onSave) {
-                    await onSave(data);
-                    return true;
-                }
-                return false;
-            },
-            interval: 2000,
-            enabled: !readOnly,
-        });
-    }
+    const autoSave = enableAutosave ? useAutoSave({
+        funnelId: funnel?.id,
+        enabled: !readOnly && !!onSave,
+        onSave: () => {
+            if (onSave && funnel) {
+                onSave(funnel);
+            }
+        },
+        debounceMs: 2000,
+    }) : null;
 
     if (enableHistory) {
         useHistory({
