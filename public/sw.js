@@ -16,6 +16,7 @@ const DYNAMIC_CACHE = 'editor-dynamic-v1';
 const STATIC_ASSETS = [
   '/',
   '/editor',
+  '/editor/modular',
   '/manifest.json',
   // CSS files will be cached automatically
   // JS files will be cached automatically
@@ -131,8 +132,15 @@ async function handleNavigationRequest(request) {
   } catch (err) {
     // fall through to cache
   }
-  // Try cached editor shell or root
-  const fallback = (await caches.match('/editor')) || (await caches.match('/'));
+  // Try cached SPA shells (prefer modular for /editor/modular)
+  const url = new URL(request.url);
+  let fallback = null;
+  if (url.pathname.startsWith('/editor/modular')) {
+    fallback = await caches.match('/editor/modular');
+  }
+  if (!fallback) {
+    fallback = (await caches.match('/editor')) || (await caches.match('/'));
+  }
   if (fallback) return fallback;
   // Last resort: redirect to root
   return Response.redirect('/', 302);
