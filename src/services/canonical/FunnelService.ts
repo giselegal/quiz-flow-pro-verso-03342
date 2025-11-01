@@ -434,20 +434,22 @@ export class CanonicalFunnelService {
 
       if (error) throw error;
 
-      // Agrupar por stepKey
+      // Agrupar por stepKey (tolerante a variação de schema/tipos gerados)
       const components: Record<string, Block[]> = {};
-      
-      for (const instance of data) {
-        if (!components[instance.step_key]) {
-          components[instance.step_key] = [];
+
+      for (const instance of data as any[]) {
+        const inst = instance as any;
+        const stepKey = inst.step_key ?? inst.stepKey ?? inst.step ?? 'unknown-step';
+        if (!components[stepKey]) {
+          components[stepKey] = [];
         }
 
-        components[instance.step_key].push({
-          id: instance.block_id,
-          type: instance.block_type,
-          order: instance.order,
-          properties: instance.properties || {},
-          content: instance.content || {},
+        components[stepKey].push({
+          id: inst.block_id ?? inst.id,
+          type: inst.block_type ?? inst.blockType ?? inst.component_type_id ?? inst.type,
+          order: inst.order ?? 0,
+          properties: inst.properties ?? inst.config ?? {},
+          content: inst.content ?? {},
         });
       }
 

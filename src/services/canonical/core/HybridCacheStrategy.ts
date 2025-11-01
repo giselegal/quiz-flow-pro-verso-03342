@@ -55,6 +55,11 @@ export class HybridCacheStrategy {
     s.delete(key);
   }
 
+  // Alias de compatibilidade com chamadas existentes
+  async invalidate(key: string, opts?: CacheOptions): Promise<void> {
+    return this.del(key, opts);
+  }
+
   clear(storeName?: string): void {
     if (storeName) {
       this.store(storeName).clear();
