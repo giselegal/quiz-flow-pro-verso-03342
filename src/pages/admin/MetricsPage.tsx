@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  TrendingUp, 
-  Eye, 
+import {
+  TrendingUp,
+  Eye,
   MousePointer,
   DollarSign,
   BarChart3,
@@ -11,22 +11,7 @@ import {
   Download,
   RefreshCw,
 } from 'lucide-react';
-import {
-  Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart as RechartsPieChart,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  Pie,
-} from 'recharts';
+import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
 
 // Mock data for demonstration
 const conversionsData = [
@@ -46,9 +31,21 @@ const funnelData = [
   { name: 'Conversões', value: 125, color: '#432818' },
 ];
 
+type RechartsBundle = Awaited<ReturnType<typeof loadRecharts>>;
+
 const MetricsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState('30d');
   const [isLoading, setIsLoading] = useState(false);
+  const [charts, setCharts] = useState<RechartsBundle | null>(null);
+
+  // Carrega Recharts sob demanda para evitar quebras do vendor-chunk em ambientes problemáticos
+  useEffect(() => {
+    let mounted = true;
+    getCachedImport('recharts-bundle', loadRecharts)
+      .then(mod => { if (mounted) setCharts(mod); })
+      .catch(err => { console.warn('Falha ao carregar Recharts dinamicamente:', err); });
+    return () => { mounted = false; };
+  }, []);
 
   const handleRefresh = () => {
     setIsLoading(true);
@@ -81,7 +78,7 @@ const MetricsPage: React.FC = () => {
             Acompanhe o desempenho dos seus funis em tempo real
           </p>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <select
             value={timeRange}
@@ -94,7 +91,7 @@ const MetricsPage: React.FC = () => {
             <option value="90d">Últimos 90 dias</option>
             <option value="1y">Último ano</option>
           </select>
-          
+
           <Button
             variant="outline"
             onClick={handleRefresh}
@@ -104,7 +101,7 @@ const MetricsPage: React.FC = () => {
             <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Atualizar
           </Button>
-          
+
           <Button
             className="bg-[#B89B7A] hover:bg-[#A0895B] text-white"
           >
@@ -216,27 +213,31 @@ const MetricsPage: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={conversionsData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5DDD5" />
-                <XAxis dataKey="name" stroke="#8F7A6A" />
-                <YAxis stroke="#8F7A6A" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#FFFFFF', 
-                    border: '1px solid #D4C4A0',
-                    borderRadius: '8px',
-                  }} 
-                />
-                <Area
-                  type="monotone"
-                  dataKey="conversions"
-                  stroke="#B89B7A"
-                  fill="#B89B7A"
-                  fillOpacity={0.3}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            {charts ? (
+              <charts.ResponsiveContainer width="100%" height={300}>
+                <charts.AreaChart data={conversionsData}>
+                  <charts.CartesianGrid strokeDasharray="3 3" stroke="#E5DDD5" />
+                  <charts.XAxis dataKey="name" stroke="#8F7A6A" />
+                  <charts.YAxis stroke="#8F7A6A" />
+                  <charts.Tooltip
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #D4C4A0',
+                      borderRadius: '8px',
+                    }}
+                  />
+                  <charts.Area
+                    type="monotone"
+                    dataKey="conversions"
+                    stroke="#B89B7A"
+                    fill="#B89B7A"
+                    fillOpacity={0.3}
+                  />
+                </charts.AreaChart>
+              </charts.ResponsiveContainer>
+            ) : (
+              <div style={{ height: 300 }} className="flex items-center justify-center text-sm text-[#8F7A6A]">Carregando gráficos…</div>
+            )}
           </CardContent>
         </Card>
 
@@ -249,23 +250,27 @@ const MetricsPage: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <RechartsPieChart>
-                <Pie
-                  data={funnelData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                  label={({ name, value }: { name: string; value: number }) => `${name}: ${value}`}
-                >
-                  {funnelData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </RechartsPieChart>
-            </ResponsiveContainer>
+            {charts ? (
+              <charts.ResponsiveContainer width="100%" height={300}>
+                <charts.PieChart>
+                  <charts.Pie
+                    data={funnelData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="value"
+                    label={({ name, value }: { name: string; value: number }) => `${name}: ${value}`}
+                  >
+                    {funnelData.map((entry, index) => (
+                      <charts.Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </charts.Pie>
+                  <charts.Tooltip />
+                </charts.PieChart>
+              </charts.ResponsiveContainer>
+            ) : (
+              <div style={{ height: 300 }} className="flex items-center justify-center text-sm text-[#8F7A6A]">Carregando gráficos…</div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -279,31 +284,35 @@ const MetricsPage: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={conversionsData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E5DDD5" />
-              <XAxis dataKey="name" stroke="#8F7A6A" />
-              <YAxis yAxisId="left" stroke="#8F7A6A" />
-              <YAxis yAxisId="right" orientation="right" stroke="#8F7A6A" />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#FFFFFF', 
-                  border: '1px solid #D4C4A0',
-                  borderRadius: '8px',
-                }} 
-              />
-              <Legend />
-              <Bar yAxisId="left" dataKey="visits" fill="#B89B7A" name="Visitas" />
-              <Line 
-                yAxisId="right" 
-                type="monotone" 
-                dataKey="revenue" 
-                stroke="#432818" 
-                strokeWidth={3}
-                name="Receita (R$)"
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          {charts ? (
+            <charts.ResponsiveContainer width="100%" height={400}>
+              <charts.BarChart data={conversionsData}>
+                <charts.CartesianGrid strokeDasharray="3 3" stroke="#E5DDD5" />
+                <charts.XAxis dataKey="name" stroke="#8F7A6A" />
+                <charts.YAxis yAxisId="left" stroke="#8F7A6A" />
+                <charts.YAxis yAxisId="right" orientation="right" stroke="#8F7A6A" />
+                <charts.Tooltip
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #D4C4A0',
+                    borderRadius: '8px',
+                  }}
+                />
+                <charts.Legend />
+                <charts.Bar yAxisId="left" dataKey="visits" fill="#B89B7A" name="Visitas" />
+                <charts.Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#432818"
+                  strokeWidth={3}
+                  name="Receita (R$)"
+                />
+              </charts.BarChart>
+            </charts.ResponsiveContainer>
+          ) : (
+            <div style={{ height: 400 }} className="flex items-center justify-center text-sm text-[#8F7A6A]">Carregando gráficos…</div>
+          )}
         </CardContent>
       </Card>
 
