@@ -1,0 +1,729 @@
+{
+  "summary": {
+    "total_schema_files": 69,
+    "files_with_zod": 13,
+    "zod_adoption_percentage": 18,
+    "unique_block_types": 24,
+    "files_with_versioning": 15,
+    "files_with_custom_errors": 0
+  },
+  "schemas": {
+    "src/schemas/result.schema.ts": {
+      "path": "src/schemas/result.schema.ts",
+      "has_zod": true,
+      "schema_definitions": 10,
+      "const_schemas": 1,
+      "exported_schemas": 1,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 16
+    },
+    "src/schemas/intro.schema.ts": {
+      "path": "src/schemas/intro.schema.ts",
+      "has_zod": true,
+      "schema_definitions": 12,
+      "const_schemas": 1,
+      "exported_schemas": 1,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 24
+    },
+    "src/schemas/editorSchemas.ts": {
+      "path": "src/schemas/editorSchemas.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 1
+    },
+    "src/schemas/option.ts": {
+      "path": "src/schemas/option.ts",
+      "has_zod": true,
+      "schema_definitions": 9,
+      "const_schemas": 1,
+      "exported_schemas": 1,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 14
+    },
+    "src/schemas/transition.schema.ts": {
+      "path": "src/schemas/transition.schema.ts",
+      "has_zod": true,
+      "schema_definitions": 7,
+      "const_schemas": 1,
+      "exported_schemas": 1,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 14
+    },
+    "src/schemas/index.ts": {
+      "path": "src/schemas/index.ts",
+      "has_zod": true,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 46
+    },
+    "src/schemas/blockSchemas.ts": {
+      "path": "src/schemas/blockSchemas.ts",
+      "has_zod": true,
+      "schema_definitions": 168,
+      "const_schemas": 28,
+      "exported_schemas": 26,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 392
+    },
+    "src/schemas/strategicQuestion.schema.ts": {
+      "path": "src/schemas/strategicQuestion.schema.ts",
+      "has_zod": true,
+      "schema_definitions": 7,
+      "const_schemas": 1,
+      "exported_schemas": 1,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 14
+    },
+    "src/schemas/offer.schema.ts": {
+      "path": "src/schemas/offer.schema.ts",
+      "has_zod": true,
+      "schema_definitions": 17,
+      "const_schemas": 2,
+      "exported_schemas": 2,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 25
+    },
+    "src/schemas/question.schema.ts": {
+      "path": "src/schemas/question.schema.ts",
+      "has_zod": true,
+      "schema_definitions": 11,
+      "const_schemas": 1,
+      "exported_schemas": 1,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 46
+    },
+    "src/types/quiz.ts": {
+      "path": "src/types/quiz.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 212
+    },
+    "src/types/FunnelStep.ts": {
+      "path": "src/types/FunnelStep.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 8
+    },
+    "src/types/funnel.ts": {
+      "path": "src/types/funnel.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 93
+    },
+    "src/types/auth.ts": {
+      "path": "src/types/auth.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 15
+    },
+    "src/types/resultPageConfig.ts": {
+      "path": "src/types/resultPageConfig.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 144
+    },
+    "src/types/normalizedTemplate.ts": {
+      "path": "src/types/normalizedTemplate.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 99
+    },
+    "src/types/editorBlockProps.ts": {
+      "path": "src/types/editorBlockProps.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 42
+    },
+    "src/types/componentConfiguration.ts": {
+      "path": "src/types/componentConfiguration.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 425
+    },
+    "src/types/missing-modules.d.ts": {
+      "path": "src/types/missing-modules.d.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 74
+    },
+    "src/types/inlineBlocks.ts": {
+      "path": "src/types/inlineBlocks.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 33
+    },
+    "src/types/blocks.ts": {
+      "path": "src/types/blocks.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 346
+    },
+    "src/types/blockComponentProps.ts": {
+      "path": "src/types/blockComponentProps.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 30
+    },
+    "src/types/analytics.ts": {
+      "path": "src/types/analytics.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 50
+    },
+    "src/types/quizBuilder.ts": {
+      "path": "src/types/quizBuilder.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 120
+    },
+    "src/types/lovable.d.ts": {
+      "path": "src/types/lovable.d.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 36
+    },
+    "src/types/editorActions.ts": {
+      "path": "src/types/editorActions.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 18
+    },
+    "src/types/jsonv3.schema.ts": {
+      "path": "src/types/jsonv3.schema.ts",
+      "has_zod": true,
+      "schema_definitions": 82,
+      "const_schemas": 5,
+      "exported_schemas": 5,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 112
+    },
+    "src/types/quiz-schema.ts": {
+      "path": "src/types/quiz-schema.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 786
+    },
+    "src/types/section-types.ts": {
+      "path": "src/types/section-types.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 170
+    },
+    "src/types/quizEditor.ts": {
+      "path": "src/types/quizEditor.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 41
+    },
+    "src/types/quizCore.ts": {
+      "path": "src/types/quizCore.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 439
+    },
+    "src/types/legacy-compatibility-extended.ts": {
+      "path": "src/types/legacy-compatibility-extended.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 93
+    },
+    "src/types/styleTypes.ts": {
+      "path": "src/types/styleTypes.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 2
+    },
+    "src/types/user.ts": {
+      "path": "src/types/user.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 15
+    },
+    "src/types/global.d.ts": {
+      "path": "src/types/global.d.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 30
+    },
+    "src/types/unifiedEditor.ts": {
+      "path": "src/types/unifiedEditor.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 59
+    },
+    "src/types/ai-quiz-result.ts": {
+      "path": "src/types/ai-quiz-result.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 15
+    },
+    "src/types/validation.ts": {
+      "path": "src/types/validation.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 48
+    },
+    "src/types/quizResult.ts": {
+      "path": "src/types/quizResult.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 114
+    },
+    "src/types/quiz-config.ts": {
+      "path": "src/types/quiz-config.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 61
+    },
+    "src/types/tsconfig-overrides.d.ts": {
+      "path": "src/types/tsconfig-overrides.d.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 11
+    },
+    "src/types/editor-lite.ts": {
+      "path": "src/types/editor-lite.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 24
+    },
+    "src/types/editor-provider-fixes.ts": {
+      "path": "src/types/editor-provider-fixes.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 45
+    },
+    "src/types/templates.ts": {
+      "path": "src/types/templates.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 47
+    },
+    "src/types/funnelSettings.ts": {
+      "path": "src/types/funnelSettings.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 87
+    },
+    "src/types/editor.ts": {
+      "path": "src/types/editor.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 957
+    },
+    "src/types/global-editor.d.ts": {
+      "path": "src/types/global-editor.d.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 24
+    },
+    "src/types/ComponentTypes.ts": {
+      "path": "src/types/ComponentTypes.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 180
+    },
+    "src/types/quizCanonical.ts": {
+      "path": "src/types/quizCanonical.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 34
+    },
+    "src/types/propertySchema.ts": {
+      "path": "src/types/propertySchema.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 368
+    },
+    "src/types/schema.ts": {
+      "path": "src/types/schema.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 1
+    },
+    "src/types/window.d.ts": {
+      "path": "src/types/window.d.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 7
+    },
+    "src/types/window-debug.d.ts": {
+      "path": "src/types/window-debug.d.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 1
+    },
+    "src/types/blockProps.ts": {
+      "path": "src/types/blockProps.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 155
+    },
+    "src/types/blockTypes.ts": {
+      "path": "src/types/blockTypes.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 118
+    },
+    "src/types/unified-schema.ts": {
+      "path": "src/types/unified-schema.ts",
+      "has_zod": true,
+      "schema_definitions": 82,
+      "const_schemas": 7,
+      "exported_schemas": 7,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 367
+    },
+    "src/types/interfaces.ts": {
+      "path": "src/types/interfaces.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 50
+    },
+    "src/types/quizTemplate.ts": {
+      "path": "src/types/quizTemplate.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 28
+    },
+    "src/types/legacy-compatibility.ts": {
+      "path": "src/types/legacy-compatibility.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 45
+    },
+    "src/types/template-v3.types.ts": {
+      "path": "src/types/template-v3.types.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 659
+    },
+    "src/types/master-schema.ts": {
+      "path": "src/types/master-schema.ts",
+      "has_zod": true,
+      "schema_definitions": 96,
+      "const_schemas": 6,
+      "exported_schemas": 6,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 416
+    },
+    "src/types/editorTypes.ts": {
+      "path": "src/types/editorTypes.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 38
+    },
+    "src/types/v3/template.ts": {
+      "path": "src/types/v3/template.ts",
+      "has_zod": true,
+      "schema_definitions": 31,
+      "const_schemas": 2,
+      "exported_schemas": 2,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 50
+    },
+    "src/types/core/index.ts": {
+      "path": "src/types/core/index.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 162
+    },
+    "src/types/core/BlockInterfaces.ts": {
+      "path": "src/types/core/BlockInterfaces.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 173
+    },
+    "src/types/core/LegacyTypeAdapters.ts": {
+      "path": "src/types/core/LegacyTypeAdapters.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 256
+    },
+    "src/types/core/ValidationTypes.ts": {
+      "path": "src/types/core/ValidationTypes.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 241
+    },
+    "src/components/editor/quiz/schema/blockRegistry.ts": {
+      "path": "src/components/editor/quiz/schema/blockRegistry.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 0,
+      "exported_schemas": 0,
+      "has_versioning": false,
+      "has_custom_errors": false,
+      "lines": 106
+    },
+    "src/components/editor/quiz/schema/blockSchema.ts": {
+      "path": "src/components/editor/quiz/schema/blockSchema.ts",
+      "has_zod": false,
+      "schema_definitions": 0,
+      "const_schemas": 2,
+      "exported_schemas": 1,
+      "has_versioning": true,
+      "has_custom_errors": false,
+      "lines": 423
+    }
+  },
+  "block_types": [
+    "intro-logo",
+    "result-congrats",
+    "text-inline",
+    "question-progress",
+    "intro-form",
+    "result-description",
+    "result-cta",
+    "question-hero",
+    "result-secondary-styles",
+    "result-image",
+    "result-progress-bars",
+    "intro-image",
+    "intro-title",
+    "question-navigation",
+    "transition-text",
+    "question-title",
+    "options-grid",
+    "result-share",
+    "result-main",
+    "pricing",
+    "offer-hero",
+    "intro-description",
+    "transition-hero",
+    "CTAButton"
+  ],
+  "coverage": {}
+}
