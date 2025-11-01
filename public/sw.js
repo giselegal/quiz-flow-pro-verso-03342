@@ -79,6 +79,23 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Ignore non-http(s) schemes (e.g., chrome-extension://)
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return;
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return;
+  }
+
+  // SPA navigation fallback: always try network first, then cached shell
+  if (request.mode === 'navigate') {
+    event.respondWith(handleNavigationRequest(request));
+    return;
+  }
+
   // Determine cache strategy
   let strategy = CACHE_STRATEGIES.fallback;
   
@@ -104,18 +121,38 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
+// 🎯 SPA navigation handler
+async function handleNavigationRequest(request) {
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse && networkResponse.ok) {
+      return networkResponse;
+    }
+  } catch (err) {
+    // fall through to cache
+  }
+  // Try cached editor shell or root
+  const fallback = (await caches.match('/editor')) || (await caches.match('/'));
+  if (fallback) return fallback;
+  // Last resort: redirect to root
+  return Response.redirect('/', 302);
+}
+
 // 🎯 CACHE FIRST STRATEGY
 async function cacheFirst(request) {
   try {
-    const cachedResponse = await caches.match(request);
+    const cachedResponse = await caches.match(request, { ignoreSearch: true });
     if (cachedResponse) {
       return cachedResponse;
     }
 
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE);
-      cache.put(request, networkResponse.clone());
+      const u = new URL(request.url);
+      if (u.protocol === 'http:' || u.protocol === 'https:') {
+        const cache = await caches.open(DYNAMIC_CACHE);
+        cache.put(request, networkResponse.clone());
+      }
     }
     
     return networkResponse;
@@ -137,15 +174,17 @@ async function networkFirst(request) {
     const networkResponse = await fetch(request);
     
     if (networkResponse.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE);
-      cache.put(request, networkResponse.clone());
+      const u = new URL(request.url);
+      if (u.protocol === 'http:' || u.protocol === 'https:') {
+        const cache = await caches.open(DYNAMIC_CACHE);
+        cache.put(request, networkResponse.clone());
+      }
     }
     
     return networkResponse;
   } catch (error) {
     console.log('SW: Network first failed, trying cache:', error);
-    
-    const cachedResponse = await caches.match(request);
+    const cachedResponse = await caches.match(request, { ignoreSearch: true });
     if (cachedResponse) {
       return cachedResponse;
     }
