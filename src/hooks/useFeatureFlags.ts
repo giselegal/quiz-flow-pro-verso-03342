@@ -7,6 +7,8 @@ interface FeatureFlags {
     useJsonTemplates: boolean;
     enablePrefetch: boolean;
     enableAnalytics: boolean;
+    useModularEditor: boolean; // Nova flag para editor modular
+    enableAutoSave: boolean;   // Auto-save no editor
     // Adicionar outras flags conforme necessário
 }
 
@@ -14,6 +16,8 @@ const DEFAULT_FLAGS: FeatureFlags = {
     useJsonTemplates: false, // Desabilitado por padrão
     enablePrefetch: true,
     enableAnalytics: true,
+    useModularEditor: false, // Editor monolítico por padrão
+    enableAutoSave: false,   // Auto-save desabilitado por padrão
 };
 
 /**
@@ -28,6 +32,8 @@ export function useFeatureFlags(): FeatureFlags {
             useJsonTemplates: import.meta.env.VITE_USE_JSON_TEMPLATES === 'true',
             enablePrefetch: import.meta.env.VITE_ENABLE_PREFETCH !== 'false',
             enableAnalytics: import.meta.env.VITE_ENABLE_ANALYTICS !== 'false',
+            useModularEditor: import.meta.env.VITE_USE_MODULAR_EDITOR === 'true',
+            enableAutoSave: import.meta.env.VITE_ENABLE_AUTO_SAVE === 'true',
         };
 
         // 2. Carregar de localStorage (para testes locais)

@@ -102,16 +102,20 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         />
                         <div className="mt-auto p-2 text-sm border-t space-y-2">
                             <div>Properties Panel (placeholder)</div>
+                            {/* TODO: Integrar PropertiesPanel existente quando houver bloco selecionado */}
                             <button
                                 className="text-xs px-2 py-1 border rounded"
                                 onClick={() => {
-                                    // TODO: Persistir via serviço canônico (ex.: FunnelService.saveStepBlocks)
-                                    // Por ora, apenas registrar o snapshot atual
-                                    // eslint-disable-next-line no-console
-                                    console.log('[ModularEditor] Salvar (stub) - step', editor.state.currentStepKey, ops.getBlocks(editor.state.currentStepKey));
+                                    const stepKey = editor.state.currentStepKey;
+                                    const blocks = ops.getBlocks(stepKey);
+                                    if (stepKey && blocks) {
+                                        persistence.saveStepBlocks(stepKey, blocks);
+                                    }
                                 }}
-                                disabled={!editor.state.currentStepKey}
-                            >Salvar (stub)</button>
+                                disabled={!editor.state.currentStepKey || persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving}
+                            >
+                                {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving ? 'Salvando...' : 'Salvar'}
+                            </button>
                         </div>
                     </div>
                 </Suspense>

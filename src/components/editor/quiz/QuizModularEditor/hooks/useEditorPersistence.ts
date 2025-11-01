@@ -26,9 +26,11 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
 
     try {
       // Usar FunnelService canônico para persistir
-      const result = await funnelService.updateStepBlocks(stepKey, blocks)
+      // TODO: Obter funnelId do contexto/props; usando 'current' como fallback
+      const funnelId = 'current' // Placeholder - implementar contexto de funnel
+      const success = await funnelService.saveStepBlocks(funnelId, stepKey, blocks)
       
-      if (result.success) {
+      if (success) {
         setLastSaved(prev => ({ ...prev, [stepKey]: Date.now() }))
         setPendingSaves(prev => {
           const next = new Set(prev)
@@ -43,8 +45,8 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
           next.delete(stepKey)
           return next
         })
-        onSaveError?.(stepKey, new Error(result.error?.message || 'Save failed'))
-        return { success: false, error: result.error?.message }
+        onSaveError?.(stepKey, new Error('Save failed'))
+        return { success: false, error: 'Save failed' }
       }
     } catch (error) {
       setPendingSaves(prev => {
