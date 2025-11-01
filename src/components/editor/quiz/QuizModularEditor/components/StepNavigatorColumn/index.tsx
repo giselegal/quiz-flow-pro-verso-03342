@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useEditorState } from '../../hooks/useEditorState';
+import { templateService } from '@/services/canonical/TemplateService';
 
 export type StepNavigatorColumnProps = {
     initialStepKey?: string;
@@ -11,11 +12,31 @@ export type StepNavigatorColumnProps = {
 function StepNavigatorColumnImpl({ initialStepKey, steps }: StepNavigatorColumnProps) {
     const { state, setStep } = useEditorState(initialStepKey);
 
-    const items = steps ?? [
-        { key: 'step-01', title: 'Etapa 01' },
-        { key: 'step-02', title: 'Etapa 02' },
-        { key: 'step-03', title: 'Etapa 03' },
-    ];
+    // Preferir fonte canônica de steps; aceitar override via prop "steps"
+    const canonicalSteps = useMemo(() => templateService.steps.list(), []);
+    const items = useMemo(() => {
+        if (steps) return steps;
+        if (canonicalSteps.success) {
+            return canonicalSteps.data.map((s) => ({
+                key: s.id,
+                title: `${s.order.toString().padStart(2, '0')} - ${s.name}`,
+            }));
+        }
+        // Fallback mínimo
+        return [
+            { key: 'step-01', title: '01 - Introdução' },
+            { key: 'step-02', title: '02 - Pergunta' },
+            { key: 'step-03', title: '03 - Pergunta' },
+        ];
+    }, [canonicalSteps, steps]);
+
+    // Garantir seleção inicial consistente
+    useEffect(() => {
+        if (!state.currentStepKey && items.length > 0) {
+            setStep(initialStepKey ?? items[0].key);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [items]);
 
     return (
         <div className="p-2 space-y-1">
