@@ -104,7 +104,58 @@ export const funnelComponentsService = {
 
     console.log(`🧩 Sincronizando ${blocks.length} blocks para step ${stepNumber} (funnel=${funnelId})`);
 
-    // 1) Limpar existentes do step
+    // Preparar payloads (antes de qualquer operação) para permitir RPC
+    const knownTypes = await ensureKnownTypes();
+    const payloads = (blocks || []).map((b, i) => {
+      let typeKey = b.type;
+      if (knownTypes.size > 0 && !knownTypes.has(typeKey)) {
+        const fallback = pickFallbackType(knownTypes, 'text-inline');
+        if (fallback) {
+          console.warn(`⚠️ Tipo desconhecido "${typeKey}" — usando fallback "${fallback}"`);
+          typeKey = fallback;
+        }
+      }
+      const instanceKey = generateInstanceKey(typeKey, stepNumber, b.id);
+      const orderIndex = typeof b.order === 'number' ? b.order : i + 1;
+      const properties = { ...(b.properties || {}), ...(b.content || {}) } as Record<string, any>;
+      return {
+        instance_key: instanceKey,
+        component_type_key: typeKey,
+        order_index: orderIndex,
+        properties,
+      } as any;
+    });
+
+    // 1) Tentar RPC atômica (delete + insert)
+    try {
+      // @ts-ignore - função pode não estar nos types ainda
+      const { data, error } = await supabase.rpc('batch_sync_components_for_step', {
+        p_funnel_id: funnelId,
+        p_step_number: stepNumber,
+        items: payloads,
+      });
+
+      if (!error && data) {
+        const res: any = Array.isArray(data) ? data[0] : data;
+        const hasErrors = res && (res.errors?.length > 0);
+        if (!hasErrors) {
+          console.log(`✅ RPC sync concluído: ${res?.inserted_count ?? payloads.length} itens`);
+          return true;
+        }
+        console.warn('⚠️ RPC sync retornou errors, seguindo para fallback...', res.errors);
+      } else if (error) {
+        // Função ausente ou schema não suportado → fallback
+        if (String(error.code) === '42883' || String(error.message || '').includes('function')) {
+          console.warn('⚠️ RPC batch_sync_components_for_step não disponível. Usando fallback.');
+        } else {
+          console.warn('⚠️ RPC batch_sync_components_for_step falhou. Usando fallback.', error);
+        }
+      }
+    } catch (e) {
+      console.warn('⚠️ Falha ao executar RPC sync, aplicando fallback...', (e as any)?.message);
+    }
+
+    // 2) Fallback: Limpar existentes do step e inserir
     await supabase
       .from('component_instances')
       .delete()
@@ -116,33 +167,14 @@ export const funnelComponentsService = {
       return true;
     }
 
-    // 2) Preparar payloads
-    const knownTypes = await ensureKnownTypes();
-    const payloads = blocks.map((b, i) => {
-      let typeKey = b.type;
-      if (knownTypes.size > 0 && !knownTypes.has(typeKey)) {
-        const fallback = pickFallbackType(knownTypes, 'text-inline');
-        if (fallback) {
-          console.warn(`⚠️ Tipo desconhecido "${typeKey}" — usando fallback "${fallback}"`);
-          typeKey = fallback;
-        }
-      }
-      const instanceKey = generateInstanceKey(typeKey, stepNumber, b.id);
-      const orderIndex = typeof b.order === 'number' ? b.order : i + 1;
-      // Unificar propriedades + conteúdo (modelo atual guarda em properties)
-      const properties = { ...(b.properties || {}), ...(b.content || {}) } as Record<string, any>;
-      return {
+    // 3) Tentar bulk insert (schema novo)
+    const bulk = await supabase.from('component_instances').insert(
+      payloads.map(p => ({
+        ...p,
         funnel_id: funnelId,
         step_number: stepNumber,
-        instance_key: instanceKey,
-        component_type_key: typeKey,
-        order_index: orderIndex,
-        properties,
-      } as any;
-    });
-
-    // 3) Tentar bulk insert
-    const bulk = await supabase.from('component_instances').insert(payloads);
+      }))
+    );
     if (!bulk.error) {
       console.log(`✅ Bulk insert concluído: ${payloads.length} itens`);
       return true;
@@ -152,8 +184,8 @@ export const funnelComponentsService = {
     const errCode = String((bulk as any).error?.code || '');
     console.warn('⚠️ Bulk insert falhou, aplicando fallback item-a-item...', { code: errCode, msg: errMsg });
 
-    // 4) Fallback: insere um a um via addComponent (aplica os mesmos fallbacks internos)
-    for (let i = 0; i < blocks.length; i++) {
+    // 4) Fallback final: insere um a um via addComponent
+    for (let i = 0; i < (blocks || []).length; i++) {
       const b = blocks[i] as any;
       try {
         await this.addComponent({
