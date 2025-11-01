@@ -12,11 +12,8 @@ import { lazy, Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 
 // 🎯 COMPONENTES CRÍTICOS LAZY LOADED
-const LazyAreaChart = lazy(() =>
-    import('recharts').then(module => ({
-        default: module.AreaChart,
-    })),
-);
+// Import from centralized LazyCharts instead of direct recharts import
+import { LazyAreaChart } from '@/components/charts/LazyCharts';
 
 const LazyModernUnifiedEditor = lazy(() =>
     import('@/pages/editor/ModernUnifiedEditor').then(module => ({
