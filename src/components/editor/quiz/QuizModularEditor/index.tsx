@@ -29,7 +29,10 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const blocks: Block[] | null = ops.getBlocks(editor.state.currentStepKey);
 
     return (
-        <div className="qm-editor grid grid-cols-4 gap-2 h-full">
+        <div className="qm-editor grid grid-cols-4 gap-2 h-full" data-editor="modular-experimental">
+            <div className="col-span-4 px-3 py-2 text-xs text-purple-800 bg-purple-50 border border-purple-200 rounded">
+                Editor Modular (experimental) — usando serviços canônicos e carregamento sob demanda
+            </div>
             <Suspense fallback={<div>Carregando navegação…</div>}>
                 <div className="col-span-1 border-r">
                     <StepNavigatorColumn
@@ -65,7 +68,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 // TODO: Persistir via serviço canônico (ex.: FunnelService.saveStepBlocks)
                                 // Por ora, apenas registrar o snapshot atual
                                 // eslint-disable-next-line no-console
-                                console.log('Salvar (stub) - step', editor.state.currentStepKey, ops.getBlocks(editor.state.currentStepKey));
+                                console.log('[ModularEditor] Salvar (stub) - step', editor.state.currentStepKey, ops.getBlocks(editor.state.currentStepKey));
                             }}
                             disabled={!editor.state.currentStepKey}
                         >Salvar (stub)</button>
