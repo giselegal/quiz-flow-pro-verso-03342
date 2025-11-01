@@ -111,13 +111,24 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🚀 CODE SPLITTING SIMPLIFICADO - Evitar circular dependencies
+          // 🚀 CODE SPLITTING MAIS GRANULAR
+          // Separação por domínios para reduzir o payload inicial e melhorar cache
           manualChunks: (id) => {
-            // Apenas separar node_modules em vendor único
+            // Dependências de terceiros
             if (id.includes('node_modules')) {
+              if (id.includes('/react/')) return 'react-vendor';
+              if (id.includes('react-dom')) return 'react-vendor';
+              if (id.includes('@radix-ui') || id.includes('lucide-react')) return 'ui-vendor';
+              if (id.includes('recharts')) return 'charts-vendor';
+              if (id.includes('@dnd-kit')) return 'dnd-vendor';
               return 'vendor';
             }
-            // Deixar Vite gerenciar o resto automaticamente
+
+            // Partes grandes da aplicação
+            if (id.includes('/src/components/editor/')) return 'editor';
+            if (id.includes('/src/runtime/quiz')) return 'quiz-runtime';
+
+            // Deixar Vite gerenciar o restante automaticamente
           },
         },
       },
