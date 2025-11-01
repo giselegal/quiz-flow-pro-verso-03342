@@ -18,7 +18,7 @@ interface PropertiesColumnProps {
 
 interface BlockProperty {
     key: string;
-    value: string | number | boolean;
+    label: string;
     type: 'text' | 'textarea' | 'number' | 'boolean' | 'select';
     value: any;
     options?: string[];
@@ -178,48 +178,40 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             case 'text':
                 return (
                     <Input
-                        value={property.value}
+                        value={String(property.value || '')}
                         onChange={(e) => handlePropertyChange(property.key, e.target.value)}
                         placeholder={`Digite ${property.label.toLowerCase()}`}
                     />
-                );
-
-            case 'textarea':
+                ); case 'textarea':
                 return (
                     <Textarea
-                        value={property.value}
+                        value={String(property.value || '')}
                         onChange={(e) => handlePropertyChange(property.key, e.target.value)}
                         placeholder={`Digite ${property.label.toLowerCase()}`}
                         rows={4}
                     />
-                );
-
-            case 'number':
+                ); case 'number':
                 return (
                     <Input
                         type="number"
-                        value={property.value}
+                        value={String(property.value || 0)}
                         onChange={(e) => handlePropertyChange(property.key, Number(e.target.value))}
                     />
-                );
-
-            case 'boolean':
+                ); case 'boolean':
                 return (
                     <div className="flex items-center space-x-2">
                         <input
                             type="checkbox"
-                            checked={property.value}
+                            checked={Boolean(property.value)}
                             onChange={(e) => handlePropertyChange(property.key, e.target.checked)}
                             className="rounded"
                         />
-                        <Label>{property.value ? 'Sim' : 'Não'}</Label>
+                        <Label>{Boolean(property.value) ? 'Sim' : 'Não'}</Label>
                     </div>
-                );
-
-            case 'select':
+                ); case 'select':
                 return (
                     <select
-                        value={property.value}
+                        value={String(property.value || '')}
                         onChange={(e) => handlePropertyChange(property.key, e.target.value)}
                         className="w-full p-2 border rounded"
                     >
@@ -229,9 +221,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                             </option>
                         ))}
                     </select>
-                );
-
-            default:
+                ); default:
                 return null;
         }
     };
