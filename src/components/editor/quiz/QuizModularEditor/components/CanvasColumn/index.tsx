@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
-import BlockPreview from './BlockPreview';
+import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -108,23 +108,47 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
                                 )}
                             </div>
                         </div>
-                        {/* Preview amigável por tipo */}
-                        <BlockPreview
-                            block={b as any}
-                            onQuickInsert={onUpdateBlock ? (id) => {
-                                // Patches rápidos por tipo
-                                const type = String((b as any).type);
-                                if (type === 'intro-title' || type === 'heading' || type === 'text-inline') {
-                                    onUpdateBlock(id, { content: { text: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você</span>.' } as any });
-                                } else if (type === 'intro-description' || type === 'text') {
-                                    onUpdateBlock(id, { content: { description: 'Em poucos minutos, descubra seu <span class="font-semibold text-[#B89B7A]">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class="font-semibold text-[#432818]">essência</span>, com praticidade e <span class="font-semibold text-[#432818]">confiança</span>.' } as any });
-                                } else if (type === 'intro-logo' || type === 'intro-image' || type === 'image') {
-                                    onUpdateBlock(id, { content: { imageUrl: '/favicon.ico', alt: 'logo' } as any });
-                                } else if (type === 'intro-form' || type === 'form-container') {
-                                    onUpdateBlock(id, { content: { fields: [] } as any });
-                                }
-                            } : undefined}
-                        />
+                        {/* Renderização canônica via BlockTypeRenderer */}
+                        <BlockTypeRenderer block={b as any} />
+
+                        {/* Quick Insert (somente quando há onUpdateBlock e conteúdo mínimo ausente) */}
+                        {onUpdateBlock && (
+                            <div className="mt-1">
+                                {(() => {
+                                    const type = String((b as any).type);
+                                    const content: any = (b as any).content || {};
+                                    const props: any = (b as any).properties || {};
+                                    const showQuick = (
+                                        (type === 'intro-title' || type === 'heading' || type === 'text-inline') && !(content.title || content.text || props.titleHtml)
+                                    ) || (
+                                            (type === 'intro-description' || type === 'text') && !(content.description || content.text)
+                                        ) || (
+                                            (type === 'intro-logo' || type === 'intro-image' || type === 'image' || type === 'image-display-inline') && !(content.imageUrl || props.imageUrl || props.logoUrl)
+                                        ) || (
+                                            (type === 'intro-form' || type === 'form-container') && !(Array.isArray(content.fields) && content.fields.length > 0)
+                                        );
+                                    if (!showQuick) return null;
+                                    return (
+                                        <button
+                                            className="px-2 py-1 border rounded text-[10px] hover:bg-accent"
+                                            onClick={() => {
+                                                if (type === 'intro-title' || type === 'heading' || type === 'text-inline') {
+                                                    onUpdateBlock(b.id, { content: { text: '<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.' } as any });
+                                                } else if (type === 'intro-description' || type === 'text') {
+                                                    onUpdateBlock(b.id, { content: { description: 'Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>.' } as any });
+                                                } else if (type === 'intro-logo' || type === 'intro-image' || type === 'image' || type === 'image-display-inline') {
+                                                    onUpdateBlock(b.id, { content: { imageUrl: '/favicon.ico', alt: 'logo' } as any });
+                                                } else if (type === 'intro-form' || type === 'form-container') {
+                                                    onUpdateBlock(b.id, { content: { fields: [] } as any });
+                                                }
+                                            }}
+                                        >
+                                            + Inserir aqui
+                                        </button>
+                                    );
+                                })()}
+                            </div>
+                        )}
                     </li>
                 ))}
             </ul>
