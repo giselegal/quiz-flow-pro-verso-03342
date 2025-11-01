@@ -12,6 +12,8 @@
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { funnelUnifiedService, type UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import { funnelService as canonicalFunnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import { appLogger } from '@/utils/logger';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // ============================================================================
@@ -141,10 +143,11 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('📖 UnifiedFunnelContext: Carregando funil', id);
+            console.log('📖 UnifiedFunnelContext: Carregando funil (canônico)', id);
 
-            // Usar serviço unificado (com cache automático)
-            const loadedFunnel = await funnelUnifiedService.getFunnel(id, userId);
+            // Preferir serviço canônico (mapeado para tipo unificado)
+            const canonical = await canonicalFunnelService.getFunnel(id);
+            const loadedFunnel = canonical ? mapCanonicalToUnified(canonical) : null;
 
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
@@ -178,14 +181,19 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('🎯 UnifiedFunnelContext: Criando funil', name);
+            console.log('🎯 UnifiedFunnelContext: Criando funil (canônico)', name);
 
-            const newFunnel = await funnelUnifiedService.createFunnel({
+            const created = await canonicalFunnelService.createFunnel({
                 name,
+                type: options?.type ?? 'quiz',
+                category: options?.category ?? 'quiz',
                 context,
-                userId,
-                ...options,
+                status: options?.status ?? 'draft',
+                config: options?.settings ?? options?.config ?? {},
+                metadata: { ...(options?.metadata || {}), createdBy: 'UnifiedFunnelContext' },
             });
+
+            const newFunnel = mapCanonicalToUnified(created);
 
             setFunnel(newFunnel);
 
@@ -219,9 +227,18 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('✏️ UnifiedFunnelContext: Atualizando funil', funnelId);
+            console.log('✏️ UnifiedFunnelContext: Atualizando funil (canônico)', funnelId);
 
-            const updatedFunnel = await funnelUnifiedService.updateFunnel(funnelId, updates, userId);
+            const updated = await canonicalFunnelService.updateFunnel(funnelId, {
+                name: updates?.name ?? funnel.name,
+                type: updates?.type ?? funnel.settings?.type,
+                category: updates?.category ?? funnel.category,
+                status: updates?.status ?? (updates?.isPublished ? 'published' : undefined),
+                config: updates?.settings ?? updates?.config ?? funnel.settings,
+                metadata: { ...(updates?.metadata || {}), updatedBy: 'UnifiedFunnelContext' },
+            });
+
+            const updatedFunnel = updated ? mapCanonicalToUnified(updated) : funnel;
             setFunnel(updatedFunnel);
 
             console.log('✅ Funil atualizado:', updatedFunnel);
@@ -272,9 +289,9 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('🗑️ UnifiedFunnelContext: Deletando funil', funnelId);
+            console.log('🗑️ UnifiedFunnelContext: Deletando funil (canônico)', funnelId);
 
-            const success = await funnelUnifiedService.deleteFunnel(funnelId, userId);
+            const success = await canonicalFunnelService.deleteFunnel(funnelId);
 
             if (success) {
                 setFunnel(null);
@@ -311,8 +328,8 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
     const reload = () => {
         if (funnelId) {
-            // Limpar cache antes de recarregar
-            funnelUnifiedService.clearCache();
+            // Limpar cache legado antes de recarregar (até termos flush canônico)
+            funnelUnifiedService.clearCache?.();
             loadFunnel(funnelId);
         }
     };
@@ -365,7 +382,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             funnelId,
             userId,
             context,
-            serviceCache: 'FunnelUnifiedService',
+            serviceCache: 'CanonicalFunnelService',
         } : null,
     };
 
@@ -399,3 +416,25 @@ export const useUnifiedFunnel = (): UnifiedFunnelContextType => {
 export const useUnifiedFunnelSafe = (): UnifiedFunnelContextType | null => {
     return useContext(UnifiedFunnelContext);
 };
+
+// =============================================================================
+// Helpers de mapeamento (canônico → unificado)
+// =============================================================================
+function mapCanonicalToUnified(meta: FunnelMetadata): UnifiedFunnelData {
+    return {
+        id: meta.id,
+        name: meta.name,
+        description: (meta.metadata && (meta.metadata as any).description) || '',
+        category: meta.category || 'quiz',
+        context: (meta.context as any) ?? FunnelContext.EDITOR,
+        userId: (meta.metadata && (meta.metadata as any).userId) || 'unknown',
+        settings: meta.config || {},
+        pages: [],
+        isPublished: meta.status === 'published',
+        version: (meta as any).version ?? 1,
+        createdAt: new Date(meta.createdAt),
+        updatedAt: new Date(meta.updatedAt),
+        templateId: (meta as any).templateId,
+        isFromTemplate: Boolean((meta as any).templateId),
+    };
+}
