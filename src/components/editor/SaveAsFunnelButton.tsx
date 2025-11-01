@@ -21,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { supabase } from '@/integrations/supabase/customClient';
 import { Save } from 'lucide-react';
+import { templateService } from '@/services/canonical/TemplateService';
 
 export const SaveAsFunnelButton: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -84,8 +85,24 @@ export const SaveAsFunnelButton: React.FC = () => {
         throw new Error(funnelError?.message || 'Erro ao criar funnel');
       }
 
-      // 2. Salvar todos os steps como component_instances (schema alinhado)
-      const allBlocks = editor.state.stepBlocks || {};
+      // 2. Salvar TODOS os steps como component_instances (schema alinhado)
+      // Estratégia: preservar edições do usuário (editor.state.stepBlocks) e preencher steps ausentes via TemplateService
+      const allBlocks: Record<string, any[]> = { ...(editor.state.stepBlocks || {}) };
+      try {
+        const STEP_IDS = templateService.getStepOrder();
+        for (const stepId of STEP_IDS) {
+          if (!allBlocks[stepId] || allBlocks[stepId].length === 0) {
+            const res = await templateService.getStep(stepId);
+            if (res?.success && Array.isArray(res.data)) {
+              allBlocks[stepId] = res.data as any[];
+            } else if (!allBlocks[stepId]) {
+              allBlocks[stepId] = [];
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('⚠️ Falha ao pré-carregar steps via TemplateService; seguindo com estado atual', e);
+      }
       const componentInstancesNew: any[] = [];
       const componentInstancesLegacy: any[] = [];
 
