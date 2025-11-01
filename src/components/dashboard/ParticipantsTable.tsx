@@ -94,7 +94,7 @@ const ParticipantsTable: React.FC = () => {
                 .from('quiz_sessions')
                 .select(`
                     *,
-                    quiz_users!quiz_user_id(
+                    participant:quiz_users!quiz_sessions_quiz_user_id_fkey(
                         id,
                         name,
                         email,
@@ -125,7 +125,7 @@ const ParticipantsTable: React.FC = () => {
 
             // Combinar dados
             const participantsData: ParticipantResponse[] = (sessions || []).map(session => {
-                const user = session.quiz_users;
+                const user = (session as any).participant as { name?: string | null; email?: string | null } | null;
                 const result = session.quiz_results?.[0]; // Pega o primeiro resultado
 
                 return {
