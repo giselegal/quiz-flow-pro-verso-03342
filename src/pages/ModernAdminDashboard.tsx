@@ -216,6 +216,18 @@ const ModernAdminDashboard: React.FC = () => {
                     Ir para Editor Principal
                   </a>
                 </div>
+                <div className="mt-2">
+                  <a href="/editor/modular" className="text-purple-700 hover:text-purple-900 underline">
+                    Abrir Editor Modular (experimental)
+                  </a>
+                  <span className="text-xs text-gray-500 ml-2">/editor/modular</span>
+                </div>
+                <div className="mt-1">
+                  <a href="/editor/modular?template=quiz21StepsComplete" className="text-purple-700 hover:text-purple-900 underline">
+                    Editor Modular com template 21 passos
+                  </a>
+                  <span className="text-xs text-gray-500 ml-2">com querystring</span>
+                </div>
               </div>
             </Route>
 

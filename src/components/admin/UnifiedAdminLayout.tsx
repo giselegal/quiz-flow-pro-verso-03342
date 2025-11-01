@@ -373,6 +373,23 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             Funil Atual
                         </Button>
 
+                        {/* Atalho: Editor Modular (experimental) */}
+                        <Button
+                            onClick={() => UnifiedRoutingService.navigate('/editor/modular')}
+                            variant="outline"
+                            size="sm"
+                            className="backdrop-blur-sm shadow-sm glow-button"
+                            style={{
+                                backgroundColor: `${theme.colors.background}60`,
+                                borderColor: `${theme.colors.detailsMinor}40`,
+                                color: theme.colors.text,
+                            }}
+                            title="Abrir Editor Modular (experimental)"
+                        >
+                            <Edit className="w-4 h-4 mr-2" />
+                            Editor Modular
+                        </Button>
+
                         <ThemeToggle size="sm" />
 
                         {/* User Identity */}
