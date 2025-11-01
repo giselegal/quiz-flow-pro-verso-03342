@@ -1,74 +1,59 @@
-// @ts-nocheck
 /**
- * 🎯 LAZY CHARTS COMPONENTS
+ * 🎯 LAZY CHARTS COMPONENTS - FIXED
  * 
  * Lazy loading de recharts (-341 kB do bundle inicial)
  * Carregado apenas quando necessário (dashboards)
+ * 
+ * FIX: Evitar problema "Cannot access 'O' before initialization"
  */
 
-import React, { Suspense } from 'react';
+import * as React from 'react';
+import { Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 
-// Lazy load individual components to avoid circular deps
-const LazyLineChartComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.LineChart }))
-);
+// Função auxiliar para criar lazy components de forma segura
+const createSafeLazyComponent = (componentName: string) => {
+    return React.lazy(async () => {
+        try {
+            // Aguardar um tick do event loop para garantir inicialização
+            await new Promise(resolve => setTimeout(resolve, 0));
 
-const LazyLineComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.Line }))
-);
+            const rechartsModule = await import('recharts');
+            const Component = (rechartsModule as any)[componentName];
 
-const LazyAreaChartComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.AreaChart }))
-);
+            if (!Component) {
+                throw new Error(`Component ${componentName} not found in recharts`);
+            }
 
-const LazyAreaComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.Area }))
-);
+            return { default: Component };
+        } catch (error) {
+            console.error(`Failed to load recharts component ${componentName}:`, error);
+            // Fallback component
+            return {
+                default: () => React.createElement('div', {
+                    style: { color: 'red', padding: '10px' }
+                }, `Error loading ${componentName}`)
+            };
+        }
+    });
+};
 
-const LazyBarChartComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.BarChart }))
-);
-
-const LazyBarComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.Bar }))
-);
-
-const LazyPieChartComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.PieChart }))
-);
-
-const LazyPieComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.Pie }))
-);
-
-const LazyCellComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.Cell }))
-);
-
-const LazyXAxisComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.XAxis }))
-);
-
-const LazyYAxisComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.YAxis }))
-);
-
-const LazyCartesianGridComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.CartesianGrid }))
-);
-
-const LazyTooltipComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.Tooltip }))
-);
-
-const LazyLegendComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.Legend }))
-);
-
-const LazyResponsiveContainerComponent = React.lazy(() =>
-    import('recharts').then(module => ({ default: module.ResponsiveContainer }))
-);
+// Criar componentes lazy de forma segura
+const LazyLineChartComponent = createSafeLazyComponent('LineChart');
+const LazyLineComponent = createSafeLazyComponent('Line');
+const LazyAreaChartComponent = createSafeLazyComponent('AreaChart');
+const LazyAreaComponent = createSafeLazyComponent('Area');
+const LazyBarChartComponent = createSafeLazyComponent('BarChart');
+const LazyBarComponent = createSafeLazyComponent('Bar');
+const LazyPieChartComponent = createSafeLazyComponent('PieChart');
+const LazyPieComponent = createSafeLazyComponent('Pie');
+const LazyCellComponent = createSafeLazyComponent('Cell');
+const LazyXAxisComponent = createSafeLazyComponent('XAxis');
+const LazyYAxisComponent = createSafeLazyComponent('YAxis');
+const LazyCartesianGridComponent = createSafeLazyComponent('CartesianGrid');
+const LazyTooltipComponent = createSafeLazyComponent('Tooltip');
+const LazyLegendComponent = createSafeLazyComponent('Legend');
+const LazyResponsiveContainerComponent = createSafeLazyComponent('ResponsiveContainer');
 
 // Componente de loading para charts
 const ChartFallback: React.FC = () => (
