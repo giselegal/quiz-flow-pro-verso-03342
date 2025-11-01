@@ -4,6 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+  "db:apply:pg": "node scripts/sql/apply-via-pg.mjs --file scripts/sql/2025-11-01_indices_and_rpc.sql",
+  "db:apply:pg:with-rls": "node scripts/sql/apply-via-pg.mjs --file scripts/sql/2025-11-01_indices_and_rpc.sql --file scripts/sql/2025-11-01_rls_policies_template.sql",
   "db:apply-remote": "bash scripts/sql/apply-remote.sh",
   "db:apply-remote:with-rls": "bash scripts/sql/apply-remote.sh --with-rls",
     "migrate:template-keys": "node scripts/migrate-templates-rename-keys.js",
