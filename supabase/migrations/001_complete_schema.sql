@@ -220,22 +220,46 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Triggers para updated_at
-CREATE TRIGGER update_funnels_updated_at 
-    BEFORE UPDATE ON public.funnels 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+-- Triggers para updated_at (idempotentes)
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_funnels_updated_at'
+    ) THEN
+        CREATE TRIGGER update_funnels_updated_at 
+            BEFORE UPDATE ON public.funnels 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
-CREATE TRIGGER update_admin_goals_updated_at 
-    BEFORE UPDATE ON public.admin_goals 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_admin_goals_updated_at'
+    ) THEN
+        CREATE TRIGGER update_admin_goals_updated_at 
+            BEFORE UPDATE ON public.admin_goals 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
-CREATE TRIGGER update_ai_optimization_recommendations_updated_at 
-    BEFORE UPDATE ON public.ai_optimization_recommendations 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_ai_optimization_recommendations_updated_at'
+    ) THEN
+        CREATE TRIGGER update_ai_optimization_recommendations_updated_at 
+            BEFORE UPDATE ON public.ai_optimization_recommendations 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
-CREATE TRIGGER update_rate_limits_updated_at 
-    BEFORE UPDATE ON public.rate_limits 
-    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_rate_limits_updated_at'
+    ) THEN
+        CREATE TRIGGER update_rate_limits_updated_at 
+            BEFORE UPDATE ON public.rate_limits 
+            FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+    END IF;
+END $$;
 
 -- =======================
 -- ÍNDICES PARA PERFORMANCE
