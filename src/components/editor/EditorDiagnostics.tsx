@@ -13,10 +13,14 @@ import { Bug, X } from 'lucide-react';
 
 export const EditorDiagnostics: React.FC = () => {
   const [show, setShow] = useState(false);
-  const editor = useEditor();
+  // Torna o uso do contexto opcional para evitar crashes em ambientes de teste/rotas sem provider
+  const editor = useEditor({ optional: true });
 
   // Só em desenvolvimento
   if (!import.meta.env.DEV) return null;
+
+  // Se o provider não estiver presente, não renderiza nada (evita lançar erro em testes de rota mínima)
+  if (!editor) return null;
 
   const stepBlocks = editor.state.stepBlocks || {};
   const stepCount = Object.keys(stepBlocks).length;
@@ -70,7 +74,7 @@ export const EditorDiagnostics: React.FC = () => {
               <X className="h-4 w-4" />
             </Button>
           </CardHeader>
-          
+
           <CardContent className="space-y-3 text-xs overflow-auto max-h-[500px]">
             {/* Modo */}
             <div className="space-y-1">
@@ -109,7 +113,7 @@ export const EditorDiagnostics: React.FC = () => {
                     .sort()
                     .map((stepKey) => {
                       const blocks = stepBlocks[stepKey];
-                      
+
                       return (
                         <div key={stepKey} className="flex items-center justify-between py-1 border-b">
                           <span className="font-mono text-xs">{stepKey}</span>

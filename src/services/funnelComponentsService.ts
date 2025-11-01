@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/customClient';
+import { generateInstanceKey } from '@/utils/idValidation';
 
 // Cache simples de tipos conhecidos para reduzir chamadas
 let __knownTypeKeys: Set<string> | null = null;
@@ -10,7 +11,7 @@ async function ensureKnownTypes(): Promise<Set<string>> {
       __knownTypeKeys = new Set(data.map((r: any) => r.type_key));
       return __knownTypeKeys;
     }
-  } catch {}
+  } catch { }
   __knownTypeKeys = new Set<string>();
   return __knownTypeKeys;
 }
@@ -89,7 +90,88 @@ export const funnelComponentsService = {
     }
 
     console.log(`✅ Encontrados ${data?.length || 0} componentes`);
-  return (data || []) as unknown as ComponentInstance[];
+    return (data || []) as unknown as ComponentInstance[];
+  },
+
+  /**
+   * Sincroniza todos os componentes de uma etapa a partir de uma lista de Blocks.
+   * Estratégia:
+   * 1) Deleta componentes existentes do step (limpeza)
+   * 2) Tenta insert em lote (bulk). Se falhar por FK/colunas, faz fallback para addComponent fila a fila.
+   */
+  async syncStepComponents(params: { funnelId: string; stepNumber: number; blocks: Array<{ id: string; type: string; order?: number; properties?: Record<string, any>; content?: Record<string, any> }> }) {
+    const { funnelId, stepNumber, blocks } = params;
+
+    console.log(`🧩 Sincronizando ${blocks.length} blocks para step ${stepNumber} (funnel=${funnelId})`);
+
+    // 1) Limpar existentes do step
+    await supabase
+      .from('component_instances')
+      .delete()
+      .eq('funnel_id', funnelId)
+      .eq('step_number', stepNumber);
+
+    if (!blocks || blocks.length === 0) {
+      console.log('ℹ️ Nenhum bloco para inserir após limpeza');
+      return true;
+    }
+
+    // 2) Preparar payloads
+    const knownTypes = await ensureKnownTypes();
+    const payloads = blocks.map((b, i) => {
+      let typeKey = b.type;
+      if (knownTypes.size > 0 && !knownTypes.has(typeKey)) {
+        const fallback = pickFallbackType(knownTypes, 'text-inline');
+        if (fallback) {
+          console.warn(`⚠️ Tipo desconhecido "${typeKey}" — usando fallback "${fallback}"`);
+          typeKey = fallback;
+        }
+      }
+      const instanceKey = generateInstanceKey(typeKey, stepNumber, b.id);
+      const orderIndex = typeof b.order === 'number' ? b.order : i + 1;
+      // Unificar propriedades + conteúdo (modelo atual guarda em properties)
+      const properties = { ...(b.properties || {}), ...(b.content || {}) } as Record<string, any>;
+      return {
+        funnel_id: funnelId,
+        step_number: stepNumber,
+        instance_key: instanceKey,
+        component_type_key: typeKey,
+        order_index: orderIndex,
+        properties,
+      } as any;
+    });
+
+    // 3) Tentar bulk insert
+    const bulk = await supabase.from('component_instances').insert(payloads);
+    if (!bulk.error) {
+      console.log(`✅ Bulk insert concluído: ${payloads.length} itens`);
+      return true;
+    }
+
+    const errMsg = String(bulk.error?.message || '');
+    const errCode = String((bulk as any).error?.code || '');
+    console.warn('⚠️ Bulk insert falhou, aplicando fallback item-a-item...', { code: errCode, msg: errMsg });
+
+    // 4) Fallback: insere um a um via addComponent (aplica os mesmos fallbacks internos)
+    for (let i = 0; i < blocks.length; i++) {
+      const b = blocks[i] as any;
+      try {
+        await this.addComponent({
+          funnelId,
+          stepNumber,
+          instanceKey: b.id || generateInstanceKey(b.type, stepNumber),
+          componentTypeKey: b.type,
+          orderIndex: (typeof b.order === 'number' ? b.order : i + 1),
+          properties: { ...(b.properties || {}), ...(b.content || {}) },
+        });
+      } catch (e) {
+        console.error('❌ Falha ao inserir componente no fallback', { i, blockId: b?.id, err: (e as any)?.message });
+        throw e;
+      }
+    }
+
+    console.log(`✅ Fallback concluído: ${blocks.length} itens inseridos`);
+    return true;
   },
 
   /**
@@ -107,7 +189,7 @@ export const funnelComponentsService = {
     } = input;
 
     console.log(`➕ Adicionando componente: ${componentTypeKey} na posição ${orderIndex}`);
-    
+
     // garantir que o tipo exista quando usando schema novo
     const knownTypes = await ensureKnownTypes();
     let typeKeyToUse = componentTypeKey;
@@ -198,7 +280,7 @@ export const funnelComponentsService = {
     }
 
     console.log(`✅ Componente adicionado: ${inserted.id}`);
-  return inserted as unknown as ComponentInstance;
+    return inserted as unknown as ComponentInstance;
   },
 
   /**
@@ -221,8 +303,8 @@ export const funnelComponentsService = {
       throw error;
     }
 
-  console.log(`✅ Componente atualizado: ${data.id}`);
-  return data as unknown as ComponentInstance;
+    console.log(`✅ Componente atualizado: ${data.id}`);
+    return data as unknown as ComponentInstance;
   },
 
   /**
@@ -279,7 +361,7 @@ export const funnelComponentsService = {
 
     // ✅ FASE 4.2: Usar batch update para atomicidade
     console.log('🔄 Aplicando nova ordem em lote...');
-    
+
     const updates = newOrderIds.map((id, index) => ({
       id,
       order_index: index + 1,
@@ -326,10 +408,10 @@ export const funnelComponentsService = {
       if (!error && data) {
         const resultAny: any = Array.isArray(data) ? data[0] : data;
         console.log(`✅ Batch update (RPC) concluído: ${resultAny?.updated_count || updates.length} componentes`);
-        return { 
-          success: true, 
-          updated: resultAny?.updated_count || updates.length, 
-          errors: resultAny?.errors || [], 
+        return {
+          success: true,
+          updated: resultAny?.updated_count || updates.length,
+          errors: resultAny?.errors || [],
         };
       }
 
@@ -345,7 +427,7 @@ export const funnelComponentsService = {
       // Fallback: Usar Promise.all para quasi-atomicidade
       if (error?.message === 'RPC_NOT_AVAILABLE' || error?.code === '42883') {
         console.log('🔄 Usando fallback Promise.all para batch update...');
-        
+
         const updatePromises = updates.map(update => {
           const { id, ...fields } = update;
           return supabase
@@ -355,7 +437,7 @@ export const funnelComponentsService = {
         });
 
         const results = await Promise.all(updatePromises);
-        
+
         // Verificar se algum update falhou
         const errors = results.filter(r => r.error);
         if (errors.length > 0) {

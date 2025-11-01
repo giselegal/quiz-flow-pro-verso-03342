@@ -118,3 +118,7 @@ attached_assets/
 # Scripts archived
 scripts/archive/
 
+# Supabase local auth token (não versionar)
+.supabase/
+supabase/access.token
+

@@ -176,19 +176,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // Services initialization (memoized)
     const history = useMemo(() => new EditorHistoryService(), []);
 
-    // ✅ NOVO: Criar wrapper do TemplateLoader que usa TemplateService internamente
-    const loader = useMemo(() => {
-        const originalLoader = new TemplateLoader();
-        // Monkey-patch loadStep para usar templateService.lazyLoadStep
-        const originalLoadStep = originalLoader.loadStep.bind(originalLoader);
-        originalLoader.loadStep = async (stepId: string) => {
-            console.log(`🔄 [EditorProviderUnified] lazyLoadStep ativado para step: ${stepId}`);
-            const result = await templateService.lazyLoadStep(stepId, true);
-            console.log(`✅ [EditorProviderUnified] lazyLoadStep concluído:`, result);
-            return result || originalLoadStep(stepId);
-        };
-        return originalLoader;
-    }, []);
+    // Usar TemplateLoader padrão (já integrado ao TemplateService)
+    const loader = useMemo(() => new TemplateLoader(), []);
 
     const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
 

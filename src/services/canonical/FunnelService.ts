@@ -29,6 +29,8 @@
  */
 
 import { supabase } from '@/lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
+import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { Block } from '@/types/editor';
 import { HybridCacheStrategy } from './core/HybridCacheStrategy';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -123,18 +125,19 @@ export class CanonicalFunnelService {
     appLogger.info('[FunnelService] Criando funil:', { name: input.name });
 
     try {
+      // Observação: o schema atual de `public.funnels` (types.ts) possui apenas:
+      // id, name, description, settings (Json), is_published (boolean), version, created_at, updated_at, user_id
+      // Campos como type/category/context/template_id/status/is_active não existem mais.
+      const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from('funnels')
         .insert({
+          id: uuidv4(),
           name: input.name,
-          type: input.type || 'quiz',
-          category: input.category || 'quiz',
-          context: input.context || FunnelContext.EDITOR,
-          template_id: input.templateId,
-          status: input.status || 'draft',
-          config: input.config || {},
-          metadata: input.metadata || {},
-          is_active: true,
+          description: input.metadata?.description ?? null,
+          settings: (input.config ?? {}) as any,
+          is_published: false,
+          updated_at: nowIso,
         })
         .select()
         .single();
@@ -222,10 +225,16 @@ export class CanonicalFunnelService {
     try {
       let query = supabase.from('funnels').select('*');
 
-      if (filters?.type) query = query.eq('type', filters.type);
-      if (filters?.status) query = query.eq('status', filters.status);
-      if (filters?.context) query = query.eq('context', filters.context);
-      if (filters?.isActive !== undefined) query = query.eq('is_active', filters.isActive);
+      // Mapeamento para o schema atual: usamos is_published como proxy de status/isActive
+      if (filters?.status) {
+        if (filters.status === 'published') {
+          query = query.eq('is_published', true);
+        } else {
+          // 'draft' ou 'archived' → não publicados
+          query = query.eq('is_published', false);
+        }
+      }
+      if (filters?.isActive !== undefined) query = query.eq('is_published', !!filters.isActive);
 
       query = query.order('updated_at', { ascending: false });
 
@@ -252,18 +261,25 @@ export class CanonicalFunnelService {
     const startTime = performance.now();
 
     try {
+      // Ajustar para colunas existentes
+      const update: Record<string, any> = {
+        updated_at: new Date().toISOString(),
+      };
+      if (typeof input.name !== 'undefined') update.name = input.name;
+      if (typeof input.config !== 'undefined') update.settings = input.config as any;
+      if (typeof input.metadata !== 'undefined' && input.metadata) {
+        // manter descrição em metadata.description caso exista
+        if (typeof (input.metadata as any).description === 'string') {
+          update.description = (input.metadata as any).description;
+        }
+      }
+      // Mapear isActive/status → is_published
+      if (typeof input.isActive !== 'undefined') update.is_published = !!input.isActive;
+      if (typeof input.status !== 'undefined') update.is_published = input.status === 'published';
+
       const { data, error } = await supabase
         .from('funnels')
-        .update({
-          name: input.name,
-          type: input.type,
-          category: input.category,
-          status: input.status,
-          config: input.config,
-          metadata: input.metadata,
-          is_active: input.isActive,
-          updated_at: new Date().toISOString(),
-        })
+        .update(update)
         .eq('id', funnelId)
         .select()
         .single();
@@ -293,9 +309,10 @@ export class CanonicalFunnelService {
    */
   async deleteFunnel(funnelId: string): Promise<boolean> {
     try {
+      // No schema atual não há is_active/status → marcar como não publicado
       const { error } = await supabase
         .from('funnels')
-        .update({ is_active: false, status: 'archived' })
+        .update({ is_published: false, updated_at: new Date().toISOString() })
         .eq('id', funnelId);
 
       if (error) throw error;
@@ -325,31 +342,16 @@ export class CanonicalFunnelService {
     const startTime = performance.now();
 
     try {
-      // 1. Deletar blocos existentes do step
-      await supabase
-        .from('component_instances')
-        .delete()
-        .eq('funnel_id', funnelId)
-        .eq('step_key', stepKey);
-
-      // 2. Inserir novos blocos
-      if (blocks.length > 0) {
-        const instances = blocks.map((block, index) => ({
-          funnel_id: funnelId,
-          step_key: stepKey,
-          block_id: block.id,
-          block_type: block.type,
-          order: block.order ?? index,
-          properties: block.properties || {},
-          content: block.content || {},
-        }));
-
-        const { error } = await supabase
-          .from('component_instances')
-          .insert(instances);
-
-        if (error) throw error;
+      // Converter stepKey → stepNumber (ex.: "step-12" → 12)
+      let stepNumber = 0;
+      const m = String(stepKey || '').match(/step-(\d{1,2})/i);
+      if (m) stepNumber = parseInt(m[1], 10);
+      if (!stepNumber || stepNumber < 1) {
+        throw new Error(`stepKey inválido: ${stepKey}`);
       }
+
+      // Delegar sincronização ao serviço dedicado (com bulk insert e fallbacks)
+      await funnelComponentsService.syncStepComponents({ funnelId, stepNumber, blocks });
 
       // Invalidar cache
       await this.cache.invalidate(`funnel:${funnelId}:components`, {
@@ -358,7 +360,7 @@ export class CanonicalFunnelService {
       });
 
       const elapsed = performance.now() - startTime;
-      appLogger.debug(`[FunnelService] ${blocks.length} blocos salvos em ${stepKey} (${elapsed.toFixed(0)}ms)`);
+      appLogger.debug(`[FunnelService] saveStepBlocks sincronizado (${blocks.length} itens) em ${elapsed.toFixed(0)}ms`);
 
       return true;
     } catch (error) {
@@ -468,16 +470,17 @@ export class CanonicalFunnelService {
     return {
       id: data.id,
       name: data.name,
-      type: data.type,
+      // Campos legados não existem mais no schema; manter defaults coerentes
+      type: 'quiz',
       category: data.category,
       context: data.context,
       templateId: data.template_id,
-      status: data.status,
-      config: data.config || {},
-      metadata: data.metadata || {},
+      status: data.is_published ? 'published' : 'draft',
+      config: data.settings || {},
+      metadata: data.metadata || { description: data.description },
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      isActive: data.is_active ?? true,
+      isActive: data.is_published ?? false,
     };
   }
 }

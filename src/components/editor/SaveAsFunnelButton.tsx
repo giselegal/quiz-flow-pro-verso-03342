@@ -19,7 +19,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
-import { supabase } from '@/integrations/supabase/customClient';
+// Agora usamos o serviço canônico para criar funil e salvar blocos por etapa
+import { funnelService } from '@/services/canonical/FunnelService';
 import { Save } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
 
@@ -27,7 +28,8 @@ export const SaveAsFunnelButton: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const editor = useEditor();
+  // Context opcional para evitar erro em ambientes de teste/fora do provider
+  const editor = useEditor({ optional: true } as any);
   const { toast } = useToast();
 
   // Mostrar sempre que NÃO estiver em modo funnel (mais flexível que exigir ?template=)
@@ -37,6 +39,8 @@ export const SaveAsFunnelButton: React.FC = () => {
   const isFunnelMode = Boolean(params.get('funnelId') || params.get('funnel'));
 
   if (isFunnelMode) return null;
+  // Se não estiver dentro do EditorProviderUnified, não renderiza o botão (evita throw de hook)
+  if (!editor) return null;
 
   const handleSave = async () => {
     if (!name.trim()) {
@@ -51,42 +55,12 @@ export const SaveAsFunnelButton: React.FC = () => {
     setLoading(true);
 
     try {
-      // 1. Criar funnel no Supabase
-      const { data: userData } = await supabase.auth.getUser();
-      const userId = userData?.user?.id || 'anonymous';
+      // 1) Criar funil via serviço canônico (schema-safe)
+      const funnel = await funnelService.createFunnel({
+        name: name.trim(),
+      });
 
-      // Gerar ID se a tabela não tiver default (evita erro de NOT NULL em id)
-      const safeUuid = (() => {
-        try {
-          if (typeof crypto !== 'undefined' && (crypto as any).randomUUID) {
-            return (crypto as any).randomUUID();
-          }
-        } catch { }
-        return 'funnel-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-      })();
-
-      // Inserir funil com payload mínimo para compatibilidade entre esquemas
-      const { data: funnel, error: funnelError } = await supabase
-        .from('funnels')
-        .insert({
-          id: safeUuid,
-          name: name.trim(),
-          user_id: userId,
-          // Campos opcionais (evitar falhas quando não existem no schema atual)
-          // type: 'quiz',
-          // status: 'draft',
-          // context: 'editor',
-          // is_active: true,
-        })
-        .select()
-        .single();
-
-      if (funnelError || !funnel) {
-        throw new Error(funnelError?.message || 'Erro ao criar funnel');
-      }
-
-      // 2. Salvar TODOS os steps como component_instances (schema alinhado)
-      // Estratégia: preservar edições do usuário (editor.state.stepBlocks) e preencher steps ausentes via TemplateService
+      // 2) Preparar TODOS os steps (estado do editor + fallback de template)
       const allBlocks: Record<string, any[]> = { ...(editor.state.stepBlocks || {}) };
       try {
         const STEP_IDS = templateService.getStepOrder();
@@ -103,62 +77,11 @@ export const SaveAsFunnelButton: React.FC = () => {
       } catch (e) {
         console.warn('⚠️ Falha ao pré-carregar steps via TemplateService; seguindo com estado atual', e);
       }
-      const componentInstancesNew: any[] = [];
-      const componentInstancesLegacy: any[] = [];
 
-      for (const [stepKey, blocks] of Object.entries(allBlocks)) {
-        const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10);
-
-        for (let i = 0; i < blocks.length; i++) {
-          const block = blocks[i];
-          // Novo schema (preferido)
-          componentInstancesNew.push({
-            funnel_id: funnel.id,
-            step_number: stepNumber,
-            order_index: i + 1,
-            instance_key: `${stepKey}-${String(block.id || i)}`,
-            component_type_key: String(block.type),
-            properties: {
-              ...(block.properties || {}),
-              // Preserva content como parte das propriedades quando existir
-              ...(block.content ? { __content: block.content } : {}),
-            },
-            is_active: true,
-            created_by: userId,
-          });
-
-          // Schema legado (fallback)
-          componentInstancesLegacy.push({
-            funnel_id: funnel.id,
-            component_type_id: null,
-            config: {
-              ...(block.properties || {}),
-              blockType: String(block.type),
-              stepNumber,
-              ...(block.content ? { __content: block.content } : {}),
-            },
-            position: i,
-            is_active: true,
-            created_by: userId,
-          });
-        }
-      }
-
-      if (componentInstancesNew.length > 0) {
-        // Tenta primeiro com o schema novo; em caso de erro, cai para o legado
-        const { error: instancesErrorNew } = await supabase
-          .from('component_instances')
-          .insert(componentInstancesNew);
-
-        if (instancesErrorNew) {
-          console.warn('⚠️ Insert (novo schema) falhou, tentando fallback legado...', instancesErrorNew);
-          const { error: instancesErrorLegacy } = await supabase
-            .from('component_instances')
-            .insert(componentInstancesLegacy);
-          if (instancesErrorLegacy) {
-            console.warn('⚠️ Insert (schema legado) também falhou:', instancesErrorLegacy);
-          }
-        }
+      // 3) Persistir blocos por etapa usando o caminho oficial (component_instances + bulk com fallback)
+      const entries = Object.entries(allBlocks);
+      for (const [stepKey, blocks] of entries) {
+        await funnelService.saveStepBlocks(funnel.id, stepKey, blocks as any[]);
       }
 
       toast({
