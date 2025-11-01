@@ -212,6 +212,9 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 <!-- 🚀 FASE 3.5: PWA Manifest -->
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#4F46E5">
+<!-- Preferir a meta moderna -->
+<meta name="mobile-web-app-capable" content="yes">
+<!-- Manter a apple para compatibilidade com versões iOS mais antigas -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="QuizFlow">
