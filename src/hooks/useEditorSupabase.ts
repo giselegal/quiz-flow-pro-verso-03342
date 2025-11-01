@@ -54,9 +54,24 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
 
       setComponents(
         (data || []).map(item => ({
-          ...item,
+          // Campos vindos do banco
+          id: item.id,
+          component_type_key: (item as any).component_type_key || (item as any).component_type_id || 'unknown',
+          created_at: item.created_at || null,
+          created_by: item.created_by || null,
+          custom_styling: (item as any).custom_styling || {},
           funnel_id: item.funnel_id || null,
-          quiz_id: null, // Legacy field for backward compatibility
+          quiz_id: null, // Compatibilidade legada
+          instance_key: (item as any).instance_key || `${(item as any).component_type_key || 'component'}_${item.id}`,
+          is_active: item.is_active ?? true,
+          is_locked: (item as any).is_locked ?? false,
+          is_template: (item as any).is_template ?? false,
+          order_index: (item as any).order_index ?? (item as any).position ?? 0,
+          // Normalização: usar "config" do banco como "properties" no app
+          properties: (item as any).properties ?? (item as any).config ?? {},
+          stage_id: (item as any).stage_id ?? null,
+          step_number: (item as any).step_number ?? 0,
+          updated_at: item.updated_at || null,
         })),
       );
       console.log('✅ Componentes carregados do Supabase:', data?.length || 0);
@@ -91,7 +106,9 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
           instance_key: `${componentTypeKey}_${Date.now()}`,
           step_number: stepNumber,
           order_index: orderIndex ?? components.length,
+          // Persistimos em config, mas mantemos properties na camada de app
           properties: properties || {},
+          config: properties || {},
           custom_styling: {},
           is_active: true,
           is_locked: false,
@@ -117,9 +134,22 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         }
 
         const componentWithDefaults: SupabaseComponent = {
-          ...data,
-          order_index: data.order_index ?? 0,
-          quiz_id: null, // Legacy field for backward compatibility
+          id: data.id,
+          component_type_key: (data as any).component_type_key || componentTypeKey,
+          created_at: data.created_at || null,
+          created_by: data.created_by || null,
+          custom_styling: (data as any).custom_styling || {},
+          funnel_id: (data as any).funnel_id || null,
+          quiz_id: null, // compat legado
+          instance_key: (data as any).instance_key || newComponent.instance_key,
+          is_active: (data as any).is_active ?? true,
+          is_locked: (data as any).is_locked ?? false,
+          is_template: (data as any).is_template ?? false,
+          order_index: (data as any).order_index ?? (data as any).position ?? 0,
+          properties: (data as any).properties ?? (data as any).config ?? (properties || {}),
+          stage_id: (data as any).stage_id ?? null,
+          step_number: (data as any).step_number ?? stepNumber,
+          updated_at: data.updated_at || null,
         };
 
         setComponents(prev => [...prev, componentWithDefaults]);
@@ -175,9 +205,22 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         }
 
         const updatedComponent: SupabaseComponent = {
-          ...data,
-          order_index: data.order_index ?? 0,
-          quiz_id: null, // Legacy field for backward compatibility
+          id: data.id,
+          component_type_key: (data as any).component_type_key || 'unknown',
+          created_at: data.created_at || null,
+          created_by: data.created_by || null,
+          custom_styling: (data as any).custom_styling || {},
+          funnel_id: (data as any).funnel_id || null,
+          quiz_id: null,
+          instance_key: (data as any).instance_key || `${(data as any).component_type_key || 'component'}_${data.id}`,
+          is_active: (data as any).is_active ?? true,
+          is_locked: (data as any).is_locked ?? false,
+          is_template: (data as any).is_template ?? false,
+          order_index: (data as any).order_index ?? (data as any).position ?? 0,
+          properties: (data as any).properties ?? (data as any).config ?? {},
+          stage_id: (data as any).stage_id ?? null,
+          step_number: (data as any).step_number ?? 0,
+          updated_at: data.updated_at || null,
         };
 
         setComponents(prev =>

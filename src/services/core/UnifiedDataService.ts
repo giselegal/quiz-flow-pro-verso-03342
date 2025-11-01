@@ -217,7 +217,7 @@ class UnifiedDataServiceImpl {
                 return this.getFallbackFunnels();
             }
 
-            const funnels = await Promise.all((data || []).map(async (funnel: SupabaseFunnel & { funnel_pages?: SupabaseFunnelPage[] }) => {
+            const funnels = await Promise.all(((data as any[]) || []).map(async (funnel: SupabaseFunnel & { funnel_pages?: SupabaseFunnelPage[] }) => {
                 // Buscar métricas de analytics para cada funil
                 const metrics = await this.getFunnelMetrics(funnel.id);
 
@@ -288,7 +288,7 @@ class UnifiedDataServiceImpl {
 
             const metrics = await this.getFunnelMetrics(id);
 
-            const typedData = data as SupabaseFunnel & { funnel_pages?: SupabaseFunnelPage[] };
+            const typedData = data as unknown as SupabaseFunnel & { funnel_pages?: SupabaseFunnelPage[] };
 
             const funnel: UnifiedFunnel = {
                 id: typedData.id,

@@ -184,6 +184,16 @@ export interface QuizStep {
   type: string;
   title: string;
   description?: string;
+  // Campos legados usados por componentes existentes (compatibilidade)
+  text?: string;
+  image?: string;
+  formQuestion?: string;
+  placeholder?: string;
+  buttonText?: string;
+  questionText?: string;
+  offerMap?: Record<string, OfferContentV3>;
+  options?: Array<QuizOptionV3 | QuizOption>;
+  // Campos de resultado/fluxo
   resultKey?: string;
   answers?: QuizOption[];
   components?: any[];

@@ -176,7 +176,7 @@ class EnhancedUnifiedDataServiceImpl {
                     completed_at, 
                     current_step,
                     total_steps,
-                    quiz_users(
+                    quiz_users!quiz_user_id(
                         id,
                         created_at,
                         utm_source,
@@ -194,7 +194,7 @@ class EnhancedUnifiedDataServiceImpl {
 
             // Calculate analytics
             const totalViews = sessions?.length || 0;
-            const uniqueViews = new Set(sessions?.map(s => s.quiz_users?.id)).size;
+            const uniqueViews = new Set((sessions || []).map(s => (s as any).quiz_users?.id)).size;
             const completedSessions = sessions?.filter(s => s.completed_at) || [];
             const totalConversions = completedSessions.length;
             const conversionRate = totalViews > 0 ? (totalConversions / totalViews) * 100 : 0;
@@ -229,8 +229,9 @@ class EnhancedUnifiedDataServiceImpl {
             // Traffic sources analysis
             const sourceData = new Map();
             sessions?.forEach(session => {
-                const source = session.quiz_users?.utm_source || 'direct';
-                const medium = session.quiz_users?.utm_medium || 'none';
+                const user = (session as any).quiz_users || {};
+                const source = user.utm_source || 'direct';
+                const medium = user.utm_medium || 'none';
                 const key = `${source}/${medium}`;
                 const current = sourceData.get(key) || { users: 0, conversions: 0 };
                 current.users++;

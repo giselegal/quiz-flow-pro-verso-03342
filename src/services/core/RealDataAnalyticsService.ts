@@ -222,13 +222,13 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       ).length;
 
       const recentActivity = (analytics || [])
-        .filter(a => a.timestamp > fiveMinutesAgo)
+        .filter(a => (a.timestamp ?? '') > fiveMinutesAgo)
         .slice(0, 10)
         .map(activity => ({
           sessionId: activity.session_id || 'unknown',
-          funnelId: activity.funnel_id,
-          timestamp: activity.timestamp,
-          event: activity.event_type,
+          funnelId: activity.funnel_id || 'unknown',
+          timestamp: activity.timestamp || new Date().toISOString(),
+          event: activity.event_type || 'event',
         }));
 
       const leadGeneration = (results || []).length;

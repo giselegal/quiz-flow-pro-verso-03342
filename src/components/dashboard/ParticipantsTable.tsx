@@ -94,7 +94,7 @@ const ParticipantsTable: React.FC = () => {
                 .from('quiz_sessions')
                 .select(`
                     *,
-                    quiz_users!inner(
+                    quiz_users!quiz_user_id(
                         id,
                         name,
                         email,

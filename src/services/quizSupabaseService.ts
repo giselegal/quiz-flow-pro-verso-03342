@@ -387,7 +387,7 @@ export const quizSupabaseService = {
         funnel_id: eventData.funnelId,
         event_type: eventData.eventType,
         event_data: eventData.eventData || {},
-        session_id: eventData.sessionId,
+        session_id: eventData.sessionId || 'unknown',
         user_id: eventData.userId,
       };
 

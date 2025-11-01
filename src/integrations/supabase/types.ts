@@ -470,6 +470,7 @@ export type Database = {
           // Campos tolerados por código leg.
           event_type?: string
           timestamp?: string
+          event_data?: Json
         }
         Update: {
           funnel_id?: string | null
@@ -482,6 +483,7 @@ export type Database = {
           user_id?: string | null
           event_type?: string
           timestamp?: string
+          event_data?: Json
         }
         Relationships: [
           {
