@@ -108,6 +108,11 @@ export function printFullStepsDebug() {
   }
 }
 
+// Compat: alguns pontos importam uma função "profunda"; mapeamos para a principal
+export function printFullStepsDebugDeep() {
+  return printFullStepsDebug();
+}
+
 // Expor no navegador para facilitar reexecução
 if (typeof window !== 'undefined') {
   (window as any).printFullStepsDebug = printFullStepsDebug;

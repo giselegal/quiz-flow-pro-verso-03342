@@ -394,9 +394,9 @@ export interface EditableContent {
 
   alt?: string;
 
-  width?: string;
+  width?: string | number;
 
-  height?: string;
+  height?: string | number;
 
   borderRadius?: string;
 

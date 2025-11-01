@@ -58,6 +58,12 @@ export type Database = {
           funnel_id: string | null
           id: string
           is_active: boolean | null
+          is_locked?: boolean | null
+          instance_key?: string | null
+          component_type_key?: string | null
+          custom_styling?: Json | null
+          order_index?: number | null
+          quiz_id?: string | null
           position: number | null
           updated_at: string
         }
@@ -69,6 +75,12 @@ export type Database = {
           funnel_id?: string | null
           id?: string
           is_active?: boolean | null
+          is_locked?: boolean | null
+          instance_key?: string | null
+          component_type_key?: string | null
+          custom_styling?: Json | null
+          order_index?: number | null
+          quiz_id?: string | null
           position?: number | null
           updated_at?: string
         }
@@ -80,6 +92,12 @@ export type Database = {
           funnel_id?: string | null
           id?: string
           is_active?: boolean | null
+          is_locked?: boolean | null
+          instance_key?: string | null
+          component_type_key?: string | null
+          custom_styling?: Json | null
+          order_index?: number | null
+          quiz_id?: string | null
           position?: number | null
           updated_at?: string
         }
@@ -173,42 +191,213 @@ export type Database = {
           description: string | null
           id: string
           is_active: boolean | null
+          is_published: boolean | null
           metadata: Json | null
           name: string
+          settings: Json | null
           status: string
           type: string
           updated_at: string
-          user_id: string
+          user_id: string | null
+          version: number | null
         }
         Insert: {
           category?: string | null
           config?: Json | null
           context?: string | null
-          created_at?: string
+          created_at?: string | null
           description?: string | null
           id?: string
           is_active?: boolean | null
+          is_published?: boolean | null
           metadata?: Json | null
           name: string
+          settings?: Json | null
           status?: string
           type?: string
-          updated_at?: string
-          user_id: string
+          updated_at?: string | null
+          user_id?: string | null
+          version?: number | null
         }
         Update: {
           category?: string | null
           config?: Json | null
           context?: string | null
-          created_at?: string
+          created_at?: string | null
           description?: string | null
           id?: string
           is_active?: boolean | null
+          is_published?: boolean | null
           metadata?: Json | null
           name?: string
+          settings?: Json | null
           status?: string
           type?: string
-          updated_at?: string
-          user_id?: string
+          updated_at?: string | null
+          user_id?: string | null
+          version?: number | null
+        }
+        Relationships: []
+      }
+      ,
+      funnel_pages: {
+        Row: {
+          id: string
+          funnel_id: string
+          page_type: string
+          page_order: number
+          blocks: Json | null
+          created_at: string
+          title?: string | null
+          metadata?: Json | null
+          updated_at?: string | null
+        }
+        Insert: {
+          id?: string
+          funnel_id: string
+          page_type: string
+          page_order?: number
+          blocks?: Json | null
+          created_at?: string
+          title?: string | null
+          metadata?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          funnel_id?: string
+          page_type?: string
+          page_order?: number
+          blocks?: Json | null
+          created_at?: string
+          title?: string | null
+          metadata?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ,
+      quiz_conversions: {
+        Row: {
+          id: string
+          session_id: string
+          conversion_type: string
+          conversion_value: number | null
+          currency: string | null
+          product_id: string | null
+          product_name: string | null
+          affiliate_id: string | null
+          commission_rate: number | null
+          conversion_data: Json | null
+          converted_at: string
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          conversion_type: string
+          conversion_value?: number | null
+          currency?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          affiliate_id?: string | null
+          commission_rate?: number | null
+          conversion_data?: Json | null
+          converted_at?: string
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          conversion_type?: string
+          conversion_value?: number | null
+          currency?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          affiliate_id?: string | null
+          commission_rate?: number | null
+          conversion_data?: Json | null
+          converted_at?: string
+        }
+        Relationships: []
+      }
+      ,
+      session_analytics: {
+        Row: {
+          date: string
+          average_duration_seconds: number | null
+          bounce_rate: number | null
+          created_at: string
+        }
+        Insert: {
+          date: string
+          average_duration_seconds?: number | null
+          bounce_rate?: number | null
+          created_at?: string
+        }
+        Update: {
+          date?: string
+          average_duration_seconds?: number | null
+          bounce_rate?: number | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      ,
+      active_user_sessions: {
+        Row: {
+          id: string
+          user_id: string | null
+          is_active: boolean | null
+          last_activity: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          is_active?: boolean | null
+          last_activity?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          is_active?: boolean | null
+          last_activity?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      ,
+      profiles: {
+        Row: {
+          id: string
+          name: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      ,
+      security_audit_logs: {
+        Row: {
+          id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
         }
         Relationships: []
       }
@@ -266,16 +455,21 @@ export type Database = {
           recorded_at: string
           session_id: string
           user_id: string | null
+          event_type?: string | null
+          timestamp?: string | null
         }
         Insert: {
           funnel_id?: string | null
           id?: string
           metric_data?: Json | null
-          metric_name: string
+          metric_name?: string
           metric_value?: number | null
           recorded_at?: string
           session_id: string
           user_id?: string | null
+          // Campos tolerados por código leg.
+          event_type?: string
+          timestamp?: string
         }
         Update: {
           funnel_id?: string | null
@@ -286,6 +480,8 @@ export type Database = {
           recorded_at?: string
           session_id?: string
           user_id?: string | null
+          event_type?: string
+          timestamp?: string
         }
         Relationships: [
           {
@@ -423,12 +619,12 @@ export type Database = {
           current_step: number | null
           device_info: Json | null
           final_result: Json | null
-          funnel_id: string | null
+          funnel_id: string
           id: string
           last_activity: string
           max_score: number | null
           metadata: Json | null
-          quiz_user_id: string | null
+          quiz_user_id: string
           score: number | null
           session_token: string | null
           started_at: string
@@ -444,12 +640,12 @@ export type Database = {
           current_step?: number | null
           device_info?: Json | null
           final_result?: Json | null
-          funnel_id?: string | null
+          funnel_id: string
           id?: string
           last_activity?: string
           max_score?: number | null
           metadata?: Json | null
-          quiz_user_id?: string | null
+          quiz_user_id: string
           score?: number | null
           session_token?: string | null
           started_at?: string
@@ -465,12 +661,12 @@ export type Database = {
           current_step?: number | null
           device_info?: Json | null
           final_result?: Json | null
-          funnel_id?: string | null
+          funnel_id?: string
           id?: string
           last_activity?: string
           max_score?: number | null
           metadata?: Json | null
-          quiz_user_id?: string | null
+          quiz_user_id?: string
           score?: number | null
           session_token?: string | null
           started_at?: string
