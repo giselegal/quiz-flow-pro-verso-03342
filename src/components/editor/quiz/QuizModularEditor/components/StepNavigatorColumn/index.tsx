@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo } from 'react';
-import { useEditorState } from '../../hooks/useEditorState';
 import { templateService } from '@/services/canonical/TemplateService';
 
 export type StepNavigatorColumnProps = {
     initialStepKey?: string;
     steps?: { key: string; title: string }[];
+    currentStepKey?: string | null;
+    onSelectStep: (stepKey: string) => void;
 };
 
 // Nota: Em iterações futuras, os passos serão carregados do serviço/estado global
 // e virtualizados para listas grandes.
-function StepNavigatorColumnImpl({ initialStepKey, steps }: StepNavigatorColumnProps) {
-    const { state, setStep } = useEditorState(initialStepKey);
+function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSelectStep }: StepNavigatorColumnProps) {
 
     // Preferir fonte canônica de steps; aceitar override via prop "steps"
     const canonicalSteps = useMemo(() => templateService.steps.list(), []);
@@ -32,8 +32,8 @@ function StepNavigatorColumnImpl({ initialStepKey, steps }: StepNavigatorColumnP
 
     // Garantir seleção inicial consistente
     useEffect(() => {
-        if (!state.currentStepKey && items.length > 0) {
-            setStep(initialStepKey ?? items[0].key);
+        if (!currentStepKey && items.length > 0) {
+            onSelectStep(initialStepKey ?? items[0].key);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
@@ -45,9 +45,9 @@ function StepNavigatorColumnImpl({ initialStepKey, steps }: StepNavigatorColumnP
                 {items.map((s) => (
                     <li key={s.key}>
                         <button
-                            className={`w-full text-left px-2 py-1 rounded hover:bg-accent ${state.currentStepKey === s.key ? 'bg-accent' : ''
+                            className={`w-full text-left px-2 py-1 rounded hover:bg-accent ${currentStepKey === s.key ? 'bg-accent' : ''
                                 }`}
-                            onClick={() => setStep(s.key)}
+                            onClick={() => onSelectStep(s.key)}
                         >
                             {s.title}
                         </button>

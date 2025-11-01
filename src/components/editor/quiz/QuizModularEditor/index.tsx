@@ -1,9 +1,11 @@
 import React, { Suspense } from 'react';
+import { useEditorState } from './hooks/useEditorState';
 
 // Esqueleto do novo editor modular (Fase 1.3)
 // Objetivo: ser o ponto de orquestração leve e carregado sob demanda
 
 const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
+const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 
 export type QuizModularEditorProps = {
     funnelId?: string;
@@ -11,22 +13,26 @@ export type QuizModularEditorProps = {
 };
 
 export default function QuizModularEditor(props: QuizModularEditorProps) {
-    // Por enquanto, apenas um layout placeholder minimalista.
-    // Na próxima etapa, conectaremos useEditorState e demais colunas.
+    // Estado compartilhado do editor (step atual, undo/redo, dirty flag)
+    const editor = useEditorState(props.initialStepKey);
+
     return (
         <div className="qm-editor grid grid-cols-4 gap-2 h-full">
             <Suspense fallback={<div>Carregando navegação…</div>}>
                 <div className="col-span-1 border-r">
-                    <StepNavigatorColumn initialStepKey={props.initialStepKey} />
+                    <StepNavigatorColumn
+                        initialStepKey={props.initialStepKey}
+                        currentStepKey={editor.state.currentStepKey}
+                        onSelectStep={editor.setStep}
+                    />
                 </div>
             </Suspense>
 
-            <div className="col-span-2 flex items-center justify-center text-muted-foreground">
-                <div>
-                    <div className="text-sm">Canvas</div>
-                    <div className="text-xs">(placeholder)</div>
+            <Suspense fallback={<div className="col-span-2 flex items-center justify-center">Carregando canvas…</div>}>
+                <div className="col-span-2">
+                    <CanvasColumn currentStepKey={editor.state.currentStepKey} />
                 </div>
-            </div>
+            </Suspense>
 
             <div className="col-span-1 border-l">
                 <div className="p-2 text-sm">Properties Panel (placeholder)</div>
