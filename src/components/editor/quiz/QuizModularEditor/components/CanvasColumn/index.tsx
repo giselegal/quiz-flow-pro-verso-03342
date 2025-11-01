@@ -5,9 +5,11 @@ import type { Block } from '@/services/UnifiedTemplateRegistry';
 export type CanvasColumnProps = {
     currentStepKey: string | null;
     blocks?: Block[] | null;
+    onRemoveBlock?: (blockId: string) => void;
+    onMoveBlock?: (fromIndex: number, toIndex: number) => void;
 };
 
-export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps }: CanvasColumnProps) {
+export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, onRemoveBlock, onMoveBlock }: CanvasColumnProps) {
     const [blocks, setBlocks] = useState<Block[] | null>(blocksFromProps ?? null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -74,9 +76,36 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps }
         <div className="p-3 space-y-2">
             <div className="text-sm font-medium mb-2">{currentStepKey}</div>
             <ul className="space-y-1">
-                {blocks.map((b) => (
-                    <li key={b.id} className="border rounded p-2">
-                        <div className="text-xs uppercase text-muted-foreground">{b.type}</div>
+                {blocks.map((b, idx) => (
+                    <li key={b.id} className="border rounded p-2 relative">
+                        <div className="flex items-center justify-between mb-1">
+                            <div className="text-xs uppercase text-muted-foreground">{b.type}</div>
+                            <div className="flex items-center gap-1">
+                                {typeof onMoveBlock === 'function' && (
+                                    <>
+                                        <button
+                                            className="text-[10px] px-1 py-0.5 border rounded disabled:opacity-50"
+                                            onClick={() => onMoveBlock(idx, Math.max(0, idx - 1))}
+                                            disabled={idx === 0}
+                                            title="Mover para cima"
+                                        >↑</button>
+                                        <button
+                                            className="text-[10px] px-1 py-0.5 border rounded disabled:opacity-50"
+                                            onClick={() => onMoveBlock(idx, Math.min((blocks?.length || 1) - 1, idx + 1))}
+                                            disabled={idx === (blocks?.length || 1) - 1}
+                                            title="Mover para baixo"
+                                        >↓</button>
+                                    </>
+                                )}
+                                {typeof onRemoveBlock === 'function' && (
+                                    <button
+                                        className="text-[10px] px-1 py-0.5 border rounded text-red-600"
+                                        onClick={() => onRemoveBlock(b.id)}
+                                        title="Remover bloco"
+                                    >×</button>
+                                )}
+                            </div>
+                        </div>
                         {/* Placeholder de preview simples */}
                         <pre className="text-[10px] whitespace-pre-wrap break-all opacity-70">{JSON.stringify(b.properties || b.content || {}, null, 2)}</pre>
                     </li>

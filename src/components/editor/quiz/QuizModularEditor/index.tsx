@@ -42,7 +42,12 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
             <Suspense fallback={<div className="col-span-2 flex items-center justify-center">Carregando canvas…</div>}>
                 <div className="col-span-2">
-                    <CanvasColumn currentStepKey={editor.state.currentStepKey} blocks={blocks} />
+                    <CanvasColumn
+                        currentStepKey={editor.state.currentStepKey}
+                        blocks={blocks}
+                        onRemoveBlock={(id) => ops.removeBlock(editor.state.currentStepKey, id)}
+                        onMoveBlock={(from, to) => ops.reorderBlock(editor.state.currentStepKey, from, to)}
+                    />
                 </div>
             </Suspense>
 
@@ -52,7 +57,19 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         currentStepKey={editor.state.currentStepKey}
                         onAddBlock={(type) => ops.addBlock(editor.state.currentStepKey, { type })}
                     />
-                    <div className="mt-auto p-2 text-sm border-t">Properties Panel (placeholder)</div>
+                    <div className="mt-auto p-2 text-sm border-t space-y-2">
+                        <div>Properties Panel (placeholder)</div>
+                        <button
+                            className="text-xs px-2 py-1 border rounded"
+                            onClick={() => {
+                                // TODO: Persistir via serviço canônico (ex.: FunnelService.saveStepBlocks)
+                                // Por ora, apenas registrar o snapshot atual
+                                // eslint-disable-next-line no-console
+                                console.log('Salvar (stub) - step', editor.state.currentStepKey, ops.getBlocks(editor.state.currentStepKey));
+                            }}
+                            disabled={!editor.state.currentStepKey}
+                        >Salvar (stub)</button>
+                    </div>
                 </div>
             </Suspense>
         </div>
