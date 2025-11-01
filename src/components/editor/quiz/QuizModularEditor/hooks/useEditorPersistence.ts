@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { funnelService } from '@/services/canonical/FunnelService'
 
 export type PersistenceOptions = {
@@ -6,6 +6,7 @@ export type PersistenceOptions = {
   enableAutoSave?: boolean
   onSaveSuccess?: (stepKey: string) => void
   onSaveError?: (stepKey: string, error: Error) => void
+  getDirtyBlocks?: () => { stepKey: string; blocks: any[] } | null
 }
 
 export function useEditorPersistence(options: PersistenceOptions = {}) {
@@ -14,10 +15,15 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
     enableAutoSave = true,
     onSaveSuccess,
     onSaveError,
+    getDirtyBlocks,
   } = options
 
   const [pendingSaves, setPendingSaves] = useState<Set<string>>(new Set())
   const [lastSaved, setLastSaved] = useState<Record<string, number>>({})
+  
+  // Auto-save debounce timer
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const pendingAutoSaveRef = useRef<{ stepKey: string; blocks: any[] } | null>(null)
 
   const saveStepBlocks = useCallback(async (stepKey: string, blocks: any[]) => {
     if (!stepKey) return { success: false, error: 'Step key required' }
@@ -60,6 +66,77 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
     }
   }, [onSaveSuccess, onSaveError])
 
+  // Auto-save trigger com debouncing
+  const triggerAutoSave = useCallback((stepKey: string, blocks: any[]) => {
+    if (!enableAutoSave || !stepKey) return
+
+    // Armazenar dados do auto-save pendente
+    pendingAutoSaveRef.current = { stepKey, blocks }
+
+    // Limpar timer anterior
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current)
+    }
+
+    // Configurar novo timer
+    autoSaveTimerRef.current = setTimeout(async () => {
+      const pending = pendingAutoSaveRef.current
+      if (pending && pending.stepKey === stepKey) {
+        console.log(`🔄 Auto-saving step: ${stepKey}`)
+        await saveStepBlocks(pending.stepKey, pending.blocks)
+        pendingAutoSaveRef.current = null
+      }
+      autoSaveTimerRef.current = null
+    }, autoSaveInterval)
+  }, [enableAutoSave, autoSaveInterval, saveStepBlocks])
+
+  // Cancelar auto-save pendente
+  const cancelAutoSave = useCallback(() => {
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current)
+      autoSaveTimerRef.current = null
+    }
+    pendingAutoSaveRef.current = null
+  }, [])
+
+  // Forçar auto-save imediato se houver dados pendentes
+  const flushAutoSave = useCallback(async () => {
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current)
+      autoSaveTimerRef.current = null
+    }
+
+    const pending = pendingAutoSaveRef.current
+    if (pending) {
+      console.log(`⚡ Flushing auto-save for step: ${pending.stepKey}`)
+      await saveStepBlocks(pending.stepKey, pending.blocks)
+      pendingAutoSaveRef.current = null
+    }
+  }, [saveStepBlocks])
+
+  // Auto-save periódico usando getDirtyBlocks
+  useEffect(() => {
+    if (!enableAutoSave || !getDirtyBlocks) return
+
+    const interval = setInterval(() => {
+      const dirtyData = getDirtyBlocks()
+      if (dirtyData) {
+        triggerAutoSave(dirtyData.stepKey, dirtyData.blocks)
+      }
+    }, Math.max(autoSaveInterval / 2, 1000)) // Verificar a cada metade do intervalo, mínimo 1s
+
+    return () => clearInterval(interval)
+  }, [enableAutoSave, getDirtyBlocks, triggerAutoSave, autoSaveInterval])
+
+  // Cleanup ao desmontar
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current)
+      }
+    }
+  }, [])
+
   const getSaveStatus = useCallback((stepKey: string) => {
     return {
       isSaving: pendingSaves.has(stepKey),
@@ -70,10 +147,14 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
 
   const api = useMemo(() => ({
     saveStepBlocks,
+    triggerAutoSave,
+    cancelAutoSave,
+    flushAutoSave,
     getSaveStatus,
     pendingSaves: Array.from(pendingSaves),
     lastSaved,
-  }), [saveStepBlocks, getSaveStatus, pendingSaves, lastSaved])
+    hasAutoSavePending: pendingAutoSaveRef.current !== null,
+  }), [saveStepBlocks, triggerAutoSave, cancelAutoSave, flushAutoSave, getSaveStatus, pendingSaves, lastSaved])
 
   return api
 }

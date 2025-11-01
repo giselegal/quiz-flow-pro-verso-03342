@@ -5,12 +5,14 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 export type EditorState = {
   currentStepKey: string | null;
   isDirty: boolean;
+  selectedBlockId: string | null;
 };
 
 export function useEditorState(initialStepKey?: string) {
   const [state, setState] = useState<EditorState>({
     currentStepKey: initialStepKey ?? null,
     isDirty: false,
+    selectedBlockId: null,
   });
 
   const historyRef = useRef<EditorState[]>([]);
@@ -26,6 +28,14 @@ export function useEditorState(initialStepKey?: string) {
 
   const markDirty = useCallback((dirty = true) => {
     setState((prev) => ({ ...prev, isDirty: dirty }));
+  }, []);
+
+  const selectBlock = useCallback((blockId: string | null) => {
+    setState((prev) => ({ ...prev, selectedBlockId: blockId }));
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setState((prev) => ({ ...prev, selectedBlockId: null }));
   }, []);
 
   const canUndo = useMemo(() => historyRef.current.length > 0, []);
@@ -53,6 +63,8 @@ export function useEditorState(initialStepKey?: string) {
     state,
     setStep,
     markDirty,
+    selectBlock,
+    clearSelection,
     undo,
     redo,
     canUndo,

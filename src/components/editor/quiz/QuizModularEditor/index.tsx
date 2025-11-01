@@ -4,6 +4,7 @@ import { useEditorState } from './hooks/useEditorState';
 import { useBlockOperations } from './hooks/useBlockOperations';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useEditorPersistence } from './hooks/useEditorPersistence';
+import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
 
 // Esqueleto do novo editor modular (Fase 1.3)
@@ -12,6 +13,7 @@ import type { Block } from '@/services/UnifiedTemplateRegistry';
 const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
 const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
+const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
 
 export type QuizModularEditorProps = {
     funnelId?: string;
@@ -23,10 +25,23 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const editor = useEditorState(props.initialStepKey);
     const ops = useBlockOperations();
     const dnd = useDndSystem();
+    const { enableAutoSave } = useFeatureFlags();
+
     const persistence = useEditorPersistence({
-        enableAutoSave: false, // Inicialmente manual
-        onSaveSuccess: (stepKey) => console.log(`✅ Step ${stepKey} saved`),
-        onSaveError: (stepKey, error) => console.error(`❌ Save failed for ${stepKey}:`, error),
+        enableAutoSave,
+        autoSaveInterval: 2000, // 2s para teste mais responsivo
+        onSaveSuccess: (stepKey) => {
+            console.log(`✅ Auto-save completed for step: ${stepKey}`);
+            editor.markDirty(false);
+        },
+        onSaveError: (stepKey, error) => console.error(`❌ Auto-save failed for ${stepKey}:`, error),
+        getDirtyBlocks: () => {
+            const stepKey = editor.state.currentStepKey;
+            if (!stepKey || !editor.state.isDirty) return null;
+
+            const blocks = ops.getBlocks(stepKey);
+            return blocks ? { stepKey, blocks } : null;
+        },
     });
 
     // Configuração DnD
@@ -87,9 +102,20 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         <CanvasColumn
                             currentStepKey={editor.state.currentStepKey}
                             blocks={blocks}
-                            onRemoveBlock={(id) => ops.removeBlock(editor.state.currentStepKey, id)}
-                            onMoveBlock={(from, to) => ops.reorderBlock(editor.state.currentStepKey, from, to)}
-                            onUpdateBlock={(id, patch) => ops.updateBlock(editor.state.currentStepKey, id, patch)}
+                            selectedBlockId={editor.state.selectedBlockId}
+                            onRemoveBlock={(id) => {
+                                ops.removeBlock(editor.state.currentStepKey, id);
+                                editor.markDirty(true);
+                            }}
+                            onMoveBlock={(from, to) => {
+                                ops.reorderBlock(editor.state.currentStepKey, from, to);
+                                editor.markDirty(true);
+                            }}
+                            onUpdateBlock={(id, patch) => {
+                                ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                editor.markDirty(true);
+                            }}
+                            onBlockSelect={editor.selectBlock}
                         />
                     </div>
                 </Suspense>
@@ -98,13 +124,26 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     <div className="col-span-1 border-l flex flex-col h-full">
                         <ComponentLibraryColumn
                             currentStepKey={editor.state.currentStepKey}
-                            onAddBlock={(type) => ops.addBlock(editor.state.currentStepKey, { type })}
+                            onAddBlock={(type) => {
+                                ops.addBlock(editor.state.currentStepKey, { type });
+                                editor.markDirty(true);
+                            }}
                         />
                         <div className="mt-auto p-2 text-sm border-t space-y-2">
-                            <div>Properties Panel (placeholder)</div>
-                            {/* TODO: Integrar PropertiesPanel existente quando houver bloco selecionado */}
+                            {/* Status do Auto-save */}
+                            {enableAutoSave && (
+                                <div className="text-xs text-muted-foreground text-center">
+                                    {persistence.hasAutoSavePending
+                                        ? '🔄 Auto-save pendente...'
+                                        : editor.state.isDirty
+                                            ? '📝 Alterações detectadas'
+                                            : '✅ Salvo automaticamente'
+                                    }
+                                </div>
+                            )}
+
                             <button
-                                className="text-xs px-2 py-1 border rounded"
+                                className="text-xs px-2 py-1 border rounded w-full"
                                 onClick={() => {
                                     const stepKey = editor.state.currentStepKey;
                                     const blocks = ops.getBlocks(stepKey);
@@ -114,10 +153,26 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 }}
                                 disabled={!editor.state.currentStepKey || persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving}
                             >
-                                {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving ? 'Salvando...' : 'Salvar'}
+                                {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving
+                                    ? 'Salvando...'
+                                    : enableAutoSave
+                                        ? 'Salvar Agora'
+                                        : 'Salvar'
+                                }
                             </button>
                         </div>
                     </div>
+                </Suspense>
+
+                <Suspense fallback={<div className="col-span-1 border-l p-2 text-sm">Carregando propriedades…</div>}>
+                    <PropertiesColumn
+                        selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) || null}
+                        onBlockUpdate={(blockId, updates) => {
+                            ops.updateBlock(editor.state.currentStepKey, blockId, updates);
+                            editor.markDirty(true);
+                        }}
+                        onClearSelection={editor.clearSelection}
+                    />
                 </Suspense>
             </div>
 
