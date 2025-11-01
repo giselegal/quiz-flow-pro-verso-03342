@@ -37,6 +37,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 // 🚀 EDITOR
 import QuizModularProductionEditor from './config/editorRoutes.config';
+const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -87,6 +88,28 @@ function App() {
                   <EditorTemplatesPage />
                 </Route>
 
+                {/* ⚗️ EDITOR MODULAR (experimental) */}
+                <Route path="/editor/modular/:funnelId">
+                  {(params) => (
+                    <EditorErrorBoundary>
+                      <EditorProviderAdapter
+                        funnelId={params.funnelId}
+                        enableSupabase={true}
+                      >
+                        <QuizModularEditor />
+                      </EditorProviderAdapter>
+                    </EditorErrorBoundary>
+                  )}
+                </Route>
+
+                <Route path="/editor/modular">
+                  <EditorErrorBoundary>
+                    <EditorProviderAdapter enableSupabase={true}>
+                      <QuizModularEditor />
+                    </EditorProviderAdapter>
+                  </EditorErrorBoundary>
+                </Route>
+
                 <Route path="/editor/:funnelId">
                   {(params) => (
                     <EditorErrorBoundary>
@@ -112,7 +135,7 @@ function App() {
                 <Route path="/quiz-ai-21-steps">
                   <QuizAIPage />
                 </Route>
-                
+
                 <Route path="/quiz-estilo">
                   <QuizErrorBoundary>
                     <QuizEstiloPessoalPage />
@@ -137,11 +160,11 @@ function App() {
                 <Route path="/templates">
                   <TemplatesPage />
                 </Route>
-                
+
                 <Route path="/funnel-types">
                   <FunnelTypesPage />
                 </Route>
-                
+
                 <Route path="/resultado">
                   <QuizErrorBoundary>
                     <QuizEstiloPessoalPage />
@@ -157,11 +180,11 @@ function App() {
                 <Route path="/admin/dashboard">
                   <RedirectRoute to="/admin" />
                 </Route>
-                
+
                 <Route path="/admin">
                   <ModernAdminDashboard />
                 </Route>
-                
+
                 <Route path="/dashboard">
                   <Phase2Dashboard />
                 </Route>
@@ -175,27 +198,27 @@ function App() {
                 <Route path="/admin/analytics">
                   <AdminAnalyticsPage />
                 </Route>
-                
+
                 <Route path="/admin/participants">
                   <AdminParticipantsPage />
                 </Route>
-                
+
                 <Route path="/admin/templates">
                   <AdminTemplatesPage />
                 </Route>
-                
+
                 <Route path="/admin/settings">
                   <AdminSettingsPage />
                 </Route>
-                
+
                 <Route path="/admin/integrations">
                   <AdminIntegrationsPage />
                 </Route>
-                
+
                 <Route path="/admin/ab-tests">
                   <AdminABTestsPage />
                 </Route>
-                
+
                 <Route path="/admin/creatives">
                   <AdminCreativesPage />
                 </Route>
