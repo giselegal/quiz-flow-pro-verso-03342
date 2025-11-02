@@ -25,20 +25,22 @@ import { z } from 'zod';
 // SUPABASE DATABASE TYPES (Re-exported for convenience)
 // =============================================================================
 
-export type Json = Database['public']['Tables']['funnels']['Row']['settings'];
+export type Json = Database['public']['Tables']['funnels']['Row']['config']; // Mudado de 'settings' para 'config'
 
 // Core table types - directly from Supabase
-export type Profile = Database['public']['Tables']['profiles']['Row'];
-export type InsertProfile = Database['public']['Tables']['profiles']['Insert'];
-export type UpdateProfile = Database['public']['Tables']['profiles']['Update'];
+// Tipos fallback para tabelas que não existem no schema atual
+export type Profile = { id: string; email?: string; name?: string; created_at: string };
+export type InsertProfile = Omit<Profile, 'id' | 'created_at'>;
+export type UpdateProfile = Partial<InsertProfile>;
 
 export type Funnel = Database['public']['Tables']['funnels']['Row'];
 export type InsertFunnel = Database['public']['Tables']['funnels']['Insert'];
 export type UpdateFunnel = Database['public']['Tables']['funnels']['Update'];
 
-export type FunnelPage = Database['public']['Tables']['funnel_pages']['Row'];
-export type InsertFunnelPage = Database['public']['Tables']['funnel_pages']['Insert'];
-export type UpdateFunnelPage = Database['public']['Tables']['funnel_pages']['Update'];
+// Tipos fallback para funnel_pages
+export type FunnelPage = { id: string; funnel_id: string; page_order: number; config: Json; created_at: string };
+export type InsertFunnelPage = Omit<FunnelPage, 'id' | 'created_at'>;
+export type UpdateFunnelPage = Partial<InsertFunnelPage>;
 
 export type ComponentInstance = Database['public']['Tables']['component_instances']['Row'];
 export type InsertComponentInstance = Database['public']['Tables']['component_instances']['Insert'];
@@ -68,9 +70,9 @@ export type QuizAnalytics = Database['public']['Tables']['quiz_analytics']['Row'
 export type InsertQuizAnalytics = Database['public']['Tables']['quiz_analytics']['Insert'];
 export type UpdateQuizAnalytics = Database['public']['Tables']['quiz_analytics']['Update'];
 
-export type QuizConversion = Database['public']['Tables']['quiz_conversions']['Row'];
-export type InsertQuizConversion = Database['public']['Tables']['quiz_conversions']['Insert'];
-export type UpdateQuizConversion = Database['public']['Tables']['quiz_conversions']['Update'];
+// export type QuizConversion = Database['public']['Tables']['quiz_conversions']['Row']; // COMENTADO: Tabela não existe
+// export type InsertQuizConversion = Database['public']['Tables']['quiz_conversions']['Insert']; // COMENTADO: Tabela não existe
+// export type UpdateQuizConversion = Database['public']['Tables']['quiz_conversions']['Update']; // COMENTADO: Tabela não existe
 
 // =============================================================================
 // ZOD VALIDATION SCHEMAS (Enhanced)
