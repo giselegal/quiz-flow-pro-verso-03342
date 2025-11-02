@@ -68,6 +68,9 @@ const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage')
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
+// 🎯 FASE 1: Preview Sandbox (isolado)
+const PreviewSandbox = lazy(() => import('./pages/PreviewSandbox'));
+
 // 🏢 DASHBOARDS
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
 const ModernAdminDashboard = lazy(() => import('./pages/ModernAdminDashboard'));
@@ -212,6 +215,13 @@ function AppCore() {
                                     <div data-testid="editor-templates-page">
                                         <EditorTemplatesPage />
                                     </div>
+                                </Route>
+
+                                {/* 🎯 FASE 1: Preview Sandbox Isolado (iframe) */}
+                                <Route path="/preview-sandbox">
+                                    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+                                        <PreviewSandbox />
+                                    </Suspense>
                                 </Route>
 
                                 {/* 📱 PREVIEW DE PRODUÇÃO GENÉRICO */}
