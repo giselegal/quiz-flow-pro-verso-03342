@@ -305,7 +305,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         for (const update of updates) {
           const { error: updateError } = await supabase
             .from('component_instances')
-            .update({ order_index: update.order_index })
+            .update({ position: update.order_index }) // Mudado de 'order_index' para 'position'
             .eq('id', update.id);
 
           if (updateError) {

@@ -55,11 +55,11 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
             console.error('❌ Erro na geração:', err);
 
             return {
+                url: '',
+                created: Date.now(),
                 success: false,
                 error: errorMessage,
-                prompt: request.prompt,
-                provider: config.provider,
-            };
+            } as ImageGenerationResponse;
         } finally {
             setIsGenerating(false);
         }
