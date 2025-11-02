@@ -47,7 +47,7 @@ export * from './imageBank';
 // ============================================================================
 
 // @deprecated Use QUIZ_21_STEPS_COMPLETE from templates/
-export * from './quizSteps';
+// export * from './quizSteps'; // COMENTADO: Arquivo não existe mais
 
 // @deprecated Use BLOCK_TYPES_REGISTRY from registry/
 export * from './componentDefinitions';

@@ -148,7 +148,7 @@ export class TemplateService {
                 usageCount: 0,
                 tags: [],
                 thumbnailUrl: undefined,
-                templateData: (data.settings as unknown) as any || {},
+                templateData: (data.config as unknown) as any || {}, // Mudado de 'settings' para 'config'
                 components: [],
                 createdAt: data.created_at || new Date().toISOString(),
                 updatedAt: data.updated_at || new Date().toISOString(),
