@@ -116,12 +116,12 @@ export const SecuritySettingsPage: React.FC = () => {
 
       const newSettings = { ...settings, ...updatedSettings };
 
-      const { error } = await supabase
-        .from('user_security_settings')
-        .upsert({
-          ...newSettings,
-          updated_at: new Date().toISOString(),
-        });
+      // Store in localStorage instead (table doesn't exist yet)
+      localStorage.setItem('user_security_settings', JSON.stringify({
+        ...newSettings,
+        updated_at: new Date().toISOString(),
+      }));
+      const error = null;
 
       if (error) throw error;
 

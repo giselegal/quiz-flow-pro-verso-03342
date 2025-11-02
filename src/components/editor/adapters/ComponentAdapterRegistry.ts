@@ -75,17 +75,18 @@ export interface TransitionStepProps {
 
 export const IntroStepAdapter = createAdapter<IntroStepProps>({
     componentType: 'intro',
-    productionComponent: IntroStep,
+    productionComponent: IntroStep as any,
     editableProps: ['data'],
     defaultProps: {
         data: {
+            id: 'intro-1',
             type: 'intro',
             title: '<span style="color: #B89B7A; font-weight: 700;">Descubra</span> seu estilo único e transforme seu guarda-roupa.',
             formQuestion: 'Como posso te chamar?',
             placeholder: 'Digite seu primeiro nome aqui...',
             buttonText: 'Quero Descobrir meu Estilo Agora!',
             image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
-        } as QuizStep,
+        } as QuizStep & { id: string },
         onNameSubmit: () => { },
     },
     toEditableBlock: (props) => ({
@@ -101,9 +102,11 @@ export const IntroStepAdapter = createAdapter<IntroStepProps>({
     }),
     fromEditableBlock: (block) => ({
         data: {
+            id: block.id || 'intro-1',
             ...block.data,
             type: 'intro',
-        } as QuizStep,
+            title: block.data?.title || 'Título padrão',
+        } as QuizStep & { id: string },
         onNameSubmit: () => { },
     }),
     createMocks: (props) => ({
@@ -115,7 +118,7 @@ export const IntroStepAdapter = createAdapter<IntroStepProps>({
 
 export const QuestionStepAdapter = createAdapter<QuestionStepProps>({
     componentType: 'question',
-    productionComponent: QuestionStep,
+    productionComponent: QuestionStep as any,
     editableProps: ['data'],
     defaultProps: {
         data: {
@@ -159,18 +162,20 @@ export const QuestionStepAdapter = createAdapter<QuestionStepProps>({
 
 export const StrategicQuestionStepAdapter = createAdapter<StrategicQuestionStepProps>({
     componentType: 'strategic-question',
-    productionComponent: StrategicQuestionStep,
+    productionComponent: StrategicQuestionStep as any,
     editableProps: ['data'],
     defaultProps: {
         data: {
+            id: 'strategic-1',
             type: 'strategic-question',
+            title: 'Pergunta Estratégica',
             questionText: 'Qual é sua prioridade no momento?',
             options: [
                 { id: 'priority1', text: 'Renovar o guarda-roupa completamente' },
                 { id: 'priority2', text: 'Adicionar algumas peças-chave' },
                 { id: 'priority3', text: 'Aprender a combinar o que já tenho' },
             ],
-        } as QuizStep,
+        } as QuizStep & { id: string },
         currentAnswer: '',
         onAnswerChange: () => { },
     },
@@ -184,9 +189,11 @@ export const StrategicQuestionStepAdapter = createAdapter<StrategicQuestionStepP
     }),
     fromEditableBlock: (block) => ({
         data: {
+            id: block.id || 'strategic-1',
             ...block.data,
             type: 'strategic-question',
-        } as QuizStep,
+            title: block.data?.title || 'Pergunta Estratégica',
+        } as QuizStep & { id: string },
         currentAnswer: '',
         onAnswerChange: () => { },
     }),
@@ -200,14 +207,15 @@ export const StrategicQuestionStepAdapter = createAdapter<StrategicQuestionStepP
 
 export const TransitionStepAdapter = createAdapter<TransitionStepProps>({
     componentType: 'transition',
-    productionComponent: TransitionStep,
+    productionComponent: TransitionStep as any,
     editableProps: ['data'],
     defaultProps: {
         data: {
+            id: 'transition-1',
             type: 'transition',
             title: 'Analisando suas respostas...',
             text: 'Aguarde enquanto preparamos seu resultado personalizado.',
-        } as QuizStep,
+        } as QuizStep & { id: string },
         onComplete: () => { },
     },
     toEditableBlock: (props) => ({
@@ -220,9 +228,11 @@ export const TransitionStepAdapter = createAdapter<TransitionStepProps>({
     }),
     fromEditableBlock: (block) => ({
         data: {
+            id: block.id || 'transition-1',
             ...block.data,
             type: 'transition',
-        } as QuizStep,
+            title: block.data?.title || 'Transição',
+        } as QuizStep & { id: string },
         onComplete: () => { },
     }),
     createMocks: (props) => ({
@@ -234,14 +244,15 @@ export const TransitionStepAdapter = createAdapter<TransitionStepProps>({
 
 export const ResultStepAdapter = createAdapter<ResultStepProps>({
     componentType: 'result',
-    productionComponent: ResultStep,
+    productionComponent: ResultStep as any,
     editableProps: ['data'],
     defaultProps: {
         data: {
+            id: 'result-1',
             type: 'result',
             title: 'Seu Estilo Único',
             text: 'Baseado nas suas respostas, identificamos seu estilo personalizado.',
-        } as QuizStep,
+        } as QuizStep & { id: string },
         userProfile: {
             userName: 'Preview User',
             resultStyle: 'clássico',
@@ -259,9 +270,11 @@ export const ResultStepAdapter = createAdapter<ResultStepProps>({
     }),
     fromEditableBlock: (block) => ({
         data: {
+            id: block.id || 'result-1',
             ...block.data,
             type: 'result',
-        } as QuizStep,
+            title: block.data?.title || 'Resultado',
+        } as QuizStep & { id: string },
         userProfile: {
             userName: 'Preview User',
             resultStyle: 'clássico',
@@ -280,10 +293,11 @@ export const ResultStepAdapter = createAdapter<ResultStepProps>({
 
 export const OfferStepAdapter = createAdapter<OfferStepProps>({
     componentType: 'offer',
-    productionComponent: OfferStep,
+    productionComponent: OfferStep as any,
     editableProps: ['data'],
     defaultProps: {
         data: {
+            id: 'offer-1',
             type: 'offer',
             title: 'Oferta Especial',
             text: 'Aproveite esta oportunidade única para transformar seu estilo!',
@@ -307,7 +321,7 @@ export const OfferStepAdapter = createAdapter<OfferStepProps>({
                     },
                 },
             },
-        } as QuizStep,
+        } as QuizStep & { id: string },
         userProfile: {
             userName: 'Preview User',
             resultStyle: 'clássico',
@@ -325,9 +339,11 @@ export const OfferStepAdapter = createAdapter<OfferStepProps>({
     }),
     fromEditableBlock: (block) => ({
         data: {
+            id: block.id || 'offer-1',
             ...block.data,
             type: 'offer',
-        } as QuizStep,
+            title: block.data?.title || 'Oferta',
+        } as QuizStep & { id: string },
         userProfile: {
             userName: 'Preview User',
             resultStyle: 'clássico',

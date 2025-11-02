@@ -81,23 +81,6 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     setMetrics(prev => ({ ...prev, cacheHitRate }));
   }, [cache]);
 
-  // Record metrics to database
-  const recordMetrics = useCallback(async () => {
-    if (!currentFunnel) return;
-
-    try {
-      // Metrics recording disabled - table 'real_time_metrics' not available
-      console.log('📊 Performance Metrics:', {
-        renderTime: metrics.renderTime.toFixed(2),
-        memoryUsage: metrics.memoryUsage,
-        cacheHitRate: metrics.cacheHitRate.toFixed(1),
-        performanceScore: calculatePerformanceScore().toFixed(1),
-      });
-    } catch (error) {
-      console.error('❌ Failed to record metrics:', error);
-    }
-  }, [currentFunnel, metrics, calculatePerformanceScore]);
-
   // Calculate overall performance score
   const calculatePerformanceScore = useCallback((): number => {
     const weights = {
@@ -120,6 +103,24 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
       return total + (scores[key as keyof typeof scores] * weight);
     }, 0);
   }, [metrics]);
+
+  // Record metrics to database
+  const recordMetrics = useCallback(async () => {
+    if (!currentFunnel) return;
+
+    try {
+      const score = calculatePerformanceScore();
+      // Metrics recording disabled - table 'real_time_metrics' not available
+      console.log('📊 Performance Metrics:', {
+        renderTime: metrics.renderTime.toFixed(2),
+        memoryUsage: metrics.memoryUsage,
+        cacheHitRate: metrics.cacheHitRate.toFixed(1),
+        performanceScore: score.toFixed(1),
+      });
+    } catch (error) {
+      console.error('❌ Failed to record metrics:', error);
+    }
+  }, [currentFunnel, metrics, calculatePerformanceScore]);
 
   // Auto-optimization based on metrics
   const performAutoOptimization = useCallback(() => {

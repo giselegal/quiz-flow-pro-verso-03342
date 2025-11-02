@@ -259,10 +259,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
 
             {/* Status de Salvamento */}
             <SaveStatusIndicator
-              lastSaved={lastSaved}
-              isSaving={isSaving}
-              onManualSave={onManualSave}
-              autoSaveEnabled={true}
+              status={isSaving ? 'saving' : lastSaved ? 'saved' : 'idle'}
             />
 
             {/* Configurações do Funil */}

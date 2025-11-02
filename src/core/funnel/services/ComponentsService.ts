@@ -82,7 +82,7 @@ export class ComponentsService {
             }
 
             console.log(`✅ Encontrados ${data?.length || 0} componentes`);
-            return (data || []) as ComponentInstance[];
+            return (data || []) as unknown as ComponentInstance[];
         } catch (error) {
             console.error('Error in getComponents:', error);
             return [];
@@ -144,7 +144,7 @@ export class ComponentsService {
             }
 
             console.log(`✅ Componente adicionado: ${data.id}`);
-            return data as ComponentInstance;
+            return data as unknown as ComponentInstance;
         } catch (error) {
             console.error('Error in addComponent:', error);
             return null;
@@ -181,7 +181,7 @@ export class ComponentsService {
             }
 
             console.log(`✅ Componente atualizado: ${data.id}`);
-            return data as ComponentInstance;
+            return data as unknown as ComponentInstance;
         } catch (error) {
             console.error('Error in updateComponent:', error);
             return null;
@@ -328,7 +328,7 @@ export class ComponentsService {
             }
 
             console.log(`✅ Encontrados ${data?.length || 0} componentes no funil`);
-            return (data || []) as ComponentInstance[];
+            return (data || []) as unknown as ComponentInstance[];
         } catch (error) {
             console.error('Error in getFunnelComponents:', error);
             return [];
