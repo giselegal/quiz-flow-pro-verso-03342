@@ -125,9 +125,7 @@ export class CanonicalFunnelService {
     appLogger.info('[FunnelService] Criando funil:', { name: input.name });
 
     try {
-      // Observação: o schema atual de `public.funnels` (types.ts) possui apenas:
-      // id, name, description, settings (Json), is_published (boolean), version, created_at, updated_at, user_id
-      // Campos como type/category/context/template_id/status/is_active não existem mais.
+      // Observação: normalizamos para o novo esquema (status/config), com fallback de compatibilidade no mapeamento
       const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from('funnels')
@@ -135,7 +133,7 @@ export class CanonicalFunnelService {
           name: input.name,
           description: input.metadata?.description ?? null,
           config: (input.config ?? {}) as any,
-          is_published: false,
+          status: input.status ?? 'draft',
           updated_at: nowIso,
           user_id: 'system', // Required field - using default value
         })
@@ -223,26 +221,23 @@ export class CanonicalFunnelService {
     const startTime = performance.now();
 
     try {
-      let query = supabase.from('funnels').select('*');
-
-      // Mapeamento para o schema atual: usamos is_published como proxy de status/isActive
-      if (filters?.status) {
-        if (filters.status === 'published') {
-          query = query.eq('is_published', true);
-        } else {
-          // 'draft' ou 'archived' → não publicados
-          query = query.eq('is_published', false);
-        }
-      }
-      if (filters?.isActive !== undefined) query = query.eq('is_published', !!filters.isActive);
-
-      query = query.order('updated_at', { ascending: false });
-
-      const { data, error } = await query;
+      // Busca sem filtro de coluna para tolerar variação de schema
+      const { data, error } = await supabase
+        .from('funnels')
+        .select('*')
+        .order('updated_at', { ascending: false });
 
       if (error) throw error;
 
-      const funnels = data.map(this.mapDatabaseToFunnel);
+      let funnels = data.map(this.mapDatabaseToFunnel);
+
+      // Filtro em memória baseado em status normalizado
+      if (filters?.status) {
+        funnels = funnels.filter(f => f.status === filters.status);
+      }
+      if (typeof filters?.isActive !== 'undefined') {
+        funnels = funnels.filter(f => f.isActive === !!filters.isActive);
+      }
 
       const elapsed = performance.now() - startTime;
       appLogger.debug(`[FunnelService] ${funnels.length} funis carregados (${elapsed.toFixed(0)}ms)`);
@@ -261,21 +256,21 @@ export class CanonicalFunnelService {
     const startTime = performance.now();
 
     try {
-      // Ajustar para colunas existentes
+      // Ajustar para novo esquema (status/config) com fallbacks
       const update: Record<string, any> = {
         updated_at: new Date().toISOString(),
       };
       if (typeof input.name !== 'undefined') update.name = input.name;
-      if (typeof input.config !== 'undefined') update.settings = input.config as any;
+      if (typeof input.config !== 'undefined') update.config = input.config as any;
       if (typeof input.metadata !== 'undefined' && input.metadata) {
         // manter descrição em metadata.description caso exista
         if (typeof (input.metadata as any).description === 'string') {
           update.description = (input.metadata as any).description;
         }
       }
-      // Mapear isActive/status → is_published
-      if (typeof input.isActive !== 'undefined') update.is_published = !!input.isActive;
-      if (typeof input.status !== 'undefined') update.is_published = input.status === 'published';
+      // status/isActive normalizados
+      if (typeof input.status !== 'undefined') update.status = input.status;
+      if (typeof input.isActive !== 'undefined') update.status = input.isActive ? 'published' : 'draft';
 
       const { data, error } = await supabase
         .from('funnels')
@@ -309,10 +304,10 @@ export class CanonicalFunnelService {
    */
   async deleteFunnel(funnelId: string): Promise<boolean> {
     try {
-      // No schema atual não há is_active/status → marcar como não publicado
+      // Marcar como rascunho (draft) no novo esquema
       const { error } = await supabase
         .from('funnels')
-        .update({ is_published: false, updated_at: new Date().toISOString() })
+        .update({ status: 'draft', updated_at: new Date().toISOString() })
         .eq('id', funnelId);
 
       if (error) throw error;
@@ -475,12 +470,12 @@ export class CanonicalFunnelService {
       category: data.category,
       context: data.context,
       templateId: data.template_id,
-      status: data.is_published ? 'published' : 'draft',
-      config: data.settings || {},
+      status: data.status ?? (data.is_published ? 'published' : 'draft'),
+      config: data.config ?? data.settings ?? {},
       metadata: data.metadata || { description: data.description },
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      isActive: data.is_published ?? false,
+      isActive: typeof data.is_published === 'boolean' ? data.is_published : (data.status ? data.status === 'published' : false),
     };
   }
 }

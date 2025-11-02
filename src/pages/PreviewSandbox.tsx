@@ -70,7 +70,7 @@ export default function PreviewSandbox() {
     window.addEventListener('message', handleMessage);
 
     // Notificar que está pronto
-    sendMessage({ type: 'READY' });
+    sendMessage({ type: 'INIT' });
 
     return () => window.removeEventListener('message', handleMessage);
   }, []);
@@ -81,7 +81,7 @@ export default function PreviewSandbox() {
   const handleStepChange = (stepId: string) => {
     setCurrentStepId(stepId);
     sendMessage({
-      type: 'STEP_CHANGE',
+      type: 'NAVIGATE',
       payload: { stepId },
     });
   };

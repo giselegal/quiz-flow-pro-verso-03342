@@ -171,8 +171,10 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
         .insert({
           funnel_id: funnelId,
           session_id: sessionId,
-          event_type: eventType,
-          event_data: eventData || {},
+          metric_name: eventType,
+          metric_data: eventData || {},
+          metric_value: undefined,
+          recorded_at: new Date().toISOString(),
           user_id: undefined, // Public quiz
         });
 

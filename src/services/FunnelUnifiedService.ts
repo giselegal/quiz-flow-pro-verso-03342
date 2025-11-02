@@ -949,8 +949,8 @@ export class FunnelUnifiedService {
             }
 
             // Carregar páginas
-            const { data: pages } = await supabase
-                .from('funnel_pages')
+            const { data: pages } = await (supabase as any)
+                .from('funnel_pages' as any)
                 .select('*')
                 .eq('funnel_id', id)
                 .order('page_order');
@@ -1021,8 +1021,8 @@ export class FunnelUnifiedService {
     private async deleteFromSupabase(id: string, userId?: string): Promise<void> {
         try {
             // Deletar páginas primeiro
-            await supabase
-                .from('funnel_pages')
+            await (supabase as any)
+                .from('funnel_pages' as any)
                 .delete()
                 .eq('funnel_id', id);
 
@@ -1051,8 +1051,8 @@ export class FunnelUnifiedService {
     private async savePagesToSupabase(funnelId: string, pages: any[]): Promise<void> {
         try {
             // Deletar páginas existentes
-            await supabase
-                .from('funnel_pages')
+            await (supabase as any)
+                .from('funnel_pages' as any)
                 .delete()
                 .eq('funnel_id', funnelId);
 
@@ -1067,8 +1067,8 @@ export class FunnelUnifiedService {
                     blocks: page.blocks || [],
                 }));
 
-                const { error } = await supabase
-                    .from('funnel_pages')
+                const { error } = await (supabase as any)
+                    .from('funnel_pages' as any)
                     .insert(pageRecords);
 
                 if (error) {

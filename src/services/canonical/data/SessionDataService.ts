@@ -48,8 +48,8 @@ export class SessionDataService extends BaseCanonicalService {
 
       const session: QuizSession = {
         id: row.id,
-        funnelId: row.funnel_id,
-        userId: row.quiz_user_id,
+  funnelId: (row.funnel_id ?? '') as string,
+  userId: (row.quiz_user_id ?? '') as string,
         status: row.status as any,
         currentStep: row.current_step || 0,
         totalSteps: row.total_steps || 0,
@@ -111,8 +111,8 @@ export class SessionDataService extends BaseCanonicalService {
 
       const session: QuizSession = {
         id: data.id,
-        funnelId: data.funnel_id,
-        userId: data.quiz_user_id,
+  funnelId: (data.funnel_id ?? '') as string,
+  userId: (data.quiz_user_id ?? '') as string,
         status: data.status as any,
         currentStep: data.current_step || 0,
         totalSteps: data.total_steps || 0,

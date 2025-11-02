@@ -37,6 +37,10 @@ interface UnifiedFunnelData {
     name: string;
     user_id: string | null;
     description?: string | null;
+    // Novo esquema principal
+    config?: any;
+    status?: 'draft' | 'published' | 'archived' | string | null;
+    // Compatibilidade legada (somente em memória)
     settings?: any;
     version?: number | null;
     is_published?: boolean | null;
@@ -597,7 +601,17 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             if (error) throw error;
 
-            dispatch({ type: 'SET_FUNNELS', payload: data || [] });
+            // Normaliza para novo esquema, mantendo compat de leitura
+            const normalized = (data || []).map((f: any) => ({
+                ...f,
+                config: f.config ?? f.settings ?? {},
+                status: f.status ?? (f.is_published ? 'published' : 'draft'),
+                // compat de consumo interno
+                settings: f.settings ?? f.config ?? {},
+                is_published: typeof f.is_published === 'boolean' ? f.is_published : (f.status ? f.status === 'published' : false),
+            }));
+
+            dispatch({ type: 'SET_FUNNELS', payload: normalized });
 
             if (debugMode) {
                 console.log('✅ Funnels loaded:', data?.length || 0);
@@ -636,7 +650,17 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             if (error) throw error;
 
-            dispatch({ type: 'SET_CURRENT_FUNNEL', payload: data });
+            const normalized: UnifiedFunnelData = {
+                ...(data as any),
+                config: (data as any).config ?? (data as any).settings ?? {},
+                status: (data as any).status ?? ((data as any).is_published ? 'published' : 'draft'),
+                settings: (data as any).settings ?? (data as any).config ?? {},
+                is_published: typeof (data as any).is_published === 'boolean'
+                    ? (data as any).is_published
+                    : ((data as any).status ? (data as any).status === 'published' : false),
+            };
+
+            dispatch({ type: 'SET_CURRENT_FUNNEL', payload: normalized });
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'funnel', error: error.message } });
         } finally {
@@ -651,12 +675,21 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: true, message: 'Salvando...' } });
 
         try {
+            // Monta payload seguro para o novo schema (status/config) com fallbacks
+            const payload: any = {
+                id: funnelToSave.id,
+                name: funnelToSave.name,
+                description: funnelToSave.description ?? null,
+                version: funnelToSave.version ?? 1,
+                user_id: funnelToSave.user_id ?? null,
+                config: (funnelToSave as any).config ?? (funnelToSave as any).settings ?? {},
+                status: (funnelToSave as any).status ?? ((funnelToSave as any).is_published ? 'published' : 'draft'),
+                updated_at: new Date().toISOString(),
+            };
+
             const { data, error } = await (supabase as any)
                 .from('funnels')
-                .upsert({
-                    ...(funnelToSave as any),
-                    updated_at: new Date().toISOString(),
-                })
+                .upsert(payload)
                 .select()
                 .single();
 
@@ -702,9 +735,9 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     id: `f_${Date.now()}`,
                     name,
                     description: options.description || '',
-                    settings: options.settings || {},
+                    config: options.settings || {},
                     version: 1,
-                    is_published: false,
+                    status: 'draft',
                     user_id: options.userId || null,
                 })
                 .select()

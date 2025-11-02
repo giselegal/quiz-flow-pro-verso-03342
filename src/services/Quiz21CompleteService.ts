@@ -483,8 +483,8 @@ export async function testQuiz21Complete(funnelId: string): Promise<boolean> {
         }
 
         // Verificar páginas
-        const { data: pages, error: pagesError } = await supabase
-            .from('funnel_pages')
+        const { data: pages, error: pagesError } = await (supabase as any)
+            .from('funnel_pages' as any)
             .select('*')
             .eq('funnel_id', funnelId)
             .order('page_order');

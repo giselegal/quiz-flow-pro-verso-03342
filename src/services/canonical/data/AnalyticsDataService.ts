@@ -3,6 +3,37 @@ import { supabase } from '@/integrations/supabase/customClient';
 import type { DashboardMetrics } from '@/services/canonical/DataService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
 
+// Helpers exportados para testes
+export function computeAverageSessionDuration(sessions: Array<any>): number {
+  if (!sessions?.length) return 0;
+  const durations: number[] = [];
+  for (const s of sessions) {
+    const start = s?.started_at ? new Date(s.started_at).getTime() : null;
+    const end = s?.ended_at ? new Date(s.ended_at).getTime() : null;
+    if (start && end && end > start) durations.push((end - start) / 1000);
+  }
+  if (!durations.length) return 0;
+  return durations.reduce((acc, v) => acc + v, 0) / durations.length;
+}
+
+export function computeBounceRate(sessions: Array<any>, analyticsToday: Array<any>): number {
+  const totalSessions = sessions?.length || 0;
+  if (!totalSessions) return 0;
+  const eventsBySession = new Map<string, number>();
+  for (const a of analyticsToday || []) {
+    const sid = a?.session_id ? String(a.session_id) : undefined;
+    if (!sid) continue;
+    eventsBySession.set(sid, (eventsBySession.get(sid) || 0) + 1);
+  }
+  let bounces = 0;
+  for (const s of sessions) {
+    const sid = s?.id ? String(s.id) : undefined;
+    const count = sid ? (eventsBySession.get(sid) || 0) : 0;
+    if (count <= 1) bounces += 1;
+  }
+  return (bounces / totalSessions) * 100;
+}
+
 export class AnalyticsDataService extends BaseCanonicalService {
   private static instance: AnalyticsDataService;
 
@@ -72,38 +103,10 @@ export class AnalyticsDataService extends BaseCanonicalService {
       }
 
       // Duração média de sessões encerradas no dia
-      let averageSessionDuration = 0;
-      if (sessions.length > 0) {
-        const durations: number[] = [];
-        for (const s of sessions) {
-          const start = s?.started_at ? new Date(s.started_at).getTime() : null;
-          const end = s?.ended_at ? new Date(s.ended_at).getTime() : null;
-          if (start && end && end > start) {
-            durations.push((end - start) / 1000);
-          }
-        }
-        if (durations.length > 0) {
-          averageSessionDuration = durations.reduce((acc, v) => acc + v, 0) / durations.length;
-        }
-      }
+      const averageSessionDuration = computeAverageSessionDuration(sessions);
 
       // Bounce rate: sessões com 0 ou 1 evento no dia
-      let bounceRate = 0;
-      if (totalSessions > 0) {
-        const eventsBySession = new Map<string, number>();
-        for (const a of analyticsToday) {
-          const sid = a?.session_id ? String(a.session_id) : undefined;
-          if (!sid) continue;
-          eventsBySession.set(sid, (eventsBySession.get(sid) || 0) + 1);
-        }
-        let bounces = 0;
-        for (const s of sessions) {
-          const sid = s?.id ? String(s.id) : undefined;
-          const count = sid ? (eventsBySession.get(sid) || 0) : 0;
-          if (count <= 1) bounces += 1;
-        }
-        bounceRate = (bounces / totalSessions) * 100;
-      }
+      const bounceRate = computeBounceRate(sessions, analyticsToday);
 
       const metrics: DashboardMetrics = {
         activeUsersNow,

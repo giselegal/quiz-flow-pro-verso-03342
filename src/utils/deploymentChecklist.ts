@@ -85,8 +85,8 @@ class DeploymentChecker {
   async runSecurityCheck(): Promise<void> {
     try {
       // Verificar se o sistema de segurança está funcionando
-      const { error } = await supabase
-        .from('security_audit_logs')
+        const { error } = await (supabase as any)
+          .from('security_audit_logs' as any)
         .select('count')
         .limit(1);
       

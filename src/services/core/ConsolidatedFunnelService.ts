@@ -17,9 +17,12 @@ export interface FunnelData {
   name: string;
   description?: string | null;
   user_id: string | null;
-  is_published: boolean | null;
-  version: number | null;
+  // Compat legado + novo esquema
+  is_published?: boolean | null;
+  version?: number | null;
   settings?: any;
+  status?: string | null;
+  config?: any;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -96,7 +99,13 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         throw new Error(`Failed to fetch funnels: ${error.message}`);
       }
 
-      const funnels = data || [];
+      const funnels = (data || []).map((f: any) => ({
+        ...f,
+        config: f.config ?? f.settings ?? {},
+        status: f.status ?? (typeof f.is_published === 'boolean' ? (f.is_published ? 'published' : 'draft') : null),
+        settings: f.settings ?? f.config ?? {},
+        is_published: typeof f.is_published === 'boolean' ? f.is_published : (f.status ? f.status === 'published' : null),
+      }));
       this.setCached(cacheKey, funnels, 300000); // 5 minutes
       return funnels;
     }, 'getAllFunnels');
@@ -145,9 +154,10 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
       const sessionsMap = new Map<string, any[]>();
       (sessions || []).forEach(session => {
-        const funnelSessions = sessionsMap.get(session.funnel_id) || [];
+        const key = String(session.funnel_id || 'unknown');
+        const funnelSessions = sessionsMap.get(key) || [];
         funnelSessions.push(session);
-        sessionsMap.set(session.funnel_id, funnelSessions);
+        sessionsMap.set(key, funnelSessions);
       });
 
       const metrics: FunnelMetrics[] = funnels.map(funnel => {
@@ -180,7 +190,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
             Math.round((completedSessions.length / funnelSessions.length) * 100) : 0,
           averageTime,
           lastActivity: lastSession?.started_at,
-          status: funnel.is_published ? 
+          status: (funnel.is_published ?? (funnel.status ? funnel.status === 'published' : false)) ? 
             (funnelSessions.length > 0 ? 'active' : 'inactive') : 'draft',
         };
       });
@@ -273,8 +283,8 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         updated_at: now,
       };
 
-      const { data: result, error } = await supabase
-        .from('funnels')
+      const { data: result, error } = await (supabase as any)
+        .from('funnels' as any)
         .insert([funnelData])
         .select()
         .single();
@@ -292,8 +302,8 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
   async updateFunnel(id: string, updates: Partial<FunnelData>): Promise<FunnelData> {
     return this.executeWithMetrics(async () => {
-      const { data, error } = await supabase
-        .from('funnels')
+      const { data, error } = await (supabase as any)
+        .from('funnels' as any)
         .update({
           ...updates,
           updated_at: new Date().toISOString(),
