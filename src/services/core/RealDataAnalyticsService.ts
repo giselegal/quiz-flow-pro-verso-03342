@@ -199,10 +199,11 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       // Top performing funnels
       const funnelStats = new Map<string, { sessions: number; completions: number }>();
       sessionsData.forEach(session => {
-        const current = funnelStats.get(session.funnel_id) || { sessions: 0, completions: 0 };
+        const fid = session.funnel_id || 'unknown';
+        const current = funnelStats.get(fid) || { sessions: 0, completions: 0 };
         current.sessions++;
         if (session.status === 'completed') current.completions++;
-        funnelStats.set(session.funnel_id, current);
+        funnelStats.set(fid, current);
       });
 
       const topPerformingFunnels = Array.from(funnelStats.entries())

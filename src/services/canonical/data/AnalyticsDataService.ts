@@ -21,44 +21,97 @@ export class AnalyticsDataService extends BaseCanonicalService {
   async getDashboardMetrics(): Promise<ServiceResult<DashboardMetrics>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'getDashboardMetrics');
     try {
-      const today = new Date().toISOString().split('T')[0];
+      // Define recortes de tempo
+      const now = new Date();
+      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startOfDayISO = startOfDay.toISOString();
+      const fiveMinutesAgoISO = new Date(now.getTime() - 5 * 60 * 1000).toISOString();
 
-      const { count: activeUsers } = await supabase
-        .from('active_user_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true)
-        .gte('last_activity', new Date(Date.now() - 5 * 60 * 1000).toISOString());
+      // Buscas baseadas no novo esquema (quiz_sessions, quiz_analytics)
+      // Observação: usamos <any> para tolerar variações de schema/tipagem gerada durante a migração.
+      const [sessionsRes, analyticsTodayRes, recentActivityRes] = await Promise.all([
+        (supabase
+          .from('quiz_sessions' as any) as any)
+          .select('id, started_at, ended_at, user_id')
+          .gte('started_at', startOfDayISO),
+        (supabase
+          .from('quiz_analytics' as any) as any)
+          .select('metric_name, metric_value, session_id, user_id, recorded_at')
+          .gte('recorded_at', startOfDayISO),
+        (supabase
+          .from('quiz_analytics' as any) as any)
+          .select('user_id, recorded_at')
+          .gte('recorded_at', fiveMinutesAgoISO)
+          .not('user_id', 'is', null),
+      ]);
 
-      const { count: totalSessions } = await supabase
-        .from('quiz_sessions')
-        .select('*', { count: 'exact', head: true })
-        .gte('started_at', today);
+      const sessions: any[] = ((sessionsRes as any)?.data as any[]) || [];
+      const analyticsToday: any[] = ((analyticsTodayRes as any)?.data as any[]) || [];
+      const recentActivity: any[] = ((recentActivityRes as any)?.data as any[]) || [];
 
-      const { count: conversions } = await supabase
-        .from('quiz_conversions')
-        .select('*', { count: 'exact', head: true })
-        .gte('converted_at', today);
+      // Usuários ativos (distinct user_id nos últimos 5 minutos)
+      const activeUserSet = new Set<string>();
+      for (const row of recentActivity) {
+        if (row?.user_id) activeUserSet.add(String(row.user_id));
+      }
+      const activeUsersNow = activeUserSet.size;
 
-      const { data: revenueData } = await supabase
-        .from('quiz_conversions')
-        .select('conversion_value')
-        .gte('converted_at', today);
+      // Total de sessões do dia
+      const totalSessions = sessions.length;
 
-      const totalRevenue = revenueData?.reduce((sum: number, item: any) => sum + (Number(item.conversion_value) || 0), 0) || 0;
+      // Conversões e Receita a partir de métricas do dia
+      const conversionMetricNames = new Set(['conversion', 'quiz_completed', 'purchase']);
+      const revenueMetricNames = new Set(['revenue', 'purchase_value', 'order_value', 'conversion_value']);
 
-      const { data: analyticsData } = await supabase
-        .from('session_analytics')
-        .select('*')
-        .eq('date', today)
-        .maybeSingle();
+      let conversions = 0;
+      let totalRevenue = 0;
+      for (const a of analyticsToday) {
+        const name = String(a?.metric_name || '').toLowerCase();
+        if (conversionMetricNames.has(name)) conversions += 1;
+        if (revenueMetricNames.has(name)) totalRevenue += Number(a?.metric_value || 0) || 0;
+      }
+
+      // Duração média de sessões encerradas no dia
+      let averageSessionDuration = 0;
+      if (sessions.length > 0) {
+        const durations: number[] = [];
+        for (const s of sessions) {
+          const start = s?.started_at ? new Date(s.started_at).getTime() : null;
+          const end = s?.ended_at ? new Date(s.ended_at).getTime() : null;
+          if (start && end && end > start) {
+            durations.push((end - start) / 1000);
+          }
+        }
+        if (durations.length > 0) {
+          averageSessionDuration = durations.reduce((acc, v) => acc + v, 0) / durations.length;
+        }
+      }
+
+      // Bounce rate: sessões com 0 ou 1 evento no dia
+      let bounceRate = 0;
+      if (totalSessions > 0) {
+        const eventsBySession = new Map<string, number>();
+        for (const a of analyticsToday) {
+          const sid = a?.session_id ? String(a.session_id) : undefined;
+          if (!sid) continue;
+          eventsBySession.set(sid, (eventsBySession.get(sid) || 0) + 1);
+        }
+        let bounces = 0;
+        for (const s of sessions) {
+          const sid = s?.id ? String(s.id) : undefined;
+          const count = sid ? (eventsBySession.get(sid) || 0) : 0;
+          if (count <= 1) bounces += 1;
+        }
+        bounceRate = (bounces / totalSessions) * 100;
+      }
 
       const metrics: DashboardMetrics = {
-        activeUsersNow: activeUsers || 0,
-        totalSessions: totalSessions || 0,
+        activeUsersNow,
+        totalSessions,
         conversionRate: totalSessions && conversions ? (conversions / totalSessions) * 100 : 0,
         totalRevenue,
-        averageSessionDuration: analyticsData?.average_duration_seconds || 0,
-        bounceRate: analyticsData?.bounce_rate || 0,
+        averageSessionDuration,
+        bounceRate,
       };
 
       return this.createResult(metrics);
