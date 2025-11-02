@@ -290,7 +290,7 @@ export const validateFunnelPage = (
 ): { valid: boolean; data?: FunnelPage; errors?: string[] } => {
   const result = safeValidate(FunnelPageSchema, data);
   if (result.success) {
-    return { valid: true, data: result.data as FunnelPage };
+    return { valid: true, data: result.data as unknown as FunnelPage }; // Mudado para as unknown as FunnelPage
   }
   return { valid: false, errors: [result.error || 'Validation failed'] };
 };
