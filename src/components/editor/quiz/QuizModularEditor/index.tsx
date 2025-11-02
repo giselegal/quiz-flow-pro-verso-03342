@@ -86,19 +86,43 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         const result = dnd.handlers.onDragEnd(event);
         if (!result) return;
 
-        const { draggedItem, dropzone } = result;
+        const { draggedItem, overId, activeId } = result as { draggedItem: any; overId: any; activeId: any };
+        const stepKey = editor.state.currentStepKey;
+        const list = ops.getBlocks(stepKey) || [];
 
-        if (draggedItem?.type === 'library-item' && dropzone === 'canvas') {
-            if (draggedItem.libraryType) {
-                const addResult = ops.addBlock(editor.state.currentStepKey, {
-                    type: draggedItem.libraryType as Block['type']
-                });
-                if (addResult.success) {
+        // 1) Inserção de item da biblioteca no canvas (fim da lista ou próximo ao item alvo)
+        if (draggedItem?.type === 'library-item') {
+            if (!draggedItem.libraryType) return;
+            const addResult = ops.addBlock(stepKey, { type: draggedItem.libraryType as Block['type'] });
+            if (addResult.success) {
+                // Inserir em posição específica se soltou sobre um bloco existente
+                const targetIndex = list.findIndex(b => String(b.id) === String(overId));
+                if (targetIndex >= 0) {
+                    // move último para após o alvo
+                    const from = (list.length); // após o add, o novo bloco vira o último (index length, mas reorder espera índices 0..n-1 após setState assíncrono)
+                    // Como o estado ainda não refletiu o novo item, fazemos uma aproximação: chamar reorder no próximo tick
+                    setTimeout(() => {
+                        const nextList = ops.getBlocks(stepKey) || [];
+                        const fromIdx = nextList.length - 1;
+                        const toIdx = Math.min(targetIndex + 1, nextList.length - 1);
+                        ops.reorderBlock(stepKey, fromIdx, toIdx);
+                        editor.markDirty(true);
+                    }, 0);
+                } else {
                     editor.markDirty(true);
                 }
             }
-        } else if (draggedItem?.type === 'block' && dropzone === 'canvas') {
-            console.log('Reorder blocks:', result);
+            return;
+        }
+
+        // 2) Reordenação entre blocos do canvas (sortable): activeId e overId são IDs de blocos
+        if (draggedItem?.type === 'block' && activeId && overId && activeId !== overId) {
+            const fromIndex = list.findIndex(b => String(b.id) === String(activeId));
+            const toIndex = list.findIndex(b => String(b.id) === String(overId));
+            if (fromIndex >= 0 && toIndex >= 0) {
+                ops.reorderBlock(stepKey, fromIndex, toIndex);
+                editor.markDirty(true);
+            }
         }
     }, [dnd.handlers, ops, editor]);
 
