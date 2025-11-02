@@ -99,7 +99,7 @@ export class SettingsService {
 
             const { data, error } = await supabase
                 .from('funnels')
-                .select('settings')
+                .select('config') // Mudado de 'settings' para 'config'
                 .eq('id', funnelId)
                 .single();
 
@@ -116,13 +116,13 @@ export class SettingsService {
             }
 
             // Se não há configurações salvas, retornar padrão
-            if (!data?.settings) {
+            if (!data?.config) {
                 console.log('ℹ️ Nenhuma configuração encontrada, usando padrão');
                 return this.getDefaultSettings();
             }
 
             // Mesclar com configurações padrão para garantir completude
-            const settings = this.mergeWithDefaults(data.settings as any);
+            const settings = this.mergeWithDefaults(data.config as any); // Mudado de 'settings' para 'config'
 
             // Cachear para próximas consultas
             this.cache.set(funnelId, settings);

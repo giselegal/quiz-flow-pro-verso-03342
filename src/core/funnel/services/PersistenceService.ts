@@ -76,9 +76,15 @@ export class PersistenceService {
                 id: state.id,
                 name: state.metadata.name,
                 description: state.metadata.description || null,
-                is_published: options.autoPublish || state.metadata.isPublished,
-                user_id: options.userId || null,
-                settings: state as any, // Armazenar o estado completo no campo settings
+                user_id: options.userId || 'anonymous', // Obrigatório, usar 'anonymous' como padrão
+                config: state as any, // Mudado de 'settings' para 'config'
+                metadata: {
+                    isPublished: options.autoPublish || state.metadata.isPublished,
+                } as any,
+                status: (options.autoPublish || state.metadata.isPublished) ? 'published' : 'draft',
+                type: 'quiz',
+                category: 'quiz',
+                context: 'editor',
                 updated_at: new Date().toISOString(),
                 created_at: new Date().toISOString(),
             };
@@ -161,8 +167,8 @@ export class PersistenceService {
                 return this.loadFromLocalStorage(funnelId);
             }
 
-            // Converter dados do Supabase para FunnelState
-            const funnelState = data.settings as unknown as FunnelState;
+            // Converter dados do Supabase para FunnelState (mudado de 'settings' para 'config')
+            const funnelState = data.config as unknown as FunnelState;
 
             console.log(`✅ Funil carregado: ${funnelId}`);
             return funnelState;

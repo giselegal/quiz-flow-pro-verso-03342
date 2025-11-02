@@ -198,7 +198,7 @@ export class PublishingService {
 
             const { data, error } = await supabase
                 .from('funnels')
-                .select('is_published')
+                .select('status') // Mudado de 'is_published' para 'status'
                 .eq('id', funnelId)
                 .single();
 
@@ -213,7 +213,7 @@ export class PublishingService {
                 .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())[0];
 
             return {
-                isPublished: data.is_published || false,
+                isPublished: data.status === 'published' || false, // Mudado de 'is_published' para 'status'
                 lastDeployment,
             };
         } catch (error) {
