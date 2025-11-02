@@ -132,12 +132,12 @@ export class CanonicalFunnelService {
       const { data, error } = await supabase
         .from('funnels')
         .insert({
-          id: uuidv4(),
           name: input.name,
           description: input.metadata?.description ?? null,
-          settings: (input.config ?? {}) as any,
+          config: (input.config ?? {}) as any,
           is_published: false,
           updated_at: nowIso,
+          user_id: 'system', // Required field - using default value
         })
         .select()
         .single();

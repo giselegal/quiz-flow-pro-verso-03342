@@ -284,6 +284,125 @@ export const resultProgressBarsBlockSchema = z.object({
 });
 
 // =====================================================================
+// SCHEMAS STEP 20 MODULARES (FALTANTES)
+// =====================================================================
+
+export const step20UserGreetingSchema = z.object({
+  greeting: z.string().min(1).default('Olá'),
+  userName: z.string().optional(),
+  fontSize: z.enum(['xl', '2xl', '3xl', '4xl']).optional().default('2xl'),
+  textAlign: z.enum(['left', 'center', 'right']).optional().default('center'),
+  fontFamily: z.string().optional(),
+  color: colorSchema.optional(),
+  showAnimation: z.boolean().optional().default(true),
+});
+
+export const step20CompatibilitySchema = z.object({
+  styles: z.array(z.object({
+    name: z.string().min(1),
+    percentage: z.number().min(0).max(100),
+    color: colorSchema.optional(),
+    description: z.string().optional(),
+  })).min(1, 'Adicione pelo menos 1 estilo'),
+  showTop: z.number().min(1).max(5).optional().default(3),
+  animationSpeed: z.enum(['slow', 'normal', 'fast']).optional().default('normal'),
+  layout: z.enum(['bars', 'circles', 'list']).optional().default('bars'),
+  title: z.string().optional().default('Compatibilidade de estilos:'),
+});
+
+export const step20PersonalizedOfferSchema = z.object({
+  offerTitle: z.string().min(1, 'Título da oferta é obrigatório'),
+  offerDescription: z.string().optional(),
+  price: z.string().optional(),
+  originalPrice: z.string().optional(),
+  discount: z.string().optional(),
+  ctaText: z.string().min(1).default('Quero meu estilo'),
+  ctaUrl: z.string().url('URL inválida'),
+  benefits: z.array(z.string()).optional(),
+  highlightColor: colorSchema.optional(),
+  showTimer: z.boolean().optional().default(false),
+  timerMinutes: z.number().min(1).max(60).optional().default(15),
+});
+
+export const step20CompleteTemplateSchema = z.object({
+  modules: z.array(z.enum([
+    'header',
+    'greeting',
+    'style-reveal',
+    'compatibility',
+    'secondary-styles',
+    'offer',
+  ])).min(1, 'Selecione pelo menos 1 módulo'),
+  spacing: z.enum(['compact', 'normal', 'spacious']).optional().default('normal'),
+  backgroundColor: colorSchema.optional(),
+  containerMaxWidth: z.string().optional().default('1200px'),
+});
+
+// =====================================================================
+// SCHEMAS SALES & AI BLOCKS
+// =====================================================================
+
+export const salesHeroSchema = z.object({
+  headline: z.string().min(1, 'Headline é obrigatório'),
+  subheadline: z.string().optional(),
+  ctaText: z.string().min(1, 'Texto do CTA é obrigatório'),
+  ctaUrl: z.string().url('URL inválida'),
+  ctaVariant: z.enum(['default', 'secondary', 'outline']).optional().default('default'),
+  backgroundImage: urlSchema.optional(),
+  overlayOpacity: z.number().min(0).max(1).optional().default(0.5),
+  textColor: colorSchema.optional(),
+  alignment: z.enum(['left', 'center', 'right']).optional().default('center'),
+});
+
+export const fashionAIGeneratorSchema = z.object({
+  prompt: z.string().min(10, 'Prompt deve ter pelo menos 10 caracteres'),
+  model: z.enum(['gemini-2.5-flash', 'gpt-5-mini']).default('gemini-2.5-flash'),
+  temperature: z.number().min(0).max(1).optional().default(0.7),
+  maxTokens: z.number().min(50).max(2000).optional().default(500),
+  systemPrompt: z.string().optional(),
+  categories: z.array(z.string()).optional(),
+  includeImages: z.boolean().optional().default(true),
+});
+
+// =====================================================================
+// SCHEMAS TESTIMONIALS
+// =====================================================================
+
+export const testimonialSchema = z.object({
+  author: z.string().min(1, 'Nome do autor é obrigatório'),
+  role: z.string().optional(),
+  text: z.string().min(10, 'Depoimento deve ter pelo menos 10 caracteres'),
+  avatar: urlSchema.optional(),
+  rating: z.number().min(1).max(5).optional(),
+  company: z.string().optional(),
+  date: z.string().optional(),
+});
+
+export const testimonialsGridSchema = z.object({
+  testimonials: z.array(testimonialSchema).min(1, 'Adicione pelo menos 1 depoimento'),
+  columns: z.enum(['1', '2', '3']).optional().default('2'),
+  showRating: z.boolean().optional().default(true),
+  showAvatar: z.boolean().optional().default(true),
+  backgroundColor: colorSchema.optional(),
+  cardStyle: z.enum(['default', 'bordered', 'elevated']).optional().default('default'),
+});
+
+export const testimonialCardInlineSchema = z.object({
+  testimonial: testimonialSchema,
+  variant: z.enum(['compact', 'full']).optional().default('full'),
+  showQuoteIcon: z.boolean().optional().default(true),
+});
+
+export const testimonialsCarouselInlineSchema = z.object({
+  testimonials: z.array(testimonialSchema).min(1, 'Adicione pelo menos 1 depoimento'),
+  autoPlay: z.boolean().optional().default(true),
+  interval: z.number().min(3000).max(10000).optional().default(5000),
+  showIndicators: z.boolean().optional().default(true),
+  showNavigation: z.boolean().optional().default(true),
+  loop: z.boolean().optional().default(true),
+});
+
+// =====================================================================
 // MAPEAMENTO DE SCHEMAS
 // =====================================================================
 
@@ -320,6 +439,22 @@ export const blockSchemas = {
   'result-cta': resultCTABlockSchema,
   'result-secondary-styles': resultSecondaryStylesBlockSchema,
   'result-progress-bars': resultProgressBarsBlockSchema,
+
+  // Step 20 Modulares
+  'step20-user-greeting': step20UserGreetingSchema,
+  'step20-compatibility': step20CompatibilitySchema,
+  'step20-personalized-offer': step20PersonalizedOfferSchema,
+  'step20-complete-template': step20CompleteTemplateSchema,
+
+  // Sales & AI
+  'sales-hero': salesHeroSchema,
+  'fashion-ai-generator': fashionAIGeneratorSchema,
+
+  // Testimonials
+  testimonials: testimonialsGridSchema,
+  'testimonials-grid': testimonialsGridSchema,
+  'testimonial-card-inline': testimonialCardInlineSchema,
+  'testimonials-carousel-inline': testimonialsCarouselInlineSchema,
 } as const;
 
 export type BlockType = keyof typeof blockSchemas;
@@ -353,6 +488,22 @@ export type ResultCharacteristicsBlockData = z.infer<typeof resultCharacteristic
 export type ResultCTABlockData = z.infer<typeof resultCTABlockSchema>;
 export type ResultSecondaryStylesBlockData = z.infer<typeof resultSecondaryStylesBlockSchema>;
 export type ResultProgressBarsBlockData = z.infer<typeof resultProgressBarsBlockSchema>;
+
+// Tipos de blocos Step 20 modulares
+export type Step20UserGreetingBlockData = z.infer<typeof step20UserGreetingSchema>;
+export type Step20CompatibilityBlockData = z.infer<typeof step20CompatibilitySchema>;
+export type Step20PersonalizedOfferBlockData = z.infer<typeof step20PersonalizedOfferSchema>;
+export type Step20CompleteTemplateBlockData = z.infer<typeof step20CompleteTemplateSchema>;
+
+// Tipos de blocos Sales & AI
+export type SalesHeroBlockData = z.infer<typeof salesHeroSchema>;
+export type FashionAIGeneratorBlockData = z.infer<typeof fashionAIGeneratorSchema>;
+
+// Tipos de blocos Testimonials
+export type TestimonialData = z.infer<typeof testimonialSchema>;
+export type TestimonialsGridBlockData = z.infer<typeof testimonialsGridSchema>;
+export type TestimonialCardInlineBlockData = z.infer<typeof testimonialCardInlineSchema>;
+export type TestimonialsCarouselInlineBlockData = z.infer<typeof testimonialsCarouselInlineSchema>;
 
 // Helper para validar um bloco
 export function validateBlockData(blockType: BlockType, data: unknown) {

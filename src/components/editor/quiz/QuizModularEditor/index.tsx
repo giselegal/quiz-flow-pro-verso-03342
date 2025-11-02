@@ -14,6 +14,7 @@ const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorC
 const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
 const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
+const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 
 export type QuizModularEditorProps = {
     funnelId?: string;
@@ -26,6 +27,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const ops = useBlockOperations();
     const dnd = useDndSystem();
     const { enableAutoSave } = useFeatureFlags();
+
+    // Estado do preview
+    const [showPreview, setShowPreview] = React.useState(true);
 
     const persistence = useEditorPersistence({
         enableAutoSave,
@@ -83,95 +87,109 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             onDragEnd={handleDragEnd}
             onDragCancel={dnd.handlers.onDragCancel}
         >
-            <div className="qm-editor grid grid-cols-4 gap-2 h-full" data-editor="modular-experimental">
-                <div className="col-span-4 px-3 py-2 text-xs text-purple-800 bg-purple-50 border border-purple-200 rounded">
+            <div className="qm-editor flex flex-col h-full" data-editor="modular-experimental">
+                {/* Header com info */}
+                <div className="px-3 py-2 text-xs text-purple-800 bg-purple-50 border-b border-purple-200">
                     Editor Modular (experimental) — usando serviços canônicos e carregamento sob demanda
                 </div>
-                <Suspense fallback={<div>Carregando navegação…</div>}>
-                    <div className="col-span-1 border-r">
-                        <StepNavigatorColumn
-                            initialStepKey={props.initialStepKey}
-                            currentStepKey={editor.state.currentStepKey}
-                            onSelectStep={editor.setStep}
-                        />
-                    </div>
-                </Suspense>
 
-                <Suspense fallback={<div className="col-span-2 flex items-center justify-center">Carregando canvas…</div>}>
-                    <div className="col-span-2">
-                        <CanvasColumn
-                            currentStepKey={editor.state.currentStepKey}
-                            blocks={blocks}
-                            selectedBlockId={editor.state.selectedBlockId}
-                            onRemoveBlock={(id) => {
-                                ops.removeBlock(editor.state.currentStepKey, id);
-                                editor.markDirty(true);
-                            }}
-                            onMoveBlock={(from, to) => {
-                                ops.reorderBlock(editor.state.currentStepKey, from, to);
-                                editor.markDirty(true);
-                            }}
-                            onUpdateBlock={(id, patch) => {
-                                ops.updateBlock(editor.state.currentStepKey, id, patch);
-                                editor.markDirty(true);
-                            }}
-                            onBlockSelect={editor.selectBlock}
-                        />
-                    </div>
-                </Suspense>
-
-                <Suspense fallback={<div className="col-span-1 border-l p-2 text-sm">Carregando biblioteca…</div>}>
-                    <div className="col-span-1 border-l flex flex-col h-full">
-                        <ComponentLibraryColumn
-                            currentStepKey={editor.state.currentStepKey}
-                            onAddBlock={(type) => {
-                                ops.addBlock(editor.state.currentStepKey, { type });
-                                editor.markDirty(true);
-                            }}
-                        />
-                        <div className="mt-auto p-2 text-sm border-t space-y-2">
-                            {/* Status do Auto-save */}
-                            {enableAutoSave && (
-                                <div className="text-xs text-muted-foreground text-center">
-                                    {persistence.hasAutoSavePending
-                                        ? '🔄 Auto-save pendente...'
-                                        : editor.state.isDirty
-                                            ? '📝 Alterações detectadas'
-                                            : '✅ Salvo automaticamente'
-                                    }
-                                </div>
-                            )}
-
-                            <button
-                                className="text-xs px-2 py-1 border rounded w-full"
-                                onClick={() => {
-                                    const stepKey = editor.state.currentStepKey;
-                                    const blocks = ops.getBlocks(stepKey);
-                                    if (stepKey && blocks) {
-                                        persistence.saveStepBlocks(stepKey, blocks);
-                                    }
-                                }}
-                                disabled={!editor.state.currentStepKey || persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving}
-                            >
-                                {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving
-                                    ? 'Salvando...'
-                                    : enableAutoSave
-                                        ? 'Salvar Agora'
-                                        : 'Salvar'
-                                }
-                            </button>
+                {/* Grid principal: Navegação | Canvas | Biblioteca + Propriedades */}
+                <div className="grid grid-cols-4 gap-2 flex-1 overflow-hidden">
+                    <Suspense fallback={<div>Carregando navegação…</div>}>
+                        <div className="col-span-1 border-r overflow-y-auto">
+                            <StepNavigatorColumn
+                                initialStepKey={props.initialStepKey}
+                                currentStepKey={editor.state.currentStepKey}
+                                onSelectStep={editor.setStep}
+                            />
                         </div>
-                    </div>
-                </Suspense>
+                    </Suspense>
 
-                <Suspense fallback={<div className="col-span-1 border-l p-2 text-sm">Carregando propriedades…</div>}>
-                    <PropertiesColumn
-                        selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) || null}
-                        onBlockUpdate={(blockId, updates) => {
-                            ops.updateBlock(editor.state.currentStepKey, blockId, updates);
-                            editor.markDirty(true);
-                        }}
-                        onClearSelection={editor.clearSelection}
+                    <Suspense fallback={<div className="col-span-2 flex items-center justify-center">Carregando canvas…</div>}>
+                        <div className="col-span-2 overflow-y-auto">
+                            <CanvasColumn
+                                currentStepKey={editor.state.currentStepKey}
+                                blocks={blocks}
+                                selectedBlockId={editor.state.selectedBlockId}
+                                onRemoveBlock={(id) => {
+                                    ops.removeBlock(editor.state.currentStepKey, id);
+                                    editor.markDirty(true);
+                                }}
+                                onMoveBlock={(from, to) => {
+                                    ops.reorderBlock(editor.state.currentStepKey, from, to);
+                                    editor.markDirty(true);
+                                }}
+                                onUpdateBlock={(id, patch) => {
+                                    ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                    editor.markDirty(true);
+                                }}
+                                onBlockSelect={editor.selectBlock}
+                            />
+                        </div>
+                    </Suspense>
+
+                    <Suspense fallback={<div className="col-span-1 border-l p-2 text-sm">Carregando biblioteca…</div>}>
+                        <div className="col-span-1 border-l flex flex-col h-full overflow-hidden">
+                            <div className="flex-1 overflow-y-auto">
+                                <ComponentLibraryColumn
+                                    currentStepKey={editor.state.currentStepKey}
+                                    onAddBlock={(type) => {
+                                        ops.addBlock(editor.state.currentStepKey, { type });
+                                        editor.markDirty(true);
+                                    }}
+                                />
+                            </div>
+                            <div className="mt-auto p-2 text-sm border-t space-y-2">
+                                {/* Status do Auto-save */}
+                                {enableAutoSave && (
+                                    <div className="text-xs text-muted-foreground text-center">
+                                        {persistence.hasAutoSavePending
+                                            ? '🔄 Auto-save pendente...'
+                                            : editor.state.isDirty
+                                                ? '📝 Alterações detectadas'
+                                                : '✅ Salvo automaticamente'
+                                        }
+                                    </div>
+                                )}
+
+                                <button
+                                    className="text-xs px-2 py-1 border rounded w-full"
+                                    onClick={() => {
+                                        const stepKey = editor.state.currentStepKey;
+                                        const blocks = ops.getBlocks(stepKey);
+                                        if (stepKey && blocks) {
+                                            persistence.saveStepBlocks(stepKey, blocks);
+                                        }
+                                    }}
+                                    disabled={!editor.state.currentStepKey || persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving}
+                                >
+                                    {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving
+                                        ? 'Salvando...'
+                                        : enableAutoSave
+                                            ? 'Salvar Agora'
+                                            : 'Salvar'
+                                    }
+                                </button>
+
+                                <button
+                                    className="text-xs px-2 py-1 border rounded w-full"
+                                    onClick={() => setShowPreview(!showPreview)}
+                                >
+                                    {showPreview ? 'Ocultar' : 'Mostrar'} Preview
+                                </button>
+                            </div>
+                        </div>
+                    </Suspense>
+                </div>
+
+                {/* Preview Panel (colapsável) */}
+                <Suspense fallback={<div className="border-t p-2 text-xs">Carregando preview…</div>}>
+                    <PreviewPanel
+                        currentStepKey={editor.state.currentStepKey}
+                        blocks={blocks}
+                        isVisible={showPreview}
+                        onToggleVisibility={() => setShowPreview(!showPreview)}
+                        className="h-[400px]"
                     />
                 </Suspense>
             </div>
