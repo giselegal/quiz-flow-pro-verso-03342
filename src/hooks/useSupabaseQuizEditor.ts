@@ -43,7 +43,7 @@ export const useSupabaseQuizEditor = () => {
       setConnectionStatus('checking');
 
       // Tentar fazer uma query simples para testar a conexão
-      const { error } = await supabase.from('profiles').select('count').limit(1);
+  const { error } = await (supabase as any).from('quiz_users').select('count').limit(1);
 
       if (error) {
         console.error('Erro de conexão:', error);

@@ -53,6 +53,7 @@
     "docs/**",
     "src/config/__tests__/**",
     "src/utils/EditorDiagnostics.ts",
-    "src/utils/editorDiagnosticsShim.ts"
+    "src/utils/editorDiagnosticsShim.ts",
+    "src/hooks/useAutosave.ts"
   ]
 }

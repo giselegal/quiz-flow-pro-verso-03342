@@ -166,7 +166,7 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
     if (!sessionId || !funnelId) return;
 
     try {
-      await supabase
+      await (supabase as any)
         .from('quiz_analytics')
         .insert({
           funnel_id: funnelId,
@@ -226,7 +226,7 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
 
     try {
       // Salvar resultado final
-      const { error: resultError } = await supabase
+      const { error: resultError } = await (supabase as any)
         .from('quiz_results')
         .insert({
           session_id: sessionId,
@@ -239,7 +239,7 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
       if (resultError) throw resultError;
 
       // Marcar sessão como completada
-      await supabase
+      await (supabase as any)
         .from('quiz_sessions')
         .update({
           status: 'completed',

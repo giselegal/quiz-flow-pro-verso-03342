@@ -42,7 +42,7 @@ export function useTemplateEngine(templateSlug?: string) {
         return;
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('templates')
         .select('*')
         .eq('slug', slug)
@@ -81,7 +81,7 @@ export function useTemplateEngine(templateSlug?: string) {
       if (!user) throw new Error('Usuário não autenticado');
 
       // Verificar se já existe
-      const { data: existing } = await supabase
+      const { data: existing } = await (supabase as any)
         .from('templates')
         .select('id')
         .eq('slug', draft.meta.slug)
@@ -90,7 +90,7 @@ export function useTemplateEngine(templateSlug?: string) {
 
       if (existing) {
         // UPDATE
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('templates')
           .update({
             name: draft.meta.name,
@@ -104,7 +104,7 @@ export function useTemplateEngine(templateSlug?: string) {
         if (error) throw error;
       } else {
         // INSERT
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('templates')
           .insert({
             user_id: user.id,

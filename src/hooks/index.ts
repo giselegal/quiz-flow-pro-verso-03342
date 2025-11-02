@@ -68,7 +68,7 @@ export { useKeyboardShortcuts } from './useKeyboardShortcuts';
 export { useScrollTracking } from './useScrollTracking';
 
 // Dados (with Supabase integration)
-export { useAutosave } from './useAutosave';
+export { useAutoSave } from './useAutoSave';
 export { useHistory } from './useHistory';
 // export { useSupabase } from './useSupabase'; // TODO: Create if needed
 export { useSupabaseQuiz } from './useSupabaseQuiz';

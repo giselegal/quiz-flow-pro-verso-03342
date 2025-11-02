@@ -166,7 +166,7 @@ export const useQuizRealTimeAnalytics = (sessionId?: string, funnelId?: string) 
     if (!sessionId || !funnelId) return;
     
     try {
-      await supabase
+      await (supabase as any)
         .from('quiz_analytics')
         .insert({
           funnel_id: funnelId,

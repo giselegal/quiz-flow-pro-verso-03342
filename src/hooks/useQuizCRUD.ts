@@ -1,7 +1,7 @@
 import { useAuth } from '@/contexts';
 import { supabase } from '../integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';
-import { Funnel } from '../types/unified-schema';
+// import { Funnel } from '../types/unified-schema';
 import type { Json } from '@/integrations/supabase/types';
 import { useEffect, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
@@ -22,9 +22,20 @@ export interface QuizMetadata {
 }
 
 // Use Funnel from unified schema instead of custom SavedQuiz
-export interface SavedQuiz extends Omit<Funnel, 'settings'> {
+export interface SavedQuiz {
+  id: string;
+  name: string;
+  description: string | null;
+  user_id: string;
+  status: string; // 'draft' | 'published' | ...
+  config: any;
+  metadata?: any;
+  type?: string | null;
+  category?: string | null;
+  context?: string | null;
+  created_at: string;
+  updated_at: string;
   questions: QuizQuestion[];
-  settings: any;
 }
 
 /**
@@ -51,7 +62,7 @@ export const useQuizCRUD = () => {
 
     try {
       // Use funnels table from unified schema instead of quizzes table
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('funnels')
         .select(
           `
@@ -59,18 +70,15 @@ export const useQuizCRUD = () => {
           name,
           description,
           user_id,
-          is_published,
-          settings,
+          status,
+          config,
+          metadata,
+          type,
+          category,
+          context,
           created_at,
-          updated_at,
-          funnel_pages (
-            id,
-            page_type,
-            title,
-            blocks,
-            page_order
-          )
-        `,
+          updated_at
+        `
         )
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
@@ -78,44 +86,21 @@ export const useQuizCRUD = () => {
       if (error) throw error;
 
       // Convert funnel format to quiz format for backward compatibility
-      const formattedQuizzes: SavedQuiz[] = (data || []).map(funnel => {
-        // Extract questions from funnel pages
-        const questions: QuizQuestion[] = [];
-
-        funnel.funnel_pages?.forEach(page => {
-          if (page.page_type === 'question' && page.blocks) {
-            const blocks = Array.isArray(page.blocks) ? page.blocks : [];
-            blocks.forEach((block: any) => {
-              if (block.type === 'question' || block.type === 'quiz-question') {
-                questions.push({
-                  id: block.id || `q_${page.id}`,
-                  title: block.properties?.question || page.title || '',
-                  question: block.properties?.question || page.title || '',
-                  text: block.properties?.question || page.title || '',
-                  type: block.properties?.questionType || 'normal',
-                  required: true,
-                  options: block.properties?.options || [],
-                  multiSelect: block.properties?.multiSelect || 1,
-                  order: page.page_order || 0,
-                });
-              }
-            });
-          }
-        });
-
-        return {
-          id: funnel.id,
-          name: funnel.name,
-          description: funnel.description || '',
-          user_id: funnel.user_id || '',
-          is_published: funnel.is_published || false,
-          version: (funnel as any).version || 1,
-          settings: funnel.settings || {},
-          created_at: funnel.created_at || new Date().toISOString(),
-          updated_at: funnel.updated_at || new Date().toISOString(),
-          questions,
-        };
-      });
+      const formattedQuizzes: SavedQuiz[] = (data || []).map((funnel: any) => ({
+        id: funnel.id,
+        name: funnel.name,
+        description: funnel.description || '',
+        user_id: funnel.user_id || '',
+        status: funnel.status || 'draft',
+        config: funnel.config || {},
+        metadata: funnel.metadata || null,
+        type: funnel.type || null,
+        category: funnel.category || null,
+        context: funnel.context || null,
+        created_at: funnel.created_at || new Date().toISOString(),
+        updated_at: funnel.updated_at || new Date().toISOString(),
+        questions: [], // Perguntas não derivadas aqui (sem join)
+      }));
 
       setQuizzes(formattedQuizzes);
     } catch (err) {
@@ -146,7 +131,7 @@ export const useQuizCRUD = () => {
 
     try {
       // 1) Criar funil no schema unificado
-      const { data: funnelData, error: funnelError } = await supabase
+      const { data: funnelData, error: funnelError } = await (supabase as any)
         .from('funnels')
         .insert([
           {
@@ -156,9 +141,8 @@ export const useQuizCRUD = () => {
             name: metadata.title,
             description: metadata.description,
             user_id: user.id,
-            is_published: false,
-            version: 1,
-            settings: {
+            status: 'draft',
+            config: {
               ...metadata.settings,
               category: metadata.category,
               difficulty: metadata.difficulty,
@@ -199,7 +183,7 @@ export const useQuizCRUD = () => {
           id: crypto.randomUUID(),
         }));
 
-        const { error: pagesError } = await supabase.from('funnel_pages').insert(pagesToInsert);
+        const { error: pagesError } = await (supabase as any).from('funnel_pages').insert(pagesToInsert);
         if (pagesError) throw pagesError;
       }
 
@@ -232,7 +216,7 @@ export const useQuizCRUD = () => {
     setError(null);
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('funnels')
         .select(
           `
@@ -240,18 +224,15 @@ export const useQuizCRUD = () => {
           name,
           description,
           user_id,
-          is_published,
-          settings,
+          status,
+          config,
+          metadata,
+          type,
+          category,
+          context,
           created_at,
-          updated_at,
-          funnel_pages (
-            id,
-            page_type,
-            title,
-            blocks,
-            page_order
-          )
-        `,
+          updated_at
+        `
         )
         .eq('id', quizId)
         .single();
@@ -259,35 +240,15 @@ export const useQuizCRUD = () => {
       if (error) throw error;
 
       const questions: QuizQuestion[] = [];
-      data.funnel_pages?.forEach((page: any) => {
-        if (page.page_type === 'question' && page.blocks) {
-          const blocks = Array.isArray(page.blocks) ? page.blocks : [];
-          blocks.forEach((block: any) => {
-            if (block.type === 'quiz-question' || block.type === 'question') {
-              questions.push({
-                id: block.id || `q_${page.id}`,
-                title: block.properties?.question || page.title || '',
-                question: block.properties?.question || page.title || '',
-                text: block.properties?.question || page.title || '',
-                type: block.properties?.questionType || 'normal',
-                options: block.properties?.options || [],
-                multiSelect: block.properties?.multiSelect || 1,
-                required: block.properties?.required || false,
-                order: questions.length,
-              });
-            }
-          });
-        }
-      });
+      // Perguntas não derivadas aqui (sem join);
 
       const formattedQuiz: SavedQuiz = {
         id: data.id,
         name: data.name,
         description: data.description || '',
         user_id: data.user_id || '',
-        is_published: data.is_published || false,
-        version: (data as any).version || 1,
-        settings: data.settings || {},
+        status: (data as any).status || 'draft',
+        config: (data as any).config || {},
         created_at: data.created_at || new Date().toISOString(),
         updated_at: data.updated_at || new Date().toISOString(),
         questions,
@@ -310,8 +271,8 @@ export const useQuizCRUD = () => {
 
     try {
       // Remover páginas do funil primeiro (caso não haja cascade)
-      await supabase.from('funnel_pages').delete().eq('funnel_id', quizId);
-      const { error } = await supabase.from('funnels').delete().eq('id', quizId);
+  await (supabase as any).from('funnel_pages').delete().eq('funnel_id', quizId);
+  const { error } = await (supabase as any).from('funnels').delete().eq('id', quizId);
 
       if (error) throw error;
 
@@ -346,11 +307,11 @@ export const useQuizCRUD = () => {
     const metadata: QuizMetadata = {
       title: `${originalQuiz.name} (Cópia)`,
       description: originalQuiz.description || '',
-      category: (originalQuiz as any).category || originalQuiz.settings?.category || 'geral',
-      difficulty: (originalQuiz as any).difficulty || originalQuiz.settings?.difficulty || 'easy',
+      category: (originalQuiz as any).category || (originalQuiz as any).config?.category || 'geral',
+      difficulty: (originalQuiz as any).difficulty || (originalQuiz as any).config?.difficulty || 'easy',
       timeLimit: undefined,
       isPublic: false,
-      settings: originalQuiz.settings || {
+      settings: (originalQuiz as any).config || {
         showProgress: true,
         randomizeQuestions: false,
         allowRetake: true,
