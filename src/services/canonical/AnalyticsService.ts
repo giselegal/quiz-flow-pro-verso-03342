@@ -922,13 +922,14 @@ export class AnalyticsService extends BaseCanonicalService {
   private async persistEventToSupabase(event: AnalyticsEvent): Promise<void> {
     try {
       await supabase.from('quiz_analytics').insert({
-        event_type: event.type,
+        metric_name: event.type,
         session_id: event.sessionId,
-        funnel_id: event.funnelId || '',
-        user_id: event.userId,
-        event_data: event.properties as any,
-        timestamp: event.timestamp.toISOString(),
-      });
+        funnel_id: event.funnelId || null,
+        user_id: event.userId || null,
+        metric_data: event.properties as any,
+        metric_value: typeof (event.properties as any)?.value === 'number' ? (event.properties as any).value : null,
+        recorded_at: event.timestamp.toISOString(),
+      } as any);
     } catch (error) {
       // Silent fail - localStorage is fallback
       throw error;

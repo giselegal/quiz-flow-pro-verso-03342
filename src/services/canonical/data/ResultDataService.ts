@@ -33,16 +33,18 @@ export class ResultDataService extends BaseCanonicalService {
       const insertData = {
         session_id: data.sessionId,
         funnel_id: data.funnelId,
-        event_type: 'quiz_completed',
-        event_data: {
+        metric_name: 'quiz_completed',
+        metric_data: {
           score: data.score,
           maxScore: data.maxScore,
           percentage,
           answers: data.answers,
           userId: data.userId,
           ...data.metadata,
-        },
-      };
+        } as any,
+        metric_value: data.score,
+        recorded_at: new Date().toISOString(),
+      } as any;
 
       const { data: row, error } = await supabase
         .from('quiz_analytics')
@@ -60,7 +62,7 @@ export class ResultDataService extends BaseCanonicalService {
         maxScore: data.maxScore,
         percentage,
         answers: data.answers,
-        completedAt: new Date(row.timestamp!),
+        completedAt: new Date(row.recorded_at!),
         metadata: data.metadata,
       };
 
@@ -77,12 +79,12 @@ export class ResultDataService extends BaseCanonicalService {
         .from('quiz_analytics')
         .select('*')
         .eq('id', resultId)
-        .eq('event_type', 'quiz_completed')
+        .eq('metric_name', 'quiz_completed')
         .single();
       if (error && (error as any).code !== 'PGRST116') return this.createError(new Error(`Failed to get result: ${error.message}`));
       if (!data) return this.createResult(null);
 
-      const eventData = (data as any).event_data || {};
+      const eventData = (data as any).metric_data || {};
       const result: QuizResult = {
         id: data.id!,
         sessionId: data.session_id!,
@@ -92,7 +94,7 @@ export class ResultDataService extends BaseCanonicalService {
         maxScore: eventData.maxScore || 0,
         percentage: eventData.percentage || 0,
         answers: eventData.answers || [],
-        completedAt: new Date(data.timestamp!),
+        completedAt: new Date((data as any).recorded_at!),
         metadata: eventData,
       };
       return this.createResult(result);
@@ -113,17 +115,17 @@ export class ResultDataService extends BaseCanonicalService {
       let query = supabase
         .from('quiz_analytics')
         .select('*')
-        .eq('event_type', 'quiz_completed');
+        .eq('metric_name', 'quiz_completed');
 
       if (filters?.funnelId) query = query.eq('funnel_id', filters.funnelId);
       const limit = filters?.limit || 50;
       const offset = filters?.offset || 0;
-      query = query.range(offset, offset + limit - 1).order('created_at', { ascending: false });
+  query = query.range(offset, offset + limit - 1).order('recorded_at', { ascending: false });
       const { data, error } = await query;
       if (error) return this.createError(new Error(`Failed to list results: ${error.message}`));
 
       const results: QuizResult[] = (data || []).map((row: any) => {
-        const eventData = row.event_data || {};
+        const eventData = row.metric_data || {};
         return {
           id: row.id!,
           sessionId: row.session_id!,
@@ -133,7 +135,7 @@ export class ResultDataService extends BaseCanonicalService {
           maxScore: eventData.maxScore || 0,
           percentage: eventData.percentage || 0,
           answers: eventData.answers || [],
-          completedAt: new Date(row.timestamp!),
+          completedAt: new Date(row.recorded_at!),
           metadata: eventData,
         };
       });
@@ -151,7 +153,7 @@ export class ResultDataService extends BaseCanonicalService {
         .from('quiz_analytics')
         .delete()
         .eq('id', resultId)
-        .eq('event_type', 'quiz_completed');
+        .eq('metric_name', 'quiz_completed');
       if (error) return this.createError(new Error(`Failed to delete result: ${error.message}`));
       return this.createResult(undefined);
     } catch (error) {

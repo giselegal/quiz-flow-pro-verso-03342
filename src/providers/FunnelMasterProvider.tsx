@@ -382,7 +382,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       if (funnelError) throw funnelError;
 
       // Load pages data
-      const { data: pagesData, error: pagesError } = await supabase
+      const { data: pagesData, error: pagesError } = await (supabase as any)
         .from('funnel_pages')
         .select('*')
         .eq('funnel_id', id)
@@ -391,11 +391,11 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       if (pagesError) throw pagesError;
 
       const unifiedFunnel: UnifiedFunnelData = {
-        ...funnelData,
-        pages: (pagesData || []).map(page => ({
+        ...(funnelData as any),
+        pages: ((pagesData || []).map((page: any) => ({
           ...page,
           blocks: Array.isArray(page.blocks) ? page.blocks : [],
-        })),
+        })) as any),
       };
 
       // Cache the result
@@ -459,9 +459,9 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
     updateFunnel: async (updates: Partial<UnifiedFunnelData>): Promise<void> => {
       if (!state.funnelId) throw new Error('No funnel selected');
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('funnels')
-        .update(updates)
+        .update(updates as any)
         .eq('id', state.funnelId);
 
       if (error) throw error;
@@ -567,7 +567,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
 
     // Page management
     addPage: async (page: Omit<FunnelPage, 'id'>): Promise<void> => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('funnel_pages')
         .insert({
           id: crypto.randomUUID(),
@@ -587,7 +587,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
     },
 
     updatePage: async (pageId: string, updates: Partial<FunnelPage>): Promise<void> => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('funnel_pages')
         .update(updates)
         .eq('id', pageId);
@@ -603,7 +603,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
     },
 
     deletePage: async (pageId: string): Promise<void> => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('funnel_pages')
         .delete()
         .eq('id', pageId);
@@ -623,7 +623,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       }));
 
       for (const update of updates) {
-        await supabase
+        await (supabase as any)
           .from('funnel_pages')
           .update({ page_order: update.page_order })
           .eq('id', update.id);

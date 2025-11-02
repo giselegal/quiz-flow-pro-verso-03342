@@ -43,18 +43,18 @@ interface RealFunnel {
     id: string;
     name: string;
     description: string | null;
-    is_published: boolean | null;
+    status: 'draft' | 'published' | 'archived' | null;
     created_at: string | null;
     updated_at: string | null;
     user_id: string | null;
-    settings: any;
+    config: any;
     version?: number | null; // <- adicionada versão
     // Métricas calculadas
     sessions: number;
     completions: number;
     conversionRate: number;
     lastActivity: string | null;
-    status: 'active' | 'draft' | 'paused';
+    uiStatus: 'active' | 'draft' | 'paused';
 }
 
 interface FunnelStats {
@@ -183,7 +183,7 @@ const MeusFunisPageReal: React.FC = () => {
 
             // Buscar sessões para cada funil
             const funnelIds = funnelsData?.map(f => f.id) || [];
-            let sessionsData: Array<{ id: string; funnel_id: string; status: string }> = [];
+            let sessionsData: Array<{ id: string; funnel_id: string | null; status: string }> = [];
             if (funnelIds.length > 0) {
                 try {
                     const { data: sessionsRaw } = await supabase
@@ -208,7 +208,7 @@ const MeusFunisPageReal: React.FC = () => {
 
             // Processar dados dos funis
             // Map funis (tabela antiga)
-            const processedFunis: RealFunnel[] = (funnelsData || []).map(funnel => {
+            const processedFunis: RealFunnel[] = (funnelsData || []).map((funnel: any) => {
                 const funnelSessions = sessionsData?.filter(s => s.funnel_id === funnel.id) || [];
                 const completedSessions = funnelSessions.filter(s => s.status === 'completed');
 
@@ -217,9 +217,9 @@ const MeusFunisPageReal: React.FC = () => {
                 const conversionRate = sessions > 0 ? (completions / sessions) * 100 : 0;
 
                 // Determinar status
-                let status: 'active' | 'draft' | 'paused' = 'draft';
-                if (funnel.is_published === true) {
-                    status = sessions > 0 ? 'active' : 'paused';
+                let uiStatus: 'active' | 'draft' | 'paused' = 'draft';
+                if (funnel.status === 'published') {
+                    uiStatus = sessions > 0 ? 'active' : 'paused';
                 }
 
                 return {
@@ -229,7 +229,7 @@ const MeusFunisPageReal: React.FC = () => {
                     completions,
                     conversionRate: parseFloat(conversionRate.toFixed(1)),
                     lastActivity: funnel.updated_at,
-                    status,
+                    uiStatus,
                 };
             });
 
@@ -238,17 +238,17 @@ const MeusFunisPageReal: React.FC = () => {
                 id: draft.id,
                 name: draft.name || draft.slug || 'Rascunho sem nome',
                 description: `Rascunho (${draft.slug}) versão ${draft.version || 1}`,
-                is_published: draft.is_published || false,
+                status: 'draft',
                 created_at: draft.created_at,
                 updated_at: draft.updated_at,
                 user_id: draft.user_id,
-                settings: {},
+                config: {},
                 version: draft.version || 1,
                 sessions: 0,
                 completions: 0,
                 conversionRate: 0,
                 lastActivity: draft.updated_at,
-                status: 'draft',
+                uiStatus: 'draft',
             }));
 
             // Ordenar drafts primeiro por updated_at (ou created_at) desc, depois funis existentes
@@ -307,15 +307,15 @@ const MeusFunisPageReal: React.FC = () => {
             // Gerar ID único para o novo funil
             const newId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-            const { error } = await supabase
+            const { error } = await (supabase as any)
                 .from('funnels')
                 .insert({
                     id: newId,
                     name: `${originalFunil.name} - Cópia`,
                     description: originalFunil.description,
                     user_id: originalFunil.user_id,
-                    settings: originalFunil.settings,
-                    is_published: false,
+                    config: originalFunil.config,
+                    status: 'draft',
                 });
 
             if (error) throw error;
@@ -367,9 +367,9 @@ const MeusFunisPageReal: React.FC = () => {
 
     const handleTogglePublish = async (funilId: string, currentStatus: boolean) => {
         try {
-            const { error } = await supabase
+            const { error } = await (supabase as any)
                 .from('funnels')
-                .update({ is_published: !currentStatus })
+                .update({ status: !currentStatus ? 'published' : 'draft' })
                 .eq('id', funilId);
 
             if (error) throw error;
@@ -398,7 +398,7 @@ const MeusFunisPageReal: React.FC = () => {
 
     const filteredFunis = funis.filter(funil => {
         if (selectedStatus === 'todos') return true;
-        return funil.status === selectedStatus;
+        return funil.uiStatus === selectedStatus;
     });
 
     const sortedFunis = [...filteredFunis].sort((a, b) => {
@@ -627,9 +627,9 @@ const MeusFunisPageReal: React.FC = () => {
                                             Duplicar
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
-                                            onClick={() => handleTogglePublish(funil.id, funil.is_published === true)}
+                                            onClick={() => handleTogglePublish(funil.id, funil.status === 'published')}
                                         >
-                                            {funil.is_published === true ? (
+                                            {funil.status === 'published' ? (
                                                 <>
                                                     <Pause className="w-4 h-4 mr-2" />
                                                     Pausar
@@ -657,9 +657,9 @@ const MeusFunisPageReal: React.FC = () => {
                             <div className="mt-3 flex items-center justify-between">
                                 <Badge
                                     variant="secondary"
-                                    className={`${statusConfig[funil.status].bgColor} ${statusConfig[funil.status].textColor}`}
+                                    className={`${statusConfig[funil.uiStatus].bgColor} ${statusConfig[funil.uiStatus].textColor}`}
                                 >
-                                    {statusConfig[funil.status].label}
+                                    {statusConfig[funil.uiStatus].label}
                                 </Badge>
                                 <span className="text-xs text-gray-500">
                                     Atualizado {funil.updated_at ? new Date(funil.updated_at).toLocaleDateString('pt-BR') : 'N/A'}

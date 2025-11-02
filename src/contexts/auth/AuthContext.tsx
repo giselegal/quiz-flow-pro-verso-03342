@@ -137,44 +137,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     init();
   }, []);
 
-  const loadUserProfile = async (supabase: any, userId: string) => {
-    try {
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-
-      if (data && !error) {
-        const profileData: UserProfile = {
-          id: data.id,
-          email: data.email,
-          name: data.name || undefined,
-          role: 'user', // Padrão por enquanto
-          plan: 'free', // Padrão por enquanto
-          avatar_url: undefined,
-          created_at: data.created_at,
-        };
-        setProfile(profileData);
-      } else {
-        // Se não existe profile, criar um padrão
-        const defaultProfile: UserProfile = {
-          id: userId,
-          email: user?.email || '',
-          role: 'user',
-          plan: 'free',
-          created_at: new Date().toISOString(),
-        };
-        setProfile(defaultProfile);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar profile:', error);
-      // Profile padrão em caso de erro
-      const defaultProfile: UserProfile = {
-        id: userId,
-        email: user?.email || '',
-        role: 'user',
-        plan: 'free',
-        created_at: new Date().toISOString(),
-      };
-      setProfile(defaultProfile);
-    }
+  const loadUserProfile = async (_supabase: any, userId: string) => {
+    // Simplificado: usar dados do usuário autenticado; evita dependência de tabelas legadas (profiles)
+    const profileData: UserProfile = {
+      id: userId,
+      email: user?.email || '',
+      name: user?.name,
+      role: 'user',
+      plan: 'free',
+      created_at: new Date().toISOString(),
+    };
+    setProfile(profileData);
   };
 
   const hasPermission = (action: string, _resource?: string): boolean => {

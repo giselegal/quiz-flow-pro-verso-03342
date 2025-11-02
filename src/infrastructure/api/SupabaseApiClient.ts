@@ -455,14 +455,18 @@ export class SupabaseApiClient {
   // 🔍 Analytics Helper Methods
   async trackEvent(eventType: string, eventData: Record<string, any>, sessionId?: string): Promise<ApiResponse<null>> {
     try {
+      // Alinhado ao schema atual: metric_* e recorded_at
+      const userId = (await this.getCurrentUser()).data?.id || null;
       const { error } = await supabase
         .from('quiz_analytics')
         .insert({
-          event_type: eventType,
-          event_data: eventData,
-          session_id: sessionId,
-          funnel_id: eventData.funnelId || null,
-          user_id: (await this.getCurrentUser()).data?.id || null,
+          metric_name: eventType,
+          metric_data: eventData as any,
+          metric_value: typeof eventData?.value === 'number' ? eventData.value : null,
+          recorded_at: new Date().toISOString(),
+          session_id: sessionId as any,
+          funnel_id: (eventData as any)?.funnelId || null,
+          user_id: userId,
         });
 
       return {
@@ -485,14 +489,14 @@ export class SupabaseApiClient {
         .from('quiz_analytics')
         .select('*')
         .eq('funnel_id', funnelId)
-        .order('timestamp', { ascending: false });
+        .order('recorded_at', { ascending: false });
 
       if (dateFrom) {
-        query = query.gte('timestamp', dateFrom.toISOString());
+        query = query.gte('recorded_at', dateFrom.toISOString());
       }
 
       if (dateTo) {
-        query = query.lte('timestamp', dateTo.toISOString());
+        query = query.lte('recorded_at', dateTo.toISOString());
       }
 
       const { data, error } = await query;
@@ -514,9 +518,10 @@ export class SupabaseApiClient {
   // 🔍 Health Check
   async healthCheck(): Promise<ApiResponse<{ status: string; timestamp: number }>> {
     try {
+      // Usar uma tabela garantida no schema atual para o health check
       const { error } = await supabase
-        .from('profiles')
-        .select('count')
+        .from('quiz_sessions')
+        .select('id')
         .limit(1);
 
       return {

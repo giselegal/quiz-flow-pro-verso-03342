@@ -78,7 +78,7 @@ interface EditorState {
     isEditing: boolean;
     dragEnabled: boolean;
     clipboardData: any | null;
-    
+
     // 🆕 FASE 3: PureBuilder compatibility
     stepBlocks: Record<number, any[]>;
     totalSteps: number;
@@ -206,7 +206,7 @@ const initialState: SuperUnifiedState = {
         isEditing: false,
         dragEnabled: true,
         clipboardData: null,
-        
+
         // 🆕 FASE 3: PureBuilder compatibility
         stepBlocks: {},
         totalSteps: 21,
@@ -509,7 +509,7 @@ interface SuperUnifiedContextType {
     enableDragDrop: (enabled: boolean) => void;
     copyToClipboard: (data: any) => void;
     pasteFromClipboard: () => any;
-    
+
     // 🆕 FASE 3: Editor block operations
     addBlock: (stepIndex: number, block: any) => void;
     updateBlock: (stepIndex: number, blockId: string, updates: any) => Promise<void>;
@@ -581,7 +581,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         });
 
         if (debugMode) {
-            console.log('🚀 SuperUnifiedProvider render time:', `${renderTime.toFixed(2)  }ms`);
+            console.log('🚀 SuperUnifiedProvider render time:', `${renderTime.toFixed(2)}ms`);
         }
     }, [renderStartTime, debugMode]);
 
@@ -651,10 +651,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: true, message: 'Salvando...' } });
 
         try {
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('funnels')
                 .upsert({
-                    ...funnelToSave,
+                    ...(funnelToSave as any),
                     updated_at: new Date().toISOString(),
                 })
                 .select()
@@ -683,7 +683,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     id: Date.now().toString(),
                     type: 'error',
                     title: 'Erro',
-                    message: `Erro ao salvar: ${  error.message}`,
+                    message: `Erro ao salvar: ${error.message}`,
                     duration: 5000,
                 },
             });

@@ -222,13 +222,13 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       ).length;
 
       const recentActivity = (analytics || [])
-        .filter(a => (a.timestamp ?? '') > fiveMinutesAgo)
+        .filter(a => ((a as any).recorded_at ?? '') > fiveMinutesAgo)
         .slice(0, 10)
         .map(activity => ({
           sessionId: activity.session_id || 'unknown',
           funnelId: activity.funnel_id || 'unknown',
-          timestamp: activity.timestamp || new Date().toISOString(),
-          event: activity.event_type || 'event',
+          timestamp: (activity as any).recorded_at || new Date().toISOString(),
+          event: (activity as any).metric_name || 'event',
         }));
 
       const leadGeneration = (results || []).length;
@@ -326,9 +326,9 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
         return {
           sessionId: session.id,
-          userId: session.quiz_user_id,
-          funnelId: session.funnel_id,
-          funnelName: funnelsMap.get(session.funnel_id) || 'Unknown Funnel',
+          userId: session.quiz_user_id || undefined,
+          funnelId: session.funnel_id || '',
+          funnelName: funnelsMap.get(session.funnel_id || '') || 'Unknown Funnel',
           startedAt: new Date(session.started_at),
           completedAt: session.completed_at ? new Date(session.completed_at) : undefined,
           currentStep: session.current_step || 0,
