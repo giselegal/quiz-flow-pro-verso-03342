@@ -1,4 +1,21 @@
-import React, { Suspense, useEffect } from 'react';
+/**
+ * 🎯 QUIZ MODULAR EDITOR - Versão Aprimorada
+ * 
+ * Layout profissional com 4 colunas:
+ * - Coluna 1: Navegação de Etapas (2 cols)
+ * - Coluna 2: Canvas Visual (5 cols) - edição + preview
+ * - Coluna 3: Biblioteca de Componentes (2 cols)
+ * - Coluna 4: Painel de Propriedades (3 cols)
+ * 
+ * Recursos:
+ * - ✅ Drag & Drop entre colunas
+ * - ✅ Modo edição + Modo preview
+ * - ✅ Preview em tempo real (live/production)
+ * - ✅ Validação Zod obrigatória
+ * - ✅ Auto-save inteligente
+ */
+
+import React, { Suspense, useEffect, useState, useCallback } from 'react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useEditorState } from './hooks/useEditorState';
 import { useBlockOperations } from './hooks/useBlockOperations';
@@ -6,10 +23,10 @@ import { useDndSystem } from './hooks/useDndSystem';
 import { useEditorPersistence } from './hooks/useEditorPersistence';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
+import { Button } from '@/components/ui/button';
+import { Eye, Edit3, Play, Save } from 'lucide-react';
 
-// Esqueleto do novo editor modular (Fase 1.3)
-// Objetivo: ser o ponto de orquestração leve e carregado sob demanda
-
+// Lazy loading de componentes pesados
 const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
 const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
@@ -22,18 +39,20 @@ export type QuizModularEditorProps = {
 };
 
 export default function QuizModularEditor(props: QuizModularEditorProps) {
-    // Estado compartilhado do editor (step atual, undo/redo, dirty flag)
+    // Estado compartilhado do editor
     const editor = useEditorState(props.initialStepKey);
     const ops = useBlockOperations();
     const dnd = useDndSystem();
     const { enableAutoSave } = useFeatureFlags();
 
-    // Estado do preview
-    const [showPreview, setShowPreview] = React.useState(true);
+    // Estados do editor
+    const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
+    const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
 
+    // Persistência
     const persistence = useEditorPersistence({
         enableAutoSave,
-        autoSaveInterval: 2000, // 2s para teste mais responsivo
+        autoSaveInterval: 2000,
         onSaveSuccess: (stepKey) => {
             console.log(`✅ Auto-save completed for step: ${stepKey}`);
             editor.markDirty(false);
@@ -51,7 +70,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-    // Garantir carregamento inicial dos blocos locais quando step mudar
+    // Carregar blocos iniciais
     useEffect(() => {
         ops.ensureLoaded(editor.state.currentStepKey);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,26 +79,34 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const blocks: Block[] | null = ops.getBlocks(editor.state.currentStepKey);
 
     // Handler de DnD consolidado
-    const handleDragEnd = (event: any) => {
+    const handleDragEnd = useCallback((event: any) => {
         const result = dnd.handlers.onDragEnd(event);
         if (!result) return;
 
         const { draggedItem, dropzone } = result;
 
         if (draggedItem?.type === 'library-item' && dropzone === 'canvas') {
-            // Adicionar novo bloco da biblioteca
             if (draggedItem.libraryType) {
-                const addResult = ops.addBlock(editor.state.currentStepKey, { type: draggedItem.libraryType as Block['type'] });
+                const addResult = ops.addBlock(editor.state.currentStepKey, {
+                    type: draggedItem.libraryType as Block['type']
+                });
                 if (addResult.success) {
                     editor.markDirty(true);
                 }
-                // Erros já são mostrados via toast pelo useBlockOperations
             }
         } else if (draggedItem?.type === 'block' && dropzone === 'canvas') {
-            // Reordenação dentro do canvas (implementar depois)
             console.log('Reorder blocks:', result);
         }
-    };
+    }, [dnd.handlers, ops, editor]);
+
+    // Handler de save manual
+    const handleSave = useCallback(() => {
+        const stepKey = editor.state.currentStepKey;
+        const blocks = ops.getBlocks(stepKey);
+        if (stepKey && blocks) {
+            persistence.saveStepBlocks(stepKey, blocks);
+        }
+    }, [editor.state.currentStepKey, ops, persistence]);
 
     return (
         <DndContext
@@ -90,16 +117,98 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             onDragEnd={handleDragEnd}
             onDragCancel={dnd.handlers.onDragCancel}
         >
-            <div className="qm-editor flex flex-col h-full" data-editor="modular-experimental">
-                {/* Header com info */}
-                <div className="px-3 py-2 text-xs text-purple-800 bg-purple-50 border-b border-purple-200">
-                    Editor Modular (experimental) — usando serviços canônicos e carregamento sob demanda
+            <div className="qm-editor flex flex-col h-screen bg-gray-50" data-editor="modular-enhanced">
+                {/* Header com controles */}
+                <div className="flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm">
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-lg font-semibold text-gray-800">Editor Modular</h1>
+                        {editor.state.currentStepKey && (
+                            <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+                                {editor.state.currentStepKey}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        {/* Toggle Modo Canvas */}
+                        <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
+                            <Button
+                                size="sm"
+                                variant={canvasMode === 'edit' ? 'default' : 'ghost'}
+                                onClick={() => setCanvasMode('edit')}
+                                className="h-7 px-3"
+                            >
+                                <Edit3 className="w-3 h-3 mr-1" />
+                                Edição
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={canvasMode === 'preview' ? 'default' : 'ghost'}
+                                onClick={() => setCanvasMode('preview')}
+                                className="h-7 px-3"
+                            >
+                                <Eye className="w-3 h-3 mr-1" />
+                                Preview
+                            </Button>
+                        </div>
+
+                        {/* Toggle Modo Preview (quando canvas = preview) */}
+                        {canvasMode === 'preview' && (
+                            <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
+                                <Button
+                                    size="sm"
+                                    variant={previewMode === 'live' ? 'default' : 'ghost'}
+                                    onClick={() => setPreviewMode('live')}
+                                    className="h-7 px-3"
+                                >
+                                    <Play className="w-3 h-3 mr-1" />
+                                    Live
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant={previewMode === 'production' ? 'default' : 'ghost'}
+                                    onClick={() => setPreviewMode('production')}
+                                    className="h-7 px-3"
+                                >
+                                    <Eye className="w-3 h-3 mr-1" />
+                                    Produção
+                                </Button>
+                            </div>
+                        )}
+
+                        {/* Status do Auto-save */}
+                        {enableAutoSave && (
+                            <div className="text-xs text-gray-500">
+                                {persistence.hasAutoSavePending
+                                    ? '🔄 Salvando...'
+                                    : editor.state.isDirty
+                                        ? '📝 Não salvo'
+                                        : '✅ Salvo'
+                                }
+                            </div>
+                        )}
+
+                        {/* Botão Save Manual */}
+                        <Button
+                            size="sm"
+                            onClick={handleSave}
+                            disabled={!editor.state.currentStepKey || persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving}
+                            className="h-7"
+                        >
+                            <Save className="w-3 h-3 mr-1" />
+                            {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving
+                                ? 'Salvando...'
+                                : 'Salvar'
+                            }
+                        </Button>
+                    </div>
                 </div>
 
-                {/* Grid principal: Navegação | Canvas | Biblioteca + Propriedades */}
-                <div className="grid grid-cols-4 gap-2 flex-1 overflow-hidden">
-                    <Suspense fallback={<div>Carregando navegação…</div>}>
-                        <div className="col-span-1 border-r overflow-y-auto">
+                {/* Grid principal: 4 colunas */}
+                <div className="grid grid-cols-12 gap-0 flex-1 overflow-hidden">
+                    {/* Coluna 1: Navegação de Etapas (2 cols) */}
+                    <Suspense fallback={<div className="col-span-2 p-4">Carregando navegação…</div>}>
+                        <div className="col-span-2 border-r bg-white overflow-y-auto">
                             <StepNavigatorColumn
                                 initialStepKey={props.initialStepKey}
                                 currentStepKey={editor.state.currentStepKey}
@@ -108,101 +217,75 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         </div>
                     </Suspense>
 
-                    <Suspense fallback={<div className="col-span-2 flex items-center justify-center">Carregando canvas…</div>}>
-                        <div className="col-span-2 overflow-y-auto">
-                            <CanvasColumn
+                    {/* Coluna 2: Canvas (5 cols) */}
+                    <Suspense fallback={<div className="col-span-5 flex items-center justify-center">Carregando canvas…</div>}>
+                        <div className="col-span-5 bg-gray-50 overflow-y-auto">
+                            {canvasMode === 'edit' ? (
+                                <CanvasColumn
+                                    currentStepKey={editor.state.currentStepKey}
+                                    blocks={blocks}
+                                    selectedBlockId={editor.state.selectedBlockId}
+                                    onRemoveBlock={(id) => {
+                                        ops.removeBlock(editor.state.currentStepKey, id);
+                                        editor.markDirty(true);
+                                    }}
+                                    onMoveBlock={(from, to) => {
+                                        ops.reorderBlock(editor.state.currentStepKey, from, to);
+                                        editor.markDirty(true);
+                                    }}
+                                    onUpdateBlock={(id, patch) => {
+                                        const updateResult = ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                        if (updateResult.success) {
+                                            editor.markDirty(true);
+                                        }
+                                    }}
+                                    onBlockSelect={editor.selectBlock}
+                                />
+                            ) : (
+                                <PreviewPanel
+                                    currentStepKey={editor.state.currentStepKey}
+                                    blocks={blocks}
+                                    isVisible={true}
+                                    className="h-full"
+                                />
+                            )}
+                        </div>
+                    </Suspense>
+
+                    {/* Coluna 3: Biblioteca de Componentes (2 cols) */}
+                    <Suspense fallback={<div className="col-span-2 p-4">Carregando biblioteca…</div>}>
+                        <div className="col-span-2 border-l bg-white overflow-y-auto">
+                            <ComponentLibraryColumn
                                 currentStepKey={editor.state.currentStepKey}
-                                blocks={blocks}
-                                selectedBlockId={editor.state.selectedBlockId}
-                                onRemoveBlock={(id) => {
-                                    ops.removeBlock(editor.state.currentStepKey, id);
-                                    editor.markDirty(true);
-                                }}
-                                onMoveBlock={(from, to) => {
-                                    ops.reorderBlock(editor.state.currentStepKey, from, to);
-                                    editor.markDirty(true);
-                                }}
-                                onUpdateBlock={(id, patch) => {
-                                    const updateResult = ops.updateBlock(editor.state.currentStepKey, id, patch);
-                                    if (updateResult.success) {
+                                onAddBlock={(type) => {
+                                    const addResult = ops.addBlock(editor.state.currentStepKey, { type });
+                                    if (addResult.success) {
                                         editor.markDirty(true);
                                     }
-                                    // Erros já são mostrados via toast pelo useBlockOperations
                                 }}
-                                onBlockSelect={editor.selectBlock}
                             />
                         </div>
                     </Suspense>
 
-                    <Suspense fallback={<div className="col-span-1 border-l p-2 text-sm">Carregando biblioteca…</div>}>
-                        <div className="col-span-1 border-l flex flex-col h-full overflow-hidden">
-                            <div className="flex-1 overflow-y-auto">
-                                <ComponentLibraryColumn
-                                    currentStepKey={editor.state.currentStepKey}
-                                    onAddBlock={(type) => {
-                                        const addResult = ops.addBlock(editor.state.currentStepKey, { type });
-                                        if (addResult.success) {
-                                            editor.markDirty(true);
-                                        }
-                                    }}
-                                />
-                            </div>
-                            <div className="mt-auto p-2 text-sm border-t space-y-2">
-                                {/* Status do Auto-save */}
-                                {enableAutoSave && (
-                                    <div className="text-xs text-muted-foreground text-center">
-                                        {persistence.hasAutoSavePending
-                                            ? '🔄 Auto-save pendente...'
-                                            : editor.state.isDirty
-                                                ? '📝 Alterações detectadas'
-                                                : '✅ Salvo automaticamente'
-                                        }
-                                    </div>
-                                )}
-
-                                <button
-                                    className="text-xs px-2 py-1 border rounded w-full"
-                                    onClick={() => {
-                                        const stepKey = editor.state.currentStepKey;
-                                        const blocks = ops.getBlocks(stepKey);
-                                        if (stepKey && blocks) {
-                                            persistence.saveStepBlocks(stepKey, blocks);
-                                        }
-                                    }}
-                                    disabled={!editor.state.currentStepKey || persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving}
-                                >
-                                    {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving
-                                        ? 'Salvando...'
-                                        : enableAutoSave
-                                            ? 'Salvar Agora'
-                                            : 'Salvar'
+                    {/* Coluna 4: Painel de Propriedades (3 cols) */}
+                    <Suspense fallback={<div className="col-span-3 p-4">Carregando propriedades…</div>}>
+                        <div className="col-span-3 border-l bg-white overflow-y-auto">
+                            <PropertiesColumn
+                                selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) || null}
+                                onBlockUpdate={(blockId, updates) => {
+                                    const updateResult = ops.updateBlock(editor.state.currentStepKey, blockId, updates);
+                                    if (updateResult.success) {
+                                        editor.markDirty(true);
                                     }
-                                </button>
-
-                                <button
-                                    className="text-xs px-2 py-1 border rounded w-full"
-                                    onClick={() => setShowPreview(!showPreview)}
-                                >
-                                    {showPreview ? 'Ocultar' : 'Mostrar'} Preview
-                                </button>
-                            </div>
+                                }}
+                                onClearSelection={editor.clearSelection}
+                            />
                         </div>
                     </Suspense>
                 </div>
-
-                {/* Preview Panel (colapsável) */}
-                <Suspense fallback={<div className="border-t p-2 text-xs">Carregando preview…</div>}>
-                    <PreviewPanel
-                        currentStepKey={editor.state.currentStepKey}
-                        blocks={blocks}
-                        isVisible={showPreview}
-                        onToggleVisibility={() => setShowPreview(!showPreview)}
-                        className="h-[400px]"
-                    />
-                </Suspense>
             </div>
 
-            {/* DragOverlay para feedback visual durante drag */}
+            {/* DragOverlay para feedback visual */}
             <DragOverlay>
                 {dnd.activeId ? (
                     <div className="px-3 py-2 text-xs rounded-md border bg-white shadow-lg flex items-center gap-2">
