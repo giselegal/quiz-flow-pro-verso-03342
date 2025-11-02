@@ -31,12 +31,27 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 }) => {
     const [editedProperties, setEditedProperties] = React.useState<Record<string, any>>({});
     const [isDirty, setIsDirty] = React.useState(false);
+    const prevSelectedIdRef = React.useRef<string | null>(null);
 
+    // Auto-save suave ao trocar de seleção se houver alterações pendentes no bloco anterior
     React.useEffect(() => {
+        const prevId = prevSelectedIdRef.current;
+        const nextId = selectedBlock?.id || null;
+
+        if (prevId && prevId !== nextId && isDirty) {
+            onBlockUpdate(prevId, { properties: editedProperties });
+        }
+
         if (selectedBlock) {
             setEditedProperties(selectedBlock.properties || {});
             setIsDirty(false);
+        } else {
+            setEditedProperties({});
+            setIsDirty(false);
         }
+
+        prevSelectedIdRef.current = nextId;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedBlock]);
 
     const handlePropertyChange = (key: string, value: unknown) => {
