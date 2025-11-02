@@ -3,14 +3,21 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
+import { validateBlockData, safeValidateBlockData, type BlockType } from '@/schemas/blockSchemas';
+import { toast } from '@/hooks/use-toast';
+
+export type ValidationError = {
+  field: string;
+  message: string;
+};
 
 export type UseBlockOperations = {
   getBlocks: (stepKey: string | null) => Block[] | null;
   ensureLoaded: (stepKey: string | null) => Promise<void>;
-  addBlock: (stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => void;
+  addBlock: (stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => { success: boolean; error?: ValidationError[] };
   removeBlock: (stepKey: string | null, blockId: string) => void;
   reorderBlock: (stepKey: string | null, fromIndex: number, toIndex: number) => void;
-  updateBlock: (stepKey: string | null, blockId: string, patch: Partial<Block>) => void;
+  updateBlock: (stepKey: string | null, blockId: string, patch: Partial<Block>) => { success: boolean; error?: ValidationError[] };
 };
 
 function genId(prefix = 'blk'): string {
@@ -43,18 +50,47 @@ export function useBlockOperations(): UseBlockOperations {
   }, [byStep]);
 
   const addBlock = useCallback((stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => {
-    if (!stepKey) return;
+    if (!stepKey) return { success: false, error: [{ field: 'stepKey', message: 'Step key é obrigatório' }] };
+
+    // Preparar dados do bloco para validação
+    const blockData = (block as any).properties || (block as any).content || {};
+    
+    // Validar se o tipo de bloco tem schema
+    const validation = safeValidateBlockData(block.type as BlockType, blockData);
+    
+    if (!validation.success) {
+      // Extrair erros do Zod
+      const zodError = validation.error as any;
+      const errors: ValidationError[] = zodError?.issues?.map((issue: any) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      })) || [{ field: 'validation', message: zodError?.message || 'Validação falhou' }];
+
+      // Mostrar toast com erro
+      toast({
+        title: 'Erro de validação',
+        description: `Bloco ${block.type}: ${errors[0].message}`,
+        variant: 'destructive',
+      });
+
+      return { success: false, error: errors };
+    }
+
+    // Validação OK - criar bloco
     const newBlock: Block = {
       id: block.id || genId('blk'),
       type: block.type,
       order: (byStep[stepKey]?.length || 0) + 1,
-      properties: (block as any).properties || (block as any).content || {},
-      content: (block as any).content,
+      properties: validation.data || blockData,
+      content: validation.data || (block as any).content,
     } as Block;
+
     setByStep((prev) => ({
       ...prev,
       [stepKey]: [...(prev[stepKey] || []), newBlock],
     }));
+
+    return { success: true };
   }, [byStep]);
 
   const removeBlock = useCallback((stepKey: string | null, blockId: string) => {
@@ -79,16 +115,62 @@ export function useBlockOperations(): UseBlockOperations {
   }, []);
 
   const updateBlock = useCallback((stepKey: string | null, blockId: string, patch: Partial<Block>) => {
-    if (!stepKey) return;
+    if (!stepKey) return { success: false, error: [{ field: 'stepKey', message: 'Step key é obrigatório' }] };
+    
+    let validationError: ValidationError[] | undefined;
+
     setByStep((prev) => {
       const list = prev[stepKey] || [];
       const idx = list.findIndex((b) => b.id === blockId);
       if (idx === -1) return prev;
-      const updated = { ...list[idx], ...patch, content: { ...(list[idx] as any).content, ...(patch as any).content }, properties: { ...(list[idx] as any).properties, ...(patch as any).properties } } as Block;
+
+      const currentBlock = list[idx];
+      const mergedData = { 
+        ...(currentBlock as any).content, 
+        ...(currentBlock as any).properties,
+        ...(patch as any).content, 
+        ...(patch as any).properties 
+      };
+
+      // Validar dados atualizados
+      const validation = safeValidateBlockData(currentBlock.type as BlockType, mergedData);
+
+      if (!validation.success) {
+        const zodError = validation.error as any;
+        validationError = zodError?.issues?.map((issue: any) => ({
+          field: issue.path.join('.'),
+          message: issue.message,
+        })) || [{ field: 'validation', message: zodError?.message || 'Validação falhou' }];
+
+        // Mostrar toast com erro
+        toast({
+          title: 'Erro de validação ao atualizar',
+          description: `Bloco ${currentBlock.type}: ${validationError![0].message}`,
+          variant: 'destructive',
+        });
+
+        // Não atualizar se inválido
+        return prev;
+      }
+
+      // Validação OK - atualizar bloco
+      const updated = { 
+        ...currentBlock, 
+        ...patch, 
+        content: validation.data || { ...mergedData }, 
+        properties: validation.data || { ...mergedData } 
+      } as Block;
+
       const next = [...list];
       next[idx] = updated;
       return { ...prev, [stepKey]: next };
     });
+
+    if (validationError) {
+      return { success: false, error: validationError };
+    }
+
+    return { success: true };
   }, []);
 
   return useMemo(() => ({ getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock, updateBlock }), [getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock, updateBlock]);

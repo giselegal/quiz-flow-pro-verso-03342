@@ -69,8 +69,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         if (draggedItem?.type === 'library-item' && dropzone === 'canvas') {
             // Adicionar novo bloco da biblioteca
             if (draggedItem.libraryType) {
-                ops.addBlock(editor.state.currentStepKey, { type: draggedItem.libraryType as Block['type'] });
-                editor.markDirty(true);
+                const addResult = ops.addBlock(editor.state.currentStepKey, { type: draggedItem.libraryType as Block['type'] });
+                if (addResult.success) {
+                    editor.markDirty(true);
+                }
+                // Erros já são mostrados via toast pelo useBlockOperations
             }
         } else if (draggedItem?.type === 'block' && dropzone === 'canvas') {
             // Reordenação dentro do canvas (implementar depois)
@@ -120,8 +123,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                     editor.markDirty(true);
                                 }}
                                 onUpdateBlock={(id, patch) => {
-                                    ops.updateBlock(editor.state.currentStepKey, id, patch);
-                                    editor.markDirty(true);
+                                    const updateResult = ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                    if (updateResult.success) {
+                                        editor.markDirty(true);
+                                    }
+                                    // Erros já são mostrados via toast pelo useBlockOperations
                                 }}
                                 onBlockSelect={editor.selectBlock}
                             />
@@ -134,8 +140,10 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 <ComponentLibraryColumn
                                     currentStepKey={editor.state.currentStepKey}
                                     onAddBlock={(type) => {
-                                        ops.addBlock(editor.state.currentStepKey, { type });
-                                        editor.markDirty(true);
+                                        const addResult = ops.addBlock(editor.state.currentStepKey, { type });
+                                        if (addResult.success) {
+                                            editor.markDirty(true);
+                                        }
                                     }}
                                 />
                             </div>

@@ -57,11 +57,12 @@ const EditorBlocksDiagnosticPage = lazy(() => import('./pages/EditorBlocksDiagno
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 
 // 🚀 EDITOR CONFIGURATION (Sprint 1 - Consolidated + Lazy Loading)
-// ✅ FASE 6: Lazy load do editor completo (-1.3 MB do bundle inicial)
-import QuizModularProductionEditor from '@/config/editorRoutes.config';
-
-// 🧪 EDITOR MODULAR EXPERIMENTAL (FASE 1.3 - Subfase em andamento)
+// ✅ ONDA 2: Migrar para QuizModularEditor (190 linhas) como padrão
+// ❌ DEPRECADO: QuizModularProductionEditor (4.317 linhas)
 const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
+
+// 🧪 FALLBACK: Editor legacy para compatibilidade (será removido na ONDA 3)
+const QuizModularProductionEditorLegacy = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -180,7 +181,7 @@ function AppCore() {
                                     <EditorErrorBoundary>
                                         <div data-testid="quiz-editor-wysiwyg-page">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando editor experimental..." />}>
-                                                <QuizModularProductionEditor />
+                                                <QuizModularEditor />
                                             </Suspense>
                                         </div>
                                     </EditorErrorBoundary>
@@ -191,7 +192,7 @@ function AppCore() {
                                         <EditorErrorBoundary>
                                             <div data-testid="quiz-editor-wysiwyg-funnel-page">
                                                 <Suspense fallback={<PageLoadingFallback message="Carregando editor experimental..." />}>
-                                                    <QuizModularProductionEditor />
+                                                    <QuizModularEditor funnelId={params.funnelId} />
                                                 </Suspense>
                                             </div>
                                         </EditorErrorBoundary>
@@ -260,7 +261,7 @@ function AppCore() {
                                             <div data-testid="quiz-modular-production-editor-page-optimized-funnel">
                                                 <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
                                                     <EditorProviderUnified funnelId={params.funnelId} enableSupabase={true}>
-                                                        <QuizModularProductionEditor />
+                                                        <QuizModularEditor funnelId={params.funnelId} />
                                                     </EditorProviderUnified>
                                                 </Suspense>
                                             </div>
@@ -276,7 +277,7 @@ function AppCore() {
                                                 <div data-testid="quiz-modular-production-editor-page-optimized">
                                                     <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
                                                         <EditorProviderUnified enableSupabase={true}>
-                                                            <QuizModularProductionEditor />
+                                                            <QuizModularEditor />
                                                         </EditorProviderUnified>
                                                     </Suspense>
                                                 </div>
