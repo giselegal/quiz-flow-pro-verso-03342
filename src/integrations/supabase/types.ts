@@ -10,577 +10,284 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
-      active_sessions: {
+      calculation_audit: {
         Row: {
-          created_at: string | null
-          expires_at: string
+          calculated_at: string
+          calculation_type: string
           id: string
-          ip_address: unknown
-          is_active: boolean | null
-          last_activity: string | null
-          location_data: Json | null
-          session_token: string
-          user_agent: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          expires_at: string
-          id?: string
-          ip_address?: unknown
-          is_active?: boolean | null
-          last_activity?: string | null
-          location_data?: Json | null
-          session_token: string
-          user_agent?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          expires_at?: string
-          id?: string
-          ip_address?: unknown
-          is_active?: boolean | null
-          last_activity?: string | null
-          location_data?: Json | null
-          session_token?: string
-          user_agent?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      active_user_sessions: {
-        Row: {
-          current_page: string | null
-          funnel_id: string | null
-          id: string
-          ip_address: string | null
-          is_active: boolean | null
-          last_activity: string | null
-          metadata: Json | null
-          session_token: string
-          started_at: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          current_page?: string | null
-          funnel_id?: string | null
-          id?: string
-          ip_address?: string | null
-          is_active?: boolean | null
-          last_activity?: string | null
-          metadata?: Json | null
-          session_token: string
-          started_at?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          current_page?: string | null
-          funnel_id?: string | null
-          id?: string
-          ip_address?: string | null
-          is_active?: boolean | null
-          last_activity?: string | null
-          metadata?: Json | null
-          session_token?: string
-          started_at?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      admin_goals: {
-        Row: {
-          achieved: boolean | null
-          created_at: string
-          current_value: number | null
-          goal_type: string
-          id: string
-          period_end: string
-          period_start: string
-          target_value: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          achieved?: boolean | null
-          created_at?: string
-          current_value?: number | null
-          goal_type: string
-          id?: string
-          period_end?: string
-          period_start?: string
-          target_value: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          achieved?: boolean | null
-          created_at?: string
-          current_value?: number | null
-          goal_type?: string
-          id?: string
-          period_end?: string
-          period_start?: string
-          target_value?: number
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      ai_optimization_recommendations: {
-        Row: {
-          actual_improvement: number | null
-          applied: boolean | null
-          applied_at: string | null
-          auto_applicable: boolean | null
-          behavior_patterns: Json | null
-          code_example: string | null
-          created_at: string | null
-          description: string
-          effort: string | null
-          expected_improvement: number | null
-          funnel_id: string | null
-          id: string
-          implementation: string | null
-          metrics: Json | null
-          priority: string
+          input_data: Json | null
+          output_data: Json | null
           session_id: string | null
-          success: boolean | null
-          title: string
-          type: string
-          updated_at: string | null
-          user_id: string | null
         }
         Insert: {
-          actual_improvement?: number | null
-          applied?: boolean | null
-          applied_at?: string | null
-          auto_applicable?: boolean | null
-          behavior_patterns?: Json | null
-          code_example?: string | null
-          created_at?: string | null
-          description: string
-          effort?: string | null
-          expected_improvement?: number | null
-          funnel_id?: string | null
+          calculated_at?: string
+          calculation_type: string
           id?: string
-          implementation?: string | null
-          metrics?: Json | null
-          priority: string
+          input_data?: Json | null
+          output_data?: Json | null
           session_id?: string | null
-          success?: boolean | null
-          title: string
-          type: string
-          updated_at?: string | null
-          user_id?: string | null
         }
         Update: {
-          actual_improvement?: number | null
-          applied?: boolean | null
-          applied_at?: string | null
-          auto_applicable?: boolean | null
-          behavior_patterns?: Json | null
-          code_example?: string | null
-          created_at?: string | null
-          description?: string
-          effort?: string | null
-          expected_improvement?: number | null
-          funnel_id?: string | null
+          calculated_at?: string
+          calculation_type?: string
           id?: string
-          implementation?: string | null
-          metrics?: Json | null
-          priority?: string
+          input_data?: Json | null
+          output_data?: Json | null
           session_id?: string | null
-          success?: boolean | null
-          title?: string
-          type?: string
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      backup_jobs: {
-        Row: {
-          backup_data: Json | null
-          completed_at: string | null
-          created_at: string | null
-          description: string | null
-          error_message: string | null
-          id: string
-          size_bytes: number | null
-          started_at: string | null
-          status: string | null
-          tables: string[]
-          type: string
-          user_id: string | null
-        }
-        Insert: {
-          backup_data?: Json | null
-          completed_at?: string | null
-          created_at?: string | null
-          description?: string | null
-          error_message?: string | null
-          id?: string
-          size_bytes?: number | null
-          started_at?: string | null
-          status?: string | null
-          tables?: string[]
-          type: string
-          user_id?: string | null
-        }
-        Update: {
-          backup_data?: Json | null
-          completed_at?: string | null
-          created_at?: string | null
-          description?: string | null
-          error_message?: string | null
-          id?: string
-          size_bytes?: number | null
-          started_at?: string | null
-          status?: string | null
-          tables?: string[]
-          type?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      component_instances: {
-        Row: {
-          component_type_key: string
-          created_at: string | null
-          created_by: string | null
-          custom_styling: Json | null
-          funnel_id: string
-          id: string
-          instance_key: string
-          is_active: boolean | null
-          is_locked: boolean | null
-          is_template: boolean | null
-          order_index: number
-          properties: Json
-          stage_id: string | null
-          step_number: number
-          updated_at: string | null
-        }
-        Insert: {
-          component_type_key: string
-          created_at?: string | null
-          created_by?: string | null
-          custom_styling?: Json | null
-          funnel_id: string
-          id?: string
-          instance_key: string
-          is_active?: boolean | null
-          is_locked?: boolean | null
-          is_template?: boolean | null
-          order_index?: number
-          properties?: Json
-          stage_id?: string | null
-          step_number: number
-          updated_at?: string | null
-        }
-        Update: {
-          component_type_key?: string
-          created_at?: string | null
-          created_by?: string | null
-          custom_styling?: Json | null
-          funnel_id?: string
-          id?: string
-          instance_key?: string
-          is_active?: boolean | null
-          is_locked?: boolean | null
-          is_template?: boolean | null
-          order_index?: number
-          properties?: Json
-          stage_id?: string | null
-          step_number?: number
-          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "component_instances_component_type_key_fkey"
-            columns: ["component_type_key"]
+            foreignKeyName: "calculation_audit_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      component_instances: {
+        Row: {
+          component_type_id: string | null
+          config: Json | null
+          created_at: string
+          created_by: string | null
+          funnel_id: string | null
+          id: string
+          is_active: boolean | null
+          position: number | null
+          updated_at: string
+        }
+        Insert: {
+          component_type_id?: string | null
+          config?: Json | null
+          created_at?: string
+          created_by?: string | null
+          funnel_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          position?: number | null
+          updated_at?: string
+        }
+        Update: {
+          component_type_id?: string | null
+          config?: Json | null
+          created_at?: string
+          created_by?: string | null
+          funnel_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          position?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "component_instances_component_type_id_fkey"
+            columns: ["component_type_id"]
             isOneToOne: false
             referencedRelation: "component_types"
-            referencedColumns: ["type_key"]
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      component_presets: {
+        Row: {
+          component_type_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_default: boolean | null
+          preset_config: Json | null
+          preset_name: string
+        }
+        Insert: {
+          component_type_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_default?: boolean | null
+          preset_config?: Json | null
+          preset_name: string
+        }
+        Update: {
+          component_type_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_default?: boolean | null
+          preset_config?: Json | null
+          preset_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "component_presets_component_type_id_fkey"
+            columns: ["component_type_id"]
+            isOneToOne: false
+            referencedRelation: "component_types"
+            referencedColumns: ["id"]
           },
         ]
       }
       component_types: {
         Row: {
           category: string
-          component_path: string
-          created_at: string | null
-          created_by: string | null
-          custom_styling: Json | null
-          default_properties: Json
-          description: string | null
-          display_name: string
-          icon: string | null
-          id: string
-          is_active: boolean | null
-          is_system: boolean | null
-          last_used_at: string | null
-          preview_image_url: string | null
-          subcategory: string | null
-          type_key: string
-          updated_at: string | null
-          usage_count: number | null
-          validation_schema: Json
-          version: number | null
-        }
-        Insert: {
-          category: string
-          component_path: string
-          created_at?: string | null
-          created_by?: string | null
-          custom_styling?: Json | null
-          default_properties?: Json
-          description?: string | null
-          display_name: string
-          icon?: string | null
-          id?: string
-          is_active?: boolean | null
-          is_system?: boolean | null
-          last_used_at?: string | null
-          preview_image_url?: string | null
-          subcategory?: string | null
-          type_key: string
-          updated_at?: string | null
-          usage_count?: number | null
-          validation_schema?: Json
-          version?: number | null
-        }
-        Update: {
-          category?: string
-          component_path?: string
-          created_at?: string | null
-          created_by?: string | null
-          custom_styling?: Json | null
-          default_properties?: Json
-          description?: string | null
-          display_name?: string
-          icon?: string | null
-          id?: string
-          is_active?: boolean | null
-          is_system?: boolean | null
-          last_used_at?: string | null
-          preview_image_url?: string | null
-          subcategory?: string | null
-          type_key?: string
-          updated_at?: string | null
-          usage_count?: number | null
-          validation_schema?: Json
-          version?: number | null
-        }
-        Relationships: []
-      }
-      funnel_pages: {
-        Row: {
-          blocks: Json
-          created_at: string | null
-          funnel_id: string
-          id: string
-          metadata: Json | null
-          page_order: number
-          page_type: string
-          title: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          blocks?: Json
-          created_at?: string | null
-          funnel_id: string
-          id: string
-          metadata?: Json | null
-          page_order: number
-          page_type: string
-          title?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          blocks?: Json
-          created_at?: string | null
-          funnel_id?: string
-          id?: string
-          metadata?: Json | null
-          page_order?: number
-          page_type?: string
-          title?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "funnel_pages_funnel_id_fkey"
-            columns: ["funnel_id"]
-            isOneToOne: false
-            referencedRelation: "funnels"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      funnels: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          id: string
-          is_published: boolean | null
-          name: string
-          settings: Json | null
-          updated_at: string | null
-          user_id: string | null
-          version: number | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          id: string
-          is_published?: boolean | null
-          name: string
-          settings?: Json | null
-          updated_at?: string | null
-          user_id?: string | null
-          version?: number | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          is_published?: boolean | null
-          name?: string
-          settings?: Json | null
-          updated_at?: string | null
-          user_id?: string | null
-          version?: number | null
-        }
-        Relationships: []
-      }
-      optimization_results: {
-        Row: {
-          after_metrics: Json | null
-          applied_at: string | null
-          applied_by: string | null
-          before_metrics: Json | null
-          created_at: string | null
-          error_message: string | null
-          funnel_id: string | null
-          id: string
-          improvement_percentage: number | null
-          recommendation_id: string | null
-          rollback_available: boolean | null
-          rolled_back: boolean | null
-          success: boolean | null
-          user_id: string | null
-        }
-        Insert: {
-          after_metrics?: Json | null
-          applied_at?: string | null
-          applied_by?: string | null
-          before_metrics?: Json | null
-          created_at?: string | null
-          error_message?: string | null
-          funnel_id?: string | null
-          id?: string
-          improvement_percentage?: number | null
-          recommendation_id?: string | null
-          rollback_available?: boolean | null
-          rolled_back?: boolean | null
-          success?: boolean | null
-          user_id?: string | null
-        }
-        Update: {
-          after_metrics?: Json | null
-          applied_at?: string | null
-          applied_by?: string | null
-          before_metrics?: Json | null
-          created_at?: string | null
-          error_message?: string | null
-          funnel_id?: string | null
-          id?: string
-          improvement_percentage?: number | null
-          recommendation_id?: string | null
-          rollback_available?: boolean | null
-          rolled_back?: boolean | null
-          success?: boolean | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "optimization_results_recommendation_id_fkey"
-            columns: ["recommendation_id"]
-            isOneToOne: false
-            referencedRelation: "ai_optimization_recommendations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
+          config_schema: Json | null
           created_at: string
-          email: string
+          created_by: string | null
+          display_name: string
           id: string
-          name: string | null
+          type_key: string
           updated_at: string
         }
         Insert: {
+          category: string
+          config_schema?: Json | null
           created_at?: string
-          email: string
-          id: string
-          name?: string | null
+          created_by?: string | null
+          display_name: string
+          id?: string
+          type_key: string
           updated_at?: string
         }
         Update: {
+          category?: string
+          config_schema?: Json | null
           created_at?: string
-          email?: string
+          created_by?: string | null
+          display_name?: string
           id?: string
-          name?: string | null
+          type_key?: string
           updated_at?: string
         }
         Relationships: []
       }
-      quiz_analytics: {
+      funnels: {
         Row: {
-          event_data: Json | null
-          event_type: string
-          funnel_id: string
+          category: string | null
+          config: Json | null
+          context: string | null
+          created_at: string
+          description: string | null
           id: string
-          session_id: string | null
-          timestamp: string
-          user_id: string | null
+          is_active: boolean | null
+          metadata: Json | null
+          name: string
+          status: string
+          type: string
+          updated_at: string
+          user_id: string
         }
         Insert: {
-          event_data?: Json | null
-          event_type: string
-          funnel_id: string
+          category?: string | null
+          config?: Json | null
+          context?: string | null
+          created_at?: string
+          description?: string | null
           id?: string
-          session_id?: string | null
-          timestamp?: string
-          user_id?: string | null
+          is_active?: boolean | null
+          metadata?: Json | null
+          name: string
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id: string
         }
         Update: {
-          event_data?: Json | null
-          event_type?: string
-          funnel_id?: string
+          category?: string | null
+          config?: Json | null
+          context?: string | null
+          created_at?: string
+          description?: string | null
           id?: string
-          session_id?: string | null
-          timestamp?: string
-          user_id?: string | null
+          is_active?: boolean | null
+          metadata?: Json | null
+          name?: string
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      outcomes: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          max_score: number | null
+          min_score: number | null
+          outcome_key: string
+          quiz_definition_id: string | null
+          result_content: Json | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          max_score?: number | null
+          min_score?: number | null
+          outcome_key: string
+          quiz_definition_id?: string | null
+          result_content?: Json | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          max_score?: number | null
+          min_score?: number | null
+          outcome_key?: string
+          quiz_definition_id?: string | null
+          result_content?: Json | null
+          title?: string
         }
         Relationships: [
           {
-            foreignKeyName: "quiz_analytics_funnel_id_fkey"
-            columns: ["funnel_id"]
+            foreignKeyName: "outcomes_quiz_definition_id_fkey"
+            columns: ["quiz_definition_id"]
             isOneToOne: false
-            referencedRelation: "funnels"
+            referencedRelation: "quiz_definitions"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      quiz_analytics: {
+        Row: {
+          funnel_id: string | null
+          id: string
+          metric_data: Json | null
+          metric_name: string
+          metric_value: number | null
+          recorded_at: string
+          session_id: string
+          user_id: string | null
+        }
+        Insert: {
+          funnel_id?: string | null
+          id?: string
+          metric_data?: Json | null
+          metric_name: string
+          metric_value?: number | null
+          recorded_at?: string
+          session_id: string
+          user_id?: string | null
+        }
+        Update: {
+          funnel_id?: string | null
+          id?: string
+          metric_data?: Json | null
+          metric_name?: string
+          metric_value?: number | null
+          recorded_at?: string
+          session_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
           {
             foreignKeyName: "quiz_analytics_session_id_fkey"
             columns: ["session_id"]
@@ -588,61 +295,183 @@ export type Database = {
             referencedRelation: "quiz_sessions"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "quiz_analytics_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "quiz_users"
-            referencedColumns: ["id"]
-          },
         ]
       }
-      quiz_conversions: {
+      quiz_definitions: {
         Row: {
-          affiliate_id: string | null
-          commission_rate: number | null
-          conversion_data: Json | null
-          conversion_type: string
-          conversion_value: number | null
-          converted_at: string
-          currency: string | null
+          created_at: string
+          description: string | null
           id: string
-          product_id: string | null
-          product_name: string | null
-          session_id: string
+          is_active: boolean | null
+          quiz_type: string
+          settings: Json | null
+          title: string
+          updated_at: string
         }
         Insert: {
-          affiliate_id?: string | null
-          commission_rate?: number | null
-          conversion_data?: Json | null
-          conversion_type: string
-          conversion_value?: number | null
-          converted_at?: string
-          currency?: string | null
+          created_at?: string
+          description?: string | null
           id?: string
-          product_id?: string | null
-          product_name?: string | null
-          session_id: string
+          is_active?: boolean | null
+          quiz_type?: string
+          settings?: Json | null
+          title: string
+          updated_at?: string
         }
         Update: {
-          affiliate_id?: string | null
-          commission_rate?: number | null
-          conversion_data?: Json | null
-          conversion_type?: string
-          conversion_value?: number | null
-          converted_at?: string
-          currency?: string | null
+          created_at?: string
+          description?: string | null
           id?: string
-          product_id?: string | null
-          product_name?: string | null
-          session_id?: string
+          is_active?: boolean | null
+          quiz_type?: string
+          settings?: Json | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quiz_drafts: {
+        Row: {
+          content: Json
+          created_at: string | null
+          funnel_id: string
+          id: string
+          last_validated_at: string | null
+          metadata: Json | null
+          name: string
+          slug: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+          version: number | null
+        }
+        Insert: {
+          content?: Json
+          created_at?: string | null
+          funnel_id: string
+          id?: string
+          last_validated_at?: string | null
+          metadata?: Json | null
+          name: string
+          slug: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+          version?: number | null
+        }
+        Update: {
+          content?: Json
+          created_at?: string | null
+          funnel_id?: string
+          id?: string
+          last_validated_at?: string | null
+          metadata?: Json | null
+          name?: string
+          slug?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+          version?: number | null
+        }
+        Relationships: []
+      }
+      quiz_events: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          option_selected: string | null
+          quiz_data: Json | null
+          step_number: number | null
+          time_spent: number | null
+          timestamp: string
+          user_data: Json | null
+          user_session_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          option_selected?: string | null
+          quiz_data?: Json | null
+          step_number?: number | null
+          time_spent?: number | null
+          timestamp?: string
+          user_data?: Json | null
+          user_session_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          option_selected?: string | null
+          quiz_data?: Json | null
+          step_number?: number | null
+          time_spent?: number | null
+          timestamp?: string
+          user_data?: Json | null
+          user_session_id?: string
+        }
+        Relationships: []
+      }
+      quiz_production: {
+        Row: {
+          content: Json
+          created_at: string | null
+          draft_id: string | null
+          funnel_id: string
+          id: string
+          is_template: boolean | null
+          metadata: Json | null
+          name: string
+          published_at: string | null
+          slug: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+          version: number
+        }
+        Insert: {
+          content: Json
+          created_at?: string | null
+          draft_id?: string | null
+          funnel_id: string
+          id?: string
+          is_template?: boolean | null
+          metadata?: Json | null
+          name: string
+          published_at?: string | null
+          slug: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+          version?: number
+        }
+        Update: {
+          content?: Json
+          created_at?: string | null
+          draft_id?: string | null
+          funnel_id?: string
+          id?: string
+          is_template?: boolean | null
+          metadata?: Json | null
+          name?: string
+          published_at?: string | null
+          slug?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+          version?: number
         }
         Relationships: [
           {
-            foreignKeyName: "quiz_conversions_session_id_fkey"
-            columns: ["session_id"]
+            foreignKeyName: "quiz_production_draft_id_fkey"
+            columns: ["draft_id"]
             isOneToOne: false
-            referencedRelation: "quiz_sessions"
+            referencedRelation: "quiz_drafts"
             referencedColumns: ["id"]
           },
         ]
@@ -694,57 +523,78 @@ export type Database = {
       quiz_sessions: {
         Row: {
           completed_at: string | null
+          completion_percentage: number | null
           current_step: number | null
-          funnel_id: string
+          device_info: Json | null
+          final_result: Json | null
+          funnel_id: string | null
           id: string
           last_activity: string
           max_score: number | null
           metadata: Json | null
-          quiz_user_id: string
+          quiz_user_id: string | null
           score: number | null
+          session_token: string | null
           started_at: string
           status: string
+          time_spent_total: number | null
           total_steps: number | null
+          user_id: string | null
+          user_name: string | null
         }
         Insert: {
           completed_at?: string | null
+          completion_percentage?: number | null
           current_step?: number | null
-          funnel_id: string
+          device_info?: Json | null
+          final_result?: Json | null
+          funnel_id?: string | null
           id?: string
           last_activity?: string
           max_score?: number | null
           metadata?: Json | null
-          quiz_user_id: string
+          quiz_user_id?: string | null
           score?: number | null
+          session_token?: string | null
           started_at?: string
           status?: string
+          time_spent_total?: number | null
           total_steps?: number | null
+          user_id?: string | null
+          user_name?: string | null
         }
         Update: {
           completed_at?: string | null
+          completion_percentage?: number | null
           current_step?: number | null
-          funnel_id?: string
+          device_info?: Json | null
+          final_result?: Json | null
+          funnel_id?: string | null
           id?: string
           last_activity?: string
           max_score?: number | null
           metadata?: Json | null
-          quiz_user_id?: string
+          quiz_user_id?: string | null
           score?: number | null
+          session_token?: string | null
           started_at?: string
           status?: string
+          time_spent_total?: number | null
           total_steps?: number | null
+          user_id?: string | null
+          user_name?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "quiz_sessions_funnel_id_fkey"
-            columns: ["funnel_id"]
+            foreignKeyName: "quiz_sessions_quiz_user_id_fkey"
+            columns: ["quiz_user_id"]
             isOneToOne: false
-            referencedRelation: "funnels"
+            referencedRelation: "quiz_users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quiz_sessions_quiz_user_id_fkey"
-            columns: ["quiz_user_id"]
+            foreignKeyName: "quiz_sessions_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "quiz_users"
             referencedColumns: ["id"]
@@ -840,475 +690,57 @@ export type Database = {
         }
         Relationships: []
       }
-      rate_limits: {
-        Row: {
-          created_at: string | null
-          current: number
-          endpoint: string
-          id: string
-          identifier: string
-          last_request: number
-          limit_value: number
-          reset_time: number
-          updated_at: string | null
-          user_id: string | null
-          window_seconds: number
-        }
-        Insert: {
-          created_at?: string | null
-          current?: number
-          endpoint: string
-          id?: string
-          identifier: string
-          last_request: number
-          limit_value: number
-          reset_time: number
-          updated_at?: string | null
-          user_id?: string | null
-          window_seconds: number
-        }
-        Update: {
-          created_at?: string | null
-          current?: number
-          endpoint?: string
-          id?: string
-          identifier?: string
-          last_request?: number
-          limit_value?: number
-          reset_time?: number
-          updated_at?: string | null
-          user_id?: string | null
-          window_seconds?: number
-        }
-        Relationships: []
-      }
-      real_time_metrics: {
-        Row: {
-          bundle_size: number | null
-          cache_hit_rate: number | null
-          device_info: Json | null
-          editor_mode: string | null
-          error_rate: number | null
-          funnel_id: string | null
-          id: string
-          memory_usage: number | null
-          network_latency: number | null
-          performance_score: number | null
-          recorded_at: string | null
-          render_time: number | null
-          session_id: string
-          user_agent: string | null
-          user_engagement: number | null
-          user_id: string | null
-          user_interaction_latency: number | null
-        }
-        Insert: {
-          bundle_size?: number | null
-          cache_hit_rate?: number | null
-          device_info?: Json | null
-          editor_mode?: string | null
-          error_rate?: number | null
-          funnel_id?: string | null
-          id?: string
-          memory_usage?: number | null
-          network_latency?: number | null
-          performance_score?: number | null
-          recorded_at?: string | null
-          render_time?: number | null
-          session_id: string
-          user_agent?: string | null
-          user_engagement?: number | null
-          user_id?: string | null
-          user_interaction_latency?: number | null
-        }
-        Update: {
-          bundle_size?: number | null
-          cache_hit_rate?: number | null
-          device_info?: Json | null
-          editor_mode?: string | null
-          error_rate?: number | null
-          funnel_id?: string | null
-          id?: string
-          memory_usage?: number | null
-          network_latency?: number | null
-          performance_score?: number | null
-          recorded_at?: string | null
-          render_time?: number | null
-          session_id?: string
-          user_agent?: string | null
-          user_engagement?: number | null
-          user_id?: string | null
-          user_interaction_latency?: number | null
-        }
-        Relationships: []
-      }
-      security_audit_logs: {
-        Row: {
-          created_at: string | null
-          event_data: Json | null
-          event_type: string
-          id: string
-          ip_address: unknown
-          severity: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          event_data?: Json | null
-          event_type: string
-          id?: string
-          ip_address?: unknown
-          severity?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          event_data?: Json | null
-          event_type?: string
-          id?: string
-          ip_address?: unknown
-          severity?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      session_analytics: {
-        Row: {
-          abandoned_sessions: number | null
-          average_duration_seconds: number | null
-          bounce_rate: number | null
-          completed_sessions: number | null
-          conversion_rate: number | null
-          created_at: string | null
-          date: string
-          funnel_id: string | null
-          id: string
-          metadata: Json | null
-          total_revenue: number | null
-          total_sessions: number | null
-          unique_users: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          abandoned_sessions?: number | null
-          average_duration_seconds?: number | null
-          bounce_rate?: number | null
-          completed_sessions?: number | null
-          conversion_rate?: number | null
-          created_at?: string | null
-          date: string
-          funnel_id?: string | null
-          id?: string
-          metadata?: Json | null
-          total_revenue?: number | null
-          total_sessions?: number | null
-          unique_users?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          abandoned_sessions?: number | null
-          average_duration_seconds?: number | null
-          bounce_rate?: number | null
-          completed_sessions?: number | null
-          conversion_rate?: number | null
-          created_at?: string | null
-          date?: string
-          funnel_id?: string | null
-          id?: string
-          metadata?: Json | null
-          total_revenue?: number | null
-          total_sessions?: number | null
-          unique_users?: number | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      system_health_metrics: {
-        Row: {
-          id: string
-          metadata: Json | null
-          metric_name: string
-          metric_unit: string | null
-          metric_value: number
-          recorded_at: string | null
-          service_name: string
-          status: string | null
-        }
-        Insert: {
-          id?: string
-          metadata?: Json | null
-          metric_name: string
-          metric_unit?: string | null
-          metric_value: number
-          recorded_at?: string | null
-          service_name: string
-          status?: string | null
-        }
-        Update: {
-          id?: string
-          metadata?: Json | null
-          metric_name?: string
-          metric_unit?: string | null
-          metric_value?: number
-          recorded_at?: string | null
-          service_name?: string
-          status?: string | null
-        }
-        Relationships: []
-      }
-      templates: {
+      user_results: {
         Row: {
           created_at: string
-          description: string | null
-          draft_data: Json
-          draft_version: number
           id: string
-          name: string
-          published_at: string | null
-          published_data: Json | null
-          published_version: number | null
-          schema_version: string
-          slug: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          draft_data?: Json
-          draft_version?: number
-          id?: string
-          name: string
-          published_at?: string | null
-          published_data?: Json | null
-          published_version?: number | null
-          schema_version?: string
-          slug: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          draft_data?: Json
-          draft_version?: number
-          id?: string
-          name?: string
-          published_at?: string | null
-          published_data?: Json | null
-          published_version?: number | null
-          schema_version?: string
-          slug?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_activities: {
-        Row: {
-          activity_description: string
-          activity_type: string
-          created_at: string | null
-          entity_id: string | null
-          entity_type: string | null
-          id: string
-          ip_address: string | null
-          metadata: Json | null
-          user_agent: string | null
+          quiz_definition_id: string | null
+          result_data: Json | null
+          score: number | null
+          session_id: string
           user_id: string | null
         }
         Insert: {
-          activity_description: string
-          activity_type: string
-          created_at?: string | null
-          entity_id?: string | null
-          entity_type?: string | null
+          created_at?: string
           id?: string
-          ip_address?: string | null
-          metadata?: Json | null
-          user_agent?: string | null
+          quiz_definition_id?: string | null
+          result_data?: Json | null
+          score?: number | null
+          session_id: string
           user_id?: string | null
         }
         Update: {
-          activity_description?: string
-          activity_type?: string
-          created_at?: string | null
-          entity_id?: string | null
-          entity_type?: string | null
+          created_at?: string
           id?: string
-          ip_address?: string | null
-          metadata?: Json | null
-          user_agent?: string | null
+          quiz_definition_id?: string | null
+          result_data?: Json | null
+          score?: number | null
+          session_id?: string
           user_id?: string | null
         }
-        Relationships: []
-      }
-      user_behavior_patterns: {
-        Row: {
-          action: string
-          analyzed_period_end: string | null
-          analyzed_period_start: string | null
-          avg_duration: number | null
-          created_at: string | null
-          drop_off_points: Json | null
-          frequency: number | null
-          funnel_id: string | null
-          id: string
-          optimization_potential: number | null
-          session_id: string | null
-          success_rate: number | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          action: string
-          analyzed_period_end?: string | null
-          analyzed_period_start?: string | null
-          avg_duration?: number | null
-          created_at?: string | null
-          drop_off_points?: Json | null
-          frequency?: number | null
-          funnel_id?: string | null
-          id?: string
-          optimization_potential?: number | null
-          session_id?: string | null
-          success_rate?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          action?: string
-          analyzed_period_end?: string | null
-          analyzed_period_start?: string | null
-          avg_duration?: number | null
-          created_at?: string | null
-          drop_off_points?: Json | null
-          frequency?: number | null
-          funnel_id?: string | null
-          id?: string
-          optimization_potential?: number | null
-          session_id?: string | null
-          success_rate?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_security_settings: {
-        Row: {
-          allowed_ips: unknown[] | null
-          backup_notifications: boolean | null
-          created_at: string | null
-          id: string
-          last_password_change: string | null
-          locked_until: string | null
-          login_attempts: number | null
-          security_alerts: boolean | null
-          security_questions: Json | null
-          session_timeout: number | null
-          two_factor_enabled: boolean | null
-          two_factor_secret: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          allowed_ips?: unknown[] | null
-          backup_notifications?: boolean | null
-          created_at?: string | null
-          id?: string
-          last_password_change?: string | null
-          locked_until?: string | null
-          login_attempts?: number | null
-          security_alerts?: boolean | null
-          security_questions?: Json | null
-          session_timeout?: number | null
-          two_factor_enabled?: boolean | null
-          two_factor_secret?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          allowed_ips?: unknown[] | null
-          backup_notifications?: boolean | null
-          created_at?: string | null
-          id?: string
-          last_password_change?: string | null
-          locked_until?: string | null
-          login_attempts?: number | null
-          security_alerts?: boolean | null
-          security_questions?: Json | null
-          session_timeout?: number | null
-          two_factor_enabled?: boolean | null
-          two_factor_secret?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_results_quiz_definition_id_fkey"
+            columns: ["quiz_definition_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      batch_update_components: { Args: { updates: Json }; Returns: Json }
-      cleanup_expired_rate_limits: { Args: never; Returns: undefined }
-      cleanup_expired_sessions: { Args: never; Returns: undefined }
-      cleanup_old_analytics_data: { Args: never; Returns: undefined }
-      cleanup_old_metrics: { Args: never; Returns: undefined }
-      handle_failed_login_attempt: {
-        Args: { p_user_id: string }
-        Returns: undefined
-      }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      log_security_event: {
-        Args: { p_event_data?: Json; p_event_type: string; p_severity?: string }
+      duplicate_quiz_template: {
+        Args: { new_funnel_id: string; new_name: string; template_slug: string }
         Returns: string
       }
-      record_system_metric: {
-        Args: {
-          p_metadata?: Json
-          p_metric_name: string
-          p_metric_unit?: string
-          p_metric_value: number
-          p_service_name: string
-          p_status?: string
-        }
-        Returns: string
-      }
-      reset_login_attempts: { Args: { p_user_id: string }; Returns: undefined }
+      publish_quiz_draft: { Args: { draft_id: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1435,8 +867,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "moderator", "user"],
-    },
+    Enums: {},
   },
 } as const
