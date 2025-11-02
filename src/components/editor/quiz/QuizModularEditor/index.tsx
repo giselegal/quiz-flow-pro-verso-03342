@@ -1,13 +1,15 @@
 /**
  * 🎯 QUIZ MODULAR EDITOR - Versão Aprimorada
  * 
- * Layout profissional com 4 colunas:
- * - Coluna 1: Navegação de Etapas (2 cols)
- * - Coluna 2: Canvas Visual (5 cols) - edição + preview
- * - Coluna 3: Biblioteca de Componentes (2 cols)
- * - Coluna 4: Painel de Propriedades (3 cols)
+ * Layout profissional com 4 colunas REDIMENSIONÁVEIS:
+ * - Coluna 1: Navegação de Etapas
+ * - Coluna 2: Biblioteca de Componentes
+ * - Coluna 3: Canvas Visual (edição + preview)
+ * - Coluna 4: Painel de Propriedades
  * 
  * Recursos:
+ * - ✅ Colunas com largura ajustável
+ * - ✅ Barras de rolagem vertical em cada coluna
  * - ✅ Drag & Drop entre colunas
  * - ✅ Modo edição + Modo preview
  * - ✅ Preview em tempo real (live/production)
@@ -17,6 +19,7 @@
 
 import React, { Suspense, useEffect, useState, useCallback } from 'react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useEditorState } from './hooks/useEditorState';
 import { useBlockOperations } from './hooks/useBlockOperations';
 import { useDndSystem } from './hooks/useDndSystem';
@@ -24,7 +27,7 @@ import { useEditorPersistence } from './hooks/useEditorPersistence';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
 import { Button } from '@/components/ui/button';
-import { Eye, Edit3, Play, Save } from 'lucide-react';
+import { Eye, Edit3, Play, Save, GripVertical } from 'lucide-react';
 
 // Lazy loading de componentes pesados
 const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
@@ -204,85 +207,111 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     </div>
                 </div>
 
-                {/* Grid principal: 4 colunas */}
-                <div className="grid grid-cols-12 gap-0 flex-1 overflow-hidden">
-                    {/* Coluna 1: Navegação de Etapas (2 cols) */}
-                    <Suspense fallback={<div className="col-span-2 p-4">Carregando navegação…</div>}>
-                        <div className="col-span-2 border-r bg-white overflow-y-auto">
-                            <StepNavigatorColumn
-                                initialStepKey={props.initialStepKey}
-                                currentStepKey={editor.state.currentStepKey}
-                                onSelectStep={editor.setStep}
-                            />
-                        </div>
-                    </Suspense>
-
-                    {/* Coluna 2: Canvas (5 cols) */}
-                    <Suspense fallback={<div className="col-span-5 flex items-center justify-center">Carregando canvas…</div>}>
-                        <div className="col-span-5 bg-gray-50 overflow-y-auto">
-                            {canvasMode === 'edit' ? (
-                                <CanvasColumn
+                {/* Grid de 4 colunas REDIMENSIONÁVEIS */}
+                <PanelGroup direction="horizontal" className="flex-1">
+                    {/* Coluna 1: Navegação de Etapas */}
+                    <Panel defaultSize={15} minSize={10} maxSize={25}>
+                        <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando navegação…</div>}>
+                            <div className="h-full border-r bg-white overflow-y-auto">
+                                <StepNavigatorColumn
+                                    initialStepKey={props.initialStepKey}
                                     currentStepKey={editor.state.currentStepKey}
-                                    blocks={blocks}
-                                    selectedBlockId={editor.state.selectedBlockId}
-                                    onRemoveBlock={(id) => {
-                                        ops.removeBlock(editor.state.currentStepKey, id);
-                                        editor.markDirty(true);
+                                    onSelectStep={editor.setStep}
+                                />
+                            </div>
+                        </Suspense>
+                    </Panel>
+
+                    {/* Divisor 1 */}
+                    <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group">
+                        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 group-hover:w-1.5 bg-gray-300 group-hover:bg-blue-500 transition-all" />
+                        <GripVertical className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </PanelResizeHandle>
+
+                    {/* Coluna 2: Biblioteca de Componentes */}
+                    <Panel defaultSize={20} minSize={15} maxSize={30}>
+                        <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando biblioteca…</div>}>
+                            <div className="h-full border-r bg-white overflow-y-auto">
+                                <ComponentLibraryColumn
+                                    currentStepKey={editor.state.currentStepKey}
+                                    onAddBlock={(type) => {
+                                        const addResult = ops.addBlock(editor.state.currentStepKey, { type });
+                                        if (addResult.success) {
+                                            editor.markDirty(true);
+                                        }
                                     }}
-                                    onMoveBlock={(from, to) => {
-                                        ops.reorderBlock(editor.state.currentStepKey, from, to);
-                                        editor.markDirty(true);
-                                    }}
-                                    onUpdateBlock={(id, patch) => {
-                                        const updateResult = ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                />
+                            </div>
+                        </Suspense>
+                    </Panel>
+
+                    {/* Divisor 2 */}
+                    <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group">
+                        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 group-hover:w-1.5 bg-gray-300 group-hover:bg-blue-500 transition-all" />
+                        <GripVertical className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </PanelResizeHandle>
+
+                    {/* Coluna 3: Canvas */}
+                    <Panel defaultSize={40} minSize={30}>
+                        <Suspense fallback={<div className="flex items-center justify-center h-full text-gray-500">Carregando canvas…</div>}>
+                            <div className="h-full bg-gray-50 overflow-y-auto">
+                                {canvasMode === 'edit' ? (
+                                    <CanvasColumn
+                                        currentStepKey={editor.state.currentStepKey}
+                                        blocks={blocks}
+                                        selectedBlockId={editor.state.selectedBlockId}
+                                        onRemoveBlock={(id) => {
+                                            ops.removeBlock(editor.state.currentStepKey, id);
+                                            editor.markDirty(true);
+                                        }}
+                                        onMoveBlock={(from, to) => {
+                                            ops.reorderBlock(editor.state.currentStepKey, from, to);
+                                            editor.markDirty(true);
+                                        }}
+                                        onUpdateBlock={(id, patch) => {
+                                            const updateResult = ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                            if (updateResult.success) {
+                                                editor.markDirty(true);
+                                            }
+                                        }}
+                                        onBlockSelect={editor.selectBlock}
+                                    />
+                                ) : (
+                                    <PreviewPanel
+                                        currentStepKey={editor.state.currentStepKey}
+                                        blocks={blocks}
+                                        isVisible={true}
+                                        className="h-full"
+                                    />
+                                )}
+                            </div>
+                        </Suspense>
+                    </Panel>
+
+                    {/* Divisor 3 */}
+                    <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group">
+                        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 group-hover:w-1.5 bg-gray-300 group-hover:bg-blue-500 transition-all" />
+                        <GripVertical className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </PanelResizeHandle>
+
+                    {/* Coluna 4: Painel de Propriedades */}
+                    <Panel defaultSize={25} minSize={20} maxSize={35}>
+                        <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando propriedades…</div>}>
+                            <div className="h-full border-l bg-white overflow-y-auto">
+                                <PropertiesColumn
+                                    selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) || null}
+                                    onBlockUpdate={(blockId, updates) => {
+                                        const updateResult = ops.updateBlock(editor.state.currentStepKey, blockId, updates);
                                         if (updateResult.success) {
                                             editor.markDirty(true);
                                         }
                                     }}
-                                    onBlockSelect={editor.selectBlock}
+                                    onClearSelection={editor.clearSelection}
                                 />
-                            ) : (
-                                <PreviewPanel
-                                    currentStepKey={editor.state.currentStepKey}
-                                    blocks={blocks}
-                                    isVisible={true}
-                                    className="h-full"
-                                />
-                            )}
-                        </div>
-                    </Suspense>
-
-                    {/* Coluna 3: Biblioteca de Componentes (2 cols) */}
-                    <Suspense fallback={<div className="col-span-2 p-4">Carregando biblioteca…</div>}>
-                        <div className="col-span-2 border-l bg-white overflow-y-auto">
-                            <ComponentLibraryColumn
-                                currentStepKey={editor.state.currentStepKey}
-                                onAddBlock={(type) => {
-                                    const addResult = ops.addBlock(editor.state.currentStepKey, { type });
-                                    if (addResult.success) {
-                                        editor.markDirty(true);
-                                    }
-                                }}
-                            />
-                        </div>
-                    </Suspense>
-
-                    {/* Coluna 4: Painel de Propriedades (3 cols) */}
-                    <Suspense fallback={<div className="col-span-3 p-4">Carregando propriedades…</div>}>
-                        <div className="col-span-3 border-l bg-white overflow-y-auto">
-                            <PropertiesColumn
-                                selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) || null}
-                                onBlockUpdate={(blockId, updates) => {
-                                    const updateResult = ops.updateBlock(editor.state.currentStepKey, blockId, updates);
-                                    if (updateResult.success) {
-                                        editor.markDirty(true);
-                                    }
-                                }}
-                                onClearSelection={editor.clearSelection}
-                            />
-                        </div>
-                    </Suspense>
-                </div>
+                            </div>
+                        </Suspense>
+                    </Panel>
+                </PanelGroup>
             </div>
 
             {/* DragOverlay para feedback visual */}
