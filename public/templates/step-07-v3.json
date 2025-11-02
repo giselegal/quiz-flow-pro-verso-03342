@@ -1,0 +1,46 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-07-question-v3",
+    "name": "Q6 - Acessórios",
+    "description": "Questão 6 sobre preferências de estilo",
+    "category": "quiz-question",
+    "questionNumber": 6,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:32:31.723Z",
+    "updatedAt": "2025-10-13T00:32:31.723Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "sections": [],
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Por favor, selecione exatamente 3 opções"
+      }
+    }
+  },
+  "behavior": {}
+}

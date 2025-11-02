@@ -508,28 +508,58 @@ class QuizEditorBridge {
     private async loadAllV3Templates(): Promise<Record<string, QuizStep>> {
         const steps: Record<string, QuizStep> = {};
 
-        // ⚠️ Verificar se deve tentar carregar arquivos individuais
+        // ⚠️ Verificar se deve tentar carregar arquivos individuais do /public
         if (!TEMPLATE_SOURCES.preferPublicStepJSON) {
             console.log('⚠️ preferPublicStepJSON=false - Usando TemplateService fallback');
             return { ...templateService.getAllStepsSync() } as Record<string, QuizStep>;
         }
 
-        console.log('📚 Carregando templates JSON v3.0...');
+        console.log('📚 Carregando templates públicos (prioridade: /templates/blocks, fallback: -v3.json)...');
 
         for (let i = 1; i <= 21; i++) {
             const stepId = `step-${i.toString().padStart(2, '0')}`;
 
+            // Referência para garantir type/título mínimos
+            const fallbackStep = (templateService.getAllStepsSync() as any)[stepId];
+            const fallbackType = fallbackStep?.type || 'question';
+
+            // 1) Tentar fonte principal: per-step blocks JSON (v3.1)
             try {
-                // Tentar carregar template JSON v3.0 via fetch (evita dynamic import vars)
-                const res = await fetch(`/templates/${stepId}-v3.json`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const raw = await res.json();
+                const resBlocks = await fetch(`/templates/blocks/${stepId}.json`, { cache: 'no-store' });
+                if (resBlocks.ok) {
+                    const rawBlocks = await resBlocks.json();
+                    const blocksArr = Array.isArray(rawBlocks?.blocks) ? rawBlocks.blocks : [];
+
+                    const editableBlocks = blocksArr.map((b: any, idx: number) => ({
+                        id: b.id,
+                        type: b.type,
+                        order: b.order ?? idx,
+                        properties: b.properties || {},
+                        content: b.content || {},
+                    }));
+
+                    const stepData = convertBlocksToStep(stepId, fallbackType, editableBlocks);
+                    steps[stepId] = {
+                        ...fallbackStep,
+                        ...stepData,
+                        type: fallbackType,
+                    } as QuizStep;
+
+                    console.log(`✅ Template ${stepId} carregado de /templates/blocks`);
+                    continue; // próximo step
+                }
+            } catch (err) {
+                console.warn(`⚠️ ${stepId}: falha ao ler /templates/blocks – tentando -v3.json`, err);
+            }
+
+            // 2) Fallback: JSON v3 por etapa
+            try {
+                const resV3 = await fetch(`/templates/${stepId}-v3.json`, { cache: 'no-store' });
+                if (!resV3.ok) throw new Error(`HTTP ${resV3.status}`);
+                const raw = await resV3.json();
                 const v3Template: JSONv3Template = parseJSONv3(raw);
 
-                // Converter sections[] para blocks[]
                 const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(v3Template);
-
-                // Converter Block[] para EditableBlock[] (adaptar formato)
                 const editableBlocks = blocks.map((b, idx) => ({
                     id: b.id,
                     type: b.type,
@@ -538,25 +568,17 @@ class QuizEditorBridge {
                     content: b.content || {},
                 }));
 
-                // Inferir tipo do step baseado no stepId ou usar fallback
-                const fallbackStep = (templateService.getAllStepsSync() as any)[stepId];
-                const stepType = fallbackStep?.type || 'question';
-
-                // Converter blocks[] para QuizStep
-                const stepData = convertBlocksToStep(stepId, stepType, editableBlocks);
-
-                // Mesclar com fallback para garantir propriedades obrigatórias
+                const stepData = convertBlocksToStep(stepId, fallbackType, editableBlocks);
                 steps[stepId] = {
                     ...fallbackStep,
                     ...stepData,
-                    type: stepType, // garantir type definido
+                    type: fallbackType,
                 } as QuizStep;
 
-                console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
+                console.log(`✅ Template ${stepId} carregado do JSON v3 (-v3.json)`);
             } catch (error) {
-                // Fallback para TemplateService fallback
-                console.warn(`⚠️  Fallback para ${stepId}:`, error);
-                steps[stepId] = (templateService.getAllStepsSync() as any)[stepId];
+                console.warn(`⚠️  ${stepId}: nenhum JSON público encontrado – usando TemplateService fallback`, error);
+                steps[stepId] = fallbackStep;
             }
         }
 
