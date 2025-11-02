@@ -11,6 +11,7 @@
 // Legacy sources removidos: usar TemplateService como fonte canônica
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { supabase } from '@/integrations/supabase/customClient';
+import type { Json } from '@/integrations/supabase/types';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
@@ -69,6 +70,19 @@ class QuizEditorBridge {
     private readonly PRODUCTION_SLUG = 'quiz-estilo';
     private readonly DRAFT_TABLE = 'quiz_drafts';
     private readonly PRODUCTION_TABLE = 'quiz_production';
+
+    /**
+     * 🔐 Obter ID do usuário atual (fallback para 'anonymous' em dev/test)
+     */
+    private async getCurrentUserId(): Promise<string> {
+        try {
+            const { data } = await supabase.auth.getUser();
+            const id = data?.user?.id;
+            return id || 'anonymous';
+        } catch {
+            return 'anonymous';
+        }
+    }
 
     /**
      * 🎯 Carregar funil para edição (draft ou produção)
@@ -139,19 +153,32 @@ class QuizEditorBridge {
 
         const draftId = funnel.id === 'production' ? `draft-${Date.now()}` : funnel.id;
 
-        const draftData = {
-            id: draftId,
-            name: funnel.name,
-            slug: funnel.slug,
-            steps: workingSteps.map(s => ({ ...s, autoLinked: !funnel.steps.find(o => o.id === s.id)?.nextStep && s.nextStep ? true : (s as any).autoLinked })),
-            version: (funnel.version || 0) + 1,
-            is_published: false,
-            updated_at: new Date().toISOString(),
-            // Persistência opcional de runtime/results/ui (pode exigir colunas JSONB no Supabase)
+        // Montar conteúdo no formato esperado pelo schema novo (content JSON)
+        const content = {
+            steps: workingSteps.map(s => ({
+                ...s,
+                autoLinked: !funnel.steps.find(o => o.id === s.id)?.nextStep && s.nextStep ? true : (s as any).autoLinked,
+            })),
             runtime: (funnel as any).runtime,
             results: (funnel as any).results,
             ui: (funnel as any).ui,
             settings: (funnel as any).settings,
+        } as const;
+
+        const userId = await this.getCurrentUserId();
+        const draftData = {
+            id: draftId,
+            name: funnel.name,
+            slug: funnel.slug || this.PRODUCTION_SLUG,
+            funnel_id: funnel.slug || this.PRODUCTION_SLUG,
+            user_id: userId,
+            status: 'draft' as string,
+            version: (funnel.version || 0) + 1,
+            updated_at: new Date().toISOString(),
+            content: (content as unknown as Json),
+            metadata: {
+                source: 'editor',
+            } as any,
         };
 
         // Salvar no Supabase (melhor esforço) e sempre manter cache local como fallback
@@ -212,17 +239,31 @@ class QuizEditorBridge {
         // Converter steps para formato QUIZ_STEPS
         const quizSteps = this.convertToQuizSteps(publishingSteps as any);
 
-        // Salvar na tabela de produção (inclui runtime/results/ui quando disponíveis)
-        const productionData = {
-            slug: this.PRODUCTION_SLUG,
+        // Montar conteúdo (content JSON) de produção
+        const productionContent = {
             steps: quizSteps,
-            version: draft.version,
-            published_at: new Date().toISOString(),
-            source_draft_id: funnelId,
             runtime: (draft as any).runtime,
             results: (draft as any).results,
             ui: (draft as any).ui,
             settings: (draft as any).settings,
+        } as const;
+
+        const userId = await this.getCurrentUserId();
+        // Salvar na tabela de produção (inclui runtime/results/ui quando disponíveis)
+        const productionData = {
+            name: draft.name || 'Quiz Estilo Pessoal',
+            slug: this.PRODUCTION_SLUG,
+            funnel_id: draft.slug || this.PRODUCTION_SLUG,
+            user_id: userId,
+            version: draft.version || 1,
+            status: 'published' as string,
+            published_at: new Date().toISOString(),
+            draft_id: funnelId,
+            updated_at: new Date().toISOString(),
+            content: (productionContent as unknown as Json),
+            metadata: {
+                source: 'editor',
+            } as any,
         };
 
         // Upsert com tratamento robusto de erro (compatível com ambiente de testes)
@@ -309,12 +350,13 @@ class QuizEditorBridge {
             return null;
         }
 
-        console.log('✅ QuizEditorBridge - Draft carregado do DB');
-        console.log('🔍 Steps:', data.steps?.length || 0);
+    console.log('✅ QuizEditorBridge - Draft carregado do DB');
+    const content: any = (data as any).content || {};
+    console.log('🔍 Steps:', Array.isArray(content.steps) ? content.steps.length : 0);
 
         // Log detalhado do primeiro bloco quiz-options encontrado
-        if (Array.isArray(data.steps)) {
-            for (const step of data.steps) {
+        if (Array.isArray(content.steps)) {
+            for (const step of content.steps) {
                 if (Array.isArray(step.blocks)) {
                     const quizOptionsBlock = step.blocks.find((b: any) =>
                         b.type === 'quiz-options' || b.type === 'options-grid',
@@ -339,16 +381,16 @@ class QuizEditorBridge {
             id: data.id,
             name: data.name,
             slug: data.slug,
-            steps: data.steps as EditorQuizStep[],
-            isPublished: data.is_published || false,
-            version: data.version || 1,
-            createdAt: data.created_at,
-            updatedAt: data.updated_at,
+            steps: (content.steps || []) as EditorQuizStep[],
+            isPublished: (data as any).status === 'published',
+            version: (data as any).version || 1,
+            createdAt: (data.created_at ?? undefined) as string | undefined,
+            updatedAt: (data.updated_at ?? undefined) as string | undefined,
             // Campos opcionais
-            runtime: (data as any).runtime,
-            results: (data as any).results,
-            ui: (data as any).ui,
-            settings: (data as any).settings,
+            runtime: content.runtime,
+            results: content.results,
+            ui: content.ui,
+            settings: content.settings,
         };
     }
 
@@ -365,20 +407,23 @@ class QuizEditorBridge {
                 .order('updated_at', { ascending: false });
 
             if (Array.isArray(data)) {
-                drafts = data.map((d: any) => ({
-                    id: d.id,
-                    name: d.name,
-                    slug: d.slug,
-                    steps: d.steps as EditorQuizStep[],
-                    isPublished: d.is_published || false,
-                    version: d.version || 1,
-                    createdAt: d.created_at,
-                    updatedAt: d.updated_at,
-                    runtime: d.runtime,
-                    results: d.results,
-                    ui: d.ui,
-                    settings: d.settings,
-                }));
+                drafts = data.map((d: any) => {
+                    const content = d.content || {};
+                    return {
+                        id: d.id,
+                        name: d.name,
+                        slug: d.slug,
+                        steps: (content.steps || []) as EditorQuizStep[],
+                        isPublished: d.status === 'published',
+                        version: d.version || 1,
+                        createdAt: (d.created_at ?? undefined) as string | undefined,
+                        updatedAt: (d.updated_at ?? undefined) as string | undefined,
+                        runtime: content.runtime,
+                        results: content.results,
+                        ui: content.ui,
+                        settings: content.settings,
+                    };
+                });
             }
         } catch {
             // Ignorar erros – usaremos cache
@@ -525,7 +570,7 @@ class QuizEditorBridge {
         try {
             const { data, error } = await supabaseAny
                 .from(this.PRODUCTION_TABLE)
-                .select('steps, runtime, results, ui, settings')
+                .select('content')
                 .eq('slug', this.PRODUCTION_SLUG)
                 .order('published_at', { ascending: false })
                 .limit(1)
@@ -533,12 +578,14 @@ class QuizEditorBridge {
 
             if (error || !data) return null;
 
+            const content = (data as any).content || {};
+
             return {
-                steps: data.steps as Record<string, QuizStep>,
-                runtime: (data as any).runtime,
-                results: (data as any).results,
-                ui: (data as any).ui,
-                settings: (data as any).settings,
+                steps: (content.steps || {}) as Record<string, QuizStep>,
+                runtime: content.runtime,
+                results: content.results,
+                ui: content.ui,
+                settings: content.settings,
             };
         } catch {
             return null;
