@@ -70,9 +70,16 @@ export type QuizAnalytics = Database['public']['Tables']['quiz_analytics']['Row'
 export type InsertQuizAnalytics = Database['public']['Tables']['quiz_analytics']['Insert'];
 export type UpdateQuizAnalytics = Database['public']['Tables']['quiz_analytics']['Update'];
 
-// export type QuizConversion = Database['public']['Tables']['quiz_conversions']['Row']; // COMENTADO: Tabela não existe
-// export type InsertQuizConversion = Database['public']['Tables']['quiz_conversions']['Insert']; // COMENTADO: Tabela não existe
-// export type UpdateQuizConversion = Database['public']['Tables']['quiz_conversions']['Update']; // COMENTADO: Tabela não existe
+// Tipos fallback para quiz_conversions
+export type QuizConversion = { 
+  id: string; 
+  session_id: string; 
+  converted_at: string; 
+  conversion_type?: string;
+  value?: number;
+};
+export type InsertQuizConversion = Omit<QuizConversion, 'id' | 'converted_at'>;
+export type UpdateQuizConversion = Partial<InsertQuizConversion>;
 
 // =============================================================================
 // ZOD VALIDATION SCHEMAS (Enhanced)
