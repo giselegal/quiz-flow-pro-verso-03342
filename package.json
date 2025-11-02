@@ -135,6 +135,8 @@
     "hydrate:blocks": "node tools/hydrate-blocks-from-v3.mjs",
     "blocks:sync-master": "node scripts/sync-master-to-per-step.js",
     "blocks:validate": "node scripts/validate-per-step-blocks.js"
+    ,
+    "sanity:runtime": "tsx scripts/sanity/runtime-load.ts"
   },
   "lintCoverage": {
     "blocks": "node scripts/dev/check-block-coverage.mjs"

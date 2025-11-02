@@ -44,14 +44,15 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
     it('deve carregar dados do quiz rapidamente', async () => {
       const startTime = performance.now();
 
-      const { QUIZ_STEPS } = await import('@/data/quizSteps');
+  // Fonte canônica migrada: usar TS gerado em templates/quiz21StepsComplete
+  const { QUIZ_STYLE_21_STEPS_TEMPLATE: QUIZ_STEPS } = await import('@/templates/quiz21StepsComplete');
       const { styleMapping } = await import('@/data/styles');
 
       const endTime = performance.now();
       const loadTime = endTime - startTime;
 
       expect(loadTime).toBeLessThan(100); // Menos de 100ms
-      expect(Object.keys(QUIZ_STEPS)).toHaveLength(21);
+  expect(Object.keys(QUIZ_STEPS)).toHaveLength(21);
       expect(Object.keys(styleMapping)).toBeGreaterThan(0);
     });
   });
