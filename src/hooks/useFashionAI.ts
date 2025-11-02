@@ -27,8 +27,6 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
         provider: config.provider,
         apiKey: config.apiKey,
         style: config.style || 'realistic',
-        size: '1024x1024',
-        quality: 'hd',
     });
 
     /**
@@ -44,7 +42,7 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
 
             if (result.success) {
                 setLastGenerated(result);
-                console.log('✅ Imagem gerada com sucesso:', result.imageUrl);
+                console.log('✅ Imagem gerada com sucesso:', result.url); // Mudado de 'imageUrl' para 'url'
             } else {
                 setError(result.error || 'Erro desconhecido');
                 console.error('❌ Erro ao gerar imagem:', result.error);
@@ -78,12 +76,12 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
             console.log('🎭 Gerando variações de roupa:', { request, count });
             const results = await fashionAI.generateOutfitVariations(request, count);
 
-            const successful = results.filter(r => r.success);
+            const successful = results.filter((r: any) => r.success);
             if (successful.length > 0) {
                 setLastGenerated(successful[0]);
                 console.log('✅ Variações geradas:', successful.length);
             } else {
-                const firstError = results.find(r => r.error)?.error || 'Nenhuma imagem gerada';
+                const firstError = results.find((r: any) => r.error)?.error || 'Nenhuma imagem gerada';
                 setError(firstError);
                 console.error('❌ Erro ao gerar variações:', firstError);
             }
