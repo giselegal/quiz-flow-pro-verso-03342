@@ -22,26 +22,28 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
   // SIMPLE BLOCKS (JSON-driven) - ~25 blocos
   // =============================================
   
-  // Intro Step (Step 01)
+  // =============================================
+  // INTRO BLOCKS (Step 01) - COMPLEX (React Components)
+  // =============================================
   'intro-logo': {
-    complexity: 'SIMPLE',
-    reason: 'Apenas exibe imagem estática',
-    template: 'intro-logo.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com lógica de fallback e compatibilidade JSON v3',
+    component: '@/components/editor/blocks/atomic/IntroLogoBlock',
   },
   'intro-title': {
-    complexity: 'SIMPLE',
-    reason: 'Texto estático com estilos CSS',
-    template: 'intro-title.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com sanitização HTML e parsing de color tags',
+    component: '@/components/editor/blocks/atomic/IntroTitleBlock',
   },
   'intro-description': {
-    complexity: 'SIMPLE',
-    reason: 'Texto estático sem lógica',
-    template: 'intro-description.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com suporte a HTML sanitizado',
+    component: '@/components/editor/blocks/atomic/IntroDescriptionBlock',
   },
   'intro-image': {
-    complexity: 'SIMPLE',
-    reason: 'Imagem decorativa estática',
-    template: 'intro-image.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com lazy loading e error handling',
+    component: '@/components/editor/blocks/atomic/IntroImageBlock',
   },
   
   // Text Blocks (Universal)
@@ -90,50 +92,55 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     template: 'button-inline.html',
   },
   
-  // Question Blocks (Steps 02-11)
+  // Question Blocks (Steps 02-11) - COMPLEX (React Components)
   'question-progress': {
-    complexity: 'SIMPLE',
-    reason: 'Barra de progresso CSS pura',
-    template: 'question-progress.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com cálculo de percentual e animações',
+    component: '@/components/editor/blocks/atomic/QuestionProgressBlock',
   },
   'question-text': {
-    complexity: 'SIMPLE',
-    reason: 'Texto da pergunta sem lógica',
-    template: 'question-text.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com suporte a subtítulo e formatação',
+    component: '@/components/editor/blocks/atomic/QuestionTextBlock',
   },
   'question-number': {
-    complexity: 'SIMPLE',
-    reason: 'Número sequencial estático',
-    template: 'question-number.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com lógica de numeração e estilização',
+    component: '@/components/editor/blocks/atomic/QuestionNumberBlock',
   },
   
-  // Transition Blocks (Steps 12, 19)
+  // Transition Blocks (Steps 12, 19) - COMPLEX (React Components)
   'transition-title': {
-    complexity: 'SIMPLE',
-    reason: 'Título de transição estático',
-    template: 'transition-title.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com suporte a animações e HTML',
+    component: '@/components/editor/blocks/atomic/TransitionTitleBlock',
   },
   'transition-text': {
-    complexity: 'SIMPLE',
-    reason: 'Texto de transição sem animação complexa',
-    template: 'transition-text.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com suporte a HTML sanitizado',
+    component: '@/components/editor/blocks/atomic/TransitionTextBlock',
   },
   'transition-image': {
-    complexity: 'SIMPLE',
-    reason: 'Imagem decorativa da transição',
-    template: 'transition-image.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com lazy loading',
+    component: '@/components/editor/blocks/atomic/TransitionImageBlock',
   },
   
-  // Result Blocks (Step 20)
+  // Result Blocks (Step 20) - COMPLEX (React Components)
   'result-header': {
-    complexity: 'SIMPLE',
-    reason: 'Cabeçalho do resultado estático',
-    template: 'result-header.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com dados dinâmicos do resultado',
+    component: '@/components/editor/blocks/atomic/ResultHeaderBlock',
   },
   'result-description': {
-    complexity: 'SIMPLE',
-    reason: 'Descrição do resultado sem lógica',
-    template: 'result-description.html',
+    complexity: 'COMPLEX',
+    reason: 'Componente React com HTML sanitizado e placeholders',
+    component: '@/components/editor/blocks/atomic/ResultDescriptionBlock',
+  },
+  'result-image': {
+    complexity: 'COMPLEX',
+    reason: 'Componente React com lazy loading e fallback',
+    component: '@/components/editor/blocks/atomic/ResultImageBlock',
   },
   
   // Layout Blocks
@@ -168,6 +175,18 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
   // =============================================
   // COMPLEX BLOCKS (TSX) - ~10 blocos
   // =============================================
+  
+  // CTA & Interactive Buttons
+  'CTAButton': {
+    complexity: 'COMPLEX',
+    reason: 'Componente React com navegação e contextData',
+    component: '@/components/editor/blocks/atomic/CTAButtonBlock',
+  },
+  'cta-button': {
+    complexity: 'COMPLEX',
+    reason: 'Alias de CTAButton com mesma lógica',
+    component: '@/components/editor/blocks/atomic/CTAButtonBlock',
+  },
   
   // Quiz Interactive Blocks
   'options-grid': {
