@@ -48,15 +48,47 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         }
 
         if (selectedBlock) {
-            // 🔧 CORREÇÃO FASE 2: Carregar dados do template + merge com edições locais
-            // Prioridade: edições locais > properties do bloco > content do bloco
-            const baseProperties = {
-                ...(selectedBlock.content || {}),
-                ...(selectedBlock.properties || {}),
-            };
+            // ✅ CORREÇÃO 3: MERGE AGRESSIVO - properties tem prioridade, fallback para content
+            const merged: Record<string, any> = {};
             
-            setEditedProperties(baseProperties);
+            // 1. Carregar tudo de content
+            if (selectedBlock.content && typeof selectedBlock.content === 'object') {
+                Object.assign(merged, selectedBlock.content);
+            }
+            
+            // 2. Sobrescrever com properties (se houver)
+            if (selectedBlock.properties && typeof selectedBlock.properties === 'object') {
+                Object.assign(merged, selectedBlock.properties);
+            }
+            
+            // 3. Garantir pelo menos valores default do schema
+            const schema = schemaInterpreter.getBlockSchema(selectedBlock.type);
+            if (schema) {
+                Object.entries(schema.properties).forEach(([key, propSchema]) => {
+                    if (merged[key] === undefined && propSchema.default !== undefined) {
+                        merged[key] = propSchema.default;
+                    }
+                });
+            }
+            
+            console.log('✅ [PropertiesColumn] Merged properties:', {
+                type: selectedBlock.type,
+                mergedKeys: Object.keys(merged),
+                mergedValues: merged
+            });
+            
+            setEditedProperties(merged);
             setIsDirty(false);
+            
+            // ✅ CORREÇÃO 2: Debug logging detalhado
+            console.log('🔍 [PropertiesColumn] selectedBlock changed:', {
+                id: selectedBlock?.id,
+                type: selectedBlock?.type,
+                hasProperties: !!selectedBlock?.properties && Object.keys(selectedBlock.properties).length,
+                hasContent: !!selectedBlock?.content && Object.keys(selectedBlock.content).length,
+                editedProperties: Object.keys(merged),
+                hasSchema: schema !== null
+            });
         } else {
             setEditedProperties({});
             setIsDirty(false);
@@ -85,10 +117,17 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
     const handleSave = () => {
         if (selectedBlock && isDirty) {
+            // ✅ CORREÇÃO 4: Salvar em AMBOS: properties E content
             onBlockUpdate(selectedBlock.id, {
-                properties: editedProperties
+                properties: editedProperties,
+                content: editedProperties, // ← Duplicar para manter sincronizado
             });
             setIsDirty(false);
+            
+            console.log('💾 [PropertiesColumn] Saved:', {
+                blockId: selectedBlock.id,
+                properties: editedProperties
+            });
         }
     };
 

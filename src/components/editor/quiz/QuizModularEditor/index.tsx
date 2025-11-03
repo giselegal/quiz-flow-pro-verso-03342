@@ -85,64 +85,85 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         async function loadTemplate() {
             setIsLoadingTemplate(true);
             try {
-                appLogger.info(`🔄 [QuizModularEditor] Carregando template: ${props.templateId}`);
+                // ✅ CORREÇÃO 5: Tentar múltiplos IDs de template com fallback
+                const templateIds = [
+                    props.templateId,
+                    'quiz-estilo-21-steps', // Alias do JSON
+                    'quiz21StepsComplete'   // Alias da URL
+                ];
                 
-                // Prioridade 1: Template consolidado
-                const consolidatedUrl = `/templates/${props.templateId}.json`;
-                const respConsolidated = await fetch(consolidatedUrl);
+                let loaded = false;
                 
-                if (respConsolidated.ok) {
-                    const data = await respConsolidated.json();
-                    appLogger.debug('[QuizModularEditor] Template consolidado encontrado', data);
+                for (const tid of templateIds) {
+                    const consolidatedUrl = `/templates/${tid}.json`;
+                    appLogger.info(`🔍 [QuizModularEditor] Tentando carregar: ${consolidatedUrl}`);
                     
-                    // Verificar estrutura (quiz21-complete.json tem steps.step-01.blocks)
-                    if (data.steps && typeof data.steps === 'object') {
-                        // Estrutura aninhada: converter para FunnelTemplate
-                        const steps = Object.entries(data.steps).map(([key, stepData]: [string, any]) => ({
-                            key,
-                            label: stepData.metadata?.name || key,
-                            type: stepData.type || 'question',
-                            blocks: stepData.blocks || [],
-                            metadata: stepData.metadata,
-                        }));
+                    const respConsolidated = await fetch(consolidatedUrl);
+                    
+                    if (respConsolidated.ok) {
+                        const data = await respConsolidated.json();
+                        appLogger.info(`✅ [QuizModularEditor] Template carregado de: ${consolidatedUrl}`);
+                        appLogger.debug('[QuizModularEditor] Template consolidado encontrado', data);
                         
-                        const template: FunnelTemplate = {
-                            id: data.templateId || props.templateId!,
-                            name: data.name || props.templateId!,
-                            description: data.description || '',
-                            version: data.templateVersion || '3.0',
-                            steps,
-                            metadata: data.metadata,
-                        };
-                        
-                        setLoadedTemplate(template);
-                        appLogger.info(`✅ [QuizModularEditor] Template consolidado carregado: ${template.name} (${steps.length} steps)`);
-                        
-                        // ✅ FASE 4: Carregar steps no useBlockOperations
-                        steps.forEach(step => {
-                            if (ops.loadStepFromTemplate) {
-                                ops.loadStepFromTemplate(step.key, step.blocks);
-                            }
-                        });
-                        
-                        setIsLoadingTemplate(false);
-                        return;
+                        // Verificar estrutura (quiz21-complete.json tem steps.step-01.blocks)
+                        if (data.steps && typeof data.steps === 'object') {
+                            // Estrutura aninhada: converter para FunnelTemplate
+                            const steps = Object.entries(data.steps).map(([key, stepData]: [string, any]) => ({
+                                key,
+                                label: stepData.metadata?.name || key,
+                                type: stepData.type || 'question',
+                                blocks: stepData.blocks || [],
+                                metadata: stepData.metadata,
+                            }));
+                            
+                            const template: FunnelTemplate = {
+                                id: data.templateId || tid,
+                                name: data.name || tid,
+                                description: data.description || '',
+                                version: data.templateVersion || '3.0',
+                                steps,
+                                metadata: data.metadata,
+                            };
+                            
+                            setLoadedTemplate(template);
+                            appLogger.info(`✅ [QuizModularEditor] Template consolidado carregado: ${template.name} (${steps.length} steps)`);
+                            
+                            // ✅ FASE 4: Carregar steps no useBlockOperations
+                            steps.forEach(step => {
+                                if (ops.loadStepFromTemplate) {
+                                    ops.loadStepFromTemplate(step.key, step.blocks);
+                                    
+                                    // ✅ CORREÇÃO 2: Debug logging após carregamento
+                                    console.log(`📊 [QuizModularEditor] Step ${step.key} carregado:`, {
+                                        blocksCount: step.blocks.length,
+                                        blocksState: ops.getBlocks(step.key)
+                                    });
+                                }
+                            });
+                            
+                            setIsLoadingTemplate(false);
+                            loaded = true;
+                            break; // Sucesso, sair do loop
+                        }
                     }
                 }
                 
-                appLogger.debug('[QuizModularEditor] Template consolidado não encontrado, tentando funnel template');
-                
-                // Prioridade 2: Template funnels/ (se existir)
-                const funnelTemplate = await loadFunnelTemplate(props.templateId!);
-                setLoadedTemplate(funnelTemplate);
-                appLogger.info(`✅ [QuizModularEditor] Template funnel carregado: ${funnelTemplate.name} (${funnelTemplate.steps.length} steps)`);
-                
-                // Carregar steps no useBlockOperations
-                funnelTemplate.steps.forEach(step => {
-                    if (ops.loadStepFromTemplate) {
-                        ops.loadStepFromTemplate(step.key, step.blocks);
-                    }
-                });
+                if (!loaded) {
+                    appLogger.warn(`❌ [QuizModularEditor] Template não encontrado: ${props.templateId}`);
+                    appLogger.debug('[QuizModularEditor] Template consolidado não encontrado, tentando funnel template');
+                    
+                    // Prioridade 2: Template funnels/ (se existir)
+                    const funnelTemplate = await loadFunnelTemplate(props.templateId!);
+                    setLoadedTemplate(funnelTemplate);
+                    appLogger.info(`✅ [QuizModularEditor] Template funnel carregado: ${funnelTemplate.name} (${funnelTemplate.steps.length} steps)`);
+                    
+                    // Carregar steps no useBlockOperations
+                    funnelTemplate.steps.forEach(step => {
+                        if (ops.loadStepFromTemplate) {
+                            ops.loadStepFromTemplate(step.key, step.blocks);
+                        }
+                    });
+                }
                 
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template principal', error);

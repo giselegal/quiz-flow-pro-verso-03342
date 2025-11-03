@@ -36,6 +36,11 @@ import { PageLoadingFallback } from './components/LoadingSpinner';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
 import { loadTemplateOverrides } from '@/bootstrap/loadTemplateOverrides';
+// ✅ CORREÇÃO 1: Carregar schemas na raiz da aplicação
+import { loadDefaultSchemas } from '@/core/schema/loadDefaultSchemas';
+
+// ✅ Executar carregamento de schemas imediatamente
+loadDefaultSchemas();
 // 🚀 FASE 3.5: PWA Notifications
 import { PWANotifications } from './components/PWANotifications';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
