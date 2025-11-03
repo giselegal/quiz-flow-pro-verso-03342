@@ -1,0 +1,62 @@
+/**
+ * 🗑️ CLEAR REGISTRY CACHE - Utilitário de debug
+ * 
+ * Limpa todos os caches do UnifiedTemplateRegistry
+ * Útil após alterações no código de normalização
+ */
+
+import { templateRegistry } from '@/services/UnifiedTemplateRegistry';
+
+/**
+ * Limpar cache e forçar recarga dos templates
+ * 
+ * Uso no console:
+ * ```js
+ * import('@/utils/clearRegistryCache').then(m => m.clearAllCaches())
+ * ```
+ */
+export async function clearAllCaches(): Promise<void> {
+  console.group('🗑️ Limpando todos os caches...');
+  
+  try {
+    // 1. Limpar L1 (Memory)
+    templateRegistry.clearL1();
+    console.log('✅ L1 Cache (Memory) limpo');
+    
+    // 2. Limpar L2 (IndexedDB)
+    await templateRegistry.clearL2();
+    console.log('✅ L2 Cache (IndexedDB) limpo');
+    
+    // 3. Limpar versão do localStorage
+    try {
+      localStorage.removeItem('registry-cache-version');
+      console.log('✅ localStorage limpo');
+    } catch {
+      console.warn('⚠️ Não foi possível limpar localStorage');
+    }
+    
+    console.log('\n✅ Todos os caches limpos com sucesso!');
+    console.log('💡 Recarregue a página (Ctrl+Shift+R) para aplicar as mudanças');
+  } catch (error) {
+    console.error('❌ Erro ao limpar caches:', error);
+  }
+  
+  console.groupEnd();
+}
+
+/**
+ * Limpar apenas L1 (mais rápido)
+ */
+export function clearMemoryCache(): void {
+  templateRegistry.clearL1();
+  console.log('✅ L1 Cache limpo - recarregue a página');
+}
+
+/**
+ * Expor no window para fácil acesso no console
+ */
+if (typeof window !== 'undefined') {
+  (window as any).clearRegistryCache = clearAllCaches;
+  (window as any).clearMemoryCache = clearMemoryCache;
+  console.log('💡 Debug utils disponíveis: clearRegistryCache() ou clearMemoryCache()');
+}

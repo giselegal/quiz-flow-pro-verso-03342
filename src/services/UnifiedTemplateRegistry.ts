@@ -12,6 +12,11 @@ import { normalizeBlocks } from '@/utils/blockNormalization';
 import { normalizeBlockTypes } from '@/utils/blockNormalizer';
 import type { Block } from '@/types/editor';
 
+// Expor utilitário de cache no console (dev only)
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  import('@/utils/clearRegistryCache').catch(() => {/* ignore */});
+}
+
 interface TemplateDBSchema extends DBSchema {
   'templates': {
     key: string;
@@ -70,8 +75,9 @@ export class UnifiedTemplateRegistry {
     forceServer: false,
   } as const;
   
-  // Bump na versão para invalidar L2 quando alteramos estratégia de carregamento
-  private readonly CACHE_VERSION = '1.0.1';
+  // Bump na versão para invalidar L1/L2 quando alteramos estratégia de carregamento
+  // 🔄 ATUALIZADO: v1.0.2 - Adicionado sistema de aliases e normalização de tipos
+  private readonly CACHE_VERSION = '1.0.2';
   private readonly DB_NAME = 'quiz-templates-cache';
   private readonly DB_VERSION = 1;
   private readonly L2_TTL = 7 * 24 * 60 * 60 * 1000; // 7 dias
@@ -79,6 +85,24 @@ export class UnifiedTemplateRegistry {
   private constructor() {
     this.initializeL2();
     this.initializeDebugFlags();
+    this.checkCacheVersion();
+  }
+
+  /**
+   * Verificar versão do cache e limpar L1 se mudou
+   */
+  private checkCacheVersion(): void {
+    try {
+      const storedVersion = localStorage.getItem('registry-cache-version');
+      if (storedVersion !== this.CACHE_VERSION) {
+        console.warn(`🔄 Cache version mismatch (${storedVersion} → ${this.CACHE_VERSION}), clearing L1...`);
+        this.clearL1();
+        localStorage.setItem('registry-cache-version', this.CACHE_VERSION);
+        console.log('✅ L1 Cache limpo e versão atualizada');
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
   }
 
   /**
