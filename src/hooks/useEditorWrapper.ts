@@ -1,42 +1,45 @@
 /**
- * 🔄 TEMPORARY MIGRATION WRAPPER - FASE 4
+ * ⚠️ DEPRECATED: EDITOR WRAPPER
  * 
- * Wrapper temporário para facilitar migração gradual.
- * Este arquivo será removido após migração completa.
+ * @deprecated Use @/hooks/useEditor directly
+ * Este arquivo será removido em versão futura.
  * 
- * FORNECE:
- * ✅ Compatibilidade com código existente
- * ✅ Logging de uso para identificar pendências
- * ✅ Redirecionamento inteligente
- * ✅ Debugging e monitoramento
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES
+ * import { useEditor } from '@/hooks/useEditorWrapper';
+ * 
+ * // ✅ DEPOIS
+ * import { useEditor } from '@/hooks/useEditor';
+ * ```
  */
 
-import { useEditor as useUnifiedEditor, useEditorOptional as useUnifiedEditorOptional } from '@/hooks/useUnifiedEditor';
+import { useEditor as useCanonicalEditor, useEditorOptional as useCanonicalEditorOptional } from '@/hooks/useEditor';
 
 // ============================================================================
 // WRAPPER HOOKS WITH LOGGING
 // ============================================================================
 
 /**
- * Wrapper temporário para useEditor que adiciona logging
+ * @deprecated Use @/hooks/useEditor directly
  */
 export const useEditor = () => {
     if (process.env.NODE_ENV === 'development') {
-        console.log('🔄 [MIGRATION] useEditor called - consider updating to direct import from @/hooks/useUnifiedEditor');
+        console.warn('⚠️ [DEPRECATED] useEditorWrapper is deprecated. Use @/hooks/useEditor directly');
     }
 
-    return useUnifiedEditor();
+    return useCanonicalEditor();
 };
 
 /**
- * Wrapper temporário para useEditorOptional
+ * @deprecated Use @/hooks/useEditor with { optional: true }
  */
 export const useEditorOptional = () => {
     if (process.env.NODE_ENV === 'development') {
-        console.log('🔄 [MIGRATION] useEditorOptional called - consider updating to direct import from @/hooks/useUnifiedEditor');
+        console.warn('⚠️ [DEPRECATED] useEditorWrapper is deprecated. Use @/hooks/useEditor directly');
     }
 
-    return useUnifiedEditorOptional();
+    return useCanonicalEditorOptional();
 };
 
 // ============================================================================

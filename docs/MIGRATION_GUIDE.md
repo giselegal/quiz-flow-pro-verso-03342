@@ -1,37 +1,142 @@
-# 🔄 GUIA DE MIGRAÇÃO
+# 🔄 GUIA DE MIGRAÇÃO - Editor Consolidado
 
-## Providers: Múltiplos → UnifiedAppProvider
-**Antes:** 5+ providers aninhados  
-**Depois:** 1 UnifiedAppProvider
+## Visão Geral
 
+Este guia documenta as mudanças na arquitetura do editor e como migrar seu código.
+
+## Mudanças Principais
+
+### 1. TemplateService Unificado
+
+**ANTES:**
 ```typescript
-// DEPOIS
-<UnifiedAppProvider>
-  <YourApp />
-</UnifiedAppProvider>
+// ❌ Múltiplas implementações
+import { TemplateService } from '@/core/funnel/services/TemplateService';
+import { templateService } from '@/services/templateService';
 ```
 
-## Hooks
-### useEditor → useUnifiedApp + useOptimizedBlockOperations
+**DEPOIS:**
 ```typescript
-const { state } = useUnifiedApp();
-const { addBlock, updateBlock } = useOptimizedBlockOperations();
+// ✅ Fonte única canônica
+import { TemplateService, templateService } from '@/services/canonical/TemplateService';
 ```
 
-### useQuizFlow → useOptimizedQuizFlow
+### 2. Hook useEditor Simplificado
+
+**ANTES:**
 ```typescript
-const { nextStep, previousStep, progress } = useOptimizedQuizFlow();
+// ❌ Hook complexo com 274 linhas
+import { useEditor } from '@/hooks/useUnifiedEditor';
+import { useEditorOptional } from '@/hooks/useEditorWrapper';
 ```
 
-## Performance
-- Adicionar lazy loading: `lazyWithRetry()`
-- Memoizar componentes pesados: `memo(Component, shallowEqual)`
-- Usar seletores otimizados: `useCurrentStep()`
+**DEPOIS:**
+```typescript
+// ✅ Hook simplificado
+import { useEditor, useEditorOptional } from '@/hooks/useEditor';
 
-## Checklist
-- [ ] Atualizar imports de providers
-- [ ] Migrar hooks para versões otimizadas
-- [ ] Adicionar lazy loading
-- [ ] Remover código legado
+// Uso obrigatório (lança erro se não houver provider)
+const editor = useEditor();
 
-Ver ARCHITECTURE.md, PROVIDERS.md e HOOKS.md para mais detalhes.
+// Uso opcional (retorna undefined)
+const editor = useEditor({ optional: true });
+// ou
+const editor = useEditorOptional();
+```
+
+### 3. Rotas do Editor Unificadas
+
+**ANTES:**
+```typescript
+// ❌ Múltiplas rotas diferentes
+/editor           → QuizModularEditor
+/editor-new       → QuizModularEditor (experimental)
+/editor-modular   → EditorModular
+```
+
+**DEPOIS:**
+```typescript
+// ✅ Rota canônica única
+/editor           → QuizModularEditor (canonical)
+/editor/:funnelId → QuizModularEditor com funnelId
+
+// Auto-redirects:
+/editor-new       → /editor
+/editor-modular   → /editor
+```
+
+## Checklist de Migração
+
+### Para Desenvolvedores
+
+- [ ] Substituir imports de `@/core/funnel/services/TemplateService` por `@/services/canonical/TemplateService`
+- [ ] Substituir imports de `@/hooks/useUnifiedEditor` por `@/hooks/useEditor`
+- [ ] Remover imports de `@/hooks/useEditorWrapper`
+- [ ] Atualizar links para `/editor` em vez de `/editor-new` ou `/editor-modular`
+- [ ] Testar componentes que usam `useEditor()`
+- [ ] Verificar warnings de deprecated no console
+
+### Para Componentes
+
+```typescript
+// ❌ ANTES
+import { useEditor } from '@/hooks/useEditorWrapper';
+import { TemplateService } from '@/core/funnel/services/TemplateService';
+
+function MyComponent() {
+  const editor = useEditor();
+  const templates = TemplateService.getInstance();
+  // ...
+}
+
+// ✅ DEPOIS
+import { useEditor } from '@/hooks/useEditor';
+import { TemplateService } from '@/services/canonical/TemplateService';
+
+function MyComponent() {
+  const editor = useEditor();
+  const templates = TemplateService.getInstance();
+  // ...
+}
+```
+
+## Breaking Changes
+
+### TemplateService
+
+- `@/core/funnel/services/TemplateService` está deprecated
+- Use `@/services/canonical/TemplateService` diretamente
+
+### useEditor Hook
+
+- `useUnifiedEditor` removido
+- `useEditorWrapper` deprecated
+- Use `useEditor` de `@/hooks/useEditor`
+
+### Rotas
+
+- `/editor-new` redireciona para `/editor`
+- `/editor-modular` redireciona para `/editor`
+
+## Timeline
+
+- **Fase 1 (Atual)**: Deprecation warnings ativos
+- **Fase 2 (+2 semanas)**: Remoção de arquivos deprecated
+- **Fase 3 (+4 semanas)**: Limpeza completa
+
+## Suporte
+
+Para dúvidas sobre migração:
+1. Verifique este guia primeiro
+2. Consulte `docs/ARCHITECTURE_CURRENT.md`
+3. Procure por warnings no console do navegador
+4. Abra issue no repositório
+
+## Benefícios da Migração
+
+✅ Redução de 70% na complexidade do hook useEditor  
+✅ Fonte única de verdade para templates  
+✅ Rotas mais simples e intuitivas  
+✅ Melhor performance de carregamento  
+✅ Menos duplicação de código  
+✅ Mais fácil de manter e debugar

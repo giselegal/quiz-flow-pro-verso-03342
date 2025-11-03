@@ -106,7 +106,7 @@ export interface EditorContextValue {
 // CONTEXT SETUP (History moved to separate service)
 // ============================================================================
 
-const EditorContext = createContext<EditorContextValue | undefined>(undefined);
+export const EditorContext = createContext<EditorContextValue | undefined>(undefined);
 
 export function useEditor(): EditorContextValue;
 export function useEditor(options: { optional: true }): EditorContextValue | undefined;

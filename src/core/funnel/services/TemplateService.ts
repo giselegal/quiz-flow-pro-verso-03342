@@ -1,8 +1,18 @@
 /**
- * 🎨 TEMPLATE SERVICE
+ * ⚠️ DEPRECATED: TEMPLATE SERVICE (FUNNEL CORE)
  * 
- * Serviço para gerenciar templates de funil
- * Migrado e integrado ao core
+ * @deprecated Use @/services/canonical/TemplateService instead
+ * Este arquivo será removido na versão futura.
+ * Mantido apenas para compatibilidade temporária.
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES
+ * import { TemplateService } from '@/core/funnel/services/TemplateService';
+ * 
+ * // ✅ DEPOIS
+ * import { TemplateService } from '@/services/canonical/TemplateService';
+ * ```
  */
 
 import { supabase } from '@/integrations/supabase/customClient';
