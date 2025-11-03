@@ -2464,29 +2464,6 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
   'result-characteristics': {
     label: 'Características do Resultado',
     fields: [
-      { key: 'text', label: 'Texto', type: 'textarea', group: 'content', required: true },
-      { key: 'fontSize', label: 'Tamanho', type: 'select', group: 'style',
-        options: [
-          { label: 'Normal (base)', value: 'base' },
-          { label: 'Grande (lg)', value: 'lg' },
-          { label: 'Extra Grande (xl)', value: 'xl' },
-        ],
-        defaultValue: 'lg',
-      },
-      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
-        options: [
-          { label: 'Esquerda', value: 'left' },
-          { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' },
-        ],
-        defaultValue: 'center',
-      },
-    ],
-  },
-
-  'result-characteristics': {
-    label: 'Características do Resultado',
-    fields: [
       { key: 'title', label: 'Título', type: 'text', group: 'content' },
       { key: 'items', label: 'Itens (JSON)', type: 'json', group: 'content', 
         description: 'Array de strings com as características',
