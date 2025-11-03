@@ -88,8 +88,8 @@ export default function CreateEditableFunnel() {
   }
 
   async function handleSignup() {
-    // Redirecionar para página de cadastro
-    navigateTo('/auth/signup');
+    // Redirecionar para página de cadastro no modo signup
+    navigateTo('/auth?mode=signup');
   }
 
   if (isLoading) {

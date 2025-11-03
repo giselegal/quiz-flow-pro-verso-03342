@@ -5,12 +5,20 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import QuizFlowLogo from '@/components/ui/QuizFlowLogo';
 import { useAuth } from '@/contexts';
 import { AlertCircle, Chrome, Lock, Mail } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 
 const AuthPage: React.FC = () => {
-  const [, setLocation] = useLocation();
-  const [isLogin, setIsLogin] = useState(true);
+  const [location, setLocation] = useLocation();
+  
+  // Check for ?mode=signup query parameter
+  const getInitialMode = () => {
+    if (typeof window === 'undefined') return true;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('mode') !== 'signup';
+  };
+  
+  const [isLogin, setIsLogin] = useState(getInitialMode());
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
