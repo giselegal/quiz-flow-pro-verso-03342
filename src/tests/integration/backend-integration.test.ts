@@ -188,8 +188,9 @@ describe('🔗 Integração com Backend Supabase', () => {
         funnel_id: mockFunnelId,
         session_id: mockSessionId,
         user_id: mockUserId,
-        event_type: 'step_completed',
-        event_data: {
+        metric_name: 'step_completed',
+        metric_value: 5,
+        metric_data: {
           stepNumber: 5,
           timeSpent: 15000,
           answer: 'elegante-option',
@@ -197,9 +198,9 @@ describe('🔗 Integração com Backend Supabase', () => {
         },
       };
 
-      await supabase.from('quiz_analytics').insert(analyticsData);
+      await supabase.from('quiz_analytics').insert([analyticsData]);
 
-      expect(mockInsert).toHaveBeenCalledWith(analyticsData);
+      expect(mockInsert).toHaveBeenCalledWith([analyticsData]);
     });
   });
 
@@ -226,7 +227,7 @@ describe('🔗 Integração com Backend Supabase', () => {
         },
       };
 
-      await supabase.from('quiz_conversions').insert(conversionData);
+      await supabase.from('user_results' as any).insert(conversionData);
 
       expect(mockInsert).toHaveBeenCalledWith(conversionData);
     });

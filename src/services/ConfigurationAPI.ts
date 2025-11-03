@@ -2,6 +2,9 @@
 export class ConfigurationAPI {
   static getConfig = async (): Promise<any> => ({});
   static saveConfig = async (): Promise<any> => ({});
+  
+  getConfiguration = async (): Promise<any> => ({});
+  getComponentDefinition = async (): Promise<any> => ({ defaultProperties: {} });
 }
 
 export default ConfigurationAPI;

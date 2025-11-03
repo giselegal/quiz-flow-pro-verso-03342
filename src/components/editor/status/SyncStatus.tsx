@@ -49,7 +49,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
       return <Clock className="w-4 h-4 text-yellow-500" />;
     }
 
-    if (autoSaveState.errorCount > 0) {
+    if ((autoSaveState.errorCount ?? 0) > 0) {
       return <AlertCircle style={{ color: '#432818' }} />;
     }
 
@@ -69,7 +69,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
       return 'Mudanças pendentes';
     }
 
-    if (autoSaveState.errorCount > 0) {
+    if ((autoSaveState.errorCount ?? 0) > 0) {
       return `Erro no auto-save (${autoSaveState.errorCount})`;
     }
 
@@ -91,7 +91,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
     if (isSaving) return 'secondary';
     if (!isOnline) return 'destructive';
     if (autoSaveState.pendingChanges) return 'secondary';
-    if (autoSaveState.errorCount > 0) return 'destructive';
+    if ((autoSaveState.errorCount ?? 0) > 0) return 'destructive';
     return 'default';
   };
 
@@ -178,7 +178,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         </div>
 
         {/* Informações de erro */}
-        {autoSaveState.errorCount > 0 && (
+        {(autoSaveState.errorCount ?? 0) > 0 && (
           <div style={{ color: '#432818' }}>
             <div className="flex items-center space-x-1">
               <AlertCircle className="w-3 h-3" />

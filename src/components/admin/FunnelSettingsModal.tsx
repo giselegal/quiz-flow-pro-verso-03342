@@ -121,7 +121,7 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
 
     const handleExportSettings = () => {
         try {
-            FunnelSettingsService.exportSettings(settings, funnelId);
+            FunnelSettingsService.exportSettings(funnelId, 'json');
             toast({
                 title: 'Configurações exportadas',
                 description: 'Arquivo de configurações baixado com sucesso.',

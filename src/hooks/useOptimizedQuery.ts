@@ -92,7 +92,7 @@ export function useOptimizedQuery<T = any>(
                 // Query única com batch automático
                 result = await queryOptimizer.batchQuery<T>(
                     table,
-                    fields,
+                    fields || ['*'],
                     { id, ...filter }
                 );
             } else if (filter) {
@@ -152,16 +152,16 @@ export function useOptimizedQuery<T = any>(
         setHasPendingUpdates(true);
 
         // Aplicar optimistic update
-        queryOptimizer.optimisticUpdate(table, id, previousValue, newValue);
+        queryOptimizer.optimisticUpdate(id, updates as Record<string, any>, table, { id });
 
         // Agendar save debounced
         queryOptimizer.debouncedUpdate(table, id, updates as Record<string, any>);
 
-        // Monitorar conclusão (simplificado - em produção usar event emitter)
+            // Monitorar conclusão (simplificado - em produção usar event emitter)
         setTimeout(() => {
             if (isMountedRef.current) {
                 setHasPendingUpdates(false);
-                queryOptimizer.confirmOptimistic(table, id);
+                queryOptimizer.confirmOptimistic(id);
             }
         }, 3500); // 3s de debounce + 500ms de buffer
 
@@ -183,7 +183,7 @@ export function useOptimizedQuery<T = any>(
 
         // Optimistic update
         setData(newValue);
-        queryOptimizer.optimisticUpdate(table, id, previousValue, newValue);
+        queryOptimizer.optimisticUpdate(id, updates as Record<string, any>, table, { id });
 
         try {
             // Force flush immediate
@@ -191,11 +191,11 @@ export function useOptimizedQuery<T = any>(
             await queryOptimizer.flushUpdates(table, id);
 
             // Confirmar optimistic
-            queryOptimizer.confirmOptimistic(table, id);
+            queryOptimizer.confirmOptimistic(id);
 
         } catch (err) {
             // Reverter se erro
-            const revertedValue = queryOptimizer.revertOptimistic<T>(table, id);
+            const revertedValue = queryOptimizer.revertOptimistic<T>(id);
             if (revertedValue && isMountedRef.current) {
                 setData(revertedValue);
             }
@@ -284,7 +284,7 @@ export function useBatchQueries<T = any>(options: {
             // Query com batch automático (in clause)
             const results = await queryOptimizer.batchQueryMany<T>(
                 table,
-                fields,
+                fields || ['*'],
                 { id: ids } // in(id, [...ids])
             );
 
