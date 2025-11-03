@@ -126,31 +126,43 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'question-instructions': () => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock'),
   'question-navigation': () => import('@/components/editor/blocks/atomic/QuestionNavigationBlock'),
 
+  // CTA Buttons
+  'CTAButton': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
+  'cta-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
+
   // Sections V3 - with universal PropNormalizer
-  'question-hero': () => import('@/components/sections/questions').then(({ QuestionHeroSection }) => ({
+  'question-hero': () => Promise.all([
+    import('@/components/sections/questions'),
+    import('@/core/adapters/PropNormalizer')
+  ]).then(([{ QuestionHeroSection }, { normalizeQuestionHeroProps }]) => ({
     default: (props: any) => {
-      const { normalizeQuestionHeroProps } = require('@/core/adapters/PropNormalizer');
       const normalized = normalizeQuestionHeroProps(props?.block || props);
       return React.createElement(QuestionHeroSection, normalized);
     },
   })),
-  'transition-hero': () => import('@/components/sections/transitions').then(({ TransitionHeroSection }) => ({
+  'transition-hero': () => Promise.all([
+    import('@/components/sections/transitions'),
+    import('@/core/adapters/PropNormalizer')
+  ]).then(([{ TransitionHeroSection }, { normalizeTransitionHeroProps }]) => ({
     default: (props: any) => {
-      const { normalizeTransitionHeroProps } = require('@/core/adapters/PropNormalizer');
       const normalized = normalizeTransitionHeroProps(props?.block || props);
       return React.createElement(TransitionHeroSection, normalized);
     },
   })),
-  'offer-hero': () => import('@/components/sections/offer').then(({ OfferHeroSection }) => ({
+  'offer-hero': () => Promise.all([
+    import('@/components/sections/offer'),
+    import('@/core/adapters/PropNormalizer')
+  ]).then(([{ OfferHeroSection }, { normalizeOfferHeroProps }]) => ({
     default: (props: any) => {
-      const { normalizeOfferHeroProps } = require('@/core/adapters/PropNormalizer');
       const normalized = normalizeOfferHeroProps(props?.block || props);
       return React.createElement(OfferHeroSection, normalized);
     },
   })),
-  'pricing': () => import('@/components/sections/offer').then(({ PricingSection }) => ({
+  'pricing': () => Promise.all([
+    import('@/components/sections/offer'),
+    import('@/core/adapters/PropNormalizer')
+  ]).then(([{ PricingSection }, { normalizePricingProps }]) => ({
     default: (props: any) => {
-      const { normalizePricingProps } = require('@/core/adapters/PropNormalizer');
       const normalized = normalizePricingProps(props?.block || props);
       return React.createElement(PricingSection, normalized);
     },
