@@ -219,7 +219,26 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     }
 
     if (!blocks || blocks.length === 0) {
-        return <div className="p-3 text-sm">Nenhum bloco nesta etapa.</div>;
+        // 🔧 CORREÇÃO FASE 5: Melhorar mensagem de fallback com debugging hints
+        return (
+            <div className="p-6 text-center space-y-3">
+                <div className="text-sm font-medium text-muted-foreground">
+                    ⚠️ Nenhum bloco nesta etapa
+                </div>
+                <div className="text-xs text-muted-foreground/70 space-y-1">
+                    <p>Step: <code className="bg-muted px-1 py-0.5 rounded">{currentStepKey}</code></p>
+                    <p>Possíveis causas:</p>
+                    <ul className="list-disc list-inside text-left max-w-xs mx-auto">
+                        <li>Template JSON não encontrado em <code>/templates/funnels/</code></li>
+                        <li>Arquivo vazio ou mal formatado</li>
+                        <li>templateService.getStep() retornou array vazio</li>
+                    </ul>
+                </div>
+                <div className="text-xs text-blue-600">
+                    💡 Dica: Execute <code className="bg-blue-50 px-1 py-0.5 rounded">npm run generate-templates</code>
+                </div>
+            </div>
+        );
     }
 
     return (

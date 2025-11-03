@@ -261,6 +261,13 @@ export function useBlockOperations(): UseBlockOperations {
       return { ...prev, [stepKey]: next };
     });
 
+    // 🔧 CORREÇÃO FASE 4: Emitir evento de mudança para forçar re-renders
+    if (!validationError) {
+      window.dispatchEvent(new CustomEvent('block-updated', { 
+        detail: { stepKey, blockId, patch } 
+      }));
+    }
+
     if (validationError) {
       return { success: false, error: validationError };
     }

@@ -350,9 +350,12 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 <PropertiesColumn
                                     selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) || null}
                                     onBlockUpdate={(blockId, updates) => {
+                                        // 🔧 CORREÇÃO FASE 3: Sincronizar diretamente com ops.updateBlock
                                         const updateResult = ops.updateBlock(editor.state.currentStepKey, blockId, updates);
                                         if (updateResult.success) {
                                             editor.markDirty(true);
+                                            // Forçar re-render do canvas para refletir mudanças imediatamente
+                                            ops.ensureLoaded(editor.state.currentStepKey);
                                         }
                                     }}
                                     onClearSelection={editor.clearSelection}

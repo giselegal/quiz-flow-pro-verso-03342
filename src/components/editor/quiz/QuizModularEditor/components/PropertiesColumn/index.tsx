@@ -48,7 +48,14 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         }
 
         if (selectedBlock) {
-            setEditedProperties(selectedBlock.properties || {});
+            // 🔧 CORREÇÃO FASE 2: Carregar dados do template + merge com edições locais
+            // Prioridade: edições locais > properties do bloco > content do bloco
+            const baseProperties = {
+                ...(selectedBlock.content || {}),
+                ...(selectedBlock.properties || {}),
+            };
+            
+            setEditedProperties(baseProperties);
             setIsDirty(false);
         } else {
             setEditedProperties({});
