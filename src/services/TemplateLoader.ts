@@ -109,11 +109,37 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
         continue; // Tentar próximo caminho
       }
       
-      const template: FunnelTemplate = await response.json();
+      const rawData: any = await response.json();
+      
+      // 🔄 Adapter: Normalizar formato para FunnelTemplate
+      const template: FunnelTemplate = {
+        id: rawData.id || rawData.funnelId || templateId,
+        name: rawData.name || rawData.metadata?.name || 'Unnamed Template',
+        description: rawData.description || '',
+        version: rawData.version || '1.0.0',
+        steps: [],
+        metadata: rawData,
+      };
+      
+      // Converter steps de Object para Array se necessário
+      if (rawData.steps) {
+        if (Array.isArray(rawData.steps)) {
+          template.steps = rawData.steps;
+        } else if (typeof rawData.steps === 'object') {
+          // Converter object {1: {...}, 2: {...}} para array
+          template.steps = Object.entries(rawData.steps).map(([key, stepData]: [string, any]) => ({
+            key: `step-${key}`,
+            label: `Step ${key}`,
+            type: stepData.type || 'question',
+            blocks: stepData.blocks || [],
+            metadata: stepData,
+          }));
+        }
+      }
       
       // Validar estrutura básica
-      if (!template.id || !template.name || !Array.isArray(template.steps)) {
-        appLogger.warn(`⚠️ [JSON] ${jsonUrl} → Estrutura inválida`);
+      if (!template.id || !template.name || template.steps.length === 0) {
+        appLogger.warn(`⚠️ [JSON] ${jsonUrl} → Estrutura inválida (id: ${template.id}, name: ${template.name}, steps: ${template.steps.length})`);
         continue;
       }
       
