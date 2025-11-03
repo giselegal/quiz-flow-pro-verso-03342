@@ -161,7 +161,7 @@ class HealthCheckService {
     try {
       // Usar edge function para health check real
       const response = await fetch(
-        'https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/security-monitor/health-check',
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/security-monitor/health-check`,
         {
           method: 'GET',
           headers: {

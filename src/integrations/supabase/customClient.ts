@@ -1,29 +1,7 @@
-// Client customizado para projeto Supabase externo
-// Este arquivo sobrescreve o client.ts gerado automaticamente pelo Lovable Cloud
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from './types';
-
-// Credenciais do projeto pwtjuuhchtbzttrzoutw
-const SUPABASE_URL = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
-
-// Safe storage access for Node.js compatibility
-const getStorage = () => {
-  if (typeof localStorage !== 'undefined') {
-    return localStorage;
-  }
-  // Mock storage for Node.js
-  return {
-    getItem: () => null,
-    setItem: () => {},
-    removeItem: () => {},
-  };
-};
-
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: getStorage() as any,
-    persistSession: typeof localStorage !== 'undefined',
-    autoRefreshToken: typeof localStorage !== 'undefined',
-  },
-});
+/**
+ * ⚠️ DEPRECATED - Use @/integrations/supabase/client instead
+ * 
+ * Este arquivo apenas reexporta o client padrão para compatibilidade.
+ * Migre suas importações para usar o client.ts diretamente.
+ */
+export { supabase } from './client';

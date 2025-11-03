@@ -9,6 +9,17 @@ import { appLogger } from '@/utils/logger';
 import { supabase } from '@/integrations/supabase/client';
 import type { Block } from '@/types/editor';
 
+/**
+ * 🧩 Detecta se estamos em Template Mode (local, sem backend)
+ */
+function isTemplateMode(): boolean {
+  if (typeof window === 'undefined') return false;
+  const params = new URLSearchParams(window.location.search);
+  const hasTemplate = !!params.get('template');
+  const hasFunnel = !!(params.get('funnelId') || params.get('funnel'));
+  return hasTemplate && !hasFunnel;
+}
+
 export interface FunnelTemplate {
   id: string;
   name: string;
@@ -46,14 +57,18 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
 
   appLogger.info(`🔍 [TemplateLoader] Loading template: ${templateId}`);
   
-  // 1️⃣ Tentar Supabase primeiro (quiz_production)
-  try {
-    const { data, error } = await supabase
-      .from('quiz_production')
-      .select('content, name, metadata')
-      .eq('slug', templateId)
-      .eq('is_template', true)
-      .maybeSingle();
+  // 🧩 Se estamos em Template Mode, pular backend e ir direto para JSON local
+  const skipDB = isTemplateMode();
+  
+  // 1️⃣ Tentar Supabase primeiro (apenas se não for Template Mode)
+  if (!skipDB) {
+    try {
+      const { data, error } = await supabase
+        .from('quiz_production')
+        .select('content, name, metadata')
+        .eq('slug', templateId)
+        .eq('is_template', true)
+        .maybeSingle();
 
     if (data?.content && !error) {
       appLogger.info(`✅ [DB] Template carregado do Supabase: ${templateId}`);
@@ -82,13 +97,16 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
       return template;
     }
     
-    if (error) {
-      appLogger.warn(`⚠️ [DB] Erro ao consultar Supabase: ${error.message}`);
-    } else {
-      appLogger.warn(`⚠️ [DB] Template não encontrado no Supabase: ${templateId}`);
+      if (error) {
+        appLogger.warn(`⚠️ [DB] Erro ao consultar Supabase: ${error.message}`);
+      } else {
+        appLogger.warn(`⚠️ [DB] Template não encontrado no Supabase: ${templateId}`);
+      }
+    } catch (dbError) {
+      appLogger.warn(`⚠️ [DB] Fallback para JSON devido a erro:`, dbError);
     }
-  } catch (dbError) {
-    appLogger.warn(`⚠️ [DB] Fallback para JSON devido a erro:`, dbError);
+  } else {
+    appLogger.info('🧩 [TemplateLoader] Template mode: pulando backend, usando JSON local');
   }
 
   // 2️⃣ Fallback: JSON local com múltiplos caminhos

@@ -99,7 +99,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       // Tentar usar Edge Function primeiro
       try {
         const response = await fetch(
-          'https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-quiz-generator',
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-quiz-generator`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -249,7 +249,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       logger.info('🔄 Builder System: Otimização automática');
       
       const response = await fetch(
-        'https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-optimization-engine',
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-optimization-engine`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
