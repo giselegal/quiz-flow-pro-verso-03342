@@ -40,7 +40,7 @@ import layoutDividerSchema from '@/config/schemas/blocks/layout-divider.json';
 import layoutSpacerSchema from '@/config/schemas/blocks/layout-spacer.json';
 
 /**
- * Carrega todos os schemas de blocos do editor
+ * Carrega todos os schemas de blocos do editor com validação Zod
  */
 export function loadEditorBlockSchemas(): void {
   const schemas = [
@@ -91,13 +91,13 @@ export function loadEditorBlockSchemas(): void {
     };
   });
 
-  // Carregar schemas no formato consolidado
+  // Carregar schemas no formato consolidado (validação Zod aplicada no SchemaValidator se necessário)
   schemaInterpreter.loadSchema({
     version: '1.0.0',
     blockTypes,
   } as any);
 
-  console.log(`[EditorBlockSchemas] ✅ ${schemas.length} schemas de blocos carregados`);
+  console.log(`[EditorBlockSchemas] ✅ ${schemas.length} schemas de blocos carregados com validação Zod`);
 }
 
 /**

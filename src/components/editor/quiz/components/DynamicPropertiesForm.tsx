@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useState } from 'react';
 import { appLogger } from '@/utils/logger';
 import { getBlockSchema, BasePropertySchema } from '../schema/blockSchema';
@@ -12,7 +11,10 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 import AdvancedArrayEditor from './AdvancedArrayEditor';
+import { schemaValidator } from '@/core/schema/SchemaValidator';
 
 export interface DynamicPropertiesFormProps {
     type: string;
@@ -29,6 +31,7 @@ function filterActive(props: BasePropertySchema[], values: Record<string, any>) 
 export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ type, values, onChange }) => {
     const [modernSchema, setModernSchema] = useState<any | null>(null);
     const [query, setQuery] = useState('');
+    const [validationErrors, setValidationErrors] = useState<Array<{ path: string; message: string }>>([]);
     const legacySchema = getBlockSchema(type);
 
     useEffect(() => {
@@ -39,11 +42,22 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         return () => { mounted = false; };
     }, [type]);
 
+    // 🔒 FASE 9: Validação Zod em tempo real
+    useEffect(() => {
+        const validation = schemaValidator.validateProperties(type, values);
+        if (!validation.valid && validation.errors) {
+            setValidationErrors(validation.errors);
+        } else {
+            setValidationErrors([]);
+        }
+    }, [type, values]);
+
     const schema = modernSchema || legacySchema;
 
     // 🔍 DEBUG: Log para verificar values recebidos
     appLogger.debug('🔍 DynamicPropertiesForm - type:', type);
     appLogger.debug('🔍 DynamicPropertiesForm - values:', values);
+    appLogger.debug('🔒 DynamicPropertiesForm - validationErrors:', validationErrors);
 
     // Agrupamento de propriedades por grupos definidos no schema (com fallback)
     const groups = useMemo(() => {
@@ -321,6 +335,23 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
 
     return (
         <div className="space-y-3" data-testid="dynamic-properties-form" data-type={type}>
+            {/* 🔒 FASE 9: Alertas de Validação Zod */}
+            {validationErrors.length > 0 && (
+                <Alert variant="destructive" className="mb-3">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="text-xs">
+                        <div className="font-semibold mb-1">Erros de validação:</div>
+                        <ul className="list-disc list-inside space-y-0.5">
+                            {validationErrors.map((error, idx) => (
+                                <li key={idx}>
+                                    <span className="font-medium">{error.path || 'Campo'}</span>: {error.message}
+                                </li>
+                            ))}
+                        </ul>
+                    </AlertDescription>
+                </Alert>
+            )}
+
             {/* Busca rápida */}
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-md border px-2 py-1.5">
                 <Input
