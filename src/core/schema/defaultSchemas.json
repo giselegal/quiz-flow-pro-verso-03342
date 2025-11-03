@@ -187,6 +187,964 @@
           "label": "Opções"
         }
       }
+    },
+    "intro-logo": {
+      "type": "intro-logo",
+      "label": "Logo de Introdução",
+      "category": "content",
+      "icon": "🏢",
+      "description": "Logo na página de introdução",
+      "properties": {
+        "src": {
+          "type": "image",
+          "control": "image-upload",
+          "default": "",
+          "label": "URL da Logo",
+          "required": true
+        },
+        "alt": {
+          "type": "string",
+          "control": "text",
+          "default": "Logo",
+          "label": "Texto Alternativo"
+        },
+        "width": {
+          "type": "number",
+          "control": "number",
+          "default": 132,
+          "label": "Largura (px)"
+        },
+        "height": {
+          "type": "number",
+          "control": "number",
+          "default": 55,
+          "label": "Altura (px)"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "fade",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Slide Up", "value": "slideUp" },
+            { "label": "Scale", "value": "scale" }
+          ],
+          "label": "Tipo de Animação"
+        },
+        "animationDuration": {
+          "type": "number",
+          "control": "number",
+          "default": 300,
+          "label": "Duração da Animação (ms)"
+        }
+      }
+    },
+    "intro-title": {
+      "type": "intro-title",
+      "label": "Título de Introdução",
+      "category": "content",
+      "icon": "📰",
+      "description": "Título principal da introdução",
+      "properties": {
+        "title": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Bem-vindo",
+          "label": "Título",
+          "required": true
+        },
+        "textAlign": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "center",
+          "options": [
+            { "label": "Esquerda", "value": "left" },
+            { "label": "Centro", "value": "center" },
+            { "label": "Direita", "value": "right" }
+          ],
+          "label": "Alinhamento"
+        },
+        "fontSize": {
+          "type": "string",
+          "control": "text",
+          "default": "28px",
+          "label": "Tamanho da Fonte"
+        },
+        "fontWeight": {
+          "type": "string",
+          "control": "text",
+          "default": "700",
+          "label": "Peso da Fonte"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "fade",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Slide Up", "value": "slideUp" }
+          ],
+          "label": "Tipo de Animação"
+        }
+      }
+    },
+    "intro-image": {
+      "type": "intro-image",
+      "label": "Imagem de Introdução",
+      "category": "media",
+      "icon": "🖼️",
+      "description": "Imagem principal da introdução",
+      "properties": {
+        "src": {
+          "type": "image",
+          "control": "image-upload",
+          "default": "",
+          "label": "URL da Imagem",
+          "required": true
+        },
+        "alt": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "Texto Alternativo"
+        },
+        "width": {
+          "type": "number",
+          "control": "number",
+          "default": 300,
+          "label": "Largura (px)"
+        },
+        "height": {
+          "type": "number",
+          "control": "number",
+          "default": 204,
+          "label": "Altura (px)"
+        },
+        "objectFit": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "contain",
+          "options": [
+            { "label": "Contain", "value": "contain" },
+            { "label": "Cover", "value": "cover" },
+            { "label": "Fill", "value": "fill" }
+          ],
+          "label": "Ajuste da Imagem"
+        },
+        "maxWidth": {
+          "type": "number",
+          "control": "number",
+          "default": 300,
+          "label": "Largura Máxima (px)"
+        },
+        "borderRadius": {
+          "type": "string",
+          "control": "text",
+          "default": "8px",
+          "label": "Raio da Borda"
+        }
+      }
+    },
+    "intro-description": {
+      "type": "intro-description",
+      "label": "Descrição de Introdução",
+      "category": "content",
+      "icon": "📝",
+      "description": "Texto descritivo da introdução",
+      "properties": {
+        "text": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Digite sua descrição aqui",
+          "label": "Texto",
+          "required": true
+        },
+        "textAlign": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "center",
+          "options": [
+            { "label": "Esquerda", "value": "left" },
+            { "label": "Centro", "value": "center" },
+            { "label": "Direita", "value": "right" }
+          ],
+          "label": "Alinhamento"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "fade",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Slide Up", "value": "slideUp" }
+          ],
+          "label": "Tipo de Animação"
+        },
+        "animationDuration": {
+          "type": "number",
+          "control": "number",
+          "default": 300,
+          "label": "Duração da Animação (ms)"
+        }
+      }
+    },
+    "intro-form": {
+      "type": "intro-form",
+      "label": "Formulário de Introdução",
+      "category": "interactive",
+      "icon": "📋",
+      "description": "Formulário de coleta de nome",
+      "properties": {
+        "label": {
+          "type": "string",
+          "control": "text",
+          "default": "Como posso te chamar?",
+          "label": "Rótulo do Campo"
+        },
+        "placeholder": {
+          "type": "string",
+          "control": "text",
+          "default": "Digite seu nome...",
+          "label": "Placeholder"
+        },
+        "buttonText": {
+          "type": "string",
+          "control": "text",
+          "default": "Começar",
+          "label": "Texto do Botão"
+        },
+        "required": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Campo Obrigatório"
+        },
+        "helperText": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "Texto de Ajuda"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "fade",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Slide Up", "value": "slideUp" }
+          ],
+          "label": "Tipo de Animação"
+        }
+      }
+    },
+    "question-progress": {
+      "type": "question-progress",
+      "label": "Barra de Progresso",
+      "category": "quiz",
+      "icon": "📊",
+      "description": "Barra de progresso do quiz",
+      "properties": {
+        "stepNumber": {
+          "type": "number",
+          "control": "number",
+          "default": 1,
+          "label": "Número da Etapa"
+        },
+        "totalSteps": {
+          "type": "number",
+          "control": "number",
+          "default": 21,
+          "label": "Total de Etapas"
+        },
+        "showPercentage": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Mostrar Porcentagem"
+        },
+        "barColor": {
+          "type": "color",
+          "control": "color-picker",
+          "default": "#B89B7A",
+          "label": "Cor da Barra"
+        },
+        "backgroundColor": {
+          "type": "color",
+          "control": "color-picker",
+          "default": "#e5e7eb",
+          "label": "Cor de Fundo"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 8,
+          "label": "Espaçamento"
+        }
+      }
+    },
+    "question-title": {
+      "type": "question-title",
+      "label": "Título da Pergunta",
+      "category": "quiz",
+      "icon": "❓",
+      "description": "Título e subtítulo da pergunta",
+      "properties": {
+        "text": {
+          "type": "string",
+          "control": "text",
+          "default": "Pergunta 1",
+          "label": "Texto Principal"
+        },
+        "subtitle": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Qual é sua pergunta?",
+          "label": "Subtítulo"
+        },
+        "backgroundColor": {
+          "type": "color",
+          "control": "color-picker",
+          "default": "transparent",
+          "label": "Cor de Fundo"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "fade",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Slide Up", "value": "slideUp" }
+          ],
+          "label": "Tipo de Animação"
+        }
+      }
+    },
+    "options-grid": {
+      "type": "options-grid",
+      "label": "Grade de Opções",
+      "category": "quiz",
+      "icon": "🎯",
+      "description": "Grade de opções múltiplas com imagens",
+      "properties": {
+        "options": {
+          "type": "json",
+          "control": "json-editor",
+          "default": [],
+          "label": "Opções",
+          "required": true
+        },
+        "columns": {
+          "type": "number",
+          "control": "number",
+          "default": 2,
+          "label": "Número de Colunas"
+        },
+        "gap": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento entre Opções"
+        },
+        "multipleSelection": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Seleção Múltipla"
+        },
+        "minSelections": {
+          "type": "number",
+          "control": "number",
+          "default": 1,
+          "label": "Mínimo de Seleções"
+        },
+        "maxSelections": {
+          "type": "number",
+          "control": "number",
+          "default": 3,
+          "label": "Máximo de Seleções"
+        },
+        "showImages": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Mostrar Imagens"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "slideUp",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Slide Up", "value": "slideUp" }
+          ],
+          "label": "Tipo de Animação"
+        }
+      }
+    },
+    "question-navigation": {
+      "type": "question-navigation",
+      "label": "Navegação da Pergunta",
+      "category": "quiz",
+      "icon": "➡️",
+      "description": "Botões de navegação (voltar/avançar)",
+      "properties": {
+        "backLabel": {
+          "type": "string",
+          "control": "text",
+          "default": "Voltar",
+          "label": "Texto do Botão Voltar"
+        },
+        "nextLabel": {
+          "type": "string",
+          "control": "text",
+          "default": "Avançar",
+          "label": "Texto do Botão Avançar"
+        },
+        "showBack": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Mostrar Botão Voltar"
+        },
+        "showNext": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Mostrar Botão Avançar"
+        },
+        "backVariant": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "outline",
+          "options": [
+            { "label": "Primário", "value": "default" },
+            { "label": "Outline", "value": "outline" },
+            { "label": "Secundário", "value": "secondary" }
+          ],
+          "label": "Variante Botão Voltar"
+        },
+        "nextVariant": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "default",
+          "options": [
+            { "label": "Primário", "value": "default" },
+            { "label": "Outline", "value": "outline" },
+            { "label": "Secundário", "value": "secondary" }
+          ],
+          "label": "Variante Botão Avançar"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 16,
+          "label": "Espaçamento"
+        }
+      }
+    },
+    "text-inline": {
+      "type": "text-inline",
+      "label": "Texto Inline",
+      "category": "content",
+      "icon": "📝",
+      "description": "Texto formatado inline",
+      "properties": {
+        "text": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Digite seu texto",
+          "label": "Texto",
+          "required": true
+        },
+        "textAlign": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "left",
+          "options": [
+            { "label": "Esquerda", "value": "left" },
+            { "label": "Centro", "value": "center" },
+            { "label": "Direita", "value": "right" }
+          ],
+          "label": "Alinhamento"
+        },
+        "fontSize": {
+          "type": "string",
+          "control": "text",
+          "default": "16px",
+          "label": "Tamanho da Fonte"
+        },
+        "color": {
+          "type": "color",
+          "control": "color-picker",
+          "default": "#000000",
+          "label": "Cor do Texto"
+        }
+      }
+    },
+    "transition-hero": {
+      "type": "transition-hero",
+      "label": "Hero de Transição",
+      "category": "content",
+      "icon": "🎭",
+      "description": "Seção hero para telas de transição",
+      "properties": {
+        "title": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Carregando...",
+          "label": "Título"
+        },
+        "subtitle": {
+          "type": "string",
+          "control": "textarea",
+          "default": "",
+          "label": "Subtítulo"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "fade",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Slide Up", "value": "slideUp" }
+          ],
+          "label": "Tipo de Animação"
+        },
+        "autoAdvance": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Avançar Automaticamente"
+        },
+        "autoAdvanceDelay": {
+          "type": "number",
+          "control": "number",
+          "default": 2000,
+          "label": "Atraso para Avançar (ms)"
+        }
+      }
+    },
+    "transition-text": {
+      "type": "transition-text",
+      "label": "Texto de Transição",
+      "category": "content",
+      "icon": "💬",
+      "description": "Texto para telas de transição",
+      "properties": {
+        "text": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Aguarde...",
+          "label": "Texto"
+        },
+        "textAlign": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "center",
+          "options": [
+            { "label": "Esquerda", "value": "left" },
+            { "label": "Centro", "value": "center" },
+            { "label": "Direita", "value": "right" }
+          ],
+          "label": "Alinhamento"
+        },
+        "animationType": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "fade",
+          "options": [
+            { "label": "Fade", "value": "fade" },
+            { "label": "Pulse", "value": "pulse" }
+          ],
+          "label": "Tipo de Animação"
+        }
+      }
+    },
+    "result-main": {
+      "type": "result-main",
+      "label": "Resultado Principal",
+      "category": "quiz",
+      "icon": "🎉",
+      "description": "Seção principal do resultado",
+      "properties": {
+        "title": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Seu Resultado",
+          "label": "Título"
+        },
+        "styleName": {
+          "type": "string",
+          "control": "text",
+          "default": "{resultStyle}",
+          "label": "Nome do Estilo (usar variável)"
+        },
+        "percentage": {
+          "type": "string",
+          "control": "text",
+          "default": "{resultPercentage}%",
+          "label": "Porcentagem (usar variável)"
+        },
+        "description": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Descrição do estilo",
+          "label": "Descrição"
+        }
+      }
+    },
+    "result-image": {
+      "type": "result-image",
+      "label": "Imagem de Resultado",
+      "category": "media",
+      "icon": "🖼️",
+      "description": "Imagem do resultado",
+      "properties": {
+        "src": {
+          "type": "image",
+          "control": "image-upload",
+          "default": "",
+          "label": "URL da Imagem"
+        },
+        "alt": {
+          "type": "string",
+          "control": "text",
+          "default": "Resultado",
+          "label": "Texto Alternativo"
+        },
+        "borderRadius": {
+          "type": "string",
+          "control": "text",
+          "default": "8px",
+          "label": "Raio da Borda"
+        }
+      }
+    },
+    "result-description": {
+      "type": "result-description",
+      "label": "Descrição do Resultado",
+      "category": "content",
+      "icon": "📝",
+      "description": "Descrição detalhada do resultado",
+      "properties": {
+        "text": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Descrição do resultado",
+          "label": "Texto"
+        },
+        "textAlign": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "left",
+          "options": [
+            { "label": "Esquerda", "value": "left" },
+            { "label": "Centro", "value": "center" },
+            { "label": "Direita", "value": "right" }
+          ],
+          "label": "Alinhamento"
+        }
+      }
+    },
+    "result-progress-bars": {
+      "type": "result-progress-bars",
+      "label": "Barras de Progresso do Resultado",
+      "category": "quiz",
+      "icon": "📊",
+      "description": "Barras mostrando pontuação dos estilos",
+      "properties": {
+        "styles": {
+          "type": "json",
+          "control": "json-editor",
+          "default": [],
+          "label": "Estilos e Pontuações"
+        },
+        "showPercentage": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": true,
+          "label": "Mostrar Porcentagem"
+        },
+        "barColor": {
+          "type": "color",
+          "control": "color-picker",
+          "default": "#B89B7A",
+          "label": "Cor da Barra"
+        }
+      }
+    },
+    "result-secondary-styles": {
+      "type": "result-secondary-styles",
+      "label": "Estilos Secundários",
+      "category": "quiz",
+      "icon": "🎨",
+      "description": "Estilos secundários do resultado",
+      "properties": {
+        "title": {
+          "type": "string",
+          "control": "text",
+          "default": "Seus estilos secundários",
+          "label": "Título"
+        },
+        "styles": {
+          "type": "json",
+          "control": "json-editor",
+          "default": [],
+          "label": "Estilos Secundários"
+        }
+      }
+    },
+    "result-congrats": {
+      "type": "result-congrats",
+      "label": "Parabéns",
+      "category": "content",
+      "icon": "🎉",
+      "description": "Mensagem de parabéns",
+      "properties": {
+        "text": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Parabéns!",
+          "label": "Texto"
+        },
+        "userName": {
+          "type": "string",
+          "control": "text",
+          "default": "{userName}",
+          "label": "Nome do Usuário (variável)"
+        }
+      }
+    },
+    "result-cta": {
+      "type": "result-cta",
+      "label": "CTA do Resultado",
+      "category": "interactive",
+      "icon": "🔔",
+      "description": "Chamada para ação no resultado",
+      "properties": {
+        "title": {
+          "type": "string",
+          "control": "text",
+          "default": "Próximo Passo",
+          "label": "Título"
+        },
+        "description": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Descrição da oferta",
+          "label": "Descrição"
+        },
+        "buttonText": {
+          "type": "string",
+          "control": "text",
+          "default": "Continuar",
+          "label": "Texto do Botão"
+        },
+        "buttonUrl": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "URL do Botão"
+        }
+      }
+    },
+    "result-share": {
+      "type": "result-share",
+      "label": "Compartilhar Resultado",
+      "category": "interactive",
+      "icon": "📤",
+      "description": "Botões de compartilhamento social",
+      "properties": {
+        "title": {
+          "type": "string",
+          "control": "text",
+          "default": "Compartilhe seu resultado",
+          "label": "Título"
+        },
+        "platforms": {
+          "type": "json",
+          "control": "json-editor",
+          "default": ["facebook", "twitter", "whatsapp"],
+          "label": "Plataformas"
+        }
+      }
+    },
+    "offer-hero": {
+      "type": "offer-hero",
+      "label": "Hero da Oferta",
+      "category": "content",
+      "icon": "💎",
+      "description": "Seção hero da página de oferta",
+      "properties": {
+        "title": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Oferta Especial",
+          "label": "Título"
+        },
+        "subtitle": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Descrição da oferta",
+          "label": "Subtítulo"
+        },
+        "imageUrl": {
+          "type": "image",
+          "control": "image-upload",
+          "default": "",
+          "label": "URL da Imagem"
+        },
+        "ctaText": {
+          "type": "string",
+          "control": "text",
+          "default": "Quero Aproveitar",
+          "label": "Texto do CTA"
+        },
+        "ctaUrl": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "URL do CTA"
+        }
+      }
+    },
+    "pricing": {
+      "type": "pricing",
+      "label": "Preço",
+      "category": "content",
+      "icon": "💰",
+      "description": "Bloco de preço e oferta",
+      "properties": {
+        "price": {
+          "type": "string",
+          "control": "text",
+          "default": "R$ 97,00",
+          "label": "Preço"
+        },
+        "oldPrice": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "Preço Antigo (opcional)"
+        },
+        "discount": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "Desconto (%)"
+        },
+        "installments": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "Parcelamento"
+        }
+      }
+    },
+    "fade": {
+      "type": "fade",
+      "label": "Animação Fade",
+      "category": "layout",
+      "icon": "✨",
+      "description": "Wrapper com animação fade",
+      "properties": {
+        "duration": {
+          "type": "number",
+          "control": "number",
+          "default": 300,
+          "label": "Duração (ms)"
+        },
+        "delay": {
+          "type": "number",
+          "control": "number",
+          "default": 0,
+          "label": "Atraso (ms)"
+        }
+      }
+    },
+    "slideUp": {
+      "type": "slideUp",
+      "label": "Animação Slide Up",
+      "category": "layout",
+      "icon": "⬆️",
+      "description": "Wrapper com animação slide up",
+      "properties": {
+        "duration": {
+          "type": "number",
+          "control": "number",
+          "default": 300,
+          "label": "Duração (ms)"
+        },
+        "delay": {
+          "type": "number",
+          "control": "number",
+          "default": 0,
+          "label": "Atraso (ms)"
+        }
+      }
+    },
+    "scale": {
+      "type": "scale",
+      "label": "Animação Scale",
+      "category": "layout",
+      "icon": "🔍",
+      "description": "Wrapper com animação scale",
+      "properties": {
+        "duration": {
+          "type": "number",
+          "control": "number",
+          "default": 300,
+          "label": "Duração (ms)"
+        },
+        "from": {
+          "type": "number",
+          "control": "number",
+          "default": 0.8,
+          "label": "Escala Inicial"
+        },
+        "to": {
+          "type": "number",
+          "control": "number",
+          "default": 1,
+          "label": "Escala Final"
+        }
+      }
     }
   }
 }
