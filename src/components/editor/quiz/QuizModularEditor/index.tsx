@@ -27,7 +27,9 @@ import { useEditorPersistence } from './hooks/useEditorPersistence';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
 import { Button } from '@/components/ui/button';
-import { Eye, Edit3, Play, Save, GripVertical } from 'lucide-react';
+import { Eye, Edit3, Play, Save, GripVertical, Download } from 'lucide-react';
+import { loadFunnelTemplate, type FunnelTemplate } from '@/services/TemplateLoader';
+import { appLogger } from '@/utils/logger';
 
 // Lazy loading de componentes pesados
 const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
@@ -39,6 +41,7 @@ const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 export type QuizModularEditorProps = {
     funnelId?: string;
     initialStepKey?: string;
+    templateId?: string; // ID do template JSON externo (opcional)
 };
 
 export default function QuizModularEditor(props: QuizModularEditorProps) {
@@ -51,6 +54,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Estados do editor
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
+    const [loadedTemplate, setLoadedTemplate] = useState<FunnelTemplate | null>(null);
+    const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
 
     // Persistência
     const persistence = useEditorPersistence({
@@ -72,6 +77,26 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+
+    // Carregar template JSON externo (se especificado)
+    useEffect(() => {
+        if (!props.templateId) return;
+
+        async function loadTemplate() {
+            setIsLoadingTemplate(true);
+            try {
+                const template = await loadFunnelTemplate(props.templateId!);
+                setLoadedTemplate(template);
+                appLogger.info(`[QuizModularEditor] Template loaded: ${template.name}`);
+            } catch (error) {
+                appLogger.error('[QuizModularEditor] Failed to load template', error);
+            } finally {
+                setIsLoadingTemplate(false);
+            }
+        }
+
+        loadTemplate();
+    }, [props.templateId]);
 
     // Carregar blocos iniciais
     useEffect(() => {

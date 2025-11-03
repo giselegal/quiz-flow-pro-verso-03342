@@ -134,8 +134,7 @@
     "validate:typescript": "bash scripts/validar-typescript.sh",
     "hydrate:blocks": "node tools/hydrate-blocks-from-v3.mjs",
     "blocks:sync-master": "node scripts/sync-master-to-per-step.js",
-    "blocks:validate": "node scripts/validate-per-step-blocks.js"
-    ,
+    "blocks:validate": "node scripts/validate-per-step-blocks.js",
     "sanity:runtime": "tsx scripts/sanity/runtime-load.ts"
   },
   "lintCoverage": {
@@ -190,6 +189,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.19",
     "@types/lodash": "^4.17.20",
+    "@types/mustache": "^4.2.6",
     "@types/react-helmet": "^6.1.11",
     "@types/react-window": "^2.0.0",
     "@types/uuid": "^10.0.0",
@@ -216,6 +216,7 @@
     "lru-cache": "^11.2.2",
     "lucide-react": "^0.453.0",
     "memorystore": "^1.6.7",
+    "mustache": "^4.2.0",
     "nanoid": "^5.1.5",
     "next-themes": "^0.4.6",
     "node-fetch": "^3.3.2",

@@ -1,0 +1,170 @@
+/**
+ * 🎯 TEMPLATE LOADER - Sistema de Templates Externos JSON
+ * 
+ * Carrega funils completos de arquivos JSON externos
+ * Permite criar múltiplos funils sem duplicar código TSX
+ */
+
+import { appLogger } from '@/utils/logger';
+import type { Block } from './UnifiedTemplateRegistry';
+
+export interface FunnelTemplate {
+  id: string;
+  name: string;
+  description: string;
+  version: string;
+  author?: string;
+  steps: FunnelStep[];
+  metadata?: Record<string, any>;
+}
+
+export interface FunnelStep {
+  key: string;
+  label: string;
+  type: 'intro' | 'question' | 'transition' | 'result' | 'offer';
+  blocks: Block[];
+  metadata?: {
+    duration?: number;
+    skipable?: boolean;
+    [key: string]: any;
+  };
+}
+
+// Cache global de templates
+const templateCache = new Map<string, FunnelTemplate>();
+
+/**
+ * Carrega template JSON do servidor
+ */
+export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemplate> {
+  // Check cache primeiro
+  if (templateCache.has(templateId)) {
+    appLogger.info(`[TemplateLoader] Cache hit: ${templateId}`);
+    return templateCache.get(templateId)!;
+  }
+
+  try {
+    appLogger.info(`[TemplateLoader] Loading template: ${templateId}`);
+    
+    const response = await fetch(`/templates/funnels/${templateId}.json`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const template: FunnelTemplate = await response.json();
+    
+    // Validar estrutura básica
+    if (!template.id || !template.name || !Array.isArray(template.steps)) {
+      throw new Error('Template JSON inválido: faltam campos obrigatórios');
+    }
+    
+    // Cache template
+    templateCache.set(templateId, template);
+    
+    appLogger.info(`[TemplateLoader] Template loaded: ${template.name} (${template.steps.length} steps)`);
+    return template;
+  } catch (error) {
+    appLogger.error(`[TemplateLoader] Failed to load template: ${templateId}`, error);
+    throw error;
+  }
+}
+
+/**
+ * Lista templates disponíveis
+ */
+export async function listAvailableTemplates(): Promise<string[]> {
+  // Para produção, esta lista poderia vir de uma API
+  // Por enquanto, retornamos lista hard-coded
+  return [
+    'quiz21StepsComplete',
+    'funil-emagrecimento',
+    'funil-moda',
+    'funil-imobiliario',
+  ];
+}
+
+/**
+ * Obtém blocos de um step específico
+ */
+export function getStepBlocks(template: FunnelTemplate, stepKey: string): Block[] {
+  const step = template.steps.find(s => s.key === stepKey);
+  return step?.blocks || [];
+}
+
+/**
+ * Obtém todas as chaves de steps disponíveis
+ */
+export function getStepKeys(template: FunnelTemplate): string[] {
+  return template.steps.map(s => s.key);
+}
+
+/**
+ * Valida se um template é válido
+ */
+export function validateTemplate(template: any): template is FunnelTemplate {
+  if (!template || typeof template !== 'object') return false;
+  if (typeof template.id !== 'string') return false;
+  if (typeof template.name !== 'string') return false;
+  if (!Array.isArray(template.steps)) return false;
+  
+  // Validar cada step
+  for (const step of template.steps) {
+    if (typeof step.key !== 'string') return false;
+    if (typeof step.label !== 'string') return false;
+    if (!Array.isArray(step.blocks)) return false;
+  }
+  
+  return true;
+}
+
+/**
+ * Limpa cache de templates (útil para hot-reload em dev)
+ */
+export function clearTemplateCache(): void {
+  templateCache.clear();
+  appLogger.info('[TemplateLoader] Template cache cleared');
+}
+
+/**
+ * Pré-carrega template (útil para performance)
+ */
+export async function preloadTemplate(templateId: string): Promise<void> {
+  if (!templateCache.has(templateId)) {
+    await loadFunnelTemplate(templateId);
+  }
+}
+
+/**
+ * Merge template externo com blocos internos
+ * Útil para sobrescrever blocos específicos mantendo o resto do template
+ */
+export function mergeTemplateBlocks(
+  template: FunnelTemplate,
+  stepKey: string,
+  customBlocks: Partial<Block>[]
+): FunnelTemplate {
+  const step = template.steps.find(s => s.key === stepKey);
+  if (!step) return template;
+
+  const mergedBlocks = step.blocks.map(block => {
+    const custom = customBlocks.find(c => c.id === block.id);
+    return custom ? { ...block, ...custom } : block;
+  });
+
+  return {
+    ...template,
+    steps: template.steps.map(s =>
+      s.key === stepKey ? { ...s, blocks: mergedBlocks } : s
+    ),
+  };
+}
+
+/**
+ * Converte template para formato legado (backward compatibility)
+ */
+export function convertToLegacyFormat(template: FunnelTemplate): Record<string, Block[]> {
+  return template.steps.reduce((acc, step) => {
+    acc[step.key] = step.blocks;
+    return acc;
+  }, {} as Record<string, Block[]>);
+}

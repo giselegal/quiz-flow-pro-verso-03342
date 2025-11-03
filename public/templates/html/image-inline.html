@@ -1,0 +1,16 @@
+<div class="image-inline-block {{className}}" style="{{style}}">
+  {{#src}}
+    <img 
+      src="{{src}}" 
+      alt="{{alt}}" 
+      {{#width}}width="{{width}}"{{/width}}
+      {{#height}}height="{{height}}"{{/height}}
+      class="max-w-full h-auto {{containerPosition}}"
+    />
+  {{/src}}
+  {{^src}}
+    <div class="bg-gray-200 rounded-lg flex items-center justify-center h-32">
+      <span class="text-gray-500">Sem imagem</span>
+    </div>
+  {{/src}}
+</div>

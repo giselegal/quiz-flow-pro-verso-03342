@@ -2,6 +2,22 @@ import { ValidationProps } from '@/types/editor';
 import { z } from 'zod';
 
 // =====================================================
+// UNIVERSAL PROPERTIES (aplicáveis a todos os blocos)
+// =====================================================
+const universalPropertiesSchema = z.object({
+  className: z.string().optional(),
+  style: z.record(z.any()).optional(),
+  scale: z.number().min(10).max(300).optional(),
+  scaleX: z.number().min(0.1).max(3).optional(),
+  scaleY: z.number().min(0.1).max(3).optional(),
+  scaleOrigin: z.enum(['center', 'top', 'top center', 'top left', 'top right', 'center left', 'center right', 'bottom', 'bottom center', 'bottom left', 'bottom right']).optional(),
+  marginTop: z.number().optional(),
+  marginBottom: z.number().optional(),
+  paddingTop: z.number().optional(),
+  paddingBottom: z.number().optional(),
+}).optional();
+
+// =====================================================
 // INTRO BLOCKS SCHEMAS
 // =====================================================
 const introLogoSchema = z.object({
@@ -10,30 +26,35 @@ const introLogoSchema = z.object({
   width: z.number().optional(),
   height: z.number().optional(),
   link: z.string().optional(),
-});
+}).merge(universalPropertiesSchema.unwrap());
 
 const introTitleSchema = z.object({
   text: z.string().min(1, 'Título é obrigatório'),
-  level: z.enum(['h1', 'h2', 'h3']).optional(),
+  content: z.string().optional(), // Alias para text
+  level: z.enum(['h1', 'h2', 'h3', 'h4']).optional(),
   fontSize: z.string().optional(),
   fontWeight: z.string().optional(),
   color: z.string().optional(),
   textAlign: z.enum(['left', 'center', 'right']).optional(),
-});
+}).merge(universalPropertiesSchema.unwrap());
 
 const introDescriptionSchema = z.object({
   text: z.string().min(1, 'Descrição é obrigatória'),
+  content: z.string().optional(), // Alias para text
   fontSize: z.string().optional(),
   color: z.string().optional(),
   textAlign: z.enum(['left', 'center', 'right']).optional(),
-});
+}).merge(universalPropertiesSchema.unwrap());
 
 const introImageSchema = z.object({
   src: z.string().min(1, 'URL da imagem é obrigatória'),
   alt: z.string().optional(),
+  width: z.number().optional(),
+  height: z.number().optional(),
   aspectRatio: z.string().optional(),
   objectFit: z.enum(['cover', 'contain', 'fill']).optional(),
-});
+  containerPosition: z.enum(['left', 'center', 'right']).optional(),
+}).merge(universalPropertiesSchema.unwrap());
 
 const introFormSchema = z.object({
   fields: z.array(z.object({
@@ -217,28 +238,63 @@ const layoutSpacerSchema = z.object({
 // LEGACY SCHEMAS (manter compatibilidade)
 // =====================================================
 const textBlockSchema = z.object({
-  content: z.string().min(1, 'Conteúdo é obrigatório'),
-  fontSize: z.number().optional(),
-  fontWeight: z.number().optional(),
+  content: z.string().optional(),
+  text: z.string().optional(), // Alias para content
+  html: z.string().optional(), // Suporte para HTML raw
+  fontSize: z.union([z.number(), z.string()]).optional(),
+  fontWeight: z.union([z.number(), z.string()]).optional(),
   textAlign: z.enum(['left', 'center', 'right', 'justify']).optional(),
   color: z.string().optional(),
-});
+  lineHeight: z.string().optional(),
+}).merge(universalPropertiesSchema.unwrap()).refine(
+  (data) => data.content || data.text || data.html,
+  { message: 'Pelo menos um campo de conteúdo é obrigatório: content, text ou html' }
+);
 
 const buttonBlockSchema = z.object({
   text: z.string().min(1, 'Texto do botão é obrigatório'),
-  action: z.string().min(1, 'Ação do botão é obrigatória'),
-  style: z.enum(['primary', 'secondary', 'outline']).optional(),
-  size: z.enum(['sm', 'md', 'lg']).optional(),
+  action: z.string().optional(),
+  onClick: z.string().optional(), // Handler de click
+  buttonStyle: z.enum(['primary', 'secondary', 'outline']).optional(),
+  buttonSize: z.enum(['sm', 'md', 'lg']).optional(),
+  style: z.enum(['primary', 'secondary', 'outline']).optional(), // Alias
+  size: z.enum(['sm', 'md', 'lg']).optional(), // Alias
   disabled: z.boolean().optional(),
-});
+}).merge(universalPropertiesSchema.unwrap());
 
 const imageBlockSchema = z.object({
   src: z.string().min(1, 'URL da imagem é obrigatória'),
-  alt: z.string().min(1, 'Texto alternativo é obrigatório'),
+  alt: z.string().optional(),
   width: z.number().optional(),
   height: z.number().optional(),
   fit: z.enum(['cover', 'contain', 'fill']).optional(),
-});
+  objectFit: z.enum(['cover', 'contain', 'fill']).optional(), // Alias
+  containerPosition: z.enum(['left', 'center', 'right']).optional(),
+}).merge(universalPropertiesSchema.unwrap());
+
+// =====================================================
+// DECORATIVE & LAYOUT SCHEMAS
+// =====================================================
+const decorativeBarSchema = z.object({
+  width: z.string().optional(),
+  height: z.union([z.number(), z.string()]).optional(),
+  color: z.string().optional(),
+  backgroundColor: z.string().optional(),
+}).merge(universalPropertiesSchema.unwrap());
+
+const legalNoticeSchema = z.object({
+  text: z.string().optional(),
+  content: z.string().optional(),
+  fontSize: z.string().optional(),
+  textAlign: z.enum(['left', 'center', 'right']).optional(),
+}).merge(universalPropertiesSchema.unwrap());
+
+const footerCopyrightSchema = z.object({
+  text: z.string().optional(),
+  content: z.string().optional(),
+  year: z.number().optional(),
+  company: z.string().optional(),
+}).merge(universalPropertiesSchema.unwrap());
 
 // =====================================================
 // MAPA COMPLETO DE SCHEMAS
@@ -281,9 +337,26 @@ export const blockSchemas: Record<string, z.ZodSchema> = {
   
   // Legacy blocks
   text: textBlockSchema,
+  'text-inline': textBlockSchema,
   button: buttonBlockSchema,
+  'button-inline': buttonBlockSchema,
   image: imageBlockSchema,
+  'image-inline': imageBlockSchema,
+  'image-display-inline': imageBlockSchema,
   'options-grid': questionOptionsGridSchema,
+  
+  // Heading blocks
+  heading: introTitleSchema,
+  'heading-inline': introTitleSchema,
+  headline: introTitleSchema,
+  'headline-inline': introTitleSchema,
+  
+  // Decorative blocks
+  'decorative-bar': decorativeBarSchema,
+  'decorative-bar-inline': decorativeBarSchema,
+  'legal-notice': legalNoticeSchema,
+  'legal-notice-inline': legalNoticeSchema,
+  'footer-copyright': footerCopyrightSchema,
 };
 
 // Função de validação genérica

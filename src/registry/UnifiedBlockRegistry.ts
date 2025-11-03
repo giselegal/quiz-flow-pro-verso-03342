@@ -20,6 +20,8 @@
 
 import React, { lazy, type ComponentType, Suspense } from 'react';
 import { appLogger } from '@/utils/logger';
+import { isSimpleBlock, getTemplatePath } from '@/config/block-complexity-map';
+import JSONTemplateRenderer from '@/core/renderers/JSONTemplateRenderer';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -320,8 +322,17 @@ export class UnifiedBlockRegistry {
 
   /**
    * Get component (sync) - for backwards compatibility
+   * 🎯 SISTEMA HÍBRIDO: Decide automaticamente entre JSON e TSX
    */
   getComponent(type: BlockType): React.ComponentType<any> | null {
+    // 0. Check if it's a simple block (JSON-driven) 
+    if (isSimpleBlock(type)) {
+      appLogger.info(`[UnifiedBlockRegistry] Using JSON renderer for: ${type}`);
+      return ((props: any) => 
+        React.createElement(JSONTemplateRenderer, { type, ...props })
+      ) as React.ComponentType<any>;
+    }
+
     // 1. Check cache
     const cached = this.getCachedComponent(type);
     if (cached) {

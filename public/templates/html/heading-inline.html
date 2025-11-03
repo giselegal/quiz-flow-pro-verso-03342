@@ -1,0 +1,11 @@
+<div class="heading-inline-block {{className}}" style="{{style}}">
+  {{#level}}
+    {{#level.h1}}<h1 class="text-4xl font-bold {{textAlign}}">{{content}}</h1>{{/level.h1}}
+    {{#level.h2}}<h2 class="text-3xl font-bold {{textAlign}}">{{content}}</h2>{{/level.h2}}
+    {{#level.h3}}<h3 class="text-2xl font-semibold {{textAlign}}">{{content}}</h3>{{/level.h3}}
+    {{#level.h4}}<h4 class="text-xl font-semibold {{textAlign}}">{{content}}</h4>{{/level.h4}}
+  {{/level}}
+  {{^level}}
+    <h2 class="text-3xl font-bold {{textAlign}}">{{content}}</h2>
+  {{/level}}
+</div>
