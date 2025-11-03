@@ -4,8 +4,8 @@
  * Página para duplicar o template quiz21StepsComplete e criar um funil editável
  */
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigationSafe } from '@/hooks/useNavigationSafe';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,13 +20,13 @@ export default function CreateEditableFunnel() {
   const [isCreating, setIsCreating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigationSafe();
   const { toast } = useToast();
 
   // Verificar autenticação ao montar
-  useState(() => {
+  useEffect(() => {
     checkAuth();
-  });
+  }, []);
 
   async function checkAuth() {
     try {
@@ -71,7 +71,7 @@ export default function CreateEditableFunnel() {
 
       // Redirecionar para o editor
       setTimeout(() => {
-        navigate(`/editor?funnelId=${newFunnelId}`);
+        navigateTo(`/editor?funnelId=${newFunnelId}`);
       }, 1000);
 
     } catch (error: any) {
@@ -89,7 +89,7 @@ export default function CreateEditableFunnel() {
 
   async function handleSignup() {
     // Redirecionar para página de cadastro
-    navigate('/auth/signup');
+    navigateTo('/auth/signup');
   }
 
   if (isLoading) {
