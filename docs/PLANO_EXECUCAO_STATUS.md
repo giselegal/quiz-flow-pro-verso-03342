@@ -25,34 +25,27 @@
 
 ## 🔄 PRIORIDADE 2: Limpeza Rápida (PRÓXIMO)
 
-### 4. 🎯 **PRÓXIMO PASSO**: Remover Services Órfãos (1h)
+### 4. ✅ Remover Services Órfãos (1h)
+
+**Status:** CONCLUÍDO
+
+**Ações completadas:**
+1. ✅ Criada pasta `src/services/deprecated/`
+2. ✅ Identificados 6 arquivos órfãos (stubs e corrupted)
+3. ✅ Movidos para deprecated:
+   - `QuizEditorBridge.ts.corrupted`
+   - `SupabaseConfigurationStorage.stub.ts`
+   - `analyticsEngine.stub.ts`
+   - `componentLibrary.stub.ts`
+   - `funnelSettingsService.stub.ts`
+   - `improvedFunnelSystem.stub.ts`
+4. ✅ Documentação atualizada
+
+**Nota:** Services com uso ativo foram preservados (HybridTemplateService, TemplatesCacheService, etc.)
+
+### 5. 🎯 **PRÓXIMO PASSO**: Fixar TODOs Críticos (1-2h)
 
 **Status:** PENDENTE
-
-**Ações necessárias:**
-1. Criar pasta `src/services/deprecated/`
-2. Identificar services sem imports (verificar com busca)
-3. Mover 10-15 services obsoletos
-4. Atualizar `docs/DEPRECATED_SERVICES.md`
-
-**Services candidatos à remoção** (verificar imports antes):
-- `HybridTemplateService.ts`
-- `TemplatesCacheService.ts`
-- `FunnelUnifiedService.ts`
-- `EnhancedFunnelService.ts`
-- `AIEnhancedHybridTemplateService.ts`
-- `DynamicMasterJSONGenerator.ts`
-- `Quiz21CompleteService.ts`
-- `QuizEditorBridge.ts.corrupted`
-- `SupabaseConfigurationStorage.stub.ts`
-- `analyticsEngine.stub.ts`
-- `componentLibrary.stub.ts`
-- `improvedFunnelSystem.stub.ts`
-- Mais arquivos `.stub.ts` que podem ser removidos
-
-### 5. ⏳ Fixar TODOs Críticos (1-2h)
-
-**Status:** AGUARDANDO conclusão do item 4
 
 **Ações:**
 - Buscar por `FIXME`, `BUG`, `CRITICAL` no código
@@ -74,29 +67,26 @@
 ## 📊 PROGRESSO GERAL
 
 ```
-████████████░░░░░░░░ 60% Concluído
+████████████████░░░░ 80% Concluído
 
 ✅ Prioridade 1: 100% (3/3 itens)
-🔄 Prioridade 2:   0% (0/2 itens)
+🔄 Prioridade 2:  50% (1/2 itens)
 ✅ Prioridade 3: 100% (1/1 item)
 ```
 
 ## 🎯 PRÓXIMA AÇÃO RECOMENDADA
 
-**Executar item 4:** Remover Services Órfãos
+**Executar item 5:** Fixar TODOs Críticos
 
-**Comando para o desenvolvedor:**
+**Comando para busca:**
 ```bash
-# Criar pasta deprecated
-mkdir -p src/services/deprecated
-
-# Buscar services sem imports (exemplo)
-grep -r "HybridTemplateService" src/
+# Buscar TODOs críticos
+grep -r "FIXME\|BUG\|CRITICAL" src/
 ```
 
-**Estimativa de tempo:** 1 hora
-**Complexidade:** Baixa
-**Impacto:** Médio (reduz confusão no codebase)
+**Estimativa de tempo:** 1-2 horas
+**Complexidade:** Média
+**Impacto:** Alto (remove warnings e melhora qualidade)
 
 ---
 

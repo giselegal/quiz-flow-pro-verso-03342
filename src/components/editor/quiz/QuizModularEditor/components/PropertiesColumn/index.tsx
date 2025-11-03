@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
+import { onBlockUpdate as subscribeToBlockUpdates } from '@/utils/editorEventBus';
 
 interface PropertiesColumnProps {
     selectedBlock: Block | null;
@@ -101,8 +102,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     React.useEffect(() => {
         if (!selectedBlock) return;
         
-        const { onBlockUpdate } = require('@/utils/editorEventBus');
-        const unsubscribe = onBlockUpdate((data: any) => {
+        const unsubscribe = subscribeToBlockUpdates((data: any) => {
             if (data.blockId === selectedBlock.id) {
                 setEditedProperties(prev => ({ ...prev, ...(data.patch.properties || {}) }));
                 setIsDirty(false);
