@@ -113,16 +113,113 @@ const cached = await cacheService.get('template', 'step-01');
 
 ---
 
-## 🔄 DOMÍNIO 2: QUIZ SERVICES (PRÓXIMO)
+## ✅ DOMÍNIO 2: QUIZ SERVICES (CONCLUÍDO 20%)
 
-**Status:** Pendente  
-**Target:** Consolidar em `canonical/DataService` e `canonical/EditorService`
+### Services Movidos para `/deprecated`
 
-Candidatos identificados:
-- `quizService.ts` → DataService
-- `quizDataService.ts` → DataService
-- `quizBuilderService.ts` → EditorService
-- `quizResultsService.ts` → AnalyticsService
+#### 1. ✅ quizService.ts
+**Status:** Movido  
+**Motivo:** STUB de 2 linhas sem implementação real  
+**Uso ativo:** ❌ Nunca foi usado efetivamente  
+**Ação tomada:**
+- Movido para `src/services/deprecated/quizService.ts`
+- Mantido re-export em `aliases/index.ts` com warning de depreciação
+- Service era apenas placeholder: `getQuiz: async () => null, saveQuiz: async () => null`
+
+**Migração recomendada para consumidores:**
+```typescript
+// ❌ ANTES (deprecado - nunca funcionou)
+import { quizService } from '@/services/quizService';
+const quiz = await quizService.getQuiz(); // Sempre retorna null
+
+// ✅ DEPOIS - Para gestão de sessões locais
+import { quizDataService } from '@/services/quizDataService';
+quizDataService.startSession('userName', 'email');
+quizDataService.addAnswer(questionId, questionText, options, ...);
+
+// ✅ DEPOIS - Para persistência no banco
+import { quizSupabaseService } from '@/services/quizSupabaseService';
+await quizSupabaseService.createQuizSession({ funnelId, quizUserId, ... });
+await quizSupabaseService.saveQuizResponse({ sessionId, stepNumber, ... });
+```
+
+---
+
+### ⏳ Services Ativos (Migração Futura)
+
+#### 2. 📋 quizDataService.ts
+**Status:** ⚠️ ATIVO - Não mover ainda  
+**Motivo:** Service core de 654 linhas usado em 3 arquivos críticos  
+**Uso ativo:** ✅ SIM
+- `src/components/quiz/QuizDataViewer.tsx`
+- `src/hooks/useQuizTracking.ts`
+- `src/services/aliases/index.ts`
+
+**Funcionalidades:**
+- Gestão de sessões de quiz (localStorage)
+- Tracking de clicks e eventos
+- Integração com Facebook Pixel e Google Analytics
+- Captura de UTM parameters
+- Analytics local
+
+**Plano de migração (Sprint futura):**
+- Consolidar em `canonical/DataService` ou criar `canonical/QuizService`
+- Manter como service especializado por enquanto
+- Alto impacto: usado em sistema de tracking crítico
+
+#### 3. 📋 quizSupabaseService.ts
+**Status:** ⚠️ ATIVO - Não mover ainda  
+**Motivo:** Service core de 510 linhas para persistência no banco  
+**Usado em:** Exportado via `aliases/index.ts` e usado em múltiplos fluxos
+
+**Funcionalidades:**
+- CRUD de quiz_users, quiz_sessions, quiz_step_responses
+- Gestão de quiz_results e quiz_analytics
+- Conversions tracking
+- Legacy functions para retrocompatibilidade
+
+**Plano de migração:** Consolidar em `canonical/DataService` (futuro)
+
+#### 4. 📋 quizResultsService.ts
+**Status:** ⚠️ ATIVO - Não mover ainda  
+**Motivo:** Service de 804 linhas com lógica complexa de cálculo  
+**Usado em:** `src/__tests__/quiz_results_progressive.test.ts`
+
+**Funcionalidades:**
+- Cálculo de perfil de estilo (styleConfig.ts)
+- Análise de respostas por categoria
+- Geração de recomendações personalizadas
+- Persistência de resultados
+
+**Plano de migração:** Consolidar em `canonical/AnalyticsService` (futuro)
+
+#### 5. 📋 quizBuilderService.ts
+**Status:** ⚠️ ATIVO - Não mover ainda  
+**Motivo:** Service de 223 linhas usado em 2 arquivos do editor  
+**Usado em:**
+- `src/components/quiz/builder/components/QuizTemplateImporter.tsx`
+- `src/hooks/useQuizBuilder.ts`
+
+**Funcionalidades:**
+- Geração de stages/components iniciais
+- Conversão de templates para QuizBuilderState
+- Conversão de ResultPageConfig
+
+**Plano de migração:** Consolidar em `canonical/EditorService` (futuro)
+
+---
+
+## 📊 PROGRESSO DOMÍNIO 2
+
+```
+████░░░░░░ 20% Concluído
+
+✅ Movidos para /deprecated:  1/5 (20%)
+⏳ Aguardando migração:       4/5 (80%)
+```
+
+**Services movidos:** quizService (STUB)  
+**Services ativos:** quizDataService, quizSupabaseService, quizResultsService, quizBuilderService
 
 ---
 

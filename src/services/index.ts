@@ -2,7 +2,7 @@
 // Legacy services - will be migrated to feature-specific locations
 
 export * from './funnelService';
-export * from './quizService';
+// quizService moved to deprecated - use quizDataService or quizSupabaseService instead
 export * from './templateService';
 
 // TODO: Migrate remaining services to appropriate features

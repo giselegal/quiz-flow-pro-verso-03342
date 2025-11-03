@@ -76,19 +76,23 @@
 ## 📊 PROGRESSO GERAL
 
 ```
-████████████████████ 100% Prioridades 1-3 | 🔄 FASE 3 iniciada (15%)
+████████████████████ 100% Prioridades 1-3 | 🔄 FASE 3: 30%
 
 ✅ Prioridade 1: 100% (3/3 itens)
 ✅ Prioridade 2: 100% (2/2 itens)
 ✅ Prioridade 3: 100% (1/1 item)
-🔄 Fase 3: 15% (Domínio 1: 40% | Domínios 2-4: 0%)
+🔄 Fase 3 Consolidação: 30% (Domínio 1: 40% | Domínio 2: 20% | Domínios 3-4: 0%)
 ```
 
 ## 🔄 FASE 3: LIMPEZA PROFUNDA (EM PROGRESSO)
 
-### 6. 🔄 Consolidar Services Duplicados - Domínio 1: Templates (3h)
+### 6. 🔄 Consolidar Services Duplicados (15h total)
 
-**Status:** 🔄 EM PROGRESSO (40% concluído)
+**Status:** 🔄 EM PROGRESSO (30% concluído geral)
+
+#### Domínio 1: Template Services (40% concluído)
+
+**Status:** 🔄 EM PROGRESSO
 
 **Ações completadas:**
 1. ✅ Análise de uso dos 5 template services principais
@@ -108,12 +112,33 @@
 - Analisar candidatos para próxima rodada de migração
 - Continuar consolidação gradual sem quebrar funcionalidades
 
+#### Domínio 2: Quiz Services (20% concluído)
+
+**Status:** 🔄 EM PROGRESSO
+
+**Ações completadas:**
+1. ✅ Análise de uso dos 5 quiz services principais
+2. ✅ Movido para `/deprecated`:
+   - `quizService.ts` (STUB sem implementação)
+3. ✅ Mantida compatibilidade via re-export em `aliases/index.ts`
+4. ✅ Documentação atualizada em `docs/SERVICES_MIGRATION_PHASE3.md`
+
+**Services ativos (aguardando migração futura):**
+- ⏳ `quizDataService.ts` - 654 linhas, usado em 3 arquivos (tracking, analytics)
+- ⏳ `quizSupabaseService.ts` - 510 linhas, CRUD de quiz no banco
+- ⏳ `quizResultsService.ts` - 804 linhas, cálculo de perfil de estilo
+- ⏳ `quizBuilderService.ts` - 223 linhas, usado no editor de quiz
+
+**Próximos passos (Domínio 2):**
+- Avaliar consolidação dos 4 services ativos em canonical services
+- Requer análise cuidadosa: são services core com lógica complexa
+
 ---
 
 ## 🎯 PRÓXIMA AÇÃO RECOMENDADA
 
-**Continuar FASE 3 - Passo 6:** Domínios 2-4  
-**Próximo domínio:** Quiz Services (3h)
+**Continuar FASE 3 - Passo 6:** Domínios 3-4  
+**Próximo domínio:** Funnel Services (3h)
 
 **Plano:**
 - Mapear `quizService.ts`, `quizDataService.ts`, `quizBuilderService.ts`, `quizResultsService.ts`

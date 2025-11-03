@@ -67,6 +67,10 @@ export { QUIZ_21_COMPLETE_DATA } from '@/services/deprecated/Quiz21CompleteServi
 export { quizDataService } from '@/services/quizDataService';
 export { quizSupabaseService } from '@/services/quizSupabaseService';
 
+// ⚠️ DEPRECATED: Use quizDataService ou quizSupabaseService
+/** @deprecated Use quizDataService para gestão de sessões ou quizSupabaseService para persistência */
+export { quizService } from '@/services/deprecated/quizService';
+
 // Validação e Analytics (barrel compatível)
 export { funnelValidationService } from '@/services/funnelValidationService';
 export { AnalyticsService } from '@/services/AnalyticsService';

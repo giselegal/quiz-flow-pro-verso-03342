@@ -6,7 +6,7 @@ Este documento lista os services que foram deprecados e movidos para `src/servic
 
 ---
 
-## ⚠️ LIMPEZA FASE 3 - TEMPLATE SERVICES (2025-11-03)
+## ⚠️ LIMPEZA FASE 3 - DOMÍNIO 1: TEMPLATE SERVICES (2025-11-03)
 
 ### HybridTemplateService.ts
 **Data:** 2025-11-03  
@@ -40,6 +40,35 @@ import { QUIZ_21_COMPLETE_DATA, createQuiz21CompleteViaService } from '@/service
 // ✅ DEPOIS
 import { QUIZ_21_COMPLETE_DATA } from '@/services/aliases';
 // Funções de criação: usar templateService ou funnelService diretamente
+```
+
+---
+
+## ⚠️ LIMPEZA FASE 3 - DOMÍNIO 2: QUIZ SERVICES (2025-11-03)
+
+### quizService.ts
+**Data:** 2025-11-03  
+**Status:** ✅ Movido para `/deprecated`  
+**Motivo:** STUB de 2 linhas sem implementação real (sempre retorna null)  
+**Alternativa:** `quizDataService` para sessões locais ou `quizSupabaseService` para persistência
+
+```typescript
+// ❌ ANTES (nunca funcionou)
+import { quizService } from '@/services/quizService';
+const quiz = await quizService.getQuiz(); // Sempre retorna null
+await quizService.saveQuiz(data); // Sempre retorna null
+
+// ✅ DEPOIS - Para gestão de sessões locais
+import { quizDataService } from '@/services/quizDataService';
+quizDataService.startSession('userName', 'email@example.com');
+quizDataService.addAnswer(questionId, questionText, selectedOptions, ...);
+const session = quizDataService.getCurrentSession();
+
+// ✅ DEPOIS - Para persistência no banco
+import { quizSupabaseService } from '@/services/quizSupabaseService';
+const user = await quizSupabaseService.createQuizUser({ sessionId, email, name });
+const session = await quizSupabaseService.createQuizSession({ funnelId, quizUserId: user.id });
+await quizSupabaseService.saveQuizResponse({ sessionId, stepNumber, questionId, ... });
 ```
 
 ---
