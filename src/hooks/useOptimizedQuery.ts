@@ -97,11 +97,11 @@ export function useOptimizedQuery<T = any>(
                 );
             } else if (filter) {
                 // Query múltipla com batch
-                const results = await queryOptimizer.batchQueryMany<T>(
-                    table,
-                    fields,
-                    filter
-                );
+      const results = await queryOptimizer.batchQueryMany<T>(
+        table,
+        fields || ['*'],
+        filter
+      );
                 result = (results?.[0] || null) as T;
             }
 
