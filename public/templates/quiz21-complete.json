@@ -1,6 +1,7 @@
 {
   "templateVersion": "3.0",
-  "templateId": "quiz-estilo-21-steps",
+  "templateId": "quiz21StepsComplete",
+  "templateIdAlias": "quiz-estilo-21-steps",
   "name": "Quiz de Estilo Pessoal - 21 Etapas",
   "description": "Template completo v3.0 com todos os blocos e seções dos 21 steps",
   "metadata": {

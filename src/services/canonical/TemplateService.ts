@@ -196,14 +196,19 @@ export class TemplateService extends BaseCanonicalService {
 
   /**
    * Obter blocos de um step específico
+   * @param stepId ID do step (ex: "step-01")
+   * @param templateId ID opcional do template (ex: "quiz21StepsComplete")
    */
-  async getStep(stepId: string): Promise<ServiceResult<Block[]>> {
+  async getStep(stepId: string, templateId?: string): Promise<ServiceResult<Block[]>> {
     try {
       CanonicalServicesMonitor.trackUsage(this.name, 'getStep');
-      const blocks = await this.registry.getStep(stepId);
+      
+      // Passar templateId para registry se fornecido
+      const blocks = await this.registry.getStep(stepId, templateId);
 
       if (!blocks || blocks.length === 0) {
-        return this.createError(new Error(`Step not found or empty: ${stepId}`));
+        const context = templateId ? ` (template: ${templateId})` : '';
+        return this.createError(new Error(`Step not found or empty: ${stepId}${context}`));
       }
 
       return this.createResult(blocks);

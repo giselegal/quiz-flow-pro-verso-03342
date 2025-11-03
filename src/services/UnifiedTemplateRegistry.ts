@@ -173,86 +173,88 @@ export class UnifiedTemplateRegistry {
     return this.l2InitPromise;
   }
 
-  /**
-   * Carregar step (cascade L1 → L2 → L3)
-   */
-  async getStep(stepId: string): Promise<Block[]> {
-    // Evita colisão de labels em execuções concorrentes (especialmente em testes)
-    const _timeBase = `[Registry] getStep(${stepId})`;
-    const _timeLabel = `${_timeBase}#${typeof performance !== 'undefined' && typeof performance.now === 'function' ? Math.floor(performance.now()) : Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-    console.time(_timeLabel);
-    this.stats.loads++;
-    const flags = (this as any).debugFlags as { disableL1: boolean; disableL2: boolean; disableL3: boolean; forceServer: boolean };
-    
-    // Caminho rápido: forçar servidor (ignora caches)
-    if (flags?.forceServer) {
-      console.log(`🚩 FORCE SERVER ativo para ${stepId}`);
-      const serverResult = await this.loadFromServer(stepId);
-      if (serverResult) {
-        // Mesmo com forceServer, ainda promovemos para L1/L2 para próximas navegações
-        this.l1Cache.set(stepId, serverResult);
-        await this.saveToL2(stepId, serverResult);
-      }
-      console.timeEnd(_timeLabel);
-      return serverResult || [];
-    }
-    
-    // L1: Memory Cache (5ms)
-    const l1Result = flags?.disableL1 ? null : this.l1Cache.get(stepId);
-    if (l1Result) {
-      this.stats.l1Hits++;
-      console.log(`⚡ L1 HIT: ${stepId} (${l1Result.length} blocos)`);
-      console.timeEnd(_timeLabel);
-      return l1Result;
-    }
-    
-    // L2: IndexedDB (50ms)
-    await this.initializeL2();
-    if (!flags?.disableL2 && this.l2Cache) {
-      try {
-        const l2Entry = await this.l2Cache.get('templates', stepId);
-        if (l2Entry && this.isL2Valid(l2Entry.timestamp)) {
-          this.stats.l2Hits++;
-          console.log(`💾 L2 HIT: ${stepId} (${l2Entry.blocks.length} blocos)`);
-          
-          // Promover para L1
-          this.l1Cache.set(stepId, l2Entry.blocks);
-          console.timeEnd(_timeLabel);
-          return l2Entry.blocks;
-        }
-      } catch (error) {
-        console.warn('⚠️ L2 read error:', error);
-      }
-    }
-    
-    // L3: Build-time embedded (10ms)
-    const l3Result = flags?.disableL3 ? null : await this.loadFromL3(stepId);
-    if (l3Result) {
-      this.stats.l3Hits++;
-      console.log(`📦 L3 HIT: ${stepId} (${l3Result.length} blocos)`);
-      
-      // Promover para L1 e L2
-      this.l1Cache.set(stepId, l3Result);
-      await this.saveToL2(stepId, l3Result);
-      console.timeEnd(_timeLabel);
-      return l3Result;
-    }
-    
-    // MISS: Tentar carregar dinamicamente do servidor
-    this.stats.misses++;
-    console.warn(`❌ MISS: ${stepId} - carregando do servidor...`);
-  const serverResult = await this.loadFromServer(stepId);
-    
-    if (serverResult) {
-      // Cachear em todos os níveis
-      this.l1Cache.set(stepId, serverResult);
-      await this.saveToL2(stepId, serverResult);
-      console.log(`✅ Carregado do servidor: ${stepId} (${serverResult.length} blocos)`);
-    }
-    
-    console.timeEnd(_timeLabel);
-    return serverResult || [];
-  }
+   /**
+    * Carregar step (cascade L1 → L2 → L3)
+    * @param stepId ID do step (ex: "step-01")
+    * @param templateId ID opcional do template para contexto (ex: "quiz21StepsComplete")
+    */
+   async getStep(stepId: string, templateId?: string): Promise<Block[]> {
+     const cacheKey = stepId; // Usar apenas stepId para cache por enquanto
+     const _timeBase = `[Registry] getStep(${stepId})`;
+     const _timeLabel = `${_timeBase}#${typeof performance !== 'undefined' && typeof performance.now === 'function' ? Math.floor(performance.now()) : Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+     console.time(_timeLabel);
+     this.stats.loads++;
+     const flags = (this as any).debugFlags as { disableL1: boolean; disableL2: boolean; disableL3: boolean; forceServer: boolean };
+     
+     // Caminho rápido: forçar servidor (ignora caches)
+     if (flags?.forceServer) {
+       console.log(`🚩 FORCE SERVER ativo para ${stepId}`);
+       const serverResult = await this.loadFromServer(stepId, templateId);
+       if (serverResult) {
+         // Mesmo com forceServer, ainda promovemos para L1/L2 para próximas navegações
+         this.l1Cache.set(stepId, serverResult);
+         await this.saveToL2(stepId, serverResult);
+       }
+       console.timeEnd(_timeLabel);
+       return serverResult || [];
+     }
+     
+     // L1: Memory Cache (5ms)
+     const l1Result = flags?.disableL1 ? null : this.l1Cache.get(stepId);
+     if (l1Result) {
+       this.stats.l1Hits++;
+       console.log(`⚡ L1 HIT: ${stepId} (${l1Result.length} blocos)`);
+       console.timeEnd(_timeLabel);
+       return l1Result;
+     }
+     
+     // L2: IndexedDB (50ms)
+     await this.initializeL2();
+     if (!flags?.disableL2 && this.l2Cache) {
+       try {
+         const l2Entry = await this.l2Cache.get('templates', stepId);
+         if (l2Entry && this.isL2Valid(l2Entry.timestamp)) {
+           this.stats.l2Hits++;
+           console.log(`💾 L2 HIT: ${stepId} (${l2Entry.blocks.length} blocos)`);
+           
+           // Promover para L1
+           this.l1Cache.set(stepId, l2Entry.blocks);
+           console.timeEnd(_timeLabel);
+           return l2Entry.blocks;
+         }
+       } catch (error) {
+         console.warn('⚠️ L2 read error:', error);
+       }
+     }
+     
+     // L3: Build-time embedded (10ms)
+     const l3Result = flags?.disableL3 ? null : await this.loadFromL3(stepId);
+     if (l3Result) {
+       this.stats.l3Hits++;
+       console.log(`📦 L3 HIT: ${stepId} (${l3Result.length} blocos)`);
+       
+       // Promover para L1 e L2
+       this.l1Cache.set(stepId, l3Result);
+       await this.saveToL2(stepId, l3Result);
+       console.timeEnd(_timeLabel);
+       return l3Result;
+     }
+     
+     // MISS: Tentar carregar dinamicamente do servidor
+     this.stats.misses++;
+     console.warn(`❌ MISS: ${stepId} - carregando do servidor...`);
+     const serverResult = await this.loadFromServer(stepId, templateId);
+     
+     if (serverResult) {
+       // Cachear em todos os níveis
+       this.l1Cache.set(stepId, serverResult);
+       await this.saveToL2(stepId, serverResult);
+       console.log(`✅ Carregado do servidor: ${stepId} (${serverResult.length} blocos)`);
+     }
+     
+     console.timeEnd(_timeLabel);
+     return serverResult || [];
+   }
 
   /**
    * Carregar do L3 (build-time embedded)
@@ -289,10 +291,41 @@ export class UnifiedTemplateRegistry {
 
   /**
    * Carregar do servidor (fallback)
+   * @param stepId ID do step (ex: "step-01")
+   * @param templateId ID opcional do template para tentar carregar consolidado
    */
-  private async loadFromServer(stepId: string): Promise<Block[] | null> {
+  private async loadFromServer(stepId: string, templateId?: string): Promise<Block[] | null> {
     try {
-      console.log(`🌐 [loadFromServer] Tentando carregar ${stepId}...`);
+      console.log(`🌐 [loadFromServer] Tentando carregar ${stepId}${templateId ? ` do template ${templateId}` : ''}...`);
+      
+      // PRIORIDADE 0: Se templateId fornecido, tentar carregar do JSON consolidado
+      if (templateId) {
+        try {
+          const consolidatedUrl = `/templates/${templateId}.json`;
+          console.log(`   → Tentando JSON consolidado: ${consolidatedUrl} (prioridade 0)`);
+          const resp = await fetch(consolidatedUrl);
+          if (resp.ok) {
+            const template = await resp.json();
+            console.log(`   ✅ SUCESSO: Template consolidado carregado`);
+            
+            // Extrair step específico do JSON consolidado
+            if (template.steps && template.steps[stepId]) {
+              const stepData = template.steps[stepId];
+              if (stepData.blocks && Array.isArray(stepData.blocks)) {
+                console.log(`   ✅ Step ${stepId} extraído do consolidado (${stepData.blocks.length} blocos)`);
+                return stepData.blocks as Block[];
+              }
+            }
+            
+            // Tentar aliases comuns
+            if (template.templateIdAlias) {
+              console.log(`   🔍 Template tem alias: ${template.templateIdAlias}`);
+            }
+          }
+        } catch (error) {
+          console.warn(`   ⚠️ Erro ao carregar template consolidado: ${error}`);
+        }
+      }
       
       // PRIORIDADE 1: JSON individual em /templates/blocks/ (ESTRUTURA CORRETA)
       try {
@@ -395,7 +428,7 @@ export class UnifiedTemplateRegistry {
     
     try {
       await this.l2Cache.put('templates', {
-        stepId,
+        stepId: stepId,
         blocks,
         timestamp: Date.now(),
         version: this.CACHE_VERSION,

@@ -35,7 +35,7 @@ export function useBlockOperations(): UseBlockOperations {
     return byStep[stepKey] ?? null;
   }, [byStep]);
 
-  const ensureLoaded = useCallback(async (stepKey: string | null) => {
+  const ensureLoaded = useCallback(async (stepKey: string | null, templateId?: string) => {
     if (!stepKey) return;
     if (byStep[stepKey]) {
       console.log(`✅ [useBlockOperations] Step ${stepKey} já carregado (${byStep[stepKey].length} blocos)`);
@@ -47,10 +47,11 @@ export function useBlockOperations(): UseBlockOperations {
     }
     
     loadingRef.current[stepKey] = true;
-    console.log(`🔄 [useBlockOperations] Carregando step ${stepKey}...`);
+    console.log(`🔄 [useBlockOperations] Carregando step ${stepKey}${templateId ? ` (template: ${templateId})` : ''}...`);
     
     try {
-      const res = await templateService.getStep(stepKey);
+      // Passar templateId para templateService se disponível
+      const res = await templateService.getStep(stepKey, templateId);
       if (res.success) {
         console.log(`✅ [useBlockOperations] Step ${stepKey} carregado (${res.data.length} blocos)`);
         setByStep((prev) => ({ ...prev, [stepKey]: res.data }));
