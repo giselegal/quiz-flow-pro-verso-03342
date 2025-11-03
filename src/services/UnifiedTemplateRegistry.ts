@@ -225,26 +225,28 @@ export class UnifiedTemplateRegistry {
   }
 
   /**
-   * Carregar do servidor usando TemplateLoader (com fallback DB → JSON)
+   * Carregar do servidor - OPÇÃO A: Direto dos JSONs locais
    */
   private async loadFromServerSimplified(stepId: string, templateId?: string): Promise<Block[] | null> {
     try {
-      const tid = templateId || 'quiz21StepsComplete';
+      console.log(`🌐 Carregando ${stepId} diretamente dos templates JSON locais`);
       
-      console.log(`🌐 Carregando ${stepId} via TemplateLoader (template: ${tid})`);
-      
-      // Usar loadFunnelTemplate com fallback automático DB → JSON
-      const { loadFunnelTemplate } = await import('@/services/TemplateLoader');
-      const template = await loadFunnelTemplate(tid);
-      
-      // Extrair step do template carregado
-      const step = template.steps.find(s => s.key === stepId);
-      if (step?.blocks && Array.isArray(step.blocks)) {
-        console.log(`✅ Step ${stepId} extraído (${step.blocks.length} blocos)`);
-        return step.blocks as Block[];
+      // Extrair número do step
+      const stepNumber = stepId.match(/\d+/)?.[0];
+      if (!stepNumber) {
+        console.error(`❌ Step ID inválido: ${stepId}`);
+        return null;
       }
       
-      console.error(`❌ Step ${stepId} não encontrado no template ${tid}`);
+      // Import dinâmico do JSON local de src/config/templates/
+      const stepTemplate = await import(`@/config/templates/step-${stepNumber.padStart(2, '0')}.json`);
+      
+      if (stepTemplate.default?.blocks && Array.isArray(stepTemplate.default.blocks)) {
+        console.log(`✅ Step ${stepId} carregado com ${stepTemplate.default.blocks.length} blocos`);
+        return stepTemplate.default.blocks as Block[];
+      }
+      
+      console.error(`❌ Step ${stepId} não tem blocks válidos`);
       return null;
     } catch (error) {
       console.error(`❌ Erro ao carregar ${stepId}:`, error);

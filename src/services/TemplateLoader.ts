@@ -97,6 +97,7 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
     `/templates/funnels/${templateId}/master.json`,    // Nested master
     `/templates/funnels/${templateId}/index.json`,     // Nested index
     `/templates/${templateId}.json`,                   // Root level (legacy)
+    `/config/templates/`,                              // 🆕 OPÇÃO A: Templates individuais
   ];
 
   for (const jsonUrl of paths) {
@@ -134,6 +135,46 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
             blocks: stepData.blocks || [],
             metadata: stepData,
           }));
+        }
+      }
+      
+      // 🆕 OPÇÃO A: Detectar fallback de templates individuais
+      if (jsonUrl.includes('/config/templates/')) {
+        appLogger.info('📦 Carregando steps individuais de /config/templates/');
+        
+        // Carregar todos os 21 steps
+        const steps = [];
+        for (let i = 1; i <= 21; i++) {
+          try {
+            const stepId = `step-${i.toString().padStart(2, '0')}`;
+            const stepModule = await import(`@/config/templates/step-${i.toString().padStart(2, '0')}.json`);
+            
+            if (stepModule.default?.blocks) {
+              steps.push({
+                key: stepId,
+                label: stepModule.default.metadata?.name || `Step ${i}`,
+                type: stepModule.default.metadata?.type || 'question',
+                blocks: stepModule.default.blocks,
+                metadata: stepModule.default,
+              });
+            }
+          } catch (err) {
+            appLogger.warn(`⚠️ Falha ao carregar step-${i}:`, err);
+          }
+        }
+        
+        if (steps.length > 0) {
+          const finalTemplate: FunnelTemplate = {
+            id: templateId,
+            name: 'Quiz 21 Steps Complete',
+            description: 'Template completo com 21 steps',
+            version: '3.1.0',
+            steps,
+            metadata: {},
+          };
+          templateCache.set(templateId, finalTemplate);
+          appLogger.info(`✅ [LOCAL] Template carregado dos JSONs individuais (${steps.length} steps)`);
+          return finalTemplate;
         }
       }
       

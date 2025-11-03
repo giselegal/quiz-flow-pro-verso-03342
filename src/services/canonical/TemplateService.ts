@@ -777,13 +777,50 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   /**
+   * 🆕 OPÇÃO A: Obter todos os steps com blocos reais (ASYNC)
+   * Retorna Record<stepId, stepData> com blocos carregados
+   * 
+   * @returns Promise<Record<stepId, stepData>>
+   */
+  async getAllSteps(): Promise<Record<string, any>> {
+    const allSteps: Record<string, any> = {};
+    
+    for (let i = 1; i <= 21; i++) {
+      const stepId = `step-${i.toString().padStart(2, '0')}`;
+      const stepInfo = this.STEP_MAPPING[i];
+      
+      if (stepInfo) {
+        // Carregar blocks via registry
+        const result = await this.getStep(stepId);
+        const blocks = result.success ? result.data : [];
+        
+        allSteps[stepId] = {
+          id: stepId,
+          type: stepInfo.type,
+          name: stepInfo.name,
+          description: stepInfo.description,
+          multiSelect: stepInfo.multiSelect,
+          nextStep: i < 21 ? `step-${(i + 1).toString().padStart(2, '0')}` : undefined,
+          blocks, // ✅ BLOCOS REAIS
+        };
+      }
+    }
+    
+    return allSteps;
+  }
+
+  /**
    * Obter todos os steps como objeto (compatibilidade com QUIZ_STEPS)
    * Retorna Record<stepId, stepData> para compatibilidade com código legacy
    * 
-   * NOTA: Este método é síncrono e retorna dados do cache.
-   * Para garantir dados frescos, chame steps.get() antes.
+   * ⚠️ ATENÇÃO: Este método é síncrono e retorna dados SEM blocos.
+   * Para obter blocos reais, use getAllSteps() async.
+   * 
+   * @deprecated Use getAllSteps() async para obter blocos reais
    */
   getAllStepsSync(): Record<string, any> {
+    console.warn('⚠️ getAllStepsSync() retorna metadata sem blocks. Use getAllSteps() async para obter blocos.');
+    
     const allSteps: Record<string, any> = {};
 
     for (let i = 1; i <= 21; i++) {
