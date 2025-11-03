@@ -140,6 +140,7 @@ export interface EditorProviderUnifiedProps {
     children: ReactNode;
     funnelId?: string;
     quizId?: string;
+    templateId?: string; // ✅ FASE 2: Adicionar templateId
     storageKey?: string;
     initial?: Partial<EditorState>;
     enableSupabase?: boolean; // ✅ FASE 3.0: Habilitado por padrão

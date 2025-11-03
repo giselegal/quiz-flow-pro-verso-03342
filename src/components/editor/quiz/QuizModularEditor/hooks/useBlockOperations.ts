@@ -15,6 +15,7 @@ export type ValidationError = {
 export type UseBlockOperations = {
   getBlocks: (stepKey: string | null) => Block[] | null;
   ensureLoaded: (stepKey: string | null) => Promise<void>;
+  loadStepFromTemplate: (stepKey: string, blocks: Block[]) => void; // ✅ FASE 4: Adicionar loadStepFromTemplate
   addBlock: (stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => { success: boolean; error?: ValidationError[] };
   removeBlock: (stepKey: string | null, blockId: string) => void;
   reorderBlock: (stepKey: string | null, fromIndex: number, toIndex: number) => void;
@@ -36,19 +37,45 @@ export function useBlockOperations(): UseBlockOperations {
 
   const ensureLoaded = useCallback(async (stepKey: string | null) => {
     if (!stepKey) return;
-    if (byStep[stepKey] || loadingRef.current[stepKey]) return;
+    if (byStep[stepKey]) {
+      console.log(`✅ [useBlockOperations] Step ${stepKey} já carregado (${byStep[stepKey].length} blocos)`);
+      return;
+    }
+    if (loadingRef.current[stepKey]) {
+      console.log(`⏳ [useBlockOperations] Step ${stepKey} já está sendo carregado...`);
+      return;
+    }
+    
     loadingRef.current[stepKey] = true;
+    console.log(`🔄 [useBlockOperations] Carregando step ${stepKey}...`);
+    
     try {
       const res = await templateService.getStep(stepKey);
       if (res.success) {
+        console.log(`✅ [useBlockOperations] Step ${stepKey} carregado (${res.data.length} blocos)`);
         setByStep((prev) => ({ ...prev, [stepKey]: res.data }));
       } else {
+        console.warn(`⚠️ [useBlockOperations] Step ${stepKey} não encontrado ou vazio`);
         setByStep((prev) => ({ ...prev, [stepKey]: [] }));
       }
     } finally {
       loadingRef.current[stepKey] = false;
     }
   }, [byStep]);
+
+  // ✅ FASE 4: Carregar step direto de dados de template
+  const loadStepFromTemplate = useCallback((stepKey: string, blocks: Block[]) => {
+    if (!stepKey || !blocks) return;
+    
+    console.log(`🎨 [useBlockOperations] Carregando step ${stepKey} do template (${blocks.length} blocos)`);
+    
+    setByStep((prev) => ({
+      ...prev,
+      [stepKey]: blocks,
+    }));
+    
+    loadingRef.current[stepKey] = false;
+  }, []);
 
   const addBlock = useCallback((stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => {
     if (!stepKey) return { success: false, error: [{ field: 'stepKey', message: 'Step key é obrigatório' }] };
@@ -275,5 +302,5 @@ export function useBlockOperations(): UseBlockOperations {
     return { success: true };
   }, []);
 
-  return useMemo(() => ({ getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock, updateBlock }), [getBlocks, ensureLoaded, addBlock, removeBlock, reorderBlock, updateBlock]);
+  return useMemo(() => ({ getBlocks, ensureLoaded, loadStepFromTemplate, addBlock, removeBlock, reorderBlock, updateBlock }), [getBlocks, ensureLoaded, loadStepFromTemplate, addBlock, removeBlock, reorderBlock, updateBlock]);
 }

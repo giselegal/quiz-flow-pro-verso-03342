@@ -274,13 +274,26 @@ function AppCore() {
 
                                 <Route path="/editor">
                                     {() => {
-                                        console.log('🎯 /editor route matched');
+                                        // ✅ FASE 1: Extrair query params
+                                        const params = new URLSearchParams(window.location.search);
+                                        const templateId = params.get('template') || undefined;
+                                        const funnelId = params.get('funnelId') || params.get('funnel') || undefined;
+                                        
+                                        console.log('🎯 /editor route matched', { templateId, funnelId });
+                                        
                                         return (
                                             <EditorErrorBoundary>
                                                 <div data-testid="quiz-modular-production-editor-page-optimized">
                                                     <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
-                                                        <EditorProviderUnified enableSupabase={true}>
-                                                            <QuizModularEditor />
+                                                        <EditorProviderUnified 
+                                                            funnelId={funnelId}
+                                                            templateId={templateId}
+                                                            enableSupabase={Boolean(funnelId)}
+                                                        >
+                                                            <QuizModularEditor 
+                                                                templateId={templateId}
+                                                                funnelId={funnelId}
+                                                            />
                                                         </EditorProviderUnified>
                                                     </Suspense>
                                                 </div>

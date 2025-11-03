@@ -78,25 +78,100 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-    // Carregar template JSON externo (se especificado)
+    // ✅ FASE 3: Carregar template JSON externo com fallback inteligente
     useEffect(() => {
         if (!props.templateId) return;
 
         async function loadTemplate() {
             setIsLoadingTemplate(true);
             try {
-                const template = await loadFunnelTemplate(props.templateId!);
-                setLoadedTemplate(template);
-                appLogger.info(`[QuizModularEditor] Template loaded: ${template.name}`);
+                appLogger.info(`🔄 [QuizModularEditor] Carregando template: ${props.templateId}`);
+                
+                // Prioridade 1: Template consolidado
+                const consolidatedUrl = `/templates/${props.templateId}.json`;
+                const respConsolidated = await fetch(consolidatedUrl);
+                
+                if (respConsolidated.ok) {
+                    const data = await respConsolidated.json();
+                    appLogger.debug('[QuizModularEditor] Template consolidado encontrado', data);
+                    
+                    // Verificar estrutura (quiz21-complete.json tem steps.step-01.blocks)
+                    if (data.steps && typeof data.steps === 'object') {
+                        // Estrutura aninhada: converter para FunnelTemplate
+                        const steps = Object.entries(data.steps).map(([key, stepData]: [string, any]) => ({
+                            key,
+                            label: stepData.metadata?.name || key,
+                            type: stepData.type || 'question',
+                            blocks: stepData.blocks || [],
+                            metadata: stepData.metadata,
+                        }));
+                        
+                        const template: FunnelTemplate = {
+                            id: data.templateId || props.templateId!,
+                            name: data.name || props.templateId!,
+                            description: data.description || '',
+                            version: data.templateVersion || '3.0',
+                            steps,
+                            metadata: data.metadata,
+                        };
+                        
+                        setLoadedTemplate(template);
+                        appLogger.info(`✅ [QuizModularEditor] Template consolidado carregado: ${template.name} (${steps.length} steps)`);
+                        
+                        // ✅ FASE 4: Carregar steps no useBlockOperations
+                        steps.forEach(step => {
+                            if (ops.loadStepFromTemplate) {
+                                ops.loadStepFromTemplate(step.key, step.blocks);
+                            }
+                        });
+                        
+                        setIsLoadingTemplate(false);
+                        return;
+                    }
+                }
+                
+                appLogger.debug('[QuizModularEditor] Template consolidado não encontrado, tentando funnel template');
+                
+                // Prioridade 2: Template funnels/ (se existir)
+                const funnelTemplate = await loadFunnelTemplate(props.templateId!);
+                setLoadedTemplate(funnelTemplate);
+                appLogger.info(`✅ [QuizModularEditor] Template funnel carregado: ${funnelTemplate.name} (${funnelTemplate.steps.length} steps)`);
+                
+                // Carregar steps no useBlockOperations
+                funnelTemplate.steps.forEach(step => {
+                    if (ops.loadStepFromTemplate) {
+                        ops.loadStepFromTemplate(step.key, step.blocks);
+                    }
+                });
+                
             } catch (error) {
-                appLogger.error('[QuizModularEditor] Failed to load template', error);
+                appLogger.error('[QuizModularEditor] Erro ao carregar template principal', error);
+                
+                // Fallback: Carregar steps individuais via manifest
+                try {
+                    appLogger.info('[QuizModularEditor] Tentando fallback: carregar steps individuais');
+                    const manifestResp = await fetch('/templates/blocks/manifest.json');
+                    if (manifestResp.ok) {
+                        const manifest = await manifestResp.json();
+                        const stepIds = manifest.steps || [];
+                        
+                        appLogger.info(`✅ [QuizModularEditor] Carregando ${stepIds.length} steps individuais do manifest`);
+                        
+                        // Carregar cada step individualmente
+                        for (const stepId of stepIds) {
+                            await ops.ensureLoaded(stepId);
+                        }
+                    }
+                } catch (fallbackError) {
+                    appLogger.error('[QuizModularEditor] Fallback loading failed', fallbackError);
+                }
             } finally {
                 setIsLoadingTemplate(false);
             }
         }
 
         loadTemplate();
-    }, [props.templateId]);
+    }, [props.templateId, ops]);
 
     // Carregar blocos iniciais
     useEffect(() => {
@@ -172,14 +247,28 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             <div className="qm-editor flex flex-col h-screen bg-gray-50" data-editor="modular-enhanced">
                 {/* Header com controles */}
                 <div className="flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm">
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-lg font-semibold text-gray-800">Editor Modular</h1>
-                        {editor.state.currentStepKey && (
-                            <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
-                                {editor.state.currentStepKey}
-                            </span>
-                        )}
-                    </div>
+                {/* ✅ FASE 5: Feedback visual melhorado */}
+                <div className="flex items-center gap-4">
+                    <h1 className="text-lg font-semibold text-gray-800">Editor Modular</h1>
+                    
+                    {isLoadingTemplate && (
+                        <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded animate-pulse">
+                            Carregando template...
+                        </span>
+                    )}
+                    
+                    {loadedTemplate && !isLoadingTemplate && (
+                        <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded">
+                            📄 {loadedTemplate.name}
+                        </span>
+                    )}
+                    
+                    {editor.state.currentStepKey && (
+                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+                            {editor.state.currentStepKey}
+                        </span>
+                    )}
+                </div>
 
                     <div className="flex items-center gap-3">
                         {/* Toggle Modo Canvas */}
