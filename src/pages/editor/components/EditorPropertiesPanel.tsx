@@ -1,5 +1,5 @@
 // 🚀 FASE 3B.1: PropertiesPanel extraído para lazy loading
-// Arquivo separado para reduzir app-editor de 381KB → ~200KB
+// FASE 2: Integração com controles dinâmicos baseados em schemas
 
 import React from 'react';
 import { Settings } from 'lucide-react';
@@ -12,6 +12,8 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
+import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 import type { EditorElement } from '../types';
 
 export interface EditorPropertiesPanelProps {
@@ -80,7 +82,22 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
 
                     <Separator />
 
-                    {/* Content Properties */}
+                    {/* 🎯 FASE 2: Propriedades Dinâmicas baseadas em Schema */}
+                    {schemaInterpreter.getBlockSchema(selectedElement.type) && (
+                        <>
+                            <div>
+                                <h4 className="font-medium text-gray-800 mb-3">Propriedades do Bloco</h4>
+                                <DynamicPropertyControls
+                                    elementType={selectedElement.type}
+                                    properties={selectedElement.properties || {}}
+                                    onChange={(key, value) => handlePropertyChange(key, value, 'properties')}
+                                />
+                            </div>
+                            <Separator />
+                        </>
+                    )}
+
+                    {/* Content Properties (Legacy - mantido para compatibilidade) */}
                     {(selectedElement.type === 'text' || selectedElement.type === 'heading' || selectedElement.type === 'button') && (
                         <div>
                             <h4 className="font-medium text-gray-800 mb-3">Conteúdo</h4>

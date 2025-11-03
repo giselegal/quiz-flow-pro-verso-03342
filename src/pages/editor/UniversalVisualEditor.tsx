@@ -1,11 +1,11 @@
 /**
- * 🎨 UNIVERSAL VISUAL EDITOR
+ * 🎨 UNIVERSAL VISUAL EDITOR - FASE 2: Integração com Registry
  * 
  * Editor visual revolucionário que integra TODA a arquitetura unificada:
  * ✅ Canvas principal com renderização em tempo real
  * ✅ Sistema de colunas com painéis laterais
- * ✅ Biblioteca de componentes drag & drop
- * ✅ Painel de propriedades dinâmico
+ * ✅ Biblioteca de componentes drag & drop DINÂMICA (schemas)
+ * ✅ Painel de propriedades DINÂMICO (schemas)
  * ✅ Integração com todos os sistemas unificados
  * 
  * ESTRUTURA:
@@ -13,6 +13,13 @@
  */
 
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { loadDefaultSchemas } from '@/core/schema/loadDefaultSchemas';
+import { 
+    loadComponentsFromRegistry, 
+    groupComponentsByCategory, 
+    createElementFromSchema,
+    type ComponentLibraryItem as SchemaComponentLibraryItem 
+} from '@/core/editor/SchemaComponentAdapter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -484,7 +491,7 @@ const COMPONENT_CATEGORIES = COMPONENT_LIBRARY.reduce((acc, item) => {
 // 🖼️ DRAGGABLE COMPONENT (SIMPLIFIED)
 // ===============================
 
-const DraggableComponent: React.FC<{ item: ComponentLibraryItem }> = ({ item }) => {
+const DraggableComponent: React.FC<{ item: SchemaComponentLibraryItem }> = ({ item }) => {
     return (
         <div
             className="p-3 rounded-lg border border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm 
@@ -741,12 +748,14 @@ interface ComponentsPanelProps {
     onComponentSelect?: (component: ComponentLibraryItem) => void;
 }
 
-const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onComponentSelect: _onComponentSelect }) => {
-    const [activeCategory, setActiveCategory] = useState('Layout');
+const ComponentsPanel: React.FC<ComponentsPanelProps & { 
+    dynamicCategories: Record<string, SchemaComponentLibraryItem[]>
+}> = ({ onComponentSelect: _onComponentSelect, dynamicCategories }) => {
+    const [activeCategory, setActiveCategory] = useState('Content');
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredComponents = useMemo(() => {
-        const categoryComponents = COMPONENT_CATEGORIES[activeCategory] || [];
+        const categoryComponents = dynamicCategories[activeCategory] || [];
 
         if (!searchTerm) return categoryComponents;
 
@@ -754,7 +763,7 @@ const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onComponentSelect: _o
             component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             component.description.toLowerCase().includes(searchTerm.toLowerCase()),
         );
-    }, [activeCategory, searchTerm]);
+    }, [activeCategory, searchTerm, dynamicCategories]);
 
     return (
         <div className="w-80 border-r border-gray-200 bg-white">
@@ -774,7 +783,7 @@ const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onComponentSelect: _o
 
                 {/* Categories */}
                 <div className="flex flex-wrap gap-1">
-                    {Object.keys(COMPONENT_CATEGORIES).map((category) => (
+                    {Object.keys(dynamicCategories).map((category) => (
                         <Button
                             key={category}
                             variant={activeCategory === category ? 'default' : 'outline'}
@@ -972,6 +981,26 @@ const Toolbar: React.FC<ToolbarProps> = ({
 // ===============================
 
 export const UniversalVisualEditor: React.FC = () => {
+    // 🎯 FASE 2: Carregar schemas no início
+    const [schemasLoaded, setSchemasLoaded] = useState(false);
+    const [dynamicComponents, setDynamicComponents] = useState<SchemaComponentLibraryItem[]>([]);
+    const [dynamicCategories, setDynamicCategories] = useState<Record<string, SchemaComponentLibraryItem[]>>({});
+
+    // Carregar schemas uma única vez
+    useEffect(() => {
+        console.log('[UniversalVisualEditor] Inicializando schemas...');
+        loadDefaultSchemas();
+        
+        const components = loadComponentsFromRegistry();
+        const categories = groupComponentsByCategory(components);
+        
+        setDynamicComponents(components);
+        setDynamicCategories(categories);
+        setSchemasLoaded(true);
+        
+        console.log(`[UniversalVisualEditor] ✅ ${components.length} componentes carregados`);
+    }, []);
+
     // Editor State
     const [editorState, setEditorState] = useState<EditorState>({
         canvasMode: 'design',
@@ -1017,33 +1046,68 @@ export const UniversalVisualEditor: React.FC = () => {
     }, [analytics]);
 
     const handleElementDrop = useCallback((item: any, position: { x: number; y: number }) => {
-        const newElement: EditorElement = {
-            id: `element-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            type: item.type as ElementType,
-            name: `${item.type} ${elements.length + 1}`,
-            position,
-            size: item.defaultElement?.size || { width: 200, height: 100 },
-            rotation: 0,
-            scale: 1,
-            content: item.defaultElement?.content || {},
-            properties: item.defaultElement?.properties || {},
-            styles: item.defaultElement?.styles || {},
-            behaviors: item.defaultElement?.behaviors || {},
-            locked: false,
-            visible: true,
-            layer: 1,
-            tags: [],
-            children: [],
-        };
+        // 🎯 FASE 2: Usar createElementFromSchema para criar elementos dinamicamente
+        try {
+            const schemaElement = createElementFromSchema(item.id || item.type, {
+                name: `${item.name} ${elements.length + 1}`,
+                position,
+            });
 
-        setElements(prev => [...prev, newElement]);
-        updateEditorState({ selectedElement: newElement });
+            // Converter para EditorElement do editor (type é mais restrito)
+            const newElement: EditorElement = {
+                id: schemaElement.id,
+                type: schemaElement.type as ElementType,
+                name: schemaElement.name,
+                position: schemaElement.position || position,
+                size: schemaElement.size || { width: 300, height: 200 },
+                rotation: schemaElement.rotation || 0,
+                scale: schemaElement.scale || 1,
+                content: schemaElement.content || {},
+                properties: schemaElement.properties || {},
+                styles: schemaElement.styles || {},
+                behaviors: schemaElement.behaviors || {},
+                locked: schemaElement.locked || false,
+                visible: schemaElement.visible !== false,
+                layer: schemaElement.layer || 1,
+                tags: schemaElement.tags || [],
+                children: [], // Elementos novos não têm filhos inicialmente
+            };
 
-        analytics.trackEvent('element_added', {
-            elementId: newElement.id,
-            elementType: newElement.type,
-            position,
-        });
+            setElements(prev => [...prev, newElement]);
+            updateEditorState({ selectedElement: newElement });
+
+            analytics.trackEvent('element_added', {
+                elementId: newElement.id,
+                elementType: newElement.type,
+                position,
+            });
+            
+            console.log('[Editor] Elemento criado do schema:', newElement.type);
+        } catch (error) {
+            console.error('[Editor] Erro ao criar elemento do schema:', error);
+            // Fallback para método anterior
+            const newElement: EditorElement = {
+                id: `element-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                type: item.type as ElementType,
+                name: `${item.type} ${elements.length + 1}`,
+                position,
+                size: item.defaultElement?.size || { width: 200, height: 100 },
+                rotation: 0,
+                scale: 1,
+                content: item.defaultElement?.content || {},
+                properties: item.defaultElement?.properties || {},
+                styles: item.defaultElement?.styles || {},
+                behaviors: item.defaultElement?.behaviors || {},
+                locked: false,
+                visible: true,
+                layer: 1,
+                tags: [],
+                children: [],
+            };
+
+            setElements(prev => [...prev, newElement]);
+            updateEditorState({ selectedElement: newElement });
+        }
     }, [elements.length, updateEditorState, analytics]);
 
     // History management
@@ -1102,7 +1166,7 @@ export const UniversalVisualEditor: React.FC = () => {
             <div className="flex-1 flex overflow-hidden">
                 {/* Left Panel - Components */}
                 {editorState.leftPanelVisible && (
-                    <ComponentsPanel />
+                    <ComponentsPanel dynamicCategories={dynamicCategories} />
                 )}
 
                 {/* Canvas Area */}
