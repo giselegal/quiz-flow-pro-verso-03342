@@ -35,6 +35,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 }) => {
     const [editedProperties, setEditedProperties] = React.useState<Record<string, any>>({});
     const [isDirty, setIsDirty] = React.useState(false);
+    const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
     const prevSelectedIdRef = React.useRef<string | null>(null);
 
     // Auto-save suave ao trocar de seleção se houver alterações pendentes no bloco anterior
@@ -94,6 +95,18 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     // Verificar se o bloco tem schema disponível
     const hasSchema = selectedBlock ? schemaInterpreter.getBlockSchema(selectedBlock.type) !== null : false;
 
+    const toggleSection = (section: string) => {
+        setExpandedSections(prev => {
+            const next = new Set(prev);
+            if (next.has(section)) {
+                next.delete(section);
+            } else {
+                next.add(section);
+            }
+            return next;
+        });
+    };
+
     if (!selectedBlock) {
         return (
             <div className="w-80 border-l bg-gradient-to-b from-muted/20 to-background">
@@ -117,21 +130,6 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             </div>
         );
     }
-
-    // Agrupar propriedades por seção (básico, avançado, estilo)
-    const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
-
-    const toggleSection = (section: string) => {
-        setExpandedSections(prev => {
-            const next = new Set(prev);
-            if (next.has(section)) {
-                next.delete(section);
-            } else {
-                next.add(section);
-            }
-            return next;
-        });
-    };
 
     return (
         <TooltipProvider>
