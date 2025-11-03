@@ -9,6 +9,7 @@
 
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 import { normalizeBlocks } from '@/utils/blockNormalization';
+import { normalizeBlockTypes } from '@/utils/blockNormalizer';
 import type { Block } from '@/types/editor';
 
 interface TemplateDBSchema extends DBSchema {
@@ -178,14 +179,15 @@ export class UnifiedTemplateRegistry {
      console.warn(`❌ MISS: ${stepId} - carregando do servidor...`);
      const serverResult = await this.loadFromServerSimplified(stepId, templateId);
      
-     if (serverResult) {
-       // ✅ NORMALIZAR antes de cachear
-       const normalized = normalizeBlocks(serverResult);
-       this.l1Cache.set(stepId, normalized);
-       console.log(`✅ Carregado e normalizado: ${stepId} (${normalized.length} blocos)`);
-       console.timeEnd(`[Registry] getStep(${stepId})`);
-       return normalized;
-     }
+      if (serverResult) {
+        // ✅ NORMALIZAR: aliases + properties/content sync
+        const withAliases = normalizeBlockTypes(serverResult);
+        const normalized = normalizeBlocks(withAliases);
+        this.l1Cache.set(stepId, normalized);
+        console.log(`✅ Carregado e normalizado: ${stepId} (${normalized.length} blocos)`);
+        console.timeEnd(`[Registry] getStep(${stepId})`);
+        return normalized;
+      }
      
      console.timeEnd(`[Registry] getStep(${stepId})`);
      return [];
