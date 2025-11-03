@@ -1,34 +1,82 @@
 /**
- * 🔧 Normalização de blocos e tipos
- * - Unifica variações como 'options-grid' → 'options grid'
- * - Pode ser expandido para outros aliases
+ * 🔄 BLOCK NORMALIZATION - Sprint 1 Dia 1
+ * 
+ * Função universal para garantir consistência entre properties ↔ content
+ * Aplica em TODOS os pontos de entrada de blocos no sistema
  */
 
-export function normalizeBlockType(type: string): string {
-  if (!type) return type;
-  const t = String(type).trim().toLowerCase();
-  // Mapear aliases para o canônico com hífen
-  if (t === 'options grid') return 'options-grid';
-  return t;
+import { Block } from '@/types/editor';
+
+/**
+ * Normaliza um bloco garantindo que properties e content estejam sincronizados
+ * 
+ * REGRA: properties tem prioridade sobre content
+ * - Primeiro copia tudo de content para properties
+ * - Depois sobrescreve com valores de properties (se houver)
+ * - Atualiza content com o resultado final
+ */
+export function normalizeBlock(block: Block): Block {
+  const normalized: Block = {
+    ...block,
+    properties: {
+      ...(block.content || {}),
+      ...(block.properties || {}), // properties tem prioridade
+    },
+    content: {
+      ...(block.content || {}),
+      ...(block.properties || {}),
+    },
+  };
+
+  return normalized;
 }
 
-export function normalizeTemplateBlocks(template: any): any {
-  if (!template) return template;
-  const clone = JSON.parse(JSON.stringify(template));
-  const entries = Object.entries(clone) as [string, any][];
-  entries.forEach(([stepId, step]) => {
-    if (Array.isArray(step?.blocks)) {
-      step.blocks = step.blocks.map((b: any) => ({
-        ...b,
-        type: normalizeBlockType(b?.type),
-      }));
-    }
-    if (Array.isArray(step?.sections)) {
-      step.sections = step.sections.map((s: any) => ({
-        ...s,
-        type: normalizeBlockType(s?.type),
-      }));
-    }
-  });
-  return clone;
+/**
+ * Normaliza array de blocos
+ */
+export function normalizeBlocks(blocks: Block[]): Block[] {
+  return blocks.map(normalizeBlock);
+}
+
+/**
+ * Normaliza array de blocos (alias para compatibilidade)
+ */
+export function normalizeTemplateBlocks(blocks: Block[]): Block[] {
+  return normalizeBlocks(blocks);
+}
+
+/**
+ * Merge parcial de updates em um bloco normalizado
+ */
+export function mergeBlockUpdates(block: Block, updates: Record<string, any>): Block {
+  const normalized = normalizeBlock(block);
+  
+  return {
+    ...normalized,
+    properties: {
+      ...normalized.properties,
+      ...updates,
+    },
+    content: {
+      ...normalized.content,
+      ...updates,
+    },
+  };
+}
+
+/**
+ * Normalizar tipo de bloco (legacy compatibility)
+ */
+export function normalizeBlockType(type: string): string {
+  const typeMap: Record<string, string> = {
+    'header': 'heading',
+    'title': 'heading',
+    'paragraph': 'text',
+    'quiz-question': 'quiz-options',
+    'question': 'quiz-options',
+    'cta': 'button',
+    'call-to-action': 'button',
+  };
+  
+  return typeMap[type] || type;
 }

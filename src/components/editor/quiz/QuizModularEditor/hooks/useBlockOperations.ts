@@ -1,7 +1,7 @@
 // 🔧 BLOCK OPERATIONS HOOK - Integração com Schema-Driven Validation
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
-import type { Block } from '@/services/UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 import { validateBlockData, safeValidateBlockData, type BlockType } from '@/schemas/blockSchemas';
 import { toast } from '@/hooks/use-toast';
 import { createElementFromSchema, validateElement } from '@/core/editor/SchemaComponentAdapter';

@@ -25,7 +25,7 @@ import { useBlockOperations } from './hooks/useBlockOperations';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useEditorPersistence } from './hooks/useEditorPersistence';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
-import type { Block } from '@/services/UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Eye, Edit3, Play, Save, GripVertical, Download } from 'lucide-react';
 import { loadFunnelTemplate, type FunnelTemplate } from '@/services/TemplateLoader';

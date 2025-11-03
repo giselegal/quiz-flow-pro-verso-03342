@@ -11,7 +11,7 @@
 import React, { useMemo } from 'react';
 import { ResponsivePreviewFrame } from '@/components/editor/preview/ResponsivePreviewFrame';
 import { Eye, EyeOff } from 'lucide-react';
-import type { Block } from '@/services/UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 
 export interface PreviewPanelProps {
     currentStepKey: string | null;

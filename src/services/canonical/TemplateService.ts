@@ -27,7 +27,8 @@
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
 import { CanonicalServicesMonitor } from './monitoring';
 import { cacheService } from './CacheService';
-import { UnifiedTemplateRegistry, Block } from '../UnifiedTemplateRegistry';
+import { UnifiedTemplateRegistry } from '../UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 
 /**
  * Template metadata
@@ -581,11 +582,11 @@ export class TemplateService extends BaseCanonicalService {
   normalizeBlocks(blocks: any[]): Block[] {
     return blocks.map((block, index) => ({
       id: block.id || `block-${index}`,
-      type: this.normalizeBlockType(block.type || 'unknown'),
+      type: this.normalizeBlockType(block.type || 'unknown') as any, // Cast para compatibilidade
       order: block.order ?? block.position ?? index,
       properties: block.properties || block.props || {},
       content: block.content || {},
-      parentId: block.parentId ?? null,
+      parentId: block.parentId || undefined,
     }));
   }
 
@@ -697,11 +698,11 @@ export class TemplateService extends BaseCanonicalService {
       try {
         const block: Block = {
           id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          type: this.normalizeBlockType(blockData.type),
+          type: this.normalizeBlockType(blockData.type) as any,
           order: 0,
           properties: blockData.properties || {},
           content: blockData.content || {},
-          parentId: blockData.parentId ?? null,
+          parentId: blockData.parentId || undefined,
         };
 
         // Cache o bloco

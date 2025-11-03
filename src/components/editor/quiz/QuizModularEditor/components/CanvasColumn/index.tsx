@@ -4,7 +4,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { templateService } from '@/services/canonical/TemplateService';
-import type { Block } from '@/services/UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 

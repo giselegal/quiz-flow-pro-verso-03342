@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Search, ChevronDown, ChevronRight, Star, Clock, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Block } from '@/services/UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 import { loadComponentsFromRegistry, groupComponentsByCategory, type ComponentLibraryItem } from '@/core/editor/SchemaComponentAdapter';
 import { loadDefaultSchemas } from '@/core/schema/loadDefaultSchemas';
 

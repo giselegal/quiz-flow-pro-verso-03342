@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { DragEndEvent, DragOverEvent, DragStartEvent, UniqueIdentifier } from '@dnd-kit/core'
-import type { Block } from '@/services/UnifiedTemplateRegistry'
+import type { Block } from '@/types/editor'
 
 export type DraggedItem = {
   id: string

@@ -12,10 +12,10 @@ import { normalizeTemplateBlocks } from '@/utils/blockNormalization';
 
 // Export centralizado para uso em imports dinâmicos (fonte canônica)
 export const getQuiz21StepsTemplate = () => {
-  // Anexar metadado de origem no objeto retornado
-  const normalized = normalizeTemplateBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-  (normalized as any)._source = 'ts';
-  return normalized as any;
+  // Template é Record<string, Block[]>, retornar como tal
+  const result = { ...QUIZ_STYLE_21_STEPS_TEMPLATE };
+  (result as any)._source = 'ts';
+  return result;
 };
 
 /**
@@ -202,7 +202,9 @@ try {
       }
 
       // normaliza tipos (aliases → canônico 'options-grid')
-      const normalizedTemplate = normalizeTemplateBlocks({ [normalizedKey]: template } as any)[normalizedKey];
+      // Template pode ser array de blocks ou Record<string, Block[]>
+      const blocksArray = Array.isArray(template) ? template : (template as any).blocks || [];
+      const normalizedTemplate = normalizeTemplateBlocks(blocksArray);
       registry.register(normalizedKey, normalizedTemplate as any);
       registeredKeys.push(normalizedKey);
       registered++;

@@ -103,17 +103,8 @@ export function loadStepTemplate(stepId: string): Block[] {
   const canonicalTemplate = getQuiz21StepsTemplate();
   if (canonicalTemplate && canonicalTemplate[stepId]) {
     console.log(`✅ [loadStepTemplate] Usando fonte canônica (TS) para ${stepId}`);
-    const sections = canonicalTemplate[stepId].sections || [];
+    const blocks = Array.isArray(canonicalTemplate[stepId]) ? canonicalTemplate[stepId] : [];
     
-    // Converter seções para o formato de blocos esperado
-    const blocks = sections.map((section: any, index: number) => ({
-      id: section.id || `${stepId}-block-${index}`,
-      type: section.type,
-      order: section.position || index,
-      properties: section.properties || section.style || {},
-      content: section.content || {},
-    }));
-
     // Salvar no cache
     templateCache.set(cacheKey, blocks);
     unifiedCache.set(cacheKey, blocks);

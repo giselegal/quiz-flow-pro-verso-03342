@@ -1,32 +1,15 @@
 /**
- * 🎯 UNIFIED TEMPLATE REGISTRY - FASE 1.2
+ * 🎯 UNIFIED TEMPLATE REGISTRY - SPRINT 1 SIMPLIFICADO
  * 
- * Sistema unificado de cache L1/L2/L3 para templates
- * Elimina 6 estratégias competindo e 3 conversões de formato
- * 
- * ARQUITETURA:
- * L1: Memory Cache (Map) - 5ms - Volátil
- * L2: IndexedDB - 50ms - Persistente entre sessões
- * L3: Build-time embedded - 10ms - Fallback estático
- * 
- * FORMATO ÚNICO: Block[] (zero conversões)
- * 
- * IMPACTO ESPERADO:
- * ✅ 50-100ms carregamento (5-10x melhoria)
- * ✅ 85%+ cache hit rate (vs 55% atual)
- * ✅ 450KB redução de bundle
+ * Sistema simplificado com L1 cache único
+ * ✅ Normalização automática de blocos
+ * ✅ 1 fetch por step (sem fallbacks redundantes)
+ * ✅ properties ↔ content sempre sincronizados
  */
 
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
-
-export interface Block {
-  id: string;
-  type: string;
-  order: number;
-  properties: Record<string, any>;
-  content: Record<string, any>;
-  parentId?: string | null;
-}
+import { normalizeBlocks } from '@/utils/blockNormalization';
+import type { Block } from '@/types/editor';
 
 interface TemplateDBSchema extends DBSchema {
   'templates': {
@@ -174,86 +157,38 @@ export class UnifiedTemplateRegistry {
   }
 
    /**
-    * Carregar step (cascade L1 → L2 → L3)
-    * @param stepId ID do step (ex: "step-01")
-    * @param templateId ID opcional do template para contexto (ex: "quiz21StepsComplete")
+    * Carregar step SIMPLIFICADO - L1 cache + 1 fetch consolidado
     */
    async getStep(stepId: string, templateId?: string): Promise<Block[]> {
-     const cacheKey = stepId; // Usar apenas stepId para cache por enquanto
-     const _timeBase = `[Registry] getStep(${stepId})`;
-     const _timeLabel = `${_timeBase}#${typeof performance !== 'undefined' && typeof performance.now === 'function' ? Math.floor(performance.now()) : Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-     console.time(_timeLabel);
+     const cacheKey = stepId;
+     console.time(`[Registry] getStep(${stepId})`);
      this.stats.loads++;
-     const flags = (this as any).debugFlags as { disableL1: boolean; disableL2: boolean; disableL3: boolean; forceServer: boolean };
      
-     // Caminho rápido: forçar servidor (ignora caches)
-     if (flags?.forceServer) {
-       console.log(`🚩 FORCE SERVER ativo para ${stepId}`);
-       const serverResult = await this.loadFromServer(stepId, templateId);
-       if (serverResult) {
-         // Mesmo com forceServer, ainda promovemos para L1/L2 para próximas navegações
-         this.l1Cache.set(stepId, serverResult);
-         await this.saveToL2(stepId, serverResult);
-       }
-       console.timeEnd(_timeLabel);
-       return serverResult || [];
-     }
-     
-     // L1: Memory Cache (5ms)
-     const l1Result = flags?.disableL1 ? null : this.l1Cache.get(stepId);
+     // L1: Memory Cache
+     const l1Result = this.l1Cache.get(stepId);
      if (l1Result) {
        this.stats.l1Hits++;
        console.log(`⚡ L1 HIT: ${stepId} (${l1Result.length} blocos)`);
-       console.timeEnd(_timeLabel);
+       console.timeEnd(`[Registry] getStep(${stepId})`);
        return l1Result;
      }
      
-     // L2: IndexedDB (50ms)
-     await this.initializeL2();
-     if (!flags?.disableL2 && this.l2Cache) {
-       try {
-         const l2Entry = await this.l2Cache.get('templates', stepId);
-         if (l2Entry && this.isL2Valid(l2Entry.timestamp)) {
-           this.stats.l2Hits++;
-           console.log(`💾 L2 HIT: ${stepId} (${l2Entry.blocks.length} blocos)`);
-           
-           // Promover para L1
-           this.l1Cache.set(stepId, l2Entry.blocks);
-           console.timeEnd(_timeLabel);
-           return l2Entry.blocks;
-         }
-       } catch (error) {
-         console.warn('⚠️ L2 read error:', error);
-       }
-     }
-     
-     // L3: Build-time embedded (10ms)
-     const l3Result = flags?.disableL3 ? null : await this.loadFromL3(stepId);
-     if (l3Result) {
-       this.stats.l3Hits++;
-       console.log(`📦 L3 HIT: ${stepId} (${l3Result.length} blocos)`);
-       
-       // Promover para L1 e L2
-       this.l1Cache.set(stepId, l3Result);
-       await this.saveToL2(stepId, l3Result);
-       console.timeEnd(_timeLabel);
-       return l3Result;
-     }
-     
-     // MISS: Tentar carregar dinamicamente do servidor
+     // MISS: Carregar do servidor (1 tentativa apenas)
      this.stats.misses++;
      console.warn(`❌ MISS: ${stepId} - carregando do servidor...`);
-     const serverResult = await this.loadFromServer(stepId, templateId);
+     const serverResult = await this.loadFromServerSimplified(stepId, templateId);
      
      if (serverResult) {
-       // Cachear em todos os níveis
-       this.l1Cache.set(stepId, serverResult);
-       await this.saveToL2(stepId, serverResult);
-       console.log(`✅ Carregado do servidor: ${stepId} (${serverResult.length} blocos)`);
+       // ✅ NORMALIZAR antes de cachear
+       const normalized = normalizeBlocks(serverResult);
+       this.l1Cache.set(stepId, normalized);
+       console.log(`✅ Carregado e normalizado: ${stepId} (${normalized.length} blocos)`);
+       console.timeEnd(`[Registry] getStep(${stepId})`);
+       return normalized;
      }
      
-     console.timeEnd(_timeLabel);
-     return serverResult || [];
+     console.timeEnd(`[Registry] getStep(${stepId})`);
+     return [];
    }
 
   /**
@@ -290,101 +225,36 @@ export class UnifiedTemplateRegistry {
   }
 
   /**
-   * Carregar do servidor (fallback)
-   * @param stepId ID do step (ex: "step-01")
-   * @param templateId ID opcional do template para tentar carregar consolidado
+   * Carregar do servidor SIMPLIFICADO - apenas JSON consolidado
    */
-  private async loadFromServer(stepId: string, templateId?: string): Promise<Block[] | null> {
+  private async loadFromServerSimplified(stepId: string, templateId?: string): Promise<Block[] | null> {
     try {
-      console.log(`🌐 [loadFromServer] Tentando carregar ${stepId}${templateId ? ` do template ${templateId}` : ''}...`);
+      const tid = templateId || 'quiz21StepsComplete';
+      const url = `/templates/${tid}.json`;
       
-      // PRIORIDADE 0: Se templateId fornecido, tentar carregar do JSON consolidado
-      if (templateId) {
-        try {
-          const consolidatedUrl = `/templates/${templateId}.json`;
-          console.log(`   → Tentando JSON consolidado: ${consolidatedUrl} (prioridade 0)`);
-          const resp = await fetch(consolidatedUrl);
-          if (resp.ok) {
-            const template = await resp.json();
-            console.log(`   ✅ SUCESSO: Template consolidado carregado`);
-            
-            // Extrair step específico do JSON consolidado
-            if (template.steps && template.steps[stepId]) {
-              const stepData = template.steps[stepId];
-              if (stepData.blocks && Array.isArray(stepData.blocks)) {
-                console.log(`   ✅ Step ${stepId} extraído do consolidado (${stepData.blocks.length} blocos)`);
-                return stepData.blocks as Block[];
-              }
-            }
-            
-            // Tentar aliases comuns
-            if (template.templateIdAlias) {
-              console.log(`   🔍 Template tem alias: ${template.templateIdAlias}`);
-            }
-          }
-        } catch (error) {
-          console.warn(`   ⚠️ Erro ao carregar template consolidado: ${error}`);
+      console.log(`🌐 Carregando ${stepId} do template consolidado: ${url}`);
+      
+      const resp = await fetch(url);
+      if (!resp.ok) {
+        console.error(`❌ Template não encontrado: ${url} (${resp.status})`);
+        return null;
+      }
+      
+      const template = await resp.json();
+      
+      // Extrair step do JSON consolidado
+      if (template.steps && template.steps[stepId]) {
+        const stepData = template.steps[stepId];
+        if (stepData.blocks && Array.isArray(stepData.blocks)) {
+          console.log(`✅ Step ${stepId} extraído (${stepData.blocks.length} blocos)`);
+          return stepData.blocks as Block[];
         }
       }
       
-      // PRIORIDADE 1: JSON individual em /templates/blocks/ (ESTRUTURA CORRETA)
-      try {
-        const url = `/templates/blocks/${stepId}.json`;
-        console.log(`   → Tentando: ${url} (prioridade 1)`);
-        const resp = await fetch(url);
-        if (resp.ok) {
-          const template = await resp.json();
-          console.log(`   ✅ SUCESSO: ${url} (${Array.isArray(template?.blocks) ? template.blocks.length : 'unknown'} blocos)`);
-          
-          // Converter para Block[] se necessário
-          if (template.blocks && Array.isArray(template.blocks)) {
-            return template.blocks as Block[];
-          }
-          
-          if (template.sections && Array.isArray(template.sections)) {
-            console.warn(`   ⚠️ Formato antigo (sections[]) detectado em ${url}, convertendo...`);
-            return this.convertSectionsToBlocks(template.sections, stepId);
-          }
-        }
-        console.warn(`   ❌ Não encontrado: ${url} (${resp.status})`);
-      } catch (error) {
-        console.warn(`   ❌ Erro ao carregar JSON individual: ${error}`);
-      }
-      
-      // PRIORIDADE 2: Fallback para formatos antigos (apenas se prioridade 1 falhar)
-      console.log(`   → Tentando fallbacks (formatos antigos)...`);
-      const fallbackUrls = [
-        `/templates/${stepId}-v3.json`,
-        `/templates/${stepId}.json`,
-      ];
-      
-      for (const url of fallbackUrls) {
-        try {
-          console.log(`   → Tentando: ${url} (fallback)`);
-          const resp = await fetch(url);
-          if (resp.ok) {
-            const template = await resp.json();
-            console.log(`   ✅ SUCESSO (fallback): ${url}`);
-            
-            // Converter para Block[] se necessário
-            if (template.blocks && Array.isArray(template.blocks)) {
-              return template.blocks as Block[];
-            }
-            
-            if (template.sections && Array.isArray(template.sections)) {
-              console.warn(`   ⚠️ Formato antigo (sections[]) detectado, convertendo...`);
-              return this.convertSectionsToBlocks(template.sections, stepId);
-            }
-          }
-        } catch (error) {
-          // Continua tentando próximo fallback
-        }
-      }
-      
-      console.error(`❌ [loadFromServer] ${stepId} não encontrado em nenhum path`);
+      console.error(`❌ Step ${stepId} não encontrado no template ${tid}`);
       return null;
     } catch (error) {
-      console.error(`❌ Falha ao carregar ${stepId} do servidor:`, error);
+      console.error(`❌ Erro ao carregar ${stepId}:`, error);
       return null;
     }
   }
@@ -395,11 +265,11 @@ export class UnifiedTemplateRegistry {
   private convertSectionsToBlocks(sections: any[], stepId: string): Block[] {
     return sections.map((section, index) => ({
       id: section.id || `${stepId}-block-${index}`,
-      type: this.normalizeBlockType(section.type),
+      type: this.normalizeBlockType(section.type) as any, // Cast para compatibilidade
       order: section.order ?? index,
       properties: section.properties || section.props || {},
       content: section.content || {},
-      parentId: section.parentId || null,
+      parentId: section.parentId || undefined,
     }));
   }
 
@@ -407,6 +277,7 @@ export class UnifiedTemplateRegistry {
    * Normalizar tipo de bloco
    */
   private normalizeBlockType(type: string): string {
+    // Delegando para função central
     const typeMap: Record<string, string> = {
       'header': 'heading',
       'title': 'heading',

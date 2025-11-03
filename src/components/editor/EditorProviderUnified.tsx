@@ -323,6 +323,14 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
         await stateManager.updateBlock(normalizeStepKey(stepKey), blockId, updates);
+        
+        // ✅ SPRINT 1 DIA 2: Emitir evento para forçar re-render do PropertiesPanel
+        const { emitBlockUpdate } = await import('@/utils/editorEventBus');
+        emitBlockUpdate({
+            stepKey: normalizeStepKey(stepKey),
+            blockId,
+            patch: { properties: updates, content: updates },
+        });
     }, [stateManager, normalizeStepKey]);
 
     const duplicateBlock = useCallback(async (stepKey: string, blockId: string) => {

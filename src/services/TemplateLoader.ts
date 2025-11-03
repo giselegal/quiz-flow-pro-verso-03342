@@ -6,7 +6,7 @@
  */
 
 import { appLogger } from '@/utils/logger';
-import type { Block } from './UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 
 export interface FunnelTemplate {
   id: string;

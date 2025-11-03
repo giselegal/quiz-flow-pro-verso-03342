@@ -10,7 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Settings, X, Edit3, Save, RotateCcw, ChevronDown, Info, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import type { Block } from '@/services/UnifiedTemplateRegistry';
+import type { Block } from '@/types/editor';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 
@@ -95,8 +95,22 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         }
 
         prevSelectedIdRef.current = nextId;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedBlock]);
+    
+    // Sprint 1 Dia 2: Event bus para forçar re-render
+    React.useEffect(() => {
+        if (!selectedBlock) return;
+        
+        const { onBlockUpdate } = require('@/utils/editorEventBus');
+        const unsubscribe = onBlockUpdate((data: any) => {
+            if (data.blockId === selectedBlock.id) {
+                setEditedProperties(prev => ({ ...prev, ...(data.patch.properties || {}) }));
+                setIsDirty(false);
+            }
+        });
+        
+        return unsubscribe;
+    }, [selectedBlock?.id]);
 
     const handlePropertyChange = (key: string, value: unknown) => {
         // Type validation based on key or expected type
