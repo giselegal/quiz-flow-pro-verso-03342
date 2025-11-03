@@ -1,0 +1,192 @@
+{
+  "version": "1.0.0",
+  "blockTypes": {
+    "text": {
+      "type": "text",
+      "label": "Texto",
+      "category": "content",
+      "icon": "📝",
+      "description": "Bloco de texto genérico",
+      "properties": {
+        "text": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Digite seu texto aqui",
+          "label": "Conteúdo",
+          "required": true
+        },
+        "tag": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "p",
+          "options": [
+            { "label": "Parágrafo", "value": "p" },
+            { "label": "H1", "value": "h1" },
+            { "label": "H2", "value": "h2" },
+            { "label": "H3", "value": "h3" },
+            { "label": "Span", "value": "span" }
+          ],
+          "label": "Tag HTML"
+        },
+        "fontSize": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "base",
+          "options": [
+            { "label": "Pequeno", "value": "sm" },
+            { "label": "Normal", "value": "base" },
+            { "label": "Grande", "value": "lg" },
+            { "label": "Extra Grande", "value": "xl" }
+          ],
+          "label": "Tamanho da Fonte"
+        },
+        "textAlign": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "left",
+          "options": [
+            { "label": "Esquerda", "value": "left" },
+            { "label": "Centro", "value": "center" },
+            { "label": "Direita", "value": "right" }
+          ],
+          "label": "Alinhamento"
+        },
+        "color": {
+          "type": "color",
+          "control": "color-picker",
+          "default": "#000000",
+          "label": "Cor do Texto"
+        }
+      }
+    },
+    "image": {
+      "type": "image",
+      "label": "Imagem",
+      "category": "media",
+      "icon": "🖼️",
+      "description": "Bloco de imagem",
+      "properties": {
+        "src": {
+          "type": "image",
+          "control": "image-upload",
+          "default": "",
+          "label": "URL da Imagem",
+          "required": true
+        },
+        "alt": {
+          "type": "string",
+          "control": "text",
+          "default": "",
+          "label": "Texto Alternativo"
+        },
+        "width": {
+          "type": "string",
+          "control": "text",
+          "default": "full",
+          "label": "Largura"
+        },
+        "rounded": {
+          "type": "boolean",
+          "control": "toggle",
+          "default": false,
+          "label": "Bordas Arredondadas"
+        }
+      }
+    },
+    "button": {
+      "type": "button",
+      "label": "Botão",
+      "category": "interactive",
+      "icon": "🔘",
+      "description": "Botão clicável",
+      "properties": {
+        "label": {
+          "type": "string",
+          "control": "text",
+          "default": "Clique aqui",
+          "label": "Texto do Botão",
+          "required": true
+        },
+        "variant": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "primary",
+          "options": [
+            { "label": "Primário", "value": "primary" },
+            { "label": "Secundário", "value": "secondary" },
+            { "label": "Outline", "value": "outline" }
+          ],
+          "label": "Variante"
+        },
+        "size": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "md",
+          "options": [
+            { "label": "Pequeno", "value": "sm" },
+            { "label": "Médio", "value": "md" },
+            { "label": "Grande", "value": "lg" }
+          ],
+          "label": "Tamanho"
+        }
+      }
+    },
+    "container": {
+      "type": "container",
+      "label": "Container",
+      "category": "layout",
+      "icon": "📦",
+      "description": "Container de layout",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "control": "dropdown",
+          "default": "flex",
+          "options": [
+            { "label": "Flexbox", "value": "flex" },
+            { "label": "Grid", "value": "grid" },
+            { "label": "Block", "value": "block" }
+          ],
+          "label": "Tipo de Layout"
+        },
+        "gap": {
+          "type": "number",
+          "control": "number",
+          "default": 4,
+          "label": "Espaçamento"
+        },
+        "padding": {
+          "type": "number",
+          "control": "number",
+          "default": 4,
+          "label": "Padding"
+        }
+      }
+    },
+    "quiz-question": {
+      "type": "quiz-question",
+      "label": "Pergunta de Quiz",
+      "category": "quiz",
+      "icon": "❓",
+      "description": "Pergunta com opções múltiplas",
+      "properties": {
+        "question": {
+          "type": "string",
+          "control": "textarea",
+          "default": "Qual é a sua pergunta?",
+          "label": "Pergunta",
+          "required": true
+        },
+        "options": {
+          "type": "json",
+          "control": "json-editor",
+          "default": [
+            { "label": "Opção 1", "value": "opt1", "points": 1 },
+            { "label": "Opção 2", "value": "opt2", "points": 2 }
+          ],
+          "label": "Opções"
+        }
+      }
+    }
+  }
+}

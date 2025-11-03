@@ -413,7 +413,7 @@ export class PublicationService extends BaseCanonicalService {
 
       // Verificar conflitos
       for (const funnel of data) {
-        const existingSettings = funnel.settings as unknown as PublicationSettings;
+        const existingSettings = (funnel.config as any) || {};
         const existingUrl = this.buildUrl(existingSettings.domain);
 
         if (currentUrl === existingUrl) {

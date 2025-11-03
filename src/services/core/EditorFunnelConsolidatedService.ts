@@ -244,9 +244,9 @@ class EditorFunnelConsolidatedService {
                 id: supabaseFunnel.id,
                 name: supabaseFunnel.name || funnelId,
                 description: supabaseFunnel.description || '',
-                status: supabaseFunnel.is_published ? 'active' : 'draft',
+                status: supabaseFunnel.status === 'published' ? 'active' : 'draft',
                 template_id: undefined, // No template_id field in current schema
-                configuration: supabaseFunnel.settings as any || {},
+                configuration: (supabaseFunnel.config as any) || {},
                 steps: await this.loadFunnelSteps(funnelId),
                 created_at: supabaseFunnel.created_at || new Date().toISOString(),
                 updated_at: supabaseFunnel.updated_at || new Date().toISOString(),
@@ -292,9 +292,9 @@ class EditorFunnelConsolidatedService {
                     id: supabaseFunnel.id,
                     name: supabaseFunnel.name || supabaseFunnel.id,
                     description: supabaseFunnel.description || '',
-                    status: supabaseFunnel.is_published ? 'active' : 'draft',
+                    status: supabaseFunnel.status === 'published' ? 'active' : 'draft',
                     template_id: undefined, // No template_id field in current schema
-                    configuration: supabaseFunnel.settings as any || {},
+                    configuration: (supabaseFunnel.config as any) || {},
                     steps: [], // Load on demand
                     created_at: supabaseFunnel.created_at || new Date().toISOString(),
                     updated_at: supabaseFunnel.updated_at || new Date().toISOString(),
@@ -326,11 +326,11 @@ class EditorFunnelConsolidatedService {
             const { data, error } = await supabaseClient
                 .from('funnels')
                 .insert({
-                    id: `funnel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                     name: funnelData.name,
                     description: funnelData.description || '',
-                    settings: funnelData.configuration || {},
-                    is_published: false,
+                    config: funnelData.configuration || {},
+                    status: 'draft',
+                    user_id: (await supabaseClient.auth.getUser()).data.user?.id || '',
                 })
                 .select()
                 .single();
@@ -347,9 +347,9 @@ class EditorFunnelConsolidatedService {
                 id: data.id,
                 name: data.name,
                 description: data.description || '',
-                status: data.is_published ? 'active' : 'draft',
+                status: data.status === 'published' ? 'active' : 'draft',
                 template_id: undefined, // No template_id field in current schema
-                configuration: data.settings as any || {},
+                configuration: (data.config as any) || {},
                 steps: [],
                 created_at: data.created_at || new Date().toISOString(),
                 updated_at: data.updated_at || new Date().toISOString(),

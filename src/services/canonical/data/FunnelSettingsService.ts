@@ -226,7 +226,7 @@ export class FunnelSettingsService extends BaseCanonicalService {
       // Merge com defaults
       const settings: PublicationSettings = {
         ...DEFAULT_SETTINGS,
-        ...(typeof data.settings === 'object' && data.settings !== null ? data.settings : {}),
+        ...(typeof (data as any).config === 'object' && (data as any).config !== null ? (data as any).config : {}),
       } as PublicationSettings;
 
       // Cachear
@@ -267,7 +267,7 @@ export class FunnelSettingsService extends BaseCanonicalService {
       // Atualizar no Supabase
       const { error } = await supabase
         .from('funnels')
-        .update({ settings: newSettings as unknown as Json })
+        .update({ config: newSettings as unknown as Json })
         .eq('id', funnelId);
 
       if (error) {

@@ -46,12 +46,12 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
     const { error: funnelError } = await supabase
       .from('funnels')
       .upsert({
-        id: funnelData.id,
         name: funnelData.name,
         description: funnelData.description,
-        is_published: true,
-        settings: funnelData.settings || {},
+        status: 'published',
+        config: funnelData.settings || {},
         updated_at: new Date().toISOString(),
+        user_id: (await supabase.auth.getUser()).data.user?.id || '',
       })
       .select()
       .single();

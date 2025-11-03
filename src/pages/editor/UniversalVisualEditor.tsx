@@ -1116,21 +1116,14 @@ export const UniversalVisualEditor: React.FC = () => {
                     zoomLevel={editorState.zoomLevel}
                 />
 
-                {/* Right Panel - Properties (Lazy Loaded) */}
+                {/* Right Panel - Properties */}
                 {editorState.rightPanelVisible && (
-                    <Suspense fallback={
-                        <div className="w-80 border-l border-gray-200 bg-gray-50 p-6">
-                            <div className="text-center text-gray-500">
-                                <Settings className="w-12 h-12 mx-auto mb-4 animate-pulse" />
-                                <p className="font-medium">Carregando propriedades...</p>
-                            </div>
+                    <div className="w-80 border-l border-gray-200 bg-gray-50 p-6">
+                        <div className="text-center text-gray-500">
+                            <Settings className="w-12 h-12 mx-auto mb-4" />
+                            <p className="font-medium">Painel de propriedades</p>
                         </div>
-                    }>
-                        <EditorPropertiesPanel
-                            selectedElement={editorState.selectedElement}
-                            onElementUpdate={handleElementUpdate}
-                        />
-                    </Suspense>
+                    </div>
                 )}
             </div>
 

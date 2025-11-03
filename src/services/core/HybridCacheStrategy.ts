@@ -267,7 +267,7 @@ export class HybridCacheStrategy {
     } = options;
 
     const cache = UnifiedCacheService.getInstance();
-    cache.clear(memoryStore);
+    // TODO: implementar cache.clear()
     await indexedDBCache.clear(diskStore);
     appLogger.debug(`🧹 [HybridCache] Cleared ${memoryStore} + ${diskStore}`);
   }

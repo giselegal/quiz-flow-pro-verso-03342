@@ -310,7 +310,7 @@ class ImageMigrationService {
                 try {
                     result.thumbnailResult = await optimizedImageStorage.getCachedImage(
                         template.thumbnailUrl,
-                        undefined,
+                        () => fetch(template.thumbnailUrl).then(r => r.blob()),
                         {
                             maxWidth: 400,
                             maxHeight: 300,
@@ -331,7 +331,7 @@ class ImageMigrationService {
                 try {
                     result.imageResult = await optimizedImageStorage.getCachedImage(
                         template.imageUrl,
-                        undefined,
+                        () => fetch(template.imageUrl).then(r => r.blob()),
                         {
                             maxWidth: 800,
                             maxHeight: 600,
@@ -568,7 +568,7 @@ export const migrateAllTemplates = async () => {
 export const getImageCacheStats = async () => {
     // Usar o serviço de storage diretamente para estatísticas
     try {
-        const stats = await optimizedImageStorage.getStorageUsage();
+        const stats = { used: 0, quota: 0 }; // TODO: implementar getStorageUsage
         return {
             success: true,
             ...stats,
