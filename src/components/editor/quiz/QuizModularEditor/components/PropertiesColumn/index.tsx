@@ -3,12 +3,12 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Settings, X, Edit3, Save, RotateCcw } from 'lucide-react';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
+import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
+import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 
 interface PropertiesColumnProps {
     selectedBlock: Block | null;
@@ -87,159 +87,8 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         }
     };
 
-    // Extrair propriedades editáveis do bloco selecionado
-    const getEditableProperties = (): BlockProperty[] => {
-        if (!selectedBlock) return [];
-
-        const properties: BlockProperty[] = [];
-        const props = selectedBlock.properties || {};
-
-        // Propriedades comuns a todos os blocos
-        if (props.content !== undefined) {
-            properties.push({
-                key: 'content',
-                label: 'Conteúdo',
-                type: 'textarea',
-                value: editedProperties.content || ''
-            });
-        }
-
-        if (props.title !== undefined) {
-            properties.push({
-                key: 'title',
-                label: 'Título',
-                type: 'text',
-                value: editedProperties.title || ''
-            });
-        }
-
-        if (props.subtitle !== undefined) {
-            properties.push({
-                key: 'subtitle',
-                label: 'Subtítulo',
-                type: 'text',
-                value: editedProperties.subtitle || ''
-            });
-        }
-
-        if (props.placeholder !== undefined) {
-            properties.push({
-                key: 'placeholder',
-                label: 'Placeholder',
-                type: 'text',
-                value: editedProperties.placeholder || ''
-            });
-        }
-
-        if (props.buttonText !== undefined) {
-            properties.push({
-                key: 'buttonText',
-                label: 'Texto do Botão',
-                type: 'text',
-                value: editedProperties.buttonText || ''
-            });
-        }
-
-        // Propriedades específicas por tipo
-        switch (selectedBlock.type) {
-            case 'intro-image':
-                if (props.imageUrl !== undefined) {
-                    properties.push({
-                        key: 'imageUrl',
-                        label: 'URL da Imagem',
-                        type: 'text',
-                        value: editedProperties.imageUrl || ''
-                    });
-                }
-                if (props.altText !== undefined) {
-                    properties.push({
-                        key: 'altText',
-                        label: 'Texto Alternativo',
-                        type: 'text',
-                        value: editedProperties.altText || ''
-                    });
-                }
-                break;
-
-            case 'question-options-grid':
-                if (props.required !== undefined) {
-                    properties.push({
-                        key: 'required',
-                        label: 'Obrigatório',
-                        type: 'boolean',
-                        value: editedProperties.required || false
-                    });
-                }
-                break;
-
-            case 'result-cta':
-                if (props.variant !== undefined) {
-                    properties.push({
-                        key: 'variant',
-                        label: 'Variante',
-                        type: 'select',
-                        value: editedProperties.variant || 'primary',
-                        options: ['primary', 'secondary', 'outline', 'destructive']
-                    });
-                }
-                break;
-        }
-
-        return properties;
-    };
-
-    const renderPropertyField = (property: BlockProperty) => {
-        switch (property.type) {
-            case 'text':
-                return (
-                    <Input
-                        value={String(property.value || '')}
-                        onChange={(e) => handlePropertyChange(property.key, e.target.value)}
-                        placeholder={`Digite ${property.label.toLowerCase()}`}
-                    />
-                ); case 'textarea':
-                return (
-                    <Textarea
-                        value={String(property.value || '')}
-                        onChange={(e) => handlePropertyChange(property.key, e.target.value)}
-                        placeholder={`Digite ${property.label.toLowerCase()}`}
-                        rows={4}
-                    />
-                ); case 'number':
-                return (
-                    <Input
-                        type="number"
-                        value={String(property.value || 0)}
-                        onChange={(e) => handlePropertyChange(property.key, Number(e.target.value))}
-                    />
-                ); case 'boolean':
-                return (
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            checked={Boolean(property.value)}
-                            onChange={(e) => handlePropertyChange(property.key, e.target.checked)}
-                            className="rounded"
-                        />
-                        <Label>{Boolean(property.value) ? 'Sim' : 'Não'}</Label>
-                    </div>
-                ); case 'select':
-                return (
-                    <select
-                        value={String(property.value || '')}
-                        onChange={(e) => handlePropertyChange(property.key, e.target.value)}
-                        className="w-full p-2 border rounded"
-                    >
-                        {property.options?.map(option => (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </select>
-                ); default:
-                return null;
-        }
-    };
+    // Verificar se o bloco tem schema disponível
+    const hasSchema = selectedBlock ? schemaInterpreter.getBlockSchema(selectedBlock.type) !== null : false;
 
     if (!selectedBlock) {
         return (
@@ -259,8 +108,6 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             </div>
         );
     }
-
-    const properties = getEditableProperties();
 
     return (
         <div className="w-80 border-l bg-background">
@@ -299,34 +146,30 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                         </div>
                     </Card>
 
-                    {/* Propriedades Editáveis */}
-                    {properties.length > 0 ? (
+                    {/* Propriedades Editáveis - Dinâmicas via Schema */}
+                    {hasSchema ? (
                         <Card className="p-4">
                             <div className="space-y-4">
                                 <Label className="text-xs font-medium text-muted-foreground">
-                                    PROPRIEDADES
+                                    PROPRIEDADES (SCHEMA-DRIVEN)
                                 </Label>
-
-                                {properties.map((property) => (
-                                    <div key={property.key} className="space-y-2">
-                                        <Label className="text-sm font-medium">
-                                            {property.label}
-                                        </Label>
-                                        {renderPropertyField(property)}
-                                    </div>
-                                ))}
+                                <DynamicPropertyControls
+                                    elementType={selectedBlock.type}
+                                    properties={editedProperties}
+                                    onChange={(key, value) => handlePropertyChange(key, value)}
+                                />
                             </div>
                         </Card>
                     ) : (
                         <Card className="p-4">
                             <p className="text-sm text-muted-foreground text-center">
-                                Este bloco não possui propriedades editáveis
+                                Este bloco não possui schema definido. Use o painel legado ou defina um schema JSON.
                             </p>
                         </Card>
                     )}
 
                     {/* Ações */}
-                    {properties.length > 0 && (
+                    {hasSchema && (
                         <>
                             <Separator />
                             <div className="flex gap-2">

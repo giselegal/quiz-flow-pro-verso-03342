@@ -1,11 +1,12 @@
-// Coluna de Canvas — implementação inicial conectada ao TemplateService e renderizador canônico
+// 🎨 CANVAS COLUMN - Integração com Universal Block Renderer
 import React, { useEffect, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
-import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
+import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -87,8 +88,29 @@ function SortableBlockItem({
                     )}
                 </div>
             </div>
-            {/* Renderização canônica via BlockTypeRenderer */}
-            <BlockTypeRenderer block={block as any} />
+            {/* Renderização via UniversalBlockRenderer se schema existe, senão fallback */}
+            {(() => {
+                const hasSchema = schemaInterpreter.getBlockSchema(block.type) !== null;
+                if (hasSchema) {
+                    return (
+                        <UniversalBlockRenderer
+                            block={block as any}
+                            isSelected={isSelected}
+                            isPreviewing={false}
+                            onUpdate={(blockId, updates) => onUpdateBlock?.(blockId, updates)}
+                            onDelete={(blockId) => onRemoveBlock?.(blockId)}
+                            onSelect={(blockId) => onSelect?.(blockId)}
+                        />
+                    );
+                }
+                // Fallback para renderizador legado
+                return (
+                    <div className="p-2 border border-dashed border-gray-300 rounded text-xs text-gray-500">
+                        <div className="font-medium">Bloco sem schema: {block.type}</div>
+                        <div className="text-[10px] mt-1">Defina um schema JSON ou use renderizador legado</div>
+                    </div>
+                );
+            })()}
 
             {/* Quick Insert (somente quando há onUpdateBlock e conteúdo mínimo ausente) */}
             {onUpdateBlock && (
