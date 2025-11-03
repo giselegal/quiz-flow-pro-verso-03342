@@ -91,32 +91,46 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
     appLogger.warn(`⚠️ [DB] Fallback para JSON devido a erro:`, dbError);
   }
 
-  // 2️⃣ Fallback: JSON local
-  try {
-    const jsonUrl = `/templates/funnels/${templateId}.json`;
-    appLogger.info(`🌐 [JSON] Tentando carregar: ${jsonUrl}`);
-    
-    const response = await fetch(jsonUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  // 2️⃣ Fallback: JSON local com múltiplos caminhos
+  const paths = [
+    `/templates/funnels/${templateId}.json`,           // Flat file
+    `/templates/funnels/${templateId}/master.json`,    // Nested master
+    `/templates/funnels/${templateId}/index.json`,     // Nested index
+    `/templates/${templateId}.json`,                   // Root level (legacy)
+  ];
+
+  for (const jsonUrl of paths) {
+    try {
+      appLogger.info(`🌐 [JSON] Tentando: ${jsonUrl}`);
+      
+      const response = await fetch(jsonUrl);
+      if (!response.ok) {
+        appLogger.warn(`⚠️ [JSON] ${jsonUrl} → HTTP ${response.status}`);
+        continue; // Tentar próximo caminho
+      }
+      
+      const template: FunnelTemplate = await response.json();
+      
+      // Validar estrutura básica
+      if (!template.id || !template.name || !Array.isArray(template.steps)) {
+        appLogger.warn(`⚠️ [JSON] ${jsonUrl} → Estrutura inválida`);
+        continue;
+      }
+      
+      // Cache template
+      templateCache.set(templateId, template);
+      
+      appLogger.info(`✅ [JSON] Template loaded: ${template.name} (${template.steps.length} steps)`);
+      return template;
+    } catch (err) {
+      appLogger.warn(`⚠️ [JSON] ${jsonUrl} → ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
+      continue;
     }
-    
-    const template: FunnelTemplate = await response.json();
-    
-    // Validar estrutura básica
-    if (!template.id || !template.name || !Array.isArray(template.steps)) {
-      throw new Error('Template JSON inválido: faltam campos obrigatórios');
-    }
-    
-    // Cache template
-    templateCache.set(templateId, template);
-    
-    appLogger.info(`✅ [JSON] Template loaded: ${template.name} (${template.steps.length} steps)`);
-    return template;
-  } catch (jsonError) {
-    appLogger.error(`❌ [TemplateLoader] Falha ao carregar '${templateId}' (DB + JSON):`, jsonError);
-    throw new Error(`Template '${templateId}' não encontrado (DB + JSON)`);
   }
+
+  // Se chegou aqui, nenhum caminho funcionou
+  appLogger.error(`❌ [TemplateLoader] Template '${templateId}' não encontrado em nenhum caminho:`, paths);
+  throw new Error(`Template '${templateId}' não encontrado (tentados: ${paths.length} caminhos)`);
 }
 
 /**
