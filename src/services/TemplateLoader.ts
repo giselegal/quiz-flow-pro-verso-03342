@@ -6,6 +6,7 @@
  */
 
 import { appLogger } from '@/utils/logger';
+import { supabase } from '@/integrations/supabase/client';
 import type { Block } from '@/types/editor';
 
 export interface FunnelTemplate {
@@ -34,19 +35,64 @@ export interface FunnelStep {
 const templateCache = new Map<string, FunnelTemplate>();
 
 /**
- * Carrega template JSON do servidor
+ * Carrega template JSON do servidor com fallback Supabase → JSON
  */
 export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemplate> {
   // Check cache primeiro
   if (templateCache.has(templateId)) {
-    appLogger.info(`[TemplateLoader] Cache hit: ${templateId}`);
+    appLogger.info(`✅ [TemplateLoader] Cache hit: ${templateId}`);
     return templateCache.get(templateId)!;
   }
 
+  appLogger.info(`🔍 [TemplateLoader] Loading template: ${templateId}`);
+  
+  // 1️⃣ Tentar Supabase primeiro (quiz_production)
   try {
-    appLogger.info(`[TemplateLoader] Loading template: ${templateId}`);
+    const { data, error } = await supabase
+      .from('quiz_production')
+      .select('content, name, metadata')
+      .eq('slug', templateId)
+      .eq('is_template', true)
+      .maybeSingle();
+
+    if (data?.content && !error) {
+      appLogger.info(`✅ [DB] Template carregado do Supabase: ${templateId}`);
+      
+      const template: FunnelTemplate = {
+        id: templateId,
+        name: data.name || templateId,
+        description: data.metadata?.description || '',
+        version: data.metadata?.version || '1.0',
+        author: data.metadata?.author,
+        steps: data.content.steps || [],
+        metadata: data.metadata || {},
+      };
+      
+      // Validar estrutura básica
+      if (!template.steps || !Array.isArray(template.steps)) {
+        throw new Error('Template do DB inválido: steps não é array');
+      }
+      
+      templateCache.set(templateId, template);
+      appLogger.info(`✅ [DB] Template cached: ${template.name} (${template.steps.length} steps)`);
+      return template;
+    }
     
-    const response = await fetch(`/templates/funnels/${templateId}.json`);
+    if (error) {
+      appLogger.warn(`⚠️ [DB] Erro ao consultar Supabase: ${error.message}`);
+    } else {
+      appLogger.warn(`⚠️ [DB] Template não encontrado no Supabase: ${templateId}`);
+    }
+  } catch (dbError) {
+    appLogger.warn(`⚠️ [DB] Fallback para JSON devido a erro:`, dbError);
+  }
+
+  // 2️⃣ Fallback: JSON local
+  try {
+    const jsonUrl = `/templates/funnels/${templateId}.json`;
+    appLogger.info(`🌐 [JSON] Tentando carregar: ${jsonUrl}`);
+    
+    const response = await fetch(jsonUrl);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
@@ -61,11 +107,11 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
     // Cache template
     templateCache.set(templateId, template);
     
-    appLogger.info(`[TemplateLoader] Template loaded: ${template.name} (${template.steps.length} steps)`);
+    appLogger.info(`✅ [JSON] Template loaded: ${template.name} (${template.steps.length} steps)`);
     return template;
-  } catch (error) {
-    appLogger.error(`[TemplateLoader] Failed to load template: ${templateId}`, error);
-    throw error;
+  } catch (jsonError) {
+    appLogger.error(`❌ [TemplateLoader] Falha ao carregar '${templateId}' (DB + JSON):`, jsonError);
+    throw new Error(`Template '${templateId}' não encontrado (DB + JSON)`);
   }
 }
 

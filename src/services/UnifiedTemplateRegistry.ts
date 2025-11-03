@@ -225,30 +225,23 @@ export class UnifiedTemplateRegistry {
   }
 
   /**
-   * Carregar do servidor SIMPLIFICADO - apenas JSON consolidado
+   * Carregar do servidor usando TemplateLoader (com fallback DB → JSON)
    */
   private async loadFromServerSimplified(stepId: string, templateId?: string): Promise<Block[] | null> {
     try {
       const tid = templateId || 'quiz21StepsComplete';
-      const url = `/templates/${tid}.json`;
       
-      console.log(`🌐 Carregando ${stepId} do template consolidado: ${url}`);
+      console.log(`🌐 Carregando ${stepId} via TemplateLoader (template: ${tid})`);
       
-      const resp = await fetch(url);
-      if (!resp.ok) {
-        console.error(`❌ Template não encontrado: ${url} (${resp.status})`);
-        return null;
-      }
+      // Usar loadFunnelTemplate com fallback automático DB → JSON
+      const { loadFunnelTemplate } = await import('@/services/TemplateLoader');
+      const template = await loadFunnelTemplate(tid);
       
-      const template = await resp.json();
-      
-      // Extrair step do JSON consolidado
-      if (template.steps && template.steps[stepId]) {
-        const stepData = template.steps[stepId];
-        if (stepData.blocks && Array.isArray(stepData.blocks)) {
-          console.log(`✅ Step ${stepId} extraído (${stepData.blocks.length} blocos)`);
-          return stepData.blocks as Block[];
-        }
+      // Extrair step do template carregado
+      const step = template.steps.find(s => s.key === stepId);
+      if (step?.blocks && Array.isArray(step.blocks)) {
+        console.log(`✅ Step ${stepId} extraído (${step.blocks.length} blocos)`);
+        return step.blocks as Block[];
       }
       
       console.error(`❌ Step ${stepId} não encontrado no template ${tid}`);
