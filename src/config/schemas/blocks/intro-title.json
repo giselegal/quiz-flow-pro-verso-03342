@@ -1,0 +1,58 @@
+{
+  "id": "intro-title",
+  "type": "intro-title",
+  "version": "1.0.0",
+  "category": "intro",
+  "label": "Título Introdução",
+  "description": "Título principal da tela de introdução",
+  "icon": "Type",
+  "renderingStrategy": "static",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "",
+      "label": "Título",
+      "description": "Texto do título (pode conter HTML)",
+      "control": "textarea",
+      "validation": {
+        "required": false,
+        "maxLength": 500
+      }
+    },
+    "titleHtml": {
+      "type": "string",
+      "default": "",
+      "label": "Título HTML",
+      "control": "textarea"
+    },
+    "text": {
+      "type": "string",
+      "default": "",
+      "label": "Texto",
+      "control": "textarea"
+    },
+    "fontSize": {
+      "type": "string",
+      "default": "2xl",
+      "label": "Tamanho da Fonte",
+      "control": "dropdown",
+      "options": [
+        { "label": "Pequeno", "value": "lg" },
+        { "label": "Médio", "value": "xl" },
+        { "label": "Grande", "value": "2xl" },
+        { "label": "Extra Grande", "value": "3xl" }
+      ]
+    },
+    "textAlign": {
+      "type": "string",
+      "default": "center",
+      "label": "Alinhamento",
+      "control": "dropdown",
+      "options": [
+        { "label": "Esquerda", "value": "left" },
+        { "label": "Centro", "value": "center" },
+        { "label": "Direita", "value": "right" }
+      ]
+    }
+  }
+}

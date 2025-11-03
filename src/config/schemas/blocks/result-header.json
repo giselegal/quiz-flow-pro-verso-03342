@@ -1,0 +1,46 @@
+{
+  "id": "result-header",
+  "type": "result-header",
+  "version": "1.0.0",
+  "category": "result",
+  "label": "Cabeçalho Resultado",
+  "description": "Cabeçalho da tela de resultado",
+  "icon": "Award",
+  "renderingStrategy": "dynamic",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "Seu Resultado",
+      "label": "Título",
+      "control": "text",
+      "validation": {
+        "required": true,
+        "maxLength": 200
+      }
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "",
+      "label": "Subtítulo",
+      "control": "textarea"
+    },
+    "showScore": {
+      "type": "boolean",
+      "default": false,
+      "label": "Exibir Pontuação",
+      "control": "toggle"
+    },
+    "showPercentage": {
+      "type": "boolean",
+      "default": false,
+      "label": "Exibir Percentual",
+      "control": "toggle"
+    },
+    "iconUrl": {
+      "type": "string",
+      "default": "",
+      "label": "URL do Ícone",
+      "control": "image-upload"
+    }
+  }
+}

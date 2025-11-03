@@ -1,0 +1,45 @@
+{
+  "id": "intro-image",
+  "type": "intro-image",
+  "version": "1.0.0",
+  "category": "intro",
+  "label": "Imagem Introdução",
+  "description": "Imagem decorativa na tela de introdução",
+  "icon": "ImageIcon",
+  "renderingStrategy": "static",
+  "properties": {
+    "imageUrl": {
+      "type": "string",
+      "default": "",
+      "label": "URL da Imagem",
+      "control": "image-upload",
+      "validation": {
+        "required": false
+      }
+    },
+    "alt": {
+      "type": "string",
+      "default": "Imagem",
+      "label": "Texto Alternativo",
+      "control": "text"
+    },
+    "width": {
+      "type": "string",
+      "default": "100%",
+      "label": "Largura",
+      "control": "text"
+    },
+    "height": {
+      "type": "string",
+      "default": "auto",
+      "label": "Altura",
+      "control": "text"
+    },
+    "rounded": {
+      "type": "boolean",
+      "default": false,
+      "label": "Bordas Arredondadas",
+      "control": "toggle"
+    }
+  }
+}

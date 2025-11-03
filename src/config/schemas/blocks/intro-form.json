@@ -1,0 +1,39 @@
+{
+  "id": "intro-form",
+  "type": "intro-form",
+  "version": "1.0.0",
+  "category": "intro",
+  "label": "Formulário Introdução",
+  "description": "Formulário de captura de dados na introdução",
+  "icon": "FormInput",
+  "renderingStrategy": "interactive",
+  "properties": {
+    "fields": {
+      "type": "array",
+      "default": [],
+      "label": "Campos do Formulário",
+      "description": "Lista de campos a serem coletados",
+      "control": "json-editor",
+      "validation": {
+        "required": false
+      }
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Começar",
+      "label": "Texto do Botão",
+      "control": "text"
+    },
+    "submitAction": {
+      "type": "string",
+      "default": "next",
+      "label": "Ação ao Submeter",
+      "control": "dropdown",
+      "options": [
+        { "label": "Próxima Etapa", "value": "next" },
+        { "label": "Enviar Dados", "value": "submit" },
+        { "label": "Custom", "value": "custom" }
+      ]
+    }
+  }
+}

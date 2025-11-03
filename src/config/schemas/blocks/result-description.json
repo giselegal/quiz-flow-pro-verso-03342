@@ -1,0 +1,33 @@
+{
+  "id": "result-description",
+  "type": "result-description",
+  "version": "1.0.0",
+  "category": "result",
+  "label": "Descrição Resultado",
+  "description": "Descrição detalhada do resultado",
+  "icon": "FileText",
+  "renderingStrategy": "dynamic",
+  "properties": {
+    "description": {
+      "type": "string",
+      "default": "",
+      "label": "Descrição",
+      "control": "textarea",
+      "validation": {
+        "maxLength": 2000
+      }
+    },
+    "showSummary": {
+      "type": "boolean",
+      "default": true,
+      "label": "Exibir Resumo",
+      "control": "toggle"
+    },
+    "highlightColor": {
+      "type": "string",
+      "default": "#B89B7A",
+      "label": "Cor de Destaque",
+      "control": "color-picker"
+    }
+  }
+}

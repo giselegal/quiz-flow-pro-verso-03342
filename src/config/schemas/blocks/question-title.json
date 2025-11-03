@@ -1,0 +1,40 @@
+{
+  "id": "question-title",
+  "type": "question-title",
+  "version": "1.0.0",
+  "category": "question",
+  "label": "Título Questão",
+  "description": "Título/pergunta da questão",
+  "icon": "HelpCircle",
+  "renderingStrategy": "static",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "",
+      "label": "Pergunta",
+      "control": "textarea",
+      "validation": {
+        "required": true,
+        "maxLength": 500
+      }
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "",
+      "label": "Subtítulo",
+      "control": "text"
+    },
+    "fontSize": {
+      "type": "string",
+      "default": "xl",
+      "label": "Tamanho da Fonte",
+      "control": "dropdown",
+      "options": [
+        { "label": "Normal", "value": "base" },
+        { "label": "Grande", "value": "lg" },
+        { "label": "Extra Grande", "value": "xl" },
+        { "label": "2X Grande", "value": "2xl" }
+      ]
+    }
+  }
+}

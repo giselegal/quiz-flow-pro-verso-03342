@@ -1,0 +1,63 @@
+{
+  "id": "result-cta",
+  "type": "result-cta",
+  "version": "1.0.0",
+  "category": "result",
+  "label": "Call-to-Action Resultado",
+  "description": "Botão de ação na tela de resultado",
+  "icon": "MousePointer",
+  "renderingStrategy": "interactive",
+  "properties": {
+    "buttonText": {
+      "type": "string",
+      "default": "Continuar",
+      "label": "Texto do Botão",
+      "control": "text",
+      "validation": {
+        "required": true,
+        "maxLength": 100
+      }
+    },
+    "variant": {
+      "type": "string",
+      "default": "primary",
+      "label": "Estilo do Botão",
+      "control": "dropdown",
+      "options": [
+        { "label": "Primário", "value": "primary" },
+        { "label": "Secundário", "value": "secondary" },
+        { "label": "Outline", "value": "outline" },
+        { "label": "Destrutivo", "value": "destructive" }
+      ]
+    },
+    "action": {
+      "type": "string",
+      "default": "next",
+      "label": "Ação",
+      "control": "dropdown",
+      "options": [
+        { "label": "Próxima Etapa", "value": "next" },
+        { "label": "URL Externa", "value": "external" },
+        { "label": "Download", "value": "download" },
+        { "label": "Custom", "value": "custom" }
+      ]
+    },
+    "url": {
+      "type": "string",
+      "default": "",
+      "label": "URL (para ação externa)",
+      "control": "text"
+    },
+    "size": {
+      "type": "string",
+      "default": "lg",
+      "label": "Tamanho",
+      "control": "dropdown",
+      "options": [
+        { "label": "Pequeno", "value": "sm" },
+        { "label": "Médio", "value": "md" },
+        { "label": "Grande", "value": "lg" }
+      ]
+    }
+  }
+}

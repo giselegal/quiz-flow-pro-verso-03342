@@ -1,0 +1,46 @@
+{
+  "id": "intro-logo",
+  "type": "intro-logo",
+  "version": "1.0.0",
+  "category": "intro",
+  "label": "Logo Introdução",
+  "description": "Exibe logo/imagem na tela de introdução",
+  "icon": "ImageIcon",
+  "renderingStrategy": "static",
+  "properties": {
+    "imageUrl": {
+      "type": "string",
+      "default": "",
+      "label": "URL da Logo",
+      "description": "URL da imagem do logo",
+      "control": "image-upload",
+      "validation": {
+        "required": false
+      }
+    },
+    "logoUrl": {
+      "type": "string",
+      "default": "",
+      "label": "URL da Logo (alternativo)",
+      "control": "image-upload"
+    },
+    "alt": {
+      "type": "string",
+      "default": "Logo",
+      "label": "Texto Alternativo",
+      "control": "text"
+    },
+    "width": {
+      "type": "string",
+      "default": "200px",
+      "label": "Largura",
+      "control": "text"
+    },
+    "height": {
+      "type": "string",
+      "default": "auto",
+      "label": "Altura",
+      "control": "text"
+    }
+  }
+}

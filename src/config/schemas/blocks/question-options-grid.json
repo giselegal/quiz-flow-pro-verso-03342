@@ -1,0 +1,51 @@
+{
+  "id": "question-options-grid",
+  "type": "question-options-grid",
+  "version": "1.0.0",
+  "category": "question",
+  "label": "Grade de Opções",
+  "description": "Grade de opções para seleção (múltipla escolha)",
+  "icon": "Grid",
+  "renderingStrategy": "interactive",
+  "properties": {
+    "options": {
+      "type": "array",
+      "default": [],
+      "label": "Opções",
+      "description": "Lista de opções disponíveis",
+      "control": "json-editor",
+      "validation": {
+        "required": true,
+        "minLength": 2
+      }
+    },
+    "multiSelect": {
+      "type": "boolean",
+      "default": false,
+      "label": "Seleção Múltipla",
+      "control": "toggle"
+    },
+    "required": {
+      "type": "boolean",
+      "default": true,
+      "label": "Campo Obrigatório",
+      "control": "toggle"
+    },
+    "columns": {
+      "type": "number",
+      "default": 2,
+      "label": "Número de Colunas",
+      "control": "number",
+      "validation": {
+        "min": 1,
+        "max": 4
+      }
+    },
+    "showImages": {
+      "type": "boolean",
+      "default": false,
+      "label": "Exibir Imagens",
+      "control": "toggle"
+    }
+  }
+}

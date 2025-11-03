@@ -1,0 +1,51 @@
+{
+  "id": "intro-description",
+  "type": "intro-description",
+  "version": "1.0.0",
+  "category": "intro",
+  "label": "Descrição Introdução",
+  "description": "Texto descritivo na tela de introdução",
+  "icon": "AlignLeft",
+  "renderingStrategy": "static",
+  "properties": {
+    "description": {
+      "type": "string",
+      "default": "",
+      "label": "Descrição",
+      "description": "Texto descritivo (pode conter HTML)",
+      "control": "textarea",
+      "validation": {
+        "required": false,
+        "maxLength": 1000
+      }
+    },
+    "text": {
+      "type": "string",
+      "default": "",
+      "label": "Texto",
+      "control": "textarea"
+    },
+    "fontSize": {
+      "type": "string",
+      "default": "base",
+      "label": "Tamanho da Fonte",
+      "control": "dropdown",
+      "options": [
+        { "label": "Pequeno", "value": "sm" },
+        { "label": "Normal", "value": "base" },
+        { "label": "Grande", "value": "lg" }
+      ]
+    },
+    "textAlign": {
+      "type": "string",
+      "default": "center",
+      "label": "Alinhamento",
+      "control": "dropdown",
+      "options": [
+        { "label": "Esquerda", "value": "left" },
+        { "label": "Centro", "value": "center" },
+        { "label": "Direita", "value": "right" }
+      ]
+    }
+  }
+}
