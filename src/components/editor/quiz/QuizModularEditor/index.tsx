@@ -437,40 +437,15 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando propriedades…</div>}>
                             <div className="h-full border-l bg-white overflow-y-auto">
                                 <PropertiesColumn
-                                    selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) || undefined}
-                                    onUpdate={(updates: Record<string, any>) => {
-                                        // ✅ CORREÇÃO: onUpdate recebe apenas updates, não blockId
-                                        const currentBlockId = editor.state.selectedBlockId;
-                                        if (!currentBlockId) return;
-                                        
-                                        const updateResult = ops.updateBlock(editor.state.currentStepKey, currentBlockId, updates);
+                                    selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) ?? null}
+                                    onBlockUpdate={(blockId: string, updates: Partial<Block>) => {
+                                        const updateResult = ops.updateBlock(editor.state.currentStepKey, blockId, updates);
                                         if (updateResult.success) {
                                             editor.markDirty(true);
                                         }
                                     }}
-                                    onClose={() => {
+                                    onClearSelection={() => {
                                         editor.clearSelection();
-                                    }}
-                                    onDelete={() => {
-                                        if (editor.state.selectedBlockId) {
-                                            ops.removeBlock(editor.state.currentStepKey, editor.state.selectedBlockId);
-                                            editor.clearSelection();
-                                            editor.markDirty(true);
-                                        }
-                                    }}
-                                    onDuplicate={() => {
-                                        if (editor.state.selectedBlockId) {
-                                            const block = blocks?.find(b => b.id === editor.state.selectedBlockId);
-                                            if (block) {
-                                                const addResult = ops.addBlock(editor.state.currentStepKey, {
-                                                    ...block,
-                                                    id: undefined, // Gerar novo ID
-                                                });
-                                                if (addResult.success) {
-                                                    editor.markDirty(true);
-                                                }
-                                            }
-                                        }
                                     }}
                                 />
                             </div>
