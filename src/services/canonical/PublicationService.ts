@@ -394,9 +394,13 @@ export class PublicationService extends BaseCanonicalService {
     CanonicalServicesMonitor.trackUsage(this.name, 'checkUrlConflicts');
 
     try {
-      const { data, error } = await supabase
+      // Gerar URL do funnel atual
+      const currentUrl = this.buildUrl(settings.domain);
+
+      // Verificar conflitos com outros funnels publicados
+      const { data: funnels, error } = await supabase
         .from('funnels')
-        .select('id, name, settings')
+        .select('id, name, config')
         .neq('id', funnelId)
         .eq('status', 'published');
 
@@ -404,15 +408,11 @@ export class PublicationService extends BaseCanonicalService {
         return this.failure('SUPABASE_ERROR', `Failed to check conflicts: ${error.message}`);
       }
 
-      if (!data || data.length === 0) {
+      if (!funnels || funnels.length === 0) {
         return this.success(null); // Nenhum conflito
       }
 
-      // Gerar URL do funnel atual
-      const currentUrl = this.buildUrl(settings.domain);
-
-      // Verificar conflitos
-      for (const funnel of data) {
+      for (const funnel of funnels) {
         const existingSettings = (funnel.config as any) || {};
         const existingUrl = this.buildUrl(existingSettings.domain);
 

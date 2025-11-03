@@ -188,7 +188,6 @@ class FunnelService {
         // alinhar nomes snake_case conforme schema
         page_type: (updates as any)?.page_type ?? (updates as any)?.pageType,
         page_order: (updates as any)?.page_order ?? (updates as any)?.pageOrder,
-        title: updates.title,
         blocks: (updates as any)?.blocks as any,
         metadata: (updates as any)?.metadata as any,
       }),
@@ -486,14 +485,14 @@ class FunnelService {
         name: funnelData.name,
         description: funnelData.description,
         userId: userId ?? undefined,
-        settings: funnelData.settings || null,
+        config: funnelData.settings || null,
       });
     } else {
       // Update existing funnel
       funnel = await this.updateFunnel(funnel.id, {
         name: funnelData.name,
         description: funnelData.description,
-        settings: funnelData.settings || null,
+        config: funnelData.settings || null,
       });
     }
 
@@ -551,12 +550,11 @@ class FunnelService {
       pages: pages.map(page => ({
         id: page.id,
         type: (page as any).page_type || 'default',
-        title: page.title || undefined,
         order: (page as any).page_order || 0,
         blocks: (page as any).blocks as unknown as BlockData[],
         metadata: (page as any).metadata || undefined,
       })),
-      settings: (funnel.settings as any) || undefined,
+      settings: (funnel.config as any) || undefined,
     };
   }
 }

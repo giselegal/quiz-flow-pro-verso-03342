@@ -23,7 +23,8 @@ export { UnifiedCacheService } from './UnifiedCacheService';
 // UnifiedStorageService removed - use canonical/StorageService instead
 
 // Configuration Services
-export { SupabaseConfigurationStorage } from './SupabaseConfigurationStorage';
+// STUB: Legacy import - needs refactoring
+// export { SupabaseConfigurationStorage } from './SupabaseConfigurationStorage';
 
 // Quiz Navigation Configuration
 export {

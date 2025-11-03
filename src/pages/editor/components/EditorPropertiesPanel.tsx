@@ -147,7 +147,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     <Label htmlFor="width" className="text-sm">Largura</Label>
                                     <Input
                                         id="width"
-                                        value={selectedElement.styles.width || ''}
+                                        value={selectedElement.styles?.width || ''}
                                         onChange={(e) => handlePropertyChange('width', e.target.value, 'styles')}
                                         placeholder="auto, 100px, 50%"
                                         className="mt-1"
@@ -159,7 +159,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     <Label htmlFor="height" className="text-sm">Altura</Label>
                                     <Input
                                         id="height"
-                                        value={selectedElement.styles.height || ''}
+                                        value={selectedElement.styles?.height || ''}
                                         onChange={(e) => handlePropertyChange('height', e.target.value, 'styles')}
                                         placeholder="auto, 200px, 100%"
                                         className="mt-1"
@@ -171,7 +171,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     <Label htmlFor="padding" className="text-sm">Padding</Label>
                                     <Input
                                         id="padding"
-                                        value={selectedElement.styles.padding || ''}
+                                        value={selectedElement.styles?.padding || ''}
                                         onChange={(e) => handlePropertyChange('padding', e.target.value, 'styles')}
                                         placeholder="10px, 10px 20px"
                                         className="mt-1"
@@ -183,7 +183,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     <Label htmlFor="margin" className="text-sm">Margin</Label>
                                     <Input
                                         id="margin"
-                                        value={selectedElement.styles.margin || ''}
+                                        value={selectedElement.styles?.margin || ''}
                                         onChange={(e) => handlePropertyChange('margin', e.target.value, 'styles')}
                                         placeholder="10px, 10px 20px"
                                         className="mt-1"
@@ -197,7 +197,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     <Label htmlFor="fontSize" className="text-sm">Tamanho da Fonte</Label>
                                     <Input
                                         id="fontSize"
-                                        value={selectedElement.styles.fontSize || ''}
+                                        value={selectedElement.styles?.fontSize || ''}
                                         onChange={(e) => handlePropertyChange('fontSize', e.target.value, 'styles')}
                                         placeholder="16px, 1rem, 1.2em"
                                         className="mt-1"
@@ -208,7 +208,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                 <div>
                                     <Label htmlFor="fontWeight" className="text-sm">Peso da Fonte</Label>
                                     <Select
-                                        value={selectedElement.styles.fontWeight || ''}
+                                        value={selectedElement.styles?.fontWeight || ''}
                                         onValueChange={(value) => handlePropertyChange('fontWeight', value, 'styles')}
                                     >
                                         <SelectTrigger className="mt-1">
@@ -231,7 +231,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                 <div>
                                     <Label htmlFor="textAlign" className="text-sm">Alinhamento</Label>
                                     <Select
-                                        value={selectedElement.styles.textAlign || ''}
+                                        value={selectedElement.styles?.textAlign || ''}
                                         onValueChange={(value) => handlePropertyChange('textAlign', value, 'styles')}
                                     >
                                         <SelectTrigger className="mt-1">
@@ -255,12 +255,12 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                         <Input
                                             id="color"
                                             type="color"
-                                            value={selectedElement.styles.color || '#000000'}
+                                            value={selectedElement.styles?.color || '#000000'}
                                             onChange={(e) => handlePropertyChange('color', e.target.value, 'styles')}
                                             className="w-12 h-8 p-0 border"
                                         />
                                         <Input
-                                            value={selectedElement.styles.color || ''}
+                                            value={selectedElement.styles?.color || ''}
                                             onChange={(e) => handlePropertyChange('color', e.target.value, 'styles')}
                                             placeholder="#000000"
                                             className="flex-1"
@@ -275,12 +275,12 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                         <Input
                                             id="backgroundColor"
                                             type="color"
-                                            value={selectedElement.styles.backgroundColor || '#ffffff'}
+                                            value={selectedElement.styles?.backgroundColor || '#ffffff'}
                                             onChange={(e) => handlePropertyChange('backgroundColor', e.target.value, 'styles')}
                                             className="w-12 h-8 p-0 border"
                                         />
                                         <Input
-                                            value={selectedElement.styles.backgroundColor || ''}
+                                            value={selectedElement.styles?.backgroundColor || ''}
                                             onChange={(e) => handlePropertyChange('backgroundColor', e.target.value, 'styles')}
                                             placeholder="transparent, #ffffff"
                                             className="flex-1"
@@ -293,7 +293,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     <Label htmlFor="border" className="text-sm">Borda</Label>
                                     <Input
                                         id="border"
-                                        value={selectedElement.styles.border || ''}
+                                        value={selectedElement.styles?.border || ''}
                                         onChange={(e) => handlePropertyChange('border', e.target.value, 'styles')}
                                         placeholder="1px solid #ccc"
                                         className="mt-1"
@@ -305,7 +305,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     <Label htmlFor="borderRadius" className="text-sm">Arredondamento</Label>
                                     <Input
                                         id="borderRadius"
-                                        value={selectedElement.styles.borderRadius || ''}
+                                        value={selectedElement.styles?.borderRadius || ''}
                                         onChange={(e) => handlePropertyChange('borderRadius', e.target.value, 'styles')}
                                         placeholder="0px, 4px, 50%"
                                         className="mt-1"

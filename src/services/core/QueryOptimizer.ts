@@ -111,7 +111,7 @@ class BatchQueryManager {
         const batches = Array.from(this.queue.entries());
         this.queue.clear();
 
-        performanceProfiler.start('batchQuery', 'database');
+        performanceProfiler.start('batchQuery', 'api');
 
         for (const [key, queries] of batches) {
             if (queries.length === 0) continue;
@@ -121,22 +121,22 @@ class BatchQueryManager {
                 const { table, fields, filter } = queries[0];
 
                 // Construir query otimizada
-                let query = supabase.from(table);
+                let query = supabase.from(table as any);
 
                 // GraphQL-style select: apenas campos necessários
                 if (fields && fields.length > 0) {
-                    query = query.select(fields.join(',')) as any;
+                    query = query.select(fields.join(','));
                 } else {
-                    query = query.select('*') as any;
+                    query = query.select('*');
                 }
 
                 // Aplicar filtros
                 if (filter) {
-                    for (const [key, value] of Object.entries(filter)) {
+                    for (const [filterKey, value] of Object.entries(filter)) {
                         if (Array.isArray(value)) {
-                            query = query.in(key, value) as any;
+                            query = query.in(filterKey, value);
                         } else {
-                            query = query.eq(key, value) as any;
+                            query = query.eq(filterKey, value);
                         }
                     }
                 }
@@ -225,11 +225,11 @@ class DebouncedUpdateManager {
         this.updates.delete(key);
         this.timers.delete(key);
 
-        performanceProfiler.start('debouncedUpdate', 'database');
+        performanceProfiler.start('debouncedUpdate', 'api');
 
         try {
             const { error } = await supabase
-                .from(update.table)
+                .from(update.table as any)
                 .update(update.updates)
                 .eq('id', update.id);
 
@@ -485,29 +485,29 @@ export class QueryOptimizer {
         filter?: Record<string, any>,
         options?: { single?: boolean }
     ): Promise<T | T[] | null> {
-        performanceProfiler.start('selectFields', 'database');
+        performanceProfiler.start('selectFields', 'api');
 
         try {
-            let query = supabase.from(table).select(fields.join(','));
+            let query = supabase.from(table as any).select(fields.join(','));
 
             // Aplicar filtros
             if (filter) {
-                for (const [key, value] of Object.entries(filter)) {
-                    query = query.eq(key, value) as any;
+                for (const [filterKey, value] of Object.entries(filter)) {
+                    query = query.eq(filterKey, value);
                 }
             }
 
             // Single ou multiple
             if (options?.single) {
-                const { data, error } = await (query as any).single();
+                const { data, error } = await query.single();
                 if (error) throw error;
                 performanceProfiler.end('selectFields');
-                return data;
+                return data as T;
             } else {
                 const { data, error } = await query;
                 if (error) throw error;
                 performanceProfiler.end('selectFields');
-                return data || [];
+                return (data || []) as T[];
             }
 
         } catch (error) {

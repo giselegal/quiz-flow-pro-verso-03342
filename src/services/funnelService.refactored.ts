@@ -196,7 +196,7 @@ class FunnelServiceRefactored {
       const { data, error } = await supabase
         .from('funnels')
         .update({
-          config: { steps },
+          config: { steps } as any,
           updated_at: new Date().toISOString(),
         })
         .eq('id', funnelId)
