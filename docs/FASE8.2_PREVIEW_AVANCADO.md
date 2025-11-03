@@ -118,7 +118,33 @@ interface ResponsivePreviewFrameProps {
 
 ---
 
-## 🔧 Integrações Necessárias
+## 🔧 Integrações Realizadas
+
+### ✅ Integrado no QuizModularEditor
+O `ResponsivePreviewFrame` foi integrado ao `PreviewPanel` do QuizModularEditor:
+
+**Arquivo atualizado:**
+- `src/components/editor/quiz/QuizModularEditor/components/PreviewPanel/index.tsx`
+
+**Como usar:**
+1. Abra o editor modular (`/editor-modular`)
+2. Clique no botão "Preview" no header
+3. Use os controles na barra superior:
+   - **Viewports**: Mobile, Tablet, Desktop
+   - **Zoom**: 50%, 75%, 100%, 125%, 150%
+   - **Theme**: Toggle Dark/Light
+   - **Refresh**: Recarregar preview
+
+**Fluxo:**
+```
+QuizModularEditor (index.tsx)
+  └─> PreviewPanel (quando canvasMode === 'preview')
+      └─> ResponsivePreviewFrame
+          ├─> PreviewControls (barra de controles)
+          └─> IsolatedPreviewIframe (preview isolado)
+```
+
+---
 
 ### Próximos Passos (8.3)
 1. **Integrar ResponsivePreviewFrame** no editor principal
