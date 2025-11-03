@@ -185,37 +185,17 @@ function AppCore() {
                                 </Route>
 
                                 {/* �🚀 EDITOR EXPERIMENTAL (DEV ONLY) */}
+                                {/* 🔄 DEPRECATED ROUTES - Auto-redirect to canonical /editor */}
                                 <Route path="/editor-new">
-                                    <EditorErrorBoundary>
-                                        <div data-testid="quiz-editor-wysiwyg-page">
-                                            <Suspense fallback={<PageLoadingFallback message="Carregando editor experimental..." />}>
-                                                <QuizModularEditor />
-                                            </Suspense>
-                                        </div>
-                                    </EditorErrorBoundary>
+                                    <RedirectRoute to="/editor" />
                                 </Route>
-
+                                
                                 <Route path="/editor-new/:funnelId">
-                                    {(params) => (
-                                        <EditorErrorBoundary>
-                                            <div data-testid="quiz-editor-wysiwyg-funnel-page">
-                                                <Suspense fallback={<PageLoadingFallback message="Carregando editor experimental..." />}>
-                                                    <QuizModularEditor funnelId={params.funnelId} />
-                                                </Suspense>
-                                            </div>
-                                        </EditorErrorBoundary>
-                                    )}
+                                    {(params) => <RedirectRoute to={`/editor/${params.funnelId}`} />}
                                 </Route>
-
-                                {/* 🧪 EDITOR MODULAR - FASE 1, 2, 3 (Registry Universal) */}
+                                
                                 <Route path="/editor-modular">
-                                    <EditorErrorBoundary>
-                                        <div data-testid="editor-modular-registry-universal">
-                                            <Suspense fallback={<PageLoadingFallback message="Carregando Editor Modular..." />}>
-                                                <EditorModular />
-                                            </Suspense>
-                                        </div>
-                                    </EditorErrorBoundary>
+                                    <RedirectRoute to="/editor" />
                                 </Route>
 
                                 {/* 🎯 EDITOR CANÔNICO (QuizModularProductionEditor) */}
