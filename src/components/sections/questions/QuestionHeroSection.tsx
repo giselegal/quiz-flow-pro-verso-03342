@@ -22,8 +22,8 @@ export interface QuestionHeroContent {
     logoAlt?: string;
 }
 
-export interface QuestionHeroSectionProps extends BaseSectionProps {
-    content: QuestionHeroContent;
+export interface QuestionHeroSectionProps extends Omit<BaseSectionProps, 'content'> {
+    content?: QuestionHeroContent;
     onAnalytics?: (event: string, data?: any) => void;
 }
 
@@ -37,6 +37,20 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
     const { isMobile } = useResponsive();
     const titleId = `${id}-question-title`;
 
+    // Default content for null safety
+    const defaultContent: QuestionHeroContent = {
+        questionNumber: '',
+        questionText: 'Pergunta',
+        currentQuestion: 1,
+        totalQuestions: 1,
+        progressValue: 0,
+        showProgress: true,
+        logoUrl: undefined,
+        logoAlt: 'Logo',
+    };
+
+    const contentSafe = { ...defaultContent, ...(content || {}) };
+
     const {
         questionNumber,
         questionText,
@@ -46,7 +60,7 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
         showProgress = true,
         logoUrl,
         logoAlt = 'Logo',
-    } = content;
+    } = contentSafe;
 
     React.useEffect(() => {
         onAnalytics?.('section_view', {
