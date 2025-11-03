@@ -6,6 +6,7 @@
  * ✅ Sistema de colunas com painéis laterais
  * ✅ Biblioteca de componentes drag & drop DINÂMICA (schemas)
  * ✅ Painel de propriedades DINÂMICO (schemas)
+ * ✅ Renderização UNIFICADA com UniversalBlock (FASE 3)
  * ✅ Integração com todos os sistemas unificados
  * 
  * ESTRUTURA:
@@ -14,6 +15,8 @@
 
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { loadDefaultSchemas } from '@/core/schema/loadDefaultSchemas';
+import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
+import { UniversalBlock } from '@/components/core/UniversalBlock';
 import { 
     loadComponentsFromRegistry, 
     groupComponentsByCategory, 
@@ -622,7 +625,24 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
         onSelect();
     };
 
+    // 🎯 FASE 3: Tentar renderizar com UniversalBlock primeiro
+    const schema = schemaInterpreter.getBlockSchema(element.type);
+    
     const renderElementContent = () => {
+        // Se existe schema, usar UniversalBlock
+        if (schema) {
+            return (
+                <UniversalBlock
+                    type={element.type}
+                    properties={element.properties || {}}
+                    content={element.content}
+                    isSelected={isSelected}
+                    onClick={() => onSelect()}
+                />
+            );
+        }
+
+        // Fallback para renderização legacy
         switch (element.type) {
             case 'text':
             case 'heading':

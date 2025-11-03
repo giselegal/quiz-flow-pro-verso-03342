@@ -61,6 +61,9 @@ const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 // ❌ DEPRECADO: QuizModularProductionEditor (4.317 linhas)
 const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
 
+// 🧪 EDITOR MODULAR - FASE 1, 2, 3 (Registry Universal)
+const EditorModular = lazy(() => import('./pages/EditorModular'));
+
 // 🧪 FALLBACK: Editor legacy para compatibilidade (será removido na ONDA 3)
 const QuizModularProductionEditorLegacy = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor'));
 
@@ -199,12 +202,12 @@ function AppCore() {
                                     )}
                                 </Route>
 
-                                {/* 🧪 EDITOR MODULAR - FASE 1.3 (Experimental) */}
+                                {/* 🧪 EDITOR MODULAR - FASE 1, 2, 3 (Registry Universal) */}
                                 <Route path="/editor-modular">
                                     <EditorErrorBoundary>
-                                        <div data-testid="quiz-modular-editor-experimental">
-                                            <Suspense fallback={<PageLoadingFallback message="Carregando editor modular experimental..." />}>
-                                                <QuizModularEditor />
+                                        <div data-testid="editor-modular-registry-universal">
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando Editor Modular..." />}>
+                                                <EditorModular />
                                             </Suspense>
                                         </div>
                                     </EditorErrorBoundary>
