@@ -1,0 +1,42 @@
+{
+  "id": "question-progress",
+  "type": "question-progress",
+  "version": "1.0.0",
+  "category": "question",
+  "label": "Barra de Progresso",
+  "description": "Indicador visual de progresso no questionário",
+  "icon": "BarChart",
+  "renderingStrategy": "dynamic",
+  "properties": {
+    "showPercentage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Mostrar Percentual",
+      "control": "toggle"
+    },
+    "showStepNumbers": {
+      "type": "boolean",
+      "default": true,
+      "label": "Mostrar Números de Etapa",
+      "control": "toggle"
+    },
+    "barColor": {
+      "type": "string",
+      "default": "#B89B7A",
+      "label": "Cor da Barra",
+      "control": "color-picker"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#E5E7EB",
+      "label": "Cor de Fundo",
+      "control": "color-picker"
+    },
+    "height": {
+      "type": "string",
+      "default": "8px",
+      "label": "Altura da Barra",
+      "control": "text"
+    }
+  }
+}

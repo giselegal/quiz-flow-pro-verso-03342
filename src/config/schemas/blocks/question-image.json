@@ -1,0 +1,47 @@
+{
+  "id": "question-image",
+  "type": "question-image",
+  "version": "1.0.0",
+  "category": "question",
+  "label": "Imagem da Questão",
+  "description": "Imagem ilustrativa relacionada à questão",
+  "icon": "ImageIcon",
+  "renderingStrategy": "static",
+  "properties": {
+    "imageUrl": {
+      "type": "string",
+      "default": "",
+      "label": "URL da Imagem",
+      "control": "image-upload"
+    },
+    "alt": {
+      "type": "string",
+      "default": "Imagem da questão",
+      "label": "Texto Alternativo",
+      "control": "text"
+    },
+    "width": {
+      "type": "string",
+      "default": "100%",
+      "label": "Largura",
+      "control": "text"
+    },
+    "maxHeight": {
+      "type": "string",
+      "default": "400px",
+      "label": "Altura Máxima",
+      "control": "text"
+    },
+    "objectFit": {
+      "type": "string",
+      "default": "cover",
+      "label": "Ajuste da Imagem",
+      "control": "dropdown",
+      "options": [
+        { "label": "Cobrir", "value": "cover" },
+        { "label": "Conter", "value": "contain" },
+        { "label": "Preencher", "value": "fill" }
+      ]
+    }
+  }
+}

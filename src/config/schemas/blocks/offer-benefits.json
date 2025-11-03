@@ -1,0 +1,42 @@
+{
+  "id": "offer-benefits",
+  "type": "offer-benefits",
+  "version": "1.0.0",
+  "category": "offer",
+  "label": "Lista de Benefícios",
+  "description": "Lista de benefícios/features da oferta",
+  "icon": "CheckCircle",
+  "renderingStrategy": "static",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "O que você vai receber:",
+      "label": "Título da Seção",
+      "control": "text"
+    },
+    "benefits": {
+      "type": "array",
+      "default": [],
+      "label": "Lista de Benefícios",
+      "description": "Array de objetos {text: string, icon?: string}",
+      "control": "json-editor"
+    },
+    "iconColor": {
+      "type": "string",
+      "default": "#10B981",
+      "label": "Cor dos Ícones",
+      "control": "color-picker"
+    },
+    "layout": {
+      "type": "string",
+      "default": "list",
+      "label": "Layout",
+      "control": "dropdown",
+      "options": [
+        { "label": "Lista Vertical", "value": "list" },
+        { "label": "Grade 2 Colunas", "value": "grid-2" },
+        { "label": "Grade 3 Colunas", "value": "grid-3" }
+      ]
+    }
+  }
+}

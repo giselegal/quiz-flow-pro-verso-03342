@@ -1,0 +1,38 @@
+{
+  "id": "question-description",
+  "type": "question-description",
+  "version": "1.0.0",
+  "category": "question",
+  "label": "Descrição da Questão",
+  "description": "Texto auxiliar ou instruções para a questão",
+  "icon": "FileText",
+  "renderingStrategy": "static",
+  "properties": {
+    "description": {
+      "type": "string",
+      "default": "",
+      "label": "Descrição",
+      "control": "textarea",
+      "validation": {
+        "maxLength": 1000
+      }
+    },
+    "fontSize": {
+      "type": "string",
+      "default": "sm",
+      "label": "Tamanho da Fonte",
+      "control": "dropdown",
+      "options": [
+        { "label": "Extra Pequeno", "value": "xs" },
+        { "label": "Pequeno", "value": "sm" },
+        { "label": "Normal", "value": "base" }
+      ]
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#6B7280",
+      "label": "Cor do Texto",
+      "control": "color-picker"
+    }
+  }
+}

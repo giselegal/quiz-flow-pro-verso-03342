@@ -1,0 +1,44 @@
+{
+  "id": "offer-urgency",
+  "type": "offer-urgency",
+  "version": "1.0.0",
+  "category": "offer",
+  "label": "Timer de Urgência",
+  "description": "Timer countdown para criar senso de urgência",
+  "icon": "Clock",
+  "renderingStrategy": "dynamic",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "Oferta termina em:",
+      "label": "Título",
+      "control": "text"
+    },
+    "endDate": {
+      "type": "string",
+      "default": "",
+      "label": "Data de Término",
+      "description": "Formato ISO: 2024-12-31T23:59:59",
+      "control": "text"
+    },
+    "duration": {
+      "type": "number",
+      "default": 3600,
+      "label": "Duração (segundos)",
+      "description": "Alternativa à data fixa",
+      "control": "number"
+    },
+    "showDays": {
+      "type": "boolean",
+      "default": true,
+      "label": "Mostrar Dias",
+      "control": "toggle"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#EF4444",
+      "label": "Cor de Destaque",
+      "control": "color-picker"
+    }
+  }
+}

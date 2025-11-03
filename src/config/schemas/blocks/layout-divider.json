@@ -1,0 +1,47 @@
+{
+  "id": "layout-divider",
+  "type": "layout-divider",
+  "version": "1.0.0",
+  "category": "layout",
+  "label": "Divisor",
+  "description": "Linha divisória entre seções",
+  "icon": "Minus",
+  "renderingStrategy": "static",
+  "properties": {
+    "style": {
+      "type": "string",
+      "default": "solid",
+      "label": "Estilo da Linha",
+      "control": "dropdown",
+      "options": [
+        { "label": "Sólida", "value": "solid" },
+        { "label": "Tracejada", "value": "dashed" },
+        { "label": "Pontilhada", "value": "dotted" }
+      ]
+    },
+    "thickness": {
+      "type": "string",
+      "default": "1px",
+      "label": "Espessura",
+      "control": "text"
+    },
+    "color": {
+      "type": "string",
+      "default": "#E5E7EB",
+      "label": "Cor",
+      "control": "color-picker"
+    },
+    "spacing": {
+      "type": "string",
+      "default": "2rem",
+      "label": "Espaçamento Vertical",
+      "control": "text"
+    },
+    "width": {
+      "type": "string",
+      "default": "100%",
+      "label": "Largura",
+      "control": "text"
+    }
+  }
+}

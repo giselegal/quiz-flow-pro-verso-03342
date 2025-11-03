@@ -1,0 +1,43 @@
+{
+  "id": "layout-container",
+  "type": "layout-container",
+  "version": "1.0.0",
+  "category": "layout",
+  "label": "Container de Layout",
+  "description": "Container flexível para organização de conteúdo",
+  "icon": "Box",
+  "renderingStrategy": "static",
+  "properties": {
+    "maxWidth": {
+      "type": "string",
+      "default": "1200px",
+      "label": "Largura Máxima",
+      "control": "dropdown",
+      "options": [
+        { "label": "Pequeno (768px)", "value": "768px" },
+        { "label": "Médio (1024px)", "value": "1024px" },
+        { "label": "Grande (1200px)", "value": "1200px" },
+        { "label": "Extra Grande (1400px)", "value": "1400px" },
+        { "label": "Tela Cheia", "value": "100%" }
+      ]
+    },
+    "padding": {
+      "type": "string",
+      "default": "2rem",
+      "label": "Padding",
+      "control": "text"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "transparent",
+      "label": "Cor de Fundo",
+      "control": "color-picker"
+    },
+    "centerContent": {
+      "type": "boolean",
+      "default": true,
+      "label": "Centralizar Conteúdo",
+      "control": "toggle"
+    }
+  }
+}

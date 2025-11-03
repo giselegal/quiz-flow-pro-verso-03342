@@ -1,0 +1,48 @@
+{
+  "id": "question-navigation",
+  "type": "question-navigation",
+  "version": "1.0.0",
+  "category": "question",
+  "label": "Navegação de Questão",
+  "description": "Botões de navegação (anterior/próximo)",
+  "icon": "Navigation",
+  "renderingStrategy": "interactive",
+  "properties": {
+    "showPrevious": {
+      "type": "boolean",
+      "default": true,
+      "label": "Mostrar Botão Anterior",
+      "control": "toggle"
+    },
+    "showNext": {
+      "type": "boolean",
+      "default": true,
+      "label": "Mostrar Botão Próximo",
+      "control": "toggle"
+    },
+    "previousText": {
+      "type": "string",
+      "default": "Anterior",
+      "label": "Texto Botão Anterior",
+      "control": "text"
+    },
+    "nextText": {
+      "type": "string",
+      "default": "Próximo",
+      "label": "Texto Botão Próximo",
+      "control": "text"
+    },
+    "alignment": {
+      "type": "string",
+      "default": "space-between",
+      "label": "Alinhamento",
+      "control": "dropdown",
+      "options": [
+        { "label": "Espaçado", "value": "space-between" },
+        { "label": "Centralizado", "value": "center" },
+        { "label": "À Esquerda", "value": "flex-start" },
+        { "label": "À Direita", "value": "flex-end" }
+      ]
+    }
+  }
+}

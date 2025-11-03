@@ -1,0 +1,33 @@
+{
+  "id": "layout-spacer",
+  "type": "layout-spacer",
+  "version": "1.0.0",
+  "category": "layout",
+  "label": "Espaçador",
+  "description": "Espaço vertical entre elementos",
+  "icon": "MoveVertical",
+  "renderingStrategy": "static",
+  "properties": {
+    "height": {
+      "type": "string",
+      "default": "2rem",
+      "label": "Altura",
+      "control": "dropdown",
+      "options": [
+        { "label": "Extra Pequeno (0.5rem)", "value": "0.5rem" },
+        { "label": "Pequeno (1rem)", "value": "1rem" },
+        { "label": "Médio (2rem)", "value": "2rem" },
+        { "label": "Grande (3rem)", "value": "3rem" },
+        { "label": "Extra Grande (4rem)", "value": "4rem" },
+        { "label": "Personalizado", "value": "custom" }
+      ]
+    },
+    "customHeight": {
+      "type": "string",
+      "default": "",
+      "label": "Altura Personalizada",
+      "description": "Ex: 50px, 5rem, 10vh",
+      "control": "text"
+    }
+  }
+}

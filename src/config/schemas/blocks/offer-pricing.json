@@ -1,0 +1,53 @@
+{
+  "id": "offer-pricing",
+  "type": "offer-pricing",
+  "version": "1.0.0",
+  "category": "offer",
+  "label": "Tabela de Preços",
+  "description": "Exibição de preços e planos da oferta",
+  "icon": "DollarSign",
+  "renderingStrategy": "interactive",
+  "properties": {
+    "price": {
+      "type": "string",
+      "default": "R$ 97,00",
+      "label": "Preço",
+      "control": "text"
+    },
+    "originalPrice": {
+      "type": "string",
+      "default": "",
+      "label": "Preço Original (riscado)",
+      "control": "text"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL",
+      "label": "Moeda",
+      "control": "dropdown",
+      "options": [
+        { "label": "Real (R$)", "value": "BRL" },
+        { "label": "Dólar ($)", "value": "USD" },
+        { "label": "Euro (€)", "value": "EUR" }
+      ]
+    },
+    "paymentTerms": {
+      "type": "string",
+      "default": "",
+      "label": "Condições de Pagamento",
+      "control": "text"
+    },
+    "showDiscount": {
+      "type": "boolean",
+      "default": false,
+      "label": "Mostrar Badge de Desconto",
+      "control": "toggle"
+    },
+    "discountText": {
+      "type": "string",
+      "default": "50% OFF",
+      "label": "Texto do Desconto",
+      "control": "text"
+    }
+  }
+}

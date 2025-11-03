@@ -1,0 +1,42 @@
+{
+  "id": "offer-testimonials",
+  "type": "offer-testimonials",
+  "version": "1.0.0",
+  "category": "offer",
+  "label": "Depoimentos",
+  "description": "Seção de depoimentos de clientes",
+  "icon": "MessageSquare",
+  "renderingStrategy": "static",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "O que nossos clientes dizem",
+      "label": "Título da Seção",
+      "control": "text"
+    },
+    "testimonials": {
+      "type": "array",
+      "default": [],
+      "label": "Depoimentos",
+      "description": "Array de objetos {name: string, text: string, avatar?: string, role?: string}",
+      "control": "json-editor"
+    },
+    "layout": {
+      "type": "string",
+      "default": "carousel",
+      "label": "Layout",
+      "control": "dropdown",
+      "options": [
+        { "label": "Carrossel", "value": "carousel" },
+        { "label": "Grade", "value": "grid" },
+        { "label": "Lista", "value": "list" }
+      ]
+    },
+    "showAvatars": {
+      "type": "boolean",
+      "default": true,
+      "label": "Mostrar Avatares",
+      "control": "toggle"
+    }
+  }
+}
