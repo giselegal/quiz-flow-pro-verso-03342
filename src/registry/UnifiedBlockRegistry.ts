@@ -384,7 +384,29 @@ export class UnifiedBlockRegistry {
 
     // 3. Check lazy registry (return lazy component wrapper)
     if (this.lazyRegistry.has(type)) {
-      const lazyComponent = lazy(this.lazyRegistry.get(type)!);
+      appLogger.info(`[UnifiedBlockRegistry] 🔄 Loading lazy component: ${type}`);
+      
+      // Create a wrapper that logs when the component loads
+      const loader = this.lazyRegistry.get(type)!;
+      const wrappedLoader = async () => {
+        try {
+          const module = await loader();
+          appLogger.info(`[UnifiedBlockRegistry] ✅ Lazy component loaded: ${type}`, module);
+          
+          // Ensure we have a default export
+          if (!module || !module.default) {
+            appLogger.error(`[UnifiedBlockRegistry] ❌ No default export for: ${type}`, module);
+            throw new Error(`No default export for ${type}`);
+          }
+          
+          return module;
+        } catch (error) {
+          appLogger.error(`[UnifiedBlockRegistry] ❌ Failed to load lazy component: ${type}`, error);
+          throw error;
+        }
+      };
+      
+      const lazyComponent = lazy(wrappedLoader);
       this.updateCache(type, lazyComponent);
       return lazyComponent;
     }
@@ -396,7 +418,7 @@ export class UnifiedBlockRegistry {
       return fallback;
     }
 
-    appLogger.error(`[UnifiedBlockRegistry] Component not found: "${type}"`);
+    appLogger.error(`[UnifiedBlockRegistry] ❌ Component not found: "${type}"`);
     return null;
   }
 
