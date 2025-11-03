@@ -85,10 +85,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         async function loadTemplate() {
             setIsLoadingTemplate(true);
             try {
-                appLogger.info(`🔍 [QuizModularEditor] Carregando template: ${props.templateId}`);
+                const tid = props.templateId || 'quiz21StepsComplete';
+                appLogger.info(`🔍 [QuizModularEditor] Carregando template: ${tid}`);
                 
                 // ✅ Usa loadFunnelTemplate com fallback automático DB → JSON
-                const template = await loadFunnelTemplate(props.templateId);
+                const template = await loadFunnelTemplate(tid);
                 
                 setLoadedTemplate(template);
                 appLogger.info(`✅ [QuizModularEditor] Template carregado: ${template.name} (${template.steps.length} steps)`);

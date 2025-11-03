@@ -58,14 +58,18 @@ export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemp
     if (data?.content && !error) {
       appLogger.info(`✅ [DB] Template carregado do Supabase: ${templateId}`);
       
+      // Type guards para dados do Supabase
+      const metadata = (data.metadata || {}) as Record<string, any>;
+      const content = data.content as any;
+      
       const template: FunnelTemplate = {
         id: templateId,
         name: data.name || templateId,
-        description: data.metadata?.description || '',
-        version: data.metadata?.version || '1.0',
-        author: data.metadata?.author,
-        steps: data.content.steps || [],
-        metadata: data.metadata || {},
+        description: metadata.description || '',
+        version: metadata.version || '1.0',
+        author: metadata.author,
+        steps: content.steps || [],
+        metadata: metadata,
       };
       
       // Validar estrutura básica
