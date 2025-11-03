@@ -366,6 +366,161 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       },
     ],
   },
+  // ========== SEÇÕES COMPLEXAS V3 (FASE 2) ==========
+  'question-hero': {
+    label: 'Hero de Pergunta',
+    fields: [
+      { key: 'questionNumber', label: 'Número da Pergunta', type: 'text', group: 'content', description: 'Número ou identificador da questão' },
+      { key: 'questionText', label: 'Texto da Pergunta', type: 'textarea', group: 'content', required: true, defaultValue: 'Qual é a sua preferência?', description: 'Texto principal da pergunta exibida' },
+      { key: 'currentQuestion', label: 'Questão Atual', type: 'number', group: 'content', defaultValue: 1, min: 1, description: 'Índice da questão atual (para barra de progresso)' },
+      { key: 'totalQuestions', label: 'Total de Questões', type: 'number', group: 'content', defaultValue: 1, min: 1, description: 'Número total de questões no quiz' },
+      { key: 'progressValue', label: 'Valor do Progresso', type: 'range', group: 'content', min: 0, max: 100, defaultValue: 0, description: 'Porcentagem de progresso (0-100)' },
+      { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', group: 'layout', defaultValue: true, description: 'Exibir barra de progresso' },
+      { key: 'logoUrl', label: 'URL do Logo', type: 'text', group: 'content', description: 'Link para imagem do logo' },
+      { key: 'logoAlt', label: 'Texto Alt do Logo', type: 'text', group: 'content', defaultValue: 'Logo', description: 'Texto alternativo para acessibilidade' },
+    ],
+  },
+  'question-title': {
+    label: 'Título de Pergunta',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'textarea', group: 'content', required: true, defaultValue: 'Qual é a sua preferência?', description: 'Texto do título da pergunta' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: 'text-xl md:text-2xl', description: 'Classes Tailwind de tamanho de fonte' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'text', group: 'style', defaultValue: 'font-bold', description: 'Classes Tailwind de peso de fonte' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#deac6d', description: 'Cor hexadecimal do texto' },
+    ],
+  },
+  'transition-hero': {
+    label: 'Hero de Transição',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', required: true, defaultValue: 'Carregando...', description: 'Título principal da transição' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content', description: 'Subtítulo opcional' },
+      { key: 'message', label: 'Mensagem', type: 'textarea', group: 'content', defaultValue: 'Preparando a próxima etapa...', description: 'Mensagem de loading' },
+      { key: 'autoAdvanceDelay', label: 'Delay Auto-avanço (ms)', type: 'number', group: 'behavior', defaultValue: 3000, min: 0, description: 'Tempo em ms antes de avançar automaticamente' },
+    ],
+  },
+  'transition-title': {
+    label: 'Título de Transição',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'text', group: 'content', required: true, defaultValue: 'Preparando...', description: 'Texto do título de transição' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: '3xl', options: [
+        { label: '2XL', value: '2xl' },
+        { label: '3XL', value: '3xl' },
+        { label: '4XL', value: '4xl' },
+        { label: '5XL', value: '5xl' },
+      ], description: 'Tamanho do título' },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#5b4135', description: 'Cor do texto' },
+    ],
+  },
+  'result-main': {
+    label: 'Resultado Principal',
+    fields: [
+      { key: 'userName', label: 'Nome do Usuário', type: 'text', group: 'content', defaultValue: 'Você', description: 'Nome do usuário para personalização' },
+      { key: 'styleName', label: 'Nome do Estilo', type: 'text', group: 'content', defaultValue: 'Seu Estilo', description: 'Nome do estilo resultante' },
+      { key: 'percentage', label: 'Porcentagem', type: 'text', group: 'content', defaultValue: '85%', description: 'Porcentagem de compatibilidade' },
+      { key: 'showCelebration', label: 'Mostrar Celebração', type: 'boolean', group: 'layout', defaultValue: true, description: 'Exibir emoji de celebração' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#F5EDE4' },
+    ],
+  },
+  'result-image': {
+    label: 'Imagem de Resultado',
+    fields: [
+      { key: 'src', label: 'URL da Imagem', type: 'text', group: 'content', required: true, description: 'Link da imagem do resultado' },
+      { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content', defaultValue: 'Resultado', description: 'Texto alt para acessibilidade' },
+      { key: 'width', label: 'Largura', type: 'number', group: 'layout', description: 'Largura em pixels' },
+      { key: 'height', label: 'Altura', type: 'number', group: 'layout', description: 'Altura em pixels' },
+    ],
+  },
+  'result-description': {
+    label: 'Descrição de Resultado',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'textarea', group: 'content', required: true, defaultValue: 'Descrição do resultado...', description: 'Texto descritivo do resultado' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: 'text-base' },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#5b4135' },
+    ],
+  },
+  'offer-hero': {
+    label: 'Hero de Oferta',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', required: true, defaultValue: 'Oferta Especial', description: 'Título principal da oferta' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content', description: 'Subtítulo complementar' },
+      { key: 'imageUrl', label: 'URL da Imagem', type: 'text', group: 'content', description: 'Imagem hero da oferta' },
+      { key: 'imageAlt', label: 'Alt da Imagem', type: 'text', group: 'content', defaultValue: 'Oferta' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content', description: 'Descrição detalhada da oferta' },
+      { key: 'urgencyMessage', label: 'Mensagem de Urgência', type: 'text', group: 'content', description: 'Mensagem para criar senso de urgência' },
+    ],
+  },
+  'pricing': {
+    label: 'Precificação',
+    fields: [
+      { key: 'originalPrice', label: 'Preço Original', type: 'number', group: 'content', required: true, defaultValue: 0, description: 'Preço antes do desconto' },
+      { key: 'salePrice', label: 'Preço com Desconto', type: 'number', group: 'content', required: true, defaultValue: 0, description: 'Preço promocional' },
+      { key: 'currency', label: 'Moeda', type: 'text', group: 'content', defaultValue: 'R$', description: 'Símbolo da moeda' },
+      { key: 'installments', label: 'Parcelamento (JSON)', type: 'json', group: 'content', description: 'Objeto { count: number, value: number }' },
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Oferta Especial' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
+      { key: 'ctaText', label: 'Texto do CTA', type: 'text', group: 'content', defaultValue: 'Quero Aproveitar Esta Oferta!' },
+      { key: 'ctaUrl', label: 'URL do CTA', type: 'text', group: 'content', description: 'Link de destino do botão' },
+      { key: 'features', label: 'Features (JSON)', type: 'json', group: 'content', description: 'Array de strings com benefícios' },
+    ],
+  },
+  'testimonials': {
+    label: 'Depoimentos',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'O que dizem sobre nós' },
+      { key: 'testimonials', label: 'Lista de Depoimentos (JSON)', type: 'json', group: 'content', required: true, description: 'Array de objetos { name, text, avatar, rating }' },
+      { key: 'showRatings', label: 'Mostrar Avaliações', type: 'boolean', group: 'layout', defaultValue: true },
+      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', defaultValue: 'grid', options: [
+        { label: 'Grade', value: 'grid' },
+        { label: 'Carrossel', value: 'carousel' },
+      ]},
+    ],
+  },
+  'guarantee': {
+    label: 'Garantia',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Garantia de 30 dias' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content', required: true },
+      { key: 'iconUrl', label: 'URL do Ícone', type: 'text', group: 'content' },
+      { key: 'badgeText', label: 'Texto do Badge', type: 'text', group: 'content', defaultValue: '30 DIAS' },
+      { key: 'highlightColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#4CAF50' },
+    ],
+  },
+  'secure-purchase': {
+    label: 'Compra Segura',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Compra 100% Segura' },
+      { key: 'securityBadges', label: 'Badges de Segurança (JSON)', type: 'json', group: 'content', description: 'Array de { icon, text }' },
+      { key: 'showSSLBadge', label: 'Mostrar Badge SSL', type: 'boolean', group: 'layout', defaultValue: true },
+      { key: 'privacyText', label: 'Texto de Privacidade', type: 'textarea', group: 'content' },
+    ],
+  },
+  'benefits': {
+    label: 'Benefícios',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'O que você vai receber' },
+      { key: 'benefits', label: 'Lista de Benefícios (JSON)', type: 'json', group: 'content', required: true, description: 'Array de { icon, title, description }' },
+      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', defaultValue: 'list', options: [
+        { label: 'Lista', value: 'list' },
+        { label: 'Grade', value: 'grid' },
+        { label: 'Cards', value: 'cards' },
+      ]},
+      { key: 'iconColor', label: 'Cor dos Ícones', type: 'color', group: 'style', defaultValue: '#4CAF50' },
+    ],
+  },
+  'urgency-timer': {
+    label: 'Timer de Urgência',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Oferta expira em:' },
+      { key: 'endTime', label: 'Tempo Final (ISO)', type: 'text', group: 'content', required: true, description: 'Data/hora em formato ISO 8601' },
+      { key: 'showDays', label: 'Mostrar Dias', type: 'boolean', group: 'layout', defaultValue: true },
+      { key: 'warningColor', label: 'Cor de Alerta', type: 'color', group: 'style', defaultValue: '#FF5722' },
+      { key: 'onExpire', label: 'Ação ao Expirar', type: 'select', group: 'behavior', options: [
+        { label: 'Ocultar', value: 'hide' },
+        { label: 'Mostrar Mensagem', value: 'message' },
+        { label: 'Redirecionar', value: 'redirect' },
+      ]},
+    ],
+  },
   'lead-form': {
     label: 'Formulário de Lead',
     fields: [
@@ -1434,31 +1589,6 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ],
   },
 
-  'secure-purchase': {
-    label: 'Compra Segura',
-    fields: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text',
-        group: 'content',
-        defaultValue: 'Compra 100% Segura e Protegida',
-      },
-      {
-        key: 'showFeatures',
-        label: 'Mostrar Itens de Segurança',
-        type: 'boolean',
-        group: 'content',
-        defaultValue: true,
-      },
-
-      { key: 'marginTop', label: 'Margem Superior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginBottom', label: 'Margem Inferior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginLeft', label: 'Margem Esquerda (px)', type: 'number', group: 'spacing' },
-      { key: 'marginRight', label: 'Margem Direita (px)', type: 'number', group: 'spacing' },
-    ],
-  },
-
   'mentor-section-inline': {
     label: 'Seção da Mentora (Inline)',
     fields: [
@@ -2243,30 +2373,6 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
   // BLOCOS ATÔMICOS - TRANSIÇÃO (Steps 12 & 19)
   // =====================================================================
 
-  'transition-title': {
-    label: 'Título de Transição',
-    fields: [
-      { key: 'text', label: 'Texto', type: 'text', group: 'content', required: true },
-      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', 
-        options: [
-          { label: '2xl', value: '2xl' },
-          { label: '3xl', value: '3xl' },
-          { label: '4xl', value: '4xl' },
-        ], 
-        defaultValue: '3xl', 
-      },
-      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#5b4135' },
-      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
-        options: [
-          { label: 'Esquerda', value: 'left' },
-          { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' },
-        ],
-        defaultValue: 'center',
-      },
-    ],
-  },
-
   'transition-loader': {
     label: 'Loader de Transição',
     fields: [
@@ -2333,8 +2439,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ],
   },
 
-  'result-main': {
-    label: 'Estilo Principal',
+  'result-style': {
+    label: 'Estilo Secundário',
     fields: [
       { key: 'styleName', label: 'Nome do Estilo', type: 'text', group: 'content', required: true },
       { key: 'percentage', label: 'Porcentagem', type: 'number', group: 'content', min: 0, max: 100, defaultValue: 65 },
@@ -2344,8 +2450,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ],
   },
 
-  'result-image': {
-    label: 'Imagem de Resultado',
+  'result-share': {
+    label: 'Compartilhamento de Resultado',
     fields: [
       { key: 'url', label: 'URL da Imagem', type: 'text', group: 'content', required: true },
       { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content' },
@@ -2355,8 +2461,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ],
   },
 
-  'result-description': {
-    label: 'Descrição do Resultado',
+  'result-characteristics': {
+    label: 'Características do Resultado',
     fields: [
       { key: 'text', label: 'Texto', type: 'textarea', group: 'content', required: true },
       { key: 'fontSize', label: 'Tamanho', type: 'select', group: 'style',
@@ -2544,128 +2650,5 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ],
   },
 
-  // Quiz Components
-  'question-hero': {
-    label: 'Hero de Pergunta',
-    fields: [
-      { key: 'title', label: 'Título da Pergunta', type: 'text', group: 'content', required: true, defaultValue: 'Qual é a sua pergunta?' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'textarea', group: 'content', description: 'Texto complementar abaixo do título' },
-      { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style', description: 'URL da imagem de fundo' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#f8f9fa' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-      { key: 'overlay', label: 'Overlay Escuro', type: 'boolean', group: 'style', defaultValue: false },
-      { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '300px' },
-      { key: 'padding', label: 'Padding', type: 'text', group: 'layout', defaultValue: '48px 24px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
-    ],
-  },
-
-  'strategic-question': {
-    label: 'Pergunta Estratégica',
-    fields: [
-      { key: 'question', label: 'Pergunta', type: 'text', group: 'content', required: true, defaultValue: 'Esta é uma pergunta estratégica...' },
-      { key: 'description', label: 'Descrição/Contexto', type: 'textarea', group: 'content', description: 'Texto explicativo adicional' },
-      { key: 'highlightColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#b3a26a' },
-      { key: 'icon', label: 'Ícone', type: 'text', group: 'content', description: 'Nome do ícone Lucide ou URL' },
-      { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'required', label: 'Resposta Obrigatória', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
-    ],
-  },
-
-  'transition-hero': {
-    label: 'Hero de Transição',
-    fields: [
-      { key: 'title', label: 'Título da Transição', type: 'text', group: 'content', required: true, defaultValue: 'Processando suas respostas...' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content', defaultValue: 'Aguarde enquanto calculamos seu resultado' },
-      { key: 'showLoader', label: 'Mostrar Animação', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'autoAdvance', label: 'Avançar Automaticamente', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'delay', label: 'Tempo de Espera (ms)', type: 'number', group: 'content', min: 0, max: 10000, defaultValue: 2000, description: 'Tempo antes de avançar automaticamente' },
-      { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '400px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
-    ],
-  },
-
-  // Offer/Sales Components
-  'offer-hero': {
-    label: 'Hero de Oferta',
-    fields: [
-      { key: 'headline', label: 'Headline Principal', type: 'text', group: 'content', required: true, defaultValue: 'Oferta Especial' },
-      { key: 'subheadline', label: 'Subheadline', type: 'textarea', group: 'content', defaultValue: 'Aproveite esta oportunidade única' },
-      { key: 'price', label: 'Preço', type: 'text', group: 'content', defaultValue: 'R$ 297,00' },
-      { key: 'oldPrice', label: 'Preço Antigo', type: 'text', group: 'content', description: 'Preço riscado (opcional)' },
-      { key: 'ctaText', label: 'Texto do CTA', type: 'text', group: 'content', defaultValue: 'Quero garantir minha vaga' },
-      { key: 'ctaUrl', label: 'URL do CTA', type: 'text', group: 'content', defaultValue: '#checkout' },
-      { key: 'badgeText', label: 'Badge/Selo', type: 'text', group: 'content', description: 'Ex: "Desconto de 50%"' },
-      { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#f8f9fa' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-      { key: 'ctaBackgroundColor', label: 'Cor do Botão', type: 'color', group: 'style', defaultValue: '#b3a26a' },
-      { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '500px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
-    ],
-  },
-
-  'bonus': {
-    label: 'Seção de Bônus',
-    fields: [
-      { key: 'title', label: 'Título da Seção', type: 'text', group: 'content', defaultValue: 'Bônus Exclusivos' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'textarea', group: 'content' },
-      { key: 'bonusList', label: 'Lista de Bônus', type: 'json', group: 'content', required: true, description: 'Array com [{title, description, value, image}]' },
-      { key: 'showValues', label: 'Mostrar Valores', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'totalValue', label: 'Valor Total', type: 'text', group: 'content' },
-      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', options: [{ label: 'Lista', value: 'list' }, { label: 'Grade 2 Colunas', value: 'grid-2' }, { label: 'Grade 3 Colunas', value: 'grid-3' }], defaultValue: 'list' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#b3a26a' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
-    ],
-  },
-
-  'testimonials': {
-    label: 'Grade de Depoimentos',
-    fields: [
-      { key: 'title', label: 'Título da Seção', type: 'text', group: 'content', defaultValue: 'Depoimentos' },
-      { key: 'testimonialsList', label: 'Lista de Depoimentos', type: 'json', group: 'content', required: true, description: 'Array com [{name, photo, text, rating, location}]' },
-      { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '1 Coluna', value: 1 }, { label: '2 Colunas', value: 2 }, { label: '3 Colunas', value: 3 }], defaultValue: 3 },
-      { key: 'showRatings', label: 'Mostrar Avaliações', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'showPhotos', label: 'Mostrar Fotos', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'cardBackgroundColor', label: 'Cor de Fundo dos Cards', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'cardBorderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
-      { key: 'starColor', label: 'Cor das Estrelas', type: 'color', group: 'style', defaultValue: '#fbbf24' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
-    ],
-  },
-
-  'guarantee': {
-    label: 'Seção de Garantia',
-    fields: [
-      { key: 'title', label: 'Título', type: 'text', group: 'content', required: true, defaultValue: 'Garantia Incondicional de 30 Dias' },
-      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content', required: true, defaultValue: 'Se você não ficar satisfeito, devolvemos 100% do seu dinheiro.' },
-      { key: 'guaranteePeriod', label: 'Período de Garantia', type: 'text', group: 'content', defaultValue: '30 dias' },
-      { key: 'icon', label: 'Ícone', type: 'text', group: 'content' },
-      { key: 'badgeText', label: 'Texto do Selo', type: 'text', group: 'content', defaultValue: '100% Garantido' },
-      { key: 'highlightColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#10b981' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ecfdf5' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#065f46' },
-      { key: 'borderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#10b981' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
-    ],
-  },
-
-  'benefits': {
-    label: 'Lista de Benefícios',
-    fields: [
-      { key: 'title', label: 'Título da Seção', type: 'text', group: 'content', defaultValue: 'O Que Você Vai Receber' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'textarea', group: 'content' },
-      { key: 'benefitsList', label: 'Lista de Benefícios', type: 'json', group: 'content', required: true, description: 'Array com [{title, description, icon}]' },
-      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', options: [{ label: 'Lista', value: 'list' }, { label: 'Grade 2 Colunas', value: 'grid-2' }, { label: 'Grade 3 Colunas', value: 'grid-3' }], defaultValue: 'grid-2' },
-      { key: 'iconStyle', label: 'Estilo do Ícone', type: 'select', group: 'style', options: [{ label: 'Check Simples', value: 'check' }, { label: 'Check Circulado', value: 'check-circle' }, { label: 'Estrela', value: 'star' }, { label: 'Customizado', value: 'custom' }], defaultValue: 'check-circle' },
-      { key: 'iconColor', label: 'Cor do Ícone', type: 'color', group: 'style', defaultValue: '#10b981' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
-    ],
-  },
 
 };

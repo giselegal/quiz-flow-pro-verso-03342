@@ -39,6 +39,9 @@ import layoutContainerSchema from '@/config/schemas/blocks/layout-container.json
 import layoutDividerSchema from '@/config/schemas/blocks/layout-divider.json';
 import layoutSpacerSchema from '@/config/schemas/blocks/layout-spacer.json';
 
+// Import blockPropertySchemas for FASE 2 integration
+import { blockPropertySchemas } from '@/config/blockPropertySchemas';
+
 /**
  * Carrega todos os schemas de blocos do editor com validação Zod
  */
@@ -77,7 +80,7 @@ export function loadEditorBlockSchemas(): void {
     layoutSpacerSchema,
   ];
 
-  // Converter schemas individuais para formato esperado pelo SchemaInterpreter
+  // Converter schemas JSON individuais para formato esperado pelo SchemaInterpreter
   const blockTypes: Record<string, any> = {};
   
   schemas.forEach((schema: any) => {
@@ -91,13 +94,51 @@ export function loadEditorBlockSchemas(): void {
     };
   });
 
+  // FASE 2: Adicionar schemas de blockPropertySchemas ao registry
+  Object.entries(blockPropertySchemas).forEach(([type, schema]) => {
+    // Converter BlockSchema para BlockTypeSchema
+    const properties: Record<string, any> = {};
+    
+    schema.fields.forEach(field => {
+      properties[field.key] = {
+        type: field.type === 'textarea' ? 'string' : 
+              field.type === 'range' ? 'number' :
+              field.type === 'boolean' ? 'boolean' :
+              field.type === 'json' ? 'json' : 'string',
+        control: field.type === 'textarea' ? 'textarea' :
+                 field.type === 'range' ? 'number' :
+                 field.type === 'boolean' ? 'toggle' :
+                 field.type === 'color' ? 'color-picker' :
+                 field.type === 'select' ? 'dropdown' :
+                 field.type === 'json' ? 'json-editor' : 'text',
+        label: field.label,
+        description: field.description,
+        default: field.defaultValue,
+        required: field.required,
+        options: field.options,
+      };
+    });
+
+    // Apenas adicionar se não existir (JSON schemas têm prioridade)
+    if (!blockTypes[type]) {
+      blockTypes[type] = {
+        type,
+        label: schema.label,
+        category: 'content', // default category
+        properties,
+      };
+    }
+  });
+
+
   // Carregar schemas no formato consolidado (validação Zod aplicada no SchemaValidator se necessário)
   schemaInterpreter.loadSchema({
     version: '1.0.0',
     blockTypes,
   } as any);
 
-  console.log(`[EditorBlockSchemas] ✅ ${schemas.length} schemas de blocos carregados com validação Zod`);
+  const totalSchemas = schemas.length + Object.keys(blockPropertySchemas).length;
+  console.log(`[EditorBlockSchemas] ✅ ${totalSchemas} schemas de blocos carregados (${schemas.length} JSON + ${Object.keys(blockPropertySchemas).length} TypeScript)`);
 }
 
 /**

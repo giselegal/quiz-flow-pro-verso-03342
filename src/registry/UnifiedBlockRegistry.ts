@@ -126,40 +126,35 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'question-instructions': () => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock'),
   'question-navigation': () => import('@/components/editor/blocks/atomic/QuestionNavigationBlock'),
 
-  // Sections V3 - with prop adapters for block -> section props
+  // Sections V3 - with universal PropNormalizer
   'question-hero': () => import('@/components/sections/questions').then(({ QuestionHeroSection }) => ({
     default: (props: any) => {
-      const { block } = props || {};
-      const properties = block?.properties || {};
-      const contentFromBlock = block?.content || {};
-      
-      // Merge content from both block.content and block.properties for backward compatibility
-      const mergedContent = {
-        questionNumber: contentFromBlock.questionNumber ?? properties.questionNumber,
-        questionText: contentFromBlock.questionText ?? properties.questionText,
-        currentQuestion: contentFromBlock.currentQuestion ?? properties.currentQuestion,
-        totalQuestions: contentFromBlock.totalQuestions ?? properties.totalQuestions,
-        progressValue: contentFromBlock.progressValue ?? properties.progressValue,
-        showProgress: contentFromBlock.showProgress ?? properties.showProgress,
-        logoUrl: contentFromBlock.logoUrl ?? properties.logoUrl,
-        logoAlt: contentFromBlock.logoAlt ?? properties.logoAlt,
-      };
-      
-      const style = properties.style || properties;
-      const animation = properties.animation || { type: properties.type, duration: properties.duration };
-      
-      return React.createElement(QuestionHeroSection, {
-        id: block?.id || 'section',
-        type: block?.type || 'question-hero',
-        content: mergedContent,
-        style,
-        animation,
-      });
+      const { normalizeQuestionHeroProps } = require('@/core/adapters/PropNormalizer');
+      const normalized = normalizeQuestionHeroProps(props?.block || props);
+      return React.createElement(QuestionHeroSection, normalized);
     },
   })),
-  'transition-hero': () => import('@/components/sections/transitions').then(m => ({ default: m.TransitionHeroSection })),
-  'offer-hero': () => import('@/components/sections/offer').then(m => ({ default: m.OfferHeroSection })),
-  'pricing': () => import('@/components/sections/offer').then(m => ({ default: m.PricingSection })),
+  'transition-hero': () => import('@/components/sections/transitions').then(({ TransitionHeroSection }) => ({
+    default: (props: any) => {
+      const { normalizeTransitionHeroProps } = require('@/core/adapters/PropNormalizer');
+      const normalized = normalizeTransitionHeroProps(props?.block || props);
+      return React.createElement(TransitionHeroSection, normalized);
+    },
+  })),
+  'offer-hero': () => import('@/components/sections/offer').then(({ OfferHeroSection }) => ({
+    default: (props: any) => {
+      const { normalizeOfferHeroProps } = require('@/core/adapters/PropNormalizer');
+      const normalized = normalizeOfferHeroProps(props?.block || props);
+      return React.createElement(OfferHeroSection, normalized);
+    },
+  })),
+  'pricing': () => import('@/components/sections/offer').then(({ PricingSection }) => ({
+    default: (props: any) => {
+      const { normalizePricingProps } = require('@/core/adapters/PropNormalizer');
+      const normalized = normalizePricingProps(props?.block || props);
+      return React.createElement(PricingSection, normalized);
+    },
+  })),
 
   // Container Components
   'container': () => import('@/components/editor/blocks/BasicContainerBlock'),
