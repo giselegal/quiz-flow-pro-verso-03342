@@ -431,7 +431,7 @@ export type Database = {
           slug: string
           status: string | null
           updated_at: string | null
-          user_id: string
+          user_id: string | null
           version: number
         }
         Insert: {
@@ -447,7 +447,7 @@ export type Database = {
           slug: string
           status?: string | null
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
           version?: number
         }
         Update: {
@@ -463,7 +463,7 @@ export type Database = {
           slug?: string
           status?: string | null
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
           version?: number
         }
         Relationships: [
