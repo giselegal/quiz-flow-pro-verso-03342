@@ -5,7 +5,7 @@
  * Permite edição 100% via JSON do sistema de templates v3.0
  */
 
-import HybridTemplateService from './HybridTemplateService';
+import HybridTemplateService from './deprecated/HybridTemplateService';
 
 export interface SaveResult {
     success: boolean;

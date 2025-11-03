@@ -1,9 +1,62 @@
-# 🗑️ SERVIÇOS DEPRECATED
+# 📦 Services Deprecados - Guia de Migração
 
-**Status:** Fase 1 - Deprecation Warnings Ativos  
-**Timeline:** Remoção prevista para 2025-12-01
+**Última atualização:** 2025-11-03
 
-## Arquivos Marcados como Deprecated
+Este documento lista os services que foram deprecados e movidos para `src/services/deprecated/`.
+
+---
+
+## ⚠️ LIMPEZA FASE 3 - TEMPLATE SERVICES (2025-11-03)
+
+### HybridTemplateService.ts
+**Data:** 2025-11-03  
+**Status:** ✅ Movido para `/deprecated`  
+**Motivo:** Adapter legado que apenas delega para templateService canônico  
+**Alternativa:** `import { templateService } from '@/services/canonical/TemplateService'`
+
+```typescript
+// ❌ ANTES
+import HybridTemplateService from '@/services/HybridTemplateService';
+const template = await HybridTemplateService.getTemplate('step-01');
+
+// ✅ DEPOIS
+import { templateService } from '@/services/canonical/TemplateService';
+const result = await templateService.getStep('step-01');
+if (result.success) {
+  const template = result.data;
+}
+```
+
+### Quiz21CompleteService.ts
+**Data:** 2025-11-03  
+**Status:** ✅ Movido para `/deprecated`  
+**Motivo:** Dados estáticos, não é service core  
+**Alternativa:** Import via `@/services/aliases` (temporário)
+
+```typescript
+// ❌ ANTES
+import { QUIZ_21_COMPLETE_DATA, createQuiz21CompleteViaService } from '@/services/Quiz21CompleteService';
+
+// ✅ DEPOIS
+import { QUIZ_21_COMPLETE_DATA } from '@/services/aliases';
+// Funções de criação: usar templateService ou funnelService diretamente
+```
+
+---
+
+## 🗑️ LIMPEZA FASE 2 - STUBS E CORRUPTED (2025-01-16)
+
+Movidos para `src/services/deprecated/`:
+- `QuizEditorBridge.ts.corrupted`
+- `SupabaseConfigurationStorage.stub.ts`
+- `analyticsEngine.stub.ts`
+- `componentLibrary.stub.ts`
+- `funnelSettingsService.stub.ts`
+- `improvedFunnelSystem.stub.ts`
+
+---
+
+## 🗑️ FASE 1 - SERVIÇOS DEPRECATED (Histórico)
 
 ### 1. Hooks
 

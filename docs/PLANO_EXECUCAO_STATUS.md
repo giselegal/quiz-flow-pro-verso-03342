@@ -76,26 +76,53 @@
 ## 📊 PROGRESSO GERAL
 
 ```
-████████████████████ 100% Prioridades 1-3 Concluídas!
+████████████████████ 100% Prioridades 1-3 | 🔄 FASE 3 iniciada (15%)
 
 ✅ Prioridade 1: 100% (3/3 itens)
 ✅ Prioridade 2: 100% (2/2 itens)
 ✅ Prioridade 3: 100% (1/1 item)
+🔄 Fase 3: 15% (Domínio 1: 40% | Domínios 2-4: 0%)
 ```
+
+## 🔄 FASE 3: LIMPEZA PROFUNDA (EM PROGRESSO)
+
+### 6. 🔄 Consolidar Services Duplicados - Domínio 1: Templates (3h)
+
+**Status:** 🔄 EM PROGRESSO (40% concluído)
+
+**Ações completadas:**
+1. ✅ Análise de uso dos 5 template services principais
+2. ✅ Movidos para `/deprecated`:
+   - `HybridTemplateService.ts` (adapter legado)
+   - `Quiz21CompleteService.ts` (dados estáticos)
+3. ✅ Mantida compatibilidade via re-exports em `aliases/index.ts`
+4. ✅ Documentação criada em `docs/SERVICES_MIGRATION_PHASE3.md`
+5. ✅ Warnings de depreciação preservados no código
+
+**Services ativos (aguardando migração futura):**
+- ⏳ `TemplatesCacheService.ts` - usado em 4 arquivos críticos do editor
+- ⏳ `TemplateLoader.ts` - usado no QuizModularEditor
+- ⏳ `TemplateRegistry.ts` - usado em 4 arquivos (bootstrap, editor, templates)
+
+**Próximos passos (Domínio 1):**
+- Analisar candidatos para próxima rodada de migração
+- Continuar consolidação gradual sem quebrar funcionalidades
+
+---
 
 ## 🎯 PRÓXIMA AÇÃO RECOMENDADA
 
-**Iniciar FASE 3:** Limpeza Profunda  
-**Próximo item:** Passo 6 - Consolidar Services Duplicados
+**Continuar FASE 3 - Passo 6:** Domínios 2-4  
+**Próximo domínio:** Quiz Services (3h)
 
-**Domínio inicial recomendado:** Template Services (3h)
-- Consolidar `HybridTemplateService`, `TemplatesCacheService`, etc.
-- Migrar para `src/services/canonical/TemplateService.ts`
-- Mover serviços obsoletos para `/deprecated`
+**Plano:**
+- Mapear `quizService.ts`, `quizDataService.ts`, `quizBuilderService.ts`, `quizResultsService.ts`
+- Consolidar em `canonical/DataService` e `canonical/EditorService`
+- Mover obsoletos para `/deprecated`
 
-**Estimativa de tempo:** 8-12 horas (total Passo 6)
-**Complexidade:** Alta
-**Impacto:** Muito Alto (redução de 60% dos services, 80→30 arquivos)
+**Estimativa restante:** 6-9 horas (Domínios 2-4)  
+**Complexidade:** Alta  
+**Impacto:** Muito Alto (meta: 80→30 services, redução de 60%)
 
 ---
 

@@ -55,15 +55,15 @@ export { default as MasterTemplateService } from '@/services/templates/MasterTem
 
 // ===== Compatibilidade com ServiceAliases (ponte de migração) =====
 // Template layer (legados com depreciação)
-export { default as HybridTemplateService } from '@/services/HybridTemplateService';
+export { default as HybridTemplateService } from '@/services/deprecated/HybridTemplateService';
 // Tipos úteis expostos via barrel para imports estáveis
-export type { StepTemplate } from '@/services/HybridTemplateService';
+export type { StepTemplate } from '@/services/deprecated/HybridTemplateService';
 
 // Storage compatível (já exportado acima como classe)
 // export { StorageService } from '@/services/canonical/StorageService';
 
 // Quiz e dados auxiliares
-export { QUIZ_21_COMPLETE_DATA } from '@/services/Quiz21CompleteService';
+export { QUIZ_21_COMPLETE_DATA } from '@/services/deprecated/Quiz21CompleteService';
 export { quizDataService } from '@/services/quizDataService';
 export { quizSupabaseService } from '@/services/quizSupabaseService';
 

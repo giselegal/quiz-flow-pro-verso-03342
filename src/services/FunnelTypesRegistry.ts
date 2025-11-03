@@ -5,7 +5,7 @@
  * que podem ser editados no ModernUnifiedEditor
  */
 
-import HybridTemplateService from './HybridTemplateService';
+import HybridTemplateService from './deprecated/HybridTemplateService';
 
 // ============================================================================
 // INTERFACES
