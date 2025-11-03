@@ -69,9 +69,42 @@ export function useBlockOperations(): UseBlockOperations {
     
     console.log(`🎨 [useBlockOperations] Carregando step ${stepKey} do template (${blocks.length} blocos)`);
     
+    // ✅ CRÍTICO: Normalizar blocos para garantir estrutura consistente
+    const normalizedBlocks = blocks.map((block) => {
+      const normalized = { ...block };
+      
+      // Garantir que properties e content sejam objetos
+      if (!normalized.properties || typeof normalized.properties !== 'object') {
+        normalized.properties = {};
+      }
+      if (!normalized.content || typeof normalized.content !== 'object') {
+        normalized.content = {};
+      }
+      
+      // Se properties vazio mas content tem dados, copiar para properties
+      if (Object.keys(normalized.properties).length === 0 && Object.keys(normalized.content).length > 0) {
+        normalized.properties = { ...normalized.content };
+        console.log(`🔄 [useBlockOperations] Copiando content → properties para bloco ${block.id}`);
+      }
+      
+      // Se content vazio mas properties tem dados, copiar para content
+      if (Object.keys(normalized.content).length === 0 && Object.keys(normalized.properties).length > 0) {
+        normalized.content = { ...normalized.properties };
+        console.log(`🔄 [useBlockOperations] Copiando properties → content para bloco ${block.id}`);
+      }
+      
+      console.log(`✅ [useBlockOperations] Bloco normalizado: ${block.id}`, {
+        type: normalized.type,
+        hasProperties: Object.keys(normalized.properties).length,
+        hasContent: Object.keys(normalized.content).length,
+      });
+      
+      return normalized;
+    });
+    
     setByStep((prev) => ({
       ...prev,
-      [stepKey]: blocks,
+      [stepKey]: normalizedBlocks,
     }));
     
     loadingRef.current[stepKey] = false;
@@ -237,7 +270,7 @@ export function useBlockOperations(): UseBlockOperations {
           return prev;
         }
 
-        // Atualizar bloco
+      // ✅ CRÍTICO: Atualizar bloco com imutabilidade garantida
         const updated = { 
           ...currentBlock, 
           ...patch, 
@@ -245,9 +278,19 @@ export function useBlockOperations(): UseBlockOperations {
           content: mergedElement.content,
         } as Block;
 
+        console.log(`✅ [useBlockOperations] Bloco atualizado (schema): ${blockId}`, {
+          stepKey,
+          type: updated.type,
+          propertiesKeys: Object.keys(updated.properties || {}),
+          contentKeys: Object.keys(updated.content || {}),
+        });
+
         const next = [...list];
         next[idx] = updated;
-        return { ...prev, [stepKey]: next };
+        
+        // ✅ CRÍTICO: Criar novo objeto de estado para forçar re-render
+        const newState = { ...prev, [stepKey]: next };
+        return newState;
       }
 
       // Fallback: Validação legada
@@ -283,9 +326,19 @@ export function useBlockOperations(): UseBlockOperations {
         properties: validation.data || { ...mergedData } 
       } as Block;
 
+      console.log(`✅ [useBlockOperations] Bloco atualizado (legado): ${blockId}`, {
+        stepKey,
+        type: updated.type,
+        propertiesKeys: Object.keys(updated.properties || {}),
+        contentKeys: Object.keys(updated.content || {}),
+      });
+
       const next = [...list];
       next[idx] = updated;
-      return { ...prev, [stepKey]: next };
+      
+      // ✅ CRÍTICO: Criar novo objeto de estado para forçar re-render
+      const newState = { ...prev, [stepKey]: next };
+      return newState;
     });
 
     // 🔧 CORREÇÃO FASE 4: Emitir evento de mudança para forçar re-renders

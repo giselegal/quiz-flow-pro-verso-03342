@@ -164,6 +164,48 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         id: 'canvas',
     });
 
+    // ✅ CRÍTICO: Sincronizar estado interno quando props mudarem
+    useEffect(() => {
+        console.log('🔄 [CanvasColumn] Props blocks changed:', {
+            currentStepKey,
+            blocksCount: blocksFromProps?.length || 0,
+            blockIds: blocksFromProps?.map(b => b.id) || [],
+        });
+        setBlocks(blocksFromProps ?? null);
+    }, [blocksFromProps, currentStepKey]);
+
+    // ✅ CRÍTICO: Escutar evento block-updated para forçar re-render
+    useEffect(() => {
+        const handleBlockUpdated = (event: Event) => {
+            const customEvent = event as CustomEvent;
+            const { stepKey, blockId } = customEvent.detail || {};
+            
+            console.log('🔔 [CanvasColumn] Recebeu evento block-updated:', {
+                stepKey,
+                blockId,
+                currentStepKey,
+                shouldUpdate: stepKey === currentStepKey,
+            });
+            
+            // Se a atualização for do step atual, forçar re-render
+            if (stepKey === currentStepKey) {
+                setBlocks(prev => {
+                    if (!prev) return prev;
+                    // Criar novo array para forçar re-render
+                    return [...prev];
+                });
+            }
+        };
+
+        window.addEventListener('block-updated', handleBlockUpdated);
+        console.log('👂 [CanvasColumn] Listener block-updated registrado');
+
+        return () => {
+            window.removeEventListener('block-updated', handleBlockUpdated);
+            console.log('🔇 [CanvasColumn] Listener block-updated removido');
+        };
+    }, [currentStepKey]);
+
     useEffect(() => {
         let cancelled = false;
         const load = async () => {

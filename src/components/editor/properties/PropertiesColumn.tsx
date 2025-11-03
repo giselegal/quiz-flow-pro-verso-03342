@@ -1,8 +1,9 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { SinglePropertiesPanel } from './SinglePropertiesPanel';
+import { loadDefaultSchemas } from '@/core/schema/loadDefaultSchemas';
 
 export interface PropertiesColumnProps {
   selectedBlock: Block | undefined;
@@ -23,12 +24,22 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onDuplicate,
   className = '',
 }) => {
+  // ✅ CRÍTICO: Garantir que schemas estão carregados
+  useEffect(() => {
+    loadDefaultSchemas();
+    appLogger.debug('🔧 [PropertiesColumn] Schemas carregados');
+  }, []);
+
   // Debug logs
   React.useEffect(() => {
     appLogger.debug('🏗️  PropertiesColumn renderizado:', {
       hasSelectedBlock: !!selectedBlock,
       selectedBlockType: selectedBlock?.type,
       selectedBlockId: selectedBlock?.id,
+      hasProperties: !!selectedBlock?.properties,
+      hasContent: !!selectedBlock?.content,
+      propertiesKeys: selectedBlock?.properties ? Object.keys(selectedBlock.properties) : [],
+      contentKeys: selectedBlock?.content ? Object.keys(selectedBlock.content) : [],
     });
   }, [selectedBlock]);
 
