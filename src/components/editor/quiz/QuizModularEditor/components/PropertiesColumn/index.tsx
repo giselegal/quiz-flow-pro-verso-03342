@@ -1,3 +1,4 @@
+// ⚙️ PROPERTIES COLUMN - FASE 8 UI Avançado
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -5,7 +6,10 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Settings, X, Edit3, Save, RotateCcw } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Settings, X, Edit3, Save, RotateCcw, ChevronDown, Info, Sparkles } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import type { Block } from '@/services/UnifiedTemplateRegistry';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
@@ -92,110 +96,207 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
     if (!selectedBlock) {
         return (
-            <div className="w-80 border-l bg-muted/30">
-                <div className="p-4 border-b">
-                    <h3 className="font-medium text-sm text-muted-foreground flex items-center gap-2">
-                        <Settings className="w-4 h-4" />
-                        Propriedades
-                    </h3>
+            <div className="w-80 border-l bg-gradient-to-b from-muted/20 to-background">
+                <div className="p-4 border-b bg-background/50 backdrop-blur-sm">
+                    <div className="flex items-center gap-2">
+                        <Settings className="w-4 h-4 text-primary" />
+                        <h3 className="font-semibold text-sm">Propriedades</h3>
+                    </div>
                 </div>
-                <div className="p-8 text-center text-muted-foreground">
-                    <Settings className="w-12 h-12 mx-auto mb-4 opacity-30" />
-                    <p className="text-sm">
-                        Selecione um bloco no canvas para editar suas propriedades
+                <div className="p-8 text-center text-muted-foreground animate-fade-in">
+                    <div className="bg-muted/30 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                        <Settings className="w-10 h-10 opacity-30" />
+                    </div>
+                    <p className="text-sm font-medium mb-2">
+                        Nenhum bloco selecionado
+                    </p>
+                    <p className="text-xs text-muted-foreground/70">
+                        Clique em um bloco no canvas para<br />editar suas propriedades
                     </p>
                 </div>
             </div>
         );
     }
 
+    // Agrupar propriedades por seção (básico, avançado, estilo)
+    const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
+
+    const toggleSection = (section: string) => {
+        setExpandedSections(prev => {
+            const next = new Set(prev);
+            if (next.has(section)) {
+                next.delete(section);
+            } else {
+                next.add(section);
+            }
+            return next;
+        });
+    };
+
     return (
-        <div className="w-80 border-l bg-background">
-            <div className="p-4 border-b">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Edit3 className="w-4 h-4" />
-                        <h3 className="font-medium text-sm">Propriedades</h3>
-                    </div>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={onClearSelection}
-                    >
-                        <X className="w-4 h-4" />
-                    </Button>
-                </div>
-            </div>
-
-            <ScrollArea className="flex-1">
-                <div className="p-4 space-y-6">
-                    {/* Informações do Bloco */}
-                    <Card className="p-3">
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <Label className="text-xs font-medium text-muted-foreground">
-                                    BLOCO SELECIONADO
-                                </Label>
-                                <Badge variant="outline" className="text-xs">
-                                    {selectedBlock.type}
-                                </Badge>
+        <TooltipProvider>
+            <div className="w-80 border-l bg-gradient-to-b from-background to-muted/20">
+                {/* Header melhorado */}
+                <div className="p-4 border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                            <div className="bg-primary/10 p-1.5 rounded">
+                                <Edit3 className="w-3.5 h-3.5 text-primary" />
                             </div>
-                            <p className="text-sm font-medium">
-                                {selectedBlock.id}
-                            </p>
+                            <h3 className="font-semibold text-sm">Propriedades</h3>
                         </div>
-                    </Card>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={onClearSelection}
+                            className="h-7 w-7"
+                        >
+                            <X className="w-4 h-4" />
+                        </Button>
+                    </div>
 
-                    {/* Propriedades Editáveis - Dinâmicas via Schema */}
-                    {hasSchema ? (
-                        <Card className="p-4">
-                            <div className="space-y-4">
-                                <Label className="text-xs font-medium text-muted-foreground">
-                                    PROPRIEDADES (SCHEMA-DRIVEN)
-                                </Label>
-                                <DynamicPropertyControls
-                                    elementType={selectedBlock.type}
-                                    properties={editedProperties}
-                                    onChange={(key, value) => handlePropertyChange(key, value)}
-                                />
-                            </div>
-                        </Card>
-                    ) : (
-                        <Card className="p-4">
-                            <p className="text-sm text-muted-foreground text-center">
-                                Este bloco não possui schema definido. Use o painel legado ou defina um schema JSON.
-                            </p>
-                        </Card>
-                    )}
-
-                    {/* Ações */}
-                    {hasSchema && (
-                        <>
-                            <Separator />
-                            <div className="flex gap-2">
-                                <Button
-                                    onClick={handleSave}
-                                    disabled={!isDirty}
-                                    className="flex-1"
-                                    size="sm"
-                                >
-                                    <Save className="w-4 h-4 mr-2" />
-                                    Salvar
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={handleReset}
-                                    disabled={!isDirty}
-                                    size="sm"
-                                >
-                                    <RotateCcw className="w-4 h-4" />
-                                </Button>
-                            </div>
-                        </>
+                    {/* Indicador de mudanças */}
+                    {isDirty && (
+                        <div className="flex items-center gap-2 text-xs text-amber-600 animate-fade-in">
+                            <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                            <span>Alterações não salvas</span>
+                        </div>
                     )}
                 </div>
-            </ScrollArea>
-        </div>
+
+                <ScrollArea className="flex-1 h-[calc(100vh-12rem)]">
+                    <div className="p-4 space-y-4">
+                        {/* Card de Informações do Bloco */}
+                        <Card className={cn(
+                            "p-3 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent",
+                            "animate-fade-in"
+                        )}>
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <Label className="text-xs font-medium text-muted-foreground uppercase">
+                                        Bloco Selecionado
+                                    </Label>
+                                    <Badge variant="secondary" className="text-[10px]">
+                                        {selectedBlock.type}
+                                    </Badge>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Sparkles className="h-3 w-3 text-primary/70" />
+                                    <p className="text-xs font-mono truncate">
+                                        {selectedBlock.id}
+                                    </p>
+                                </div>
+                            </div>
+                        </Card>
+
+                        {/* Propriedades Editáveis com Seções Colapsáveis */}
+                        {hasSchema ? (
+                            <div className="space-y-3">
+                                {/* Seção: Propriedades Básicas */}
+                                <Collapsible
+                                    open={expandedSections.has('basic')}
+                                    onOpenChange={() => toggleSection('basic')}
+                                >
+                                    <Card className="overflow-hidden">
+                                        <CollapsibleTrigger className="w-full p-3 hover:bg-accent/50 transition-colors">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <ChevronDown className={cn(
+                                                        "h-4 w-4 transition-transform",
+                                                        !expandedSections.has('basic') && "-rotate-90"
+                                                    )} />
+                                                    <span className="text-xs font-semibold uppercase text-muted-foreground">
+                                                        Propriedades
+                                                    </span>
+                                                </div>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Info className="h-3 w-3 text-muted-foreground" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p className="text-xs">Propriedades do bloco via schema</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </div>
+                                        </CollapsibleTrigger>
+
+                                        <CollapsibleContent className="animate-accordion-down">
+                                            <div className="p-4 pt-0 space-y-4">
+                                                <DynamicPropertyControls
+                                                    elementType={selectedBlock.type}
+                                                    properties={editedProperties}
+                                                    onChange={(key, value) => handlePropertyChange(key, value)}
+                                                />
+                                            </div>
+                                        </CollapsibleContent>
+                                    </Card>
+                                </Collapsible>
+
+                                {/* Dica de uso */}
+                                <Card className="p-3 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
+                                    <div className="flex gap-2">
+                                        <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                                        <p className="text-xs text-blue-700 dark:text-blue-300">
+                                            As propriedades são carregadas dinamicamente do schema JSON. 
+                                            Alterações aparecem em tempo real no canvas.
+                                        </p>
+                                    </div>
+                                </Card>
+                            </div>
+                        ) : (
+                            <Card className="p-6 text-center">
+                                <div className="bg-muted/30 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                                    <Settings className="w-6 h-6 opacity-30" />
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-1">
+                                    Schema não encontrado
+                                </p>
+                                <p className="text-xs text-muted-foreground/70">
+                                    Este bloco não possui schema definido.
+                                </p>
+                            </Card>
+                        )}
+
+                        {/* Ações (sempre visíveis quando há schema) */}
+                        {hasSchema && (
+                            <>
+                                <Separator className="my-4" />
+                                <div className="flex gap-2 sticky bottom-0 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4">
+                                    <Button
+                                        onClick={handleSave}
+                                        disabled={!isDirty}
+                                        className={cn(
+                                            "flex-1 gap-2",
+                                            isDirty && "animate-pulse"
+                                        )}
+                                        size="sm"
+                                    >
+                                        <Save className="w-4 h-4" />
+                                        {isDirty ? 'Salvar Alterações' : 'Salvo'}
+                                    </Button>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                onClick={handleReset}
+                                                disabled={!isDirty}
+                                                size="sm"
+                                                className="px-3"
+                                            >
+                                                <RotateCcw className="w-4 h-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="text-xs">Desfazer alterações</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </ScrollArea>
+            </div>
+        </TooltipProvider>
     );
 };
 
