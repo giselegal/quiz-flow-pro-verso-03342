@@ -307,6 +307,17 @@ function AppCore() {
                                     }}
                                 </Route>
 
+                                {/* 🎯 CRIAR FUNIL EDITÁVEL */}
+                                <Route path="/criar-funil">
+                                    {() => (
+                                        <Suspense fallback={<PageLoadingFallback message="Carregando..." />}>
+                                            {React.createElement(
+                                                React.lazy(() => import('./pages/CreateEditableFunnel'))
+                                            )}
+                                        </Suspense>
+                                    )}
+                                </Route>
+
                                 {/* 🔍 PÁGINAS DE DIAGNÓSTICO */}
                                 <Route path="/debug/templates">
                                     <div data-testid="template-diagnostic-page">
