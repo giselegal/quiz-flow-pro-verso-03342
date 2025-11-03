@@ -94,7 +94,14 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         return Array.from(dynamicMap.values());
     }, [schema, values, query]);
     const renderField = (prop: BasePropertySchema) => {
-        const value = values[prop.key] ?? prop.default ?? '';
+        // ✅ CORREÇÃO 3: Buscar valor em múltiplas fontes (prioridade: editado > content > properties > default)
+        const value = 
+            values[prop.key] ?? 
+            values.content?.[prop.key] ?? 
+            values.properties?.[prop.key] ?? 
+            prop.default ?? 
+            '';
+
         const common = { id: prop.key, name: prop.key } as const;
 
         // ✅ Detectar campos de imagem e usar ImageUploadField

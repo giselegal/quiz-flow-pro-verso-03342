@@ -1536,6 +1536,34 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         debounceTimerRef.current = setTimeout(() => { flushPendingPatch(); }, 300);
     }, [flushPendingPatch]);
 
+    // ✅ CORREÇÃO 2: Handler sincronizado que atualiza local + EditorProvider
+    const handleBlockPatchWithSync = useCallback((patch: Record<string, any>) => {
+        // 1) Atualizar UI local (debounced, rápido)
+        onBlockPatchDebounced(patch);
+
+        // 2) Sincronizar com EditorProvider (persistência)
+        if (editorCtx?.actions?.updateBlock && selectedBlock && selectedStep) {
+            const stepKey = editorCtx ? effectiveSelectedStepId : selectedStepId;
+            if (stepKey) {
+                editorCtx.actions.updateBlock(
+                    stepKey,
+                    selectedBlock.id,
+                    {
+                        properties: {
+                            ...selectedBlock.properties,
+                            ...patch,
+                        },
+                        content: {
+                            ...selectedBlock.content,
+                            ...patch,
+                        },
+                    }
+                );
+                appLogger.debug('✅ Bloco sincronizado com EditorProvider:', selectedBlock.id);
+            }
+        }
+    }, [onBlockPatchDebounced, editorCtx, selectedBlock, selectedStep, effectiveSelectedStepId, selectedStepId]);
+
     useEffect(() => () => { if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current); }, []);
 
 
@@ -3682,7 +3710,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     onSnippetRename={(s: any, newName: string) => { snippetsManager.update(s.id, { name: newName }); refreshSnippets(); }}
                                     onSnippetDelete={(s: any) => { snippetsManager.remove(s.id); refreshSnippets(); }}
                                     onRefreshSnippets={refreshSnippets}
-                                    onBlockPatch={onBlockPatchDebounced}
+                                    onBlockPatch={handleBlockPatchWithSync}
                                     isOfferStep={!!(selectedStep && selectedStep.type === 'offer')}
                                     OfferMapComponent={OfferMap as any}
                                     onOfferMapUpdate={(c: any) => { if (!selectedStep) return; setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }}
@@ -4027,7 +4055,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             onSnippetRename={(s: any, newName: string) => { snippetsManager.update(s.id, { name: newName }); refreshSnippets(); }}
                             onSnippetDelete={(s: any) => { snippetsManager.remove(s.id); refreshSnippets(); }}
                             onRefreshSnippets={refreshSnippets}
-                            onBlockPatch={onBlockPatchDebounced}
+                            onBlockPatch={handleBlockPatchWithSync}
                             isOfferStep={!!(selectedStep && selectedStep.type === 'offer')}
                             OfferMapComponent={OfferMap as any}
                             onOfferMapUpdate={(c: any) => { if (!selectedStep) return; setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }}

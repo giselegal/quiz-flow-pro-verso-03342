@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Copy, ArrowRightCircle, Trash2 } from 'lucide-react';
 import DynamicPropertiesForm from '../components/DynamicPropertiesForm';
 import { StorageService } from '@/services/core/StorageService';
+import { blockPropertiesAPI } from '@/api/internal/BlockPropertiesAPI';
 
 // Tipagens locais (mantêm o componente independente do arquivo gigante)
 export interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
@@ -86,6 +87,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     onUnifiedConfigPatch,
     onStepPropsApply,
 }) => {
+    // ✅ CORREÇÃO 1: Estado para dados reais do template via API
+    const [realBlockData, setRealBlockData] = React.useState<Record<string, any>>({});
+
     // Estado local para edição simples de scoring (UI leve)
     const [tieBreak, setTieBreak] = React.useState<'alphabetical' | 'first' | 'natural-first' | 'random'>(
         (currentRuntimeScoring?.tieBreak as any) || 'alphabetical',
@@ -93,6 +97,28 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     const [weightsText, setWeightsText] = React.useState<string>(
         currentRuntimeScoring?.weights ? JSON.stringify(currentRuntimeScoring.weights, null, 2) : '',
     );
+
+    // ✅ CORREÇÃO 1: Carregar dados reais do template quando bloco é selecionado
+    React.useEffect(() => {
+        if (!selectedBlock?.id) {
+            setRealBlockData({});
+            return;
+        }
+
+        blockPropertiesAPI.getRealBlockProperties(selectedBlock.id)
+            .then(props => {
+                appLogger.debug('✅ Dados reais carregados via BlockPropertiesAPI:', props);
+                setRealBlockData(props);
+            })
+            .catch(err => {
+                appLogger.error('❌ Erro ao carregar dados reais via API:', err);
+                // Fallback: usar dados locais
+                setRealBlockData({
+                    ...selectedBlock.properties,
+                    ...selectedBlock.content,
+                });
+            });
+    }, [selectedBlock?.id]);
 
     React.useEffect(() => {
         // Atualizar UI quando props externas mudarem
@@ -205,7 +231,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                 </button>
 
                                 {(() => {
-                                    const baseValues = { ...selectedBlock.properties, ...selectedBlock.content } as any;
+                                    // ✅ CORREÇÃO 1: Merge dados reais (template) com dados editados (local tem prioridade)
+                                    const baseValues = {
+                                        ...realBlockData, // Dados do template (base)
+                                        ...selectedBlock.properties, // Propriedades editadas (sobrescreve)
+                                        ...selectedBlock.content, // Conteúdo editado (sobrescreve)
+                                    } as any;
+
                                     // Flatten especial para 'pricing': refletir valores atuais de content.pricing no formulário
                                     if (selectedBlock.type === 'pricing') {
                                         const p = (selectedBlock.content as any)?.pricing || {};
@@ -218,6 +250,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                             baseValues.features = p.features ?? baseValues.features;
                                         }
                                     }
+
+                                    appLogger.debug('🔍 PropertiesPanel - mergedValues final:', baseValues);
+
                                     return (
                                         <DynamicPropertiesForm
                                             type={selectedBlock.type}
