@@ -140,7 +140,10 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
         const funnel = crud.currentFunnel as any;
         if (!funnel) return; // aguardar
 
-        // Se já tem quizSteps não crescer
+        // ✅ NOVO: Só aplicar seed se templateId foi explicitamente fornecido
+        const hasExplicitTemplate = Boolean(params.templateId);
+        
+        // Se já tem quizSteps, não fazer nada
         if (Array.isArray(funnel.quizSteps) && funnel.quizSteps.length > 0) {
             seedGuardRef.current = true;
             setSeedApplied(false);
@@ -150,8 +153,20 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
             return;
         }
 
+        // ✅ NOVO: Sem templateId = editor vazio (sem seed automático)
+        if (!hasExplicitTemplate) {
+            funnel.quizSteps = [];  // ✅ Iniciar VAZIO
+            seedGuardRef.current = true;
+            setSeedApplied(false);
+            setPhase('ready');
+            try { performance.mark('editor_bootstrap_ready'); performance.measure('editor_TTI', 'editor_bootstrap_start', 'editor_bootstrap_ready'); } catch { }
+            editorEvents.emit('EDITOR_BOOTSTRAP_READY', { funnelId: funnel.id });
+            console.log('🎨 Editor iniciado com canvas VAZIO (modo construção do zero)');
+            return;
+        }
+
+        // ✅ Aplicar seed APENAS se templateId fornecido
         try {
-            // ✅ MIGRADO: Usar TemplateService ao invés de QUIZ_STEPS
             const allSteps = templateService.getAllStepsSync();
             const quizSeedArray = Array.isArray(allSteps) ? allSteps as any[] : Object.values(allSteps as any);
             funnel.quizSteps = quizSeedArray.map(s => ({ ...s }));
@@ -164,12 +179,13 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
             setPhase('ready');
             try { performance.mark('editor_bootstrap_ready'); performance.measure('editor_TTI', 'editor_bootstrap_start', 'editor_bootstrap_ready'); } catch { }
             editorEvents.emit('EDITOR_BOOTSTRAP_READY', { funnelId: funnel.id });
+            console.log('📄 Template carregado:', params.templateId);
         } catch (e: any) {
             setError(e instanceof Error ? e : new Error(String(e)));
             setPhase('error');
             editorEvents.emit('EDITOR_BOOTSTRAP_ERROR', { error: String(e) });
         }
-    }, [phase, crud]);
+    }, [phase, crud, params.templateId]);
 
     // Progresso derivado da phase
     const progress = useMemo(() => {

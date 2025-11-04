@@ -4,11 +4,12 @@
  * Configuração das rotas do editor visual unificado usando wouter
  */
 
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useState, useCallback } from 'react';
 const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
 import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EditorProviderUnified, { useEditor } from '@/components/editor/EditorProviderUnified';
+import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
 
 /**
  * 🔧 CORREÇÃO CRÍTICA (Fase 1.1): Template não é Funnel!
@@ -53,13 +54,54 @@ const EditorRoutesInner: React.FC = () => {
     const funnelId = useFunnelIdFromLocation();
     const enableSupabase = useMemo(() => Boolean(funnelId), [funnelId]);
 
+    // Estado do modal de startup
+    const [showStartupModal, setShowStartupModal] = useState(false);
+    const [templateId, setTemplateId] = useState<string | undefined>();
+
+    // Detectar se deve mostrar modal na montagem inicial
+    useMemo(() => {
+        if (typeof window === 'undefined') return;
+        const params = new URLSearchParams(window.location.search);
+        const hasTemplate = params.has('template');
+        const hasFunnel = params.has('funnelId') || params.has('funnel');
+        
+        // Mostrar modal apenas se não tem template/funnel na URL
+        if (!hasTemplate && !hasFunnel) {
+            setShowStartupModal(true);
+        } else if (hasTemplate) {
+            setTemplateId(params.get('template') || undefined);
+        }
+    }, []);
+
+    const handleSelectMode = useCallback((mode: 'blank' | 'template') => {
+        setShowStartupModal(false);
+        
+        if (mode === 'template') {
+            // Adicionar ?template= na URL sem recarregar
+            const url = new URL(window.location.href);
+            url.searchParams.set('template', 'quiz21StepsComplete');
+            window.history.pushState({}, '', url);
+            setTemplateId('quiz21StepsComplete');
+        } else {
+            // Modo vazio - não adicionar templateId
+            setTemplateId(undefined);
+        }
+    }, []);
+
     return (
-        <EditorProviderUnified funnelId={funnelId} enableSupabase={enableSupabase}>
-            {import.meta.env.DEV ? <SaveDebugButton /> : null}
-            <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
-                <QuizModularEditor />
-            </Suspense>
-        </EditorProviderUnified>
+        <>
+            <EditorStartupModal 
+                open={showStartupModal}
+                onSelectMode={handleSelectMode}
+            />
+            
+            <EditorProviderUnified funnelId={funnelId} enableSupabase={enableSupabase}>
+                {import.meta.env.DEV ? <SaveDebugButton /> : null}
+                <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
+                    <QuizModularEditor templateId={templateId} />
+                </Suspense>
+            </EditorProviderUnified>
+        </>
     );
 };
 

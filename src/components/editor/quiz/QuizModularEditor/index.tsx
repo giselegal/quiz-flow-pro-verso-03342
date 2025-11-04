@@ -260,6 +260,12 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         </span>
                     )}
                     
+                    {!loadedTemplate && !isLoadingTemplate && !props.templateId && (
+                        <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
+                            🎨 Modo Construção Livre
+                        </span>
+                    )}
+                    
                     {editor.state.currentStepKey && (
                         <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
                             {editor.state.currentStepKey}
