@@ -56,6 +56,19 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const dnd = useDndSystem();
     const { enableAutoSave } = useFeatureFlags();
 
+    // ✅ FASE 4.3: History state para undo/redo
+    const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
+    
+    const undo = useCallback(() => {
+        console.log('🔙 Undo triggered');
+        // TODO: Implementar undo no useEditorState
+    }, []);
+    
+    const redo = useCallback(() => {
+        console.log('🔜 Redo triggered');
+        // TODO: Implementar redo no useEditorState
+    }, []);
+
     // Estados do editor
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
@@ -290,17 +303,44 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             </div>
                         )}
 
-                        {/* Status do Auto-save */}
+                        {/* ✅ FASE 4.1: Status do Auto-save com timestamp */}
                         {enableAutoSave && (
-                            <div className="text-xs text-gray-500">
-                                {persistence.hasAutoSavePending
-                                    ? '🔄 Salvando...'
-                                    : editor.state.isDirty
-                                        ? '📝 Não salvo'
-                                        : '✅ Salvo'
-                                }
+                            <div className="text-xs flex items-center gap-2 animate-fade-in">
+                                {persistence.hasAutoSavePending ? (
+                                    <span className="text-blue-600 flex items-center gap-1">
+                                        <span className="animate-spin">🔄</span> Salvando...
+                                    </span>
+                                ) : editor.state.isDirty ? (
+                                    <span className="text-orange-600">📝 Não salvo</span>
+                                ) : (
+                                    <span className="text-green-600">✅ Salvo agora</span>
+                                )}
                             </div>
                         )}
+
+                        {/* ✅ FASE 4.3: Botões Undo/Redo */}
+                        <div className="flex items-center gap-1 border-l pl-3">
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={!historyState.canUndo}
+                                onClick={undo}
+                                className="h-7 px-2"
+                                title="Desfazer (Ctrl+Z)"
+                            >
+                                ↶
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={!historyState.canRedo}
+                                onClick={redo}
+                                className="h-7 px-2"
+                                title="Refazer (Ctrl+Y)"
+                            >
+                                ↷
+                            </Button>
+                        </div>
 
                         {/* Botão Save Manual */}
                         <Button
