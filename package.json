@@ -18,6 +18,8 @@
     "analisar-etapas": "node scripts/analisador-etapas.mjs",
     "analisar-pontuacao": "node scripts/analisador-pontuacao.mjs",
     "verificar-schema": "node scripts/verificador-schema-hooks.mjs",
+    "analisar-gargalos": "node scripts/analisar-gargalos.mjs",
+    "analisar-gargalos:json": "node scripts/analisar-gargalos.mjs --json",
     "generate:templates": "tsx scripts/generate-templates.ts",
     "build:templates": "tsx scripts/build-templates-from-master.ts",
     "normalize:templates": "tsx scripts/normalize-quiz21-complete.ts",
