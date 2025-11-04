@@ -76,19 +76,19 @@
 ## 📊 PROGRESSO GERAL
 
 ```
-████████████████████ 100% Prioridades 1-3 | 🔄 FASE 3: 40%
+████████████████████ 100% Prioridades 1-3 | 🔄 FASE 3: 30%
 
 ✅ Prioridade 1: 100% (3/3 itens)
 ✅ Prioridade 2: 100% (2/2 itens)
 ✅ Prioridade 3: 100% (1/1 item)
-🔄 Fase 3 Consolidação: 40% (Domínio 1: 40% | Domínio 2: 20% | Domínio 3: 50% | Domínio 4: 0%)
+🔄 Fase 3 Consolidação: 30% (Domínio 1: 40% | Domínio 2: 20% | Domínio 3: 0% | Domínio 4: 0%)
 ```
 
 ## 🔄 FASE 3: LIMPEZA PROFUNDA (EM PROGRESSO)
 
 ### 6. 🔄 Consolidar Services Duplicados (15h total)
 
-**Status:** 🔄 EM PROGRESSO (40% concluído geral)
+**Status:** 🔄 EM PROGRESSO (30% concluído geral)
 
 #### Domínio 1: Template Services (40% concluído)
 
@@ -133,41 +133,50 @@
 - Avaliar consolidação dos 4 services ativos em canonical services
 - Requer análise cuidadosa: são services core com lógica complexa
 
-#### Domínio 3: Funnel Services (50% concluído)
+#### Domínio 3: Funnel Services (0% concluído)
 
-**Status:** ✅ PARCIALMENTE CONCLUÍDO
+**Status:** ⏳ ANÁLISE REALIZADA, MIGRAÇÃO ADIADA
 
 **Ações completadas:**
 1. ✅ Análise de uso dos funnel services
-2. ✅ Movidos para `/deprecated`:
-   - `funnelService.ts` (API HTTP antiga)
-   - `funnelService.refactored.ts` (redundante)
-   - `EnhancedFunnelService.ts` (bridge não usado)
-   - `FunnelUnifiedService.ts` (obsoleto)
-3. ✅ Mantida compatibilidade via re-exports em `aliases/index.ts`
-4. ✅ Documentação atualizada em todas as docs
+2. ⚠️ **MIGRAÇÃO ADIADA:** Descobertos 10+ arquivos consumidores ativos
+3. ⚠️ **INCOMPATIBILIDADES:** APIs legadas incompatíveis com canonical services
 
-**Services ativos (mantidos):**
+**Services identificados (necessitam refatoração dos consumidores):**
+- ⏳ `funnelService.ts` (API HTTP antiga) - usado em `pageConfigService.ts`
+- ⏳ `funnelService.refactored.ts` (redundante) - não usado diretamente
+- ⏳ `EnhancedFunnelService.ts` (bridge) - usado em `UnifiedCRUDProvider.tsx`
+- ⏳ `FunnelUnifiedService.ts` (700+ linhas) - usado em 6+ contextos
+
+**Services canônicos disponíveis:**
 - ✅ `core/ConsolidatedFunnelService.ts` - service principal
 - ✅ `core/ContextualFunnelService.ts` - isolamento por contexto
+- ✅ `canonical/FunnelService` - service canônico
+- ✅ `canonical/DataService` - operations de data
 
 **Próximos passos (Domínio 3):**
-- Monitorar uso dos services ativos
-- Avaliar se é necessária consolidação adicional
+1. Refatorar `UnifiedCRUDProvider.tsx` para usar canonical services
+2. Refatorar contextos funnel para usar canonical services
+3. Refatorar adapters para usar canonical services
+4. Após refatoração completa, mover para `/deprecated`
 
 ---
 
 ## 🎯 PRÓXIMA AÇÃO RECOMENDADA
 
-**Continuar FASE 3 - Passo 6:** Domínio 4  
-**Próximo domínio:** Data Services (3h)
+**Continuar FASE 3 - Passo 6:** Domínio 3 (Refatoração)  
+**Próximo domínio:** Refatorar consumidores de Funnel Services (6-8h)
 
 **Plano:**
-- Mapear data services duplicados
-- Consolidar em `canonical/DataService`
-- Mover obsoletos para `/deprecated`
+1. Refatorar `UnifiedCRUDProvider.tsx` para canonical services
+2. Refatorar contextos funnel (`UnifiedFunnelContext`, `UnifiedFunnelContextRefactored`)
+3. Refatorar adapters (`FunnelAdapterRegistry`, `QuizFunnelAdapter`)
+4. Refatorar hooks (`useFunnelLoader`, `useFunnelLoaderRefactored`)
+5. Após refatorações, mover funnel services para `/deprecated`
 
-**Estimativa restante:** 3-6 horas (Domínio 4)
+**Alternativa:** Pular para Domínio 4 (Data Services) enquanto aguarda refatoração
+
+**Estimativa restante:** 9-14 horas (Domínios 3-4)
 **Complexidade:** Alta  
 **Impacto:** Muito Alto (meta: 80→30 services, redução de 60%)
 

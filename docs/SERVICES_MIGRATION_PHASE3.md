@@ -223,125 +223,139 @@ await quizSupabaseService.saveQuizResponse({ sessionId, stepNumber, ... });
 
 ---
 
-## 3️⃣ DOMÍNIO 3: Funnel Services (50% concluído)
+## 3️⃣ DOMÍNIO 3: Funnel Services (0% concluído - MIGRAÇÃO ADIADA)
 
-### Services Movidos para `/deprecated`
+### ⚠️ ANÁLISE REALIZADA - MIGRAÇÃO REVERTIDA
 
-#### 1. ✅ funnelService.ts
-**Status:** Movido  
-**Motivo:** API HTTP antiga (localhost:3001), obsoleta  
-**Uso ativo:** ❌ Apenas em pageConfigService (será atualizado)  
-**Ação tomada:**
-- Movido para `src/services/deprecated/funnelService.ts`
-- Mantido re-export em `aliases/index.ts` para compatibilidade temporária
-- Service usava fetch para API local inexistente
+**Status:** ⏳ ADIADO  
+**Motivo:** Descobertos 10+ arquivos consumidores ativos com incompatibilidades de API
 
-**Migração recomendada para consumidores:**
+#### Tentativa de Migração (REVERTIDA)
+
+Durante a análise, identificamos 4 funnel services candidatos a deprecação:
+
+1. **`funnelService.ts`**
+   - API HTTP antiga (localhost:3001)
+   - Usado em: `pageConfigService.ts`
+   - Motivo de reversão: Dependência ativa
+
+2. **`funnelService.refactored.ts`**
+   - Versão refatorada com Supabase
+   - Uso: Nenhum direto
+   - Motivo de reversão: Pode ser removido após refatoração
+
+3. **`EnhancedFunnelService.ts`**
+   - Bridge para canonical service
+   - Usado em: `UnifiedCRUDProvider.tsx`
+   - Motivo de reversão: Dependência ativa crítica
+
+4. **`FunnelUnifiedService.ts`**
+   - Service unificado de 700+ linhas
+   - Usado em: 6+ arquivos (contextos, adapters, hooks, pages)
+   - Motivo de reversão: **API incompatível com canonical services**
+
+#### Arquivos Consumidores Identificados
+
+```
+✗ src/contexts/data/UnifiedCRUDProvider.tsx
+✗ src/contexts/funnel/UnifiedFunnelContext.tsx  
+✗ src/contexts/funnel/UnifiedFunnelContextRefactored.tsx
+✗ src/editor/adapters/FunnelAdapterRegistry.ts
+✗ src/editor/adapters/FunnelAdapterTypes.ts
+✗ src/editor/adapters/QuizFunnelAdapter.ts
+✗ src/hooks/useFunnelLoader.ts
+✗ src/hooks/useFunnelLoaderRefactored.ts
+✗ src/pages/IndexedDBMigrationTestPage.tsx
+✗ src/services/core/ContextualFunnelService.ts
+✗ src/services/pageConfigService.ts
+```
+
+#### Incompatibilidades de API Detectadas
+
+**Problema principal:** `FunnelUnifiedService` retorna objetos `UnifiedFunnelData`, mas `canonical/DataService` retorna `ServiceResult<Funnel>` com API diferente.
+
 ```typescript
-// ❌ ANTES (deprecado)
-import { funnelService } from '@/services/funnelService';
-const funnel = await funnelService.getFunnelById(id);
+// ❌ FunnelUnifiedService (legado)
+interface UnifiedFunnelData {
+  id: string;
+  name: string;
+  context: FunnelContext;
+  userId: string;
+  // ... 6+ propriedades específicas
+}
 
-// ✅ DEPOIS (canônico)
-import { funnelService } from '@/services/canonical/FunnelService';
-const result = await funnelService.getFunnel(id);
-if (result.success) {
-  const funnel = result.data;
+// ✅ Canonical/DataService  
+type ServiceResult<T> = {
+  success: boolean;
+  data: T;
+}
+
+interface Funnel {
+  id: string;
+  userId: string;
+  name: string;
+  // ... propriedades diferentes
 }
 ```
 
-#### 2. ✅ funnelService.refactored.ts
-**Status:** Movido  
-**Motivo:** Versão refatorada, redundante com canonical  
-**Uso ativo:** ❌ Não usado  
-**Ação tomada:**
-- Movido para `src/services/deprecated/funnelService.refactored.ts`
-- Service tinha integração Supabase, mas canonical já existe
+#### Services Canônicos Disponíveis
 
-**Migração:**
-```typescript
-// ❌ ANTES
-import { funnelService } from '@/services/funnelService.refactored';
-
-// ✅ DEPOIS
-import { funnelService } from '@/services/canonical/FunnelService';
-```
-
-#### 3. ✅ EnhancedFunnelService.ts
-**Status:** Movido  
-**Motivo:** Bridge para canonical, não usado  
-**Uso ativo:** ❌ Não usado  
-**Ação tomada:**
-- Movido para `src/services/deprecated/EnhancedFunnelService.ts`
-- Era apenas um wrapper com warnings
-
-**Migração:**
-```typescript
-// ❌ ANTES
-import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
-
-// ✅ DEPOIS
-import { funnelService } from '@/services/canonical/FunnelService';
-```
-
-#### 4. ✅ FunnelUnifiedService.ts
-**Status:** Movido  
-**Motivo:** Service unificado obsoleto, 700+ linhas legadas  
-**Uso ativo:** ⚠️ Usado em 6+ arquivos de contextos  
-**Ação tomada:**
-- Movido para `src/services/deprecated/FunnelUnifiedService.ts`
-- **IMPORTANTE:** Service tem dependência quebrada (`./storage/IndexedDBService`)
-- Re-export em `aliases/index.ts` aponta para `canonical/DataService`
-
-**Migração:**
-```typescript
-// ❌ ANTES
-import { FunnelUnifiedService } from '@/services/FunnelUnifiedService';
-
-// ✅ DEPOIS - Para data operations
-import { dataService } from '@/services/canonical/DataService';
-
-// ✅ DEPOIS - Para funnel operations
-import { funnelService } from '@/services/canonical/FunnelService';
-```
+- ✅ `canonical/FunnelService` - CRUD de funnels
+- ✅ `canonical/DataService` - Operations de data
+- ✅ `core/ConsolidatedFunnelService` - Service consolidado
+- ✅ `core/ContextualFunnelService` - Isolamento por contexto
 
 ---
 
-### ⏳ Services Ativos (Não Mover)
+### 📋 Plano de Migração (Sprint Futura)
 
-#### 5. 📋 core/ConsolidatedFunnelService.ts
-**Status:** ⚠️ ATIVO - Serviço principal  
-**Motivo:** Service core de 405 linhas, integra com UnifiedServiceManager  
-**Usado em:** Sistema de gerenciamento unificado
-**Funcionalidades:**
-- CRUD de funnels
-- Métricas e analytics
-- Dashboard summary
-- Cache integrado
+#### Fase 1: Refatorar Consumidores (6-8h)
 
-#### 6. 📋 core/ContextualFunnelService.ts
-**Status:** ⚠️ ATIVO - Isolamento por contexto  
-**Motivo:** Service de 300 linhas, gerencia isolamento  
-**Usado em:** Instâncias contextuais (editor, templates, preview)
-**Funcionalidades:**
-- CRUD contextualizado
-- Copy entre contextos
-- Clear context
-- Stats por contexto
+1. **UnifiedCRUDProvider.tsx** (2h)
+   - Adaptar para usar `canonical/DataService`
+   - Criar adapter para converter `ServiceResult<Funnel>` → `UnifiedFunnelData`
+   - Manter compatibilidade com consumidores
+
+2. **Contextos Funnel** (2h)
+   - `UnifiedFunnelContext.tsx`
+   - `UnifiedFunnelContextRefactored.tsx`
+   - Migrar para canonical services
+
+3. **Adapters & Hooks** (2h)
+   - `FunnelAdapterRegistry.ts`
+   - `QuizFunnelAdapter.ts`
+   - `useFunnelLoader.ts`
+   - `useFunnelLoaderRefactored.ts`
+
+4. **Pages & Utils** (1-2h)
+   - `IndexedDBMigrationTestPage.tsx`
+   - `pageConfigService.ts`
+   - `ContextualFunnelService.ts`
+
+#### Fase 2: Mover para `/deprecated` (1h)
+
+Após 100% dos consumidores refatorados:
+- Mover `FunnelUnifiedService.ts` → `deprecated/`
+- Mover `EnhancedFunnelService.ts` → `deprecated/`
+- Mover `funnelService.ts` → `deprecated/`
+- Mover `funnelService.refactored.ts` → `deprecated/`
+- Atualizar `aliases/index.ts`
 
 ---
 
 ## 📊 PROGRESSO DOMÍNIO 3
 
 ```
-█████░░░░░ 50% Concluído
+░░░░░░░░░░ 0% Concluído (Análise: 100% | Migração: 0%)
 
-✅ Movidos para /deprecated:  4/6 (67%)
-⏳ Services ativos mantidos:  2/6 (33%)
+✅ Análise realizada:      100%
+⏳ Refatoração pendente:   0% (11 arquivos)
+⏳ Movidos para deprecated: 0/4 services
 ```
 
-**Services movidos:** funnelService, funnelService.refactored, EnhancedFunnelService, FunnelUnifiedService  
-**Services ativos:** ConsolidatedFunnelService, ContextualFunnelService
+**Status:** Análise completa, aguardando refatoração de consumidores  
+**Bloqueio:** Incompatibilidades de API  
+**Estimativa:** 6-8h de refatoração + 1h de migração
 
 ---
 
