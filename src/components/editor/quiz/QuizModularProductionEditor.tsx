@@ -1,4 +1,38 @@
 /**
+ * ⚠️⚠️⚠️ DEPRECATED - NÃO USE ESTE ARQUIVO ⚠️⚠️⚠️
+ * 
+ * Este arquivo foi substituído por:
+ * @see src/components/editor/quiz/QuizModularEditor/index.tsx (502 linhas)
+ * 
+ * MOTIVO DA DEPRECIAÇÃO:
+ * - 4,345 linhas vs 502 linhas (86% redução)
+ * - Eager loading vs lazy loading inteligente
+ * - +75 KB de bundle desnecessário
+ * - TTI mais lento (4-5s vs 2s)
+ * - Não usa TemplateService.lazyLoadStep()
+ * - Imports diretos causam bundle bloat
+ * 
+ * IMPACTO NO BUNDLE:
+ * - Com este arquivo: ~500 KB
+ * - Sem este arquivo: ~180 KB
+ * - Economia: 64% (-320 KB)
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES (INCORRETO)
+ * import QuizModularProductionEditor from '@/components/editor/quiz/QuizModularProductionEditor';
+ * 
+ * // ✅ DEPOIS (CORRETO)
+ * import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor';
+ * ```
+ * 
+ * SERÁ REMOVIDO EM: Sprint 4 Fase 6 (após migração completa de testes)
+ * 
+ * @deprecated Use QuizModularEditor instead
+ * @see https://github.com/your-repo/docs/MIGRATION_GUIDE.md
+ */
+
+/**
  * 🎯 QUIZ MODULAR PRODUCTION EDITOR - 4 Colunas Completo
  * 
  * Layout profissional:
@@ -17,7 +51,7 @@
 
 
 const logModule = createLogger({ namespace: 'QuizModularEditor' });
-logModule.debug('📦 QuizModularProductionEditor: Module loading...');
+logModule.debug('⚠️ DEPRECATED: QuizModularProductionEditor loading (use QuizModularEditor instead)');
 
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
 import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)

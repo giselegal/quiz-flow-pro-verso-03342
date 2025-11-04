@@ -69,9 +69,6 @@ const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModula
 // 🧪 EDITOR MODULAR - FASE 1, 2, 3 (Registry Universal)
 const EditorModular = lazy(() => import('./pages/EditorModular'));
 
-// 🧪 FALLBACK: Editor legacy para compatibilidade (será removido na ONDA 3)
-const QuizModularProductionEditorLegacy = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor'));
-
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
