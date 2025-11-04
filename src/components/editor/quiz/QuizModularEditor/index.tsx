@@ -67,19 +67,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const dnd = useDndSystem();
     const { enableAutoSave } = useFeatureFlags();
 
-    // ✅ FASE 1: Undo/Redo conectado ao useEditorState
-    const undo = useCallback(() => {
-        editor.undo();
-    }, [editor]);
-    
-    const redo = useCallback(() => {
-        editor.redo();
-    }, [editor]);
-
-    const historyState = {
-        canUndo: editor.canUndo,
-        canRedo: editor.canRedo,
-    };
+    const undo = useCallback(() => editor.undo(), [editor]);
+    const redo = useCallback(() => editor.redo(), [editor]);
+    const historyState = { canUndo: editor.canUndo, canRedo: editor.canRedo };
 
     // Estados do editor
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
@@ -104,19 +94,18 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         }));
     }, []); // Sem dependências - carregar uma vez apenas
 
-    // Persistência
+    // Persistência com auto-save
     const persistence = useEditorPersistence({
         enableAutoSave,
         autoSaveInterval: 2000,
         onSaveSuccess: (stepKey) => {
-            console.log(`✅ Auto-save completed for step: ${stepKey}`);
+            console.log(`✅ Auto-save: ${stepKey}`);
             editor.markDirty(false);
         },
-        onSaveError: (stepKey, error) => console.error(`❌ Auto-save failed for ${stepKey}:`, error),
+        onSaveError: (stepKey, error) => console.error(`❌ Auto-save failed:`, error),
         getDirtyBlocks: () => {
             const stepKey = editor.state.currentStepKey;
             if (!stepKey || !editor.state.isDirty) return null;
-
             const blocks = ops.getBlocks(stepKey);
             return blocks ? { stepKey, blocks } : null;
         },
@@ -125,32 +114,83 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-    // ✅ FASE 1: Carregamento condicional via templateService
+    // ✅ FASE 2: Batch loading otimizado + Preload inteligente
     useEffect(() => {
-        // ❌ NÃO carregar se não tem templateId (modo canvas vazio)
         if (!props.templateId) {
             appLogger.info('🎨 [QuizModularEditor] Modo canvas vazio - sem template');
             return;
         }
 
-        async function loadTemplate() {
+        async function loadTemplateOptimized() {
             setIsLoadingTemplate(true);
             try {
                 const tid = props.templateId!;
-                appLogger.info(`🔍 [QuizModularEditor] Carregando template: ${tid}`);
+                appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
                 
+                // 🚀 FASE 2.1: Batch loading de TODOS os steps
                 const { templateService } = await import('@/services/canonical/TemplateService');
                 await templateService.preloadTemplate(tid);
                 
-                // ✅ Buscar steps dinamicamente do template (não hardcoded)
                 const templateStepsResult = templateService.steps.list();
                 if (!templateStepsResult.success) {
                     throw new Error('Falha ao carregar lista de steps do template');
                 }
                 const stepIds = templateStepsResult.data.map((s: any) => s.id);
                 
-                appLogger.info(`📋 [QuizModularEditor] Template tem ${stepIds.length} steps`);
+                // 🚀 FASE 2.2: Carregar todos os steps em paralelo (batch)
+                const startTime = performance.now();
+                const stepPromises = stepIds.map((sid: string) => 
+                    templateService.getStep(sid, tid).catch(err => {
+                        console.warn(`⚠️ Failed to load ${sid}:`, err);
+                        return null;
+                    })
+                );
                 
+                const results = await Promise.all(stepPromises);
+                const loadTime = performance.now() - startTime;
+                
+                // Carregar blocos no SuperUnifiedProvider
+                results.forEach((result, idx) => {
+                    if (result?.success && result.data) {
+                        actions.reorderBlocks(idx + 1, result.data);
+                    }
+                });
+                
+                appLogger.info(`✅ Batch loaded ${results.length} steps in ${loadTime.toFixed(0)}ms`);
+                setLoadedTemplate({ 
+                    name: tid, 
+                    steps: templateStepsResult.data 
+                });
+            } catch (error) {
+                appLogger.error('❌ Template loading failed:', error);
+            } finally {
+                setIsLoadingTemplate(false);
+            }
+        }
+
+    // ✅ FASE 2: Batch loading otimizado com preload inteligente
+    useEffect(() => {
+        if (!props.templateId) {
+            appLogger.info('🎨 [QuizModularEditor] Modo canvas vazio - sem template');
+            return;
+        }
+
+        async function loadTemplateOptimized() {
+            setIsLoadingTemplate(true);
+            try {
+                const tid = props.templateId!;
+                appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
+                
+                const { templateService } = await import('@/services/canonical/TemplateService');
+                await templateService.preloadTemplate(tid);
+                
+                const templateStepsResult = templateService.steps.list();
+                if (!templateStepsResult.success) {
+                    throw new Error('Falha ao carregar lista de steps do template');
+                }
+                const stepIds = templateStepsResult.data.map((s: any) => s.id);
+                
+                // Batch loading paralelo
                 await Promise.all(
                     stepIds.map(async (stepId: string) => {
                         const result = await templateService.getStep(stepId, tid);
@@ -162,7 +202,6 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 
                 setLoadedTemplate({ name: `Template: ${tid}`, steps: [] });
                 appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
-                
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
             } finally {
@@ -170,14 +209,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             }
         }
 
-        loadTemplate();
+        loadTemplateOptimized();
     }, [props.templateId, ops]);
-
-    // Carregar blocos iniciais
-    useEffect(() => {
-        ops.ensureLoaded(editor.state.currentStepKey);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editor.state.currentStepKey]);
 
     const blocks: Block[] | null = ops.getBlocks(editor.state.currentStepKey);
 

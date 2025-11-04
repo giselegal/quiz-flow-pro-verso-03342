@@ -544,8 +544,8 @@ interface SuperUnifiedContextType {
     isFeatureEnabled: (feature: keyof SuperUnifiedState['features']) => boolean;
 }
 
-// 🎯 CONTEXT
-const SuperUnifiedContext = createContext<SuperUnifiedContextType | null>(null);
+// 🎯 CONTEXT (exportado para useSuperUnified hook)
+export const SuperUnifiedContext = createContext<SuperUnifiedContextType | null>(null);
 
 // 🎯 PROVIDER PROPS
 interface SuperUnifiedProviderProps {
