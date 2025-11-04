@@ -8,7 +8,16 @@
 import React, { useEffect, useState } from 'react';
 import { editorMetrics } from '@/utils/editorMetrics';
 import { Button } from '@/components/ui/button';
-import { BarChart, RefreshCw, Download } from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
+
+// ✅ FIX: Usar ícone SVG simples ao invés de BarChart do lucide-react
+const BarChartIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="12" y1="20" x2="12" y2="10"></line>
+    <line x1="18" y1="20" x2="18" y2="4"></line>
+    <line x1="6" y1="20" x2="6" y2="16"></line>
+  </svg>
+);
 
 export const MetricsPanel: React.FC = () => {
   const [report, setReport] = useState<any>(null);
@@ -38,8 +47,8 @@ export const MetricsPanel: React.FC = () => {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 z-50 shadow-lg"
       >
-        <BarChart className="w-4 h-4 mr-2" />
-        Métricas
+        <BarChartIcon />
+        <span className="ml-2">Métricas</span>
       </Button>
     );
   }
@@ -48,7 +57,7 @@ export const MetricsPanel: React.FC = () => {
     <div className="fixed bottom-4 right-4 z-50 bg-card border rounded-lg shadow-xl w-96 max-h-96 overflow-auto">
       <div className="sticky top-0 bg-card border-b p-3 flex items-center justify-between">
         <h3 className="font-semibold text-sm flex items-center gap-2">
-          <BarChart className="w-4 h-4" />
+          <BarChartIcon />
           Editor Performance
         </h3>
         <div className="flex gap-2">

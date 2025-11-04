@@ -40,8 +40,18 @@ const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 // ✅ FASE 2.3: Error Boundary para steps
 import { StepErrorBoundary } from '../StepErrorBoundary';
 
-// ✅ FASE 3.3: Metrics Panel (dev only)
-const MetricsPanel = React.lazy(() => import('./components/MetricsPanel'));
+// ✅ FASE 3.3: Metrics Panel (dev only) - com error boundary
+let MetricsPanel: React.LazyExoticComponent<React.ComponentType<any>> | null = null;
+
+if (import.meta.env.DEV) {
+  try {
+    MetricsPanel = React.lazy(() => import('./components/MetricsPanel').catch(() => ({
+      default: () => null // Fallback silencioso se falhar
+    })));
+  } catch (e) {
+    console.warn('MetricsPanel failed to load:', e);
+  }
+}
 
 export type QuizModularEditorProps = {
     funnelId?: string;
@@ -481,7 +491,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             </DragOverlay>
 
             {/* ✅ FASE 3.3: Metrics Panel (dev mode only) */}
-            {import.meta.env.DEV && (
+            {import.meta.env.DEV && MetricsPanel && (
                 <Suspense fallback={null}>
                     <MetricsPanel />
                 </Suspense>
