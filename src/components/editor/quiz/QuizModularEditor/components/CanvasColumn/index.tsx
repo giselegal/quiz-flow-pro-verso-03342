@@ -1,4 +1,5 @@
 // 🎨 CANVAS COLUMN - Integração com Universal Block Renderer
+// ✅ FASE 4.2: Skeleton loading states adicionado
 import React, { useEffect, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -7,6 +8,7 @@ import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/editor';
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
+import { SkeletonBlock } from '../SkeletonBlock';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -253,7 +255,16 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     }
 
     if (!blocksFromProps && loading) {
-        return <div className="p-3 text-sm">Carregando blocos de {currentStepKey}…</div>;
+        return (
+            <div className="p-3 space-y-2">
+                <div className="text-sm text-muted-foreground mb-4">
+                    Carregando blocos de {currentStepKey}…
+                </div>
+                <SkeletonBlock />
+                <SkeletonBlock />
+                <SkeletonBlock />
+            </div>
+        );
     }
 
     if (error) {

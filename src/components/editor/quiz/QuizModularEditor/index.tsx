@@ -37,6 +37,12 @@ const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLi
 const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
 const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 
+// ✅ FASE 2.3: Error Boundary para steps
+import { StepErrorBoundary } from '../StepErrorBoundary';
+
+// ✅ FASE 3.3: Metrics Panel (dev only)
+const MetricsPanel = React.lazy(() => import('./components/MetricsPanel'));
+
 export type QuizModularEditorProps = {
     funnelId?: string;
     initialStepKey?: string;
@@ -177,6 +183,30 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             persistence.saveStepBlocks(stepKey, blocks);
         }
     }, [editor.state.currentStepKey, ops, persistence]);
+
+    // ✅ FASE 2.3: Handler de reload para error boundary
+    const handleReloadStep = useCallback(async () => {
+        const stepKey = editor.state.currentStepKey;
+        if (!stepKey) return;
+
+        appLogger.info(`🔄 [QuizModularEditor] Recarregando step após erro: ${stepKey}`);
+        
+        try {
+            const { templateService } = await import('@/services/canonical/TemplateService');
+            
+            // Invalidar cache do step
+            templateService.invalidateTemplate(stepKey);
+            
+            // Recarregar
+            const result = await templateService.getStep(stepKey, props.templateId);
+            if (result.success && result.data) {
+                ops.loadStepFromTemplate(stepKey, result.data);
+                appLogger.info(`✅ [QuizModularEditor] Step recarregado: ${result.data.length} blocos`);
+            }
+        } catch (error) {
+            appLogger.error('[QuizModularEditor] Erro ao recarregar step:', error);
+        }
+    }, [editor.state.currentStepKey, ops, props.templateId]);
 
     return (
         <DndContext
@@ -332,30 +362,35 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         <GripVertical className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </PanelResizeHandle>
 
-                    {/* Coluna 3: Canvas */}
+                    {/* Coluna 3: Canvas com Error Boundary */}
                     <Panel defaultSize={40} minSize={30}>
                         <Suspense fallback={<div className="flex items-center justify-center h-full text-gray-500">Carregando canvas…</div>}>
                             <div className="h-full bg-gray-50 overflow-y-auto">
                                 {canvasMode === 'edit' ? (
-                                    <CanvasColumn
-                                        currentStepKey={editor.state.currentStepKey}
-                                        blocks={blocks}
-                                        selectedBlockId={editor.state.selectedBlockId}
-                                        onRemoveBlock={(id) => {
-                                            ops.removeBlock(editor.state.currentStepKey, id);
-                                            editor.markDirty(true);
-                                        }}
-                                        onMoveBlock={(from, to) => {
-                                            ops.reorderBlock(editor.state.currentStepKey, from, to);
-                                            editor.markDirty(true);
-                                        }}
-                                        onUpdateBlock={(id, patch) => {
-                                            // ✅ FASE 2.1: updateBlock agora é void (debounced)
-                                            ops.updateBlock(editor.state.currentStepKey, id, patch);
-                                            editor.markDirty(true);
-                                        }}
-                                        onBlockSelect={editor.selectBlock}
-                                    />
+                                    <StepErrorBoundary 
+                                        stepId={editor.state.currentStepKey || 'unknown'}
+                                        onReset={handleReloadStep}
+                                    >
+                                        <CanvasColumn
+                                            currentStepKey={editor.state.currentStepKey}
+                                            blocks={blocks}
+                                            selectedBlockId={editor.state.selectedBlockId}
+                                            onRemoveBlock={(id) => {
+                                                ops.removeBlock(editor.state.currentStepKey, id);
+                                                editor.markDirty(true);
+                                            }}
+                                            onMoveBlock={(from, to) => {
+                                                ops.reorderBlock(editor.state.currentStepKey, from, to);
+                                                editor.markDirty(true);
+                                            }}
+                                            onUpdateBlock={(id, patch) => {
+                                                // ✅ FASE 2.1: updateBlock agora é void (debounced)
+                                                ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                                editor.markDirty(true);
+                                            }}
+                                            onBlockSelect={editor.selectBlock}
+                                        />
+                                    </StepErrorBoundary>
                                 ) : (
                                     <PreviewPanel
                                         currentStepKey={editor.state.currentStepKey}
@@ -404,6 +439,13 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     </div>
                 ) : null}
             </DragOverlay>
+
+            {/* ✅ FASE 3.3: Metrics Panel (dev mode only) */}
+            {import.meta.env.DEV && (
+                <Suspense fallback={null}>
+                    <MetricsPanel />
+                </Suspense>
+            )}
         </DndContext>
     );
 }

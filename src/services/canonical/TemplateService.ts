@@ -29,6 +29,7 @@ import { CanonicalServicesMonitor } from './monitoring';
 import { cacheService } from './CacheService';
 import { UnifiedTemplateRegistry } from '../deprecated/UnifiedTemplateRegistry';
 import type { Block } from '@/types/editor';
+import { editorMetrics } from '@/utils/editorMetrics'; // ✅ FASE 3.3
 
 /**
  * Template metadata
@@ -201,19 +202,43 @@ export class TemplateService extends BaseCanonicalService {
    * @param templateId ID opcional do template (ex: "quiz21StepsComplete")
    */
   async getStep(stepId: string, templateId?: string): Promise<ServiceResult<Block[]>> {
+    const startTime = performance.now(); // ✅ FASE 3.3: Track timing
+    
     try {
-      CanonicalServicesMonitor.trackUsage(this.name, 'getStep');
+      // ✅ FASE 1.2: Verificar cache PRIMEIRO
+      const cacheKey = `template:${templateId || 'default'}:${stepId}`;
+      const cachedResult = cacheService.templates.get<Block[]>(cacheKey);
       
-      // Passar templateId para registry se fornecido
+      if (cachedResult.success && cachedResult.data) {
+        this.log(`⚡ Cache HIT: ${stepId}`);
+        editorMetrics.trackCacheHit(cacheKey); // ✅ FASE 3.3
+        editorMetrics.trackLoadTime(stepId, performance.now() - startTime, { source: 'cache' });
+        return this.createResult(cachedResult.data);
+      }
+      
+      this.log(`⏳ Cache MISS: ${stepId} - Loading...`);
+      editorMetrics.trackCacheMiss(cacheKey); // ✅ FASE 3.3
+      
+      // FASE 2: Carregar do registry (lazy loading)
       const blocks = await this.registry.getStep(stepId, templateId);
 
       if (!blocks || blocks.length === 0) {
-        const context = templateId ? ` (template: ${templateId})` : '';
-        return this.createError(new Error(`Step not found or empty: ${stepId}${context}`));
+        return this.createError(new Error(`Step not found: ${stepId}`));
       }
-
+      
+      // ✅ FASE 1.2: Armazenar em cache (TTL: 10min)
+      cacheService.templates.set(cacheKey, blocks, 600000);
+      
+      // ✅ FASE 3.3: Track metrics
+      editorMetrics.trackLoadTime(stepId, performance.now() - startTime, { 
+        source: 'registry', 
+        blocksCount: blocks.length 
+      });
+      
+      this.log(`✅ Carregado ${blocks.length} blocos para ${stepId}`);
       return this.createResult(blocks);
     } catch (error) {
+      editorMetrics.trackError(error as Error, { stepId, templateId }); // ✅ FASE 3.3
       this.error('getStep failed:', error);
       return this.createError(error as Error);
     }
