@@ -52,7 +52,7 @@ export const useContextualEditorPersistence = (
     const [isLoading, setIsLoading] = useState(false);
     const [service] = useState(() => new ContextualFunnelService(context));
 
-    const convertToContextualData = (data: FunnelData): ContextualFunnelData => {
+    const convertToContextualData = (data: FunnelData): any => {
         return {
             id: data.id,
             name: data.name,
@@ -61,31 +61,33 @@ export const useContextualEditorPersistence = (
             theme: data.settings.theme,
             isPublished: data.isPublished,
             version: data.version,
+            settings: data.settings,
             config: data.settings,
             createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+            updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date(),
             lastModified: data.updatedAt ? new Date(data.updatedAt) : new Date(),
             context,
         };
     };
 
-    const convertFromContextualData = (data: ContextualFunnelData): FunnelData => {
+    const convertFromContextualData = (data: any): FunnelData => {
         return {
             id: data.id,
             name: data.name,
             description: data.description || '',
             isPublished: data.isPublished || false,
             version: data.version || 1,
-            settings: data.config || {},
+            settings: data.settings || data.config || {},
             pages: (data.pages || []).map((page: any) => ({
                 id: page.id,
-                pageType: page.page_type || 'step',
-                pageOrder: page.page_order || 1,
+                pageType: page.page_type || page.type || 'step',
+                pageOrder: page.page_order || page.order || 1,
                 title: page.title || 'Untitled',
                 blocks: Array.isArray(page.blocks) ? page.blocks : [],
                 metadata: typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
             })),
             createdAt: typeof data.createdAt === 'string' ? data.createdAt : data.createdAt?.toISOString(),
-            updatedAt: data.lastModified?.toISOString(),
+            updatedAt: (data.updatedAt || data.lastModified)?.toISOString?.() || new Date().toISOString(),
         };
     };
 
@@ -96,7 +98,7 @@ export const useContextualEditorPersistence = (
                 console.log(`💾 Salvando funil no contexto ${context}:`, data.id);
 
                 const contextualData = convertToContextualData(data);
-                await service.saveFunnel(contextualData as any); // Force cast for compatibility
+                await service.saveFunnel(contextualData); // Now compatible with UnifiedFunnelData
 
                 toast({
                     title: 'Sucesso',

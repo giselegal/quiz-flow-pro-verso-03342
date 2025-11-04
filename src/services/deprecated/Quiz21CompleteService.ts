@@ -442,17 +442,15 @@ export async function createQuiz21CompleteViaService(): Promise<string | null> {
 
         const createdFunnel = await funnelService.createFunnel(unifiedFunnelData);
 
-        // Salvar páginas usando updateFunnel com páginas incluídas
-        await funnelService.updateFunnel(createdFunnel.id, {
-            pages: QUIZ_21_COMPLETE_DATA.pages.map(page => ({
-                id: page.id,
-                type: page.page_type,
-                order: page.page_order,
-                title: page.title,
-                blocks: page.blocks,
-                metadata: page.metadata || {},
-            })),
-        }, user?.id || 'anonymous');
+        // Salvar blocos de cada página usando saveStepBlocks
+        for (const page of QUIZ_21_COMPLETE_DATA.pages) {
+            const stepKey = page.id;
+            await funnelService.saveStepBlocks(
+                createdFunnel.id,
+                stepKey,
+                page.blocks || []
+            );
+        }
 
         console.log(`✅ Quiz 21 Complete criado: ${createdFunnel.id}`);
         return createdFunnel.id;
