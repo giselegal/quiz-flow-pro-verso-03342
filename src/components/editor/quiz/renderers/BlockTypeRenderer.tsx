@@ -85,14 +85,90 @@ const GenericBlock: React.FC<BlockRendererProps> = ({ block, isSelected, isEdita
 
 export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest }) => {
     const content = (() => {
-        switch (String(block.type)) {
+        // ✅ FASE 4: Aliases expandidos para tipos legacy
+        const normalizedType = String(block.type).toLowerCase().trim();
+        
+        switch (normalizedType) {
+            // ===== ALIASES DE TIPOS CRÍTICOS =====
+            case 'hero-block':
+            case 'hero':
+                return <IntroLogoHeaderBlock block={block} {...rest} />;
+            
+            case 'welcome-form-block':
+                return <IntroFormBlock block={block} {...rest} onNameSubmit={(rest as any)?.contextData?.onNameSubmit} />;
+            
+            case 'heading':
+            case 'title':
+                return <TextInlineAtomic block={block} {...rest} />;
+            
+            case 'question-block':
+                return <OptionsGridAtomic block={block} {...rest} contextData={rest.contextData} />;
+            
+            case 'option-grid':
+            case 'options grid':
+                return <OptionsGridAtomic block={block} {...rest} contextData={rest.contextData} />;
+            
+            case 'transition.next':
+                return <TransitionHeroBlock block={block} {...rest} contextData={rest.contextData} />;
+            
+            case 'result.headline':
+                return <ResultMainBlock block={block} {...rest} />;
+            
+            case 'result.secondarylist':
+                return <ResultSecondaryStylesBlock block={block} {...rest} />;
+            
+            case 'offer.core':
+                return (
+                    <SelectableBlock
+                        blockId={block.id}
+                        isSelected={!!rest.isSelected}
+                        isEditable={!!rest.isEditable}
+                        onSelect={() => rest.onSelect?.(block.id)}
+                        blockType="CTA da Oferta"
+                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                        isDraggable={true}
+                    >
+                        <CTAInlineBlock block={block as any} isSelected={rest.isSelected} />
+                    </SelectableBlock>
+                );
+            
+            case 'offer.urgency':
+                return (
+                    <SelectableBlock
+                        blockId={block.id}
+                        isSelected={!!rest.isSelected}
+                        isEditable={!!rest.isEditable}
+                        onSelect={() => rest.onSelect?.(block.id)}
+                        blockType="Urgência"
+                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                        isDraggable={true}
+                    >
+                        <UrgencyTimerInlineBlock block={block as any} isSelected={rest.isSelected} />
+                    </SelectableBlock>
+                );
+            
+            case 'offer.testimonial':
+                return (
+                    <SelectableBlock
+                        blockId={block.id}
+                        isSelected={!!rest.isSelected}
+                        isEditable={!!rest.isEditable}
+                        onSelect={() => rest.onSelect?.(block.id)}
+                        blockType="Depoimentos"
+                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                        isDraggable={true}
+                    >
+                        <TestimonialsBlock block={block as any} />
+                    </SelectableBlock>
+                );
+            
             // ===== INTRO (Step 01) =====
             case 'intro-hero':
             case 'intro-logo-header':
                 // Preferir bloco atômico para cabeçalho (logo + linha decorativa)
                 return <IntroLogoHeaderBlock block={block} {...rest} />;
             case 'quiz-intro-header':
-                // Compatibilidade: mapear para atômico para manter padronização
+                // ✅ FASE 4: Alias para intro-logo-header
                 return <IntroLogoHeaderBlock block={block} {...rest} />;
             case 'welcome-form':
                 // Mapear seção v3 para bloco atômico do form

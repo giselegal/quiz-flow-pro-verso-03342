@@ -1,0 +1,73 @@
+{
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-15",
+    "name": "Pergunta (Blocos)",
+    "description": "Pergunta de múltipla escolha com grid de opções",
+    "category": "question",
+    "tags": [
+      "question",
+      "options"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "q-15",
+      "type": "question-block",
+      "config": {
+        "questionNumber": "3 de 6",
+        "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "quase-todos-dias",
+            "text": "Quase todos os dias — é sempre uma indecisão"
+          },
+          {
+            "id": "compromissos-importantes",
+            "text": "Sempre que tenho um compromisso importante"
+          },
+          {
+            "id": "as-vezes-limitada",
+            "text": "Às vezes, mas me sinto limitada nas escolhas"
+          },
+          {
+            "id": "raramente-segura",
+            "text": "Raramente — já me sinto segura ao me vestir"
+          }
+        ]
+      },
+      "properties": {
+        "questionNumber": "3 de 6",
+        "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "quase-todos-dias",
+            "text": "Quase todos os dias — é sempre uma indecisão"
+          },
+          {
+            "id": "compromissos-importantes",
+            "text": "Sempre que tenho um compromisso importante"
+          },
+          {
+            "id": "as-vezes-limitada",
+            "text": "Às vezes, mas me sinto limitada nas escolhas"
+          },
+          {
+            "id": "raramente-segura",
+            "text": "Raramente — já me sinto segura ao me vestir"
+          }
+        ]
+      }
+    }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "step_completed"
+    ],
+    "trackingId": "step-15-blocks"
+  }
+}

@@ -1,99 +1,53 @@
 {
-  "templateVersion": "3.0",
+  "templateVersion": "3.1",
   "templateId": "quiz21StepsComplete",
-  "name": "Quiz de Estilo Pessoal - 21 Etapas (V3 Editor Ready)",
-  "description": "Master JSON V3 com steps em sections para editor com blocos reordenáveis e inserção entre blocos",
+  "name": "Quiz de Estilo Pessoal - 21 Etapas Completo",
+  "description": "Master JSON V3.1 com 21 steps em formato blocks[] para editor com blocos reordenáveis",
   "metadata": {
-    "createdAt": "2025-10-24T00:00:00.000Z",
-    "updatedAt": "2025-10-24T00:00:00.000Z",
-    "author": "Editor Generator",
-    "version": "3.0.0",
-    "_notes": "Este arquivo é um exemplo V3 pronto para o editor. Cada section vira um bloco reordenável. Para inserir no meio, adicione uma nova section com position adequada."
+    "createdAt": "2025-11-04T20:00:00.000Z",
+    "updatedAt": "2025-11-04T20:00:00.000Z",
+    "author": "Editor System",
+    "version": "3.1.0",
+    "_notes": "Este arquivo referencia 21 steps em formato V3.1 (blocks[]). Cada step é carregado de /steps/{step-id}.json"
   },
-  "steps": {
-    "step-01": {
-      "templateVersion": "3.0",
-      "metadata": {
-        "id": "step-01-intro-v3-min",
-        "name": "Introdução",
-        "category": "intro",
-        "version": "3.0.0"
-      },
-      "theme": {
-        "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937" },
-        "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
-      },
-      "sections": [
-        { "type": "heading-inline", "id": "intro-title", "content": { "title": "Bem-vinda ao Quiz de Estilo" }, "style": { "padding": 16 }, "position": 0 },
-        { "type": "text-inline", "id": "intro-subtitle", "content": { "text": "Descubra seu estilo predominante em minutos." }, "position": 1 },
-        { "type": "button-inline", "id": "start-button", "content": { "buttonText": "Começar", "buttonUrl": "#next" }, "position": 2 }
-      ],
-      "navigation": { "nextStep": "step-02" }
+  "steps": [
+    { "id": "step-01", "name": "Introdução", "type": "intro", "order": 1, "file": "./steps/step-01.json" },
+    { "id": "step-02", "name": "Q1: Tipo de Roupa", "type": "question", "order": 2, "file": "./steps/step-02.json" },
+    { "id": "step-03", "name": "Q2: Personalidade", "type": "question", "order": 3, "file": "./steps/step-03.json" },
+    { "id": "step-04", "name": "Q3: Estampas", "type": "question", "order": 4, "file": "./steps/step-04.json" },
+    { "id": "step-05", "name": "Q4: Detalhes", "type": "question", "order": 5, "file": "./steps/step-05.json" },
+    { "id": "step-06", "name": "Q5: Casacos", "type": "question", "order": 6, "file": "./steps/step-06.json" },
+    { "id": "step-07", "name": "Q6: Roupas Favoritas", "type": "question", "order": 7, "file": "./steps/step-07.json" },
+    { "id": "step-08", "name": "Q7: Calças", "type": "question", "order": 8, "file": "./steps/step-08.json" },
+    { "id": "step-09", "name": "Q8: Sapatos", "type": "question", "order": 9, "file": "./steps/step-09.json" },
+    { "id": "step-10", "name": "Q9: Acessórios", "type": "question", "order": 10, "file": "./steps/step-10.json" },
+    { "id": "step-11", "name": "Q10: Tecidos", "type": "question", "order": 11, "file": "./steps/step-11.json" },
+    { "id": "step-12", "name": "Transição Principal", "type": "transition", "order": 12, "file": "./steps/step-12.json" },
+    { "id": "step-13", "name": "S1: Percepção de Imagem", "type": "question", "order": 13, "file": "./steps/step-13.json" },
+    { "id": "step-14", "name": "S2: Desafios ao se Vestir", "type": "question", "order": 14, "file": "./steps/step-14.json" },
+    { "id": "step-15", "name": "S3: Frequência do Dilema", "type": "question", "order": 15, "file": "./steps/step-15.json" },
+    { "id": "step-16", "name": "S4: Investimento", "type": "question", "order": 16, "file": "./steps/step-16.json" },
+    { "id": "step-17", "name": "S5: Valor do Investimento", "type": "question", "order": 17, "file": "./steps/step-17.json" },
+    { "id": "step-18", "name": "S6: Resultado Desejado", "type": "question", "order": 18, "file": "./steps/step-18.json" },
+    { "id": "step-19", "name": "Transição Final", "type": "transition", "order": 19, "file": "./steps/step-19.json" },
+    { "id": "step-20", "name": "Resultado", "type": "result", "order": 20, "file": "./steps/step-20.json" },
+    { "id": "step-21", "name": "Oferta", "type": "offer", "order": 21, "file": "./steps/step-21.json" }
+  ],
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#fffaf7",
+      "text": "#432818"
     },
-    "step-02": {
-      "templateVersion": "3.0",
-      "metadata": {
-        "id": "step-02-v3-min",
-        "name": "Pergunta 1",
-        "category": "question",
-        "version": "3.0.0"
-      },
-      "sections": [
-        {
-          "type": "question-title",
-          "id": "step-02-title",
-          "content": { "text": "Pergunta 1 de 10" },
-          "style": { "padding": 16 },
-          "position": 0
-        },
-        {
-          "type": "options grid",
-          "id": "step-02-options",
-          "content": {
-            "options": [
-              { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
-              { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
-              { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
-              { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" }
-            ],
-            "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
-            "showImages": true
-          },
-          "style": { "padding": 16 },
-          "position": 1
-        },
-        {
-          "type": "button-inline",
-          "id": "step-02-cta",
-          "content": { "buttonText": "Continuar", "buttonUrl": "#next" },
-          "position": 2
-        }
-      ],
-      "validation": {
-        "required": ["selectedOptions"],
-        "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
-      },
-      "behavior": { "autoAdvance": true },
-      "navigation": { "nextStep": "step-03" }
-    },
-    "step-03": {
-      "templateVersion": "3.0",
-      "metadata": { "id": "step-03-v3-min", "name": "Pergunta 2", "category": "question", "version": "3.0.0" },
-      "sections": [
-        { "type": "question-title", "id": "step-03-title", "content": { "text": "Pergunta 2 de 10" }, "position": 0 },
-        { "type": "text-inline", "id": "step-03-tip", "content": { "text": "Dica: pense no seu dia a dia." }, "position": 1 },
-        { "type": "options grid", "id": "step-03-options", "content": { "options": [
-          { "id": "jeans", "text": "Jeans" },
-          { "id": "alfaiataria", "text": "Alfaiataria" },
-          { "id": "vestidos", "text": "Vestidos" },
-          { "id": "athleisure", "text": "Athleisure" }
-        ], "columns": 2, "multipleSelection": true, "minSelections": 1, "maxSelections": 3 }, "position": 2 },
-        { "type": "button-inline", "id": "step-03-cta", "content": { "buttonText": "Próxima", "buttonUrl": "#next" }, "position": 3 }
-      ],
-      "navigation": { "nextStep": "step-04" }
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
     }
+  },
+  "navigation": {
+    "flow": "linear",
+    "allowBack": true,
+    "showProgress": true
   }
 }

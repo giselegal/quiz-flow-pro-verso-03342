@@ -30,6 +30,7 @@ import { cacheService } from './CacheService';
 import { UnifiedTemplateRegistry } from '../deprecated/UnifiedTemplateRegistry';
 import type { Block } from '@/types/editor';
 import { editorMetrics } from '@/utils/editorMetrics'; // ✅ FASE 3.3
+import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: Adapter para normalização
 
 /**
  * Template metadata
@@ -226,17 +227,30 @@ export class TemplateService extends BaseCanonicalService {
         return this.createError(new Error(`Step not found: ${stepId}`));
       }
       
+      // ✅ FASE 1: Normalizar formato usando adapter
+      // O adapter converte automaticamente V2/V3 sections[] → V3.1 blocks[]
+      const normalizedBlocks = blocks.map((block: any) => {
+        // Se o bloco já está no formato correto, retornar como está
+        if (block.type && block.content) {
+          return block;
+        }
+        
+        // Caso contrário, tentar normalizar
+        const normalized = templateFormatAdapter.normalize({ blocks: [block] });
+        return normalized.blocks[0] || block;
+      });
+      
       // ✅ FASE 1.2: Armazenar em cache (TTL: 10min)
-      cacheService.templates.set(cacheKey, blocks, 600000);
+      cacheService.templates.set(cacheKey, normalizedBlocks, 600000);
       
       // ✅ FASE 3.3: Track metrics
       editorMetrics.trackLoadTime(stepId, performance.now() - startTime, { 
         source: 'registry', 
-        blocksCount: blocks.length 
+        blocksCount: normalizedBlocks.length 
       });
       
-      this.log(`✅ Carregado ${blocks.length} blocos para ${stepId}`);
-      return this.createResult(blocks);
+      this.log(`✅ Carregado e normalizado ${normalizedBlocks.length} blocos para ${stepId}`);
+      return this.createResult(normalizedBlocks);
     } catch (error) {
       editorMetrics.trackError(error as Error, { stepId, templateId }); // ✅ FASE 3.3
       this.error('getStep failed:', error);
