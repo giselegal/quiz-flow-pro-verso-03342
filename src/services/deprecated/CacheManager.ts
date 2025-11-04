@@ -19,7 +19,7 @@
  * ```
  */
 
-import { hybridCache, HybridCacheStrategy } from './core/HybridCacheStrategy';
+import { hybridCache, HybridCacheStrategy } from '../core/HybridCacheStrategy';
 import { appLogger } from '@/utils/logger';
 import { performanceProfiler } from '@/utils/performanceProfiler';
 
