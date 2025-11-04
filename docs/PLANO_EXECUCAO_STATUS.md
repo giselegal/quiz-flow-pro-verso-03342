@@ -76,19 +76,19 @@
 ## 📊 PROGRESSO GERAL
 
 ```
-████████████████████ 100% Prioridades 1-3 | 🔄 FASE 3: 30%
+████████████████████ 100% Prioridades 1-3 | 🔄 FASE 3: 45%
 
 ✅ Prioridade 1: 100% (3/3 itens)
 ✅ Prioridade 2: 100% (2/2 itens)
 ✅ Prioridade 3: 100% (1/1 item)
-🔄 Fase 3 Consolidação: 30% (Domínio 1: 40% | Domínio 2: 20% | Domínio 3: 0% | Domínio 4: 0%)
+🔄 Fase 3 Consolidação: 45% (Domínio 1: 40% | Domínio 2: 20% | Domínio 3: 0% | Domínio 4: 60%)
 ```
 
 ## 🔄 FASE 3: LIMPEZA PROFUNDA (EM PROGRESSO)
 
 ### 6. 🔄 Consolidar Services Duplicados (15h total)
 
-**Status:** 🔄 EM PROGRESSO (30% concluído geral)
+**Status:** 🔄 EM PROGRESSO (45% concluído geral)
 
 #### Domínio 1: Template Services (40% concluído)
 
@@ -177,6 +177,53 @@
 **Alternativa:** Pular para Domínio 4 (Data Services) enquanto aguarda refatoração
 
 **Estimativa restante:** 9-14 horas (Domínios 3-4)
+
+**Complexidade:** Alta (Domínio 3 bloqueado por refatorações)  
+**Impacto:** Muito Alto (meta: 80→30 services, redução de 60%)
+
+#### Domínio 4: Data Services (60% concluído)
+
+**Status:** 🔄 EM PROGRESSO
+
+**Ações completadas:**
+1. ✅ Análise de uso dos data services
+2. ✅ Movidos para `/deprecated`:
+   - `core/EnhancedUnifiedDataService.ts` (475 linhas, não usado)
+   - `core/UnifiedDataService.ts` (761 linhas, apenas importado pelo Enhanced)
+   - `quizDataAdapter.ts` (47 linhas, placeholder/stub)
+3. ✅ Documentação atualizada
+
+**Services ativos (NÃO mover):**
+- ✅ `canonical/DataService.ts` - Service principal consolidado
+- ✅ `canonical/data/AnalyticsDataService.ts` - Especializado em analytics
+- ✅ `canonical/data/FunnelDataService.ts` - CRUD de funnels
+- ✅ `canonical/data/ParticipantDataService.ts` - Gestão de participantes
+- ✅ `canonical/data/ResultDataService.ts` - Resultados de quiz
+- ✅ `canonical/data/SessionDataService.ts` - Sessões de quiz
+- ✅ `core/QuizDataService.ts` - Service ativo core
+- ✅ `core/RealDataAnalyticsService.ts` - Analytics em tempo real
+- ✅ `quizDataService.ts` - 654 linhas, usado em 3 arquivos
+
+**Próximos passos (Domínio 4):**
+- Avaliar se há mais data services candidatos a deprecação
+- Documentar migrações recomendadas
+
+---
+
+## 🎯 PRÓXIMA AÇÃO RECOMENDADA
+
+**FASE 3 - STATUS ATUALIZADO:**
+- Domínio 1 (Templates): 40% ✅
+- Domínio 2 (Quiz): 20% ✅
+- Domínio 3 (Funnel): 0% ⏳ (bloqueado, refatoração 6-8h)
+- Domínio 4 (Data): 60% ✅
+
+**Próximas opções:**
+1. Continuar Domínio 4: Buscar mais data services duplicados
+2. Revisar Domínio 1-2: Identificar mais candidatos
+3. Começar refatoração do Domínio 3 (6-8h intensivas)
+
+**Estimativa restante:** 3-5 horas (finalizar Domínios 1,2,4) + 6-8h (Domínio 3)
 **Complexidade:** Alta  
 **Impacto:** Muito Alto (meta: 80→30 services, redução de 60%)
 
