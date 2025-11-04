@@ -223,7 +223,129 @@ await quizSupabaseService.saveQuizResponse({ sessionId, stepNumber, ... });
 
 ---
 
-## 🔄 DOMÍNIO 3: FUNNEL SERVICES (FUTURO)
+## 3️⃣ DOMÍNIO 3: Funnel Services (50% concluído)
+
+### Services Movidos para `/deprecated`
+
+#### 1. ✅ funnelService.ts
+**Status:** Movido  
+**Motivo:** API HTTP antiga (localhost:3001), obsoleta  
+**Uso ativo:** ❌ Apenas em pageConfigService (será atualizado)  
+**Ação tomada:**
+- Movido para `src/services/deprecated/funnelService.ts`
+- Mantido re-export em `aliases/index.ts` para compatibilidade temporária
+- Service usava fetch para API local inexistente
+
+**Migração recomendada para consumidores:**
+```typescript
+// ❌ ANTES (deprecado)
+import { funnelService } from '@/services/funnelService';
+const funnel = await funnelService.getFunnelById(id);
+
+// ✅ DEPOIS (canônico)
+import { funnelService } from '@/services/canonical/FunnelService';
+const result = await funnelService.getFunnel(id);
+if (result.success) {
+  const funnel = result.data;
+}
+```
+
+#### 2. ✅ funnelService.refactored.ts
+**Status:** Movido  
+**Motivo:** Versão refatorada, redundante com canonical  
+**Uso ativo:** ❌ Não usado  
+**Ação tomada:**
+- Movido para `src/services/deprecated/funnelService.refactored.ts`
+- Service tinha integração Supabase, mas canonical já existe
+
+**Migração:**
+```typescript
+// ❌ ANTES
+import { funnelService } from '@/services/funnelService.refactored';
+
+// ✅ DEPOIS
+import { funnelService } from '@/services/canonical/FunnelService';
+```
+
+#### 3. ✅ EnhancedFunnelService.ts
+**Status:** Movido  
+**Motivo:** Bridge para canonical, não usado  
+**Uso ativo:** ❌ Não usado  
+**Ação tomada:**
+- Movido para `src/services/deprecated/EnhancedFunnelService.ts`
+- Era apenas um wrapper com warnings
+
+**Migração:**
+```typescript
+// ❌ ANTES
+import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
+
+// ✅ DEPOIS
+import { funnelService } from '@/services/canonical/FunnelService';
+```
+
+#### 4. ✅ FunnelUnifiedService.ts
+**Status:** Movido  
+**Motivo:** Service unificado obsoleto, 700+ linhas legadas  
+**Uso ativo:** ⚠️ Usado em 6+ arquivos de contextos  
+**Ação tomada:**
+- Movido para `src/services/deprecated/FunnelUnifiedService.ts`
+- **IMPORTANTE:** Service tem dependência quebrada (`./storage/IndexedDBService`)
+- Re-export em `aliases/index.ts` aponta para `canonical/DataService`
+
+**Migração:**
+```typescript
+// ❌ ANTES
+import { FunnelUnifiedService } from '@/services/FunnelUnifiedService';
+
+// ✅ DEPOIS - Para data operations
+import { dataService } from '@/services/canonical/DataService';
+
+// ✅ DEPOIS - Para funnel operations
+import { funnelService } from '@/services/canonical/FunnelService';
+```
+
+---
+
+### ⏳ Services Ativos (Não Mover)
+
+#### 5. 📋 core/ConsolidatedFunnelService.ts
+**Status:** ⚠️ ATIVO - Serviço principal  
+**Motivo:** Service core de 405 linhas, integra com UnifiedServiceManager  
+**Usado em:** Sistema de gerenciamento unificado
+**Funcionalidades:**
+- CRUD de funnels
+- Métricas e analytics
+- Dashboard summary
+- Cache integrado
+
+#### 6. 📋 core/ContextualFunnelService.ts
+**Status:** ⚠️ ATIVO - Isolamento por contexto  
+**Motivo:** Service de 300 linhas, gerencia isolamento  
+**Usado em:** Instâncias contextuais (editor, templates, preview)
+**Funcionalidades:**
+- CRUD contextualizado
+- Copy entre contextos
+- Clear context
+- Stats por contexto
+
+---
+
+## 📊 PROGRESSO DOMÍNIO 3
+
+```
+█████░░░░░ 50% Concluído
+
+✅ Movidos para /deprecated:  4/6 (67%)
+⏳ Services ativos mantidos:  2/6 (33%)
+```
+
+**Services movidos:** funnelService, funnelService.refactored, EnhancedFunnelService, FunnelUnifiedService  
+**Services ativos:** ConsolidatedFunnelService, ContextualFunnelService
+
+---
+
+## 🔄 DOMÍNIO 4: DATA SERVICES (FUTURO)
 
 **Status:** Pendente  
 **Target:** Consolidar em `canonical/EditorService`

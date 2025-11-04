@@ -1,21 +1,12 @@
-/**
- * 🔗 Aliases de Compatibilidade para Migração Canônica
- * 
- * Objetivo: Permitir migração incremental dos serviços legados para
- * os serviços canônicos sem quebrar importações existentes.
- * 
- * Uso recomendado (temporário):
- * import { HybridTemplateService } from '@/services/aliases';
- * import { UnifiedTemplateService } from '@/services/aliases';
- * import { templateService } from '@/services/aliases';
- * import { cacheService } from '@/services/aliases';
- * import { FunnelUnifiedService } from '@/services/aliases';
- */
+// Compatibility layer: re-export deprecated services with runtime warnings
+// ⚠️ WARNING: For backward compatibility only! Migrate to new services ASAP
+
+console.warn('⚠️ [Deprecated] Usando aliases retrocompatíveis. Migre para services canônicos.');
 
 // Canonical Service Aliases
 export { templateService } from '@/services/canonical/TemplateService';
 export { cacheService } from '@/services/canonical/CacheService';
-export { dataService as FunnelUnifiedService } from '@/services/canonical/DataService';
+export { dataService } from '@/services/canonical/DataService';
 export { navigationService } from '@/services/canonical/NavigationService';
 
 // Exportações opcionais para ampliar adoção
@@ -28,6 +19,7 @@ export { authService } from '@/services/canonical/AuthService';
 export { ConfigService } from '@/services/canonical/ConfigService';
 export { HistoryService } from '@/services/canonical/HistoryService';
 export { EditorService } from '@/services/canonical/EditorService';
+
 /**
  * Canonical Service Aliases
  *
@@ -80,3 +72,14 @@ export { AnalyticsService } from '@/services/AnalyticsService';
 export { ConfigurationService } from '@/services/ConfigurationService';
 // Alias de compatibilidade para migração
 export { ConfigurationService as ConfigurationAPI } from '@/services/ConfigurationService';
+
+// ============================================================================
+// Funnel Services - Deprecated
+// ============================================================================
+
+// FunnelUnifiedService: Mapeamento para canonical/DataService
+// O service original tem dependências quebradas, usar canonical
+export { dataService as FunnelUnifiedService } from '@/services/canonical/DataService';
+
+// Outros funnel services: exports nomeados de deprecated
+export type { UnifiedFunnelData } from '@/services/deprecated/FunnelUnifiedService';
