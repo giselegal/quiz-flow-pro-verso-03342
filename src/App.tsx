@@ -267,12 +267,24 @@ function AppCore() {
                                         
                                         // Detectar se deve mostrar modal
                                         useEffect(() => {
+                                            console.log('🔍 [EditorStartupModal] Verificando condições:', {
+                                                hasTemplate,
+                                                hasFunnel,
+                                                selectedMode,
+                                                currentShowStartupModal: showStartupModal,
+                                                urlParams: window.location.search
+                                            });
+                                            
                                             if (!hasTemplate && !hasFunnel && !selectedMode) {
+                                                console.log('✅ [EditorStartupModal] Mostrando modal');
                                                 setShowStartupModal(true);
+                                            } else {
+                                                console.log('❌ [EditorStartupModal] Modal não será mostrado');
                                             }
                                         }, [hasTemplate, hasFunnel, selectedMode]);
                                         
                                         const handleSelectMode = useCallback((mode: 'blank' | 'template') => {
+                                            console.log('🎯 [EditorStartupModal] Modo selecionado:', mode);
                                             setSelectedMode(mode);
                                             setShowStartupModal(false);
                                             
@@ -280,13 +292,21 @@ function AppCore() {
                                                 const url = new URL(window.location.href);
                                                 url.searchParams.set('template', 'quiz21StepsComplete');
                                                 window.history.pushState({}, '', url);
+                                                console.log('🔄 [EditorStartupModal] URL atualizada com template');
                                             }
                                         }, []);
                                         
                                         const templateId = hasTemplate ? (params.get('template') ?? undefined) : (selectedMode === 'template' ? 'quiz21StepsComplete' : undefined);
                                         const funnelId = (params.get('funnelId') ?? params.get('funnel')) ?? undefined;
                                         
-                                        console.log('🎯 /editor route matched', { templateId, funnelId, selectedMode, showStartupModal });
+                                        console.log('🎯 /editor route matched', { 
+                                            templateId, 
+                                            funnelId, 
+                                            selectedMode, 
+                                            showStartupModal,
+                                            hasTemplate,
+                                            hasFunnel
+                                        });
                                         
                                         return (
                                             <>

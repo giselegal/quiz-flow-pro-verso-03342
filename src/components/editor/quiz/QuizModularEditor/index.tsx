@@ -87,13 +87,22 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
 
-    // 🚥 Passos da navegação: vazio no modo canvas, dinâmico quando template carregado
+    // 🚥 Passos da navegação: SEMPRE carregar 21 steps (independente de template)
     const navSteps = useMemo(() => {
-        if (!(loadedTemplate || props.templateId)) return [] as { key: string; title: string }[];
         const res = templateService.steps.list();
-        if (!res.success) return [] as { key: string; title: string }[];
-        return res.data.map((s) => ({ key: s.id, title: `${String(s.order).padStart(2, '0')} - ${s.name}` }));
-    }, [loadedTemplate, props.templateId]);
+        if (!res.success || !res.data || res.data.length === 0) {
+            console.warn('⚠️ [QuizModularEditor] templateService.steps.list() falhou, usando fallback');
+            // Fallback para 21 steps do quiz completo
+            return Array.from({ length: 21 }, (_, i) => ({
+                key: `step-${String(i + 1).padStart(2, '0')}`,
+                title: `${String(i + 1).padStart(2, '0')} - Etapa ${i + 1}`
+            }));
+        }
+        return res.data.map((s) => ({ 
+            key: s.id, 
+            title: `${String(s.order).padStart(2, '0')} - ${s.name}` 
+        }));
+    }, []); // Sem dependências - carregar uma vez apenas
 
     // Persistência
     const persistence = useEditorPersistence({
@@ -138,7 +147,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 if (!templateStepsResult.success) {
                     throw new Error('Falha ao carregar lista de steps do template');
                 }
-                const stepIds = templateStepsResult.data.map((s: any) => s.key);
+                const stepIds = templateStepsResult.data.map((s: any) => s.id);
                 
                 appLogger.info(`📋 [QuizModularEditor] Template tem ${stepIds.length} steps`);
                 
@@ -265,7 +274,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             if (!templateStepsResult.success) {
                 throw new Error('Falha ao carregar lista de steps do template');
             }
-            const stepIds = templateStepsResult.data.map((s: any) => s.key);
+            const stepIds = templateStepsResult.data.map((s: any) => s.id);
             
             appLogger.info(`📋 [QuizModularEditor] Carregando ${stepIds.length} steps do template`);
             
