@@ -66,18 +66,19 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const dnd = useDndSystem();
     const { enableAutoSave } = useFeatureFlags();
 
-    // ✅ FASE 4.3: History state para undo/redo
-    const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
-    
+    // ✅ FASE 1: Undo/Redo conectado ao useEditorState
     const undo = useCallback(() => {
-        console.log('🔙 Undo triggered');
-        // TODO: Implementar undo no useEditorState
-    }, []);
+        editor.undo();
+    }, [editor]);
     
     const redo = useCallback(() => {
-        console.log('🔜 Redo triggered');
-        // TODO: Implementar redo no useEditorState
-    }, []);
+        editor.redo();
+    }, [editor]);
+
+    const historyState = {
+        canUndo: editor.canUndo,
+        canRedo: editor.canRedo,
+    };
 
     // Estados do editor
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');

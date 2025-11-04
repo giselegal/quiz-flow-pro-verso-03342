@@ -359,8 +359,8 @@ export function useBlockOperations(): UseBlockOperations {
     return { success: true };
   }, []);
 
-  // ✅ FASE 2.1: Debounced version (150ms delay)
-  const updateBlock = useDebouncedCallback(updateBlockImmediate, 150);
+  // ✅ FASE 1: Direct update (no debounce - removes race conditions)
+  const updateBlock = updateBlockImmediate;
 
   return useMemo(() => ({ getBlocks, ensureLoaded, loadStepFromTemplate, addBlock, removeBlock, reorderBlock, updateBlock }), [getBlocks, ensureLoaded, loadStepFromTemplate, addBlock, removeBlock, reorderBlock, updateBlock]);
 }

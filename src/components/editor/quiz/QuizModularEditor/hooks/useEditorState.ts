@@ -38,14 +38,15 @@ export function useEditorState(initialStepKey?: string) {
     setState((prev) => ({ ...prev, selectedBlockId: null }));
   }, []);
 
-  const canUndo = useMemo(() => historyRef.current.length > 0, []);
-  const canRedo = useMemo(() => futureRef.current.length > 0, []);
+  const canUndo = historyRef.current.length > 0;
+  const canRedo = futureRef.current.length > 0;
 
   const undo = useCallback(() => {
     if (!historyRef.current.length) return;
     setState((prev) => {
       const last = historyRef.current.pop()!;
       futureRef.current.push(prev);
+      console.log('🔙 Undo: restored state', { historySize: historyRef.current.length, futureSize: futureRef.current.length });
       return last;
     });
   }, []);
@@ -55,6 +56,7 @@ export function useEditorState(initialStepKey?: string) {
     setState((prev) => {
       const next = futureRef.current.pop()!;
       historyRef.current.push(prev);
+      console.log('🔜 Redo: restored state', { historySize: historyRef.current.length, futureSize: futureRef.current.length });
       return next;
     });
   }, []);
