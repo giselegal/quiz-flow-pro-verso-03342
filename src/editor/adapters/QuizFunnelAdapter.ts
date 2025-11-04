@@ -9,7 +9,7 @@ export class QuizFunnelAdapter implements IFunnelAdapter {
         // heurística simples: presença de quizSteps ou templateId começando com 'quiz'
         if (!funnel) return true; // criação nova sempre suportada
         const hasQuizSteps = Array.isArray((funnel as any).quizSteps);
-        const templateIsQuiz = !!funnel.templateId && funnel.templateId.startsWith('quiz');
+        const templateIsQuiz = !!(funnel as any).templateId && (funnel as any).templateId.startsWith('quiz');
         return hasQuizSteps || templateIsQuiz;
     }
 
@@ -29,7 +29,7 @@ export class QuizFunnelAdapter implements IFunnelAdapter {
             })),
             meta: {
                 id: funnel?.id,
-                templateId: funnel?.templateId,
+                templateId: (funnel as any)?.templateId,
                 updatedAt: Date.now(),
             },
         };

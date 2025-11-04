@@ -44,9 +44,8 @@ export class ContextualFunnelService {
       const funnelWithContext: UnifiedFunnelData = {
         ...funnel,
         id: contextualId,
-        context: this.context,
         updatedAt: new Date(),
-      };
+      } as any;
 
       // Salvar no storage contextual
       const storageKey = `funnel-${contextualId}`;
@@ -177,10 +176,9 @@ export class ContextualFunnelService {
         ...funnel,
         id: newId,
         name: `${funnel.name} (cópia)`,
-        context: targetContext,
         createdAt: new Date(),
         updatedAt: new Date(),
-      };
+      } as any;
 
       return await targetService.saveFunnel(copiedFunnel);
     } catch (error) {

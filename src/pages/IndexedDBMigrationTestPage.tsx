@@ -18,8 +18,8 @@ const IndexedDBMigrationTestPage: React.FC = () => {
 
         try {
             // Importar o serviço dinamicamente
-            const { FunnelUnifiedService } = await import('@/services/FunnelUnifiedService');
-            const service = FunnelUnifiedService.getInstance();
+            const { CanonicalFunnelService } = await import('@/services/canonical/FunnelService');
+            const service = CanonicalFunnelService.getInstance();
 
             addLog('✅ FunnelUnifiedService carregado com sucesso');
 
@@ -50,11 +50,14 @@ const IndexedDBMigrationTestPage: React.FC = () => {
             addLog('🔄 Testando criação de novo funil...');
             const newFunnel = await service.createFunnel({
                 name: 'Funil Novo IndexedDB',
-                description: 'Este funil deve ir direto para IndexedDB',
+                type: 'quiz',
                 category: 'quiz',
                 context: FunnelContext.EDITOR,
-                userId: 'anonymous',
-            });
+                metadata: {
+                    description: 'Este funil deve ir direto para IndexedDB',
+                    userId: 'anonymous',
+                }
+            } as any);
 
             if (newFunnel) {
                 addLog(`✅ Funil criado com sucesso: ${newFunnel.name} (ID: ${newFunnel.id})`);
@@ -66,8 +69,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
             addLog('📋 Testando listagem de funis...');
             const funnels = await service.listFunnels({
                 context: FunnelContext.EDITOR,
-                userId: 'anonymous',
-            });
+            } as any);
 
             addLog(`📊 Encontrados ${funnels?.length || 0} funis`);
             if (funnels && funnels.length > 0) {
@@ -79,7 +81,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
             // 4. Testar carregamento individual
             if (newFunnel) {
                 addLog(`🔍 Testando carregamento do funil: ${newFunnel.id}`);
-                const loadedFunnel = await service.getFunnel(newFunnel.id, 'anonymous');
+                const loadedFunnel = await service.getFunnel(newFunnel.id);
 
                 if (loadedFunnel) {
                     addLog(`✅ Funil carregado: ${loadedFunnel.name}`);

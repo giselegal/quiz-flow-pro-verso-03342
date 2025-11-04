@@ -11,6 +11,7 @@
 
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
 import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -101,7 +102,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🎯 UnifiedCRUDProvider: Creating funnel', { name });
 
-            const newFunnel = await funnelUnifiedService.createFunnel({
+            const newFunnelMeta = await funnelUnifiedService.createFunnel({
                 name,
                 description: options.description || '',
                 category: options.category || 'outros',
@@ -109,6 +110,8 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 templateId: options.templateId,
                 ...options,
             });
+
+            const newFunnel = adaptMetadataToUnified(newFunnelMeta);
 
             // Atualizar listas e estado
             setCurrentFunnel(newFunnel);
@@ -209,7 +212,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '💾 UnifiedCRUDProvider: Saving funnel', { id: targetFunnel.id });
 
-            const updatedFunnel = await funnelUnifiedService.updateFunnel(
+            const updatedFunnelMeta = await funnelUnifiedService.updateFunnel(
                 targetFunnel.id,
                 {
                     name: targetFunnel.name,
@@ -222,9 +225,10 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             );
 
             // Atualizar estado
-            if (updatedFunnel) {
-                setCurrentFunnel(updatedFunnel as any);
-                setFunnels(prev => prev.map(f => f.id === updatedFunnel.id ? updatedFunnel as any : f));
+            if (updatedFunnelMeta) {
+                const updatedFunnel = adaptMetadataToUnified(updatedFunnelMeta);
+                setCurrentFunnel(updatedFunnel);
+                setFunnels(prev => prev.map(f => f.id === updatedFunnel.id ? updatedFunnel : f));
                 
                 if (debug) logger.debug('unifiedCRUD', '✅ Funnel saved', { id: updatedFunnel.id });
             }
@@ -246,7 +250,8 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '📋 UnifiedCRUDProvider: Duplicating funnel', { id });
 
-            const duplicatedFunnel = await funnelUnifiedService.duplicateFunnel(id, newName);
+            const duplicatedFunnelMeta = await funnelUnifiedService.duplicateFunnel(id, newName);
+            const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             // Atualizar listas
             setFunnels(prev => [duplicatedFunnel, ...prev]);
@@ -302,10 +307,11 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🔄 UnifiedCRUDProvider: Refreshing funnels');
 
-            const funnelList = await funnelUnifiedService.listFunnels({
+            const funnelListMeta = await funnelUnifiedService.listFunnels({
                 context,
             });
 
+            const funnelList = funnelListMeta.map(adaptMetadataToUnified);
             setFunnels(funnelList);
 
             if (debug) logger.debug('unifiedCRUD', '✅ Funnels loaded', { count: funnelList.length });

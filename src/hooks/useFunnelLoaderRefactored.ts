@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { funnelUnifiedService, type UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 export interface FunnelLoadingState {
@@ -126,7 +127,8 @@ export function useFunnelLoader(
             console.log('📖 useFunnelLoader: Carregando funil', id);
 
             // Usar serviço unificado (com cache automático)
-            const loadedFunnel = await funnelUnifiedService.getFunnel(id, userId);
+            const loadedFunnelMeta = await funnelUnifiedService.getFunnel(id);
+            const loadedFunnel = loadedFunnelMeta ? adaptMetadataToUnified(loadedFunnelMeta) : null;
 
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
@@ -134,7 +136,7 @@ export function useFunnelLoader(
                 currentFunnelIdRef.current = id;
 
                 // Verificar permissões
-                const perms = await funnelUnifiedService.checkPermissions(id, userId);
+                const perms = await funnelUnifiedService.checkPermissions(id);
                 setPermissions(perms);
 
                 console.log('✅ Funil carregado:', loadedFunnel);
@@ -177,7 +179,7 @@ export function useFunnelLoader(
         try {
             console.log('🔍 useFunnelLoader: Validando funil', id);
 
-            const perms = await funnelUnifiedService.checkPermissions(id, userIdParam || userId);
+            const perms = await funnelUnifiedService.checkPermissions(id);
             setPermissions(perms);
 
             if (!perms.canRead) {
@@ -208,12 +210,14 @@ export function useFunnelLoader(
         try {
             console.log('🎯 useFunnelLoader: Criando funil', name);
 
-            const newFunnel = await funnelUnifiedService.createFunnel({
+            const newFunnelMeta = await funnelUnifiedService.createFunnel({
                 name,
                 context,
                 userId,
                 ...createOptions,
             });
+
+            const newFunnel = adaptMetadataToUnified(newFunnelMeta);
 
             // Atualizar estado local
             setFunnel(newFunnel);
@@ -252,7 +256,8 @@ export function useFunnelLoader(
         try {
             console.log('✏️ useFunnelLoader: Atualizando funil', funnelId);
 
-            const updatedFunnel = await funnelUnifiedService.updateFunnel(funnelId, updates, userId);
+            const updatedFunnelMeta = await funnelUnifiedService.updateFunnel(funnelId, updates);
+            const updatedFunnel = updatedFunnelMeta ? adaptMetadataToUnified(updatedFunnelMeta) : funnel!;
             setFunnel(updatedFunnel);
 
             console.log('✅ Funil atualizado:', updatedFunnel);
@@ -279,7 +284,8 @@ export function useFunnelLoader(
         try {
             console.log('🔄 useFunnelLoader: Duplicando funil', funnelId);
 
-            const duplicatedFunnel = await funnelUnifiedService.duplicateFunnel(funnelId, newName, userId);
+            const duplicatedFunnelMeta = await funnelUnifiedService.duplicateFunnel(funnelId, newName);
+            const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             console.log('✅ Funil duplicado:', duplicatedFunnel);
             return duplicatedFunnel;
@@ -305,7 +311,7 @@ export function useFunnelLoader(
         try {
             console.log('🗑️ useFunnelLoader: Deletando funil', funnelId);
 
-            const success = await funnelUnifiedService.deleteFunnel(funnelId, userId);
+            const success = await funnelUnifiedService.deleteFunnel(funnelId);
 
             if (success) {
                 setFunnel(null);

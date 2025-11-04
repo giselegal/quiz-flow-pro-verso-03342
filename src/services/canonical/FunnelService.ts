@@ -526,11 +526,8 @@ export class CanonicalFunnelService {
   }
 
   async clearCache(): Promise<void> {
-    // Limpar cache manualmente de cada store conhecido
-    const stores = ['funnels', 'blocks', 'templates', 'generic'];
-    for (const store of stores) {
-      await this.cache.clearStore(store as any);
-    }
+    // Limpar cache manualmente
+    this.cache.clear();
   }
 
   // ==========================================================================

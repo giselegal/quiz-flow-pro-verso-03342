@@ -153,7 +153,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 setFunnel(loadedFunnel);
 
                 // Verificar permissões
-                const perms = await funnelUnifiedService.checkPermissions(id, userId);
+                const perms = await funnelUnifiedService.checkPermissions(id);
                 setPermissions(perms);
 
                 console.log('✅ Funil carregado:', loadedFunnel);
@@ -231,8 +231,8 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
             const updated = await canonicalFunnelService.updateFunnel(funnelId, {
                 name: updates?.name ?? funnel.name,
-                type: updates?.type ?? funnel.settings?.type,
-                category: updates?.category ?? funnel.category,
+                type: updates?.type ?? (funnel.settings as any)?.type,
+                category: updates?.category ?? (funnel as any).category,
                 status: updates?.status ?? (updates?.isPublished ? 'published' : undefined),
                 config: updates?.settings ?? updates?.config ?? funnel.settings,
                 metadata: { ...(updates?.metadata || {}), updatedBy: 'UnifiedFunnelContext' },
@@ -265,7 +265,8 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('🔄 UnifiedFunnelContext: Duplicando funil', funnelId);
 
-            const duplicatedFunnel = await funnelUnifiedService.duplicateFunnel(funnelId, newName, userId);
+            const duplicatedFunnelMeta = await funnelUnifiedService.duplicateFunnel(funnelId, newName);
+            const duplicatedFunnel = mapCanonicalToUnified(duplicatedFunnelMeta);
 
             console.log('✅ Funil duplicado:', duplicatedFunnel);
             return duplicatedFunnel;
@@ -336,7 +337,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
     const validateFunnel = async (id: string) => {
         try {
-            const permissions = await funnelUnifiedService.checkPermissions(id, userId);
+            const permissions = await funnelUnifiedService.checkPermissions(id);
             setPermissions(permissions);
         } catch (err) {
             console.error('❌ Erro na validação:', err);
@@ -425,16 +426,12 @@ function mapCanonicalToUnified(meta: FunnelMetadata): UnifiedFunnelData {
         id: meta.id,
         name: meta.name,
         description: (meta.metadata && (meta.metadata as any).description) || '',
-        category: meta.category || 'quiz',
-        context: (meta.context as any) ?? FunnelContext.EDITOR,
-        userId: (meta.metadata && (meta.metadata as any).userId) || 'unknown',
+        stages: [],
         settings: meta.config || {},
-        pages: [],
-        isPublished: meta.status === 'published',
-        version: (meta as any).version ?? 1,
+        status: meta.status,
+        version: '1',
         createdAt: new Date(meta.createdAt),
         updatedAt: new Date(meta.updatedAt),
-        templateId: (meta as any).templateId,
-        isFromTemplate: Boolean((meta as any).templateId),
+        userId: 'system',
     };
 }

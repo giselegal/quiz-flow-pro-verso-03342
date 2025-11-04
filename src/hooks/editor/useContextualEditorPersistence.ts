@@ -132,7 +132,7 @@ export const useContextualEditorPersistence = (
                     return null;
                 }
 
-                const funnelData = convertFromContextualData(contextualData);
+                const funnelData: any = convertFromContextualData(contextualData);
                 console.log(`✅ Funil carregado do contexto ${context}:`, funnelData.id);
 
                 return funnelData;
@@ -215,13 +215,13 @@ export const useContextualEditorPersistence = (
                 }
 
                 // Marcar como publicado
-                const updatedFunnel: ContextualFunnelData = {
+                const updatedFunnel: any = {
                     ...funnel,
                     isPublished: true,
                     lastModified: new Date(),
                 };
 
-                await service.saveFunnel(updatedFunnel as any); // Force cast for compatibility
+                await service.saveFunnel(updatedFunnel);
 
                 toast({
                     title: 'Sucesso',

@@ -408,8 +408,8 @@ export async function createQuiz21CompleteViaService(): Promise<string | null> {
         }
 
         // Importar serviço dinamicamente
-        const { FunnelUnifiedService } = await import('@/services/FunnelUnifiedService');
-        const funnelService = FunnelUnifiedService.getInstance();
+        const { CanonicalFunnelService } = await import('@/services/canonical/FunnelService');
+        const funnelService = CanonicalFunnelService.getInstance();
 
         // Criar funil
         const unifiedFunnelData = {

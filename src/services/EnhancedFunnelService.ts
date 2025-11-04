@@ -85,18 +85,13 @@ export class EnhancedFunnelService {
       id: meta.id,
       name: meta.name,
       description: (meta.metadata && (meta.metadata as any).description) || '',
-      category: meta.category || 'quiz',
-      context: (meta.context as FunnelContext) || FunnelContext.EDITOR,
       userId: (meta.metadata && (meta.metadata as any).userId) || 'unknown',
       settings: meta.config || {},
-      pages: [],
-      isPublished: meta.status === 'published',
-      version: (meta as any).version ?? 1,
+      status: meta.status,
+      version: '1',
       createdAt: new Date(meta.createdAt),
       updatedAt: new Date(meta.updatedAt),
-      templateId: (meta as any).templateId,
-      isFromTemplate: Boolean((meta as any).templateId),
-    };
+    } as any;
   }
 }
 

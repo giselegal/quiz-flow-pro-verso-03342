@@ -91,10 +91,10 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
           id: contextualData.id,
           name: contextualData.name,
           description: contextualData.description,
-          isPublished: contextualData.isPublished || false,
-          version: contextualData.version || 1,
+          isPublished: (contextualData as any).isPublished || false,
+          version: parseInt(String(contextualData.version || 1)),
           settings: contextualData.settings || {},
-          pages: (contextualData.pages || []).map((page: any) => ({
+          pages: ((contextualData as any).pages || []).map((page: any) => ({
             id: page.id,
             pageType: page.page_type || 'step',
             pageOrder: page.page_order || 1,

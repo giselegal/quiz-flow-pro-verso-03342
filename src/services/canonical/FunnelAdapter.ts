@@ -20,12 +20,7 @@ export function adaptMetadataToUnified(metadata: FunnelMetadata): UnifiedFunnel 
     createdAt: new Date(metadata.createdAt),
     updatedAt: new Date(metadata.updatedAt),
     userId: 'system',
-    version: 1,
-    context: metadata.context,
-    templateId: metadata.templateId,
-    isActive: metadata.isActive,
-    lastModified: new Date(metadata.updatedAt),
-    category: metadata.category,
+    version: '1',
   } as UnifiedFunnel;
 }
 
@@ -34,9 +29,7 @@ export function adaptUnifiedToMetadata(unified: UnifiedFunnel): Partial<FunnelMe
     id: unified.id,
     name: unified.name,
     type: (unified.settings as any)?.type || 'quiz',
-    category: (unified as any).category || (unified.settings as any)?.category,
-    context: unified.context,
-    templateId: (unified as any).templateId,
+    category: (unified.settings as any)?.category || 'quiz',
     status: unified.status,
     config: unified.settings,
     metadata: {
@@ -44,6 +37,6 @@ export function adaptUnifiedToMetadata(unified: UnifiedFunnel): Partial<FunnelMe
     },
     createdAt: unified.createdAt.toISOString(),
     updatedAt: unified.updatedAt.toISOString(),
-    isActive: unified.isActive ?? (unified.status === 'published'),
+    isActive: unified.status === 'published',
   };
 }
