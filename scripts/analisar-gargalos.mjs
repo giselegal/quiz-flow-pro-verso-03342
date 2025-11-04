@@ -11,11 +11,15 @@
  */
 
 import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, extname } from 'path';
+import { join, extname, relative } from 'path';
 import { execSync } from 'child_process';
 
 const projectRoot = process.cwd();
 const srcDir = join(projectRoot, 'src');
+
+// Constantes
+const CHUNK_SIZE_WARNING_KB = 500;
+const CHUNK_NAME_MAX_LENGTH = 30;
 
 // Cores para output
 const colors = {
@@ -62,7 +66,7 @@ function searchInFiles(pattern, directory) {
               const matches = content.match(pattern);
               if (matches) {
                 results.push({
-                  file: filePath.replace(projectRoot + '/', ''),
+                  file: relative(projectRoot, filePath),
                   count: matches.length,
                 });
               }
@@ -242,8 +246,11 @@ function analyzeBundleSize() {
     console.log(`   ${colors.magenta}Top 5 maiores chunks:${colors.reset}`);
     chunks.slice(0, 5).forEach((chunk, i) => {
       const sizeMB = (chunk.size / 1024 / 1024).toFixed(2);
-      const color = chunk.size > 500 * 1024 ? colors.red : colors.green;
-      console.log(`   ${i + 1}. ${chunk.name.substring(0, 30)}: ${color}${sizeMB} MB${colors.reset}`);
+      const color = chunk.size > CHUNK_SIZE_WARNING_KB * 1024 ? colors.red : colors.green;
+      const name = chunk.name.length > CHUNK_NAME_MAX_LENGTH 
+        ? chunk.name.substring(0, CHUNK_NAME_MAX_LENGTH) + '...'
+        : chunk.name;
+      console.log(`   ${i + 1}. ${name}: ${color}${sizeMB} MB${colors.reset}`);
     });
     
     return { totalSize, chunks: chunks.slice(0, 10) };
