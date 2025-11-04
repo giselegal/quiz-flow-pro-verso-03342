@@ -50,6 +50,8 @@ import UnifiedAppProvider from '@/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProviderUnified } from '@/components/editor/EditorProviderUnified';
 import { ProviderGuard } from '@/components/ProviderGuard';
+import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
+import { useState, useCallback } from 'react';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -256,30 +258,60 @@ function AppCore() {
 
                                 <Route path="/editor">
                                     {() => {
-                                        // ✅ FASE 1: Extrair query params
-                                        const params = new URLSearchParams(window.location.search);
-                                        const templateId = params.get('template') || undefined;
-                                        const funnelId = params.get('funnelId') || params.get('funnel') || undefined;
+                                        const [showStartupModal, setShowStartupModal] = useState(false);
+                                        const [selectedMode, setSelectedMode] = useState<'blank' | 'template' | null>(null);
                                         
-                                        console.log('🎯 /editor route matched', { templateId, funnelId });
+                                        const params = new URLSearchParams(window.location.search);
+                                        const hasTemplate = params.has('template');
+                                        const hasFunnel = params.has('funnelId') || params.has('funnel');
+                                        
+                                        // Detectar se deve mostrar modal
+                                        useEffect(() => {
+                                            if (!hasTemplate && !hasFunnel && !selectedMode) {
+                                                setShowStartupModal(true);
+                                            }
+                                        }, [hasTemplate, hasFunnel, selectedMode]);
+                                        
+                                        const handleSelectMode = useCallback((mode: 'blank' | 'template') => {
+                                            setSelectedMode(mode);
+                                            setShowStartupModal(false);
+                                            
+                                            if (mode === 'template') {
+                                                const url = new URL(window.location.href);
+                                                url.searchParams.set('template', 'quiz21StepsComplete');
+                                                window.history.pushState({}, '', url);
+                                            }
+                                        }, []);
+                                        
+                                        const templateId = hasTemplate ? (params.get('template') ?? undefined) : (selectedMode === 'template' ? 'quiz21StepsComplete' : undefined);
+                                        const funnelId = (params.get('funnelId') ?? params.get('funnel')) ?? undefined;
+                                        
+                                        console.log('🎯 /editor route matched', { templateId, funnelId, selectedMode, showStartupModal });
                                         
                                         return (
-                                            <EditorErrorBoundary>
-                                                <div data-testid="quiz-modular-production-editor-page-optimized">
-                                                    <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
-                                                        <EditorProviderUnified 
-                                                            funnelId={funnelId}
-                                                            templateId={templateId}
-                                                            enableSupabase={Boolean(funnelId)}
-                                                        >
-                                                            <QuizModularEditor 
-                                                                templateId={templateId}
+                                            <>
+                                                <EditorStartupModal 
+                                                    open={showStartupModal}
+                                                    onSelectMode={handleSelectMode}
+                                                />
+                                                
+                                                <EditorErrorBoundary>
+                                                    <div data-testid="quiz-modular-production-editor-page-optimized">
+                                                        <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
+                                                            <EditorProviderUnified 
                                                                 funnelId={funnelId}
-                                                            />
-                                                        </EditorProviderUnified>
-                                                    </Suspense>
-                                                </div>
-                                            </EditorErrorBoundary>
+                                                                templateId={templateId}
+                                                                enableSupabase={Boolean(funnelId)}
+                                                            >
+                                                                <QuizModularEditor 
+                                                                    templateId={templateId}
+                                                                    funnelId={funnelId}
+                                                                />
+                                                            </EditorProviderUnified>
+                                                        </Suspense>
+                                                    </div>
+                                                </EditorErrorBoundary>
+                                            </>
                                         );
                                     }}
                                 </Route>
