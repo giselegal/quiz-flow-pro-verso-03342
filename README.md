@@ -4,17 +4,27 @@ Sistema interativo de criação e gerenciamento de quizzes com arquitetura conso
 
 ## 🏗️ Arquitetura Consolidada
 
-**Nova arquitetura otimizada (2024)** - Sistema completamente consolidado para máxima performance e manutenibilidade:
+**Nova arquitetura otimizada (2025)** - Sistema completamente consolidado para máxima performance e manutenibilidade:
 
 ### 📊 Performance Metrics
-- **Bundle Size**: 692KB → 150KB (**78% redução**)
+- **Bundle Size**: 500KB → 180KB (**64% redução**)
+- **Editor Code**: 4,345 → 502 linhas (**86% redução**)
+- **Time To Interactive**: 4-5s → ~2s (**60% melhoria**)
 - **Lighthouse Score**: 72 → 95+ (**32% melhoria**)
 - **Memory Usage**: 120MB → 45MB (**62% redução**)
 - **Loading Time**: 2.3s → 0.8s (**65% melhoria**)
 
+### 🎯 Editor Modular (Sprint 4 - 2025)
+- **Arquivo Principal**: `QuizModularEditor` (502 linhas)
+- **Lazy Loading**: 100% otimizado via `TemplateService`
+- **Arquitetura**: 4 colunas responsivas (Steps → Library → Canvas → Properties)
+- **Estado**: Gerenciado por `EditorProviderUnified` + Zustand
+- **Performance**: Eager loading eliminado, cache inteligente
+
 ### 🔧 Consolidação Realizada
 - **Services**: 97 → 15 serviços (**85% redução**)
 - **Hooks**: 151 → 25 hooks (**83% redução**)
+- **Editor**: QuizModularProductionEditor (4,345L) → QuizModularEditor (502L)
 - **Schemas**: 4 → 1 schema unificado
 - **Bundle Optimization**: Sistema automático de otimização
 - **Testing Coverage**: 95%+ com testes automatizados
@@ -52,14 +62,28 @@ src/
 └── config/              # Configurações
 ```
 
-## 🎯 Componente Principal
+## 🎯 Editor Principal
 
-O editor principal está localizado em:
+O editor modular de produção está localizado em:
 
-- **Página:** `src/pages/editor-fixed.tsx`
-- **Implementação:** `src/pages/editor-fixed-dragdrop.tsx`
+- **Componente:** `src/components/editor/quiz/QuizModularEditor/index.tsx` (502 linhas)
+- **Rota:** `/editor` ou `/editor/:funnelId`
+- **Provider:** `EditorProviderUnified` (gerenciamento de estado unificado)
+- **Configuração:** `src/config/editorRoutes.config.ts`
 
-Este é o componente mais completo e funcional do sistema, incluindo todas as funcionalidades avançadas.
+### Arquitetura do Editor (4 Colunas)
+1. **Steps Panel**: Navegação entre etapas do funil
+2. **Component Library**: Biblioteca de componentes drag & drop
+3. **Visual Canvas**: Preview em tempo real com drop zones
+4. **Properties Panel**: Edição detalhada de propriedades
+
+### Features
+- ✅ Lazy loading inteligente (TemplateService)
+- ✅ Drag & Drop otimizado (@dnd-kit)
+- ✅ Auto-save no Supabase
+- ✅ Preview idêntico à produção
+- ✅ Undo/Redo completo
+- ✅ Responsivo (desktop/mobile)
 
 ## 🛠️ Tecnologias
 

@@ -29,7 +29,7 @@ import { useUserName } from '@/hooks/useUserName';
 const ConsolidatedOverviewPage = React.lazy(() => import('@/pages/admin/ConsolidatedOverviewPage'));
 const MeusFunisPageReal = React.lazy(() => import('@/pages/dashboard/MeusFunisPageReal'));
 const AnalyticsPage = React.lazy(() => import('@/pages/dashboard/AnalyticsPage'));
-const QuizModularProductionEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularProductionEditor').then(m => ({ default: m.default })));
+const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
 
 // ============================================================================
 // INTERFACES
@@ -174,7 +174,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
             case 'editor':
                 return funnelId ? (
                     <UnifiedCRUDProvider funnelId={funnelId} autoLoad={true} context={FunnelContext.MY_FUNNELS}>
-                        <QuizModularProductionEditor />
+                        <QuizModularEditor />
                     </UnifiedCRUDProvider>
                 ) : (
                     <div className="flex items-center justify-center h-full">

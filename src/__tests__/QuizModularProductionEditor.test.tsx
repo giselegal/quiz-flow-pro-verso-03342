@@ -1,6 +1,8 @@
 /**
  * 🧪 TESTES ESPECÍFICOS: Editor Modular vs /quiz-estilo REAL
  * 
+ * ⚠️ MIGRADO PARA: QuizModularEditor (502 linhas)
+ * 
  * Baseado na análise completa em ANALISE_ESTRUTURA_REAL_QUIZ_ESTILO.md
  * 
  * OBJETIVO: Validar se o editor consegue editar 100% do funil /quiz-estilo
@@ -17,7 +19,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { QuizModularProductionEditor } from '@/components/editor/quiz/QuizModularProductionEditor';
+import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useQuizState } from '@/hooks/useQuizState';
 import QuizApp from '@/components/quiz/QuizApp';
@@ -31,7 +33,7 @@ vi.mock('@/hooks/use-toast', () => ({
     }),
 }));
 
-describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () => {
+describe('QuizModularEditor - Edição Completa do /quiz-estilo', () => {
     let mockFunnelData: any;
     let savedDraftId: string | null = null;
 
@@ -115,7 +117,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
     describe('1. Layout de 4 Colunas', () => {
         it('deve renderizar todas as 4 colunas', async () => {
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 // Coluna 1: Etapas
@@ -137,7 +139,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
         });
 
         it('deve mostrar todas as etapas na coluna 1', async () => {
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -148,7 +150,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
         });
 
         it('deve mostrar biblioteca com 7 componentes', async () => {
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('Texto')).toBeInTheDocument();
@@ -165,7 +167,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('2. Navegação entre Etapas', () => {
         it('deve selecionar etapa ao clicar', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -184,7 +186,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
         });
 
         it('deve mostrar quantidade de blocos por etapa', async () => {
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 // Step 1 tem 2 blocos
@@ -201,7 +203,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('3. Adicionar Componentes', () => {
         it('deve adicionar componente de texto à etapa', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -224,7 +226,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
         it('deve adicionar componente de imagem à etapa', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-02')).toBeInTheDocument();
@@ -244,7 +246,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
         it('deve adicionar opções de quiz', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -265,7 +267,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('4. Remover Componentes', () => {
         it('deve remover componente ao clicar no botão trash', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -294,7 +296,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('5. Editar Propriedades', () => {
         it('deve editar texto do componente', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -322,7 +324,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
         it('deve editar cor do texto', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -345,7 +347,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
         it('deve editar tamanho da fonte', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -369,7 +371,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
         it('deve editar propriedades de botão', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -392,7 +394,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('6. Duplicar Componentes', () => {
         it('deve duplicar componente ao clicar em duplicar', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -421,7 +423,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('7. Salvar Rascunho', () => {
         it('deve salvar rascunho ao clicar em salvar', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -449,7 +451,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
         });
 
         it('deve desabilitar botão salvar quando não há mudanças', async () => {
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 const salvarButton = screen.getByText('Salvar').closest('button');
@@ -463,7 +465,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
             const user = userEvent.setup();
             const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
 
-            render(<QuizModularProductionEditor funnelId="draft-123" />);
+            render(<QuizModularEditor funnelId="draft-123" />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -484,7 +486,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
             const user = userEvent.setup();
             const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
 
-            render(<QuizModularProductionEditor funnelId="draft-123" />);
+            render(<QuizModularEditor funnelId="draft-123" />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -505,7 +507,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('9. Preview em Tempo Real', () => {
         it('deve alternar entre canvas e preview', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('Canvas')).toBeInTheDocument();
@@ -569,7 +571,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
     describe('11. Validação', () => {
         it('deve validar estrutura do funil', async () => {
             const user = userEvent.setup();
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -599,7 +601,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
             const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
 
             // 1. Renderizar editor
-            render(<QuizModularProductionEditor />);
+            render(<QuizModularEditor />);
 
             await waitFor(() => {
                 expect(screen.getByText('step-01')).toBeInTheDocument();
@@ -633,7 +635,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
                 warnings: [],
             });
 
-            render(<QuizModularProductionEditor funnelId={savedDraftId!} />);
+            render(<QuizModularEditor funnelId={savedDraftId!} />);
 
             await waitFor(() => {
                 const publicarButton = screen.getByText('Publicar').closest('button');
