@@ -107,25 +107,34 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-    // ✅ FASE 1: Carregamento unificado via templateService (elimina double loading)
+    // ✅ FASE 1: Carregamento condicional via templateService
     useEffect(() => {
-        if (!props.templateId) return;
+        // ❌ NÃO carregar se não tem templateId (modo canvas vazio)
+        if (!props.templateId) {
+            appLogger.info('🎨 [QuizModularEditor] Modo canvas vazio - sem template');
+            return;
+        }
 
         async function loadTemplate() {
             setIsLoadingTemplate(true);
             try {
-                const tid = props.templateId || 'quiz21StepsComplete';
+                const tid = props.templateId!;
                 appLogger.info(`🔍 [QuizModularEditor] Carregando template: ${tid}`);
                 
-                // ✅ FASE 1.1: Usar templateService.preloadTemplate (paralelo, não waterfall!)
                 const { templateService } = await import('@/services/canonical/TemplateService');
                 await templateService.preloadTemplate(tid);
                 
-                // ✅ FASE 1.3: Carregar steps em PARALELO (não forEach sequencial)
-                const stepIds = Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
+                // ✅ Buscar steps dinamicamente do template (não hardcoded)
+                const templateStepsResult = templateService.steps.list();
+                if (!templateStepsResult.success) {
+                    throw new Error('Falha ao carregar lista de steps do template');
+                }
+                const stepIds = templateStepsResult.data.map((s: any) => s.key);
+                
+                appLogger.info(`📋 [QuizModularEditor] Template tem ${stepIds.length} steps`);
                 
                 await Promise.all(
-                    stepIds.map(async (stepId) => {
+                    stepIds.map(async (stepId: string) => {
                         const result = await templateService.getStep(stepId, tid);
                         if (result.success && result.data) {
                             ops.loadStepFromTemplate(stepId, result.data);
@@ -133,8 +142,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     })
                 );
                 
-                setLoadedTemplate({ name: 'Quiz 21 Steps', steps: [] });
-                appLogger.info(`✅ [QuizModularEditor] Template carregado: 21 steps em paralelo`);
+                setLoadedTemplate({ name: `Template: ${tid}`, steps: [] });
+                appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
                 
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
@@ -242,11 +251,17 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             const { templateService } = await import('@/services/canonical/TemplateService');
             await templateService.preloadTemplate(tid);
             
-            // Carregar steps em PARALELO
-            const stepIds = Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
+            // ✅ Buscar steps dinamicamente do template
+            const templateStepsResult = templateService.steps.list();
+            if (!templateStepsResult.success) {
+                throw new Error('Falha ao carregar lista de steps do template');
+            }
+            const stepIds = templateStepsResult.data.map((s: any) => s.key);
+            
+            appLogger.info(`📋 [QuizModularEditor] Carregando ${stepIds.length} steps do template`);
             
             await Promise.all(
-                stepIds.map(async (stepId) => {
+                stepIds.map(async (stepId: string) => {
                     const result = await templateService.getStep(stepId, tid);
                     if (result.success && result.data) {
                         ops.loadStepFromTemplate(stepId, result.data);
@@ -255,7 +270,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             );
             
             setLoadedTemplate({ name: 'Quiz 21 Steps', steps: [] });
-            appLogger.info(`✅ [QuizModularEditor] Template carregado: 21 steps`);
+            appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
             
             // Atualizar URL
             const url = new URL(window.location.href);
