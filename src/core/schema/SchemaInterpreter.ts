@@ -9,7 +9,7 @@
 
 export interface PropertySchema {
   type: 'string' | 'number' | 'boolean' | 'color' | 'image' | 'select' | 'json';
-  control: 'text' | 'textarea' | 'number' | 'toggle' | 'color-picker' | 'image-upload' | 'dropdown' | 'json-editor';
+  control: 'text' | 'textarea' | 'number' | 'toggle' | 'color-picker' | 'image-upload' | 'dropdown' | 'json-editor' | 'range' | 'options-list';
   default?: any;
   options?: Array<{ label: string; value: any }>;
   label?: string;
@@ -18,6 +18,7 @@ export interface PropertySchema {
   validation?: {
     min?: number;
     max?: number;
+    step?: number;
     pattern?: string;
     custom?: (value: any) => boolean | string;
   };
