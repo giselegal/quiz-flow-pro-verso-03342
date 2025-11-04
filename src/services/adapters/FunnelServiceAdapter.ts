@@ -261,12 +261,33 @@ export class FunnelServiceAdapter {
         createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
         updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date(),
       },
-      {},
       {
-        templateId: data.templateId,
+        allowAnonymous: false,
+        collectEmail: true,
+        collectPhone: false,
+        requireEmailVerification: false,
+        enableAnalytics: true,
+        enableABTesting: false,
+        conversionGoals: [],
+      },
+      {
+        primaryColor: '#3b82f6',
+        secondaryColor: '#8b5cf6',
+        accentColor: '#06b6d4',
+        fontFamily: 'system-ui, sans-serif',
+        theme: 'light',
       },
       [],
-      data.metadata || {}
+      {
+        totalViews: 0,
+        uniqueVisitors: 0,
+        conversionRate: 0,
+        averageTimeSpent: 0,
+        exitRate: 0,
+        topTrafficSources: {},
+        deviceBreakdown: {},
+        locationBreakdown: {},
+      }
     );
   }
 }
