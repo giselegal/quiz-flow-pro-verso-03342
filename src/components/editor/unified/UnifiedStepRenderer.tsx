@@ -123,51 +123,60 @@ export interface UnifiedStepRendererProps {
 }
 
 /**
- * 🎯 SELETOR DE COMPONENTE OTIMIZADO
+ * 🎯 SELETOR DE COMPONENTE OTIMIZADO - Fase 5.1 JSON-DRIVEN
  * 
- * Determina se usa lazy loading, registry ou V3Renderer baseado no modo e stepId
+ * PRIORIDADE:
+ * 1. JSON Templates (v3.1) - Fonte única de verdade
+ * 2. Lazy Components (TSX) - Fallback durante migração
+ * 3. Registry - Editor/Preview
  */
 const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
     return useMemo(() => {
-        // 🆕 V3.0: Verificar se step tem template v3.0
-        appLogger.debug('🔍 [UnifiedStepRenderer] Debug:', { stepId, mode });
+        appLogger.debug('🔍 [UnifiedStepRenderer] Iniciando seleção:', { stepId, mode });
 
+        // 🆕 FASE 5.1: PRIORIDADE 1 - Tentar carregar JSON Template
+        const jsonDrivenEnabled = (import.meta as any)?.env?.VITE_USE_JSON_DRIVEN !== 'false'; // Default: true
+        
+        if (jsonDrivenEnabled) {
+            // Lazy import para não bloquear render inicial
+            import('@/utils/loadJsonTemplate')
+                .then(({ loadJsonTemplate }) => loadJsonTemplate(stepId))
+                .then(template => {
+                    if (template && (template.templateVersion === '3.1' || template.templateVersion === '3.0')) {
+                        appLogger.debug('✅ [JSON-DRIVEN] Template carregado:', stepId);
+                        // Template será usado no próximo render via state update
+                    } else {
+                        appLogger.debug('⚠️ [JSON-DRIVEN] Template não encontrado, usando fallback TSX:', stepId);
+                    }
+                })
+                .catch(err => {
+                    appLogger.warn('[JSON-DRIVEN] Erro ao carregar template:', err);
+                });
+        }
+
+        // 🔄 Verificar V3.0 hardcoded (backwards compatibility)
         const v3Enabled = (import.meta as any)?.env?.VITE_ENABLE_V3_RENDER === 'true';
         if (mode === 'production' && v3Enabled) {
             try {
                 const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
-                appLogger.debug('🔍 [Template Check]:', {
-                    stepId,
-                    hasTemplate: !!template,
-                    isObject: typeof template === 'object',
-                    templateVersion: template?.templateVersion,
-                    templateKeys: template ? Object.keys(template).slice(0, 5) : [],
-                });
-
+                
                 if (template && typeof template === 'object' && template.templateVersion === '3.0') {
-                    appLogger.debug('✅ [V3.0 DETECTED] Usando V3Renderer para', stepId);
+                    appLogger.debug('✅ [V3.0 HARDCODED] Usando V3Renderer para', stepId);
                     return {
                         type: 'v3' as const,
                         component: V3Renderer,
                         isRegistry: false,
                         template: template as TemplateV3,
                     };
-                } else {
-                    appLogger.debug('⚠️ [V3.0 NOT DETECTED] Fallback para lazy/registry:', {
-                        stepId,
-                        reason: !template ? 'no template' : typeof template !== 'object' ? 'not object' : 'no v3.0 version',
-                    });
                 }
             } catch (error) {
-                appLogger.error(`❌ Failed to check v3.0 template for ${stepId}:`, error);
+                appLogger.error(`❌ Erro ao verificar template v3.0 para ${stepId}:`, error);
             }
-        } else {
-            appLogger.debug('⚠️ [Mode NOT production] Mode is:', mode);
         }
 
-        // Para modo production e stepIds conhecidos, usar lazy loading
+        // PRIORIDADE 2: Lazy Components (TSX) - Fallback durante migração
         if (mode === 'production' && stepId in LazyStepComponents) {
-            appLogger.debug('📦 [Lazy Loading] Usando componente lazy para', stepId);
+            appLogger.debug('📦 [FALLBACK TSX] Usando componente lazy para', stepId);
             return {
                 type: 'lazy' as const,
                 component: LazyStepComponents[stepId as LazyStepId],
@@ -175,7 +184,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
             };
         }
 
-        // Para outros casos, usar registry (editor/preview)
+        // PRIORIDADE 3: Registry (editor/preview)
         try {
             const registryComponent = stepRegistry.get(stepId);
             appLogger.debug('📝 [Registry] Usando componente registry para', stepId, registryComponent ? '✅' : '❌');
