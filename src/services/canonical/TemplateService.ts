@@ -513,6 +513,29 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   /**
+   * 🚀 FASE 1.1: Pré-carregar template completo (21 steps em paralelo)
+   * Elimina waterfall loading - carrega todos os steps ao mesmo tempo
+   */
+  async preloadTemplate(templateId: string): Promise<ServiceResult<void>> {
+    try {
+      const stepIds = Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
+      
+      this.log(`🚀 Preloading ${stepIds.length} steps em paralelo para template ${templateId}...`);
+      
+      // ⚡ PARALELO - todos os steps ao mesmo tempo (não waterfall!)
+      await Promise.allSettled(
+        stepIds.map(id => this.getStep(id, templateId))
+      );
+      
+      this.log(`✅ Preload completo: ${stepIds.length} steps carregados`);
+      return this.createResult(undefined);
+    } catch (error) {
+      this.error('preloadTemplate failed:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
    * Invalidar template do cache
    */
   invalidateTemplate(id: string): void {

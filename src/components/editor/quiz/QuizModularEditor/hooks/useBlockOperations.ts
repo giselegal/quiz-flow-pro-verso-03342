@@ -1,5 +1,7 @@
 // 🔧 BLOCK OPERATIONS HOOK - Integração com Schema-Driven Validation
+// ✅ FASE 2.1: Debounce adicionado para re-renders
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/editor';
 import { validateBlockData, safeValidateBlockData, type BlockType } from '@/schemas/blockSchemas';
@@ -15,11 +17,11 @@ export type ValidationError = {
 export type UseBlockOperations = {
   getBlocks: (stepKey: string | null) => Block[] | null;
   ensureLoaded: (stepKey: string | null) => Promise<void>;
-  loadStepFromTemplate: (stepKey: string, blocks: Block[]) => void; // ✅ FASE 4: Adicionar loadStepFromTemplate
+  loadStepFromTemplate: (stepKey: string, blocks: Block[]) => void;
   addBlock: (stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => { success: boolean; error?: ValidationError[] };
   removeBlock: (stepKey: string | null, blockId: string) => void;
   reorderBlock: (stepKey: string | null, fromIndex: number, toIndex: number) => void;
-  updateBlock: (stepKey: string | null, blockId: string, patch: Partial<Block>) => { success: boolean; error?: ValidationError[] };
+  updateBlock: (stepKey: string | null, blockId: string, patch: Partial<Block>) => void; // ✅ FASE 2.1: Sem return type para debounce
 };
 
 function genId(prefix = 'blk'): string {
@@ -226,7 +228,8 @@ export function useBlockOperations(): UseBlockOperations {
     });
   }, []);
 
-  const updateBlock = useCallback((stepKey: string | null, blockId: string, patch: Partial<Block>) => {
+  // ✅ FASE 2.1: Debounce wrapper para updateBlock (150ms)
+  const updateBlockImmediate = useCallback((stepKey: string | null, blockId: string, patch: Partial<Block>) => {
     if (!stepKey) return { success: false, error: [{ field: 'stepKey', message: 'Step key é obrigatório' }] };
     
     let validationError: ValidationError[] | undefined;
@@ -355,6 +358,9 @@ export function useBlockOperations(): UseBlockOperations {
 
     return { success: true };
   }, []);
+
+  // ✅ FASE 2.1: Debounced version (150ms delay)
+  const updateBlock = useDebouncedCallback(updateBlockImmediate, 150);
 
   return useMemo(() => ({ getBlocks, ensureLoaded, loadStepFromTemplate, addBlock, removeBlock, reorderBlock, updateBlock }), [getBlocks, ensureLoaded, loadStepFromTemplate, addBlock, removeBlock, reorderBlock, updateBlock]);
 }

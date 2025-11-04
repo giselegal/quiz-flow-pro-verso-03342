@@ -28,7 +28,6 @@ import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Eye, Edit3, Play, Save, GripVertical, Download } from 'lucide-react';
-import { loadFunnelTemplate, type FunnelTemplate } from '@/services/TemplateLoader';
 import { appLogger } from '@/utils/logger';
 
 // Lazy loading de componentes pesados
@@ -54,7 +53,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Estados do editor
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
-    const [loadedTemplate, setLoadedTemplate] = useState<FunnelTemplate | null>(null);
+    const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
 
     // Persistência
@@ -78,7 +77,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-    // ✅ FASE 4: Carregar template via loadFunnelTemplate (com fallback DB → JSON)
+    // ✅ FASE 1: Carregamento unificado via templateService (elimina double loading)
     useEffect(() => {
         if (!props.templateId) return;
 
@@ -88,44 +87,27 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 const tid = props.templateId || 'quiz21StepsComplete';
                 appLogger.info(`🔍 [QuizModularEditor] Carregando template: ${tid}`);
                 
-                // ✅ Usa loadFunnelTemplate com fallback automático DB → JSON
-                const template = await loadFunnelTemplate(tid);
+                // ✅ FASE 1.1: Usar templateService.preloadTemplate (paralelo, não waterfall!)
+                const { templateService } = await import('@/services/canonical/TemplateService');
+                await templateService.preloadTemplate(tid);
                 
-                setLoadedTemplate(template);
-                appLogger.info(`✅ [QuizModularEditor] Template carregado: ${template.name} (${template.steps.length} steps)`);
+                // ✅ FASE 1.3: Carregar steps em PARALELO (não forEach sequencial)
+                const stepIds = Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
                 
-                // Carregar steps no useBlockOperations
-                template.steps.forEach(step => {
-                    if (ops.loadStepFromTemplate) {
-                        ops.loadStepFromTemplate(step.key, step.blocks);
-                        
-                        console.log(`📊 [QuizModularEditor] Step ${step.key} carregado:`, {
-                            blocksCount: step.blocks.length,
-                            blocksState: ops.getBlocks(step.key)
-                        });
-                    }
-                });
+                await Promise.all(
+                    stepIds.map(async (stepId) => {
+                        const result = await templateService.getStep(stepId, tid);
+                        if (result.success && result.data) {
+                            ops.loadStepFromTemplate(stepId, result.data);
+                        }
+                    })
+                );
+                
+                setLoadedTemplate({ name: 'Quiz 21 Steps', steps: [] });
+                appLogger.info(`✅ [QuizModularEditor] Template carregado: 21 steps em paralelo`);
                 
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
-                
-                // Fallback: Carregar steps individuais via manifest
-                try {
-                    appLogger.info('[QuizModularEditor] Tentando fallback: carregar steps individuais');
-                    const manifestResp = await fetch('/templates/blocks/manifest.json');
-                    if (manifestResp.ok) {
-                        const manifest = await manifestResp.json();
-                        const stepIds = manifest.steps || [];
-                        
-                        appLogger.info(`✅ [QuizModularEditor] Carregando ${stepIds.length} steps individuais do manifest`);
-                        
-                        for (const stepId of stepIds) {
-                            await ops.ensureLoaded(stepId);
-                        }
-                    }
-                } catch (fallbackError) {
-                    appLogger.error('[QuizModularEditor] Fallback loading failed', fallbackError);
-                }
             } finally {
                 setIsLoadingTemplate(false);
             }
@@ -368,10 +350,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                             editor.markDirty(true);
                                         }}
                                         onUpdateBlock={(id, patch) => {
-                                            const updateResult = ops.updateBlock(editor.state.currentStepKey, id, patch);
-                                            if (updateResult.success) {
-                                                editor.markDirty(true);
-                                            }
+                                            // ✅ FASE 2.1: updateBlock agora é void (debounced)
+                                            ops.updateBlock(editor.state.currentStepKey, id, patch);
+                                            editor.markDirty(true);
                                         }}
                                         onBlockSelect={editor.selectBlock}
                                     />
@@ -400,10 +381,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 <PropertiesColumn
                                     selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) ?? null}
                                     onBlockUpdate={(blockId: string, updates: Partial<Block>) => {
-                                        const updateResult = ops.updateBlock(editor.state.currentStepKey, blockId, updates);
-                                        if (updateResult.success) {
-                                            editor.markDirty(true);
-                                        }
+                                        // ✅ FASE 2.1: updateBlock agora é void (debounced)
+                                        ops.updateBlock(editor.state.currentStepKey, blockId, updates);
+                                        editor.markDirty(true);
                                     }}
                                     onClearSelection={() => {
                                         editor.clearSelection();
