@@ -114,59 +114,6 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-    // ✅ FASE 2: Batch loading otimizado + Preload inteligente
-    useEffect(() => {
-        if (!props.templateId) {
-            appLogger.info('🎨 [QuizModularEditor] Modo canvas vazio - sem template');
-            return;
-        }
-
-        async function loadTemplateOptimized() {
-            setIsLoadingTemplate(true);
-            try {
-                const tid = props.templateId!;
-                appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
-                
-                // 🚀 FASE 2.1: Batch loading de TODOS os steps
-                const { templateService } = await import('@/services/canonical/TemplateService');
-                await templateService.preloadTemplate(tid);
-                
-                const templateStepsResult = templateService.steps.list();
-                if (!templateStepsResult.success) {
-                    throw new Error('Falha ao carregar lista de steps do template');
-                }
-                const stepIds = templateStepsResult.data.map((s: any) => s.id);
-                
-                // 🚀 FASE 2.2: Carregar todos os steps em paralelo (batch)
-                const startTime = performance.now();
-                const stepPromises = stepIds.map((sid: string) => 
-                    templateService.getStep(sid, tid).catch(err => {
-                        console.warn(`⚠️ Failed to load ${sid}:`, err);
-                        return null;
-                    })
-                );
-                
-                const results = await Promise.all(stepPromises);
-                const loadTime = performance.now() - startTime;
-                
-                // Carregar blocos no SuperUnifiedProvider
-                results.forEach((result, idx) => {
-                    if (result?.success && result.data) {
-                        actions.reorderBlocks(idx + 1, result.data);
-                    }
-                });
-                
-                appLogger.info(`✅ Batch loaded ${results.length} steps in ${loadTime.toFixed(0)}ms`);
-                setLoadedTemplate({ 
-                    name: tid, 
-                    steps: templateStepsResult.data 
-                });
-            } catch (error) {
-                appLogger.error('❌ Template loading failed:', error);
-            } finally {
-                setIsLoadingTemplate(false);
-            }
-        }
 
     // ✅ FASE 2: Batch loading otimizado com preload inteligente
     useEffect(() => {
