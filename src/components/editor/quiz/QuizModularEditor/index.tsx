@@ -232,6 +232,43 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         }
     }, [editor.state.currentStepKey, ops, props.templateId]);
 
+    // ✅ NOVO: Handler para carregar template quando usuário clicar no botão
+    const handleLoadTemplate = useCallback(async () => {
+        setIsLoadingTemplate(true);
+        try {
+            const tid = 'quiz21StepsComplete';
+            appLogger.info(`🔍 [QuizModularEditor] Carregando template via botão: ${tid}`);
+            
+            const { templateService } = await import('@/services/canonical/TemplateService');
+            await templateService.preloadTemplate(tid);
+            
+            // Carregar steps em PARALELO
+            const stepIds = Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
+            
+            await Promise.all(
+                stepIds.map(async (stepId) => {
+                    const result = await templateService.getStep(stepId, tid);
+                    if (result.success && result.data) {
+                        ops.loadStepFromTemplate(stepId, result.data);
+                    }
+                })
+            );
+            
+            setLoadedTemplate({ name: 'Quiz 21 Steps', steps: [] });
+            appLogger.info(`✅ [QuizModularEditor] Template carregado: 21 steps`);
+            
+            // Atualizar URL
+            const url = new URL(window.location.href);
+            url.searchParams.set('template', tid);
+            window.history.pushState({}, '', url);
+            
+        } catch (error) {
+            appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
+        } finally {
+            setIsLoadingTemplate(false);
+        }
+    }, [ops]);
+
     return (
         <DndContext
             sensors={sensors}
@@ -446,6 +483,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                                 editor.markDirty(true);
                                             }}
                                             onBlockSelect={editor.selectBlock}
+                                            hasTemplate={Boolean(loadedTemplate || props.templateId)}
+                                            onLoadTemplate={handleLoadTemplate}
                                         />
                                     </StepErrorBoundary>
                                 ) : (

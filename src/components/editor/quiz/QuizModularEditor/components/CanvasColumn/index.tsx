@@ -9,6 +9,7 @@ import type { Block } from '@/types/editor';
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 import { SkeletonBlock } from '../SkeletonBlock';
+import { EmptyCanvasState } from '../EmptyCanvasState';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -18,6 +19,8 @@ export type CanvasColumnProps = {
     onMoveBlock?: (fromIndex: number, toIndex: number) => void;
     onUpdateBlock?: (blockId: string, patch: Partial<Block>) => void;
     onBlockSelect?: (blockId: string) => void;
+    hasTemplate?: boolean;
+    onLoadTemplate?: () => void;
 };
 
 function SortableBlockItem({
@@ -156,7 +159,7 @@ function SortableBlockItem({
     );
 }
 
-export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect }: CanvasColumnProps) {
+export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect, hasTemplate, onLoadTemplate }: CanvasColumnProps) {
     const [blocks, setBlocks] = useState<Block[] | null>(blocksFromProps ?? null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -272,6 +275,11 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     }
 
     if (!blocks || blocks.length === 0) {
+        // ✅ NOVO: Mostrar EmptyCanvasState se não tem template carregado
+        if (!hasTemplate && onLoadTemplate) {
+            return <EmptyCanvasState onLoadTemplate={onLoadTemplate} />;
+        }
+        
         // 🔧 CORREÇÃO FASE 5: Melhorar mensagem de fallback com debugging hints
         return (
             <div className="p-6 text-center space-y-3">
