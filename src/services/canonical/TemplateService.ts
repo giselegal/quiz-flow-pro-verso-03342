@@ -27,7 +27,7 @@
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
 import { CanonicalServicesMonitor } from './monitoring';
 import { cacheService } from './CacheService';
-import { UnifiedTemplateRegistry } from '../UnifiedTemplateRegistry';
+import { UnifiedTemplateRegistry } from '../deprecated/UnifiedTemplateRegistry';
 import type { Block } from '@/types/editor';
 
 /**
