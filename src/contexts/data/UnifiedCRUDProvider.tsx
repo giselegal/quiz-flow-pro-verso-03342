@@ -213,17 +213,21 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 targetFunnel.id,
                 {
                     name: targetFunnel.name,
-                    description: targetFunnel.description,
                     settings: targetFunnel.settings,
-                    pages: targetFunnel.pages,
+                    metadata: {
+                        description: (targetFunnel as any).description,
+                        pages: (targetFunnel as any).pages,
+                    },
                 },
             );
 
             // Atualizar estado
-            setCurrentFunnel(updatedFunnel);
-            setFunnels(prev => prev.map(f => f.id === updatedFunnel.id ? updatedFunnel : f));
-
-            if (debug) logger.debug('unifiedCRUD', '✅ Funnel saved', { id: updatedFunnel.id });
+            if (updatedFunnel) {
+                setCurrentFunnel(updatedFunnel as any);
+                setFunnels(prev => prev.map(f => f.id === updatedFunnel.id ? updatedFunnel as any : f));
+                
+                if (debug) logger.debug('unifiedCRUD', '✅ Funnel saved', { id: updatedFunnel.id });
+            }
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao salvar funil';
@@ -299,8 +303,6 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             if (debug) logger.debug('unifiedCRUD', '🔄 UnifiedCRUDProvider: Refreshing funnels');
 
             const funnelList = await funnelUnifiedService.listFunnels({
-                includeUnpublished: true,
-                limit: 50,
                 context,
             });
 

@@ -72,6 +72,7 @@ export interface UpdateFunnelInput {
   category?: string;
   status?: FunnelMetadata['status'];
   config?: Record<string, any>;
+  settings?: Record<string, any>; // Alias for config
   metadata?: Record<string, any>;
   isActive?: boolean;
 }
@@ -101,6 +102,7 @@ export interface FunnelWithComponents {
 export class CanonicalFunnelService {
   private static instance: CanonicalFunnelService;
   private cache: HybridCacheStrategy;
+  private eventListeners: Map<string, Set<Function>> = new Map();
 
   private constructor() {
     this.cache = HybridCacheStrategy.getInstance();
@@ -111,6 +113,31 @@ export class CanonicalFunnelService {
       CanonicalFunnelService.instance = new CanonicalFunnelService();
     }
     return CanonicalFunnelService.instance;
+  }
+
+  // ==========================================================================
+  // EVENT SYSTEM (Compatibilidade)
+  // ==========================================================================
+
+  on(event: string, callback: Function): void {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, new Set());
+    }
+    this.eventListeners.get(event)!.add(callback);
+  }
+
+  off(event: string, callback: Function): void {
+    const listeners = this.eventListeners.get(event);
+    if (listeners) {
+      listeners.delete(callback);
+    }
+  }
+
+  private emit(event: string, ...args: any[]): void {
+    const listeners = this.eventListeners.get(event);
+    if (listeners) {
+      listeners.forEach(callback => callback(...args));
+    }
   }
 
   // ==========================================================================
@@ -154,6 +181,7 @@ export class CanonicalFunnelService {
       const elapsed = performance.now() - startTime;
       appLogger.info(`[FunnelService] Funil criado: ${funnel.id} (${elapsed.toFixed(0)}ms)`);
 
+      this.emit('funnel:created', funnel);
       return funnel;
     } catch (error) {
       appLogger.error('[FunnelService] Erro ao criar funil:', error);
@@ -261,7 +289,9 @@ export class CanonicalFunnelService {
         updated_at: new Date().toISOString(),
       };
       if (typeof input.name !== 'undefined') update.name = input.name;
+      // Aceitar tanto config quanto settings
       if (typeof input.config !== 'undefined') update.config = input.config as any;
+      if (typeof input.settings !== 'undefined') update.config = input.settings as any;
       if (typeof input.metadata !== 'undefined' && input.metadata) {
         // manter descrição em metadata.description caso exista
         if (typeof (input.metadata as any).description === 'string') {
@@ -292,6 +322,7 @@ export class CanonicalFunnelService {
       const elapsed = performance.now() - startTime;
       appLogger.info(`[FunnelService] Funil atualizado: ${funnelId} (${elapsed.toFixed(0)}ms)`);
 
+      this.emit('funnel:updated', funnel);
       return funnel;
     } catch (error) {
       appLogger.error('[FunnelService] Erro ao atualizar funil:', error);
@@ -319,6 +350,7 @@ export class CanonicalFunnelService {
       });
 
       appLogger.info(`[FunnelService] Funil deletado (soft): ${funnelId}`);
+      this.emit('funnel:deleted', funnelId);
       return true;
     } catch (error) {
       appLogger.error('[FunnelService] Erro ao deletar funil:', error);
@@ -454,6 +486,50 @@ export class CanonicalFunnelService {
     } catch (error) {
       appLogger.error('[FunnelService] Erro ao carregar funil completo:', error);
       return { funnel, components: {} };
+    }
+  }
+
+  // ==========================================================================
+  // COMPATIBILIDADE COM API ANTIGA
+  // ==========================================================================
+
+  async duplicateFunnel(funnelId: string, newName?: string): Promise<FunnelMetadata> {
+    const original = await this.getFunnel(funnelId);
+    if (!original) {
+      throw new Error(`Funnel ${funnelId} not found`);
+    }
+
+    const duplicated = await this.createFunnel({
+      name: newName || `${original.name} (cópia)`,
+      type: original.type,
+      category: original.category,
+      context: original.context,
+      status: 'draft',
+      config: original.config,
+      metadata: original.metadata,
+    });
+
+    // Copiar components se existirem
+    const originalWithComponents = await this.getFunnelWithComponents(funnelId);
+    if (originalWithComponents?.components) {
+      for (const [stepKey, blocks] of Object.entries(originalWithComponents.components)) {
+        await this.saveStepBlocks(duplicated.id, stepKey, blocks);
+      }
+    }
+
+    return duplicated;
+  }
+
+  async checkPermissions(funnelId: string): Promise<{ canRead: boolean; canEdit: boolean; canDelete: boolean; isOwner: boolean }> {
+    // Por enquanto, sempre permitir (pode ser implementado com lógica de permissões real)
+    return { canRead: true, canEdit: true, canDelete: true, isOwner: true };
+  }
+
+  async clearCache(): Promise<void> {
+    // Limpar cache manualmente de cada store conhecido
+    const stores = ['funnels', 'blocks', 'templates', 'generic'];
+    for (const store of stores) {
+      await this.cache.clearStore(store as any);
     }
   }
 
