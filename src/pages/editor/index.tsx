@@ -5,7 +5,7 @@
  */
 
 import React, { Suspense, useMemo } from 'react';
-const QuizModularProductionEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularProductionEditor').then(m => ({ default: m.default })));
+const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
 import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EditorProviderUnified, { useEditor } from '@/components/editor/EditorProviderUnified';
@@ -57,7 +57,7 @@ const EditorRoutesInner: React.FC = () => {
         <EditorProviderUnified funnelId={funnelId} enableSupabase={enableSupabase}>
             {import.meta.env.DEV ? <SaveDebugButton /> : null}
             <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
-                <QuizModularProductionEditor />
+                <QuizModularEditor />
             </Suspense>
         </EditorProviderUnified>
     );
