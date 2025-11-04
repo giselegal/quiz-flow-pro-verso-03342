@@ -1,11 +1,12 @@
 /**
- * ⚠️ COMPATIBILITY SHIM - DO NOT USE IN NEW CODE
- * 
- * Este arquivo foi movido para deprecated/AIEnhancedHybridTemplateService.ts
- * Mantido apenas para não quebrar imports existentes
+ * 🔄 REDIRECT: AIEnhancedHybridTemplateService → TemplateService (canonical)
  * 
  * @deprecated Use @/services/canonical/TemplateService
  */
 
 export * from '@/services/deprecated/AIEnhancedHybridTemplateService';
 export { default } from '@/services/deprecated/AIEnhancedHybridTemplateService';
+
+if (typeof window !== 'undefined') {
+  console.warn('[DEPRECATED] AIEnhancedHybridTemplateService → use @/services/canonical/TemplateService');
+}

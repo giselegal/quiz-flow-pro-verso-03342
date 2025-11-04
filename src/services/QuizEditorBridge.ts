@@ -1,11 +1,12 @@
 /**
- * ⚠️ COMPATIBILITY SHIM - DO NOT USE IN NEW CODE
+ * 🔄 REDIRECT: QuizEditorBridge → TemplateService (canonical)
  * 
- * Este arquivo foi movido para deprecated/QuizEditorBridge.ts
- * Mantido apenas para não quebrar imports existentes
- * 
- * @deprecated Use @/services/canonical/TemplateService ou UnifiedCRUDProvider
+ * @deprecated Use @/services/canonical/TemplateService or UnifiedCRUDProvider
  */
 
 export * from '@/services/deprecated/QuizEditorBridge';
 export { default } from '@/services/deprecated/QuizEditorBridge';
+
+if (typeof window !== 'undefined') {
+  console.warn('[DEPRECATED] QuizEditorBridge → use @/services/canonical/TemplateService');
+}

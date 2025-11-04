@@ -1,10 +1,11 @@
 /**
- * ⚠️ COMPATIBILITY SHIM - DO NOT USE IN NEW CODE
- * 
- * Este arquivo foi movido para deprecated/FunnelConfigPersistenceService.ts
- * Mantido apenas para não quebrar imports existentes
+ * 🔄 REDIRECT: FunnelConfigPersistenceService → FunnelService (canonical)
  * 
  * @deprecated Use @/services/canonical/FunnelService
  */
 
 export * from '@/services/deprecated/FunnelConfigPersistenceService';
+
+if (typeof window !== 'undefined') {
+  console.warn('[DEPRECATED] FunnelConfigPersistenceService → use @/services/canonical/FunnelService');
+}

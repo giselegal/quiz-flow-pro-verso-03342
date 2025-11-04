@@ -1,12 +1,9 @@
-// 🔧 BLOCK OPERATIONS HOOK - Integração com Schema-Driven Validation
-// ✅ FASE 2.1: Debounce adicionado para re-renders
+// 🔧 BLOCK OPERATIONS HOOK - Fase 2: Validação Unificada
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/editor';
-import { validateBlockData, safeValidateBlockData, type BlockType } from '@/schemas/blockSchemas';
 import { toast } from '@/hooks/use-toast';
-import { createElementFromSchema, validateElement } from '@/core/editor/SchemaComponentAdapter';
+import { validateBlock } from '@/core/validation/UnifiedBlockValidator';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 
 export type ValidationError = {
@@ -66,48 +63,15 @@ export function useBlockOperations(): UseBlockOperations {
     }
   }, [byStep]);
 
-  // ✅ FASE 4: Carregar step direto de dados de template
+  // ✅ FASE 2: Carregar step sem normalização forçada
   const loadStepFromTemplate = useCallback((stepKey: string, blocks: Block[]) => {
     if (!stepKey || !blocks) return;
     
     console.log(`🎨 [useBlockOperations] Carregando step ${stepKey} do template (${blocks.length} blocos)`);
     
-    // ✅ CRÍTICO: Normalizar blocos para garantir estrutura consistente
-    const normalizedBlocks = blocks.map((block) => {
-      const normalized = { ...block };
-      
-      // Garantir que properties e content sejam objetos
-      if (!normalized.properties || typeof normalized.properties !== 'object') {
-        normalized.properties = {};
-      }
-      if (!normalized.content || typeof normalized.content !== 'object') {
-        normalized.content = {};
-      }
-      
-      // Se properties vazio mas content tem dados, copiar para properties
-      if (Object.keys(normalized.properties).length === 0 && Object.keys(normalized.content).length > 0) {
-        normalized.properties = { ...normalized.content };
-        console.log(`🔄 [useBlockOperations] Copiando content → properties para bloco ${block.id}`);
-      }
-      
-      // Se content vazio mas properties tem dados, copiar para content
-      if (Object.keys(normalized.content).length === 0 && Object.keys(normalized.properties).length > 0) {
-        normalized.content = { ...normalized.properties };
-        console.log(`🔄 [useBlockOperations] Copiando properties → content para bloco ${block.id}`);
-      }
-      
-      console.log(`✅ [useBlockOperations] Bloco normalizado: ${block.id}`, {
-        type: normalized.type,
-        hasProperties: Object.keys(normalized.properties).length,
-        hasContent: Object.keys(normalized.content).length,
-      });
-      
-      return normalized;
-    });
-    
     setByStep((prev) => ({
       ...prev,
-      [stepKey]: normalizedBlocks,
+      [stepKey]: blocks,
     }));
     
     loadingRef.current[stepKey] = false;
@@ -116,88 +80,25 @@ export function useBlockOperations(): UseBlockOperations {
   const addBlock = useCallback((stepKey: string | null, block: Partial<Block> & { type: Block['type'] }) => {
     if (!stepKey) return { success: false, error: [{ field: 'stepKey', message: 'Step key é obrigatório' }] };
 
-    // Verificar se existe schema para o tipo
-    const hasSchema = schemaInterpreter.getBlockSchema(block.type) !== null;
-
-    if (hasSchema) {
-      // Usar Schema-Driven Creation
-      try {
-        const newElement = createElementFromSchema(block.type, {
-          id: block.id || genId('blk'),
-          properties: (block as any).properties,
-          content: (block as any).content,
-        });
-
-        // Validar elemento criado
-        const validation = validateElement(newElement);
-        if (!validation.valid) {
-          const errors: ValidationError[] = validation.errors.map(err => ({
-            field: 'schema',
-            message: err,
-          }));
-
-          toast({
-            title: 'Erro de validação (schema)',
-            description: `Bloco ${block.type}: ${errors[0].message}`,
-            variant: 'destructive',
-          });
-
-          return { success: false, error: errors };
-        }
-
-        // Converter para formato Block
-        const newBlock: Block = {
-          id: newElement.id,
-          type: newElement.type as Block['type'],
-          order: (byStep[stepKey]?.length || 0) + 1,
-          properties: newElement.properties || {},
-          content: newElement.content || {},
-        } as Block;
-
-        setByStep((prev) => ({
-          ...prev,
-          [stepKey]: [...(prev[stepKey] || []), newBlock],
-        }));
-
-        return { success: true };
-      } catch (error: any) {
-        toast({
-          title: 'Erro ao criar bloco',
-          description: error.message || 'Falha ao criar elemento do schema',
-          variant: 'destructive',
-        });
-        return { success: false, error: [{ field: 'creation', message: error.message }] };
-      }
-    }
-
-    // Fallback: Validação legada para blocos sem schema
-    const blockData = (block as any).properties || (block as any).content || {};
-    const validation = safeValidateBlockData(block.type as BlockType, blockData);
-    
-    if (!validation.success) {
-      const zodError = validation.error as any;
-      const errors: ValidationError[] = zodError?.issues?.map((issue: any) => ({
-        field: issue.path.join('.'),
-        message: issue.message,
-      })) || [{ field: 'validation', message: zodError?.message || 'Validação falhou' }];
-
-      toast({
-        title: 'Erro de validação (legado)',
-        description: `Bloco ${block.type}: ${errors[0].message}`,
-        variant: 'destructive',
-      });
-
-      return { success: false, error: errors };
-    }
-
-    // Criar bloco legado
+    // Criar bloco básico
     const newBlock: Block = {
       id: block.id || genId('blk'),
       type: block.type,
       order: (byStep[stepKey]?.length || 0) + 1,
-      properties: validation.data || blockData,
-      content: validation.data || (block as any).content,
+      properties: (block as any).properties || {},
+      content: (block as any).content || {},
     } as Block;
+
+    // Validação unificada
+    const validation = validateBlock(newBlock);
+    if (!validation.valid) {
+      toast({
+        title: 'Erro de validação',
+        description: `${validation.errors[0].message}`,
+        variant: 'destructive',
+      });
+      return { success: false, error: validation.errors };
+    }
 
     setByStep((prev) => ({
       ...prev,
@@ -228,7 +129,7 @@ export function useBlockOperations(): UseBlockOperations {
     });
   }, []);
 
-  // ✅ FASE 2.1: Debounce wrapper para updateBlock (150ms)
+  // ✅ FASE 2: Update com validação unificada
   const updateBlockImmediate = useCallback((stepKey: string | null, blockId: string, patch: Partial<Block>) => {
     if (!stepKey) return { success: false, error: [{ field: 'stepKey', message: 'Step key é obrigatório' }] };
     
@@ -240,97 +141,34 @@ export function useBlockOperations(): UseBlockOperations {
       if (idx === -1) return prev;
 
       const currentBlock = list[idx];
-      const hasSchema = schemaInterpreter.getBlockSchema(currentBlock.type) !== null;
+      
+      // Merge updates
+      const updated = { 
+        ...currentBlock, 
+        ...patch,
+        properties: {
+          ...(currentBlock as any).properties,
+          ...(patch as any).properties,
+        },
+        content: {
+          ...(currentBlock as any).content,
+          ...(patch as any).content,
+        },
+      } as Block;
 
-      if (hasSchema) {
-        // Usar Schema-Driven Validation
-        const mergedElement = {
-          id: currentBlock.id,
-          type: currentBlock.type,
-          name: currentBlock.type,
-          properties: {
-            ...(currentBlock as any).properties,
-            ...(patch as any).properties,
-          },
-          content: {
-            ...(currentBlock as any).content,
-            ...(patch as any).content,
-          },
-        };
-
-        const validation = validateElement(mergedElement as any);
-        if (!validation.valid) {
-          validationError = validation.errors.map(err => ({
-            field: 'schema',
-            message: err,
-          }));
-
-          toast({
-            title: 'Erro de validação (schema)',
-            description: `Bloco ${currentBlock.type}: ${validationError![0].message}`,
-            variant: 'destructive',
-          });
-
-          return prev;
-        }
-
-      // ✅ CRÍTICO: Atualizar bloco com imutabilidade garantida
-        const updated = { 
-          ...currentBlock, 
-          ...patch, 
-          properties: mergedElement.properties,
-          content: mergedElement.content,
-        } as Block;
-
-        console.log(`✅ [useBlockOperations] Bloco atualizado (schema): ${blockId}`, {
-          stepKey,
-          type: updated.type,
-          propertiesKeys: Object.keys(updated.properties || {}),
-          contentKeys: Object.keys(updated.content || {}),
-        });
-
-        const next = [...list];
-        next[idx] = updated;
-        
-        // ✅ CRÍTICO: Criar novo objeto de estado para forçar re-render
-        const newState = { ...prev, [stepKey]: next };
-        return newState;
-      }
-
-      // Fallback: Validação legada
-      const mergedData = { 
-        ...(currentBlock as any).content, 
-        ...(currentBlock as any).properties,
-        ...(patch as any).content, 
-        ...(patch as any).properties 
-      };
-
-      const validation = safeValidateBlockData(currentBlock.type as BlockType, mergedData);
-
-      if (!validation.success) {
-        const zodError = validation.error as any;
-        validationError = zodError?.issues?.map((issue: any) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })) || [{ field: 'validation', message: zodError?.message || 'Validação falhou' }];
-
+      // Validação unificada
+      const validation = validateBlock(updated);
+      if (!validation.valid) {
+        validationError = validation.errors;
         toast({
-          title: 'Erro de validação (legado)',
-          description: `Bloco ${currentBlock.type}: ${validationError![0].message}`,
+          title: 'Erro de validação',
+          description: `${validation.errors[0].message}`,
           variant: 'destructive',
         });
-
         return prev;
       }
 
-      const updated = { 
-        ...currentBlock, 
-        ...patch, 
-        content: validation.data || { ...mergedData }, 
-        properties: validation.data || { ...mergedData } 
-      } as Block;
-
-      console.log(`✅ [useBlockOperations] Bloco atualizado (legado): ${blockId}`, {
+      console.log(`✅ [useBlockOperations] Bloco atualizado: ${blockId}`, {
         stepKey,
         type: updated.type,
         propertiesKeys: Object.keys(updated.properties || {}),
@@ -340,23 +178,19 @@ export function useBlockOperations(): UseBlockOperations {
       const next = [...list];
       next[idx] = updated;
       
-      // ✅ CRÍTICO: Criar novo objeto de estado para forçar re-render
-      const newState = { ...prev, [stepKey]: next };
-      return newState;
+      return { ...prev, [stepKey]: next };
     });
 
-    // 🔧 CORREÇÃO FASE 4: Emitir evento de mudança para forçar re-renders
+    // Emitir evento de mudança
     if (!validationError) {
       window.dispatchEvent(new CustomEvent('block-updated', { 
         detail: { stepKey, blockId, patch } 
       }));
     }
 
-    if (validationError) {
-      return { success: false, error: validationError };
-    }
-
-    return { success: true };
+    return validationError 
+      ? { success: false, error: validationError }
+      : { success: true };
   }, []);
 
   // ✅ FASE 1: Direct update (no debounce - removes race conditions)
