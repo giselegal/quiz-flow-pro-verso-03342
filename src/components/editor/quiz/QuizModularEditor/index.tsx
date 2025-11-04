@@ -17,7 +17,7 @@
  * - ✅ Auto-save inteligente
  */
 
-import React, { Suspense, useEffect, useState, useCallback } from 'react';
+import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useEditorState } from './hooks/useEditorState';
@@ -29,6 +29,7 @@ import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Eye, Edit3, Play, Save, GripVertical, Download } from 'lucide-react';
 import { appLogger } from '@/utils/logger';
+import { templateService } from '@/services/canonical/TemplateService';
 
 // Lazy loading de componentes pesados
 const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
@@ -85,6 +86,14 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
+
+    // 🚥 Passos da navegação: vazio no modo canvas, dinâmico quando template carregado
+    const navSteps = useMemo(() => {
+        if (!(loadedTemplate || props.templateId)) return [] as { key: string; title: string }[];
+        const res = templateService.steps.list();
+        if (!res.success) return [] as { key: string; title: string }[];
+        return res.data.map((s) => ({ key: s.id, title: `${String(s.order).padStart(2, '0')} - ${s.name}` }));
+    }, [loadedTemplate, props.templateId]);
 
     // Persistência
     const persistence = useEditorPersistence({
