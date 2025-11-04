@@ -90,9 +90,9 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
     });
 
     describe('📦 Component Import Test', () => {
-        it('TC-LOAD-001: deve importar o componente QuizModularProductionEditor sem erros', async () => {
+        it('TC-LOAD-001: deve importar o componente QuizModularEditor sem erros', async () => {
             expect(async () => {
-                await import('../QuizModularProductionEditor');
+                await import('../QuizModularEditor');
             }).not.toThrow();
         });
 
@@ -111,23 +111,23 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
     describe('🎯 Initial Render Test', () => {
         it('TC-LOAD-004: deve renderizar o editor sem crashes', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             expect(() => {
                 render(
                     <Providers>
-                        <QuizModularProductionEditor />
+                    <QuizModularEditor />
                     </Providers>,
                 );
             }).not.toThrow();
         });
 
         it('TC-LOAD-005: deve mostrar estado de carregamento inicial', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -136,12 +136,12 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
         });
 
         it('TC-LOAD-006: deve carregar sem erros de hook condicional', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
             const errorSpy = vi.spyOn(console, 'error');
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -156,11 +156,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
     describe('🏗️ Layout Structure Test', () => {
         it('TC-LOAD-007: deve renderizar layout de 4 colunas', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             const { container } = render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -172,11 +172,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
         });
 
         it('TC-LOAD-008: deve ter contexto de DnD inicializado', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -196,11 +196,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
     describe('⚡ Performance Test', () => {
         it('TC-LOAD-009: deve carregar em menos de 5 segundos', async () => {
             const startTime = performance.now();
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -213,11 +213,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
         });
 
         it('TC-LOAD-010: não deve ter memory leaks evidentes', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             const { unmount } = render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -231,14 +231,14 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
     describe('🛡️ Error Boundary Test', () => {
         it('TC-LOAD-011: deve ter error boundary para capturar erros', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             // Simula erro controlado
             const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -250,13 +250,13 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
         });
 
         it('TC-LOAD-012: deve lidar com falha de carregamento de dados', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             // Testa se o componente não quebra com dados ausentes
             expect(() => {
                 render(
                     <Providers>
-                        <QuizModularProductionEditor />
+                        <QuizModularEditor />
                     </Providers>,
                 );
             }).not.toThrow();
@@ -265,11 +265,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
     describe('📊 Initial State Test', () => {
         it('TC-LOAD-013: deve inicializar com template padrão se não houver funnelId', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -279,12 +279,12 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
         });
 
         it('TC-LOAD-014: deve inicializar hooks na ordem correta', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
             const errorSpy = vi.spyOn(console, 'error');
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -299,11 +299,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
         });
 
         it('TC-LOAD-015: deve ter CanvasArea montado após carregamento', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -317,11 +317,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
     describe('🔄 Re-render Stability Test', () => {
         it('TC-LOAD-016: deve manter estabilidade em múltiplos re-renders', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             const { rerender } = render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -333,29 +333,29 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             expect(() => {
                 rerender(
                     <Providers>
-                        <QuizModularProductionEditor />
+                        <QuizModularEditor />
                     </Providers>,
                 );
                 rerender(
                     <Providers>
-                        <QuizModularProductionEditor />
+                        <QuizModularEditor />
                     </Providers>,
                 );
                 rerender(
                     <Providers>
-                        <QuizModularProductionEditor />
+                        <QuizModularEditor />
                     </Providers>,
                 );
             }).not.toThrow();
         });
 
         it('TC-LOAD-017: não deve aumentar número de hooks em re-renders', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
             const errorSpy = vi.spyOn(console, 'error');
 
             const { rerender } = render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -366,7 +366,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             // Re-render
             rerender(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -380,11 +380,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
     describe('🎨 Visual Regression Test', () => {
         it('TC-LOAD-018: deve renderizar sem erros de CSS', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             const { container } = render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -396,11 +396,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
         });
 
         it('TC-LOAD-019: deve ter estrutura HTML válida', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             const { container } = render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 
@@ -412,11 +412,11 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
     describe('🔌 Integration Test', () => {
         it('TC-LOAD-020: deve integrar todos os providers necessários', async () => {
-            const { QuizModularProductionEditor } = await import('../QuizModularProductionEditor');
+            const QuizModularEditor = (await import('../QuizModularEditor')).default;
 
             render(
                 <Providers>
-                    <QuizModularProductionEditor />
+                    <QuizModularEditor />
                 </Providers>,
             );
 

@@ -33,7 +33,7 @@ export const TERTIARY_ROUTES = {
 export const setupCriticalRoutes = () => {
   // HIGH PRIORITY - Preload imediato em idle
   routePreloader.register(CRITICAL_ROUTES.editor, {
-    component: () => import('@/components/editor/quiz/QuizModularProductionEditor'),
+    component: () => import('@/components/editor/quiz/QuizModularEditor'),
     priority: 'high',
     preloadOnIdle: true,
   });

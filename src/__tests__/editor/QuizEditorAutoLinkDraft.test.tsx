@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import * as BridgeModule from '@/services/QuizEditorBridge';
-import QuizModularProductionEditor from '@/components/editor/quiz/QuizModularProductionEditor';
+import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor';
 
 // Mock toast (usado dentro do editor)
 vi.mock('@/components/ui/use-toast', () => ({
@@ -50,7 +50,7 @@ describe('QuizEditor auto-link nextStep ao salvar', () => {
     });
 
     it('preenche nextStep ausentes antes de chamar saveDraft', async () => {
-        render(<QuizModularProductionEditor />);
+        render(<QuizModularEditor />);
 
         // Botão Salvar
         const saveButton = await screen.findByRole('button', { name: /salvar/i });
