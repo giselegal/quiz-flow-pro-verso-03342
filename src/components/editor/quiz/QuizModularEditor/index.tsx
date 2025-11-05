@@ -75,22 +75,18 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
 
-    // 🚥 Passos da navegação: SEMPRE carregar 21 steps (independente de template)
+    // 🎯 FASE 4: Navegação dinâmica baseada no template carregado
     const navSteps = useMemo(() => {
         const res = templateService.steps.list();
         if (!res.success || !res.data || res.data.length === 0) {
-            console.warn('⚠️ [QuizModularEditor] templateService.steps.list() falhou, usando fallback');
-            // Fallback para 21 steps do quiz completo
-            return Array.from({ length: 21 }, (_, i) => ({
-                key: `step-${String(i + 1).padStart(2, '0')}`,
-                title: `${String(i + 1).padStart(2, '0')} - Etapa ${i + 1}`
-            }));
+            console.warn('⚠️ [QuizModularEditor] templateService.steps.list() falhou');
+            return []; // Retorna vazio ao invés de fallback fixo
         }
         return res.data.map((s) => ({ 
             key: s.id, 
             title: `${String(s.order).padStart(2, '0')} - ${s.name}` 
         }));
-    }, []); // Sem dependências - carregar uma vez apenas
+    }, [loadedTemplate]); // ✅ Depende do template carregado para atualizar
 
     // ✅ FASE 1: Auto-save direto do SuperUnified
     useEffect(() => {
@@ -126,15 +122,18 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
                 
                 const { templateService } = await import('@/services/canonical/TemplateService');
+                
+                // ✅ Preload agora detecta automaticamente o número de steps
                 await templateService.preloadTemplate(tid);
                 
+                // ✅ Após preload, steps.list() retornará o número correto
                 const templateStepsResult = templateService.steps.list();
                 if (!templateStepsResult.success) {
                     throw new Error('Falha ao carregar lista de steps do template');
                 }
                 const stepIds = templateStepsResult.data.map((s: any) => s.id);
                 
-                // ✅ FASE 1: Batch loading usando SuperUnified
+                // Batch loading dos blocos
                 await Promise.all(
                     stepIds.map(async (stepId: string, idx: number) => {
                         const result = await templateService.getStep(stepId, tid);
@@ -144,7 +143,12 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     })
                 );
                 
-                setLoadedTemplate({ name: `Template: ${tid}`, steps: [] });
+                // ✅ Atualizar state com número correto de steps para forçar recalcular navSteps
+                setLoadedTemplate({ 
+                    name: `Template: ${tid}`, 
+                    steps: templateStepsResult.data
+                });
+                
                 appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
@@ -248,6 +252,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             appLogger.info(`🔍 [QuizModularEditor] Carregando template via botão: ${tid}`);
             
             const { templateService } = await import('@/services/canonical/TemplateService');
+            
+            // ✅ Preload detecta automaticamente o número de steps
             await templateService.preloadTemplate(tid);
             
             // ✅ Buscar steps dinamicamente do template
@@ -268,7 +274,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 })
             );
             
-            setLoadedTemplate({ name: 'Quiz 21 Steps', steps: [] });
+            // ✅ Atualizar state com número correto de steps
+            setLoadedTemplate({ 
+                name: 'Quiz 21 Steps', 
+                steps: templateStepsResult.data 
+            });
             appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
             
             // Atualizar URL

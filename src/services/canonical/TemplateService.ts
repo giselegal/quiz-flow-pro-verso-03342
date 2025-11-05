@@ -112,6 +112,10 @@ export class TemplateService extends BaseCanonicalService {
   private stepLoadPromises = new Map<string, Promise<any>>();
   private loadedSteps = new Set<string>();
 
+  // 🎯 FASE 4: Navegação Dinâmica
+  private activeTemplateId: string | null = null;
+  private activeTemplateSteps: number = 21; // Default para quiz completo
+
   // Mapeamento das 21 etapas do Quiz de Estilo
   private readonly STEP_MAPPING: Record<number, Omit<StepInfo, 'id' | 'order' | 'blocksCount' | 'hasTemplate'>> = {
     1: { name: 'Introdução', type: 'intro', description: 'Apresentação do Quiz de Estilo' },
@@ -411,6 +415,39 @@ export class TemplateService extends BaseCanonicalService {
   // ==================== CACHE OPERATIONS ====================
 
   /**
+   * 🎯 Definir template ativo (afeta número de steps na navegação)
+   */
+  setActiveTemplate(templateId: string, totalSteps: number): void {
+    this.activeTemplateId = templateId;
+    this.activeTemplateSteps = totalSteps;
+    this.log(`✅ Template ativo: ${templateId} (${totalSteps} etapas)`);
+  }
+
+  /**
+   * 🔍 Detectar número de steps do template lendo master.v3.json
+   */
+  private async detectTemplateSteps(templateId: string): Promise<number> {
+    try {
+      const masterPath = `/templates/funnels/${templateId}/master.v3.json`;
+      const response = await fetch(masterPath);
+      
+      if (!response.ok) {
+        this.log(`⚠️ Master JSON não encontrado para ${templateId}, usando default 21`);
+        return 21;
+      }
+      
+      const masterData = await response.json();
+      const stepCount = masterData.steps?.length || 21;
+      
+      this.log(`✅ Template ${templateId} possui ${stepCount} etapas`);
+      return stepCount;
+    } catch (error) {
+      this.log(`⚠️ Erro ao detectar steps de ${templateId}:`, error);
+      return 21; // Fallback seguro
+    }
+  }
+
+  /**
    * 🚀 FASE 3.1: Smart Lazy Loading de Steps
    * Carrega step sob demanda + preload inteligente de vizinhos e críticos
    * 
@@ -552,21 +589,30 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   /**
-   * 🚀 FASE 1.1: Pré-carregar template completo (21 steps em paralelo)
-   * Elimina waterfall loading - carrega todos os steps ao mesmo tempo
+   * 🚀 FASE 4: Pré-carregar template completo com detecção dinâmica de steps
+   * Detecta automaticamente quantos steps o template possui
    */
   async preloadTemplate(templateId: string): Promise<ServiceResult<void>> {
     try {
-      const stepIds = Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
+      // 1. Detectar quantos steps o template tem
+      const totalSteps = await this.detectTemplateSteps(templateId);
       
-      this.log(`🚀 Preloading ${stepIds.length} steps em paralelo para template ${templateId}...`);
+      // 2. Configurar como template ativo
+      this.setActiveTemplate(templateId, totalSteps);
       
-      // ⚡ PARALELO - todos os steps ao mesmo tempo (não waterfall!)
+      // 3. Gerar array de stepIds dinamicamente
+      const stepIds = Array.from({ length: totalSteps }, (_, i) => 
+        `step-${String(i + 1).padStart(2, '0')}`
+      );
+      
+      this.log(`🚀 Preloading ${totalSteps} steps em paralelo para template ${templateId}...`);
+      
+      // 4. Carregar steps em paralelo
       await Promise.allSettled(
         stepIds.map(id => this.getStep(id, templateId))
       );
       
-      this.log(`✅ Preload completo: ${stepIds.length} steps carregados`);
+      this.log(`✅ Preload completo: ${totalSteps} steps carregados`);
       return this.createResult(undefined);
     } catch (error) {
       this.error('preloadTemplate failed:', error);
@@ -688,15 +734,22 @@ export class TemplateService extends BaseCanonicalService {
     },
 
     /**
-     * Listar informações de todos os steps
+     * 🎯 FASE 4: Listar informações de steps de forma dinâmica
+     * Usa activeTemplateSteps para mostrar apenas os steps do template carregado
      */
     list: (): ServiceResult<StepInfo[]> => {
       try {
         const steps: StepInfo[] = [];
+        
+        // Usar número dinâmico de steps ao invés de hardcoded 21
+        const totalSteps = this.activeTemplateSteps;
 
-        for (let i = 1; i <= 21; i++) {
-          const info = this.STEP_MAPPING[i];
-          if (!info) continue;
+        for (let i = 1; i <= totalSteps; i++) {
+          const info = this.STEP_MAPPING[i] || {
+            name: `Etapa ${i}`,
+            type: 'custom' as const,
+            description: `Etapa personalizada ${i}`,
+          };
 
           steps.push({
             id: `step-${i.toString().padStart(2, '0')}`,
