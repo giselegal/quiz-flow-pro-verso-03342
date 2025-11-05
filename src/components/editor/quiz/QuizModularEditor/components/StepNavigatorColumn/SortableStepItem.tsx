@@ -8,11 +8,12 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
-import { GripVertical, MoreVertical, Trash2 } from 'lucide-react';
+import { GripVertical, MoreVertical, Trash2, Copy } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -23,6 +24,7 @@ interface SortableStepItemProps {
   isCustomStep: boolean;
   onSelect: () => void;
   onDelete: () => void;
+  onDuplicate: () => void;
 }
 
 export function SortableStepItem({
@@ -32,6 +34,7 @@ export function SortableStepItem({
   isCustomStep,
   onSelect,
   onDelete,
+  onDuplicate,
 }: SortableStepItemProps) {
   const {
     attributes,
@@ -75,29 +78,37 @@ export function SortableStepItem({
           {title}
         </button>
 
-        {/* Actions Menu (apenas para etapas customizadas) */}
-        {isCustomStep && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <MoreVertical className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={onDelete}
-                className="text-red-600 focus:text-red-600"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Deletar Etapa
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        {/* Actions Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <MoreVertical className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={onDuplicate}>
+              <Copy className="h-4 w-4 mr-2" />
+              Duplicar Etapa
+            </DropdownMenuItem>
+            
+            {isCustomStep && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={onDelete}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Deletar Etapa
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </li>
   );

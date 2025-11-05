@@ -156,6 +156,38 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
         closeDeleteDialog();
     };
 
+    const handleDuplicateStep = async (stepId: string) => {
+        try {
+            const result = await templateService.steps.duplicate(stepId);
+            
+            if (result.success) {
+                toast({
+                    title: 'Etapa duplicada',
+                    description: `Nova etapa criada: ${result.data.name}`,
+                });
+
+                // Forçar refresh da lista
+                setRefreshKey(prev => prev + 1);
+                
+                // Selecionar a nova etapa
+                onSelectStep(result.data.id);
+            } else {
+                toast({
+                    title: 'Erro ao duplicar',
+                    description: 'error' in result ? result.error.message : 'Não foi possível duplicar a etapa',
+                    variant: 'destructive',
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao duplicar etapa:', error);
+            toast({
+                title: 'Erro ao duplicar',
+                description: 'Ocorreu um erro inesperado',
+                variant: 'destructive',
+            });
+        }
+    };
+
     const handleDragEnd = async (event: DragEndEvent) => {
         const { active, over } = event;
 
@@ -262,6 +294,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                                             isCustomStep={isCustomStep}
                                             onSelect={() => onSelectStep(s.key)}
                                             onDelete={() => openDeleteDialog(s.key, s.title)}
+                                            onDuplicate={() => handleDuplicateStep(s.key)}
                                         />
                                     );
                                 })}

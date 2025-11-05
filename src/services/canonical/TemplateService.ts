@@ -870,6 +870,65 @@ export class TemplateService extends BaseCanonicalService {
     },
 
     /**
+     * 📋 Duplicar step existente
+     */
+    duplicate: async (stepId: string): Promise<ServiceResult<StepInfo>> => {
+      try {
+        // Buscar step original
+        let originalStep: StepInfo | undefined;
+        
+        // Verificar se é step customizado
+        if (this.customSteps.has(stepId)) {
+          originalStep = this.customSteps.get(stepId);
+        } else {
+          // Buscar nos steps do template
+          const allSteps = this.steps.list();
+          if (allSteps.success) {
+            originalStep = allSteps.data.find(s => s.id === stepId);
+          }
+        }
+
+        if (!originalStep) {
+          return this.createError(new Error(`Step não encontrado: ${stepId}`));
+        }
+
+        // Buscar blocos do step original
+        const blocksResult = await this.getStep(stepId);
+        const originalBlocks = blocksResult.success ? blocksResult.data : [];
+
+        // Criar novo step com nome "Cópia de..."
+        const newStepNumber = this.customSteps.size + this.activeTemplateSteps + 1;
+        const newStepId = `step-custom-${Date.now()}`;
+        
+        const newStep: StepInfo = {
+          ...originalStep,
+          id: newStepId,
+          name: `Cópia de ${originalStep.name}`,
+          order: newStepNumber,
+          hasTemplate: false, // Marca como customizado
+        };
+
+        // Duplicar blocos com novos IDs
+        const duplicatedBlocks: Block[] = originalBlocks.map((block, index) => ({
+          ...block,
+          id: `${newStepId}-block-${Date.now()}-${index}`,
+        }));
+
+        // Adicionar ao Map de steps customizados
+        this.customSteps.set(newStepId, newStep);
+
+        // Salvar blocos no cache
+        cacheService.templates.set(newStepId, duplicatedBlocks);
+
+        this.log(`✅ Step duplicado: ${stepId} → ${newStepId} (${duplicatedBlocks.length} blocos)`);
+        return this.createResult(newStep);
+      } catch (error) {
+        this.error('steps.duplicate failed:', error);
+        return this.createError(error as Error);
+      }
+    },
+
+    /**
      * Pré-carregar steps específicos
      */
     preload: async (stepNumbers: number[]): Promise<void> => {
