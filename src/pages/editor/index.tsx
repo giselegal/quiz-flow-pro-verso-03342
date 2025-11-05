@@ -6,9 +6,7 @@
 
 import React, { Suspense, useMemo, useState, useCallback } from 'react';
 const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
-import { UnifiedCRUDProvider } from '@/contexts';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
-import EditorProviderUnified, { useEditor } from '@/components/editor/EditorProviderUnified';
+import { SuperUnifiedProvider, useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
 
 /**
@@ -43,16 +41,13 @@ function useFunnelIdFromLocation(): string | undefined {
 }
 
 export const EditorRoutes: React.FC = () => (
-    <UnifiedCRUDProvider autoLoad={true} debug={false} context={FunnelContext.EDITOR}>
-        <EditorRoutesInner />
-    </UnifiedCRUDProvider>
+    <EditorRoutesInner />
 );
 
 export default EditorRoutes;
 
 const EditorRoutesInner: React.FC = () => {
     const funnelId = useFunnelIdFromLocation();
-    const enableSupabase = useMemo(() => Boolean(funnelId), [funnelId]);
 
     // Estado do modal de startup
     const [showStartupModal, setShowStartupModal] = useState(false);
@@ -95,34 +90,40 @@ const EditorRoutesInner: React.FC = () => {
                 onSelectMode={handleSelectMode}
             />
             
-            <EditorProviderUnified funnelId={funnelId} enableSupabase={enableSupabase}>
+            <SuperUnifiedProvider funnelId={funnelId} autoLoad={Boolean(funnelId)} debugMode={import.meta.env.DEV}>
                 {import.meta.env.DEV ? <SaveDebugButton /> : null}
                 <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
                     <QuizModularEditor templateId={templateId} />
                 </Suspense>
-            </EditorProviderUnified>
+            </SuperUnifiedProvider>
         </>
     );
 };
 
-// Botão de debug para salvar manualmente no Supabase durante desenvolvimento
+// ✅ FASE 2: Botão de debug usando SuperUnified
 const SaveDebugButton: React.FC = () => {
-    const editor = useEditor();
-    const canSave = Boolean(editor.actions.saveToSupabase);
+    const unified = useSuperUnified();
+    const canSave = Boolean(unified.state.currentFunnel);
     if (!canSave) return null;
 
-    const onClick = () => editor.actions.saveToSupabase?.();
+    const onClick = async () => {
+        try {
+            await unified.saveFunnel();
+        } catch (error) {
+            console.error('Save failed:', error);
+        }
+    };
 
     return (
         <button
             type="button"
             onClick={onClick}
-            disabled={editor.state.isLoading}
+            disabled={unified.state.ui.isLoading}
             style={{ position: 'fixed', top: 12, right: 12, zIndex: 50 }}
             className="rounded bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white shadow hover:bg-emerald-700 disabled:opacity-60"
             title="Salvar no Supabase (debug)"
         >
-            {editor.state.isLoading ? 'Salvando…' : 'Salvar (debug)'}
+            {unified.state.ui.isLoading ? 'Salvando…' : 'Salvar (debug)'}
         </button>
     );
 };

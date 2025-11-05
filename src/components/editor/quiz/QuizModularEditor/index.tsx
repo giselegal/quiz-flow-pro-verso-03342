@@ -20,10 +20,8 @@
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { useEditorState } from './hooks/useEditorState';
-import { useBlockOperations } from './hooks/useBlockOperations';
+import { useSuperUnified } from '@/hooks/useSuperUnified';
 import { useDndSystem } from './hooks/useDndSystem';
-import { useEditorPersistence } from './hooks/useEditorPersistence';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
@@ -61,15 +59,15 @@ export type QuizModularEditorProps = {
 };
 
 export default function QuizModularEditor(props: QuizModularEditorProps) {
-    // Estado compartilhado do editor
-    const editor = useEditorState(props.initialStepKey);
-    const ops = useBlockOperations();
+    // ✅ FASE 1: Usar SuperUnifiedProvider
+    const unified = useSuperUnified();
     const dnd = useDndSystem();
     const { enableAutoSave } = useFeatureFlags();
 
-    const undo = useCallback(() => editor.undo(), [editor]);
-    const redo = useCallback(() => editor.redo(), [editor]);
-    const historyState = { canUndo: editor.canUndo, canRedo: editor.canRedo };
+    // Mapear estado do SuperUnified para interface local
+    const currentStepKey = `step-${String(unified.state.editor.currentStep).padStart(2, '0')}`;
+    const selectedBlockId = unified.state.editor.selectedBlockId;
+    const isDirty = unified.state.editor.isDirty;
 
     // Estados do editor
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
@@ -94,22 +92,21 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         }));
     }, []); // Sem dependências - carregar uma vez apenas
 
-    // Persistência com auto-save
-    const persistence = useEditorPersistence({
-        enableAutoSave,
-        autoSaveInterval: 2000,
-        onSaveSuccess: (stepKey) => {
-            console.log(`✅ Auto-save: ${stepKey}`);
-            editor.markDirty(false);
-        },
-        onSaveError: (stepKey, error) => console.error(`❌ Auto-save failed:`, error),
-        getDirtyBlocks: () => {
-            const stepKey = editor.state.currentStepKey;
-            if (!stepKey || !editor.state.isDirty) return null;
-            const blocks = ops.getBlocks(stepKey);
-            return blocks ? { stepKey, blocks } : null;
-        },
-    });
+    // ✅ FASE 1: Auto-save direto do SuperUnified
+    useEffect(() => {
+        if (!enableAutoSave || !isDirty) return;
+        
+        const timer = setTimeout(async () => {
+            try {
+                await unified.saveFunnel();
+                console.log(`✅ Auto-save: ${currentStepKey}`);
+            } catch (error) {
+                console.error(`❌ Auto-save failed:`, error);
+            }
+        }, 2000);
+        
+        return () => clearTimeout(timer);
+    }, [enableAutoSave, isDirty, currentStepKey, unified]);
 
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
@@ -137,12 +134,12 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 }
                 const stepIds = templateStepsResult.data.map((s: any) => s.id);
                 
-                // Batch loading paralelo
+                // ✅ FASE 1: Batch loading usando SuperUnified
                 await Promise.all(
-                    stepIds.map(async (stepId: string) => {
+                    stepIds.map(async (stepId: string, idx: number) => {
                         const result = await templateService.getStep(stepId, tid);
                         if (result.success && result.data) {
-                            ops.loadStepFromTemplate(stepId, result.data);
+                            unified.setStepBlocks(idx + 1, result.data);
                         }
                     })
                 );
@@ -159,7 +156,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         loadTemplateOptimized();
     }, [props.templateId, ops]);
 
-    const blocks: Block[] | null = ops.getBlocks(editor.state.currentStepKey);
+    // ✅ FASE 1: Obter blocos do SuperUnified
+    const blocks: Block[] | null = unified.getStepBlocks(unified.state.editor.currentStep);
 
     // Handler de DnD consolidado
     const handleDragEnd = useCallback((event: any) => {
@@ -167,63 +165,66 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         if (!result) return;
 
         const { draggedItem, overId, activeId } = result as { draggedItem: any; overId: any; activeId: any };
-        const stepKey = editor.state.currentStepKey;
-        const list = ops.getBlocks(stepKey) || [];
+        const stepIndex = unified.state.editor.currentStep;
+        const list = blocks || [];
 
-        // 1) Inserção de item da biblioteca no canvas (fim da lista ou próximo ao item alvo)
+        // 1) Inserção de item da biblioteca no canvas
         if (draggedItem?.type === 'library-item') {
             if (!draggedItem.libraryType) return;
-            const addResult = ops.addBlock(stepKey, { type: draggedItem.libraryType as Block['type'] });
-            if (addResult.success) {
-                // Inserir em posição específica se soltou sobre um bloco existente
-                const targetIndex = list.findIndex(b => String(b.id) === String(overId));
-                if (targetIndex >= 0) {
-                    // move último para após o alvo
-                    const from = (list.length); // após o add, o novo bloco vira o último (index length, mas reorder espera índices 0..n-1 após setState assíncrono)
-                    // Como o estado ainda não refletiu o novo item, fazemos uma aproximação: chamar reorder no próximo tick
-                    setTimeout(() => {
-                        const nextList = ops.getBlocks(stepKey) || [];
-                        const fromIdx = nextList.length - 1;
-                        const toIdx = Math.min(targetIndex + 1, nextList.length - 1);
-                        ops.reorderBlock(stepKey, fromIdx, toIdx);
-                        editor.markDirty(true);
-                    }, 0);
-                } else {
-                    editor.markDirty(true);
-                }
-            }
+            
+            const newBlock = {
+                id: `block-${Date.now()}`,
+                type: draggedItem.libraryType,
+                properties: {},
+                content: {},
+                order: list.length,
+            };
+            
+            unified.addBlock(stepIndex, newBlock);
             return;
         }
 
-        // 2) Reordenação entre blocos do canvas (sortable): activeId e overId são IDs de blocos
+        // 2) Reordenação entre blocos do canvas
         if (draggedItem?.type === 'block' && activeId && overId && activeId !== overId) {
             const fromIndex = list.findIndex(b => String(b.id) === String(activeId));
             const toIndex = list.findIndex(b => String(b.id) === String(overId));
             if (fromIndex >= 0 && toIndex >= 0) {
-                ops.reorderBlock(stepKey, fromIndex, toIndex);
-                editor.markDirty(true);
+                const reordered = [...list];
+                const [moved] = reordered.splice(fromIndex, 1);
+                reordered.splice(toIndex, 0, moved);
+                unified.reorderBlocks(stepIndex, reordered);
             }
         }
-    }, [dnd.handlers, ops, editor]);
+    }, [dnd.handlers, blocks, unified]);
 
-    // Handler de save manual
-    const handleSave = useCallback(() => {
-        const stepKey = editor.state.currentStepKey;
-        const blocks = ops.getBlocks(stepKey);
-        if (stepKey && blocks) {
-            persistence.saveStepBlocks(stepKey, blocks);
+    // ✅ FASE 1: Save manual usando SuperUnified
+    const handleSave = useCallback(async () => {
+        try {
+            await unified.saveFunnel();
+            unified.showToast({
+                type: 'success',
+                title: 'Salvo!',
+                message: 'Funil salvo com sucesso',
+            });
+        } catch (error) {
+            unified.showToast({
+                type: 'error',
+                title: 'Erro',
+                message: 'Erro ao salvar funil',
+            });
         }
-    }, [editor.state.currentStepKey, ops, persistence]);
+    }, [unified]);
 
-    // ✅ FASE 2.3: Handler de reload para error boundary
+    // ✅ FASE 1: Handler de reload usando SuperUnified
     const handleReloadStep = useCallback(async () => {
-        const stepKey = editor.state.currentStepKey;
-        if (!stepKey) return;
+        const stepIndex = unified.state.editor.currentStep;
+        if (!stepIndex) return;
 
-        appLogger.info(`🔄 [QuizModularEditor] Recarregando step após erro: ${stepKey}`);
+        appLogger.info(`🔄 [QuizModularEditor] Recarregando step após erro: step-${stepIndex}`);
         
         try {
             const { templateService } = await import('@/services/canonical/TemplateService');
+            const stepKey = `step-${String(stepIndex).padStart(2, '0')}`;
             
             // Invalidar cache do step
             templateService.invalidateTemplate(stepKey);
@@ -231,13 +232,13 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             // Recarregar
             const result = await templateService.getStep(stepKey, props.templateId);
             if (result.success && result.data) {
-                ops.loadStepFromTemplate(stepKey, result.data);
+                unified.setStepBlocks(stepIndex, result.data);
                 appLogger.info(`✅ [QuizModularEditor] Step recarregado: ${result.data.length} blocos`);
             }
         } catch (error) {
             appLogger.error('[QuizModularEditor] Erro ao recarregar step:', error);
         }
-    }, [editor.state.currentStepKey, ops, props.templateId]);
+    }, [unified, props.templateId]);
 
     // ✅ NOVO: Handler para carregar template quando usuário clicar no botão
     const handleLoadTemplate = useCallback(async () => {
@@ -259,10 +260,10 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             appLogger.info(`📋 [QuizModularEditor] Carregando ${stepIds.length} steps do template`);
             
             await Promise.all(
-                stepIds.map(async (stepId: string) => {
+                stepIds.map(async (stepId: string, idx: number) => {
                     const result = await templateService.getStep(stepId, tid);
                     if (result.success && result.data) {
-                        ops.loadStepFromTemplate(stepId, result.data);
+                        unified.setStepBlocks(idx + 1, result.data);
                     }
                 })
             );
@@ -280,7 +281,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         } finally {
             setIsLoadingTemplate(false);
         }
-    }, [ops]);
+    }, [unified]);
 
     return (
         <DndContext
@@ -316,9 +317,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         </span>
                     )}
                     
-                    {editor.state.currentStepKey && (
+                    {currentStepKey && (
                         <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
-                            {editor.state.currentStepKey}
+                            {currentStepKey}
                         </span>
                     )}
                 </div>
@@ -370,14 +371,14 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             </div>
                         )}
 
-                        {/* ✅ FASE 4.1: Status do Auto-save com timestamp */}
+                        {/* ✅ FASE 1: Status do Auto-save com SuperUnified */}
                         {enableAutoSave && (
                             <div className="text-xs flex items-center gap-2 animate-fade-in">
-                                {persistence.hasAutoSavePending ? (
+                                {unified.state.ui.isLoading ? (
                                     <span className="text-blue-600 flex items-center gap-1">
                                         <span className="animate-spin">🔄</span> Salvando...
                                     </span>
-                                ) : editor.state.isDirty ? (
+                                ) : isDirty ? (
                                     <span className="text-orange-600">📝 Não salvo</span>
                                 ) : (
                                     <span className="text-green-600">✅ Salvo agora</span>
@@ -385,42 +386,15 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             </div>
                         )}
 
-                        {/* ✅ FASE 4.3: Botões Undo/Redo */}
-                        <div className="flex items-center gap-1 border-l pl-3">
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                disabled={!historyState.canUndo}
-                                onClick={undo}
-                                className="h-7 px-2"
-                                title="Desfazer (Ctrl+Z)"
-                            >
-                                ↶
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                disabled={!historyState.canRedo}
-                                onClick={redo}
-                                className="h-7 px-2"
-                                title="Refazer (Ctrl+Y)"
-                            >
-                                ↷
-                            </Button>
-                        </div>
-
                         {/* Botão Save Manual */}
                         <Button
                             size="sm"
                             onClick={handleSave}
-                            disabled={!editor.state.currentStepKey || persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving}
+                            disabled={unified.state.ui.isLoading}
                             className="h-7"
                         >
                             <Save className="w-3 h-3 mr-1" />
-                            {persistence.getSaveStatus(editor.state.currentStepKey || '').isSaving
-                                ? 'Salvando...'
-                                : 'Salvar'
-                            }
+                            {unified.state.ui.isLoading ? 'Salvando...' : 'Salvar'}
                         </Button>
                     </div>
                 </div>
@@ -432,9 +406,12 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando navegação…</div>}>
                             <div className="h-full border-r bg-white overflow-y-auto">
                                 <StepNavigatorColumn
-                                    initialStepKey={props.initialStepKey}
-                                    currentStepKey={editor.state.currentStepKey}
-                                    onSelectStep={editor.setStep}
+                                    steps={navSteps}
+                                    currentStep={currentStepKey}
+                                    onStepChange={(key) => {
+                                        const num = parseInt(key.replace('step-', ''), 10);
+                                        unified.setCurrentStep(num);
+                                    }}
                                 />
                             </div>
                         </Suspense>

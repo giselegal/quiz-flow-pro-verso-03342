@@ -37,10 +37,8 @@ interface UnifiedFunnelData {
     name: string;
     user_id: string | null;
     description?: string | null;
-    // Novo esquema principal
     config?: any;
     status?: 'draft' | 'published' | 'archived' | string | null;
-    // Compatibilidade legada (somente em memória)
     settings?: any;
     version?: number | null;
     is_published?: boolean | null;
@@ -82,8 +80,6 @@ interface EditorState {
     isEditing: boolean;
     dragEnabled: boolean;
     clipboardData: any | null;
-
-    // 🆕 FASE 3: PureBuilder compatibility
     stepBlocks: Record<number, any[]>;
     totalSteps: number;
     funnelSettings: any;
@@ -128,29 +124,14 @@ interface PerformanceMetrics {
 
 // 🎯 UNIFIED STATE TYPE
 interface SuperUnifiedState {
-    // Core data
     funnels: UnifiedFunnelData[];
     currentFunnel: UnifiedFunnelData | null;
-
-    // Auth state
     auth: AuthState;
-
-    // Theme state
     theme: ThemeState;
-
-    // Editor state
     editor: EditorState;
-
-    // UI state
     ui: UIState;
-
-    // Cache state
     cache: CacheState;
-
-    // Performance metrics
     performance: PerformanceMetrics;
-
-    // Feature flags
     features: {
         enableCache: boolean;
         enableAnalytics: boolean;
@@ -175,7 +156,6 @@ type SuperUnifiedAction =
     | { type: 'UPDATE_CACHE'; payload: { key: string; data: any } }
     | { type: 'UPDATE_PERFORMANCE'; payload: Partial<PerformanceMetrics> }
     | { type: 'TOGGLE_FEATURE'; payload: { feature: keyof SuperUnifiedState['features']; enabled: boolean } }
-    // 🆕 FASE 3: Editor block operations
     | { type: 'ADD_BLOCK'; payload: { stepIndex: number; block: any } }
     | { type: 'UPDATE_BLOCK'; payload: { stepIndex: number; blockId: string; updates: any } }
     | { type: 'REMOVE_BLOCK'; payload: { stepIndex: number; blockId: string } }
@@ -187,14 +167,12 @@ type SuperUnifiedAction =
 const initialState: SuperUnifiedState = {
     funnels: [],
     currentFunnel: null,
-
     auth: {
         user: null,
         isAuthenticated: false,
         isLoading: false,
         error: null,
     },
-
     theme: {
         theme: 'light',
         primaryColor: '#4F46E5',
@@ -202,7 +180,6 @@ const initialState: SuperUnifiedState = {
         fontFamily: 'Inter, sans-serif',
         borderRadius: '8px',
     },
-
     editor: {
         currentStep: 1,
         selectedBlockId: null,
@@ -210,8 +187,6 @@ const initialState: SuperUnifiedState = {
         isEditing: false,
         dragEnabled: true,
         clipboardData: null,
-
-        // 🆕 FASE 3: PureBuilder compatibility
         stepBlocks: {},
         totalSteps: 21,
         funnelSettings: {},
@@ -219,7 +194,6 @@ const initialState: SuperUnifiedState = {
         isDirty: false,
         lastSaved: null,
     },
-
     ui: {
         showSidebar: true,
         showPropertiesPanel: false,
@@ -228,7 +202,6 @@ const initialState: SuperUnifiedState = {
         isLoading: false,
         loadingMessage: '',
     },
-
     cache: {
         funnels: {},
         templates: {},
@@ -236,16 +209,14 @@ const initialState: SuperUnifiedState = {
         lastUpdated: {},
         hitRate: 0,
     },
-
     performance: {
-        providersLoaded: 1, // Apenas 1 provider!
+        providersLoaded: 1,
         renderCount: 0,
         cacheHitRate: 0,
         averageRenderTime: 0,
         memoryUsage: 0,
         lastOptimization: Date.now(),
     },
-
     features: {
         enableCache: true,
         enableAnalytics: true,
@@ -396,7 +367,6 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 },
             };
 
-        // 🆕 FASE 3: Editor block operations
         case 'ADD_BLOCK':
             return {
                 ...state,
@@ -486,65 +456,26 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
 
 // 🎯 CONTEXT TYPE
 interface SuperUnifiedContextType {
-    // State
     state: SuperUnifiedState;
-
-    // Funnel operations
     loadFunnels: () => Promise<void>;
     loadFunnel: (id: string) => Promise<void>;
     saveFunnel: (funnel?: UnifiedFunnelData) => Promise<void>;
     createFunnel: (name: string, options?: any) => Promise<UnifiedFunnelData>;
     deleteFunnel: (id: string) => Promise<boolean>;
     duplicateFunnel: (id: string, newName?: string) => Promise<UnifiedFunnelData>;
-
-    // Auth operations
-    signIn: (email: string, password: string) => Promise<void>;
-    signOut: () => Promise<void>;
-    signUp: (email: string, password: string) => Promise<void>;
-
-    // Theme operations
-    setTheme: (theme: 'light' | 'dark' | 'system') => void;
-    updateThemeColors: (colors: Partial<ThemeState>) => void;
-
-    // Editor operations
     setCurrentStep: (step: number) => void;
     setSelectedBlock: (blockId: string | null) => void;
-    togglePreviewMode: () => void;
-    enableDragDrop: (enabled: boolean) => void;
-    copyToClipboard: (data: any) => void;
-    pasteFromClipboard: () => any;
-
-    // 🆕 FASE 3: Editor block operations
+    setTheme: (theme: 'light' | 'dark' | 'system') => void;
     addBlock: (stepIndex: number, block: any) => void;
     updateBlock: (stepIndex: number, blockId: string, updates: any) => Promise<void>;
     removeBlock: (stepIndex: number, blockId: string) => Promise<void>;
     reorderBlocks: (stepIndex: number, blocks: any[]) => void;
+    setStepBlocks: (stepIndex: number, blocks: any[]) => void;
     getStepBlocks: (stepIndex: number) => any[];
-    validateStep: (stepIndex: number) => Promise<any[]>;
-
-    // UI operations
     showToast: (toast: Omit<ToastMessage, 'id'>) => void;
-    hideToast: (id: string) => void;
-    openModal: (modalId: string) => void;
-    closeModal: () => void;
-    toggleSidebar: () => void;
-    togglePropertiesPanel: () => void;
-    setLoading: (loading: boolean, message?: string) => void;
-
-    // Cache operations
-    clearCache: (section?: string) => void;
-    getCacheStats: () => { hitRate: number; itemCount: number; memoryUsage: number };
-
-    // Performance operations
-    getPerformanceMetrics: () => PerformanceMetrics;
-    optimizePerformance: () => void;
-
-    // Feature flags
-    toggleFeature: (feature: keyof SuperUnifiedState['features'], enabled?: boolean) => void;
-    isFeatureEnabled: (feature: keyof SuperUnifiedState['features']) => boolean;
 }
 
-// 🎯 CONTEXT (exportado para useSuperUnified hook)
+// 🎯 CONTEXT
 export const SuperUnifiedContext = createContext<SuperUnifiedContextType | null>(null);
 
 // 🎯 PROVIDER PROPS
@@ -601,12 +532,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             if (error) throw error;
 
-            // Normaliza para novo esquema, mantendo compat de leitura
             const normalized = (data || []).map((f: any) => ({
                 ...f,
                 config: f.config ?? f.settings ?? {},
                 status: f.status ?? (f.is_published ? 'published' : 'draft'),
-                // compat de consumo interno
                 settings: f.settings ?? f.config ?? {},
                 is_published: typeof f.is_published === 'boolean' ? f.is_published : (f.status ? f.status === 'published' : false),
             }));
@@ -624,12 +553,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [debugMode]);
 
     const loadFunnel = useCallback(async (id: string) => {
-        // Check cache first
         if (state.cache.funnels[id] && state.features.enableCache) {
             const cached = state.cache.funnels[id];
             const cacheAge = Date.now() - (state.cache.lastUpdated[id] || 0);
 
-            if (cacheAge < 300000) { // 5 minutes
+            if (cacheAge < 300000) {
                 dispatch({ type: 'SET_CURRENT_FUNNEL', payload: cached });
                 dispatch({
                     type: 'UPDATE_PERFORMANCE',
@@ -675,7 +603,6 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: true, message: 'Salvando...' } });
 
         try {
-            // Monta payload seguro para o novo schema (status/config) com fallbacks
             const payload: any = {
                 id: funnelToSave.id,
                 name: funnelToSave.name,
@@ -696,30 +623,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             if (error) throw error;
 
             dispatch({ type: 'UPDATE_FUNNEL', payload: { id: data.id, updates: data } });
-
-            // Show success toast
-            dispatch({
-                type: 'ADD_TOAST',
-                payload: {
-                    id: Date.now().toString(),
-                    type: 'success',
-                    title: 'Salvo!',
-                    message: 'Funil salvo com sucesso',
-                    duration: 3000,
-                },
-            });
+            dispatch({ type: 'SET_EDITOR_STATE', payload: { isDirty: false, lastSaved: Date.now() } });
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'save', error: error.message } });
-            dispatch({
-                type: 'ADD_TOAST',
-                payload: {
-                    id: Date.now().toString(),
-                    type: 'error',
-                    title: 'Erro',
-                    message: `Erro ao salvar: ${error.message}`,
-                    duration: 5000,
-                },
-            });
+            throw error;
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: false } });
         }
@@ -796,86 +703,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         return duplicated;
     }, [state.funnels, createFunnel]);
 
-    // 🔐 Auth Operations
-    const signIn = useCallback(async (email: string, password: string) => {
-        dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
-
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) throw error;
-
-            dispatch({
-                type: 'SET_AUTH_STATE',
-                payload: {
-                    user: data.user,
-                    isAuthenticated: true,
-                    isLoading: false,
-                },
-            });
-        } catch (error: any) {
-            dispatch({
-                type: 'SET_AUTH_STATE',
-                payload: {
-                    error: error.message,
-                    isLoading: false,
-                },
-            });
-        }
-    }, []);
-
-    const signOut = useCallback(async () => {
-        try {
-            await supabase.auth.signOut();
-            dispatch({
-                type: 'SET_AUTH_STATE',
-                payload: {
-                    user: null,
-                    isAuthenticated: false,
-                    error: null,
-                },
-            });
-        } catch (error: any) {
-            dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message } });
-        }
-    }, []);
-
-    const signUp = useCallback(async (email: string, password: string) => {
-        dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
-
-        try {
-            const { data, error } = await supabase.auth.signUp({ email, password });
-            if (error) throw error;
-
-            dispatch({
-                type: 'SET_AUTH_STATE',
-                payload: {
-                    user: data.user,
-                    isAuthenticated: !!data.user,
-                    isLoading: false,
-                },
-            });
-        } catch (error: any) {
-            dispatch({
-                type: 'SET_AUTH_STATE',
-                payload: {
-                    error: error.message,
-                    isLoading: false,
-                },
-            });
-        }
-    }, []);
-
-    // 🎨 Theme Operations
-    const setTheme = useCallback((theme: 'light' | 'dark' | 'system') => {
-        dispatch({ type: 'SET_THEME', payload: { theme } });
-        localStorage.setItem('theme', theme);
-    }, []);
-
-    const updateThemeColors = useCallback((colors: Partial<ThemeState>) => {
-        dispatch({ type: 'SET_THEME', payload: colors });
-    }, []);
-
-    // ✏️ Editor Operations
+    // 🎯 Editor Operations
     const setCurrentStep = useCallback((step: number) => {
         dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: step } });
     }, []);
@@ -884,38 +712,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_EDITOR_STATE', payload: { selectedBlockId: blockId } });
     }, []);
 
-    const togglePreviewMode = useCallback(() => {
-        dispatch({
-            type: 'SET_EDITOR_STATE',
-            payload: { isPreviewMode: !state.editor.isPreviewMode },
-        });
-    }, [state.editor.isPreviewMode]);
-
-    const enableDragDrop = useCallback((enabled: boolean) => {
-        dispatch({ type: 'SET_EDITOR_STATE', payload: { dragEnabled: enabled } });
+    const setTheme = useCallback((theme: 'light' | 'dark' | 'system') => {
+        dispatch({ type: 'SET_THEME', payload: { theme } });
     }, []);
 
-    const copyToClipboard = useCallback((data: any) => {
-        dispatch({ type: 'SET_EDITOR_STATE', payload: { clipboardData: data } });
-
-        // Show toast
-        dispatch({
-            type: 'ADD_TOAST',
-            payload: {
-                id: Date.now().toString(),
-                type: 'info',
-                title: 'Copiado!',
-                message: 'Item copiado para a área de transferência',
-                duration: 2000,
-            },
-        });
-    }, []);
-
-    const pasteFromClipboard = useCallback(() => {
-        return state.editor.clipboardData;
-    }, [state.editor.clipboardData]);
-
-    // 🆕 FASE 3: Editor block operations
     const addBlock = useCallback((stepIndex: number, block: any) => {
         dispatch({ type: 'ADD_BLOCK', payload: { stepIndex, block } });
     }, []);
@@ -932,372 +732,84 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'REORDER_BLOCKS', payload: { stepIndex, blocks } });
     }, []);
 
+    const setStepBlocks = useCallback((stepIndex: number, blocks: any[]) => {
+        dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex, blocks } });
+    }, []);
+
     const getStepBlocks = useCallback((stepIndex: number) => {
         return state.editor.stepBlocks[stepIndex] || [];
     }, [state.editor.stepBlocks]);
 
-    const validateStep = useCallback(async (stepIndex: number) => {
-        // TODO: Implement validation logic
-        const errors: any[] = [];
-        dispatch({ type: 'VALIDATE_STEP', payload: { stepIndex, errors } });
-        return errors;
-    }, []);
-
-    // 🎪 UI Operations
     const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
         const id = Date.now().toString();
-        dispatch({
-            type: 'ADD_TOAST',
-            payload: { ...toast, id },
-        });
+        dispatch({ type: 'ADD_TOAST', payload: { ...toast, id } });
 
-        // Auto remove toast
-        if (toast.duration !== 0) {
+        if (toast.duration !== -1) {
             setTimeout(() => {
                 dispatch({ type: 'REMOVE_TOAST', payload: id });
-            }, toast.duration || 4000);
+            }, toast.duration || 3000);
         }
     }, []);
 
-    const hideToast = useCallback((id: string) => {
-        dispatch({ type: 'REMOVE_TOAST', payload: id });
-    }, []);
-
-    const openModal = useCallback((modalId: string) => {
-        dispatch({ type: 'SET_UI_STATE', payload: { activeModal: modalId } });
-    }, []);
-
-    const closeModal = useCallback(() => {
-        dispatch({ type: 'SET_UI_STATE', payload: { activeModal: null } });
-    }, []);
-
-    const toggleSidebar = useCallback(() => {
-        dispatch({
-            type: 'SET_UI_STATE',
-            payload: { showSidebar: !state.ui.showSidebar },
-        });
-    }, [state.ui.showSidebar]);
-
-    const togglePropertiesPanel = useCallback(() => {
-        dispatch({
-            type: 'SET_UI_STATE',
-            payload: { showPropertiesPanel: !state.ui.showPropertiesPanel },
-        });
-    }, [state.ui.showPropertiesPanel]);
-
-    const setLoading = useCallback((loading: boolean, message?: string) => {
-        dispatch({
-            type: 'SET_LOADING',
-            payload: { section: 'general', loading, message },
-        });
-    }, []);
-
-    // 🗄️ Cache Operations
-    const clearCache = useCallback((section?: string) => {
-        if (section) {
-            dispatch({
-                type: 'UPDATE_CACHE',
-                payload: { key: section, data: {} },
-            });
-        } else {
-            // Clear all cache
-            Object.keys(state.cache).forEach(key => {
-                if (key !== 'hitRate') {
-                    dispatch({
-                        type: 'UPDATE_CACHE',
-                        payload: { key, data: {} },
-                    });
-                }
-            });
-        }
-    }, [state.cache]);
-
-    const getCacheStats = useCallback(() => {
-        const itemCount = Object.keys(state.cache.funnels).length +
-            Object.keys(state.cache.templates).length +
-            Object.keys(state.cache.users).length;
-
-        return {
-            hitRate: state.cache.hitRate,
-            itemCount,
-            memoryUsage: JSON.stringify(state.cache).length,
-        };
-    }, [state.cache]);
-
-    // 📈 Performance Operations
-    const getPerformanceMetrics = useCallback(() => {
-        return state.performance;
-    }, [state.performance]);
-
-    const optimizePerformance = useCallback(() => {
-        // Clear old cache entries
-        const now = Date.now();
-        const maxAge = 600000; // 10 minutes
-
-        Object.keys(state.cache.lastUpdated).forEach(key => {
-            if (now - state.cache.lastUpdated[key] > maxAge) {
-                dispatch({
-                    type: 'UPDATE_CACHE',
-                    payload: { key, data: {} },
-                });
-            }
-        });
-
-        dispatch({
-            type: 'UPDATE_PERFORMANCE',
-            payload: { lastOptimization: now },
-        });
-    }, [state.cache.lastUpdated]);
-
-    // 🎛️ Feature Flag Operations
-    const toggleFeature = useCallback((feature: keyof SuperUnifiedState['features'], enabled?: boolean) => {
-        const newValue = enabled !== undefined ? enabled : !state.features[feature];
-        dispatch({
-            type: 'TOGGLE_FEATURE',
-            payload: { feature, enabled: newValue },
-        });
-    }, [state.features]);
-
-    const isFeatureEnabled = useCallback((feature: keyof SuperUnifiedState['features']) => {
-        return state.features[feature];
-    }, [state.features]);
-
-    // 🚀 Auto load data
+    // Auto-load funnel
     useEffect(() => {
-        if (autoLoad && state.funnels.length === 0 && !state.ui.isLoading) {
-            loadFunnels();
-        }
-
-        if (funnelId && funnelId !== state.currentFunnel?.id) {
+        if (autoLoad && funnelId) {
             loadFunnel(funnelId);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [autoLoad, funnelId]);
+    }, [autoLoad, funnelId, loadFunnel]);
 
-    // 🔐 Auth listener
-    useEffect(() => {
-        let subscription: { unsubscribe: () => void } | null = null;
-        if (typeof (supabase as any)?.auth?.onAuthStateChange === 'function') {
-            const result = supabase.auth.onAuthStateChange((event, session) => {
-                dispatch({
-                    type: 'SET_AUTH_STATE',
-                    payload: {
-                        user: session?.user || null,
-                        isAuthenticated: !!session?.user,
-                        isLoading: false,
-                    },
-                });
-            });
-            subscription = (result as any)?.data?.subscription || null;
-        } else {
-            // Fallback: marcar auth como não autenticado mas carregado
-            dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: false } });
-        }
-
-        return () => subscription?.unsubscribe?.();
-    }, []);
-
-    // 📊 Performance monitoring
-    useEffect(() => {
-        const interval = setInterval(() => {
-            optimizePerformance();
-        }, 300000); // 5 minutes
-
-        return () => clearInterval(interval);
-    }, [optimizePerformance]);
-
-    // 🎯 Context value
-    const contextValue = useMemo<SuperUnifiedContextType>(() => ({
-        // State
+    const value = useMemo<SuperUnifiedContextType>(() => ({
         state,
-
-        // Funnel operations
         loadFunnels,
         loadFunnel,
         saveFunnel,
         createFunnel,
         deleteFunnel,
         duplicateFunnel,
-
-        // Auth operations
-        signIn,
-        signOut,
-        signUp,
-
-        // Theme operations
-        setTheme,
-        updateThemeColors,
-
-        // Editor operations
         setCurrentStep,
         setSelectedBlock,
-        togglePreviewMode,
-        enableDragDrop,
-        copyToClipboard,
-        pasteFromClipboard,
+        setTheme,
         addBlock,
         updateBlock,
         removeBlock,
         reorderBlocks,
+        setStepBlocks,
         getStepBlocks,
-        validateStep,
-
-        // UI operations
         showToast,
-        hideToast,
-        openModal,
-        closeModal,
-        toggleSidebar,
-        togglePropertiesPanel,
-        setLoading,
-
-        // Cache operations
-        clearCache,
-        getCacheStats,
-
-        // Performance operations
-        getPerformanceMetrics,
-        optimizePerformance,
-
-        // Feature flags
-        toggleFeature,
-        isFeatureEnabled,
     }), [
         state,
-        loadFunnels, loadFunnel, saveFunnel, createFunnel, deleteFunnel, duplicateFunnel,
-        signIn, signOut, signUp,
-        setTheme, updateThemeColors,
-        setCurrentStep, setSelectedBlock, togglePreviewMode, enableDragDrop, copyToClipboard, pasteFromClipboard,
-        addBlock, updateBlock, removeBlock, reorderBlocks, getStepBlocks, validateStep,
-        showToast, hideToast, openModal, closeModal, toggleSidebar, togglePropertiesPanel, setLoading,
-        clearCache, getCacheStats,
-        getPerformanceMetrics, optimizePerformance,
-        toggleFeature, isFeatureEnabled,
+        loadFunnels,
+        loadFunnel,
+        saveFunnel,
+        createFunnel,
+        deleteFunnel,
+        duplicateFunnel,
+        setCurrentStep,
+        setSelectedBlock,
+        setTheme,
+        addBlock,
+        updateBlock,
+        removeBlock,
+        reorderBlocks,
+        setStepBlocks,
+        getStepBlocks,
+        showToast,
     ]);
 
-    // ✅ Debug apenas quando necessário (não a cada render)
-    useEffect(() => {
-        if (debugMode) {
-            console.log('🚀 SuperUnifiedProvider initialized:', {
-                funnelsCount: state.funnels.length,
-                currentFunnel: state.currentFunnel?.name,
-                isAuthenticated: state.auth.isAuthenticated,
-                theme: state.theme.theme,
-            });
-        }
-    }, [debugMode]); // Só executa uma vez no mount
-
     return (
-        <SuperUnifiedContext.Provider value={contextValue}>
+        <SuperUnifiedContext.Provider value={value}>
             {children}
         </SuperUnifiedContext.Provider>
     );
 };
 
 // 🎯 HOOK
-export const useSuperUnified = () => {
+export function useSuperUnified() {
     const context = useContext(SuperUnifiedContext);
     if (!context) {
         throw new Error('useSuperUnified must be used within SuperUnifiedProvider');
     }
     return context;
-};
-
-// 🎯 SPECIALIZED HOOKS (for backward compatibility)
-export const useUnifiedAuth = () => {
-    const { state, signIn, signOut, signUp } = useSuperUnified();
-    return {
-        ...state.auth,
-        signIn,
-        signOut,
-        logout: signOut, // ✅ Alias para compatibilidade
-        signUp,
-        login: signIn, // ✅ Alias para compatibilidade
-        signup: signUp, // ✅ Alias para compatibilidade
-    };
-};
-
-// 🎯 ALIAS: useAuth (para compatibilidade total com AuthContext)
-export const useAuth = useUnifiedAuth;
-
-export const useUnifiedTheme = () => {
-    const { state, setTheme, updateThemeColors } = useSuperUnified();
-    return {
-        ...state.theme,
-        setTheme,
-        updateThemeColors,
-    };
-};
-
-export const useUnifiedEditor = () => {
-    const {
-        state,
-        setCurrentStep,
-        setSelectedBlock,
-        togglePreviewMode,
-        enableDragDrop,
-        copyToClipboard,
-        pasteFromClipboard,
-    } = useSuperUnified();
-
-    return {
-        ...state.editor,
-        setCurrentStep,
-        setSelectedBlock,
-        togglePreviewMode,
-        enableDragDrop,
-        copyToClipboard,
-        pasteFromClipboard,
-    };
-};
-
-export const useUnifiedUI = () => {
-    const {
-        state,
-        showToast,
-        hideToast,
-        openModal,
-        closeModal,
-        toggleSidebar,
-        togglePropertiesPanel,
-        setLoading,
-    } = useSuperUnified();
-
-    return {
-        ...state.ui,
-        showToast,
-        hideToast,
-        openModal,
-        closeModal,
-        toggleSidebar,
-        togglePropertiesPanel,
-        setLoading,
-    };
-};
-
-export const useUnifiedFunnels = () => {
-    const {
-        state,
-        loadFunnels,
-        loadFunnel,
-        saveFunnel,
-        createFunnel,
-        deleteFunnel,
-        duplicateFunnel,
-    } = useSuperUnified();
-
-    return {
-        funnels: state.funnels,
-        currentFunnel: state.currentFunnel,
-        isLoading: state.ui.isLoading,
-        error: state.auth.error, // Generic error handling
-        loadFunnels,
-        loadFunnel,
-        saveFunnel,
-        createFunnel,
-        deleteFunnel,
-        duplicateFunnel,
-    };
-};
+}
 
 export default SuperUnifiedProvider;
