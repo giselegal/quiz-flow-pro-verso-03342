@@ -17,9 +17,6 @@
  * - ✅ Auto-save inteligente
  */
 
-// Polyfills de teste (precisam ser carregados antes de libs que usam matchMedia)
-import '@/test/polyfills/matchMedia';
-
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
