@@ -104,19 +104,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     }, [unified.state.editor.stepBlocks]);
 
     const navSteps = useMemo(() => {
-        // Modo livre sem template → derivar de stepBlocks
-        if (!props.templateId && !loadedTemplate) {
-            const indexes = Object.keys(unified.state.editor.stepBlocks || {})
-                .map((k) => Number(k))
-                .filter((n) => Number.isFinite(n) && n >= 1)
-                .sort((a, b) => a - b);
-            return indexes.map((i) => ({
-                key: `step-${String(i).padStart(2, '0')}`,
-                title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
-            }));
-        }
-
-        // Template ativo → usar lista do service, com fallback para stepBlocks
+        // Sempre que possível, usar fonte canônica de steps
         const res = templateService.steps.list();
         if (res.success && res.data && res.data.length > 0) {
             return res.data.map((s) => ({
@@ -125,7 +113,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             }));
         }
 
-        console.warn('⚠️ [QuizModularEditor] steps.list() vazio - fallback para stepBlocks');
+        // Fallback: derivar de stepBlocks quando ainda não há steps canônicos
         const indexes = Object.keys(unified.state.editor.stepBlocks || {})
             .map((k) => Number(k))
             .filter((n) => Number.isFinite(n) && n >= 1)
@@ -134,7 +122,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             key: `step-${String(i).padStart(2, '0')}`,
             title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
         }));
-    }, [loadedTemplate, props.templateId, stepsVersion]);
+    }, [loadedTemplate, props.templateId, stepsVersion, unified.state.editor.stepBlocks]);
 
     // ✅ NOVO: Garantir que currentStep seja inicializado em modo livre
     useEffect(() => {
@@ -142,6 +130,28 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         if (!props.templateId && !loadedTemplate && (!unified.state.editor.currentStep || unified.state.editor.currentStep < 1)) {
             appLogger.info('🎨 [QuizModularEditor] Modo livre - inicializando currentStep = 1');
             unified.setCurrentStep(1);
+        }
+
+        // Além disso, garantir que exista ao menos uma etapa canônica em modo livre
+        if (!props.templateId && !loadedTemplate) {
+            const res = templateService.steps.list();
+            const hasAny = res.success && res.data && res.data.length > 0;
+            if (!hasAny) {
+                const firstId = `step-custom-${String(1).padStart(2, '0')}`;
+                templateService.steps.add({
+                    id: firstId,
+                    name: 'Etapa 1 - Criação Livre',
+                    order: 1,
+                    type: 'custom',
+                    description: 'Crie seu funil a partir daqui',
+                    blocksCount: 0,
+                    hasTemplate: false,
+                }).then(() => {
+                    appLogger.info('✅ [QuizModularEditor] Etapa inicial criada para Modo Livre');
+                }).catch((err) => {
+                    appLogger.error('⚠️ [QuizModularEditor] Falha ao criar etapa inicial (Modo Livre):', err);
+                });
+            }
         }
     }, [props.templateId, loadedTemplate, unified]);
 
@@ -506,10 +516,18 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
                         <div className="h-full border-r bg-white overflow-y-auto">
                             <StepNavigatorColumn
-                                steps={navSteps}
                                 currentStepKey={currentStepKey}
                                 onSelectStep={(key: string) => {
-                                    const num = parseInt(key.replace('step-', ''), 10);
+                                    // Mapear o ID selecionado para um índice (1-based) com base na lista canônica
+                                    const res = templateService.steps.list();
+                                    if (res.success && res.data && res.data.length > 0) {
+                                        const index = res.data.findIndex((s) => s.id === key);
+                                        unified.setCurrentStep(index >= 0 ? index + 1 : 1);
+                                        return;
+                                    }
+                                    // Fallback: tentar extrair número do padrão step-XX
+                                    const match = key.match(/step-(\d{1,2})/i);
+                                    const num = match ? parseInt(match[1], 10) : 1;
                                     unified.setCurrentStep(num);
                                 }}
                             />
