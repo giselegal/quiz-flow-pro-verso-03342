@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { Settings } from 'lucide-react';
@@ -55,100 +54,98 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         )}
       </div>
 
-      <ScrollArea className="flex-1">
-        <div className="p-4">
-          {!selectedBlockId ? (
-            <Alert data-testid="properties-no-selection">
-              <AlertDescription>
-                Selecione um bloco no canvas para editar suas propriedades
-              </AlertDescription>
-            </Alert>
-          ) : renderCustomEditor ? (
-            renderCustomEditor()
-          ) : (
-            <div className="space-y-4">
-              {fields.map((field) => (
-                <div key={field.key} className="space-y-2">
-                  <label className="text-sm font-medium">
-                    {field.label}
+      <div className="flex-1 overflow-y-auto p-4 properties-panel scrollbar-thin">
+        {!selectedBlockId ? (
+          <Alert data-testid="properties-no-selection">
+            <AlertDescription>
+              Selecione um bloco no canvas para editar suas propriedades
+            </AlertDescription>
+          </Alert>
+        ) : renderCustomEditor ? (
+          renderCustomEditor()
+        ) : (
+          <div className="space-y-4">
+            {fields.map((field) => (
+              <div key={field.key} className="space-y-2">
+                <label className="text-sm font-medium">
+                  {field.label}
+                </label>
+
+                {field.type === 'text' && (
+                  <input
+                    type="text"
+                    value={field.value || ''}
+                    onChange={(e) => onFieldChange?.(field.key, e.target.value)}
+                    placeholder={field.placeholder}
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                )}
+
+                {field.type === 'textarea' && (
+                  <textarea
+                    value={field.value || ''}
+                    onChange={(e) => onFieldChange?.(field.key, e.target.value)}
+                    placeholder={field.placeholder}
+                    rows={4}
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                )}
+
+                {field.type === 'number' && (
+                  <input
+                    type="number"
+                    value={field.value || 0}
+                    onChange={(e) => onFieldChange?.(field.key, Number(e.target.value))}
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                )}
+
+                {field.type === 'color' && (
+                  <input
+                    type="color"
+                    value={field.value || '#000000'}
+                    onChange={(e) => onFieldChange?.(field.key, e.target.value)}
+                    className="w-full h-10 border rounded-md"
+                  />
+                )}
+
+                {field.type === 'select' && field.options && (
+                  <select
+                    value={field.value || ''}
+                    onChange={(e) => onFieldChange?.(field.key, e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md"
+                  >
+                    <option value="">Selecione...</option>
+                    {field.options.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                {field.type === 'boolean' && (
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={field.value || false}
+                      onChange={(e) => onFieldChange?.(field.key, e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">{field.description || 'Habilitar'}</span>
                   </label>
+                )}
 
-                  {field.type === 'text' && (
-                    <input
-                      type="text"
-                      value={field.value || ''}
-                      onChange={(e) => onFieldChange?.(field.key, e.target.value)}
-                      placeholder={field.placeholder}
-                      className="w-full px-3 py-2 border rounded-md"
-                    />
-                  )}
-
-                  {field.type === 'textarea' && (
-                    <textarea
-                      value={field.value || ''}
-                      onChange={(e) => onFieldChange?.(field.key, e.target.value)}
-                      placeholder={field.placeholder}
-                      rows={4}
-                      className="w-full px-3 py-2 border rounded-md"
-                    />
-                  )}
-
-                  {field.type === 'number' && (
-                    <input
-                      type="number"
-                      value={field.value || 0}
-                      onChange={(e) => onFieldChange?.(field.key, Number(e.target.value))}
-                      className="w-full px-3 py-2 border rounded-md"
-                    />
-                  )}
-
-                  {field.type === 'color' && (
-                    <input
-                      type="color"
-                      value={field.value || '#000000'}
-                      onChange={(e) => onFieldChange?.(field.key, e.target.value)}
-                      className="w-full h-10 border rounded-md"
-                    />
-                  )}
-
-                  {field.type === 'select' && field.options && (
-                    <select
-                      value={field.value || ''}
-                      onChange={(e) => onFieldChange?.(field.key, e.target.value)}
-                      className="w-full px-3 py-2 border rounded-md"
-                    >
-                      <option value="">Selecione...</option>
-                      {field.options.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-
-                  {field.type === 'boolean' && (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value || false}
-                        onChange={(e) => onFieldChange?.(field.key, e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-sm">{field.description || 'Habilitar'}</span>
-                    </label>
-                  )}
-
-                  {field.description && field.type !== 'boolean' && (
-                    <p className="text-xs text-muted-foreground">
-                      {field.description}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+                {field.description && field.type !== 'boolean' && (
+                  <p className="text-xs text-muted-foreground">
+                    {field.description}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
