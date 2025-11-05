@@ -3,12 +3,16 @@
  * 
  * Container 100% isolado para executar quiz
  * NUNCA importa código do editor
+ * 
+ * 🚀 FASE 3: Atualizado com suporte a lazy loading
+ * Usa LazyQuizRuntimeContainer quando lazy loading está habilitado
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { LazyQuizRuntimeContainer } from './LazyQuizRuntimeContainer';
 
 export interface QuizRuntimeContainerProps {
-  quizContent: {
+  quizContent?: {
     steps: Array<{
       id: string;
       type: string;
@@ -20,17 +24,69 @@ export interface QuizRuntimeContainerProps {
   initialStepId?: string;
   onStepChange?: (stepId: string) => void;
   onComplete?: (results: any) => void;
+  
+  // 🚀 FASE 3: Lazy loading options
+  enableLazyLoad?: boolean;
+  funnelId?: string;
+  totalSteps?: number;
+  lazyLoadConfig?: {
+    prefetchRadius?: number;
+    maxCachedSteps?: number;
+    prefetchDelay?: number;
+  };
 }
 
 /**
  * Runtime isolado - apenas renderiza JSON
+ * 🚀 FASE 3: Roteamento automático para lazy loading
  */
-export const QuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
+export const QuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = (props) => {
+  const {
+    quizContent,
+    initialStepId,
+    onStepChange,
+    onComplete,
+    enableLazyLoad = true,
+    funnelId,
+    totalSteps,
+    lazyLoadConfig,
+  } = props;
+  
+  // 🚀 FASE 3: Se lazy loading habilitado e sem quizContent pré-carregado, usar LazyQuizRuntimeContainer
+  if (enableLazyLoad && !quizContent) {
+    return (
+      <LazyQuizRuntimeContainer
+        funnelId={funnelId}
+        initialStepId={initialStepId}
+        totalSteps={totalSteps}
+        onStepChange={onStepChange}
+        onComplete={onComplete}
+        enableLazyLoad={enableLazyLoad}
+        lazyLoadConfig={lazyLoadConfig}
+      />
+    );
+  }
+  
+  // Fallback: Renderização tradicional com quizContent completo
+  return <TraditionalQuizRuntimeContainer {...props} />;
+};
+
+/**
+ * Container tradicional (sem lazy loading)
+ */
+const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
   quizContent,
   initialStepId,
   onStepChange,
   onComplete,
 }) => {
+  if (!quizContent) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-muted-foreground">Nenhum conteúdo disponível</p>
+      </div>
+    );
+  }
   const [currentStepIndex, setCurrentStepIndex] = useState(() => {
     if (!initialStepId) return 0;
     const index = quizContent.steps.findIndex(s => s.id === initialStepId);
@@ -175,3 +231,6 @@ export const QuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
     </div>
   );
 };
+
+// Export ambos para compatibilidade
+export { LazyQuizRuntimeContainer } from './LazyQuizRuntimeContainer';
