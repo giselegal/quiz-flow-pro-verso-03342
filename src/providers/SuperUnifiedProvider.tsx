@@ -106,8 +106,12 @@ interface ToastMessage {
 }
 
 interface CacheState {
+    // ⚠️ DEPRECATED: Cache movido para UnifiedCacheService
+    /** @deprecated Use unifiedCacheService.get('funnel:id') */
     funnels: Record<string, UnifiedFunnelData>;
+    /** @deprecated Use unifiedCacheService.get('template:id') */
     templates: Record<string, any>;
+    /** @deprecated Use unifiedCacheService.get('user:id') */
     users: Record<string, any>;
     lastUpdated: Record<string, number>;
     hitRate: number;

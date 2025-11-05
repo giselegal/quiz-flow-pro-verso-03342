@@ -1,7 +1,22 @@
 /**
- * UnifiedTemplateCache - cache único e simples para templates/steps/blocos
- * Objetivo: reduzir fragmentação de caches e facilitar invalidação.
+ * ⚠️ DEPRECATED: UNIFIED TEMPLATE CACHE
+ * 
+ * @deprecated Este cache foi consolidado em UnifiedCacheService.
+ * Use: import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES
+ * import { unifiedCache } from '@/utils/UnifiedTemplateCache';
+ * 
+ * // ✅ DEPOIS
+ * import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
+ * ```
+ * 
+ * Este arquivo será removido em versão futura.
  */
+
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 
 export interface CacheStats {
   totalEntries: number;
@@ -15,6 +30,9 @@ export interface CacheConfig {
   ttl?: number;
 }
 
+/**
+ * @deprecated Use UnifiedCacheService
+ */
 export class UnifiedTemplateCache {
   private cache = new Map<string, any>();
   private hitCount = 0;
@@ -84,23 +102,19 @@ export class UnifiedTemplateCache {
   }
 
   getStats(): CacheStats {
-    let memoryUsage = 0;
-    this.cache.forEach(value => {
-      memoryUsage += JSON.stringify(value).length;
-    });
-
+    const stats = unifiedCacheService.getStats();
     return {
-      totalEntries: this.cache.size,
-      memoryUsage,
-      hitCount: this.hitCount,
-      missCount: this.missCount,
+      totalEntries: stats.totalEntries,
+      memoryUsage: stats.totalSize,
+      hitCount: stats.hitCount,
+      missCount: stats.missCount,
     };
   }
 
   getHitRate(): number {
-    const total = this.hitCount + this.missCount;
-    return total > 0 ? this.hitCount / total : 0;
+    return unifiedCacheService.getHitRate();
   }
 }
 
+/** @deprecated Use unifiedCacheService from '@/services/unified/UnifiedCacheService' */
 export const unifiedCache = new UnifiedTemplateCache();
