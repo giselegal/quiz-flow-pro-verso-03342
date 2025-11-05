@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
@@ -70,7 +69,7 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
       </div>
 
       {/* Canvas Area */}
-      <ScrollArea className="flex-1 p-6">
+      <div className="flex-1 p-6 overflow-y-auto scrollbar-thin">
         {blocks.length === 0 ? (
           <Alert className="border-dashed">
             <AlertDescription>
@@ -208,7 +207,7 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
             ))}
           </>
         )}
-      </ScrollArea>
+      </div>
     </div>
   );
 };
