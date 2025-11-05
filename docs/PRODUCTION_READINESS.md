@@ -260,7 +260,7 @@ Ver `docs/NPM_SCRIPTS.md` para lista completa.
 
 ## 📚 Arquivos Criados/Modificados
 
-### Novos Arquivos
+### Arquivos Criados/Modificados
 
 ```
 ✅ tests/e2e/funnel-creation.spec.ts
@@ -271,10 +271,13 @@ Ver `docs/NPM_SCRIPTS.md` para lista completa.
 ✅ typedoc.json
 ✅ src/lib/sentry.ts
 ✅ src/components/a11y/AccessibilityAuditor.tsx
+✅ src/hooks/useAccessibilityAudit.ts
+✅ src/tests/a11y/accessibility.test.tsx
 ✅ docs/E2E_TESTS_EXPANDED.md
 ✅ docs/TYPEDOC_SETUP.md
 ✅ docs/SENTRY_SETUP.md
 ✅ docs/ACCESSIBILITY_AUDIT.md
+✅ docs/ACCESSIBILITY_INTEGRATION.md
 ✅ docs/NPM_SCRIPTS.md
 ✅ docs/PRODUCTION_READINESS.md
 ```
@@ -285,7 +288,9 @@ Ver `docs/NPM_SCRIPTS.md` para lista completa.
 ✅ src/main.tsx                    # Adicionado initSentry()
 ✅ src/App.tsx                     # Adicionado rota /debug/accessibility
 ✅ src/lib/sentry.ts               # Corrigido startSpan (Sentry v8 API)
-✅ src/components/a11y/AccessibilityAuditor.tsx  # Mock de axe-core
+✅ src/components/a11y/AccessibilityAuditor.tsx  # Integração real axe-core
+✅ src/hooks/useAccessibilityAudit.ts  # Hook customizado
+✅ src/tests/a11y/accessibility.test.tsx  # Testes automatizados
 ```
 
 ---
@@ -304,13 +309,15 @@ Ver `docs/NPM_SCRIPTS.md` para lista completa.
 - [x] Rota /debug/accessibility adicionada
 - [x] Documentação completa (6 arquivos .md)
 - [x] Correções de build (Sentry v8 API, axe-core mock)
+- [x] **Integração real axe-core implementada** ✨
+- [x] **Hook useAccessibilityAudit criado** ✨
+- [x] **Testes automatizados de acessibilidade** ✨
 
 ### Pendente (Ação do Usuário) ⏳
 
 - [ ] Adicionar scripts npm ao package.json
 - [ ] Configurar Sentry DSN no .env
 - [ ] Executar primeira auditoria de acessibilidade
-- [ ] Implementar integração real axe-core (substituir mock)
 - [ ] Corrigir issues de acessibilidade encontrados
 
 ---

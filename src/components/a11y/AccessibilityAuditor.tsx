@@ -27,32 +27,87 @@ export const AccessibilityAuditor: React.FC = () => {
     setIsRunning(true);
     
     try {
-      // Mock de resultados para demonstração
-      // Em produção, integrar com axe-core real via script
-      const mockResults: A11yIssue[] = [
-        {
-          id: 'color-contrast',
-          impact: 'serious',
-          description: 'Elementos devem ter contraste de cor suficiente',
-          help: 'Contraste insuficiente detectado',
-          helpUrl: 'https://dequeuniversity.com/rules/axe/4.4/color-contrast',
-          nodes: ['<button class="text-gray-400">Clique aqui</button>'],
+      // Importar axe-core dinamicamente
+      const axe = await import('axe-core');
+      
+      // Configurar regras WCAG 2.1 AA
+      const config = {
+        runOnly: {
+          type: 'tag' as const,
+          values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
         },
-      ];
+        rules: {
+          // Habilitar regras específicas importantes
+          'color-contrast': { enabled: true },
+          'html-has-lang': { enabled: true },
+          'label': { enabled: true },
+          'link-name': { enabled: true },
+          'button-name': { enabled: true },
+          'image-alt': { enabled: true },
+          'input-button-name': { enabled: true },
+          'valid-lang': { enabled: true },
+          'aria-valid-attr': { enabled: true },
+          'aria-valid-attr-value': { enabled: true },
+          'landmark-one-main': { enabled: true },
+          'page-has-heading-one': { enabled: true },
+          'region': { enabled: true },
+        },
+      };
 
-      const processedIssues: A11yIssue[] = mockResults.map((violation) => ({
+      // Executar análise no documento inteiro
+      console.log('🔍 Iniciando análise de acessibilidade...');
+      const results = await axe.default.run(document, config);
+      
+      console.log('📊 Análise completa:', {
+        violations: results.violations.length,
+        passes: results.passes.length,
+        incomplete: results.incomplete.length,
+      });
+
+      // Processar violações
+      const processedIssues: A11yIssue[] = results.violations.map((violation) => ({
         id: violation.id,
-        impact: violation.impact,
+        impact: (violation.impact || 'minor') as A11yIssue['impact'],
         description: violation.description,
         help: violation.help,
         helpUrl: violation.helpUrl,
-        nodes: violation.nodes,
+        nodes: violation.nodes.map((node) => {
+          // Extrair HTML do elemento
+          const html = node.html;
+          // Limitar tamanho para exibição
+          return html.length > 150 ? html.substring(0, 150) + '...' : html;
+        }),
       }));
+
+      // Ordenar por severidade (crítico → sério → moderado → menor)
+      const severityOrder = { critical: 0, serious: 1, moderate: 2, minor: 3 };
+      processedIssues.sort((a, b) => severityOrder[a.impact] - severityOrder[b.impact]);
 
       setIssues(processedIssues);
       setLastRun(new Date());
+
+      // Log resumo
+      console.log('✅ Auditoria concluída:', {
+        total: processedIssues.length,
+        critical: processedIssues.filter(i => i.impact === 'critical').length,
+        serious: processedIssues.filter(i => i.impact === 'serious').length,
+        moderate: processedIssues.filter(i => i.impact === 'moderate').length,
+        minor: processedIssues.filter(i => i.impact === 'minor').length,
+      });
     } catch (error) {
-      console.error('Erro ao executar auditoria de acessibilidade:', error);
+      console.error('❌ Erro ao executar auditoria de acessibilidade:', error);
+      
+      // Exibir erro para o usuário
+      const errorIssue: A11yIssue = {
+        id: 'audit-error',
+        impact: 'critical',
+        description: `Erro ao executar auditoria: ${error instanceof Error ? error.message : String(error)}`,
+        help: 'Falha ao carregar axe-core',
+        helpUrl: 'https://github.com/dequelabs/axe-core',
+        nodes: ['Erro na execução da auditoria'],
+      };
+      
+      setIssues([errorIssue]);
     } finally {
       setIsRunning(false);
     }
@@ -112,10 +167,10 @@ export const AccessibilityAuditor: React.FC = () => {
             </Button>
           </div>
           <CardDescription>
-            Análise WCAG 2.1 AA com axe-core
+            Análise WCAG 2.1 AA com axe-core v{typeof window !== 'undefined' && (window as any).axe?.version || '4.x'}
             {lastRun && (
               <span className="ml-2 text-xs">
-                Última execução: {lastRun.toLocaleTimeString()}
+                • Última execução: {lastRun.toLocaleTimeString()}
               </span>
             )}
           </CardDescription>
