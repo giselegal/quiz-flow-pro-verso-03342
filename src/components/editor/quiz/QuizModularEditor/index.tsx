@@ -80,24 +80,61 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
     const [templateLoadError, setTemplateLoadError] = useState(false);
 
+    // Persistência de layout dos painéis (larguras)
+    const PANEL_LAYOUT_KEY = 'qm-editor:panel-layout-v1';
+    const [panelLayout, setPanelLayout] = useState<number[] | null>(null);
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem(PANEL_LAYOUT_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length === 4) {
+                    setPanelLayout(parsed);
+                }
+            }
+        } catch {
+            // noop
+        }
+    }, []);
+
     // 🎯 FASE 4: Navegação dinâmica baseada no template carregado
+    const stepsVersion = useMemo(() => {
+        const keys = Object.keys(unified.state.editor.stepBlocks || {});
+        return keys.sort((a, b) => Number(a) - Number(b)).join('|');
+    }, [unified.state.editor.stepBlocks]);
+
     const navSteps = useMemo(() => {
-        // ✅ Se não tem templateId nem template carregado, retornar vazio (modo canvas vazio)
+        // Modo livre sem template → derivar de stepBlocks
         if (!props.templateId && !loadedTemplate) {
-            return [];
+            const indexes = Object.keys(unified.state.editor.stepBlocks || {})
+                .map((k) => Number(k))
+                .filter((n) => Number.isFinite(n) && n >= 1)
+                .sort((a, b) => a - b);
+            return indexes.map((i) => ({
+                key: `step-${String(i).padStart(2, '0')}`,
+                title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
+            }));
         }
 
+        // Template ativo → usar lista do service, com fallback para stepBlocks
         const res = templateService.steps.list();
-        if (!res.success || !res.data || res.data.length === 0) {
-            console.warn('⚠️ [QuizModularEditor] templateService.steps.list() vazio');
-            return [];
+        if (res.success && res.data && res.data.length > 0) {
+            return res.data.map((s) => ({
+                key: s.id,
+                title: `${String(s.order).padStart(2, '0')} - ${s.name}`,
+            }));
         }
 
-        return res.data.map((s) => ({
-            key: s.id,
-            title: `${String(s.order).padStart(2, '0')} - ${s.name}`
+        console.warn('⚠️ [QuizModularEditor] steps.list() vazio - fallback para stepBlocks');
+        const indexes = Object.keys(unified.state.editor.stepBlocks || {})
+            .map((k) => Number(k))
+            .filter((n) => Number.isFinite(n) && n >= 1)
+            .sort((a, b) => a - b);
+        return indexes.map((i) => ({
+            key: `step-${String(i).padStart(2, '0')}`,
+            title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
         }));
-    }, [loadedTemplate, props.templateId]); // ✅ Reagir a mudanças de template
+    }, [loadedTemplate, props.templateId, stepsVersion]);
 
     // ✅ NOVO: Garantir que currentStep seja inicializado em modo livre
     useEffect(() => {
@@ -112,6 +149,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     useEffect(() => {
         if (!enableAutoSave || !isDirty) return;
 
+        const delayMs = Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000);
         const timer = setTimeout(async () => {
             try {
                 await unified.saveFunnel();
@@ -119,13 +157,16 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             } catch (error) {
                 console.error(`❌ Auto-save failed:`, error);
             }
-        }, 2000);
+        }, isNaN(delayMs) ? 2000 : delayMs);
 
         return () => clearTimeout(timer);
     }, [enableAutoSave, isDirty, currentStepKey, unified]);
 
     // Configuração DnD
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+
+    // Helper para normalizar a ordem dos blocos
+    const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
 
     // ✅ FASE 2: Batch loading otimizado com preload inteligente
@@ -259,12 +300,35 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         }
     }, [unified, props.templateId]);
 
+    // Exportar JSON do estado atual
+    const handleExportJSON = useCallback(() => {
+        try {
+            const data = {
+                meta: {
+                    exportedAt: new Date().toISOString(),
+                    currentStep: safeCurrentStep,
+                    template: props.templateId || loadedTemplate?.name || null,
+                },
+                stepBlocks: unified.state.editor.stepBlocks,
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'editor-export.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (e) {
+            console.error('Erro ao exportar JSON:', e);
+        }
+    }, [unified.state.editor.stepBlocks, safeCurrentStep, props.templateId, loadedTemplate]);
+
     // ✅ NOVO: Handler para carregar template quando usuário clicar no botão
     const handleLoadTemplate = useCallback(async () => {
         setIsLoadingTemplate(true);
         setTemplateLoadError(false);
         try {
-            const tid = 'quiz21StepsComplete';
+            const tid = props.templateId ?? 'quiz21StepsComplete';
             appLogger.info(`🔍 [QuizModularEditor] Carregando template via botão: ${tid}`);
             await templateService.preloadTemplate(tid);
 
@@ -288,7 +352,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
             // ✅ Atualizar state com número correto de steps
             setLoadedTemplate({
-                name: 'Quiz 21 Steps',
+                name: `Template: ${tid}`,
                 steps: templateStepsResult.data
             });
             appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
@@ -409,7 +473,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             </div>
                         )}
 
-                        {/* Botão Save Manual */}
+                        {/* Botões de ação */}
                         <Button
                             size="sm"
                             onClick={handleSave}
@@ -419,11 +483,25 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             <Save className="w-3 h-3 mr-1" />
                             {unified.state.ui.isLoading ? 'Salvando...' : 'Salvar'}
                         </Button>
+                        <Button size="sm" variant="outline" onClick={handleExportJSON} className="h-7">
+                            <Download className="w-3 h-3 mr-1" />
+                            Exportar JSON
+                        </Button>
                     </div>
                 </div>
 
                 {/* Grid de 4 colunas REDIMENSIONÁVEIS */}
-                <PanelGroup direction="horizontal" className="flex-1">
+                <PanelGroup
+                    direction="horizontal"
+                    className="flex-1"
+                    autoSaveId={PANEL_LAYOUT_KEY}
+                    onLayout={(sizes: number[]) => {
+                        try {
+                            localStorage.setItem(PANEL_LAYOUT_KEY, JSON.stringify(sizes));
+                            setPanelLayout(sizes);
+                        } catch {}
+                    }}
+                >
                     {/* Coluna 1: Navegação de Etapas */}
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
                         <div className="h-full border-r bg-white overflow-y-auto">
@@ -475,7 +553,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     <Panel defaultSize={40} minSize={30}>
                         <Suspense fallback={<div className="flex items-center justify-center h-full text-gray-500">Carregando canvas…</div>}>
                             <div className="h-full bg-gray-50 overflow-y-auto">
-                                {canvasMode === 'edit' ? (
+                                {isLoadingTemplate ? (
+                                    <div className="h-full flex items-center justify-center">
+                                        <div className="text-sm text-gray-500 animate-pulse">Carregando etapas do template…</div>
+                                    </div>
+                                ) : canvasMode === 'edit' ? (
                                     <StepErrorBoundary
                                         stepId={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
@@ -494,7 +576,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                                 const reordered = [...list];
                                                 const [moved] = reordered.splice(from, 1);
                                                 reordered.splice(to, 0, moved);
-                                                unified.reorderBlocks(stepIndex, reordered);
+                                                unified.reorderBlocks(stepIndex, normalizeOrder(reordered));
                                             }}
                                             onUpdateBlock={(id, patch) => {
                                                 const stepIndex = safeCurrentStep;
