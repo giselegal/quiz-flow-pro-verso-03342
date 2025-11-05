@@ -806,6 +806,41 @@ export class TemplateService extends BaseCanonicalService {
     },
 
     /**
+     * 🗑️ Remover step customizado
+     */
+    remove: async (stepId: string): Promise<ServiceResult<void>> => {
+      try {
+        // Verificar se é um step do template (não pode deletar)
+        const stepMatch = stepId.match(/^step-(\d{2})$/);
+        if (stepMatch) {
+          const stepNumber = parseInt(stepMatch[1]);
+          if (stepNumber >= 1 && stepNumber <= 21) {
+            return this.createError(
+              new Error('Não é possível deletar etapas do template. Apenas etapas customizadas podem ser removidas.')
+            );
+          }
+        }
+
+        // Verificar se existe
+        if (!this.customSteps.has(stepId)) {
+          return this.createError(new Error(`Etapa não encontrada: ${stepId}`));
+        }
+
+        // Remover do Map
+        this.customSteps.delete(stepId);
+
+        // Remover do cache
+        cacheService.templates.invalidate(stepId);
+
+        this.log(`✅ Step customizado removido: ${stepId}`);
+        return this.createResult(undefined);
+      } catch (error) {
+        this.error('steps.remove failed:', error);
+        return this.createError(error as Error);
+      }
+    },
+
+    /**
      * Pré-carregar steps específicos
      */
     preload: async (stepNumbers: number[]): Promise<void> => {

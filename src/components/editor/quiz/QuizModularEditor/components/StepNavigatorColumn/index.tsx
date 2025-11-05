@@ -2,8 +2,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2, MoreVertical } from 'lucide-react';
 import { AddStepDialog, type NewStepData } from '../AddStepDialog';
+import { DeleteStepConfirmDialog } from '../DeleteStepConfirmDialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
 
 export type StepNavigatorColumnProps = {
     initialStepKey?: string;
@@ -15,7 +23,13 @@ export type StepNavigatorColumnProps = {
 // Nota: Em iterações futuras, os passos serão carregados do serviço/estado global
 // e virtualizados para listas grandes.
 function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSelectStep }: StepNavigatorColumnProps) {
+    const { toast } = useToast();
     const [showAddDialog, setShowAddDialog] = useState(false);
+    const [deleteDialog, setDeleteDialog] = useState<{
+        open: boolean;
+        stepId: string;
+        stepName: string;
+    }>({ open: false, stepId: '', stepName: '' });
     const [refreshKey, setRefreshKey] = useState(0);
 
     // Preferir fonte canônica de steps; aceitar override via prop "steps"
@@ -59,6 +73,56 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
         }
     };
 
+    const handleDeleteStep = async (stepId: string) => {
+        try {
+            const result = await templateService.steps.remove(stepId);
+            
+            if (result.success) {
+                toast({
+                    title: 'Etapa removida',
+                    description: 'A etapa foi deletada com sucesso',
+                });
+
+                // Se a etapa deletada estava selecionada, selecionar a primeira
+                if (currentStepKey === stepId) {
+                    const remainingSteps = items.filter(s => s.key !== stepId);
+                    if (remainingSteps.length > 0) {
+                        onSelectStep(remainingSteps[0].key);
+                    }
+                }
+
+                // Forçar refresh da lista
+                setRefreshKey(prev => prev + 1);
+            } else {
+                toast({
+                    title: 'Erro ao deletar',
+                    description: result.error?.message || 'Não foi possível deletar a etapa',
+                    variant: 'destructive',
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao deletar etapa:', error);
+            toast({
+                title: 'Erro ao deletar',
+                description: 'Ocorreu um erro inesperado',
+                variant: 'destructive',
+            });
+        }
+    };
+
+    const openDeleteDialog = (stepId: string, stepName: string) => {
+        setDeleteDialog({ open: true, stepId, stepName });
+    };
+
+    const closeDeleteDialog = () => {
+        setDeleteDialog({ open: false, stepId: '', stepName: '' });
+    };
+
+    const confirmDelete = () => {
+        handleDeleteStep(deleteDialog.stepId);
+        closeDeleteDialog();
+    };
+
     // Garantir seleção inicial consistente
     useEffect(() => {
         if (!currentStepKey && items.length > 0) {
@@ -92,17 +156,48 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                     </div>
                 ) : (
                     <ul className="space-y-1">
-                        {items.map((s) => (
-                            <li key={s.key}>
-                                <button
-                                    className={`w-full text-left px-2 py-1 rounded hover:bg-accent ${currentStepKey === s.key ? 'bg-accent' : ''
-                                        }`}
-                                    onClick={() => onSelectStep(s.key)}
-                                >
-                                    {s.title}
-                                </button>
-                            </li>
-                        ))}
+                        {items.map((s) => {
+                            // Verificar se é uma etapa customizada (deletável)
+                            const isCustomStep = !s.key.match(/^step-0[1-9]$|^step-1[0-9]$|^step-2[01]$/);
+                            
+                            return (
+                                <li key={s.key} className="group relative">
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            className={`flex-1 text-left px-2 py-1 rounded hover:bg-accent transition-colors ${
+                                                currentStepKey === s.key ? 'bg-accent' : ''
+                                            }`}
+                                            onClick={() => onSelectStep(s.key)}
+                                        >
+                                            {s.title}
+                                        </button>
+                                        
+                                        {isCustomStep && (
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        <MoreVertical className="h-3 w-3" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem
+                                                        onClick={() => openDeleteDialog(s.key, s.title)}
+                                                        className="text-red-600 focus:text-red-600"
+                                                    >
+                                                        <Trash2 className="h-4 w-4 mr-2" />
+                                                        Deletar Etapa
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        )}
+                                    </div>
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </div>
@@ -112,6 +207,14 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                 onClose={() => setShowAddDialog(false)}
                 onAdd={handleAddStep}
                 existingStepsCount={items.length}
+            />
+
+            <DeleteStepConfirmDialog
+                open={deleteDialog.open}
+                stepName={deleteDialog.stepName}
+                stepId={deleteDialog.stepId}
+                onConfirm={confirmDelete}
+                onCancel={closeDeleteDialog}
             />
         </>
     );
