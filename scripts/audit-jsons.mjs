@@ -220,7 +220,7 @@ function toMarkdown(files, summary, dupInfo) {
     return lines.join('\n');
 }
 
-function loadConfig() {
+async function loadConfig() {
     const defaultCfg = {
         allowedDuplicateIds: [],
         failOnInvalid: false,
@@ -228,11 +228,7 @@ function loadConfig() {
     };
     const cfgPath = path.join(ROOT, 'scripts', 'audit-jsons.config.json');
     try {
-        const raw = fs.readFileSync ? null : null; // appease bundlers
-    } catch {}
-    try {
-        const content = fs.readFileSync ? require('fs').readFileSync(cfgPath, 'utf8') : null;
-        if (!content) return defaultCfg;
+        const content = await fs.readFile(cfgPath, 'utf8');
         const parsed = JSON.parse(content);
         return { ...defaultCfg, ...parsed };
     } catch {
@@ -256,7 +252,7 @@ function filterWhitelistedDuplicates(summary, cfg) {
 async function main() {
     const argv = process.argv.slice(2);
     const isCI = argv.includes('--ci');
-    const cfg = loadConfig();
+    const cfg = await loadConfig();
     if (isCI) {
         cfg.failOnInvalid = true;
         cfg.failOnNonWhitelistedDuplicates = true;
