@@ -93,14 +93,19 @@ describe('QuizModularEditor - Navegação', () => {
     it('renderiza a coluna de navegação com steps do serviço canônico', async () => {
         render(<QuizModularEditor />);
 
-        // Aguardamos itens da navegação
+        // Aguarda o Suspense resolver e o step-navigator aparecer
+        const navigator = await waitFor(() => screen.getByTestId('step-navigator'), {
+            timeout: 3000,
+        });
+
+        expect(navigator).toBeInTheDocument();
+
+        // Aguarda os itens da navegação renderizarem
         await waitFor(() => {
             expect(screen.getByText('01 - Introdução')).toBeInTheDocument();
             expect(screen.getByText('02 - Pergunta')).toBeInTheDocument();
         });
-    });
-
-    it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
+    }); it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
         render(<QuizModularEditor />);
 
         // Garantir que os itens existam
