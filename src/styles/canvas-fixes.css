@@ -1,0 +1,163 @@
+/* 🔧 CORREÇÕES DE BLUR E SELEÇÃO DE BLOCOS */
+
+/**
+ * PROBLEMA 1: Imagens embaçadas
+ * Causa: transform: translateZ(0) + backface-visibility: hidden causam blur em imagens
+ * Solução: Remover transforms desnecessários e adicionar image-rendering
+ */
+
+/* Corrigir blur em imagens dentro do canvas */
+.dnd-droppable-zone img,
+.sortable-block img,
+.canvas-drop-zone img,
+[data-testid="canvas-block"] img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: none !important;
+    /* Remover transforms que causam blur */
+}
+
+/* Garantir nitidez em imagens Cloudinary */
+img[src*="cloudinary"],
+img[src*="res.cloudinary.com"] {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto;
+    /* Deixar browser decidir qualidade */
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+}
+
+/**
+ * PROBLEMA 2: Seleção de blocos imprecisa
+ * Causa: Múltiplos listeners de click e pointer-events conflitantes
+ * Solução: Garantir z-index e cursor corretos
+ */
+
+/* Melhorar área clicável dos blocos */
+[data-testid="canvas-block"] {
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+[data-testid="canvas-block"]:hover {
+    z-index: 10;
+}
+
+/* Bloco selecionado tem prioridade máxima */
+[data-testid="canvas-block"][data-selected="true"],
+.border-primary.ring-2 {
+    z-index: 20 !important;
+}
+
+/* Garantir que botões de ação não bloqueiem clique do bloco */
+[data-testid="canvas-block"] button {
+    position: relative;
+    z-index: 30;
+}
+
+/* Prevenir clicks acidentais em elementos internos */
+[data-testid="canvas-block"]>div {
+    pointer-events: auto;
+}
+
+[data-testid="canvas-block"] img,
+[data-testid="canvas-block"] p,
+[data-testid="canvas-block"] h1,
+[data-testid="canvas-block"] h2,
+[data-testid="canvas-block"] h3 {
+    pointer-events: none;
+    /* Não interceptar clicks, deixar para o container */
+}
+
+/**
+ * OTIMIZAÇÃO: Remover transforms agressivos que causam blur
+ */
+
+/* Desabilitar translateZ(0) para imagens */
+.dnd-droppable-zone:has(img),
+.sortable-block:has(img) {
+    transform: none !important;
+    will-change: auto !important;
+}
+
+/* GPU acceleration apenas para animações ativas */
+.dnd-droppable-zone:not(:hover):not(.dragging) {
+    transform: none !important;
+    will-change: auto !important;
+}
+
+/**
+ * ACESSIBILIDADE: Melhorar feedback visual
+ */
+
+/* Hover mais evidente */
+[data-testid="canvas-block"]:hover:not([data-selected="true"]) {
+    outline: 2px solid rgba(59, 130, 246, 0.3);
+    outline-offset: 2px;
+    transition: outline 0.15s ease-in-out;
+}
+
+/* Seleção mais evidente */
+[data-testid="canvas-block"][data-selected="true"] {
+    outline: 3px solid rgb(59, 130, 246);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/**
+ * PERFORMANCE: Otimizar apenas quando necessário
+ */
+
+/* Aplicar GPU acceleration apenas durante drag */
+.dnd-droppable-zone.dragging {
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+}
+
+/* Remover contain que pode causar problemas de rendering */
+.canvas-drop-zone * {
+    contain: none !important;
+}
+
+/**
+ * FIX: Garantir que imagens grandes não percam qualidade
+ */
+
+img {
+    max-width: 100%;
+    height: auto;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+/* Imagens dentro de blocos devem manter qualidade original */
+[data-testid="canvas-block"] img {
+    image-rendering: auto !important;
+    -webkit-transform: translateZ(0);
+    /* Hardware acceleration sutil */
+    transform: translateZ(0);
+    will-change: auto;
+}
+
+/**
+ * DEBUG: Classes utilitárias para teste
+ */
+
+/* Adicionar ao elemento para forçar nitidez máxima */
+.force-crisp {
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Adicionar para desabilitar todas as otimizações */
+.no-gpu-acceleration {
+    transform: none !important;
+    will-change: auto !important;
+    contain: none !important;
+    backface-visibility: visible !important;
+}

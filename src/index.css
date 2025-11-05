@@ -16,6 +16,8 @@
 @import './styles/spinner.css';
 @import "./styles/canvas-performance.css";
 @import "./styles/imageOptimization.css";
+@import './styles/canvas-fixes.css';
+/* 🔧 Correções de blur e seleção */
 @import './styles/mobile-responsive-fixes.css';
 @import './styles/brand-system.css';
 @import './styles/global-effects.css';
