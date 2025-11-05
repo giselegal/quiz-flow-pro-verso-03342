@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -41,39 +40,37 @@ export const StepNavigatorColumn: React.FC<StepNavigatorColumnProps> = ({
         </p>
       </div>
 
-      <ScrollArea className="flex-1">
-        <div className="p-2 space-y-1">
-          {steps.map((step) => (
-            <Button
-              key={step.id}
-              variant={currentStep === step.id ? 'default' : 'ghost'}
-              className={cn(
-                'w-full justify-start text-left gap-2',
-                currentStep === step.id && 'bg-primary text-primary-foreground',
-              )}
-              onClick={() => onStepChange(step.id)}
-            >
-              <div className="flex items-center justify-between flex-1">
-                <span className="flex items-center gap-2">
-                  {step.label}
-                  {step.blockCount !== undefined && (
-                    <Badge variant="secondary" className="text-xs">
-                      {step.blockCount}
-                    </Badge>
-                  )}
-                </span>
-                {step.isValid !== undefined && (
-                  step.isValid ? (
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                  )
+      <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin">
+        {steps.map((step) => (
+          <Button
+            key={step.id}
+            variant={currentStep === step.id ? 'default' : 'ghost'}
+            className={cn(
+              'w-full justify-start text-left gap-2',
+              currentStep === step.id && 'bg-primary text-primary-foreground',
+            )}
+            onClick={() => onStepChange(step.id)}
+          >
+            <div className="flex items-center justify-between flex-1">
+              <span className="flex items-center gap-2">
+                {step.label}
+                {step.blockCount !== undefined && (
+                  <Badge variant="secondary" className="text-xs">
+                    {step.blockCount}
+                  </Badge>
                 )}
-              </div>
-            </Button>
-          ))}
-        </div>
-      </ScrollArea>
+              </span>
+              {step.isValid !== undefined && (
+                step.isValid ? (
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                ) : (
+                  <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                )
+              )}
+            </div>
+          </Button>
+        ))}
+      </div>
     </div>
   );
 };
