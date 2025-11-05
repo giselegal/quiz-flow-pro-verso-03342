@@ -256,14 +256,13 @@ export default function ComponentLibraryColumn({ currentStepKey, onAddBlock }: C
                     })
                 )}
             </div>
-        </div>
 
-            {/* Footer com dica */ }
-    <div className="p-3 border-t bg-muted/10">
-        <p className="text-[10px] text-muted-foreground text-center">
-            💡 Arraste componentes para o canvas
-        </p>
-    </div>
-        </div >
+            {/* Footer com dica */}
+            <div className="p-3 border-t bg-muted/10">
+                <p className="text-[10px] text-muted-foreground text-center">
+                    💡 Arraste componentes para o canvas
+                </p>
+            </div>
+        </div>
     );
 }
