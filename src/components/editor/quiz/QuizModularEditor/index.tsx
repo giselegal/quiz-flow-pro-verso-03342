@@ -29,8 +29,10 @@ import { Eye, Edit3, Play, Save, GripVertical, Download } from 'lucide-react';
 import { appLogger } from '@/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
 
-// Lazy loading de componentes pesados
-const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
+// Import estático de StepNavigatorColumn para evitar problemas de renderização em testes
+import StepNavigatorColumn from './components/StepNavigatorColumn';
+
+// Lazy loading de componentes pesados (exceto navegação)
 const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
 const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
@@ -81,13 +83,13 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         if (!props.templateId && !loadedTemplate) {
             return [];
         }
-        
+
         const res = templateService.steps.list();
         if (!res.success || !res.data || res.data.length === 0) {
             console.warn('⚠️ [QuizModularEditor] templateService.steps.list() vazio');
             return [];
         }
-        
+
         return res.data.map((s) => ({
             key: s.id,
             title: `${String(s.order).padStart(2, '0')} - ${s.name}`
@@ -408,18 +410,16 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 <PanelGroup direction="horizontal" className="flex-1">
                     {/* Coluna 1: Navegação de Etapas */}
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
-                        <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando navegação…</div>}>
-                            <div className="h-full border-r bg-white overflow-y-auto">
-                                <StepNavigatorColumn
-                                    steps={navSteps}
-                                    currentStepKey={currentStepKey}
-                                    onSelectStep={(key: string) => {
-                                        const num = parseInt(key.replace('step-', ''), 10);
-                                        unified.setCurrentStep(num);
-                                    }}
-                                />
-                            </div>
-                        </Suspense>
+                        <div className="h-full border-r bg-white overflow-y-auto">
+                            <StepNavigatorColumn
+                                steps={navSteps}
+                                currentStepKey={currentStepKey}
+                                onSelectStep={(key: string) => {
+                                    const num = parseInt(key.replace('step-', ''), 10);
+                                    unified.setCurrentStep(num);
+                                }}
+                            />
+                        </div>
                     </Panel>
 
                     {/* Divisor 1 */}
