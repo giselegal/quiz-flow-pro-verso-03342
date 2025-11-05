@@ -27,10 +27,11 @@ interface QuizStep {
 }
 
 interface TimeEstimateConfig {
-  baseTimings: Record<string, number>;
-  optionPenalty: number;
-  complexityBonus: number;
-  textInputPenalty: number;
+    baseTimings: Record<string, number>; // segundos por tipo
+    optionPenalty: number;               // segundos extras por opção adicional
+    complexityThreshold: number;         // caracteres que indicam complexidade
+    complexityBonus: number;             // segundos extras para conteúdo complexo
+    textInputPenalty: number;            // segundos extras para input de texto
 }
 
 interface TimeEstimate {
@@ -42,13 +43,6 @@ interface TimeEstimate {
     factors: string[];
   }>;
   confidence: 'low' | 'medium' | 'high';
-}
-
-interface TimeEstimateConfig {
-    baseTimings: Record<string, number>; // segundos por tipo
-    optionPenalty: number;               // segundos extras por opção adicional
-    complexityThreshold: number;         // caracteres que indicam complexidade
-    complexityBonus: number;             // segundos extras para conteúdo complexo
 }
 
 const DEFAULT_CONFIG: TimeEstimateConfig = {
@@ -67,7 +61,8 @@ const DEFAULT_CONFIG: TimeEstimateConfig = {
     },
     optionPenalty: 3,
     complexityThreshold: 1000,
-    complexityBonus: 10
+    complexityBonus: 10,
+    textInputPenalty: 15
 };
 
 export function calculateEstimatedTime(
@@ -78,7 +73,7 @@ export function calculateEstimatedTime(
     const breakdown: any[] = [];
     let totalSeconds = 0;
     
-    steps.forEach(step => {
+    Object.entries(steps).forEach(([stepId, step]) => {
         const factors: string[] = [];
         
         // Tempo base
@@ -109,12 +104,12 @@ export function calculateEstimatedTime(
             b.type === 'text-input' || b.type === 'textarea'
         );
         if (hasTextInput) {
-            stepTime += 15;
-            factors.push('Input de texto: +15s');
+            stepTime += finalConfig.textInputPenalty;
+            factors.push(`Input de texto: +${finalConfig.textInputPenalty}s`);
         }
         
         breakdown.push({
-            stepId: step.id || step.metadata?.id,
+            stepId: stepId,
             seconds: Math.round(stepTime),
             factors
         });
@@ -123,8 +118,9 @@ export function calculateEstimatedTime(
     });
     
     // Calcular confiança baseado em completude dos dados
-    const hasAllTypes = steps.every(s => s.type);
-    const hasBlockInfo = steps.every(s => s.blocks);
+    const stepsArray = Object.values(steps);
+    const hasAllTypes = stepsArray.every((s: QuizStep) => s.type);
+    const hasBlockInfo = stepsArray.every((s: QuizStep) => s.blocks);
     const confidence = hasAllTypes && hasBlockInfo ? 'high'
         : hasAllTypes ? 'medium'
         : 'low';
