@@ -232,124 +232,123 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                                 <Label className="text-xs font-medium text-muted-foreground uppercase">
                                     Bloco Selecionado
                                 </Label>
-                                    <Badge variant="secondary" className="text-[10px]">
-                                        {selectedBlock.type}
-                                    </Badge>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Sparkles className="h-3 w-3 text-primary/70" />
-                                    <p className="text-xs font-mono truncate">
-                                        {selectedBlock.id}
+                                <Badge variant="secondary" className="text-[10px]">
+                                    {selectedBlock.type}
+                                </Badge>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="h-3 w-3 text-primary/70" />
+                                <p className="text-xs font-mono truncate">
+                                    {selectedBlock.id}
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Propriedades Editáveis com Seções Colapsáveis */}
+                    {hasSchema ? (
+                        <div className="space-y-3">
+                            {/* Seção: Propriedades Básicas */}
+                            <Collapsible
+                                open={expandedSections.has('basic')}
+                                onOpenChange={() => toggleSection('basic')}
+                            >
+                                <Card className="overflow-hidden">
+                                    <CollapsibleTrigger className="w-full p-3 hover:bg-accent/50 transition-colors">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <ChevronDown className={cn(
+                                                    "h-4 w-4 transition-transform",
+                                                    !expandedSections.has('basic') && "-rotate-90"
+                                                )} />
+                                                <span className="text-xs font-semibold uppercase text-muted-foreground">
+                                                    Propriedades
+                                                </span>
+                                            </div>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Info className="h-3 w-3 text-muted-foreground" />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p className="text-xs">Propriedades do bloco via schema</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </div>
+                                    </CollapsibleTrigger>
+
+                                    <CollapsibleContent className="animate-accordion-down">
+                                        <div className="p-4 pt-0 space-y-4">
+                                            <DynamicPropertyControls
+                                                elementType={selectedBlock.type}
+                                                properties={editedProperties}
+                                                onChange={(key, value) => handlePropertyChange(key, value)}
+                                            />
+                                        </div>
+                                    </CollapsibleContent>
+                                </Card>
+                            </Collapsible>
+
+                            {/* Dica de uso */}
+                            <Card className="p-3 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
+                                <div className="flex gap-2">
+                                    <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                                    <p className="text-xs text-blue-700 dark:text-blue-300">
+                                        As propriedades são carregadas dinamicamente do schema JSON.
+                                        Alterações aparecem em tempo real no canvas.
                                     </p>
                                 </div>
-                            </div>
-                        </Card>
-
-                        {/* Propriedades Editáveis com Seções Colapsáveis */}
-                        {hasSchema ? (
-                            <div className="space-y-3">
-                                {/* Seção: Propriedades Básicas */}
-                                <Collapsible
-                                    open={expandedSections.has('basic')}
-                                    onOpenChange={() => toggleSection('basic')}
-                                >
-                                    <Card className="overflow-hidden">
-                                        <CollapsibleTrigger className="w-full p-3 hover:bg-accent/50 transition-colors">
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-2">
-                                                    <ChevronDown className={cn(
-                                                        "h-4 w-4 transition-transform",
-                                                        !expandedSections.has('basic') && "-rotate-90"
-                                                    )} />
-                                                    <span className="text-xs font-semibold uppercase text-muted-foreground">
-                                                        Propriedades
-                                                    </span>
-                                                </div>
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <Info className="h-3 w-3 text-muted-foreground" />
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p className="text-xs">Propriedades do bloco via schema</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </div>
-                                        </CollapsibleTrigger>
-
-                                        <CollapsibleContent className="animate-accordion-down">
-                                            <div className="p-4 pt-0 space-y-4">
-                                                <DynamicPropertyControls
-                                                    elementType={selectedBlock.type}
-                                                    properties={editedProperties}
-                                                    onChange={(key, value) => handlePropertyChange(key, value)}
-                                                />
-                                            </div>
-                                        </CollapsibleContent>
-                                    </Card>
-                                </Collapsible>
-
-                                {/* Dica de uso */}
-                                <Card className="p-3 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
-                                    <div className="flex gap-2">
-                                        <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                                        <p className="text-xs text-blue-700 dark:text-blue-300">
-                                            As propriedades são carregadas dinamicamente do schema JSON.
-                                            Alterações aparecem em tempo real no canvas.
-                                        </p>
-                                    </div>
-                                </Card>
-                            </div>
-                        ) : (
-                            <Card className="p-6 text-center">
-                                <div className="bg-muted/30 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                                    <Settings className="w-6 h-6 opacity-30" />
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-1">
-                                    Schema não encontrado
-                                </p>
-                                <p className="text-xs text-muted-foreground/70">
-                                    Este bloco não possui schema definido.
-                                </p>
                             </Card>
-                        )}
+                        </div>
+                    ) : (
+                        <Card className="p-6 text-center">
+                            <div className="bg-muted/30 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                                <Settings className="w-6 h-6 opacity-30" />
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-1">
+                                Schema não encontrado
+                            </p>
+                            <p className="text-xs text-muted-foreground/70">
+                                Este bloco não possui schema definido.
+                            </p>
+                        </Card>
+                    )}
 
-                        {/* Ações (sempre visíveis quando há schema) */}
-                        {hasSchema && (
-                            <>
-                                <Separator className="my-4" />
-                                <div className="flex gap-2 sticky bottom-0 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4">
-                                    <Button
-                                        onClick={handleSave}
-                                        disabled={!isDirty}
-                                        className={cn(
-                                            "flex-1 gap-2",
-                                            isDirty && "animate-pulse"
-                                        )}
-                                        size="sm"
-                                    >
-                                        <Save className="w-4 h-4" />
-                                        {isDirty ? 'Salvar Alterações' : 'Salvo'}
-                                    </Button>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="outline"
-                                                onClick={handleReset}
-                                                disabled={!isDirty}
-                                                size="sm"
-                                                className="px-3"
-                                            >
-                                                <RotateCcw className="w-4 h-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p className="text-xs">Desfazer alterações</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </div>
-                            </>
-                        )}
-                    </div>
+                    {/* Ações (sempre visíveis quando há schema) */}
+                    {hasSchema && (
+                        <>
+                            <Separator className="my-4" />
+                            <div className="flex gap-2 sticky bottom-0 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4">
+                                <Button
+                                    onClick={handleSave}
+                                    disabled={!isDirty}
+                                    className={cn(
+                                        "flex-1 gap-2",
+                                        isDirty && "animate-pulse"
+                                    )}
+                                    size="sm"
+                                >
+                                    <Save className="w-4 h-4" />
+                                    {isDirty ? 'Salvar Alterações' : 'Salvo'}
+                                </Button>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            onClick={handleReset}
+                                            disabled={!isDirty}
+                                            size="sm"
+                                            className="px-3"
+                                        >
+                                            <RotateCcw className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p className="text-xs">Desfazer alterações</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </TooltipProvider>
