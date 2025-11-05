@@ -123,31 +123,40 @@ export const useImageWithFallback = (
             // Opcionalmente, armazenar no cache (apenas para URLs externas)
             if (enableCache && !imageUrl.startsWith('/') && !imageUrl.includes('localhost')) {
                 try {
-                    // Converter imagem para blob para armazenamento
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    if (ctx) {
-                        canvas.width = img.naturalWidth;
-                        canvas.height = img.naturalHeight;
-                        ctx.drawImage(img, 0, 0);
+                    // ✅ CORREÇÃO: Adicionar verificação de crossOrigin
+                    const isCrossOrigin = new URL(imageUrl, window.location.href).origin !== window.location.origin;
 
-                        canvas.toBlob(async (blob) => {
-                            if (blob) {
-                                try {
-                                    await imageCache.storeImage(imageUrl, blob, {
-                                        width: img.naturalWidth,
-                                        height: img.naturalHeight,
-                                        type: blob.type,
-                                        originalUrl: imageUrl,
-                                    });
-                                } catch (cacheError) {
-                                    console.warn('Erro ao armazenar imagem no cache:', cacheError);
+                    // Só tentar fazer toBlob se não for cross-origin ou se crossOrigin foi configurado
+                    if (!isCrossOrigin) {
+                        // Converter imagem para blob para armazenamento
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        if (ctx) {
+                            canvas.width = img.naturalWidth;
+                            canvas.height = img.naturalHeight;
+                            ctx.drawImage(img, 0, 0);
+
+                            canvas.toBlob(async (blob) => {
+                                if (blob) {
+                                    try {
+                                        await imageCache.storeImage(imageUrl, blob, {
+                                            width: img.naturalWidth,
+                                            height: img.naturalHeight,
+                                            type: blob.type,
+                                            originalUrl: imageUrl,
+                                        });
+                                    } catch (cacheError) {
+                                        console.warn('⚠️ Erro ao armazenar imagem no cache:', cacheError);
+                                    }
                                 }
-                            }
-                        }, 'image/png', 0.8);
+                            }, 'image/png', 0.8);
+                        }
+                    } else {
+                        // ✅ CORREÇÃO: Para imagens cross-origin, apenas logar e pular cache
+                        console.log('🔒 Imagem cross-origin não pode ser cacheada:', imageUrl);
                     }
                 } catch (cacheError) {
-                    console.warn('Erro ao processar imagem para cache:', cacheError);
+                    console.warn('⚠️ Erro ao processar imagem para cache:', cacheError);
                 }
             }
 
