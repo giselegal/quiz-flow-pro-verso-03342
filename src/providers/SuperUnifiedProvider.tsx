@@ -473,6 +473,13 @@ interface SuperUnifiedContextType {
     setStepBlocks: (stepIndex: number, blocks: any[]) => void;
     getStepBlocks: (stepIndex: number) => any[];
     showToast: (toast: Omit<ToastMessage, 'id'>) => void;
+    // Auth methods (aliases para compatibilidade)
+    user: any | null;
+    isLoading: boolean;
+    login: (email: string, password: string) => Promise<void>;
+    signup: (email: string, password: string) => Promise<void>;
+    logout: () => Promise<void>;
+    signOut: () => Promise<void>;
 }
 
 // 🎯 CONTEXT
@@ -751,6 +758,43 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, []);
 
+    // 🔐 Auth Operations
+    const login = useCallback(async (email: string, password: string) => {
+        dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            dispatch({ type: 'SET_AUTH_STATE', payload: { user: data.user, isAuthenticated: true, isLoading: false } });
+        } catch (error: any) {
+            dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message, isLoading: false } });
+            throw error;
+        }
+    }, []);
+
+    const signup = useCallback(async (email: string, password: string) => {
+        dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
+        try {
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) throw error;
+            dispatch({ type: 'SET_AUTH_STATE', payload: { user: data.user, isAuthenticated: true, isLoading: false } });
+        } catch (error: any) {
+            dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message, isLoading: false } });
+            throw error;
+        }
+    }, []);
+
+    const logout = useCallback(async () => {
+        dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true } });
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+            dispatch({ type: 'SET_AUTH_STATE', payload: { user: null, isAuthenticated: false, isLoading: false } });
+        } catch (error: any) {
+            dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message, isLoading: false } });
+            throw error;
+        }
+    }, []);
+
     // Auto-load funnel
     useEffect(() => {
         if (autoLoad && funnelId) {
@@ -776,6 +820,13 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         setStepBlocks,
         getStepBlocks,
         showToast,
+        // Auth aliases
+        user: state.auth.user,
+        isLoading: state.auth.isLoading,
+        login,
+        signup,
+        logout,
+        signOut: logout, // Alias
     }), [
         state,
         loadFunnels,
@@ -794,6 +845,9 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         setStepBlocks,
         getStepBlocks,
         showToast,
+        login,
+        signup,
+        logout,
     ]);
 
     return (
@@ -803,7 +857,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     );
 };
 
-// 🎯 HOOK
+// 🎯 HOOKS
 export function useSuperUnified() {
     const context = useContext(SuperUnifiedContext);
     if (!context) {
@@ -811,5 +865,9 @@ export function useSuperUnified() {
     }
     return context;
 }
+
+// 🔄 Aliases para compatibilidade
+export const useAuth = useSuperUnified;
+export const useUnifiedAuth = useSuperUnified;
 
 export default SuperUnifiedProvider;

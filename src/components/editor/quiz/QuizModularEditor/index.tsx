@@ -154,7 +154,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         }
 
         loadTemplateOptimized();
-    }, [props.templateId, ops]);
+    }, [props.templateId, unified]);
 
     // ✅ FASE 1: Obter blocos do SuperUnified
     const blocks: Block[] | null = unified.getStepBlocks(unified.state.editor.currentStep);
@@ -407,8 +407,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             <div className="h-full border-r bg-white overflow-y-auto">
                                 <StepNavigatorColumn
                                     steps={navSteps}
-                                    currentStep={currentStepKey}
-                                    onStepChange={(key) => {
+                                    currentStepKey={currentStepKey}
+                                    onSelectStep={(key: string) => {
                                         const num = parseInt(key.replace('step-', ''), 10);
                                         unified.setCurrentStep(num);
                                     }}
@@ -428,12 +428,16 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando biblioteca…</div>}>
                             <div className="h-full border-r bg-white overflow-y-auto">
                                 <ComponentLibraryColumn
-                                    currentStepKey={editor.state.currentStepKey}
+                                    currentStepKey={currentStepKey}
                                     onAddBlock={(type) => {
-                                        const addResult = ops.addBlock(editor.state.currentStepKey, { type });
-                                        if (addResult.success) {
-                                            editor.markDirty(true);
-                                        }
+                                        const stepIndex = unified.state.editor.currentStep;
+                                        unified.addBlock(stepIndex, { 
+                                            type, 
+                                            id: `block-${Date.now()}`,
+                                            properties: {},
+                                            content: {},
+                                            order: (blocks || []).length
+                                        });
                                     }}
                                 />
                             </div>
@@ -452,34 +456,37 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             <div className="h-full bg-gray-50 overflow-y-auto">
                                 {canvasMode === 'edit' ? (
                                     <StepErrorBoundary 
-                                        stepId={editor.state.currentStepKey || 'unknown'}
+                                        stepId={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
                                     >
                                         <CanvasColumn
-                                            currentStepKey={editor.state.currentStepKey}
+                                            currentStepKey={currentStepKey}
                                             blocks={blocks}
-                                            selectedBlockId={editor.state.selectedBlockId}
+                                            selectedBlockId={selectedBlockId}
                                             onRemoveBlock={(id) => {
-                                                ops.removeBlock(editor.state.currentStepKey, id);
-                                                editor.markDirty(true);
+                                                const stepIndex = unified.state.editor.currentStep;
+                                                unified.removeBlock(stepIndex, id);
                                             }}
                                             onMoveBlock={(from, to) => {
-                                                ops.reorderBlock(editor.state.currentStepKey, from, to);
-                                                editor.markDirty(true);
+                                                const stepIndex = unified.state.editor.currentStep;
+                                                const list = blocks || [];
+                                                const reordered = [...list];
+                                                const [moved] = reordered.splice(from, 1);
+                                                reordered.splice(to, 0, moved);
+                                                unified.reorderBlocks(stepIndex, reordered);
                                             }}
                                             onUpdateBlock={(id, patch) => {
-                                                // ✅ FASE 2.1: updateBlock agora é void (debounced)
-                                                ops.updateBlock(editor.state.currentStepKey, id, patch);
-                                                editor.markDirty(true);
+                                                const stepIndex = unified.state.editor.currentStep;
+                                                unified.updateBlock(stepIndex, id, patch);
                                             }}
-                                            onBlockSelect={editor.selectBlock}
+                                            onBlockSelect={unified.setSelectedBlock}
                                             hasTemplate={Boolean(loadedTemplate || props.templateId)}
                                             onLoadTemplate={handleLoadTemplate}
                                         />
                                     </StepErrorBoundary>
                                 ) : (
                                     <PreviewPanel
-                                        currentStepKey={editor.state.currentStepKey}
+                                        currentStepKey={currentStepKey}
                                         blocks={blocks}
                                         isVisible={true}
                                         className="h-full"
@@ -500,14 +507,13 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando propriedades…</div>}>
                             <div className="h-full border-l bg-white overflow-y-auto">
                                 <PropertiesColumn
-                                    selectedBlock={blocks?.find(b => b.id === editor.state.selectedBlockId) ?? null}
+                                    selectedBlock={blocks?.find(b => b.id === selectedBlockId) ?? null}
                                     onBlockUpdate={(blockId: string, updates: Partial<Block>) => {
-                                        // ✅ FASE 2.1: updateBlock agora é void (debounced)
-                                        ops.updateBlock(editor.state.currentStepKey, blockId, updates);
-                                        editor.markDirty(true);
+                                        const stepIndex = unified.state.editor.currentStep;
+                                        unified.updateBlock(stepIndex, blockId, updates);
                                     }}
                                     onClearSelection={() => {
-                                        editor.clearSelection();
+                                        unified.setSelectedBlock(null);
                                     }}
                                 />
                             </div>
