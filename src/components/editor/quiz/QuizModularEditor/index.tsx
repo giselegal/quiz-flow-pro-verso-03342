@@ -76,6 +76,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
+    const [templateLoadError, setTemplateLoadError] = useState(false);
 
     // 🎯 FASE 4: Navegação dinâmica baseada no template carregado
     const navSteps = useMemo(() => {
