@@ -246,7 +246,9 @@ interface QuizResultsProps {
 
 export const QuizResultsWithScore: React.FC<QuizResultsProps> = ({ answers, totalSteps }) => {
     const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
-    const [analysis, setAnalysis] = useState<PerformanceAnalysis | null>(null); useEffect(() => {
+    const [analysis, setAnalysis] = useState<PerformanceAnalysis | null>(null);
+
+    useEffect(() => {
         // Calcular score
         const result = calculateScore(answers, {
             completionBonus: 50,
