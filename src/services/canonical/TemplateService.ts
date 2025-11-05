@@ -782,6 +782,21 @@ export class TemplateService extends BaseCanonicalService {
      */
     add: async (stepInfo: StepInfo): Promise<ServiceResult<void>> => {
       try {
+        // ✅ Validar se ID já existe
+        if (this.customSteps.has(stepInfo.id)) {
+          this.log(`⚠️ ID duplicado detectado: ${stepInfo.id}`);
+          return this.createError(new Error(`Etapa com ID ${stepInfo.id} já existe`));
+        }
+
+        // Verificar se é um step do template
+        const stepMatch = stepInfo.id.match(/^step-(\d{2})$/);
+        if (stepMatch) {
+          const stepNumber = parseInt(stepMatch[1]);
+          if (stepNumber >= 1 && stepNumber <= 21) {
+            return this.createError(new Error('ID conflita com etapas do template'));
+          }
+        }
+        
         // Adicionar ao Map de steps customizados
         this.customSteps.set(stepInfo.id, stepInfo);
         
@@ -797,7 +812,7 @@ export class TemplateService extends BaseCanonicalService {
         // Salvar no cache
         cacheService.templates.set(stepInfo.id, emptyBlocks);
         
-        this.log(`✅ Step customizado adicionado: ${stepInfo.id}`);
+        this.log(`✅ Step customizado adicionado: ${stepInfo.id} (order: ${stepInfo.order})`);
         return this.createResult(undefined);
       } catch (error) {
         this.error('steps.add failed:', error);

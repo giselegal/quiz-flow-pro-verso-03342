@@ -85,9 +85,13 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
 
     const handleAddStep = async (stepData: NewStepData) => {
         try {
+            // ✅ Gerar ID único usando timestamp + random para evitar colisões
+            const randomId = Math.random().toString(36).substring(2, 9);
+            const uniqueId = `step-custom-${Date.now()}-${randomId}`;
+            
             // Adicionar step via TemplateService
-            await templateService.steps.add({
-                id: `step-${stepData.order.toString().padStart(2, '0')}`,
+            const result = await templateService.steps.add({
+                id: uniqueId,
                 name: stepData.name,
                 order: stepData.order,
                 type: stepData.type,
@@ -96,13 +100,32 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                 hasTemplate: false,
             });
 
-            // Forçar refresh da lista
-            setRefreshKey(prev => prev + 1);
-            
-            // Selecionar a nova etapa
-            onSelectStep(`step-${stepData.order.toString().padStart(2, '0')}`);
+            // ✅ Validar resultado da operação
+            if (result.success) {
+                toast({
+                    title: 'Etapa criada',
+                    description: `A etapa "${stepData.name}" foi adicionada com sucesso`,
+                });
+
+                // Forçar refresh da lista
+                setRefreshKey(prev => prev + 1);
+                
+                // Selecionar a nova etapa
+                onSelectStep(uniqueId);
+            } else {
+                toast({
+                    title: 'Erro ao criar etapa',
+                    description: result.error?.message || 'Não foi possível criar a etapa',
+                    variant: 'destructive',
+                });
+            }
         } catch (error) {
             console.error('Erro ao adicionar etapa:', error);
+            toast({
+                title: 'Erro ao criar etapa',
+                description: 'Ocorreu um erro inesperado',
+                variant: 'destructive',
+            });
         }
     };
 
