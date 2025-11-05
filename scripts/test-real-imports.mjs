@@ -1,4 +1,8 @@
-#!/usr/bin/env node
+#!/usr/bin/env tsx
+/**
+ * 🧪 TESTE REAL DE IMPORTAÇÃO - COMPONENTES DO QUIZ
+ * Tenta importar REALMENTE cada componente usado no JSON
+ */
 /**
  * 🧪 TESTE REAL DE IMPORT - Verifica se os componentes podem ser importados
  */
