@@ -334,7 +334,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             </span>
                         )}
 
-                        {(!loadedTemplate && !isLoadingTemplate && !props.templateId) || templateLoadError && (
+                        {((!loadedTemplate && !isLoadingTemplate && !props.templateId) || templateLoadError) && (
                             <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
                                 🎨 Modo Construção Livre
                             </span>
