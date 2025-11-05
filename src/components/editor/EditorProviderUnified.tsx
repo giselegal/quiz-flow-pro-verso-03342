@@ -1,22 +1,21 @@
 /**
- * 🎯 EDITOR PROVIDER UNIFIED - FASE 2 SIMPLIFICADO
+ * ⚠️ DEPRECATED: EDITOR PROVIDER UNIFIED
  * 
- * Provider do editor que DELEGA estado básico para SuperUnifiedProvider
- * e mantém APENAS funcionalidades avançadas:
- * ✅ Undo/Redo (EditorHistoryService)
- * ✅ Template Loading (TemplateService)
- * ✅ Supabase Sync (quando habilitado)
- * ✅ Block Operations Avançadas (duplicate, snippet)
+ * @deprecated Este provider foi consolidado em EditorProviderCanonical.
+ * Use: import { EditorProviderCanonical } from '@/components/editor/EditorProviderCanonical';
  * 
- * ESTADO DELEGADO para SuperUnifiedProvider:
- * ❌ stepBlocks → state.editor.stepBlocks
- * ❌ currentStep → state.editor.currentStep
- * ❌ selectedBlockId → state.editor.selectedBlockId
- * ❌ Basic block operations → addBlock, updateBlock, removeBlock
+ * MIGRAÇÃO:
+ * ```tsx
+ * // ❌ ANTES
+ * <EditorProviderUnified funnelId={id} enableSupabase={true}>
  * 
- * REDUÇÃO: 918 linhas → ~400 linhas (56% menor)
+ * // ✅ DEPOIS
+ * <EditorProviderCanonical funnelId={id} enableSupabase={true}>
+ * ```
  * 
- * @version 6.0.0 - FASE 2 Simplificado
+ * Este arquivo será removido em versão futura.
+ * 
+ * @version 7.0.0 - DEPRECATED
  * @date 2025-01-17
  */
 
@@ -170,6 +169,19 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     initial = {},
     enableSupabase = true,
 }) => {
+    // ============================================================================
+    // DEPRECATION WARNING
+    // ============================================================================
+    
+    useEffect(() => {
+        console.warn(
+            '⚠️ EditorProviderUnified is deprecated. Use EditorProviderCanonical instead.\n' +
+            'Migration: Replace "EditorProviderUnified" with "EditorProviderCanonical"\n' +
+            'Import: import { EditorProviderCanonical } from "@/components/editor/EditorProviderCanonical";\n' +
+            'See: docs/EDITOR_PROVIDERS_REFACTOR_PROPOSAL.md',
+        );
+    }, []);
+    
     // ============================================================================
     // FASE 2: CONECTAR AO SUPERUNIFIEDPROVIDER
     // ============================================================================

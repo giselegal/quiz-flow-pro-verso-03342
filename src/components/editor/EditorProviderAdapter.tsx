@@ -1,18 +1,19 @@
 /**
- * 🔄 EDITOR PROVIDER ADAPTER - Wrapper de Compatibilidade
+ * ⚠️ DEPRECATED: EDITOR PROVIDER ADAPTER
  * 
- * Adapter temporário que permite componentes legados usarem
- * as novas stores Zustand através da API antiga de EditorProvider.
+ * @deprecated Este adapter foi consolidado em EditorProviderCanonical.
+ * Use: import { EditorProviderCanonical } from '@/components/editor/EditorProviderCanonical';
  * 
- * SPRINT 3 - Facilita migração gradual
- * 
- * USO:
+ * MIGRAÇÃO:
  * ```tsx
- * // Código legado continua funcionando
- * <EditorProviderAdapter>
- *   <ComponentQueUsaUseEditor />
- * </EditorProviderAdapter>
+ * // ❌ ANTES
+ * <EditorProviderAdapter funnelId={id}>
+ * 
+ * // ✅ DEPOIS  
+ * <EditorProviderCanonical funnelId={id}>
  * ```
+ * 
+ * Este arquivo será removido em versão futura.
  */
 
 import React, { createContext, useContext, useEffect } from 'react';

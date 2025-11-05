@@ -2,18 +2,13 @@
  * 🎯 USE EDITOR HOOK - Simplified Canonical Version
  * 
  * Hook simplificado e canônico para acesso ao editor.
- * Substitui useUnifiedEditor complexo (274 linhas).
+ * Agora usa EditorProviderCanonical consolidado.
  * 
  * CARACTERÍSTICAS:
  * ✅ Interface limpa e direta
  * ✅ Auto-detecção do provider
  * ✅ TypeScript rigoroso
  * ✅ Performance otimizada
- * 
- * SUBSTITUI:
- * ❌ useUnifiedEditor (274 linhas, muito complexo)
- * ❌ useEditorWrapper (duplicação)
- * ❌ Múltiplas implementações espalhadas
  * 
  * USO:
  * ```typescript
@@ -26,7 +21,7 @@
  */
 
 import { useContext } from 'react';
-import { EditorContext, type EditorContextValue } from '@/components/editor/EditorProviderUnified';
+import { EditorContext, type EditorContextValue } from '@/components/editor/EditorProviderCanonical';
 
 // ============================================================================
 // MAIN HOOK
@@ -48,11 +43,11 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValue 
   // Se obrigatório e não encontrado, lança erro
   if (!context) {
     throw new Error(
-      '🚨 useEditor must be used within EditorProviderUnified\n\n' +
+      '🚨 useEditor must be used within EditorProviderCanonical\n\n' +
       'Wrap your component with:\n' +
-      '<EditorProviderUnified>\n' +
+      '<EditorProviderCanonical>\n' +
       '  <YourComponent />\n' +
-      '</EditorProviderUnified>'
+      '</EditorProviderCanonical>'
     );
   }
 

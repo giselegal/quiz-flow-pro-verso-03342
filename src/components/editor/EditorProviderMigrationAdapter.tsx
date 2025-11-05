@@ -1,7 +1,10 @@
 /**
- * Migration Adapter - SPRINT 1 ATUALIZADO
+ * ⚠️ DEPRECATED: MIGRATION ADAPTER
  * 
- * Agora usa EditorProviderUnified consolidado
+ * @deprecated Este adapter foi consolidado em EditorProviderCanonical.
+ * Use: import { EditorProviderCanonical } from '@/components/editor/EditorProviderCanonical';
+ * 
+ * Este arquivo será removido em versão futura.
  */
 
 import React, { ReactNode } from 'react';
