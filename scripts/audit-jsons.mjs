@@ -264,7 +264,7 @@ async function main() {
     const argv = process.argv.slice(2);
     const isCI = argv.includes('--ci');
     const cfg = await loadConfig();
-    if (isCI) {
+        if (isCI) {
         cfg.failOnInvalid = true;
         cfg.failOnNonWhitelistedDuplicates = true;
     }
@@ -313,7 +313,8 @@ async function main() {
         console.error('Falha: arquivos JSON inválidos encontrados.');
         process.exit(1);
     }
-    if (isCI && summary.schemaErrors > 0) {
+        const failOnSchema = argv.includes('--schema-strict') || cfg.failOnSchemaErrors;
+        if (failOnSchema && summary.schemaErrors > 0) {
         console.error('Falha: erros de esquema encontrados.');
         process.exit(3);
     }
