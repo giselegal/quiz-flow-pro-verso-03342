@@ -1,6 +1,6 @@
 import type { BlockComponentProps } from '@/types/blocks';
 import { appLogger } from '@/utils/logger';
-import React from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
@@ -169,7 +169,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   }
 
   // Evitar autoavanço duplicado
-  const autoAdvanceScheduledRef = React.useRef(false);
+  const autoAdvanceScheduledRef = useRef(false);
   const { schedule, cancel } = useOptimizedScheduler();
 
   const {
@@ -293,11 +293,11 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   } catch { /* noop */ }
 
   // State for preview mode selections
-  const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
-  const previewAutoAdvanceRef = React.useRef(false);
+  const [previewSelections, setPreviewSelections] = useState<string[]>([]);
+  const previewAutoAdvanceRef = useRef(false);
 
   // 🎯 Estado para configuração da etapa atual
-  const [stepBehaviorConfig, setStepBehaviorConfig] = React.useState<{
+  const [stepBehaviorConfig, setStepBehaviorConfig] = useState<{
     requiresValidInput: boolean;
     requiresValidSelection: boolean;
     autoAdvance: boolean;
@@ -306,7 +306,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   } | null>(null);
 
   // 🔧 Debug logs para desenvolvimento
-  React.useEffect(() => {
+  useEffect(() => {
     if (import.meta?.env?.DEV) {
       appLogger.debug('🔧 OptionsGridBlock: Debug info', {
         isPreviewMode,
@@ -326,7 +326,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   });
 
   // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (Agora usando o hook)
-  const getStepBehavior = React.useCallback(async (stepNumber: number) => {
+  const getStepBehavior = useCallback(async (stepNumber: number) => {
     try {
       // Atalho seguro: Step 1 é introdução e não depende de grid de opções
       // Evita qualquer análise de template que possa falhar em ambientes minificados
@@ -467,7 +467,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   };
 
   // ⚡ Carregar configuração da etapa atual (com short-circuit para Step 1)
-  React.useEffect(() => {
+  useEffect(() => {
     // Normaliza o número da etapa a partir de possíveis fontes (window/editor)
     const rawStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
     const currentStep = Number(rawStep);
@@ -486,7 +486,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   }, [currentStepFromEditor, getStepBehavior]);
 
   // Persistência unificada das seleções (compatível com validação centralizada)
-  const persistSelections = React.useCallback((selections: string[]) => {
+  const persistSelections = useCallback((selections: string[]) => {
     try {
       const questionId = (block?.properties as any)?.questionId || block?.id;
       if (!questionId) return;
@@ -504,7 +504,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   }, [block?.id, (block?.properties as any)?.questionId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Initialize from session data in preview mode
     if (isPreviewMode && sessionDataObj) {
       const sessionKey = `step_selections_${block?.id}`;
@@ -1086,4 +1086,4 @@ const areEqual = (prevProps: OptionsGridBlockProps, nextProps: OptionsGridBlockP
   return true;
 };
 
-export default React.memo(OptionsGridBlock, areEqual);
+export default memo(OptionsGridBlock, areEqual);

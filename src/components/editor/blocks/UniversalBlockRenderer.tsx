@@ -1,4 +1,4 @@
-import React, { memo, useMemo, Suspense } from 'react';
+import React, { memo, useMemo, Suspense, useEffect, useRef, CSSProperties } from 'react';
 import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -26,7 +26,7 @@ export interface UniversalBlockRendererProps {
   onSelect?: (blockId: string) => void;
   onPropertyChange?: (key: any, value: any) => void;
   className?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   onClick?: () => void;
 }
 
@@ -99,16 +99,16 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   }
 
   // ✅ MONITORAMENTO DE PERFORMANCE
-  const renderStartTime = React.useRef<number>();
+  const renderStartTime = useRef<number>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     renderStartTime.current = performance.now();
   });
 
   // ✅ OTIMIZAÇÃO: Usar hook cacheado ao invés de lookup direto
   const BlockComponent = useBlockComponent(block.type);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!renderStartTime.current) return;
     const renderTime = performance.now() - renderStartTime.current;
 
@@ -159,7 +159,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   }
 
   // ✅ LOG DE RENDERIZAÇÃO (apenas em desenvolvimento)
-  React.useEffect(() => {
+  useEffect(() => {
     logger.render(`UniversalBlockRenderer[${block.type}]`, {
       blockId: safeBlockId,
       isSelected,
@@ -169,11 +169,11 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   }, [block.type, safeBlockId, BlockComponent, isSelected, isPreviewing, logger]);
 
   // ✅ OTIMIZAÇÃO: Memoizar handlers com dependências estáveis
-  const handleUpdate = React.useMemo(() =>
+  const handleUpdate = useMemo(() =>
     onUpdate ? (updates: any) => onUpdate(safeBlockId, updates) : undefined
     , [safeBlockId, onUpdate]);
 
-  const handleClick = React.useMemo(() => {
+  const handleClick = useMemo(() => {
     if (onSelect) {
       return () => onSelect(safeBlockId);
     } else if (onClick) {

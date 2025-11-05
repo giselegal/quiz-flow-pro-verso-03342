@@ -1,14 +1,14 @@
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { appLogger } from '@/utils/logger';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, CSSProperties, FC } from 'react';
 import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
 
 /**
  * FormContainerBlock
  * Renderiza um container de formulário e seus filhos definidos via JSON (properties.children).
  */
-const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
+const FormContainerBlock: FC<BlockComponentProps> = ({ block }) => {
   const { properties = {} } = block || {};
   const { elementId, className, marginTop, marginBottom } = (properties as any) || {};
   const { addEventListener } = useGlobalEventManager();
@@ -16,7 +16,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   // Fonte única de verdade para children: prioriza block.children e faz fallback para properties.children
   const childrenList = (block as any)?.children || (properties as any)?.children || [];
 
-  const containerStyle: React.CSSProperties = {
+  const containerStyle: CSSProperties = {
     marginTop,
     marginBottom,
     paddingTop: (properties as any)?.paddingTop,
@@ -31,7 +31,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   const combinedClassName = className ? `w-full ${className}` : 'w-full';
 
   // 🔒 Regra: habilitar botão somente após nome válido (configurável no painel)
-  const autoAdvanceRef = React.useRef(false);
+  const autoAdvanceRef = useRef(false);
   useEffect(() => {
     // ✅ Lista de IDs de botão possíveis no Step-01
     const possibleButtonIds = [
