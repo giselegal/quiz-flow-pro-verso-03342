@@ -2,7 +2,7 @@
   "name": "Quiz Teste - Descubra Seu Estilo",
   "description": "Quiz para descobrir seu estilo pessoal único",
   "userId": 1,
-  "settings": JSON.stringify({
+  "settings": {
     "tracking_enabled": true,
     "utm_tracking": true,
     "quiz_config": {
@@ -21,26 +21,17 @@
             {
               "id": "o1",
               "text": "Azul",
-              "points": {
-                "elegante": 2,
-                "casual": 1
-              }
+              "points": { "elegante": 2, "casual": 1 }
             },
             {
-              "id": "o2", 
+              "id": "o2",
               "text": "Vermelho",
-              "points": {
-                "elegante": 1,
-                "casual": 2
-              }
+              "points": { "elegante": 1, "casual": 2 }
             },
             {
               "id": "o3",
               "text": "Verde",
-              "points": {
-                "elegante": 1,
-                "casual": 2
-              }
+              "points": { "elegante": 1, "casual": 2 }
             }
           ]
         },
@@ -52,26 +43,17 @@
             {
               "id": "o4",
               "text": "Escritório moderno",
-              "points": {
-                "elegante": 2,
-                "casual": 0
-              }
+              "points": { "elegante": 2, "casual": 0 }
             },
             {
               "id": "o5",
               "text": "Café aconchegante",
-              "points": {
-                "elegante": 0,
-                "casual": 2
-              }
+              "points": { "elegante": 0, "casual": 2 }
             },
             {
               "id": "o6",
               "text": "Parque ao ar livre",
-              "points": {
-                "elegante": 1,
-                "casual": 1
-              }
+              "points": { "elegante": 1, "casual": 1 }
             }
           ]
         }

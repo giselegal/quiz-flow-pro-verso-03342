@@ -1,0 +1,26 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://example.com/schemas/template.schema.json",
+	"title": "Template Schema",
+	"type": "object",
+	"additionalProperties": true,
+	"properties": {
+		"id": { "type": "string" },
+		"name": { "type": "string" },
+		"description": { "type": "string" },
+		"templateVersion": { "type": "string" },
+		"metadata": { "type": "object", "additionalProperties": true },
+		"steps": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"properties": {
+					"id": { "type": "string" },
+					"blocks": { "type": "array", "items": { "type": "object" } }
+				}
+			}
+		},
+		"blocks": { "type": "array", "items": { "type": "object" } }
+	}
+}

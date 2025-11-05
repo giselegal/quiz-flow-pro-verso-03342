@@ -1,0 +1,23 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://example.com/schemas/stage.schema.json",
+	"title": "Stage Schema",
+	"type": "object",
+	"additionalProperties": true,
+	"properties": {
+		"id": { "type": "string" },
+		"title": { "type": "string" },
+		"steps": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"properties": {
+					"id": { "type": "string" },
+					"title": { "type": "string" },
+					"blocks": { "type": "array", "items": { "type": "object" } }
+				}
+			}
+		}
+	}
+}

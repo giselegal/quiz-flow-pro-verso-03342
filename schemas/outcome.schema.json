@@ -1,0 +1,21 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://example.com/schemas/outcome.schema.json",
+	"title": "Outcome Schema",
+	"type": "object",
+	"additionalProperties": true,
+	"properties": {
+		"id": { "type": "string" },
+		"title": { "type": "string" },
+		"description": { "type": "string" },
+		"scoreRange": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"min": { "type": "number" },
+				"max": { "type": "number" }
+			}
+		},
+		"actions": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+	}
+}

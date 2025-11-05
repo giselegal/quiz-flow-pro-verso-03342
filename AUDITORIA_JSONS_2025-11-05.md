@@ -3,8 +3,8 @@
 ## Resumo
 
 - Total de arquivos: 236
-- Válidos: 226
-- Inválidos: 10
+- Válidos: 235
+- Inválidos: 1
 
 ### Maiores arquivos
 - package-lock.json (785 KB)
@@ -19,15 +19,6 @@
 - src/core/schema/defaultSchemas.json (31 KB)
 
 ## Erros de sintaxe
-- exemplo-quiz-estilo.json: — Unexpected end of JSON input
-- schemas/component.schema.json: — Unexpected end of JSON input
-- schemas/logic.schema.json: — Unexpected end of JSON input
-- schemas/outcome.schema.json: — Unexpected end of JSON input
-- schemas/stage.schema.json: — Unexpected end of JSON input
-- schemas/template.schema.json: — Unexpected end of JSON input
-- scripts/quiz-images-organized.json: — Unexpected end of JSON input
-- scripts/testing/clean-scripts.json: — Unexpected end of JSON input
-- scripts/testing/funnel_teste.json: — Unexpected token 'J', ..."ettings": JSON.strin"... is not valid JSON
 - src/templates/step21-offer-template.json: (linha 153, coluna 5) posição 5417 — Expected ',' or ']' after array element in JSON at position 5417 (line 153 column 5)
 
 ## IDs duplicados entre arquivos
@@ -57,25 +48,25 @@
 - analytics: presente em 93 arquivos; tipos: object
 - validation: presente em 68 arquivos; tipos: object
 - id: presente em 64 arquivos; tipos: string
+- type: presente em 50 arquivos; tipos: string
 - theme: presente em 47 arquivos; tipos: object, string
-- type: presente em 45 arquivos; tipos: string
 - sections: presente em 45 arquivos; tipos: array
-- version: presente em 35 arquivos; tipos: string, number
-- description: presente em 35 arquivos; tipos: string
+- version: presente em 36 arquivos; tipos: string, number
+- description: presente em 36 arquivos; tipos: string
+- title: presente em 31 arquivos; tipos: string
 - behavior: presente em 27 arquivos; tipos: object
-- title: presente em 25 arquivos; tipos: string
+- properties: presente em 27 arquivos; tipos: object
 - navigation: presente em 23 arquivos; tipos: object
 - layout: presente em 23 arquivos; tipos: object
 - category: presente em 22 arquivos; tipos: string
 - label: presente em 22 arquivos; tipos: string
 - icon: presente em 22 arquivos; tipos: string
 - renderingStrategy: presente em 22 arquivos; tipos: string
-- properties: presente em 22 arquivos; tipos: object
 - design: presente em 22 arquivos; tipos: object
 - logic: presente em 22 arquivos; tipos: object
 - updatedAt: presente em 21 arquivos; tipos: string
-- steps: presente em 14 arquivos; tipos: array, object
-- name: presente em 14 arquivos; tipos: string
+- steps: presente em 15 arquivos; tipos: array, object
+- name: presente em 15 arquivos; tipos: string
 - meta: presente em 11 arquivos; tipos: object
 - scoring: presente em 10 arquivos; tipos: object
 - templateId: presente em 7 arquivos; tipos: string

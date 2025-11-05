@@ -1,0 +1,46 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://example.com/schemas/logic.schema.json",
+	"title": "Logic Schema",
+	"type": "object",
+	"additionalProperties": true,
+	"properties": {
+		"conditions": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"properties": {
+					"id": { "type": "string" },
+					"left": { "type": ["string", "number", "boolean", "object", "array", "null"] },
+					"operator": { "type": "string" },
+					"right": { "type": ["string", "number", "boolean", "object", "array", "null"] }
+				},
+				"required": ["operator"]
+			}
+		},
+		"actions": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"properties": {
+					"type": { "type": "string" },
+					"params": { "type": "object", "additionalProperties": true }
+				},
+				"required": ["type"]
+			}
+		},
+		"rules": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"properties": {
+					"when": { "type": "string" },
+					"then": { "type": "array", "items": { "type": "string" } }
+				}
+			}
+		}
+	}
+}
