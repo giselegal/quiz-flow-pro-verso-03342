@@ -257,6 +257,9 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'benefits': () => import('@/components/editor/blocks/BenefitsListBlock'),
   'benefits-list': () => import('@/components/editor/blocks/BenefitsListBlock'),
   'guarantee': () => import('@/components/editor/blocks/GuaranteeBlock'),
+  
+  // Accessibility
+  'accessibility-skip-link': () => import('@/components/editor/blocks/AccessibilitySkipLinkBlock'),
 };
 
 // ============================================================================
