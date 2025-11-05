@@ -208,18 +208,18 @@ export const QuizScoreHeader: React.FC<QuizScoreHeaderProps> = ({
     nextLevelAt
 }) => {
 
-// ============================================================================
-// EXEMPLO 3: PÁGINA DE RESULTADOS COMPLETA
-// ============================================================================
+    // ============================================================================
+    // EXEMPLO 3: PÁGINA DE RESULTADOS COMPLETA
+    // ============================================================================
 
-interface QuizResultsProps {
-  answers: Answer[];
-  totalSteps: number;
-}
+    interface QuizResultsProps {
+        answers: Answer[];
+        totalSteps: number;
+    }
 
-export const QuizResultsWithScore: React.FC<QuizResultsProps> = ({ answers, totalSteps }) => {
-  const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
-  const [analysis, setAnalysis] = useState<PerformanceAnalysis | null>(null);        useEffect(() => {
+    export const QuizResultsWithScore: React.FC<QuizResultsProps> = ({ answers, totalSteps }) => {
+        const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
+        const [analysis, setAnalysis] = useState<PerformanceAnalysis | null>(null); useEffect(() => {
             // Calcular score
             const result = calculateScore(answers, {
                 completionBonus: 50,
@@ -405,10 +405,28 @@ export const QuizResultsWithScore: React.FC<QuizResultsProps> = ({ answers, tota
     // EXEMPLO 4: INTEGRAÇÃO COMPLETA COM FLUXO DO QUIZ
     // ============================================================================
 
-    export const QuizFlowWithScoring = () => {
+    interface ScoreState {
+        totalScore: number;
+        level: {
+            current: number;
+            name: string;
+            nextLevelAt: number;
+        };
+        badges: string[];
+        breakdown: Array<{
+            questionId: string;
+            basePoints: number;
+            bonusPoints: number;
+            penalties: number;
+            totalPoints: number;
+            notes: string[];
+        }>;
+    }
+
+    export const QuizFlowWithScoring: React.FC = () => {
         const [currentStep, setCurrentStep] = useState(0);
         const [answers, setAnswers] = useState<Answer[]>([]);
-        const [scoreState, setScoreState] = useState({
+        const [scoreState, setScoreState] = useState<ScoreState>({
             totalScore: 0,
             level: { current: 1, name: 'Iniciante', nextLevelAt: 100 },
             badges: [],

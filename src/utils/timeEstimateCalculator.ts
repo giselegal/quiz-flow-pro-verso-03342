@@ -1,9 +1,48 @@
 /**
  * ⏱️ CALCULADORA DE TEMPO ESTIMADO
- * Calcula tempo de conclusão baseado em tipos de step e complexidade
+ * Estima o tempo necessário para completar o quiz baseado em:
+ * - Tipo de step (intro, question, offer, etc)
+ * - Complexidade do conteúdo
+ * - Número de opções
  */
 
-import type { Step } from '@/types/editor';
+interface QuizStep {
+  type: string;
+  blocks?: Array<{
+    type: string;
+    content?: {
+      text?: string;
+      options?: any[];
+    };
+    properties?: any;
+  }>;
+  validation?: {
+    rules?: {
+      selectedOptions?: {
+        minItems?: number;
+        maxItems?: number;
+      };
+    };
+  };
+}
+
+interface TimeEstimateConfig {
+  baseTimings: Record<string, number>;
+  optionPenalty: number;
+  complexityBonus: number;
+  textInputPenalty: number;
+}
+
+interface TimeEstimate {
+  totalMinutes: number;
+  totalSeconds: number;
+  breakdown: Array<{
+    stepId: string;
+    seconds: number;
+    factors: string[];
+  }>;
+  confidence: 'low' | 'medium' | 'high';
+}
 
 interface TimeEstimateConfig {
     baseTimings: Record<string, number>; // segundos por tipo
@@ -32,18 +71,9 @@ const DEFAULT_CONFIG: TimeEstimateConfig = {
 };
 
 export function calculateEstimatedTime(
-    steps: any[],
-    config: Partial<TimeEstimateConfig> = {}
-): {
-    totalMinutes: number;
-    totalSeconds: number;
-    breakdown: {
-        stepId: string;
-        seconds: number;
-        factors: string[];
-    }[];
-    confidence: 'low' | 'medium' | 'high';
-} {
+  steps: Record<string, QuizStep>,
+  config?: Partial<TimeEstimateConfig>
+): TimeEstimate {
     const finalConfig = { ...DEFAULT_CONFIG, ...config };
     const breakdown: any[] = [];
     let totalSeconds = 0;
