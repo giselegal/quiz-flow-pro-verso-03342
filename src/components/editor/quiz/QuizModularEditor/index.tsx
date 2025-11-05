@@ -67,7 +67,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const { enableAutoSave } = useFeatureFlags();
 
     // Mapear estado do SuperUnified para interface local
-    const currentStepKey = `step-${String(unified.state.editor.currentStep).padStart(2, '0')}`;
+    // ✅ PROTEÇÃO: Garantir que currentStep seja sempre válido (>= 1)
+    const safeCurrentStep = Math.max(1, unified.state.editor.currentStep || 1);
+    const currentStepKey = `step-${String(safeCurrentStep).padStart(2, '0')}`;
     const selectedBlockId = unified.state.editor.selectedBlockId;
     const isDirty = unified.state.editor.isDirty;
 
@@ -96,6 +98,15 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             title: `${String(s.order).padStart(2, '0')} - ${s.name}`
         }));
     }, [loadedTemplate, props.templateId]); // ✅ Reagir a mudanças de template
+
+    // ✅ NOVO: Garantir que currentStep seja inicializado em modo livre
+    useEffect(() => {
+        // Se não tem template e currentStep não está definido ou é inválido, inicializar com 1
+        if (!props.templateId && !loadedTemplate && (!unified.state.editor.currentStep || unified.state.editor.currentStep < 1)) {
+            appLogger.info('🎨 [QuizModularEditor] Modo livre - inicializando currentStep = 1');
+            unified.setCurrentStep(1);
+        }
+    }, [props.templateId, loadedTemplate, unified]);
 
     // ✅ FASE 1: Auto-save direto do SuperUnified
     useEffect(() => {
@@ -165,8 +176,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         loadTemplateOptimized();
     }, [props.templateId, unified]);
 
-    // ✅ FASE 1: Obter blocos do SuperUnified
-    const blocks: Block[] | null = unified.getStepBlocks(unified.state.editor.currentStep);
+    // ✅ FASE 1: Obter blocos do SuperUnified (usar safeCurrentStep)
+    const blocks: Block[] | null = unified.getStepBlocks(safeCurrentStep);
 
     // Handler de DnD consolidado
     const handleDragEnd = useCallback((event: any) => {
@@ -174,7 +185,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         if (!result) return;
 
         const { draggedItem, overId, activeId } = result as { draggedItem: any; overId: any; activeId: any };
-        const stepIndex = unified.state.editor.currentStep;
+        const stepIndex = safeCurrentStep;
         const list = blocks || [];
 
         // 1) Inserção de item da biblioteca no canvas
@@ -226,7 +237,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
     // ✅ FASE 1: Handler de reload usando SuperUnified
     const handleReloadStep = useCallback(async () => {
-        const stepIndex = unified.state.editor.currentStep;
+        const stepIndex = safeCurrentStep;
         if (!stepIndex) return;
 
         appLogger.info(`🔄 [QuizModularEditor] Recarregando step após erro: step-${stepIndex}`);
@@ -440,7 +451,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 <ComponentLibraryColumn
                                     currentStepKey={currentStepKey}
                                     onAddBlock={(type) => {
-                                        const stepIndex = unified.state.editor.currentStep;
+                                        const stepIndex = safeCurrentStep;
                                         unified.addBlock(stepIndex, {
                                             type,
                                             id: `block-${Date.now()}`,
@@ -474,11 +485,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                             blocks={blocks}
                                             selectedBlockId={selectedBlockId}
                                             onRemoveBlock={(id) => {
-                                                const stepIndex = unified.state.editor.currentStep;
+                                                const stepIndex = safeCurrentStep;
                                                 unified.removeBlock(stepIndex, id);
                                             }}
                                             onMoveBlock={(from, to) => {
-                                                const stepIndex = unified.state.editor.currentStep;
+                                                const stepIndex = safeCurrentStep;
                                                 const list = blocks || [];
                                                 const reordered = [...list];
                                                 const [moved] = reordered.splice(from, 1);
@@ -486,7 +497,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                                 unified.reorderBlocks(stepIndex, reordered);
                                             }}
                                             onUpdateBlock={(id, patch) => {
-                                                const stepIndex = unified.state.editor.currentStep;
+                                                const stepIndex = safeCurrentStep;
                                                 unified.updateBlock(stepIndex, id, patch);
                                             }}
                                             onBlockSelect={unified.setSelectedBlock}
@@ -519,7 +530,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 <PropertiesColumn
                                     selectedBlock={blocks?.find(b => b.id === selectedBlockId) ?? null}
                                     onBlockUpdate={(blockId: string, updates: Partial<Block>) => {
-                                        const stepIndex = unified.state.editor.currentStep;
+                                        const stepIndex = safeCurrentStep;
                                         unified.updateBlock(stepIndex, blockId, updates);
                                     }}
                                     onClearSelection={() => {
