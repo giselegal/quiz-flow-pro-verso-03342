@@ -94,6 +94,8 @@ async function auditFile(file) {
                 };
             }
         }
+                // Attach parsed data for optional schema validation step
+                result.__data = data;
     } catch (e) {
         // Try extract position from message: e.g., 'Unexpected token } in JSON at position 123'
         const msg = String(e && e.message || e);
@@ -110,6 +112,7 @@ function summarize(files) {
         totalFiles: files.length,
         valid: files.filter(f => !f.error).length,
         invalid: files.filter(f => !!f.error).length,
+        schemaErrors: files.filter(f => f.schemaError).length,
         largestFiles: [...files].sort((a, b) => b.sizeBytes - a.sizeBytes).slice(0, 10),
         keyFrequency: {},
         idOccurrences: new Map(),
@@ -157,6 +160,7 @@ function toMarkdown(files, summary, dupInfo) {
     lines.push(`- Total de arquivos: ${summary.totalFiles}`);
     lines.push(`- Válidos: ${summary.valid}`);
     lines.push(`- Inválidos: ${summary.invalid}`);
+        if (summary.schemaErrors) lines.push(`- Erros de esquema: ${summary.schemaErrors}`);
     lines.push('');
     if (summary.largestFiles.length) {
         lines.push('### Maiores arquivos');
@@ -172,6 +176,13 @@ function toMarkdown(files, summary, dupInfo) {
             const lc = f.error.line ? ` (linha ${f.error.line}, coluna ${f.error.column})` : '';
             lines.push(`- ${f.file}:${lc}${pos} — ${f.error.message}`);
         }
+            if (summary.schemaErrors) {
+                lines.push('## Erros de esquema (JSON Schema)');
+                for (const f of files.filter(f => f.schemaError)) {
+                    lines.push(`- ${f.file}: ${f.schemaError}`);
+                }
+                lines.push('');
+            }
         lines.push('');
     }
         if (summary.idOccurrences.size) {
@@ -265,6 +276,29 @@ async function main() {
     for (const f of files) {
         audits.push(await auditFile(f));
     }
+    // Optional: JSON Schema validation via AJV (if installed)
+    try {
+        const { default: Ajv } = await import('ajv');
+        const ajv = new Ajv({ allErrors: true, strict: false });
+        const schemasDir = path.join(ROOT, 'schemas');
+        const templateSchemaPath = path.join(schemasDir, 'template.schema.json');
+        let templateSchema = null;
+        try { templateSchema = JSON.parse(await fs.readFile(templateSchemaPath, 'utf8')); } catch {}
+        const validateTemplate = templateSchema ? ajv.compile(templateSchema) : null;
+        for (const a of audits) {
+            const p = a.file.replace(/\\/g, '/');
+            if (a.error || !a.__data) continue;
+            // Heurística simples: validar templates
+            if ((/\/templates\//.test(p) || /-template\.json$/i.test(p)) && validateTemplate) {
+                const ok = validateTemplate(a.__data);
+                if (!ok) {
+                    a.schemaError = validateTemplate.errors?.map(e => `${e.instancePath} ${e.message}`).join('; ');
+                }
+            }
+        }
+    } catch (e) {
+        // AJV não instalado ou erro ao compilar: ignorar silenciosamente
+    }
     const summary = summarize(audits);
     const { nonWhitelisted, whitelisted } = filterWhitelistedDuplicates(summary, cfg);
     const md = toMarkdown(audits, summary, { nonWhitelisted, whitelisted });
@@ -278,6 +312,10 @@ async function main() {
     if (cfg.failOnInvalid && summary.invalid > 0) {
         console.error('Falha: arquivos JSON inválidos encontrados.');
         process.exit(1);
+    }
+    if (isCI && summary.schemaErrors > 0) {
+        console.error('Falha: erros de esquema encontrados.');
+        process.exit(3);
     }
     if (cfg.failOnNonWhitelistedDuplicates && nonWhitelisted.length > 0) {
         console.error('Falha: IDs duplicados não permitidos encontrados.');

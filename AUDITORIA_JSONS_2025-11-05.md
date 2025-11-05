@@ -5,9 +5,10 @@
 - Total de arquivos: 237
 - Válidos: 237
 - Inválidos: 0
+- Erros de esquema: 7
 
 ### Maiores arquivos
-- package-lock.json (785 KB)
+- package-lock.json (788 KB)
 - TS_NOCHECK_AUDIT_REPORT.json (127 KB)
 - scripts/cloudinary-all-resources-image.json (120 KB)
 - public/templates/quiz21-complete.json (113 KB)
