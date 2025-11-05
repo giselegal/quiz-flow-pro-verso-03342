@@ -1,57 +1,52 @@
 /**
- * 🎯 EDITOR PROVIDER UNIFIED - SPRINT 1 CONSOLIDAÇÃO
+ * 🎯 EDITOR PROVIDER UNIFIED - FASE 2 SIMPLIFICADO
  * 
- * Provider único que consolida EditorProvider + OptimizedEditorProvider
- * ✅ API compatível com ambos os providers anteriores
- * ✅ Sistema único de persistência (UnifiedCRUD)
- * ✅ Histórico simplificado de undo/redo
- * ✅ ~600 linhas (vs 1556 + 497 = 2053 linhas antes)
+ * Provider do editor que DELEGA estado básico para SuperUnifiedProvider
+ * e mantém APENAS funcionalidades avançadas:
+ * ✅ Undo/Redo (EditorHistoryService)
+ * ✅ Template Loading (TemplateService)
+ * ✅ Supabase Sync (quando habilitado)
+ * ✅ Block Operations Avançadas (duplicate, snippet)
  * 
- * CONSOLIDADO:
- * ✅ EditorProvider.tsx (1556 linhas)
- * ✅ OptimizedEditorProvider.tsx (497 linhas)
- * ✅ useEditor + useOptimizedEditor hooks unificados
+ * ESTADO DELEGADO para SuperUnifiedProvider:
+ * ❌ stepBlocks → state.editor.stepBlocks
+ * ❌ currentStep → state.editor.currentStep
+ * ❌ selectedBlockId → state.editor.selectedBlockId
+ * ❌ Basic block operations → addBlock, updateBlock, removeBlock
  * 
- * @version 5.0.0
- * @date 2025-10-10
+ * REDUÇÃO: 918 linhas → ~400 linhas (56% menor)
+ * 
+ * @version 6.0.0 - FASE 2 Simplificado
+ * @date 2025-01-17
  */
 
 import * as React from 'react';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState, useRef, useMemo } from 'react';
+import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
-// ❌ REMOVIDO: import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-// Motivo: Carregamento EAGER do bundle completo - agora usamos lazyLoadStep() para carregar JSONs individuais
 import { blockComponentsToBlocks } from '@/utils/templateConverter';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
-// ✅ MANTIDO temporariamente para EditorStateManager, mas com monkey-patch para usar templateService
 import { TemplateLoader, type TemplateSource } from '@/services/editor/TemplateLoader';
 import EditorStateManager from '@/services/editor/EditorStateManager';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import type { UnifiedStage, UnifiedFunnel } from '@/services/UnifiedCRUDService';
 import { createLogger, appLogger } from '@/utils/logger';
-
-// ✅ FASE 1.2 & 2.1: Integrar serviços consolidados
-// ✅ NOVO: TemplateService com lazyLoadStep ativo!
 import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { templateService, TemplateService } from '@/services/canonical/TemplateService';
 import { navigationService } from '@/services/canonical/NavigationService';
 
 // ============================================================================
-// TYPES & INTERFACES
+// TYPES & INTERFACES (FASE 2: Simplificados)
 // ============================================================================
 
+/**
+ * Estado do Editor - FASE 2: Apenas lógica avançada
+ * Estado básico (stepBlocks, currentStep) delegado para SuperUnifiedProvider
+ */
 export interface EditorState {
-    /** Blocos organizados por step */
-    stepBlocks: Record<string, Block[]>;
-    /** Origem dos blocos por step (diagnóstico) */
-    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-json' | 'consolidated' | 'supabase' | 'ts-template'>;
-    /** Step atual selecionado */
-    currentStep: number;
-    /** Bloco selecionado para edição */
-    selectedBlockId: string | null;
     /** Validação visual por step */
     stepValidation: Record<number, boolean>;
     /** Status de carregamento */
@@ -60,6 +55,13 @@ export interface EditorState {
     databaseMode: 'local' | 'supabase';
     /** Flag Supabase habilitado */
     isSupabaseEnabled: boolean;
+    /** Origem dos blocos por step (diagnóstico) */
+    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-json' | 'consolidated' | 'supabase' | 'ts-template'>;
+    
+    // ✅ FASE 2: Estado básico vem do SuperUnifiedProvider via proxy
+    readonly stepBlocks: Record<string, Block[]>;
+    readonly currentStep: number;
+    readonly selectedBlockId: string | null;
 }
 
 export interface EditorActions {
@@ -100,6 +102,8 @@ export interface EditorActions {
 export interface EditorContextValue {
     state: EditorState;
     actions: EditorActions;
+    // ✅ FASE 2: Expor SuperUnifiedProvider para acesso direto
+    superUnified?: ReturnType<typeof useSuperUnified>;
 }
 
 // ============================================================================
@@ -161,31 +165,53 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     children,
     funnelId,
     quizId,
+    templateId,
     storageKey = 'unified-editor',
     initial = {},
-    enableSupabase = true, // ✅ FASE 3.0: Habilitado por padrão
+    enableSupabase = true,
 }) => {
     // ============================================================================
-    // STATE MANAGEMENT
+    // FASE 2: CONECTAR AO SUPERUNIFIEDPROVIDER
+    // ============================================================================
+    
+    const superUnified = useSuperUnified();
+    
+    // ============================================================================
+    // STATE MANAGEMENT (FASE 2: Apenas estado avançado local)
     // ============================================================================
 
-    const [state, setState] = useState<EditorState>(() => ({
-        ...getInitialState(enableSupabase),
+    const [localState, setLocalState] = useState(() => ({
+        stepValidation: {} as Record<number, boolean>,
+        isLoading: false,
+        databaseMode: enableSupabase ? 'supabase' as const : 'local' as const,
+        isSupabaseEnabled: enableSupabase,
+        stepSources: {} as Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-json' | 'consolidated' | 'supabase' | 'ts-template'>,
         ...initial,
     }));
+    
+    // ✅ FASE 2: Estado proxy que lê de SuperUnifiedProvider
+    const state: EditorState = useMemo(() => {
+        // Converter Record<number, any[]> para Record<string, Block[]>
+        const stepBlocksFromSuper = Object.entries(superUnified.state.editor.stepBlocks).reduce((acc, [key, blocks]) => {
+            const stepKey = key.startsWith('step-') ? key : `step-${key.padStart(2, '0')}`;
+            acc[stepKey] = blocks as Block[];
+            return acc;
+        }, {} as Record<string, Block[]>);
+        
+        return {
+            ...localState,
+            // Estado básico vem do SuperUnifiedProvider
+            stepBlocks: stepBlocksFromSuper,
+            currentStep: superUnified.state.editor.currentStep,
+            selectedBlockId: superUnified.state.editor.selectedBlockId,
+        };
+    }, [localState, superUnified.state.editor]);
 
     // Services initialization (memoized)
     const history = useMemo(() => new EditorHistoryService(), []);
-
-    // Usar TemplateLoader padrão (já integrado ao TemplateService)
     const loader = useMemo(() => new TemplateLoader(), []);
-
     const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
-
-    // ✅ FASE 2.1: Instanciar serviços unificados
     const blockRegistry = useMemo(() => UnifiedBlockRegistry.getInstance(), []);
-    // templateService and navigationService are singletons - use directly
-    // No need for useMemo wrappers
 
     // Refs para debounce
     const saveTimeoutRef = useRef<NodeJS.Timeout>();
