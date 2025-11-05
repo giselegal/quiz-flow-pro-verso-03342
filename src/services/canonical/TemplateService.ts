@@ -115,6 +115,9 @@ export class TemplateService extends BaseCanonicalService {
   // 🎯 FASE 4: Navegação Dinâmica
   private activeTemplateId: string | null = null;
   private activeTemplateSteps: number = 0; // ✅ Vazio até carregar template
+  
+  // 🎯 Custom Steps (modo "Começar do Zero")
+  private customSteps: Map<string, StepInfo> = new Map();
 
   // Mapeamento das 21 etapas do Quiz de Estilo
   private readonly STEP_MAPPING: Record<number, Omit<StepInfo, 'id' | 'order' | 'blocksCount' | 'hasTemplate'>> = {
@@ -741,9 +744,8 @@ export class TemplateService extends BaseCanonicalService {
       try {
         const steps: StepInfo[] = [];
         
-        // Usar número dinâmico de steps ao invés de hardcoded 21
+        // 1. Adicionar steps do template (se houver)
         const totalSteps = this.activeTemplateSteps;
-
         for (let i = 1; i <= totalSteps; i++) {
           const info = this.STEP_MAPPING[i] || {
             name: `Etapa ${i}`,
@@ -754,15 +756,51 @@ export class TemplateService extends BaseCanonicalService {
           steps.push({
             id: `step-${i.toString().padStart(2, '0')}`,
             order: i,
-            blocksCount: 0, // TODO: buscar do cache se disponível
+            blocksCount: 0,
             hasTemplate: true,
             ...info,
           });
         }
+        
+        // 2. Adicionar steps customizados (modo "Começar do Zero")
+        this.customSteps.forEach((stepInfo) => {
+          steps.push(stepInfo);
+        });
+
+        // 3. Ordenar por número de ordem
+        steps.sort((a, b) => a.order - b.order);
 
         return this.createResult(steps);
       } catch (error) {
         this.error('steps.list failed:', error);
+        return this.createError(error as Error);
+      }
+    },
+    
+    /**
+     * 🎯 Adicionar step customizado (modo "Começar do Zero")
+     */
+    add: async (stepInfo: StepInfo): Promise<ServiceResult<void>> => {
+      try {
+        // Adicionar ao Map de steps customizados
+        this.customSteps.set(stepInfo.id, stepInfo);
+        
+        // Criar blocos vazios iniciais para o step
+        const emptyBlocks: Block[] = [{
+          id: `${stepInfo.id}-block-initial`,
+          type: 'TextBlock' as any,
+          order: 0,
+          properties: { text: 'Clique para editar' },
+          content: {},
+        }];
+        
+        // Salvar no cache
+        cacheService.templates.set(stepInfo.id, emptyBlocks);
+        
+        this.log(`✅ Step customizado adicionado: ${stepInfo.id}`);
+        return this.createResult(undefined);
+      } catch (error) {
+        this.error('steps.add failed:', error);
         return this.createError(error as Error);
       }
     },
