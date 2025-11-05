@@ -138,8 +138,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             appLogger.info('🎨 [QuizModularEditor] Modo livre - inicializando currentStep = 1');
             unified.setCurrentStep(1);
         }
+        // ✅ FIX: Remover 'unified' das deps - setCurrentStep é estável via useCallback
         // Em modo livre não definimos template ativo nem criamos etapas automaticamente
-    }, [props.templateId, loadedTemplate, unified]);
+    }, [props.templateId, loadedTemplate]);
 
     // ✅ FASE 1: Auto-save direto do SuperUnified
     useEffect(() => {
@@ -552,16 +553,24 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 steps={navSteps}
                                 currentStepKey={currentStepKey}
                                 onSelectStep={(key: string) => {
+                                    // ✅ FIX: Prevenir mudanças desnecessárias de step
+                                    if (key === currentStepKey) return;
+
                                     // Mapear o ID selecionado para um índice (1-based) usando loadedTemplate quando disponível
                                     if (loadedTemplate?.steps?.length) {
                                         const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
-                                        unified.setCurrentStep(index >= 0 ? index + 1 : 1);
+                                        const newStep = index >= 0 ? index + 1 : 1;
+                                        if (newStep !== safeCurrentStep) {
+                                            unified.setCurrentStep(newStep);
+                                        }
                                         return;
                                     }
                                     // Fallback: tentar extrair número do padrão step-XX
                                     const match = key.match(/step-(\d{1,2})/i);
                                     const num = match ? parseInt(match[1], 10) : 1;
-                                    unified.setCurrentStep(num);
+                                    if (num !== safeCurrentStep) {
+                                        unified.setCurrentStep(num);
+                                    }
                                 }}
                             />
                         </div>
@@ -607,6 +616,10 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                 {isLoadingTemplate ? (
                                     <div className="h-full flex items-center justify-center">
                                         <div className="text-sm text-gray-500 animate-pulse">Carregando etapas do template…</div>
+                                    </div>
+                                ) : isLoadingStep ? (
+                                    <div className="h-full flex items-center justify-center">
+                                        <div className="text-sm text-gray-500 animate-pulse">Carregando etapa…</div>
                                     </div>
                                 ) : canvasMode === 'edit' ? (
                                     <StepErrorBoundary
