@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { sanitizeHtml } from '@/utils/sanitizeHtml';
+import { sanitizeHtml } from '../../src/utils/sanitizeHtml';
 import { z } from 'zod';
 
 // Definição de um bloco modular de conteúdo do quiz (ex: Headline Resultado, Oferta CTA, Urgência, Depoimento etc.)
