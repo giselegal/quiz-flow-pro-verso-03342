@@ -499,7 +499,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         try {
                             localStorage.setItem(PANEL_LAYOUT_KEY, JSON.stringify(sizes));
                             setPanelLayout(sizes);
-                        } catch {}
+                        } catch { }
                     }}
                 >
                     {/* Coluna 1: Navegação de Etapas */}
