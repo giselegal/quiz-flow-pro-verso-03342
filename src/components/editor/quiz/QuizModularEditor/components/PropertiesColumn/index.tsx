@@ -221,18 +221,17 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                     )}
                 </div>
 
-                <div className="flex-1 h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin">
-                    <div className="p-4 space-y-4">
-                        {/* Card de Informações do Bloco */}
-                        <Card className={cn(
-                            "p-3 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent",
-                            "animate-fade-in"
-                        )}>
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-xs font-medium text-muted-foreground uppercase">
-                                        Bloco Selecionado
-                                    </Label>
+                <div className="flex-1 h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin p-4 space-y-4">
+                    {/* Card de Informações do Bloco */}
+                    <Card className={cn(
+                        "p-3 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent",
+                        "animate-fade-in"
+                    )}>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <Label className="text-xs font-medium text-muted-foreground uppercase">
+                                    Bloco Selecionado
+                                </Label>
                                     <Badge variant="secondary" className="text-[10px]">
                                         {selectedBlock.type}
                                     </Badge>

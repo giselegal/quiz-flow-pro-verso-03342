@@ -201,70 +201,69 @@ export default function ComponentLibraryColumn({ currentStepKey, onAddBlock }: C
             )}
 
             {/* Lista de componentes por categoria (colapsável) */}
-            <div className="flex-1 overflow-y-auto scrollbar-thin">
-                <div className="p-4 space-y-3">
-                    {Object.keys(filteredCategories).length === 0 ? (
-                        <div className="text-center py-12 text-muted-foreground text-xs space-y-2">
-                            <Search className="h-8 w-8 mx-auto opacity-30" />
-                            <p>Nenhum componente encontrado</p>
-                            <p className="text-[10px]">Tente outro termo de busca</p>
-                        </div>
-                    ) : (
-                        Object.entries(filteredCategories).map(([category, items]) => {
-                            const isCollapsed = collapsedCategories.has(category);
-                            return (
-                                <Collapsible
-                                    key={category}
-                                    open={!isCollapsed}
-                                    onOpenChange={() => toggleCategory(category)}
-                                    className="space-y-2"
-                                >
-                                    <CollapsibleTrigger className="w-full group">
-                                        <div className="flex items-center justify-between hover:bg-accent/50 rounded px-2 py-1.5 transition-colors">
-                                            <div className="flex items-center gap-2">
-                                                {isCollapsed ? (
-                                                    <ChevronRight className="h-3 w-3 transition-transform" />
-                                                ) : (
-                                                    <ChevronDown className="h-3 w-3 transition-transform" />
-                                                )}
-                                                <span className="text-xs font-semibold uppercase text-muted-foreground">
-                                                    {category}
-                                                </span>
-                                            </div>
-                                            <Badge variant="secondary" className="text-[9px] h-4">
-                                                {items.length}
-                                            </Badge>
+            <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-3">
+                {Object.keys(filteredCategories).length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground text-xs space-y-2">
+                        <Search className="h-8 w-8 mx-auto opacity-30" />
+                        <p>Nenhum componente encontrado</p>
+                        <p className="text-[10px]">Tente outro termo de busca</p>
+                    </div>
+                ) : (
+                    Object.entries(filteredCategories).map(([category, items]) => {
+                        const isCollapsed = collapsedCategories.has(category);
+                        return (
+                            <Collapsible
+                                key={category}
+                                open={!isCollapsed}
+                                onOpenChange={() => toggleCategory(category)}
+                                className="space-y-2"
+                            >
+                                <CollapsibleTrigger className="w-full group">
+                                    <div className="flex items-center justify-between hover:bg-accent/50 rounded px-2 py-1.5 transition-colors">
+                                        <div className="flex items-center gap-2">
+                                            {isCollapsed ? (
+                                                <ChevronRight className="h-3 w-3 transition-transform" />
+                                            ) : (
+                                                <ChevronDown className="h-3 w-3 transition-transform" />
+                                            )}
+                                            <span className="text-xs font-semibold uppercase text-muted-foreground">
+                                                {category}
+                                            </span>
                                         </div>
-                                    </CollapsibleTrigger>
+                                        <Badge variant="secondary" className="text-[9px] h-4">
+                                            {items.length}
+                                        </Badge>
+                                    </div>
+                                </CollapsibleTrigger>
 
-                                    <CollapsibleContent className="animate-accordion-down">
-                                        <div className="grid grid-cols-2 gap-2 pt-1">
-                                            {items.map((item) => (
-                                                <DraggableLibraryItem
-                                                    key={item.id}
-                                                    type={item.id as Block['type']}
-                                                    label={item.name}
-                                                    description={item.description}
-                                                    disabled={!currentStepKey}
-                                                    isNew={newComponents.has(item.id)}
-                                                    isFavorite={favorites.has(item.id)}
-                                                />
-                                            ))}
-                                        </div>
-                                    </CollapsibleContent>
-                                </Collapsible>
-                            );
-                        })
-                    )}
-                </div>
-            </div>
-
-            {/* Footer com dica */}
-            <div className="p-3 border-t bg-muted/10">
-                <p className="text-[10px] text-muted-foreground text-center">
-                    💡 Arraste componentes para o canvas
-                </p>
+                                <CollapsibleContent className="animate-accordion-down">
+                                    <div className="grid grid-cols-2 gap-2 pt-1">
+                                        {items.map((item) => (
+                                            <DraggableLibraryItem
+                                                key={item.id}
+                                                type={item.id as Block['type']}
+                                                label={item.name}
+                                                description={item.description}
+                                                disabled={!currentStepKey}
+                                                isNew={newComponents.has(item.id)}
+                                                isFavorite={favorites.has(item.id)}
+                                            />
+                                        ))}
+                                    </div>
+                                </CollapsibleContent>
+                            </Collapsible>
+                        );
+                    })
+                )}
             </div>
         </div>
+
+            {/* Footer com dica */ }
+    <div className="p-3 border-t bg-muted/10">
+        <p className="text-[10px] text-muted-foreground text-center">
+            💡 Arraste componentes para o canvas
+        </p>
+    </div>
+        </div >
     );
 }
