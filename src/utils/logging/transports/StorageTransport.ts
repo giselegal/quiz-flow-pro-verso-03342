@@ -84,8 +84,8 @@ export class StorageTransport implements LogTransport {
             return (now - entryTime) < retention;
         });
 
-        // Filter by size
-        const maxSize = this.config.maxStorageSize || (50 * 1024 * 1024);
+        // Filter by size - FASE 1: Reduced to 500KB to prevent QuotaExceededError
+        const maxSize = this.config.maxStorageSize || (500 * 1024); // 500KB
         let currentSize = 0;
         const result: LogEntry[] = [];
 

@@ -84,6 +84,8 @@ export default defineConfig(({ mode }) => {
       // 🎯 FASE 3 TASK 7: Otimizações de bundle
       minify: 'esbuild', // esbuild é mais rápido que terser
       target: 'es2020',
+      // 🧹 FASE 1: Remove console.* in production builds
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
       // Ativar sourcemaps somente em staging para facilitar diagnóstico (React #418, vendor chunks)
       sourcemap: isStaging ? true : false,
       // 🎯 FASE 6: Chunk size limits otimizados

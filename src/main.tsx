@@ -93,6 +93,25 @@ try {
   );
 } catch { /* ignore preload errors in dev */ }
 
+// 🧹 FASE 1: Emergency localStorage cleanup on startup if quota exceeded
+if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+  try {
+    const testKey = '__storage_quota_test__';
+    localStorage.setItem(testKey, 'test');
+    localStorage.removeItem(testKey);
+  } catch (error) {
+    // QuotaExceededError detected - clear localStorage
+    console.warn('⚠️ FASE 1: LocalStorage quota exceeded, clearing...');
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      console.log('✅ FASE 1: Storage cleared successfully');
+    } catch (clearError) {
+      console.error('❌ FASE 1: Failed to clear storage:', clearError);
+    }
+  }
+}
+
 // 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento
 if (import.meta.env.DEV) {
   cleanupConsoleWarnings();

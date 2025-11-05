@@ -58,7 +58,7 @@ export const createLoggerConfig = (
         includeSessionData: true,
         batchSize: environment === 'production' ? 10 : 1,
         flushInterval: environment === 'production' ? 5000 : 1000,
-        maxStorageSize: 50 * 1024 * 1024, // 50MB
+        maxStorageSize: 500 * 1024, // FASE 1: 500KB (reduced from 50MB)
         storageRetention: 7 * 24 * 60 * 60 * 1000, // 7 days
         ...overrides,
     };
@@ -83,7 +83,7 @@ export const developmentConfig = createLoggerConfig({
     includeStackTrace: true,
     defaultFormatter: 'dev',
     allowedContexts: undefined, // Log all contexts
-    enableStorage: true,
+    enableStorage: false, // FASE 1: Disabled to prevent QuotaExceededError
     // Enable debug contexts in development
     blockedContexts: undefined,
 });
