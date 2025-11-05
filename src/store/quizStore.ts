@@ -25,7 +25,38 @@ export interface QuizAnswer {
   answerValue: string;
   answerText: string;
   scoreEarned?: number;
+  timeSpent?: number;           // 🆕 Tempo em segundos para speed bonus
+  isCorrect?: boolean;          // 🆕 Para cálculo de pontuação
   respondedAt: Date;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  earnedAt: Date;
+}
+
+export interface ScoreSystem {
+  currentScore: number;
+  maxScore: number;
+  percentage: number;
+  level: {
+    current: number;
+    name: string;
+    nextLevelAt: number;
+  };
+  badges: Badge[];
+  streak: number;                // Sequência de acertos
+  breakdown: Array<{
+    questionId: string;
+    basePoints: number;
+    bonusPoints: number;
+    penalties: number;
+    totalPoints: number;
+    notes: string[];
+  }>;
 }
 
 export interface QuizSession {
@@ -41,6 +72,7 @@ export interface QuizSession {
   answers: QuizAnswer[];
   score: number;
   maxScore: number;
+  scoreSystem?: ScoreSystem;     // 🆕 Sistema de pontuação avançado
   metadata: Record<string, any>;
 }
 

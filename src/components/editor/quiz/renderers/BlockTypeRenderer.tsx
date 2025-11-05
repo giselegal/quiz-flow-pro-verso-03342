@@ -14,6 +14,8 @@ import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
 import QuizQuestionHeaderBlock from './blocks/QuizQuestionHeaderBlock';
 // Navegação de perguntas (atômico)
 import QuestionNavigationBlock from '@/components/editor/blocks/atomic/QuestionNavigationBlock';
+// 🆕 Score/Pontuação (Sistema de Scoring v2.0)
+import QuizScoreDisplay from '@/components/quiz/blocks/QuizScoreDisplay';
 // Blocos de oferta (editor) — importados do registro aprimorado
 import CTAInlineBlock from '@/components/editor/blocks/CTAInlineBlock';
 import ValueAnchoringBlock from '@/components/editor/blocks/ValueAnchoringBlock';
@@ -87,36 +89,54 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
     const content = (() => {
         // ✅ FASE 4: Aliases expandidos para tipos legacy
         const normalizedType = String(block.type).toLowerCase().trim();
-        
+
         switch (normalizedType) {
             // ===== ALIASES DE TIPOS CRÍTICOS =====
             case 'hero-block':
             case 'hero':
                 return <IntroLogoHeaderBlock block={block} {...rest} />;
-            
+
             case 'welcome-form-block':
                 return <IntroFormBlock block={block} {...rest} onNameSubmit={(rest as any)?.contextData?.onNameSubmit} />;
-            
+
             case 'heading':
             case 'title':
                 return <TextInlineAtomic block={block} {...rest} />;
-            
+
             case 'question-block':
                 return <OptionsGridAtomic block={block} {...rest} contextData={rest.contextData} />;
-            
+
             case 'option-grid':
             case 'options grid':
                 return <OptionsGridAtomic block={block} {...rest} contextData={rest.contextData} />;
-            
+
+            // 🆕 SCORE/PONTUAÇÃO (Sistema de Scoring v2.0)
+            case 'quiz-score-display':
+            case 'quiz-score-header':
+            case 'score-display':
+                return (
+                    <SelectableBlock
+                        blockId={block.id}
+                        isSelected={!!rest.isSelected}
+                        isEditable={!!rest.isEditable}
+                        onSelect={() => rest.onSelect?.(block.id)}
+                        blockType="Pontuação do Quiz"
+                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                        isDraggable={true}
+                    >
+                        <QuizScoreDisplay block={block} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />
+                    </SelectableBlock>
+                );
+
             case 'transition.next':
                 return <TransitionHeroBlock block={block} {...rest} contextData={rest.contextData} />;
-            
+
             case 'result.headline':
                 return <ResultMainBlock block={block} {...rest} />;
-            
+
             case 'result.secondarylist':
                 return <ResultSecondaryStylesBlock block={block} {...rest} />;
-            
+
             case 'offer.core':
                 return (
                     <SelectableBlock
@@ -131,7 +151,7 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                         <CTAInlineBlock block={block as any} isSelected={rest.isSelected} />
                     </SelectableBlock>
                 );
-            
+
             case 'offer.urgency':
                 return (
                     <SelectableBlock
@@ -146,7 +166,7 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                         <UrgencyTimerInlineBlock block={block as any} isSelected={rest.isSelected} />
                     </SelectableBlock>
                 );
-            
+
             case 'offer.testimonial':
                 return (
                     <SelectableBlock
@@ -161,7 +181,7 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                         <TestimonialsBlock block={block as any} />
                     </SelectableBlock>
                 );
-            
+
             // ===== INTRO (Step 01) =====
             case 'intro-hero':
             case 'intro-logo-header':
