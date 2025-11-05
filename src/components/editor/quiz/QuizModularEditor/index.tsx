@@ -79,6 +79,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
     const [templateLoadError, setTemplateLoadError] = useState(false);
+    const [isLoadingStep, setIsLoadingStep] = useState(false); // ✅ Estado de loading de step
 
     // Persistência de layout dos painéis (larguras)
     const PANEL_LAYOUT_KEY = 'qm-editor:panel-layout-v1';
@@ -229,6 +230,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         let cancelled = false;
 
         async function ensureStepBlocks() {
+            // ✅ FIX: Indicar loading durante mudança de step
+            setIsLoadingStep(true);
             try {
                 // Usar getStep para compatibilidade direta com mocks de teste
                 const svc: any = templateService;
@@ -238,13 +241,21 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 }
             } catch (e) {
                 appLogger.error('[QuizModularEditor] lazyLoadStep falhou:', e);
+            } finally {
+                if (!cancelled) {
+                    setIsLoadingStep(false);
+                }
             }
         }
 
         ensureStepBlocks();
-        return () => { cancelled = true; };
-        // safeCurrentStep e loadedTemplate determinam o atual
-    }, [safeCurrentStep, loadedTemplate, unified]);
+        return () => {
+            cancelled = true;
+            setIsLoadingStep(false);
+        };
+        // ✅ FIX: Remover 'unified' das deps - setStepBlocks é estável via useCallback
+        // safeCurrentStep e loadedTemplate determinam o step atual
+    }, [safeCurrentStep, loadedTemplate]);
 
     // Handler de DnD consolidado
     const handleDragEnd = useCallback((event: any) => {
