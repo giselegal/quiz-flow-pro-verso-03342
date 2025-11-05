@@ -293,7 +293,7 @@ export const QuizScoreDisplay: React.FC<QuizScoreDisplayProps> = ({
                             Conquistas
                         </h4>
                         <div className="flex flex-wrap gap-2">
-                            {badges.map((badge, idx) => (
+                            {badges.map((badge: string, idx: number) => (
                                 <motion.div
                                     key={idx}
                                     initial={animate ? { scale: 0, opacity: 0 } : undefined}
@@ -313,7 +313,7 @@ export const QuizScoreDisplay: React.FC<QuizScoreDisplayProps> = ({
                     <div className="space-y-3">
                         <h4 className="text-sm font-semibold text-gray-700">Detalhamento</h4>
                         <div className="space-y-2 max-h-64 overflow-y-auto">
-                            {breakdown.map((item, idx) => (
+                            {breakdown.map((item: any, idx: number) => (
                                 <div
                                     key={idx}
                                     className="p-3 bg-gray-50 rounded-lg text-xs"
@@ -327,7 +327,34 @@ export const QuizScoreDisplay: React.FC<QuizScoreDisplayProps> = ({
                                         </span>
                                     </div>
                                     <div className="space-y-1 text-gray-600">
-                                        {item.notes.map((note, noteIdx) => (
+                                        {item.notes.map((note: string, noteIdx: number) => (
+                                            <div key={noteIdx}>• {note}</div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}                {/* Breakdown */}
+                {showBreakdown && breakdown && breakdown.length > 0 && (
+                    <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-gray-700">Detalhamento</h4>
+                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                            {breakdown.map((item: any, idx: number) => (
+                                <div
+                                    key={idx}
+                                    className="p-3 bg-gray-50 rounded-lg text-xs"
+                                >
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="font-medium text-gray-700">
+                                            {item.questionId.replace('step-', 'Questão ')}
+                                        </span>
+                                        <span className="font-bold text-purple-600">
+                                            {item.totalPoints} pts
+                                        </span>
+                                    </div>
+                                    <div className="space-y-1 text-gray-600">
+                                        {item.notes.map((note: string, noteIdx: number) => (
                                             <div key={noteIdx}>• {note}</div>
                                         ))}
                                     </div>
