@@ -172,7 +172,7 @@ export const QuizScoreDisplay: React.FC<QuizScoreDisplayProps> = ({
                         <div className="space-y-2">
                             <h3 className="text-sm font-semibold text-gray-700">Conquistas Desbloqueadas:</h3>
                             <div className="flex flex-wrap justify-center gap-2">
-                                {badges.map((badge, idx) => (
+                                {badges.map((badge: string, idx: number) => (
                                     <motion.div
                                         key={idx}
                                         initial={animate ? { scale: 0 } : undefined}
