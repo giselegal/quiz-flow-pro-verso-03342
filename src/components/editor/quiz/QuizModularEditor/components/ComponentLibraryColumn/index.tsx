@@ -1,7 +1,6 @@
 // 📚 COMPONENT LIBRARY COLUMN - FASE 8 UI Avançado
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -16,16 +15,16 @@ export type ComponentLibraryColumnProps = {
     onAddBlock: (type: Block['type']) => void;
 };
 
-function DraggableLibraryItem({ 
-    type, 
-    label, 
+function DraggableLibraryItem({
+    type,
+    label,
     description,
     disabled,
     isNew,
-    isFavorite 
-}: { 
-    type: Block['type']; 
-    label: string; 
+    isFavorite
+}: {
+    type: Block['type'];
+    label: string;
     description?: string;
     disabled?: boolean;
     isNew?: boolean;
@@ -75,14 +74,14 @@ function DraggableLibraryItem({
 
             {/* Label */}
             <div className="font-medium text-xs mb-1 pr-8">{label}</div>
-            
+
             {/* Description (on hover) */}
             {isHovered && description && (
                 <div className="text-[10px] text-muted-foreground line-clamp-2 animate-fade-in">
                     {description}
                 </div>
             )}
-            
+
             {/* Type badge */}
             <div className="text-[9px] text-muted-foreground font-mono mt-1">
                 {type}
@@ -202,7 +201,7 @@ export default function ComponentLibraryColumn({ currentStepKey, onAddBlock }: C
             )}
 
             {/* Lista de componentes por categoria (colapsável) */}
-            <ScrollArea className="flex-1">
+            <div className="flex-1 overflow-y-auto scrollbar-thin">
                 <div className="p-4 space-y-3">
                     {Object.keys(filteredCategories).length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground text-xs space-y-2">
@@ -258,7 +257,7 @@ export default function ComponentLibraryColumn({ currentStepKey, onAddBlock }: C
                         })
                     )}
                 </div>
-            </ScrollArea>
+            </div>
 
             {/* Footer com dica */}
             <div className="p-3 border-t bg-muted/10">
