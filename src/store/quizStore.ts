@@ -6,6 +6,7 @@
  * - Respostas do usuário
  * - Sessão e progresso
  * - Cálculo de resultados
+ * - 🆕 Sistema de pontuação com badges e níveis
  * 
  * Substitui: QuizContext, useQuizFlow, useOptimizedQuizFlow
  */
@@ -13,6 +14,8 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { calculateScore } from '@/utils/scoreCalculator';
+import type { Answer as ScoreAnswer, ScoringRules } from '@/utils/scoreCalculator';
 
 // ============================================================================
 // TYPES
@@ -112,6 +115,11 @@ interface QuizActions {
   saveAnswer: (answer: Omit<QuizAnswer, 'respondedAt'>) => void;
   updateAnswer: (stepId: string, updates: Partial<QuizAnswer>) => void;
   clearAnswer: (stepId: string) => void;
+  
+  // 🆕 Pontuação (Sistema de Scoring v2.0)
+  updateScore: (config?: any) => void;
+  calculateFinalScore: () => void;
+  addBadge: (badge: Omit<Badge, 'earnedAt'>) => void;
   
   // Validação
   validateCurrentStep: () => boolean;
@@ -267,6 +275,115 @@ export const useQuizStore = create<QuizStore>()(
           set((state) => {
             delete state.answers[stepId];
             state.canProceed = false;
+          }),
+
+        // 🆕 Pontuação (Sistema de Scoring v2.0)
+        updateScore: (config?: Partial<ScoringRules>) =>
+          set((state) => {
+            if (!state.session) return;
+
+            // Converter answers do store para formato do scoreCalculator
+            const answersArray: ScoreAnswer[] = Object.values(state.answers).map(ans => ({
+              questionId: ans.stepId,
+              selectedOptions: ans.answerValue ? [ans.answerValue] : [],
+              timeSpent: ans.timeSpent || 0,
+              isCorrect: ans.isCorrect,
+              confidence: 100,
+            }));
+
+            // Se não tem respostas ainda, inicializar scoreSystem vazio
+            if (answersArray.length === 0) {
+              state.session.scoreSystem = {
+                currentScore: 0,
+                maxScore: 0,
+                percentage: 0,
+                level: { current: 1, name: 'Iniciante', nextLevelAt: 100 },
+                badges: [],
+                streak: 0,
+                breakdown: [],
+              };
+              return;
+            }
+
+            try {
+              // Calcular com scoreCalculator.ts
+              const result = calculateScore(answersArray, config);
+              
+              // Converter badges de string[] para Badge[]
+              const badgesWithDetails: Badge[] = result.badges.map((badgeStr, idx) => ({
+                id: `badge-${idx}`,
+                name: badgeStr,
+                icon: badgeStr.split(' ')[0], // Emoji do início
+                description: badgeStr,
+                earnedAt: new Date(),
+              }));
+              
+              state.session.scoreSystem = {
+                currentScore: result.totalScore,
+                maxScore: result.maxPossibleScore,
+                percentage: result.percentage,
+                level: result.level,
+                badges: badgesWithDetails,
+                streak: answersArray.filter((a, idx) => 
+                  a.isCorrect !== false && 
+                  (idx === 0 || answersArray[idx - 1].isCorrect !== false)
+                ).length,
+                breakdown: result.breakdown,
+              };
+              
+              state.session.score = result.totalScore;
+              state.session.maxScore = result.maxPossibleScore;
+            } catch (error) {
+              console.error('Error calculating score:', error);
+              
+              // Fallback simplificado
+              const totalAnswered = answersArray.filter(a => a.selectedOptions.length > 0).length;
+              const currentScore = totalAnswered * 10;
+              const maxScore = answersArray.length * 10;
+              const percentage = Math.round((currentScore / maxScore) * 100);
+              
+              state.session.scoreSystem = {
+                currentScore,
+                maxScore,
+                percentage,
+                level: {
+                  current: Math.floor(currentScore / 100) + 1,
+                  name: currentScore > 200 ? 'Mestre' : currentScore > 100 ? 'Explorador' : 'Iniciante',
+                  nextLevelAt: (Math.floor(currentScore / 100) + 1) * 100,
+                },
+                badges: [],
+                streak: 0,
+                breakdown: [],
+              };
+              
+              state.session.score = currentScore;
+              state.session.maxScore = maxScore;
+            }
+          }),
+
+        calculateFinalScore: () =>
+          set((state) => {
+            // Chamar updateScore com config final
+            if (state.session) {
+              // Trigger final calculation
+              get().updateScore();
+            }
+          }),
+
+        addBadge: (badge) =>
+          set((state) => {
+            if (!state.session?.scoreSystem) return;
+            
+            const fullBadge: Badge = {
+              ...badge,
+              earnedAt: new Date(),
+            };
+            
+            // Adicionar badge se não existir
+            const exists = state.session.scoreSystem.badges.some(b => b.id === fullBadge.id);
+            if (!exists) {
+              state.session.scoreSystem.badges.push(fullBadge);
+            }
           }),
 
         // Validação

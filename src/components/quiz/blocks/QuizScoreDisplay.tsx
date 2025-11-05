@@ -9,14 +9,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Star, Zap, Award, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Block } from '@/types/block';
 
 export interface QuizScoreDisplayProps {
-    block?: Block;
-    isSelected?: boolean;
-    onClick?: () => void;
-
-    // Score data
+  block?: {
+    id: string;
+    type: string;
+    props?: Record<string, any>;
+  };
+  isSelected?: boolean;
+  onClick?: () => void;    // Score data
     score?: number;
     maxScore?: number;
     percentage?: number;
