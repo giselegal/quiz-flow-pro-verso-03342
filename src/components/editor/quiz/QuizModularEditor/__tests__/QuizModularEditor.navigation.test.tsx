@@ -91,7 +91,7 @@ describe('QuizModularEditor - Navegação', () => {
     });
 
     it('renderiza a coluna de navegação com steps do serviço canônico', async () => {
-        render(<QuizModularEditor />);
+        render(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
         // Aguarda o Suspense resolver e o step-navigator aparecer
         const navigator = await waitFor(() => screen.getByTestId('step-navigator'), {
@@ -105,26 +105,25 @@ describe('QuizModularEditor - Navegação', () => {
             expect(screen.getByText('01 - Introdução')).toBeInTheDocument();
             expect(screen.getByText('02 - Pergunta')).toBeInTheDocument();
         });
-    }); it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
-        render(<QuizModularEditor />);
+        it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
+            it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
+                render(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
-        // Garantir que os itens existam
-        await waitFor(() => expect(screen.getByText('02 - Pergunta')).toBeInTheDocument());
+                // Garantir que os itens existam
+                await waitFor(() => expect(screen.getByText('02 - Pergunta')).toBeInTheDocument());
 
-        fireEvent.click(screen.getByText('02 - Pergunta'));
+                fireEvent.click(screen.getByText('02 - Pergunta'));
 
-        // step-02 -> número 2
-        expect(setCurrentStep).toHaveBeenCalledWith(2);
-    });
+                // step-02 -> número 2
+                expect(setCurrentStep).toHaveBeenCalledWith(2);
+            }); it('ao clicar em Salvar, aciona saveFunnel uma vez', async () => {
+                render(<QuizModularEditor />);
 
-    it('ao clicar em Salvar, aciona saveFunnel uma vez', async () => {
-        render(<QuizModularEditor />);
+                const saveButton = await waitFor(() => screen.getByText('Salvar'));
+                fireEvent.click(saveButton);
 
-        const saveButton = await waitFor(() => screen.getByText('Salvar'));
-        fireEvent.click(saveButton);
-
-        await waitFor(() => {
-            expect(saveFunnel).toHaveBeenCalledTimes(1);
+                await waitFor(() => {
+                    expect(saveFunnel).toHaveBeenCalledTimes(1);
+                });
+            });
         });
-    });
-});
