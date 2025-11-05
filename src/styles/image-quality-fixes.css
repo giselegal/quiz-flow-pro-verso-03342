@@ -1,0 +1,147 @@
+/**
+ * 🖼️ OTIMIZAÇÃO DE QUALIDADE DE IMAGEM
+ * Garante máxima nitidez e qualidade visual para imagens no editor
+ */
+
+/* ============================================================================
+   REGRA #1: Desabilitar aceleração GPU que causa blur
+   ============================================================================ */
+[data-testid="canvas-block"] img,
+.intro-logo img,
+.intro-image img {
+    /* Remover todas as transformações 3D que causam blur */
+    transform: none !important;
+    will-change: auto !important;
+
+    /* Desabilitar backface-visibility que causa subpixel rendering */
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+
+    /* Garantir que imagem não seja composta em camada separada */
+    -webkit-transform: translateZ(0) none !important;
+}
+
+/* ============================================================================
+   REGRA #2: Configurar image-rendering para máxima qualidade
+   ============================================================================ */
+[data-testid="canvas-block"] img {
+    /* Ordem de fallback para máxima qualidade */
+    image-rendering: -webkit-optimize-contrast;
+    /* Webkit/Blink */
+    image-rendering: -moz-crisp-edges;
+    /* Firefox - apenas para ícones */
+    image-rendering: auto;
+    /* Padrão - alta qualidade */
+
+    /* Garantir que seja renderizado em tamanho natural */
+    image-rendering: high-quality;
+
+    /* Subpixel antialiasing para nitidez */
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+}
+
+/* ============================================================================
+   REGRA #3: Otimizações específicas para Cloudinary
+   ============================================================================ */
+img[src*="cloudinary"],
+img[src*="res.cloudinary.com"] {
+    /* Cloudinary já entrega imagens otimizadas, deixar browser decidir */
+    image-rendering: auto !important;
+
+    /* Garantir que transformações Cloudinary sejam respeitadas */
+    object-fit: contain;
+    object-position: center;
+
+    /* Remover qualquer filtro ou efeito */
+    filter: none !important;
+}
+
+/* ============================================================================
+   REGRA #4: Prevenir escalonamento incorreto
+   ============================================================================ */
+[data-testid="canvas-block"] img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+
+    /* Garantir que dimensões sejam respeitadas */
+    object-fit: contain;
+
+    /* Centralizar na área disponível */
+    margin: 0 auto;
+}
+
+/* ============================================================================
+   REGRA #5: Desabilitar otimizações agressivas em modo de edição
+   ============================================================================ */
+.canvas-column img,
+.editor-canvas img {
+    /* Priorizar qualidade sobre performance */
+    will-change: auto !important;
+    contain: none !important;
+    content-visibility: auto !important;
+}
+
+/* ============================================================================
+   REGRA #6: Fix para hover/estados que causam blur
+   ============================================================================ */
+[data-testid="canvas-block"]:hover img,
+[data-testid="canvas-block"].selected img,
+[data-testid="canvas-block"]:focus img {
+    /* Manter qualidade durante interações */
+    transform: none !important;
+    filter: none !important;
+
+    /* Apenas destacar com outline, sem transformações */
+    outline: none;
+}
+
+/* ============================================================================
+   REGRA #7: Otimização para logos (intro-logo)
+   ============================================================================ */
+.intro-logo-block img,
+[data-block-type="intro-logo"] img {
+    /* Logos geralmente são PNG com transparência */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto;
+
+    /* Garantir que transparência seja respeitada */
+    background: transparent;
+
+    /* Evitar compression artifacts */
+    image-rendering: pixelated none;
+}
+
+/* ============================================================================
+   REGRA #8: Container constraints
+   ============================================================================ */
+[data-testid="canvas-block"] {
+    /* Garantir que container não force escalonamento */
+    overflow: visible;
+
+    /* Não aplicar transforms no container */
+    transform: none !important;
+    will-change: auto !important;
+}
+
+/* ============================================================================
+   REGRA #9: Fix específico para flex containers
+   ============================================================================ */
+.flex.justify-center img {
+    /* Evitar que flex shrink force resize */
+    flex-shrink: 0;
+
+    /* Manter proporções originais */
+    aspect-ratio: auto;
+}
+
+/* ============================================================================
+   REGRA #10: Debugging - Remover em produção
+   ============================================================================ */
+/* 
+[data-testid="canvas-block"] img {
+    outline: 1px solid red !important;
+    outline-offset: 2px;
+}
+*/

@@ -32,6 +32,15 @@ img[src*="res.cloudinary.com"] {
     filter: none !important;
 }
 
+/* Otimizações específicas para intro-logo */
+[data-testid="canvas-block"] img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
 /**
  * PROBLEMA 2: Seleção de blocos imprecisa
  * Causa: Múltiplos listeners de click e pointer-events conflitantes

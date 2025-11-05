@@ -6,7 +6,7 @@
   "description": "Template completo v3.0 com todos os blocos e seções dos 21 steps",
   "metadata": {
     "createdAt": "2025-01-13",
-    "updatedAt": "2025-10-28T03:26:07.524Z",
+    "updatedAt": "2025-11-05T21:28:33.961Z",
     "author": "Sistema - Consolidador Automático",
     "version": "3.0.0",
     "consolidated": true,
@@ -15,7 +15,9 @@
     "failedConsolidation": 0,
     "normalized": true,
     "structure": "blocks",
-    "normalizedBy": "scripts/normalize-quiz21-complete.ts"
+    "normalizedBy": "scripts/normalize-quiz21-complete.ts",
+    "migrationApplied": "intro-logo-to-quiz-intro-header",
+    "migrationDate": "2025-11-05T21:28:33.961Z"
   },
   "steps": {
     "step-01": {
@@ -86,22 +88,36 @@
       },
       "blocks": [
         {
-          "id": "intro-logo",
-          "type": "intro-logo",
+          "id": "quiz-intro-header",
+          "type": "quiz-intro-header",
           "order": 0,
           "properties": {
-            "padding": 16,
-            "type": "fade",
-            "duration": 300,
+            "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+            "logoAlt": "Logo Gisele Galvão",
+            "logoWidth": 132,
+            "logoHeight": 55,
+            "showLogo": true,
+            "logoPosition": "center",
+            "showProgress": true,
+            "progressValue": 5,
+            "progressMax": 100,
+            "progressHeight": 4,
+            "progressStyle": "bar",
+            "progressColor": "#B89B7A",
+            "progressBackgroundColor": "#E5DDD5",
+            "showBackButton": false,
+            "backButtonStyle": "icon",
+            "backButtonPosition": "left",
+            "headerStyle": "default",
+            "backgroundColor": "#FAF9F7",
+            "showBorder": false,
+            "isSticky": false,
+            "enableAnimation": true,
+            "marginTop": 0,
+            "marginBottom": 16,
+            "contentMaxWidth": 640,
             "animationType": "fade",
             "animationDuration": 300
-          },
-          "content": {
-            "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
-            "alt": "Logo Gisele Galvão",
-            "width": 132,
-            "height": 55,
-            "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
           },
           "parentId": null
         },

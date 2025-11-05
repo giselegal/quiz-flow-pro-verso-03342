@@ -13,9 +13,11 @@
       "cta"
     ],
     "createdAt": "2025-01-13T00:00:00.000Z",
-    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-11-05T21:28:33.968Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0"
+    "version": "3.0.0",
+    "migratedFrom": "quiz21-complete.json",
+    "migrationApplied": "intro-logo-to-quiz-intro-header"
   },
   "theme": {
     "colors": {
@@ -35,8 +37,8 @@
   "validation": {},
   "behavior": {},
   "type": "offer",
-  "navigation": {},
   "redirectPath": "/quiz-estilo/step-21",
+  "navigation": {},
   "blocks": [
     {
       "id": "offer-hero-21",
@@ -78,6 +80,5 @@
       },
       "parentId": null
     }
-  ],
-  "title": "Oferta Final - 5 Passos Vista-se de Você"
+  ]
 }

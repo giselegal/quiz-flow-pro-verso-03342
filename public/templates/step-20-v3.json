@@ -13,7 +13,9 @@
       "conversion"
     ],
     "createdAt": "2025-01-26T00:00:00.000Z",
-    "updatedAt": "2025-01-26T00:00:00.000Z"
+    "updatedAt": "2025-11-05T21:28:33.967Z",
+    "migratedFrom": "quiz21-complete.json",
+    "migrationApplied": "intro-logo-to-quiz-intro-header"
   },
   "theme": {
     "colors": {
@@ -29,8 +31,6 @@
       "body": "Inter"
     }
   },
-  "validation": {},
-  "behavior": {},
   "type": "result",
   "blocks": [
     {
@@ -257,37 +257,5 @@
       },
       "parentId": null
     }
-  ],
-  "layout": {
-    "containerWidth": "full",
-    "maxWidth": "1280px",
-    "backgroundColor": "#fffaf7",
-    "responsive": true
-  },
-  "offer": {
-    "productName": "5 Passos – Vista-se de Você",
-    "mentor": "Gisele Galvão",
-    "mentorTitle": "Consultora de Imagem e Branding Pessoal",
-    "description": "Uma metodologia de autoconhecimento, imagem estratégica e transformação pessoal.",
-    "pricing": {
-      "originalPrice": 447,
-      "salePrice": 97,
-      "currency": "BRL",
-      "installments": {
-        "count": 8,
-        "value": 14.11
-      },
-      "discount": {
-        "percentage": 78,
-        "label": "78% de desconto"
-      }
-    },
-    "links": {
-      "checkout": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"
-    },
-    "guarantee": {
-      "days": 7,
-      "description": "Se não fizer sentido pra você, o reembolso é simples e sem perguntas."
-    }
-  }
+  ]
 }

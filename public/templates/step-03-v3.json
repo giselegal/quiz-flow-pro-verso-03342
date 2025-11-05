@@ -6,9 +6,11 @@
     "description": "Etapa step-03 do Quiz de Estilo (question) — Nome pessoal / entrada de texto",
     "category": "question",
     "createdAt": "2025-10-20T00:00:00Z",
-    "updatedAt": "2025-10-20T00:00:00Z",
+    "updatedAt": "2025-11-05T21:28:33.963Z",
     "author": "Quiz Flow Builder",
-    "version": "3.0.1"
+    "version": "3.0.1",
+    "migratedFrom": "quiz21-complete.json",
+    "migrationApplied": "intro-logo-to-quiz-intro-header"
   },
   "theme": {
     "colors": {
@@ -37,10 +39,10 @@
   },
   "behavior": {},
   "type": "question",
+  "redirectPath": "/quiz-estilo/step-03",
   "navigation": {
     "nextStep": "step-04"
   },
-  "redirectPath": "/quiz-estilo/step-03",
   "blocks": [
     {
       "id": "progress-bar-step-03",
@@ -162,6 +164,5 @@
       },
       "parentId": null
     }
-  ],
-  "title": "Q2 - Nome pessoal"
+  ]
 }

@@ -12,9 +12,11 @@
       "mid-quiz"
     ],
     "createdAt": "2025-01-13T00:00:00.000Z",
-    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-11-05T21:28:33.965Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0"
+    "version": "3.0.0",
+    "migratedFrom": "quiz21-complete.json",
+    "migrationApplied": "intro-logo-to-quiz-intro-header"
   },
   "theme": {
     "colors": {
@@ -31,12 +33,12 @@
   "validation": {},
   "behavior": {},
   "type": "transition",
+  "redirectPath": "/quiz-estilo/step-12",
   "navigation": {
     "autoAdvance": true,
     "autoAdvanceDelay": 3500,
     "nextStep": "step-13"
   },
-  "redirectPath": "/quiz-estilo/step-12",
   "blocks": [
     {
       "id": "transition-hero-12",
@@ -86,6 +88,5 @@
       },
       "parentId": null
     }
-  ],
-  "title": "Transição Mid-Quiz"
+  ]
 }

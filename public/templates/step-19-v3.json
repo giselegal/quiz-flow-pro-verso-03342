@@ -13,9 +13,11 @@
       "pre-result"
     ],
     "createdAt": "2025-01-13T00:00:00.000Z",
-    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-11-05T21:28:33.967Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0"
+    "version": "3.0.0",
+    "migratedFrom": "quiz21-complete.json",
+    "migrationApplied": "intro-logo-to-quiz-intro-header"
   },
   "theme": {
     "colors": {
@@ -32,10 +34,10 @@
   "validation": {},
   "behavior": {},
   "type": "transition-result",
+  "redirectPath": "/quiz-estilo/step-19",
   "navigation": {
     "nextStep": "step-20"
   },
-  "redirectPath": "/quiz-estilo/step-19",
   "blocks": [
     {
       "id": "transition-hero-19",
@@ -81,6 +83,5 @@
       },
       "parentId": null
     }
-  ],
-  "title": "Transição Pré-Resultado"
+  ]
 }
