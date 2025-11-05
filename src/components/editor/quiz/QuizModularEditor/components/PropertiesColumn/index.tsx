@@ -1,7 +1,6 @@
 // ⚙️ PROPERTIES COLUMN - FASE 8 UI Avançado
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -51,17 +50,17 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         if (selectedBlock) {
             // ✅ CORREÇÃO 3: MERGE AGRESSIVO - properties tem prioridade, fallback para content
             const merged: Record<string, any> = {};
-            
+
             // 1. Carregar tudo de content
             if (selectedBlock.content && typeof selectedBlock.content === 'object') {
                 Object.assign(merged, selectedBlock.content);
             }
-            
+
             // 2. Sobrescrever com properties (se houver)
             if (selectedBlock.properties && typeof selectedBlock.properties === 'object') {
                 Object.assign(merged, selectedBlock.properties);
             }
-            
+
             // 3. Garantir pelo menos valores default do schema
             const schema = schemaInterpreter.getBlockSchema(selectedBlock.type);
             if (schema) {
@@ -71,16 +70,16 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                     }
                 });
             }
-            
+
             console.log('✅ [PropertiesColumn] Merged properties:', {
                 type: selectedBlock.type,
                 mergedKeys: Object.keys(merged),
                 mergedValues: merged
             });
-            
+
             setEditedProperties(merged);
             setIsDirty(false);
-            
+
             // ✅ CORREÇÃO 2: Debug logging detalhado
             console.log('🔍 [PropertiesColumn] selectedBlock changed:', {
                 id: selectedBlock?.id,
@@ -97,18 +96,18 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
         prevSelectedIdRef.current = nextId;
     }, [selectedBlock]);
-    
+
     // Sprint 1 Dia 2: Event bus para forçar re-render
     React.useEffect(() => {
         if (!selectedBlock) return;
-        
+
         const unsubscribe = subscribeToBlockUpdates((data: any) => {
             if (data.blockId === selectedBlock.id) {
                 setEditedProperties(prev => ({ ...prev, ...(data.patch.properties || {}) }));
                 setIsDirty(false);
             }
         });
-        
+
         return unsubscribe;
     }, [selectedBlock?.id]);
 
@@ -137,7 +136,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 content: editedProperties, // ← Duplicar para manter sincronizado
             });
             setIsDirty(false);
-            
+
             console.log('💾 [PropertiesColumn] Saved:', {
                 blockId: selectedBlock.id,
                 properties: editedProperties
@@ -222,7 +221,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                     )}
                 </div>
 
-                <ScrollArea className="flex-1 h-[calc(100vh-12rem)]">
+                <div className="flex-1 h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin">
                     <div className="p-4 space-y-4">
                         {/* Card de Informações do Bloco */}
                         <Card className={cn(
@@ -295,7 +294,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                                     <div className="flex gap-2">
                                         <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                                         <p className="text-xs text-blue-700 dark:text-blue-300">
-                                            As propriedades são carregadas dinamicamente do schema JSON. 
+                                            As propriedades são carregadas dinamicamente do schema JSON.
                                             Alterações aparecem em tempo real no canvas.
                                         </p>
                                     </div>
@@ -352,7 +351,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                             </>
                         )}
                     </div>
-                </ScrollArea>
+                </div>
             </div>
         </TooltipProvider>
     );
