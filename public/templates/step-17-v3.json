@@ -8,11 +8,10 @@
     "questionNumber": 15,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-11-05T21:28:33.966Z",
+    "updatedAt": "2025-11-05T21:31:46.108Z",
     "author": "Quiz Flow Pro",
     "version": "3.0.0",
-    "migratedFrom": "quiz21-complete.json",
-    "migrationApplied": "intro-logo-to-quiz-intro-header"
+    "progressRecalculated": true
   },
   "theme": {
     "colors": {
