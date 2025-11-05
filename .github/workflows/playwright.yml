@@ -1,0 +1,110 @@
+name: Playwright E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Start backend server
+        run: |
+          npm run dev:backend &
+          sleep 10
+        env:
+          NODE_ENV: test
+          PORT: 3001
+
+      - name: Start frontend dev server
+        run: |
+          npm run dev &
+          sleep 15
+        env:
+          VITE_API_URL: http://localhost:3001
+
+      - name: Wait for servers to be ready
+        run: |
+          npx wait-on http://localhost:5173 http://localhost:3001/health --timeout 60000
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          CI: true
+          PLAYWRIGHT_BASE_URL: http://localhost:8080
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload test videos
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-videos
+          path: test-results/
+          retention-days: 7
+
+  test-v3-flow:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Start servers
+        run: |
+          npm run dev:backend &
+          sleep 10
+          npm run dev &
+          sleep 15
+
+      - name: Run V3 Complete Flow
+        run: npx playwright test --config=playwright.v3.config.ts
+        env:
+          CI: true
+
+      - name: Upload V3 test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v3-flow-report
+          path: test-results/v3-flow-html/
+          retention-days: 30

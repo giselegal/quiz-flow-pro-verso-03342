@@ -1,0 +1,42 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/services/canonical/TemplateService.ts",
+    "src/providers/SuperUnifiedProvider.tsx",
+    "src/components/editor/EditorProviderCanonical.tsx",
+    "src/services/canonical/DataService.ts",
+    "src/services/canonical/ConfigurationService.ts",
+    "src/hooks/useQuizState.ts",
+    "src/hooks/useQuizLogic.ts"
+  ],
+  "out": "docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "theme": "default",
+  "name": "Quiz Funnel System - API Documentation",
+  "includeVersion": true,
+  "readme": "none",
+  "categorizeByGroup": true,
+  "categoryOrder": [
+    "Services",
+    "Providers",
+    "Hooks",
+    "Components",
+    "*"
+  ],
+  "navigation": {
+    "includeCategories": true,
+    "includeFolders": true
+  },
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "notDocumented": false
+  },
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": false,
+  "searchInComments": true,
+  "cleanOutputDir": true,
+  "gitRevision": "main",
+  "commentStyle": "all"
+}
