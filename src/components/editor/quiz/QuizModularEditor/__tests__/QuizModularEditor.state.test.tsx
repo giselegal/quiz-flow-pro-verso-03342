@@ -45,7 +45,7 @@ vi.mock('@/services/canonical/TemplateService', () => ({
 const initialState = {
     editor: {
         currentStep: 1,
-        selectedBlockId: null,
+        selectedBlockId: null as string | null,
         isDirty: false,
     },
     ui: { isLoading: false },
