@@ -105,7 +105,7 @@ export interface ValidationResult {
 export class TemplateService extends BaseCanonicalService {
   private static instance: TemplateService;
   private registry: UnifiedTemplateRegistry;
-  
+
   // 🚀 FASE 3.1: Smart Lazy Loading
   private readonly CRITICAL_STEPS = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
   private readonly PRELOAD_NEIGHBORS = 1; // Preload ±1 step
@@ -115,7 +115,7 @@ export class TemplateService extends BaseCanonicalService {
   // 🎯 FASE 4: Navegação Dinâmica
   private activeTemplateId: string | null = null;
   private activeTemplateSteps: number = 0; // ✅ Vazio até carregar template
-  
+
   // 🎯 Custom Steps (modo "Começar do Zero")
   private customSteps: Map<string, StepInfo> = new Map();
 
@@ -211,29 +211,29 @@ export class TemplateService extends BaseCanonicalService {
    */
   async getStep(stepId: string, templateId?: string): Promise<ServiceResult<Block[]>> {
     const startTime = performance.now(); // ✅ FASE 3.3: Track timing
-    
+
     try {
       // ✅ FASE 1.2: Verificar cache PRIMEIRO
       const cacheKey = `template:${templateId || 'default'}:${stepId}`;
       const cachedResult = cacheService.templates.get<Block[]>(cacheKey);
-      
+
       if (cachedResult.success && cachedResult.data) {
         this.log(`⚡ Cache HIT: ${stepId}`);
         editorMetrics.trackCacheHit(cacheKey); // ✅ FASE 3.3
         editorMetrics.trackLoadTime(stepId, performance.now() - startTime, { source: 'cache' });
         return this.createResult(cachedResult.data);
       }
-      
+
       this.log(`⏳ Cache MISS: ${stepId} - Loading...`);
       editorMetrics.trackCacheMiss(cacheKey); // ✅ FASE 3.3
-      
+
       // FASE 2: Carregar do registry (lazy loading)
       const blocks = await this.registry.getStep(stepId, templateId);
 
       if (!blocks || blocks.length === 0) {
         return this.createError(new Error(`Step not found: ${stepId}`));
       }
-      
+
       // ✅ FASE 1: Normalizar formato usando adapter
       // O adapter converte automaticamente V2/V3 sections[] → V3.1 blocks[]
       const normalizedBlocks = blocks.map((block: any) => {
@@ -241,21 +241,21 @@ export class TemplateService extends BaseCanonicalService {
         if (block.type && block.content) {
           return block;
         }
-        
+
         // Caso contrário, tentar normalizar
         const normalized = templateFormatAdapter.normalize({ blocks: [block] });
         return normalized.blocks[0] || block;
       });
-      
+
       // ✅ FASE 1.2: Armazenar em cache (TTL: 10min)
       cacheService.templates.set(cacheKey, normalizedBlocks, 600000);
-      
+
       // ✅ FASE 3.3: Track metrics
-      editorMetrics.trackLoadTime(stepId, performance.now() - startTime, { 
-        source: 'registry', 
-        blocksCount: normalizedBlocks.length 
+      editorMetrics.trackLoadTime(stepId, performance.now() - startTime, {
+        source: 'registry',
+        blocksCount: normalizedBlocks.length
       });
-      
+
       this.log(`✅ Carregado e normalizado ${normalizedBlocks.length} blocos para ${stepId}`);
       return this.createResult(normalizedBlocks);
     } catch (error) {
@@ -433,15 +433,15 @@ export class TemplateService extends BaseCanonicalService {
     try {
       const masterPath = `/templates/funnels/${templateId}/master.v3.json`;
       const response = await fetch(masterPath);
-      
+
       if (!response.ok) {
         this.log(`⚠️ Master JSON não encontrado para ${templateId}, usando default 21`);
         return 21;
       }
-      
+
       const masterData = await response.json();
       const stepCount = masterData.steps?.length || 21;
-      
+
       this.log(`✅ Template ${templateId} possui ${stepCount} etapas`);
       return stepCount;
     } catch (error) {
@@ -480,14 +480,14 @@ export class TemplateService extends BaseCanonicalService {
     try {
       const stepData = await loadPromise;
       this.loadedSteps.add(stepId);
-      
+
       // 4. Preload vizinhos e críticos em background (não bloqueia)
       if (preloadNeighbors) {
-        this.preloadNeighborsAndCritical(stepId).catch(err => 
+        this.preloadNeighborsAndCritical(stepId).catch(err =>
           this.log(`⚠️ Preload failed for neighbors of ${stepId}:`, err)
         );
       }
-      
+
       return stepData;
     } finally {
       this.stepLoadPromises.delete(stepId);
@@ -548,12 +548,12 @@ export class TemplateService extends BaseCanonicalService {
 
     if (toPreload.size > 0) {
       this.log(`⚡ Preloading ${toPreload.size} steps in background:`, Array.from(toPreload));
-      
+
       // Preload em paralelo (não bloqueia)
-      const promises = Array.from(toPreload).map(id => 
+      const promises = Array.from(toPreload).map(id =>
         this.lazyLoadStep(id, false).catch(() => null) // Silently fail
       );
-      
+
       await Promise.allSettled(promises);
     }
   }
@@ -592,35 +592,36 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   /**
+   * 🚀 FASE 4: Preparar template com detecção dinâmica de steps, sem carregar blocos
+   * Detecta automaticamente quantos steps o template possui e define como ativo
+   */
+  async prepareTemplate(templateId: string, options?: { preloadAll?: boolean }): Promise<ServiceResult<void>> {
+    try {
+      const totalSteps = await this.detectTemplateSteps(templateId);
+      this.setActiveTemplate(templateId, totalSteps);
+
+      // Compat: se explicitamente solicitado, fazer preload completo (comportamento antigo)
+      if (options?.preloadAll) {
+        const stepIds = Array.from({ length: totalSteps }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+        this.log(`🚀 Preloading ${totalSteps} steps em paralelo para template ${templateId}...`);
+        await Promise.allSettled(stepIds.map(id => this.getStep(id, templateId)));
+        this.log(`✅ Preload completo: ${totalSteps} steps carregados`);
+      }
+
+      return this.createResult(undefined);
+    } catch (error) {
+      this.error('prepareTemplate failed:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
    * 🚀 FASE 4: Pré-carregar template completo com detecção dinâmica de steps
    * Detecta automaticamente quantos steps o template possui
    */
   async preloadTemplate(templateId: string): Promise<ServiceResult<void>> {
-    try {
-      // 1. Detectar quantos steps o template tem
-      const totalSteps = await this.detectTemplateSteps(templateId);
-      
-      // 2. Configurar como template ativo
-      this.setActiveTemplate(templateId, totalSteps);
-      
-      // 3. Gerar array de stepIds dinamicamente
-      const stepIds = Array.from({ length: totalSteps }, (_, i) => 
-        `step-${String(i + 1).padStart(2, '0')}`
-      );
-      
-      this.log(`🚀 Preloading ${totalSteps} steps em paralelo para template ${templateId}...`);
-      
-      // 4. Carregar steps em paralelo
-      await Promise.allSettled(
-        stepIds.map(id => this.getStep(id, templateId))
-      );
-      
-      this.log(`✅ Preload completo: ${totalSteps} steps carregados`);
-      return this.createResult(undefined);
-    } catch (error) {
-      this.error('preloadTemplate failed:', error);
-      return this.createError(error as Error);
-    }
+    // Mantém compatibilidade chamando prepareTemplate com preloadAll=true
+    return this.prepareTemplate(templateId, { preloadAll: true });
   }
 
   /**
@@ -743,7 +744,7 @@ export class TemplateService extends BaseCanonicalService {
     list: (): ServiceResult<StepInfo[]> => {
       try {
         const steps: StepInfo[] = [];
-        
+
         // 1. Adicionar steps do template (se houver)
         const totalSteps = this.activeTemplateSteps;
         for (let i = 1; i <= totalSteps; i++) {
@@ -761,7 +762,7 @@ export class TemplateService extends BaseCanonicalService {
             ...info,
           });
         }
-        
+
         // 2. Adicionar steps customizados (modo "Começar do Zero")
         this.customSteps.forEach((stepInfo) => {
           steps.push(stepInfo);
@@ -776,7 +777,7 @@ export class TemplateService extends BaseCanonicalService {
         return this.createError(error as Error);
       }
     },
-    
+
     /**
      * 🎯 Adicionar step customizado (modo "Começar do Zero")
      */
@@ -796,10 +797,10 @@ export class TemplateService extends BaseCanonicalService {
             return this.createError(new Error('ID conflita com etapas do template'));
           }
         }
-        
+
         // Adicionar ao Map de steps customizados
         this.customSteps.set(stepInfo.id, stepInfo);
-        
+
         // Criar blocos vazios iniciais para o step
         const emptyBlocks: Block[] = [{
           id: `${stepInfo.id}-block-initial`,
@@ -808,10 +809,10 @@ export class TemplateService extends BaseCanonicalService {
           properties: { text: 'Clique para editar' },
           content: {},
         }];
-        
+
         // Salvar no cache
         cacheService.templates.set(stepInfo.id, emptyBlocks);
-        
+
         this.log(`✅ Step customizado adicionado: ${stepInfo.id} (order: ${stepInfo.order})`);
         return this.createResult(undefined);
       } catch (error) {
@@ -862,7 +863,7 @@ export class TemplateService extends BaseCanonicalService {
       try {
         // Atualizar ordem dos steps customizados
         const updatedSteps = new Map<string, StepInfo>();
-        
+
         orderedStepIds.forEach((stepId, index) => {
           const existingStep = this.customSteps.get(stepId);
           if (existingStep) {
@@ -891,7 +892,7 @@ export class TemplateService extends BaseCanonicalService {
       try {
         // Buscar step original
         let originalStep: StepInfo | undefined;
-        
+
         // Verificar se é step customizado
         if (this.customSteps.has(stepId)) {
           originalStep = this.customSteps.get(stepId);
@@ -914,7 +915,7 @@ export class TemplateService extends BaseCanonicalService {
         // Criar novo step com nome "Cópia de..."
         const newStepNumber = this.customSteps.size + this.activeTemplateSteps + 1;
         const newStepId = `step-custom-${Date.now()}`;
-        
+
         const newStep: StepInfo = {
           ...originalStep,
           id: newStepId,
@@ -1075,16 +1076,16 @@ export class TemplateService extends BaseCanonicalService {
    */
   async getAllSteps(): Promise<Record<string, any>> {
     const allSteps: Record<string, any> = {};
-    
+
     for (let i = 1; i <= 21; i++) {
       const stepId = `step-${i.toString().padStart(2, '0')}`;
       const stepInfo = this.STEP_MAPPING[i];
-      
+
       if (stepInfo) {
         // Carregar blocks via registry
         const result = await this.getStep(stepId);
         const blocks = result.success ? result.data : [];
-        
+
         allSteps[stepId] = {
           id: stepId,
           type: stepInfo.type,
@@ -1096,7 +1097,7 @@ export class TemplateService extends BaseCanonicalService {
         };
       }
     }
-    
+
     return allSteps;
   }
 
@@ -1111,7 +1112,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   getAllStepsSync(): Record<string, any> {
     console.warn('⚠️ getAllStepsSync() retorna metadata sem blocks. Use getAllSteps() async para obter blocos.');
-    
+
     const allSteps: Record<string, any> = {};
 
     for (let i = 1; i <= 21; i++) {

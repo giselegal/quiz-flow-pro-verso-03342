@@ -83,21 +83,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
     const [templateLoadError, setTemplateLoadError] = useState(false);
 
-    // Polyfill mínimo para window.matchMedia em ambientes de teste (happy-dom/jsdom)
-    useEffect(() => {
-        if (typeof window !== 'undefined' && !(window as any).matchMedia) {
-            (window as any).matchMedia = (query: string) => ({
-                matches: false,
-                media: query,
-                onchange: null,
-                addListener: () => { },
-                removeListener: () => { },
-                addEventListener: () => { },
-                removeEventListener: () => { },
-                dispatchEvent: () => false,
-            });
-        }
-    }, []);
+    // matchMedia polyfill global é carregado em '@/test/polyfills/matchMedia'
 
     // Persistência de layout dos painéis (larguras)
     const PANEL_LAYOUT_KEY = 'qm-editor:panel-layout-v1';
@@ -199,7 +185,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
 
-    // ✅ FASE 2: Batch loading otimizado com preload inteligente
+    // ✅ FASE 2: Preparar template sem carregar todos os steps (lazy)
     useEffect(() => {
         if (!props.templateId) {
             appLogger.info('🎨 [QuizModularEditor] Modo canvas vazio - sem template');
@@ -216,15 +202,16 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             setTemplateLoadError(false);
             try {
                 const tid = props.templateId!;
-                appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
-                // Tentar preload, mas prosseguir mesmo em caso de falha
+                appLogger.info(`🔍 [QuizModularEditor] Preparando template (lazy): ${tid}`);
+                // Detecta número de steps e define template ativo, sem pré-carregar todos os blocos
                 try {
-                    await templateService.preloadTemplate(tid);
+                    await templateService.prepareTemplate(tid);
                 } catch (e) {
-                    appLogger.warn('[QuizModularEditor] preloadTemplate falhou, prosseguindo com fallback');
+                    appLogger.warn('[QuizModularEditor] prepareTemplate falhou, usando fallback de 21 etapas');
+                    try { templateService.setActiveTemplate(tid, 21); } catch { }
                 }
 
-                // Tentar obter steps do service; fallback para 21 etapas padrão
+                // Obter steps do service; fallback para 21 etapas padrão
                 let templateStepsResult = templateService.steps.list();
                 let stepsMeta: any[] = [];
                 if (templateStepsResult.success && templateStepsResult.data?.length) {
@@ -237,25 +224,14 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     }));
                 }
 
-                const stepIds = stepsMeta.map((s: any) => s.id);
-
-                // ✅ FASE 1: Batch loading usando SuperUnified
-                await Promise.all(
-                    stepIds.map(async (stepId: string, idx: number) => {
-                        const result = await templateService.getStep(stepId, tid);
-                        if (result.success && result.data) {
-                            unified.setStepBlocks(idx + 1, result.data);
-                        }
-                    })
-                );
-
-                // ✅ Atualizar state com número correto de steps para forçar recalcular navSteps
+                // ✅ Atualizar state com metadados (sem blocos) para forçar recalcular navSteps
                 setLoadedTemplate({
                     name: `Template: ${tid}`,
                     steps: stepsMeta
                 });
-
-                appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
+                // Garantir currentStep inicial
+                unified.setCurrentStep(1);
+                appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${stepsMeta.length} steps`);
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
                 setTemplateLoadError(true);
@@ -269,6 +245,28 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
     // ✅ FASE 1: Obter blocos do SuperUnified (usar safeCurrentStep)
     const blocks: Block[] | null = unified.getStepBlocks(safeCurrentStep);
+
+    // 🔄 Lazy load do step visível + pré-carga de vizinhos/criticos via TemplateService
+    useEffect(() => {
+        const stepIndex = safeCurrentStep;
+        const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
+        let cancelled = false;
+
+        async function ensureStepBlocks() {
+            try {
+                const result = await templateService.lazyLoadStep(stepId, true);
+                if (!cancelled && result?.blocks) {
+                    unified.setStepBlocks(stepIndex, result.blocks);
+                }
+            } catch (e) {
+                appLogger.error('[QuizModularEditor] lazyLoadStep falhou:', e);
+            }
+        }
+
+        ensureStepBlocks();
+        return () => { cancelled = true; };
+        // safeCurrentStep e loadedTemplate determinam o atual
+    }, [safeCurrentStep, loadedTemplate, unified]);
 
     // Handler de DnD consolidado
     const handleDragEnd = useCallback((event: any) => {
@@ -387,33 +385,20 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         setTemplateLoadError(false);
         try {
             const tid = props.templateId ?? 'quiz21StepsComplete';
-            appLogger.info(`🔍 [QuizModularEditor] Carregando template via botão: ${tid}`);
-            await templateService.preloadTemplate(tid);
+            appLogger.info(`🔍 [QuizModularEditor] Preparando template via botão (lazy): ${tid}`);
+            await templateService.prepareTemplate(tid);
 
-            // ✅ Buscar steps dinamicamente do template
             const templateStepsResult = templateService.steps.list();
             if (!templateStepsResult.success) {
                 throw new Error('Falha ao carregar lista de steps do template');
             }
-            const stepIds = templateStepsResult.data.map((s: any) => s.id);
 
-            appLogger.info(`📋 [QuizModularEditor] Carregando ${stepIds.length} steps do template`);
-
-            await Promise.all(
-                stepIds.map(async (stepId: string, idx: number) => {
-                    const result = await templateService.getStep(stepId, tid);
-                    if (result.success && result.data) {
-                        unified.setStepBlocks(idx + 1, result.data);
-                    }
-                })
-            );
-
-            // ✅ Atualizar state com número correto de steps
             setLoadedTemplate({
                 name: `Template: ${tid}`,
                 steps: templateStepsResult.data
             });
-            appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
+            unified.setCurrentStep(1);
+            appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${templateStepsResult.data.length} steps`);
 
             // Atualizar URL
             const url = new URL(window.location.href);
