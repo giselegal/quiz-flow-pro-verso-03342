@@ -278,28 +278,42 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // HISTORY MANAGEMENT & STATE MANAGER
     // ============================================================================
 
-    // State manager (initialized after setState is available)
+    // State manager (initialized after setLocalState is available)
     const stateManager = useMemo(() => {
         const updateStateCallback = (updater: (prev: EditorState) => EditorState) => {
-            setState(prevState => {
-                const newState = updater(prevState);
-                setTimeout(() => {
-                    history.push(newState);
-                    setHistoryState({
-                        canUndo: history.canUndo,
-                        canRedo: history.canRedo,
-                    });
-                }, 0);
-                return newState;
+            const currentState: EditorState = state;
+            const newState = updater(currentState);
+            
+            // Atualizar apenas campos locais no localState
+            setLocalState({
+                stepValidation: newState.stepValidation,
+                isLoading: newState.isLoading,
+                databaseMode: newState.databaseMode,
+                isSupabaseEnabled: newState.isSupabaseEnabled,
+                stepSources: newState.stepSources || {},
             });
+            
+            setTimeout(() => {
+                history.push(newState);
+                setHistoryState({
+                    canUndo: history.canUndo,
+                    canRedo: history.canRedo,
+                });
+            }, 0);
         };
         return new EditorStateManager(updateStateCallback, history, loader);
-    }, [history, loader]);
+    }, [history, loader, state]);
 
     const undo = useCallback(() => {
         const previousState = stateManager.undo();
         if (previousState) {
-            setState(previousState);
+            setLocalState({
+                stepValidation: previousState.stepValidation,
+                isLoading: previousState.isLoading,
+                databaseMode: previousState.databaseMode,
+                isSupabaseEnabled: previousState.isSupabaseEnabled,
+                stepSources: previousState.stepSources || {},
+            });
             setHistoryState({
                 canUndo: stateManager.canUndo,
                 canRedo: stateManager.canRedo,
@@ -310,7 +324,13 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const redo = useCallback(() => {
         const nextState = stateManager.redo();
         if (nextState) {
-            setState(nextState);
+            setLocalState({
+                stepValidation: nextState.stepValidation,
+                isLoading: nextState.isLoading,
+                databaseMode: nextState.databaseMode,
+                isSupabaseEnabled: nextState.isSupabaseEnabled,
+                stepSources: nextState.stepSources || {},
+            });
             setHistoryState({
                 canUndo: stateManager.canUndo,
                 canRedo: stateManager.canRedo,
@@ -376,15 +396,15 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // ============================================================================
 
     const setCurrentStep = useCallback((step: number) => {
-        setState(prev => ({ ...prev, currentStep: step }));
-    }, []);
+        superUnified?.setCurrentStep?.(step);
+    }, [superUnified]);
 
     const setSelectedBlockId = useCallback((blockId: string | null) => {
-        setState(prev => ({ ...prev, selectedBlockId: blockId }));
-    }, []);
+        superUnified?.setSelectedBlock?.(blockId);
+    }, [superUnified]);
 
     const setStepValid = useCallback((step: number, isValid: boolean) => {
-        setState(prev => ({
+        setLocalState(prev => ({
             ...prev,
             stepValidation: { ...prev.stepValidation, [step]: isValid },
         }));
@@ -418,7 +438,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     // fallback ao default
                 }
 
-                setState(prev => ({
+                setLocalState(prev => ({
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
@@ -451,14 +471,14 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         unifiedCache.delete(masterBlocksKey(normalizedKey));
 
         // Remove do estado local para forçar ensureStepLoaded a buscar novamente
-        setState(prev => {
-            const { [normalizedKey]: _removed, ...restBlocks } = prev.stepBlocks;
-            const { [normalizedKey]: _removedSrc, ...restSources } = (prev.stepSources || {}) as Record<string, any>;
+        setLocalState(prev => {
+            const { [normalizedKey]: _removed, ...restBlocks } = prev.stepBlocks || {};
+            const { [normalizedKey]: _removedSrc, ...restSources } = prev.stepSources || {};
             return {
                 ...prev,
                 stepBlocks: restBlocks,
-                stepSources: restSources as any,
-            } as EditorState;
+                stepSources: restSources,
+            };
         });
 
         // Carregar novamente
@@ -476,7 +496,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }
 
         // Zera estado local
-        setState(prev => ({
+        setLocalState(prev => ({
             ...prev,
             stepBlocks: {},
             stepSources: {},
@@ -533,7 +553,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 } else if (!hasLocal && Array.isArray(cached) && cached.length > 0) {
                     // ⚠️ REMOVIDO: Não forçar source como 'master-hydrated' aqui
                     // A fonte correta será determinada pelo TemplateLoader
-                    setState(prev => ({
+                    setLocalState(prev => ({
                         ...prev,
                         stepBlocks: { ...prev.stepBlocks, [normalizedNext]: cached as Block[] },
                         // stepSources será atualizado pelo ensureStepLoaded quando necessário
@@ -568,7 +588,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             }
         }
 
-        setState({
+        setLocalState({
             ...getInitialState(enableSupabase),
             stepBlocks: newStepBlocks,
             stepSources: newStepSources,
@@ -616,7 +636,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         });
 
         try {
-            setState(prev => ({ ...prev, isLoading: true }));
+            setLocalState(prev => ({ ...prev, isLoading: true }));
             lastSaveRef.current = now;
 
             // 1) Converter stepBlocks -> UnifiedFunnel.stages (shape esperado pelo UnifiedCRUDService)
@@ -736,7 +756,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             });
             throw error;
         } finally {
-            setState(prev => ({ ...prev, isLoading: false }));
+            setLocalState(prev => ({ ...prev, isLoading: false }));
         }
     }, [enableSupabase, unifiedCrud, funnelId, state.stepBlocks, state.currentStep, state.selectedBlockId]);
 
@@ -746,14 +766,14 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }
 
         try {
-            setState(prev => ({ ...prev, isLoading: true }));
+            setLocalState(prev => ({ ...prev, isLoading: false }));
             appLogger.debug('📡 Carregando componentes do Supabase...');
 
             // Implementar carregamento do Supabase via UnifiedCRUD
             if (unifiedCrud?.loadFunnel) {
                 const funnelData = await unifiedCrud.loadFunnel(funnelId);
                 if (funnelData?.steps) {
-                    setState(prev => ({
+                    setLocalState(prev => ({
                         ...prev,
                         stepBlocks: funnelData.steps,
                         isLoading: false,
@@ -763,7 +783,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             }
         } catch (error) {
             appLogger.error('❌ Erro ao carregar do Supabase:', error);
-            setState(prev => ({ ...prev, isLoading: false }));
+            setLocalState(prev => ({ ...prev, isLoading: false }));
         }
     }, [enableSupabase, funnelId, unifiedCrud]);
 
@@ -807,7 +827,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         try {
             const data = JSON.parse(json);
             if (data.state) {
-                setState({
+                setLocalState({
                     ...getInitialState(enableSupabase),
                     ...data.state,
                 });
