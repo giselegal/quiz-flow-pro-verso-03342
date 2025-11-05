@@ -1,233 +1,169 @@
 {
-  "templateVersion": "2.0",
+  "templateVersion": "3.0",
   "metadata": {
-    "id": "quiz-step-17",
-    "name": "Qual desses resultados você mais gostaria de alcançar?",
-    "description": "Questão estratégica 6 - Objetivo desejado",
-    "category": "quiz-strategic",
-    "type": "strategic-question",
-    "tags": [
-      "quiz",
-      "style",
-      "strategic-question",
-      "gisele-galvao"
-    ],
-    "createdAt": "2025-08-10T03:45:03.518Z",
-    "updatedAt": "2025-08-10T03:45:03.518Z",
-    "author": "giselegal"
+    "id": "step-17-strategic-v3",
+    "name": "Q15 - Transformação (Estratégica)",
+    "description": "Questão estratégica 5 sobre objetivos e resultados",
+    "category": "strategic-question",
+    "questionNumber": 15,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:33:47.498Z",
+    "updatedAt": "2025-10-13T00:33:47.498Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
   },
-  "design": {
-    "primaryColor": "#B89B7A",
-    "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
-    "backgroundColor": "#FAF9F7",
-    "fontFamily": "'Playfair Display', 'Inter', serif",
-    "button": {
-      "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-      "textColor": "#fff",
-      "borderRadius": "10px",
-      "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)"
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
     },
-    "card": {
-      "background": "#fff",
-      "borderRadius": "16px",
-      "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)"
-    },
-    "progressBar": {
-      "color": "#B89B7A",
-      "background": "#F3E8E6",
-      "height": "6px"
-    },
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    },
-    "imageOptionSize": {
-      "default": {
-        "width": 256,
-        "height": 256,
-        "aspect": "square"
-      },
-      "strategic": {
-        "width": 400,
-        "height": 256,
-        "aspect": "landscape"
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 1,
+        "maxItems": 1,
+        "errorMessage": "Por favor, selecione uma opção"
       }
     }
   },
-  "layout": {
-    "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
-    "responsive": true,
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    }
+  "behavior": {},
+  "type": "strategic-question",
+  "navigation": {
+    "nextStep": "step-18"
   },
+  "redirectPath": "/quiz-estilo/step-17",
   "blocks": [
     {
-      "id": "step17-header",
-      "type": "quiz-intro-header",
+      "id": "progress-bar-step-17",
+      "type": "question-progress",
+      "order": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 120,
-        "logoHeight": 50,
+        "padding": 8
+      },
+      "content": {
+        "stepNumber": 17,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "parentId": null
+    },
+    {
+      "id": "step-17-question-title",
+      "type": "question-title",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+      },
+      "parentId": null
+    },
+    {
+      "id": "question-hero-17",
+      "type": "question-hero",
+      "order": 2,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "questionNumber": "Q15 - TRANSFORMAÇÃO",
+        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
+        "currentQuestion": 15,
+        "totalQuestions": 13,
+        "progressValue": 76,
         "showProgress": true,
-        "progressValue": 17,
-        "progressMax": 21,
-        "showBackButton": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "showLogo": true,
-        "progressBarColor": "#B89B7A",
-        "progressBarThickness": 6,
-        "backgroundColor": "#FFFFFF",
-        "textColor": "#432818",
-        "paddingTop": 16,
-        "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
-        "marginBottom": 24,
-        "progressTotal": 100,
-        "type": "quiz-intro-header"
-      }
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "parentId": null
     },
     {
-      "id": "step17-question-image",
-      "type": "image-display-inline",
-      "properties": {
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334753/ChatGPT_Image_4_de_mai._de_2025_01_30_01_vbiysd.webp",
-        "alt": "Questão Estratégica",
-        "width": 400,
-        "height": 256,
-        "aspect": "landscape",
-        "borderRadius": "16px",
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step17-question-title",
-      "type": "text-inline",
-      "properties": {
-        "content": "Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step17-options-grid",
+      "id": "options-grid-17",
       "type": "options-grid",
+      "order": 3,
       "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
         "options": [
           {
-            "id": "17a",
-            "text": "Montar looks com mais facilidade e confiança",
-            "value": "facilidade_confianca",
-            "points": 4
+            "id": "sim-vale-muito",
+            "text": "Sim! Por esse resultado, vale muito",
+            "value": "sim-vale-muito"
           },
           {
-            "id": "17b",
-            "text": "Usar o que já tenho e me sentir estilosa",
-            "value": "usar_bem",
-            "points": 3
+            "id": "sim-se-certeza",
+            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+            "value": "sim-se-certeza"
           },
           {
-            "id": "17c",
-            "text": "Comprar com mais consciência e sem culpa",
-            "value": "comprar_consciencia",
-            "points": 2
+            "id": "talvez-depende",
+            "text": "Talvez — depende do que está incluso",
+            "value": "talvez-depende"
           },
           {
-            "id": "17d",
-            "text": "Ser admirada pela imagem que transmito",
-            "value": "ser_admirada",
-            "points": 4
-          },
-          {
-            "id": "17e",
-            "text": "Resgatar peças esquecidas e criar novos looks com estilo",
-            "value": "resgatar_pecas",
-            "points": 3
+            "id": "nao-nao-pronta",
+            "text": "Não, ainda não estou pronta para investir",
+            "value": "nao-nao-pronta"
           }
         ],
-        "columns": 1,
-        "imageSize": 0,
-        "showImages": false,
+        "columns": 2,
         "multipleSelection": false,
         "minSelections": 1,
         "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "medium",
-        "marginBottom": 16,
-        "selectionStyle": "highlight",
-        "allowDeselection": false,
-        "validationMessage": "Selecione uma opção para avançar."
-      }
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "parentId": null
     },
     {
-      "id": "step17-continue-button",
-      "type": "button-inline",
+      "id": "navigation-step-17",
+      "type": "question-navigation",
+      "order": 4,
       "properties": {
-        "text": "Próxima Pergunta →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "medium",
-        "marginTop": 24
-      }
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      },
+      "parentId": null
     }
   ],
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 1,
-    "validationMessage": "Selecione uma opção para avançar."
-  },
-  "analytics": {
-    "trackingId": "step-17-strategic-question",
-    "events": [
-      "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
-    ],
-    "utmParams": true,
-    "customEvents": []
-  },
-  "logic": {
-    "navigation": {
-      "nextStep": "step-18",
-      "prevStep": "step-16",
-      "allowBack": true,
-      "autoAdvance": false
-    },
-    "scoring": null,
-    "conditions": null
-  },
-  "updatedAt": "2025-08-17T19:06:10.221Z"
+  "title": "Q15 - Transformação (Estratégica)"
 }

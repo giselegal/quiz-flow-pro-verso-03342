@@ -1,284 +1,199 @@
 {
-  "templateVersion": "2.0",
+  "templateVersion": "3.0",
   "metadata": {
-    "id": "quiz-step-09",
-    "name": "Q8 - QUAL VISUAL VOC MAIS",
-    "description": "Questão 8 de 13",
+    "id": "step-09-question-v3",
+    "name": "Q8 - Inspiração",
+    "description": "Questão 8 sobre preferências de estilo",
     "category": "quiz-question",
-    "type": "question",
-    "tags": [
-      "quiz",
-      "style",
-      "quiz-question",
-      "gisele-galvao"
-    ],
-    "createdAt": "2025-08-10T03:45:03.514Z",
-    "updatedAt": "2025-08-10T03:45:03.514Z",
-    "author": "giselegal"
+    "questionNumber": 8,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:32:31.724Z",
+    "updatedAt": "2025-10-13T00:32:31.724Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
   },
-  "design": {
-    "primaryColor": "#B89B7A",
-    "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
-    "backgroundColor": "#FAF9F7",
-    "fontFamily": "'Playfair Display', 'Inter', serif",
-    "button": {
-      "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-      "textColor": "#fff",
-      "borderRadius": "10px",
-      "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)"
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
     },
-    "card": {
-      "background": "#fff",
-      "borderRadius": "16px",
-      "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)"
-    },
-    "progressBar": {
-      "color": "#B89B7A",
-      "background": "#F3E8E6",
-      "height": "6px"
-    },
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    },
-    "imageOptionSize": {
-      "default": {
-        "width": 256,
-        "height": 256,
-        "aspect": "square"
-      },
-      "strategic": {
-        "width": 400,
-        "height": 256,
-        "aspect": "landscape"
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Por favor, selecione exatamente 3 opções"
       }
     }
   },
-  "layout": {
-    "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
-    "responsive": true,
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    }
+  "behavior": {},
+  "type": "question",
+  "navigation": {
+    "nextStep": "step-10"
   },
+  "redirectPath": "/quiz-estilo/step-09",
   "blocks": [
     {
-      "id": "step09-header",
-      "type": "quiz-intro-header",
+      "id": "progress-bar-step-09",
+      "type": "question-progress",
+      "order": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 120,
-        "logoHeight": 50,
+        "padding": 8
+      },
+      "content": {
+        "stepNumber": 9,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "parentId": null
+    },
+    {
+      "id": "step-09-question-title",
+      "type": "question-title",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
+      },
+      "parentId": null
+    },
+    {
+      "id": "question-hero-09",
+      "type": "question-hero",
+      "order": 2,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "questionNumber": "8 de 10",
+        "questionText": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
+        "currentQuestion": 8,
+        "totalQuestions": 13,
+        "progressValue": 43,
         "showProgress": true,
-        "progressValue": 9,
-        "progressMax": 21,
-        "showBackButton": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "showLogo": true,
-        "progressBarColor": "#B89B7A",
-        "progressBarThickness": 6,
-        "backgroundColor": "#FFFFFF",
-        "textColor": "#432818",
-        "paddingTop": 16,
-        "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
-        "marginBottom": 24,
-        "progressTotal": 100,
-        "type": "quiz-intro-header"
-      }
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "parentId": null
     },
     {
-      "id": "step09-question-title",
-      "type": "text-inline",
-      "properties": {
-        "content": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step09-question-counter",
-      "type": "text-inline",
-      "properties": {
-        "content": "Questão 8 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step09-options-grid",
+      "id": "options-grid-09",
       "type": "options-grid",
+      "order": 3,
       "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
         "options": [
           {
-            "id": "8a",
+            "id": "natural",
             "text": "Tênis nude casual e confortável",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
-            "styleCategory": "Natural",
-            "points": 1
+            "value": "natural"
           },
           {
-            "id": "8b",
+            "id": "classico",
             "text": "Scarpin nude de salto baixo",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
-            "styleCategory": "Clássico",
-            "points": 1
+            "value": "classico"
           },
           {
-            "id": "8c",
+            "id": "contemporaneo",
             "text": "Sandália dourada com salto bloco",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
-            "styleCategory": "Contemporâneo",
-            "points": 1
+            "value": "contemporaneo"
           },
           {
-            "id": "8d",
+            "id": "elegante",
             "text": "Scarpin nude salto alto e fino",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
-            "styleCategory": "Elegante",
-            "points": 1
+            "value": "elegante"
           },
           {
-            "id": "8e",
+            "id": "romantico",
             "text": "Sandália anabela off white",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
-            "styleCategory": "Romântico",
-            "points": 1
+            "value": "romantico"
           },
           {
-            "id": "8f",
+            "id": "sexy",
             "text": "Sandália rosa de tiras finas",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
-            "styleCategory": "Sexy",
-            "points": 1
+            "value": "sexy"
           },
           {
-            "id": "8g",
+            "id": "dramatico",
             "text": "Scarpin preto moderno com vinil transparente",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
-            "styleCategory": "Dramático",
-            "points": 1
+            "value": "dramatico"
           },
           {
-            "id": "8h",
+            "id": "criativo",
             "text": "Scarpin colorido estampado",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
-            "styleCategory": "Criativo",
-            "points": 1
+            "value": "criativo"
           }
         ],
         "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
         "multipleSelection": true,
         "minSelections": 3,
         "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "selectionStyle": "glow",
-        "animationType": "scale",
-        "validationMessage": "Selecione 3 opções para avançar.",
-        "scoring": {
-          "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Elegante",
-            "Romântico",
-            "Sexy",
-            "Dramático",
-            "Criativo"
-          ]
-        }
-      }
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "parentId": null
     },
     {
-      "id": "step09-continue-button",
-      "type": "button-inline",
+      "id": "navigation-step-09",
+      "type": "question-navigation",
+      "order": 4,
       "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para avançar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 3,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
-      }
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      },
+      "parentId": null
     }
   ],
-  "validation": {
-    "required": true,
-    "minAnswers": 3,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione 3 opções para avançar."
-  },
-  "analytics": {
-    "trackingId": "step-09-quiz-question",
-    "events": [
-      "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
-    ],
-    "utmParams": true,
-    "customEvents": []
-  },
-  "logic": {
-    "navigation": {
-      "nextStep": "step-10",
-      "prevStep": "step-08",
-      "allowBack": true,
-      "autoAdvance": false
-    },
-    "scoring": {
-      "enabled": true,
-      "method": "category-points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante",
-        "Romântico",
-        "Sexy",
-        "Dramático",
-        "Criativo"
-      ]
-    },
-    "conditions": null
-  },
-  "updatedAt": "2025-08-17T19:06:10.216Z"
+  "title": "Q8 - Inspiração"
 }

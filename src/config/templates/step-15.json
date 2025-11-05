@@ -1,242 +1,169 @@
 {
-  "templateVersion": "2.0",
+  "templateVersion": "3.0",
   "metadata": {
-    "id": "quiz-step-15",
-    "name": "Pense no quanto você já gastou com roupas que não usa...",
-    "description": "Questão estratégica 4 - Consciência do investimento em material",
-    "category": "quiz-strategic",
-    "type": "strategic-question",
-    "tags": [
-      "quiz",
-      "style",
-      "transition",
-      "gisele-galvao"
-    ],
-    "createdAt": "2025-08-10T03:45:03.517Z",
-    "updatedAt": "2025-08-10T03:45:03.517Z",
-    "author": "giselegal"
+    "id": "step-15-strategic-v3",
+    "name": "Q13 - Prioridades (Estratégica)",
+    "description": "Questão estratégica 3 sobre objetivos e resultados",
+    "category": "strategic-question",
+    "questionNumber": 13,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:33:47.497Z",
+    "updatedAt": "2025-10-13T00:33:47.497Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
   },
-  "design": {
-    "primaryColor": "#B89B7A",
-    "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
-    "backgroundColor": "#FAF9F7",
-    "fontFamily": "'Playfair Display', 'Inter', serif",
-    "button": {
-      "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-      "textColor": "#fff",
-      "borderRadius": "10px",
-      "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)"
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
     },
-    "card": {
-      "background": "#fff",
-      "borderRadius": "16px",
-      "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)"
-    },
-    "progressBar": {
-      "color": "#B89B7A",
-      "background": "#F3E8E6",
-      "height": "6px"
-    },
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    },
-    "imageOptionSize": {
-      "default": {
-        "width": 256,
-        "height": 256,
-        "aspect": "square"
-      },
-      "strategic": {
-        "width": 400,
-        "height": 256,
-        "aspect": "landscape"
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 1,
+        "maxItems": 1,
+        "errorMessage": "Por favor, selecione uma opção"
       }
     }
   },
-  "layout": {
-    "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
-    "responsive": true,
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    }
+  "behavior": {},
+  "type": "strategic-question",
+  "navigation": {
+    "nextStep": "step-16"
   },
+  "redirectPath": "/quiz-estilo/step-15",
   "blocks": [
     {
-      "id": "step15-header",
-      "type": "quiz-intro-header",
+      "id": "progress-bar-step-15",
+      "type": "question-progress",
+      "order": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 120,
-        "logoHeight": 50,
+        "padding": 8
+      },
+      "content": {
+        "stepNumber": 15,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "parentId": null
+    },
+    {
+      "id": "step-15-question-title",
+      "type": "question-title",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
+      },
+      "parentId": null
+    },
+    {
+      "id": "question-hero-15",
+      "type": "question-hero",
+      "order": 2,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "questionNumber": "Q13 - PRIORIDADES",
+        "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
+        "currentQuestion": 13,
+        "totalQuestions": 13,
+        "progressValue": 67,
         "showProgress": true,
-        "progressValue": 15,
-        "progressMax": 21,
-        "showBackButton": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "showLogo": true,
-        "progressBarColor": "#B89B7A",
-        "progressBarThickness": 6,
-        "backgroundColor": "#FFFFFF",
-        "textColor": "#432818",
-        "paddingTop": 16,
-        "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
-        "marginBottom": 24,
-        "progressTotal": 100,
-        "type": "quiz-intro-header"
-      }
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "parentId": null
     },
     {
-      "id": "step15-background-image",
-      "type": "image-display-inline",
-      "properties": {
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
-        "alt": "Transição Quiz",
-        "width": "100%",
-        "height": "auto",
-        "borderRadius": "16px",
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step15-title",
-      "type": "text-inline",
-      "properties": {
-        "content": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...",
-        "fontSize": "text-3xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step15-description",
-      "type": "text-inline",
-      "properties": {
-        "content": "Você acredita que ter acesso a um material estratégico, direto ao ponto, que te ensina a aplicar seu estilo com clareza, faria diferença?",
-        "fontSize": "text-lg",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step15-options-grid",
+      "id": "options-grid-15",
       "type": "options-grid",
+      "order": 3,
       "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
         "options": [
           {
-            "id": "15a",
-            "text": "Sim! Se existisse algo assim, eu quero",
-            "value": "quero_muito",
-            "points": 4
+            "id": "quase-todos-dias",
+            "text": "Quase todos os dias — é sempre uma indecisão",
+            "value": "quase-todos-dias"
           },
           {
-            "id": "15b",
-            "text": "Sim, mas teria que ser no momento certo",
-            "value": "momento_certo",
-            "points": 3
+            "id": "compromissos-importantes",
+            "text": "Sempre que tenho um compromisso importante",
+            "value": "compromissos-importantes"
           },
           {
-            "id": "15c",
-            "text": "Tenho dúvidas se funcionaria pra mim",
-            "value": "duvidas",
-            "points": 2
+            "id": "as-vezes-limitada",
+            "text": "Às vezes, mas me sinto limitada nas escolhas",
+            "value": "as-vezes-limitada"
           },
           {
-            "id": "15d",
-            "text": "Não, prefiro continuar como estou",
-            "value": "nao_interessada",
-            "points": 1
+            "id": "raramente-segura",
+            "text": "Raramente — já me sinto segura ao me vestir",
+            "value": "raramente-segura"
           }
         ],
-        "columns": 1,
-        "imageSize": 0,
-        "showImages": false,
+        "columns": 2,
         "multipleSelection": false,
         "minSelections": 1,
         "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "selectionStyle": "glow",
-        "animationType": "scale",
-        "validationMessage": "Selecione uma opção para avançar.",
-        "scoring": {
-          "enabled": true,
-          "method": "strategic-points"
-        }
-      }
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "parentId": null
     },
     {
-      "id": "step15-continue-button",
-      "type": "button-inline",
+      "id": "navigation-step-15",
+      "type": "question-navigation",
+      "order": 4,
       "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
-      }
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      },
+      "parentId": null
     }
   ],
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 1,
-    "validationMessage": "Selecione uma opção para avançar."
-  },
-  "analytics": {
-    "trackingId": "step-15-transition",
-    "events": [
-      "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
-    ],
-    "utmParams": true,
-    "customEvents": []
-  },
-  "logic": {
-    "navigation": {
-      "nextStep": "step-16",
-      "prevStep": "step-14",
-      "allowBack": true,
-      "autoAdvance": false
-    },
-    "scoring": null,
-    "conditions": null
-  },
-  "updatedAt": "2025-08-17T19:06:10.220Z"
+  "title": "Q13 - Prioridades (Estratégica)"
 }
