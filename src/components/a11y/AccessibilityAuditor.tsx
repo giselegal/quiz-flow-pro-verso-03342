@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { QuickFixPanel } from './QuickFixPanel';
 
 interface A11yIssue {
   id: string;
@@ -153,6 +154,9 @@ export const AccessibilityAuditor: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      {/* Quick Fix Panel */}
+      <QuickFixPanel />
+
       {/* Guia de Primeira Auditoria */}
       {showGuide && !lastRun && (
         <Alert className="border-blue-500 bg-blue-50 dark:bg-blue-950">
