@@ -146,6 +146,7 @@
     "step20": "node scripts/smoke-step20.mjs"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
     "@craftjs/core": "^0.2.12",
     "@craftjs/layers": "^0.2.7",
     "@dnd-kit/core": "^6.3.1",
