@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect, ComponentType } from 'react';
 import { appLogger } from '@/utils/logger';
 import { EditorLoadingWrapper } from './EditorLoadingWrapper';
 
@@ -15,17 +15,17 @@ const EditorFallback: React.FC<{
     templateId?: string;
     funnelId?: string;
 }> = ({ templateId, funnelId }) => {
-    const [editorComponent, setEditorComponent] = React.useState<React.ComponentType | null>(null);
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [error, setError] = React.useState<string | null>(null);
-    const [attempts, setAttempts] = React.useState(0);
+    const [editorComponent, setEditorComponent] = useState<ComponentType | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorState, setErrorState] = useState<string | null>(null);
+    const [attempts, setAttempts] = useState(0);
 
-    const loadEditor = React.useCallback(async (attempt = 0) => {
+    const loadEditor = useCallback(async (attempt = 0) => {
         appLogger.debug(`🔄 [FALLBACK] Tentativa ${attempt + 1} de carregar editor`);
 
         try {
             setIsLoading(true);
-            setError(null);
+            setErrorState(null);
 
             // Lista de editores para tentar em ordem de prioridade
             const editorPaths = [
@@ -65,20 +65,20 @@ const EditorFallback: React.FC<{
                     loadEditor(attempt + 1);
                 }, 2000);
             } else {
-                setError(`Falha ao carregar editor após ${attempt + 1} tentativas`);
+                setErrorState(`Falha ao carregar editor após ${attempt + 1} tentativas`);
                 setIsLoading(false);
             }
         }
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         loadEditor(attempts);
     }, [loadEditor, attempts]);
 
     const handleRetry = () => {
         appLogger.debug('🔄 [FALLBACK] Reiniciando carregamento...');
         setAttempts(0);
-        setError(null);
+        setErrorState(null);
         loadEditor(0);
     };
 
@@ -108,7 +108,7 @@ const EditorFallback: React.FC<{
     }
 
     // Error state
-    if (error) {
+    if (errorState) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="text-center max-w-md mx-auto p-6">
@@ -121,7 +121,7 @@ const EditorFallback: React.FC<{
                         <h3 className="text-xl font-semibold text-gray-900 mb-3">
                             Não Foi Possível Carregar o Editor
                         </h3>
-                        <p className="text-gray-600 mb-4">{error}</p>
+                        <p className="text-gray-600 mb-4">{errorState}</p>
                     </div>
 
                     <div className="space-y-3">

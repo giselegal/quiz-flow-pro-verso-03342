@@ -1,8 +1,8 @@
+import React, { useEffect, CSSProperties, memo, FC } from 'react';
 import { cn } from '@/lib/utils';
 import { appLogger } from '@/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowLeft } from 'lucide-react';
-import React from 'react';
 import { useImageWithFallback } from '@/hooks/useImageWithFallback';
 
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
@@ -14,7 +14,7 @@ interface QuizIntroHeaderBlockProps extends BlockComponentProps {
 
 // Removida função getMarginClass - usando CSS inline para margens
 
-const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
+const QuizIntroHeaderBlock: FC<QuizIntroHeaderBlockProps> = ({
   block,
   onClick: _onClick,
   onPropertyChange: _onPropertyChange,
@@ -45,7 +45,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   }
 
   // ✅ USAR useEffect para detectar mudanças nas propriedades
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDev && verbose) {
        
       appLogger.debug('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
@@ -141,14 +141,14 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     return `${baseClasses} ${minHeight} ${getLogoJustifyClass()}`;
   };
 
-  const contentWrapperStyle: React.CSSProperties = {
+  const contentWrapperStyle: CSSProperties = {
     maxWidth: contentMaxWidth,
     margin: '0 auto',
     paddingLeft: backSafePadding,
   };
 
   // 🎨 Estilo do container principal com bordas e animações
-  const mainContainerStyle: React.CSSProperties = {
+  const mainContainerStyle: CSSProperties = {
     backgroundColor: backgroundColor || '#ffffff',
     marginTop: marginTop || 0,
     marginBottom: marginBottom || 0,
@@ -346,7 +346,7 @@ interface LogoImageProps {
   enableAnimation?: boolean;
 }
 
-const LogoImage: React.FC<LogoImageProps> = ({
+const LogoImage: FC<LogoImageProps> = ({
   src,
   alt = 'Logo',
   width = 96,
@@ -383,7 +383,7 @@ interface IntroImageProps {
   height: number;
 }
 
-const IntroImage: React.FC<IntroImageProps> = ({ src, alt, width, height }) => {
+const IntroImage: FC<IntroImageProps> = ({ src, alt, width, height }) => {
   const { src: imageSrc, isLoading } = useImageWithFallback(src, {
     width,
     height,
@@ -450,4 +450,4 @@ function areEqual(
   return true; // ignora mudanças de identidade de handlers
 }
 
-export default React.memo(QuizIntroHeaderBlock, areEqual);
+export default memo(QuizIntroHeaderBlock, areEqual);

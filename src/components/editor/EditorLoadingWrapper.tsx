@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { appLogger } from '@/utils/logger';
 
 interface EditorLoadingWrapperProps {
-    children: React.ReactNode;
+    children: ReactNode;
     templateId?: string;
     funnelId?: string;
     timeout?: number;
@@ -23,10 +23,10 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
     funnelId,
     timeout = 10000,
 }) => {
-    const [isTimeout, setIsTimeout] = React.useState(false);
-    const [startTime] = React.useState(Date.now());
+    const [isTimeout, setIsTimeout] = useState(false);
+    const [startTime] = useState(Date.now());
 
-    React.useEffect(() => {
+    useEffect(() => {
         appLogger.debug('🔄 [LOADING] Iniciando timeout', { timeoutMs: timeout });
 
         const timeoutId = setTimeout(() => {
