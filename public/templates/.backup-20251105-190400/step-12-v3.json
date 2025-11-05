@@ -1,0 +1,34 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-12-transition-v3",
+    "name": "Transição Mid-Quiz",
+    "description": "Página de transição no meio do quiz com mensagem motivacional",
+    "category": "transition",
+    "tags": [
+      "quiz",
+      "transition",
+      "loading",
+      "mid-quiz"
+    ],
+    "createdAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "sections": [],
+  "validation": {},
+  "behavior": {}
+}
