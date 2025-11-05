@@ -3,8 +3,8 @@
 ## Resumo
 
 - Total de arquivos: 236
-- Válidos: 235
-- Inválidos: 1
+- Válidos: 236
+- Inválidos: 0
 
 ### Maiores arquivos
 - package-lock.json (785 KB)
@@ -17,9 +17,6 @@
 - SERVICE_AUDIT_REPORT.json (66 KB)
 - src/config/optimized21StepsFunnel.json (41 KB)
 - src/core/schema/defaultSchemas.json (31 KB)
-
-## Erros de sintaxe
-- src/templates/step21-offer-template.json: (linha 153, coluna 5) posição 5417 — Expected ',' or ']' after array element in JSON at position 5417 (line 153 column 5)
 
 ## IDs duplicados entre arquivos
 - id "step-01": public/templates/blocks/step-01.json, public/templates/normalized/step-01.json
@@ -44,15 +41,15 @@
 ## Chaves de topo mais comuns
 - metadata: presente em 147 arquivos; tipos: object
 - templateVersion: presente em 127 arquivos; tipos: string
-- blocks: presente em 103 arquivos; tipos: array
+- blocks: presente em 104 arquivos; tipos: array
 - analytics: presente em 93 arquivos; tipos: object
 - validation: presente em 68 arquivos; tipos: object
-- id: presente em 64 arquivos; tipos: string
+- id: presente em 65 arquivos; tipos: string
 - type: presente em 50 arquivos; tipos: string
 - theme: presente em 47 arquivos; tipos: object, string
 - sections: presente em 45 arquivos; tipos: array
+- description: presente em 37 arquivos; tipos: string
 - version: presente em 36 arquivos; tipos: string, number
-- description: presente em 36 arquivos; tipos: string
 - title: presente em 31 arquivos; tipos: string
 - behavior: presente em 27 arquivos; tipos: object
 - properties: presente em 27 arquivos; tipos: object
@@ -65,8 +62,8 @@
 - design: presente em 22 arquivos; tipos: object
 - logic: presente em 22 arquivos; tipos: object
 - updatedAt: presente em 21 arquivos; tipos: string
+- name: presente em 16 arquivos; tipos: string
 - steps: presente em 15 arquivos; tipos: array, object
-- name: presente em 15 arquivos; tipos: string
 - meta: presente em 11 arquivos; tipos: object
 - scoring: presente em 10 arquivos; tipos: object
 - templateId: presente em 7 arquivos; tipos: string

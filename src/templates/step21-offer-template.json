@@ -25,13 +25,12 @@
       "type": "step-21-offer",
       "id": "offer-page-21",
       "properties": {
-          "logoUrl": "https://placehold.co/200x60",
-          "logoAlt": "Logo da Empresa",
-          "logoWidth": 200,
-          "logoHeight": 60,
-          "isSticky": true,
-          "backgroundColor": "#ffffff"
-        },
+        "logoUrl": "https://placehold.co/200x60",
+        "logoAlt": "Logo da Empresa",
+        "logoWidth": 200,
+        "logoHeight": 60,
+        "isSticky": true,
+        "backgroundColor": "#ffffff",
         "hero": {
           "title": "Transforme seu Guarda-Roupa Agora!",
           "subtitle": "Oferta especial baseada no seu estilo pessoal",
@@ -68,11 +67,7 @@
           "imageAlt": "Solução de Estilo",
           "imageWidth": 500,
           "imageHeight": 300,
-          "countdown": {
-            "hours": 48,
-            "minutes": 0,
-            "seconds": 0
-          }
+          "countdown": { "hours": 48, "minutes": 0, "seconds": 0 }
         },
         "products": {
           "title": "Escolha Seu Plano",
@@ -87,10 +82,7 @@
               "imageWidth": 300,
               "imageHeight": 200,
               "price": "R$ 297,00",
-              "installments": {
-                "quantity": 6,
-                "amount": "R$ 49,50"
-              },
+              "installments": { "quantity": 6, "amount": "R$ 49,50" },
               "features": [
                 "Análise de coloração pessoal",
                 "Guia de estilos básicos",
@@ -106,10 +98,7 @@
               "imageWidth": 300,
               "imageHeight": 200,
               "price": "R$ 497,00",
-              "installments": {
-                "quantity": 12,
-                "amount": "R$ 41,42"
-              },
+              "installments": { "quantity": 12, "amount": "R$ 41,42" },
               "features": [
                 "Tudo do plano essencial",
                 "Consultoria individual",
