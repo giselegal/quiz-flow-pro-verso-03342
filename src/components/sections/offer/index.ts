@@ -17,3 +17,6 @@ export type {
     PricingSectionContent,
     PricingSectionProps,
 } from './PricingSection';
+
+// Export default para BlockTypeRenderer (usa PricingSection como padrão)
+export { PricingSection as default } from './PricingSection';
