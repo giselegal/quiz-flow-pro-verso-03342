@@ -77,16 +77,22 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
     // 🎯 FASE 4: Navegação dinâmica baseada no template carregado
     const navSteps = useMemo(() => {
+        // ✅ Se não tem templateId nem template carregado, retornar vazio (modo canvas vazio)
+        if (!props.templateId && !loadedTemplate) {
+            return [];
+        }
+        
         const res = templateService.steps.list();
         if (!res.success || !res.data || res.data.length === 0) {
-            console.warn('⚠️ [QuizModularEditor] templateService.steps.list() falhou');
-            return []; // Retorna vazio ao invés de fallback fixo
+            console.warn('⚠️ [QuizModularEditor] templateService.steps.list() vazio');
+            return [];
         }
+        
         return res.data.map((s) => ({
             key: s.id,
             title: `${String(s.order).padStart(2, '0')} - ${s.name}`
         }));
-    }, [loadedTemplate]); // ✅ Depende do template carregado para atualizar
+    }, [loadedTemplate, props.templateId]); // ✅ Reagir a mudanças de template
 
     // ✅ FASE 1: Auto-save direto do SuperUnified
     useEffect(() => {

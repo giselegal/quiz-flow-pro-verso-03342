@@ -114,7 +114,7 @@ export class TemplateService extends BaseCanonicalService {
 
   // 🎯 FASE 4: Navegação Dinâmica
   private activeTemplateId: string | null = null;
-  private activeTemplateSteps: number = 21; // Default para quiz completo
+  private activeTemplateSteps: number = 0; // ✅ Vazio até carregar template
 
   // Mapeamento das 21 etapas do Quiz de Estilo
   private readonly STEP_MAPPING: Record<number, Omit<StepInfo, 'id' | 'order' | 'blocksCount' | 'hasTemplate'>> = {

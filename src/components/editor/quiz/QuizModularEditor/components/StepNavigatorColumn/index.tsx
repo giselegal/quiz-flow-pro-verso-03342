@@ -42,19 +42,28 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
     return (
         <div className="p-2 space-y-1">
             <div className="text-sm font-medium mb-2">Navegação</div>
-            <ul className="space-y-1">
-                {items.map((s) => (
-                    <li key={s.key}>
-                        <button
-                            className={`w-full text-left px-2 py-1 rounded hover:bg-accent ${currentStepKey === s.key ? 'bg-accent' : ''
-                                }`}
-                            onClick={() => onSelectStep(s.key)}
-                        >
-                            {s.title}
-                        </button>
-                    </li>
-                ))}
-            </ul>
+            {items.length === 0 ? (
+                <div className="p-4 text-center text-sm text-muted-foreground">
+                    <p>Nenhuma etapa carregada</p>
+                    <p className="text-xs mt-2">
+                        Escolha "Usar Template" ou adicione etapas manualmente
+                    </p>
+                </div>
+            ) : (
+                <ul className="space-y-1">
+                    {items.map((s) => (
+                        <li key={s.key}>
+                            <button
+                                className={`w-full text-left px-2 py-1 rounded hover:bg-accent ${currentStepKey === s.key ? 'bg-accent' : ''
+                                    }`}
+                                onClick={() => onSelectStep(s.key)}
+                            >
+                                {s.title}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
