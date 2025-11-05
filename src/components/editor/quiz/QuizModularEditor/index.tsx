@@ -238,7 +238,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             await new Promise(resolve => setTimeout(resolve, 50));
 
             if (cancelled) {
-                setIsLoadingStep(false);
+                // ✅ FIX: Não resetar loading aqui - o cleanup já faz isso
                 return;
             }
 

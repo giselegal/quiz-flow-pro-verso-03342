@@ -182,14 +182,14 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
                   {/* Conteúdo do bloco */}
                   <div className="p-4">
                     {renderBlock ? renderBlock(block) : (
-                      <div>
+                      <>
                         <div className="text-sm font-medium mb-2">{block.label}</div>
-                        {block.preview || (
+                        {block.preview ? block.preview : (
                           <div className="text-muted-foreground text-sm">
                             Preview não disponível
                           </div>
                         )}
-                      </div>
+                      </>
                     )}
                   </div>
                   {/* Zona de inserção após o bloco */}
