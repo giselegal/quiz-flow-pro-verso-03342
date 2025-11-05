@@ -52,35 +52,62 @@ export type Database = {
       component_instances: {
         Row: {
           component_type_id: string | null
+          component_type_key: string | null
           config: Json | null
           created_at: string
           created_by: string | null
+          custom_styling: Json | null
           funnel_id: string | null
           id: string
+          instance_key: string | null
           is_active: boolean | null
+          is_locked: boolean | null
+          is_template: boolean | null
+          order_index: number | null
           position: number | null
+          properties: Json | null
+          stage_id: string | null
+          step_number: number | null
           updated_at: string
         }
         Insert: {
           component_type_id?: string | null
+          component_type_key?: string | null
           config?: Json | null
           created_at?: string
           created_by?: string | null
+          custom_styling?: Json | null
           funnel_id?: string | null
           id?: string
+          instance_key?: string | null
           is_active?: boolean | null
+          is_locked?: boolean | null
+          is_template?: boolean | null
+          order_index?: number | null
           position?: number | null
+          properties?: Json | null
+          stage_id?: string | null
+          step_number?: number | null
           updated_at?: string
         }
         Update: {
           component_type_id?: string | null
+          component_type_key?: string | null
           config?: Json | null
           created_at?: string
           created_by?: string | null
+          custom_styling?: Json | null
           funnel_id?: string | null
           id?: string
+          instance_key?: string | null
           is_active?: boolean | null
+          is_locked?: boolean | null
+          is_template?: boolean | null
+          order_index?: number | null
           position?: number | null
+          properties?: Json | null
+          stage_id?: string | null
+          step_number?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -733,6 +760,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      batch_sync_components_for_step: {
+        Args: { items: Json[]; p_funnel_id: string; p_step_number: number }
+        Returns: Json
+      }
+      batch_update_components: { Args: { updates: Json[] }; Returns: Json }
       duplicate_quiz_template: {
         Args: { new_funnel_id: string; new_name: string; template_slug: string }
         Returns: string
