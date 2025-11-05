@@ -25,7 +25,7 @@ import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
 import { blockComponentsToBlocks } from '@/utils/templateConverter';
-import { unifiedCache } from '@/utils/UnifiedTemplateCache';
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader, type TemplateSource } from '@/services/editor/TemplateLoader';
@@ -479,8 +479,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             : (String(s).match(/^step-(\d{1,2})$/) ? `step-${parseInt(String(s).replace('step-', ''), 10).toString().padStart(2, '0')}` : String(s));
 
         // Invalida caches relacionados
-        unifiedCache.delete(stepBlocksKey(normalizedKey));
-        unifiedCache.delete(masterBlocksKey(normalizedKey));
+        unifiedCacheService.delete(stepBlocksKey(normalizedKey));
+        unifiedCacheService.delete(masterBlocksKey(normalizedKey));
 
         // Remove do estado local para forçar ensureStepLoaded a buscar novamente
         setLocalState(prev => {
@@ -500,11 +500,11 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // 🔄 Recarrega todos os steps 01–20 a partir dos JSONs públicos
     const reloadAllStepsFromJSON = useCallback(async () => {
         // Limpa caches globais relacionados ao master e steps
-        unifiedCache.delete(masterTemplateKey());
+        unifiedCacheService.delete(masterTemplateKey());
         for (let i = 1; i <= 21; i++) {
             const key = `step-${i.toString().padStart(2, '0')}`;
-            unifiedCache.delete(stepBlocksKey(key));
-            unifiedCache.delete(masterBlocksKey(key));
+            unifiedCacheService.delete(stepBlocksKey(key));
+            unifiedCacheService.delete(masterBlocksKey(key));
         }
 
         // Zera estado local
@@ -559,7 +559,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             const t = setTimeout(() => {
                 // Evitar trabalho se já em cache local ou unificado
                 const hasLocal = (state.stepBlocks[normalizedNext]?.length || 0) > 0;
-                const cached = unifiedCache.get(stepBlocksKey(normalizedNext));
+                const cached = unifiedCacheService.get(stepBlocksKey(normalizedNext));
                 if (!hasLocal && !(Array.isArray(cached) && cached.length > 0)) {
                     ensureStepLoaded(next);
                 } else if (!hasLocal && Array.isArray(cached) && cached.length > 0) {

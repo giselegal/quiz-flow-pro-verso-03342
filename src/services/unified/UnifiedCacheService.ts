@@ -449,6 +449,21 @@ export class UnifiedCacheService {
     return total > 0 ? this.hitCount / total : 0;
   }
 
+  /** @deprecated Use invalidateFunnel() */
+  async preloadFunnel(funnelId: string): Promise<void> {
+    // No-op - preload on-demand com lazy loading
+  }
+
+  /** @deprecated Use invalidateFunnel() */
+  async refreshCache(): Promise<void> {
+    // No-op - cache com TTL automático
+  }
+
+  /** @deprecated Use invalidateFunnel() */
+  clearFunnel(funnelId: string): void {
+    this.invalidateFunnel(funnelId);
+  }
+
   // ============================================================================
   // EVENT SUBSCRIPTION
   // ============================================================================

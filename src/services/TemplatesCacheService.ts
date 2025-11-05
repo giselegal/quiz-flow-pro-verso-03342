@@ -1,12 +1,12 @@
 /**
  * 🔄 REDIRECT: TemplatesCacheService → UnifiedCacheService
  * 
- * @deprecated Use @/utils/UnifiedTemplateCache
+ * @deprecated Use @/services/unified/UnifiedCacheService
  */
 
-export { unifiedCache as templatesCacheService } from '@/utils/UnifiedTemplateCache';
-export type { CacheConfig, CacheStats } from '@/utils/UnifiedTemplateCache';
+export { unifiedCacheService as templatesCacheService } from '@/services/unified/UnifiedCacheService';
+export type { CacheConfig, CacheStats } from '@/services/unified/UnifiedCacheService';
 
 if (typeof window !== 'undefined') {
-  console.warn('[DEPRECATED] TemplatesCacheService → use @/utils/UnifiedTemplateCache');
+  console.warn('[DEPRECATED] TemplatesCacheService → use @/services/unified/UnifiedCacheService');
 }

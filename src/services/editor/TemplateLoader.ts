@@ -20,7 +20,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
 // 🔧 Removido dependência de utils/loadStepTemplates para evitar eager-loading de bundles
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
-import { unifiedCache } from '@/utils/UnifiedTemplateCache';
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
@@ -28,6 +28,9 @@ import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import blockAliasMap from '@/config/block-aliases.json';
 import { templateService } from '@/services/canonical/TemplateService';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
+
+// Alias para compatibilidade
+const unifiedCache = unifiedCacheService;
 import { convertComponentInstancesToBlocks, filterValidInstances } from '@/utils/componentInstanceConverter';
 import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/utils/retryWithBackoff';
 

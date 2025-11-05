@@ -14,7 +14,10 @@
  */
 
 import { supabase } from '@/integrations/supabase/customClient';
-import { queryCache } from '@/cache/IntelligentCacheSystem';
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
+
+// Alias para compatibilidade
+const queryCache = unifiedCacheService;
 
 interface BatchQuery {
   id: string;
@@ -182,7 +185,7 @@ class QueryBatcher {
         if (query.operation === 'select' && result && !result.error && this.config.enableCache) {
           const filters = query.filters || {};
           const cacheKey = this.generateCacheKey(query.table, query.operation, query.query, filters);
-          queryCache.set(cacheKey, result, { priority: 'medium' });
+          queryCache.set(cacheKey, result, 'metadata');
         }
 
         query.resolve(result);

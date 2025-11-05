@@ -9,10 +9,13 @@
 
 import { Block } from '@/types/editor';
 import { templateCache } from '@/utils/TemplateCache';
-import { unifiedCache } from '@/utils/UnifiedTemplateCache';
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { templateKey } from '@/utils/cacheKeys';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
+
+// Alias para compatibilidade
+const unifiedCache = unifiedCacheService;
 
 // Nota: Mantendo imports legados como referência, mas não utilizando no runtime
 // Para compatibilidade histórica apenas

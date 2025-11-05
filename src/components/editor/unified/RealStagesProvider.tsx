@@ -306,7 +306,8 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       // Invalidar cache
       if (enableCache) {
         const stepNumber = extractStepNumber(stageId);
-        templatesCacheService.invalidateStep(stepNumber, config.funnelId);
+        const stepKey = `step-${stepNumber.toString().padStart(2, '0')}`;
+        templatesCacheService.invalidateStep(stepKey);
       }
 
       appLogger.debug(`✅ Etapa removida: ${stageId}`);
@@ -332,7 +333,8 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       // Invalidar cache e recarregar
       if (enableCache) {
         const stepNumber = extractStepNumber(stageId);
-        templatesCacheService.invalidateStep(stepNumber, config.funnelId);
+        const stepKey = `step-${stepNumber.toString().padStart(2, '0')}`;
+        templatesCacheService.invalidateStep(stepKey);
       }
 
       setLoadedStages(prev => {
@@ -408,7 +410,8 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       // Atualizar cache se habilitado
       if (enableCache) {
         const stepNumber = extractStepNumber(stageId);
-        templatesCacheService.invalidateStep(stepNumber, config.funnelId);
+        const stepKey = `step-${stepNumber.toString().padStart(2, '0')}`;
+        templatesCacheService.invalidateStep(stepKey);
       }
 
       // Atualizar estado da etapa
@@ -445,7 +448,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
     return {
       hitRate: templatesCacheService.getHitRate(),
       totalCached: stats.totalEntries,
-      memoryUsage: stats.memoryUsage,
+      memoryUsage: stats.totalSize,
     };
   }, [enableCache, loadedStages]);
 

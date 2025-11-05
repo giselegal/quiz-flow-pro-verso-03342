@@ -1006,7 +1006,7 @@ export const useUnifiedEditorProduction = (
     return {
       hitRate: templatesCacheService.getHitRate(),
       totalCached: templatesStats.totalEntries + crudStats.totalFunnels,
-      memoryUsage: templatesStats.memoryUsage,
+      memoryUsage: templatesStats.totalSize,
     };
   }, [enableCache]);
 
