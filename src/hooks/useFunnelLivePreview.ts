@@ -11,6 +11,16 @@ export function useFunnelLivePreview(funnelId?: string) {
         const proto = location.protocol === 'https:' ? 'wss' : 'ws';
         // Em dev (Vite em 5173 + backend 3001), conectamos direto no backend para WS
         const isDev = typeof import.meta !== 'undefined' && (import.meta as any).env && (import.meta as any).env.DEV;
+        
+        // ✅ Detectar ambiente Lovable
+        const isLovable = location.host.includes('lovableproject.com');
+        
+        // ⚠️ Desabilitar WebSocket em Lovable (não tem backend WS)
+        if (isLovable && !isDev) {
+            console.warn('[useFunnelLivePreview] WebSocket desabilitado em ambiente Lovable Cloud');
+            return;
+        }
+        
         const host = isDev ? `${location.hostname}:3001` : location.host;
         const url = `${proto}://${host}/?funnelId=${encodeURIComponent(id)}`;
         try {

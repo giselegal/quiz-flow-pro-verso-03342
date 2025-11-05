@@ -11,35 +11,28 @@
  * Recharts (410KB) - Carregar sob demanda
  */
 export const loadRecharts = async () => {
-  const [
-    { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, ReferenceLine },
-    { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer },
-  ] = await Promise.all([
-    import('recharts').then(m => ({
-      LineChart: m.LineChart,
-      Line: m.Line,
-      AreaChart: m.AreaChart,
-      Area: m.Area,
-      BarChart: m.BarChart,
-      Bar: m.Bar,
-      PieChart: m.PieChart,
-      Pie: m.Pie,
-      Cell: m.Cell,
-      ReferenceLine: m.ReferenceLine,
-    })),
-    import('recharts').then(m => ({
-      XAxis: m.XAxis,
-      YAxis: m.YAxis,
-      CartesianGrid: m.CartesianGrid,
-      Tooltip: m.Tooltip,
-      Legend: m.Legend,
-      ResponsiveContainer: m.ResponsiveContainer,
-    })),
-  ]);
-
+  // ✅ Import único - evita ReferenceError de inicialização
+  const recharts = await import('recharts');
+  
   return {
-    LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, ReferenceLine,
-    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+    // Chart components
+    LineChart: recharts.LineChart,
+    Line: recharts.Line,
+    AreaChart: recharts.AreaChart,
+    Area: recharts.Area,
+    BarChart: recharts.BarChart,
+    Bar: recharts.Bar,
+    PieChart: recharts.PieChart,
+    Pie: recharts.Pie,
+    Cell: recharts.Cell,
+    ReferenceLine: recharts.ReferenceLine,
+    // Axis and layout components
+    XAxis: recharts.XAxis,
+    YAxis: recharts.YAxis,
+    CartesianGrid: recharts.CartesianGrid,
+    Tooltip: recharts.Tooltip,
+    Legend: recharts.Legend,
+    ResponsiveContainer: recharts.ResponsiveContainer,
   };
 };
 
