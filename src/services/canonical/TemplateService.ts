@@ -783,6 +783,30 @@ export class TemplateService extends BaseCanonicalService {
      */
     add: async (stepInfo: StepInfo): Promise<ServiceResult<void>> => {
       try {
+        // ✅ Validação básica de entrada (sem dependências externas)
+        if (!stepInfo || typeof stepInfo !== 'object') {
+          return this.createError(new Error('StepInfo inválido'));
+        }
+
+        if (!/^step-/.test(stepInfo.id)) {
+          return this.createError(new Error('ID de etapa deve iniciar com "step-"'));
+        }
+
+        const allowedTypes = new Set(['intro', 'question', 'strategic', 'transition', 'result', 'offer', 'custom']);
+        if (!allowedTypes.has(stepInfo.type)) {
+          return this.createError(new Error(`Tipo de etapa inválido: ${stepInfo.type}`));
+        }
+
+        if (!stepInfo.name || !stepInfo.name.trim()) {
+          return this.createError(new Error('Nome da etapa é obrigatório'));
+        }
+
+        // Normalizar ordem
+        if (!Number.isFinite(stepInfo.order) || stepInfo.order <= 0) {
+          const nextOrder = this.activeTemplateSteps + this.customSteps.size + 1;
+          stepInfo.order = nextOrder;
+        }
+
         // ✅ Validar se ID já existe
         if (this.customSteps.has(stepInfo.id)) {
           this.log(`⚠️ ID duplicado detectado: ${stepInfo.id}`);
