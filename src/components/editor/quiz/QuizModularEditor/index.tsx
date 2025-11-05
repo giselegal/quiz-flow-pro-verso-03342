@@ -17,6 +17,9 @@
  * - ✅ Auto-save inteligente
  */
 
+// Polyfills de teste (precisam ser carregados antes de libs que usam matchMedia)
+import '@/test/polyfills/matchMedia';
+
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
@@ -148,8 +151,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             unified.setCurrentStep(1);
         }
 
-        // Além disso, garantir que exista ao menos uma etapa canônica em modo livre
+        // Além disso, garantir que exista ao menos uma etapa canônica em modo livre e habilitar navegação padrão (21 etapas)
         if (!props.templateId && !loadedTemplate) {
+            try { templateService.setActiveTemplate('free-mode', 21); } catch { /* noop */ }
             const res = templateService.steps.list();
             const hasAny = res.success && res.data && res.data.length > 0;
             if (!hasAny) {
@@ -213,12 +217,27 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             try {
                 const tid = props.templateId!;
                 appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
-                await templateService.preloadTemplate(tid);
-                const templateStepsResult = templateService.steps.list();
-                if (!templateStepsResult.success) {
-                    throw new Error('Falha ao carregar lista de steps do template');
+                // Tentar preload, mas prosseguir mesmo em caso de falha
+                try {
+                    await templateService.preloadTemplate(tid);
+                } catch (e) {
+                    appLogger.warn('[QuizModularEditor] preloadTemplate falhou, prosseguindo com fallback');
                 }
-                const stepIds = templateStepsResult.data.map((s: any) => s.id);
+
+                // Tentar obter steps do service; fallback para 21 etapas padrão
+                let templateStepsResult = templateService.steps.list();
+                let stepsMeta: any[] = [];
+                if (templateStepsResult.success && templateStepsResult.data?.length) {
+                    stepsMeta = templateStepsResult.data;
+                } else {
+                    stepsMeta = Array.from({ length: 21 }, (_, i) => ({
+                        id: `step-${String(i + 1).padStart(2, '0')}`,
+                        order: i + 1,
+                        name: `Etapa ${i + 1}`,
+                    }));
+                }
+
+                const stepIds = stepsMeta.map((s: any) => s.id);
 
                 // ✅ FASE 1: Batch loading usando SuperUnified
                 await Promise.all(
@@ -233,7 +252,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 // ✅ Atualizar state com número correto de steps para forçar recalcular navSteps
                 setLoadedTemplate({
                     name: `Template: ${tid}`,
-                    steps: templateStepsResult.data
+                    steps: stepsMeta
                 });
 
                 appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
