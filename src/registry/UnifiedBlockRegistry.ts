@@ -86,6 +86,11 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'headline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
   'headline-inline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
   
+  // 🆕 QUIZ SCORE/PONTUAÇÃO (Sistema de Scoring v2.0)
+  'quiz-score-display': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
+  'quiz-score-header': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
+  'score-display': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
+  
   // Intro blocks - Step 1 (7 blocos)
   'intro-logo': () => import('@/components/editor/blocks/atomic/IntroLogoBlock'),
   'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
