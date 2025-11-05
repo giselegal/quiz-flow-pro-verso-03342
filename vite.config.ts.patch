@@ -1,0 +1,34 @@
+/**
+ * 🔧 VITE CONFIG PATCH - FASE 3 WebSocket
+ * 
+ * Adicionar ao vite.config.ts:
+ */
+
+// No server.hmr, adicionar configuração de WebSocket:
+server: {
+  hmr: {
+    // ✅ FASE 3: Configuração otimizada de WebSocket para HMR
+    overlay: true,
+    clientPort: undefined, // Auto-detect
+    // Timeout maior para evitar "closed without opened"
+    timeout: 5000,
+  },
+}
+
+// No build.rollupOptions, adicionar:
+build: {
+  rollupOptions: {
+    output: {
+      // ✅ FASE 3: Remover console.* em produção
+      banner: `
+        if (typeof window !== 'undefined') {
+          if (import.meta.env.PROD) {
+            console.log = () => {};
+            console.debug = () => {};
+            console.info = () => {};
+          }
+        }
+      `,
+    },
+  },
+}

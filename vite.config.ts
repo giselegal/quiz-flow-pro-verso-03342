@@ -63,10 +63,10 @@ export default defineConfig(({ mode }) => {
         'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
       },
       hmr: {
-        overlay: false,
-        // HMR habilitado via mesma porta do servidor
+        overlay: true, // ✅ FASE 3: Mostrar overlay de erros
         clientPort: 8080,
         port: 8080,
+        timeout: 5000, // ✅ FASE 3: Timeout maior para evitar "closed without opened"
       },
     },
     preview: {
