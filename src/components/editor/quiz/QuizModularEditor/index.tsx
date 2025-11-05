@@ -217,7 +217,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         }
 
         loadTemplateOptimized();
-    }, [props.templateId, unified]);
+    }, [props.templateId]); // ✅ FIX: Remover 'unified' das deps para evitar loop infinito
 
     // ✅ FASE 1: Obter blocos do SuperUnified (usar safeCurrentStep)
     const blocks: Block[] | null = unified.getStepBlocks(safeCurrentStep);
