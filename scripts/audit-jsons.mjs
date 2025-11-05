@@ -146,7 +146,7 @@ function formatBytes(n) {
     return `${v.toFixed(v >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
-function toMarkdown(files, summary) {
+function toMarkdown(files, summary, dupInfo) {
     const lines = [];
     const now = new Date();
     const d = now.toISOString().slice(0, 10);
@@ -174,16 +174,32 @@ function toMarkdown(files, summary) {
         }
         lines.push('');
     }
-    if (summary.idOccurrences.size) {
-        const dups = [...summary.idOccurrences.entries()].filter(([, arr]) => arr.length > 1);
-        if (dups.length) {
-            lines.push('## IDs duplicados entre arquivos');
-            for (const [id, filesArr] of dups) {
-                lines.push(`- id "${id}": ${filesArr.join(', ')}`);
+        if (summary.idOccurrences.size) {
+            const allDups = [...summary.idOccurrences.entries()].filter(([,arr]) => arr.length > 1);
+            const nonWhite = dupInfo?.nonWhitelisted || [];
+            const white = dupInfo?.whitelisted || [];
+            if (nonWhite.length) {
+                lines.push('## IDs duplicados entre arquivos (não-whitelisted)');
+                for (const [id, filesArr] of nonWhite) {
+                    lines.push(`- id \"${id}\": ${filesArr.join(', ')}`);
+                }
+                lines.push('');
             }
-            lines.push('');
+            if (white.length) {
+                lines.push('## IDs duplicados ignorados pela whitelist');
+                for (const [id, filesArr] of white) {
+                    lines.push(`- id \"${id}\": ${filesArr.join(', ')}`);
+                }
+                lines.push('');
+            }
+            if (!nonWhite.length && !white.length && allDups.length) {
+                lines.push('## IDs duplicados entre arquivos');
+                for (const [id, filesArr] of allDups) {
+                    lines.push(`- id \"${id}\": ${filesArr.join(', ')}`);
+                }
+                lines.push('');
+            }
         }
-    }
     if (summary.stepsWithDuplicates.length) {
         lines.push('## Duplicatas de steps dentro de arquivos');
         for (const s of summary.stepsWithDuplicates) {
@@ -204,7 +220,47 @@ function toMarkdown(files, summary) {
     return lines.join('\n');
 }
 
+function loadConfig() {
+    const defaultCfg = {
+        allowedDuplicateIds: [],
+        failOnInvalid: false,
+        failOnNonWhitelistedDuplicates: false,
+    };
+    const cfgPath = path.join(ROOT, 'scripts', 'audit-jsons.config.json');
+    try {
+        const raw = fs.readFileSync ? null : null; // appease bundlers
+    } catch {}
+    try {
+        const content = fs.readFileSync ? require('fs').readFileSync(cfgPath, 'utf8') : null;
+        if (!content) return defaultCfg;
+        const parsed = JSON.parse(content);
+        return { ...defaultCfg, ...parsed };
+    } catch {
+        return defaultCfg;
+    }
+}
+
+function filterWhitelistedDuplicates(summary, cfg) {
+    const entries = [...summary.idOccurrences.entries()];
+    const dups = entries.filter(([, files]) => files.length > 1);
+    const isAllowed = (id) => cfg.allowedDuplicateIds && cfg.allowedDuplicateIds.includes(id);
+    const nonWhitelisted = [];
+    const whitelisted = [];
+    for (const [id, files] of dups) {
+        if (isAllowed(id)) whitelisted.push([id, files]);
+        else nonWhitelisted.push([id, files]);
+    }
+    return { nonWhitelisted, whitelisted };
+}
+
 async function main() {
+    const argv = process.argv.slice(2);
+    const isCI = argv.includes('--ci');
+    const cfg = loadConfig();
+    if (isCI) {
+        cfg.failOnInvalid = true;
+        cfg.failOnNonWhitelistedDuplicates = true;
+    }
     const files = [];
     for await (const f of walk(ROOT)) {
         files.push(f);
@@ -214,11 +270,23 @@ async function main() {
         audits.push(await auditFile(f));
     }
     const summary = summarize(audits);
-    const md = toMarkdown(audits, summary);
+    const { nonWhitelisted, whitelisted } = filterWhitelistedDuplicates(summary, cfg);
+    const md = toMarkdown(audits, summary, { nonWhitelisted, whitelisted });
     const outName = `AUDITORIA_JSONS_${new Date().toISOString().slice(0, 10)}.md`;
     await fs.writeFile(path.join(ROOT, outName), md, 'utf8');
     console.log(`Relatório gerado: ${outName}`);
     console.log(`Arquivos analisados: ${audits.length} | Válidos: ${summary.valid} | Inválidos: ${summary.invalid}`);
+    if (whitelisted.length) {
+        console.log(`IDs duplicados ignorados pela whitelist: ${whitelisted.length}`);
+    }
+    if (cfg.failOnInvalid && summary.invalid > 0) {
+        console.error('Falha: arquivos JSON inválidos encontrados.');
+        process.exit(1);
+    }
+    if (cfg.failOnNonWhitelistedDuplicates && nonWhitelisted.length > 0) {
+        console.error('Falha: IDs duplicados não permitidos encontrados.');
+        process.exit(2);
+    }
 }
 
 main().catch(err => {

@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "audit:jsons": "node scripts/audit-jsons.mjs",
+    "audit:jsons:ci": "node scripts/audit-jsons.mjs --ci",
     "supabase:gen:types": "node scripts/supabase/gen-types.mjs",
     "rpc:verify": "node -r dotenv/config scripts/audit/verifyRpcBatchUpdate.mjs",
     "rpc:steps": "node -r dotenv/config scripts/audit/listStepCounts.mjs",
