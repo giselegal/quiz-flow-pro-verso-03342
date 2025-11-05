@@ -32,7 +32,7 @@ img[src*="res.cloudinary.com"] {
 /**
  * PROBLEMA 2: Seleção de blocos imprecisa
  * Causa: Múltiplos listeners de click e pointer-events conflitantes
- * Solução: Garantir z-index e cursor corretos
+ * Solução: Garantir z-index e cursor corretos, evitar aninhamentos
  */
 
 /* Melhorar área clicável dos blocos */
@@ -40,6 +40,8 @@ img[src*="res.cloudinary.com"] {
     cursor: pointer;
     position: relative;
     z-index: 1;
+    /* ✅ NOVO: Isolar contexto de stacking para evitar conflitos */
+    isolation: isolate;
 }
 
 [data-testid="canvas-block"]:hover {
@@ -56,6 +58,8 @@ img[src*="res.cloudinary.com"] {
 [data-testid="canvas-block"] button {
     position: relative;
     z-index: 30;
+    /* ✅ NOVO: Eventos de botão sempre ativos */
+    pointer-events: auto !important;
 }
 
 /* Prevenir clicks acidentais em elementos internos */
@@ -67,9 +71,26 @@ img[src*="res.cloudinary.com"] {
 [data-testid="canvas-block"] p,
 [data-testid="canvas-block"] h1,
 [data-testid="canvas-block"] h2,
-[data-testid="canvas-block"] h3 {
+[data-testid="canvas-block"] h3,
+[data-testid="canvas-block"] span:not(:has(button)) {
     pointer-events: none;
     /* Não interceptar clicks, deixar para o container */
+}
+
+/* ✅ NOVO: Garantir que toolbars/ações não criem aninhamentos problemáticos */
+[data-testid="canvas-block"] .absolute {
+    pointer-events: none;
+}
+
+[data-testid="canvas-block"] .absolute button {
+    pointer-events: auto;
+}
+
+/* ✅ NOVO: Durante loading, desabilitar TODAS as interações */
+.pointer-events-none [data-testid="canvas-block"],
+.pointer-events-none [data-testid="canvas-block"] * {
+    pointer-events: none !important;
+    cursor: wait !important;
 }
 
 /**

@@ -233,6 +233,15 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         async function ensureStepBlocks() {
             // ✅ FIX: Indicar loading durante mudança de step
             setIsLoadingStep(true);
+
+            // ✅ NOVO: Debounce para evitar múltiplas chamadas rápidas
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            if (cancelled) {
+                setIsLoadingStep(false);
+                return;
+            }
+
             try {
                 // Usar getStep para compatibilidade direta com mocks de teste
                 const svc: any = templateService;
@@ -254,9 +263,9 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             cancelled = true;
             setIsLoadingStep(false);
         };
-        // ✅ FIX: Remover 'unified' das deps - setStepBlocks é estável via useCallback
-        // safeCurrentStep e loadedTemplate determinam o step atual
-    }, [safeCurrentStep, loadedTemplate]);
+        // ✅ FIX: Remover loadedTemplate das deps - causa loop infinito
+        // Apenas safeCurrentStep determina quando recarregar
+    }, [safeCurrentStep, props.templateId]);
 
     // Handler de DnD consolidado
     const handleDragEnd = useCallback((event: any) => {
@@ -619,37 +628,43 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                     </div>
                                 ) : isLoadingStep ? (
                                     <div className="h-full flex items-center justify-center">
-                                        <div className="text-sm text-gray-500 animate-pulse">Carregando etapa…</div>
+                                        <div className="text-center">
+                                            <div className="text-sm text-gray-500 animate-pulse mb-2">Carregando etapa…</div>
+                                            <div className="text-xs text-gray-400">{currentStepKey}</div>
+                                        </div>
                                     </div>
                                 ) : canvasMode === 'edit' ? (
                                     <StepErrorBoundary
                                         stepId={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
                                     >
-                                        <CanvasColumn
-                                            currentStepKey={currentStepKey}
-                                            blocks={blocks}
-                                            selectedBlockId={selectedBlockId}
-                                            onRemoveBlock={(id) => {
-                                                const stepIndex = safeCurrentStep;
-                                                unified.removeBlock(stepIndex, id);
-                                            }}
-                                            onMoveBlock={(from, to) => {
-                                                const stepIndex = safeCurrentStep;
-                                                const list = blocks || [];
-                                                const reordered = [...list];
-                                                const [moved] = reordered.splice(from, 1);
-                                                reordered.splice(to, 0, moved);
-                                                unified.reorderBlocks(stepIndex, normalizeOrder(reordered));
-                                            }}
-                                            onUpdateBlock={(id, patch) => {
-                                                const stepIndex = safeCurrentStep;
-                                                unified.updateBlock(stepIndex, id, patch);
-                                            }}
-                                            onBlockSelect={unified.setSelectedBlock}
-                                            hasTemplate={Boolean(loadedTemplate || props.templateId)}
-                                            onLoadTemplate={handleLoadTemplate}
-                                        />
+                                        {/* ✅ NOVO: Desabilitar interações durante loading */}
+                                        <div className={isLoadingStep ? 'pointer-events-none opacity-50' : ''}>
+                                            <CanvasColumn
+                                                currentStepKey={currentStepKey}
+                                                blocks={blocks}
+                                                selectedBlockId={selectedBlockId}
+                                                onRemoveBlock={(id) => {
+                                                    const stepIndex = safeCurrentStep;
+                                                    unified.removeBlock(stepIndex, id);
+                                                }}
+                                                onMoveBlock={(from, to) => {
+                                                    const stepIndex = safeCurrentStep;
+                                                    const list = blocks || [];
+                                                    const reordered = [...list];
+                                                    const [moved] = reordered.splice(from, 1);
+                                                    reordered.splice(to, 0, moved);
+                                                    unified.reorderBlocks(stepIndex, normalizeOrder(reordered));
+                                                }}
+                                                onUpdateBlock={(id, patch) => {
+                                                    const stepIndex = safeCurrentStep;
+                                                    unified.updateBlock(stepIndex, id, patch);
+                                                }}
+                                                onBlockSelect={unified.setSelectedBlock}
+                                                hasTemplate={Boolean(loadedTemplate || props.templateId)}
+                                                onLoadTemplate={handleLoadTemplate}
+                                            />
+                                        </div>
                                     </StepErrorBoundary>
                                 ) : (
                                     <PreviewPanel
