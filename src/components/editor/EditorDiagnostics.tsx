@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/hooks/useEditor';
 import { Bug, X } from 'lucide-react';
 
 export const EditorDiagnostics: React.FC = () => {

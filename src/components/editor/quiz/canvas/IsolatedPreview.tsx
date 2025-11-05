@@ -17,7 +17,7 @@ import { PreviewBlock } from './PreviewBlock';
 import { Block } from '@/types/editor';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePreviewDevice } from '@/contexts/editor/EditorModeContext';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/hooks/useEditor';
 import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
 import { usePreviewDataWorker } from '@/hooks/usePreviewDataWorker';
 

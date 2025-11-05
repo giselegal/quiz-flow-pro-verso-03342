@@ -29,7 +29,7 @@ import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';
 import { LivePreviewProvider } from '@/providers/LivePreviewProvider';
 import PreviewMonitor from '@/components/debug/PreviewMonitor';
 import UnifiedBlockRenderer from './UnifiedBlockRenderer';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/hooks/useEditor';
 import { blocksToBlockComponents } from '@/utils/templateConverter';
 
 export interface EnhancedCanvasAreaProps {

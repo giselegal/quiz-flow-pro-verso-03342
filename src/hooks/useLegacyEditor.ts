@@ -5,7 +5,7 @@
  * Mantém compatibilidade com código antigo sem overhead de Provider adicional
  */
 
-import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/hooks/useEditor';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 export interface LegacyEditorAPI {

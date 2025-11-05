@@ -16,7 +16,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/hooks/useEditor';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

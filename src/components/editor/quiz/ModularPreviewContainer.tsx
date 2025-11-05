@@ -3,7 +3,8 @@ import { appLogger } from '@/utils/logger';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
-import { EditorProviderUnified, useEditorOptional } from '@/components/editor/EditorProviderUnified';
+import { EditorProviderUnified } from '@/components/editor/EditorProviderUnified';
+import { useEditorOptional } from '@/hooks/useEditor';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
 
 export interface ModularPreviewContainerProps {

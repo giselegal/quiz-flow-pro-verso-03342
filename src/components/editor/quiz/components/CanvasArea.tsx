@@ -11,7 +11,7 @@ import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeCon
 import { UnifiedStepRenderer } from './UnifiedStepRenderer';
 import { smartMigration } from '@/utils/stepDataMigration';
 import UnifiedBlockRenderer from './UnifiedBlockRenderer';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/hooks/useEditor';
 import { Badge } from '@/components/ui/badge';
 
 // Virtualização agora tratada internamente via hook

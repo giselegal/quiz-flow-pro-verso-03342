@@ -2,7 +2,7 @@ import React, { memo, useMemo, useCallback } from 'react';
 import { appLogger } from '@/utils/logger';
 import { EditableQuizStep } from '@/components/editor/quiz/types';
 import { adaptStepData } from '@/utils/StepDataAdapter';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/hooks/useEditor';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
