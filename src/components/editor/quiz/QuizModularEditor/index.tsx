@@ -126,6 +126,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
         async function loadTemplateOptimized() {
             setIsLoadingTemplate(true);
+            setTemplateLoadError(false);
             try {
                 const tid = props.templateId!;
                 appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
@@ -155,6 +156,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
+                setTemplateLoadError(true);
             } finally {
                 setIsLoadingTemplate(false);
             }
@@ -249,6 +251,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     // ✅ NOVO: Handler para carregar template quando usuário clicar no botão
     const handleLoadTemplate = useCallback(async () => {
         setIsLoadingTemplate(true);
+        setTemplateLoadError(false);
         try {
             const tid = 'quiz21StepsComplete';
             appLogger.info(`🔍 [QuizModularEditor] Carregando template via botão: ${tid}`);
@@ -286,6 +289,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
 
         } catch (error) {
             appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
+            setTemplateLoadError(true);
         } finally {
             setIsLoadingTemplate(false);
         }
@@ -319,7 +323,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                             </span>
                         )}
 
-                        {!loadedTemplate && !isLoadingTemplate && !props.templateId && (
+                        {(!loadedTemplate && !isLoadingTemplate && !props.templateId) || templateLoadError && (
                             <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
                                 🎨 Modo Construção Livre
                             </span>
