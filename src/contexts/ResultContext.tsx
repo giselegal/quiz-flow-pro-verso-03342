@@ -189,14 +189,24 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
             const comp1 = complementaryStyles?.[0];
             const comp2 = complementaryStyles?.[1];
             const ctx = {
+                // Dados do usuário
                 username: userProfile.userName,
+                userName: userProfile.userName,
+
+                // Dados do estilo
                 style: styleConfig?.name,
+                styleName: styleConfig?.name,
+                primaryStyle: styleConfig?.name,
+
+                // Objetos aninhados
                 user: { name: userProfile.userName },
                 result: { styleName: styleConfig?.name },
+
                 // Complementares em diferentes formas de acesso aos tokens
                 comp1: comp1 ? { ...comp1, styleName: comp1.name } : undefined,
                 comp2: comp2 ? { ...comp2, styleName: comp2.name } : undefined,
                 complementary: complementaryStyles?.map(s => ({ ...s, styleName: s.name })) || [],
+
                 // Aliases simples
                 comp1Name: comp1?.name,
                 comp2Name: comp2?.name,
@@ -204,6 +214,13 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
                 comp2Description: comp2?.description,
                 comp1Image: comp1?.imageUrl,
                 comp2Image: comp2?.imageUrl,
+
+                // CTAs - textos e URLs padrão
+                ctaPrimaryText: 'Quero Transformar Meu Estilo Agora!',
+                ctaPrimaryUrl: offerUrl,
+                ctaSecondaryText: 'Conhecer a Metodologia Completa',
+                ctaSecondaryUrl: offerUrl,
+
                 calculations,
                 styleConfig,
             };
