@@ -1,10 +1,11 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import QuizModularEditor from '../index';
+import { templateService } from '@/services/canonical/TemplateService';
 
-// Mocks leves para evitar carregar componentes pesados
+// Mocks leves
 vi.mock('../components/CanvasColumn', () => ({
     default: () => <div data-testid="canvas-column" />,
 }));
@@ -18,22 +19,21 @@ vi.mock('../components/PreviewPanel', () => ({
     default: () => <div data-testid="preview-panel" />,
 }));
 vi.mock('../components/StepNavigatorColumn', () => ({
-    default: ({ steps, onSelectStep }: any) => (
-        <div data-testid="step-navigator">
-            {steps?.map((step: any) => (
-                <button key={step.key} onClick={() => onSelectStep(step.key)}>
-                    {step.title}
-                </button>
-            ))}
-        </div>
-    ),
+    default: () => <div data-testid="step-navigator" />,
 }));
 vi.mock('../StepErrorBoundary', () => ({
     StepErrorBoundary: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 vi.mock('@/utils/logger', () => ({ appLogger: { info: vi.fn(), error: vi.fn() } }));
 
-// Mock do serviço canônico (lista de steps e getStep básico)
+const mockPreloadTemplate = vi.fn().mockResolvedValue(undefined);
+const mockGetStep = vi.fn().mockResolvedValue({
+    success: true,
+    data: [
+        { id: 'block-1', type: 'TextBlock', order: 0, properties: {}, content: {} },
+    ],
+});
+
 vi.mock('@/services/canonical/TemplateService', () => ({
     templateService: {
         steps: {
@@ -42,19 +42,16 @@ vi.mock('@/services/canonical/TemplateService', () => ({
                 data: [
                     { id: 'step-01', name: 'Introdução', order: 1 },
                     { id: 'step-02', name: 'Pergunta', order: 2 },
-                    { id: 'step-03', name: 'Pergunta 2', order: 3 },
                 ],
             }),
         },
-        preloadTemplate: vi.fn().mockResolvedValue(undefined),
-        getStep: vi.fn().mockResolvedValue({ success: true, data: [] }),
+        preloadTemplate: (...args: any[]) => mockPreloadTemplate(...args),
+        getStep: (...args: any[]) => mockGetStep(...args),
         invalidateTemplate: vi.fn(),
     },
 }));
 
-// Mock do estado unificado
-const setCurrentStep = vi.fn();
-const saveFunnel = vi.fn().mockResolvedValue(undefined);
+const setStepBlocks = vi.fn();
 
 vi.mock('@/hooks/useSuperUnified', () => ({
     useSuperUnified: () => ({
@@ -66,60 +63,64 @@ vi.mock('@/hooks/useSuperUnified', () => ({
             },
             ui: { isLoading: false },
         },
-        setCurrentStep,
-        setStepBlocks: vi.fn(),
+        setCurrentStep: vi.fn(),
+        setStepBlocks,
         addBlock: vi.fn(),
         removeBlock: vi.fn(),
         reorderBlocks: vi.fn(),
         updateBlock: vi.fn(),
         setSelectedBlock: vi.fn(),
         getStepBlocks: () => [],
-        saveFunnel,
+        saveFunnel: vi.fn().mockResolvedValue(undefined),
         showToast: vi.fn(),
     }),
 }));
 
-// Flags de features
 vi.mock('@/hooks/useFeatureFlags', () => ({
     useFeatureFlags: () => ({ enableAutoSave: false }),
 }));
 
-
-describe('QuizModularEditor - Navegação', () => {
+describe('QuizModularEditor - Template Loading', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
-    it('renderiza a coluna de navegação com steps do serviço canônico', async () => {
-        render(<QuizModularEditor />);
+    it('carrega template quando templateId é fornecido via props', async () => {
+        render(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
-        // Aguardamos itens da navegação
-        await waitFor(() => {
-            expect(screen.getByText('01 - Introdução')).toBeInTheDocument();
-            expect(screen.getByText('02 - Pergunta')).toBeInTheDocument();
-        });
+        // Aguarda preload ser chamado
+        await waitFor(
+            () => {
+                expect(mockPreloadTemplate).toHaveBeenCalledWith('quiz21StepsComplete');
+            },
+            { timeout: 3000 },
+        );
+
+        // Aguarda getStep ser chamado para os steps
+        await waitFor(
+            () => {
+                expect(mockGetStep).toHaveBeenCalled();
+            },
+            { timeout: 3000 },
+        );
     });
 
-    it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
-        render(<QuizModularEditor />);
+    it('chama setStepBlocks quando blocos do template são carregados', async () => {
+        render(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
-        // Garantir que os itens existam
-        await waitFor(() => expect(screen.getByText('02 - Pergunta')).toBeInTheDocument());
-
-        fireEvent.click(screen.getByText('02 - Pergunta'));
-
-        // step-02 -> número 2
-        expect(setCurrentStep).toHaveBeenCalledWith(2);
+        await waitFor(
+            () => {
+                expect(setStepBlocks).toHaveBeenCalled();
+            },
+            { timeout: 3000 },
+        );
     });
 
-    it('ao clicar em Salvar, aciona saveFunnel uma vez', async () => {
+    it('exibe "Modo Construção Livre" quando não há templateId', async () => {
         render(<QuizModularEditor />);
 
-        const saveButton = await waitFor(() => screen.getByText('Salvar'));
-        fireEvent.click(saveButton);
-
         await waitFor(() => {
-            expect(saveFunnel).toHaveBeenCalledTimes(1);
+            expect(screen.getByText(/Modo Construção Livre/i)).toBeInTheDocument();
         });
     });
 });
