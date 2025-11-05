@@ -4,5 +4,6 @@
     "step-12", "step-13", "step-19", "step-20", "step-21"
   ],
   "failOnInvalid": false,
-  "failOnNonWhitelistedDuplicates": false
+  "failOnNonWhitelistedDuplicates": false,
+  "failOnSchemaErrors": false
 }
