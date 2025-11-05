@@ -17,9 +17,6 @@
  * - ✅ Auto-save inteligente
  */
 
-// Polyfills de teste (precisam ser carregados antes de libs que usam matchMedia)
-import '@/test/polyfills/matchMedia';
-
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
@@ -82,8 +79,6 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
     const [templateLoadError, setTemplateLoadError] = useState(false);
-
-    // matchMedia polyfill global é carregado em '@/test/polyfills/matchMedia'
 
     // Persistência de layout dos painéis (larguras)
     const PANEL_LAYOUT_KEY = 'qm-editor:panel-layout-v1';
