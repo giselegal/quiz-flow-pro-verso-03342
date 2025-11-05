@@ -3609,11 +3609,13 @@
                 "aspectRatio": "4/5",
                 "showDecorations": true,
                 "decorationColor": "#B89B7A",
-                "fallbackEnabled": true
+                "fallbackEnabled": true,
+                "showLabel": true
               },
               "showIntroText": true,
               "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
-              "showDescription": true
+              "showDescription": true,
+              "showGuideImage": true
             }
           },
           "content": {},

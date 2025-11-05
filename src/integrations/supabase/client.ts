@@ -2,15 +2,33 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://dgpbqhjktlnjiatcqheh.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRncGJxaGprdGxuamlhdGNxaGVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDYwMDksImV4cCI6MjA3NjA4MjAwOX0.BADCIVGW0fUpHvC8VcXjSNhx2pSApVMu5fUHnnkj_ck';
+// Safe access to environment variables with fallback
+const getEnvVar = (key: string, fallback: string): string => {
+  try {
+    return (import.meta as any)?.env?.[key] || fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const SUPABASE_URL = getEnvVar('VITE_SUPABASE_URL', 'https://dgpbqhjktlnjiatcqheh.supabase.co');
+const SUPABASE_PUBLISHABLE_KEY = getEnvVar('VITE_SUPABASE_PUBLISHABLE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRncGJxaGprdGxuamlhdGNxaGVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDYwMDksImV4cCI6MjA3NjA4MjAwOX0.BADCIVGW0fUpHvC8VcXjSNhx2pSApVMu5fUHnnkj_ck');
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+// Safe access to localStorage with fallback
+const getStorage = () => {
+  try {
+    return typeof localStorage !== 'undefined' ? localStorage : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
+    storage: getStorage(),
     persistSession: true,
     autoRefreshToken: true,
   },
