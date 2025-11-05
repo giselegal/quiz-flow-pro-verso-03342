@@ -549,6 +549,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
                         <div className="h-full border-r bg-white overflow-y-auto">
                             <StepNavigatorColumn
+                                steps={navSteps}
                                 currentStepKey={currentStepKey}
                                 onSelectStep={(key: string) => {
                                     // Mapear o ID selecionado para um índice (1-based) com base na lista canônica
