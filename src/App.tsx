@@ -83,6 +83,9 @@ const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'));
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
+
+// 🧪 TESTES CRUD
+const TestsPage = lazy(() => import('./pages/TestsPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
 
@@ -292,6 +295,13 @@ function AppCore() {
                                 <Route path="/performance-test">
                                     <div data-testid="performance-test-page">
                                         <PerformanceTestPage />
+                                    </div>
+                                </Route>
+
+                                {/* 🧪 TESTES CRUD - SUPABASE INTEGRATION */}
+                                <Route path="/tests">
+                                    <div data-testid="tests-page">
+                                        <TestsPage />
                                     </div>
                                 </Route>
 
