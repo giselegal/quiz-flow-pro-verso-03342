@@ -105,25 +105,28 @@ describe('QuizModularEditor - Navegação', () => {
             expect(screen.getByText('01 - Introdução')).toBeInTheDocument();
             expect(screen.getByText('02 - Pergunta')).toBeInTheDocument();
         });
-        it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
-            it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
-                render(<QuizModularEditor templateId="quiz21StepsComplete" />);
+    });
 
-                // Garantir que os itens existam
-                await waitFor(() => expect(screen.getByText('02 - Pergunta')).toBeInTheDocument());
+    it('ao clicar em um step, chama setCurrentStep com o índice correto', async () => {
+        render(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
-                fireEvent.click(screen.getByText('02 - Pergunta'));
+        // Garantir que os itens existam
+        await waitFor(() => expect(screen.getByText('02 - Pergunta')).toBeInTheDocument());
 
-                // step-02 -> número 2
-                expect(setCurrentStep).toHaveBeenCalledWith(2);
-            }); it('ao clicar em Salvar, aciona saveFunnel uma vez', async () => {
-                render(<QuizModularEditor />);
+        fireEvent.click(screen.getByText('02 - Pergunta'));
 
-                const saveButton = await waitFor(() => screen.getByText('Salvar'));
-                fireEvent.click(saveButton);
+        // step-02 -> número 2
+        expect(setCurrentStep).toHaveBeenCalledWith(2);
+    });
 
-                await waitFor(() => {
-                    expect(saveFunnel).toHaveBeenCalledTimes(1);
-                });
-            });
+    it('ao clicar em Salvar, aciona saveFunnel uma vez', async () => {
+        render(<QuizModularEditor />);
+
+        const saveButton = await waitFor(() => screen.getByText('Salvar'));
+        fireEvent.click(saveButton);
+
+        await waitFor(() => {
+            expect(saveFunnel).toHaveBeenCalledTimes(1);
         });
+    });
+});
