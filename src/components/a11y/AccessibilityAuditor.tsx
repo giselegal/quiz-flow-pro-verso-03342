@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Shield, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, Info, Book, Zap, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface A11yIssue {
   id: string;
@@ -22,6 +23,7 @@ export const AccessibilityAuditor: React.FC = () => {
   const [issues, setIssues] = useState<A11yIssue[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [lastRun, setLastRun] = useState<Date | null>(null);
+  const [showGuide, setShowGuide] = useState(true);
 
   const runAudit = async () => {
     setIsRunning(true);
@@ -151,6 +153,69 @@ export const AccessibilityAuditor: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      {/* Guia de Primeira Auditoria */}
+      {showGuide && !lastRun && (
+        <Alert className="border-blue-500 bg-blue-50 dark:bg-blue-950">
+          <Book className="h-4 w-4 text-blue-600" />
+          <AlertTitle className="text-blue-900 dark:text-blue-100">
+            🚀 Primeira Auditoria de Acessibilidade
+          </AlertTitle>
+          <AlertDescription className="text-blue-800 dark:text-blue-200 space-y-2">
+            <p className="text-sm">
+              <strong>Passo 1:</strong> Clique em "Executar Auditoria" abaixo (aguarde 2-5s)
+            </p>
+            <p className="text-sm">
+              <strong>Passo 2:</strong> Veja resultados agrupados por severidade
+            </p>
+            <p className="text-sm">
+              <strong>Passo 3:</strong> Priorize correções: Críticos (hoje) → Sérios (amanhã)
+            </p>
+            <div className="flex gap-2 mt-3">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowGuide(false)}
+                className="text-xs"
+              >
+                Entendi
+              </Button>
+              <a
+                href="/docs/A11Y_QUICK_START.md"
+                target="_blank"
+                className="text-xs flex items-center gap-1 text-blue-700 hover:text-blue-900 dark:text-blue-300"
+              >
+                Ver guia completo <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Dica de Correção Rápida */}
+      {lastRun && issues.length > 0 && (
+        <Alert className="border-amber-500 bg-amber-50 dark:bg-amber-950">
+          <Zap className="h-4 w-4 text-amber-600" />
+          <AlertTitle className="text-amber-900 dark:text-amber-100">
+            💡 Dica: Correções Rápidas
+          </AlertTitle>
+          <AlertDescription className="text-amber-800 dark:text-amber-200">
+            <p className="text-sm mb-2">
+              Abra o DevTools Console e cole para ver preview:
+            </p>
+            <pre className="bg-amber-100 dark:bg-amber-900 p-2 rounded text-xs overflow-x-auto">
+              {`const axe = await import('axe-core');
+const results = await axe.default.run();
+console.table(results.violations.map(v => ({
+  id: v.id, impact: v.impact, count: v.nodes.length
+})));`}
+            </pre>
+            <p className="text-xs mt-2">
+              📚 Guia completo: <code className="bg-amber-200 dark:bg-amber-800 px-1 rounded">docs/A11Y_COMMON_FIXES.md</code>
+            </p>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
