@@ -6,6 +6,8 @@ import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 import React from 'react';
+// Carrega polyfill robusto de matchMedia ANTES de qualquer import que possa usar
+import '@/test/polyfills/matchMedia';
 // Stub de IndexedDB para testes que carregam serviços de storage/imagens
 // Nota: reutiliza o mock mais completo já presente no repositório
 import '../__tests__/setup/indexeddb.mock';
@@ -14,7 +16,7 @@ import '../__tests__/setup/indexeddb.mock';
 vi.mock('next-themes', () => {
     return {
         ThemeProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
-        useTheme: () => ({ theme: 'light', setTheme: () => {} }),
+        useTheme: () => ({ theme: 'light', setTheme: () => { } }),
     };
 });
 
@@ -54,21 +56,9 @@ if (typeof (globalThis as any).window !== 'undefined') {
     (globalThis as any).localStorage = localStorageMock;
 }
 
-// Mock global do matchMedia
+// Garantir que globalThis.matchMedia referencia window.matchMedia
 if (typeof window !== 'undefined') {
-    Object.defineProperty(window, 'matchMedia', {
-        writable: true,
-        value: vi.fn().mockImplementation(query => ({
-            matches: false,
-            media: query,
-            onchange: null,
-            addListener: vi.fn(),
-            removeListener: vi.fn(),
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-            dispatchEvent: vi.fn(),
-        })),
-    });
+    (globalThis as any).matchMedia = (window as any).matchMedia;
 }
 
 // Mock global do ResizeObserver
