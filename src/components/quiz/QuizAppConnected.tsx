@@ -14,6 +14,9 @@
 import { useQuizState } from '../../hooks/useQuizState';
 import { useOptionalQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { useComponentConfiguration } from '../../hooks/useComponentConfiguration';
+// 🆕 SISTEMA DE PONTUAÇÃO
+import { useQuizStore } from '@/store/quizStore';
+import { QuizScoreDisplay } from '@/components/quiz/blocks/QuizScoreDisplay';
 // Componentes originais (ainda usados como fallback para alguns casos especiais)
 
 
@@ -141,6 +144,70 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         addStrategicAnswer,
         getOfferKey,
     } = useQuizState(funnelId, externalSteps);
+
+    // 🆕 SISTEMA DE PONTUAÇÃO - Zustand Store
+    const quizStoreSession = useQuizStore(s => s.session);
+    const quizStoreSaveAnswer = useQuizStore(s => s.saveAnswer);
+    const quizStoreUpdateScore = useQuizStore(s => s.updateScore);
+    const quizStoreStartSession = useQuizStore(s => s.startSession);
+    const scoreSystem = quizStoreSession?.scoreSystem;
+
+    // 🆕 TIME TRACKING - Rastrear tempo por questão
+    const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
+
+    // Iniciar sessão do quizStore quando componente monta
+    useEffect(() => {
+        if (!quizStoreSession) {
+            quizStoreStartSession(funnelId, 21);
+            console.log('🎯 QuizStore session iniciada');
+        }
+    }, [funnelId, quizStoreSession, quizStoreStartSession]);
+
+    // Resetar timer quando step muda
+    useEffect(() => {
+        setQuestionStartTime(Date.now());
+    }, [state.currentStep]);
+
+    // 🆕 HELPER: Salvar resposta com pontuação
+    const saveAnswerWithScore = useCallback((
+        stepId: string,
+        answerValue: string | string[],
+        isCorrect: boolean = true
+    ) => {
+        const timeSpent = (Date.now() - questionStartTime) / 1000;
+        const answerText = Array.isArray(answerValue) ? answerValue.join(', ') : answerValue;
+        const answerVal = Array.isArray(answerValue) ? answerValue[0] : answerValue;
+
+        // Salvar no sistema antigo (compatibilidade)
+        addAnswer(stepId, Array.isArray(answerValue) ? answerValue : [answerValue]);
+
+        // Salvar no quizStore com dados de pontuação
+        quizStoreSaveAnswer({
+            stepId,
+            questionId: stepId,
+            questionText: currentStepData?.title || 'Pergunta',
+            answerValue: answerVal,
+            answerText,
+            scoreEarned: isCorrect ? 10 : 0,
+            timeSpent,
+            isCorrect,
+        });
+
+        // Recalcular pontuação total
+        quizStoreUpdateScore();
+
+        console.log('✅ Resposta salva com pontuação:', {
+            stepId,
+            timeSpent: timeSpent.toFixed(2) + 's',
+            score: isCorrect ? 10 : 0,
+        });
+    }, [
+        questionStartTime,
+        addAnswer,
+        quizStoreSaveAnswer,
+        quizStoreUpdateScore,
+        currentStepData,
+    ]);
 
     // Renderer mode detection (legacy | unified | auto)
     const [rendererMode, setRendererMode] = useState<'legacy' | 'unified' | 'auto'>('legacy');
@@ -669,8 +736,9 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         blocks={questionBlocks}
                         currentAnswers={answers}
                         onAnswersChange={(newAnswers: string[]) => {
-                            // Atualiza respostas e avança se completou requiredSelections
-                            addAnswer(state.currentStep, newAnswers);
+                            // 🆕 Salvar com pontuação
+                            saveAnswerWithScore(state.currentStep, newAnswers, true);
+
                             const required = (currentStepData as any).requiredSelections || 1;
                             if (newAnswers.length === required) {
                                 // Delay pequeno para feedback visual antes de avançar
@@ -689,6 +757,10 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         currentAnswer={currentAnswer}
                         onAnswerChange={(answer: string) => {
                             addStrategicAnswer(state.currentStep, answer);
+
+                            // 🆕 Salvar resposta estratégica com pontuação
+                            saveAnswerWithScore(state.currentStep, answer, true);
+
                             // Avança automático após seleção
                             setTimeout(() => nextStep(), 400);
                         }}
@@ -708,6 +780,41 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             }
             case 'result': {
                 const resultBlocks = (currentStepData as any).blocks || [];
+
+                // 🆕 Exibir pontuação no resultado
+                if (scoreSystem) {
+                    return (
+                        <div className="space-y-8">
+                            <QuizScoreDisplay
+                                score={scoreSystem.currentScore}
+                                maxScore={scoreSystem.maxScore}
+                                percentage={scoreSystem.percentage}
+                                level={scoreSystem.level}
+                                badges={scoreSystem.badges.map(b => b.name)}
+                                breakdown={scoreSystem.breakdown}
+                                variant="celebration"
+                                showLevel={true}
+                                showBadges={true}
+                                showBreakdown={false}
+                                animate={true}
+                            />
+
+                            <ResultStep
+                                data={currentStepData as any}
+                                blocks={resultBlocks}
+                                userProfile={{
+                                    ...state.userProfile,
+                                    scores: Object.entries(state.scores).map(([name, score]) => ({
+                                        name,
+                                        score,
+                                    })),
+                                } as any}
+                            />
+                        </div>
+                    );
+                }
+
+                // Fallback sem pontuação (caso scoreSystem não esteja pronto)
                 return (
                     <ResultStep
                         data={currentStepData as any}
@@ -811,6 +918,38 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         </div>
                     </div>
                 )}
+
+                {/* 🆕 LIVE SCORE INDICATOR - Sempre visível */}
+                {scoreSystem && !editorMode && !previewMode && (
+                    <div className="fixed top-4 right-4 bg-white rounded-xl shadow-2xl p-4 z-50 border border-purple-200 min-w-[120px]">
+                        <div className="text-center space-y-2">
+                            <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                                Pontuação
+                            </div>
+                            <div className="text-3xl font-bold text-purple-600">
+                                {scoreSystem.currentScore}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                                {scoreSystem.level.name}
+                            </div>
+                            {scoreSystem.badges.length > 0 && (
+                                <div className="flex justify-center gap-1 pt-2 border-t border-gray-100">
+                                    {scoreSystem.badges.slice(0, 3).map((badge, idx) => (
+                                        <span key={badge.id || idx} className="text-lg" title={badge.name}>
+                                            {badge.icon}
+                                        </span>
+                                    ))}
+                                    {scoreSystem.badges.length > 3 && (
+                                        <span className="text-xs text-gray-400 self-center">
+                                            +{scoreSystem.badges.length - 3}
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
                 {legacyEnabled ? (
                     <div className="max-w-6xl mx-auto px-4 py-8">
                         {legacyRender() || (
