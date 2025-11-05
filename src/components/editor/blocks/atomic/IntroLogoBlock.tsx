@@ -26,8 +26,14 @@ export default function IntroLogoBlock({
       <img
         src={logoUrl}
         alt={logoAlt}
-        style={{ height }}
+        style={{
+          height,
+          maxWidth: '100%',
+          width: 'auto'
+        }}
         className="object-contain"
+        loading="eager"
+        decoding="sync"
       />
     </div>
   );

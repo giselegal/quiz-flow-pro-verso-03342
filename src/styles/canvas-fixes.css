@@ -11,22 +11,25 @@
 .sortable-block img,
 .canvas-drop-zone img,
 [data-testid="canvas-block"] img {
+    image-rendering: auto;
     image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transform: none !important;
     /* Remover transforms que causam blur */
+    backface-visibility: visible !important;
 }
 
-/* Garantir nitidez em imagens Cloudinary */
+/* Garantir máxima qualidade em imagens Cloudinary */
 img[src*="cloudinary"],
 img[src*="res.cloudinary.com"] {
-    image-rendering: -webkit-optimize-contrast;
     image-rendering: auto;
+    image-rendering: high-quality;
+    image-rendering: -webkit-optimize-contrast;
     /* Deixar browser decidir qualidade */
     -webkit-backface-visibility: visible !important;
     backface-visibility: visible !important;
+    filter: none !important;
 }
 
 /**
