@@ -158,6 +158,25 @@ export class TemplateService extends BaseCanonicalService {
 
   protected async onInitialize(): Promise<void> {
     this.log('TemplateService initialized with UnifiedTemplateRegistry');
+    
+    // ✅ FASE 1: Preload de steps críticos para eliminar cache MISS
+    try {
+      this.log('⚡ Preloading critical steps...');
+      const criticalPromises = this.CRITICAL_STEPS.map(stepId => 
+        this.lazyLoadStep(stepId, false).catch(err => {
+          this.log(`⚠️ Failed to preload ${stepId}:`, err);
+          return null;
+        })
+      );
+      await Promise.allSettled(criticalPromises);
+      this.log(`✅ Preloaded ${this.CRITICAL_STEPS.length} critical steps`);
+      
+      // Preload steps vizinhos do step inicial (step-01)
+      await this.preloadNeighborsAndCritical('step-01');
+    } catch (error) {
+      this.log('⚠️ Error during preload:', error);
+      // Não falhar a inicialização se preload falhar
+    }
   }
 
   protected async onDispose(): Promise<void> {
