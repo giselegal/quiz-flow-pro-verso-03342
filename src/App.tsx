@@ -57,6 +57,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 const EditorBlocksDiagnosticPage = lazy(() => import('./pages/EditorBlocksDiagnosticPage'));
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
+const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
 // 🚀 EDITOR ROUTES (Sprint 1 - Consolidated + Lazy Loading)
 // ✅ Delega para src/pages/editor/index.tsx (usa SuperUnifiedProvider)
@@ -288,6 +289,14 @@ function AppCore() {
                                         <SuperUnifiedProvider autoLoad={false} debugMode={true}>
                                             <EditorBlocksDiagnosticPage />
                                         </SuperUnifiedProvider>
+                                    </div>
+                                </Route>
+
+                                <Route path="/debug/accessibility">
+                                    <div data-testid="accessibility-page" className="min-h-screen bg-background p-8">
+                                        <div className="max-w-7xl mx-auto">
+                                            <AccessibilityAuditorPage />
+                                        </div>
                                     </div>
                                 </Route>
 

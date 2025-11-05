@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import ClientLayout from './components/ClientLayout';
 import './index.css';
+// 🔍 SENTRY: Error tracking e performance monitoring
+import { initSentry } from '@/lib/sentry';
 // Silenciador de logs em produção (pode ser desativado via VITE_DEBUG_LOGS=true)
 import './shims/consoleSilencer';
 import './styles/design-system.css';
@@ -300,6 +302,9 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 }
 
 // O serviço é inicializado automaticamente na importação
+
+// 🔍 SENTRY: Inicializar antes do React
+initSentry();
 
 console.log('🔧 DEBUG: Criando root do React...');
 // Instalar guards de depreciação (alert/unload)
