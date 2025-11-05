@@ -30,16 +30,16 @@ export interface EditorContextValue {
   stages: EditorStep[];
   activeStageId: string | null;
   selectedBlockId: string | null;
-  
+
   // UI
   isPreviewing: boolean;
   setIsPreviewing: (value: boolean) => void;
-  
+
   // Actions
   stageActions: {
     setActiveStage: (stageId: string) => void;
   };
-  
+
   blockActions: {
     addBlock: (type: string) => Promise<string>;
     updateBlock: (id: string, updates: any) => Promise<void>;
@@ -47,16 +47,16 @@ export interface EditorContextValue {
     reorderBlocks: (startIndex: number, endIndex: number) => Promise<void>;
     setSelectedBlockId: (id: string | null) => void;
   };
-  
+
   persistenceActions: {
     saveFunnel: () => Promise<void>;
   };
-  
+
   uiState: {
     isPreviewing: boolean;
     setIsPreviewing: (value: boolean) => void;
   };
-  
+
   // State para compatibilidade adicional
   state?: {
     currentStep: number;
@@ -78,11 +78,11 @@ export function useEditor(): EditorContextValue;
 export function useEditor(options: { optional: true }): EditorContextValue | undefined;
 export function useEditor(options?: { optional?: boolean }): EditorContextValue | undefined {
   const context = useContext(EditorContext);
-  
+
   if (!context && !options?.optional) {
     throw new Error('useEditor must be used within EditorProviderAdapter');
   }
-  
+
   return context;
 }
 
@@ -103,6 +103,12 @@ export const EditorProviderAdapter: React.FC<EditorProviderAdapterProps> = ({
   enableSupabase = false,
   autoLoad = true,
 }) => {
+  useEffect(() => {
+    // Aviso de depreciação conforme auditoria
+    try {
+      console.warn('[DEPRECATED] EditorProviderAdapter: use EditorProviderCanonical/EditorProviderUnified em novos códigos.');
+    } catch { }
+  }, []);
   const editor = useEditorConsolidated();
   const isPreviewMode = useEditorStore((state) => state.isPreviewMode);
   const setPreviewMode = useEditorStore((state) => state.setPreviewMode);
@@ -120,14 +126,14 @@ export const EditorProviderAdapter: React.FC<EditorProviderAdapterProps> = ({
     stages: editor.steps,
     activeStageId: editor.currentStep?.id || null,
     selectedBlockId: editor.selectedBlockId,
-    
+
     isPreviewing: isPreviewMode,
     setIsPreviewing: setPreviewMode,
-    
+
     stageActions: {
       setActiveStage: editor.goToStep,
     },
-    
+
     blockActions: {
       addBlock: async (type: string) => {
         return editor.addBlock(type as any);
@@ -143,18 +149,18 @@ export const EditorProviderAdapter: React.FC<EditorProviderAdapterProps> = ({
       },
       setSelectedBlockId: editor.selectBlock,
     },
-    
+
     persistenceActions: {
       saveFunnel: async () => {
         await editor.save();
       },
     },
-    
+
     uiState: {
       isPreviewing: isPreviewMode,
       setIsPreviewing: setPreviewMode,
     },
-    
+
     // Compatibilidade adicional
     state: {
       currentStep: editor.currentStepIndex + 1,

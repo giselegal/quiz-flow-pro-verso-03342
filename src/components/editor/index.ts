@@ -14,12 +14,15 @@
 // ============================================================================
 
 // ✅ Provider único recomendado (use este!)
-export { 
-    EditorProviderUnified, 
+export {
+    EditorProviderUnified,
     EditorProviderUnified as EditorProvider,
-    useEditor, 
-    useEditorOptional 
+    useEditor,
+    useEditorOptional
 } from './EditorProviderUnified';
+
+// 🧩 Provider canônico (alias explícito)
+export { EditorProviderCanonical } from './EditorProviderCanonical';
 
 // Alias para compatibilidade
 export { useEditorOptional as useUnifiedEditorOptional } from './EditorProviderUnified';
