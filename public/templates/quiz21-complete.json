@@ -3557,6 +3557,44 @@
           "parentId": null
         },
         {
+          "id": "quiz-score-celebration",
+          "type": "quiz-score-display",
+          "order": 0.5,
+          "properties": {
+            "enabled": true,
+            "order": 1.5,
+            "props": {
+              "variant": "celebration",
+              "showScore": true,
+              "showLevel": true,
+              "showBadges": true,
+              "showBreakdown": true,
+              "animateOnMount": true,
+              "confettiEnabled": true,
+              "theme": {
+                "primaryColor": "#B89B7A",
+                "secondaryColor": "#432818",
+                "accentColor": "#a08966",
+                "backgroundColor": "#fffaf7",
+                "successColor": "#2d5f3f"
+              },
+              "labels": {
+                "title": "🏆 Sua Pontuação Final",
+                "scoreLabel": "Pontos Totais",
+                "levelLabel": "Nível Alcançado",
+                "badgesLabel": "Badges Conquistadas",
+                "breakdownLabel": "Detalhamento"
+              },
+              "spacing": {
+                "padding": "2rem 1.5rem",
+                "marginBottom": "2rem"
+              }
+            }
+          },
+          "content": {},
+          "parentId": null
+        },
+        {
           "id": "result-main",
           "type": "result-main",
           "order": 1,
