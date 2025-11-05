@@ -43,13 +43,13 @@ import { StepErrorBoundary } from '../StepErrorBoundary';
 let MetricsPanel: React.LazyExoticComponent<React.ComponentType<any>> | null = null;
 
 if (import.meta.env.DEV) {
-  try {
-    MetricsPanel = React.lazy(() => import('./components/MetricsPanel').catch(() => ({
-      default: () => null // Fallback silencioso se falhar
-    })));
-  } catch (e) {
-    console.warn('MetricsPanel failed to load:', e);
-  }
+    try {
+        MetricsPanel = React.lazy(() => import('./components/MetricsPanel').catch(() => ({
+            default: () => null // Fallback silencioso se falhar
+        })));
+    } catch (e) {
+        console.warn('MetricsPanel failed to load:', e);
+    }
 }
 
 export type QuizModularEditorProps = {
@@ -82,16 +82,16 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             console.warn('⚠️ [QuizModularEditor] templateService.steps.list() falhou');
             return []; // Retorna vazio ao invés de fallback fixo
         }
-        return res.data.map((s) => ({ 
-            key: s.id, 
-            title: `${String(s.order).padStart(2, '0')} - ${s.name}` 
+        return res.data.map((s) => ({
+            key: s.id,
+            title: `${String(s.order).padStart(2, '0')} - ${s.name}`
         }));
     }, [loadedTemplate]); // ✅ Depende do template carregado para atualizar
 
     // ✅ FASE 1: Auto-save direto do SuperUnified
     useEffect(() => {
         if (!enableAutoSave || !isDirty) return;
-        
+
         const timer = setTimeout(async () => {
             try {
                 await unified.saveFunnel();
@@ -100,7 +100,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 console.error(`❌ Auto-save failed:`, error);
             }
         }, 2000);
-        
+
         return () => clearTimeout(timer);
     }, [enableAutoSave, isDirty, currentStepKey, unified]);
 
@@ -120,20 +120,14 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             try {
                 const tid = props.templateId!;
                 appLogger.info(`🔍 [QuizModularEditor] Batch loading: ${tid}`);
-                
-                const { templateService } = await import('@/services/canonical/TemplateService');
-                
-                // ✅ Preload agora detecta automaticamente o número de steps
                 await templateService.preloadTemplate(tid);
-                
-                // ✅ Após preload, steps.list() retornará o número correto
                 const templateStepsResult = templateService.steps.list();
                 if (!templateStepsResult.success) {
                     throw new Error('Falha ao carregar lista de steps do template');
                 }
                 const stepIds = templateStepsResult.data.map((s: any) => s.id);
-                
-                // Batch loading dos blocos
+
+                // ✅ FASE 1: Batch loading usando SuperUnified
                 await Promise.all(
                     stepIds.map(async (stepId: string, idx: number) => {
                         const result = await templateService.getStep(stepId, tid);
@@ -142,13 +136,13 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         }
                     })
                 );
-                
+
                 // ✅ Atualizar state com número correto de steps para forçar recalcular navSteps
-                setLoadedTemplate({ 
-                    name: `Template: ${tid}`, 
+                setLoadedTemplate({
+                    name: `Template: ${tid}`,
                     steps: templateStepsResult.data
                 });
-                
+
                 appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
@@ -175,7 +169,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         // 1) Inserção de item da biblioteca no canvas
         if (draggedItem?.type === 'library-item') {
             if (!draggedItem.libraryType) return;
-            
+
             const newBlock = {
                 id: `block-${Date.now()}`,
                 type: draggedItem.libraryType,
@@ -183,7 +177,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 content: {},
                 order: list.length,
             };
-            
+
             unified.addBlock(stepIndex, newBlock);
             return;
         }
@@ -225,14 +219,13 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         if (!stepIndex) return;
 
         appLogger.info(`🔄 [QuizModularEditor] Recarregando step após erro: step-${stepIndex}`);
-        
+
         try {
-            const { templateService } = await import('@/services/canonical/TemplateService');
             const stepKey = `step-${String(stepIndex).padStart(2, '0')}`;
-            
+
             // Invalidar cache do step
             templateService.invalidateTemplate(stepKey);
-            
+
             // Recarregar
             const result = await templateService.getStep(stepKey, props.templateId);
             if (result.success && result.data) {
@@ -250,21 +243,17 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         try {
             const tid = 'quiz21StepsComplete';
             appLogger.info(`🔍 [QuizModularEditor] Carregando template via botão: ${tid}`);
-            
-            const { templateService } = await import('@/services/canonical/TemplateService');
-            
-            // ✅ Preload detecta automaticamente o número de steps
             await templateService.preloadTemplate(tid);
-            
+
             // ✅ Buscar steps dinamicamente do template
             const templateStepsResult = templateService.steps.list();
             if (!templateStepsResult.success) {
                 throw new Error('Falha ao carregar lista de steps do template');
             }
             const stepIds = templateStepsResult.data.map((s: any) => s.id);
-            
+
             appLogger.info(`📋 [QuizModularEditor] Carregando ${stepIds.length} steps do template`);
-            
+
             await Promise.all(
                 stepIds.map(async (stepId: string, idx: number) => {
                     const result = await templateService.getStep(stepId, tid);
@@ -273,19 +262,19 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                     }
                 })
             );
-            
+
             // ✅ Atualizar state com número correto de steps
-            setLoadedTemplate({ 
-                name: 'Quiz 21 Steps', 
-                steps: templateStepsResult.data 
+            setLoadedTemplate({
+                name: 'Quiz 21 Steps',
+                steps: templateStepsResult.data
             });
             appLogger.info(`✅ [QuizModularEditor] Template carregado: ${stepIds.length} steps`);
-            
+
             // Atualizar URL
             const url = new URL(window.location.href);
             url.searchParams.set('template', tid);
             window.history.pushState({}, '', url);
-            
+
         } catch (error) {
             appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
         } finally {
@@ -305,34 +294,34 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
             <div className="qm-editor flex flex-col h-screen bg-gray-50" data-editor="modular-enhanced">
                 {/* Header com controles */}
                 <div className="flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm">
-                {/* ✅ FASE 5: Feedback visual melhorado */}
-                <div className="flex items-center gap-4">
-                    <h1 className="text-lg font-semibold text-gray-800">Editor Modular</h1>
-                    
-                    {isLoadingTemplate && (
-                        <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded animate-pulse">
-                            Carregando template...
-                        </span>
-                    )}
-                    
-                    {loadedTemplate && !isLoadingTemplate && (
-                        <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded">
-                            📄 {loadedTemplate.name}
-                        </span>
-                    )}
-                    
-                    {!loadedTemplate && !isLoadingTemplate && !props.templateId && (
-                        <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
-                            🎨 Modo Construção Livre
-                        </span>
-                    )}
-                    
-                    {currentStepKey && (
-                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
-                            {currentStepKey}
-                        </span>
-                    )}
-                </div>
+                    {/* ✅ FASE 5: Feedback visual melhorado */}
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-lg font-semibold text-gray-800">Editor Modular</h1>
+
+                        {isLoadingTemplate && (
+                            <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded animate-pulse">
+                                Carregando template...
+                            </span>
+                        )}
+
+                        {loadedTemplate && !isLoadingTemplate && (
+                            <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded">
+                                📄 {loadedTemplate.name}
+                            </span>
+                        )}
+
+                        {!loadedTemplate && !isLoadingTemplate && !props.templateId && (
+                            <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
+                                🎨 Modo Construção Livre
+                            </span>
+                        )}
+
+                        {currentStepKey && (
+                            <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+                                {currentStepKey}
+                            </span>
+                        )}
+                    </div>
 
                     <div className="flex items-center gap-3">
                         {/* Toggle Modo Canvas */}
@@ -441,8 +430,8 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                                     currentStepKey={currentStepKey}
                                     onAddBlock={(type) => {
                                         const stepIndex = unified.state.editor.currentStep;
-                                        unified.addBlock(stepIndex, { 
-                                            type, 
+                                        unified.addBlock(stepIndex, {
+                                            type,
                                             id: `block-${Date.now()}`,
                                             properties: {},
                                             content: {},
@@ -465,7 +454,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                         <Suspense fallback={<div className="flex items-center justify-center h-full text-gray-500">Carregando canvas…</div>}>
                             <div className="h-full bg-gray-50 overflow-y-auto">
                                 {canvasMode === 'edit' ? (
-                                    <StepErrorBoundary 
+                                    <StepErrorBoundary
                                         stepId={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
                                     >
