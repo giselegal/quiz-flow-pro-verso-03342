@@ -841,6 +841,35 @@ export class TemplateService extends BaseCanonicalService {
     },
 
     /**
+     * 🔄 Reordenar steps
+     */
+    reorder: async (orderedStepIds: string[]): Promise<ServiceResult<void>> => {
+      try {
+        // Atualizar ordem dos steps customizados
+        const updatedSteps = new Map<string, StepInfo>();
+        
+        orderedStepIds.forEach((stepId, index) => {
+          const existingStep = this.customSteps.get(stepId);
+          if (existingStep) {
+            updatedSteps.set(stepId, {
+              ...existingStep,
+              order: index + 1,
+            });
+          }
+        });
+
+        // Substituir Map de steps customizados
+        this.customSteps = updatedSteps;
+
+        this.log(`✅ Steps reordenados: ${orderedStepIds.length} etapas`);
+        return this.createResult(undefined);
+      } catch (error) {
+        this.error('steps.reorder failed:', error);
+        return this.createError(error as Error);
+      }
+    },
+
+    /**
      * Pré-carregar steps específicos
      */
     preload: async (stepNumbers: number[]): Promise<void> => {

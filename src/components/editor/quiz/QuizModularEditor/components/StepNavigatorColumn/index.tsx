@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, MoreVertical } from 'lucide-react';
+import { Plus, Trash2, MoreVertical, GripVertical } from 'lucide-react';
 import { AddStepDialog, type NewStepData } from '../AddStepDialog';
 import { DeleteStepConfirmDialog } from '../DeleteStepConfirmDialog';
 import {
@@ -12,6 +12,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+import { SortableStepItem } from './SortableStepItem';
 
 export type StepNavigatorColumnProps = {
     initialStepKey?: string;
@@ -32,23 +51,37 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
     }>({ open: false, stepId: '', stepName: '' });
     const [refreshKey, setRefreshKey] = useState(0);
 
+    // Configurar sensores de drag
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8, // Requer 8px de movimento para iniciar drag
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
     // Preferir fonte canônica de steps; aceitar override via prop "steps"
     const canonicalSteps = useMemo(() => templateService.steps.list(), [refreshKey]);
-    const items = useMemo(() => {
-        if (steps) return steps;
-        if (canonicalSteps.success) {
-            return canonicalSteps.data.map((s) => ({
-                key: s.id,
-                title: `${s.order.toString().padStart(2, '0')} - ${s.name}`,
-            }));
+    const [localItems, setLocalItems] = useState<{ key: string; title: string }[]>([]);
+
+    // Sincronizar items com canonicalSteps
+    useEffect(() => {
+        if (steps) {
+            setLocalItems(steps);
+        } else if (canonicalSteps.success) {
+            setLocalItems(
+                canonicalSteps.data.map((s) => ({
+                    key: s.id,
+                    title: `${s.order.toString().padStart(2, '0')} - ${s.name}`,
+                }))
+            );
         }
-        // Fallback mínimo
-        return [
-            { key: 'step-01', title: '01 - Introdução' },
-            { key: 'step-02', title: '02 - Pergunta' },
-            { key: 'step-03', title: '03 - Pergunta' },
-        ];
     }, [canonicalSteps, steps, refreshKey]);
+
+    const items = localItems;
 
     const handleAddStep = async (stepData: NewStepData) => {
         try {
@@ -123,6 +156,57 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
         closeDeleteDialog();
     };
 
+    const handleDragEnd = async (event: DragEndEvent) => {
+        const { active, over } = event;
+
+        if (!over || active.id === over.id) {
+            return;
+        }
+
+        const oldIndex = items.findIndex((item) => item.key === active.id);
+        const newIndex = items.findIndex((item) => item.key === over.id);
+
+        if (oldIndex === -1 || newIndex === -1) {
+            return;
+        }
+
+        // Atualizar ordem localmente primeiro (UI instantânea)
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        setLocalItems(newItems);
+
+        try {
+            // Atualizar ordem no service
+            const stepIds = newItems.map((item) => item.key);
+            const result = await templateService.steps.reorder(stepIds);
+
+            if (result.success) {
+                toast({
+                    title: 'Ordem atualizada',
+                    description: 'As etapas foram reordenadas com sucesso',
+                });
+                // Forçar refresh para sincronizar com service
+                setRefreshKey((prev) => prev + 1);
+            } else {
+                // Reverter em caso de erro
+                setLocalItems(items);
+                toast({
+                    title: 'Erro ao reordenar',
+                    description: result.error?.message || 'Não foi possível atualizar a ordem',
+                    variant: 'destructive',
+                });
+            }
+        } catch (error) {
+            // Reverter em caso de erro
+            setLocalItems(items);
+            console.error('Erro ao reordenar etapas:', error);
+            toast({
+                title: 'Erro ao reordenar',
+                description: 'Ocorreu um erro inesperado',
+                variant: 'destructive',
+            });
+        }
+    };
+
     // Garantir seleção inicial consistente
     useEffect(() => {
         if (!currentStepKey && items.length > 0) {
@@ -155,50 +239,35 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                         </p>
                     </div>
                 ) : (
-                    <ul className="space-y-1">
-                        {items.map((s) => {
-                            // Verificar se é uma etapa customizada (deletável)
-                            const isCustomStep = !s.key.match(/^step-0[1-9]$|^step-1[0-9]$|^step-2[01]$/);
-                            
-                            return (
-                                <li key={s.key} className="group relative">
-                                    <div className="flex items-center gap-1">
-                                        <button
-                                            className={`flex-1 text-left px-2 py-1 rounded hover:bg-accent transition-colors ${
-                                                currentStepKey === s.key ? 'bg-accent' : ''
-                                            }`}
-                                            onClick={() => onSelectStep(s.key)}
-                                        >
-                                            {s.title}
-                                        </button>
-                                        
-                                        {isCustomStep && (
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                    >
-                                                        <MoreVertical className="h-3 w-3" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem
-                                                        onClick={() => openDeleteDialog(s.key, s.title)}
-                                                        className="text-red-600 focus:text-red-600"
-                                                    >
-                                                        <Trash2 className="h-4 w-4 mr-2" />
-                                                        Deletar Etapa
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        )}
-                                    </div>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={items.map((item) => item.key)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <ul className="space-y-1">
+                                {items.map((s) => {
+                                    // Verificar se é uma etapa customizada (deletável)
+                                    const isCustomStep = !s.key.match(/^step-0[1-9]$|^step-1[0-9]$|^step-2[01]$/);
+                                    
+                                    return (
+                                        <SortableStepItem
+                                            key={s.key}
+                                            id={s.key}
+                                            title={s.title}
+                                            isSelected={currentStepKey === s.key}
+                                            isCustomStep={isCustomStep}
+                                            onSelect={() => onSelectStep(s.key)}
+                                            onDelete={() => openDeleteDialog(s.key, s.title)}
+                                        />
+                                    );
+                                })}
+                            </ul>
+                        </SortableContext>
+                    </DndContext>
                 )}
             </div>
 
