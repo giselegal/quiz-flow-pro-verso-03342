@@ -6,49 +6,49 @@ import QuizModularEditor from '../index';
 
 // Mocks para componentes
 vi.mock('../components/CanvasColumn', () => ({
-  default: () => <div data-testid="canvas-column" />,
+    default: () => <div data-testid="canvas-column" />,
 }));
 vi.mock('../components/ComponentLibraryColumn', () => ({
-  default: () => <div data-testid="library-column" />,
+    default: () => <div data-testid="library-column" />,
 }));
 vi.mock('../components/PropertiesColumn', () => ({
-  default: () => <div data-testid="properties-column" />,
+    default: () => <div data-testid="properties-column" />,
 }));
 vi.mock('../components/PreviewPanel', () => ({
-  default: () => <div data-testid="preview-panel" />,
+    default: () => <div data-testid="preview-panel" />,
 }));
 vi.mock('../components/StepNavigatorColumn', () => ({
-  default: () => <div data-testid="step-navigator" />,
+    default: () => <div data-testid="step-navigator" />,
 }));
 vi.mock('../StepErrorBoundary', () => ({
-  StepErrorBoundary: ({ children }: any) => <>{children}</>,
+    StepErrorBoundary: ({ children }: any) => <>{children}</>,
 }));
 vi.mock('@/utils/logger', () => ({
-  appLogger: { info: vi.fn(), error: vi.fn() },
+    appLogger: { info: vi.fn(), error: vi.fn() },
 }));
 
 vi.mock('@/services/canonical/TemplateService', () => ({
-  templateService: {
-    steps: {
-      list: () => ({
-        success: true,
-        data: [{ id: 'step-01', name: 'Intro', order: 1 }],
-      }),
+    templateService: {
+        steps: {
+            list: () => ({
+                success: true,
+                data: [{ id: 'step-01', name: 'Intro', order: 1 }],
+            }),
+        },
+        preloadTemplate: vi.fn().mockResolvedValue(undefined),
+        getStep: vi.fn().mockResolvedValue({ success: true, data: [] }),
+        invalidateTemplate: vi.fn(),
     },
-    preloadTemplate: vi.fn().mockResolvedValue(undefined),
-    getStep: vi.fn().mockResolvedValue({ success: true, data: [] }),
-    invalidateTemplate: vi.fn(),
-  },
 }));
 
 // Estado inicial do useSuperUnified
 const initialState = {
-  editor: {
-    currentStep: 1,
-    selectedBlockId: null,
-    isDirty: false,
-  },
-  ui: { isLoading: false },
+    editor: {
+        currentStep: 1,
+        selectedBlockId: null,
+        isDirty: false,
+    },
+    ui: { isLoading: false },
 };
 
 const setCurrentStep = vi.fn();
@@ -59,195 +59,195 @@ const setSelectedBlock = vi.fn();
 const saveFunnel = vi.fn();
 
 vi.mock('@/hooks/useSuperUnified', () => ({
-  useSuperUnified: () => ({
-    state: initialState,
-    setCurrentStep,
-    setStepBlocks: vi.fn(),
-    addBlock,
-    removeBlock,
-    reorderBlocks: vi.fn(),
-    updateBlock,
-    setSelectedBlock,
-    getStepBlocks: vi.fn().mockReturnValue([]),
-    saveFunnel,
-    showToast: vi.fn(),
-  }),
+    useSuperUnified: () => ({
+        state: initialState,
+        setCurrentStep,
+        setStepBlocks: vi.fn(),
+        addBlock,
+        removeBlock,
+        reorderBlocks: vi.fn(),
+        updateBlock,
+        setSelectedBlock,
+        getStepBlocks: vi.fn().mockReturnValue([]),
+        saveFunnel,
+        showToast: vi.fn(),
+    }),
 }));
 
 vi.mock('@/hooks/useFeatureFlags', () => ({
-  useFeatureFlags: () => ({ enableAutoSave: false }),
+    useFeatureFlags: () => ({ enableAutoSave: false }),
 }));
 
 describe('QuizModularEditor - Gestão de Estado', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    initialState.editor.currentStep = 1;
-    initialState.editor.selectedBlockId = null;
-    initialState.editor.isDirty = false;
-  });
-
-  describe('Estado inicial correto', () => {
-    it('inicia no step 1', async () => {
-      render(<QuizModularEditor />);
-
-      await waitFor(() => {
-        expect(screen.getByText('step-01')).toBeInTheDocument();
-      });
+    beforeEach(() => {
+        vi.clearAllMocks();
+        initialState.editor.currentStep = 1;
+        initialState.editor.selectedBlockId = null;
+        initialState.editor.isDirty = false;
     });
 
-    it('não tem blocos selecionados inicialmente', () => {
-      render(<QuizModularEditor />);
+    describe('Estado inicial correto', () => {
+        it('inicia no step 1', async () => {
+            render(<QuizModularEditor />);
 
-      expect(initialState.editor.selectedBlockId).toBeNull();
+            await waitFor(() => {
+                expect(screen.getByText('step-01')).toBeInTheDocument();
+            });
+        });
+
+        it('não tem blocos selecionados inicialmente', () => {
+            render(<QuizModularEditor />);
+
+            expect(initialState.editor.selectedBlockId).toBeNull();
+        });
+
+        it('não está dirty inicialmente', () => {
+            render(<QuizModularEditor />);
+
+            expect(initialState.editor.isDirty).toBe(false);
+        });
     });
 
-    it('não está dirty inicialmente', () => {
-      render(<QuizModularEditor />);
+    describe('Mudanças de estado durante edição', () => {
+        it('currentStep é atualizado via setCurrentStep', () => {
+            render(<QuizModularEditor />);
 
-      expect(initialState.editor.isDirty).toBe(false);
-    });
-  });
+            // Simular ação que muda step
+            setCurrentStep(2);
 
-  describe('Mudanças de estado durante edição', () => {
-    it('currentStep é atualizado via setCurrentStep', () => {
-      render(<QuizModularEditor />);
+            expect(setCurrentStep).toHaveBeenCalledWith(2);
+        });
 
-      // Simular ação que muda step
-      setCurrentStep(2);
+        it('selectedBlockId é atualizado via setSelectedBlock', () => {
+            render(<QuizModularEditor />);
 
-      expect(setCurrentStep).toHaveBeenCalledWith(2);
-    });
+            setSelectedBlock('block-123');
 
-    it('selectedBlockId é atualizado via setSelectedBlock', () => {
-      render(<QuizModularEditor />);
+            expect(setSelectedBlock).toHaveBeenCalledWith('block-123');
+        });
 
-      setSelectedBlock('block-123');
+        it('addBlock é chamado com stepIndex correto', () => {
+            render(<QuizModularEditor />);
 
-      expect(setSelectedBlock).toHaveBeenCalledWith('block-123');
-    });
+            addBlock(1, { id: 'new-block', type: 'TextBlock' });
 
-    it('addBlock é chamado com stepIndex correto', () => {
-      render(<QuizModularEditor />);
-
-      addBlock(1, { id: 'new-block', type: 'TextBlock' });
-
-      expect(addBlock).toHaveBeenCalledWith(1, expect.any(Object));
-    });
-  });
-
-  describe('Indicador de estado dirty', () => {
-    it('não mostra "Não salvo" quando isDirty = false', async () => {
-      initialState.editor.isDirty = false;
-
-      render(<QuizModularEditor />);
-
-      await waitFor(() => {
-        expect(screen.queryByText(/Não salvo/i)).not.toBeInTheDocument();
-      });
+            expect(addBlock).toHaveBeenCalledWith(1, expect.any(Object));
+        });
     });
 
-    it('mostra status "Salvo agora" quando não dirty', async () => {
-      initialState.editor.isDirty = false;
+    describe('Indicador de estado dirty', () => {
+        it('não mostra "Não salvo" quando isDirty = false', async () => {
+            initialState.editor.isDirty = false;
 
-      const { rerender } = render(<QuizModularEditor />);
+            render(<QuizModularEditor />);
 
-      // Forçar re-render
-      rerender(<QuizModularEditor />);
+            await waitFor(() => {
+                expect(screen.queryByText(/Não salvo/i)).not.toBeInTheDocument();
+            });
+        });
 
-      // Status de salvo deve aparecer
-      // (pode não aparecer se autoSave estiver desabilitado)
-    });
-  });
+        it('mostra status "Salvo agora" quando não dirty', async () => {
+            initialState.editor.isDirty = false;
 
-  describe('Botão Salvar sempre disponível', () => {
-    it('botão Salvar está presente', async () => {
-      render(<QuizModularEditor />);
+            const { rerender } = render(<QuizModularEditor />);
 
-      await waitFor(() => {
-        expect(screen.getByText('Salvar')).toBeInTheDocument();
-      });
-    });
+            // Forçar re-render
+            rerender(<QuizModularEditor />);
 
-    it('botão Salvar não está disabled por padrão', async () => {
-      render(<QuizModularEditor />);
-
-      const saveButton = await waitFor(() => screen.getByText('Salvar'));
-
-      expect(saveButton).not.toBeDisabled();
+            // Status de salvo deve aparecer
+            // (pode não aparecer se autoSave estiver desabilitado)
+        });
     });
 
-    it('chama saveFunnel quando clicado', async () => {
-      saveFunnel.mockResolvedValue(undefined);
+    describe('Botão Salvar sempre disponível', () => {
+        it('botão Salvar está presente', async () => {
+            render(<QuizModularEditor />);
 
-      render(<QuizModularEditor />);
+            await waitFor(() => {
+                expect(screen.getByText('Salvar')).toBeInTheDocument();
+            });
+        });
 
-      const saveButton = await waitFor(() => screen.getByText('Salvar'));
-      fireEvent.click(saveButton);
+        it('botão Salvar não está disabled por padrão', async () => {
+            render(<QuizModularEditor />);
 
-      await waitFor(() => {
-        expect(saveFunnel).toHaveBeenCalled();
-      });
-    });
-  });
+            const saveButton = await waitFor(() => screen.getByText('Salvar'));
 
-  describe('Loading state da UI', () => {
-    it('botão Salvar mostra "Salvando..." quando isLoading = true', async () => {
-      initialState.ui.isLoading = true;
+            expect(saveButton).not.toBeDisabled();
+        });
 
-      render(<QuizModularEditor />);
+        it('chama saveFunnel quando clicado', async () => {
+            saveFunnel.mockResolvedValue(undefined);
 
-      await waitFor(() => {
-        const saveButton = screen.getByText(/Salvando/i);
-        expect(saveButton).toBeInTheDocument();
-      });
-    });
+            render(<QuizModularEditor />);
 
-    it('botão Salvar é disabled quando isLoading = true', async () => {
-      initialState.ui.isLoading = true;
+            const saveButton = await waitFor(() => screen.getByText('Salvar'));
+            fireEvent.click(saveButton);
 
-      render(<QuizModularEditor />);
-
-      await waitFor(() => {
-        const saveButton = screen.getByText(/Salvando/i);
-        expect(saveButton).toBeDisabled();
-      });
-    });
-  });
-
-  describe('Integridade do estado entre operações', () => {
-    it('addBlock não modifica currentStep', () => {
-      render(<QuizModularEditor />);
-
-      const initialStep = initialState.editor.currentStep;
-      addBlock(initialStep, { id: 'test', type: 'TextBlock' });
-
-      expect(initialState.editor.currentStep).toBe(initialStep);
+            await waitFor(() => {
+                expect(saveFunnel).toHaveBeenCalled();
+            });
+        });
     });
 
-    it('setCurrentStep não afeta selectedBlockId', () => {
-      render(<QuizModularEditor />);
+    describe('Loading state da UI', () => {
+        it('botão Salvar mostra "Salvando..." quando isLoading = true', async () => {
+            initialState.ui.isLoading = true;
 
-      initialState.editor.selectedBlockId = 'block-123';
-      setCurrentStep(2);
+            render(<QuizModularEditor />);
 
-      // selectedBlockId deveria persistir ou ser null, mas não mudar para outro valor
-      expect(setCurrentStep).toHaveBeenCalled();
+            await waitFor(() => {
+                const saveButton = screen.getByText(/Salvando/i);
+                expect(saveButton).toBeInTheDocument();
+            });
+        });
+
+        it('botão Salvar é disabled quando isLoading = true', async () => {
+            initialState.ui.isLoading = true;
+
+            render(<QuizModularEditor />);
+
+            await waitFor(() => {
+                const saveButton = screen.getByText(/Salvando/i);
+                expect(saveButton).toBeDisabled();
+            });
+        });
     });
 
-    it('múltiplas operações não causam race conditions', async () => {
-      render(<QuizModularEditor />);
+    describe('Integridade do estado entre operações', () => {
+        it('addBlock não modifica currentStep', () => {
+            render(<QuizModularEditor />);
 
-      // Executar múltiplas operações rapidamente
-      addBlock(1, { id: 'b1', type: 'TextBlock' });
-      setSelectedBlock('b1');
-      updateBlock(1, 'b1', { order: 5 });
-      removeBlock(1, 'b1');
+            const initialStep = initialState.editor.currentStep;
+            addBlock(initialStep, { id: 'test', type: 'TextBlock' });
 
-      // Todas devem ter sido chamadas
-      expect(addBlock).toHaveBeenCalled();
-      expect(setSelectedBlock).toHaveBeenCalled();
-      expect(updateBlock).toHaveBeenCalled();
-      expect(removeBlock).toHaveBeenCalled();
+            expect(initialState.editor.currentStep).toBe(initialStep);
+        });
+
+        it('setCurrentStep não afeta selectedBlockId', () => {
+            render(<QuizModularEditor />);
+
+            initialState.editor.selectedBlockId = 'block-123';
+            setCurrentStep(2);
+
+            // selectedBlockId deveria persistir ou ser null, mas não mudar para outro valor
+            expect(setCurrentStep).toHaveBeenCalled();
+        });
+
+        it('múltiplas operações não causam race conditions', async () => {
+            render(<QuizModularEditor />);
+
+            // Executar múltiplas operações rapidamente
+            addBlock(1, { id: 'b1', type: 'TextBlock' });
+            setSelectedBlock('b1');
+            updateBlock(1, 'b1', { order: 5 });
+            removeBlock(1, 'b1');
+
+            // Todas devem ter sido chamadas
+            expect(addBlock).toHaveBeenCalled();
+            expect(setSelectedBlock).toHaveBeenCalled();
+            expect(updateBlock).toHaveBeenCalled();
+            expect(removeBlock).toHaveBeenCalled();
+        });
     });
-  });
 });
