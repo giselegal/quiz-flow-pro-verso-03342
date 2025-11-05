@@ -11,13 +11,13 @@ import { Trophy, Star, Zap, Award, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface QuizScoreDisplayProps {
-  block?: {
-    id: string;
-    type: string;
-    props?: Record<string, any>;
-  };
-  isSelected?: boolean;
-  onClick?: () => void;    // Score data
+    block?: {
+        id: string;
+        type: string;
+        props?: Record<string, any>;
+    };
+    isSelected?: boolean;
+    onClick?: () => void;    // Score data
     score?: number;
     maxScore?: number;
     percentage?: number;
@@ -77,10 +77,10 @@ export const QuizScoreDisplay: React.FC<QuizScoreDisplayProps> = ({
     const level = propLevel ?? block?.props?.level;
     const badges = propBadges ?? block?.props?.badges ?? [];
     const showBreakdown = propShowBreakdown ?? block?.props?.showBreakdown ?? false;
+    const showLevel = propShowLevel ?? block?.props?.showLevel ?? true;
+    const showBadges = propShowBadges ?? block?.props?.showBadges ?? true;
     const animate = propAnimate ?? block?.props?.animate ?? true;
-    const breakdown = propBreakdown ?? block?.props?.breakdown;
-
-    const getScoreColor = (perc: number) => {
+    const breakdown = propBreakdown ?? block?.props?.breakdown; const getScoreColor = (perc: number) => {
         if (perc >= 90) return 'text-green-600';
         if (perc >= 70) return 'text-blue-600';
         if (perc >= 50) return 'text-yellow-600';
