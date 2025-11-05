@@ -18,7 +18,7 @@
 - src/config/optimized21StepsFunnel.json (41 KB)
 - src/core/schema/defaultSchemas.json (31 KB)
 
-## IDs duplicados entre arquivos (não-whitelisted)
+## IDs duplicados ignorados pela whitelist
 - id "step-01": public/templates/blocks/step-01.json, public/templates/normalized/step-01.json
 - id "step-02": public/templates/blocks/step-02.json, public/templates/normalized/step-02.json
 - id "step-03": public/templates/blocks/step-03.json, public/templates/normalized/step-03.json
