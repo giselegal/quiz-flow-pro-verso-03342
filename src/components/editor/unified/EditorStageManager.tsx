@@ -12,7 +12,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { cn } from '@/lib/utils';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { getStepCategory, getStepType, getStepTitle, getStepDescription, getStepIcon } from '@/utils/stepMeta';
 import {
   ArrowRight,
   Calculator,
@@ -28,7 +29,7 @@ import {
   Trophy,
   Users,
 } from 'lucide-react';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface EditorStageManagerProps {
   /** Modo atual do editor */
@@ -215,95 +216,52 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
     }
   }, [quizState.currentStep]);
 
-  // Metadados das etapas
-  const stepsMetadata = useMemo((): StepMetadata[] => {
-    const getStepMetadata = (step: number): StepMetadata => {
-      const stepKey = `step-${step}`;
-      const stepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
+  // Blocos carregados dinamicamente (JSON v3 / overrides hierárquicos)
+  const [stepBlocksMap, setStepBlocksMap] = useState<Record<string, any[]>>({});
+  const [isLoadingBlocks, setIsLoadingBlocks] = useState(false);
 
-      // Categorizar etapas
-      const getCategory = (step: number): StepMetadata['category'] => {
-        if (step === 1) return 'intro';
-        if (step >= 2 && step <= 11) return 'questions';
-        if (step >= 12 && step <= 13) return 'transitions';
-        if (step >= 14 && step <= 18) return 'strategic';
-        if (step === 19) return 'transitions';
-        if (step === 20) return 'result';
-        if (step === 21) return 'offer';
-        return 'questions';
-      };
-
-      // Determinar tipo da etapa
-      const getStepType = (step: number): StepMetadata['type'] => {
-        if (step === 1) return 'form';
-        if (step === 12 || step === 19) return 'transition';
-        if (step === 20) return 'result';
-        if (step === 21) return 'offer';
-        return 'question';
-      };
-
-      // Ícone da etapa
-      const getStepIcon = (step: number) => {
-        const category = getCategory(step);
-        switch (category) {
-          case 'intro':
-            return Users;
-          case 'questions':
-            return Circle;
-          case 'strategic':
-            return Calculator;
-          case 'transitions':
-            return ArrowRight;
-          case 'result':
-            return Trophy;
-          case 'offer':
-            return Gift;
-          default:
-            return Circle;
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        setIsLoadingBlocks(true);
+        const map: Record<string, any[]> = {};
+        for (let i = 1; i <= 21; i++) {
+          const stepId = `step-${String(i).padStart(2, '0')}`;
+          try {
+            const res = await hierarchicalTemplateSource.getPrimary(stepId);
+            map[stepId] = Array.isArray(res?.data) ? res.data : [];
+          } catch {
+            map[stepId] = [];
+          }
         }
-      };
+        if (mounted) setStepBlocksMap(map);
+      } finally {
+        if (mounted) setIsLoadingBlocks(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
-      // Título da etapa
-      const getStepTitle = (step: number): string => {
-        if (step === 1) return 'Introdução';
-        if (step >= 2 && step <= 11) return `Questão ${step - 1}`;
-        if (step === 12) return 'Transição Principal';
-        if (step >= 13 && step <= 18) return `Estratégica ${step - 12}`;
-        if (step === 19) return 'Calculando Resultado';
-        if (step === 20) return 'Resultado Final';
-        if (step === 21) return 'Oferta Final';
-        return `Etapa ${step}`;
-      };
-
-      // Descrição da etapa
-      const getStepDescription = (step: number): string => {
-        if (step === 1) return 'Coleta nome e apresentação';
-        if (step >= 2 && step <= 11) return 'Questões de personalidade';
-        if (step === 12) return 'Ponte entre seções';
-        if (step >= 13 && step <= 18) return 'Questões estratégicas';
-        if (step === 19) return 'Processamento de dados';
-        if (step === 20) return 'Exibição do resultado';
-        if (step === 21) return 'Call to action final';
-        return 'Etapa do quiz';
-      };
-
-      const category = getCategory(step);
-
+  // Metadados das etapas (derivados dinamicamente dos blocos carregados)
+  const stepsMetadata = useMemo((): StepMetadata[] => {
+    const buildMeta = (step: number): StepMetadata => {
+      const stepKey = `step-${step}`;
+      const blocks = stepBlocksMap[stepKey.padStart(6, '0')] || stepBlocksMap[stepKey] || [];
       return {
         id: stepKey,
         title: getStepTitle(step),
         description: getStepDescription(step),
         type: getStepType(step),
         icon: getStepIcon(step),
-        category,
+        category: getStepCategory(step),
         isCompleted: step < quizState.currentStep,
-        hasData: stepData.length > 0,
-        blockCount: stepData.length,
+        hasData: blocks.length > 0,
+        blockCount: blocks.length,
       };
     };
-
-    return Array.from({ length: 21 }, (_, i) => getStepMetadata(i + 1));
-  }, [quizState.currentStep]);
+    return Array.from({ length: 21 }, (_, i) => buildMeta(i + 1));
+  }, [quizState.currentStep, stepBlocksMap]);
 
   // Navegar para uma etapa específica
   const handleStepSelect = useCallback(
