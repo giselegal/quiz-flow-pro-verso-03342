@@ -140,21 +140,20 @@ export default defineConfig(({ mode }) => {
           // 🚀 CODE SPLITTING MAIS GRANULAR
           // Separação por domínios para reduzir o payload inicial e melhorar cache
           manualChunks: (id) => {
-            // Dependências de terceiros
+            // Evitar separar recharts em DEV para mitigar ReferenceError (TDZ) em chunk isolado
+            const isDev = mode !== 'production';
+
             if (id.includes('node_modules')) {
               if (id.includes('/react/')) return 'react-vendor';
               if (id.includes('react-dom')) return 'react-vendor';
               if (id.includes('@radix-ui') || id.includes('lucide-react')) return 'ui-vendor';
-              if (id.includes('recharts')) return 'charts-vendor';
+              if (!isDev && id.includes('recharts')) return 'charts-vendor'; // somente produz separar
               if (id.includes('@dnd-kit')) return 'dnd-vendor';
               return 'vendor';
             }
 
-            // Partes grandes da aplicação
             if (id.includes('/src/components/editor/')) return 'editor';
             if (id.includes('/src/runtime/quiz')) return 'quiz-runtime';
-
-            // Deixar Vite gerenciar o restante automaticamente
           },
         },
       },
@@ -172,10 +171,9 @@ export default defineConfig(({ mode }) => {
         'wouter',
       ],
       exclude: [
-        // Excluir módulos que causam problemas de bundling
         '@supabase/functions-js',
-        // Evita pré-bundle do recharts pelo esbuild (fonte comum do erro TDZ)
-        'recharts',
+        // Em produção podemos excluir 'recharts' para manter chunk separado; em dev deixamos esbuild pré-bundle
+        ...(mode === 'production' ? ['recharts'] : []),
       ],
       esbuildOptions: {
         target: 'es2020',
