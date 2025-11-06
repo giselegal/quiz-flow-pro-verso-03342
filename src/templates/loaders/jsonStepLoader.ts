@@ -34,6 +34,9 @@ export async function loadStepFromJson(stepId: string): Promise<Block[] | null> 
   // Ordens de caminhos suportados:
   // 1) Novo padrão dedicado
   const paths: string[] = [
+    // Preferência: per-step blocks (v3.1)
+    `/templates/blocks/${stepId}.json`,
+    // Padrão legado citado em docs (pode não existir neste repo)
     `/templates/quiz21-steps/${stepId}.json`,
     // 2) Arquivos v3 existentes no repo (ex.: step-01-v3.json)
     `/templates/${stepId}-v3.json`,
