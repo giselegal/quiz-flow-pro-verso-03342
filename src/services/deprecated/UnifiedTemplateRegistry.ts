@@ -252,7 +252,7 @@ export class UnifiedTemplateRegistry {
 
   /**
    * Carregar do servidor - OPÇÃO A: Direto dos JSONs locais
-   * Usa import.meta.glob para compatibilidade com Vite
+   * Usa import dinâmico direto (Vite resolve automaticamente)
    */
   private async loadFromServerSimplified(stepId: string, templateId?: string): Promise<Block[] | null> {
     try {
@@ -265,25 +265,22 @@ export class UnifiedTemplateRegistry {
         return null;
       }
 
-      // ✅ CORREÇÃO: Usar import.meta.glob para Vite
-      // Vite requer que imports dinâmicos sejam pré-escaneados em build time
-      const templates = import.meta.glob('@/config/templates/step-*.json') as Record<string, () => Promise<any>>;
+      // ✅ CORREÇÃO: Import dinâmico direto funciona no Vite quando o caminho base é literal
+      const stepFile = `step-${stepNumber.padStart(2, '0')}.json`;
+      console.log(`📂 Tentando carregar: @/config/templates/${stepFile}`);
 
-      // Nem sempre a key retornada pelo Vite bate com '/src/...' — buscar por sufixo para ser resiliente
-      const stepSuffix = `step-${stepNumber.padStart(2, '0')}.json`;
-      const availableKeys = Object.keys(templates);
-      const matchingKey = availableKeys.find(k => k.endsWith(stepSuffix) || k.includes(`/config/templates/${stepSuffix}`) || k.includes(stepSuffix));
+      // Vite consegue resolver imports com template literals se o prefixo for literal
+      const stepTemplate = await import(`../../config/templates/${stepFile}`).catch(err => {
+        console.error(`❌ Erro ao importar ${stepFile}:`, err);
+        return null;
+      });
 
-      if (!matchingKey) {
-        console.error(`❌ Template não encontrado para sufixo: ${stepSuffix}`);
-        console.log('📂 Templates disponíveis:', availableKeys);
+      if (!stepTemplate) {
+        console.error(`❌ Template não encontrado: ${stepFile}`);
         return null;
       }
 
-      console.log(`🔎 Template match key encontrada: ${matchingKey}`);
-      const loader = templates[matchingKey];
-
-      const stepTemplate = await loader();
+      console.log(`🔎 Template carregado:`, stepFile);
 
       if (stepTemplate.default?.blocks && Array.isArray(stepTemplate.default.blocks)) {
         console.log(`✅ Step ${stepId} carregado com ${stepTemplate.default.blocks.length} blocos`);
