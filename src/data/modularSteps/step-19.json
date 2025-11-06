@@ -1,136 +1,47 @@
 {
   "id": "step-19",
-  "type": "strategicQuestion",
-  "title": "Estratégica 4 - Quanto você estaria disposta a...",
+  "title": "Transição Pré-Resultado",
   "blocks": [
     {
-      "id": "step19-header",
-      "type": "quiz-intro-header",
+      "id": "transition-hero-19",
+      "type": "transition-hero",
       "order": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 120,
-        "logoHeight": 50,
-        "showProgress": true,
-        "progressValue": 19,
-        "progressMax": 21,
-        "showBackButton": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "showLogo": true,
-        "progressBarColor": "#B89B7A",
-        "progressBarThickness": 6,
-        "backgroundColor": "#FFFFFF",
+        "backgroundColor": "#FAF9F7",
         "textColor": "#432818",
-        "paddingTop": 16,
-        "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
-        "marginBottom": 24,
-        "progressTotal": 100,
-        "type": "quiz-intro-header"
+        "padding": 32,
+        "type": "scale",
+        "duration": 500,
+        "delay": 0,
+        "easing": "ease-out"
       },
-      "content": {}
+      "content": {
+        "title": "Obrigada por compartilhar.",
+        "subtitle": "Preparando seu resultado personalizado",
+        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+        "autoAdvanceDelay": 3000
+      }
     },
     {
-      "id": "step19-question-image",
-      "type": "image-display-inline",
+      "id": "step-19-transition-text",
+      "type": "transition-text",
       "order": 1,
       "properties": {
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920677/Espanhol_Portugu%C3%AAs_6_jxqlxx.webp",
-        "alt": "Questão Estratégica",
-        "width": 400,
-        "height": 256,
-        "aspect": "landscape",
-        "borderRadius": "16px",
-        "containerWidth": "full",
-        "spacing": "medium"
+        "type": "fade",
+        "duration": 300
       },
       "content": {}
     },
     {
-      "id": "step19-question-title",
-      "type": "text-inline",
+      "id": "step-19-transition-cta",
+      "type": "CTAButton",
       "order": 2,
-      "properties": {
-        "content": "Quanto você estaria disposta a investir em um guia completo de estilo personalizado?",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "medium"
-      },
-      "content": "Quanto você estaria disposta a investir em um guia completo de estilo personalizado?"
-    },
-    {
-      "id": "step19-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "properties": {
-        "options": [
-          {
-            "id": "strategic-4-1",
-            "text": "Menos de R$100"
-          },
-          {
-            "id": "strategic-4-2",
-            "text": "Entre R$100 e R$300"
-          },
-          {
-            "id": "strategic-4-3",
-            "text": "Entre R$300 e R$500"
-          },
-          {
-            "id": "strategic-4-4",
-            "text": "Mais de R$500"
-          }
-        ],
-        "columns": 1,
-        "imageSize": 0,
-        "showImages": false,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "medium",
-        "marginBottom": 16,
-        "selectionStyle": "highlight",
-        "allowDeselection": false,
-        "validationMessage": "Selecione uma opção para avançar."
-      },
-      "content": {}
-    },
-    {
-      "id": "step19-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "properties": {
-        "text": "Próxima Pergunta →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "medium",
-        "marginTop": 24
-      },
-      "content": {}
+      "properties": {},
+      "content": {
+        "label": "...",
+        "variant": "outline",
+        "size": "small"
+      }
     }
   ]
 }

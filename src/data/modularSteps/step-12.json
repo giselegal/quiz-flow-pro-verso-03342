@@ -1,203 +1,51 @@
 {
   "id": "step-12",
-  "type": "transition",
-  "title": "Etapa de Transição 1: Preparação para questões estratégicas",
+  "title": "Transição Mid-Quiz",
   "blocks": [
     {
-      "id": "step12-header",
-      "type": "quiz-intro-header",
+      "id": "transition-hero-12",
+      "type": "transition-hero",
       "order": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 120,
-        "logoHeight": 50,
-        "showProgress": true,
-        "progressValue": 12,
-        "progressMax": 21,
-        "showBackButton": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "showLogo": true,
-        "progressBarColor": "#B89B7A",
-        "progressBarThickness": 6,
-        "backgroundColor": "#FFFFFF",
+        "backgroundColor": "#FAF9F7",
         "textColor": "#432818",
-        "paddingTop": 16,
-        "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
-        "marginBottom": 24,
-        "progressTotal": 100,
-        "type": "quiz-intro-header"
+        "padding": 32,
+        "type": "scale",
+        "duration": 500,
+        "delay": 0,
+        "easing": "ease-out"
       },
-      "content": {}
+      "content": {
+        "title": "🕐 Enquanto calculamos o seu resultado...",
+        "subtitle": "Estamos montando seu perfil de estilo personalizado",
+        "message": "Continue para descobrir ainda mais sobre seu estilo único!",
+        "autoAdvanceDelay": 3500,
+        "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      }
     },
     {
-      "id": "step12-transition-title",
-      "type": "text-inline",
+      "id": "step-12-transition-text",
+      "type": "transition-text",
       "order": 1,
       "properties": {
-        "content": "🕐 Enquanto calculamos o seu resultado...",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "small"
+        "type": "fade",
+        "duration": 300
       },
-      "content": "🕐 Enquanto calculamos o seu resultado..."
+      "content": {
+        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      }
     },
     {
-      "id": "step12-transition-subtitle",
-      "type": "text-inline",
+      "id": "step-12-transition-cta",
+      "type": "CTAButton",
       "order": 2,
-      "properties": {
-        "content": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.",
-        "fontSize": "text-lg",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 16,
-        "containerWidth": "full",
-        "spacing": "small"
-      },
-      "content": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa."
-    },
-    {
-      "id": "step12-transition-description",
-      "type": "text-inline",
-      "order": 3,
-      "properties": {
-        "content": "A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.",
-        "fontSize": "text-base",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      },
-      "content": "A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade."
-    },
-    {
-      "id": "step12-transition-call",
-      "type": "text-inline",
-      "order": 4,
-      "properties": {
-        "content": "💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.",
-        "fontSize": "text-base",
-        "fontWeight": "font-medium",
-        "textAlign": "text-center",
-        "color": "#B89B7A",
-        "marginBottom": 16,
-        "containerWidth": "full",
-        "spacing": "small"
-      },
-      "content": "💬 Responda com sinceridade. Isso é só entre você e a sua nova versão."
-    },
-    {
-      "id": "step12-transition-loader",
-      "type": "transition-loader",
-      "order": 5,
       "properties": {},
       "content": {
-        "color": "#B89B7A",
-        "dots": 3,
-        "size": "md",
-        "animationSpeed": "normal"
-      }
-    },
-    {
-      "id": "step12-transition-progress",
-      "type": "transition-progress",
-      "order": 6,
-      "properties": {},
-      "content": {
-        "currentStep": 12,
-        "totalSteps": 21,
-        "showPercentage": true,
-        "color": "#B89B7A",
-        "height": 8
-      }
-    },
-    {
-      "id": "step12-options-grid",
-      "type": "options-grid",
-      "order": 7,
-      "properties": {
-        "options": [
-          {
-            "id": "12a",
-            "text": "Me sinto desconectada da mulher que sou hoje",
-            "value": "desconectada",
-            "points": 1
-          },
-          {
-            "id": "12b",
-            "text": "Tenho dúvidas sobre o que realmente me valoriza",
-            "value": "duvidas",
-            "points": 2
-          },
-          {
-            "id": "12c",
-            "text": "Às vezes acerto, às vezes erro",
-            "value": "inconsistente",
-            "points": 3
-          },
-          {
-            "id": "12d",
-            "text": "Me sinto segura, mas sei que posso evoluir",
-            "value": "segura_evolucao",
-            "points": 4
-          }
-        ],
-        "columns": 1,
-        "imageSize": 0,
-        "showImages": false,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "selectionStyle": "glow",
-        "animationType": "scale",
-        "validationMessage": "Selecione uma opção para avançar.",
-        "scoring": {
-          "enabled": true,
-          "method": "strategic-points"
-        }
-      },
-      "content": {}
-    },
-    {
-      "id": "step12-continue-button",
-      "type": "button-inline",
-      "order": 8,
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
+        "label": "Continuar",
+        "href": "#next",
         "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
-      },
-      "content": {}
+        "size": "medium"
+      }
     }
   ]
 }

@@ -1,211 +1,218 @@
 {
   "id": "step-20",
-  "type": "conversionResult",
-  "title": "Página de Conversão - Resultado Personalizado",
+  "title": "Resultado Personalizado - Atomic v3",
   "blocks": [
     {
-      "id": "step20-header",
-      "type": "quiz-intro-header",
+      "id": "result-congrats",
+      "type": "result-congrats",
       "order": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 120,
-        "logoHeight": 50,
-        "showProgress": true,
-        "progressValue": 20,
-        "progressMax": 21,
-        "showBackButton": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "showLogo": true,
-        "progressBarColor": "#B89B7A",
-        "progressBarThickness": 6,
-        "backgroundColor": "#FFFFFF",
-        "textColor": "#432818",
-        "paddingTop": 16,
-        "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
-        "marginBottom": 24,
-        "progressTotal": 100,
-        "type": "quiz-intro-header"
+        "enabled": true,
+        "order": 1,
+        "props": {
+          "showCelebration": true,
+          "celebrationEmoji": "🎉",
+          "celebrationAnimation": "bounce",
+          "greetingFormat": "Olá, {userName}!",
+          "titleFormat": "Seu Estilo Predominante é:",
+          "styleNameDisplay": "{styleName}",
+          "colors": {
+            "greeting": "#432818",
+            "greetingHighlight": "#B89B7A",
+            "title": "#432818",
+            "styleName": "#B89B7A"
+          },
+          "spacing": {
+            "padding": "3rem 1.5rem",
+            "marginBottom": "2.5rem"
+          }
+        }
       },
       "content": {}
     },
     {
-      "id": "step20-result-title",
-      "type": "text-inline",
+      "id": "result-main",
+      "type": "result-main",
       "order": 1,
       "properties": {
-        "content": "✨ Seu Estilo Predominante",
-        "fontSize": "text-3xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "marginBottom": 16
+        "enabled": true,
+        "order": 2,
+        "props": {
+          "layout": "two-column",
+          "imagePosition": "left",
+          "showStyleImage": true,
+          "styleImage": {
+            "aspectRatio": "4/5",
+            "showDecorations": true,
+            "decorationColor": "#B89B7A",
+            "fallbackEnabled": true
+          },
+          "showIntroText": true,
+          "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
+          "showDescription": true
+        }
       },
-      "content": "✨ Seu Estilo Predominante"
+      "content": {}
     },
     {
-      "id": "step20-result-main",
-      "type": "result-main",
+      "id": "result-progress-bars",
+      "type": "result-progress-bars",
       "order": 2,
-      "properties": {},
-      "content": {
-        "styleName": "{resultStyle}",
-        "description": "Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}. Descubra como aplicar essa essência única no seu dia a dia.",
-        "imageUrl": "",
-        "backgroundColor": "#FAF9F7",
-        "showIcon": true
-      }
+      "properties": {
+        "enabled": true,
+        "order": 3,
+        "props": {
+          "topCount": 3,
+          "showPercentage": true,
+          "percentageFormat": "{percentage}%",
+          "animationDelay": 200,
+          "colors": {
+            "primary": "#B89B7A",
+            "secondary": "#a08966",
+            "tertiary": "#8c7757"
+          },
+          "titleFormat": "Além do {primaryStyle}, você também tem traços de:"
+        }
+      },
+      "content": {}
     },
     {
-      "id": "step20-result-style-primary",
-      "type": "result-style",
+      "id": "result-secondary-styles",
+      "type": "result-secondary-styles",
       "order": 3,
-      "properties": {},
-      "content": {
-        "styleName": "{resultStyle}",
-        "percentage": "{percentage}",
-        "description": "Seu estilo predominante",
-        "color": "#B89B7A",
-        "showBar": true
-      }
+      "properties": {
+        "enabled": true,
+        "order": 4,
+        "props": {
+          "showKeywords": true,
+          "keywordsTitle": "Palavras que te definem:",
+          "tagColor": "#B89B7A",
+          "tagStyle": "rounded-full"
+        }
+      },
+      "content": {}
     },
     {
-      "id": "step20-result-characteristics",
-      "type": "result-characteristics",
+      "id": "result-image",
+      "type": "result-image",
       "order": 4,
-      "properties": {},
-      "content": {
-        "title": "✨ Suas Características Marcantes",
-        "items": [
-          "{characteristic1}",
-          "{characteristic2}",
-          "{characteristic3}"
-        ],
-        "icon": "check",
-        "iconColor": "#B89B7A",
-        "textColor": "#432818"
-      }
+      "properties": {
+        "enabled": true,
+        "order": 5,
+        "props": {
+          "position": "center",
+          "aspectRatio": "4/5",
+          "maxWidth": "28rem",
+          "centered": true,
+          "showDecorations": false
+        }
+      },
+      "content": {}
     },
     {
-      "id": "step20-hook-title",
-      "type": "text-inline",
+      "id": "result-description",
+      "type": "result-description",
       "order": 5,
       "properties": {
-        "content": "🎯 Seu Estilo {resultStyle} foi Revelado!",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#B89B7A",
-        "fontFamily": "'Playfair Display', serif",
-        "marginTop": 32,
-        "marginBottom": 16
+        "enabled": true,
+        "order": 6,
+        "props": {
+          "showTransitionText": true,
+          "transitionText": "Mas lembre-se: você não é só um estilo.",
+          "showPersuasiveQuestions": true,
+          "persuasiveQuestionsTitle": "💭 Você já se perguntou...",
+          "persuasiveQuestionsIcon": "❓",
+          "showClosingMessage": true,
+          "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
+        }
       },
-      "content": "🎯 Seu Estilo {resultStyle} foi Revelado!"
+      "content": {}
     },
     {
-      "id": "step20-hook-subtitle",
-      "type": "text-inline",
+      "id": "button-cta-primary",
+      "type": "result-cta",
       "order": 6,
       "properties": {
-        "content": "Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.",
-        "fontSize": "text-lg",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24
+        "enabled": true,
+        "order": 7
       },
-      "content": "Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é."
-    },
-    {
-      "id": "step20-value-title",
-      "type": "text-inline",
-      "order": 7,
-      "properties": {
-        "content": "💎 Vista-se de Você — na Prática",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "marginTop": 32,
-        "marginBottom": 16
-      },
-      "content": "💎 Vista-se de Você — na Prática"
-    },
-    {
-      "id": "step20-value-description",
-      "type": "text-inline",
-      "order": 8,
-      "properties": {
-        "content": "O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder.",
-        "fontSize": "text-base",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24
-      },
-      "content": "O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder."
-    },
-    {
-      "id": "step20-pricing",
-      "type": "text-inline",
-      "order": 9,
-      "properties": {
-        "content": "<div style='text-align: center;'><span style='text-decoration: line-through; color: #9CA3AF;'>De R$ 175</span> <span style='font-size: 2rem; font-weight: bold; color: #B89B7A;'>por apenas R$ 39</span><br/><span style='color: #6B7280;'>ou 5x de R$ 8,83</span><br/><span style='color: #EF4444; font-weight: 600;'>⚡ 78% de desconto</span></div>",
-        "fontSize": "text-lg",
-        "textAlign": "text-center",
-        "marginBottom": 24
-      },
-      "content": "<div style='text-align: center;'><span style='text-decoration: line-through; color: #9CA3AF;'>De R$ 175</span> <span style='font-size: 2rem; font-weight: bold; color: #B89B7A;'>por apenas R$ 39</span><br/><span style='color: #6B7280;'>ou 5x de R$ 8,83</span><br/><span style='color: #EF4444; font-weight: 600;'>⚡ 78% de desconto</span></div>"
-    },
-    {
-      "id": "step20-cta-primary",
-      "type": "button-inline",
-      "order": 10,
-      "properties": {
-        "text": "✨ GARANTIR MEU GUIA PERSONALIZADO AGORA ✨",
+      "content": {
+        "text": "{ctaPrimaryText}",
+        "url": "{ctaPrimaryUrl}",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
         "backgroundColor": "#B89B7A",
-        "textColor": "#FFFFFF",
-        "fontSize": "text-lg",
-        "fontWeight": "font-bold",
-        "onClick": "window.location.href='https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'",
-        "marginBottom": 16
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      }
+    },
+    {
+      "id": "result-share",
+      "type": "result-share",
+      "order": 7,
+      "properties": {
+        "enabled": true,
+        "order": 8
+      },
+      "content": {
+        "title": "Compartilhe seu resultado",
+        "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
+        "platforms": [
+          "facebook",
+          "twitter",
+          "whatsapp",
+          "linkedin"
+        ]
+      }
+    },
+    {
+      "id": "transformation-benefits",
+      "type": "text-inline",
+      "order": 8,
+      "properties": {
+        "enabled": true,
+        "order": 8,
+        "props": {
+          "content": "<h3>Transforme Sua Imagem, Revele Sua Essência</h3><p>Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.</p><ul><li>🎯 Clareza de estilo para se vestir com facilidade todos os dias</li><li>🎨 Cores e formas que comunicam quem você é e o que você quer</li><li>💼 Imagem que chega primeiro: autoridade sem perder autenticidade</li><li>👗 Guarda-roupa estratégico que conversa entre si</li></ul>",
+          "align": "left",
+          "style": "rich-text"
+        }
       },
       "content": {}
     },
     {
-      "id": "step20-urgency",
+      "id": "method-steps",
       "type": "text-inline",
-      "order": 11,
+      "order": 9,
       "properties": {
-        "content": "⚡ Esta oferta expira ao sair desta página",
-        "fontSize": "text-sm",
-        "fontWeight": "font-semibold",
-        "textAlign": "text-center",
-        "color": "#EF4444",
-        "marginBottom": 32
+        "enabled": true,
+        "order": 9,
+        "props": {
+          "content": "<h3>O que você vai aprender no Método 5 Passos</h3><div><h4>🪞 Passo 1 — Estilo de Ser</h4><p>Descubra seus 3 estilos predominantes e entenda como traduzir sua personalidade no vestir.</p></div><div><h4>🎨 Passo 2 — Cores</h4><p>As cores são uma linguagem emocional. Aprenda como escolher tons que valorizam sua beleza natural.</p></div><div><h4>🧍‍♀️ Passo 3 — Biotipo</h4><p>Entenda as linhas e proporções do seu corpo e como se vestir para equilibrar formas.</p></div><div><h4>🧹 Passo 4 — Detox do Guarda-Roupa</h4><p>Um processo de autoconhecimento através do desapego.</p></div><div><h4>👗 Passo 5 — Guarda-Roupa de Sucesso</h4><p>Monte um guarda-roupa funcional e inteligente, com peças-chave e combinações rápidas.</p></div>",
+          "align": "left",
+          "style": "rich-text"
+        }
       },
-      "content": "⚡ Esta oferta expira ao sair desta página"
+      "content": {}
     },
     {
-      "id": "step20-share",
-      "type": "result-share",
-      "order": 12,
-      "properties": {},
+      "id": "button-cta-final",
+      "type": "result-cta",
+      "order": 10,
+      "properties": {
+        "enabled": true,
+        "order": 10
+      },
       "content": {
-        "title": "💬 Compartilhe seu resultado",
-        "platforms": [
-          "facebook",
-          "twitter",
-          "whatsapp"
-        ],
-        "message": "Descobri meu estilo predominante! ✨ {resultStyle}"
+        "text": "{ctaSecondaryText}",
+        "url": "{ctaSecondaryUrl}",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
       }
     }
   ]
