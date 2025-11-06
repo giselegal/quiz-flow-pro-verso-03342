@@ -36,6 +36,7 @@ export interface EditorResource {
     version?: number;
     description?: string;
     tags?: string[];
+    clonedFrom?: string; // ID do recurso original quando este é um clone
   };
 }
 
