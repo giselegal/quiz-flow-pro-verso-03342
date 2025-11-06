@@ -135,7 +135,8 @@ export class TemplateService extends BaseCanonicalService {
     } catch {
       // noop
     }
-    return false;
+    // Padrão: habilitar o novo pipeline por padrão
+    return true;
   }
 
   // 🚀 FASE 3.1: Smart Lazy Loading
@@ -160,7 +161,8 @@ export class TemplateService extends BaseCanonicalService {
       const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_JSON_ONLY : undefined);
       if (typeof rawNode === 'string') return rawNode === 'true';
     } catch { /* noop */ }
-    return false;
+    // Padrão: priorizar JSON-only (pode ser desativado por env/localStorage quando necessário)
+    return true;
   }
 
   // 🎯 FASE 4: Navegação Dinâmica

@@ -51,14 +51,17 @@ async function readJson(filePath: string): Promise<any | null> {
 }
 
 async function loadPartials(): Promise<Record<string, string>> {
-  const entries = await fs.readdir(PARTIALS_DIR)
   const acc: Record<string, string> = {}
-  for (const file of entries) {
-    if (file.endsWith('.html')) {
-      const key = file
-      const tpl = await fs.readFile(path.join(PARTIALS_DIR, file), 'utf-8')
-      acc[key] = tpl
+  try {
+    const entries = await fs.readdir(PARTIALS_DIR)
+    for (const file of entries) {
+      if (file.endsWith('.html')) {
+        const tpl = await fs.readFile(path.join(PARTIALS_DIR, file), 'utf-8')
+        acc[file] = tpl
+      }
     }
+  } catch {
+    // sem parciais, sem erro
   }
   return acc
 }
@@ -121,13 +124,13 @@ function renderBlock(block: Block, partials: Record<string, string>): string {
     return Mustache.render(partials[name], mapDataForTemplate(block))
   }
   // Fallback genérico
-  const raw = mapDataForTemplate(block).__raw || ''
+  const raw = (mapDataForTemplate(block) as any).__raw || ''
   return `<section data-block-id="${block.id}" data-block-type="${block.type}" style="${computeInlineStyle(block.content)}">
     <pre style="white-space: pre-wrap; background:#f8fafc; padding:8px; border-radius:6px; font-size:12px;">${raw}</pre>
   </section>`
 }
 
-function renderDocument(stepId: string, title: string, bodyHtml: string) {
+function renderDocument(stepId: string, title: string | undefined, bodyHtml: string) {
   return `<!doctype html>
 <html lang="pt-br">
 <head>
@@ -146,8 +149,8 @@ function renderDocument(stepId: string, title: string, bodyHtml: string) {
   <main class="container" data-step-id="${stepId}">
     ${bodyHtml}
   </main>
-</body>
-</html>`
+  </body>
+  </html>`
 }
 
 async function processStep(stepId: string, partials: Record<string, string>) {
@@ -158,7 +161,7 @@ async function processStep(stepId: string, partials: Record<string, string>) {
   const blocks = Array.isArray((data as any).blocks) ? (data as any).blocks as Block[] : []
   const sorted = blocks.slice().sort((a, b) => (a.order || 0) - (b.order || 0))
   const rendered = sorted.map(b => renderBlock(b, partials)).join('\n')
-  const html = renderDocument(stepId, data.title || stepId, rendered)
+  const html = renderDocument(stepId, data.title, rendered)
   const outPath = path.join(OUTPUT_DIR, `${stepId}.html`)
   await fs.writeFile(outPath, html, 'utf-8')
   return outPath

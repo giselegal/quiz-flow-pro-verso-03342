@@ -74,7 +74,26 @@ class WebSocketOptimizer {
   }
 
   private shouldFilterLog(args: any[]): boolean {
-    const message = args.join(' ');
+    const safe = (val: any): string => {
+      try {
+        if (typeof val === 'string') return val;
+        if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+        if (val instanceof Error) return `${val.name}: ${val.message}`;
+        // Evitar circular references
+        const seen = new WeakSet();
+        return JSON.stringify(val, function (key, value) {
+          if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) return '[Circular]';
+            seen.add(value);
+          }
+          return value;
+        });
+      } catch {
+        try { return String(val); } catch { return '[Unserializable]'; }
+      }
+    };
+
+    const message = args.map(safe).join(' ');
 
     // Filtrar logs de websocket repetitivos
     if (WEBSOCKET_CONFIG.filterWebSocketLogs) {
