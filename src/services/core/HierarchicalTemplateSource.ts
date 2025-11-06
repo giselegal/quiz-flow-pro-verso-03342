@@ -255,8 +255,23 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    * 2️⃣ PRIORIDADE ALTA: Admin Override (Supabase template_overrides)
    */
   private async getFromAdminOverride(stepId: string): Promise<Block[] | null> {
-    // Em DEV (ou quando flag desativa), não consultar Supabase
-    if (this.ONLINE_DISABLED) return null;
+    // 🔒 Regras de desativação:
+    // - ONLINE_DISABLED: bloqueia totalmente qualquer chamada remota
+    // - JSON_ONLY: não faz sentido buscar overrides se estamos forçando JSON puro
+    // - VITE_DISABLE_TEMPLATE_OVERRIDES / VITE_DISABLE_ADMIN_OVERRIDE: flags explícitas para desligar esta fonte
+    if (this.ONLINE_DISABLED || this.JSON_ONLY) return null;
+    try {
+      if (typeof window !== 'undefined') {
+        const lsDisable = window.localStorage?.getItem('VITE_DISABLE_TEMPLATE_OVERRIDES') || window.localStorage?.getItem('VITE_DISABLE_ADMIN_OVERRIDE');
+        if (lsDisable === 'true') return null;
+      }
+      let viteDisable: any;
+      try { viteDisable = (import.meta as any)?.env?.VITE_DISABLE_TEMPLATE_OVERRIDES || (import.meta as any)?.env?.VITE_DISABLE_ADMIN_OVERRIDE; } catch { /* noop */ }
+      if (typeof viteDisable === 'string' && viteDisable === 'true') return null;
+      const nodeDisable = (typeof process !== 'undefined') ? (process as any).env?.VITE_DISABLE_TEMPLATE_OVERRIDES || (process as any).env?.VITE_DISABLE_ADMIN_OVERRIDE : undefined;
+      if (typeof nodeDisable === 'string' && nodeDisable === 'true') return null;
+    } catch { /* noop */ }
+
     try {
       // Evita 404 do PostgREST usando limit(1) em vez de single()
       const { data, error } = await (supabase as any)
@@ -265,8 +280,16 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
         .eq('step_id', stepId)
         .eq('active', true)
         .limit(1);
-
-      if (error) throw error;
+      // Se a tabela não existir ou RLS bloquear, Supabase tende a retornar error (status 404 / 401)
+      if (error) {
+        // Tratar 404 silenciosamente como ausência de override sem poluir console
+        if ((error as any)?.code === 'PGRST116' || (error as any)?.message?.includes('404')) {
+          return null;
+        }
+        // Outros erros podem ser transientes; apenas log leve e continuar
+        appLogger.debug('[HierarchicalSource] Admin override error:', { stepId, error });
+        return null;
+      }
       if (Array.isArray(data) && data.length > 0) {
         return (data[0] as any)?.blocks || null;
       }
@@ -443,7 +466,18 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    * Verificar se existe admin override
    */
   private async hasAdminOverride(stepId: string): Promise<boolean> {
-    if (this.ONLINE_DISABLED) return false;
+    if (this.ONLINE_DISABLED || this.JSON_ONLY) return false;
+    try {
+      if (typeof window !== 'undefined') {
+        const lsDisable = window.localStorage?.getItem('VITE_DISABLE_TEMPLATE_OVERRIDES') || window.localStorage?.getItem('VITE_DISABLE_ADMIN_OVERRIDE');
+        if (lsDisable === 'true') return false;
+      }
+      let viteDisable: any;
+      try { viteDisable = (import.meta as any)?.env?.VITE_DISABLE_TEMPLATE_OVERRIDES || (import.meta as any)?.env?.VITE_DISABLE_ADMIN_OVERRIDE; } catch { /* noop */ }
+      if (typeof viteDisable === 'string' && viteDisable === 'true') return false;
+      const nodeDisable = (typeof process !== 'undefined') ? (process as any).env?.VITE_DISABLE_TEMPLATE_OVERRIDES || (process as any).env?.VITE_DISABLE_ADMIN_OVERRIDE : undefined;
+      if (typeof nodeDisable === 'string' && nodeDisable === 'true') return false;
+    } catch { /* noop */ }
     try {
       // Evita 404 do PostgREST usando limit(1) em vez de single()
       const { data } = await (supabase as any)
