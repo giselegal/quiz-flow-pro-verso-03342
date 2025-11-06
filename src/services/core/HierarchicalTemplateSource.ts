@@ -1,14 +1,25 @@
 /**
- * 🎯 HIERARCHICAL TEMPLATE SOURCE - Implementação SSOT
- * 
- * Implementa hierarquia clara de prioridade:
- * 1. USER_EDIT (Supabase funnels.config) - Maior prioridade
- * 2. ADMIN_OVERRIDE (Supabase template_overrides) - Admin control
- * 3. TEMPLATE_DEFAULT (JSON files) - Template padrão
- * 4. FALLBACK (quiz21StepsComplete.ts) - Emergency fallback
- * 
- * @version 1.0.0
- * @phase FASE-1
+ * 🎯 HIERARCHICAL TEMPLATE SOURCE (SSOT)
+ *
+ * ORDEM DE PRIORIDADE ATUAL (após refatorações JSON-only):
+ * 1. USER_EDIT (Supabase: tabela `funnels.config.steps[stepId]`) - prioridade máxima quando online
+ * 2. ADMIN_OVERRIDE (Supabase: tabela `template_overrides`) - somente se não houver USER_EDIT e fonte não estiver desativada
+ * 3. TEMPLATE_DEFAULT (Arquivos JSON dinâmicos / loaders) - fonte primária em modo offline ou JSON_ONLY
+ * 4. FALLBACK (quiz21StepsComplete.ts) - DESATIVADO POR PADRÃO; só ativa se localStorage['VITE_ENABLE_TS_FALLBACK'] === 'true'
+ *
+ * FLAGS / MODOS:
+ * - ONLINE_DISABLED: (VITE_DISABLE_SUPABASE=true ou localStorage) pula totalmente USER_EDIT e ADMIN_OVERRIDE.
+ * - JSON_ONLY: (VITE_TEMPLATE_JSON_ONLY=true) força uso exclusivo de JSON → ignora ADMIN_OVERRIDE e fallback TS.
+ * - VITE_DISABLE_TEMPLATE_OVERRIDES / VITE_DISABLE_ADMIN_OVERRIDE: desliga ADMIN_OVERRIDE sem afetar USER_EDIT.
+ * - VITE_ENABLE_TS_FALLBACK=true: reativa fallback TypeScript emergencial (não recomendado).
+ *
+ * NOTAS DE IMPLEMENTAÇÃO:
+ * - Fallback TS está encapsulado em isFallbackDisabled() e removido da lista de sources se desativado.
+ * - Em DEV, ONLINE_DISABLED tende a ser true por padrão (menos ruído de 404 no console).
+ * - Steps inválidos (<1 ou >21) retornam vazio imediato para evitar spam.
+ *
+ * @version 1.2.0
+ * @phase PÓS-FASE-1 / CONSOLIDAÇÃO JSON V3
  */
 
 import type { Block } from '@/types/editor';
