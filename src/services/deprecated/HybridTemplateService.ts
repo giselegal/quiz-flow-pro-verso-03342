@@ -57,11 +57,11 @@ class HybridTemplateService {
   private static warned = false;
 
   private static warnOnce() {
-    if (!this.warned && typeof console !== 'undefined') {
-      this.warned = true;
-      // Aviso de depreciação padronizado
-      console.warn('\n⚠️ DEPRECATED: HybridTemplateService está descontinuado.\nUse: import { templateService } from \'@/services/canonical/TemplateService\'\nSerá removido em: v2.0.0\n');
-    }
+    // Silenciado: redirect funcionando corretamente
+    // if (!this.warned && typeof console !== 'undefined') {
+    //   this.warned = true;
+    //   console.warn('\n⚠️ DEPRECATED: HybridTemplateService está descontinuado.\nUse: import { templateService } from \'@/services/canonical/TemplateService\'\nSerá removido em: v2.0.0\n');
+    // }
   }
 
   static async getTemplate(templateId: string): Promise<any | null> {
@@ -75,7 +75,7 @@ class HybridTemplateService {
       return null;
     }
 
-  if (templateId === 'quiz21StepsComplete') {
+    if (templateId === 'quiz21StepsComplete') {
       // Retorna um objeto com todos os ids de step mapeados para blocos
       const stepsResult = templateService.steps.list();
       if (!stepsResult.success) return null;

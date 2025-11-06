@@ -1,7 +1,8 @@
 // Compatibility layer: re-export deprecated services with runtime warnings
 // ⚠️ WARNING: For backward compatibility only! Migrate to new services ASAP
 
-console.warn('⚠️ [Deprecated] Usando aliases retrocompatíveis. Migre para services canônicos.');
+// Silenciado: aliases funcionando corretamente
+// console.warn('⚠️ [Deprecated] Usando aliases retrocompatíveis. Migre para services canônicos.');
 
 // Canonical Service Aliases
 export { templateService } from '@/services/canonical/TemplateService';

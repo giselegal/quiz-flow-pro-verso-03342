@@ -158,11 +158,11 @@ export class TemplateService extends BaseCanonicalService {
 
   protected async onInitialize(): Promise<void> {
     this.log('TemplateService initialized with UnifiedTemplateRegistry');
-    
+
     // ✅ FASE 1: Preload de steps críticos para eliminar cache MISS
     try {
       this.log('⚡ Preloading critical steps...');
-      const criticalPromises = this.CRITICAL_STEPS.map(stepId => 
+      const criticalPromises = this.CRITICAL_STEPS.map(stepId =>
         this.lazyLoadStep(stepId, false).catch(err => {
           this.log(`⚠️ Failed to preload ${stepId}:`, err);
           return null;
@@ -170,7 +170,7 @@ export class TemplateService extends BaseCanonicalService {
       );
       await Promise.allSettled(criticalPromises);
       this.log(`✅ Preloaded ${this.CRITICAL_STEPS.length} critical steps`);
-      
+
       // Preload steps vizinhos do step inicial (step-01)
       await this.preloadNeighborsAndCritical('step-01');
     } catch (error) {
@@ -1154,7 +1154,8 @@ export class TemplateService extends BaseCanonicalService {
    * @deprecated Use getAllSteps() async para obter blocos reais
    */
   getAllStepsSync(): Record<string, any> {
-    console.warn('⚠️ getAllStepsSync() retorna metadata sem blocks. Use getAllSteps() async para obter blocos.');
+    // Silenciado: comportamento esperado e documentado
+    // console.warn('⚠️ getAllStepsSync() retorna metadata sem blocks. Use getAllSteps() async para obter blocos.');
 
     const allSteps: Record<string, any> = {};
 

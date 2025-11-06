@@ -9,6 +9,4 @@ export type { UnifiedFunnel as UnifiedFunnelData, UnifiedStage } from '@/service
 export { funnelService as funnelUnifiedService, funnelService as FunnelUnifiedService } from '@/services/canonical/FunnelService';
 export { adaptMetadataToUnified, adaptUnifiedToMetadata } from '@/services/canonical/FunnelAdapter';
 
-if (typeof window !== 'undefined') {
-  console.warn('[DEPRECATED] FunnelUnifiedService → use @/services/canonical/FunnelService');
-}
+// Silenciado: redirect funcionando corretamente

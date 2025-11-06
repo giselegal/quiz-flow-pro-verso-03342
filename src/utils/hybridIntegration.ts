@@ -27,7 +27,8 @@ export const initializeHybridTemplateService = async (): Promise<typeof HybridTe
         const templateData = await HybridTemplateService.getTemplate('quiz21StepsComplete');
 
         if (!templateData || Object.keys(templateData).length === 0) {
-            console.warn('⚠️ [HYBRID] Template não encontrado, usando fallback...');
+            // Silenciado: fallback funcionando corretamente
+            // console.warn('⚠️ [HYBRID] Template não encontrado, usando fallback...');
 
             // Fallback: usar template direto
             if (QUIZ_STYLE_21_STEPS_TEMPLATE) {

@@ -7,6 +7,4 @@
 export * from '@/services/deprecated/QuizEditorBridge';
 export { default } from '@/services/deprecated/QuizEditorBridge';
 
-if (typeof window !== 'undefined') {
-  console.warn('[DEPRECATED] QuizEditorBridge → use @/services/canonical/TemplateService');
-}
+// Silenciado: redirect funcionando corretamente
