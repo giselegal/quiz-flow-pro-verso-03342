@@ -31,6 +31,9 @@ import { UnifiedTemplateRegistry } from '../deprecated/UnifiedTemplateRegistry';
 import type { Block } from '@/types/editor';
 import { editorMetrics } from '@/utils/editorMetrics'; // ✅ FASE 3.3
 import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: Adapter para normalização
+// 🎯 FASE 1: Hierarchical Template Source (SSOT)
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { DataSourcePriority } from '@/services/core/TemplateDataSource';
 
 /**
  * Template metadata
@@ -106,6 +109,35 @@ export class TemplateService extends BaseCanonicalService {
   private static instance: TemplateService;
   private registry: UnifiedTemplateRegistry;
 
+  // 🎯 FASE 1: Feature Flag para novo sistema
+  // Em ambientes Vite, usar import.meta.env; fallback para process.env; permite override via localStorage
+  private get USE_HIERARCHICAL_SOURCE(): boolean {
+    try {
+      // LocalStorage override (útil para debug sem rebuild)
+      if (typeof window !== 'undefined') {
+        const ls = window.localStorage?.getItem('VITE_ENABLE_HIERARCHICAL_SOURCE');
+        if (ls != null) return ls === 'true';
+      }
+
+      // Vite env (import.meta.env)
+      let rawVite: any;
+      try {
+        // @ts-ignore - import.meta pode não existir em alguns ambientes de teste
+        rawVite = (import.meta as any)?.env?.VITE_ENABLE_HIERARCHICAL_SOURCE;
+      } catch {
+        // noop
+      }
+      if (typeof rawVite === 'string') return rawVite === 'true';
+
+      // Node/process fallback (tests, SSR)
+      const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_ENABLE_HIERARCHICAL_SOURCE : undefined);
+      if (typeof rawNode === 'string') return rawNode === 'true';
+    } catch {
+      // noop
+    }
+    return false;
+  }
+
   // 🚀 FASE 3.1: Smart Lazy Loading
   private readonly CRITICAL_STEPS = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
   private readonly PRELOAD_NEIGHBORS = 1; // Preload ±1 step
@@ -114,6 +146,8 @@ export class TemplateService extends BaseCanonicalService {
 
   // 🎯 FASE 4: Navegação Dinâmica
   private activeTemplateId: string | null = null;
+  // 🆕 FASE 1: manter funnelId ativo para priorizar USER_EDIT no HierarchicalSource
+  private activeFunnelId: string | null = null;
   private activeTemplateSteps: number = 0; // ✅ Vazio até carregar template
 
   // 🎯 Custom Steps (modo "Começar do Zero")
@@ -232,56 +266,110 @@ export class TemplateService extends BaseCanonicalService {
     const startTime = performance.now(); // ✅ FASE 3.3: Track timing
 
     try {
-      // ✅ FASE 1.2: Verificar cache PRIMEIRO
-      const cacheKey = `template:${templateId || 'default'}:${stepId}`;
-      const cachedResult = cacheService.templates.get<Block[]>(cacheKey);
-
-      if (cachedResult.success && cachedResult.data) {
-        this.log(`⚡ Cache HIT: ${stepId}`);
-        editorMetrics.trackCacheHit(cacheKey); // ✅ FASE 3.3
-        editorMetrics.trackLoadTime(stepId, performance.now() - startTime, { source: 'cache' });
-        return this.createResult(cachedResult.data);
+      // 🎯 FASE 1: Usar HierarchicalTemplateSource se feature flag ativa
+      if (this.USE_HIERARCHICAL_SOURCE) {
+        return await this.getStepFromHierarchicalSource(stepId, templateId);
       }
 
-      this.log(`⏳ Cache MISS: ${stepId} - Loading...`);
-      editorMetrics.trackCacheMiss(cacheKey); // ✅ FASE 3.3
-
-      // FASE 2: Carregar do registry (lazy loading)
-      const blocks = await this.registry.getStep(stepId, templateId);
-
-      if (!blocks || blocks.length === 0) {
-        return this.createError(new Error(`Step not found: ${stepId}`));
-      }
-
-      // ✅ FASE 1: Normalizar formato usando adapter
-      // O adapter converte automaticamente V2/V3 sections[] → V3.1 blocks[]
-      const normalizedBlocks = blocks.map((block: any) => {
-        // Se o bloco já está no formato correto, retornar como está
-        if (block.type && block.content) {
-          return block;
-        }
-
-        // Caso contrário, tentar normalizar
-        const normalized = templateFormatAdapter.normalize({ blocks: [block] });
-        return normalized.blocks[0] || block;
-      });
-
-      // ✅ FASE 1.2: Armazenar em cache (TTL: 10min)
-      cacheService.templates.set(cacheKey, normalizedBlocks, 600000);
-
-      // ✅ FASE 3.3: Track metrics
-      editorMetrics.trackLoadTime(stepId, performance.now() - startTime, {
-        source: 'registry',
-        blocksCount: normalizedBlocks.length
-      });
-
-      this.log(`✅ Carregado e normalizado ${normalizedBlocks.length} blocos para ${stepId}`);
-      return this.createResult(normalizedBlocks);
+      // ⚠️ LEGACY: Código existente (será removido na Fase 3)
+      return await this.getStepLegacy(stepId, templateId, startTime);
     } catch (error) {
       editorMetrics.trackError(error as Error, { stepId, templateId }); // ✅ FASE 3.3
       this.error('getStep failed:', error);
       return this.createError(error as Error);
     }
+  }
+
+  /**
+   * 🎯 NOVO: Obter step usando HierarchicalTemplateSource (FASE 1)
+   */
+  private async getStepFromHierarchicalSource(
+    stepId: string,
+    templateId?: string
+  ): Promise<ServiceResult<Block[]>> {
+    const startTime = performance.now();
+
+    try {
+  // Extrair funnelId do contexto se disponível
+  // TODO: Passar funnelId como parâmetro no futuro
+  const funnelId = this.activeFunnelId || undefined;
+
+      // Usar HierarchicalTemplateSource
+      const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
+
+      // Log da fonte usada (debug/monitoring)
+      this.log(`✅ [NEW] Step ${stepId} loaded from ${DataSourcePriority[result.metadata.source]} (${result.metadata.loadTime.toFixed(1)}ms)`);
+
+      // Track metrics
+      editorMetrics.trackLoadTime(stepId, performance.now() - startTime, {
+        source: DataSourcePriority[result.metadata.source],
+        blocksCount: result.data.length,
+        cacheHit: result.metadata.cacheHit,
+      });
+
+      return this.createResult(result.data);
+    } catch (error) {
+      this.error('[NEW] getStepFromHierarchicalSource failed:', error);
+      
+      // Fallback para legacy se novo sistema falhar
+  this.log('[WARN][NEW] Falling back to legacy system');
+      return await this.getStepLegacy(stepId, templateId, performance.now());
+    }
+  }
+
+  /**
+   * ⚠️ LEGACY: Método antigo (será removido na Fase 3)
+   */
+  private async getStepLegacy(
+    stepId: string,
+    templateId: string | undefined,
+    startTime: number
+  ): Promise<ServiceResult<Block[]>> {
+    // ✅ FASE 1.2: Verificar cache PRIMEIRO
+    const cacheKey = `template:${templateId || 'default'}:${stepId}`;
+    const cachedResult = cacheService.templates.get<Block[]>(cacheKey);
+
+    if (cachedResult.success && cachedResult.data) {
+      this.log(`⚡ Cache HIT: ${stepId}`);
+      editorMetrics.trackCacheHit(cacheKey); // ✅ FASE 3.3
+      editorMetrics.trackLoadTime(stepId, performance.now() - startTime, { source: 'cache' });
+      return this.createResult(cachedResult.data);
+    }
+
+    this.log(`⏳ Cache MISS: ${stepId} - Loading...`);
+    editorMetrics.trackCacheMiss(cacheKey); // ✅ FASE 3.3
+
+    // FASE 2: Carregar do registry (lazy loading)
+    const blocks = await this.registry.getStep(stepId, templateId);
+
+    if (!blocks || blocks.length === 0) {
+      return this.createError(new Error(`Step not found: ${stepId}`));
+    }
+
+    // ✅ FASE 1: Normalizar formato usando adapter
+    // O adapter converte automaticamente V2/V3 sections[] → V3.1 blocks[]
+    const normalizedBlocks = blocks.map((block: any) => {
+      // Se o bloco já está no formato correto, retornar como está
+      if (block.type && block.content) {
+        return block;
+      }
+
+      // Caso contrário, tentar normalizar
+      const normalized = templateFormatAdapter.normalize({ blocks: [block] });
+      return normalized.blocks[0] || block;
+    });
+
+    // ✅ FASE 1.2: Armazenar em cache (TTL: 10min)
+    cacheService.templates.set(cacheKey, normalizedBlocks, 600000);
+
+    // ✅ FASE 3.3: Track metrics
+    editorMetrics.trackLoadTime(stepId, performance.now() - startTime, {
+      source: 'registry',
+      blocksCount: normalizedBlocks.length
+    });
+
+    this.log(`✅ [LEGACY] Carregado e normalizado ${normalizedBlocks.length} blocos para ${stepId}`);
+    return this.createResult(normalizedBlocks);
   }
 
   /**
@@ -443,6 +531,18 @@ export class TemplateService extends BaseCanonicalService {
     this.activeTemplateId = templateId;
     this.activeTemplateSteps = totalSteps;
     this.log(`✅ Template ativo: ${templateId} (${totalSteps} etapas)`);
+  }
+
+  /**
+   * 🎯 Definir funnel ativo (afeta HierarchicalTemplateSource → USER_EDIT)
+   */
+  setActiveFunnel(funnelId: string | null): void {
+    this.activeFunnelId = funnelId || null;
+    if (funnelId) {
+      this.log(`✅ Funnel ativo para USER_EDIT: ${funnelId}`);
+    } else {
+      this.log('ℹ️ Funnel ativo removido (voltando para TEMPLATE_DEFAULT/ADMIN_OVERRIDE)');
+    }
   }
 
   /**
@@ -651,6 +751,14 @@ export class TemplateService extends BaseCanonicalService {
     this.registry.invalidate(id);
     this.loadedSteps.delete(id); // 🚀 FASE 3.1: Limpar do lazy load
     this.log(`Template invalidated: ${id}`);
+  }
+
+  /**
+   * Alias explícito para invalidar cache de um step específico.
+   * Útil para integrações com React Query.
+   */
+  invalidateStepCache(stepId: string): void {
+    this.invalidateTemplate(stepId);
   }
 
   /**

@@ -9,6 +9,7 @@ import { loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   const isStaging = mode === 'staging';
+  const preferredPort = Number(env.VITE_PORT || process.env.VITE_PORT || 8080);
 
   return {
     base: '/',
@@ -42,10 +43,11 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: '0.0.0.0',
-      port: 8080,
+      port: preferredPort,
       open: false,
       cors: true,
-      strictPort: true,
+      // Se a porta preferida estiver ocupada, permitir fallback automático
+      strictPort: false,
       proxy: {
         '/api': {
           target: 'http://localhost:3001',
@@ -62,10 +64,9 @@ export default defineConfig(({ mode }) => {
         'Access-Control-Allow-Headers': '*',
         'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
       },
+      // Não fixar porta do HMR; deixar sincronizar com a porta efetiva do servidor
       hmr: {
         overlay: true, // ✅ FASE 3: Mostrar overlay de erros
-        clientPort: 8080,
-        port: 8080,
         timeout: 5000, // ✅ FASE 3: Timeout maior para evitar "closed without opened"
       },
     },

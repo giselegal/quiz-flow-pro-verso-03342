@@ -1,7 +1,7 @@
 // 🎨 CANVAS COLUMN - Integração com Universal Block Renderer
 // ✅ FASE 4.2: Skeleton loading states adicionado
 // ✅ SPRINT 1: Event listener leak fix + auto metrics
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -13,6 +13,7 @@ import { SkeletonBlock } from '../SkeletonBlock';
 import { EmptyCanvasState } from '../EmptyCanvasState';
 import { useSafeEventListener } from '@/hooks/useSafeEventListener';
 import { useAutoMetrics } from '@/hooks/useAutoMetrics';
+import { useStepBlocksQuery } from '@/api/steps/hooks';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -163,9 +164,18 @@ function SortableBlockItem({
 }
 
 export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect, hasTemplate, onLoadTemplate }: CanvasColumnProps) {
-    const [blocks, setBlocks] = useState<Block[] | null>(blocksFromProps ?? null);
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [tick, setTick] = useState(0); // força re-render quando necessário
+
+    // 🔄 React Query: centralizar carregamento sempre via hook (props como initialData)
+    const { data: fetchedBlocks, isLoading: isLoadingQuery, error: queryError } = useStepBlocksQuery({
+        stepId: currentStepKey,
+        enabled: !!currentStepKey,
+    });
+
+    const blocks: Block[] | null = useMemo(() => {
+        return (fetchedBlocks ?? blocksFromProps ?? null) as Block[] | null;
+    }, [fetchedBlocks, blocksFromProps, tick]);
 
     // ✅ SPRINT 1: Auto metrics tracking
     useAutoMetrics('CanvasColumn', {
@@ -179,78 +189,41 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         id: 'canvas',
     });
 
-    // ✅ CRÍTICO: Sincronizar estado interno quando props mudarem
+    // Log de diagnóstico quando props.blocks mudar
     useEffect(() => {
+        if (!blocksFromProps) return;
         console.log('🔄 [CanvasColumn] Props blocks changed:', {
             currentStepKey,
             blocksCount: blocksFromProps?.length || 0,
             blockIds: blocksFromProps?.map(b => b.id) || [],
         });
-        setBlocks(blocksFromProps ?? null);
     }, [blocksFromProps, currentStepKey]);
 
     // ✅ SPRINT 1: Usar hook seguro para event listeners
     useSafeEventListener('block-updated', (event: Event) => {
         const customEvent = event as CustomEvent;
         const { stepKey, blockId } = customEvent.detail || {};
-        
+
         console.log('🔔 [CanvasColumn] Recebeu evento block-updated:', {
             stepKey,
             blockId,
             currentStepKey,
             shouldUpdate: stepKey === currentStepKey,
         });
-        
-        // Se a atualização for do step atual, forçar re-render
-        if (stepKey === currentStepKey) {
-            setBlocks(prev => {
-                if (!prev) return prev;
-                // Criar novo array para forçar re-render
-                return [...prev];
-            });
-        }
+
+        // Se a atualização for do step atual, forçar re-render leve
+        if (stepKey === currentStepKey) setTick(t => t + 1);
     }, {
         target: typeof window !== 'undefined' ? window : null,
         enabled: true,
     });
 
     useEffect(() => {
-        let cancelled = false;
-        const load = async () => {
-            // Se blocos forem fornecidos via props, priorizar essa fonte e não carregar do serviço
-            if (blocksFromProps) {
-                setBlocks(blocksFromProps);
-                setLoading(false);
-                setError(null);
-                return;
-            }
-            if (!currentStepKey) {
-                setBlocks(null);
-                return;
-            }
-            setLoading(true);
-            setError(null);
-            try {
-                const res = await templateService.getStep(currentStepKey);
-                if (!cancelled) {
-                    if (res.success) setBlocks(res.data);
-                    else {
-                        setBlocks([]);
-                        setError(res.error.message);
-                    }
-                }
-            } catch (err: any) {
-                if (!cancelled) {
-                    setBlocks([]);
-                    setError(err?.message || 'Erro ao carregar blocos');
-                }
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        };
-        load();
-        return () => { cancelled = true; };
-    }, [currentStepKey, blocksFromProps]);
+        if (queryError) setError(queryError.message);
+        else setError(null);
+    }, [queryError]);
+
+
 
     if (!currentStepKey) {
         return (
@@ -260,7 +233,7 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         );
     }
 
-    if (!blocksFromProps && loading) {
+    if (isLoadingQuery && !blocks) {
         return (
             <div className="p-3 space-y-2">
                 <div className="text-sm text-muted-foreground mb-4">
@@ -282,7 +255,7 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         if (!hasTemplate && onLoadTemplate) {
             return <EmptyCanvasState onLoadTemplate={onLoadTemplate} />;
         }
-        
+
         // 🔧 CORREÇÃO FASE 5: Melhorar mensagem de fallback com debugging hints
         return (
             <div className="p-6 text-center space-y-3">

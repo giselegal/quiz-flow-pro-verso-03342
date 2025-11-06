@@ -12,6 +12,7 @@ import React, { useMemo } from 'react';
 import { ResponsivePreviewFrame } from '@/components/editor/preview/ResponsivePreviewFrame';
 import { Eye, EyeOff } from 'lucide-react';
 import type { Block } from '@/types/editor';
+import { useStepBlocksQuery } from '@/api/steps/hooks';
 
 export interface PreviewPanelProps {
     currentStepKey: string | null;
@@ -28,9 +29,19 @@ export default function PreviewPanel({
     onToggleVisibility,
     className = '',
 }: PreviewPanelProps) {
+    // Quando não recebemos blocos por props, buscamos via React Query
+    const { data: fetchedBlocks, isLoading, error } = useStepBlocksQuery({
+        stepId: currentStepKey,
+        enabled: !blocks && !!currentStepKey,
+        // Preview pode tolerar cache curto
+        staleTimeMs: 15_000,
+    });
+
+    const blocksToUse: Block[] | null = (blocks ?? fetchedBlocks) ?? null;
+
     // Converter blocos do editor para formato de preview
     const quizContent = useMemo(() => {
-        if (!currentStepKey || !blocks) {
+        if (!currentStepKey || !blocksToUse) {
             return null;
         }
 
@@ -39,7 +50,7 @@ export default function PreviewPanel({
                 {
                     id: currentStepKey,
                     type: 'quiz-step',
-                    blocks: blocks,
+                    blocks: blocksToUse,
                 },
             ],
             metadata: {
@@ -47,7 +58,7 @@ export default function PreviewPanel({
                 previewMode: true,
             },
         };
-    }, [currentStepKey, blocks]);
+    }, [currentStepKey, blocksToUse]);
 
     if (!isVisible) {
         return (
@@ -59,6 +70,25 @@ export default function PreviewPanel({
                     <Eye className="w-4 h-4" />
                     Mostrar Preview
                 </button>
+            </div>
+        );
+    }
+
+    if (!blocks && isLoading) {
+        return (
+            <div className={`flex items-center justify-center h-full text-gray-500 bg-muted/20 ${className}`}>
+                <div className="text-center">
+                    <div className="animate-pulse mb-2">Carregando preview…</div>
+                    <div className="text-xs text-gray-400">{currentStepKey}</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className={`flex items-center justify-center h-full text-red-500 bg-red-50 ${className}`}>
+                <div className="text-sm">Erro ao carregar blocos: {String(error.message || error)}</div>
             </div>
         );
     }

@@ -1,4 +1,6 @@
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { stepKeys } from '@/api/steps/hooks';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useSuperUnified } from '@/hooks/useSuperUnified';
@@ -56,6 +58,8 @@ export type QuizModularEditorProps = {
  * We keep the provider in the outer default export to guarantee the hook has context.
  */
 function QuizModularEditorInner(props: QuizModularEditorProps) {
+    // React Query client para prefetch/invalidações
+    const queryClient = useQueryClient();
     // Core systems
     const unified = useSuperUnified();
     const dnd = useDndSystem();
@@ -94,6 +98,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const currentStepKey = `step-${String(safeCurrentStep).padStart(2, '0')}`;
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
+
+    // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
+    useEffect(() => {
+        try {
+            if (props.funnelId) {
+                templateService.setActiveFunnel?.(props.funnelId);
+            } else {
+                templateService.setActiveFunnel?.(null);
+            }
+        } catch { /* noop */ }
+
+        return () => {
+            try { templateService.setActiveFunnel?.(null); } catch { /* noop */ }
+        };
+    }, [props.funnelId]);
 
     // Local UI state
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
@@ -236,6 +255,25 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         return () => { cancelled = true; setTemplateLoading(false); };
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep]);
 
+    // Prefetch de steps críticos na montagem para navegação mais fluida
+    useEffect(() => {
+        const critical = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
+        const templateOrResource = props.templateId ?? resourceId ?? null;
+        const funnel = props.funnelId ?? null;
+        critical.forEach((sid) => {
+            queryClient.prefetchQuery({
+                queryKey: stepKeys.detail(sid, templateOrResource, funnel),
+                queryFn: async () => {
+                    const res = await templateService.getStep(sid, templateOrResource ?? undefined);
+                    if (res.success) return res.data;
+                    throw res.error ?? new Error('Falha no prefetch crítico');
+                },
+                staleTime: 60_000,
+            }).catch(() => void 0);
+        });
+        // sem cleanup necessário
+    }, [queryClient, props.templateId, resourceId, props.funnelId]);
+
     // Blocks from unified
     const blocks: Block[] | null = getStepBlocks(safeCurrentStep);
 
@@ -265,8 +303,27 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
 
         ensureStepBlocks();
+        // Prefetch vizinhos no cache do React Query para navegação rápida
+        try {
+            const neighborIds = [stepIndex - 1, stepIndex + 1]
+                .filter((i) => i >= 1)
+                .map((i) => `step-${String(i).padStart(2, '0')}`);
+            const templateOrResource = props.templateId ?? resourceId ?? null;
+            const funnel = props.funnelId ?? null;
+            neighborIds.forEach((nid) => {
+                queryClient.prefetchQuery({
+                    queryKey: stepKeys.detail(nid, templateOrResource, funnel),
+                    queryFn: async () => {
+                        const res = await templateService.getStep(nid, templateOrResource ?? undefined);
+                        if (res.success) return res.data;
+                        throw res.error ?? new Error('Falha no prefetch');
+                    },
+                    staleTime: 30_000,
+                }).catch(() => void 0);
+            });
+        } catch { /* noop */ }
         return () => { cancelled = true; setStepLoading(false); };
-    }, [safeCurrentStep, props.templateId, resourceId, setStepLoading, setStepBlocks]);
+    }, [safeCurrentStep, props.templateId, resourceId, setStepLoading, setStepBlocks, queryClient, props.funnelId]);
 
     // DnD handler (uses desestructured methods)
     const handleDragEnd = useCallback((event: any) => {
@@ -348,6 +405,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             const svc: any = templateService;
             svc.invalidateTemplate?.(stepKey);
 
+            // Invalida também o cache do React Query para o step atual
+            try {
+                const templateOrResource = props.templateId ?? resourceId ?? null;
+                const funnel = props.funnelId ?? null;
+                await queryClient.invalidateQueries({ queryKey: stepKeys.detail(stepKey, templateOrResource, funnel) });
+            } catch { /* noop */ }
+
             const result = await svc.getStep(stepKey, props.templateId ?? resourceId);
             if (result.success && result.data) {
                 setStepBlocks(stepIndex, result.data);
@@ -356,7 +420,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch (error) {
             appLogger.error('[QuizModularEditor] Erro ao recarregar step:', error);
         }
-    }, [safeCurrentStep, props.templateId, resourceId, setStepBlocks]);
+    }, [safeCurrentStep, props.templateId, props.funnelId, resourceId, setStepBlocks, queryClient]);
 
     // Export JSON
     const handleExportJSON = useCallback(() => {

@@ -2,6 +2,12 @@ import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import GenericFallback from '@/components/core/fallbacks/GenericFallback';
+import IntroFallback from '@/components/core/fallbacks/IntroFallback';
+import QuestionFallback from '@/components/core/fallbacks/QuestionFallback';
+import TransitionFallback from '@/components/core/fallbacks/TransitionFallback';
+import ResultFallback from '@/components/core/fallbacks/ResultFallback';
+import OfferFallback from '@/components/core/fallbacks/OfferFallback';
 
 export interface UniversalBlockRendererProps {
   block: Block;
@@ -18,13 +24,15 @@ export interface UniversalBlockRendererProps {
   onClick?: () => void;
 }
 
-const FallbackComponent: React.FC<{ block: Block }> = ({ block }) => (
-  <div className="p-4 border-2 border-dashed border-gray-300 bg-gray-50 rounded">
-    <div className="text-sm text-gray-700 font-medium mb-1">Componente não encontrado</div>
-    <div className="text-xs text-gray-600">Tipo: {block.type}</div>
-    <div className="text-xs text-gray-500">ID: {block.id}</div>
-  </div>
-);
+const FallbackComponent: React.FC<{ block: Block }> = ({ block }) => {
+  const t = String(block.type || '').toLowerCase();
+  if (t.startsWith('intro-')) return <IntroFallback block={block} />;
+  if (t.startsWith('question-') || t.startsWith('options-')) return <QuestionFallback block={block} />;
+  if (t.startsWith('transition-')) return <TransitionFallback block={block} />;
+  if (t.startsWith('result-')) return <ResultFallback block={block} />;
+  if (t.startsWith('offer-') || t === 'cta' || t.includes('pricing')) return <OfferFallback block={block} />;
+  return <GenericFallback block={block} />;
+};
 
 class BlockErrorBoundary extends React.Component<{ block: Block; children?: React.ReactNode }, { hasError: boolean; error?: any }> {
   constructor(props: { block: Block; children?: React.ReactNode }) {
