@@ -1,7 +1,7 @@
 /**
  * 🎯 CONTEXTO UNIFICADO DE FUNIL - REFATORADO
  * 
- * Contexto centralizado que usa FunnelUnifiedService:
+ * Contexto centralizado que usa FunnelService (canonical):
  * - Estado único e consistente
  * - Cache inteligente automático
  * - Deep clone para isolamento
@@ -11,8 +11,8 @@
  */
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { funnelUnifiedService, type UnifiedFunnelData } from '@/services/FunnelUnifiedService';
-import { funnelService as canonicalFunnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
 import { appLogger } from '@/utils/logger';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
