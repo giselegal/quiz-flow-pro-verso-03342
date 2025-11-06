@@ -118,10 +118,10 @@ export function loadStepTemplate(stepId: string): Block[] {
   // 3. Fallback para templates legados (apenas compatibilidade histórica)
   console.warn(`⚠️ [loadStepTemplate] Fonte canônica não encontrou ${stepId}, usando fallback (deprecado)`);
   const templates: Record<string, StepTemplate> = {
-    'step-12': step12Template as StepTemplate,
-    'step-13': step13Template as StepTemplate,
-    'step-19': step19Template as StepTemplate,
-    'step-20': step20Template as StepTemplate,
+    'step-12': step12Template as unknown as StepTemplate,
+    'step-13': step13Template as unknown as StepTemplate,
+    'step-19': step19Template as unknown as StepTemplate,
+    'step-20': step20Template as unknown as StepTemplate,
   };
 
   const template = templates[stepId];
