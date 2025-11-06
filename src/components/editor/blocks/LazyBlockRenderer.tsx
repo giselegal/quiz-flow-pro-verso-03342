@@ -184,6 +184,18 @@ const LazyBlockRendererComponent: React.FC<LazyBlockRendererProps> = ({
   // 🔄 Componente wrapper (fallback se não encontrado)
   const Wrapper = BlockComponent || FallbackBlockComponent;
 
+  // 🎯 Props dinâmicas para suportar diferentes assinaturas de componentes
+  const blockProps: Record<string, any> = {
+    block,
+    isSelected,
+    isEditable,
+  };
+
+  // Adicionar handlers opcionais apenas se definidos
+  if (onUpdate) blockProps.onUpdate = handleUpdate;
+  if (onDelete) blockProps.onDelete = handleDelete;
+  if (onSelect) blockProps.onSelect = handleSelect;
+
   return (
     <div
       className={cn(
@@ -207,11 +219,7 @@ const LazyBlockRendererComponent: React.FC<LazyBlockRendererProps> = ({
             />
           }
         >
-          <Wrapper
-            block={block}
-            isSelected={isSelected}
-            isEditable={isEditable}
-          />
+          {React.createElement(Wrapper as any, blockProps)}
         </Suspense>
       </BlockErrorBoundary>
     </div>
