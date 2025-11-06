@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 // Interface para configuração de template
 export interface TemplateConfig {
@@ -101,81 +102,62 @@ export const useTemplateConfig = (stepNumber: number) => {
     setError(null);
 
     try {
-      const stepId = String(stepNumber).padStart(2, '0');
-      const configPath = `/src/config/templates/step-${stepId}.json`;
+      const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
 
-      // Tentar carregar a configuração JSON
-      const response = await fetch(configPath);
+      // 1. Carregar blocos via HierarchicalTemplateSource (respeita JSON_ONLY / flags)
+      const primary = await hierarchicalTemplateSource.getPrimary(stepId);
+      const blocks = primary.data || [];
 
-      if (!response.ok) {
-        throw new Error(`Não foi possível carregar configuração para step ${stepNumber}`);
-      }
+      // 2. Carregar master.v3.json para metadata/design (único fetch)
+      let master: any = null;
+      try {
+        const masterResp = await fetch('/templates/funnels/quiz21StepsComplete/master.v3.json', { cache: 'no-cache' });
+        if (masterResp.ok) {
+          master = await masterResp.json();
+        }
+      } catch {/* noop */}
 
-      const jsonConfig = (await response.json()) as TemplateConfig;
-      setConfig(jsonConfig);
-
-      console.log(`✅ useTemplateConfig: Carregado step-${stepId}.json`, jsonConfig.metadata);
-    } catch (err) {
-      console.warn(`⚠️ useTemplateConfig: Erro ao carregar step-${stepNumber}:`, err);
-
-      // Fallback: criar configuração básica
-      const fallbackConfig: TemplateConfig = {
-        templateVersion: '2.0',
+      const templateConfig: TemplateConfig = {
+        templateVersion: master?.version || '3.0',
         metadata: {
-          id: `quiz-step-${stepNumber}`,
-          name: `Step ${stepNumber}`,
-          description: `Template para step ${stepNumber}`,
-          category: 'quiz',
-          type: stepNumber <= 14 ? 'question' : stepNumber === 20 ? 'result' : 'transition',
-          tags: ['quiz', 'style'],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          author: 'system',
+          id: master?.funnelId ? `${master.funnelId}:${stepId}` : stepId,
+          name: master?.name || stepId,
+          description: master?.description || `Blocos do ${stepId}`,
+          category: master?.category || 'quiz',
+          type: stepNumber <= 14 ? 'question' : stepNumber === 20 ? 'result' : stepNumber === 21 ? 'offer' : 'transition',
+          tags: master?.tags || [],
+          createdAt: master?.createdAt || new Date().toISOString(),
+          updatedAt: master?.updatedAt || new Date().toISOString(),
+          author: master?.author || 'system',
         },
         design: {
-          primaryColor: '#B89B7A',
-          secondaryColor: '#432818',
-          accentColor: '#aa6b5d',
-          backgroundColor: '#FAF9F7',
-          fontFamily: "'Playfair Display', 'Inter', serif",
-          button: {
-            background: 'linear-gradient(90deg, #B89B7A, #aa6b5d)',
-            textColor: '#fff',
-            borderRadius: '10px',
-            shadow: '0 4px 14px rgba(184, 155, 122, 0.15)',
-          },
-          card: {
-            background: '#fff',
-            borderRadius: '16px',
-            shadow: '0 4px 20px rgba(184, 155, 122, 0.10)',
-          },
-          progressBar: {
-            color: '#B89B7A',
-            background: '#F3E8E6',
-            height: '6px',
-          },
-          animations: {
-            questionTransition: 'fade, scale',
-            optionSelect: 'glow, scale',
-            button: 'hover:scale-105, active:scale-95',
-          },
+          primaryColor: master?.design?.primaryColor || '#B89B7A',
+          secondaryColor: master?.design?.secondaryColor || '#432818',
+          accentColor: master?.design?.accentColor || '#aa6b5d',
+          backgroundColor: master?.design?.backgroundColor || '#FAF9F7',
+          fontFamily: master?.design?.fontFamily || 'Inter, sans-serif',
+          button: master?.design?.button || { background: '#B89B7A', textColor: '#fff', borderRadius: '8px', shadow: 'none' },
+          card: master?.design?.card || { background: '#fff', borderRadius: '12px', shadow: 'none' },
+          progressBar: master?.design?.progressBar || { color: '#B89B7A', background: '#EEE', height: '6px' },
+          animations: master?.design?.animations || { questionTransition: 'fade', optionSelect: 'pulse', button: 'scale' },
         },
         layout: {
           containerWidth: 'full',
           spacing: 'responsive',
-          backgroundColor: '#FAF9F7',
+          backgroundColor: master?.design?.backgroundColor || '#FAF9F7',
           responsive: true,
-          animations: {
-            questionTransition: 'fade, scale',
-            optionSelect: 'glow, scale',
-            button: 'hover:scale-105, active:scale-95',
-          },
+          animations: master?.design?.animations || {},
         },
-        blocks: [],
+        blocks: blocks as any,
       };
 
-      setConfig(fallbackConfig);
-      setError(`Usando configuração padrão para step ${stepNumber}`);
+      setConfig(templateConfig);
+      setError(null);
+      console.log(`✅ useTemplateConfig: Carregado ${stepId} via HierarchicalTemplateSource (${blocks.length} blocos)`);
+    } catch (err) {
+      console.warn(`⚠️ useTemplateConfig: Erro ao carregar step-${stepNumber}:`, err);
+      setError(`Falha ao carregar configuração do ${stepNumber}`);
+      setConfig(null); // Sem fallback gerado para evitar drift
     } finally {
       setLoading(false);
     }

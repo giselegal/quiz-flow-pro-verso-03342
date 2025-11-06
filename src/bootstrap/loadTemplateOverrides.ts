@@ -1,3 +1,4 @@
+
 /**
  * Carrega overrides de templates JSON em runtime e registra no TemplateRegistry.
  * Ativado quando ENABLE_JSON_TEMPLATE_OVERRIDES=true.

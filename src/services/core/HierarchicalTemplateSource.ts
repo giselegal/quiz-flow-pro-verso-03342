@@ -335,6 +335,20 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    */
   async setPrimary(stepId: string, blocks: Block[], funnelId: string): Promise<void> {
     try {
+      // Em modo offline, não persistir em Supabase: apenas atualiza cache local
+      if (this.ONLINE_DISABLED) {
+        this.log(stepId, 'OFFLINE_SAVE_SKIPPED', DataSourcePriority.USER_EDIT);
+        // Atualizar cache para refletir edição local
+        const cacheKey = this.getCacheKey(stepId, funnelId);
+        const metadata: SourceMetadata = {
+          source: DataSourcePriority.USER_EDIT,
+          timestamp: Date.now(),
+          cacheHit: false,
+          loadTime: 0,
+        };
+        this.setInCache(cacheKey, { data: blocks, metadata });
+        return;
+      }
       // 1. Buscar config atual
       const { data: funnel, error: fetchError } = await supabase
         .from('funnels')

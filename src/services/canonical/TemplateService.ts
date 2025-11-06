@@ -250,7 +250,27 @@ export class TemplateService extends BaseCanonicalService {
       const stepMatch = id.match(/step-?(\d+)/i);
       if (stepMatch) {
         const stepNumber = parseInt(stepMatch[1]);
-        const blocks = await this.registry.getStep(`step-${stepNumber.toString().padStart(2, '0')}`);
+        const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
+        let blocks: Block[] = [];
+        // 🔐 JSON_ONLY + HierarchicalSource ativo → nunca usar registry legado aqui
+        if (this.USE_HIERARCHICAL_SOURCE) {
+          try {
+            const result = await hierarchicalTemplateSource.getPrimary(stepId, this.activeFunnelId || undefined);
+            blocks = result.data;
+            this.log(`✅ [NEW] getTemplate(${id}) carregado via HierarchicalTemplateSource (${blocks.length} blocos)`);
+          } catch (err) {
+            this.log(`⚠️ [NEW] Falha ao carregar ${stepId} via HierarchicalTemplateSource`, err);
+            if (!this.JSON_ONLY) {
+              // Apenas se não estiver em modo estrito tentar registro legado
+              blocks = await this.registry.getStep(stepId);
+            } else {
+              blocks = [];
+            }
+          }
+        } else {
+          // Legacy path (feature flag desativada)
+          blocks = await this.registry.getStep(stepId);
+        }
 
         if (blocks && blocks.length > 0) {
           const stepInfo = this.STEP_MAPPING[stepNumber];

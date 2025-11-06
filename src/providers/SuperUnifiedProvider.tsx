@@ -31,6 +31,7 @@ import React, {
 } from 'react';
 import { supabase } from '@/integrations/supabase/customClient';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { isSupabaseDisabled } from '@/integrations/supabase/flags';
 
 // 🎯 CONSOLIDATED TYPES
 interface UnifiedFunnelData {
@@ -534,6 +535,23 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
     const [renderStartTime] = useState(() => performance.now());
 
+    // Flag única de desativação total de Supabase (env ou localStorage)
+    const SUPABASE_DISABLED = useMemo(() => {
+        try {
+            if (isSupabaseDisabled()) return true;
+            if (typeof window !== 'undefined') {
+                const lsDisable = window.localStorage.getItem('VITE_DISABLE_SUPABASE') === 'true' ||
+                    window.localStorage.getItem('supabase:disableNetwork') === 'true';
+                if (lsDisable) return true;
+            }
+        } catch { /* noop */ }
+        return false;
+    }, []);
+
+    if (SUPABASE_DISABLED && debugMode) {
+        console.info('🛑 [SuperUnifiedProvider] Supabase DESATIVADO - todas operações serão offline/in-memory');
+    }
+
     // 📊 Performance tracking
     useEffect(() => {
         const endTime = performance.now();
@@ -555,6 +573,13 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     // 🎯 Funnel Operations
     const loadFunnels = useCallback(async () => {
         dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: true, message: 'Carregando funis...' } });
+
+        // Modo offline: não faz chamadas ao Supabase, mantém estado atual
+        if (SUPABASE_DISABLED) {
+            if (debugMode) console.log('🛑 [loadFunnels] Supabase desativado → retornando estado local');
+            dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: false } });
+            return;
+        }
 
         try {
             const { data, error } = await supabase
@@ -602,6 +627,31 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_LOADING', payload: { section: 'funnel', loading: true, message: 'Carregando funil...' } });
 
         try {
+            if (SUPABASE_DISABLED) {
+                if (debugMode) console.log('🛑 [loadFunnel] Supabase desativado → usando cache/in-memory');
+                const cached = state.cache.funnels[id];
+                if (cached) {
+                    dispatch({ type: 'SET_CURRENT_FUNNEL', payload: cached });
+                } else {
+                    // Criar funil efêmero local
+                    const ephemeral: UnifiedFunnelData = {
+                        id,
+                        name: id,
+                        user_id: null,
+                        config: {},
+                        status: 'draft',
+                        version: 1,
+                        is_published: false,
+                        pages: [],
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                        quizSteps: [],
+                    };
+                    dispatch({ type: 'SET_CURRENT_FUNNEL', payload: ephemeral });
+                }
+                dispatch({ type: 'SET_LOADING', payload: { section: 'funnel', loading: false } });
+                return;
+            }
             const { data, error } = await supabase
                 .from('funnels')
                 .select('*')
@@ -635,6 +685,13 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: true, message: 'Salvando...' } });
 
         try {
+            if (SUPABASE_DISABLED) {
+                if (debugMode) console.log('🛑 [saveFunnel] Supabase desativado → atualização apenas local');
+                dispatch({ type: 'UPDATE_FUNNEL', payload: { id: funnelToSave.id, updates: { ...funnelToSave, updated_at: new Date().toISOString() } } });
+                dispatch({ type: 'SET_EDITOR_STATE', payload: { isDirty: false, lastSaved: Date.now() } });
+                dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: false } });
+                return;
+            }
             const payload: any = {
                 id: funnelToSave.id,
                 name: funnelToSave.name,
@@ -670,6 +727,27 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_LOADING', payload: { section: 'create', loading: true, message: 'Criando funil...' } });
 
         try {
+            if (SUPABASE_DISABLED) {
+                const localFunnel: UnifiedFunnelData = {
+                    id: `offline_${Date.now()}`,
+                    name,
+                    user_id: null,
+                    description: options.description || '',
+                    config: options.settings || {},
+                    version: 1,
+                    status: 'draft',
+                    is_published: false,
+                    pages: options.pages || [],
+                    quizSteps: options.quizSteps || [],
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                    settings: options.settings || {},
+                } as any;
+                dispatch({ type: 'SET_FUNNELS', payload: [localFunnel, ...state.funnels] });
+                dispatch({ type: 'SET_CURRENT_FUNNEL', payload: localFunnel });
+                dispatch({ type: 'SET_LOADING', payload: { section: 'create', loading: false } });
+                return localFunnel;
+            }
             const { data, error } = await supabase
                 .from('funnels')
                 .insert({
@@ -700,6 +778,14 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
     const deleteFunnel = useCallback(async (id: string) => {
         try {
+            if (SUPABASE_DISABLED) {
+                if (debugMode) console.log('🛑 [deleteFunnel] Supabase desativado → remoção apenas local');
+                dispatch({ type: 'SET_FUNNELS', payload: state.funnels.filter(f => f.id !== id) });
+                if (state.currentFunnel?.id === id) {
+                    dispatch({ type: 'SET_CURRENT_FUNNEL', payload: null });
+                }
+                return true;
+            }
             const { error } = await supabase
                 .from('funnels')
                 .delete()
@@ -822,6 +908,19 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
         dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: true, message: 'Publicando…' } });
         try {
+            if (SUPABASE_DISABLED) {
+                if (debugMode) console.log('🛑 [publishFunnel] Supabase desativado → atualização somente local');
+                const updates: any = {
+                    status: 'published',
+                    is_published: true,
+                    version: (funnel.version || 1) + 1,
+                    updated_at: new Date().toISOString(),
+                };
+                dispatch({ type: 'UPDATE_FUNNEL', payload: { id: funnel.id, updates } });
+                dispatch({ type: 'SET_EDITOR_STATE', payload: { isDirty: false, lastSaved: Date.now() } });
+                dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: false } });
+                return;
+            }
             const updates: any = {
                 status: 'published',
                 is_published: true,
