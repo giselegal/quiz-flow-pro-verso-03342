@@ -1,0 +1,45 @@
+import { useEffect, useState } from 'react';
+
+interface MasterRuntime {
+  runtime?: any;
+  scoringRules?: any;
+  loading: boolean;
+  error?: Error;
+}
+
+/**
+ * Lê /templates/quiz21-complete.json e expõe runtime + metadata.scoringRules
+ * com cache leve em memória (por sessão).
+ */
+export function useMasterRuntime(): MasterRuntime {
+  const [state, setState] = useState<MasterRuntime>({ loading: true });
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const cacheKey = '__MASTER_RUNTIME_CACHE__';
+        const cached = (globalThis as any)[cacheKey];
+        if (cached) {
+          if (mounted) setState({ ...cached, loading: false });
+          return;
+        }
+
+        const res = await fetch('/templates/quiz21-complete.json', { cache: 'no-cache' });
+        const data = await res.json();
+        const runtime = data?.runtime;
+        const scoringRules = data?.metadata?.scoringRules;
+        const payload = { runtime, scoringRules };
+        (globalThis as any)[cacheKey] = payload;
+        if (mounted) setState({ ...payload, loading: false });
+      } catch (e: any) {
+        if (mounted) setState({ loading: false, error: e });
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  return state;
+}
+
+export default useMasterRuntime;
