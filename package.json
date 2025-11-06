@@ -144,7 +144,8 @@
     "diagnostic:blocks:fix": "tsx scripts/diagnostic/blocks-content-fix.ts",
     "diagnostic:v3": "tsx scripts/diagnostic/v3-sources-audit.ts",
     "diagnostic:cleanup:templates": "tsx scripts/diagnostic/cleanup-template-duplicates.ts",
-    "templates:generate:v3": "tsx scripts/normalize-quiz21-complete.ts && node scripts/split-master-complete.mjs && npm run -s diagnostic:blocks:fix && npm run -s diagnostic:v3"
+    "templates:generate:v3": "tsx scripts/normalize-quiz21-complete.ts && node scripts/split-master-complete.mjs && npm run -s diagnostic:blocks:fix && npm run -s diagnostic:v3",
+    "diagnostic:renderer-choice": "tsx scripts/diagnostic/list-renderer-choice.ts"
   },
   "lintCoverage": {
     "blocks": "node scripts/dev/check-block-coverage.mjs"
