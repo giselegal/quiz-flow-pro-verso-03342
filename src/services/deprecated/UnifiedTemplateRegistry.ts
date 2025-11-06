@@ -269,14 +269,19 @@ export class UnifiedTemplateRegistry {
       // Vite requer que imports dinâmicos sejam pré-escaneados em build time
       const templates = import.meta.glob('@/config/templates/step-*.json') as Record<string, () => Promise<any>>;
 
-      const stepKey = `/src/config/templates/step-${stepNumber.padStart(2, '0')}.json`;
-      const loader = templates[stepKey];
+      // Nem sempre a key retornada pelo Vite bate com '/src/...' — buscar por sufixo para ser resiliente
+      const stepSuffix = `step-${stepNumber.padStart(2, '0')}.json`;
+      const availableKeys = Object.keys(templates);
+      const matchingKey = availableKeys.find(k => k.endsWith(stepSuffix) || k.includes(`/config/templates/${stepSuffix}`) || k.includes(stepSuffix));
 
-      if (!loader) {
-        console.error(`❌ Template não encontrado: ${stepKey}`);
-        console.log('📂 Templates disponíveis:', Object.keys(templates));
+      if (!matchingKey) {
+        console.error(`❌ Template não encontrado para sufixo: ${stepSuffix}`);
+        console.log('📂 Templates disponíveis:', availableKeys);
         return null;
       }
+
+      console.log(`🔎 Template match key encontrada: ${matchingKey}`);
+      const loader = templates[matchingKey];
 
       const stepTemplate = await loader();
 
