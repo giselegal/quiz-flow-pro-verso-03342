@@ -27,6 +27,7 @@ import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
 import PricingInlineBlock from '@/components/editor/blocks/PricingInlineBlock';
 import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
 import OfferHeroBlock from '@/components/editor/blocks/OfferHeroBlock';
+import OfferBenefitsBlock from '@/components/editor/blocks/OfferBenefitsBlock';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 // Blocos atômicos específicos usados no Step 01
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
@@ -364,6 +365,20 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                         isDraggable={true}
                     >
                         <OfferHeroBlock block={block} isSelected={rest.isSelected} onSelect={rest.onSelect} />
+                    </SelectableBlock>
+                );
+            case 'offer-benefits':
+                return (
+                    <SelectableBlock
+                        blockId={block.id}
+                        isSelected={!!rest.isSelected}
+                        isEditable={!!rest.isEditable}
+                        onSelect={() => rest.onSelect?.(block.id)}
+                        blockType="Benefícios da Oferta"
+                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                        isDraggable={true}
+                    >
+                        <OfferBenefitsBlock block={block} isSelected={rest.isSelected} onSelect={rest.onSelect} />
                     </SelectableBlock>
                 );
             case 'quiz-offer-cta-inline':

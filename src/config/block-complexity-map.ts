@@ -160,16 +160,38 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     template: 'footer-copyright.html',
   },
   
-  // Offer Blocks (Step 21) - Reclassificados como COMPLEX
+  // Spacer & Divider Blocks
+  'spacer': {
+    complexity: 'SIMPLE',
+    reason: 'Espaçador simples com altura configurável',
+    template: 'spacer-inline.html',
+  },
+  'spacer-inline': {
+    complexity: 'SIMPLE',
+    reason: 'Espaçador inline sem lógica',
+    template: 'spacer-inline.html',
+  },
+  'divider': {
+    complexity: 'SIMPLE',
+    reason: 'Divisor horizontal simples',
+    template: 'divider-inline.html',
+  },
+  'divider-inline': {
+    complexity: 'SIMPLE',
+    reason: 'Divisor inline sem lógica',
+    template: 'divider-inline.html',
+  },
+  
+  // Offer Blocks (Step 21) - COMPLEX (React Components)
   'offer-hero': {
     complexity: 'COMPLEX',
     reason: 'Hero com variáveis dinâmicas ({userName}) e lógica condicional',
     component: '@/components/editor/blocks/OfferHeroBlock',
   },
   'offer-benefits': {
-    complexity: 'SIMPLE',
-    reason: 'Lista de benefícios estática',
-    template: 'offer-benefits.html',
+    complexity: 'COMPLEX',
+    reason: 'Lista de benefícios com ícones e formatação dinâmica',
+    component: '@/components/editor/blocks/OfferBenefitsBlock',
   },
   
   // =============================================
