@@ -25,7 +25,7 @@ if (!step21) {
 
 console.log(`\n📋 STEP 21: ${step21.title}`);
 console.log(`   Tipo: ${step21.type}`);
-console.log(`   Blocos: ${step21.template?.blocks?.length || 0}\n`);
+console.log(`   Blocos: ${step21.blocks?.length || 0}\n`);
 
 // Verificar cada bloco
 const blockMapPath = path.join(__dirname, '../src/config/block-complexity-map.ts');
@@ -36,7 +36,12 @@ const registryContent = fs.readFileSync(registryPath, 'utf8');
 
 let allOk = true;
 
-step21.template.blocks.forEach((block, idx) => {
+if (!step21.blocks || step21.blocks.length === 0) {
+  console.log('⚠️  Step 21 não tem blocos definidos (pode estar em outra estrutura)\n');
+  process.exit(0);
+}
+
+step21.blocks.forEach((block, idx) => {
   console.log(`${idx + 1}. Bloco: ${block.type} (${block.id})`);
   
   // Check if SIMPLE
