@@ -12,7 +12,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { Block } from '../../src/types/editor';
 import { isSimpleBlock, isComplexBlock, getTemplatePath, getComponentPath } from '../../src/config/block-complexity-map';
-import { blockRegistry } from '../../src/registry/UnifiedBlockRegistry';
+// Evitar importar o runtime do registro (que puxa React/serviços). Vamos analisar estaticamente o arquivo TS.
 
 const ROOT = process.cwd();
 const PUBLIC_TEMPLATES = path.join(ROOT, 'public', 'templates');
@@ -67,42 +67,35 @@ function blockStub(type: string): Block {
   } as any;
 }
 
-async function auditType(type: string) {
+type LoadStatus = 'ok' | 'skip' | 'error';
+interface AuditResult {
+  type: string;
+  registered: boolean;
+  critical: boolean;
+  mode: string;
+  template: string | null;
+  templateExists: boolean;
+  componentPath: string | null;
+  lazyLoad: LoadStatus;
+  render: LoadStatus;
+  error?: string;
+}
+
+async function auditType(type: string): Promise<AuditResult> {
   const simple = isSimpleBlock(type);
   const complex = isComplexBlock(type);
-  const has = blockRegistry.has(type);
-  const isCritical = (blockRegistry as any).isCritical?.(type) || false;
+  const has = REGISTRY.types.has(type);
+  const isCritical = REGISTRY.critical.has(type);
   const template = simple ? getTemplatePath(type) : null;
   const templatePath = template ? path.join(PUBLIC_TEMPLATES, 'html', template) : null;
   const templateExists = templatePath ? fileExists(templatePath) : false;
   const componentPath = complex ? getComponentPath(type) : null;
 
-  let lazyLoad: 'ok' | 'skip' | 'error' = 'skip';
-  let render: 'ok' | 'skip' | 'error' = 'skip';
-  let errorMsg: string | undefined;
-
-  try {
-    if (has) {
-      // Forçar resolução (inclusive lazy)
-      const Comp = await blockRegistry.getComponentAsync(type);
-      lazyLoad = 'ok';
-
-      // Apenas tentar SSR para componentes complexos; blocos simples usam JSONTemplateRenderer no runtime, mantemos como skip
-      if (!simple && typeof Comp === 'function') {
-        try {
-          const element = React.createElement(Comp as any, { block: blockStub(type), isPreviewing: true });
-          renderToStaticMarkup(element);
-          render = 'ok';
-        } catch (err: any) {
-          render = 'error';
-          errorMsg = `[render] ${err?.message || String(err)}`;
-        }
-      }
-    }
-  } catch (err: any) {
-    lazyLoad = 'error';
-    errorMsg = `[load] ${err?.message || String(err)}`;
-  }
+  // Para manter o script leve e independente do runtime (evita import.meta.glob etc),
+  // não vamos executar lazy imports aqui. Fornecemos apenas análise estática.
+  const lazyLoad: LoadStatus = 'skip';
+  const render: LoadStatus = 'skip';
+  const errorMsg: string | undefined = undefined;
 
   return {
     type,
@@ -115,8 +108,46 @@ async function auditType(type: string) {
     lazyLoad,
     render,
     error: errorMsg,
-  };
+  } as AuditResult;
 }
+
+/**
+ * Parse estático do arquivo do registro unificado para capturar tipos e críticos
+ */
+function parseUnifiedBlockRegistry() {
+  const registryPath = path.join(ROOT, 'src', 'registry', 'UnifiedBlockRegistry.ts');
+  const src = fs.readFileSync(registryPath, 'utf-8');
+
+  const critical = new Set<string>();
+  // Extrair chaves do objeto criticalBlocks { 'text': ..., 'button': ... }
+  const criticalSectionMatch = src.match(/const\s+criticalBlocks[\s\S]*?=\s*\{([\s\S]*?)\};/);
+  if (criticalSectionMatch) {
+    const objectBody = criticalSectionMatch[1];
+    const keyRegex = /['"]([a-zA-Z0-9_-]+)['"]\s*:/g;
+    let m;
+    while ((m = keyRegex.exec(objectBody)) !== null) {
+      critical.add(m[1]);
+    }
+  }
+
+  const lazy = new Set<string>();
+  // Extrair chaves de lazyImports: 'tipo': () => import('...'),
+  const lazySectionMatch = src.match(/const\s+lazyImports[\s\S]*?=\s*\{([\s\S]*?)\n\};/);
+  if (lazySectionMatch) {
+    const body = lazySectionMatch[1];
+    const lineRegex = /['"]([a-zA-Z0-9_-]+)['"]\s*:\s*\(.*?\)\s*=>/g;
+    let m;
+    while ((m = lineRegex.exec(body)) !== null) {
+      lazy.add(m[1]);
+    }
+  }
+
+  const types = new Set<string>([...critical, ...lazy]);
+
+  return { critical, lazy, types };
+}
+
+const REGISTRY = parseUnifiedBlockRegistry();
 
 async function main() {
   const results: any = { steps: {}, types: {} };
@@ -136,8 +167,8 @@ async function main() {
   }
 
   // Passo 2: auditar cada tipo encontrado (e incluir alguns críticos do registry)
-  const registryTypes = (blockRegistry.getAllTypes?.() || []) as string[];
-  registryTypes.forEach(t => allTypes.add(t));
+  const registryTypes = Array.from(REGISTRY.types);
+  registryTypes.forEach((t) => allTypes.add(t));
 
   const typesArray = Array.from(allTypes).sort();
   const audits = await Promise.all(typesArray.map(t => auditType(t)));
