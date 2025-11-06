@@ -79,6 +79,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         setCurrentStep,
         addBlock,
         saveFunnel,
+        saveStepBlocks,
         publishFunnel,
         showToast,
         getStepBlocks,
@@ -176,22 +177,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [props.templateId, loadedTemplate, setCurrentStep, unifiedState.editor.currentStep]);
 
-    // Auto-save (uses desestructured saveFunnel)
+    // Auto-save por etapa (persistência granular em Supabase → funnels.config.steps)
     useEffect(() => {
         if (!enableAutoSave || !isDirty) return;
 
         const delayMs = Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000);
         const timer = setTimeout(async () => {
             try {
-                await saveFunnel();
-                console.log(`✅ Auto-save: ${currentStepKey}`);
+                await saveStepBlocks(safeCurrentStep);
+                console.log(`✅ Auto-save step: ${currentStepKey}`);
             } catch (error) {
                 console.error(`❌ Auto-save failed:`, error);
             }
         }, isNaN(delayMs) ? 2000 : delayMs);
 
         return () => clearTimeout(timer);
-    }, [enableAutoSave, isDirty, currentStepKey, saveFunnel]);
+    }, [enableAutoSave, isDirty, currentStepKey, saveStepBlocks, safeCurrentStep]);
 
     // DnD sensors
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
