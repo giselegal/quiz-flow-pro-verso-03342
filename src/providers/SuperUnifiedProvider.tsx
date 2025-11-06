@@ -664,71 +664,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, [state.currentFunnel]);
 
-    const publishFunnel = useCallback(async (opts: { ensureSaved?: boolean } = {}) => {
-        const { ensureSaved = true } = opts;
-        const funnel = state.currentFunnel;
-        if (!funnel) return;
-
-        // Opcionalmente garantir que as alterações foram salvas antes de publicar
-        if (ensureSaved) {
-            await ensureAllDirtyStepsSaved();
-            if (state.editor.isDirty) {
-                await saveFunnel();
-            }
-        }
-
-        dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: true, message: 'Publicando…' } });
-        try {
-            const updates: any = {
-                status: 'published',
-                is_published: true,
-                // Bump de versão simples
-                version: (funnel.version || 1) + 1,
-                updated_at: new Date().toISOString(),
-            };
-
-            // Tentar com published_at; se falhar por coluna inexistente, tentar sem
-            let data: any = null;
-            let error: any = null;
-            try {
-                const withPublishedAt = { ...updates, published_at: new Date().toISOString() };
-                const resp = await (supabase as any)
-                    .from('funnels')
-                    .update(withPublishedAt)
-                    .eq('id', funnel.id)
-                    .select()
-                    .single();
-                data = resp.data; error = resp.error;
-            } catch (e: any) {
-                error = e;
-            }
-
-            if (error) {
-                const msg = String(error?.message || error);
-                const colErr = msg.includes('published_at') || msg.includes('column');
-                if (colErr) {
-                    const resp2 = await (supabase as any)
-                        .from('funnels')
-                        .update(updates)
-                        .eq('id', funnel.id)
-                        .select()
-                        .single();
-                    if (resp2.error) throw resp2.error;
-                    data = resp2.data;
-                } else {
-                    throw error;
-                }
-            }
-
-            dispatch({ type: 'UPDATE_FUNNEL', payload: { id: funnel.id, updates: data } });
-            dispatch({ type: 'SET_EDITOR_STATE', payload: { isDirty: false, lastSaved: Date.now() } });
-        } catch (error: any) {
-            dispatch({ type: 'SET_ERROR', payload: { section: 'publish', error: error?.message || String(error) } });
-            throw error;
-        } finally {
-            dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: false } });
-        }
-    }, [state.currentFunnel, state.editor.isDirty, saveFunnel, ensureAllDirtyStepsSaved]);
+    // publishFunnel será definido após ensureAllDirtyStepsSaved
 
     const createFunnel = useCallback(async (name: string, options: any = {}) => {
         dispatch({ type: 'SET_LOADING', payload: { section: 'create', loading: true, message: 'Criando funil...' } });
@@ -870,6 +806,70 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             }
         }
     }, [state.currentFunnel, state.editor.dirtySteps, state.editor.stepBlocks]);
+
+    const publishFunnel = useCallback(async (opts: { ensureSaved?: boolean } = {}) => {
+        const { ensureSaved = true } = opts;
+        const funnel = state.currentFunnel;
+        if (!funnel) return;
+
+        // Garantir persistência antes de publicar
+        if (ensureSaved) {
+            await ensureAllDirtyStepsSaved();
+            if (state.editor.isDirty) {
+                await saveFunnel();
+            }
+        }
+
+        dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: true, message: 'Publicando…' } });
+        try {
+            const updates: any = {
+                status: 'published',
+                is_published: true,
+                version: (funnel.version || 1) + 1,
+                updated_at: new Date().toISOString(),
+            };
+
+            let data: any = null;
+            let error: any = null;
+            try {
+                const withPublishedAt = { ...updates, published_at: new Date().toISOString() };
+                const resp = await (supabase as any)
+                    .from('funnels')
+                    .update(withPublishedAt)
+                    .eq('id', funnel.id)
+                    .select()
+                    .single();
+                data = resp.data; error = resp.error;
+            } catch (e: any) {
+                error = e;
+            }
+
+            if (error) {
+                const msg = String(error?.message || error);
+                const colErr = msg.includes('published_at') || msg.includes('column');
+                if (colErr) {
+                    const resp2 = await (supabase as any)
+                        .from('funnels')
+                        .update(updates)
+                        .eq('id', funnel.id)
+                        .select()
+                        .single();
+                    if (resp2.error) throw resp2.error;
+                    data = resp2.data;
+                } else {
+                    throw error;
+                }
+            }
+
+            dispatch({ type: 'UPDATE_FUNNEL', payload: { id: funnel.id, updates: data } });
+            dispatch({ type: 'SET_EDITOR_STATE', payload: { isDirty: false, lastSaved: Date.now() } });
+        } catch (error: any) {
+            dispatch({ type: 'SET_ERROR', payload: { section: 'publish', error: error?.message || String(error) } });
+            throw error;
+        } finally {
+            dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: false } });
+        }
+    }, [state.currentFunnel, state.editor.isDirty, saveFunnel, ensureAllDirtyStepsSaved]);
 
     const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
         const id = Date.now().toString();

@@ -379,13 +379,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 } catch { /* noop */ }
             }
 
+            // Garantir persistência de todas as etapas sujas antes do snapshot global
+            try { await (unified as any).ensureAllDirtyStepsSaved?.(); } catch { /* noop */ }
+            await saveFunnel();
+
             showToast({
                 type: 'success',
                 title: 'Salvo!',
                 message: 'Funil salvo com sucesso',
             });
-
-            await saveFunnel();
         } catch (error) {
             showToast({
                 type: 'error',
@@ -393,7 +395,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 message: 'Erro ao salvar funil',
             });
         }
-    }, [props.templateId, resourceId, loadedTemplate?.steps, unifiedState.editor.stepBlocks, saveFunnel, showToast]);
+    }, [props.templateId, resourceId, loadedTemplate?.steps, unifiedState.editor.stepBlocks, saveFunnel, showToast, unified]);
 
     // Reload current step (retry)
     const handleReloadStep = useCallback(async () => {
