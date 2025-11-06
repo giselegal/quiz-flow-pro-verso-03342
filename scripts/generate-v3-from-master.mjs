@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// ⚠️ DEPRECATED: Use `node scripts/split-master-complete.mjs` ou `npm run templates:generate:v3`
+// Para continuar usando este script legacy, defina ALLOW_DEPRECATED_GENERATORS=1
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { dirname, resolve } from 'path';
 
@@ -9,6 +11,11 @@ const outDir = resolve(root, 'public/templates');
 function pad2(n) { return String(n).padStart(2, '0'); }
 
 try {
+    if (!process.env.ALLOW_DEPRECATED_GENERATORS) {
+        console.warn('⚠️ DEPRECATION: scripts/generate-v3-from-master.mjs está obsoleto.');
+        console.warn('   Use: node scripts/split-master-complete.mjs  (ou)  npm run templates:generate:v3');
+        process.exit(1);
+    }
     const raw = readFileSync(masterPath, 'utf-8');
     const master = JSON.parse(raw);
     const steps = master?.steps || {};

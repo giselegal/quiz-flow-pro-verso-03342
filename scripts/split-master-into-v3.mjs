@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 /**
- * 🪄 SPLIT MASTER → step-XX-v3.json
- *
- * Lê public/templates/quiz21-complete.json (v3 master consolidado)
- * e gera 21 arquivos individuais em public/templates/step-XX-v3.json.
- *
- * Uso:
- *   node scripts/split-master-into-v3.mjs
+ * 🛑 DEPRECATED: Use `node scripts/split-master-complete.mjs` ou `npm run templates:generate:v3`
+ * Este script legacy operava em "sections" e não preserva todos os campos.
+ * Para forçar execução, defina ALLOW_DEPRECATED_GENERATORS=1.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { resolve, dirname, join } from 'path';
@@ -18,6 +14,11 @@ const MASTER = resolve(TEMPLATES_DIR, 'quiz21-complete.json');
 const pad2 = (n) => String(n).padStart(2, '0');
 
 function main() {
+  if (!process.env.ALLOW_DEPRECATED_GENERATORS) {
+    console.warn('⚠️ DEPRECATION: scripts/split-master-into-v3.mjs está obsoleto.');
+    console.warn('   Use: node scripts/split-master-complete.mjs  (ou)  npm run templates:generate:v3');
+    process.exit(1);
+  }
   try {
     const raw = readFileSync(MASTER, 'utf-8');
     const master = JSON.parse(raw);
