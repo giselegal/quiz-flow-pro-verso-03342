@@ -12,6 +12,9 @@ import { normalizeBlocks } from '@/utils/blockNormalization';
 import { normalizeBlockTypes } from '@/utils/blockNormalizer';
 import type { Block } from '@/types/editor';
 
+// ✅ CORREÇÃO DEFINITIVA: import.meta.glob no nível do módulo (Vite requirement)
+const templateModules = import.meta.glob<{ default: { blocks: Block[] } }>('../../config/templates/step-*.json', { eager: false });
+
 // Expor utilitário de cache no console (dev only)
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   import('@/utils/clearRegistryCache').catch(() => {/* ignore */ });
@@ -265,34 +268,36 @@ export class UnifiedTemplateRegistry {
         return null;
       }
 
-      // ✅ CORREÇÃO: Import dinâmico direto funciona no Vite quando o caminho base é literal
+      // ✅ CORREÇÃO: Usar o mapa pré-carregado de templates
       const stepFile = `step-${stepNumber.padStart(2, '0')}.json`;
-      console.log(`📂 Tentando carregar: @/config/templates/${stepFile}`);
+      console.log(`📂 Tentando carregar: ${stepFile}`);
+      console.log(`📋 Templates disponíveis:`, Object.keys(templateModules));
 
-      // Vite consegue resolver imports com template literals se o prefixo for literal
-      const stepTemplate = await import(`../../config/templates/${stepFile}`).catch(err => {
-        console.error(`❌ Erro ao importar ${stepFile}:`, err);
-        return null;
-      });
+      // Buscar o loader correspondente
+      const templatePath = Object.keys(templateModules).find(path => path.includes(stepFile));
 
-      if (!stepTemplate) {
-        console.error(`❌ Template não encontrado: ${stepFile}`);
+      if (!templatePath) {
+        console.error(`❌ Template não encontrado no glob: ${stepFile}`);
+        console.error(`   Chaves disponíveis:`, Object.keys(templateModules));
         return null;
       }
 
-      console.log(`🔎 Template carregado:`, stepFile);
+      console.log(`🔍 Carregando template do caminho: ${templatePath}`);
+      const stepTemplate = await templateModules[templatePath]();
+
+      if (!stepTemplate) {
+        console.error(`❌ Template retornou null: ${stepFile}`);
+        return null;
+      }
+
+      console.log(`🔎 Template carregado:`, stepFile, stepTemplate);
 
       if (stepTemplate.default?.blocks && Array.isArray(stepTemplate.default.blocks)) {
         console.log(`✅ Step ${stepId} carregado com ${stepTemplate.default.blocks.length} blocos`);
         return stepTemplate.default.blocks as Block[];
       }
 
-      if (stepTemplate.blocks && Array.isArray(stepTemplate.blocks)) {
-        console.log(`✅ Step ${stepId} carregado com ${stepTemplate.blocks.length} blocos`);
-        return stepTemplate.blocks as Block[];
-      }
-
-      console.error(`❌ Step ${stepId} não tem blocks válidos`);
+      console.error(`❌ Step ${stepId} não tem blocks válidos`, stepTemplate);
       return null;
     } catch (error) {
       console.error(`❌ Erro ao carregar ${stepId}:`, error);
