@@ -172,6 +172,16 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     reason: 'Lista de estilos secundários com cálculos e formatação',
     component: '@/components/editor/blocks/atomic/ResultSecondaryStylesBlock',
   },
+  'result-congrats': {
+    complexity: 'COMPLEX',
+    reason: 'Mensagem de parabéns dinâmica com placeholders (ex: {userName}) e emoji',
+    component: '@/components/editor/blocks/ResultCongratsBlock',
+  },
+  'result-main': {
+    complexity: 'COMPLEX',
+    reason: 'Bloco principal de resultado com cálculos de estilo, porcentagem e formatação avançada',
+    component: '@/components/editor/blocks/atomic/ResultMainBlock',
+  },
   
   // Layout Blocks
   'decorative-bar-inline': {
