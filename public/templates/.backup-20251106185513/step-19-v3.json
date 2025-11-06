@@ -1,27 +1,29 @@
 {
   "templateVersion": "3.0",
   "metadata": {
-    "id": "step-12-transition-v3",
-    "name": "Transição Mid-Quiz",
-    "description": "Página de transição no meio do quiz com mensagem motivacional",
-    "category": "transition",
+    "id": "step-19-transition-v3",
+    "name": "Transição Pré-Resultado",
+    "description": "Página de transição antes da exibição do resultado final",
+    "category": "transition-result",
     "tags": [
       "quiz",
       "transition",
       "loading",
-      "mid-quiz"
+      "result",
+      "pre-result"
     ],
     "createdAt": "2025-01-13T00:00:00.000Z",
-    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-11-05T21:31:46.108Z",
     "author": "Quiz Flow Pro",
     "version": "3.0.0",
+    "progressRecalculated": true,
     "scoring": {
       "weight": 1,
       "timeLimit": 30,
       "hasCorrectAnswer": false,
       "speedBonusEnabled": true
     },
-    "scoringAddedAt": "2025-11-05T21:52:52.455Z"
+    "scoringAddedAt": "2025-11-05T21:52:52.456Z"
   },
   "theme": {
     "colors": {
@@ -37,16 +39,14 @@
   },
   "validation": {},
   "behavior": {},
-  "type": "transition",
+  "type": "transition-result",
+  "redirectPath": "/quiz-estilo/step-19",
   "navigation": {
-    "autoAdvance": true,
-    "autoAdvanceDelay": 3500,
-    "nextStep": "step-13"
+    "nextStep": "step-20"
   },
-  "redirectPath": "/quiz-estilo/step-12",
   "blocks": [
     {
-      "id": "transition-hero-12",
+      "id": "transition-hero-19",
       "type": "transition-hero",
       "order": 0,
       "properties": {
@@ -59,16 +59,15 @@
         "easing": "ease-out"
       },
       "content": {
-        "title": "🕐 Enquanto calculamos o seu resultado...",
-        "subtitle": "Estamos montando seu perfil de estilo personalizado",
-        "message": "Continue para descobrir ainda mais sobre seu estilo único!",
-        "autoAdvanceDelay": 3500,
-        "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+        "title": "Obrigada por compartilhar.",
+        "subtitle": "Preparando seu resultado personalizado",
+        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+        "autoAdvanceDelay": 3000
       },
       "parentId": null
     },
     {
-      "id": "step-12-transition-text",
+      "id": "step-19-transition-text",
       "type": "transition-text",
       "order": 1,
       "properties": {
@@ -76,23 +75,21 @@
         "duration": 300
       },
       "content": {
-        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+        "text": "Continuando..."
       },
       "parentId": null
     },
     {
-      "id": "step-12-transition-cta",
+      "id": "step-19-transition-cta",
       "type": "CTAButton",
       "order": 2,
       "properties": {},
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "medium"
+        "label": "...",
+        "variant": "outline",
+        "size": "small"
       },
       "parentId": null
     }
-  ],
-  "title": "Transição Mid-Quiz"
+  ]
 }

@@ -8,10 +8,9 @@
     "questionNumber": 4,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:32:31.721Z",
-    "updatedAt": "2025-11-05T21:31:46.105Z",
+    "updatedAt": "2025-10-13T00:32:31.721Z",
     "author": "Quiz Flow Pro",
     "version": "3.0.0",
-    "progressRecalculated": true,
     "scoring": {
       "weight": 1,
       "timeLimit": 30,
@@ -51,10 +50,10 @@
   },
   "behavior": {},
   "type": "question",
-  "redirectPath": "/quiz-estilo/step-05",
   "navigation": {
     "nextStep": "step-06"
   },
+  "redirectPath": "/quiz-estilo/step-05",
   "blocks": [
     {
       "id": "progress-bar-step-05",
@@ -196,5 +195,6 @@
       },
       "parentId": null
     }
-  ]
+  ],
+  "title": "Q4 - Ocasiões"
 }

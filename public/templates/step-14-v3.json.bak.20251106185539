@@ -1,11 +1,11 @@
 {
   "templateVersion": "3.0",
   "metadata": {
-    "id": "step-15-strategic-v3",
-    "name": "Q13 - Prioridades (Estratégica)",
-    "description": "Questão estratégica 3 sobre objetivos e resultados",
+    "id": "step-14-strategic-v3",
+    "name": "Q12 - Desafios (Estratégica)",
+    "description": "Questão estratégica 2 sobre objetivos e resultados",
     "category": "strategic-question",
-    "questionNumber": 13,
+    "questionNumber": 12,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:33:47.497Z",
     "updatedAt": "2025-10-13T00:33:47.497Z",
@@ -51,19 +51,19 @@
   "behavior": {},
   "type": "strategic-question",
   "navigation": {
-    "nextStep": "step-16"
+    "nextStep": "step-15"
   },
-  "redirectPath": "/quiz-estilo/step-15",
+  "redirectPath": "/quiz-estilo/step-14",
   "blocks": [
     {
-      "id": "progress-bar-step-15",
+      "id": "progress-bar-step-14",
       "type": "question-progress",
       "order": 0,
       "properties": {
         "padding": 8
       },
       "content": {
-        "stepNumber": 15,
+        "stepNumber": 14,
         "totalSteps": 21,
         "showPercentage": true,
         "barColor": "#B89B7A",
@@ -72,7 +72,7 @@
       "parentId": null
     },
     {
-      "id": "step-15-question-title",
+      "id": "step-14-question-title",
       "type": "question-title",
       "order": 1,
       "properties": {
@@ -81,12 +81,12 @@
         "padding": 16
       },
       "content": {
-        "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
+        "text": "O que mais te desafia na hora de se vestir?"
       },
       "parentId": null
     },
     {
-      "id": "question-hero-15",
+      "id": "question-hero-14",
       "type": "question-hero",
       "order": 2,
       "properties": {
@@ -95,21 +95,19 @@
         "padding": 16
       },
       "content": {
-        "questionNumber": "Q13 - PRIORIDADES",
-        "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
-        "currentQuestion": 13,
+        "questionNumber": "Q12 - DESAFIOS",
+        "questionText": "O que mais te desafia na hora de se vestir?",
+        "currentQuestion": 12,
         "totalQuestions": 13,
-        "progressValue": 67,
+        "progressValue": 62,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "title": "Pergunta",
-        "text": "Escolha uma opção:"
+        "logoAlt": "Logo Gisele Galvão"
       },
       "parentId": null
     },
     {
-      "id": "options-grid-15",
+      "id": "options-grid-14",
       "type": "options-grid",
       "order": 3,
       "properties": {
@@ -123,24 +121,24 @@
       "content": {
         "options": [
           {
-            "id": "quase-todos-dias",
-            "text": "Quase todos os dias — é sempre uma indecisão",
-            "value": "quase-todos-dias"
+            "id": "combinar-pecas",
+            "text": "Tenho peças, mas não sei como combiná-las",
+            "value": "combinar-pecas"
           },
           {
-            "id": "compromissos-importantes",
-            "text": "Sempre que tenho um compromisso importante",
-            "value": "compromissos-importantes"
+            "id": "comprar-impulso",
+            "text": "Compro por impulso e me arrependo depois",
+            "value": "comprar-impulso"
           },
           {
-            "id": "as-vezes-limitada",
-            "text": "Às vezes, mas me sinto limitada nas escolhas",
-            "value": "as-vezes-limitada"
+            "id": "imagem-nao-reflete",
+            "text": "Minha imagem não reflete quem eu sou",
+            "value": "imagem-nao-reflete"
           },
           {
-            "id": "raramente-segura",
-            "text": "Raramente — já me sinto segura ao me vestir",
-            "value": "raramente-segura"
+            "id": "perco-tempo",
+            "text": "Perco tempo e acabo usando sempre os mesmos looks",
+            "value": "perco-tempo"
           }
         ],
         "columns": 2,
@@ -155,7 +153,7 @@
       "parentId": null
     },
     {
-      "id": "navigation-step-15",
+      "id": "navigation-step-14",
       "type": "question-navigation",
       "order": 4,
       "properties": {
@@ -174,5 +172,5 @@
       "parentId": null
     }
   ],
-  "title": "Q13 - Prioridades (Estratégica)"
+  "title": "Q12 - Desafios (Estratégica)"
 }

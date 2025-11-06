@@ -104,8 +104,7 @@
         "animationType": "fade",
         "animationDuration": 300
       },
-      "parentId": null,
-      "content": {}
+      "parentId": null
     },
     {
       "id": "intro-title",
@@ -122,8 +121,7 @@
         "fontWeight": "700"
       },
       "content": {
-        "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.",
-        "text": "Bem-vindo(a)!"
+        "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
       },
       "parentId": null
     },

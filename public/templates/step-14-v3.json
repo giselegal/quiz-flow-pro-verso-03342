@@ -8,10 +8,9 @@
     "questionNumber": 12,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:33:47.497Z",
-    "updatedAt": "2025-11-05T21:31:46.107Z",
+    "updatedAt": "2025-10-13T00:33:47.497Z",
     "author": "Quiz Flow Pro",
     "version": "3.0.0",
-    "progressRecalculated": true,
     "scoring": {
       "weight": 3,
       "timeLimit": 45,
@@ -51,10 +50,10 @@
   },
   "behavior": {},
   "type": "strategic-question",
-  "redirectPath": "/quiz-estilo/step-14",
   "navigation": {
     "nextStep": "step-15"
   },
+  "redirectPath": "/quiz-estilo/step-14",
   "blocks": [
     {
       "id": "progress-bar-step-14",
@@ -174,5 +173,6 @@
       },
       "parentId": null
     }
-  ]
+  ],
+  "title": "Q12 - Desafios (Estratégica)"
 }
