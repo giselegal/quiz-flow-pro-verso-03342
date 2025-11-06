@@ -79,6 +79,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         setCurrentStep,
         addBlock,
         saveFunnel,
+        publishFunnel,
         showToast,
         getStepBlocks,
         setStepBlocks,
@@ -445,6 +446,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [unifiedState.editor.stepBlocks, safeCurrentStep, props.templateId, loadedTemplate, resourceId]);
 
+    // Publish funnel
+    const handlePublish = useCallback(async () => {
+        try {
+            await publishFunnel({ ensureSaved: true });
+            showToast({ type: 'success', title: 'Publicado', message: 'Seu funil foi publicado com sucesso!' });
+        } catch (e) {
+            showToast({ type: 'error', title: 'Erro ao publicar', message: 'Não foi possível publicar o funil. Tente novamente.' });
+        }
+    }, [publishFunnel, showToast]);
+
     // Load template via button (use imported templateService)
     const handleLoadTemplate = useCallback(async () => {
         setTemplateLoading(true);
@@ -585,6 +596,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         >
                             <Save className="w-3 h-3 mr-1" />
                             {unifiedState.ui.isLoading ? 'Salvando...' : 'Salvar'}
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="default"
+                            onClick={handlePublish}
+                            disabled={unifiedState.ui.isLoading || isReadOnly}
+                            className="h-7 bg-emerald-600 hover:bg-emerald-700"
+                            title="Publicar este funil"
+                        >
+                            <Play className="w-3 h-3 mr-1" />
+                            Publicar
                         </Button>
                         <Button size="sm" variant="outline" onClick={handleExportJSON} className="h-7">
                             <Download className="w-3 h-3 mr-1" />
