@@ -26,6 +26,7 @@ import BenefitsListBlock from '@/components/editor/blocks/BenefitsListBlock';
 import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
 import PricingInlineBlock from '@/components/editor/blocks/PricingInlineBlock';
 import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
+import OfferHeroBlock from '@/components/editor/blocks/OfferHeroBlock';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 // Blocos atômicos específicos usados no Step 01
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
@@ -338,7 +339,6 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 return <GenericBlock block={block} {...rest} />;
             // ===== OFFER (Steps 20, 21) =====
             case 'quiz-offer-hero':
-            case 'offer-hero':
                 return (
                     <SelectableBlock
                         blockId={block.id}
@@ -350,6 +350,20 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                         isDraggable={true}
                     >
                         <QuizOfferHeroBlock properties={(block as any).properties || {}} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />
+                    </SelectableBlock>
+                );
+            case 'offer-hero':
+                return (
+                    <SelectableBlock
+                        blockId={block.id}
+                        isSelected={!!rest.isSelected}
+                        isEditable={!!rest.isEditable}
+                        onSelect={() => rest.onSelect?.(block.id)}
+                        blockType="Hero da Oferta"
+                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                        isDraggable={true}
+                    >
+                        <OfferHeroBlock block={block} isSelected={rest.isSelected} onSelect={rest.onSelect} />
                     </SelectableBlock>
                 );
             case 'quiz-offer-cta-inline':

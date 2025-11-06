@@ -155,15 +155,6 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
       return React.createElement(TransitionHeroSection, normalized);
     },
   })),
-  'offer-hero': () => Promise.all([
-    import('@/components/sections/offer'),
-    import('@/core/adapters/PropNormalizer')
-  ]).then(([{ OfferHeroSection }, { normalizeOfferHeroProps }]) => ({
-    default: (props: any) => {
-      const normalized = normalizeOfferHeroProps(props?.block || props);
-      return React.createElement(OfferHeroSection, normalized);
-    },
-  })),
   'pricing': () => Promise.all([
     import('@/components/sections/offer'),
     import('@/core/adapters/PropNormalizer')
