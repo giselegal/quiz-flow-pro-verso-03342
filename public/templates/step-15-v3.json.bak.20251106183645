@@ -1,13 +1,13 @@
 {
   "templateVersion": "3.0",
   "metadata": {
-    "id": "step-16-strategic-v3",
-    "name": "Q14 - Investimento (Estratégica)",
-    "description": "Questão estratégica 4 sobre objetivos e resultados",
+    "id": "step-15-strategic-v3",
+    "name": "Q13 - Prioridades (Estratégica)",
+    "description": "Questão estratégica 3 sobre objetivos e resultados",
     "category": "strategic-question",
-    "questionNumber": 14,
+    "questionNumber": 13,
     "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:33:47.498Z",
+    "createdAt": "2025-10-13T00:33:47.497Z",
     "updatedAt": "2025-11-05T21:31:46.107Z",
     "author": "Quiz Flow Pro",
     "version": "3.0.0",
@@ -51,20 +51,20 @@
   },
   "behavior": {},
   "type": "strategic-question",
-  "redirectPath": "/quiz-estilo/step-16",
+  "redirectPath": "/quiz-estilo/step-15",
   "navigation": {
-    "nextStep": "step-17"
+    "nextStep": "step-16"
   },
   "blocks": [
     {
-      "id": "progress-bar-step-16",
+      "id": "progress-bar-step-15",
       "type": "question-progress",
       "order": 0,
       "properties": {
         "padding": 8
       },
       "content": {
-        "stepNumber": 16,
+        "stepNumber": 15,
         "totalSteps": 21,
         "showPercentage": true,
         "barColor": "#B89B7A",
@@ -73,7 +73,7 @@
       "parentId": null
     },
     {
-      "id": "step-16-question-title",
+      "id": "step-15-question-title",
       "type": "question-title",
       "order": 1,
       "properties": {
@@ -82,12 +82,12 @@
         "padding": 16
       },
       "content": {
-        "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+        "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
       },
       "parentId": null
     },
     {
-      "id": "question-hero-16",
+      "id": "question-hero-15",
       "type": "question-hero",
       "order": 2,
       "properties": {
@@ -96,21 +96,19 @@
         "padding": 16
       },
       "content": {
-        "questionNumber": "Q14 - INVESTIMENTO",
-        "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
-        "currentQuestion": 14,
+        "questionNumber": "Q13 - PRIORIDADES",
+        "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
+        "currentQuestion": 13,
         "totalQuestions": 13,
-        "progressValue": 71,
+        "progressValue": 67,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "title": "Pergunta",
-        "text": "Escolha uma opção:"
+        "logoAlt": "Logo Gisele Galvão"
       },
       "parentId": null
     },
     {
-      "id": "options-grid-16",
+      "id": "options-grid-15",
       "type": "options-grid",
       "order": 3,
       "properties": {
@@ -124,24 +122,24 @@
       "content": {
         "options": [
           {
-            "id": "sim-quero",
-            "text": "Sim! Se existisse algo assim, eu quero",
-            "value": "sim-quero"
+            "id": "quase-todos-dias",
+            "text": "Quase todos os dias — é sempre uma indecisão",
+            "value": "quase-todos-dias"
           },
           {
-            "id": "sim-momento-certo",
-            "text": "Sim, mas teria que ser no momento certo",
-            "value": "sim-momento-certo"
+            "id": "compromissos-importantes",
+            "text": "Sempre que tenho um compromisso importante",
+            "value": "compromissos-importantes"
           },
           {
-            "id": "tenho-duvidas",
-            "text": "Tenho dúvidas se funcionaria pra mim",
-            "value": "tenho-duvidas"
+            "id": "as-vezes-limitada",
+            "text": "Às vezes, mas me sinto limitada nas escolhas",
+            "value": "as-vezes-limitada"
           },
           {
-            "id": "nao-prefiro-continuar",
-            "text": "Não, prefiro continuar como estou",
-            "value": "nao-prefiro-continuar"
+            "id": "raramente-segura",
+            "text": "Raramente — já me sinto segura ao me vestir",
+            "value": "raramente-segura"
           }
         ],
         "columns": 2,
@@ -156,7 +154,7 @@
       "parentId": null
     },
     {
-      "id": "navigation-step-16",
+      "id": "navigation-step-15",
       "type": "question-navigation",
       "order": 4,
       "properties": {

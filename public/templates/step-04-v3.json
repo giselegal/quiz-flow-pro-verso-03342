@@ -118,7 +118,9 @@
         "progressValue": 19,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão"
+        "logoAlt": "Logo Gisele Galvão",
+        "title": "Pergunta",
+        "text": "Escolha uma opção:"
       },
       "parentId": null
     },

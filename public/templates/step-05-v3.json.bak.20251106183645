@@ -1,24 +1,24 @@
 {
   "templateVersion": "3.0",
   "metadata": {
-    "id": "step-16-strategic-v3",
-    "name": "Q14 - Investimento (Estratégica)",
-    "description": "Questão estratégica 4 sobre objetivos e resultados",
-    "category": "strategic-question",
-    "questionNumber": 14,
+    "id": "step-05-question-v3",
+    "name": "Q4 - Ocasiões",
+    "description": "Questão 4 sobre preferências de estilo",
+    "category": "quiz-question",
+    "questionNumber": 4,
     "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-11-05T21:31:46.107Z",
+    "createdAt": "2025-10-13T00:32:31.721Z",
+    "updatedAt": "2025-11-05T21:31:46.105Z",
     "author": "Quiz Flow Pro",
     "version": "3.0.0",
     "progressRecalculated": true,
     "scoring": {
-      "weight": 3,
-      "timeLimit": 45,
+      "weight": 1,
+      "timeLimit": 30,
       "hasCorrectAnswer": false,
       "speedBonusEnabled": true
     },
-    "scoringAddedAt": "2025-11-05T21:52:52.456Z"
+    "scoringAddedAt": "2025-11-05T21:52:52.453Z"
   },
   "theme": {
     "colors": {
@@ -43,28 +43,28 @@
     ],
     "rules": {
       "selectedOptions": {
-        "minItems": 1,
-        "maxItems": 1,
-        "errorMessage": "Por favor, selecione uma opção"
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Por favor, selecione exatamente 3 opções"
       }
     }
   },
   "behavior": {},
-  "type": "strategic-question",
-  "redirectPath": "/quiz-estilo/step-16",
+  "type": "question",
+  "redirectPath": "/quiz-estilo/step-05",
   "navigation": {
-    "nextStep": "step-17"
+    "nextStep": "step-06"
   },
   "blocks": [
     {
-      "id": "progress-bar-step-16",
+      "id": "progress-bar-step-05",
       "type": "question-progress",
       "order": 0,
       "properties": {
         "padding": 8
       },
       "content": {
-        "stepNumber": 16,
+        "stepNumber": 5,
         "totalSteps": 21,
         "showPercentage": true,
         "barColor": "#B89B7A",
@@ -73,7 +73,7 @@
       "parentId": null
     },
     {
-      "id": "step-16-question-title",
+      "id": "step-05-question-title",
       "type": "question-title",
       "order": 1,
       "properties": {
@@ -82,12 +82,12 @@
         "padding": 16
       },
       "content": {
-        "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+        "text": "QUAIS DETALHES VOCÊ GOSTA?"
       },
       "parentId": null
     },
     {
-      "id": "question-hero-16",
+      "id": "question-hero-05",
       "type": "question-hero",
       "order": 2,
       "properties": {
@@ -96,21 +96,19 @@
         "padding": 16
       },
       "content": {
-        "questionNumber": "Q14 - INVESTIMENTO",
-        "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
-        "currentQuestion": 14,
+        "questionNumber": "4 de 10",
+        "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
+        "currentQuestion": 4,
         "totalQuestions": 13,
-        "progressValue": 71,
+        "progressValue": 24,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "title": "Pergunta",
-        "text": "Escolha uma opção:"
+        "logoAlt": "Logo Gisele Galvão"
       },
       "parentId": null
     },
     {
-      "id": "options-grid-16",
+      "id": "options-grid-05",
       "type": "options-grid",
       "order": 3,
       "properties": {
@@ -124,39 +122,61 @@
       "content": {
         "options": [
           {
-            "id": "sim-quero",
-            "text": "Sim! Se existisse algo assim, eu quero",
-            "value": "sim-quero"
+            "id": "natural",
+            "text": "Poucos detalhes, básico e prático",
+            "value": "natural"
           },
           {
-            "id": "sim-momento-certo",
-            "text": "Sim, mas teria que ser no momento certo",
-            "value": "sim-momento-certo"
+            "id": "classico",
+            "text": "Bem discretos e sutis, clean e clássico",
+            "value": "classico"
           },
           {
-            "id": "tenho-duvidas",
-            "text": "Tenho dúvidas se funcionaria pra mim",
-            "value": "tenho-duvidas"
+            "id": "contemporaneo",
+            "text": "Básico, mas com um toque de estilo",
+            "value": "contemporaneo"
           },
           {
-            "id": "nao-prefiro-continuar",
-            "text": "Não, prefiro continuar como estou",
-            "value": "nao-prefiro-continuar"
+            "id": "elegante",
+            "text": "Detalhes refinados, chic e que deem status",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Detalhes delicados, laços, babados",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Detalhes marcantes, firmeza e peso",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Detalhes diferentes do convencional, produções ousadas",
+            "value": "criativo"
           }
         ],
         "columns": 2,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
         "showImages": true,
         "imageSize": 256,
         "autoAdvance": true,
-        "autoAdvanceDelay": 1500
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
       },
       "parentId": null
     },
     {
-      "id": "navigation-step-16",
+      "id": "navigation-step-05",
       "type": "question-navigation",
       "order": 4,
       "properties": {
@@ -168,7 +188,7 @@
       },
       "content": {
         "backLabel": "Voltar",
-        "nextLabel": "Continuar",
+        "nextLabel": "Avançar",
         "backVariant": "outline",
         "nextVariant": "default"
       },

@@ -1,14 +1,14 @@
 {
   "templateVersion": "3.0",
   "metadata": {
-    "id": "step-16-strategic-v3",
-    "name": "Q14 - Investimento (Estratégica)",
-    "description": "Questão estratégica 4 sobre objetivos e resultados",
+    "id": "step-17-strategic-v3",
+    "name": "Q15 - Transformação (Estratégica)",
+    "description": "Questão estratégica 5 sobre objetivos e resultados",
     "category": "strategic-question",
-    "questionNumber": 14,
+    "questionNumber": 15,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-11-05T21:31:46.107Z",
+    "updatedAt": "2025-11-05T21:31:46.108Z",
     "author": "Quiz Flow Pro",
     "version": "3.0.0",
     "progressRecalculated": true,
@@ -51,20 +51,20 @@
   },
   "behavior": {},
   "type": "strategic-question",
-  "redirectPath": "/quiz-estilo/step-16",
+  "redirectPath": "/quiz-estilo/step-17",
   "navigation": {
-    "nextStep": "step-17"
+    "nextStep": "step-18"
   },
   "blocks": [
     {
-      "id": "progress-bar-step-16",
+      "id": "progress-bar-step-17",
       "type": "question-progress",
       "order": 0,
       "properties": {
         "padding": 8
       },
       "content": {
-        "stepNumber": 16,
+        "stepNumber": 17,
         "totalSteps": 21,
         "showPercentage": true,
         "barColor": "#B89B7A",
@@ -73,7 +73,7 @@
       "parentId": null
     },
     {
-      "id": "step-16-question-title",
+      "id": "step-17-question-title",
       "type": "question-title",
       "order": 1,
       "properties": {
@@ -82,12 +82,12 @@
         "padding": 16
       },
       "content": {
-        "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
       },
       "parentId": null
     },
     {
-      "id": "question-hero-16",
+      "id": "question-hero-17",
       "type": "question-hero",
       "order": 2,
       "properties": {
@@ -96,21 +96,19 @@
         "padding": 16
       },
       "content": {
-        "questionNumber": "Q14 - INVESTIMENTO",
-        "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
-        "currentQuestion": 14,
+        "questionNumber": "Q15 - TRANSFORMAÇÃO",
+        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
+        "currentQuestion": 15,
         "totalQuestions": 13,
-        "progressValue": 71,
+        "progressValue": 76,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "title": "Pergunta",
-        "text": "Escolha uma opção:"
+        "logoAlt": "Logo Gisele Galvão"
       },
       "parentId": null
     },
     {
-      "id": "options-grid-16",
+      "id": "options-grid-17",
       "type": "options-grid",
       "order": 3,
       "properties": {
@@ -124,24 +122,24 @@
       "content": {
         "options": [
           {
-            "id": "sim-quero",
-            "text": "Sim! Se existisse algo assim, eu quero",
-            "value": "sim-quero"
+            "id": "sim-vale-muito",
+            "text": "Sim! Por esse resultado, vale muito",
+            "value": "sim-vale-muito"
           },
           {
-            "id": "sim-momento-certo",
-            "text": "Sim, mas teria que ser no momento certo",
-            "value": "sim-momento-certo"
+            "id": "sim-se-certeza",
+            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+            "value": "sim-se-certeza"
           },
           {
-            "id": "tenho-duvidas",
-            "text": "Tenho dúvidas se funcionaria pra mim",
-            "value": "tenho-duvidas"
+            "id": "talvez-depende",
+            "text": "Talvez — depende do que está incluso",
+            "value": "talvez-depende"
           },
           {
-            "id": "nao-prefiro-continuar",
-            "text": "Não, prefiro continuar como estou",
-            "value": "nao-prefiro-continuar"
+            "id": "nao-nao-pronta",
+            "text": "Não, ainda não estou pronta para investir",
+            "value": "nao-nao-pronta"
           }
         ],
         "columns": 2,
@@ -156,7 +154,7 @@
       "parentId": null
     },
     {
-      "id": "navigation-step-16",
+      "id": "navigation-step-17",
       "type": "question-navigation",
       "order": 4,
       "properties": {

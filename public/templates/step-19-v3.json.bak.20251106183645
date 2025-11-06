@@ -74,9 +74,7 @@
         "type": "fade",
         "duration": 300
       },
-      "content": {
-        "text": "Continuando..."
-      },
+      "content": {},
       "parentId": null
     },
     {

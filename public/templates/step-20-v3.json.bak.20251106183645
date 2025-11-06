@@ -130,11 +130,7 @@
           "tagStyle": "rounded-full"
         }
       },
-      "content": {
-        "styles": [
-          "Clássico"
-        ]
-      },
+      "content": {},
       "parentId": null
     },
     {
@@ -150,13 +146,9 @@
           "maxWidth": "28rem",
           "centered": true,
           "showDecorations": false
-        },
-        "url": "https://picsum.photos/800/400?blur=2"
+        }
       },
-      "content": {
-        "imageUrl": "https://picsum.photos/800/400?blur=2",
-        "src": "https://picsum.photos/800/400?blur=2"
-      },
+      "content": {},
       "parentId": null
     },
     {
@@ -176,9 +168,7 @@
           "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
         }
       },
-      "content": {
-        "text": "Descrição do resultado."
-      },
+      "content": {},
       "parentId": null
     },
     {
