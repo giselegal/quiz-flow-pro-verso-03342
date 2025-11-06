@@ -132,6 +132,12 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'question-instructions': () => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock'),
   'question-navigation': () => import('@/components/editor/blocks/atomic/QuestionNavigationBlock'),
 
+  // Options & Interactive
+  'options-grid': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+  'quiz-options': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+  'quiz-options-grid-connected': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+  'form-input': () => import('@/components/editor/blocks/FormInputBlock'),
+
   // CTA Buttons
   'CTAButton': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
   'cta-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
@@ -232,6 +238,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
 
   // Offer Components (Step 21)
   'urgency-timer-inline': () => import('@/components/editor/blocks/UrgencyTimerInlineBlock'),
+  'offer-pricing': () => import('@/components/editor/blocks/PricingInlineBlock'),
   'before-after-inline': () => import('@/components/editor/blocks/BeforeAfterInlineBlock'),
   'bonus': () => import('@/components/editor/blocks/BonusBlock'),
   'bonus-inline': () => import('@/components/editor/blocks/BonusInlineBlock'),
