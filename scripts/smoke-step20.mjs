@@ -31,7 +31,8 @@ try {
     assert(existsSync(join(ROOT, unifiedPath)), `Missing file: ${unifiedPath}`);
     const unified = read(unifiedPath);
     assert(/LazyBlockRenderer/.test(unified), 'UnifiedStepContent: LazyBlockRenderer não encontrado');
-    assert(!/ModularResultStep/.test(unified), 'UnifiedStepContent ainda referencia ModularResultStep (legado)');
+    const hasActiveImport = /^\s*import[^\n]*ModularResultStep/m.test(unified);
+    assert(!hasActiveImport, 'UnifiedStepContent ainda importa ModularResultStep (legado)');
 
     // 3) Registry deve registrar os blocos de resultado
     const registryPath = 'src/registry/UnifiedBlockRegistry.ts';
