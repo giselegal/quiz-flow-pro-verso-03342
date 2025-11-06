@@ -161,15 +161,19 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    */
   private async getFromAdminOverride(stepId: string): Promise<Block[] | null> {
     try {
+      // Evita 404 do PostgREST usando limit(1) em vez de single()
       const { data, error } = await (supabase as any)
         .from('template_overrides')
         .select('blocks')
         .eq('step_id', stepId)
         .eq('active', true)
-        .single();
+        .limit(1);
 
       if (error) throw error;
-      return data?.blocks || null;
+      if (Array.isArray(data) && data.length > 0) {
+        return (data[0] as any)?.blocks || null;
+      }
+      return null;
     } catch (error) {
       appLogger.debug('[HierarchicalSource] Admin override not found:', stepId);
       return null;
@@ -327,14 +331,15 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    */
   private async hasAdminOverride(stepId: string): Promise<boolean> {
     try {
+      // Evita 404 do PostgREST usando limit(1) em vez de single()
       const { data } = await (supabase as any)
         .from('template_overrides')
         .select('id')
         .eq('step_id', stepId)
         .eq('active', true)
-        .single();
+        .limit(1);
 
-      return !!data;
+      return Array.isArray(data) && data.length > 0;
     } catch {
       return false;
     }
