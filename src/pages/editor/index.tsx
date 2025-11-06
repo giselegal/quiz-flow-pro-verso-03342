@@ -70,11 +70,27 @@ const EditorRoutesInner: React.FC = () => {
     const [showStartupModal, setShowStartupModal] = useState(false);
 
     // Usar hook unificado para gerenciar o recurso
+    // 🔌 Detectar se Supabase está desativado por flags (ambiente + localStorage)
+    const supabaseDisabled = (() => {
+        try {
+            const envFlag = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
+            const lsFlag = (typeof window !== 'undefined') && (
+                window.localStorage.getItem('VITE_DISABLE_SUPABASE') === 'true' ||
+                window.localStorage.getItem('supabase:disableNetwork') === 'true'
+            );
+            return envFlag || lsFlag;
+        } catch { return false; }
+    })();
+
     const editorResource = useEditorResource({
         resourceId,
         autoLoad: Boolean(resourceId),
-        hasSupabaseAccess: true, // TODO: Detectar do ambiente
+        hasSupabaseAccess: !supabaseDisabled,
     });
+
+    if (supabaseDisabled) {
+        console.info('🛑 Supabase desativado por flag (VITE_DISABLE_SUPABASE). Editor operando 100% offline.');
+    }
 
     // Detectar se deve mostrar modal na montagem inicial
     useMemo(() => {

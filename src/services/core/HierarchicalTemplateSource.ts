@@ -37,6 +37,22 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   // 🔧 Em DEV, desabilita fontes online (Supabase) por padrão para evitar 404s no console
   private get ONLINE_DISABLED(): boolean {
     try {
+      // 🔌 Super-flag global: se VITE_DISABLE_SUPABASE=true → bloqueia tudo
+      //   Prioridade: localStorage > env vite > process.env
+      const localDisable = (typeof window !== 'undefined') ? window.localStorage?.getItem('VITE_DISABLE_SUPABASE') : null;
+      if (localDisable === 'true') return true;
+      // Legacy interceptor flag
+      const legacyDisable = (typeof window !== 'undefined') ? window.localStorage?.getItem('supabase:disableNetwork') : null;
+      if (legacyDisable === 'true') return true;
+      let envDisable: any;
+      try {
+        // @ts-ignore
+        envDisable = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE;
+      } catch { /* noop */ }
+      if (typeof envDisable === 'string' && envDisable === 'true') return true;
+      const procDisable = (typeof process !== 'undefined') ? (process as any).env?.VITE_DISABLE_SUPABASE : undefined;
+      if (typeof procDisable === 'string' && procDisable === 'true') return true;
+
       // 1) localStorage override (browser)
       if (typeof window !== 'undefined') {
         const enable = window.localStorage?.getItem('VITE_ENABLE_REMOTE_TEMPLATES');
@@ -100,6 +116,11 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
     // Se JSON-only, desativar fallback para estático imediatamente
     if (this.JSON_ONLY) {
       this.options.fallbackToStatic = false;
+    }
+
+    // Log único para clarificar se Supabase está desligado (dev experience)
+    if (this.ONLINE_DISABLED) {
+      appLogger.info('[HierarchicalSource] Supabase DESATIVADO (ONLINE_DISABLED=true) - nenhuma chamada .from() será feita');
     }
   }
 
