@@ -160,11 +160,11 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     template: 'footer-copyright.html',
   },
   
-  // Offer Blocks (Step 21) - Simples
+  // Offer Blocks (Step 21) - Reclassificados como COMPLEX
   'offer-hero': {
-    complexity: 'SIMPLE',
-    reason: 'Hero da oferta sem interatividade',
-    template: 'offer-hero.html',
+    complexity: 'COMPLEX',
+    reason: 'Hero com variáveis dinâmicas ({userName}) e lógica condicional',
+    component: '@/components/editor/blocks/OfferHeroBlock',
   },
   'offer-benefits': {
     complexity: 'SIMPLE',
@@ -301,6 +301,11 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
   'offer-pricing': {
     complexity: 'COMPLEX',
     reason: 'Cálculos de preço, seleção de planos',
+    component: '@/components/editor/blocks/PricingBlock',
+  },
+  'pricing': {
+    complexity: 'COMPLEX',
+    reason: 'Alias de offer-pricing para compatibilidade com JSON',
     component: '@/components/editor/blocks/PricingBlock',
   },
 };

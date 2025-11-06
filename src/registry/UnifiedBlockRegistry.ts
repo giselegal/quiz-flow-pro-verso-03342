@@ -122,6 +122,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'quiz-question-header': () => import('@/components/editor/blocks/QuizQuestionHeaderBlock'),
   'quiz-result-header': () => import('@/components/editor/blocks/QuizResultHeaderBlock'),
   'quiz-offer-hero': () => import('@/components/editor/blocks/QuizOfferHeroBlock'),
+  'offer-hero': () => import('@/components/editor/blocks/OfferHeroBlock'),
 
   // Question Components (Steps 02-11)
   'question-progress': () => import('@/components/editor/blocks/atomic/QuestionProgressBlock'),
