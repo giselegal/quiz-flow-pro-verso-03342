@@ -19,7 +19,7 @@ import {
   Search,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import NoCodePropertiesPanel from './NoCodePropertiesPanel';
 import type { Block } from '@/types/editor';
 
@@ -219,22 +219,22 @@ const generateBlockPreview = (block: Block): string => {
   // Tentar extrair texto do conteúdo
   if (block.content?.text) {
     const text = String(block.content.text);
-    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
+    return text.length > 50 ? `${text.substring(0, 50)}...` : text;
   }
 
   if (block.properties?.text) {
     const text = String(block.properties.text);
-    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
+    return text.length > 50 ? `${text.substring(0, 50)}...` : text;
   }
 
   if (block.properties?.title) {
     const text = String(block.properties.title);
-    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
+    return text.length > 50 ? `${text.substring(0, 50)}...` : text;
   }
 
   if (block.properties?.content) {
     const text = String(block.properties.content);
-    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
+    return text.length > 50 ? `${text.substring(0, 50)}...` : text;
   }
 
   return `${block.type} (${block.id})`;
@@ -265,12 +265,45 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set(['step-1']));
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'intro' | 'question' | 'strategic' | 'transition' | 'result' | 'offer'>('all');
+  const [stepBlocksMap, setStepBlocksMap] = useState<Record<string, Block[]>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Carregar blocos dinamicamente (JSON v3 / USER_EDIT / ADMIN_OVERRIDE)
+  React.useEffect(() => {
+    let mounted = true;
+    const loadAllSteps = async () => {
+      try {
+        setIsLoading(true);
+        const entries = await Promise.all(
+          Object.keys(STEP_DEFINITIONS).map(async key => {
+            const normalized = key.replace('step-', 'step-').padStart(6, '0');
+            const stepId = key.includes('-0') ? key : `step-${String(parseInt(key.replace('step-', ''), 10)).padStart(2, '0')}`;
+            try {
+              const res = await hierarchicalTemplateSource.getPrimary(stepId);
+              return [stepId, res.data || []] as [string, Block[]];
+            } catch {
+              return [stepId, []] as [string, Block[]];
+            }
+          })
+        );
+        if (!mounted) return;
+        const map: Record<string, Block[]> = {};
+        for (const [k, v] of entries) map[k] = v;
+        setStepBlocksMap(map);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+    loadAllSteps();
+    return () => { mounted = false; };
+  }, []);
 
   // Processar informações das etapas
   const stepsInfo = useMemo((): StepInfo[] => {
     return Object.keys(STEP_DEFINITIONS).map(stepKey => {
       const definition = STEP_DEFINITIONS[stepKey];
-      const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
+      const normalizedKey = `step-${String(parseInt(stepKey.replace('step-', ''), 10)).padStart(2, '0')}`;
+      const blocks = stepBlocksMap[normalizedKey] || [];
       const number = parseInt(stepKey.replace('step-', ''));
 
       const propertyCount = blocks.reduce((total: number, block: Block) => total + countBlockProperties(block), 0);
@@ -288,7 +321,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
         propertyCount,
       };
     });
-  }, []);
+  }, [stepBlocksMap]);
 
   // Filtrar etapas
   const filteredSteps = useMemo(() => {
