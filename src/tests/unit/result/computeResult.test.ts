@@ -70,4 +70,22 @@ describe('computeResult (scoring config)', () => {
         const resAlpha = computeResult({ answers, scoring: { tieBreak: 'alphabetical' } as any });
         expect(resAlpha.primaryStyleId).toBe('contemporaneo');
     });
+
+    it('deriva pesos por etapa a partir de steps.metadata.scoring.weight quando scoring.optionWeights não é informado', () => {
+        const steps = {
+            'step-02': {
+                id: 'step-02',
+                type: 'question',
+                metadata: { scoring: { weight: 3 } },
+                options: [
+                    { id: 'natural', text: 'Natural' },
+                    { id: 'classico', text: 'Clássico' },
+                ],
+            },
+        } as any;
+
+        const res = computeResult({ answers: { 'step-02': ['natural'] }, steps });
+        expect(res.scores.natural).toBe(3);
+        expect(res.primaryStyleId).toBe('natural');
+    });
 });

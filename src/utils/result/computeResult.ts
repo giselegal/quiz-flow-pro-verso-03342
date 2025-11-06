@@ -55,7 +55,38 @@ export function computeResult({ answers, steps, scoring }: ComputeResultInput): 
     // Pesos opcionais por estilo (baseline atual)
     const weights: Record<string, number> | undefined = (scoring as any)?.weights;
     // Pesos por opção (override mais específico): scoring.optionWeights[stepId][optionId] = weight
-    const optionWeights: Record<string, Record<string, number>> | undefined = (scoring as any)?.optionWeights;
+    let optionWeights: Record<string, Record<string, number>> | undefined = (scoring as any)?.optionWeights;
+
+    // Derivar pesos por opção automaticamente a partir do metadata.scoring.weight por etapa,
+    // quando não fornecido explicitamente. Isso alinha o motor ao quiz21-complete.json.
+    if (!optionWeights) {
+        const derived: Record<string, Record<string, number>> = {};
+        try {
+            for (const [stepId, step] of Object.entries(stepsSource as Record<string, any>)) {
+                if (!step || step.type !== 'question') continue;
+                const stepWeight = Number(step?.metadata?.scoring?.weight);
+                // aplica somente se for número válido (> 0), senão assume 1 implicito
+                const effectiveWeight = Number.isFinite(stepWeight) ? stepWeight : undefined;
+                const options = (step as any).options as Array<{ id: string } | string> | undefined;
+                if (!options || options.length === 0) continue;
+                for (const opt of options) {
+                    const optId = typeof opt === 'string' ? opt : opt.id;
+                    if (!optId) continue;
+                    if (!derived[stepId]) derived[stepId] = {};
+                    // se weight não definido, não seta — o fallback de 1 permanece
+                    if (typeof effectiveWeight === 'number') {
+                        derived[stepId][optId] = effectiveWeight;
+                    }
+                }
+            }
+            // Só aplica se tivermos de fato pelo menos um peso derivado
+            const hasAny = Object.values(derived).some(x => Object.keys(x).length > 0);
+            optionWeights = hasAny ? derived : undefined;
+        } catch {
+            // Em caso de qualquer estrutura inesperada, ignora silenciosamente e usa baseline
+            optionWeights = undefined;
+        }
+    }
 
     for (const [stepId, selections] of Object.entries(answers)) {
         const step = (stepsSource as any)[stepId];
