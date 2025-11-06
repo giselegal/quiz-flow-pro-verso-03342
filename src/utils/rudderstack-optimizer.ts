@@ -67,7 +67,27 @@ class RudderStackOptimizer {
   }
 
   private shouldFilterLog(args: any[]): boolean {
-    const message = args.join(' ');
+    // Transformar argumentos em string com segurança (evitar TypeError em Array.join)
+    let message: string;
+    try {
+      message = args.map((arg) => {
+        if (arg == null) return String(arg);
+        const t = typeof arg;
+        if (t === 'string' || t === 'number' || t === 'boolean') return String(arg);
+        // Tentar JSON.stringify com fallback para toString
+        try {
+          return JSON.stringify(arg);
+        } catch {
+          try {
+            return String(arg);
+          } catch {
+            return '[object]';
+          }
+        }
+      }).join(' ');
+    } catch {
+      message = '[unserializable log]';
+    }
 
     // Filtrar logs de identificação repetitivos do RudderStack
     if (RUDDERSTACK_CONFIG.filterUserIdentification && 

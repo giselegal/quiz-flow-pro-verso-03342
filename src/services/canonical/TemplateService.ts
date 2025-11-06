@@ -144,6 +144,25 @@ export class TemplateService extends BaseCanonicalService {
   private stepLoadPromises = new Map<string, Promise<any>>();
   private loadedSteps = new Set<string>();
 
+  // 🔧 JSON-only awareness: evitar fallback legada quando o modo estiver ativo
+  private get JSON_ONLY(): boolean {
+    try {
+      if (typeof window !== 'undefined') {
+        const ls = window.localStorage?.getItem('VITE_TEMPLATE_JSON_ONLY');
+        if (ls != null) return ls === 'true';
+      }
+      let rawVite: any;
+      try {
+        // @ts-ignore
+        rawVite = (import.meta as any)?.env?.VITE_TEMPLATE_JSON_ONLY;
+      } catch { /* noop */ }
+      if (typeof rawVite === 'string') return rawVite === 'true';
+      const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_JSON_ONLY : undefined);
+      if (typeof rawNode === 'string') return rawNode === 'true';
+    } catch { /* noop */ }
+    return false;
+  }
+
   // 🎯 FASE 4: Navegação Dinâmica
   private activeTemplateId: string | null = null;
   // 🆕 FASE 1: manter funnelId ativo para priorizar USER_EDIT no HierarchicalSource
@@ -310,9 +329,13 @@ export class TemplateService extends BaseCanonicalService {
       return this.createResult(result.data);
     } catch (error) {
       this.error('[NEW] getStepFromHierarchicalSource failed:', error);
-      
+      // Se JSON-only estiver ativo, não cair no legado para evitar drift/registry
+      if (this.JSON_ONLY) {
+        this.log('[WARN][NEW] JSON-only ativo → não usar legado; retornando vazio');
+        return this.createResult<Block[]>([]);
+      }
       // Fallback para legacy se novo sistema falhar
-  this.log('[WARN][NEW] Falling back to legacy system');
+      this.log('[WARN][NEW] Falling back to legacy system');
       return await this.getStepLegacy(stepId, templateId, performance.now());
     }
   }
