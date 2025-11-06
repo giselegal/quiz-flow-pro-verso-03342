@@ -34,6 +34,27 @@ interface CacheEntry {
 export class HierarchicalTemplateSource implements TemplateDataSource {
   private cache = new Map<string, CacheEntry>();
   private options: Required<DataSourceOptions>;
+  // 🔧 Modo JSON-only: força uso de JSON dinâmico e desativa fallback TS/registry
+  private get JSON_ONLY(): boolean {
+    try {
+      if (typeof window !== 'undefined') {
+        const ls = window.localStorage?.getItem('VITE_TEMPLATE_JSON_ONLY');
+        if (ls != null) return ls === 'true';
+      }
+      // Vite env
+      let rawVite: any;
+      try {
+        // @ts-ignore
+        rawVite = (import.meta as any)?.env?.VITE_TEMPLATE_JSON_ONLY;
+      } catch { /* noop */ }
+      if (typeof rawVite === 'string') return rawVite === 'true';
+
+      // Node/process fallback
+      const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_JSON_ONLY : undefined);
+      if (typeof rawNode === 'string') return rawNode === 'true';
+    } catch { /* noop */ }
+    return false;
+  }
 
   constructor(options: DataSourceOptions = {}) {
     this.options = {
@@ -42,6 +63,11 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       enableMetrics: options.enableMetrics ?? true,
       fallbackToStatic: options.fallbackToStatic ?? true,
     };
+
+    // Se JSON-only, desativar fallback para estático imediatamente
+    if (this.JSON_ONLY) {
+      this.options.fallbackToStatic = false;
+    }
   }
 
   /**
@@ -164,9 +190,12 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
         return jsonBlocks;
       }
     } catch (error) {
-      // Apenas log de debug, continua para o registry
+      // Apenas log de debug, continua para o registry se não estiver em modo JSON-only
       appLogger.debug('[HierarchicalSource] JSON default loader falhou para', stepId);
     }
+
+    // Em modo JSON-only, não usar registry; retorna null para tentar próximo nível
+    if (this.JSON_ONLY) return null;
 
     // 3.2 Registry (legado/compatibilidade)
     try {
