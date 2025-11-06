@@ -33,7 +33,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { funnelService } from '@/services/canonical/FunnelService';
+import { templateService } from '@/services/canonical/TemplateService';
 
 // ============================================================================
 // TYPES
@@ -142,9 +143,15 @@ const MeusFunisPageReal: React.FC = () => {
             } catch {
                 draftsData = [];
             }
-            // Mesclar drafts do cache em memória do bridge (sessão atual)
-            const cachedDrafts = await quizEditorBridge.listDrafts();
-            // Normalizar drafts do supabase e do cache para o mesmo shape
+
+            // Buscar funis do tipo 'draft' usando FunnelService
+            const draftFunnelsResult = await funnelService.listFunnels({
+                status: 'draft',
+                limit: 100,
+            });
+            const draftFunnels = draftFunnelsResult.success ? draftFunnelsResult.data : [];
+
+            // Normalizar drafts do supabase e funnels em draft
             const supabaseDrafts = (draftsData || []).map((d: any) => ({
                 id: d.id,
                 name: d.name,
@@ -155,7 +162,7 @@ const MeusFunisPageReal: React.FC = () => {
                 version: d.version || 1,
                 user_id: d.user_id,
             }));
-            const memoryDrafts = (cachedDrafts || []).map((d: any) => ({
+            const funnelDrafts = (draftFunnels || []).map((d: any) => ({
                 id: d.id,
                 name: d.name,
                 slug: d.slug,
