@@ -139,7 +139,8 @@
     "blocks:validate": "node scripts/validate-per-step-blocks.js",
     "sanity:runtime": "tsx scripts/sanity/runtime-load.ts",
     "export:html": "tsx scripts/export/html-from-blocks.ts",
-    "diagnostic:blocks": "tsx scripts/diagnostic/blocks-audit.ts"
+    "diagnostic:blocks": "tsx scripts/diagnostic/blocks-audit.ts",
+    "diagnostic:blocks:content": "tsx scripts/diagnostic/blocks-content-audit.ts"
   },
   "lintCoverage": {
     "blocks": "node scripts/dev/check-block-coverage.mjs"
