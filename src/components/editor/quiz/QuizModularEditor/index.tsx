@@ -30,6 +30,8 @@ import { appLogger } from '@/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
 // ✅ SPRINT 2 Fase 3: Loading Context Unificado
 import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadingContext';
+// ✅ SPRINT 3: Arquitetura Unificada de Recursos
+import type { EditorResource } from '@/types/editor-resource';
 
 // Import estático de StepNavigatorColumn para evitar problemas de renderização em testes
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -57,9 +59,29 @@ if (import.meta.env.DEV) {
 }
 
 export type QuizModularEditorProps = {
+    /** ID unificado do recurso (template, funnel ou draft) */
+    resourceId?: string;
+
+    /** Metadata do recurso (fornecida por useEditorResource) */
+    editorResource?: EditorResource | null;
+
+    /** Se o recurso é somente leitura */
+    isReadOnly?: boolean;
+
+    /** 
+     * @deprecated Use resourceId em vez de funnelId
+     * Mantido apenas para backward compatibility
+     */
     funnelId?: string;
+
+    /**
+     * @deprecated Use resourceId em vez de templateId
+     * Mantido apenas para backward compatibility
+     */
+    templateId?: string;
+
+    /** Step inicial (opcional) */
     initialStepKey?: string;
-    templateId?: string; // ID do template JSON externo (opcional)
 };
 
 export default function QuizModularEditor(props: QuizModularEditorProps) {
@@ -75,6 +97,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         setTemplateLoading,
         setStepLoading
     } = useEditorLoading();
+
+    // ✅ SPRINT 3: Unificar resourceId (suportar props legadas)
+    const resourceId = props.resourceId || props.templateId || props.funnelId;
+    const isReadOnly = props.isReadOnly ?? false;
+    const resourceMetadata = props.editorResource;
 
     // Mapear estado do SuperUnified para interface local
     // ✅ PROTEÇÃO: Garantir que currentStep seja sempre válido (>= 1)

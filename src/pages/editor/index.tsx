@@ -1,40 +1,57 @@
 /**
- * 🎯 EDITOR ROUTE CONFIGURATION
+ * 🎯 EDITOR ROUTE CONFIGURATION - Arquitetura Unificada
  * 
- * Configuração das rotas do editor visual unificado usando wouter
+ * ✅ NOVA ABORDAGEM: Template = Funnel = Resource
+ * Não há mais distinção artificial entre template e funnel
+ * Tudo é um "EditorResource" com diferentes características
  */
 
 import React, { Suspense, useMemo, useState, useCallback } from 'react';
 const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
 import { SuperUnifiedProvider, useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
+import { useEditorResource } from '@/hooks/useEditorResource';
+import { detectResourceType } from '@/types/editor-resource';
 
 /**
- * 🔧 CORREÇÃO CRÍTICA (Fase 1.1): Template não é Funnel!
+ * 🎯 ARQUITETURA UNIFICADA
  * 
- * ANTES: ?template=quiz21StepsComplete era tratado como funnelId
- * PROBLEMA: Criava "funnel fantasma" que não existe no Supabase
+ * Extrai resourceId da URL (query param ou path param)
+ * Não diferencia entre template/funnel - tudo é "resource"
  * 
- * DEPOIS: Separar template mode (local) vs funnel mode (Supabase)
+ * Suporte para:
+ * - ?id=quiz21StepsComplete (legacy)
+ * - ?template=quiz21StepsComplete (legacy)
+ * - ?funnelId=abc-123 (legacy)
+ * - ?resource=xxx (novo, recomendado)
+ * - /:resourceId via router (futuro)
  */
-function useFunnelIdFromLocation(): string | undefined {
+function useResourceIdFromLocation(): string | undefined {
     if (typeof window === 'undefined') return undefined;
     const params = new URLSearchParams(window.location.search);
 
-    // ✅ NOVO: Template não é funnel!
-    const funnelId = params.get('funnelId') || params.get('funnel');
-    const templateId = params.get('template') || params.get('id');
-
-    // Se tem template mas não tem funnelId, forçar modo local
-    if (templateId && !funnelId) {
-        console.log('🎨 Modo Template Ativado:', templateId, '- Trabalhando 100% local');
-        return undefined; // Forçar modo local (sem Supabase)
+    // Prioridade 1: Novo parâmetro unificado
+    const resourceId = params.get('resource');
+    if (resourceId) {
+        console.log('🎯 Recurso carregado:', resourceId);
+        return resourceId;
     }
 
-    // Se tem funnelId explícito, usar modo funnel (com Supabase)
-    if (funnelId) {
-        console.log('💾 Modo Funnel Ativado:', funnelId, '- Persistência no Supabase');
-        return funnelId;
+    // Prioridade 2: Legacy params (backward compatibility)
+    const legacyId =
+        params.get('template') ||
+        params.get('funnelId') ||
+        params.get('funnel') ||
+        params.get('id');
+
+    if (legacyId) {
+        const type = detectResourceType(legacyId);
+        console.log(`🔄 Legacy param detectado: ${legacyId} (tipo: ${type})`);
+        console.warn(
+            '⚠️ DEPRECATED: Use ?resource= em vez de ?template= ou ?funnelId=\n' +
+            `   Migre para: /editor?resource=${legacyId}`
+        );
+        return legacyId;
     }
 
     return undefined;
@@ -47,60 +64,74 @@ export const EditorRoutes: React.FC = () => (
 export default EditorRoutes;
 
 const EditorRoutesInner: React.FC = () => {
-    const funnelId = useFunnelIdFromLocation();
+    const resourceId = useResourceIdFromLocation();
 
     // Estado do modal de startup
     const [showStartupModal, setShowStartupModal] = useState(false);
-    const [templateId, setTemplateId] = useState<string | undefined>();
+
+    // Usar hook unificado para gerenciar o recurso
+    const editorResource = useEditorResource({
+        resourceId,
+        autoLoad: Boolean(resourceId),
+        hasSupabaseAccess: true, // TODO: Detectar do ambiente
+    });
 
     // Detectar se deve mostrar modal na montagem inicial
     useMemo(() => {
         if (typeof window === 'undefined') return;
-        const params = new URLSearchParams(window.location.search);
-        const hasTemplate = params.has('template');
-        const hasFunnel = params.has('funnelId') || params.has('funnel');
-        
-        // Mostrar modal apenas se não tem template/funnel na URL
-        if (!hasTemplate && !hasFunnel) {
+
+        // Mostrar modal apenas se não tem resource na URL
+        if (!resourceId) {
             setShowStartupModal(true);
-        } else if (hasTemplate) {
-            setTemplateId(params.get('template') || undefined);
         }
-    }, []);
+    }, [resourceId]);
 
     const handleSelectMode = useCallback((mode: 'blank' | 'template') => {
         setShowStartupModal(false);
-        
+
         if (mode === 'template') {
-            // Adicionar ?template= na URL sem recarregar
+            // Adicionar ?resource=quiz21StepsComplete na URL
             const url = new URL(window.location.href);
-            url.searchParams.set('template', 'quiz21StepsComplete');
+            url.searchParams.set('resource', 'quiz21StepsComplete');
             window.history.pushState({}, '', url);
-            setTemplateId('quiz21StepsComplete');
-        } else {
-            // Modo vazio - não adicionar templateId
-            setTemplateId(undefined);
+            window.location.reload(); // Recarregar para aplicar novo resource
         }
+        // Modo blank: continuar sem resourceId
     }, []);
+
+    // Determinar funnelId para SuperUnifiedProvider
+    // Apenas passar funnelId se for realmente um funnel do Supabase
+    const funnelIdForProvider =
+        editorResource.resourceType === 'funnel' &&
+            editorResource.resource?.source === 'supabase'
+            ? resourceId
+            : undefined;
 
     return (
         <>
-            <EditorStartupModal 
+            <EditorStartupModal
                 open={showStartupModal}
                 onSelectMode={handleSelectMode}
             />
-            
-            <SuperUnifiedProvider funnelId={funnelId} autoLoad={Boolean(funnelId)} debugMode={import.meta.env.DEV}>
+
+            <SuperUnifiedProvider
+                funnelId={funnelIdForProvider}
+                autoLoad={Boolean(funnelIdForProvider)}
+                debugMode={import.meta.env.DEV}
+            >
                 {import.meta.env.DEV ? <SaveDebugButton /> : null}
                 <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
-                    <QuizModularEditor templateId={templateId} />
+                    {/* ✅ Props unificadas - resourceId substitui templateId/funnelId */}
+                    <QuizModularEditor
+                        resourceId={resourceId}
+                        editorResource={editorResource.resource}
+                        isReadOnly={editorResource.isReadOnly}
+                    />
                 </Suspense>
             </SuperUnifiedProvider>
         </>
     );
-};
-
-// ✅ FASE 2: Botão de debug usando SuperUnified
+};// ✅ FASE 2: Botão de debug usando SuperUnified
 const SaveDebugButton: React.FC = () => {
     const unified = useSuperUnified();
     const canSave = Boolean(unified.state.currentFunnel);
