@@ -15,7 +15,14 @@ const templateCache = new Map<string, string>();
 
 interface JSONTemplateRendererProps {
   type: string;
+  /**
+   * Propriedades já normalizadas do bloco (podem vir do UniversalBlockRenderer)
+   */
   properties?: Record<string, any>;
+  /**
+   * Bloco completo (quando disponível). Usado para extrair content e propriedades faltantes.
+   */
+  block?: { content?: Record<string, any>; properties?: Record<string, any> } | any;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -34,10 +41,10 @@ async function loadTemplate(templateName: string): Promise<string> {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
+
     const html = await response.text();
     templateCache.set(templateName, html);
-    
+
     appLogger.info(`[JSONTemplateRenderer] Template loaded: ${templateName}`);
     return html;
   } catch (error) {
@@ -51,27 +58,14 @@ async function loadTemplate(templateName: string): Promise<string> {
  */
 function renderTemplate(template: string, data: Record<string, any>): string {
   try {
-    // Sanitize data para prevenir XSS
-    const sanitizedData = Object.entries(data).reduce((acc, [key, value]) => {
-      // Converter valores undefined/null para string vazia
-      if (value === undefined || value === null) {
-        acc[key] = '';
-      }
-      // Manter strings, números, booleans
-      else if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-        acc[key] = value;
-      }
-      // Converter objetos/arrays para JSON
-      else if (typeof value === 'object') {
-        acc[key] = JSON.stringify(value);
-      }
-      else {
-        acc[key] = String(value);
-      }
-      return acc;
-    }, {} as Record<string, any>);
+    // Importante: NÃO transformar objetos em string para permitir seções Mustache aninhadas (ex.: level.h1)
+    // Apenas normalizar undefined/null para string vazia quando necessário
+    const normalized = Object.fromEntries(Object.entries(data).map(([k, v]) => [
+      k,
+      v === undefined || v === null ? '' : v,
+    ]));
 
-    return Mustache.render(template, sanitizedData);
+    return Mustache.render(template, normalized);
   } catch (error) {
     appLogger.error('[JSONTemplateRenderer] Mustache render failed', error);
     return `<div class="text-red-500">Erro ao renderizar template</div>`;
@@ -84,6 +78,7 @@ function renderTemplate(template: string, data: Record<string, any>): string {
 export const JSONTemplateRenderer: React.FC<JSONTemplateRendererProps> = ({
   type,
   properties = {},
+  block,
   className = '',
   style = {},
 }) => {
@@ -112,11 +107,46 @@ export const JSONTemplateRenderer: React.FC<JSONTemplateRendererProps> = ({
         setError(null);
 
         const template = await loadTemplate(safePath);
-        const rendered = renderTemplate(template, {
-          ...properties,
+
+        // Unir propriedades vindas via props e do próprio bloco
+        const blockProps = (block?.properties && typeof block.properties === 'object') ? block.properties : {};
+        const mergedProps = { ...blockProps, ...properties };
+
+        // Extrair conteúdo plano principal para templates simples (text, heading, etc.)
+        const contentObj = (block?.content && typeof block.content === 'object') ? block.content : {};
+
+        // Aliases e fallbacks comuns
+        const data: Record<string, any> = {
+          ...mergedProps,
+          ...contentObj,
           className,
           type,
-        });
+        };
+
+        // content (string) preferindo campos comuns
+        if (data.content == null) {
+          const candidate = contentObj.text ?? contentObj.html ?? contentObj.content ?? mergedProps.text;
+          if (candidate != null) data.content = candidate;
+        }
+
+        // src (imagem)
+        if (data.src == null) {
+          const candidate = mergedProps.src ?? contentObj.src ?? contentObj.imageUrl ?? mergedProps.url;
+          if (candidate != null) data.src = candidate;
+        }
+
+        // style inline como string se vier como objeto
+        if (typeof data.style === 'object' && data.style) {
+          try {
+            const styleObj = data.style as Record<string, any>;
+            const css = Object.entries(styleObj)
+              .map(([k, v]) => `${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}:${String(v)}`)
+              .join(';');
+            data.style = css;
+          } catch { }
+        }
+
+        const rendered = renderTemplate(template, data);
 
         if (isMounted) {
           setHtml(rendered);
@@ -135,7 +165,7 @@ export const JSONTemplateRenderer: React.FC<JSONTemplateRendererProps> = ({
     return () => {
       isMounted = false;
     };
-  }, [type, templateName, properties, className]);
+  }, [type, templateName, properties, className, block]);
 
   // Loading state
   if (loading) {
@@ -169,7 +199,7 @@ export const JSONTemplateRenderer: React.FC<JSONTemplateRendererProps> = ({
 /**
  * Wrapper para uso com Suspense
  */
-export const LazyJSONTemplateRenderer = React.lazy(() => 
+export const LazyJSONTemplateRenderer = React.lazy(() =>
   Promise.resolve({ default: JSONTemplateRenderer })
 );
 
