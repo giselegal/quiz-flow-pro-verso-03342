@@ -189,7 +189,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('🎯 UnifiedFunnelContext: Criando funil (canônico)', name);
 
-            const created = await canonicalFunnelService.createFunnel({
+            const created = await funnelService.createFunnel({
                 name,
                 type: options?.type ?? 'quiz',
                 category: options?.category ?? 'quiz',
@@ -235,16 +235,14 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('✏️ UnifiedFunnelContext: Atualizando funil (canônico)', funnelId);
 
-            const updated = await canonicalFunnelService.updateFunnel(funnelId, {
+            const updated = await funnelService.updateFunnel(funnelId, {
                 name: updates?.name ?? funnel.name,
                 type: updates?.type ?? (funnel.settings as any)?.type,
                 category: updates?.category ?? (funnel as any).category,
                 status: updates?.status ?? (updates?.isPublished ? 'published' : undefined),
                 config: updates?.settings ?? updates?.config ?? funnel.settings,
                 metadata: { ...(updates?.metadata || {}), updatedBy: 'UnifiedFunnelContext' },
-            });
-
-            const updatedFunnel = updated ? mapCanonicalToUnified(updated) : funnel;
+            }); const updatedFunnel = updated ? mapCanonicalToUnified(updated) : funnel;
             setFunnel(updatedFunnel);
 
             console.log('✅ Funil atualizado:', updatedFunnel);
@@ -271,8 +269,23 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('🔄 UnifiedFunnelContext: Duplicando funil', funnelId);
 
-            const duplicatedFunnelMeta = await funnelUnifiedService.duplicateFunnel(funnelId, newName);
-            const duplicatedFunnel = mapCanonicalToUnified(duplicatedFunnelMeta);
+            // funnelService pode não ter método duplicateFunnel, vamos criar manualmente
+            const original = await funnelService.getFunnel(funnelId);
+            if (!original) {
+                throw new Error('Funil original não encontrado');
+            }
+
+            const duplicated = await funnelService.createFunnel({
+                name: newName || `${original.name} (Cópia)`,
+                type: original.type,
+                category: original.category,
+                context: original.context,
+                status: 'draft',
+                config: original.config,
+                metadata: { ...original.metadata, clonedFrom: funnelId },
+            });
+
+            const duplicatedFunnel = mapCanonicalToUnified(duplicated);
 
             console.log('✅ Funil duplicado:', duplicatedFunnel);
             return duplicatedFunnel;
@@ -298,7 +311,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('🗑️ UnifiedFunnelContext: Deletando funil (canônico)', funnelId);
 
-            const success = await canonicalFunnelService.deleteFunnel(funnelId);
+            const success = await funnelService.deleteFunnel(funnelId);
 
             if (success) {
                 setFunnel(null);
@@ -335,16 +348,20 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
     const reload = () => {
         if (funnelId) {
-            // Limpar cache legado antes de recarregar (até termos flush canônico)
-            funnelUnifiedService.clearCache?.();
+            // Limpar cache antes de recarregar (se disponível)
+            if (funnelService.clearCache) {
+                funnelService.clearCache();
+            }
             loadFunnel(funnelId);
         }
     };
 
     const validateFunnel = async (id: string) => {
         try {
-            const permissions = await funnelUnifiedService.checkPermissions(id);
-            setPermissions(permissions);
+            if (funnelService.checkPermissions) {
+                const permissions = await funnelService.checkPermissions(id);
+                setPermissions(permissions);
+            }
         } catch (err) {
             console.error('❌ Erro na validação:', err);
         }
