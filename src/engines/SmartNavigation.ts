@@ -10,8 +10,7 @@
  */
 
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { HybridTemplateService } from '@/services/aliases';
-import type { StepTemplate } from '@/services/aliases';
+import { templateService } from '@/services/canonical/TemplateService';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 
 export interface NavigationState {
@@ -57,7 +56,7 @@ class SmartNavigation {
   private config: NavigationConfig;
   private listeners: Set<(state: NavigationState) => void> = new Set();
   private autoAdvanceTimer: NodeJS.Timeout | null = null;
-  private stepConfigs: Map<number, StepTemplate> = new Map();
+  private stepConfigs: Map<number, any> = new Map();
 
   constructor(config: NavigationConfig) {
     this.config = config;
@@ -354,8 +353,19 @@ class SmartNavigation {
 
   private async loadStepConfig(step: number): Promise<void> {
     if (!this.stepConfigs.has(step)) {
-      const config = await HybridTemplateService.getStepConfig(step);
-      this.stepConfigs.set(step, config);
+      const stepId = `step-${String(step).padStart(2, '0')}`;
+      const stepResult = await templateService.getStep(stepId);
+      
+      if (stepResult.success && stepResult.data) {
+        // Criar uma configuração simplificada compatível
+        const config = {
+          metadata: { name: `Step ${step}`, description: '' },
+          behavior: { autoAdvance: false, autoAdvanceDelay: 0 },
+          validation: { type: 'presence', required: true, message: 'Obrigatório' },
+          blocks: stepResult.data,
+        };
+        this.stepConfigs.set(step, config as any);
+      }
     }
   }
 
@@ -390,7 +400,7 @@ class SmartNavigation {
       };
     }
 
-    // Usar configuração do template (v3) para determinar regras de seleção
+    // Usar configuração do template para determinar regras de seleção
     const templateConfig = this.stepConfigs.get(step);
     const selections = quizData.selections[`step-${step}`] || [];
 
