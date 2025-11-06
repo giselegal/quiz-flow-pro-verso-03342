@@ -118,6 +118,9 @@ attached_assets/
 # Scripts archived
 scripts/archive/
 
+# Template backups (archived)
+.archive/
+
 # Supabase local auth token (não versionar)
 .supabase/
 supabase/access.token
