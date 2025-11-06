@@ -32,6 +32,7 @@ import {
 } from './TemplateDataSource';
 import { supabase } from '@/lib/supabase';
 import { appLogger } from '@/utils/logger';
+import { IndexedTemplateCache } from './IndexedTemplateCache';
 
 /**
  * 🔒 Flags globais de comportamento (centralizar lógica para evitar drift)
@@ -203,6 +204,27 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
     for (const { priority, fn } of sources) {
       try {
+        // Primeiro, tentar IndexedDB se habilitado e válido
+        const idbKey = funnelId ? `${funnelId}:${stepId}` : stepId;
+        const idbRecord = await IndexedTemplateCache.get(idbKey);
+        if (idbRecord && Array.isArray(idbRecord.blocks)) {
+          const fresh = (Date.now() - idbRecord.savedAt) < (idbRecord.ttlMs || 5 * 60_000);
+          if (fresh) {
+            const loadTime = performance.now() - startTime;
+            const metadata: SourceMetadata = {
+              source: priority,
+              timestamp: Date.now(),
+              cacheHit: true,
+              loadTime,
+            };
+            const result: DataSourceResult<Block[]> = { data: idbRecord.blocks, metadata };
+            if (this.options.enableCache) this.setInCache(cacheKey, result);
+            this.log(stepId, 'IDB_HIT', priority, loadTime);
+            this.recordMetric(stepId, priority, loadTime);
+            return result;
+          }
+        }
+
         const blocks = await fn();
         if (blocks && blocks.length > 0) {
           const loadTime = performance.now() - startTime;
@@ -219,6 +241,17 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
           if (this.options.enableCache) {
             this.setInCache(cacheKey, result);
           }
+
+          // Gravar no IndexedDB (opt-in) com TTL padrão 10min
+          try {
+            await IndexedTemplateCache.set(idbKey, {
+              key: idbKey,
+              blocks,
+              savedAt: Date.now(),
+              ttlMs: 10 * 60_000,
+              version: 'v3.0',
+            });
+          } catch { /* ignore idb errors */ }
 
           this.log(stepId, 'LOADED', priority, loadTime);
           this.recordMetric(stepId, priority, loadTime);
