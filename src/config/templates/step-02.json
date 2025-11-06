@@ -6,9 +6,17 @@
     "description": "Etapa step-02 do Quiz de Estilo (question)",
     "category": "question",
     "createdAt": "2025-10-20T00:00:00Z",
-    "updatedAt": "2025-10-20T00:00:00Z",
+    "updatedAt": "2025-11-05T21:31:46.105Z",
     "author": "Quiz Flow Builder",
-    "version": "3.0.1"
+    "version": "3.0.1",
+    "progressRecalculated": true,
+    "scoring": {
+      "weight": 1,
+      "timeLimit": 30,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.452Z"
   },
   "theme": {
     "colors": {
@@ -39,10 +47,10 @@
     "autoAdvance": true
   },
   "type": "question",
+  "redirectPath": "/quiz-estilo/step-02",
   "navigation": {
     "nextStep": "step-03"
   },
-  "redirectPath": "/quiz-estilo/step-02",
   "blocks": [
     {
       "id": "progress-bar-step-02",

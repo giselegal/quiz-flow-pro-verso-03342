@@ -8,17 +8,9 @@
     "questionNumber": 15,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-11-05T21:31:46.108Z",
+    "updatedAt": "2025-10-13T00:33:47.498Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0",
-    "progressRecalculated": true,
-    "scoring": {
-      "weight": 3,
-      "timeLimit": 45,
-      "hasCorrectAnswer": false,
-      "speedBonusEnabled": true
-    },
-    "scoringAddedAt": "2025-11-05T21:52:52.456Z"
+    "version": "3.0.0"
   },
   "theme": {
     "colors": {
@@ -51,10 +43,10 @@
   },
   "behavior": {},
   "type": "strategic-question",
-  "redirectPath": "/quiz-estilo/step-17",
   "navigation": {
     "nextStep": "step-18"
   },
+  "redirectPath": "/quiz-estilo/step-17",
   "blocks": [
     {
       "id": "progress-bar-step-17",
@@ -172,5 +164,6 @@
       },
       "parentId": null
     }
-  ]
+  ],
+  "title": "Q15 - Transformação (Estratégica)"
 }

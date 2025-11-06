@@ -8,9 +8,17 @@
     "questionNumber": 16,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-10-13T00:33:47.498Z",
+    "updatedAt": "2025-11-05T21:31:46.108Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0"
+    "version": "3.0.0",
+    "progressRecalculated": true,
+    "scoring": {
+      "weight": 3,
+      "timeLimit": 45,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.456Z"
   },
   "theme": {
     "colors": {
@@ -43,10 +51,10 @@
   },
   "behavior": {},
   "type": "strategic-question",
+  "redirectPath": "/quiz-estilo/step-18",
   "navigation": {
     "nextStep": "step-19"
   },
-  "redirectPath": "/quiz-estilo/step-18",
   "blocks": [
     {
       "id": "progress-bar-step-18",
@@ -164,6 +172,5 @@
       },
       "parentId": null
     }
-  ],
-  "title": "Q16 - Resultado (Estratégica)"
+  ]
 }

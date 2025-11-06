@@ -1,24 +1,16 @@
 {
   "templateVersion": "3.0",
   "metadata": {
-    "id": "step-17-strategic-v3",
-    "name": "Q15 - Transformação (Estratégica)",
-    "description": "Questão estratégica 5 sobre objetivos e resultados",
+    "id": "step-14-strategic-v3",
+    "name": "Q12 - Desafios (Estratégica)",
+    "description": "Questão estratégica 2 sobre objetivos e resultados",
     "category": "strategic-question",
-    "questionNumber": 15,
+    "questionNumber": 12,
     "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-11-05T21:31:46.108Z",
+    "createdAt": "2025-10-13T00:33:47.497Z",
+    "updatedAt": "2025-10-13T00:33:47.497Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0",
-    "progressRecalculated": true,
-    "scoring": {
-      "weight": 3,
-      "timeLimit": 45,
-      "hasCorrectAnswer": false,
-      "speedBonusEnabled": true
-    },
-    "scoringAddedAt": "2025-11-05T21:52:52.456Z"
+    "version": "3.0.0"
   },
   "theme": {
     "colors": {
@@ -51,20 +43,20 @@
   },
   "behavior": {},
   "type": "strategic-question",
-  "redirectPath": "/quiz-estilo/step-17",
   "navigation": {
-    "nextStep": "step-18"
+    "nextStep": "step-15"
   },
+  "redirectPath": "/quiz-estilo/step-14",
   "blocks": [
     {
-      "id": "progress-bar-step-17",
+      "id": "progress-bar-step-14",
       "type": "question-progress",
       "order": 0,
       "properties": {
         "padding": 8
       },
       "content": {
-        "stepNumber": 17,
+        "stepNumber": 14,
         "totalSteps": 21,
         "showPercentage": true,
         "barColor": "#B89B7A",
@@ -73,7 +65,7 @@
       "parentId": null
     },
     {
-      "id": "step-17-question-title",
+      "id": "step-14-question-title",
       "type": "question-title",
       "order": 1,
       "properties": {
@@ -82,12 +74,12 @@
         "padding": 16
       },
       "content": {
-        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+        "text": "O que mais te desafia na hora de se vestir?"
       },
       "parentId": null
     },
     {
-      "id": "question-hero-17",
+      "id": "question-hero-14",
       "type": "question-hero",
       "order": 2,
       "properties": {
@@ -96,11 +88,11 @@
         "padding": 16
       },
       "content": {
-        "questionNumber": "Q15 - TRANSFORMAÇÃO",
-        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
-        "currentQuestion": 15,
+        "questionNumber": "Q12 - DESAFIOS",
+        "questionText": "O que mais te desafia na hora de se vestir?",
+        "currentQuestion": 12,
         "totalQuestions": 13,
-        "progressValue": 76,
+        "progressValue": 62,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
@@ -108,7 +100,7 @@
       "parentId": null
     },
     {
-      "id": "options-grid-17",
+      "id": "options-grid-14",
       "type": "options-grid",
       "order": 3,
       "properties": {
@@ -122,24 +114,24 @@
       "content": {
         "options": [
           {
-            "id": "sim-vale-muito",
-            "text": "Sim! Por esse resultado, vale muito",
-            "value": "sim-vale-muito"
+            "id": "combinar-pecas",
+            "text": "Tenho peças, mas não sei como combiná-las",
+            "value": "combinar-pecas"
           },
           {
-            "id": "sim-se-certeza",
-            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
-            "value": "sim-se-certeza"
+            "id": "comprar-impulso",
+            "text": "Compro por impulso e me arrependo depois",
+            "value": "comprar-impulso"
           },
           {
-            "id": "talvez-depende",
-            "text": "Talvez — depende do que está incluso",
-            "value": "talvez-depende"
+            "id": "imagem-nao-reflete",
+            "text": "Minha imagem não reflete quem eu sou",
+            "value": "imagem-nao-reflete"
           },
           {
-            "id": "nao-nao-pronta",
-            "text": "Não, ainda não estou pronta para investir",
-            "value": "nao-nao-pronta"
+            "id": "perco-tempo",
+            "text": "Perco tempo e acabo usando sempre os mesmos looks",
+            "value": "perco-tempo"
           }
         ],
         "columns": 2,
@@ -154,7 +146,7 @@
       "parentId": null
     },
     {
-      "id": "navigation-step-17",
+      "id": "navigation-step-14",
       "type": "question-navigation",
       "order": 4,
       "properties": {
@@ -172,5 +164,6 @@
       },
       "parentId": null
     }
-  ]
+  ],
+  "title": "Q12 - Desafios (Estratégica)"
 }

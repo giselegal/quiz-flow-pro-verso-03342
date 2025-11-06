@@ -8,17 +8,9 @@
     "questionNumber": 7,
     "totalQuestions": 13,
     "createdAt": "2025-10-13T00:32:31.723Z",
-    "updatedAt": "2025-11-05T21:31:46.106Z",
+    "updatedAt": "2025-10-13T00:32:31.723Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0",
-    "progressRecalculated": true,
-    "scoring": {
-      "weight": 1,
-      "timeLimit": 30,
-      "hasCorrectAnswer": false,
-      "speedBonusEnabled": true
-    },
-    "scoringAddedAt": "2025-11-05T21:52:52.454Z"
+    "version": "3.0.0"
   },
   "theme": {
     "colors": {
@@ -51,10 +43,10 @@
   },
   "behavior": {},
   "type": "question",
-  "redirectPath": "/quiz-estilo/step-08",
   "navigation": {
     "nextStep": "step-09"
   },
+  "redirectPath": "/quiz-estilo/step-08",
   "blocks": [
     {
       "id": "progress-bar-step-08",
@@ -202,5 +194,6 @@
       },
       "parentId": null
     }
-  ]
+  ],
+  "title": "Q7 - Conforto"
 }

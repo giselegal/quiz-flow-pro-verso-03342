@@ -1,24 +1,16 @@
 {
   "templateVersion": "3.0",
   "metadata": {
-    "id": "step-17-strategic-v3",
-    "name": "Q15 - Transformação (Estratégica)",
-    "description": "Questão estratégica 5 sobre objetivos e resultados",
-    "category": "strategic-question",
-    "questionNumber": 15,
+    "id": "step-11-question-v3",
+    "name": "Q10 - Peças-chave",
+    "description": "Questão 10 sobre preferências de estilo",
+    "category": "quiz-question",
+    "questionNumber": 10,
     "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-11-05T21:31:46.108Z",
+    "createdAt": "2025-10-13T00:32:31.725Z",
+    "updatedAt": "2025-10-13T00:32:31.725Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0",
-    "progressRecalculated": true,
-    "scoring": {
-      "weight": 3,
-      "timeLimit": 45,
-      "hasCorrectAnswer": false,
-      "speedBonusEnabled": true
-    },
-    "scoringAddedAt": "2025-11-05T21:52:52.456Z"
+    "version": "3.0.0"
   },
   "theme": {
     "colors": {
@@ -43,28 +35,28 @@
     ],
     "rules": {
       "selectedOptions": {
-        "minItems": 1,
-        "maxItems": 1,
-        "errorMessage": "Por favor, selecione uma opção"
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Por favor, selecione exatamente 3 opções"
       }
     }
   },
   "behavior": {},
-  "type": "strategic-question",
-  "redirectPath": "/quiz-estilo/step-17",
+  "type": "question",
   "navigation": {
-    "nextStep": "step-18"
+    "nextStep": "step-12"
   },
+  "redirectPath": "/quiz-estilo/step-11",
   "blocks": [
     {
-      "id": "progress-bar-step-17",
+      "id": "progress-bar-step-11",
       "type": "question-progress",
       "order": 0,
       "properties": {
         "padding": 8
       },
       "content": {
-        "stepNumber": 17,
+        "stepNumber": 11,
         "totalSteps": 21,
         "showPercentage": true,
         "barColor": "#B89B7A",
@@ -73,7 +65,7 @@
       "parentId": null
     },
     {
-      "id": "step-17-question-title",
+      "id": "step-11-question-title",
       "type": "question-title",
       "order": 1,
       "properties": {
@@ -82,12 +74,12 @@
         "padding": 16
       },
       "content": {
-        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+        "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
       },
       "parentId": null
     },
     {
-      "id": "question-hero-17",
+      "id": "question-hero-11",
       "type": "question-hero",
       "order": 2,
       "properties": {
@@ -96,11 +88,11 @@
         "padding": 16
       },
       "content": {
-        "questionNumber": "Q15 - TRANSFORMAÇÃO",
-        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
-        "currentQuestion": 15,
+        "questionNumber": "10 de 10",
+        "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+        "currentQuestion": 10,
         "totalQuestions": 13,
-        "progressValue": 76,
+        "progressValue": 52,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
@@ -108,7 +100,7 @@
       "parentId": null
     },
     {
-      "id": "options-grid-17",
+      "id": "options-grid-11",
       "type": "options-grid",
       "order": 3,
       "properties": {
@@ -122,39 +114,61 @@
       "content": {
         "options": [
           {
-            "id": "sim-vale-muito",
-            "text": "Sim! Por esse resultado, vale muito",
-            "value": "sim-vale-muito"
+            "id": "natural",
+            "text": "São fáceis de cuidar",
+            "value": "natural"
           },
           {
-            "id": "sim-se-certeza",
-            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
-            "value": "sim-se-certeza"
+            "id": "classico",
+            "text": "São de excelente qualidade",
+            "value": "classico"
           },
           {
-            "id": "talvez-depende",
-            "text": "Talvez — depende do que está incluso",
-            "value": "talvez-depende"
+            "id": "contemporaneo",
+            "text": "São fáceis de cuidar e modernos",
+            "value": "contemporaneo"
           },
           {
-            "id": "nao-nao-pronta",
-            "text": "Não, ainda não estou pronta para investir",
-            "value": "nao-nao-pronta"
+            "id": "elegante",
+            "text": "São sofisticados",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "São delicados",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "São perfeitos ao meu corpo",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "São diferentes, e trazem um efeito para minha roupa",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "São exclusivos, criam identidade no look",
+            "value": "criativo"
           }
         ],
         "columns": 2,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
         "showImages": true,
         "imageSize": 256,
         "autoAdvance": true,
-        "autoAdvanceDelay": 1500
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
       },
       "parentId": null
     },
     {
-      "id": "navigation-step-17",
+      "id": "navigation-step-11",
       "type": "question-navigation",
       "order": 4,
       "properties": {
@@ -166,11 +180,12 @@
       },
       "content": {
         "backLabel": "Voltar",
-        "nextLabel": "Continuar",
+        "nextLabel": "Avançar",
         "backVariant": "outline",
         "nextVariant": "default"
       },
       "parentId": null
     }
-  ]
+  ],
+  "title": "Q10 - Peças-chave"
 }
