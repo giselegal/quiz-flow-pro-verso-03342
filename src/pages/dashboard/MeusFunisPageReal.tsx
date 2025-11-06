@@ -145,11 +145,9 @@ const MeusFunisPageReal: React.FC = () => {
             }
 
             // Buscar funis do tipo 'draft' usando FunnelService
-            const draftFunnelsResult = await funnelService.listFunnels({
+            const draftFunnels = await funnelService.listFunnels({
                 status: 'draft',
-                limit: 100,
             });
-            const draftFunnels = draftFunnelsResult.success ? draftFunnelsResult.data : [];
 
             // Normalizar drafts do supabase e funnels em draft
             const supabaseDrafts = (draftsData || []).map((d: any) => ({
@@ -175,7 +173,7 @@ const MeusFunisPageReal: React.FC = () => {
             // Unificar por id, priorizando supabase
             const draftsById = new Map<string, any>();
             supabaseDrafts.forEach(d => draftsById.set(d.id, d));
-            memoryDrafts.forEach(d => { if (!draftsById.has(d.id)) draftsById.set(d.id, d); });
+            funnelDrafts.forEach((d: any) => { if (!draftsById.has(d.id)) draftsById.set(d.id, d); });
             const unifiedDrafts = Array.from(draftsById.values());
 
             if (funnelsError) {
@@ -454,23 +452,32 @@ const MeusFunisPageReal: React.FC = () => {
     // Criar rascunho padrão a partir da produção (21 etapas)
     const handleCreateDefaultDraft = async () => {
         try {
-            const production = await quizEditorBridge.loadFunnelForEdit('production');
-            const savedId = await quizEditorBridge.saveDraft({
-                ...production,
-                id: 'production',
+            // Buscar template de 21 etapas usando templateService
+            const templateResult = await templateService.getTemplate('quiz21StepsComplete');
+
+            if (!templateResult.success || !templateResult.data) {
+                throw new Error('Template não encontrado');
+            }
+
+            // Criar novo funnel em draft usando funnelService
+            const newFunnel = await funnelService.createFunnel({
                 name: 'Quiz Estilo Pessoal - Rascunho',
-                isPublished: false,
-            } as any);
-            toast({ title: 'Rascunho criado', description: `ID: ${savedId}` });
-            // abrir no editor para começar a editar
-            window.location.href = `/editor?funnel=${encodeURIComponent(savedId)}`;
+                type: 'quiz',
+                category: 'quiz',
+                status: 'draft',
+                config: templateResult.data,
+                metadata: { source: 'quiz21StepsComplete' },
+            });
+
+            toast({ title: 'Rascunho criado', description: `ID: ${newFunnel.id}` });
+
+            // Abrir no editor para começar a editar
+            window.location.href = `/editor?resource=${encodeURIComponent(newFunnel.id)}`;
         } catch (e: any) {
             console.error('Erro ao criar rascunho padrão:', e);
             toast({ title: 'Erro ao criar rascunho', description: String(e?.message || e), variant: 'destructive' });
         }
-    };
-
-    return (
+    }; return (
         <div className="p-6">
             {/* Header */}
             <div className="mb-8">
@@ -763,16 +770,35 @@ const MeusFunisPageReal: React.FC = () => {
                         <p className="text-sm text-gray-600 leading-relaxed">Publicar este rascunho substituirá a versão atual em produção do Quiz Estilo. Deseja continuar?</p>
                         <div className="flex justify-end gap-2 pt-2">
                             <Button variant="outline" size="sm" onClick={() => setConfirmPublishId(null)} disabled={publishingDraftId !== null}>Cancelar</Button>
-                            <Button size="sm" onClick={() => {
-                                const draftId = confirmPublishId; setPublishingDraftId(draftId);
-                                import('@/services/QuizEditorBridge').then(m => m.quizEditorBridge.publishToProduction(draftId)
-                                    .then(() => {
-                                        toast({ title: 'Publicado!', description: 'Versão enviada para produção.' });
-                                        const url = new URL(window.location.href); url.searchParams.set('published', draftId); window.history.replaceState({}, '', url.toString());
-                                        setConfirmPublishId(null); setPublishingDraftId(null); loadFunis();
-                                    })
-                                    .catch(err => { toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' }); setPublishingDraftId(null); }),
-                                );
+                            <Button size="sm" onClick={async () => {
+                                const draftId = confirmPublishId;
+                                setPublishingDraftId(draftId);
+
+                                try {
+                                    // Buscar o draft
+                                    const draftFunnel = await funnelService.getFunnel(draftId);
+
+                                    if (!draftFunnel) {
+                                        throw new Error('Draft não encontrado');
+                                    }
+
+                                    // Atualizar status para published
+                                    await funnelService.updateFunnel(draftId, {
+                                        ...draftFunnel,
+                                        status: 'published',
+                                    });
+
+                                    toast({ title: 'Publicado!', description: 'Versão enviada para produção.' });
+                                    const url = new URL(window.location.href);
+                                    url.searchParams.set('published', draftId);
+                                    window.history.replaceState({}, '', url.toString());
+                                    setConfirmPublishId(null);
+                                    setPublishingDraftId(null);
+                                    loadFunis();
+                                } catch (err: any) {
+                                    toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' });
+                                    setPublishingDraftId(null);
+                                }
                             }} disabled={publishingDraftId !== null}>
                                 {publishingDraftId ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Play className="w-4 h-4 mr-2" />}
                                 {publishingDraftId ? 'Publicando...' : 'Confirmar'}
