@@ -37,11 +37,12 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   // 🔧 Modo JSON-only: força uso de JSON dinâmico e desativa fallback TS/registry
   private get JSON_ONLY(): boolean {
     try {
+      // 1) localStorage override (mais alta prioridade em ambiente browser)
       if (typeof window !== 'undefined') {
         const ls = window.localStorage?.getItem('VITE_TEMPLATE_JSON_ONLY');
         if (ls != null) return ls === 'true';
       }
-      // Vite env
+      // 2) Vite env
       let rawVite: any;
       try {
         // @ts-ignore
@@ -49,9 +50,16 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       } catch { /* noop */ }
       if (typeof rawVite === 'string') return rawVite === 'true';
 
-      // Node/process fallback
+      // 3) Node/process fallback (scripts/tests)
       const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_JSON_ONLY : undefined);
       if (typeof rawNode === 'string') return rawNode === 'true';
+
+      // 4) Padrão em DEV: preferir JSON V3 automaticamente
+      try {
+        // @ts-ignore
+        const isDev = !!(import.meta as any)?.env?.DEV;
+        if (isDev) return true;
+      } catch { /* noop */ }
     } catch { /* noop */ }
     return false;
   }
