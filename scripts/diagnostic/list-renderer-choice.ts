@@ -1,8 +1,17 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { isSimpleBlock, getTemplatePath, getComponentPath } from '@/config/block-complexity-map';
-import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
+// IMPORTS COM PATH RELATIVO PARA FUNCIONAR EM NODE (fora do bundler Vite)
+import { isSimpleBlock, getTemplatePath, getComponentPath } from '../../src/config/block-complexity-map';
+// O UnifiedBlockRegistry depende de ambiente React/Vite para alguns lazy imports.
+// Para este script Node usamos import dinâmico e fallback leve.
+let UnifiedBlockRegistry: any;
+try {
+  UnifiedBlockRegistry = (await import('../../src/registry/UnifiedBlockRegistry')).UnifiedBlockRegistry;
+} catch {
+  console.warn('⚠️ Não foi possível carregar UnifiedBlockRegistry completamente; usando stub para SIMPLE detection.');
+  UnifiedBlockRegistry = { getInstance: () => ({ isCritical: () => false, getLazyComponent: () => null }) };
+}
 
 type Canonical = { id: string; type: string };
 
@@ -32,7 +41,7 @@ async function loadPublicStepBlocks(stepId: string): Promise<Canonical[]> {
       return (fromV3.blocks as any[]).map((b: any) => ({ id: String(b?.id ?? ''), type: String(b?.type ?? '') }));
     }
     if (Array.isArray(fromV3?.sections)) {
-      const mod = await import('@/utils/sectionToBlockConverter');
+  const mod = await import('../../src/utils/sectionToBlockConverter');
       const fn = (mod as any).convertSectionsToBlocks || (mod as any).default;
       const converted = fn ? fn(fromV3.sections) : [];
       return converted.map((b: any) => ({ id: String(b?.id ?? ''), type: String(b?.type ?? '') }));
@@ -43,7 +52,7 @@ async function loadPublicStepBlocks(stepId: string): Promise<Canonical[]> {
   const step = master?.steps?.[stepId];
   if (Array.isArray(step?.blocks)) return step.blocks.map((b: any) => ({ id: String(b?.id ?? ''), type: String(b?.type ?? '') }));
   if (Array.isArray(step?.sections)) {
-    const mod = await import('@/utils/sectionToBlockConverter');
+  const mod = await import('../../src/utils/sectionToBlockConverter');
     const fn = (mod as any).convertSectionsToBlocks || (mod as any).default;
     const converted = fn ? fn(step.sections) : [];
     return converted.map((b: any) => ({ id: String(b?.id ?? ''), type: String(b?.type ?? '') }));
@@ -76,9 +85,13 @@ async function main() {
         row.renderer = 'SIMPLE';
         row.details = { template: tpl || null, exists };
       } else {
-        const isCritical = registry.isCritical(type);
-        const lazy = registry.getLazyComponent(type) ? true : false;
-        const compPath = getComponentPath(type);
+        let isCritical = false;
+        let lazy = false;
+        let compPath = getComponentPath(type);
+        try {
+          isCritical = !!registry.isCritical(type);
+          lazy = !!registry.getLazyComponent(type);
+        } catch { /* noop */ }
         row.renderer = 'COMPLEX';
         row.details = { critical: isCritical, lazy, componentPath: compPath || null };
       }
