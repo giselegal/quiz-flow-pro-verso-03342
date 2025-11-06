@@ -170,6 +170,23 @@ export function initializeSchemaRegistry(): void {
   registerSchema('transition-hero', () => 
     import('./blocks/transition-blocks').then(m => m.transitionHeroSchema),
   );
+  
+  // ✅ SPRINT 2 Fase 3: Schemas de transição faltantes adicionados
+  registerSchema('transition-title', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionTitleSchema),
+  );
+  registerSchema('transition-text', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionTextSchema),
+  );
+  registerSchema('transition-loader', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionLoaderSchema),
+  );
+  registerSchema('transition-progress', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionProgressSchema),
+  );
+  registerSchema('transition-message', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionMessageSchema),
+  );
 
   // NEW: Offer blocks
   registerSchema('offer-hero', () => 

@@ -7,7 +7,7 @@ Estes problemas **NÃO FORAM CAUSADOS** pelos novos componentes (LazyBlockRender
 
 ## 📋 PROBLEMAS IDENTIFICADOS
 
-### 1. ⚠️ SchemaRegistry Incompleto (Prioridade: MÉDIA)
+### 1. ✅ SchemaRegistry Incompleto (Prioridade: MÉDIA) - RESOLVIDO
 
 **Sintoma:**
 ```
@@ -19,26 +19,26 @@ Estes problemas **NÃO FORAM CAUSADOS** pelos novos componentes (LazyBlockRender
 ```
 
 **Causa:**
-Schemas de blocos de transição não estão registrados em `src/config/schemas/dynamic.ts`
+Schemas de blocos de transição não estavam registrados em `src/config/schemas/dynamic.ts`
 
 **Impacto:**
 - Properties Panel pode não exibir controles para estes blocos
 - Usuário não consegue editar propriedades destes elementos via UI
 - Funcionalidade de renderização não é afetada (blocos ainda renderizam)
 
-**Solução Proposta:**
-Adicionar schemas faltantes em `src/config/schemas/dynamic.ts`:
-```typescript
-export const transitionSchemas = {
-  'transition-title': { /* schema */ },
-  'transition-text': { /* schema */ },
-  'transition-loader': { /* schema */ },
-  'transition-progress': { /* schema */ },
-  'transition-message': { /* schema */ }
-};
-```
+**Solução Implementada:**
+✅ Adicionados 5 schemas em `src/config/schemas/blocks/transition-blocks.ts`:
+- `transitionTitleSchema` - Título de transição (title + typography + colors)
+- `transitionTextSchema` - Texto de transição (description + typography + colors)
+- `transitionLoaderSchema` - Loading de transição (show + type + text + colors)
+- `transitionProgressSchema` - Progresso de transição (show + value + text + colors)
+- `transitionMessageSchema` - Mensagem de transição (message + type + typography + colors)
 
-**Status:** 🔴 Pendente
+✅ Registrados em `src/config/schemas/dynamic.ts` com lazy loading
+
+**Documentação:** `docs/SPRINT_2_SCHEMA_REGISTRY_FIX.md`
+
+**Status:** ✅ Resolvido (2025-11-06)
 
 ---
 
@@ -109,27 +109,27 @@ import { funnelService } from '@/services/canonical/FunnelService';
 
 ## 📊 PRIORIZAÇÃO
 
-| Problema | Prioridade | Bloqueante Fase 3? | Esforço |
-|----------|-----------|-------------------|---------|
-| SchemaRegistry Incompleto | MÉDIA | ❌ Não | 🟢 Baixo (30min) |
-| Charts Vendor Error | ALTA | ❓ Precisa investigar | 🔴 Alto (2-4h) |
-| Deprecated Services | BAIXA | ❌ Não | 🟡 Médio (1-2h) |
+| Problema | Prioridade | Bloqueante Fase 3? | Esforço | Status |
+|----------|-----------|-------------------|---------|--------|
+| SchemaRegistry Incompleto | MÉDIA | ❌ Não | 🟢 Baixo (30min) | ✅ Resolvido |
+| Charts Vendor Error | ALTA | ❓ Precisa investigar | 🔴 Alto (2-4h) | 🔴 Pendente |
+| Deprecated Services | BAIXA | ❌ Não | 🟡 Médio (1-2h) | 🔴 Pendente |
 
 ---
 
 ## 🎯 RECOMENDAÇÃO
 
 **Para SPRINT 2 Fase 3:**
-1. ✅ Prosseguir com integração do LazyBlockRenderer
-2. ✅ Documentar problemas (este arquivo)
-3. 🔄 Resolver SchemaRegistry durante ou após Fase 3 (quick win)
+1. ✅ ~~Prosseguir com integração do LazyBlockRenderer~~ - COMPLETO
+2. ✅ ~~Documentar problemas (este arquivo)~~ - COMPLETO
+3. ✅ ~~Resolver SchemaRegistry durante ou após Fase 3 (quick win)~~ - COMPLETO
 4. 📋 Marcar Charts Vendor Error para investigação dedicada posterior
+5. 📋 Marcar Deprecated Services para refactor futuro
 
 **Justificativa:**
-- Nenhum problema é causado por SPRINT 2 Fase 2
-- LazyBlockRenderer e EditorLoadingContext estão isolados e testados
-- Problemas pré-existentes não bloqueiam integração
-- Resolver tudo agora atrasaria sprint sem ganho real
+- SchemaRegistry resolvido (10min) ✅
+- Charts Vendor Error e Deprecated Services não bloqueiam desenvolvimento
+- Problemas restantes documentados para posterior investigação
 
 ---
 
@@ -140,6 +140,7 @@ import { funnelService } from '@/services/canonical/FunnelService';
 | 2025-11-06 | Problemas identificados após SPRINT 2 Fase 2 conclusão |
 | 2025-11-06 | Documento criado para tracking |
 | 2025-11-06 | Decisão: Opção A (documentar e prosseguir) |
+| 2025-11-06 | ✅ SchemaRegistry resolvido - 5 schemas adicionados |
 
 ---
 
