@@ -11,7 +11,8 @@
 
 import React, { useState } from 'react';
 import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
-import { getBlockComponent } from '@/editor/registry/BlockRegistry';
+// Unificar renderização com o runtime: usar o UniversalBlockRenderer (registry híbrido)
+import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
 
@@ -118,30 +119,6 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
             {/* Blocks Container */}
             <div className="p-4 space-y-2">
                 {blocks.map((block, index) => {
-                    // Obter componente do registry
-                    const BlockComponent = getBlockComponent(block.type);
-
-                    if (!BlockComponent) {
-                        return (
-                            <div
-                                key={block.id}
-                                className="p-4 border-2 border-dashed border-red-300 bg-red-50 rounded-lg"
-                            >
-                                <div className="flex items-center gap-2 text-red-600">
-                                    <AlertCircle className="w-4 h-4" />
-                                    <div>
-                                        <p className="text-sm font-medium">
-                                            Componente não encontrado: {block.type}
-                                        </p>
-                                        <p className="text-xs mt-1">
-                                            ID: {block.id}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    }
-
                     const isSelected = selectedBlockId === block.id;
                     const isDragOver = dragOverIndex === index;
 
@@ -185,13 +162,18 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                 </div>
                             )}
 
-                            {/* Block Component */}
-                            <BlockComponent
-                                data={block}
+                            {/* Block Component (Unified Runtime) */}
+                            <UniversalBlockRenderer
+                                block={{
+                                    id: block.id,
+                                    type: block.type,
+                                    properties: block.properties || {},
+                                    content: block.content || {},
+                                    order: block.order,
+                                } as any}
                                 isSelected={isSelected}
-                                isEditable={isEditable}
-                                onSelect={() => onSelectBlock(block.id)}
-                                onUpdate={() => { }} // Atualização via painel de propriedades
+                                isPreviewing={true}
+                                onSelect={onSelectBlock}
                             />
 
                             {/* Order Indicator */}
