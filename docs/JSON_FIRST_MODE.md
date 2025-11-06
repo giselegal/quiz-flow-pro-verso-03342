@@ -31,14 +31,15 @@ Recarregue a página após alterar.
 
 ## Estrutura dos JSONs de steps
 
-Crie um arquivo por step em:
+O loader suporta múltiplos caminhos, nesta ordem:
 
-```
-public/templates/quiz21-steps/step-XX.json
-```
+1. `public/templates/quiz21-steps/step-XX.json`
+2. `public/templates/step-XX-v3.json`
+3. `public/templates/step-XX-template.json`
+4. `public/templates/quiz21-complete.json` (extraindo `steps["step-XX"].blocks`)
 
-- `XX` é a chave do step (ex.: `intro`, `q1`, `result`, etc.).
-- Formatos aceitos:
+- `XX` é o número do step com zero à esquerda (01..21).
+- Formatos aceitos por arquivo de step:
   - Somente array de blocos: `[{...}, {...}]`
   - Objeto com `blocks`: `{ "blocks": [{...}] }`
 

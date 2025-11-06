@@ -177,9 +177,13 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   }
 
   /**
-   * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico → Registry)
-   * Primeiro tenta JSON em public/templates/quiz21-steps/<stepId>.json
-   * Se não existir, usa UnifiedTemplateRegistry (compatibilidade)
+  * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico → Registry)
+  * Tenta, em ordem:
+  *  - /public/templates/quiz21-steps/<stepId>.json
+  *  - /public/templates/<stepId>-v3.json
+  *  - /public/templates/<stepId>-template.json
+  *  - /public/templates/quiz21-complete.json (extraindo steps[stepId])
+  * Se nada existir e NÃO estiver em JSON-only, usa UnifiedTemplateRegistry (compatibilidade)
    */
   private async getFromTemplateDefault(stepId: string): Promise<Block[] | null> {
     // 3.1 JSON dinâmico
