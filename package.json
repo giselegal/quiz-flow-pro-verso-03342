@@ -138,7 +138,8 @@
     "blocks:sync-master": "node scripts/sync-master-to-per-step.js",
     "blocks:validate": "node scripts/validate-per-step-blocks.js",
     "sanity:runtime": "tsx scripts/sanity/runtime-load.ts",
-    "export:html": "tsx scripts/export/html-from-blocks.ts"
+    "export:html": "tsx scripts/export/html-from-blocks.ts",
+    "diagnostic:blocks": "tsx scripts/diagnostic/blocks-audit.ts"
   },
   "lintCoverage": {
     "blocks": "node scripts/dev/check-block-coverage.mjs"
