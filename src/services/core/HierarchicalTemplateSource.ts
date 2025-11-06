@@ -34,6 +34,31 @@ interface CacheEntry {
 export class HierarchicalTemplateSource implements TemplateDataSource {
   private cache = new Map<string, CacheEntry>();
   private options: Required<DataSourceOptions>;
+  // 🔧 Em DEV, desabilita fontes online (Supabase) por padrão para evitar 404s no console
+  private get ONLINE_DISABLED(): boolean {
+    try {
+      // 1) localStorage override (browser)
+      if (typeof window !== 'undefined') {
+        const enable = window.localStorage?.getItem('VITE_ENABLE_REMOTE_TEMPLATES');
+        if (enable != null) return enable !== 'true';
+      }
+      // 2) Vite env
+      let rawVite: any;
+      try {
+        // @ts-ignore
+        rawVite = (import.meta as any)?.env?.VITE_ENABLE_REMOTE_TEMPLATES;
+      } catch { /* noop */ }
+      if (typeof rawVite === 'string') return rawVite !== 'true';
+
+      // 3) Ambiente: em DEV → desabilitar; em PROD → habilitar
+      try {
+        // @ts-ignore
+        const isDev = !!(import.meta as any)?.env?.DEV;
+        return !!isDev;
+      } catch { /* noop */ }
+    } catch { /* noop */ }
+    return false;
+  }
   // 🔧 Modo JSON-only: força uso de JSON dinâmico e desativa fallback TS/registry
   private get JSON_ONLY(): boolean {
     try {
@@ -143,6 +168,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    * 1️⃣ PRIORIDADE MÁXIMA: User Edit (Supabase funnels.config)
    */
   private async getFromUserEdit(stepId: string, funnelId?: string): Promise<Block[] | null> {
+    // Em DEV (ou quando flag desativa), não consultar Supabase
+    if (this.ONLINE_DISABLED) return null;
     if (!funnelId) return null;
 
     try {
@@ -168,6 +195,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    * 2️⃣ PRIORIDADE ALTA: Admin Override (Supabase template_overrides)
    */
   private async getFromAdminOverride(stepId: string): Promise<Block[] | null> {
+    // Em DEV (ou quando flag desativa), não consultar Supabase
+    if (this.ONLINE_DISABLED) return null;
     try {
       // Evita 404 do PostgREST usando limit(1) em vez de single()
       const { data, error } = await (supabase as any)
@@ -320,6 +349,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    * Verificar se existe user edit
    */
   private async hasUserEdit(stepId: string, funnelId: string): Promise<boolean> {
+    if (this.ONLINE_DISABLED) return false;
     try {
       const { data } = await supabase
         .from('funnels')
@@ -338,6 +368,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    * Verificar se existe admin override
    */
   private async hasAdminOverride(stepId: string): Promise<boolean> {
+    if (this.ONLINE_DISABLED) return false;
     try {
       // Evita 404 do PostgREST usando limit(1) em vez de single()
       const { data } = await (supabase as any)
