@@ -85,12 +85,12 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'heading-inline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
   'headline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
   'headline-inline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
-  
+
   // 🆕 QUIZ SCORE/PONTUAÇÃO (Sistema de Scoring v2.0)
   'quiz-score-display': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
   'quiz-score-header': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
   'score-display': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
-  
+
   // Intro blocks - Step 1 (7 blocos)
   'intro-logo': () => import('@/components/editor/blocks/atomic/IntroLogoBlock'),
   'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
@@ -99,14 +99,14 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'intro-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
   'intro-form': () => import('@/components/editor/blocks/atomic/IntroFormBlock'),
   'quiz-intro': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'), // Alias
-  
+
   // Decorative/UI (3 blocos)
   'quiz-intro-header': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'),
   'decorative-bar': () => import('@/components/editor/blocks/DecorativeBarInlineBlock'),
   'decorative-bar-inline': () => import('@/components/editor/blocks/DecorativeBarInlineBlock'),
   'legal-notice': () => import('@/components/editor/blocks/LegalNoticeInlineBlock'),
   'legal-notice-inline': () => import('@/components/editor/blocks/LegalNoticeInlineBlock'),
-  
+
   // Transition blocks - Steps 12, 19 (6 blocos)
   'quiz-transition-loader': () => import('@/components/editor/blocks/QuizTransitionLoaderBlock'),
   'transition-title': () => import('@/components/editor/blocks/atomic/TransitionTitleBlock'),
@@ -239,6 +239,8 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   // Offer Components (Step 21)
   'urgency-timer-inline': () => import('@/components/editor/blocks/UrgencyTimerInlineBlock'),
   'offer-pricing': () => import('@/components/editor/blocks/PricingInlineBlock'),
+  'offer-pricing-table': () => import('@/components/editor/blocks/PricingInlineBlock'),
+  'pricing-table': () => import('@/components/editor/blocks/PricingInlineBlock'),
   'before-after-inline': () => import('@/components/editor/blocks/BeforeAfterInlineBlock'),
   'bonus': () => import('@/components/editor/blocks/BonusBlock'),
   'bonus-inline': () => import('@/components/editor/blocks/BonusInlineBlock'),
@@ -261,7 +263,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'benefits': () => import('@/components/editor/blocks/BenefitsListBlock'),
   'benefits-list': () => import('@/components/editor/blocks/BenefitsListBlock'),
   'guarantee': () => import('@/components/editor/blocks/GuaranteeBlock'),
-  
+
   // Accessibility
   'accessibility-skip-link': () => import('@/components/editor/blocks/AccessibilitySkipLinkBlock'),
 };
@@ -272,18 +274,18 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
 
 export class UnifiedBlockRegistry {
   private static instance: UnifiedBlockRegistry;
-  
+
   // Core registries
   private registry: Map<string, React.ComponentType<any>>;
   private lazyRegistry: Map<string, () => Promise<{ default: React.ComponentType<any> }>>;
-  
+
   // Cache system
   private cache: Map<string, CacheEntry>;
   private readonly CACHE_TTL = 30 * 60 * 1000; // 30 minutos
-  
+
   // Performance tracking
   private metrics: Map<string, PerformanceMetrics>;
-  
+
   // Critical components (pre-loaded)
   private criticalComponents = new Set<string>();
 
@@ -292,10 +294,10 @@ export class UnifiedBlockRegistry {
     this.lazyRegistry = new Map();
     this.cache = new Map();
     this.metrics = new Map();
-    
+
     this.initializeCriticalComponents();
     this.initializeLazyComponents();
-    
+
     appLogger.info('✅ UnifiedBlockRegistry initialized', {
       critical: this.criticalComponents.size,
       lazy: this.lazyRegistry.size,
@@ -324,13 +326,13 @@ export class UnifiedBlockRegistry {
       'button-inline': ButtonInlineBlock,
       'image': ImageInlineBlock,
       'image-inline': ImageInlineBlock,
-      
+
       // Quiz Core (não funciona sem eles)
       'form-input': FormInputBlock,
       'options-grid': OptionsGridBlock,
       'quiz-options': OptionsGridBlock,
       'quiz-options-inline': OptionsGridBlock,
-      
+
       // Aliases para compatibilidade
       'cta-inline': ButtonInlineBlock,
       'quiz-form': FormInputBlock,
@@ -343,7 +345,7 @@ export class UnifiedBlockRegistry {
     Object.entries(criticalBlocks).forEach(([type, component]) => {
       this.registry.set(type, component);
       this.criticalComponents.add(type);
-      
+
       // Pre-warm cache
       this.cache.set(type, {
         component,
@@ -371,7 +373,7 @@ export class UnifiedBlockRegistry {
     // 0. Check if it's a simple block (JSON-driven) 
     if (isSimpleBlock(type)) {
       appLogger.info(`[UnifiedBlockRegistry] Using JSON renderer for: ${type}`);
-      return ((props: any) => 
+      return ((props: any) =>
         React.createElement(JSONTemplateRenderer, { type, ...props })
       ) as React.ComponentType<any>;
     }
@@ -392,27 +394,27 @@ export class UnifiedBlockRegistry {
     // 3. Check lazy registry (return lazy component wrapper)
     if (this.lazyRegistry.has(type)) {
       appLogger.info(`[UnifiedBlockRegistry] 🔄 Loading lazy component: ${type}`);
-      
+
       // Create a wrapper that logs when the component loads
       const loader = this.lazyRegistry.get(type)!;
       const wrappedLoader = async () => {
         try {
           const module = await loader();
           appLogger.info(`[UnifiedBlockRegistry] ✅ Lazy component loaded: ${type}`, module);
-          
+
           // Ensure we have a default export
           if (!module || !module.default) {
             appLogger.error(`[UnifiedBlockRegistry] ❌ No default export for: ${type}`, module);
             throw new Error(`No default export for ${type}`);
           }
-          
+
           return module;
         } catch (error) {
           appLogger.error(`[UnifiedBlockRegistry] ❌ Failed to load lazy component: ${type}`, error);
           throw error;
         }
       };
-      
+
       const lazyComponent = lazy(wrappedLoader);
       this.updateCache(type, lazyComponent);
       return lazyComponent;
@@ -456,10 +458,10 @@ export class UnifiedBlockRegistry {
         const loader = this.lazyRegistry.get(type)!;
         const module = await loader();
         const component = module.default;
-        
+
         this.updateCache(type, component);
         this.recordMetric(type, performance.now() - startTime, false, false);
-        
+
         return component;
       }
 
@@ -475,7 +477,7 @@ export class UnifiedBlockRegistry {
     } catch (error) {
       this.recordMetric(type, performance.now() - startTime, true, false);
       appLogger.error(`[UnifiedBlockRegistry] Failed to load "${type}":`, error);
-      
+
       // Return fallback on error
       return this.getFallbackComponent(type) || TextInlineBlock;
     }
@@ -538,7 +540,7 @@ export class UnifiedBlockRegistry {
     this.registry.set(definition.id, definition.component);
     this.criticalComponents.add(definition.id);
     this.updateCache(definition.id, definition.component);
-    
+
     appLogger.info(`[UnifiedBlockRegistry] ✅ Registered CRITICAL: ${definition.id}`, {
       displayName: definition.displayName,
       category: definition.category,
@@ -575,7 +577,7 @@ export class UnifiedBlockRegistry {
    * Register lazy component
    */
   registerLazy(
-    type: BlockType, 
+    type: BlockType,
     loader: () => Promise<{ default: React.ComponentType<any> }>,
   ): void {
     this.lazyRegistry.set(type, loader);
@@ -659,7 +661,7 @@ export class UnifiedBlockRegistry {
     // Fallback by prefix
     const prefix = type.split('-')[0];
     const suffixFallback = `${prefix}-*`;
-    
+
     if (this.registry.has(suffixFallback)) {
       return this.registry.get(suffixFallback)!;
     }
@@ -690,8 +692,8 @@ export class UnifiedBlockRegistry {
   // ==========================================================================
 
   private recordMetric(
-    type: BlockType, 
-    loadTime: number, 
+    type: BlockType,
+    loadTime: number,
     isError: boolean,
     isCacheHit: boolean,
   ): void {
@@ -704,11 +706,11 @@ export class UnifiedBlockRegistry {
 
     existing.loads += 1;
     existing.avgLoadTime = (existing.avgLoadTime * (existing.loads - 1) + loadTime) / existing.loads;
-    
+
     if (isError) {
       existing.errors += 1;
     }
-    
+
     if (isCacheHit) {
       existing.cacheHits += 1;
     }
@@ -773,7 +775,7 @@ export class UnifiedBlockRegistry {
    */
   debug(): void {
     const stats = this.getStats();
-    
+
     console.group('🎯 UnifiedBlockRegistry Stats');
     console.table({
       'Total Types': stats.registry.totalTypes,
@@ -784,13 +786,13 @@ export class UnifiedBlockRegistry {
       'Cache Hit Rate': `${stats.performance.cacheHitRate}%`,
       'Error Rate': `${stats.performance.errorRate}%`,
     });
-    
+
     if (stats.topComponents.length > 0) {
       console.group('Top 10 Components');
       console.table(stats.topComponents);
       console.groupEnd();
     }
-    
+
     console.groupEnd();
   }
 }
@@ -807,7 +809,7 @@ export const getBlockComponentAsync = (type: BlockType) => blockRegistry.getComp
 export const hasBlockComponent = (type: BlockType) => blockRegistry.has(type);
 export const prefetchBlock = (type: BlockType) => blockRegistry.prefetch(type);
 export const prefetchBlocks = (types: BlockType[]) => blockRegistry.prefetchBatch(types);
-export const registerBlock = (type: BlockType, component: React.ComponentType<any>, isCritical = false) => 
+export const registerBlock = (type: BlockType, component: React.ComponentType<any>, isCritical = false) =>
   blockRegistry.register(type, component, isCritical);
 export const registerLazyBlock = (type: BlockType, loader: () => Promise<{ default: React.ComponentType<any> }>) =>
   blockRegistry.registerLazy(type, loader);
