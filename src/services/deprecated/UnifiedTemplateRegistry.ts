@@ -14,7 +14,7 @@ import type { Block } from '@/types/editor';
 
 // Expor utilitário de cache no console (dev only)
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  import('@/utils/clearRegistryCache').catch(() => {/* ignore */});
+  import('@/utils/clearRegistryCache').catch(() => {/* ignore */ });
 }
 
 interface TemplateDBSchema extends DBSchema {
@@ -47,17 +47,17 @@ interface CacheStats {
 
 export class UnifiedTemplateRegistry {
   private static instance: UnifiedTemplateRegistry;
-  
+
   // L1: Memory Cache (Map) - mais rápido
   private l1Cache = new Map<string, Block[]>();
-  
+
   // L2: IndexedDB - persistente
   private l2Cache: IDBPDatabase<TemplateDBSchema> | null = null;
   private l2InitPromise: Promise<void> | null = null;
-  
+
   // L3: Build-time embedded templates (carregado lazy)
   private l3Embedded: Record<string, Block[]> | null = null;
-  
+
   // Métricas
   private stats = {
     l1Hits: 0,
@@ -66,7 +66,7 @@ export class UnifiedTemplateRegistry {
     misses: 0,
     loads: 0,
   };
-  
+
   // Flags de depuração/controladas por query params
   private debugFlags = {
     disableL1: false,
@@ -74,7 +74,7 @@ export class UnifiedTemplateRegistry {
     disableL3: false,
     forceServer: false,
   } as const;
-  
+
   // Bump na versão para invalidar L1/L2 quando alteramos estratégia de carregamento
   // 🔄 ATUALIZADO: v1.0.2 - Adicionado sistema de aliases e normalização de tipos
   private readonly CACHE_VERSION = '1.0.2';
@@ -147,7 +147,7 @@ export class UnifiedTemplateRegistry {
    */
   private async initializeL2(): Promise<void> {
     if (this.l2InitPromise) return this.l2InitPromise;
-    
+
     this.l2InitPromise = (async () => {
       try {
         this.l2Cache = await openDB<TemplateDBSchema>(this.DB_NAME, this.DB_VERSION, {
@@ -162,9 +162,9 @@ export class UnifiedTemplateRegistry {
             }
           },
         });
-        
+
         console.log('✅ L2 Cache (IndexedDB) inicializado');
-        
+
         // Verificar versão do cache
         const version = await this.getMetadata('cache-version');
         if (version !== this.CACHE_VERSION) {
@@ -177,45 +177,45 @@ export class UnifiedTemplateRegistry {
         this.l2Cache = null;
       }
     })();
-    
+
     return this.l2InitPromise;
   }
 
-   /**
-    * Carregar step SIMPLIFICADO - L1 cache + 1 fetch consolidado
-    */
-   async getStep(stepId: string, templateId?: string): Promise<Block[]> {
-     const cacheKey = stepId;
-     console.time(`[Registry] getStep(${stepId})`);
-     this.stats.loads++;
-     
-     // L1: Memory Cache
-     const l1Result = this.l1Cache.get(stepId);
-     if (l1Result) {
-       this.stats.l1Hits++;
-       console.log(`⚡ L1 HIT: ${stepId} (${l1Result.length} blocos)`);
-       console.timeEnd(`[Registry] getStep(${stepId})`);
-       return l1Result;
-     }
-     
-     // MISS: Carregar do servidor (1 tentativa apenas)
-     this.stats.misses++;
-     console.warn(`❌ MISS: ${stepId} - carregando do servidor...`);
-     const serverResult = await this.loadFromServerSimplified(stepId, templateId);
-     
-      if (serverResult) {
-        // ✅ NORMALIZAR: aliases + properties/content sync
-        const withAliases = normalizeBlockTypes(serverResult);
-        const normalized = normalizeBlocks(withAliases);
-        this.l1Cache.set(stepId, normalized);
-        console.log(`✅ Carregado e normalizado: ${stepId} (${normalized.length} blocos)`);
-        console.timeEnd(`[Registry] getStep(${stepId})`);
-        return normalized;
-      }
-     
-     console.timeEnd(`[Registry] getStep(${stepId})`);
-     return [];
-   }
+  /**
+   * Carregar step SIMPLIFICADO - L1 cache + 1 fetch consolidado
+   */
+  async getStep(stepId: string, templateId?: string): Promise<Block[]> {
+    const cacheKey = stepId;
+    console.time(`[Registry] getStep(${stepId})`);
+    this.stats.loads++;
+
+    // L1: Memory Cache
+    const l1Result = this.l1Cache.get(stepId);
+    if (l1Result) {
+      this.stats.l1Hits++;
+      console.log(`⚡ L1 HIT: ${stepId} (${l1Result.length} blocos)`);
+      console.timeEnd(`[Registry] getStep(${stepId})`);
+      return l1Result;
+    }
+
+    // MISS: Carregar do servidor (1 tentativa apenas)
+    this.stats.misses++;
+    console.warn(`❌ MISS: ${stepId} - carregando do servidor...`);
+    const serverResult = await this.loadFromServerSimplified(stepId, templateId);
+
+    if (serverResult) {
+      // ✅ NORMALIZAR: aliases + properties/content sync
+      const withAliases = normalizeBlockTypes(serverResult);
+      const normalized = normalizeBlocks(withAliases);
+      this.l1Cache.set(stepId, normalized);
+      console.log(`✅ Carregado e normalizado: ${stepId} (${normalized.length} blocos)`);
+      console.timeEnd(`[Registry] getStep(${stepId})`);
+      return normalized;
+    }
+
+    console.timeEnd(`[Registry] getStep(${stepId})`);
+    return [];
+  }
 
   /**
    * Carregar do L3 (build-time embedded)
@@ -224,7 +224,7 @@ export class UnifiedTemplateRegistry {
     if (!this.l3Embedded) {
       try {
         // Lazy load do módulo embedded (gerado em build time)
-  const module = await import('@templates/embedded');
+        const module = await import('@templates/embedded');
         // Usar named export para evitar problemas de inicialização circular
         const embeddedData = module.embedded || module.default || {};
         // Normalizar blocks: position → order se necessário
@@ -246,32 +246,50 @@ export class UnifiedTemplateRegistry {
         this.l3Embedded = {};
       }
     }
-    
+
     return this.l3Embedded?.[stepId] || null;
   }
 
   /**
    * Carregar do servidor - OPÇÃO A: Direto dos JSONs locais
+   * Usa import.meta.glob para compatibilidade com Vite
    */
   private async loadFromServerSimplified(stepId: string, templateId?: string): Promise<Block[] | null> {
     try {
       console.log(`🌐 Carregando ${stepId} diretamente dos templates JSON locais`);
-      
+
       // Extrair número do step
       const stepNumber = stepId.match(/\d+/)?.[0];
       if (!stepNumber) {
         console.error(`❌ Step ID inválido: ${stepId}`);
         return null;
       }
-      
-      // Import dinâmico do JSON local de src/config/templates/
-      const stepTemplate = await import(`@/config/templates/step-${stepNumber.padStart(2, '0')}.json`);
-      
+
+      // ✅ CORREÇÃO: Usar import.meta.glob para Vite
+      // Vite requer que imports dinâmicos sejam pré-escaneados em build time
+      const templates = import.meta.glob('@/config/templates/step-*.json') as Record<string, () => Promise<any>>;
+
+      const stepKey = `/src/config/templates/step-${stepNumber.padStart(2, '0')}.json`;
+      const loader = templates[stepKey];
+
+      if (!loader) {
+        console.error(`❌ Template não encontrado: ${stepKey}`);
+        console.log('📂 Templates disponíveis:', Object.keys(templates));
+        return null;
+      }
+
+      const stepTemplate = await loader();
+
       if (stepTemplate.default?.blocks && Array.isArray(stepTemplate.default.blocks)) {
         console.log(`✅ Step ${stepId} carregado com ${stepTemplate.default.blocks.length} blocos`);
         return stepTemplate.default.blocks as Block[];
       }
-      
+
+      if (stepTemplate.blocks && Array.isArray(stepTemplate.blocks)) {
+        console.log(`✅ Step ${stepId} carregado com ${stepTemplate.blocks.length} blocos`);
+        return stepTemplate.blocks as Block[];
+      }
+
       console.error(`❌ Step ${stepId} não tem blocks válidos`);
       return null;
     } catch (error) {
@@ -308,7 +326,7 @@ export class UnifiedTemplateRegistry {
       'cta': 'button',
       'call-to-action': 'button',
     };
-    
+
     return typeMap[type] || type;
   }
 
@@ -317,7 +335,7 @@ export class UnifiedTemplateRegistry {
    */
   private async saveToL2(stepId: string, blocks: Block[]): Promise<void> {
     if (!this.l2Cache) return;
-    
+
     try {
       await this.l2Cache.put('templates', {
         stepId: stepId,
@@ -343,7 +361,7 @@ export class UnifiedTemplateRegistry {
    */
   async invalidate(stepId: string): Promise<void> {
     this.l1Cache.delete(stepId);
-    
+
     if (this.l2Cache) {
       try {
         await this.l2Cache.delete('templates', stepId);
@@ -367,7 +385,7 @@ export class UnifiedTemplateRegistry {
    */
   async clearL2(): Promise<void> {
     if (!this.l2Cache) return;
-    
+
     try {
       await this.l2Cache.clear('templates');
       console.log('🗑️ L2 Cache limpo');
@@ -399,7 +417,7 @@ export class UnifiedTemplateRegistry {
   async getStats(): Promise<CacheStats> {
     const totalRequests = this.stats.loads;
     const totalHits = this.stats.l1Hits + this.stats.l2Hits + this.stats.l3Hits;
-    
+
     let l2Size = 0;
     if (this.l2Cache) {
       try {
@@ -409,9 +427,9 @@ export class UnifiedTemplateRegistry {
         l2Size = 0;
       }
     }
-    
+
     const memoryUsage = this.estimateMemoryUsage();
-    
+
     return {
       l1Size: this.l1Cache.size,
       l2Size,
@@ -438,7 +456,7 @@ export class UnifiedTemplateRegistry {
    */
   private async getMetadata(key: string): Promise<any> {
     if (!this.l2Cache) return null;
-    
+
     try {
       const entry = await this.l2Cache.get('metadata', key);
       return entry?.value || null;
@@ -449,7 +467,7 @@ export class UnifiedTemplateRegistry {
 
   private async setMetadata(key: string, value: any): Promise<void> {
     if (!this.l2Cache) return;
-    
+
     try {
       await this.l2Cache.put('metadata', { key, value });
     } catch (error) {
