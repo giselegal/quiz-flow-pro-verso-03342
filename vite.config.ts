@@ -9,6 +9,7 @@ import { loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   const isStaging = mode === 'staging';
+  const isProd = mode === 'production';
   const preferredPort = Number(env.VITE_PORT || process.env.VITE_PORT || 8080);
 
   return {
@@ -83,7 +84,24 @@ export default defineConfig(({ mode }) => {
       cssMinify: 'lightningcss',
       cssCodeSplit: true,
       // 🎯 FASE 3 TASK 7: Otimizações de bundle
-      minify: 'esbuild', // esbuild é mais rápido que terser
+      // ⚠️ Mitigação: alguns vendors (ex.: recharts) podem quebrar com esbuild minify
+      // Use terser em produção para evitar "Cannot access 'X' before initialization"
+      minify: isProd ? 'terser' : 'esbuild',
+      terserOptions: isProd ? ({
+        compress: {
+          // Ser conservador com reordenação/inlining para evitar TDZ em vendors
+          inline: 1,
+          reduce_funcs: false,
+          reduce_vars: false,
+          passes: 1,
+        },
+        mangle: {
+          keep_fnames: true,
+        },
+        format: {
+          comments: false,
+        },
+      } as any) : undefined,
       target: 'es2020',
       // 🧹 FASE 1: Remove console.* in production builds
       drop: mode === 'production' ? ['console', 'debugger'] : [],
@@ -156,6 +174,8 @@ export default defineConfig(({ mode }) => {
       exclude: [
         // Excluir módulos que causam problemas de bundling
         '@supabase/functions-js',
+        // Evita pré-bundle do recharts pelo esbuild (fonte comum do erro TDZ)
+        'recharts',
       ],
       esbuildOptions: {
         target: 'es2020',
