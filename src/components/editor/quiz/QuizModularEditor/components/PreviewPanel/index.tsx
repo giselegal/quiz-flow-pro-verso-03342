@@ -29,15 +29,15 @@ export default function PreviewPanel({
     onToggleVisibility,
     className = '',
 }: PreviewPanelProps) {
-    // Quando não recebemos blocos por props, buscamos via React Query
+    // Sempre buscar via React Query (alinha com JSON-first e fonte canônica)
     const { data: fetchedBlocks, isLoading, error } = useStepBlocksQuery({
         stepId: currentStepKey,
-        enabled: !blocks && !!currentStepKey,
+        enabled: !!currentStepKey,
         // Preview pode tolerar cache curto
         staleTimeMs: 15_000,
     });
 
-    const blocksToUse: Block[] | null = (blocks ?? fetchedBlocks) ?? null;
+    const blocksToUse: Block[] | null = (fetchedBlocks ?? blocks) ?? null;
 
     // Converter blocos do editor para formato de preview
     const quizContent = useMemo(() => {
@@ -74,7 +74,7 @@ export default function PreviewPanel({
         );
     }
 
-    if (!blocks && isLoading) {
+    if (isLoading && !blocksToUse) {
         return (
             <div className={`flex items-center justify-center h-full text-gray-500 bg-muted/20 ${className}`}>
                 <div className="text-center">
