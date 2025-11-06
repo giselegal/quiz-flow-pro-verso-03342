@@ -8,7 +8,7 @@ import { getPreloadSteps, getChunkForStep, PERFORMANCE_TARGETS } from './ChunkOp
 // V3.0 Template Support
 import V3Renderer from '@/components/core/V3Renderer';
 import type { TemplateV3, UserData } from '@/types/template-v3.types';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 /**
  * 🎯 UNIFIED STEP RENDERER - FASE 3
@@ -136,7 +136,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
 
         // 🆕 FASE 5.1: PRIORIDADE 1 - Tentar carregar JSON Template
         const jsonDrivenEnabled = (import.meta as any)?.env?.VITE_USE_JSON_DRIVEN !== 'false'; // Default: true
-        
+
         if (jsonDrivenEnabled) {
             // Lazy import para não bloquear render inicial
             import('@/utils/loadJsonTemplate')
@@ -158,19 +158,19 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
         const v3Enabled = (import.meta as any)?.env?.VITE_ENABLE_V3_RENDER === 'true';
         if (mode === 'production' && v3Enabled) {
             try {
-                const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
-                
-                if (template && typeof template === 'object' && template.templateVersion === '3.0') {
-                    appLogger.debug('✅ [V3.0 HARDCODED] Usando V3Renderer para', stepId);
-                    return {
-                        type: 'v3' as const,
-                        component: V3Renderer,
-                        isRegistry: false,
-                        template: template as TemplateV3,
-                    };
-                }
+                // Tentar carregar via fonte hierárquica (blocos dinâmicos)
+                // NOTA: Chamadas assíncronas não podem bloquear o memo; apenas log e seguir.
+                hierarchicalTemplateSource.getPrimary(stepId).then(result => {
+                    if (Array.isArray(result.data) && result.data.length > 0) {
+                        appLogger.debug('✅ [V3.0 DYNAMIC] Blocos carregados para', stepId, 'count=', result.data.length);
+                    } else {
+                        appLogger.debug('⚠️ [V3.0 DYNAMIC] Nenhum bloco encontrado para', stepId);
+                    }
+                }).catch(err => {
+                    appLogger.warn('[V3.0 DYNAMIC] Falha ao carregar blocos', stepId, err);
+                });
             } catch (error) {
-                appLogger.error(`❌ Erro ao verificar template v3.0 para ${stepId}:`, error);
+                appLogger.error(`❌ Erro ao iniciar carregamento dinâmico para ${stepId}:`, error);
             }
         }
 
