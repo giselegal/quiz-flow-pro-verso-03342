@@ -1,5 +1,6 @@
 // 🎨 CANVAS COLUMN - Integração com Universal Block Renderer
 // ✅ FASE 4.2: Skeleton loading states adicionado
+// ✅ SPRINT 1: Event listener leak fix + auto metrics
 import React, { useEffect, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -10,6 +11,8 @@ import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlo
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 import { SkeletonBlock } from '../SkeletonBlock';
 import { EmptyCanvasState } from '../EmptyCanvasState';
+import { useSafeEventListener } from '@/hooks/useSafeEventListener';
+import { useAutoMetrics } from '@/hooks/useAutoMetrics';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -164,6 +167,13 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // ✅ SPRINT 1: Auto metrics tracking
+    useAutoMetrics('CanvasColumn', {
+        currentStepKey,
+        blocksCount: blocks?.length || 0,
+        selectedBlockId,
+    });
+
     // Configurar como drop zone para DnD
     const { setNodeRef, isOver } = useDroppable({
         id: 'canvas',
@@ -179,37 +189,30 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         setBlocks(blocksFromProps ?? null);
     }, [blocksFromProps, currentStepKey]);
 
-    // ✅ CRÍTICO: Escutar evento block-updated para forçar re-render
-    useEffect(() => {
-        const handleBlockUpdated = (event: Event) => {
-            const customEvent = event as CustomEvent;
-            const { stepKey, blockId } = customEvent.detail || {};
-            
-            console.log('🔔 [CanvasColumn] Recebeu evento block-updated:', {
-                stepKey,
-                blockId,
-                currentStepKey,
-                shouldUpdate: stepKey === currentStepKey,
+    // ✅ SPRINT 1: Usar hook seguro para event listeners
+    useSafeEventListener('block-updated', (event: Event) => {
+        const customEvent = event as CustomEvent;
+        const { stepKey, blockId } = customEvent.detail || {};
+        
+        console.log('🔔 [CanvasColumn] Recebeu evento block-updated:', {
+            stepKey,
+            blockId,
+            currentStepKey,
+            shouldUpdate: stepKey === currentStepKey,
+        });
+        
+        // Se a atualização for do step atual, forçar re-render
+        if (stepKey === currentStepKey) {
+            setBlocks(prev => {
+                if (!prev) return prev;
+                // Criar novo array para forçar re-render
+                return [...prev];
             });
-            
-            // Se a atualização for do step atual, forçar re-render
-            if (stepKey === currentStepKey) {
-                setBlocks(prev => {
-                    if (!prev) return prev;
-                    // Criar novo array para forçar re-render
-                    return [...prev];
-                });
-            }
-        };
-
-        window.addEventListener('block-updated', handleBlockUpdated);
-        console.log('👂 [CanvasColumn] Listener block-updated registrado');
-
-        return () => {
-            window.removeEventListener('block-updated', handleBlockUpdated);
-            console.log('🔇 [CanvasColumn] Listener block-updated removido');
-        };
-    }, [currentStepKey]);
+        }
+    }, {
+        target: typeof window !== 'undefined' ? window : null,
+        enabled: true,
+    });
 
     useEffect(() => {
         let cancelled = false;

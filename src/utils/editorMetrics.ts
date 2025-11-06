@@ -76,13 +76,31 @@ class EditorMetrics {
   /**
    * Rastrear tempo de render
    */
-  trackRender(component: string, durationMs: number) {
+  trackRender(component: string, durationMs: number, metadata?: Record<string, any>) {
     this.addMetric({
       timestamp: Date.now(),
       duration: durationMs,
       type: 'render',
-      metadata: { component },
+      metadata: { component, ...metadata },
     });
+  }
+
+  /**
+   * Rastrear props changes (SPRINT 1)
+   */
+  trackPropsChange(component: string, changedKeys: string[]) {
+    if (import.meta.env.DEV) {
+      console.debug(`🔄 [EditorMetrics] Props changed in "${component}":`, changedKeys);
+    }
+  }
+
+  /**
+   * Rastrear component unmount (SPRINT 1)
+   */
+  trackComponentUnmount(component: string, metadata?: Record<string, any>) {
+    if (import.meta.env.DEV) {
+      console.debug(`👋 [EditorMetrics] Component unmounted: "${component}"`, metadata);
+    }
   }
 
   /**
