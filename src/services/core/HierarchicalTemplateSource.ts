@@ -23,6 +23,31 @@ import { supabase } from '@/lib/supabase';
 import { appLogger } from '@/utils/logger';
 
 /**
+ * 🔒 Flags globais de comportamento (centralizar lógica para evitar drift)
+ *
+ * - DISABLE_TS_FALLBACK: desativa completamente o fallback TypeScript (quiz21StepsComplete.ts)
+ *   mesmo se options.fallbackToStatic estiver true. Útil para garantir 100% JSON V3.
+ *   Pode ser reativado apenas via localStorage['VITE_ENABLE_TS_FALLBACK'] === 'true'.
+ */
+function isFallbackDisabled(): boolean {
+  try {
+    // LocalStorage override para reativar explicitamente
+    if (typeof window !== 'undefined') {
+      const enableTs = window.localStorage?.getItem('VITE_ENABLE_TS_FALLBACK');
+      if (enableTs === 'true') return false; // reativado manualmente
+    }
+    // Padrão: desativado em qualquer ambiente quando JSON-only estiver habilitado ou em DEV
+    let jsonOnlyFlag: any;
+    try { jsonOnlyFlag = (import.meta as any)?.env?.VITE_TEMPLATE_JSON_ONLY; } catch { /* noop */ }
+    const jsonOnlyActive = jsonOnlyFlag === 'true' || (typeof process !== 'undefined' && (process as any).env?.VITE_TEMPLATE_JSON_ONLY === 'true');
+    let isDev = false;
+    try { isDev = !!(import.meta as any)?.env?.DEV; } catch { /* noop */ }
+    if (jsonOnlyActive || isDev) return true;
+  } catch { /* noop */ }
+  return true; // ultra conservador → desligado
+}
+
+/**
  * Cache entry
  */
 interface CacheEntry {
@@ -144,11 +169,25 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
     }
 
     // Tentar cada fonte na ordem de prioridade
+    // Bloquear imediatamente steps inválidos (> 21) para evitar spam de logs / chamadas
+    const numericMatch = stepId.match(/^step-(\d{2})$/);
+    if (numericMatch) {
+      const num = parseInt(numericMatch[1], 10);
+      if (num < 1 || num > 21) {
+        this.log(stepId, 'IGNORED_INVALID_STEP');
+        return {
+          data: [],
+          metadata: { source: DataSourcePriority.TEMPLATE_DEFAULT, timestamp: Date.now(), cacheHit: false, loadTime: 0 },
+        };
+      }
+    }
+
     const sources = [
       { priority: DataSourcePriority.USER_EDIT, fn: () => this.getFromUserEdit(stepId, funnelId) },
       { priority: DataSourcePriority.ADMIN_OVERRIDE, fn: () => this.getFromAdminOverride(stepId) },
       { priority: DataSourcePriority.TEMPLATE_DEFAULT, fn: () => this.getFromTemplateDefault(stepId) },
-      { priority: DataSourcePriority.FALLBACK, fn: () => this.getFromFallback(stepId) },
+      // FALLBACK removido quando desativado globalmente
+      ...(isFallbackDisabled() ? [] : [ { priority: DataSourcePriority.FALLBACK, fn: () => this.getFromFallback(stepId) } ])
     ];
 
     for (const { priority, fn } of sources) {
@@ -260,8 +299,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       appLogger.debug('[HierarchicalSource] JSON default loader falhou para', stepId);
     }
 
-    // Em modo JSON-only, não usar registry; retorna null para tentar próximo nível
-    if (this.JSON_ONLY) return null;
+  // Em modo JSON-only ou quando fallback desativado → NÃO usar registry legado
+  if (this.JSON_ONLY) return null;
 
     // 3.2 Registry (legado/compatibilidade)
     try {
@@ -278,7 +317,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    * 4️⃣ PRIORIDADE BAIXA: Fallback (quiz21StepsComplete.ts)
    */
   private async getFromFallback(stepId: string): Promise<Block[] | null> {
-    if (!this.options.fallbackToStatic) return null;
+  // Fallback globalmente desativado a menos que flag explicita esteja ativa
+  if (!this.options.fallbackToStatic || isFallbackDisabled()) return null;
 
     try {
       const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
