@@ -65,7 +65,8 @@
         "subtitle": "Preparando seu resultado personalizado",
         "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
         "autoAdvanceDelay": 3000
-      }
+      },
+      "parentId": null
     },
     {
       "id": "step-19-transition-text",
@@ -75,7 +76,8 @@
         "type": "fade",
         "duration": 300
       },
-      "content": {}
+      "content": {},
+      "parentId": null
     },
     {
       "id": "step-19-transition-cta",
@@ -86,7 +88,8 @@
         "label": "...",
         "variant": "outline",
         "size": "small"
-      }
+      },
+      "parentId": null
     }
   ]
 }
