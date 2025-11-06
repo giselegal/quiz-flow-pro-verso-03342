@@ -28,6 +28,8 @@ import { Button } from '@/components/ui/button';
 import { Eye, Edit3, Play, Save, GripVertical, Download } from 'lucide-react';
 import { appLogger } from '@/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
+// ✅ SPRINT 2 Fase 3: Loading Context Unificado
+import { EditorLoadingProvider } from '@/contexts/EditorLoadingContext';
 
 // Import estático de StepNavigatorColumn para evitar problemas de renderização em testes
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -424,14 +426,15 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     }, [unified]);
 
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={dnd.handlers.onDragStart}
-            onDragOver={dnd.handlers.onDragOver}
-            onDragEnd={handleDragEnd}
-            onDragCancel={dnd.handlers.onDragCancel}
-        >
+        <EditorLoadingProvider>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={dnd.handlers.onDragStart}
+                onDragOver={dnd.handlers.onDragOver}
+                onDragEnd={handleDragEnd}
+                onDragCancel={dnd.handlers.onDragCancel}
+            >
             <div className="qm-editor flex flex-col h-screen bg-gray-50" data-editor="modular-enhanced">
                 {/* Header com controles */}
                 <div className="flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm">
@@ -721,5 +724,6 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
                 </Suspense>
             )}
         </DndContext>
+        </EditorLoadingProvider>
     );
 }

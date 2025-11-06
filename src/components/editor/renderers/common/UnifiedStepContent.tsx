@@ -6,7 +6,8 @@ import { useEditor } from '@/hooks/useEditor';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
-import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+// ✅ SPRINT 2 Fase 3: Migração para LazyBlockRenderer
+import { LazyBlockRenderer } from '@/components/editor/blocks/LazyBlockRenderer';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -565,7 +566,11 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                     <div className="p-8 text-center">
                         <p className="text-muted-foreground">Transition Step (componente em migração)</p>
                         {blocks.map((block, idx) => (
-                            <BlockTypeRenderer key={block.id || idx} block={block} />
+                            <LazyBlockRenderer 
+                                key={block.id || idx} 
+                                block={block}
+                                isEditable={isEditMode}
+                            />
                         ))}
                     </div>
                 </div>
@@ -586,7 +591,11 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                     <div className="p-8 text-center">
                         <p className="text-muted-foreground">Result Step (componente em migração)</p>
                         {blocks.map((block, idx) => (
-                            <BlockTypeRenderer key={block.id || idx} block={block} />
+                            <LazyBlockRenderer 
+                                key={block.id || idx} 
+                                block={block}
+                                isEditable={isEditMode}
+                            />
                         ))}
                     </div>
                 </div>
@@ -602,13 +611,11 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                     <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
                         {blocks.map((block) => (
                             <SortableBlock key={block.id} id={block.id}>
-                                <BlockTypeRenderer
+                                <LazyBlockRenderer
                                     block={block}
                                     isSelected={selectedBlockId === block.id}
                                     isEditable={isEditMode}
                                     onSelect={handleSelectBlock}
-                                    onOpenProperties={handleOpenProperties}
-                                    contextData={contextData}
                                 />
                             </SortableBlock>
                         ))}
@@ -617,12 +624,11 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             ) : (
                 <>
                     {blocks.map((block) => (
-                        <BlockTypeRenderer
+                        <LazyBlockRenderer
                             key={block.id}
                             block={block}
                             isSelected={false}
                             isEditable={false}
-                            contextData={contextData}
                         />
                     ))}
                 </>
