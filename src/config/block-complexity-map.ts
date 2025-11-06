@@ -159,13 +159,13 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
   },
   'result-cta': {
     complexity: 'COMPLEX',
-    reason: 'Botão CTA com tracking e variáveis dinâmicas',
-    component: '@/components/editor/blocks/atomic/CTAButtonBlock',
+    reason: 'CTA de resultado com estilos e tracking',
+    component: '@/components/editor/blocks/atomic/ResultCTABlock',
   },
   'result-share': {
     complexity: 'COMPLEX',
     reason: 'Compartilhamento social com múltiplas plataformas',
-    component: '@/components/editor/blocks/ResultShareBlock',
+    component: '@/components/editor/blocks/atomic/ResultShareBlock',
   },
   'result-secondary-styles': {
     complexity: 'COMPLEX',
@@ -353,12 +353,12 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
   'offer-pricing': {
     complexity: 'COMPLEX',
     reason: 'Cálculos de preço, seleção de planos',
-    component: '@/components/editor/blocks/PricingBlock',
+     component: '@/components/editor/blocks/PricingInlineBlock',
   },
   'pricing': {
     complexity: 'COMPLEX',
     reason: 'Alias de offer-pricing para compatibilidade com JSON',
-    component: '@/components/editor/blocks/PricingBlock',
+     component: '@/components/editor/blocks/PricingInlineBlock',
   },
 };
 
