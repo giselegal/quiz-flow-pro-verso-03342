@@ -15,6 +15,8 @@ import { styleMapping, type StyleId } from '../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
 import { templateService } from '@/services/canonical/TemplateService';
 import { computeResult } from '@/utils/result/computeResult';
+import { applyRuntimeBonuses } from '@/utils/result/applyRuntimeBonuses';
+import { useMasterRuntime } from '@/hooks/useMasterRuntime';
 import { getEffectiveRequiredSelections, shouldAutoAdvance } from '@/lib/quiz/requiredSelections';
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
@@ -91,6 +93,12 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
   const flags = useMemo(() => mergeRuntimeFlags(flagsInput), [flagsInput]);
   const autoAdvanceTimerRef = (globalThis as any).__quizAutoAdvanceTimerRef || { current: null as any };
   ; (globalThis as any).__quizAutoAdvanceTimerRef = autoAdvanceTimerRef;
+  // Telemetria leve por step (em memória)
+  const timingsRef = (globalThis as any).__quizTimingsRef || { current: { startByStep: {} as Record<string, number>, durationByStep: {} as Record<string, number> } };
+  ; (globalThis as any).__quizTimingsRef = timingsRef;
+
+  // Carregar scoring rules do master JSON
+  const { scoringRules } = useMasterRuntime();
 
   // 🎯 FASE 2: Feature Flags e Template Loader
   const { useJsonTemplates, enablePrefetch } = useFeatureFlags();
@@ -134,6 +142,11 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
   // 🎯 FASE 2: Carregar template JSON quando step mudar
   useEffect(() => {
+    // Início de timing do step atual
+    try {
+      timingsRef.current.startByStep[state.currentStep] = performance.now();
+    } catch { /* noop */ }
+
     // Se não usar JSON ou tem externalSteps, pular
     if (!useJsonTemplates || externalSteps || funnelId) {
       return;
@@ -233,7 +246,30 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
   const calculateResult = useCallback(() => {
     console.log('🔄 [useQuizState] Calculando resultado via computeResult util...');
     // Passa steps explicitamente a partir da fonte atual para evitar fallback legado
-    const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers: state.answers, steps: stepsSource as any });
+    const base = computeResult({ answers: state.answers, steps: stepsSource as any });
+
+    // Aplicar bônus globais se existem regras
+    let adjustedScores = base.scores;
+    let ordered = base.orderedStyleIds;
+    if (scoringRules) {
+      try {
+        const tDurations: Record<string, number> = timingsRef.current.durationByStep || {};
+        const out = applyRuntimeBonuses({
+          baseScores: base.scores,
+          answers: state.answers,
+          steps: stepsSource as any,
+          rules: scoringRules as any,
+          telemetry: { durations: tDurations },
+        });
+        adjustedScores = out.scores;
+        ordered = out.orderedStyleIds;
+      } catch (e) {
+        console.warn('⚠️ Falha ao aplicar scoringRules, usando base:', e);
+      }
+    }
+
+    const primaryStyleId = ordered[0];
+    const secondaryStyleIds = ordered.filter(id => id !== primaryStyleId).slice(0, 2);
 
     // Mapear estilos canônicos para objetos completos
     const primaryStyle = (styleMapping as any)[resolveStyleId(primaryStyleId) as StyleId] || (styleMapping as any)[primaryStyleId as StyleId];
@@ -243,7 +279,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
     setState(prev => ({
       ...prev,
-      scores: Object.keys(prev.scores).reduce((acc, k) => { acc[k as keyof typeof prev.scores] = (scores as any)[k] || 0; return acc; }, { ...prev.scores }),
+  scores: Object.keys(prev.scores).reduce((acc, k) => { acc[k as keyof typeof prev.scores] = (adjustedScores as any)[k] || 0; return acc; }, { ...prev.scores }),
       userProfile: {
         ...prev.userProfile,
         resultStyle: primaryStyle?.id || primaryStyleId,
@@ -254,9 +290,9 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     return {
       primaryStyle,
       secondaryStyles: secondaryStylesObjects,
-      scores,
+      scores: adjustedScores,
     };
-  }, [state.answers, stepsSource]);
+  }, [state.answers, stepsSource, scoringRules]);
 
   // Adicionar resposta para etapa
   const addAnswer = useCallback((stepId: string, selections: string[]) => {
@@ -273,6 +309,16 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
         [stepId]: selections,
       },
     }));
+
+    // Finalizar timing do step
+    try {
+      const start = timingsRef.current.startByStep[stepId];
+      if (typeof start === 'number' && start > 0 && timingsRef.current.durationByStep[stepId] == null) {
+        const end = performance.now();
+        const ms = Math.max(0, end - start);
+        timingsRef.current.durationByStep[stepId] = ms / 1000; // segundos
+      }
+    } catch { /* noop */ }
 
   const sourceStep = (externalSteps || loadedSteps || QUIZ_STEPS_FALLBACK)[stepId];
     if (sourceStep?.type === 'strategic-question') {
