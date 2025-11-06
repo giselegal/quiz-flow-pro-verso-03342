@@ -426,7 +426,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [safeCurrentStep, props.templateId, props.funnelId, resourceId, setStepBlocks, queryClient]);
 
-    // Export JSON
+    // Export JSON (estado bruto do editor)
     const handleExportJSON = useCallback(() => {
         try {
             const data = {
@@ -448,6 +448,62 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             console.error('Erro ao exportar JSON:', e);
         }
     }, [unifiedState.editor.stepBlocks, safeCurrentStep, props.templateId, loadedTemplate, resourceId]);
+
+    // Export v3 (normalizado para StepBlocksTemplate v3.1)
+    const handleExportV3 = useCallback(() => {
+        try {
+            const stepsEntries = Object.entries(unifiedState.editor.stepBlocks || {}) as Array<[string, any[]]>;
+
+            const steps: Record<string, any> = {};
+            for (const [indexStr, blocks] of stepsEntries) {
+                const indexNum = Number(indexStr);
+                const stepId = `step-${String(Number.isFinite(indexNum) ? indexNum : indexStr).padStart(2, '0')}`;
+
+                const normalizedBlocks = (blocks || []).map((b: any, i: number) => ({
+                    id: b?.id || `${b?.type || 'block'}-${i}`,
+                    type: b?.type || 'unknown',
+                    config: {
+                        ...(b?.properties || {}),
+                        ...(b?.content || {}),
+                        order: typeof b?.order === 'number' ? b.order : i,
+                        ...(b?.parentId ? { parentId: b.parentId } : {}),
+                    },
+                }));
+
+                steps[stepId] = {
+                    templateVersion: '3.1',
+                    metadata: {
+                        id: `${stepId}-v3`,
+                        name: `Etapa ${String(indexNum || indexStr)}`,
+                        description: '',
+                        category: '',
+                        tags: [],
+                    },
+                    blocks: normalizedBlocks,
+                };
+            }
+
+            const data = {
+                meta: {
+                    exportedAt: new Date().toISOString(),
+                    format: 'v3.1',
+                    source: 'editor-state',
+                    template: props.templateId || loadedTemplate?.name || resourceId || null,
+                },
+                steps,
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'editor-export-v3.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (e) {
+            console.error('Erro ao exportar JSON v3:', e);
+        }
+    }, [unifiedState.editor.stepBlocks, props.templateId, loadedTemplate, resourceId]);
 
     // Publish funnel
     const handlePublish = useCallback(async () => {
@@ -614,6 +670,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <Button size="sm" variant="outline" onClick={handleExportJSON} className="h-7">
                             <Download className="w-3 h-3 mr-1" />
                             Exportar JSON
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={handleExportV3} className="h-7">
+                            <Download className="w-3 h-3 mr-1" />
+                            Exportar v3
                         </Button>
                     </div>
                 </div>
