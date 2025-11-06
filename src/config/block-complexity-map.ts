@@ -103,13 +103,28 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     reason: 'Componente React com suporte a subtítulo e formatação',
     component: '@/components/editor/blocks/atomic/QuestionTextBlock',
   },
+  'question-title': {
+    complexity: 'COMPLEX',
+    reason: 'Componente React com suporte a formatação e animações',
+    component: '@/components/editor/blocks/atomic/QuestionTextBlock',
+  },
   'question-number': {
     complexity: 'COMPLEX',
     reason: 'Componente React com lógica de numeração e estilização',
     component: '@/components/editor/blocks/atomic/QuestionNumberBlock',
   },
+  'question-hero': {
+    complexity: 'COMPLEX',
+    reason: 'Hero section completa com logo, progresso e título',
+    component: '@/components/sections/questions',
+  },
   
   // Transition Blocks (Steps 12, 19) - COMPLEX (React Components)
+  'transition-hero': {
+    complexity: 'COMPLEX',
+    reason: 'Hero de transição com auto-advance e mensagens dinâmicas',
+    component: '@/components/sections/transitions',
+  },
   'transition-title': {
     complexity: 'COMPLEX',
     reason: 'Componente React com suporte a animações e HTML',
@@ -141,6 +156,21 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     complexity: 'COMPLEX',
     reason: 'Componente React com lazy loading e fallback',
     component: '@/components/editor/blocks/atomic/ResultImageBlock',
+  },
+  'result-cta': {
+    complexity: 'COMPLEX',
+    reason: 'Botão CTA com tracking e variáveis dinâmicas',
+    component: '@/components/editor/blocks/atomic/CTAButtonBlock',
+  },
+  'result-share': {
+    complexity: 'COMPLEX',
+    reason: 'Compartilhamento social com múltiplas plataformas',
+    component: '@/components/editor/blocks/ResultShareBlock',
+  },
+  'result-secondary-styles': {
+    complexity: 'COMPLEX',
+    reason: 'Lista de estilos secundários com cálculos e formatação',
+    component: '@/components/editor/blocks/atomic/ResultSecondaryStylesBlock',
   },
   
   // Layout Blocks
