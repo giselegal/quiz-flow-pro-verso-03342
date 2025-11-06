@@ -30,6 +30,7 @@ import React, {
     useState,
 } from 'react';
 import { supabase } from '@/integrations/supabase/customClient';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 // 🎯 CONSOLIDATED TYPES
 interface UnifiedFunnelData {
@@ -81,6 +82,7 @@ interface EditorState {
     dragEnabled: boolean;
     clipboardData: any | null;
     stepBlocks: Record<number, any[]>;
+    dirtySteps: Record<number, boolean>;
     totalSteps: number;
     funnelSettings: any;
     validationErrors: any[];
@@ -165,7 +167,8 @@ type SuperUnifiedAction =
     | { type: 'REMOVE_BLOCK'; payload: { stepIndex: number; blockId: string } }
     | { type: 'REORDER_BLOCKS'; payload: { stepIndex: number; blocks: any[] } }
     | { type: 'SET_STEP_BLOCKS'; payload: { stepIndex: number; blocks: any[] } }
-    | { type: 'VALIDATE_STEP'; payload: { stepIndex: number; errors: any[] } };
+    | { type: 'VALIDATE_STEP'; payload: { stepIndex: number; errors: any[] } }
+    | { type: 'SET_STEP_DIRTY'; payload: { stepIndex: number; dirty: boolean } };
 
 // 🎯 INITIAL STATE
 const initialState: SuperUnifiedState = {
@@ -192,6 +195,7 @@ const initialState: SuperUnifiedState = {
         dragEnabled: true,
         clipboardData: null,
         stepBlocks: {},
+        dirtySteps: {},
         totalSteps: 21,
         funnelSettings: {},
         validationErrors: [],
@@ -383,6 +387,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                             action.payload.block,
                         ],
                     },
+                    dirtySteps: { ...state.editor.dirtySteps, [action.payload.stepIndex]: true },
                     isDirty: true,
                 },
             };
@@ -400,6 +405,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                                 : block,
                         ),
                     },
+                    dirtySteps: { ...state.editor.dirtySteps, [action.payload.stepIndex]: true },
                     isDirty: true,
                 },
             };
@@ -415,6 +421,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                             block => block.id !== action.payload.blockId,
                         ),
                     },
+                    dirtySteps: { ...state.editor.dirtySteps, [action.payload.stepIndex]: true },
                     isDirty: true,
                 },
             };
@@ -428,6 +435,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                         ...state.editor.stepBlocks,
                         [action.payload.stepIndex]: action.payload.blocks,
                     },
+                    dirtySteps: { ...state.editor.dirtySteps, [action.payload.stepIndex]: true },
                     isDirty: true,
                 },
             };
@@ -453,6 +461,16 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 },
             };
 
+        case 'SET_STEP_DIRTY':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    dirtySteps: { ...state.editor.dirtySteps, [action.payload.stepIndex]: action.payload.dirty },
+                    isDirty: Object.values({ ...state.editor.dirtySteps, [action.payload.stepIndex]: action.payload.dirty }).some(Boolean),
+                },
+            };
+
         default:
             return state;
     }
@@ -465,6 +483,8 @@ interface SuperUnifiedContextType {
     loadFunnel: (id: string) => Promise<void>;
     saveFunnel: (funnel?: UnifiedFunnelData) => Promise<void>;
     publishFunnel: (opts?: { ensureSaved?: boolean }) => Promise<void>;
+    saveStepBlocks: (stepIndex: number) => Promise<void>;
+    ensureAllDirtyStepsSaved: () => Promise<void>;
     createFunnel: (name: string, options?: any) => Promise<UnifiedFunnelData>;
     deleteFunnel: (id: string) => Promise<boolean>;
     duplicateFunnel: (id: string, newName?: string) => Promise<UnifiedFunnelData>;
@@ -650,8 +670,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         if (!funnel) return;
 
         // Opcionalmente garantir que as alterações foram salvas antes de publicar
-        if (ensureSaved && state.editor.isDirty) {
-            await saveFunnel();
+        if (ensureSaved) {
+            await ensureAllDirtyStepsSaved();
+            if (state.editor.isDirty) {
+                await saveFunnel();
+            }
         }
 
         dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: true, message: 'Publicando…' } });
@@ -705,7 +728,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: false } });
         }
-    }, [state.currentFunnel, state.editor.isDirty, saveFunnel]);
+    }, [state.currentFunnel, state.editor.isDirty, saveFunnel, ensureAllDirtyStepsSaved]);
 
     const createFunnel = useCallback(async (name: string, options: any = {}) => {
         dispatch({ type: 'SET_LOADING', payload: { section: 'create', loading: true, message: 'Criando funil...' } });
@@ -815,6 +838,39 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         return state.editor.stepBlocks[stepIndex] || [];
     }, [state.editor.stepBlocks]);
 
+    // 💾 Persistência por etapa (USER_EDIT → Supabase funnels.config.steps[stepId])
+    const saveStepBlocks = useCallback(async (stepIndex: number) => {
+        const funnel = state.currentFunnel;
+        if (!funnel?.id) return; // sem funil ativo, não persiste
+
+        const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
+        const blocks = state.editor.stepBlocks[stepIndex] || [];
+        try {
+            await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnel.id);
+            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
+        } catch (error: any) {
+            dispatch({ type: 'SET_ERROR', payload: { section: 'step-save', error: error?.message || String(error) } });
+            throw error;
+        }
+    }, [state.currentFunnel, state.editor.stepBlocks]);
+
+    const ensureAllDirtyStepsSaved = useCallback(async () => {
+        const funnel = state.currentFunnel;
+        if (!funnel?.id) return;
+        const entries = Object.entries(state.editor.dirtySteps || {}).filter(([, dirty]) => dirty);
+        for (const [idxStr] of entries) {
+            const idx = Number(idxStr);
+            if (Number.isFinite(idx) && idx >= 1) {
+                await (async () => {
+                    const stepId = `step-${String(idx).padStart(2, '0')}`;
+                    const blocks = state.editor.stepBlocks[idx] || [];
+                    await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnel.id);
+                    dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex: idx, dirty: false } });
+                })();
+            }
+        }
+    }, [state.currentFunnel, state.editor.dirtySteps, state.editor.stepBlocks]);
+
     const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
         const id = Date.now().toString();
         dispatch({ type: 'ADD_TOAST', payload: { ...toast, id } });
@@ -876,6 +932,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         loadFunnel,
         saveFunnel,
         publishFunnel,
+        saveStepBlocks,
+        ensureAllDirtyStepsSaved,
         createFunnel,
         deleteFunnel,
         duplicateFunnel,
@@ -902,6 +960,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         loadFunnel,
         saveFunnel,
         publishFunnel,
+        saveStepBlocks,
+        ensureAllDirtyStepsSaved,
         createFunnel,
         deleteFunnel,
         duplicateFunnel,
