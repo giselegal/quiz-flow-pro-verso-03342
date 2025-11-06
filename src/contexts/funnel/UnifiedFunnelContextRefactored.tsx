@@ -123,14 +123,18 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             }
         };
 
-        // Registrar listeners
-        funnelUnifiedService.on('updated', handleFunnelUpdated);
-        funnelUnifiedService.on('deleted', handleFunnelDeleted);
+        // Registrar listeners (se funnelService suportar eventos)
+        if (funnelService.on) {
+            funnelService.on('updated', handleFunnelUpdated);
+            funnelService.on('deleted', handleFunnelDeleted);
+        }
 
         // Cleanup
         return () => {
-            funnelUnifiedService.off('updated', handleFunnelUpdated);
-            funnelUnifiedService.off('deleted', handleFunnelDeleted);
+            if (funnelService.off) {
+                funnelService.off('updated', handleFunnelUpdated);
+                funnelService.off('deleted', handleFunnelDeleted);
+            }
         };
     }, [funnelId]);
 
@@ -145,16 +149,18 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('📖 UnifiedFunnelContext: Carregando funil (canônico)', id);
 
-            // Preferir serviço canônico (mapeado para tipo unificado)
-            const canonical = await canonicalFunnelService.getFunnel(id);
+            // Usar serviço canônico (mapeado para tipo unificado)
+            const canonical = await funnelService.getFunnel(id);
             const loadedFunnel = canonical ? mapCanonicalToUnified(canonical) : null;
 
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
 
-                // Verificar permissões
-                const perms = await funnelUnifiedService.checkPermissions(id);
-                setPermissions(perms);
+                // Verificar permissões (se disponível)
+                if (funnelService.checkPermissions) {
+                    const perms = await funnelService.checkPermissions(id);
+                    setPermissions(perms);
+                }
 
                 console.log('✅ Funil carregado:', loadedFunnel);
             } else {
