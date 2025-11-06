@@ -1,11 +1,61 @@
 {
-    "id": "step-13",
-    "type": "strategic-question",
-    "metadata": {
-        "name": "Strategic Question Step (Modular)",
-        "description": "Pergunta estratégica com opções e botão"
+  "templateVersion": "3.0",
+  "id": "step-13",
+  "type": "strategic-question",
+  "metadata": {
+    "id": "step-13-strategic-v3",
+    "name": "S1: Percepção de Imagem",
+    "description": "Pergunta estratégica sobre como você é vista",
+    "category": "strategic",
+    "tags": [
+      "quiz",
+      "strategic",
+      "image",
+      "perception"
+    ],
+    "createdAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-11-05T21:31:46.107Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0",
+    "progressRecalculated": true,
+    "scoring": {
+      "weight": 2,
+      "timeLimit": 30,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
     },
-    "blocks": [
+    "scoringAddedAt": "2025-11-05T21:52:52.455Z"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "validation": {
+    "required": [
+      "selectedOption"
+    ],
+    "rules": {
+      "selectedOption": {
+        "minItems": 1,
+        "maxItems": 1,
+        "errorMessage": "Por favor, selecione uma opção"
+      }
+    }
+  },
+  "behavior": {},
+  "redirectPath": "/quiz-estilo/step-13",
+  "navigation": {
+    "nextStep": "step-14"
+  },
+  "blocks": [
         {
             "id": "strategic-question-13",
             "type": "strategic-question",
@@ -24,7 +74,8 @@
                     }
                 ]
             },
-            "content": {}
+            "content": {},
+            "parentId": null
         },
         {
             "id": "strategic-next-13",
@@ -34,7 +85,8 @@
                 "text": "Continuar",
                 "style": "primary"
             },
-            "content": {}
+            "content": {},
+            "parentId": null
         }
     ]
 }
