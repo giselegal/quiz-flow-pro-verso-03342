@@ -147,12 +147,17 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'question-hero': () => Promise.all([
     import('@/components/sections/questions'),
     import('@/core/adapters/PropNormalizer')
-  ]).then(([{ QuestionHeroSection }, { normalizeQuestionHeroProps }]) => ({
-    default: (props: any) => {
-      const normalized = normalizeQuestionHeroProps(props?.block || props);
-      return React.createElement(QuestionHeroSection, normalized);
-    },
-  })),
+  ]).then(([{ QuestionHeroSection }, { normalizeQuestionHeroProps }]) => {
+    console.log('✅ [Registry] question-hero carregado com sucesso');
+    return {
+      default: (props: any) => {
+        console.log('🔍 [question-hero] Props recebidas:', props);
+        const normalized = normalizeQuestionHeroProps(props?.block || props);
+        console.log('🔍 [question-hero] Props normalizadas:', normalized);
+        return React.createElement(QuestionHeroSection, normalized);
+      },
+    };
+  }),
   'transition-hero': () => Promise.all([
     import('@/components/sections/transitions'),
     import('@/core/adapters/PropNormalizer')

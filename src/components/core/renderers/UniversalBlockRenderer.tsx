@@ -88,8 +88,22 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   style,
   onClick,
 }) => {
+  // Debug log para question-hero
+  if (block.type === 'question-hero') {
+    console.log('🎯 [UniversalBlockRenderer] Renderizando question-hero:', {
+      blockId: block.id,
+      type: block.type,
+      content: block.content,
+      properties: block.properties
+    });
+  }
+
   // Resolver componente via UnifiedBlockRegistry
   const EnhancedComponent = blockRegistry.getComponent(block.type);
+
+  if (block.type === 'question-hero' && !EnhancedComponent) {
+    console.error('❌ [UniversalBlockRenderer] Componente question-hero NÃO encontrado no registry!');
+  }
 
   const handleClick = React.useMemo(() => {
     if (onSelect) return () => onSelect(block.id);
