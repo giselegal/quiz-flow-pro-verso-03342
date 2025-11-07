@@ -1,8 +1,10 @@
 // 🔗 HOOK PARA GERENCIAR TEMPLATES CONECTADOS AO SISTEMA DE QUIZ
 // Facilita a integração entre templates TSX e hooks de quiz
 
-import { QUIZ_QUESTIONS_COMPLETE } from '@/templates/quiz21StepsComplete';
-import { useCallback, useMemo } from 'react';
+// ✅ CORREÇÃO: Usar HierarchicalTemplateSource ao invés de import direto do .ts
+// import { QUIZ_QUESTIONS_COMPLETE } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useQuizLogic } from './useQuizLogic';
 import { useSupabaseQuiz } from './useSupabaseQuiz';
 

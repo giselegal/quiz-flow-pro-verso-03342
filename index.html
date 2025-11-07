@@ -66,32 +66,6 @@
       width: 100%;
     }
 
-    .loading-fallback {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background-color: #f9fafb;
-    }
-
-    .loading-spinner {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      border: 2px solid #e5e7eb;
-      border-top-color: #b29670;
-      animation: spin 0.8s linear infinite;
-      will-change: transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
     .font-playfair {
       font-family: 'Playfair Display', serif;
     }
@@ -99,11 +73,7 @@
 </head>
 
 <body>
-  <div id="root">
-    <div class="loading-fallback">
-      <div class="loading-spinner"></div>
-    </div>
-  </div>
+  <div id="root"></div>
 
   <!-- Supabase Fallback System (deve carregar ANTES do app) -->
   <script src="/supabase-fallback-system.js" type="text/javascript"></script>
