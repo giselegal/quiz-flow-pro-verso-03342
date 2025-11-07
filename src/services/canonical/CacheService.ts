@@ -273,10 +273,10 @@ export class CacheService extends BaseCanonicalService {
    * Cache para funnels (TTL padrão: 10min)
    */
   funnels = {
-    set: <T>(key: string, value: T, ttl = 10 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 10 * 60 * 1000) => 
       this.set(key, value, { store: 'funnels', ttl }),
     
-    get: <T>(key: string) => 
+    get: <T,>(key: string) => 
       this.get<T>(key, 'funnels'),
     
     invalidate: (funnelId: string) => 
@@ -287,10 +287,10 @@ export class CacheService extends BaseCanonicalService {
    * Cache para configurações (TTL padrão: 2min)
    */
   configs = {
-    set: <T>(key: string, value: T, ttl = 2 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 2 * 60 * 1000) => 
       this.set(key, value, { store: 'configs', ttl }),
     
-    get: <T>(key: string) => 
+    get: <T,>(key: string) => 
       this.get<T>(key, 'configs'),
     
     invalidate: (key: string) => 
@@ -301,10 +301,10 @@ export class CacheService extends BaseCanonicalService {
    * Cache para blocks (TTL padrão: 5min)
    */
   blocks = {
-    set: <T>(key: string, value: T, ttl = 5 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 5 * 60 * 1000) => 
       this.set(key, value, { store: 'blocks', ttl }),
     
-    get: <T>(key: string) => 
+    get: <T,>(key: string) => 
       this.get<T>(key, 'blocks'),
     
     invalidate: (blockId: string) => 

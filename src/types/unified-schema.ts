@@ -201,7 +201,7 @@ export const EditorBlockSchema = z.object({
 });
 
 // Runtime validation functions with better error handling
-export const safeValidate = <T>(
+export const safeValidate = <T,>(
   schema: z.ZodSchema<T>,
   data: unknown,
 ): {

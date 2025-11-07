@@ -38,7 +38,7 @@ export const useSupabaseSafe = () => {
 };
 
 // Função para operações seguras
-export const withSupabase = async <T>(
+export const withSupabase = async <T,>(
   operation: (client: typeof supabaseSafe) => Promise<T>,
 ): Promise<T | null> => {
   if (typeof window === 'undefined') {
