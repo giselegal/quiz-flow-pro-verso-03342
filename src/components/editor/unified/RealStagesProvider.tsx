@@ -514,16 +514,26 @@ function getStageDescription(stepNumber: number): string {
   return descriptions[stepNumber] || `Questão ${stepNumber - 1} do quiz de estilo`;
 }
 
-import { QUIZ_STYLE_21_STEPS_TEMPLATE as QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC } from '@/templates/quiz21StepsComplete';
+// ⚠️ REMOVIDO: Import direto do .ts (deve usar JSON!)
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE as QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC } from '@/templates/quiz21StepsComplete';
 
 async function loadStepDirect(stepNumber: number): Promise<Block[]> {
-  // Implementação direta sem cache (fallback)
+  // 🔧 CORRIGIDO: Usa loader de JSON em vez de import direto do .ts
   appLogger.debug(`🔄 Carregamento direto para step ${stepNumber}`);
 
   try {
-    const stepKey = `step-${stepNumber}`;
-    const stepBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC as any)[stepKey] || [];
-    return Array.isArray(stepBlocks) ? stepBlocks : [];
+    // Usar loader de JSON (mesma prioridade do HierarchicalTemplateSource)
+    const { loadStepFromJson } = await import('@/templates/loaders/jsonStepLoader');
+    const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
+    const blocks = await loadStepFromJson(stepKey);
+
+    if (blocks && blocks.length > 0) {
+      appLogger.debug(`✅ Step ${stepNumber} carregado do JSON: ${blocks.length} blocos`);
+      return blocks;
+    }
+
+    appLogger.warn(`⚠️ Nenhum bloco encontrado para step ${stepNumber}, usando fallback`);
+    return createFallbackBlocks(stepNumber);
   } catch (error) {
     appLogger.error(`❌ Carregamento direto falhou para step ${stepNumber}:`, error);
     return createFallbackBlocks(stepNumber);
