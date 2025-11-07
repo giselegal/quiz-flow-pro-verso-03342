@@ -12,7 +12,7 @@
 
 import { useMutation, type UseMutationOptions, type UseMutationResult } from '@tanstack/react-query';
 import { templateService } from '../canonical/TemplateService';
-import type { PreloadTemplateOptions, ServiceResult } from '../canonical/types';
+import type { ServiceResult } from '../canonical/types';
 
 /**
  * Options for the usePreloadTemplate hook
@@ -44,9 +44,9 @@ export interface PreloadTemplateMutationVariables {
   templateId: string;
   
   /**
-   * Optional preload options
+   * Optional preload options (currently unused, reserved for future)
    */
-  options?: Omit<PreloadTemplateOptions, 'signal'>;
+  options?: Record<string, never>;
 }
 
 /**
@@ -81,12 +81,9 @@ export function usePreloadTemplate(
   const { onSuccess, onError, retry = 2, ...mutationOptions } = options;
 
   return useMutation<ServiceResult<void>, Error, PreloadTemplateMutationVariables>({
-    mutationFn: async ({ templateId, options: preloadOptions }, { signal }) => {
-      // Call templateService with AbortSignal from React Query
-      const result = await templateService.preloadTemplate(templateId, {
-        ...preloadOptions,
-        signal,
-      });
+    mutationFn: async ({ templateId, options: preloadOptions }) => {
+      // Call templateService with options
+      const result = await templateService.preloadTemplate(templateId, preloadOptions);
       
       // Throw error if preload failed
       if (!result.success) {
@@ -128,7 +125,7 @@ export function usePreloadTemplate(
 export function usePreloadTemplateFn(options: UsePreloadTemplateOptions = {}) {
   const { mutateAsync } = usePreloadTemplate(options);
   
-  return async (templateId: string, preloadOptions?: Omit<PreloadTemplateOptions, 'signal'>) => {
+  return async (templateId: string, preloadOptions?: Record<string, never>) => {
     return mutateAsync({ templateId, options: preloadOptions });
   };
 }

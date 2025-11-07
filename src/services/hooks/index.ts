@@ -21,7 +21,6 @@ export {
   useTemplateSteps,
   usePrefetchTemplateStep,
   type UseTemplateStepOptions,
-  type UseTemplateStepsOptions,
 } from './useTemplateStep';
 
 // Template preparation hooks
