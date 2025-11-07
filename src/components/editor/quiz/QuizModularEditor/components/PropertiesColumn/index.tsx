@@ -13,6 +13,7 @@ import type { Block } from '@/types/editor';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 import { onBlockUpdate as subscribeToBlockUpdates } from '@/utils/editorEventBus';
+import { normalizeBlockData, createSynchronizedBlockUpdate, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
 
 interface PropertiesColumnProps {
     selectedBlock: Block | null;
@@ -44,25 +45,22 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         const nextId = selectedBlock?.id || null;
 
         if (prevId && prevId !== nextId && isDirty) {
-            onBlockUpdate(prevId, { properties: editedProperties });
+            // Encontrar o bloco anterior para fazer auto-save sincronizado
+            const prevBlock = selectedBlock; // Assumindo que selectedBlock ainda é o anterior aqui
+            if (prevBlock) {
+                const synchronizedUpdate = createSynchronizedBlockUpdate(prevBlock, editedProperties);
+                onBlockUpdate(prevId, synchronizedUpdate);
+            }
         }
 
         if (selectedBlock) {
-            // ✅ CORREÇÃO 3: MERGE AGRESSIVO - properties tem prioridade, fallback para content
-            const merged: Record<string, any> = {};
+            // ✅ NORMALIZAÇÃO DE DADOS - Garante sincronização properties ↔ content
+            const normalizedBlock = normalizeBlockData(selectedBlock);
 
-            // 1. Carregar tudo de content
-            if (selectedBlock.content && typeof selectedBlock.content === 'object') {
-                Object.assign(merged, selectedBlock.content);
-            }
-
-            // 2. Sobrescrever com properties (se houver)
-            if (selectedBlock.properties && typeof selectedBlock.properties === 'object') {
-                Object.assign(merged, selectedBlock.properties);
-            }
-
-            // 3. Garantir pelo menos valores default do schema
+            // Aplicar valores default do schema se necessário
             const schema = schemaInterpreter.getBlockSchema(selectedBlock.type);
+            const merged = { ...normalizedBlock.properties };
+
             if (schema) {
                 Object.entries(schema.properties).forEach(([key, propSchema]) => {
                     if (merged[key] === undefined && propSchema.default !== undefined) {
@@ -71,10 +69,11 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 });
             }
 
-            console.log('✅ [PropertiesColumn] Merged properties:', {
+            normalizerLogger.debug('Properties normalized for editing', {
                 type: selectedBlock.type,
-                mergedKeys: Object.keys(merged),
-                mergedValues: merged
+                originalProperties: selectedBlock.properties,
+                originalContent: selectedBlock.content,
+                normalizedProperties: merged
             });
 
             setEditedProperties(merged);
@@ -130,16 +129,16 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
     const handleSave = () => {
         if (selectedBlock && isDirty) {
-            // ✅ CORREÇÃO 4: Salvar em AMBOS: properties E content
-            onBlockUpdate(selectedBlock.id, {
-                properties: editedProperties,
-                content: editedProperties, // ← Duplicar para manter sincronizado
-            });
+            // ✅ SINCRONIZAÇÃO BIDIRECIONAL - Garante properties ↔ content sempre alinhados
+            const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, editedProperties);
+
+            onBlockUpdate(selectedBlock.id, synchronizedUpdate);
             setIsDirty(false);
 
-            console.log('💾 [PropertiesColumn] Saved:', {
+            normalizerLogger.debug('Block saved with synchronized data', {
                 blockId: selectedBlock.id,
-                properties: editedProperties
+                editedProperties,
+                synchronizedUpdate
             });
         }
     };
