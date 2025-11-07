@@ -10,13 +10,15 @@ import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
-import { Eye, Edit3, Play, Save, GripVertical, Download } from 'lucide-react';
+import { Eye, Edit3, Play, Save, GripVertical, Download, Upload } from 'lucide-react';
 import { appLogger } from '@/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
 // Loading context (provider + hook)
 import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadingContext';
 // Arquitetura unificada de recursos
 import type { EditorResource } from '@/types/editor-resource';
+// Import Template Dialog
+import ImportTemplateDialog from '../dialogs/ImportTemplateDialog';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -123,6 +125,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [templateLoadError, setTemplateLoadError] = useState(false);
+    const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
     // Persist layout
     const PANEL_LAYOUT_KEY = 'qm-editor:panel-layout-v1';
