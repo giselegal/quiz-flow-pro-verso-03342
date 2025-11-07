@@ -8,7 +8,7 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Plus } from 'lucide-react';
+import { Sparkles, Plus, X } from 'lucide-react';
 
 interface EditorStartupModalProps {
     open: boolean;
@@ -16,14 +16,30 @@ interface EditorStartupModalProps {
 }
 
 export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalProps) {
+    // Permitir fechar o modal escolhendo modo blank
+    const handleClose = () => {
+        onSelectMode('blank');
+    };
+
     return (
-        <Dialog open={open}>
-            <DialogContent className="sm:max-w-[600px]">
+        <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+            <DialogContent
+                className="sm:max-w-[600px]"
+                data-testid="editor-startup-modal"
+            >
+                <button
+                    onClick={handleClose}
+                    data-testid="editor-startup-modal-close"
+                    className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                    aria-label="Fechar"
+                >
+                    <X className="h-4 w-4" />
+                    <span className="sr-only">Fechar</span>
+                </button>
+
                 <DialogHeader>
                     <DialogTitle className="text-2xl">Como deseja começar?</DialogTitle>
-                </DialogHeader>
-                
-                <div className="grid grid-cols-2 gap-4 py-6">
+                </DialogHeader>                <div className="grid grid-cols-2 gap-4 py-6">
                     {/* Opção 1: Canvas Vazio */}
                     <button
                         onClick={() => onSelectMode('blank')}
@@ -56,7 +72,7 @@ export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalPro
                         </div>
                     </button>
                 </div>
-                
+
                 <p className="text-xs text-gray-500 text-center mt-2">
                     💡 Você poderá adicionar/remover etapas depois
                 </p>
