@@ -16,7 +16,9 @@
  */
 
 import { Block } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+// ✅ CORREÇÃO: Remover import direto do .ts
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
 // 🔧 Removido dependência de utils/loadStepTemplates para evitar eager-loading de bundles
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
@@ -173,7 +175,7 @@ export class TemplateLoader {
 
           // 3. TypeScript template (fallback final)
           console.log('🔄 Template mode: Usando fallback TypeScript');
-          return this.loadFromTypescript(normalizedKey);
+          return await this.loadFromTypescript(normalizedKey);
         }
 
         // ============================================================
@@ -198,7 +200,7 @@ export class TemplateLoader {
 
           // Fallback: TypeScript
           console.log('🔄 Funnel mode: Usando fallback TypeScript');
-          return this.loadFromTypescript(normalizedKey);
+          return await this.loadFromTypescript(normalizedKey);
         }
 
         // ============================================================
@@ -268,7 +270,7 @@ export class TemplateLoader {
 
         // Estratégia 6: TypeScript template (fallback)
         console.warn('🔄 Caindo no fallback TypeScript template');
-        return this.loadFromTypescript(normalizedKey);
+        return await this.loadFromTypescript(normalizedKey);
       } finally {
         console.groupEnd();
       }
@@ -899,26 +901,24 @@ export class TemplateLoader {
 
   /**
    * Estratégia 5: Carregar de TypeScript template (fallback)
+   * ✅ CORREÇÃO: Agora usa hierarchicalTemplateSource
    */
-  private loadFromTypescript(normalizedKey: string): LoadedTemplate {
-    console.log(`📦 Fallback: TypeScript template → ${normalizedKey}`);
+  private async loadFromTypescript(normalizedKey: string): Promise<LoadedTemplate> {
+    console.log(`📦 Fallback: HierarchicalTemplateSource → ${normalizedKey}`);
 
-    // ✅ FASE 1.2: Migrado para usar convertTemplateToBlocks diretamente
-    const stepTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[normalizedKey];
-    if (!stepTemplate) {
-      console.warn(`⚠️ Step ${normalizedKey} não encontrado no template TS`);
+    // ✅ FASE 1.2: Migrado para usar hierarchicalTemplateSource
+    const result = await hierarchicalTemplateSource.getPrimary(normalizedKey);
+    const stepBlocks = result?.data || [];
+    
+    if (!stepBlocks || stepBlocks.length === 0) {
+      console.warn(`⚠️ Step ${normalizedKey} não encontrado via hierarchicalTemplateSource`);
       return { blocks: [], source: 'ts-template' };
     }
 
-    const blockComponents = convertTemplateToBlocks({
-      [normalizedKey]: stepTemplate,
-    });
-    const blocks = blockComponentsToBlocks(blockComponents);
+    unifiedCache.set(stepBlocksKey(normalizedKey), stepBlocks);
+    console.log(`📦 HierarchicalSource → ${normalizedKey}: ${stepBlocks.length} blocos`);
 
-    unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-    console.log(`📦 TS template → ${normalizedKey}: ${blocks.length} blocos`);
-
-    return { blocks, source: 'ts-template' };
+    return { blocks: stepBlocks, source: 'ts-template' };
   }
 
   /**

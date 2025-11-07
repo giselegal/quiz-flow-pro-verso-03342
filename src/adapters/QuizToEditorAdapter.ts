@@ -7,7 +7,9 @@
  */
 
 import { Block } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, getStepTemplate } from '@/templates/quiz21StepsComplete';
+// ✅ CORREÇÃO: Remover import direto do .ts
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE, getStepTemplate } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 // Import BlockType para tipagem correta
 import { BlockType } from '@/types/editor';
@@ -33,6 +35,7 @@ export class QuizToEditorAdapter {
   
   /**
    * 🔄 MÉTODO PRINCIPAL: Converter quiz completo para editor
+   * ✅ CORREÇÃO: Agora usa hierarchicalTemplateSource (async)
    */
   static async convertQuizToEditor(funnelId?: string): Promise<EditorCompatibleData> {
     console.log('🎯 Iniciando conversão Quiz → Editor', { funnelId });
@@ -42,8 +45,9 @@ export class QuizToEditorAdapter {
     
     // Converter cada etapa do quiz
     for (let stepNum = 1; stepNum <= totalSteps; stepNum++) {
-      const stepId = `step-${stepNum}`;
-      const stepTemplate = getStepTemplate(stepId);
+      const stepId = `step-${String(stepNum).padStart(2, '0')}`;
+      const result = await hierarchicalTemplateSource.getPrimary(stepId);
+      const stepTemplate = result?.data || [];
       
       if (stepTemplate && Array.isArray(stepTemplate)) {
         stepBlocks[stepId] = this.convertStepToBlocks(stepTemplate, stepNum, funnelId);
@@ -240,12 +244,14 @@ export class QuizToEditorAdapter {
 
   /**
    * 🎯 Obter configuração específica para uma etapa
+   * ✅ CORREÇÃO: Agora usa hierarchicalTemplateSource (async)
    */
   static async getStepConfiguration(stepNumber: number): Promise<QuizStepData | null> {
-    const stepId = `step-${stepNumber}`;
-    const template = getStepTemplate(stepId);
+    const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+    const result = await hierarchicalTemplateSource.getPrimary(stepId);
+    const template = result?.data || [];
     
-    if (!template) return null;
+    if (!template || template.length === 0) return null;
 
     // Determinar tipo da etapa baseado no número
     let type: QuizStepData['type'];
