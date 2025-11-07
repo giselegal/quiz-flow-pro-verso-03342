@@ -144,17 +144,13 @@ export default defineConfig(({ mode }) => {
             const isDev = mode !== 'production';
 
             if (id.includes('node_modules')) {
-              // CRÍTICO: React e react-dom DEVEM estar no PRIMEIRO chunk carregado
-              // Sem isto, ui-vendor tenta usar React.forwardRef antes do React existir
+              // SOLUÇÃO DEFINITIVA: NÃO separar React em chunks diferentes
+              // React, ReactDOM e UI components (Radix) vão TODOS para o MESMO chunk
+              // Isto garante que React esteja disponível quando Radix tentar usar forwardRef
               if (id.includes('/react/') || id.includes('/react-dom/') || 
-                  id.includes('/scheduler/') || id.includes('/react-is/')) {
-                return 'vendor'; // Chunk 0 - Carrega PRIMEIRO (priority)
-              }
-              
-              // UI vendors (Radix, Lucide) dependem do React
-              // Só podem vir DEPOIS do vendor carregar
-              if (id.includes('@radix-ui') || id.includes('lucide-react')) {
-                return 'ui-vendor'; // Chunk 1 - Carrega DEPOIS do vendor
+                  id.includes('/scheduler/') || id.includes('/react-is/') ||
+                  id.includes('@radix-ui') || id.includes('lucide-react')) {
+                return 'vendor'; // TUDO no mesmo chunk - sem problemas de ordem
               }
               
               if (!isDev && id.includes('recharts')) return 'charts-vendor';
