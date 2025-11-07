@@ -145,16 +145,16 @@ export default defineConfig(({ mode }) => {
 
             if (id.includes('node_modules')) {
               // SOLUÇÃO DEFINITIVA: NÃO separar React em chunks diferentes
-              // React, ReactDOM e UI components (Radix) vão TODOS para o MESMO chunk
-              // Isto garante que React esteja disponível quando Radix tentar usar forwardRef
+              // React, ReactDOM, UI components (Radix) E DND-KIT vão TODOS para o MESMO chunk
+              // Isto garante que React esteja disponível quando qualquer lib tentar usar React hooks
               if (id.includes('/react/') || id.includes('/react-dom/') || 
                   id.includes('/scheduler/') || id.includes('/react-is/') ||
-                  id.includes('@radix-ui') || id.includes('lucide-react')) {
+                  id.includes('@radix-ui') || id.includes('lucide-react') ||
+                  id.includes('@dnd-kit')) { // ✅ CORREÇÃO: DND também vai pro vendor principal
                 return 'vendor'; // TUDO no mesmo chunk - sem problemas de ordem
               }
               
               if (!isDev && id.includes('recharts')) return 'charts-vendor';
-              if (id.includes('@dnd-kit')) return 'dnd-vendor';
               
               // Outros node_modules vão para vendor genérico
               return 'vendor-misc';
