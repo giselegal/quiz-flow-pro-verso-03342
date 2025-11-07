@@ -157,6 +157,10 @@ export const Home: React.FC = () => {
               <a href="#features" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Features</a>
               <a href="#testimonials" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Reviews</a>
               <a href="#pricing" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Pricing</a>
+              <Button onClick={() => navigate('/demo/templates')} variant="ghost" size="sm" className="text-brand-brightBlue hover:text-brand-brightBlue/80">
+                <Zap className="h-4 w-4 mr-1" />
+                Demo
+              </Button>
             </nav>
 
             <div className="flex items-center space-x-3">
