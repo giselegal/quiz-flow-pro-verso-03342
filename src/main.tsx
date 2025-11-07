@@ -1,11 +1,13 @@
 // 🛡️ CRITICAL: Importar React PRIMEIRO para garantir disponibilidade global
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 // 🔧 POLYFILLS GLOBAIS PARA REACT APIs
 // Deve ser aplicado ANTES de qualquer bundle de vendor ser carregado
 if (typeof window !== 'undefined') {
   // Garantir React global para todos os vendors
   (window as any).React = React;
+  (window as any).ReactDOM = ReactDOM;
 
   // Aplicar polyfills completos para APIs que podem estar ausentes
   const reactGlobalPolyfills = {
@@ -28,8 +30,18 @@ if (typeof window !== 'undefined') {
 
   // Garantir que window.React tenha todos os polyfills
   (window as any).React = { ...React, ...reactGlobalPolyfills };
+  
+  // CRÍTICO: Verificar se forwardRef está disponível
+  if (!React.forwardRef) {
+    console.error('❌ React.forwardRef não está disponível! Aplicando polyfill de emergência...');
+    (React as any).forwardRef = reactGlobalPolyfills.forwardRef;
+  }
 
-  console.log('🔧 [main.tsx] Polyfills React aplicados globalmente');
+  console.log('🔧 [main.tsx] Polyfills React aplicados globalmente', {
+    hasForwardRef: !!React.forwardRef,
+    hasWindow: typeof window !== 'undefined',
+    windowReact: !!(window as any).React,
+  });
 }
 
 import { createRoot } from 'react-dom/client';

@@ -144,9 +144,15 @@ export default defineConfig(({ mode }) => {
             const isDev = mode !== 'production';
 
             if (id.includes('node_modules')) {
-              // CRÍTICO: React deve estar no chunk principal, não separado, para evitar forwardRef errors
-              if (id.includes('/react/') || id.includes('react-dom')) return 'react-core';
+              // CRÍTICO: React e react-dom DEVEM estar no vendor principal (não separar)
+              // para garantir que estejam disponíveis antes de qualquer outro chunk
+              if (id.includes('/react/') || id.includes('/react-dom/')) {
+                return 'vendor'; // Chunk principal que carrega PRIMEIRO
+              }
+              
+              // UI vendors (Radix, Lucide) dependem do React, então só podem vir depois
               if (id.includes('@radix-ui') || id.includes('lucide-react')) return 'ui-vendor';
+              
               if (!isDev && id.includes('recharts')) return 'charts-vendor'; // somente produz separar
               if (id.includes('@dnd-kit')) return 'dnd-vendor';
               return 'vendor';
