@@ -1017,9 +1017,10 @@ export async function discoverAllComponentProperties(): Promise<Map<string, Comp
 
 /**
  * Gets property schema for a specific component and property key
+ * ✅ CORREÇÃO: Agora é async
  */
-export function getPropertySchema(componentType: string, propertyKey: string): DiscoveredProperty | null {
-  const schema = discoverComponentProperties(componentType);
+export async function getPropertySchema(componentType: string, propertyKey: string): Promise<DiscoveredProperty | null> {
+  const schema = await discoverComponentProperties(componentType);
   if (!schema) return null;
 
   return schema.properties.find(p => p.key === propertyKey) || null;
