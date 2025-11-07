@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { stepKeys } from '@/api/steps/hooks';
-import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useSuperUnified } from '@/hooks/useSuperUnified';
 import { useDndSystem } from './hooks/useDndSystem';
@@ -194,8 +194,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         return () => clearTimeout(timer);
     }, [enableAutoSave, isDirty, currentStepKey, saveStepBlocks, safeCurrentStep]);
 
-    // DnD sensors
-    const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+    // DnD sensors (usando hook seguro)
+    const sensors = useSafeDndSensors();
 
     // normalize order helper
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
@@ -549,13 +549,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep]);
 
     return (
-        <DndContext
+        <SafeDndContext
             sensors={sensors}
-            collisionDetection={closestCenter}
             onDragStart={dnd.handlers.onDragStart}
             onDragOver={dnd.handlers.onDragOver}
             onDragEnd={handleDragEnd}
-            onDragCancel={dnd.handlers.onDragCancel}
         >
             <div className="qm-editor flex flex-col h-screen bg-gray-50" data-editor="modular-enhanced">
                 {/* Header */}
@@ -811,22 +809,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     </Panel>
                 </PanelGroup>
 
-                <DragOverlay>
-                    {dnd.activeId ? (
-                        <div className="px-3 py-2 text-xs rounded-md border bg-white shadow-lg flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-blue-500" />
-                            {dnd.draggedItem?.type === 'library-item' ? `+ ${dnd.draggedItem.libraryType}` : 'Bloco'}
-                        </div>
-                    ) : null}
-                </DragOverlay>
-
                 {import.meta.env.DEV && MetricsPanel && (
                     <Suspense fallback={null}>
                         <MetricsPanel />
                     </Suspense>
                 )}
             </div>
-        </DndContext>
+        </SafeDndContext>
     );
 }
 

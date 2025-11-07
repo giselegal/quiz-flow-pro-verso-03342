@@ -2,9 +2,12 @@
 // ✅ FASE 4.2: Skeleton loading states adicionado
 // ✅ SPRINT 1: Event listener leak fix + auto metrics
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import {
+    useSafeDroppable,
+    SafeSortableContext,
+    useSafeSortable,
+    SafeCSS
+} from '../SafeDndContext';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/editor';
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
@@ -45,9 +48,9 @@ function SortableBlockItem({
     onRemoveBlock?: (blockId: string) => void;
     onUpdateBlock?: (blockId: string, patch: Partial<Block>) => void;
 }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id });
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSafeSortable({ id: block.id });
     const style: React.CSSProperties = {
-        transform: CSS.Transform.toString(transform),
+        transform: SafeCSS?.Transform?.toString(transform) || 'none',
         transition,
         opacity: isDragging ? 0.6 : 1,
     };
@@ -186,7 +189,7 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     });
 
     // Configurar como drop zone para DnD
-    const { setNodeRef, isOver } = useDroppable({
+    const { setNodeRef, isOver } = useSafeDroppable({
         id: 'canvas',
     });
 
