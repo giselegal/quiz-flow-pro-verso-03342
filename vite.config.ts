@@ -151,6 +151,10 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: true,
         },
         output: {
+          // 🔒 Evitar reordenação perigosa entre módulos (mitiga TDZ)
+          preserveModules: true,
+          preserveModulesRoot: 'src',
+          hoistTransitiveImports: false,
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
           // 🚀 CODE SPLITTING MAIS GRANULAR
