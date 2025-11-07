@@ -106,12 +106,12 @@ const EditorRoutesInner: React.FC = () => {
 
         // Verificar se usuário já escolheu não mostrar novamente
         const dontShowAgain = localStorage.getItem('editor:skipStartupModal') === 'true';
-        
+
         console.log('🔍 VERIFICANDO SE DEVE MOSTRAR MODAL:');
         console.log('  - resourceId:', resourceId);
         console.log('  - dontShowAgain:', dontShowAgain);
         console.log('  - Vai mostrar?', !resourceId && !dontShowAgain);
-        
+
         // Mostrar modal apenas se não tem resource na URL E usuário não escolheu pular
         if (!resourceId && !dontShowAgain) {
             console.log('✅ ATIVANDO MODAL!');
@@ -119,7 +119,7 @@ const EditorRoutesInner: React.FC = () => {
         } else {
             console.log('❌ NÃO vai mostrar modal');
         }
-    }, [resourceId]);    const handleSelectMode = useCallback((mode: 'blank' | 'template') => {
+    }, [resourceId]); const handleSelectMode = useCallback((mode: 'blank' | 'template') => {
         setShowStartupModal(false);
 
         if (mode === 'template') {
