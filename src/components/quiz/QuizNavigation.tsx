@@ -230,7 +230,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                     aria-label={
                       currentStep === totalSteps ? 'Finalizar quiz' : 'Ir para a próxima etapa'
                     }
-                    onKeyDown={e => {
+                    onKeyDown={(e: React.KeyboardEvent) => {
                       if (!canProceed) return;
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();

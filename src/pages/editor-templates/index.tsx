@@ -163,7 +163,7 @@ const EditorTemplatesPage: React.FC = () => {
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleSelectTemplate(template.id);
                     }}
@@ -175,7 +175,7 @@ const EditorTemplatesPage: React.FC = () => {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handlePreviewTemplate(template.id);
                     }}

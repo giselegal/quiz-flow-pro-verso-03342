@@ -178,7 +178,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
             variant="secondary"
             size="sm"
             className="h-6 w-6 p-0 text-red-600 hover:bg-red-100"
-            onClick={e => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               onDelete();
             }}

@@ -7,14 +7,24 @@ import { cn } from '@/lib/utils';
 
 const labelVariants = cva(
   'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-) as unknown as () => string;
+);
 
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>
->(({ className, ...props }, ref) => (
-  <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), className)} {...props} />
-));
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  // Safely convert variant result to string for cn utility
+  const variantResult = labelVariants();
+  const variantClasses = typeof variantResult === 'string' ? variantResult : '';
+  
+  return (
+    <LabelPrimitive.Root 
+      ref={ref} 
+      className={cn(variantClasses, className)} 
+      {...props} 
+    />
+  );
+});
 Label.displayName = LabelPrimitive.Root.displayName;
 
 export { Label };

@@ -45,7 +45,7 @@ const EditModeRenderer: React.FC<EditModeRendererProps> = ({
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             onDelete?.();
                         }}
@@ -58,7 +58,7 @@ const EditModeRenderer: React.FC<EditModeRendererProps> = ({
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             onDuplicate?.();
                         }}
