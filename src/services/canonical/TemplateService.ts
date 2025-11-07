@@ -378,17 +378,27 @@ export class TemplateService extends BaseCanonicalService {
    */
   private async getStepFromHierarchicalSource(
     stepId: string,
-    templateId?: string
+    templateId?: string,
+    signal?: AbortSignal
   ): Promise<ServiceResult<Block[]>> {
     const startTime = performance.now();
 
     try {
-  // Extrair funnelId do contexto se disponível
-  // TODO: Passar funnelId como parâmetro no futuro
-  const funnelId = this.activeFunnelId || undefined;
+      // ✅ Verificar cancelamento
+      if (signal?.aborted) {
+        throw new Error('Operation aborted');
+      }
+
+      // Extrair funnelId do contexto se disponível
+      const funnelId = this.activeFunnelId || undefined;
 
       // Usar HierarchicalTemplateSource
       const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
+
+      // ✅ Verificar cancelamento após fetch
+      if (signal?.aborted) {
+        throw new Error('Operation aborted');
+      }
 
       // Log da fonte usada (debug/monitoring)
       this.log(`✅ [NEW] Step ${stepId} loaded from ${DataSourcePriority[result.metadata.source]} (${result.metadata.loadTime.toFixed(1)}ms)`);
@@ -402,6 +412,10 @@ export class TemplateService extends BaseCanonicalService {
 
       return this.createResult(result.data);
     } catch (error) {
+      if (signal?.aborted || (error as Error).message === 'Operation aborted') {
+        throw error; // Re-throw para tratar no caller
+      }
+      
       this.error('[NEW] getStepFromHierarchicalSource failed:', error);
       // Se JSON-only estiver ativo, não cair no legado para evitar drift/registry
       if (this.JSON_ONLY) {
@@ -410,7 +424,7 @@ export class TemplateService extends BaseCanonicalService {
       }
       // Fallback para legacy se novo sistema falhar
       this.log('[WARN][NEW] Falling back to legacy system');
-      return await this.getStepLegacy(stepId, templateId, performance.now());
+      return await this.getStepLegacy(stepId, templateId, performance.now(), signal);
     }
   }
 
@@ -420,8 +434,14 @@ export class TemplateService extends BaseCanonicalService {
   private async getStepLegacy(
     stepId: string,
     templateId: string | undefined,
-    startTime: number
+    startTime: number,
+    signal?: AbortSignal
   ): Promise<ServiceResult<Block[]>> {
+    // ✅ Verificar cancelamento
+    if (signal?.aborted) {
+      throw new Error('Operation aborted');
+    }
+
     // ✅ FASE 1.2: Verificar cache PRIMEIRO
     const cacheKey = `template:${templateId || 'default'}:${stepId}`;
     const cachedResult = cacheService.templates.get<Block[]>(cacheKey);
@@ -436,8 +456,18 @@ export class TemplateService extends BaseCanonicalService {
     this.log(`⏳ Cache MISS: ${stepId} - Loading...`);
     editorMetrics.trackCacheMiss(cacheKey); // ✅ FASE 3.3
 
+    // ✅ Verificar cancelamento antes de fetch
+    if (signal?.aborted) {
+      throw new Error('Operation aborted');
+    }
+
     // FASE 2: Carregar do registry (lazy loading)
     const blocks = await this.registry.getStep(stepId, templateId);
+
+    // ✅ Verificar cancelamento após fetch
+    if (signal?.aborted) {
+      throw new Error('Operation aborted');
+    }
 
     if (!blocks || blocks.length === 0) {
       return this.createError(new Error(`Step not found: ${stepId}`));
