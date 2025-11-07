@@ -291,7 +291,7 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
                 {currentStepKey}
                 {isOver && <span className="text-blue-600 text-xs ml-2">Solte aqui</span>}
             </div>
-            <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+            <SafeSortableContext items={blocks.map(b => b.id)}>
                 <ul className="space-y-1">
                     {normalizeBlocksData(blocks).map((b, idx) => {
                         normalizerLogger.debug(`Rendering normalized block ${b.type}`, {
@@ -316,7 +316,7 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
                         );
                     })}
                 </ul>
-            </SortableContext>
+            </SafeSortableContext>
         </div>
     );
 }
