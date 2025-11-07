@@ -8,7 +8,7 @@
  * - Preload resource warnings
  */
 
-// 1. Remove warnings de features não suportadas
+// 1. Remove/normaliza warnings de features não suportadas e sandbox
 const cleanupBrowserWarnings = () => {
   // Remove meta tags com features não suportadas
   const unsupportedFeatures = ['vr', 'ambient-light-sensor', 'battery'];
@@ -20,14 +20,36 @@ const cleanupBrowserWarnings = () => {
     metaTags.forEach(tag => tag.remove());
   });
 
+  // Normaliza atributo allow de iframes removendo features não suportadas
+  const featureMap = ['vr', 'ambient-light-sensor', 'battery'];
+  document.querySelectorAll('iframe[allow]')
+    .forEach((iframe: Element) => {
+      const current = (iframe as HTMLIFrameElement).getAttribute('allow') || '';
+      const cleaned = current
+        .split(';')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .filter(token => !featureMap.some(f => token.startsWith(f)) )
+        .join('; ');
+      if (cleaned !== current) {
+        (iframe as HTMLIFrameElement).setAttribute('allow', cleaned);
+      }
+    });
+
   // Remove ou ajusta iframes com sandbox inseguro
   const iframes = document.querySelectorAll(
     'iframe[sandbox*="allow-scripts"][sandbox*="allow-same-origin"]',
   );
   iframes.forEach(iframe => {
     console.warn('⚠️ Iframe sandbox potentially insecure:', iframe);
-    // Opcionalmente, ajustar o sandbox
-    // iframe.setAttribute('sandbox', 'allow-scripts'); // Remover allow-same-origin se não necessário
+    // Estratégia conservadora: manter scripts, remover same-origin a menos que esteja marcado explicitamente
+    const el = iframe as HTMLIFrameElement;
+    const current = el.getAttribute('sandbox') || '';
+    const tokens = new Set(current.split(/\s+/).filter(Boolean));
+    if (tokens.has('allow-scripts') && tokens.has('allow-same-origin')) {
+      tokens.delete('allow-same-origin');
+      el.setAttribute('sandbox', Array.from(tokens).join(' '));
+    }
   });
 };
 

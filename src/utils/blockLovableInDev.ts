@@ -46,8 +46,15 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
                         headers: { 'Content-Type': 'application/json' },
                     }));
                 }
-
-                return Promise.reject(new Error('Lovable requests blocked in development'));
+                // Em vez de rejeitar (gerando erros no console), retornamos resposta neutra
+                return Promise.resolve(new Response(JSON.stringify({
+                    status: 'blocked_in_dev',
+                    ok: true,
+                    message: 'Lovable request silently neutralized in development'
+                }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                }));
             }
             return originalFetch(url, options);
         };
