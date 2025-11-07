@@ -5,7 +5,7 @@
  */
 
 import { Block } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { templateService } from '@/services/core/templateService';
 
 export interface TemplateThumbnail {
     id: string;
@@ -22,7 +22,12 @@ export const generateTemplateThumbnail = async (
     templateId: string,
     step1Blocks?: Block[],
 ): Promise<TemplateThumbnail> => {
-    const blocks = step1Blocks || QUIZ_STYLE_21_STEPS_TEMPLATE['step-1'] || [];
+    // Obter blocos: prioridade para step1Blocks, fallback para templateService
+    let blocks = step1Blocks;
+    if (!blocks) {
+        const stepResult = await templateService.getStep('step-01');
+        blocks = stepResult.success ? stepResult.data : [];
+    }
 
     // Criar canvas para renderizar o thumbnail
     const canvas = document.createElement('canvas');

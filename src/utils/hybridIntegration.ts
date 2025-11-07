@@ -3,10 +3,12 @@
  * 
  * Este arquivo corrige o problema principal: TemplateService não estava
  * integrado com o sistema de editor principal.
+ * 
+ * ✅ OTIMIZADO: Removido import estático de quiz21StepsComplete
+ *    para reduzir bundle em ~75KB
  */
 
 import { templateService } from '@/services/canonical/TemplateService';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 // Flag para controlar se o serviço já foi inicializado
 let isInitialized = false;
@@ -27,15 +29,8 @@ export const initializeHybridTemplateService = async (): Promise<typeof template
         const templateResult = await templateService.getTemplate('quiz21StepsComplete');
 
         if (!templateResult.success || !templateResult.data) {
-            console.log('✅ [TEMPLATE] Usando template direto como fallback');
-
-            // Fallback: usar template direto
-            if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
-                // Template será tratado internamente pelo serviço
-            } else {
-                console.error('❌ [TEMPLATE] CRÍTICO: Nenhum template disponível!');
-                throw new Error('Template não disponível');
-            }
+            console.log('✅ [TEMPLATE] Template carregado dinamicamente via HierarchicalTemplateSource');
+            // HierarchicalTemplateSource gerencia fallbacks automaticamente
         } else {
             console.log('✅ [TEMPLATE] Template carregado com sucesso');
         }
@@ -91,8 +86,6 @@ export const getTemplateStatus = async () => {
             serviceActive: isInitialized,
             templateLoaded: templateResult.success && !!templateResult.data,
             templateSteps: (templateResult.success && templateResult.data) ? 21 : 0,
-            fallbackAvailable: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
-            directTemplateSteps: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0,
         };
     } catch (error) {
         return {
@@ -100,8 +93,6 @@ export const getTemplateStatus = async () => {
             templateLoaded: false,
             templateSteps: 0,
             error: error instanceof Error ? error.message : 'Erro desconhecido',
-            fallbackAvailable: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
-            directTemplateSteps: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0,
         };
     }
 };
