@@ -1,5 +1,37 @@
 // 🛡️ CRITICAL: Importar React PRIMEIRO para garantir disponibilidade global
 import React from 'react';
+
+// 🔧 POLYFILLS GLOBAIS PARA REACT APIs
+// Deve ser aplicado ANTES de qualquer bundle de vendor ser carregado
+if (typeof window !== 'undefined') {
+  // Garantir React global para todos os vendors
+  (window as any).React = React;
+
+  // Aplicar polyfills completos para APIs que podem estar ausentes
+  const reactGlobalPolyfills = {
+    useLayoutEffect: React.useLayoutEffect || React.useEffect,
+    forwardRef: React.forwardRef || ((render: any) => {
+      return React.memo ? React.memo((props: any) => render(props, null)) : (props: any) => render(props, null);
+    }),
+    createRef: React.createRef || (() => ({ current: null })),
+    memo: React.memo || ((component: any) => component),
+    useMemo: React.useMemo || ((factory: any, deps?: any) => factory()),
+    useCallback: React.useCallback || ((callback: any, deps?: any) => callback),
+    useImperativeHandle: React.useImperativeHandle || (() => { }),
+    Fragment: React.Fragment || ((props: any) => props.children),
+    StrictMode: React.StrictMode || ((props: any) => props.children),
+    Suspense: React.Suspense || ((props: any) => props.children || props.fallback || null)
+  };
+
+  // Aplicar patches no React global para vendor bundles
+  Object.assign(React, reactGlobalPolyfills);
+
+  // Garantir que window.React tenha todos os polyfills
+  (window as any).React = { ...React, ...reactGlobalPolyfills };
+
+  console.log('🔧 [main.tsx] Polyfills React aplicados globalmente');
+}
+
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import ClientLayout from './components/ClientLayout';

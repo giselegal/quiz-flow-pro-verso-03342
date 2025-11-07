@@ -144,8 +144,8 @@ export default defineConfig(({ mode }) => {
             const isDev = mode !== 'production';
 
             if (id.includes('node_modules')) {
-              if (id.includes('/react/')) return 'react-vendor';
-              if (id.includes('react-dom')) return 'react-vendor';
+              // CRÍTICO: React deve estar no chunk principal, não separado, para evitar forwardRef errors
+              if (id.includes('/react/') || id.includes('react-dom')) return 'react-core';
               if (id.includes('@radix-ui') || id.includes('lucide-react')) return 'ui-vendor';
               if (!isDev && id.includes('recharts')) return 'charts-vendor'; // somente produz separar
               if (id.includes('@dnd-kit')) return 'dnd-vendor';
@@ -169,6 +169,10 @@ export default defineConfig(({ mode }) => {
         'prop-types',
         'object-assign',
         'wouter',
+        // Incluir APIs críticas que podem causar problemas se não pré-bundladas
+        '@radix-ui/react-slot',
+        '@radix-ui/react-portal',
+        'lucide-react',
       ],
       exclude: [
         '@supabase/functions-js',
