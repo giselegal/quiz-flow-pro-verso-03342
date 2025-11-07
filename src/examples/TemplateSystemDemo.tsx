@@ -296,10 +296,10 @@ export function TemplateSystemDemo() {
                                             </div>
                                             <Badge>{block.order ?? index}</Badge>
                                         </div>
-                                        {block.config && Object.keys(block.config).length > 0 && (
+                                        {(block as any).config && Object.keys((block as any).config).length > 0 && (
                                             <div className="mt-3 p-3 bg-background rounded text-xs">
                                                 <pre className="overflow-x-auto">
-                                                    {JSON.stringify(block.config, null, 2)}
+                                                    {JSON.stringify((block as any).config, null, 2)}
                                                 </pre>
                                             </div>
                                         )}
