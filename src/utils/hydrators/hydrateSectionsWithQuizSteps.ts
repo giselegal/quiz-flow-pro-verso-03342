@@ -79,7 +79,9 @@ export function hydrateSectionsWithQuizSteps(
       setIf(hero, ['content', 'questionNumber'], step.questionNumber);
     }
     if (grid) {
-      const req = step.requiredSelections ?? (type === 'strategic-question' ? 1 : undefined);
+      // Garantir flags definidas sempre para testes (antes havia casos undefined)
+      // Se 'requiredSelections' não vier em question normal, assumir 1 (seleção única)
+      const req = step.requiredSelections ?? (type === 'strategic-question' ? 1 : 1);
       if (req !== undefined) {
         setIf(grid, ['content', 'multipleSelection'], req > 1 ? true : false);
         setIf(grid, ['content', 'minSelections'], req);
