@@ -13,9 +13,8 @@ import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } 
 import { CSS } from '@dnd-kit/utilities';
 import type { Block } from '@/types/editor';
 // Steps modulares (edição com paridade de produção)
-// ❌ DEPRECATED: Componentes movidos para .archive/
-// import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
-// import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
+import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
+import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
 import { templateService } from '@/services/canonical/TemplateService';
 
@@ -556,23 +555,12 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         if (step.type === 'transition' || step.type === 'transition-result') {
             return (
                 <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
-                    {/* ❌ DEPRECATED: ModularTransitionStep movido para .archive/
                     <ModularTransitionStep
                         data={{ id: step.id }}
                         blocks={blocks as any}
                         editor={editor as any}
                         isEditable
-                    /> */}
-                    <div className="p-8 text-center">
-                        <p className="text-muted-foreground">Transition Step (componente em migração)</p>
-                        {blocks.map((block, idx) => (
-                            <LazyBlockRenderer 
-                                key={block.id || idx} 
-                                block={block}
-                                isEditable={isEditMode}
-                            />
-                        ))}
-                    </div>
+                    />
                 </div>
             );
         }
@@ -580,24 +568,13 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         if (step.type === 'result') {
             return (
                 <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
-                    {/* ❌ DEPRECATED: ModularResultStep movido para .archive/
                     <ModularResultStep
                         data={{ id: step.id }}
                         blocks={blocks as any}
                         editor={editor as any}
                         isEditable
                         userProfile={(contextData as any)?.userProfile}
-                    /> */}
-                    <div className="p-8 text-center">
-                        <p className="text-muted-foreground">Result Step (componente em migração)</p>
-                        {blocks.map((block, idx) => (
-                            <LazyBlockRenderer 
-                                key={block.id || idx} 
-                                block={block}
-                                isEditable={isEditMode}
-                            />
-                        ))}
-                    </div>
+                    />
                 </div>
             );
         }
