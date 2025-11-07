@@ -89,7 +89,7 @@ export default function ResultShareBlock({
                             variant="outline"
                             size="sm"
                             className="flex items-center gap-2"
-                            onClick={(e) => {
+                            onClick={(e: React.MouseEvent) => {
                                 e.stopPropagation();
                                 if (!isSelected) {
                                     shareHandlers[platform]();
