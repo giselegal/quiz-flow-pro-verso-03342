@@ -75,7 +75,7 @@ export interface DndWrapperProps {
 }
 
 /**
- * Wrapper seguro para DndContext que previne erros de useLayoutEffect
+ * Wrapper seguro para DndContext que previne erros de React APIs
  */
 export function SafeDndContext({
     children,
@@ -83,42 +83,63 @@ export function SafeDndContext({
     onDragStart,
     onDragOver,
     sensors,
-    collisionDetection = closestCenter,
+    collisionDetection,
     disabled = false
 }: DndWrapperProps) {
+    const [dndReady, setDndReady] = React.useState(!!DndContext);
+    const [dndComponents, setDndComponents] = React.useState<any>(null);
+
+    React.useEffect(() => {
+        if (!DndContext && !disabled) {
+            loadDndKit().then((components) => {
+                if (components) {
+                    setDndComponents(components);
+                    setDndReady(true);
+                }
+            });
+        }
+    }, [disabled]);
+
     // Se @dnd-kit não carregou ou está desabilitado, renderizar sem DnD
-    if (!DndContext || disabled) {
-        console.log('🔄 [DndWrapper] Renderizando sem drag-and-drop (desabilitado ou não disponível)');
-        return <>{children}</>;
+    if (!dndReady || disabled || (!DndContext && !dndComponents)) {
+        return (
+            <div data-testid="safe-dnd-fallback">
+                {children}
+            </div>
+        );
     }
 
-    // Se não há React disponível, fallback
-    if (typeof React.useLayoutEffect === 'undefined') {
-        console.warn('⚠️ [DndWrapper] React.useLayoutEffect não disponível, desabilitando DnD');
-        return <>{children}</>;
+    // Usar componentes carregados dinamicamente ou estáticos
+    const ActiveDndContext = dndComponents?.DndContext || DndContext;
+    const ActiveDragOverlay = dndComponents?.DragOverlay || DragOverlay;
+    const activeCollisionDetection = collisionDetection || dndComponents?.closestCenter || closestCenter;
+
+    if (!ActiveDndContext) {
+        return <div data-testid="safe-dnd-no-context">{children}</div>;
     }
 
     try {
         return (
-            <DndContext
+            <ActiveDndContext
                 sensors={sensors}
-                collisionDetection={collisionDetection}
+                collisionDetection={activeCollisionDetection}
                 onDragStart={onDragStart}
                 onDragOver={onDragOver}
                 onDragEnd={onDragEnd}
             >
                 {children}
-                <DragOverlay>
-                    <div className="opacity-50 bg-gray-100 border border-dashed border-gray-300 p-2 rounded">
-                        Movendo item...
-                    </div>
-                </DragOverlay>
-            </DndContext>
+                {ActiveDragOverlay && (
+                    <ActiveDragOverlay>
+                        <div className="opacity-50 bg-gray-100 border border-dashed border-gray-300 p-2 rounded">
+                            Movendo item...
+                        </div>
+                    </ActiveDragOverlay>
+                )}
+            </ActiveDndContext>
         );
     } catch (error) {
-        console.error('❌ [DndWrapper] Erro ao renderizar DndContext:', error);
-        // Fallback: renderizar sem DnD
-        return <>{children}</>;
+        console.error('❌ [SafeDndContext] Erro ao renderizar:', error);
+        return <div data-testid="safe-dnd-error">{children}</div>;
     }
 }
 
