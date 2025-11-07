@@ -1,13 +1,27 @@
 /**
- * 🔧 DND CONTEXT WRAPPER - Correção para erro useLayoutEffect
+ * 🔧 REACT + DND CONTEXT WRAPPER - Correção completa para erros React
  * 
- * Resolve o problema "Cannot read properties of undefined (reading 'useLayoutEffect')"
- * que ocorre quando @dnd-kit tenta acessar hooks do React em contexto inválido
+ * Resolve os problemas:
+ * - "Cannot read properties of undefined (reading 'useLayoutEffect')"
+ * - "Cannot read properties of undefined (reading 'forwardRef')"
  */
 
 import React, { Suspense } from 'react';
 
-// Import condicional do DndContext
+// Garantir que React está disponível globalmente
+if (typeof window !== 'undefined') {
+    (window as any).React = React;
+
+    // Polyfills para APIs React que podem estar ausentes
+    if (!React.useLayoutEffect) {
+        (React as any).useLayoutEffect = React.useEffect;
+    }
+    if (!React.forwardRef) {
+        (React as any).forwardRef = (render: any) => render;
+    }
+}
+
+// Import estático seguro (ES modules)
 let DndContext: any = null;
 let DragOverlay: any = null;
 let closestCenter: any = null;
@@ -15,16 +29,39 @@ let PointerSensor: any = null;
 let useSensor: any = null;
 let useSensors: any = null;
 
+// Import dinâmico mais seguro
+const loadDndKit = async () => {
+    try {
+        if (typeof window === 'undefined') return null;
+
+        const dndCore = await import('@dnd-kit/core');
+        return {
+            DndContext: dndCore.DndContext,
+            DragOverlay: dndCore.DragOverlay,
+            closestCenter: dndCore.closestCenter,
+            PointerSensor: dndCore.PointerSensor,
+            useSensor: dndCore.useSensor,
+            useSensors: dndCore.useSensors,
+        };
+    } catch (error) {
+        console.warn('❌ [SafeDndContext] Falha ao carregar @dnd-kit:', error);
+        return null;
+    }
+};
+
+// Tentar carregar sincronamente primeiro (fallback)
 try {
-    const dndKit = require('@dnd-kit/core');
-    DndContext = dndKit.DndContext;
-    DragOverlay = dndKit.DragOverlay;
-    closestCenter = dndKit.closestCenter;
-    PointerSensor = dndKit.PointerSensor;
-    useSensor = dndKit.useSensor;
-    useSensors = dndKit.useSensors;
+    const dndCore = (window as any)['@dnd-kit/core'] || require('@dnd-kit/core');
+    if (dndCore) {
+        DndContext = dndCore.DndContext;
+        DragOverlay = dndCore.DragOverlay;
+        closestCenter = dndCore.closestCenter;
+        PointerSensor = dndCore.PointerSensor;
+        useSensor = dndCore.useSensor;
+        useSensors = dndCore.useSensors;
+    }
 } catch (error) {
-    console.warn('❌ [DndWrapper] Falha ao carregar @dnd-kit/core:', error);
+    // Será carregado assincronamente no useEffect
 }
 
 export interface DndWrapperProps {
