@@ -252,8 +252,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 // ✅ CORRIGIDO: Usar QuestionTextBlock dedicado para título + subtítulo
                 return <QuestionTextBlock block={block} {...rest} />;
             case 'question-hero':
-                // Template v3: question-hero section → header completo
-                return <QuizQuestionHeaderBlock block={block} {...rest} />;
+                // Template v3: question-hero section → componente atômico dedicado
+                return <QuestionHeroBlock block={block} {...rest} />;
             case 'CTAButton':
                 // Versão atômica do CTA (passa contextData para navegação)
                 return <CTAButtonAtomic block={block} {...rest} contextData={rest.contextData} />;

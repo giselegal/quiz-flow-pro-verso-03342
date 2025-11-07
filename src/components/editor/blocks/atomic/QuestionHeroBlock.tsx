@@ -8,26 +8,30 @@
  */
 
 import React from 'react';
-import type { BlockComponentProps } from '@/types/blockTypes';
+import type { Block } from '@/types/editor';
 
-export interface QuestionHeroBlockProps extends BlockComponentProps {
-    // Props específicas podem ser adicionadas aqui
+export interface QuestionHeroBlockProps {
+    block: Block;
+    isSelected?: boolean;
+    isEditable?: boolean;
+    onSelect?: (blockId: string) => void;
+    onOpenProperties?: (blockId: string) => void;
 }
 
 export default function QuestionHeroBlock({
-    data,
+    block,
     isSelected = false,
     isEditable = false,
     onSelect,
-    onUpdate
+    onOpenProperties
 }: QuestionHeroBlockProps) {
-    const { imageUrl, title, description } = data.props || {};
+    const { imageUrl, title, description } = block.properties || block.content || {};
     const {
         height = '200px',
         objectFit = 'cover',
         borderRadius = '8px',
         backgroundColor = '#f8fafc'
-    } = data.props || {}; return (
+    } = block.properties || block.content || {}; return (
         <div className="question-hero mb-6">
             {imageUrl ? (
                 <div
