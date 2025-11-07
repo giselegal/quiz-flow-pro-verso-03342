@@ -55,7 +55,7 @@ export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalPro
                 </DialogHeader>                <div className="grid grid-cols-2 gap-4 py-6">
                     {/* Opção 1: Canvas Vazio */}
                     <button
-                        onClick={() => onSelectMode('blank')}
+                        onClick={() => handleSelectMode('blank')}
                         data-testid="editor-startup-blank-button"
                         className="flex flex-col items-center gap-4 p-6 rounded-lg border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all group"
                     >
@@ -72,7 +72,7 @@ export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalPro
 
                     {/* Opção 2: Usar Template */}
                     <button
-                        onClick={() => onSelectMode('template')}
+                        onClick={() => handleSelectMode('template')}
                         data-testid="editor-startup-template-button"
                         className="flex flex-col items-center gap-4 p-6 rounded-lg border-2 border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-all group"
                     >
@@ -88,7 +88,20 @@ export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalPro
                     </button>
                 </div>
 
-                <p className="text-xs text-gray-500 text-center mt-2">
+                <div className="flex items-center justify-center gap-2 mt-4 mb-2">
+                    <input
+                        type="checkbox"
+                        id="dontShowAgain"
+                        checked={dontShowAgain}
+                        onChange={(e) => setDontShowAgain(e.target.checked)}
+                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <label htmlFor="dontShowAgain" className="text-sm text-gray-600 cursor-pointer">
+                        Não mostrar novamente
+                    </label>
+                </div>
+
+                <p className="text-xs text-gray-500 text-center">
                     💡 Você poderá adicionar/remover etapas depois
                 </p>
             </DialogContent>
