@@ -553,6 +553,75 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep]);
 
+    // Import template from JSON
+    const handleImportTemplate = useCallback(async (template: any, stepId?: string) => {
+        try {
+            appLogger.info(`📥 [QuizModularEditor] Importando template JSON: ${template.metadata.name}`);
+
+            if (stepId) {
+                // Import single step
+                if (template.steps[stepId]) {
+                    const blocks = template.steps[stepId];
+                    const stepIndex = parseInt(stepId.replace('step-', ''), 10);
+
+                    if (!isNaN(stepIndex)) {
+                        setStepBlocks(stepIndex, blocks);
+                        showToast({
+                            type: 'success',
+                            title: 'Step importado',
+                            message: `${blocks.length} blocos importados para ${stepId}`
+                        });
+                        appLogger.info(`✅ [QuizModularEditor] Step ${stepId} importado: ${blocks.length} blocos`);
+                    }
+                } else {
+                    throw new Error(`Step "${stepId}" não encontrado no template`);
+                }
+            } else {
+                // Import full template
+                const stepEntries = Object.entries(template.steps);
+                let totalBlocks = 0;
+
+                for (const [key, blocks] of stepEntries) {
+                    const stepIndex = parseInt(key.replace('step-', ''), 10);
+                    if (!isNaN(stepIndex) && Array.isArray(blocks)) {
+                        setStepBlocks(stepIndex, blocks as Block[]);
+                        totalBlocks += blocks.length;
+                    }
+                }
+
+                // Update loaded template metadata
+                setLoadedTemplate({
+                    name: template.metadata.name,
+                    steps: stepEntries.map(([key], index) => ({
+                        id: key,
+                        order: index + 1,
+                        name: `Etapa ${index + 1}`
+                    }))
+                });
+
+                // Navigate to first step
+                setCurrentStep(1);
+
+                showToast({
+                    type: 'success',
+                    title: 'Template importado',
+                    message: `${stepEntries.length} steps importados com ${totalBlocks} blocos no total`
+                });
+                appLogger.info(`✅ [QuizModularEditor] Template completo importado: ${stepEntries.length} steps, ${totalBlocks} blocos`);
+            }
+
+            // Invalidate cache
+            queryClient.invalidateQueries({ queryKey: ['templates'] });
+        } catch (error) {
+            appLogger.error('[QuizModularEditor] Erro ao importar template:', error);
+            showToast({
+                type: 'error',
+                title: 'Erro ao importar',
+                message: error instanceof Error ? error.message : 'Erro desconhecido'
+            });
+        }
+    }, [setStepBlocks, setLoadedTemplate, setCurrentStep, showToast, queryClient]);
+
     return (
         <SafeDndContext
             sensors={sensors}
@@ -677,6 +746,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <Button size="sm" variant="outline" onClick={handleExportV3} className="h-7">
                             <Download className="w-3 h-3 mr-1" />
                             Exportar v3
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setIsImportDialogOpen(true)}
+                            className="h-7"
+                            title="Importar template JSON"
+                        >
+                            <Upload className="w-3 h-3 mr-1" />
+                            Importar JSON
                         </Button>
                     </div>
                 </div>
@@ -819,6 +898,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <MetricsPanel />
                     </Suspense>
                 )}
+
+                {/* Import Template Dialog */}
+                <ImportTemplateDialog
+                    open={isImportDialogOpen}
+                    onClose={() => setIsImportDialogOpen(false)}
+                    onImport={handleImportTemplate}
+                    currentStepKey={currentStepKey}
+                />
             </div>
         </SafeDndContext>
     );
