@@ -5,10 +5,20 @@
  * - Carregar templates via URL (ex: /editor/quiz21StepsComplete)
  * - Converter formato de template para editor
  * - Gerenciar cache de templates
+ * 
+ * PRIORIDADE DE CARREGAMENTO:
+ * 1. Templates JSON built-in (src/templates/*.json) - build-time
+ * 2. Templates TypeScript (.ts) - runtime fallback
+ * 3. Backend templates - se disponível
  */
 
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from './quiz21StepsComplete';
 import { Block } from '@/types/editor';
+import { 
+  getBuiltInTemplateById, 
+  hasBuiltInTemplate,
+  listBuiltInTemplateIds 
+} from '@/services/templates/builtInTemplates';
 
 export interface TemplateMetadata {
   id: string;
@@ -186,25 +196,88 @@ async function loadROITemplate(): Promise<FullTemplate> {
 
 /**
  * Carrega template completo por ID
+ * PRIORIDADE: 1) Built-in JSON, 2) TypeScript modules, 3) Backend
  */
 export async function loadFullTemplate(templateId: string): Promise<FullTemplate | null> {
   console.log(`🎯 [TemplateRegistry] Tentando carregar template: ${templateId}`);
   
+  // 1️⃣ PRIORIDADE: Verificar se existe template JSON built-in
+  if (hasBuiltInTemplate(templateId)) {
+    console.log(`✅ [TemplateRegistry] Usando template JSON built-in: ${templateId}`);
+    try {
+      const builtInTemplate = getBuiltInTemplateById(templateId);
+      if (builtInTemplate) {
+        // Normalizar template JSON para formato FullTemplate
+        const normalized = normalizeBuiltInTemplate(builtInTemplate, templateId);
+        console.log(`✅ [TemplateRegistry] Template JSON carregado: ${templateId}`);
+        return normalized;
+      }
+    } catch (error) {
+      console.error(`❌ [TemplateRegistry] Erro ao carregar built-in JSON ${templateId}:`, error);
+      // Continuar para fallback
+    }
+  }
+  
+  // 2️⃣ FALLBACK: Usar registry TypeScript
   const loader = TEMPLATE_REGISTRY[templateId];
   if (!loader) {
     console.warn(`⚠️ [TemplateRegistry] Template não encontrado: ${templateId}`);
-    console.log('📋 [TemplateRegistry] Templates disponíveis:', Object.keys(TEMPLATE_REGISTRY));
+    console.log('📋 [TemplateRegistry] Templates disponíveis (TS):', Object.keys(TEMPLATE_REGISTRY));
+    console.log('📋 [TemplateRegistry] Templates disponíveis (JSON):', listBuiltInTemplateIds());
     return null;
   }
 
   try {
     const template = await loader();
-    console.log(`✅ [TemplateRegistry] Template carregado com sucesso: ${templateId}`);
+    console.log(`✅ [TemplateRegistry] Template .ts carregado com sucesso: ${templateId}`);
     return template;
   } catch (error) {
     console.error(`❌ [TemplateRegistry] Erro ao carregar template ${templateId}:`, error);
     return null;
   }
+}
+
+/**
+ * Normaliza template JSON built-in para formato FullTemplate
+ * Aceita formatos v3.1 e raw editor export
+ */
+function normalizeBuiltInTemplate(builtIn: any, templateId: string): FullTemplate {
+  // Se já está no formato correto
+  if (builtIn.steps && builtIn.metadata) {
+    return builtIn as FullTemplate;
+  }
+  
+  // Converter de formato v3.1 ou raw export
+  const steps: Record<string, Block[]> = {};
+  let totalSteps = 0;
+  
+  // Processar steps do template
+  if (builtIn.steps && typeof builtIn.steps === 'object') {
+    for (const [stepKey, stepBlocks] of Object.entries(builtIn.steps)) {
+      if (Array.isArray(stepBlocks)) {
+        steps[stepKey] = stepBlocks as Block[];
+        totalSteps++;
+      }
+    }
+  }
+  
+  return {
+    id: templateId,
+    name: builtIn.name || builtIn.metadata?.name || templateId,
+    metadata: {
+      id: templateId,
+      name: builtIn.name || builtIn.metadata?.name || templateId,
+      description: builtIn.description || builtIn.metadata?.description || '',
+      version: builtIn.version || builtIn.metadata?.version || '3.1.0',
+      totalSteps,
+      type: builtIn.type || builtIn.metadata?.type || 'quiz',
+      tags: builtIn.tags || builtIn.metadata?.tags || [],
+      author: builtIn.author || builtIn.metadata?.author || 'Unknown',
+      created: builtIn.created || builtIn.metadata?.created || new Date().toISOString(),
+    },
+    steps,
+    totalSteps,
+  };
 }
 
 /**
