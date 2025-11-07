@@ -14,6 +14,7 @@ import { EmptyCanvasState } from '../EmptyCanvasState';
 import { useSafeEventListener } from '@/hooks/useSafeEventListener';
 import { useAutoMetrics } from '@/hooks/useAutoMetrics';
 import { useStepBlocksQuery } from '@/api/steps/hooks';
+import { normalizeBlocksData, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -289,22 +290,28 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
             </div>
             <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
                 <ul className="space-y-1">
-                    {blocks.map((b, idx) => (
-                        <SortableBlockItem
-                            key={b.id}
-                            block={b}
-                            index={idx}
-                            isSelected={selectedBlockId === b.id}
-                            onSelect={onBlockSelect}
-                            onMoveBlock={(from, to) => {
-                                // Clamp 'to' para dentro da lista
-                                const clampedTo = Math.max(0, Math.min((blocks?.length || 1) - 1, to));
-                                onMoveBlock?.(from, clampedTo);
-                            }}
-                            onRemoveBlock={onRemoveBlock}
-                            onUpdateBlock={onUpdateBlock}
-                        />
-                    ))}
+                    {normalizeBlocksData(blocks).map((b, idx) => {
+                        normalizerLogger.debug(`Rendering normalized block ${b.type}`, {
+                            original: blocks[idx],
+                            normalized: b
+                        });
+                        return (
+                            <SortableBlockItem
+                                key={b.id}
+                                block={b}
+                                index={idx}
+                                isSelected={selectedBlockId === b.id}
+                                onSelect={onBlockSelect}
+                                onMoveBlock={(from, to) => {
+                                    // Clamp 'to' para dentro da lista
+                                    const clampedTo = Math.max(0, Math.min((blocks?.length || 1) - 1, to));
+                                    onMoveBlock?.(from, clampedTo);
+                                }}
+                                onRemoveBlock={onRemoveBlock}
+                                onUpdateBlock={onUpdateBlock}
+                            />
+                        );
+                    })}
                 </ul>
             </SortableContext>
         </div>
