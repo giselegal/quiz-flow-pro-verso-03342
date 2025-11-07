@@ -229,7 +229,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
 
                 if (!cancelled) {
-                    setLoadedTemplate({ name: `Template: ${tid}`, steps: stepsMeta });
+                    setLoadedTemplate({ name: `Template: ${tid} (JSON v3)`, steps: stepsMeta });
                     setCurrentStep(1);
                 }
 
