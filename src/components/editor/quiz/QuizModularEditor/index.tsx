@@ -18,7 +18,7 @@ import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadin
 // Arquitetura unificada de recursos
 import type { EditorResource } from '@/types/editor-resource';
 // Import Template Dialog
-import ImportTemplateDialog from '../dialogs/ImportTemplateDialog';
+import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
