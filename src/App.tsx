@@ -181,16 +181,23 @@ function AppCore() {
                                     <RedirectRoute to="/" />
                                 </Route>
 
-                                {/* �🚀 EDITOR EXPERIMENTAL (DEV ONLY) */}
+                                {/* 🎓 DEMO DO SISTEMA DE TEMPLATES */}
+                                <Route path="/demo/templates">
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando demo..." />}>
+                                        {React.createElement(lazy(() => import('./examples/TemplateSystemDemo')))}
+                                    </Suspense>
+                                </Route>
+
+                                {/* 🚀 EDITOR EXPERIMENTAL (DEV ONLY) */}
                                 {/* 🔄 DEPRECATED ROUTES - Auto-redirect to canonical /editor */}
                                 <Route path="/editor-new">
                                     <RedirectRoute to="/editor" />
                                 </Route>
-                                
+
                                 <Route path="/editor-new/:funnelId">
                                     {(params) => <RedirectRoute to={`/editor/${params.funnelId}`} />}
                                 </Route>
-                                
+
                                 <Route path="/editor-modular">
                                     <RedirectRoute to="/editor" />
                                 </Route>
@@ -202,7 +209,7 @@ function AppCore() {
                                         <EditorTemplatesPage />
                                     </div>
                                 </Route>
-                                
+
                                 {/* ✅ ROTAS DO EDITOR - Delegadas para src/pages/editor/index.tsx */}
                                 <Route path="/editor/:funnelId">
                                     {(params) => (
@@ -215,7 +222,7 @@ function AppCore() {
                                         </EditorErrorBoundary>
                                     )}
                                 </Route>
-                                
+
                                 <Route path="/editor">
                                     {() => (
                                         <EditorErrorBoundary>
