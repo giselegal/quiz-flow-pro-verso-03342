@@ -256,10 +256,10 @@ export class CacheService extends BaseCanonicalService {
    * Cache para templates (TTL padrão: 10min)
    */
   templates = {
-    set: <T>(key: string, value: T, ttl = 10 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 10 * 60 * 1000) => 
       this.set(key, value, { store: 'templates', ttl }),
     
-    get: <T>(key: string) => 
+    get: <T,>(key: string) => 
       this.get<T>(key, 'templates'),
     
     invalidate: (key: string) => 
