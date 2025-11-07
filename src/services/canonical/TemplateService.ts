@@ -840,9 +840,42 @@ export class TemplateService extends BaseCanonicalService {
   /**
    * 🚀 FASE 4: Preparar template com detecção dinâmica de steps, sem carregar blocos
    * Detecta automaticamente quantos steps o template possui e define como ativo
+   * 
+   * @param templateId ID do template
+   * @param options Opções incluindo preloadAll e AbortSignal
    */
-  async prepareTemplate(templateId: string, options?: { preloadAll?: boolean }): Promise<ServiceResult<void>> {
+  async prepareTemplate(
+    templateId: string, 
+    options?: { preloadAll?: boolean; signal?: AbortSignal }
+  ): Promise<ServiceResult<void>> {
+    const signal = options?.signal;
+    
     try {
+      // ✅ Verificar cancelamento
+      if (signal?.aborted) {
+        throw new Error('Operation aborted');
+      }
+
+      // 🎯 PRIORIDADE 1: Verificar se existe built-in JSON
+      if (hasBuiltInTemplate(templateId)) {
+        this.log(`✅ [BUILT-IN] Preparando template ${templateId} do JSON`);
+        
+        const builtInTemplate = await loadFullTemplate(templateId);
+        if (builtInTemplate) {
+          const totalSteps = builtInTemplate.totalSteps || Object.keys(builtInTemplate.steps).length;
+          this.setActiveTemplate(templateId, totalSteps);
+          
+          this.log(`✅ [BUILT-IN] Template ${templateId} preparado: ${totalSteps} steps`);
+          return this.createResult(undefined);
+        }
+      }
+
+      // ✅ Verificar cancelamento
+      if (signal?.aborted) {
+        throw new Error('Operation aborted');
+      }
+
+      // 🎯 PRIORIDADE 2: Sistema dinâmico (fallback)
       const totalSteps = await this.detectTemplateSteps(templateId);
       this.setActiveTemplate(templateId, totalSteps);
 
@@ -864,10 +897,30 @@ export class TemplateService extends BaseCanonicalService {
   /**
    * 🚀 FASE 4: Pré-carregar template completo com detecção dinâmica de steps
    * Detecta automaticamente quantos steps o template possui
+   * 
+   * @param templateId ID do template
+   * @param options Opções incluindo AbortSignal
    */
-  async preloadTemplate(templateId: string): Promise<ServiceResult<void>> {
-    // Mantém compatibilidade chamando prepareTemplate com preloadAll=true
-    return this.prepareTemplate(templateId, { preloadAll: true });
+  async preloadTemplate(templateId: string, options?: ServiceOptions): Promise<ServiceResult<void>> {
+    const signal = options?.signal;
+    
+    try {
+      // ✅ Verificar cancelamento
+      if (signal?.aborted) {
+        throw new Error('Operation aborted');
+      }
+
+      // Chamar prepareTemplate com preloadAll: true
+      return await this.prepareTemplate(templateId, { preloadAll: true, signal });
+    } catch (error) {
+      if (signal?.aborted || (error as Error).message === 'Operation aborted') {
+        this.log(`🚫 [CANCELLED] preloadTemplate ${templateId} foi cancelado`);
+        return this.createError(new Error('Operation cancelled'));
+      }
+      
+      this.error('preloadTemplate failed:', error);
+      return this.createError(error as Error);
+    }
   }
 
   /**
