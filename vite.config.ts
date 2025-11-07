@@ -166,7 +166,8 @@ export default defineConfig(({ mode }) => {
               if (id.includes('/react/') || id.includes('/react-dom/') || 
                   id.includes('/scheduler/') || id.includes('/react-is/') ||
                   id.includes('@radix-ui') || id.includes('lucide-react') ||
-                  id.includes('@dnd-kit')) { // ✅ CORREÇÃO: DND também vai pro vendor principal
+                  id.includes('@dnd-kit') ||
+                  id.includes('class-variance-authority')) { // ✅ Incluir cva no vendor principal
                 return 'vendor'; // TUDO no mesmo chunk - sem problemas de ordem
               }
               
@@ -197,6 +198,8 @@ export default defineConfig(({ mode }) => {
         '@radix-ui/react-slot',
         '@radix-ui/react-portal',
         'lucide-react',
+        // ✅ Incluir cva para evitar TDZ
+        'class-variance-authority',
       ],
       exclude: [
         '@supabase/functions-js',
