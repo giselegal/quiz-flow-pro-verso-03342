@@ -828,9 +828,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 export default function QuizModularEditor(props: QuizModularEditorProps) {
     return (
         <EditorLoadingProvider>
-            <Suspense fallback={<div />}>
-                <QuizModularEditorInner {...props} />
-            </Suspense>
+            <div data-testid="quiz-modular-production-editor-page-optimized" className="h-full w-full">
+                <Suspense fallback={<div />}>
+                    <QuizModularEditorInner {...props} />
+                </Suspense>
+            </div>
         </EditorLoadingProvider>
     );
 }

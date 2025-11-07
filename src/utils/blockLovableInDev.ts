@@ -1,5 +1,5 @@
 // Desabilitar conexões Lovable APENAS em desenvolvimento local (não no preview do Lovable)
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || import.meta.env.DEV)) {
     // Detectar se estamos dentro do iframe do preview do Lovable
     const isInLovablePreview = window.self !== window.top;
     
@@ -42,6 +42,13 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
                         message: 'Lovable SDK disabled in development',
                         config: {},
                     }), {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' },
+                    }));
+                }
+                // Endpoint específico citado nos logs: /projects/:id/collaborators → retornar 200 vazio
+                if (/\/projects\/.+\/collaborators/.test(urlString)) {
+                    return Promise.resolve(new Response(JSON.stringify({ collaborators: [] }), {
                         status: 200,
                         headers: { 'Content-Type': 'application/json' },
                     }));

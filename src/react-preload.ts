@@ -16,31 +16,31 @@ if (typeof window !== 'undefined') {
   };
 
   // Garantir APIs críticas (forwardRef era a que estourava em vendor)
-  if (!(React as any).forwardRef) {
-    (React as any).forwardRef = safeForwardRef;
-  }
-  if (!(React as any).createRef) {
-    (React as any).createRef = () => ({ current: null });
-  }
-  if (!(React as any).memo) {
-    (React as any).memo = (c: any) => c;
-  }
+  // Não sobrescrever bindings de import (imutáveis em ESBuild). Criar shim separado.
+  const reactShim: any = {
+    ...React,
+    forwardRef: (React as any).forwardRef || safeForwardRef,
+    createRef: (React as any).createRef || (() => ({ current: null })),
+    memo: (React as any).memo || ((c: any) => c),
+  };
 
   // Expor múltiplos aliases porque alguns bundles minificados procuram variantes
-  (window as any).React = React;
+  // Expor shim como React global para vendors minificados que acessam via window.React.forwardRef
+  (window as any).React = reactShim;
   (window as any).ReactDOM = ReactDOM;
-  (window as any).React__default = React;        // comum em output ESM convertido
-  (window as any).ReactDefault = React;          // fallback adicional
-  try { (globalThis as any).React = React; } catch { /* ignore */ }
+  (window as any).React__default = reactShim;        // comum em output ESM convertido
+  (window as any).ReactDefault = reactShim;          // fallback adicional
+  try { (globalThis as any).React = reactShim; } catch { /* ignore */ }
 
   // Flag para outros módulos saberem que preload já rodou
   (window as any).__REACT_PRELOAD_READY__ = true;
 
-  console.log('✅ [react-preload] React disponível globalmente (preload inicial)', {
-    hasForwardRef: !!React.forwardRef,
-    hasMemo: !!React.memo,
-    hasCreateRef: !!React.createRef,
-    aliases: ['React', 'React__default', 'ReactDefault']
+  console.log('✅ [react-preload] React shim global criado', {
+    hasForwardRef: !!reactShim.forwardRef,
+    hasMemo: !!reactShim.memo,
+    hasCreateRef: !!reactShim.createRef,
+    aliases: ['React', 'React__default', 'ReactDefault'],
+    shim: true,
   });
 }
 
