@@ -13,17 +13,23 @@ interface LovablePreviewPanelProps {
 export const LovablePreviewPanel: React.FC<LovablePreviewPanelProps> = ({ children }) => {
   useEffect(() => {
     // Carrega CSS apenas quando o painel é realmente utilizado
-    import('@/styles/lovable-preview.css').catch(() => {});
+    import('@/styles/lovable-preview.css').catch(() => { });
 
     // Configura o ambiente para o Lovable detectar como editor
     if (typeof window !== 'undefined') {
+      const projectId = (import.meta as any).env?.VITE_LOVABLE_PROJECT_ID as string | undefined;
       // Força configuração do Lovable
-      (window as any).LOVABLE_CONFIG = {
-        projectId: '65efd17d-5178-405d-9721-909c97470c6d',
-        apiBaseUrl: 'https://api.lovable.dev',
-        previewMode: true,
-        enableLivePreview: true,
-      };
+      if (projectId) {
+        (window as any).LOVABLE_CONFIG = {
+          projectId,
+          apiBaseUrl: 'https://api.lovable.dev',
+          previewMode: true,
+          enableLivePreview: true,
+        };
+      } else {
+        // eslint-disable-next-line no-console
+        console.info('[Lovable] PreviewPanel não configurado: VITE_LOVABLE_PROJECT_ID ausente');
+      }
 
       // Adiciona classe CSS para identificação do Lovable
       document.body.classList.add('lovable-editor-active');

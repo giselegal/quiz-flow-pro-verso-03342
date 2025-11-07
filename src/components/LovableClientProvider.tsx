@@ -12,6 +12,7 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
       try {
         const inIframe = window.self !== window.top;
         const enableFlag = (import.meta as any).env?.VITE_ENABLE_LOVABLE === 'true';
+        const projectId = (import.meta as any).env?.VITE_LOVABLE_PROJECT_ID as string | undefined;
         const isEditor =
           window.location.pathname.includes('/admin') ||
           window.location.pathname === '/' ||
@@ -25,11 +26,11 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
         // Habilitar Lovable somente quando:
         // - Estiver rodando dentro do preview (iframe) OU
         // - Flag explícita VITE_ENABLE_LOVABLE=true
-        const shouldEnableLovable = isEditor && (inIframe || enableFlag);
+        const shouldEnableLovable = isEditor && (inIframe || enableFlag) && !!projectId;
 
         if (shouldEnableLovable) {
           (window as any).LOVABLE_CONFIG = {
-            projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+            projectId,
             apiBaseUrl: 'https://api.lovable.dev',
           };
 
@@ -38,6 +39,7 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
           console.info('[Lovable] Configuração ativada', {
             inIframe,
             enableFlag,
+            hasProjectId: !!projectId,
             path: window.location.pathname,
           });
 
@@ -54,7 +56,7 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
             if ((window as any).LOVABLE_CONFIG) {
               delete (window as any).LOVABLE_CONFIG;
               // eslint-disable-next-line no-console
-              console.info('[Lovable] Desativado em desenvolvimento local (sem iframe e sem flag)');
+              console.info('[Lovable] Desativado (sem iframe/flag ou sem projectId)');
             }
           } catch { }
         }

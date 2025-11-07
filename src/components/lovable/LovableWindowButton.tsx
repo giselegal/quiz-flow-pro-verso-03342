@@ -7,10 +7,15 @@ export const LovableWindowButton: React.FC = () => {
   const forceOpenLovableWindow = () => {
     // Executa o mesmo script de força
     if (typeof window !== 'undefined') {
+      const projectId = (import.meta as any).env?.VITE_LOVABLE_PROJECT_ID as string | undefined;
+      if (!projectId) {
+        console.warn('[Lovable] VITE_LOVABLE_PROJECT_ID ausente - botão não pode forçar janela');
+        return;
+      }
       // Configuração global forçada
       (window as any).LOVABLE_FORCE_WINDOW = true;
       (window as any).LOVABLE_CONFIG = {
-        projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+        projectId,
         apiBaseUrl: 'https://api.lovable.dev',
         previewMode: true,
         enableLivePreview: true,
@@ -26,7 +31,7 @@ export const LovableWindowButton: React.FC = () => {
         { name: 'lovable-window-preview', content: 'active' },
         { name: 'lovable-auto-open', content: 'true' },
         { name: 'lovable-force-window', content: 'enabled' },
-        { name: 'lovable-project-id', content: '65efd17d-5178-405d-9721-909c97470c6d' },
+        { name: 'lovable-project-id', content: projectId },
       ];
 
       forceMetaTags.forEach(({ name, content }) => {
@@ -60,7 +65,7 @@ export const LovableWindowButton: React.FC = () => {
               source: 'button-force',
               timestamp: Date.now(),
               action: 'force-open-window',
-              projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+              projectId,
               forced: true,
             },
             bubbles: true,
@@ -74,7 +79,7 @@ export const LovableWindowButton: React.FC = () => {
         {
           type: 'lovable-force-open',
           data: {
-            projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+            projectId,
             action: 'open-preview-window',
             timestamp: Date.now(),
             forced: true,
