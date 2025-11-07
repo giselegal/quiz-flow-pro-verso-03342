@@ -228,9 +228,11 @@ function extractPropertiesFromBlock(block: Block): DiscoveredProperty[] {
 
 /**
  * Discovers properties from quiz template steps
+ * ✅ CORREÇÃO: Agora usa hierarchicalTemplateSource (async)
  */
-function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | null {
-  const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
+async function discoverQuizStepProperties(stepKey: string): Promise<ComponentPropertySchema | null> {
+  const result = await hierarchicalTemplateSource.getPrimary(stepKey);
+  const stepBlocks = result?.data || [];
 
   if (!stepBlocks || stepBlocks.length === 0) {
     console.log(`⚠️ PropertyDiscovery: Nenhum bloco encontrado para ${stepKey}`);
@@ -307,17 +309,20 @@ function generateQuizStepName(stepKey: string): string {
 
 /**
  * Discovers all quiz step properties for global discovery
+ * ✅ CORREÇÃO: Agora itera step-keys hardcoded e usa async
  */
-function discoverAllQuizStepProperties(): Map<string, ComponentPropertySchema> {
+async function discoverAllQuizStepProperties(): Promise<Map<string, ComponentPropertySchema>> {
   const discovered = new Map<string, ComponentPropertySchema>();
 
-  // Discover properties for all quiz steps
-  Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(stepKey => {
-    const schema = discoverQuizStepProperties(stepKey);
+  // Discover properties for all quiz steps (step-01 to step-21)
+  const stepKeys = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+  
+  for (const stepKey of stepKeys) {
+    const schema = await discoverQuizStepProperties(stepKey);
     if (schema) {
       discovered.set(stepKey, schema);
     }
-  });
+  }
 
   console.log(`🎯 PropertyDiscovery: Descobriu ${discovered.size} etapas do quiz com propriedades`);
 
@@ -828,14 +833,15 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
 
 /**
  * Discovers all properties from a component using useUnifiedProperties or fallback to modular components
+ * ✅ CORREÇÃO: Agora é async para suportar step discovery
  */
-export function discoverComponentProperties(componentType: string): ComponentPropertySchema | null {
+export async function discoverComponentProperties(componentType: string): Promise<ComponentPropertySchema | null> {
   console.log('🔍 PropertyDiscovery: buscando componente:', componentType);
 
-  // Check if this is a quiz step (step-1, step-2, etc.)
-  if (componentType.startsWith('step-') && QUIZ_STYLE_21_STEPS_TEMPLATE[componentType]) {
+  // Check if this is a quiz step (step-01, step-02, etc.)
+  if (componentType.startsWith('step-')) {
     console.log('🎯 PropertyDiscovery: Detectado como etapa do quiz:', componentType);
-    return discoverQuizStepProperties(componentType);
+    return await discoverQuizStepProperties(componentType);
   }
 
   // First, try to get properties from useUnifiedProperties hook (primary source for 21-step components)
@@ -985,23 +991,24 @@ export function discoverComponentProperties(componentType: string): ComponentPro
 
 /**
  * Discovers all available component types and their properties
+ * ✅ CORREÇÃO: Agora é async
  */
-export function discoverAllComponentProperties(): Map<string, ComponentPropertySchema> {
+export async function discoverAllComponentProperties(): Promise<Map<string, ComponentPropertySchema>> {
   const discovered = new Map<string, ComponentPropertySchema>();
 
   // Add all quiz steps
-  const quizStepSchemas = discoverAllQuizStepProperties();
+  const quizStepSchemas = await discoverAllQuizStepProperties();
   quizStepSchemas.forEach((schema, stepKey) => {
     discovered.set(stepKey, schema);
   });
 
   // Add modular components
-  MODULAR_COMPONENTS.forEach(component => {
-    const schema = discoverComponentProperties(component.type);
+  for (const component of MODULAR_COMPONENTS) {
+    const schema = await discoverComponentProperties(component.type);
     if (schema) {
       discovered.set(component.type, schema);
     }
-  });
+  }
 
   console.log(`🎯 PropertyDiscovery: Total discovered components: ${discovered.size} (${quizStepSchemas.size} quiz steps + ${MODULAR_COMPONENTS.length} modular components)`);
 
