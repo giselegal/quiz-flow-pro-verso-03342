@@ -1,4 +1,12 @@
 /**
+ * @deprecated
+ * Este serviço está DEPRECATED e será removido na v4.0 (Janeiro 2026)
+ * 
+ * ✅ USE: @/services/canonical/FunnelService
+ * 
+ * Motivo: Consolidação de serviços duplicados - este é apenas um wrapper
+ * Veja: DEPRECATED.md para mais detalhes
+ * 
  * Enhanced Funnel Service - Compatibility Wrapper
  *
  * Objetivo: manter compatibilidade com chamadores legados enquanto
