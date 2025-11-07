@@ -5,7 +5,7 @@
  */
 
 import { Block } from '@/types/editor';
-import { templateService } from '@/services/core/templateService';
+import { templateService } from '@/services/templateService';
 
 export interface TemplateThumbnail {
     id: string;
@@ -23,8 +23,8 @@ export const generateTemplateThumbnail = async (
     step1Blocks?: Block[],
 ): Promise<TemplateThumbnail> => {
     // Obter blocos: prioridade para step1Blocks, fallback para templateService
-    let blocks = step1Blocks;
-    if (!blocks) {
+    let blocks = step1Blocks || [];
+    if (!step1Blocks) {
         const stepResult = await templateService.getStep('step-01');
         blocks = stepResult.success ? stepResult.data : [];
     }
@@ -49,9 +49,9 @@ export const generateTemplateThumbnail = async (
     ctx.fillRect(0, 0, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
 
     // Extrair informações principais dos blocos
-    const titleBlock = blocks.find((b: any) => b.type === 'text' || b.id.includes('title'));
+    const titleBlock = blocks.find((b: any) => b.type === 'text' || b.id?.includes('title'));
     const headerBlock = blocks.find((b: any) => b.type === 'quiz-intro-header');
-    const inputBlock = blocks.find((b: any) => b.type.includes('input'));
+    const inputBlock = blocks.find((b: any) => b.type?.includes('input'));
 
     let yOffset = 20;
 
