@@ -19,7 +19,9 @@ interface EditorStartupModalProps {
 export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalProps) {
     const [dontShowAgain, setDontShowAgain] = useState(false);
 
-    console.log('🎯 EditorStartupModal renderizado - open:', open);
+    console.log('🎯🎯🎯 EDITOR STARTUP MODAL RENDERIZADO!!! 🎯🎯🎯');
+    console.log('Modal open:', open);
+    console.log('Timestamp:', new Date().toISOString());
 
     // Permitir fechar o modal escolhendo modo blank
     const handleClose = () => {
