@@ -13,7 +13,7 @@
 
 import React from 'react';
 import { appLogger } from '@/utils/logger';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, FUNNEL_PERSISTENCE_SCHEMA } from '@/templates/quiz21StepsComplete';
+import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 
 export interface UniversalStepEditorProps {
     stepId: string;
@@ -57,21 +57,21 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 setIsLoading(true);
                 appLogger.debug('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
 
-                // Buscar dados do step no template
-                const stepKey = `step-${stepNumber}`;
-                const stepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
+                // Buscar dados do step via serviço consolidado (JSON > registry > TS fallback)
+                const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
+                const stepBlocks = await consolidatedTemplateService.getStepBlocks(stepKey);
 
-                if (stepData && Array.isArray(stepData)) {
+                if (stepBlocks && Array.isArray(stepBlocks) && stepBlocks.length > 0) {
                     const stepInfo = {
                         name: `Step ${stepNumber}`,
                         description: `Conteúdo do step ${stepNumber}`,
-                        blocks: stepData,
+                        blocks: stepBlocks,
                     };
                     setCurrentStepData(stepInfo);
                     appLogger.debug('✅ Dados do step carregados:', stepKey, {
                         nome: stepInfo.name,
-                        blocos: stepData.length,
-                        primeiroBloco: stepData[0],
+                        blocos: stepBlocks.length,
+                        primeiroBloco: stepBlocks[0],
                     });
                 } else {
                     // Dados de fallback mais realistas
@@ -132,7 +132,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
     const handleNext = () => {
         // ✅ CORRIGIDO: Obter totalSteps dinamicamente
-        const availableSteps = Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length || 21;
+    const availableSteps = 21;
         if (stepNumber < availableSteps) {
             const nextStepId = `step-${stepNumber + 1}`;
             onStepChange?.(nextStepId);

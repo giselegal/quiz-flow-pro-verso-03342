@@ -3,7 +3,6 @@ import { StorageService } from './StorageService';
 import EVENTS from '@/core/constants/events';
 import { quizSupabaseService } from '@/services/aliases';
 import { isUUID } from '@/core/utils/id';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { toCanonicalAny } from './adapters';
 import { accumulateScores as accumulateCanonicalScores } from './CanonicalScorer';
 import { STYLE_TIEBREAK_ORDER, stabilizeScoresOrder } from '@/utils/styleKeywordMap';
@@ -34,9 +33,11 @@ export const ResultOrchestrator = {
 
         // 2) Se nada foi pontuado (total 0), fazer fallback canônico por template
         const summed = Object.values(scores).reduce((a, b) => a + b, 0);
-        if (!summed) {
+    if (!summed) {
             try {
-                const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
+        const mod = await import('@/templates/quiz21StepsComplete');
+        const QUIZ_STYLE_21_STEPS_TEMPLATE = (mod as any).QUIZ_STYLE_21_STEPS_TEMPLATE;
+        const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
                 const canonTotals = accumulateCanonicalScores(canonical, selectionsByQuestion);
                 const compat: Record<string, string> = {
                     natural: 'Natural',
