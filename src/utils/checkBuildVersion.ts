@@ -47,7 +47,7 @@ export async function checkBuildVersion(options: { onNewVersion?: (remote: Build
 export function startPeriodicVersionCheck(intervalMs = 120000) {
     if (typeof window === 'undefined') return undefined as any;
 
-    const disabledHostSubstrings = ['lovableproject.com'];
+    const disabledHostSubstrings = ['lovableproject.com', 'localhost', '127.0.0.1', '0.0.0.0'];
     const host = window.location.hostname || '';
     if (disabledHostSubstrings.some((s) => host.includes(s))) {
         console.info('[VersionCheck] desabilitado neste host:', host);
