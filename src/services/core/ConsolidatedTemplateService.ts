@@ -10,7 +10,6 @@
  */
 
 import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 
 // ============================================================================
@@ -179,6 +178,9 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
     try {
       // Caso 1: template completo identificado por quiz21StepsComplete
       if (templateId === 'quiz21StepsComplete') {
+        // Dynamic import para evitar incluir o template TS no bundle principal
+        const mod = await import('@/templates/quiz21StepsComplete');
+        const QUIZ_STYLE_21_STEPS_TEMPLATE = (mod as any).QUIZ_STYLE_21_STEPS_TEMPLATE;
         return this.convertLegacyTemplate(QUIZ_STYLE_21_STEPS_TEMPLATE, templateId);
       }
 
@@ -189,6 +191,9 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       if (stepMatch) {
         const stepNum = parseInt(stepMatch[1], 10);
         const normalized = `step-${String(stepNum).padStart(2, '0')}`;
+        // Dynamic import para evitar incluir o template TS no bundle principal
+        const mod = await import('@/templates/quiz21StepsComplete');
+        const QUIZ_STYLE_21_STEPS_TEMPLATE = (mod as any).QUIZ_STYLE_21_STEPS_TEMPLATE;
         const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[normalized as keyof typeof QUIZ_STYLE_21_STEPS_TEMPLATE];
 
         if (Array.isArray(blocks) && blocks.length > 0) {

@@ -5,7 +5,7 @@
  */
 
 import { Block } from '@/types/editor';
-import { templateService } from '@/services/templateService';
+import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 
 export interface TemplateThumbnail {
     id: string;
@@ -25,8 +25,7 @@ export const generateTemplateThumbnail = async (
     // Obter blocos: prioridade para step1Blocks, fallback para templateService
     let blocks = step1Blocks || [];
     if (!step1Blocks) {
-        const stepResult = await templateService.getStep('step-01');
-        blocks = stepResult.success ? stepResult.data : [];
+        blocks = await consolidatedTemplateService.getStepBlocks('step-01');
     }
 
     // Criar canvas para renderizar o thumbnail

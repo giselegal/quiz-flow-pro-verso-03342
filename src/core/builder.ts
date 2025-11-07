@@ -6,7 +6,7 @@
  * Integrado com templates reais do quiz21StepsComplete
  */
 
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_GLOBAL_CONFIG, FUNNEL_PERSISTENCE_SCHEMA } from '@/templates/quiz21StepsComplete';
+import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 
 // Interfaces do Builder System
 export interface FunnelStep {
@@ -56,19 +56,48 @@ export class FunnelBuilder {
   }
 
   private initializeFromQuiz21Steps() {
-    console.log('🎯 Inicializando FunnelBuilder com dados reais do quiz21StepsComplete...');
-    
-    // Converter template para formato de steps
-    const steps: FunnelStep[] = Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).map(([stepKey, blocks], index) => ({
-      id: stepKey,
-      name: `Etapa ${index + 1}`,
-      order: index + 1,
-      components: blocks || [],
+    console.log('🎯 Inicializando FunnelBuilder com dados (assíncrono) do quiz21StepsComplete...');
+    // Carregar de forma assíncrona para evitar import estático do template TS
+    this.initializeFromQuiz21StepsAsync().catch((e) => {
+      console.warn('⚠️ Falha na inicialização assíncrona do FunnelBuilder, usando defaults:', e);
+      this.steps = [];
+      this.config = {
+        id: 'quiz21StepsComplete',
+        name: 'Quiz de Estilo Pessoal - 21 Etapas',
+        description: 'Quiz completo para descoberta do estilo pessoal',
+        totalSteps: 0,
+        steps: [],
+        settings: {
+          theme: 'quiz-style',
+          branding: {},
+          analytics: {},
+          seo: {},
+        },
+        metadata: {
+          initialized: true,
+          source: 'quiz21StepsComplete',
+          version: '2.0.0',
+        },
+      } as any;
+    });
+  }
+
+  private async initializeFromQuiz21StepsAsync() {
+    const full = await consolidatedTemplateService.getTemplate('quiz21StepsComplete');
+    if (!full) {
+      throw new Error('Template quiz21StepsComplete não disponível');
+    }
+
+    const steps: FunnelStep[] = (full.steps || []).map((s, idx) => ({
+      id: `step-${String(s.stepNumber).padStart(2, '0')}`,
+      name: `Etapa ${idx + 1}`,
+      order: idx + 1,
+      components: s.blocks || [],
       metadata: {
-        stepKey,
-        blockCount: (blocks || []).length,
-        hasQuestions: (blocks || []).some((block: any) => block.type === 'options-grid'),
-        category: this.getStepCategory(index + 1),
+        stepKey: `step-${String(s.stepNumber).padStart(2, '0')}`,
+        blockCount: (s.blocks || []).length,
+        hasQuestions: (s.blocks || []).some((block: any) => block.type === 'options-grid'),
+        category: this.getStepCategory(idx + 1),
       },
       validation: {
         required: true,
@@ -80,23 +109,22 @@ export class FunnelBuilder {
     this.steps = steps;
     this.config = {
       id: 'quiz21StepsComplete',
-      name: 'Quiz de Estilo Pessoal - 21 Etapas',
-      description: 'Quiz completo para descoberta do estilo pessoal',
+      name: full.name || 'Quiz de Estilo Pessoal - 21 Etapas',
+      description: full.description || 'Quiz completo para descoberta do estilo pessoal',
       totalSteps: steps.length,
       steps,
       settings: {
         theme: 'quiz-style',
-        branding: QUIZ_GLOBAL_CONFIG?.branding || {},
-        analytics: QUIZ_GLOBAL_CONFIG?.tracking || {},
-        seo: QUIZ_GLOBAL_CONFIG?.seo || {},
+        branding: (full as any).globalConfig?.branding || {},
+        analytics: (full as any).globalConfig?.analytics || {},
+        seo: (full as any).globalConfig?.seo || {},
       },
       metadata: {
-        ...FUNNEL_PERSISTENCE_SCHEMA,
         initialized: true,
         source: 'quiz21StepsComplete',
-        version: '2.0.0',
+        version: full.version || '2.0.0',
       },
-    };
+    } as any;
 
     console.log(`✅ FunnelBuilder inicializado com ${steps.length} etapas funcionais`);
   }
