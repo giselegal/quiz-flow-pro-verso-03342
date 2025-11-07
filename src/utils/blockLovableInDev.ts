@@ -31,7 +31,17 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
         // Interceptar fetch para APIs do Lovable (incluindo SDK)
         const originalFetch = window.fetch;
         window.fetch = function (url: RequestInfo | URL, options?: RequestInit) {
-            const urlString = url.toString();
+            // Normaliza Request/URL/string para capturar endpoints chamados via Request objects
+            let urlString: string;
+            if (typeof url === 'string') {
+                urlString = url;
+            } else if (url instanceof URL) {
+                urlString = url.toString();
+            } else if (typeof Request !== 'undefined' && url instanceof Request) {
+                urlString = url.url;
+            } else {
+                urlString = String(url);
+            }
             if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
                 console.warn('🚫 Bloqueada requisição para Lovable/SDK em desenvolvimento:', url);
 
