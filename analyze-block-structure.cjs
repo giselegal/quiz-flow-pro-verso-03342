@@ -93,9 +93,9 @@ function analyzeRegistryBlocks() {
             const content = fs.readFileSync(regPath, 'utf8');
             
             // Procurar imports estáticos
-            const staticMatches = content.match(/import\\s+\\w+Block\\s+from\\s+['"]([^'"]+)['"]/g) || [];
+            const staticMatches = content.match(/import\s+\w+Block\s+from\s+['"]([^'"]+)['"]/g) || [];
             staticMatches.forEach(match => {
-                const blockName = match.match(/import\\s+(\\w+Block)/)?.[1];
+                const blockName = match.match(/import\s+(\w+Block)/)?.[1];
                 if (blockName) {
                     staticBlocks.add(blockName.replace('Block', '').toLowerCase());
                 }
@@ -112,9 +112,9 @@ function analyzeRegistryBlocks() {
             });
             
             // Procurar registros diretos
-            const directMatches = content.match(/['"]([^'"]+)['"]\\s*:/g) || [];
+            const directMatches = content.match(/['"]([^'"]+)['"]\s*:/g) || [];
             directMatches.forEach(match => {
-                const type = match.replace(/['"]|:\\s*$/g, '');
+                const type = match.replace(/['"]|:\s*$/g, '');
                 if (type && type.length > 1 && !type.includes(' ')) {
                     registeredBlocks.add(type);
                 }

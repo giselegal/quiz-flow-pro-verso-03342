@@ -1,0 +1,594 @@
+{
+  "blocks": [
+    {
+      "type": "question-progress",
+      "steps": [
+        "step-02-v3",
+        "step-03-v3",
+        "step-04-v3",
+        "step-05-v3",
+        "step-06-v3",
+        "step-07-v3",
+        "step-08-v3",
+        "step-09-v3",
+        "step-10-v3",
+        "step-11-v3",
+        "step-13-v3",
+        "step-14-v3",
+        "step-15-v3",
+        "step-16-v3",
+        "step-17-v3",
+        "step-18-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-02-v3",
+          "id": "progress-bar-step-02",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-03-v3",
+          "id": "progress-bar-step-03",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 16
+    },
+    {
+      "type": "question-title",
+      "steps": [
+        "step-02-v3",
+        "step-03-v3",
+        "step-04-v3",
+        "step-05-v3",
+        "step-06-v3",
+        "step-07-v3",
+        "step-08-v3",
+        "step-09-v3",
+        "step-10-v3",
+        "step-11-v3",
+        "step-13-v3",
+        "step-14-v3",
+        "step-15-v3",
+        "step-16-v3",
+        "step-17-v3",
+        "step-18-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-02-v3",
+          "id": "step-02-title",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-03-v3",
+          "id": "step-03-title",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 16
+    },
+    {
+      "type": "options-grid",
+      "steps": [
+        "step-02-v3",
+        "step-03-v3",
+        "step-04-v3",
+        "step-05-v3",
+        "step-06-v3",
+        "step-07-v3",
+        "step-08-v3",
+        "step-09-v3",
+        "step-10-v3",
+        "step-11-v3",
+        "step-13-v3",
+        "step-14-v3",
+        "step-15-v3",
+        "step-16-v3",
+        "step-17-v3",
+        "step-18-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-02-v3",
+          "id": "step-02-options",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-03-v3",
+          "id": "options-grid-03",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 16
+    },
+    {
+      "type": "question-navigation",
+      "steps": [
+        "step-02-v3",
+        "step-03-v3",
+        "step-04-v3",
+        "step-05-v3",
+        "step-06-v3",
+        "step-07-v3",
+        "step-08-v3",
+        "step-09-v3",
+        "step-10-v3",
+        "step-11-v3",
+        "step-13-v3",
+        "step-14-v3",
+        "step-15-v3",
+        "step-16-v3",
+        "step-17-v3",
+        "step-18-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-02-v3",
+          "id": "navigation-step-02",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-03-v3",
+          "id": "navigation-step-03",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 16
+    },
+    {
+      "type": "question-hero",
+      "steps": [
+        "step-04-v3",
+        "step-05-v3",
+        "step-06-v3",
+        "step-07-v3",
+        "step-08-v3",
+        "step-09-v3",
+        "step-10-v3",
+        "step-11-v3",
+        "step-13-v3",
+        "step-14-v3",
+        "step-15-v3",
+        "step-16-v3",
+        "step-17-v3",
+        "step-18-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-04-v3",
+          "id": "question-hero-04",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-05-v3",
+          "id": "question-hero-05",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 14
+    },
+    {
+      "type": "transition-hero",
+      "steps": [
+        "step-12-v3",
+        "step-19-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-12-v3",
+          "id": "transition-hero-12",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-19-v3",
+          "id": "transition-hero-19",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 2
+    },
+    {
+      "type": "transition-text",
+      "steps": [
+        "step-12-v3",
+        "step-19-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-12-v3",
+          "id": "step-12-transition-text",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-19-v3",
+          "id": "step-19-transition-text",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 2
+    },
+    {
+      "type": "CTAButton",
+      "steps": [
+        "step-12-v3",
+        "step-19-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-12-v3",
+          "id": "step-12-transition-cta",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-19-v3",
+          "id": "step-19-transition-cta",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 2
+    },
+    {
+      "type": "quiz-intro-header",
+      "steps": [
+        "step-01-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-01-v3",
+          "id": "quiz-intro-header",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "intro-title",
+      "steps": [
+        "step-01-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-01-v3",
+          "id": "intro-title",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "intro-image",
+      "steps": [
+        "step-01-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-01-v3",
+          "id": "intro-image",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "intro-description",
+      "steps": [
+        "step-01-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-01-v3",
+          "id": "intro-description",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "intro-form",
+      "steps": [
+        "step-01-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-01-v3",
+          "id": "intro-form",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-congrats",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "result-congrats",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "quiz-score-display",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "quiz-score-celebration",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-main",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "result-main",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-progress-bars",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "result-progress-bars",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-secondary-styles",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "result-secondary-styles",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-image",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "result-image",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-description",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "result-description",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-cta",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "button-cta-primary",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-20-v3",
+          "id": "button-cta-final",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "result-share",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "result-share",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "text-inline",
+      "steps": [
+        "step-20-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-20-v3",
+          "id": "transformation-benefits",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        },
+        {
+          "step": "step-20-v3",
+          "id": "method-steps",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "offer-hero",
+      "steps": [
+        "step-21-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-21-v3",
+          "id": "offer-hero-21",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    },
+    {
+      "type": "pricing",
+      "steps": [
+        "step-21-v3"
+      ],
+      "examples": [
+        {
+          "step": "step-21-v3",
+          "id": "pricing-21",
+          "hasProps": true,
+          "hasContent": true,
+          "hasParentId": false
+        }
+      ],
+      "stepCount": 1
+    }
+  ],
+  "critical": [
+    "question-progress",
+    "question-title",
+    "options-grid",
+    "question-navigation",
+    "question-hero"
+  ],
+  "highPriority": [],
+  "categories": {
+    "intro": [
+      "quiz-intro-header",
+      "intro-title",
+      "intro-image",
+      "intro-description",
+      "intro-form"
+    ],
+    "questions": [
+      "question-progress",
+      "question-title",
+      "options-grid",
+      "question-navigation",
+      "question-hero"
+    ],
+    "transitions": [
+      "transition-hero",
+      "transition-text",
+      "CTAButton"
+    ],
+    "results": [
+      "result-congrats",
+      "quiz-score-display",
+      "result-main",
+      "result-progress-bars",
+      "result-secondary-styles",
+      "result-image",
+      "result-description",
+      "result-cta",
+      "result-share"
+    ],
+    "offers": [
+      "offer-hero",
+      "pricing"
+    ]
+  }
+}
