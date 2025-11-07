@@ -1,4 +1,7 @@
-// 🛡️ CRITICAL: Importar React PRIMEIRO para garantir disponibilidade global
+// 🛡️ CRITICAL: Importar React Preload PRIMEIRO ANTES DE TUDO
+import './react-preload';
+
+// Agora importar React normalmente (já está global)
 import React from 'react';
 import ReactDOM from 'react-dom';
 

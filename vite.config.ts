@@ -144,18 +144,24 @@ export default defineConfig(({ mode }) => {
             const isDev = mode !== 'production';
 
             if (id.includes('node_modules')) {
-              // CRÍTICO: React e react-dom DEVEM estar no vendor principal (não separar)
-              // para garantir que estejam disponíveis antes de qualquer outro chunk
-              if (id.includes('/react/') || id.includes('/react-dom/')) {
-                return 'vendor'; // Chunk principal que carrega PRIMEIRO
+              // CRÍTICO: React e react-dom DEVEM estar no PRIMEIRO chunk carregado
+              // Sem isto, ui-vendor tenta usar React.forwardRef antes do React existir
+              if (id.includes('/react/') || id.includes('/react-dom/') || 
+                  id.includes('/scheduler/') || id.includes('/react-is/')) {
+                return 'vendor'; // Chunk 0 - Carrega PRIMEIRO (priority)
               }
               
-              // UI vendors (Radix, Lucide) dependem do React, então só podem vir depois
-              if (id.includes('@radix-ui') || id.includes('lucide-react')) return 'ui-vendor';
+              // UI vendors (Radix, Lucide) dependem do React
+              // Só podem vir DEPOIS do vendor carregar
+              if (id.includes('@radix-ui') || id.includes('lucide-react')) {
+                return 'ui-vendor'; // Chunk 1 - Carrega DEPOIS do vendor
+              }
               
-              if (!isDev && id.includes('recharts')) return 'charts-vendor'; // somente produz separar
+              if (!isDev && id.includes('recharts')) return 'charts-vendor';
               if (id.includes('@dnd-kit')) return 'dnd-vendor';
-              return 'vendor';
+              
+              // Outros node_modules vão para vendor genérico
+              return 'vendor-misc';
             }
 
             if (id.includes('/src/components/editor/')) return 'editor';
@@ -187,9 +193,9 @@ export default defineConfig(({ mode }) => {
       ],
       esbuildOptions: {
         target: 'es2020',
-        loader: { '.js': 'jsx' },
+        loader: { '.js': 'jsx', '.ts': 'tsx' },
       },
-      // Forçar re-otimização para garantir dependências corretas
+      // Forçar re-otimização para garantir que react-preload seja processado
       force: true,
     },
     define: {
