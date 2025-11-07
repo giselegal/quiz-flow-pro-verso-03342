@@ -104,8 +104,11 @@ const EditorRoutesInner: React.FC = () => {
     useMemo(() => {
         if (typeof window === 'undefined') return;
 
-        // Mostrar modal apenas se não tem resource na URL
-        if (!resourceId) {
+        // Verificar se usuário já escolheu não mostrar novamente
+        const dontShowAgain = localStorage.getItem('editor:skipStartupModal') === 'true';
+
+        // Mostrar modal apenas se não tem resource na URL E usuário não escolheu pular
+        if (!resourceId && !dontShowAgain) {
             setShowStartupModal(true);
         }
     }, [resourceId]);

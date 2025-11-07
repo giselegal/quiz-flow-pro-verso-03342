@@ -9,6 +9,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Plus, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface EditorStartupModalProps {
     open: boolean;
@@ -16,9 +17,21 @@ interface EditorStartupModalProps {
 }
 
 export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalProps) {
+    const [dontShowAgain, setDontShowAgain] = useState(false);
+
     // Permitir fechar o modal escolhendo modo blank
     const handleClose = () => {
+        if (dontShowAgain) {
+            localStorage.setItem('editor:skipStartupModal', 'true');
+        }
         onSelectMode('blank');
+    };
+
+    const handleSelectMode = (mode: 'blank' | 'template') => {
+        if (dontShowAgain) {
+            localStorage.setItem('editor:skipStartupModal', 'true');
+        }
+        onSelectMode(mode);
     };
 
     return (
