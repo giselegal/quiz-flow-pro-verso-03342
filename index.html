@@ -82,13 +82,21 @@
   <script>
     (function () {
       try {
-        if (typeof window !== 'undefined' && !window.React) {
+        if (typeof window !== 'undefined') {
           window.React = window.React || {};
           var R = window.React;
-          R.forwardRef = R.forwardRef || (function (render) { return render; });
-          R.useLayoutEffect = R.useLayoutEffect || function () { };
-          R.useEffect = R.useEffect || function () { };
-          R.Fragment = R.Fragment || function Fragment(props) { return (props && props.children) || null; };
+          if (typeof R.forwardRef !== 'function') {
+            R.forwardRef = function (render) { return render; };
+          }
+          if (typeof R.useLayoutEffect !== 'function') {
+            R.useLayoutEffect = function () { };
+          }
+          if (typeof R.useEffect !== 'function') {
+            R.useEffect = function () { };
+          }
+          if (typeof R.Fragment !== 'function') {
+            R.Fragment = function Fragment(props) { return (props && props.children) || null; };
+          }
           console.info('[InitGuard] React fallbacks aplicados (pré-bundle)');
         }
         // Guard para cva (class-variance-authority) para evitar ReferenceError antes da lib carregar
