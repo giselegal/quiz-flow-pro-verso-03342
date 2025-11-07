@@ -119,7 +119,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "contentMaxWidth": 640,
         "animationType": "fade",
         "animationDuration": 300
-      }
+      },
+      "content": {}
     },
     {
       "id": "intro-title",

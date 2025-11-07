@@ -216,6 +216,7 @@ export type BlockType =
   | 'result-characteristics'
   | 'result-cta'
   | 'result-secondary-styles'
+  | 'quiz-score-display'
   // Legacy/deprecated types (kept for backward compatibility)
   | 'result-title'
   | 'result-style-name'

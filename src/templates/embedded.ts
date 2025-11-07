@@ -51,6 +51,7 @@ const embedded: Record<string, Block[]> = {
           "animationType": "fade",
           "animationDuration": 300
         },
+        "content": {},
         "parentId": null
       },
       {
