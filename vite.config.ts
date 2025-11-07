@@ -84,22 +84,38 @@ export default defineConfig(({ mode }) => {
       cssMinify: 'lightningcss',
       cssCodeSplit: true,
       // 🎯 FASE 3 TASK 7: Otimizações de bundle
-      // ⚠️ Mitigação: alguns vendors (ex.: recharts) podem quebrar com esbuild minify
-      // Use terser em produção para evitar "Cannot access 'X' before initialization"
-      minify: isProd ? 'terser' : 'esbuild',
+      // ⚠️ CORREÇÃO TDZ: Usar esbuild em DEV (mais rápido) e terser CONSERVADOR em PROD
+      // Terser com configurações conservadoras para evitar "Cannot access 'X' before initialization"
+      minify: isProd ? 'terser' : false, // ✅ SEM minify em DEV para debug
       terserOptions: isProd ? ({
         compress: {
-          // Ser conservador com reordenação/inlining para evitar TDZ em vendors
-          inline: 1,
-          reduce_funcs: false,
-          reduce_vars: false,
-          passes: 1,
+          // 🛡️ EXTREMAMENTE conservador para evitar TDZ
+          inline: 0, // ✅ NÃO fazer inline de funções
+          reduce_funcs: false, // ✅ NÃO reduzir funções
+          reduce_vars: false, // ✅ NÃO reduzir variáveis
+          passes: 1, // ✅ Apenas 1 passe
+          sequences: false, // ✅ NÃO combinar statements
+          conditionals: false, // ✅ NÃO otimizar condicionais
+          comparisons: false, // ✅ NÃO otimizar comparações
+          evaluate: false, // ✅ NÃO avaliar expressões constantes
+          booleans: false, // ✅ NÃO otimizar booleanos
+          loops: false, // ✅ NÃO otimizar loops
+          unused: false, // ✅ NÃO remover código não usado (pode quebrar side effects)
+          hoist_funs: false, // ✅ NÃO mover funções para o topo
+          hoist_vars: false, // ✅ NÃO mover vars para o topo
+          if_return: false, // ✅ NÃO otimizar if/return
+          join_vars: false, // ✅ NÃO juntar declarações de var
+          side_effects: false, // ✅ NÃO remover expressões sem efeito aparente
+          warnings: false,
+          drop_console: true, // ✅ Remover apenas console (seguro)
         },
         mangle: {
-          keep_fnames: true,
+          keep_fnames: true, // ✅ Preservar nomes de funções
+          keep_classnames: true, // ✅ Preservar nomes de classes
         },
         format: {
           comments: false,
+          beautify: false,
         },
       } as any) : undefined,
       target: 'es2020',
