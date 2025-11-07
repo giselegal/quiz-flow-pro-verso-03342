@@ -349,6 +349,3 @@
     "bufferutil": "^4.0.8"
   }
 }
-  },
-  "test:templates": "echo '🧪 Testes de Template - Sistema v3.1' && echo '✅ Schema Validation' && echo '✅ React Query Hooks' && echo '✅ Template Service' && echo '✅ Import Dialog' && echo '✅ Integration Workflows' && echo '' && echo '📊 Total: 180+ casos de teste' && echo '✅ Todos os testes configurados'"
-}
