@@ -91,6 +91,16 @@
           R.Fragment = R.Fragment || function Fragment(props) { return (props && props.children) || null; };
           console.info('[InitGuard] React fallbacks aplicados (pré-bundle)');
         }
+        // Guard para cva (class-variance-authority) para evitar ReferenceError antes da lib carregar
+        if (typeof window !== 'undefined' && !window.cva) {
+          window.cva = function cvaGuard(base, config) {
+            return function composed(variants) {
+              // Retorna classes base imediatamente até a lib real substituir
+              return Array.isArray(base) ? base.join(' ') : (typeof base === 'string' ? base : '');
+            };
+          };
+          console.info('[InitGuard] cva stub aplicado (pré-bundle)');
+        }
       } catch (e) { /* ignore */ }
     })();
   </script>
