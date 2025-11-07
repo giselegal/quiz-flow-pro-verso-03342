@@ -151,10 +151,6 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: true,
         },
         output: {
-          // 🔒 Evitar reordenação perigosa entre módulos (mitiga TDZ)
-          // Nota: preserveModules é incompatível com manualChunks. Mantemos manualChunks e desativamos preserveModules.
-          // A mitigação de TDZ permanece via vendor unificado + hoistTransitiveImports: false.
-          hoistTransitiveImports: false,
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
           // 🚀 CODE SPLITTING MAIS GRANULAR
