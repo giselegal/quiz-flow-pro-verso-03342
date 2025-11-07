@@ -1,0 +1,121 @@
+{
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-01",
+    "name": "Introdução - Bem-vindo ao Quiz de Estilo",
+    "description": "Página inicial do quiz com apresentação e coleta do nome do usuário",
+    "category": "intro",
+    "tags": [
+      "quiz",
+      "style",
+      "intro",
+      "welcome",
+      "name-input"
+    ]
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#fffaf7",
+      "text": "#432818"
+    }
+  },
+  "blocks": [
+    {
+      "id": "intro-logo",
+      "type": "intro-logo",
+      "config": {
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        "alt": "Logo Gisele Galvão",
+        "width": "132",
+        "height": "55",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        "alt": "Logo Gisele Galvão",
+        "width": "132",
+        "height": "55",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "intro-title",
+      "type": "intro-title",
+      "config": {
+        "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "intro-image",
+      "type": "intro-image",
+      "config": {
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        "alt": "Descubra seu estilo predominante",
+        "width": "300",
+        "height": "204"
+      },
+      "properties": {
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        "alt": "Descubra seu estilo predominante",
+        "width": "300",
+        "height": "204"
+      }
+    },
+    {
+      "id": "intro-description",
+      "type": "intro-description",
+      "config": {
+        "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
+      },
+      "properties": {
+        "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
+      }
+    },
+    {
+      "id": "intro-form",
+      "type": "intro-form",
+      "config": {
+        "label": "Como posso te chamar?",
+        "placeholder": "Digite seu primeiro nome aqui...",
+        "buttonText": "Quero Descobrir meu Estilo Agora!",
+        "required": true,
+        "helperText": "Seu nome é necessário para personalizar sua experiência.",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300
+      },
+      "properties": {
+        "label": "Como posso te chamar?",
+        "placeholder": "Digite seu primeiro nome aqui...",
+        "buttonText": "Quero Descobrir meu Estilo Agora!",
+        "required": true,
+        "helperText": "Seu nome é necessário para personalizar sua experiência.",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300
+      }
+    }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "form_submit"
+    ],
+    "trackingId": "step-01-blocks"
+  }
+}

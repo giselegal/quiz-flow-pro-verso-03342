@@ -1,0 +1,218 @@
+{
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-03",
+    "name": "Etapa step-03 - Question",
+    "description": "Etapa step-03 do Quiz de Estilo (question) — Nome pessoal / entrada de texto",
+    "category": "question"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "blocks": [
+    {
+      "id": "progress-bar-step-03",
+      "type": "question-progress",
+      "config": {
+        "stepNumber": 3,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      },
+      "properties": {
+        "stepNumber": 3,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      }
+    },
+    {
+      "id": "step-03-title",
+      "type": "question-title",
+      "config": {
+        "text": "Pergunta 2 de 10",
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "text": "Pergunta 2 de 10",
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "options-grid-03",
+      "type": "options-grid",
+      "config": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Informal, espontânea, alegre, essencialista",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Conservadora, séria, organizada",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Informada, ativa, prática",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Exigente, sofisticada, seletiva",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Feminina, meiga, delicada, sensível",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Glamorosa, vaidosa, sensual",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Cosmopolita, moderna e audaciosa",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Exótica, aventureira, livre",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3,
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      },
+      "properties": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Informal, espontânea, alegre, essencialista",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Conservadora, séria, organizada",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Informada, ativa, prática",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Exigente, sofisticada, seletiva",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Feminina, meiga, delicada, sensível",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Glamorosa, vaidosa, sensual",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Cosmopolita, moderna e audaciosa",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Exótica, aventureira, livre",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3,
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "id": "navigation-step-03",
+      "type": "question-navigation",
+      "config": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      }
+    }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "step_completed"
+    ],
+    "trackingId": "step-03-blocks"
+  }
+}

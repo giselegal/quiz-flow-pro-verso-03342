@@ -1,0 +1,198 @@
+{
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-13",
+    "name": "Q11 - Objetivos (Estratégica)",
+    "description": "Questão estratégica 1 sobre objetivos e resultados",
+    "category": "strategic-question"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "blocks": [
+    {
+      "id": "progress-bar-step-13",
+      "type": "question-progress",
+      "config": {
+        "stepNumber": 13,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      },
+      "properties": {
+        "stepNumber": 13,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb",
+        "padding": 8
+      }
+    },
+    {
+      "id": "step-13-question-title",
+      "type": "question-title",
+      "config": {
+        "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "question-hero-13",
+      "type": "question-hero",
+      "config": {
+        "questionNumber": "Q11 - OBJETIVOS",
+        "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "currentQuestion": 11,
+        "totalQuestions": 13,
+        "progressValue": 57,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "questionNumber": "Q11 - OBJETIVOS",
+        "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "currentQuestion": 11,
+        "totalQuestions": 13,
+        "progressValue": 57,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "type": "fade",
+        "duration": 300
+      }
+    },
+    {
+      "id": "options-grid-13",
+      "type": "options-grid",
+      "config": {
+        "options": [
+          {
+            "id": "desconectada",
+            "text": "Me sinto desconectada da mulher que sou hoje",
+            "value": "desconectada"
+          },
+          {
+            "id": "duvidas",
+            "text": "Tenho dúvidas sobre o que realmente me valoriza",
+            "value": "duvidas"
+          },
+          {
+            "id": "as-vezes-acerto",
+            "text": "Às vezes acerto, às vezes erro",
+            "value": "as-vezes-acerto"
+          },
+          {
+            "id": "segura-evoluir",
+            "text": "Me sinto segura, mas sei que posso evoluir",
+            "value": "segura-evoluir"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      },
+      "properties": {
+        "options": [
+          {
+            "id": "desconectada",
+            "text": "Me sinto desconectada da mulher que sou hoje",
+            "value": "desconectada"
+          },
+          {
+            "id": "duvidas",
+            "text": "Tenho dúvidas sobre o que realmente me valoriza",
+            "value": "duvidas"
+          },
+          {
+            "id": "as-vezes-acerto",
+            "text": "Às vezes acerto, às vezes erro",
+            "value": "as-vezes-acerto"
+          },
+          {
+            "id": "segura-evoluir",
+            "text": "Me sinto segura, mas sei que posso evoluir",
+            "value": "segura-evoluir"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "id": "navigation-step-13",
+      "type": "question-navigation",
+      "config": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      },
+      "properties": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default",
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300
+      }
+    }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "step_completed"
+    ],
+    "trackingId": "step-13-blocks"
+  }
+}
