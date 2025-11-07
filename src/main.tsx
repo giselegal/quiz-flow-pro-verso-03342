@@ -72,6 +72,8 @@ import './utils/blockLovableInDev';
 import './utils/canvasPerformanceControl';
 // ✨ MODULAR STEPS: Sistema modular de steps - auto-registro dos componentes
 import './components/steps';
+// 🧪 Layer diagnostics (dev only)
+import installLayerDiagnostics from './utils/layerDiagnostics';
 // 🏗️ SCHEMA SYSTEM: Inicializa o sistema modular de schemas com lazy loading
 import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 // 🤖 AI: IA do funil auto-ativada via utils
@@ -81,6 +83,7 @@ import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 // 🏗️ Inicializar sistema de schemas
 initializeSchemaRegistry();
 console.log('✅ Schema system initialized');
+try { installLayerDiagnostics(); } catch { }
 
 // Pré-carregar schemas críticos para evitar fallback legacy em blocos de resultado
 try {
