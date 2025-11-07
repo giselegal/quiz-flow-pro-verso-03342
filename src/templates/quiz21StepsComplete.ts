@@ -11,7 +11,7 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-11-01T18:40:35.010Z
+ * Gerado em: 2025-11-07T12:30:23.724Z
  * Versão: 3.0.0
  */
 
@@ -89,22 +89,36 @@ function generateSeedFromFunnelId(funnelId: string): number {
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   'step-01': [
     {
-      "id": "intro-logo",
-      "type": "intro-logo",
+      "id": "quiz-intro-header",
+      "type": "quiz-intro-header",
       "order": 0,
       "properties": {
-        "padding": 16,
-        "type": "fade",
-        "duration": 300,
+        "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 132,
+        "logoHeight": 55,
+        "showLogo": true,
+        "logoPosition": "center",
+        "showProgress": true,
+        "progressValue": 5,
+        "progressMax": 100,
+        "progressHeight": 4,
+        "progressStyle": "bar",
+        "progressColor": "#B89B7A",
+        "progressBackgroundColor": "#E5DDD5",
+        "showBackButton": false,
+        "backButtonStyle": "icon",
+        "backButtonPosition": "left",
+        "headerStyle": "default",
+        "backgroundColor": "#FAF9F7",
+        "showBorder": false,
+        "isSticky": false,
+        "enableAnimation": true,
+        "marginTop": 0,
+        "marginBottom": 16,
+        "contentMaxWidth": 640,
         "animationType": "fade",
         "animationDuration": 300
-      },
-      "content": {
-        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
-        "alt": "Logo Gisele Galvão",
-        "width": 132,
-        "height": 55,
-        "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
       }
     },
     {
@@ -2358,6 +2372,43 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "content": {}
     },
     {
+      "id": "quiz-score-celebration",
+      "type": "quiz-score-display",
+      "order": 0.5,
+      "properties": {
+        "enabled": true,
+        "order": 1.5,
+        "props": {
+          "variant": "celebration",
+          "showScore": true,
+          "showLevel": true,
+          "showBadges": true,
+          "showBreakdown": true,
+          "animateOnMount": true,
+          "confettiEnabled": true,
+          "theme": {
+            "primaryColor": "#B89B7A",
+            "secondaryColor": "#432818",
+            "accentColor": "#a08966",
+            "backgroundColor": "#fffaf7",
+            "successColor": "#2d5f3f"
+          },
+          "labels": {
+            "title": "🏆 Sua Pontuação Final",
+            "scoreLabel": "Pontos Totais",
+            "levelLabel": "Nível Alcançado",
+            "badgesLabel": "Badges Conquistadas",
+            "breakdownLabel": "Detalhamento"
+          },
+          "spacing": {
+            "padding": "2rem 1.5rem",
+            "marginBottom": "2rem"
+          }
+        }
+      },
+      "content": {}
+    },
+    {
       "id": "result-main",
       "type": "result-main",
       "order": 1,
@@ -2372,11 +2423,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
             "aspectRatio": "4/5",
             "showDecorations": true,
             "decorationColor": "#B89B7A",
-            "fallbackEnabled": true
+            "fallbackEnabled": true,
+            "showLabel": true
           },
           "showIntroText": true,
           "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
-          "showDescription": true
+          "showDescription": true,
+          "showGuideImage": true
         }
       },
       "content": {}
@@ -2426,16 +2479,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "properties": {
         "enabled": true,
         "order": 5,
-        "position": "center",
-        "aspectRatio": "4/5",
-        "maxWidth": "28rem",
-        "centered": true,
-        "showDecorations": false
+        "props": {
+          "position": "center",
+          "aspectRatio": "4/5",
+          "maxWidth": "28rem",
+          "centered": true,
+          "showDecorations": false
+        }
       },
-      "content": {
-        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/result-style.webp",
-        "alt": "Seu estilo personalizado"
-      }
+      "content": {}
     },
     {
       "id": "result-description",
@@ -2465,8 +2517,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "order": 7
       },
       "content": {
-        "text": "Quero Transformar Meu Estilo Agora!",
-        "url": "https://pay.kiwify.com.br/DkYC1Aj",
+        "text": "{ctaPrimaryText}",
+        "url": "{ctaPrimaryUrl}",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -2501,12 +2553,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "properties": {
         "enabled": true,
         "order": 8,
-        "align": "left",
-        "style": "rich-text"
+        "props": {
+          "content": "<h3>Transforme Sua Imagem, Revele Sua Essência</h3><p>Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.</p><ul><li>🎯 Clareza de estilo para se vestir com facilidade todos os dias</li><li>🎨 Cores e formas que comunicam quem você é e o que você quer</li><li>💼 Imagem que chega primeiro: autoridade sem perder autenticidade</li><li>👗 Guarda-roupa estratégico que conversa entre si</li></ul>",
+          "align": "left",
+          "style": "rich-text"
+        }
       },
-      "content": {
-        "text": "<h3>Transforme Sua Imagem, Revele Sua Essência</h3><p>Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.</p><ul><li>🎯 Clareza de estilo para se vestir com facilidade todos os dias</li><li>🎨 Cores e formas que comunicam quem você é e o que você quer</li><li>💼 Imagem que chega primeiro: autoridade sem perder autenticidade</li><li>👗 Guarda-roupa estratégico que conversa entre si</li></ul>"
-      }
+      "content": {}
     },
     {
       "id": "method-steps",
@@ -2515,12 +2568,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "properties": {
         "enabled": true,
         "order": 9,
-        "align": "left",
-        "style": "rich-text"
+        "props": {
+          "content": "<h3>O que você vai aprender no Método 5 Passos</h3><div><h4>🪞 Passo 1 — Estilo de Ser</h4><p>Descubra seus 3 estilos predominantes e entenda como traduzir sua personalidade no vestir.</p></div><div><h4>🎨 Passo 2 — Cores</h4><p>As cores são uma linguagem emocional. Aprenda como escolher tons que valorizam sua beleza natural.</p></div><div><h4>🧍‍♀️ Passo 3 — Biotipo</h4><p>Entenda as linhas e proporções do seu corpo e como se vestir para equilibrar formas.</p></div><div><h4>🧹 Passo 4 — Detox do Guarda-Roupa</h4><p>Um processo de autoconhecimento através do desapego.</p></div><div><h4>👗 Passo 5 — Guarda-Roupa de Sucesso</h4><p>Monte um guarda-roupa funcional e inteligente, com peças-chave e combinações rápidas.</p></div>",
+          "align": "left",
+          "style": "rich-text"
+        }
       },
-      "content": {
-        "text": "<h3>O que você vai aprender no Método 5 Passos</h3><div><h4>🪞 Passo 1 — Estilo de Ser</h4><p>Descubra seus 3 estilos predominantes e entenda como traduzir sua personalidade no vestir.</p></div><div><h4>🎨 Passo 2 — Cores</h4><p>As cores são uma linguagem emocional. Aprenda como escolher tons que valorizam sua beleza natural.</p></div><div><h4>🧍‍♀️ Passo 3 — Biotipo</h4><p>Entenda as linhas e proporções do seu corpo e como se vestir para equilibrar formas.</p></div><div><h4>🧹 Passo 4 — Detox do Guarda-Roupa</h4><p>Um processo de autoconhecimento através do desapego.</p></div><div><h4>👗 Passo 5 — Guarda-Roupa de Sucesso</h4><p>Monte um guarda-roupa funcional e inteligente, com peças-chave e combinações rápidas.</p></div>"
-      }
+      "content": {}
     },
     {
       "id": "button-cta-final",
@@ -2531,8 +2585,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "order": 10
       },
       "content": {
-        "text": "Quero Garantir Minha Vaga no Método 5 Passos",
-        "url": "https://pay.kiwify.com.br/DkYC1Aj",
+        "text": "{ctaSecondaryText}",
+        "url": "{ctaSecondaryUrl}",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -2553,7 +2607,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "duration": 500
       },
       "content": {
-        "title": "Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
+        "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
         "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
         "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
         "urgencyMessage": "Oferta por tempo limitado!"

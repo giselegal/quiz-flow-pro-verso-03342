@@ -1,9 +1,9 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-11-01T18:40:35.011Z
+ * Gerado automaticamente em: 2025-11-07T12:30:23.726Z
  * Total de steps: 21
- * Total de blocos: 102
+ * Total de blocos: 103
  * 
  * ⚠️ NÃO EDITAR MANUALMENTE - executar: npm run build:templates
  */
@@ -20,22 +20,36 @@ export interface Block {
 const embedded: Record<string, Block[]> = {
     "step-01": [
       {
-        "id": "intro-logo",
-        "type": "intro-logo",
+        "id": "quiz-intro-header",
+        "type": "quiz-intro-header",
         "order": 0,
         "properties": {
-          "padding": 16,
-          "type": "fade",
-          "duration": 300,
+          "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+          "logoAlt": "Logo Gisele Galvão",
+          "logoWidth": 132,
+          "logoHeight": 55,
+          "showLogo": true,
+          "logoPosition": "center",
+          "showProgress": true,
+          "progressValue": 5,
+          "progressMax": 100,
+          "progressHeight": 4,
+          "progressStyle": "bar",
+          "progressColor": "#B89B7A",
+          "progressBackgroundColor": "#E5DDD5",
+          "showBackButton": false,
+          "backButtonStyle": "icon",
+          "backButtonPosition": "left",
+          "headerStyle": "default",
+          "backgroundColor": "#FAF9F7",
+          "showBorder": false,
+          "isSticky": false,
+          "enableAnimation": true,
+          "marginTop": 0,
+          "marginBottom": 16,
+          "contentMaxWidth": 640,
           "animationType": "fade",
           "animationDuration": 300
-        },
-        "content": {
-          "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
-          "alt": "Logo Gisele Galvão",
-          "width": 132,
-          "height": 55,
-          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
         },
         "parentId": null
       },
@@ -2360,6 +2374,44 @@ const embedded: Record<string, Block[]> = {
         "parentId": null
       },
       {
+        "id": "quiz-score-celebration",
+        "type": "quiz-score-display",
+        "order": 0.5,
+        "properties": {
+          "enabled": true,
+          "order": 1.5,
+          "props": {
+            "variant": "celebration",
+            "showScore": true,
+            "showLevel": true,
+            "showBadges": true,
+            "showBreakdown": true,
+            "animateOnMount": true,
+            "confettiEnabled": true,
+            "theme": {
+              "primaryColor": "#B89B7A",
+              "secondaryColor": "#432818",
+              "accentColor": "#a08966",
+              "backgroundColor": "#fffaf7",
+              "successColor": "#2d5f3f"
+            },
+            "labels": {
+              "title": "🏆 Sua Pontuação Final",
+              "scoreLabel": "Pontos Totais",
+              "levelLabel": "Nível Alcançado",
+              "badgesLabel": "Badges Conquistadas",
+              "breakdownLabel": "Detalhamento"
+            },
+            "spacing": {
+              "padding": "2rem 1.5rem",
+              "marginBottom": "2rem"
+            }
+          }
+        },
+        "content": {},
+        "parentId": null
+      },
+      {
         "id": "result-main",
         "type": "result-main",
         "order": 1,
@@ -2374,11 +2426,13 @@ const embedded: Record<string, Block[]> = {
               "aspectRatio": "4/5",
               "showDecorations": true,
               "decorationColor": "#B89B7A",
-              "fallbackEnabled": true
+              "fallbackEnabled": true,
+              "showLabel": true
             },
             "showIntroText": true,
             "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
-            "showDescription": true
+            "showDescription": true,
+            "showGuideImage": true
           }
         },
         "content": {},
