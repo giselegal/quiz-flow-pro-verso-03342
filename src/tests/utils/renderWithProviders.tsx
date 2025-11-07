@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SuperUnifiedProvider } from '@/providers/SuperUnifiedProvider';
 import { Router } from 'wouter';
 import { memoryLocation } from 'wouter/memory-location';
 import { HelmetProvider } from 'react-helmet-async';
@@ -19,19 +20,21 @@ export function renderWithProviders(ui: ReactElement, { path = '/' }: Options = 
     return render(
         <HelmetProvider>
             <QueryClientProvider client={qc}>
-                <CustomThemeProvider defaultTheme="light">
-                    <AuthProvider>
-                        <SecurityProvider>
-                            <MonitoringProvider enableAlerts={false} enableAnalytics={false}>
-                                <OptimizedProviderStack enableLazyLoading={false} enableComponentCaching={false} debugMode={false}>
-                                    <Router hook={location.hook}>
-                                        {ui}
-                                    </Router>
-                                </OptimizedProviderStack>
-                            </MonitoringProvider>
-                        </SecurityProvider>
-                    </AuthProvider>
-                </CustomThemeProvider>
+                <SuperUnifiedProvider autoLoad={false} debugMode={false}>
+                    <CustomThemeProvider defaultTheme="light">
+                        <AuthProvider>
+                            <SecurityProvider>
+                                <MonitoringProvider enableAlerts={false} enableAnalytics={false}>
+                                    <OptimizedProviderStack enableLazyLoading={false} enableComponentCaching={false} debugMode={false}>
+                                        <Router hook={location.hook}>
+                                            {ui}
+                                        </Router>
+                                    </OptimizedProviderStack>
+                                </MonitoringProvider>
+                            </SecurityProvider>
+                        </AuthProvider>
+                    </CustomThemeProvider>
+                </SuperUnifiedProvider>
             </QueryClientProvider>
         </HelmetProvider>,
     );
