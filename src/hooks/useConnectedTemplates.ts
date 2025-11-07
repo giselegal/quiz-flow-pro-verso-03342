@@ -24,14 +24,52 @@ export interface ConnectedTemplateConfig {
 export const useConnectedTemplates = () => {
   const quizLogic = useQuizLogic();
   const supabaseQuiz = useSupabaseQuiz();
+  const [questionsData, setQuestionsData] = useState<Record<number, string>>({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 🎯 CARREGAR DADOS DAS QUESTÕES VIA HIERARCHICAL SOURCE
+  useEffect(() => {
+    const loadQuestions = async () => {
+      try {
+        setIsLoading(true);
+        const questions: Record<number, string> = {};
+        
+        // Carregar dados de todas as steps
+        for (let step = 1; step <= 21; step++) {
+          const stepKey = `step-${String(step).padStart(2, '0')}`;
+          const result = await hierarchicalTemplateSource.getPrimary(stepKey);
+          
+          // result.data é Block[], então pegamos o título do primeiro bloco de texto
+          if (result?.data && Array.isArray(result.data)) {
+            const firstBlock = result.data.find((block: any) => block.content?.text || (block as any).props?.title);
+            if (firstBlock) {
+              questions[step] = firstBlock.content?.text || (firstBlock as any).props?.title || `Questão ${step}`;
+            } else {
+              questions[step] = `Questão ${step}`;
+            }
+          } else {
+            questions[step] = `Questão ${step}`;
+          }
+        }
+        
+        setQuestionsData(questions);
+      } catch (error) {
+        console.error('❌ Erro ao carregar questões:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadQuestions();
+  }, []);
 
   // 🎯 MAPEAR CONFIGURAÇÕES DOS TEMPLATES CONECTADOS
   const templateConfigs = useMemo(() => {
     const configs: Record<number, ConnectedTemplateConfig> = {};
 
-    // Steps 1-21 usando QUIZ_QUESTIONS_COMPLETE como fonte única
+    // Steps 1-21 usando dados carregados via HierarchicalTemplateSource
     for (let step = 1; step <= 21; step++) {
-      const questionText = QUIZ_QUESTIONS_COMPLETE[step];
+      const questionText = questionsData[step] || `Questão ${step}`;
 
       configs[step] = {
         stepNumber: step,
@@ -61,7 +99,7 @@ export const useConnectedTemplates = () => {
     }
 
     return configs;
-  }, []);
+  }, [questionsData]); // Atualizar quando questionsData mudar
 
   // 🎯 HANDLER UNIFICADO PARA RESPONDER QUESTÕES
   const handleAnswerQuestion = useCallback(
@@ -150,6 +188,7 @@ export const useConnectedTemplates = () => {
 
     // 📊 Estatísticas
     stats,
+    isLoading, // Novo: indicador de carregamento
 
     // 🎯 Utilitários
     isTemplateConnected: (stepNumber: number) => templateConfigs[stepNumber]?.isConnected || false,

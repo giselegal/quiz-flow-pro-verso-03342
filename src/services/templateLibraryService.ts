@@ -1,4 +1,6 @@
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+// ✅ CORREÇÃO: Comentado import direto do .ts - usar HierarchicalTemplateSource se necessário
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 export interface FunnelTemplate {
   id: string;
@@ -34,7 +36,8 @@ export const templateLibraryService = {
       id: 'quiz-style-21-steps',
       name: 'Quiz de Estilo - 21 Etapas',
       version: '3.0.0',
-      steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+      // ✅ CORREÇÃO: steps vazio aqui, deve ser carregado via HierarchicalTemplateSource
+      steps: {}, // Use hierarchicalTemplateSource.getPrimary() para carregar dados
       metadata: {
         collectUserName: true,
         seo: {

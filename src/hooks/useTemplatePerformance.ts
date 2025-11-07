@@ -6,7 +6,9 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { getStepTemplate as getStepTemplateStatic } from '@/templates/quiz21StepsComplete';
+// ✅ CORREÇÃO: Comentado import direto do .ts - usar HierarchicalTemplateSource se necessário
+// import { getStepTemplate as getStepTemplateStatic } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 interface PerformanceMetrics {
   loadTime: number;
@@ -58,8 +60,9 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
     }
 
     try {
-      // Use static import to avoid mixed dynamic+static import warnings
-      const template = getStepTemplateStatic(stepId);
+      // ✅ CORREÇÃO: Usar HierarchicalTemplateSource ao invés de import estático
+      const result = await hierarchicalTemplateSource.getPrimary(stepId);
+      const template = result?.data;
 
       if (enableCache && template) {
         cacheRef.current.set(stepId, template);
