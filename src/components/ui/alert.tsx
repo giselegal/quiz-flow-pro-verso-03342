@@ -4,6 +4,7 @@ import { type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+// Tipar manualmente o retorno para garantir compatibilidade com ClassValue
 const alertVariants = cva(
   'relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7',
   {
@@ -18,14 +19,17 @@ const alertVariants = cva(
       variant: 'default',
     },
   },
-);
+) as unknown as (opts: { variant?: string; className?: string }) => string;
 
 const Alert = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
-  <div ref={ref} role="alert" className={cn(alertVariants({ variant }), className)} {...props} />
-));
+>(({ className, variant, ...props }, ref) => {
+  const composed = alertVariants({ variant, className });
+  return (
+    <div ref={ref} role="alert" className={cn(composed)} {...props} />
+  );
+});
 Alert.displayName = 'Alert';
 
 const AlertTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
