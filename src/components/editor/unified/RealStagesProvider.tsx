@@ -514,26 +514,23 @@ function getStageDescription(stepNumber: number): string {
   return descriptions[stepNumber] || `Questão ${stepNumber - 1} do quiz de estilo`;
 }
 
-// ⚠️ REMOVIDO: Import direto do .ts (deve usar JSON!)
-// import { QUIZ_STYLE_21_STEPS_TEMPLATE as QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC } from '@/templates/quiz21StepsComplete';
+// ✅ CORREÇÃO: Usar HierarchicalTemplateSource em vez de import direto do .ts
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 async function loadStepDirect(stepNumber: number): Promise<Block[]> {
-  // 🔧 CORRIGIDO: Usa loader de JSON em vez de import direto do .ts
-  appLogger.debug(`🔄 Carregamento direto para step ${stepNumber}`);
+  // ✅ CORREÇÃO: Carregar do JSON via HierarchicalTemplateSource
+  appLogger.debug(`🔄 Carregamento direto (sem cache) para step ${stepNumber}`);
 
   try {
-    // Usar loader de JSON (mesma prioridade do HierarchicalTemplateSource)
-    const { loadStepFromJson } = await import('@/templates/loaders/jsonStepLoader');
     const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
-    const blocks = await loadStepFromJson(stepKey);
 
-    if (blocks && blocks.length > 0) {
-      appLogger.debug(`✅ Step ${stepNumber} carregado do JSON: ${blocks.length} blocos`);
-      return blocks;
-    }
+    // ✅ Usar hierarchicalTemplateSource que respeita a ordem:
+    // 1. USER_EDIT (Supabase)
+    // 2. TEMPLATE_DEFAULT (JSON)
+    // 3. FALLBACK (Registry)
+    const stepBlocks = await hierarchicalTemplateSource.getPrimary(stepKey);
 
-    appLogger.warn(`⚠️ Nenhum bloco encontrado para step ${stepNumber}, usando fallback`);
-    return createFallbackBlocks(stepNumber);
+    return Array.isArray(stepBlocks) ? stepBlocks : [];
   } catch (error) {
     appLogger.error(`❌ Carregamento direto falhou para step ${stepNumber}:`, error);
     return createFallbackBlocks(stepNumber);

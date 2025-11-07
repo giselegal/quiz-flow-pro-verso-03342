@@ -8,7 +8,9 @@
 import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
 import { mapComponentType } from './ComponentTypeMapping';
 import { MODULAR_COMPONENTS } from '@/config/modularComponents';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+// ✅ CORREÇÃO: Remover import direto do .ts
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { propertySchemas, getPropertySchema as getBlockPropertySchema } from '@/config/propertySchemas';
 import type { Block } from '@/types/editor';
 
