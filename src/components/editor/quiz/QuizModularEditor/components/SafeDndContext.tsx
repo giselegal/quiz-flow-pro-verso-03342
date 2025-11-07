@@ -6,18 +6,41 @@
  * - "Cannot read properties of undefined (reading 'forwardRef')"
  */
 
+// APLICAR POLYFILLS PRIMEIRO
+import '@/utils/reactPolyfills';
 import React, { Suspense } from 'react';
 
-// Garantir que React está disponível globalmente
+// CORREÇÃO GLOBAL ROBUSTA para React APIs
 if (typeof window !== 'undefined') {
+    // Garantir React global
     (window as any).React = React;
 
-    // Polyfills para APIs React que podem estar ausentes
-    if (!React.useLayoutEffect) {
-        (React as any).useLayoutEffect = React.useEffect;
-    }
-    if (!React.forwardRef) {
-        (React as any).forwardRef = (render: any) => render;
+    // Polyfills completos para React APIs ausentes
+    const reactPatches = {
+        useLayoutEffect: React.useLayoutEffect || React.useEffect,
+        forwardRef: React.forwardRef || ((render: any) => {
+            return (props: any) => render(props, null);
+        }),
+        createRef: React.createRef || (() => ({ current: null })),
+        memo: React.memo || ((component: any) => component),
+        useMemo: React.useMemo || ((factory: any, deps: any) => factory()),
+        useCallback: React.useCallback || ((callback: any, deps: any) => callback),
+        useImperativeHandle: React.useImperativeHandle || (() => { }),
+        Fragment: React.Fragment || ((props: any) => props.children)
+    };
+
+    // Aplicar patches no React global
+    Object.assign(React, reactPatches);
+    (window as any).React = React;
+
+    // Também disponibilizar no contexto global para outros bundles
+    if (!(window as any).__REACT_POLYFILLS_APPLIED__) {
+        Object.defineProperty(window, '__REACT_POLYFILLS_APPLIED__', {
+            value: true,
+            writable: false
+        });
+
+        console.log('✅ [SafeDndContext] React polyfills aplicados globalmente');
     }
 }
 
