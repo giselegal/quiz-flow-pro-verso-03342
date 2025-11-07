@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 
   // Garantir que window.React tenha todos os polyfills
   (window as any).React = { ...React, ...reactGlobalPolyfills };
-  
+
   // CRÍTICO: Verificar se forwardRef está disponível
   if (!React.forwardRef) {
     console.error('❌ React.forwardRef não está disponível! Aplicando polyfill de emergência...');
