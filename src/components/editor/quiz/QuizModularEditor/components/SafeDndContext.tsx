@@ -72,9 +72,9 @@ const loadDndKit = async () => {
     }
 };
 
-// Tentar carregar sincronamente primeiro (fallback)
+// Tentar carregar do window primeiro (se disponível globalmente)
 try {
-    const dndCore = (window as any)['@dnd-kit/core'] || require('@dnd-kit/core');
+    const dndCore = (window as any)['@dnd-kit/core'];
     if (dndCore) {
         DndContext = dndCore.DndContext;
         DragOverlay = dndCore.DragOverlay;
@@ -198,20 +198,27 @@ let verticalListSortingStrategy: any = null;
 let useSortable: any = null;
 let CSS: any = null;
 
-try {
-    const sortable = require('@dnd-kit/sortable');
-    const utilities = require('@dnd-kit/utilities');
+// Dynamic imports usando ES modules
+const loadDndKitModules = async () => {
+    try {
+        const [sortable, utilities, core] = await Promise.all([
+            import('@dnd-kit/sortable'),
+            import('@dnd-kit/utilities'),
+            import('@dnd-kit/core')
+        ]);
 
-    SortableContext = sortable.SortableContext;
-    verticalListSortingStrategy = sortable.verticalListSortingStrategy;
-    useSortable = sortable.useSortable;
-    CSS = utilities.CSS;
+        SortableContext = sortable.SortableContext;
+        verticalListSortingStrategy = sortable.verticalListSortingStrategy;
+        useSortable = sortable.useSortable;
+        CSS = utilities.CSS;
+        useDroppable = core.useDroppable;
+    } catch (error) {
+        console.warn('❌ [DndWrapper] Falha ao carregar hooks DnD:', error);
+    }
+};
 
-    const core = require('@dnd-kit/core');
-    useDroppable = core.useDroppable;
-} catch (error) {
-    console.warn('❌ [DndWrapper] Falha ao carregar hooks DnD:', error);
-}
+// Inicializar módulos
+loadDndKitModules();
 
 export function useSafeDroppable(options: any = {}) {
     if (!useDroppable) {
