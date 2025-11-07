@@ -46,7 +46,7 @@ const sheetVariants = cva(
       side: 'right',
     },
   },
-);
+) as unknown as (opts: { side?: string; className?: string }) => string;
 
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
