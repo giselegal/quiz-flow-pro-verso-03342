@@ -284,6 +284,6 @@ console.debug('[Editor] Mounted:', {
 
 ---
 
-**Relatório gerado em:** 2025-01-09  
+**Relatório gerado em:** 2025-11-07  
 **Versão dos testes:** 1.0.0  
 **Tool:** Playwright E2E Testing
