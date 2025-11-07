@@ -43,6 +43,8 @@ import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTex
 import QuestionProgressBlock from '@/components/editor/blocks/atomic/QuestionProgressBlock';
 import QuestionNumberBlock from '@/components/editor/blocks/atomic/QuestionNumberBlock';
 import QuestionTextBlock from '@/components/editor/blocks/atomic/QuestionTextBlock';
+import QuestionTitleBlock from '@/components/editor/blocks/atomic/QuestionTitleBlock';
+import QuestionHeroBlock from '@/components/editor/blocks/atomic/QuestionHeroBlock';
 import QuestionInstructionsBlock from '@/components/editor/blocks/atomic/QuestionInstructionsBlock';
 // Result blocks (atômicos)
 import ResultMainBlock from '@/components/editor/blocks/atomic/ResultMainBlock';

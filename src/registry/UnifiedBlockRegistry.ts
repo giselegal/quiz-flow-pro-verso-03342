@@ -92,6 +92,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'score-display': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
 
   // Intro blocks - Step 1 (7 blocos)
+  'hero-block': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
   'intro-logo': () => import('@/components/editor/blocks/atomic/IntroLogoBlock'),
   'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
   'intro-title': () => import('@/components/editor/blocks/atomic/IntroTitleBlock'),
