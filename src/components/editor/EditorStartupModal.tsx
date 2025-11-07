@@ -19,17 +19,23 @@ interface EditorStartupModalProps {
 export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalProps) {
     const [dontShowAgain, setDontShowAgain] = useState(false);
 
+    console.log('🎯 EditorStartupModal renderizado - open:', open);
+
     // Permitir fechar o modal escolhendo modo blank
     const handleClose = () => {
+        console.log('❌ Modal fechado via X ou backdrop');
         if (dontShowAgain) {
             localStorage.setItem('editor:skipStartupModal', 'true');
+            console.log('✅ Preferência salva: não mostrar modal novamente');
         }
         onSelectMode('blank');
     };
 
     const handleSelectMode = (mode: 'blank' | 'template') => {
+        console.log(`🎨 Modo selecionado: ${mode}`);
         if (dontShowAgain) {
             localStorage.setItem('editor:skipStartupModal', 'true');
+            console.log('✅ Preferência salva: não mostrar modal novamente');
         }
         onSelectMode(mode);
     };
