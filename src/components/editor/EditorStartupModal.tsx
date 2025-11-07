@@ -43,6 +43,7 @@ export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalPro
                     {/* Opção 1: Canvas Vazio */}
                     <button
                         onClick={() => onSelectMode('blank')}
+                        data-testid="editor-startup-blank-button"
                         className="flex flex-col items-center gap-4 p-6 rounded-lg border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all group"
                     >
                         <div className="w-16 h-16 rounded-full bg-gray-100 group-hover:bg-blue-100 flex items-center justify-center">
@@ -59,6 +60,7 @@ export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalPro
                     {/* Opção 2: Usar Template */}
                     <button
                         onClick={() => onSelectMode('template')}
+                        data-testid="editor-startup-template-button"
                         className="flex flex-col items-center gap-4 p-6 rounded-lg border-2 border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-all group"
                     >
                         <div className="w-16 h-16 rounded-full bg-gray-100 group-hover:bg-purple-100 flex items-center justify-center">
