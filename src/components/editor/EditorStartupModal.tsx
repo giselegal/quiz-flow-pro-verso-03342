@@ -45,13 +45,13 @@ export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalPro
     return (
         <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
             <DialogContent
-                className="sm:max-w-[600px]"
+                className="sm:max-w-[600px] [&>button]:hidden"
                 data-testid="editor-startup-modal"
             >
                 <button
                     onClick={handleClose}
                     data-testid="editor-startup-modal-close"
-                    className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                    className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10"
                     aria-label="Fechar"
                 >
                     <X className="h-4 w-4" />
