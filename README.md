@@ -2,6 +2,12 @@
 
 Sistema interativo de criação e gerenciamento de quizzes com arquitetura consolidada de alta performance.
 
+## 📚 Documentação
+
+- **[Sistema de Templates](./docs/TEMPLATE_SYSTEM.md)** - Documentação completa do sistema v3.1
+- **[React Query Hooks](./docs/REACT_QUERY_HOOKS.md)** - Guia completo de hooks
+- **[Guia de Testes](./docs/TESTING_GUIDE.md)** - Estratégia e exemplos de testes
+
 ## 🏗️ Arquitetura Consolidada
 
 **Nova arquitetura otimizada (2025)** - Sistema completamente consolidado para máxima performance e manutenibilidade:
@@ -85,7 +91,50 @@ O editor modular de produção está localizado em:
 - ✅ Undo/Redo completo
 - ✅ Responsivo (desktop/mobile)
 
-## 🛠️ Tecnologias
+## � Sistema de Templates v3.1
+
+Sistema robusto de gerenciamento de templates com múltiplas fontes e validação type-safe.
+
+### Características
+
+- **3-Tier Prioritization**: Built-in JSON → Hierarchical API → Legacy Registry
+- **Validação Zod**: Type-safe validation com mensagens detalhadas
+- **React Query Hooks**: Cache automático e AbortSignal support
+- **Import/Export UI**: Interface visual para importar/exportar JSON
+- **Build-time Loading**: Templates bundled para zero latência
+
+### Hooks Disponíveis
+
+```typescript
+import {
+  useTemplateStep,        // Carregar step individual
+  useTemplateSteps,       // Carregar múltiplos steps
+  usePrefetchTemplateStep,// Prefetch em background
+  usePrepareTemplate,     // Preparar template
+  usePreloadTemplate,     // Preload completo
+} from '@/services/hooks';
+```
+
+### Exportar Templates
+
+```bash
+# Exportar template específico
+npm run export-templates -- --template=quiz21StepsComplete
+
+# Exportar todos os templates
+npm run export-templates:all
+
+# Modo verbose
+npm run export-templates:verbose
+```
+
+### Documentação Detalhada
+
+- **[Sistema de Templates](./docs/TEMPLATE_SYSTEM.md)** - Arquitetura, formatos, exemplos
+- **[React Query Hooks](./docs/REACT_QUERY_HOOKS.md)** - Guia completo de hooks
+- **[Guia de Testes](./docs/TESTING_GUIDE.md)** - Estratégia e exemplos
+
+## �🛠️ Tecnologias
 
 - **React 18** com TypeScript
 - **Tailwind CSS** para estilização
