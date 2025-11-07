@@ -22,20 +22,57 @@ const EDITOR_LOAD_TIMEOUT = 20000;
 const API_TIMEOUT = 10000;
 
 /**
+ * Helper: Fechar modal de startup (novo modal com botão X)
+ */
+async function closeStartupModal(page: Page) {
+  const modal = page.locator('[data-testid="editor-startup-modal"]');
+  
+  if (await modal.isVisible().catch(() => false)) {
+    console.log('⚠️ Modal de startup detectado, fechando...');
+    
+    // Tentar fechar usando botão X
+    const closeButton = page.locator('[data-testid="editor-startup-modal-close"]');
+    if (await closeButton.isVisible().catch(() => false)) {
+      await closeButton.click();
+      await page.waitForTimeout(500);
+      return true;
+    }
+    
+    // Fallback: clicar em "Começar do Zero"
+    const blankButton = page.locator('[data-testid="editor-startup-blank-button"]');
+    if (await blankButton.isVisible().catch(() => false)) {
+      await blankButton.click();
+      await page.waitForTimeout(500);
+      return true;
+    }
+    
+    // Fallback antigo: qualquer botão no dialog
+    await modal.locator('button').first().click({ force: true }).catch(() => {});
+    await page.waitForTimeout(500);
+    return true;
+  }
+  
+  return false;
+}
+
+/**
  * Helper: Aguardar carregamento do editor
  */
 async function waitForEditorLoaded(page: Page) {
   // Aguardar sinais de que o editor carregou completamente
   await Promise.race([
-    page.waitForSelector('[data-testid="canvas-editor"]', { timeout: EDITOR_LOAD_TIMEOUT }),
-    page.waitForSelector('.editor-canvas', { timeout: EDITOR_LOAD_TIMEOUT }),
-    page.waitForSelector('[class*="editor"]', { timeout: EDITOR_LOAD_TIMEOUT }),
+    page.waitForSelector('[data-testid="quiz-modular-production-editor-page-optimized"]', { timeout: EDITOR_LOAD_TIMEOUT }),
+    page.waitForSelector('.qm-editor', { timeout: EDITOR_LOAD_TIMEOUT }),
+    page.waitForSelector('[data-editor="modular-enhanced"]', { timeout: EDITOR_LOAD_TIMEOUT }),
   ]).catch(() => {
-    console.log('⚠️ Editor não carregou completamente com data-testid, tentando seletores alternativos');
+    console.log('⚠️ Editor não carregou completamente, mas continuando...');
   });
 
   // Aguardar JavaScript carregar
-  await page.waitForLoadState('networkidle', { timeout: NAVIGATION_TIMEOUT });
+  await page.waitForLoadState('networkidle', { timeout: NAVIGATION_TIMEOUT }).catch(() => {});
+  
+  // Fechar modal se existir
+  await closeStartupModal(page);
 }
 
 /**
