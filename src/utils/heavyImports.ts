@@ -82,7 +82,7 @@ export const loadDateFns = async (fns: string[]): Promise<Record<string, any>> =
  */
 const importCache = new Map<string, any>();
 
-export const getCachedImport = async <T>(
+export const getCachedImport = async <T,>(
   key: string,
   importFn: () => Promise<T>,
 ): Promise<T> => {

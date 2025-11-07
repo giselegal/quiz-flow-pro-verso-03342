@@ -105,7 +105,7 @@ export const useQuizResult = () => {
       // ✅ Calcular com timeout (10s) e guarda global anti-concorrência
       console.log('🔄 Iniciando cálculo com timeout e guarda global...');
 
-      const runWithTimeout = async <T>(p: Promise<T>, ms: number): Promise<T> => {
+      const runWithTimeout = async <T,>(p: Promise<T>, ms: number): Promise<T> => {
         let timeoutId: number | undefined;
         const timeoutPromise = new Promise<never>((_, reject) => {
           timeoutId = setTimeout(() => reject(new Error('Timeout: cálculo demorou mais de 10 segundos')), ms) as unknown as number;
