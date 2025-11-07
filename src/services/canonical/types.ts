@@ -65,6 +65,11 @@ export interface ServiceOptions {
     maxAttempts: number;
     backoff: number;
   };
+
+  /**
+   * AbortSignal para cancelamento de operações
+   */
+  signal?: AbortSignal;
 }
 
 /**

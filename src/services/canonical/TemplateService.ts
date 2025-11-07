@@ -34,6 +34,13 @@ import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: 
 // 🎯 FASE 1: Hierarchical Template Source (SSOT)
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { DataSourcePriority } from '@/services/core/TemplateDataSource';
+// 🎯 PR3: Built-in Templates Loader (JSON build-time)
+import { 
+  getBuiltInTemplateById, 
+  hasBuiltInTemplate,
+  listBuiltInTemplateIds 
+} from '@/services/templates/builtInTemplates';
+import { loadFullTemplate } from '@/templates/registry';
 
 /**
  * Template metadata
@@ -302,20 +309,65 @@ export class TemplateService extends BaseCanonicalService {
    * Obter blocos de um step específico
    * @param stepId ID do step (ex: "step-01")
    * @param templateId ID opcional do template (ex: "quiz21StepsComplete")
+   * @param options Opções incluindo AbortSignal para cancelamento
    */
-  async getStep(stepId: string, templateId?: string): Promise<ServiceResult<Block[]>> {
-    const startTime = performance.now(); // ✅ FASE 3.3: Track timing
+  async getStep(
+    stepId: string, 
+    templateId?: string,
+    options?: ServiceOptions
+  ): Promise<ServiceResult<Block[]>> {
+    const startTime = performance.now();
+    const signal = options?.signal;
 
     try {
-      // 🎯 FASE 1: Usar HierarchicalTemplateSource se feature flag ativa
-      if (this.USE_HIERARCHICAL_SOURCE) {
-        return await this.getStepFromHierarchicalSource(stepId, templateId);
+      // ✅ Verificar se operação foi cancelada
+      if (signal?.aborted) {
+        throw new Error('Operation aborted');
       }
 
-      // ⚠️ LEGACY: Código existente (será removido na Fase 3)
-      return await this.getStepLegacy(stepId, templateId, startTime);
+      // 🎯 PRIORIDADE 1: Verificar se existe template built-in JSON
+      if (templateId && hasBuiltInTemplate(templateId)) {
+        this.log(`✅ [BUILT-IN] Template ${templateId} disponível como JSON`);
+        
+        try {
+          const builtInTemplate = await loadFullTemplate(templateId);
+          if (builtInTemplate && builtInTemplate.steps[stepId]) {
+            const blocks = builtInTemplate.steps[stepId];
+            this.log(`✅ [BUILT-IN] Step ${stepId} carregado do JSON (${blocks.length} blocos)`);
+            
+            editorMetrics.trackLoadTime(stepId, performance.now() - startTime, {
+              source: 'built-in-json',
+              blocksCount: blocks.length,
+              cacheHit: false,
+            });
+            
+            return this.createResult(blocks);
+          }
+        } catch (error) {
+          this.log(`⚠️ [BUILT-IN] Erro ao carregar ${stepId} do JSON:`, error);
+          // Continuar para próxima fonte
+        }
+      }
+
+      // ✅ Verificar cancelamento antes de continuar
+      if (signal?.aborted) {
+        throw new Error('Operation aborted');
+      }
+
+      // 🎯 PRIORIDADE 2: Usar HierarchicalTemplateSource se feature flag ativa
+      if (this.USE_HIERARCHICAL_SOURCE) {
+        return await this.getStepFromHierarchicalSource(stepId, templateId, signal);
+      }
+
+      // ⚠️ PRIORIDADE 3 (FALLBACK): Código legado
+      return await this.getStepLegacy(stepId, templateId, startTime, signal);
     } catch (error) {
-      editorMetrics.trackError(error as Error, { stepId, templateId }); // ✅ FASE 3.3
+      if (signal?.aborted || (error as Error).message === 'Operation aborted') {
+        this.log(`🚫 [CANCELLED] getStep ${stepId} foi cancelado`);
+        return this.createError(new Error('Operation cancelled'));
+      }
+      
+      editorMetrics.trackError(error as Error, { stepId, templateId });
       this.error('getStep failed:', error);
       return this.createError(error as Error);
     }
