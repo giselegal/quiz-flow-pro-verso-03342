@@ -29,8 +29,8 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
         };
 
         // Interceptar fetch para APIs do Lovable (incluindo SDK)
-        const originalFetch = window.fetch;
-        window.fetch = function (url: RequestInfo | URL, options?: RequestInit) {
+    const originalFetch = window.fetch;
+    window.fetch = function (url: RequestInfo | URL, options?: RequestInit) {
             // Normaliza Request/URL/string para capturar endpoints chamados via Request objects
             let urlString: string;
             if (typeof url === 'string') {
@@ -75,6 +75,38 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
             }
             return originalFetch(url, options);
         };
+
+        // Interceptar XMLHttpRequest para capturar chamadas do SDK legacy
+        if (typeof XMLHttpRequest !== 'undefined') {
+            const originalXhrOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function (method: string, url: string | URL, ...rest: any[]) {
+                const urlString = typeof url === 'string' ? url : url.toString();
+                if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
+                    console.warn('🚫 Bloqueada XHR para Lovable/SDK em desenvolvimento:', urlString);
+                    // Substitui métodos para evitar envio real
+                    this.addEventListener('send', () => { });
+                    Object.defineProperty(this, 'readyState', { value: 4 });
+                    Object.defineProperty(this, 'status', { value: 200 });
+                    Object.defineProperty(this, 'response', { value: JSON.stringify({ status: 'blocked_in_dev' }) });
+                    Object.defineProperty(this, 'responseText', { value: JSON.stringify({ status: 'blocked_in_dev' }) });
+                    return;
+                }
+                return originalXhrOpen.call(this, method, url, ...rest);
+            };
+        }
+
+        // Interceptar navigator.sendBeacon para bloquear telemetria
+        if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+            const originalSendBeacon = navigator.sendBeacon.bind(navigator);
+            navigator.sendBeacon = function (url: string | URL, data?: BodyInit | null) {
+                const urlString = typeof url === 'string' ? url : url.toString();
+                if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
+                    console.warn('🚫 Bloqueado sendBeacon para Lovable em desenvolvimento:', urlString);
+                    return true;
+                }
+                return originalSendBeacon(url, data);
+            };
+        }
 
         // Bloquear scripts Lovable que podem ser carregados dinamicamente
         const originalCreateElement = document.createElement;
