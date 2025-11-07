@@ -37,7 +37,7 @@ function useResourceIdFromLocation(): string | undefined {
         return resourceId;
     }
 
-    // Prioridade 2: Legacy params (backward compatibility)
+    // Prioridade 2: Legacy params (backward compatibility + auto-redirect)
     const legacyId =
         params.get('template') ||
         params.get('funnelId') ||
@@ -47,10 +47,18 @@ function useResourceIdFromLocation(): string | undefined {
     if (legacyId) {
         const type = detectResourceType(legacyId);
         console.log(`🔄 Legacy param detectado: ${legacyId} (tipo: ${type})`);
-        console.warn(
-            '⚠️ DEPRECATED: Use ?resource= em vez de ?template= ou ?funnelId=\n' +
-            `   Migre para: /editor?resource=${legacyId}`
-        );
+
+        // Auto-redirect para formato novo (silencioso, sem reload)
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('template');
+        newUrl.searchParams.delete('funnelId');
+        newUrl.searchParams.delete('funnel');
+        newUrl.searchParams.delete('id');
+        newUrl.searchParams.set('resource', legacyId);
+
+        window.history.replaceState({}, '', newUrl.toString());
+        console.log(`✅ URL atualizada para: ${newUrl.pathname}${newUrl.search}`);
+
         return legacyId;
     }
 
