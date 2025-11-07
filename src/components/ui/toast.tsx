@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from '@/shims/safe-cva';
+import { type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -36,7 +37,7 @@ const toastVariants = cva(
       variant: 'default',
     },
   },
-);
+) as unknown as (opts: { variant?: string; className?: string }) => string;
 
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,

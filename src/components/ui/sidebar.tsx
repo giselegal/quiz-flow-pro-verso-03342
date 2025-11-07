@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from '@/shims/safe-cva';
+import { type VariantProps } from 'class-variance-authority';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
@@ -32,7 +33,7 @@ const sidebarVariants = cva(
 
 interface SidebarProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof sidebarVariants> {
+  VariantProps<typeof sidebarVariants> {
   isCollapsed?: boolean;
   isMobile?: boolean;
   size?: 'sm' | 'md';
