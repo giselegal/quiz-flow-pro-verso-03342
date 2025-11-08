@@ -18,6 +18,8 @@ import { templateService } from '@/services/canonical/TemplateService';
 import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadingContext';
 // Arquitetura unificada de recursos
 import type { EditorResource } from '@/types/editor-resource';
+// Validação e normalização de templates
+import { validateAndNormalizeTemplate, formatValidationErrors } from '@/templates/validation/normalize';
 // Import Template Dialog
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 
@@ -593,12 +595,41 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Import template from JSON
     const handleImportTemplate = useCallback(async (template: any, stepId?: string) => {
         try {
-            appLogger.info(`📥 [QuizModularEditor] Importando template JSON: ${template.metadata.name}`);
+            appLogger.info(`📥 [QuizModularEditor] Importando template JSON: ${template?.metadata?.name || 'unknown'}`);
+
+            // VALIDAÇÃO + NORMALIZAÇÃO: Valida estrutura e substitui IDs legados por UUIDs
+            const validationResult = validateAndNormalizeTemplate(template);
+
+            if (!validationResult.success) {
+                const errorMessage = formatValidationErrors(validationResult);
+                appLogger.error('[QuizModularEditor] Template inválido', {
+                    errors: validationResult.errors,
+                });
+                throw new Error(errorMessage);
+            }
+
+            // Template válido e normalizado
+            const normalizedTemplate = validationResult.data;
+
+            // Exibir warnings se houver IDs legados substituídos
+            if (validationResult.warnings && validationResult.warnings.length > 0) {
+                appLogger.warn('[QuizModularEditor] IDs legados normalizados', {
+                    count: validationResult.warnings.length,
+                    warnings: validationResult.warnings,
+                });
+
+                // Opcional: mostrar toast informativo ao usuário
+                showToast({
+                    type: 'info',
+                    title: 'Template normalizado',
+                    message: `${validationResult.warnings.length} IDs legados foram atualizados para UUID v4`
+                });
+            }
 
             if (stepId) {
                 // Import single step
-                if (template.steps[stepId]) {
-                    const blocks = template.steps[stepId];
+                if (normalizedTemplate.steps[stepId]) {
+                    const blocks = normalizedTemplate.steps[stepId];
                     const stepIndex = parseInt(stepId.replace('step-', ''), 10);
 
                     if (!isNaN(stepIndex)) {
@@ -615,7 +646,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
             } else {
                 // Import full template
-                const stepEntries = Object.entries(template.steps);
+                const stepEntries = Object.entries(normalizedTemplate.steps);
                 let totalBlocks = 0;
 
                 for (const [key, blocks] of stepEntries) {
@@ -628,7 +659,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                 // Update loaded template metadata
                 setLoadedTemplate({
-                    name: template.metadata.name,
+                    name: normalizedTemplate.metadata.name,
                     steps: stepEntries.map(([key], index) => ({
                         id: key,
                         order: index + 1,
