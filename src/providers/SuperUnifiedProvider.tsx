@@ -1044,7 +1044,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [state.currentFunnel, state.editor.isDirty, saveFunnel, ensureAllDirtyStepsSaved]);
 
     const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
-        const id = Date.now().toString();
+        const id = uuidv4(); // 🆕 G36 FIX: UUID ao invés de Date.now()
         dispatch({ type: 'ADD_TOAST', payload: { ...toast, id } });
 
         if (toast.duration !== -1) {
