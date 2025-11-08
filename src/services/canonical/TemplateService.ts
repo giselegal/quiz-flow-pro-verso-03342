@@ -370,13 +370,41 @@ export class TemplateService extends BaseCanonicalService {
       }
 
       // 🎯 PRIORIDADE 2: Usar HierarchicalTemplateSource se feature flag ativa
-      if (this.USE_HIERARCHICAL_SOURCE) {
-        return await this.getStepFromHierarchicalSource(stepId, templateId, signal);
-      }
+      // 🆕 Registrar promise para deduplicação
+      const loadPromise = (async () => {
+        try {
+          if (this.USE_HIERARCHICAL_SOURCE) {
+            const result = await this.getStepFromHierarchicalSource(stepId, templateId, signal);
+            if (result.success) {
+              return result.data;
+            }
+            throw result.error;
+          }
 
-      // ⚠️ PRIORIDADE 3 (FALLBACK): Código legado
-      return await this.getStepLegacy(stepId, templateId, startTime, signal);
+          // ⚠️ PRIORIDADE 3 (FALLBACK): Código legado
+          const result = await this.getStepLegacy(stepId, templateId, startTime, signal);
+          if (result.success) {
+            return result.data;
+          }
+          throw result.error;
+        } finally {
+          // Limpar promise após completar (sucesso ou erro)
+          this.stepLoadPromises.delete(loadKey);
+        }
+      })();
+
+      // Registrar promise
+      this.stepLoadPromises.set(loadKey, loadPromise);
+
+      // Aguardar resultado
+      const data = await loadPromise;
+      return this.createResult(data);
+
     } catch (error) {
+      // Limpar promise em caso de erro
+      const loadKey = `${stepId}-${templateId || 'default'}`;
+      this.stepLoadPromises.delete(loadKey);
+
       if (signal?.aborted || (error as Error).message === 'Operation aborted') {
         this.log(`🚫 [CANCELLED] getStep ${stepId} foi cancelado`);
         return this.createError(new Error('Operation cancelled'));
