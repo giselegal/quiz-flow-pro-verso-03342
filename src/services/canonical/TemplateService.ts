@@ -953,6 +953,44 @@ export class TemplateService extends BaseCanonicalService {
     this.log('Template cache cleared');
   }
 
+  /**
+   * 📊 FASE 3: Obter estatísticas de cache
+   * Retorna métricas de performance do cache incluindo hit rate, steps carregados, etc.
+   */
+  getCacheStats(): {
+    cacheHitRate: string;
+    stepsLoadedInMemory: number;
+    pendingLoads: number;
+    avgLoadTimeMs: number;
+    lastReport: ReturnType<typeof editorMetrics.getReport>;
+  } {
+    const report = editorMetrics.getReport();
+    
+    return {
+      cacheHitRate: report.summary.cacheHitRate,
+      stepsLoadedInMemory: this.loadedSteps.size,
+      pendingLoads: this.stepLoadPromises.size,
+      avgLoadTimeMs: report.summary.avgLoadTimeMs,
+      lastReport: report,
+    };
+  }
+
+  /**
+   * 📊 FASE 3: Log do relatório de cache (console)
+   * Imprime estatísticas formatadas no console para debugging
+   */
+  logCacheReport(): void {
+    const stats = this.getCacheStats();
+    
+    console.group('📊 Template Cache Stats');
+    console.log(`Cache Hit Rate: ${stats.cacheHitRate}`);
+    console.log(`Steps in Memory: ${stats.stepsLoadedInMemory}`);
+    console.log(`Pending Loads: ${stats.pendingLoads}`);
+    console.log(`Avg Load Time: ${stats.avgLoadTimeMs.toFixed(0)}ms`);
+    console.log('\nDetailed Report:', stats.lastReport);
+    console.groupEnd();
+  }
+
   // ==================== CONVERSIONS & VALIDATION ====================
 
   /**
