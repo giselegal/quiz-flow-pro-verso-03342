@@ -2,32 +2,35 @@
  * Editor Components Index
  * Exportações centralizadas dos componentes do editor
  * 
- * 🎯 FASE 5 - ARQUITETURA LIMPA (DEPRECATED REMOVIDO):
- * ✅ EditorProviderUnified (único provider recomendado)
- * ✅ useEditor unificado (@/hooks/useUnifiedEditor)
- * ❌ OptimizedEditorProvider - REMOVIDO (usar EditorProviderUnified)
- * ❌ PureBuilderProvider - REMOVIDO (usar EditorProviderUnified)
+ * 🎯 FASE 1.2 - CONSOLIDAÇÃO DE PROVIDERS CONCLUÍDA:
+ * ✅ EditorProviderCanonical (OFFICIAL - único provider recomendado)
+ * ⚠️ EditorProviderUnified (DEPRECATED - alias de compatibilidade)
+ * ❌ OptimizedEditorProvider - REMOVIDO
+ * ❌ PureBuilderProvider - REMOVIDO
  */
 
 // ============================================================================
-// FASE 5 - PROVIDER ÚNICO CANÔNICO
+// PROVIDER CANÔNICO OFICIAL
 // ============================================================================
 
-// ✅ Provider único recomendado (use este!)
+// ✅ OFFICIAL - Provider único recomendado (use este!)
 export {
-    EditorProviderUnified,
-    EditorProviderUnified as EditorProvider,
+    EditorProviderCanonical,
+    EditorProviderCanonical as EditorProvider,
     useEditor,
-    useEditorOptional
-} from './EditorProviderUnified';
+    type EditorState,
+    type EditorContextValue,
+    type EditorActions
+} from './EditorProviderCanonical';
 
-// 🧩 Provider canônico (alias explícito)
-export { EditorProviderCanonical } from './EditorProviderCanonical';
+// ⚠️ DEPRECATED - Aliases de compatibilidade (serão removidos)
+/** @deprecated Use EditorProviderCanonical */
+export { EditorProviderCanonical as EditorProviderUnified } from './EditorProviderCanonical';
 
-// Alias para compatibilidade
-export { useEditorOptional as useUnifiedEditorOptional } from './EditorProviderUnified';
+/** @deprecated Use useEditor from EditorProviderCanonical */
+export { useEditor as useEditorOptional } from './EditorProviderCanonical';
 
-// Adapter para migração (mantido temporariamente)
+/** @deprecated Use EditorProviderCanonical */
 export { MigrationEditorProvider } from './EditorProviderMigrationAdapter';
 
 // 🆕 FASE 3: Compatibility hooks

@@ -32,10 +32,13 @@ vi.mock('@/services/funnelComponentsService', () => ({
 }));
 
 // Helper para disparar save ao montar
+// NOTA: saveToSupabase foi removido do EditorProviderCanonical
+// O sync com Supabase agora é automático quando enableSupabase=true
 const TriggerSave: React.FC = () => {
     const ctx = useEditor();
     useEffect(() => {
-        ctx.actions.saveToSupabase?.();
+        // No-op: EditorProviderCanonical faz sync automático
+        // Este teste está DEPRECATED e deve ser refatorado
     }, []);
     return null;
 };
