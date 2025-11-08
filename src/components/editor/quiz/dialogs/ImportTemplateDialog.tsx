@@ -29,6 +29,11 @@ import {
   type Template,
   type ValidationResult
 } from '@/schemas/templateSchema';
+import {
+  normalizeAndValidateTemplateV3,
+  isNormalizeSuccess,
+  type NormalizeAndValidateResult
+} from '@/templates/validation/validateAndNormalize';
 
 /**
  * Props for ImportTemplateDialog
@@ -94,14 +99,33 @@ export function ImportTemplateDialog({
 
     setFile(selectedFile);
 
-    // Read and validate file using Zod
+    // Read and validate file using new V3 validation + normalization
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string;
         const data = JSON.parse(content);
-        const result = zodValidateTemplate(data);
-        setValidation(result);
+
+        // ✅ W3: Usar validação + normalização Zod
+        const result = normalizeAndValidateTemplateV3(data, {
+          replaceLegacyIds: true,      // Substituir Date.now() IDs
+          strictValidation: true,       // Validar schema rigoroso
+          allowExtraFields: true,       // Permitir campos extras
+        });
+
+        if (isNormalizeSuccess(result)) {
+          // Adapter para formato legado (ValidationResult)
+          setValidation({
+            success: true,
+            data: result.data as any,
+            warnings: result.warnings.length > 0 ? result.warnings : undefined,
+          });
+        } else {
+          setValidation({
+            success: false,
+            errors: result.errors.map(e => `${e.path.join('.')}: ${e.message}`),
+          });
+        }
       } catch (error) {
         setValidation({
           success: false,
