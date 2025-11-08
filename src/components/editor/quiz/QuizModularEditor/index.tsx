@@ -311,24 +311,29 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     useEffect(() => {
         const stepIndex = safeCurrentStep;
         const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
-        let cancelled = false;
+        const controller = new AbortController();
+        const { signal } = controller;
 
         async function ensureStepBlocks() {
             setStepLoading(true);
             // debounce small
             await new Promise(resolve => setTimeout(resolve, 50));
-            if (cancelled) return;
+            if (signal.aborted) return;
 
             try {
                 const svc: any = templateService;
-                const result = await svc.getStep(stepId, props.templateId ?? resourceId);
-                if (!cancelled && result?.success && result.data) {
+                const result = await svc.getStep(stepId, props.templateId ?? resourceId, { signal });
+                if (!signal.aborted && result?.success && result.data) {
                     setStepBlocks(stepIndex, result.data);
                 }
             } catch (e) {
-                appLogger.error('[QuizModularEditor] lazyLoadStep falhou:', e);
+                if (!signal.aborted) {
+                    appLogger.error('[QuizModularEditor] lazyLoadStep falhou:', e);
+                }
             } finally {
-                if (!cancelled) setStepLoading(false);
+                if (!signal.aborted) {
+                    setStepLoading(false);
+                }
             }
         }
 
@@ -343,16 +348,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             neighborIds.forEach((nid) => {
                 queryClient.prefetchQuery({
                     queryKey: stepKeys.detail(nid, templateOrResource, funnel),
-                    queryFn: async () => {
-                        const res = await templateService.getStep(nid, templateOrResource ?? undefined);
+                    queryFn: async ({ signal: querySignal }) => {
+                        const res = await templateService.getStep(nid, templateOrResource ?? undefined, { signal: querySignal });
                         if (res.success) return res.data;
                         throw res.error ?? new Error('Falha no prefetch');
                     },
                     staleTime: 30_000,
-                }).catch(() => void 0);
+                }).catch((err) => {
+                    appLogger.warn('[QuizModularEditor] prefetch neighbor failed', err);
+                });
             });
-        } catch { /* noop */ }
-        return () => { cancelled = true; setStepLoading(false); };
+        } catch (err) {
+            appLogger.warn('[QuizModularEditor] prefetch setup failed', err);
+        }
+        return () => {
+            controller.abort();
+            setStepLoading(false);
+        };
     }, [safeCurrentStep, props.templateId, resourceId, setStepLoading, setStepBlocks, queryClient, props.funnelId]);
 
     // DnD handler (uses desestructured methods)
