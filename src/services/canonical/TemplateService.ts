@@ -1669,7 +1669,7 @@ export class TemplateService extends BaseCanonicalService {
       
       const newBlock: Block = {
         id: blockId,
-        type: blockDTO.type,
+        type: blockDTO.type as any, // Cast para compatibilidade com BlockType
         order: 0, // Será ajustado ao adicionar ao step
         properties: blockDTO.properties || {},
         content: blockDTO.content || {},
