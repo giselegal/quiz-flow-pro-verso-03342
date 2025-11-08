@@ -7,7 +7,8 @@ import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { makeStepKey } from '@/utils/stepKey';
 import { motion } from 'framer-motion';
-import { Monitor, Save, Smartphone, Tablet, LayoutGrid } from 'lucide-react';
+import { Monitor, Save, Smartphone, Tablet, LayoutGrid, Undo2, Redo2 } from 'lucide-react';
+import { useEditorHistory } from '@/hooks/useEditorHistory';
 
 interface EditorToolbarProps {
   className?: string;
@@ -18,6 +19,9 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
   if (!editorContext) return null;
   const { state } = editorContext;
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
+
+  // 🔄 FASE 6: Undo/Redo hooks
+  const { canUndo, canRedo, undo, redo, historySize } = useEditorHistory();
 
   const totalBlocks = useMemo(() => {
     const stepKey = makeStepKey(state.currentStep || 1);
@@ -93,6 +97,50 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
       </div>
 
       <div className="flex items-center space-x-3">
+        {/* 🔄 FASE 6: Undo/Redo Buttons */}
+        <div className="flex items-center gap-1 bg-gray-800/50 p-1 rounded-lg border border-gray-700/50">
+          <Button
+            onClick={undo}
+            disabled={!canUndo}
+            variant="ghost"
+            size="sm"
+            className={cn(
+              'h-8 w-8 p-0 transition-all duration-200',
+              canUndo
+                ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                : 'text-gray-600 cursor-not-allowed opacity-40',
+            )}
+            title="Desfazer (Ctrl+Z)"
+          >
+            <Undo2 className="h-4 w-4" />
+          </Button>
+
+          <div className="h-4 w-px bg-gray-700"></div>
+
+          <Button
+            onClick={redo}
+            disabled={!canRedo}
+            variant="ghost"
+            size="sm"
+            className={cn(
+              'h-8 w-8 p-0 transition-all duration-200',
+              canRedo
+                ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                : 'text-gray-600 cursor-not-allowed opacity-40',
+            )}
+            title="Refazer (Ctrl+Y)"
+          >
+            <Redo2 className="h-4 w-4" />
+          </Button>
+
+          {historySize > 0 && (
+            <>
+              <div className="h-4 w-px bg-gray-700"></div>
+              <span className="text-xs text-gray-500 px-2">{historySize}</span>
+            </>
+          )}
+        </div>
+
         <Button
           onClick={handleSave}
           size="sm"
