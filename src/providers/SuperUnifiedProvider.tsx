@@ -29,6 +29,7 @@ import React, {
     ReactNode,
     useState,
 } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import { supabase } from '@/integrations/supabase/customClient';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { isSupabaseDisabled } from '@/integrations/supabase/flags';
@@ -803,7 +804,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             const { data, error } = await supabase
                 .from('funnels')
                 .insert({
-                    id: `f_${Date.now()}`,
+                    id: `f_${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
                     name,
                     description: options.description || '',
                     config: options.settings || {},
