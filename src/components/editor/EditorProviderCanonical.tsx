@@ -46,6 +46,7 @@ import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader, type TemplateSource } from '@/services/editor/TemplateLoader';
 import { templateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/utils/logger';
+import { generateCloneId } from '@/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -303,7 +304,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
 
         const newBlock = {
             ...block,
-            id: `${block.id}-copy-${Date.now()}`,
+            id: generateCloneId(block.id),
         };
 
         await addBlock(normalized, newBlock);

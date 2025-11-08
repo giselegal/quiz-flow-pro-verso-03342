@@ -15,6 +15,7 @@ import {
 import { templateService } from '@/services/canonical/TemplateService';
 import { templateToFunnelAdapter } from '@/editor/adapters/TemplateToFunnelAdapter';
 import { appLogger } from '@/utils/logger';
+import { generateDraftId, generateCloneId } from '@/utils/idGenerator';
 
 export interface UseEditorResourceOptions {
   /** ID do recurso a carregar (opcional - se não informado, modo "novo") */
@@ -79,7 +80,7 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
     if (!resourceId) {
       // Modo novo - criar recurso vazio
       setResource({
-        id: `draft-${Date.now()}`,
+        id: generateDraftId(),
         type: 'draft',
         name: 'Novo Funnel',
         source: 'local',
@@ -206,7 +207,7 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
     appLogger.info(`🔄 [useEditorResource] Clonando recurso:`, resource.id);
 
     // Gerar ID único para o clone
-    const cloneId = `clone-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const cloneId = generateCloneId(resource.id);
 
     const clonedResource: EditorResource = {
       ...resource,

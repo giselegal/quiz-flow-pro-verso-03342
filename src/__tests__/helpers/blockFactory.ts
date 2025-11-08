@@ -8,12 +8,13 @@
  */
 
 import type { Block, BlockType } from '@/types/editor';
+import { generateBlockId } from '@/utils/idGenerator';
 
 /**
  * Cria um Block válido com todos os campos obrigatórios
  */
 export function createValidBlock(overrides: Partial<Block> = {}): Block {
-  const id = overrides.id || `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const id = overrides.id || generateBlockId();
   
   return {
     id,

@@ -17,6 +17,7 @@ import { useUnifiedCRUD } from '@/contexts/data/UnifiedCRUDProvider';
 import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/utils/logger';
+import { generateBlockId } from '@/utils/idGenerator';
 
 export interface UseBlockMutationsOptions {
   /** Step key (ex: 'step-01') */
@@ -133,7 +134,7 @@ export function useBlockMutations(
    */
   const addBlock = useCallback(async (block: Omit<Block, 'id'>): Promise<string> => {
     try {
-      const blockId = `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const blockId = generateBlockId();
       const newBlock: Block = { ...block, id: blockId } as Block;
 
       appLogger.debug(`[useBlockMutations] Adicionando bloco ${blockId} ao step ${stepKey}`);
