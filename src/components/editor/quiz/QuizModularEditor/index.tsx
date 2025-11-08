@@ -3,6 +3,7 @@ import '@/utils/reactPolyfills';
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { stepKeys } from '@/api/steps/hooks';
+import { v4 as uuidv4 } from 'uuid';
 import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useSuperUnified } from '@/hooks/useSuperUnified';
@@ -345,7 +346,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             if (!draggedItem.libraryType) return;
 
             const newBlock = {
-                id: `block-${Date.now()}`,
+                id: `block-${uuidv4()}`,
                 type: draggedItem.libraryType,
                 properties: {},
                 content: {},

@@ -216,7 +216,6 @@
     "@types/mustache": "^4.2.6",
     "@types/react-helmet": "^6.1.11",
     "@types/react-window": "^2.0.0",
-    "@types/uuid": "^10.0.0",
     "@use-gesture/react": "^10.3.1",
     "ajv": "^8.17.1",
     "axe-core": "^4.11.0",
@@ -309,6 +308,7 @@
     "@types/quill": "^2.0.14",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
+    "@types/uuid": "^10.0.0",
     "@types/ws": "^8.5.13",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
@@ -342,13 +342,13 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "rollup-plugin-visualizer": "^6.0.5",
     "tailwindcss": "^3.4.17",
+    "terser": "^5.36.0",
     "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
     "typescript": "^5.6.3",
     "vite": "^7.1.11",
-    "vitest": "^3.2.4",
-    "terser": "^5.36.0"
+    "vitest": "^3.2.4"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
