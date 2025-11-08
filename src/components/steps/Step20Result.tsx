@@ -36,11 +36,11 @@ const Step20Result: React.FC<Step20ResultProps> = ({
       // Verificar se localStorage está cheio ou corrompido
       const usage = JSON.stringify(localStorage).length;
       const maxSize = 5 * 1024 * 1024; // 5MB
-      
+
       if (usage > maxSize * 0.8) {
         console.warn('🧹 [Step20Result] localStorage próximo do limite, limpando...');
         cleanEditorLocalStorage();
-        
+
         // Remover dados obsoletos específicos
         ['editor_config', 'quiz_old_cache', 'temp_selections'].forEach(key => {
           try {
@@ -50,7 +50,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
           }
         });
       }
-      
+
       setIsStorageCleaned(true);
     } catch (error) {
       console.error('❌ Erro na limpeza do storage:', error);
@@ -61,9 +61,9 @@ const Step20Result: React.FC<Step20ResultProps> = ({
   // 📱 Carregar nome do usuário
   useEffect(() => {
     const loadUserData = () => {
-      const name = StorageService.safeGetString('userName') || 
-                   StorageService.safeGetString('user_name') || 
-                   'Participante';
+      const name = StorageService.safeGetString('userName') ||
+        StorageService.safeGetString('user_name') ||
+        'Participante';
       setUserName(name);
     };
 
@@ -74,7 +74,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
     const handler = () => loadUserData();
     window.addEventListener('storage', handler);
     window.addEventListener('quiz-result-refresh', handler);
-    
+
     return () => {
       window.removeEventListener('storage', handler);
       window.removeEventListener('quiz-result-refresh', handler);
@@ -95,15 +95,15 @@ const Step20Result: React.FC<Step20ResultProps> = ({
   // 🎨 Cores do estilo
   const getStyleColors = (style: string) => {
     switch (style?.toLowerCase()) {
-      case 'clássico': case 'classic': 
+      case 'clássico': case 'classic':
         return { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-800' };
-      case 'romântico': case 'romantic': 
+      case 'romântico': case 'romantic':
         return { bg: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-800' };
-      case 'dramático': case 'dramatic': 
+      case 'dramático': case 'dramatic':
         return { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-800' };
-      case 'natural': 
+      case 'natural':
         return { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800' };
-      default: 
+      default:
         return { bg: 'bg-stone-50', border: 'border-stone-200', text: 'text-stone-800' };
     }
   };
@@ -118,7 +118,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
             {!isStorageCleaned ? 'Preparando ambiente...' : 'Calculando seu resultado...'}
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            {!isStorageCleaned 
+            {!isStorageCleaned
               ? 'Otimizando dados para melhor experiência'
               : 'Analisando suas respostas para descobrir seu estilo predominante'
             }
@@ -136,8 +136,8 @@ const Step20Result: React.FC<Step20ResultProps> = ({
           <CardContent className="text-center p-8">
             <div className="text-red-500 mb-6">
               <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
             <h2 className="text-2xl font-semibold text-red-800 mb-3">Ops, algo deu errado!</h2>
@@ -148,8 +148,8 @@ const Step20Result: React.FC<Step20ResultProps> = ({
               <Button onClick={retry} variant="outline" className="w-full">
                 Tentar Novamente
               </Button>
-              <Button 
-                onClick={() => window.location.reload()} 
+              <Button
+                onClick={() => window.location.reload()}
                 className="w-full"
               >
                 Recarregar Página
@@ -169,8 +169,8 @@ const Step20Result: React.FC<Step20ResultProps> = ({
           <CardContent className="text-center p-8">
             <div className="text-yellow-600 mb-6">
               <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <h2 className="text-2xl font-semibold text-yellow-800 mb-3">Resultado não encontrado</h2>
@@ -209,11 +209,11 @@ const Step20Result: React.FC<Step20ResultProps> = ({
               <div className="flex items-center justify-center mb-6">
                 {getStyleIcon(primaryStyle.style)}
               </div>
-              
+
               <h2 className={`text-3xl md:text-4xl font-bold ${styleColors.text} text-center mb-4`}>
                 Seu Estilo: {primaryStyle.category || primaryStyle.style}
               </h2>
-              
+
               <div className="text-center mb-6">
                 <div className={`inline-flex items-center px-4 py-2 rounded-full ${styleColors.bg} ${styleColors.border} border`}>
                   <span className={`text-lg font-medium ${styleColors.text}`}>
@@ -223,8 +223,8 @@ const Step20Result: React.FC<Step20ResultProps> = ({
               </div>
 
               <p className="text-center text-muted-foreground text-lg leading-relaxed">
-                {primaryStyle.description || 
-                 `Seu estilo ${primaryStyle.category || primaryStyle.style} reflete sua personalidade única e forma de expressão. 
+                {primaryStyle.description ||
+                  `Seu estilo ${primaryStyle.category || primaryStyle.style} reflete sua personalidade única e forma de expressão. 
                  Através das suas escolhas, podemos ver uma clara preferência por elementos que representam este estilo.`}
               </p>
             </div>
@@ -261,7 +261,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
                 <ArrowRight className="w-5 h-5 mr-2" />
                 Ver Minha Consultoria Personalizada
               </Button>
-              
+
               <div className="mt-6">
                 <Button variant="outline" size="lg" className="mr-4">
                   <Share2 className="w-4 h-4 mr-2" />
@@ -277,7 +277,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
           <CardContent className="p-6 text-center">
             <h3 className="text-xl font-semibold text-foreground mb-3">Próximos Passos</h3>
             <p className="text-muted-foreground mb-4">
-              Agora você pode acessar sua consultoria personalizada com recomendações exclusivas 
+              Agora você pode acessar sua consultoria personalizada com recomendações exclusivas
               baseadas no seu estilo!
             </p>
             <div className="flex justify-center space-x-4">

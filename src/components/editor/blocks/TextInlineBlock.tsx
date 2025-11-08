@@ -178,7 +178,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       const userName = StorageService.safeGetString('userName') || 'Usuário';
       const ctx = { userName, user: { name: userName } } as Record<string, any>;
       setPersonalizedContent(interpolate(base, ctx));
-    } catch {
+    } catch (error) {
+      console.warn('[TextInlineBlock] Erro ao interpolar conteúdo:', error);
       setPersonalizedContent(base);
     }
   }, [content, useUsername, usernamePattern, enableInterpolation]);
@@ -307,7 +308,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         g.__TEXT_INLINE_LOGS = g.__TEXT_INLINE_LOGS || new Set<string>();
         if (!g.__TEXT_INLINE_LOGS.has(hash)) {
           g.__TEXT_INLINE_LOGS.add(hash);
-           
+
           appLogger.debug('� TextInlineBlock DEBUG COMPLETO:', {
             blockId: block?.id,
             rawContent: personalizedContent,
@@ -316,7 +317,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             hasSpanTag,
             hasStrongTag,
             willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-            contentPreview: `${personalizedContent?.substring(0, 200)  }...`,
+            contentPreview: `${personalizedContent?.substring(0, 200)}...`,
           });
         }
       }
@@ -390,7 +391,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   const autoResizeTextarea = useCallback(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight  }px`;
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, []);
 
