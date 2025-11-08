@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { History, Clock, User, RotateCcw, Save, FileText, GitBranch } from 'lucide-react';
-import type { FunnelVersion } from '@/services/canonical/FunnelService';
+import type { FunnelVersion } from '@/services/schemaDrivenFunnelService';
 
 interface VersionManagerProps {
   versions: FunnelVersion[];
@@ -157,10 +157,9 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                           key={version.id}
                           className={`
                             border rounded-lg p-4 cursor-pointer transition-all duration-200
-                            ${
-                              selectedVersion === version.id
-                                ? 'border-[#B89B7A] bg-[#B89B7A]/10'
-                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                            ${selectedVersion === version.id
+                              ? 'border-[#B89B7A] bg-[#B89B7A]/10'
+                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                             }
                             ${currentVersion === version.version ? 'ring-2 ring-green-200' : ''}
                           `}
