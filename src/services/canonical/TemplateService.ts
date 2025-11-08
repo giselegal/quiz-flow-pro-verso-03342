@@ -706,6 +706,7 @@ export class TemplateService extends BaseCanonicalService {
   setActiveTemplate(templateId: string, totalSteps: number): void {
     this.activeTemplateId = templateId;
     this.activeTemplateSteps = totalSteps;
+    console.log(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} com ${totalSteps} etapas`);
     this.log(`✅ Template ativo: ${templateId} (${totalSteps} etapas)`);
   }
 
@@ -1141,6 +1142,7 @@ export class TemplateService extends BaseCanonicalService {
 
         // 1. Adicionar steps do template (se houver)
         const totalSteps = this.activeTemplateSteps;
+        console.log(`🔍 [TemplateService.steps.list] activeTemplateSteps = ${totalSteps}, activeTemplateId = ${this.activeTemplateId}`);
         for (let i = 1; i <= totalSteps; i++) {
           const info = this.STEP_MAPPING[i] || {
             name: `Etapa ${i}`,
