@@ -83,21 +83,42 @@
     (function () {
       try {
         if (typeof window !== 'undefined') {
-          window.React = window.React || {};
-          var R = window.React;
-          if (typeof R.forwardRef !== 'function') {
-            R.forwardRef = function (render) { return render; };
+          // Criar um proxy robusto para React que nunca retorna undefined
+          var reactStub = {
+            forwardRef: function (render) {
+              if (!render) return function () { return null; };
+              var Comp = function (props, ref) {
+                try {
+                  return render(props, ref);
+                } catch (e) {
+                  console.error('[ReactStub] Error in forwardRef:', e);
+                  return null;
+                }
+              };
+              Comp.displayName = (render.displayName || render.name || 'ForwardRef');
+              return Comp;
+            },
+            useLayoutEffect: function () { },
+            useEffect: function () { },
+            useState: function (init) { return [init, function () { }]; },
+            useRef: function (init) { return { current: init }; },
+            useMemo: function (fn) { return fn(); },
+            useCallback: function (fn) { return fn; },
+            Fragment: function Fragment(props) { return (props && props.children) || null; },
+            createElement: function () { return null; },
+            memo: function (comp) { return comp; },
+            createRef: function () { return { current: null }; },
+            Children: { map: function (c, fn) { return c; } }
+          };
+
+          // Aplicar stub apenas se React ainda não estiver carregado
+          if (!window.React || typeof window.React.forwardRef !== 'function') {
+            window.React = Object.assign(window.React || {}, reactStub);
+            console.info('[InitGuard] React fallbacks aplicados (pré-bundle)', {
+              hasForwardRef: !!window.React.forwardRef,
+              timestamp: Date.now()
+            });
           }
-          if (typeof R.useLayoutEffect !== 'function') {
-            R.useLayoutEffect = function () { };
-          }
-          if (typeof R.useEffect !== 'function') {
-            R.useEffect = function () { };
-          }
-          if (typeof R.Fragment !== 'function') {
-            R.Fragment = function Fragment(props) { return (props && props.children) || null; };
-          }
-          console.info('[InitGuard] React fallbacks aplicados (pré-bundle)');
         }
         // Guard para cva (class-variance-authority) para evitar ReferenceError antes da lib carregar
         if (typeof window !== 'undefined' && !window.cva) {
@@ -109,7 +130,9 @@
           };
           console.info('[InitGuard] cva stub aplicado (pré-bundle)');
         }
-      } catch (e) { /* ignore */ }
+      } catch (e) {
+        console.error('[InitGuard] Erro ao aplicar fallbacks:', e);
+      }
     })();
   </script>
 
