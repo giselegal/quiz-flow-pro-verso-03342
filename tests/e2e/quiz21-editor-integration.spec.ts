@@ -23,20 +23,21 @@ async function closeStartupModal(page: Page) {
 }
 
 async function waitForEditorReady(page: Page) {
-  await expect(page.locator('[data-editor="modular-enhanced"]')).toBeVisible({ timeout: 15000 });
-  await expect(page.locator('[data-testid="step-navigator"]').first()).toBeVisible();
+  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-steps')).toBeVisible();
   console.log('✅ Editor pronto para testes de integração');
 }
 
 async function navigateToStep(page: Page, stepNumber: number) {
-  const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
-  await page.locator(`[data-testid="step-nav-${stepKey}"]`).first().click();
+  await page.locator(`[data-testid="step-navigator-item"][data-step-order="${stepNumber}"]`).first().click();
   await page.waitForTimeout(500);
 }
 
 test.describe('Integration - Supabase Save/Load', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -157,7 +158,9 @@ test.describe('Integration - Supabase Save/Load', () => {
 
 test.describe('Integration - Fallback Offline', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -246,7 +249,9 @@ test.describe('Integration - Fallback Offline', () => {
 
 test.describe('Integration - Cache Invalidation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -322,7 +327,9 @@ test.describe('Integration - Cache Invalidation', () => {
 
 test.describe('Integration - React Query', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -407,7 +414,9 @@ test.describe('Integration - React Query', () => {
 
 test.describe('Integration - Error Handling', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -500,7 +509,9 @@ test.describe('Integration - Error Handling', () => {
 
 test.describe('Integration - Performance Monitoring', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 

@@ -23,20 +23,21 @@ async function closeStartupModal(page: Page) {
 }
 
 async function waitForEditorReady(page: Page) {
-  await expect(page.locator('[data-editor="modular-enhanced"]')).toBeVisible({ timeout: 15000 });
-  await expect(page.locator('[data-testid="step-navigator"]').first()).toBeVisible();
+  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-steps')).toBeVisible();
   console.log('✅ Editor pronto para testes de regressão');
 }
 
 async function navigateToStep(page: Page, stepNumber: number) {
-  const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
-  await page.locator(`[data-testid="step-nav-${stepKey}"]`).first().click();
+  await page.locator(`[data-testid="step-navigator-item"][data-step-order="${stepNumber}"]`).first().click();
   await page.waitForTimeout(500);
 }
 
 test.describe('Regression - Drag & Drop', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -104,7 +105,7 @@ test.describe('Regression - Drag & Drop', () => {
 
   test('REG-002: Deve arrastar bloco da biblioteca para o canvas', async ({ page }) => {
     // Procurar biblioteca de blocos
-    const library = page.locator('[data-testid="block-library"], [data-testid="sidebar-left"]').first();
+    const library = page.locator('[data-testid="column-library"], [data-testid="column-library"]').first();
     
     if (!(await library.isVisible({ timeout: 2000 }))) {
       console.log('⚠️ Biblioteca de blocos não encontrada');
@@ -228,7 +229,9 @@ test.describe('Regression - Drag & Drop', () => {
 
 test.describe('Regression - Undo/Redo', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -392,7 +395,9 @@ test.describe('Regression - Undo/Redo', () => {
 
 test.describe('Regression - Multi-seleção', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -546,7 +551,9 @@ test.describe('Regression - Multi-seleção', () => {
 
 test.describe('Regression - Copy/Paste', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -693,7 +700,9 @@ test.describe('Regression - Copy/Paste', () => {
 
 test.describe('Regression - Acessibilidade', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 

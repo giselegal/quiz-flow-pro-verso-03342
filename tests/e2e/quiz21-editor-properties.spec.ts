@@ -51,7 +51,9 @@ async function selectFirstBlock(page: Page): Promise<boolean> {
 
 test.describe('Properties - Painel de Propriedades', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -142,7 +144,9 @@ test.describe('Properties - Painel de Propriedades', () => {
 
 test.describe('Properties - Edição de Campos de Texto', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -197,7 +201,9 @@ test.describe('Properties - Edição de Campos de Texto', () => {
       return;
     }
     
-    const longText = 'Este é um texto longo para testar textarea.\nCom múltiplas linhas.\nE formatação.';
+    const longText = 'Este é um texto longo para testar textarea.
+Com múltiplas linhas.
+E formatação.';
     
     await textarea.clear();
     await textarea.fill(longText);
@@ -250,7 +256,9 @@ test.describe('Properties - Edição de Campos de Texto', () => {
 
 test.describe('Properties - Edição de Campos Numéricos', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -341,7 +349,9 @@ test.describe('Properties - Edição de Campos Numéricos', () => {
 
 test.describe('Properties - Seleção e Checkboxes', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -446,7 +456,9 @@ test.describe('Properties - Seleção e Checkboxes', () => {
 
 test.describe('Properties - Cores e Estilos', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -519,7 +531,9 @@ test.describe('Properties - Cores e Estilos', () => {
 
 test.describe('Properties - Validação Zod', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
@@ -590,7 +604,9 @@ test.describe('Properties - Validação Zod', () => {
 
 test.describe('Properties - SchemaInterpreter', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
     await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
