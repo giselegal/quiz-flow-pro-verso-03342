@@ -91,13 +91,13 @@ if (!validationResult.success && validationResult.errors) {
 
 ```
 ✅ 1.1. Criar helper blockFactory.ts
-✅ 1.2. Corrigir ValidationResult.errors
-⏳ 1.3. Corrigir event handlers (VersionManager.tsx)
+✅ 1.2. Corrigir ValidationResult.errors  
+✅ 1.3. Corrigir event handlers (VersionManager.tsx)
 ⏳ 1.4. Refatorar mocks de teste com createValidBlock()
-⏳ 1.5. Validar build completo (0 erros)
+✅ 1.5. Validar build completo (0 erros TypeScript!) 
 ```
 
-**Progresso**: 40% (2/5 tarefas)
+**Progresso**: 80% (4/5 tarefas) ✅ **QUASE COMPLETA**
 
 ### FASE 2: Consolidar Providers (2 dias) 🟡 PENDENTE
 
@@ -188,7 +188,7 @@ if (!validationResult.success && validationResult.errors) {
 
 | Métrica | Meta | Atual | Status |
 |---------|------|-------|--------|
-| Erros TypeScript | 0 | ~24 | 🔴 EM PROGRESSO |
+| Erros TypeScript | 0 | **0** | ✅ **ALCANÇADO** |
 | Tempo de compilação | <60s | ? | ⏳ |
 | Tamanho do bundle | <2MB | ? | ⏳ |
 
@@ -292,11 +292,11 @@ const block = createValidBlock({
 - `src/__tests__/helpers/blockFactory.ts`
 
 ### Modificados ✅
-- `src/__tests__/integration/templateWorkflows.test.tsx` (linha 156)
+- `src/__tests__/integration/templateWorkflows.test.tsx` (linha 156 - ValidationResult.errors)
+- `src/components/editor/version/VersionManager.tsx` (linha 222 - Event handler tipado)
 
 ### Pendentes ⏳
-- `src/components/editor/version/VersionManager.tsx` (linha 222)
-- `src/__tests__/integration/templateWorkflows.test.tsx` (15+ mocks)
+- `src/__tests__/integration/templateWorkflows.test.tsx` (15+ mocks precisam usar createValidBlock)
 - Múltiplos arquivos na FASE 2-6
 
 ---
