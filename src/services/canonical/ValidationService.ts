@@ -461,7 +461,8 @@ export class ValidationService extends BaseCanonicalService {
     try {
       new URL(url);
       return { success: true, data: true };
-    } catch {
+    } catch (error) {
+      console.warn('[ValidationService] URL inválida:', url, error);
       return { success: true, data: false };
     }
   }

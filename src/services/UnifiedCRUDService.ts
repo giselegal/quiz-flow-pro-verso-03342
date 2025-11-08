@@ -1402,7 +1402,8 @@ export class UnifiedCRUDService {
         funnel.stages.length > 0 &&
         funnel.stages.every(stage => this.validateStage(stage))
       );
-    } catch {
+    } catch (error) {
+      console.warn('[UnifiedCRUDService] Erro ao validar funnel:', error);
       return false;
     }
   }
@@ -1418,7 +1419,8 @@ export class UnifiedCRUDService {
         Array.isArray(stage.blocks) &&
         typeof stage.order === 'number'
       );
-    } catch {
+    } catch (error) {
+      console.warn('[UnifiedCRUDService] Erro ao validar stage:', error);
       return false;
     }
   }
