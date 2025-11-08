@@ -82,8 +82,8 @@ export function createOptionsBlock(overrides: Partial<Block> = {}): Block {
     type: 'text' as BlockType, // Usando 'text' pois 'options-grid' não está em BlockType
     content: {
       options: [
-        { id: 'opt-1', label: 'Opção 1', value: '1' },
-        { id: 'opt-2', label: 'Opção 2', value: '2' }
+        { id: 'opt-1', text: 'Opção 1', value: '1' }, // ✅ 'text' ao invés de 'label'
+        { id: 'opt-2', text: 'Opção 2', value: '2' }  // ✅ 'text' ao invés de 'label'
       ]
     },
     properties: {
