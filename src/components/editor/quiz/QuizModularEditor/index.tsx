@@ -213,7 +213,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             return;
         }
 
-        let cancelled = false;
+        const controller = new AbortController();
+        const { signal } = controller;
+
         async function loadTemplateOptimized() {
             setTemplateLoading(true);
             setTemplateLoadError(false);
@@ -222,9 +224,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 const tid = props.templateId ?? resourceId!;
                 appLogger.info(`🔍 [QuizModularEditor] Preparando template (lazy): ${tid}`);
 
-                const templateStepsResult = svc.steps?.list?.() ?? { success: false };
+                // Add await and pass signal if supported
+                const templateStepsResult = await svc.steps?.list?.({ signal }) ?? { success: false };
                 let stepsMeta: any[] = [];
-                if (templateStepsResult.success && templateStepsResult.data?.length) {
+                if (templateStepsResult.success && Array.isArray(templateStepsResult.data)) {
                     stepsMeta = templateStepsResult.data;
                 } else {
                     stepsMeta = Array.from({ length: 21 }, (_, i) => ({
@@ -234,33 +237,52 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     }));
                 }
 
-                if (!cancelled) {
+                if (!signal.aborted) {
                     setLoadedTemplate({ name: `Template: ${tid} (JSON v3)`, steps: stepsMeta });
                     setCurrentStep(1);
                 }
 
                 try {
-                    await svc.prepareTemplate?.(tid);
+                    await svc.prepareTemplate?.(tid, { signal });
                 } catch (e) {
-                    appLogger.warn('[QuizModularEditor] prepareTemplate falhou, usando fallback de 21 etapas');
-                    try { svc.setActiveTemplate?.(tid, 21); } catch { /* noop */ }
+                    if (!signal.aborted) {
+                        appLogger.warn('[QuizModularEditor] prepareTemplate falhou, usando fallback de 21 etapas', e);
+                        try {
+                            svc.setActiveTemplate?.(tid, 21);
+                        } catch (err) {
+                            appLogger.warn('[QuizModularEditor] setActiveTemplate fallback failed', err);
+                        }
+                    }
                 }
 
                 try {
-                    await svc.preloadTemplate?.(tid);
-                } catch { /* noop */ }
+                    await svc.preloadTemplate?.(tid, { signal });
+                } catch (err) {
+                    if (!signal.aborted) {
+                        appLogger.warn('[QuizModularEditor] preloadTemplate failed', err);
+                    }
+                }
 
-                appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${stepsMeta.length} steps`);
+                if (!signal.aborted) {
+                    appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${stepsMeta.length} steps`);
+                }
             } catch (error) {
-                appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
-                if (!cancelled) setTemplateLoadError(true);
+                if (!signal.aborted) {
+                    appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
+                    setTemplateLoadError(true);
+                }
             } finally {
-                if (!cancelled) setTemplateLoading(false);
+                if (!signal.aborted) {
+                    setTemplateLoading(false);
+                }
             }
         }
 
         loadTemplateOptimized();
-        return () => { cancelled = true; setTemplateLoading(false); };
+        return () => {
+            controller.abort();
+            setTemplateLoading(false);
+        };
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep]);
 
     // Prefetch de steps críticos na montagem para navegação mais fluida
