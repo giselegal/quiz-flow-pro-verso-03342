@@ -81,7 +81,11 @@ export class OptimizedImageStorage {
 
     async clearCache(): Promise<void> {
         for (const entry of this.cache.values()) {
-            try { URL.revokeObjectURL(entry.url); } catch {}
+            try { 
+                URL.revokeObjectURL(entry.url); 
+            } catch (error) {
+                console.warn('[OptimizedImageStorage] Erro ao revogar ObjectURL:', error);
+            }
         }
         this.cache.clear();
     }

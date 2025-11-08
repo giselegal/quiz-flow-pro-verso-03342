@@ -51,7 +51,9 @@ export const userResponseService = {
       const arr = StorageService.safeGetJSON<any[]>('quiz_pending_responses') || [];
       arr.push(response);
       StorageService.safeSetJSON('quiz_pending_responses', arr);
-    } catch { }
+    } catch (error) {
+      console.warn('[userResponseService] Erro ao enfileirar resposta pendente:', error);
+    }
   },
 
   async flushPending(): Promise<{ success: boolean; sent: number; remaining: number }> {
@@ -179,7 +181,9 @@ export const userResponseService = {
         StorageService.safeSetJSON(`quiz_response_${fallbackResponse.id}`, fallbackResponse);
         // Enfileirar para tentar enviar quando obtivermos uma sessão UUID
         this.enqueuePending(response);
-      } catch { }
+      } catch (error) {
+        console.warn('[userResponseService] Erro ao salvar resposta fallback:', error);
+      }
       return fallbackResponse;
     }
     try {
@@ -256,7 +260,9 @@ export const userResponseService = {
         if (componentKey) {
           StorageService.safeSetJSON(`quiz_response_${componentKey}`, fallbackResponse);
         }
-      } catch { }
+      } catch (error) {
+        console.warn('[userResponseService] Erro ao salvar resposta por componentKey:', error);
+      }
       console.log('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }

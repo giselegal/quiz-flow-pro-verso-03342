@@ -170,7 +170,9 @@ class QuizResultsService {
             try {
               StorageService.safeSetString('userName', name);
               StorageService.safeSetString('quizUserName', name);
-            } catch { }
+            } catch (error) {
+              console.warn('[quizResultsService] Erro ao salvar userName:', error);
+            }
             return name;
           }
         }
@@ -186,7 +188,9 @@ class QuizResultsService {
         console.log('👤 Nome recuperado do StorageService:', storedName);
         return storedName.trim();
       }
-    } catch { }
+    } catch (error) {
+      console.warn('[quizResultsService] Erro ao recuperar userName do storage:', error);
+    }
 
     console.log('⚠️ Nome do usuário não encontrado nas respostas');
     return '';

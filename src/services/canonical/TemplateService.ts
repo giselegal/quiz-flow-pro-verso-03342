@@ -133,16 +133,16 @@ export class TemplateService extends BaseCanonicalService {
       try {
         // @ts-ignore - import.meta pode não existir em alguns ambientes de teste
         rawVite = (import.meta as any)?.env?.VITE_ENABLE_HIERARCHICAL_SOURCE;
-      } catch {
-        // noop
+      } catch (error) {
+        console.warn('[TemplateService] Erro ao acessar import.meta.env:', error);
       }
       if (typeof rawVite === 'string') return rawVite === 'true';
 
       // Node/process fallback (tests, SSR)
       const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_ENABLE_HIERARCHICAL_SOURCE : undefined);
       if (typeof rawNode === 'string') return rawNode === 'true';
-    } catch {
-      // noop
+    } catch (error) {
+      console.warn('[TemplateService] Erro ao verificar HIERARCHICAL_SOURCE:', error);
     }
     // Padrão: habilitar o novo pipeline por padrão
     return true;
@@ -165,11 +165,15 @@ export class TemplateService extends BaseCanonicalService {
       try {
         // @ts-ignore
         rawVite = (import.meta as any)?.env?.VITE_TEMPLATE_JSON_ONLY;
-      } catch { /* noop */ }
+      } catch (error) {
+        console.warn('[TemplateService] Erro ao acessar import.meta.env (JSON_ONLY):', error);
+      }
       if (typeof rawVite === 'string') return rawVite === 'true';
       const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_JSON_ONLY : undefined);
       if (typeof rawNode === 'string') return rawNode === 'true';
-    } catch { /* noop */ }
+    } catch (error) {
+      console.warn('[TemplateService] Erro ao verificar TEMPLATE_JSON_ONLY:', error);
+    }
     // Padrão: priorizar JSON-only (pode ser desativado por env/localStorage quando necessário)
     return true;
   }
@@ -1467,7 +1471,8 @@ export class TemplateService extends BaseCanonicalService {
       // Test basic template retrieval
       const result = await this.steps.get(1);
       return result.success;
-    } catch {
+    } catch (error) {
+      console.warn('[TemplateService] Health check falhou:', error);
       return false;
     }
   }

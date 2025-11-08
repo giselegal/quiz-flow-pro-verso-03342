@@ -40,7 +40,9 @@ export const DraftPersistence = {
     clearStepDraft(quizId: string, stepKey: string) {
         try {
             localStorage.removeItem(STEP_KEY(quizId, stepKey));
-        } catch { }
+        } catch (error) {
+            console.warn('[DraftPersistence] Erro ao remover step draft:', error);
+        }
         const idx = this.getIndex(quizId);
         if (idx[stepKey]) {
             delete idx[stepKey];

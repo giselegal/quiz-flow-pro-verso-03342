@@ -56,7 +56,9 @@ function readPreferSectionsV3(): boolean {
     const ls = window.localStorage.getItem('qfp.preferSectionsV3');
     if (ls === '1') return true;
     if (ls === '0') return false;
-  } catch {}
+  } catch (error) {
+    console.warn('[imports] Erro ao verificar preferência sectionsV3:', error);
+  }
   const w = window as any;
   return !!w.__editorPreferSectionsV3;
 }
@@ -150,7 +152,8 @@ export const loadTemplate = async (templateId: string) => {
                 }
               }
               return false;
-            } catch {
+            } catch (error) {
+              console.warn(`[imports] Erro ao carregar JSON v3 para step ${stepId}:`, error);
               return false;
             } finally {
               // Marcar como tentado para evitar spam de 404; novo build/refresh limpa este estado.
@@ -160,7 +163,11 @@ export const loadTemplate = async (templateId: string) => {
         );
       }
       // Aguarda a primeira tentativa quando chamado inline; ignora o resultado.
-      try { await w.__jsonV3InFlight.get(stepId); } catch { }
+      try { 
+        await w.__jsonV3InFlight.get(stepId); 
+      } catch (error) {
+        console.warn(`[imports] Erro ao aguardar carregamento JSON v3 (step ${stepId}):`, error);
+      }
       // limpeza de referência em voo após término
       w.__jsonV3InFlight.delete(stepId);
     }
@@ -272,7 +279,8 @@ if (typeof window !== 'undefined') {
                       return true;
                     }
                     return false;
-                  } catch {
+                  } catch (error) {
+                    console.warn(`[imports] Erro ao pré-carregar JSON para ${id}:`, error);
                     return false;
                   } finally {
                     w.__jsonV3Attempts.add(id);
@@ -280,12 +288,16 @@ if (typeof window !== 'undefined') {
                 })(),
               );
             }
-            try { await w.__jsonV3InFlight.get(id); } catch { }
+            try { 
+              await w.__jsonV3InFlight.get(id); 
+            } catch (error) {
+              console.warn(`[imports] Erro ao aguardar pré-carregamento para ${id}:`, error);
+            }
             w.__jsonV3InFlight.delete(id);
           }),
         );
-      } catch {
-        // silencioso
+      } catch (error) {
+        console.warn('[imports] Erro ao iniciar pré-carregamento JSON v3:', error);
       }
     }, 0);
   }
