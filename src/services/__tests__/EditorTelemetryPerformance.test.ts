@@ -5,6 +5,7 @@
  * Testa limites de memória e throughput
  * 
  * @phase FASE 5 - Telemetria e Métricas
+ * @vitest-environment node
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
