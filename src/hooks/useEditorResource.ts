@@ -13,6 +13,7 @@ import {
   EditorResourceType 
 } from '@/types/editor-resource';
 import { templateService } from '@/services/canonical/TemplateService';
+import { templateToFunnelAdapter } from '@/editor/adapters/TemplateToFunnelAdapter';
 import { appLogger } from '@/utils/logger';
 
 export interface UseEditorResourceOptions {
@@ -97,29 +98,52 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
 
       appLogger.info(`🔍 [useEditorResource] Carregando ${type}:`, resourceId);
 
-      // Templates: carregar via templateService
+      // Templates: CONVERTER para funnel editável (GARGALO #1 FIX)
       if (type === 'template') {
-        // Verificar se é um template de step individual ou template completo
-        const isStepTemplate = /^step-\d{2}$/i.test(resourceId);
+        appLogger.info(`🔄 [useEditorResource] Convertendo template → funnel:`, resourceId);
 
+        // Verificar se é template completo (quiz21StepsComplete) ou step individual
+        const isCompleteTemplate = resourceId.toLowerCase().includes('complete') || 
+                                   resourceId.toLowerCase().includes('quiz21');
+
+        // Converter template → funnel
+        const conversionResult = await templateToFunnelAdapter.convertTemplateToFunnel({
+          templateId: resourceId,
+          customName: `Funnel - ${resourceId}`,
+          loadAllSteps: isCompleteTemplate,
+          specificSteps: isCompleteTemplate ? undefined : [resourceId],
+        });
+
+        if (!conversionResult.success || !conversionResult.funnel) {
+          throw new Error(conversionResult.error || 'Falha na conversão do template');
+        }
+
+        // Criar EditorResource com dados do funnel
         const loadedResource: EditorResource = {
-          id: resourceId,
-          type: 'template',
-          name: isStepTemplate 
-            ? `Template - ${resourceId}`
-            : resourceId, // Usar resourceId como fallback
-          source: 'embedded',
-          isReadOnly: true,
+          id: conversionResult.funnel.id,
+          type: 'funnel', // ✅ Agora é funnel editável!
+          name: conversionResult.funnel.name,
+          source: 'local', // Temporário até salvar no Supabase
+          isReadOnly: false, // ✅ Editável!
           canClone: true,
           metadata: {
-            description: isStepTemplate 
-              ? 'Template de etapa individual'
-              : 'Template completo de quiz',
+            clonedFrom: resourceId,
+            originalTemplate: resourceId,
+            description: `Convertido de ${resourceId}`,
+            stepsLoaded: conversionResult.metadata.stepsLoaded,
+            totalBlocks: conversionResult.metadata.totalBlocks,
+            conversionDuration: conversionResult.metadata.duration,
           },
+          data: conversionResult.funnel, // 🆕 Dados completos do funnel
         };
 
         setResource(loadedResource);
-        appLogger.info(`✅ [useEditorResource] Template carregado:`, loadedResource);
+        appLogger.info(`✅ [useEditorResource] Template convertido para funnel:`, {
+          originalTemplate: resourceId,
+          newFunnelId: loadedResource.id,
+          stages: conversionResult.funnel.stages.length,
+          blocks: conversionResult.metadata.totalBlocks,
+        });
         return;
       }
 
