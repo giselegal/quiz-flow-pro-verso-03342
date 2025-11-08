@@ -275,6 +275,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                 if (!signal.aborted) {
                     appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${stepsMeta.length} steps`);
+                    
+                    // Validar integridade das 21 etapas para quiz21StepsComplete
+                    if (tid === 'quiz21StepsComplete' && stepsMeta.length === 21) {
+                        validateTemplateIntegrity(tid, stepsMeta, signal);
+                    }
                 }
             } catch (error) {
                 if (!signal.aborted) {
@@ -284,6 +289,57 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             } finally {
                 if (!signal.aborted) {
                     setTemplateLoading(false);
+                }
+            }
+        }
+        
+        // Função auxiliar para validar integridade das 21 etapas
+        async function validateTemplateIntegrity(tid: string, stepsMeta: any[], signal: AbortSignal) {
+            try {
+                const expectedSteps = Array.from({ length: 21 }, (_, i) => 
+                    `step-${String(i + 1).padStart(2, '0')}`
+                );
+                
+                const missingSteps: string[] = [];
+                const emptySteps: string[] = [];
+                
+                for (const stepId of expectedSteps) {
+                    if (signal.aborted) return;
+                    
+                    try {
+                        const result = await templateService.getStep(stepId, tid, { signal });
+                        if (!result.success) {
+                            missingSteps.push(stepId);
+                        } else if (!result.data || result.data.length === 0) {
+                            emptySteps.push(stepId);
+                        }
+                    } catch (err) {
+                        if (!signal.aborted) {
+                            missingSteps.push(stepId);
+                        }
+                    }
+                }
+                
+                if (!signal.aborted) {
+                    if (missingSteps.length > 0 || emptySteps.length > 0) {
+                        const issues = [
+                            missingSteps.length > 0 ? `${missingSteps.length} steps faltando (${missingSteps.slice(0, 3).join(', ')}${missingSteps.length > 3 ? '...' : ''})` : null,
+                            emptySteps.length > 0 ? `${emptySteps.length} steps vazios (${emptySteps.slice(0, 3).join(', ')}${emptySteps.length > 3 ? '...' : ''})` : null,
+                        ].filter(Boolean).join('; ');
+                        
+                        appLogger.warn(`⚠️ [QuizModularEditor] Template incompleto: ${issues}`);
+                        showToast({
+                            type: 'warning',
+                            title: 'Template Incompleto',
+                            message: issues,
+                        });
+                    } else {
+                        appLogger.info(`✅ [QuizModularEditor] Validação de integridade: 21/21 steps OK`);
+                    }
+                }
+            } catch (error) {
+                if (!signal.aborted) {
+                    appLogger.warn('[QuizModularEditor] Erro ao validar integridade do template:', error);
                 }
             }
         }
