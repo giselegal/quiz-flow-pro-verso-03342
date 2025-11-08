@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { appLogger } from '@/utils/logger';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
-import { schemaDrivenFunnelService, type SchemaDrivenFunnelData } from '@/services/schemaDrivenFunnelService';
+import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import type { SchemaDrivenFunnelData } from '@/services/funnelService';
 import { FunnelManager } from './FunnelManager';
 import { SaveStatusIndicator } from './SaveStatusIndicator';
 import { FunnelSettingsModal } from './FunnelSettingsModal';
@@ -77,7 +78,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
           });
         } else {
           // Para funis personalizados, buscar no Supabase
-          const funnelData = await schemaDrivenFunnelService.getFunnel(currentFunnelId);
+          const funnelData = await funnelService.getFunnel(currentFunnelId);
           if (funnelData) {
             setCurrentFunnel(funnelData);
           } else {

@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { History, Clock, User, RotateCcw, Save, FileText, GitBranch } from 'lucide-react';
-import { type FunnelVersion } from '@/services/schemaDrivenFunnelService';
+import type { FunnelVersion } from '@/services/canonical/FunnelService';
 
 interface VersionManagerProps {
   versions: FunnelVersion[];

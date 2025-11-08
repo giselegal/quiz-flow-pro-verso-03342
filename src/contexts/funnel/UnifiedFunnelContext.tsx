@@ -1,7 +1,7 @@
 /**
  * 🎯 CONTEXTO UNIFICADO DE FUNIL - REFATORADO
  * 
- * Contexto centralizado que usa FunnelUnifiedService:
+ * Contexto centralizado que usa FunnelService Canonical:
  * - Estado único e consistente
  * - Cache inteligente automático
  * - Deep clone para isolamento
@@ -11,7 +11,8 @@
  */
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { funnelUnifiedService, type UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import { funnelService } from '@/services/canonical/FunnelService';
+import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
@@ -123,13 +124,13 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         };
 
         // Registrar listeners
-        funnelUnifiedService.on('updated', handleFunnelUpdated);
-        funnelUnifiedService.on('deleted', handleFunnelDeleted);
+        funnelService.on('updated', handleFunnelUpdated);
+        funnelService.on('deleted', handleFunnelDeleted);
 
         // Cleanup
         return () => {
-            funnelUnifiedService.off('updated', handleFunnelUpdated);
-            funnelUnifiedService.off('deleted', handleFunnelDeleted);
+            funnelService.off('updated', handleFunnelUpdated);
+            funnelService.off('deleted', handleFunnelDeleted);
         };
     }, [funnelId]);
 
@@ -145,14 +146,14 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             console.log('📖 UnifiedFunnelContext: Carregando funil', id);
 
             // Usar serviço unificado (com cache automático)
-            const loadedFunnelMeta = await funnelUnifiedService.getFunnel(id);
+            const loadedFunnelMeta = await funnelService.getFunnel(id);
             const loadedFunnel = loadedFunnelMeta ? adaptMetadataToUnified(loadedFunnelMeta) : null;
 
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
 
                 // Verificar permissões
-                const perms = await funnelUnifiedService.checkPermissions(id);
+                const perms = await funnelService.checkPermissions(id);
                 setPermissions(perms);
 
                 console.log('✅ Funil carregado:', loadedFunnel);
@@ -182,7 +183,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('🎯 UnifiedFunnelContext: Criando funil', name);
 
-            const newFunnelMeta = await funnelUnifiedService.createFunnel({
+            const newFunnelMeta = await funnelService.createFunnel({
                 name,
                 context,
                 userId,
@@ -224,7 +225,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('✏️ UnifiedFunnelContext: Atualizando funil', funnelId);
 
-            const updatedFunnelMeta = await funnelUnifiedService.updateFunnel(funnelId, updates);
+            const updatedFunnelMeta = await funnelService.updateFunnel(funnelId, updates);
             const updatedFunnel = updatedFunnelMeta ? adaptMetadataToUnified(updatedFunnelMeta) : funnel;
             setFunnel(updatedFunnel);
 
@@ -252,7 +253,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('🔄 UnifiedFunnelContext: Duplicando funil', funnelId);
 
-            const duplicatedFunnelMeta = await funnelUnifiedService.duplicateFunnel(funnelId, newName);
+            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(funnelId, newName);
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             console.log('✅ Funil duplicado:', duplicatedFunnel);
@@ -279,7 +280,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             console.log('🗑️ UnifiedFunnelContext: Deletando funil', funnelId);
 
-            const success = await funnelUnifiedService.deleteFunnel(funnelId);
+            const success = await funnelService.deleteFunnel(funnelId);
 
             if (success) {
                 setFunnel(null);
@@ -317,14 +318,14 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
     const reload = () => {
         if (funnelId) {
             // Limpar cache antes de recarregar
-            funnelUnifiedService.clearCache();
+            funnelService.clearCache();
             loadFunnel(funnelId);
         }
     };
 
     const validateFunnel = async (id: string) => {
         try {
-            const permissions = await funnelUnifiedService.checkPermissions(id);
+            const permissions = await funnelService.checkPermissions(id);
             setPermissions(permissions);
         } catch (err) {
             console.error('❌ Erro na validação:', err);
