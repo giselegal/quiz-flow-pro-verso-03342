@@ -831,7 +831,27 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     // 🎯 Editor Operations
     const setCurrentStep = useCallback((step: number) => {
         dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: step } });
-    }, []);
+
+        // 🆕 G19 FIX: Persistir currentStep em URL e localStorage
+        try {
+            // Persistir em URL query params
+            if (typeof window !== 'undefined') {
+                const url = new URL(window.location.href);
+                url.searchParams.set('step', step.toString());
+                window.history.replaceState({}, '', url.toString());
+
+                // Persistir em localStorage
+                localStorage.setItem('editor:currentStep', step.toString());
+                localStorage.setItem('editor:currentStep:timestamp', Date.now().toString());
+
+                if (debugMode) {
+                    console.log(`💾 [G19] Step ${step} persistido em URL e localStorage`);
+                }
+            }
+        } catch (error) {
+            console.error('❌ [G19] Erro ao persistir currentStep:', error);
+        }
+    }, [debugMode]);
 
     const setSelectedBlock = useCallback((blockId: string | null) => {
         dispatch({ type: 'SET_EDITOR_STATE', payload: { selectedBlockId: blockId } });
