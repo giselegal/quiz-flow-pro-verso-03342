@@ -156,10 +156,16 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
           // Usamos apenas sessionStorage e uma chave namespaced para preview/editor.
           try {
             sessionStorage.setItem('quizResultPreview', JSON.stringify(minimal));
-          } catch { /* ignore */ }
-        } catch { }
+          } catch (error) {
+            console.warn('[QuizRenderer] Erro ao salvar resultado no sessionStorage:', error);
+          }
+        } catch (error) {
+          console.warn('[QuizRenderer] Erro ao calcular resultado final:', error);
+        }
       }
-    } catch { }
+    } catch (error) {
+      console.warn('[QuizRenderer] Erro no cálculo de resultados:', error);
+    }
   }, [mode, previewEditable, currentStep, currentStepOverride]); // Proper dependency array
 
   // Gating passa a ser feito via validação centralizada (quizState.stepValidation)
@@ -169,7 +175,9 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     try {
       const stepNum = currentStepOverride ?? currentStep;
       (window as any).__quizCurrentStep = stepNum;
-    } catch { }
+    } catch (error) {
+      console.warn('[QuizRenderer] Erro ao expor __quizCurrentStep:', error);
+    }
   }, [currentStep, currentStepOverride]);
 
   // Escutar eventos globais de blocos - STABLE VERSION
@@ -500,8 +508,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
             <div
               key={block.id || index}
               className={
-                `block-container relative transition-all ${ 
-                isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : ''}`
+                `block-container relative transition-all ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : ''}`
               }
               onMouseDown={() => {
                 if (isSelectable && block.id && onBlockClick) {

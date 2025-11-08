@@ -223,7 +223,9 @@ if (typeof window !== 'undefined') {
       const DISABLE_SUPABASE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
       try {
         (window as any).__USE_CLOUDINARY__ = ((import.meta as any)?.env?.VITE_ENABLE_CLOUDINARY === 'true');
-      } catch { }
+      } catch (error) {
+        console.warn('[main.tsx] Erro ao configurar Cloudinary flag:', error);
+      }
       const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
       // Bloqueia logs externos em dev
       if (url.includes('cloudfunctions.net/pushLogsToGrafana')) {
@@ -234,14 +236,18 @@ if (typeof window !== 'undefined') {
       if (/sentry\.io|ingest\.sentry\.io/.test(url) && (import.meta.env.DEV || isPreviewHost)) {
         try {
           console.warn('🛑 Interceptado (Sentry desabilitado em dev):', url);
-        } catch { }
+        } catch (error) {
+          console.warn('[main.tsx] Erro ao logar interceptação Sentry:', error);
+        }
         return Promise.resolve(new Response(null, { status: 204 }));
       }
       // Silencia chamadas REST do Supabase quando desabilitado (evita erros 400/403 durante QA)
       if (DISABLE_SUPABASE && url.includes('.supabase.co/rest/v1/')) {
         try {
           console.warn('🛑 Interceptado (Supabase REST desabilitado em dev):', url);
-        } catch { }
+        } catch (error) {
+          console.warn('[main.tsx] Erro ao logar interceptação Supabase:', error);
+        }
         // Responder com lista vazia ou sucesso sem corpo
         const wantsJson =
           (init?.headers &&
@@ -272,11 +278,15 @@ if (typeof window !== 'undefined') {
               console.warn('🛑 Interceptado (sendBeacon -> Sentry bloqueado):', str);
               return true; // finge sucesso
             }
-          } catch { }
+          } catch (error) {
+            console.warn('[main.tsx] Erro ao verificar sendBeacon Sentry:', error);
+          }
           return originalBeacon(url, data);
         };
       }
-    } catch { }
+    } catch (error) {
+      console.warn('[main.tsx] Erro ao patch sendBeacon:', error);
+    }
 
     // Intercepta XHR para evitar ruído em libs que não usam fetch
     try {
@@ -295,7 +305,9 @@ if (typeof window !== 'undefined') {
                 console.warn('🛑 Interceptado (XHR -> Sentry bloqueado):', u);
                 return originalOpen.apply(xhr, ['GET', 'data:ignored', true]);
               }
-            } catch { }
+            } catch (error) {
+              console.warn('[main.tsx] Erro ao verificar XHR Sentry:', error);
+            }
             return originalOpen.apply(xhr, [method, url as any, true]);
           } as any;
           return xhr as any;
@@ -303,11 +315,17 @@ if (typeof window !== 'undefined') {
         // Replace global XMLHttpRequest with patched version
         (window as any).XMLHttpRequest = PatchedXHR as any;
       }
-    } catch { }
+    } catch (error) {
+      console.warn('[main.tsx] Erro ao patch XMLHttpRequest:', error);
+    }
 
     // Cleanup: restaurar interceptores no pagehide para evitar depreciação de unload
     window.addEventListener('pagehide', () => {
-      try { (window as any).fetch = originalFetch; } catch { }
+      try {
+        (window as any).fetch = originalFetch;
+      } catch (error) {
+        console.warn('[main.tsx] Erro ao restaurar fetch original:', error);
+      }
     });
   }
 }

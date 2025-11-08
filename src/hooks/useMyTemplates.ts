@@ -198,11 +198,17 @@ export const useMyTemplates = () => {
             setError(null);
 
             // Remover template individual das novas chaves (e opcionalmente das legadas)
-            try { localStorage.removeItem(TEMPLATE_KEY_LEGACY(templateId)); } catch { }
+            try { 
+                localStorage.removeItem(TEMPLATE_KEY_LEGACY(templateId)); 
+            } catch (error) {
+                console.warn('[useMyTemplates] Erro ao remover template legado:', error);
+            }
             try {
                 // contextualStorage não tem remove direto aqui; leitura não quebra se sobrar
                 // (poderíamos criar safeRemoveItem se necessário)
-            } catch { }
+            } catch (error) {
+                console.warn('[useMyTemplates] Erro ao remover template contextual:', error);
+            }
 
             // Atualizar lista de IDs
             const currentList = await loadTemplateIds();
