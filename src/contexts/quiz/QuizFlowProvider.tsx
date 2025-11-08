@@ -71,17 +71,11 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
       onNavigate?.(clamped);
 
       // evento global p/ consumidores legados
-      try {
-        window.dispatchEvent(
-          new CustomEvent('quiz-navigate-to-step', {
-            detail: {
-              step: clamped,
-              stepId: `step-${String(clamped).padStart(2, '0')}`,
-              source: 'quiz-flow-provider',
-            },
-          }),
-        );
-      } catch { }
+          try {
+      sessionStorage.setItem('quiz-session-id', quizSession);
+    } catch (error) {
+      appLogger.warn('[QuizFlowProvider] Falha ao persistir sessão no sessionStorage:', error);
+    }
     },
     [currentStep, onNavigate, safeClamp],
   );
