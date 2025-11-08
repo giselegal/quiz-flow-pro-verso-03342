@@ -83,6 +83,35 @@ import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 // 🏗️ Inicializar sistema de schemas
 initializeSchemaRegistry();
 console.log('✅ Schema system initialized');
+
+// ✅ W3: Validar templates built-ins no bootstrap
+import { validateBuiltInTemplate } from '@/templates/validation/validateAndNormalize';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/imports';
+
+try {
+  const templateData = {
+    metadata: {
+      name: 'Quiz de Estilo 21 Etapas',
+      version: '3.0.0',
+      description: 'Template completo de 21 etapas para quiz de estilo pessoal',
+    },
+    steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+  };
+
+  const validationResult = validateBuiltInTemplate('quiz21StepsComplete', templateData);
+
+  if (validationResult.success) {
+    console.log('✅ Built-in template "quiz21StepsComplete" validado com sucesso');
+    if (validationResult.warnings && validationResult.warnings.length > 0) {
+      console.warn('⚠️ Built-in template warnings:', validationResult.warnings);
+    }
+  } else {
+    console.error('❌ Built-in template "quiz21StepsComplete" inválido:', validationResult.errors);
+  }
+} catch (error) {
+  console.error('❌ Erro ao validar built-in template:', error);
+}
+
 try {
   installLayerDiagnostics();
 } catch (error) {
