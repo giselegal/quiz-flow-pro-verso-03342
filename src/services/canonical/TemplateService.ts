@@ -708,6 +708,9 @@ export class TemplateService extends BaseCanonicalService {
     this.activeTemplateSteps = totalSteps;
     console.log(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} com ${totalSteps} etapas`);
     this.log(`✅ Template ativo: ${templateId} (${totalSteps} etapas)`);
+    
+    // 🆕 Sincronizar com HierarchicalTemplateSource
+    hierarchicalTemplateSource.setActiveTemplate(templateId);
   }
 
   /**

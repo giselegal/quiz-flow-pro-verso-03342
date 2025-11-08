@@ -71,46 +71,39 @@ interface CacheEntry {
 export class HierarchicalTemplateSource implements TemplateDataSource {
   private cache = new Map<string, CacheEntry>();
   private options: Required<DataSourceOptions>;
-  // 🔧 Em DEV, desabilita fontes online (Supabase) por padrão para evitar 404s no console
+  private activeTemplateId: string = 'quiz21StepsComplete'; // 🆕 Template ativo (padrão)
+  
+  // 🔧 Controla se fontes online (Supabase) estão desabilitadas
   private get ONLINE_DISABLED(): boolean {
     try {
-      // 🔌 Super-flag global: se VITE_DISABLE_SUPABASE=true → bloqueia tudo
-      //   Prioridade: localStorage > env vite > process.env
-      const localDisable = (typeof window !== 'undefined') ? window.localStorage?.getItem('VITE_DISABLE_SUPABASE') : null;
-      if (localDisable === 'true') return true;
-      // Legacy interceptor flag
-      const legacyDisable = (typeof window !== 'undefined') ? window.localStorage?.getItem('supabase:disableNetwork') : null;
-      if (legacyDisable === 'true') return true;
-      let envDisable: any;
-      try {
-        // @ts-ignore
-        envDisable = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE;
-      } catch { /* noop */ }
-      if (typeof envDisable === 'string' && envDisable === 'true') return true;
-      const procDisable = (typeof process !== 'undefined') ? (process as any).env?.VITE_DISABLE_SUPABASE : undefined;
-      if (typeof procDisable === 'string' && procDisable === 'true') return true;
-
-      // 1) localStorage override (browser)
+      // Prioridade 1: localStorage explícito (mais alta prioridade)
       if (typeof window !== 'undefined') {
-        const enable = window.localStorage?.getItem('VITE_ENABLE_REMOTE_TEMPLATES');
-        if (enable != null) return enable !== 'true';
+        const disable = window.localStorage?.getItem('VITE_DISABLE_SUPABASE');
+        if (disable !== null) return disable === 'true';
+        
+        // Legacy flag
+        const legacyDisable = window.localStorage?.getItem('supabase:disableNetwork');
+        if (legacyDisable !== null) return legacyDisable === 'true';
       }
-      // 2) Vite env
-      let rawVite: any;
-      try {
-        // @ts-ignore
-        rawVite = (import.meta as any)?.env?.VITE_ENABLE_REMOTE_TEMPLATES;
-      } catch { /* noop */ }
-      if (typeof rawVite === 'string') return rawVite !== 'true';
 
-      // 3) Ambiente: em DEV → desabilitar; em PROD → habilitar
+      // Prioridade 2: Vite env variable
       try {
-        // @ts-ignore
-        const isDev = !!(import.meta as any)?.env?.DEV;
-        return !!isDev;
+        const viteDisable = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE;
+        if (viteDisable !== undefined) return viteDisable === 'true';
       } catch { /* noop */ }
+
+      // Prioridade 3: Process env (Node.js/SSR)
+      if (typeof process !== 'undefined') {
+        const procDisable = (process as any).env?.VITE_DISABLE_SUPABASE;
+        if (procDisable !== undefined) return procDisable === 'true';
+      }
+
+      // ✅ MUDANÇA CRÍTICA: Não desabilitar automaticamente em DEV
+      // Permite testar Supabase em desenvolvimento
+      // Use localStorage.setItem('VITE_DISABLE_SUPABASE', 'true') para desabilitar manualmente
     } catch { /* noop */ }
-    return false;
+    
+    return false; // ✅ Padrão: Supabase HABILITADO
   }
   // 🔧 Modo JSON-only: força uso de JSON dinâmico e desativa fallback TS/registry
   private get JSON_ONLY(): boolean {
@@ -162,6 +155,14 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   }
 
   /**
+   * 🆕 Definir template ativo (sincronizado com TemplateService)
+   */
+  setActiveTemplate(templateId: string): void {
+    this.activeTemplateId = templateId;
+    console.log(`🎯 [HierarchicalSource] Template ativo definido: ${templateId}`);
+  }
+
+  /**
    * Obter blocos com hierarquia de prioridade
    */
   async getPrimary(stepId: string, funnelId?: string): Promise<DataSourceResult<Block[]>> {
@@ -204,6 +205,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
     for (const { priority, fn } of sources) {
       try {
+        console.log(`🔍 [HierarchicalSource] Tentando fonte: ${DataSourcePriority[priority]} para ${stepId}`);
+        
         // Primeiro, tentar IndexedDB se habilitado e válido
         const idbKey = funnelId ? `${funnelId}:${stepId}` : stepId;
         const idbRecord = await IndexedTemplateCache.get(idbKey);
@@ -257,14 +260,27 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
           this.recordMetric(stepId, priority, loadTime);
 
           return result;
+        } else {
+          console.log(`⚠️ [HierarchicalSource] Fonte ${DataSourcePriority[priority]} retornou vazio para ${stepId}`);
         }
       } catch (error) {
-        appLogger.warn(`[HierarchicalSource] Failed to load from ${DataSourcePriority[priority]}:`, error);
+        console.warn(`❌ [HierarchicalSource] Erro em ${DataSourcePriority[priority]} para ${stepId}:`, error);
         // Continue para próxima fonte
       }
     }
 
-    // Nenhuma fonte funcionou
+    // Nenhuma fonte funcionou - log detalhado
+    console.error(`❌ [HierarchicalSource] NENHUMA FONTE disponível para ${stepId}`);
+    console.table({
+      'Step ID': stepId,
+      'Funnel ID': funnelId || 'N/A',
+      'Template Ativo': this.activeTemplateId,
+      'USER_EDIT (Supabase)': this.ONLINE_DISABLED ? '❌ Desabilitado' : (funnelId ? '✅ Tentado' : '⚠️ Sem funnelId'),
+      'ADMIN_OVERRIDE': this.ONLINE_DISABLED || this.JSON_ONLY ? '❌ Desabilitado' : '✅ Tentado',
+      'TEMPLATE_DEFAULT (JSON)': `✅ Tentado (${this.activeTemplateId})`,
+      'FALLBACK (TS)': isFallbackDisabled() ? '❌ Desabilitado' : '✅ Tentado',
+    });
+    
     throw new Error(`No data source available for step: ${stepId}`);
   }
 
@@ -345,41 +361,26 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   }
 
   /**
-  * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico v3.1 → Registry)
-  * Tenta, em ordem (via jsonStepLoader):
-  *  - /public/templates/funnels/quiz21StepsComplete/steps/<stepId>.json (v3.1 - PRIORIDADE)
-  *  - /public/templates/<stepId>-v3.json (v3.0 - fallback legado)
-  *  - /public/templates/blocks/<stepId>.json (fallback)
-  *  - /public/templates/quiz21-steps/<stepId>.json (fallback legado)
-  *  - /public/templates/<stepId>-template.json (fallback)
-  *  - /public/templates/quiz21-complete.json (v3.0 monolítico - fallback final)
-  * Se nada existir e NÃO estiver em JSON-only, usa UnifiedTemplateRegistry (compatibilidade)
+  * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico v3.1)
+  * Carrega de /public/templates/funnels/{activeTemplateId}/steps/<stepId>.json
+  * 
+  * ✅ APÓS MIGRAÇÃO v3.1: UnifiedTemplateRegistry REMOVIDO
+  * ✅ Path dinâmico baseado no template ativo
    */
   private async getFromTemplateDefault(stepId: string): Promise<Block[] | null> {
-    // 3.1 JSON dinâmico (v3.1 primeiro, fallbacks depois)
     try {
       const { loadStepFromJson } = await import('@/templates/loaders/jsonStepLoader');
-      const jsonBlocks = await loadStepFromJson(stepId);
+      // 🆕 Passar templateId ativo para o loader
+      const jsonBlocks = await loadStepFromJson(stepId, this.activeTemplateId);
       if (jsonBlocks && jsonBlocks.length > 0) {
         return jsonBlocks;
       }
     } catch (error) {
-      // Apenas log de debug, continua para o registry se não estiver em modo JSON-only
-      appLogger.debug('[HierarchicalSource] JSON default loader falhou para', stepId);
+      appLogger.debug('[HierarchicalSource] JSON default loader falhou para', stepId, error);
     }
 
-  // Em modo JSON-only ou quando fallback desativado → NÃO usar registry legado
-  if (this.JSON_ONLY) return null;
-
-    // 3.2 Registry (legado/compatibilidade)
-    try {
-      const { templateRegistry } = await import('@/services/deprecated/UnifiedTemplateRegistry');
-      const blocks = await templateRegistry.getStep(stepId);
-      return blocks && blocks.length > 0 ? blocks : null;
-    } catch (error) {
-      appLogger.debug('[HierarchicalSource] Template default (registry) não encontrado:', stepId);
-      return null;
-    }
+    // ✅ Registry removido - modo JSON-only permanente
+    return null;
   }
 
   /**

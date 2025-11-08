@@ -2,12 +2,20 @@ import type { Block } from '@/types/editor';
 
 /**
  * Carrega blocos de um step a partir de JSON dinâmico no diretório public.
- * Tenta em /templates/quiz21-steps/<stepId>.json e aceita dois formatos:
+ * 
+ * @param stepId - ID do step (ex: "step-01")
+ * @param templateId - ID do template/funnel (ex: "quiz21StepsComplete")
+ * 
+ * Tenta carregar de /templates/funnels/{templateId}/steps/{stepId}.json
+ * Aceita dois formatos:
  *  - Array<Block>
  *  - { blocks: Block[] }
  * Retorna null quando não encontrado (404) ou em erro.
  */
-export async function loadStepFromJson(stepId: string): Promise<Block[] | null> {
+export async function loadStepFromJson(
+  stepId: string, 
+  templateId: string = 'quiz21StepsComplete'
+): Promise<Block[] | null> {
   if (!stepId) return null;
 
   // Helper: tenta carregar e extrair blocks de diferentes formatos
@@ -31,16 +39,22 @@ export async function loadStepFromJson(stepId: string): Promise<Block[] | null> 
     }
   };
 
-  // ✅ APÓS MIGRAÇÃO v3.1: Usando APENAS formato v3.1 individual
-  // Fallbacks v3.0 foram REMOVIDOS após validação completa da migração (2025-11-08)
-    const paths: string[] = [
-      `/templates/funnels/quiz21StepsComplete/steps/${stepId}.json`,
-    ];
+  // ✅ APÓS MIGRAÇÃO v3.1: Usando formato v3.1 individual por template
+  // Path dinâmico baseado no templateId fornecido
+  const paths: string[] = [
+    `/templates/funnels/${templateId}/steps/${stepId}.json`,
+  ];
+
+  console.log(`🔍 [jsonStepLoader] Tentando carregar: ${paths[0]}`);
 
   for (const url of paths) {
     const blocks = await tryUrl(url);
-    if (blocks && blocks.length > 0) return blocks;
+    if (blocks && blocks.length > 0) {
+      console.log(`✅ [jsonStepLoader] Carregado ${blocks.length} blocos de ${url}`);
+      return blocks;
+    }
   }
 
+  console.warn(`⚠️ [jsonStepLoader] Nenhum bloco encontrado para ${stepId} no template ${templateId}`);
   return null;
 }
