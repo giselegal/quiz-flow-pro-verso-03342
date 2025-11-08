@@ -36,7 +36,8 @@ async function navigateToStep(page: Page, stepNumber: number) {
 
 test.describe('Regression - Drag & Drop', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -50,7 +51,7 @@ test.describe('Regression - Drag & Drop', () => {
     await navigateToStep(page, 5);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const blockCount = await blocks.count();
     
@@ -111,7 +112,7 @@ test.describe('Regression - Drag & Drop', () => {
       return;
     }
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const initialBlockCount = await canvas.locator('[data-block-id]').count();
     
     // Procurar bloco na biblioteca
@@ -150,7 +151,7 @@ test.describe('Regression - Drag & Drop', () => {
     await navigateToStep(page, 3);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const firstBlock = canvas.locator('[data-block-id]').first();
     
     if (!(await firstBlock.isVisible({ timeout: 1000 }))) {
@@ -188,7 +189,7 @@ test.describe('Regression - Drag & Drop', () => {
     await navigateToStep(page, 4);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const initialCount = await blocks.count();
     
@@ -227,7 +228,8 @@ test.describe('Regression - Drag & Drop', () => {
 
 test.describe('Regression - Undo/Redo', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -258,7 +260,7 @@ test.describe('Regression - Undo/Redo', () => {
     await navigateToStep(page, 2);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const firstBlock = canvas.locator('[data-block-id]').first();
     
     if (!(await firstBlock.isVisible({ timeout: 1000 }))) {
@@ -270,7 +272,7 @@ test.describe('Regression - Undo/Redo', () => {
     await firstBlock.click();
     await page.waitForTimeout(300);
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const textInput = propertiesPanel.locator('input[type="text"], textarea').first();
     
     if (await textInput.isVisible({ timeout: 1000 })) {
@@ -303,7 +305,7 @@ test.describe('Regression - Undo/Redo', () => {
     await navigateToStep(page, 3);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const firstBlock = canvas.locator('[data-block-id]').first();
     
     if (!(await firstBlock.isVisible({ timeout: 1000 }))) {
@@ -314,7 +316,7 @@ test.describe('Regression - Undo/Redo', () => {
     await firstBlock.click();
     await page.waitForTimeout(300);
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const textInput = propertiesPanel.locator('input[type="text"], textarea').first();
     
     if (await textInput.isVisible({ timeout: 1000 })) {
@@ -352,7 +354,7 @@ test.describe('Regression - Undo/Redo', () => {
     await navigateToStep(page, 1);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const firstBlock = canvas.locator('[data-block-id]').first();
     
     if (!(await firstBlock.isVisible({ timeout: 1000 }))) {
@@ -361,7 +363,7 @@ test.describe('Regression - Undo/Redo', () => {
     }
     
     await firstBlock.click();
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const textInput = propertiesPanel.locator('input[type="text"], textarea').first();
     
     if (!(await textInput.isVisible({ timeout: 1000 }))) {
@@ -390,7 +392,8 @@ test.describe('Regression - Undo/Redo', () => {
 
 test.describe('Regression - Multi-seleção', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -403,7 +406,7 @@ test.describe('Regression - Multi-seleção', () => {
     await navigateToStep(page, 5);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const blockCount = await blocks.count();
     
@@ -441,7 +444,7 @@ test.describe('Regression - Multi-seleção', () => {
     await navigateToStep(page, 7);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const blockCount = await blocks.count();
     
@@ -475,7 +478,7 @@ test.describe('Regression - Multi-seleção', () => {
     await navigateToStep(page, 8);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const initialCount = await blocks.count();
     
@@ -510,7 +513,7 @@ test.describe('Regression - Multi-seleção', () => {
     await navigateToStep(page, 4);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     
     if (await blocks.count() < 2) {
@@ -543,7 +546,8 @@ test.describe('Regression - Multi-seleção', () => {
 
 test.describe('Regression - Copy/Paste', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -556,7 +560,7 @@ test.describe('Regression - Copy/Paste', () => {
     await navigateToStep(page, 2);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const firstBlock = canvas.locator('[data-block-id]').first();
     
     if (!(await firstBlock.isVisible({ timeout: 1000 }))) {
@@ -587,7 +591,7 @@ test.describe('Regression - Copy/Paste', () => {
     await navigateToStep(page, 3);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const initialCount = await blocks.count();
     
@@ -620,7 +624,7 @@ test.describe('Regression - Copy/Paste', () => {
     await navigateToStep(page, 6);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const initialCount = await blocks.count();
     
@@ -655,7 +659,7 @@ test.describe('Regression - Copy/Paste', () => {
     await navigateToStep(page, 4);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocks = canvas.locator('[data-block-id]');
     const initialCount = await blocks.count();
     
@@ -689,7 +693,8 @@ test.describe('Regression - Copy/Paste', () => {
 
 test.describe('Regression - Acessibilidade', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -814,7 +819,7 @@ test.describe('Regression - Responsividade', () => {
   test('REG-050: Deve funcionar em tablet (768x1024)', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -822,7 +827,7 @@ test.describe('Regression - Responsividade', () => {
     await closeStartupModal(page);
     await waitForEditorReady(page);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const isVisible = await canvas.isVisible();
     
     expect(isVisible).toBe(true);
@@ -832,7 +837,7 @@ test.describe('Regression - Responsividade', () => {
   test('REG-051: Deve adaptar layout em mobile (375x667)', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -854,7 +859,7 @@ test.describe('Regression - Responsividade', () => {
   test('REG-052: Sidebar deve colapsar em telas pequenas', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
     
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });

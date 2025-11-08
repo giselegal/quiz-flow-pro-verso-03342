@@ -23,15 +23,15 @@ async function closeStartupModal(page: Page) {
 }
 
 async function waitForEditorReady(page: Page) {
-  await expect(page.locator('[data-editor="modular-enhanced"]')).toBeVisible({ timeout: 15000 });
-  await expect(page.locator('[data-testid="step-navigator"]').first()).toBeVisible();
+  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-steps')).toBeVisible();
   console.log('✅ Editor pronto para testes de propriedades');
 }
 
 async function selectFirstBlock(page: Page): Promise<boolean> {
   await page.waitForTimeout(1000);
   
-  const canvas = page.locator('[data-testid="canvas-column"]').first();
+  const canvas = page.getByTestId('column-canvas').first();
   const firstBlock = canvas.locator('[data-block-id]').first();
   
   const blockCount = await canvas.locator('[data-block-id]').count();
@@ -43,7 +43,7 @@ async function selectFirstBlock(page: Page): Promise<boolean> {
   await firstBlock.click();
   await page.waitForTimeout(300);
   
-  const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+  const propertiesPanel = page.getByTestId('column-properties').first();
   await expect(propertiesPanel).toBeVisible({ timeout: 3000 });
   
   return true;
@@ -51,7 +51,8 @@ async function selectFirstBlock(page: Page): Promise<boolean> {
 
 test.describe('Properties - Painel de Propriedades', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -67,7 +68,7 @@ test.describe('Properties - Painel de Propriedades', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     await expect(propertiesPanel).toBeVisible();
     
     // Verificar título do painel
@@ -84,7 +85,7 @@ test.describe('Properties - Painel de Propriedades', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar por indicação do tipo (ex: "Texto", "Botão", etc)
     const content = await propertiesPanel.textContent();
@@ -101,7 +102,7 @@ test.describe('Properties - Painel de Propriedades', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Contar inputs editáveis
     const inputs = propertiesPanel.locator('input:not([type="hidden"]), textarea, select');
@@ -118,7 +119,7 @@ test.describe('Properties - Painel de Propriedades', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar botão de fechar
     const closeButton = propertiesPanel.locator('button[aria-label*="fechar"], button[aria-label*="close"]').first();
@@ -141,7 +142,8 @@ test.describe('Properties - Painel de Propriedades', () => {
 
 test.describe('Properties - Edição de Campos de Texto', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -157,7 +159,7 @@ test.describe('Properties - Edição de Campos de Texto', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar primeiro input de texto
     const textInput = propertiesPanel.locator('input[type="text"], textarea').first();
@@ -186,7 +188,7 @@ test.describe('Properties - Edição de Campos de Texto', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const textarea = propertiesPanel.locator('textarea').first();
     
     if (!(await textarea.isVisible({ timeout: 1000 }))) {
@@ -213,7 +215,7 @@ test.describe('Properties - Edição de Campos de Texto', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar campo com atributo required
     const requiredInput = propertiesPanel.locator('input[required], textarea[required]').first();
@@ -248,7 +250,8 @@ test.describe('Properties - Edição de Campos de Texto', () => {
 
 test.describe('Properties - Edição de Campos Numéricos', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -264,7 +267,7 @@ test.describe('Properties - Edição de Campos Numéricos', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const numberInput = propertiesPanel.locator('input[type="number"]').first();
     
     if (!(await numberInput.isVisible({ timeout: 1000 }))) {
@@ -289,7 +292,7 @@ test.describe('Properties - Edição de Campos Numéricos', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const numberInput = propertiesPanel.locator('input[type="number"][min], input[type="number"][max]').first();
     
     if (!(await numberInput.isVisible({ timeout: 1000 }))) {
@@ -311,7 +314,7 @@ test.describe('Properties - Edição de Campos Numéricos', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const numberInput = propertiesPanel.locator('input[type="number"]').first();
     
     if (!(await numberInput.isVisible({ timeout: 1000 }))) {
@@ -338,7 +341,8 @@ test.describe('Properties - Edição de Campos Numéricos', () => {
 
 test.describe('Properties - Seleção e Checkboxes', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -354,7 +358,7 @@ test.describe('Properties - Seleção e Checkboxes', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const checkbox = propertiesPanel.locator('input[type="checkbox"]').first();
     
     if (!(await checkbox.isVisible({ timeout: 1000 }))) {
@@ -382,7 +386,7 @@ test.describe('Properties - Seleção e Checkboxes', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const select = propertiesPanel.locator('select').first();
     
     if (!(await select.isVisible({ timeout: 1000 }))) {
@@ -417,7 +421,7 @@ test.describe('Properties - Seleção e Checkboxes', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar select de alinhamento (common em blocos de texto)
     const alignSelect = propertiesPanel.locator('select[name*="align"], select[id*="align"]').first();
@@ -442,7 +446,8 @@ test.describe('Properties - Seleção e Checkboxes', () => {
 
 test.describe('Properties - Cores e Estilos', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -458,7 +463,7 @@ test.describe('Properties - Cores e Estilos', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const colorInput = propertiesPanel.locator('input[type="color"]').first();
     
     if (!(await colorInput.isVisible({ timeout: 1000 }))) {
@@ -486,7 +491,7 @@ test.describe('Properties - Cores e Estilos', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar input de cor em formato texto (ex: backgroundColor)
     const colorTextInput = propertiesPanel.locator('input[name*="color"], input[id*="color"]').first();
@@ -514,7 +519,8 @@ test.describe('Properties - Cores e Estilos', () => {
 
 test.describe('Properties - Validação Zod', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -530,7 +536,7 @@ test.describe('Properties - Validação Zod', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar campo numérico com validação
     const numberInput = propertiesPanel.locator('input[type="number"]').first();
@@ -563,7 +569,7 @@ test.describe('Properties - Validação Zod', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Verificar que campos têm valores padrão
     const inputs = propertiesPanel.locator('input[type="text"], input[type="number"]');
@@ -584,7 +590,8 @@ test.describe('Properties - Validação Zod', () => {
 
 test.describe('Properties - SchemaInterpreter', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -600,7 +607,7 @@ test.describe('Properties - SchemaInterpreter', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Verificar que há campos renderizados
     const allInputs = propertiesPanel.locator('input, textarea, select');
@@ -617,7 +624,7 @@ test.describe('Properties - SchemaInterpreter', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Contar labels
     const labels = propertiesPanel.locator('label');
@@ -638,7 +645,7 @@ test.describe('Properties - SchemaInterpreter', () => {
       return;
     }
     
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     
     // Procurar textos de ajuda (small, span.help, etc)
     const helpTexts = propertiesPanel.locator('small, .help-text, [class*="hint"]');

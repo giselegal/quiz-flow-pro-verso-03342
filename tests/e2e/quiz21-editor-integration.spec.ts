@@ -36,7 +36,8 @@ async function navigateToStep(page: Page, stepNumber: number) {
 
 test.describe('Integration - Supabase Save/Load', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -47,7 +48,7 @@ test.describe('Integration - Supabase Save/Load', () => {
 
   test('INT-001: Deve carregar template do Supabase na inicialização', async ({ page }) => {
     // Verificar que editor carregou dados
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     
     // Aguardar blocos carregarem
     await page.waitForTimeout(2000);
@@ -64,7 +65,7 @@ test.describe('Integration - Supabase Save/Load', () => {
     // Fazer uma alteração
     await navigateToStep(page, 1);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const firstBlock = canvas.locator('[data-block-id]').first();
     
     if (await firstBlock.isVisible({ timeout: 2000 })) {
@@ -72,7 +73,7 @@ test.describe('Integration - Supabase Save/Load', () => {
       await page.waitForTimeout(300);
       
       // Editar alguma propriedade
-      const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+      const propertiesPanel = page.getByTestId('column-properties').first();
       const textInput = propertiesPanel.locator('input[type="text"], textarea').first();
       
       if (await textInput.isVisible({ timeout: 1000 })) {
@@ -105,7 +106,7 @@ test.describe('Integration - Supabase Save/Load', () => {
     await navigateToStep(page, 5);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const initialBlockCount = await canvas.locator('[data-block-id]').count();
     
     // Fazer reload da página
@@ -156,7 +157,8 @@ test.describe('Integration - Supabase Save/Load', () => {
 
 test.describe('Integration - Fallback Offline', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -169,7 +171,7 @@ test.describe('Integration - Fallback Offline', () => {
     // Aguardar carregamento inicial
     await page.waitForTimeout(2000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const initialBlockCount = await canvas.locator('[data-block-id]').count();
     
     expect(initialBlockCount).toBeGreaterThan(0);
@@ -244,7 +246,8 @@ test.describe('Integration - Fallback Offline', () => {
 
 test.describe('Integration - Cache Invalidation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -258,7 +261,7 @@ test.describe('Integration - Cache Invalidation', () => {
     await navigateToStep(page, 2);
     await page.waitForTimeout(500);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const initialBlockCount = await canvas.locator('[data-block-id]').count();
     
     // Tentar salvar
@@ -307,7 +310,7 @@ test.describe('Integration - Cache Invalidation', () => {
     await closeStartupModal(page);
     await waitForEditorReady(page);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     await page.waitForTimeout(2000);
     
     const blockCount = await canvas.locator('[data-block-id]').count();
@@ -319,7 +322,8 @@ test.describe('Integration - Cache Invalidation', () => {
 
 test.describe('Integration - React Query', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -403,7 +407,8 @@ test.describe('Integration - React Query', () => {
 
 test.describe('Integration - Error Handling', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -449,7 +454,7 @@ test.describe('Integration - Error Handling', () => {
     await navigateToStep(page, 10);
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blockCount = await canvas.locator('[data-block-id]').count();
     
     if (blockCount > 0) {
@@ -495,7 +500,8 @@ test.describe('Integration - Error Handling', () => {
 
 test.describe('Integration - Performance Monitoring', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.addInitScript(() => {\n      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}\n    });
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });

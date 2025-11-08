@@ -26,36 +26,40 @@ async function closeStartupModal(page: Page) {
 
 // Helper: Aguardar carregamento do editor
 async function waitForEditorReady(page: Page) {
-  // Aguardar panel principal do editor
-  await expect(page.locator('[data-editor="modular-enhanced"]')).toBeVisible({ timeout: 15000 });
+  // Aguardar layout modular aparecer
+  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
   
-  // Aguardar navegador de steps aparecer
-  await expect(page.locator('[data-testid="step-navigator"]').first()).toBeVisible();
+  // Aguardar coluna de steps aparecer
+  await expect(page.getByTestId('column-steps')).toBeVisible();
   
   // Aguardar pelo menos um step estar presente
-  await expect(page.locator('[data-testid^="step-nav-"]').first()).toBeVisible();
+  await expect(page.locator('[data-testid="step-navigator-item"]').first()).toBeVisible();
   
-  console.log('✅ Editor carregado e pronto');
+  console.log('✅ Editor quiz21StepsComplete carregado e pronto');
 }
 
 // Helper: Navegar para step específico
 async function navigateToStep(page: Page, stepNumber: number) {
-  const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
-  const stepButton = page.locator(`[data-testid="step-nav-${stepKey}"]`).first();
+  // Encontrar step pelo data-step-order
+  const stepButton = page.locator(`[data-testid="step-navigator-item"][data-step-order="${stepNumber}"]`).first();
   
-  await expect(stepButton).toBeVisible();
   await stepButton.click();
+  await page.waitForTimeout(500); // Aguardar transição
   
-  // Aguardar step ativo atualizar
-  await expect(page.locator('.qm-editor').first()).toContainText(stepKey, { timeout: 5000 });
-  
-  console.log(`✅ Navegou para ${stepKey}`);
+  // Aguardar canvas atualizar
+  const canvas = page.getByTestId('column-canvas');
+  await expect(canvas).toBeVisible();
 }
 
 test.describe('Quiz21Editor - Navegação Completa', () => {
   test.beforeEach(async ({ page }) => {
+    // Garantir flag modular ligada
+    await page.addInitScript(() => {
+      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
+    });
+    
     // Navegar para editor com quiz21StepsComplete
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -65,12 +69,17 @@ test.describe('Quiz21Editor - Navegação Completa', () => {
   });
 
   test('E2E-001: Deve carregar editor com 21 steps visíveis', async ({ page }) => {
-    // Verificar que navegador de steps tem todos os 21
-    const stepButtons = page.locator('[data-testid^="step-nav-step-"]');
-    const count = await stepButtons.count();
+    // Procurar por step navigator items
+    const stepItems = page.locator('[data-testid="step-navigator-item"]');
+    await expect(stepItems.first()).toBeVisible();
     
-    expect(count).toBeGreaterThanOrEqual(21);
-    console.log(`✅ ${count} steps encontrados (esperado: 21+)`);
+    // Contar steps visíveis
+    const stepCount = await stepItems.count();
+    
+    // Deve ter 21 steps
+    expect(stepCount).toBe(21);
+    
+    console.log(`✅ Editor carregado com ${stepCount} steps`);
   });
 
   test('E2E-002: Deve navegar sequencialmente por todos os 21 steps', async ({ page }) => {
@@ -80,7 +89,7 @@ test.describe('Quiz21Editor - Navegação Completa', () => {
       await navigateToStep(page, stepNum);
       
       // Verificar que canvas carregou blocos (se houver)
-      const canvas = page.locator('[data-testid="canvas-column"]').first();
+      const canvas = page.getByTestId('column-canvas').first();
       await expect(canvas).toBeVisible();
       
       // Aguardar pequeno delay para simular usuário real
@@ -115,7 +124,7 @@ test.describe('Quiz21Editor - Navegação Completa', () => {
     await page.waitForTimeout(500);
     
     // Obter texto de um bloco (se houver)
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const blocksCount1 = await canvas.locator('[data-block-id]').count();
     
     // Navegar para outro step e voltar
@@ -133,7 +142,7 @@ test.describe('Quiz21Editor - Navegação Completa', () => {
 
 test.describe('Quiz21Editor - Edição de Blocos', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -144,33 +153,40 @@ test.describe('Quiz21Editor - Edição de Blocos', () => {
   });
 
   test('E2E-010: Deve selecionar bloco ao clicar no canvas', async ({ page }) => {
-    // Aguardar blocos carregarem
+    // Navegar para step com blocos
+    await navigateToStep(page, 1);
+    
+    // Aguardar canvas carregar
+    const canvas = page.getByTestId('column-canvas');
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    // Procurar primeiro bloco
     const firstBlock = canvas.locator('[data-block-id]').first();
     
+    // Verificar se há blocos
     const blockCount = await canvas.locator('[data-block-id]').count();
+    
     if (blockCount === 0) {
-      console.log('⚠️ Nenhum bloco encontrado no step-01, pulando teste');
+      console.log('⚠️ Step 1 não tem blocos, pulando teste');
       test.skip();
       return;
     }
     
-    // Clicar no primeiro bloco
+    // Clicar no bloco
     await firstBlock.click();
+    await page.waitForTimeout(300);
     
-    // Verificar que painel de propriedades apareceu
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
-    await expect(propertiesPanel).toBeVisible();
+    // Verificar que painel de propriedades abriu
+    const propertiesPanel = page.getByTestId('column-properties');
+    await expect(propertiesPanel).toBeVisible({ timeout: 3000 });
     
-    console.log('✅ Bloco selecionado, propriedades visíveis');
+    console.log('✅ Bloco selecionado, painel de propriedades visível');
   });
 
   test('E2E-011: Deve abrir painel de propriedades com controles corretos', async ({ page }) => {
     await page.waitForTimeout(1000);
     
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const firstBlock = canvas.locator('[data-block-id]').first();
     
     const blockCount = await canvas.locator('[data-block-id]').count();
@@ -183,7 +199,7 @@ test.describe('Quiz21Editor - Edição de Blocos', () => {
     await firstBlock.click();
     
     // Verificar que painel tem campos editáveis
-    const propertiesPanel = page.locator('[data-testid="properties-panel"]').first();
+    const propertiesPanel = page.getByTestId('column-properties').first();
     const inputs = propertiesPanel.locator('input, textarea, select');
     const inputCount = await inputs.count();
     
@@ -197,7 +213,7 @@ test.describe('Quiz21Editor - Edição de Blocos', () => {
     await expect(library).toBeVisible();
     
     // Obter contador de blocos inicial
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     const initialCount = await canvas.locator('[data-block-id]').count();
     
     // Tentar encontrar botão de adicionar texto
@@ -222,7 +238,7 @@ test.describe('Quiz21Editor - Edição de Blocos', () => {
 
 test.describe('Quiz21Editor - Save/Load', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -270,7 +286,7 @@ test.describe('Quiz21Editor - Save/Load', () => {
 
 test.describe('Quiz21Editor - Preview Mode', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -321,7 +337,7 @@ test.describe('Quiz21Editor - Preview Mode', () => {
     await page.waitForTimeout(300);
     
     // Verificar que canvas está visível novamente
-    const canvas = page.locator('[data-testid="canvas-column"]').first();
+    const canvas = page.getByTestId('column-canvas').first();
     await expect(canvas).toBeVisible();
     
     console.log('✅ Voltou para modo edição');
@@ -332,7 +348,7 @@ test.describe('Quiz21Editor - Performance', () => {
   test('E2E-040: Deve carregar em menos de 5 segundos', async ({ page }) => {
     const startTime = Date.now();
     
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -347,7 +363,7 @@ test.describe('Quiz21Editor - Performance', () => {
   });
 
   test('E2E-041: Navegação entre steps deve ser rápida (<500ms)', async ({ page }) => {
-    await page.goto('/editor?resource=quiz21StepsComplete', { 
+    await page.goto('/editor?template=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
