@@ -85,7 +85,9 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     if (typeof currentStepOverride === 'number' && currentStepOverride !== currentStep) {
       try {
         goToStep?.(currentStepOverride);
-      } catch { }
+      } catch (error) {
+        console.warn('[QuizRenderer] Erro ao aplicar currentStepOverride:', error);
+      }
     }
   }, [currentStepOverride, currentStep, goToStep]);
 
@@ -111,7 +113,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       const stepNum = currentStepOverride ?? currentStep;
       const cfg = getStepConfig(`step-${stepNum}`);
       return { stepConfig: cfg } as any;
-    } catch {
+    } catch (error) {
+      console.warn('[QuizRenderer] Erro ao obter stepConfig:', error);
       return { stepConfig: undefined } as any;
     }
   }, [currentStep, currentStepOverride, getStepConfig]);
@@ -136,7 +139,10 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
         try {
           const r = StorageService.safeGetJSON('quizResult');
           return !!r && !!r.primaryStyle;
-        } catch { return false; }
+        } catch (error) {
+          console.warn('[QuizRenderer] Erro ao verificar quizResult:', error);
+          return false;
+        }
       })();
 
       if (!hasResult) {

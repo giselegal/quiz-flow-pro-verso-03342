@@ -116,10 +116,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             } else {
                 templateService.setActiveFunnel?.(null);
             }
-        } catch { /* noop */ }
+        } catch (error) {
+            console.warn('[QuizModularEditor] Erro ao configurar funnel ativo:', error);
+        }
 
         return () => {
-            try { templateService.setActiveFunnel?.(null); } catch { /* noop */ }
+            try {
+                templateService.setActiveFunnel?.(null);
+            } catch (error) {
+                console.warn('[QuizModularEditor] Erro ao limpar funnel ativo:', error);
+            }
         };
     }, [props.funnelId]);
 
@@ -142,7 +148,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     setPanelLayout(parsed);
                 }
             }
-        } catch { /* noop */ }
+        } catch (error) {
+            console.warn('[QuizModularEditor] Erro ao restaurar layout de painéis:', error);
+        }
     }, []);
 
     // Navigation steps — derived from either loadedTemplate or editor.stepBlocks
