@@ -1566,6 +1566,268 @@ export class TemplateService extends BaseCanonicalService {
     const stepNumber = parseInt(match[1]);
     return stepNumber >= 1 && stepNumber <= 21;
   }
+
+  // ==================== CONTRACT COMPLIANCE METHODS ====================
+
+  /**
+   * Obter template ativo atual
+   */
+  getActiveTemplate(): string | null {
+    return this.activeTemplateId;
+  }
+
+  /**
+   * Obter funnel ativo atual
+   */
+  getActiveFunnel(): string | null {
+    return this.activeFunnelId;
+  }
+
+  /**
+   * Salvar blocos de um step
+   */
+  async saveStep(
+    stepId: string,
+    blocks: Block[],
+    options?: ServiceOptions
+  ): Promise<ServiceResult<void>> {
+    try {
+      // Usar registry para salvar
+      await this.registry.saveStep(stepId, blocks);
+      
+      // Invalidar cache
+      this.invalidateTemplate(stepId);
+      
+      return this.createResult(undefined as void);
+    } catch (error) {
+      this.error('saveStep failed:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
+   * Listar informações de todos os steps
+   */
+  async listSteps(
+    templateId?: string,
+    options?: ServiceOptions
+  ): Promise<ServiceResult<StepInfo[]>> {
+    try {
+      const steps: StepInfo[] = [];
+      
+      for (let i = 1; i <= 21; i++) {
+        const stepId = `step-${String(i).padStart(2, '0')}`;
+        const stepInfo = this.STEP_MAPPING[i];
+        
+        if (stepInfo) {
+          // Verificar se tem template carregado
+          const result = await this.getStep(stepId, templateId, options);
+          const blocks = result.success ? result.data : [];
+          
+          steps.push({
+            id: stepId,
+            order: i,
+            name: stepInfo.name,
+            type: stepInfo.type,
+            description: stepInfo.description,
+            blocksCount: blocks.length,
+            hasTemplate: blocks.length > 0,
+            multiSelect: stepInfo.multiSelect,
+          });
+        }
+      }
+      
+      return this.createResult(steps);
+    } catch (error) {
+      this.error('listSteps failed:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
+   * Criar novo bloco em um step
+   */
+  async createBlock(
+    stepId: string,
+    blockDTO: CreateBlockDTO,
+    options?: ServiceOptions
+  ): Promise<ServiceResult<Block>> {
+    try {
+      // Gerar ID único para o bloco
+      const blockId = generateBlockId();
+      
+      const newBlock: Block = {
+        id: blockId,
+        type: blockDTO.type,
+        order: 0, // Será ajustado ao adicionar ao step
+        properties: blockDTO.properties || {},
+        content: blockDTO.content || {},
+        parentId: blockDTO.parentId || undefined,
+      };
+      
+      // Obter blocos atuais do step
+      const stepResult = await this.getStep(stepId, undefined, options);
+      if (!stepResult.success) {
+        throw stepResult.error;
+      }
+      
+      const currentBlocks = stepResult.data;
+      
+      // Adicionar novo bloco ao final
+      newBlock.order = currentBlocks.length;
+      const updatedBlocks = [...currentBlocks, newBlock];
+      
+      // Salvar step atualizado
+      const saveResult = await this.saveStep(stepId, updatedBlocks, options);
+      if (!saveResult.success) {
+        throw saveResult.error;
+      }
+      
+      return this.createResult(newBlock);
+    } catch (error) {
+      this.error('createBlock failed:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
+   * Atualizar bloco existente
+   */
+  async updateBlock(
+    stepId: string,
+    blockId: string,
+    updates: Partial<Block>,
+    options?: ServiceOptions
+  ): Promise<ServiceResult<Block>> {
+    try {
+      // Obter blocos atuais do step
+      const stepResult = await this.getStep(stepId, undefined, options);
+      if (!stepResult.success) {
+        throw stepResult.error;
+      }
+      
+      const currentBlocks = stepResult.data;
+      const blockIndex = currentBlocks.findIndex(b => b.id === blockId);
+      
+      if (blockIndex === -1) {
+        throw new Error(`Block ${blockId} not found in ${stepId}`);
+      }
+      
+      // Atualizar bloco
+      const updatedBlock = {
+        ...currentBlocks[blockIndex],
+        ...updates,
+        id: blockId, // Garantir que ID não muda
+      };
+      
+      const updatedBlocks = [...currentBlocks];
+      updatedBlocks[blockIndex] = updatedBlock;
+      
+      // Salvar step atualizado
+      const saveResult = await this.saveStep(stepId, updatedBlocks, options);
+      if (!saveResult.success) {
+        throw saveResult.error;
+      }
+      
+      return this.createResult(updatedBlock);
+    } catch (error) {
+      this.error('updateBlock failed:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
+   * Deletar bloco
+   */
+  async deleteBlock(
+    stepId: string,
+    blockId: string,
+    options?: ServiceOptions
+  ): Promise<ServiceResult<void>> {
+    try {
+      // Obter blocos atuais do step
+      const stepResult = await this.getStep(stepId, undefined, options);
+      if (!stepResult.success) {
+        throw stepResult.error;
+      }
+      
+      const currentBlocks = stepResult.data;
+      const updatedBlocks = currentBlocks.filter(b => b.id !== blockId);
+      
+      if (updatedBlocks.length === currentBlocks.length) {
+        throw new Error(`Block ${blockId} not found in ${stepId}`);
+      }
+      
+      // Renormalizar ordem
+      updatedBlocks.forEach((b, index) => {
+        b.order = index;
+      });
+      
+      // Salvar step atualizado
+      const saveResult = await this.saveStep(stepId, updatedBlocks, options);
+      if (!saveResult.success) {
+        throw saveResult.error;
+      }
+      
+      return this.createResult(undefined as void);
+    } catch (error) {
+      this.error('deleteBlock failed:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
+   * Validar step (blocos)
+   */
+  async validateStep(
+    stepId: string,
+    blocks: Block[],
+    options?: ServiceOptions
+  ): Promise<ServiceResult<ValidationResult>> {
+    try {
+      const errors: string[] = [];
+      const warnings: string[] = [];
+      
+      if (!stepId || !stepId.match(/step-\d{2}/)) {
+        errors.push('Invalid stepId format. Expected: step-NN');
+      }
+      
+      if (!Array.isArray(blocks)) {
+        errors.push('Blocks must be an array');
+      } else {
+        // Validar cada bloco
+        blocks.forEach((block, index) => {
+          if (!block.id) {
+            errors.push(`Block ${index} is missing ID`);
+          }
+          if (!block.type) {
+            errors.push(`Block ${index} is missing type`);
+          }
+          if (typeof block.order !== 'number') {
+            warnings.push(`Block ${index} has invalid order`);
+          }
+        });
+        
+        // Verificar ordem sequencial
+        const orders = blocks.map(b => b.order).sort((a, b) => a - b);
+        for (let i = 0; i < orders.length; i++) {
+          if (orders[i] !== i) {
+            warnings.push('Block order is not sequential');
+            break;
+          }
+        }
+      }
+      
+      return this.createResult({
+        isValid: errors.length === 0,
+        errors,
+        warnings,
+      });
+    } catch (error) {
+      this.error('validateStep failed:', error);
+      return this.createError(error as Error);
+    }
+  }
 }
 
 // ==================== SINGLETON EXPORT ====================
