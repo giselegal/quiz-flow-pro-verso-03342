@@ -325,6 +325,21 @@ export class TemplateService extends BaseCanonicalService {
         throw new Error('Operation aborted');
       }
 
+      // 🆕 GARGALO #5 FIX: Deduplicação de cargas (FASE 3)
+      // Se já existe uma promise para este step, retornar ela (evita redundância)
+      const loadKey = `${stepId}-${templateId || 'default'}`;
+      if (this.stepLoadPromises.has(loadKey)) {
+        this.log(`🔄 [DEDUPLICATE] Aguardando load existente: ${stepId}`);
+        const existingPromise = this.stepLoadPromises.get(loadKey)!;
+        try {
+          const data = await existingPromise;
+          return this.createResult(data);
+        } catch (error) {
+          // Se promise existente falhou, tentar novamente
+          this.stepLoadPromises.delete(loadKey);
+        }
+      }
+
       // 🎯 PRIORIDADE 1: Verificar se existe template built-in JSON
       if (templateId && hasBuiltInTemplate(templateId)) {
         this.log(`✅ [BUILT-IN] Template ${templateId} disponível como JSON`);
