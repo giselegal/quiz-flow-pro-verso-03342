@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { appLogger } from '@/utils/logger';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
-import type { SchemaDrivenFunnelData } from '@/services/schemaDrivenFunnelService';
+import type { SchemaDrivenFunnelData } from '@/services/__deprecated/schemaDrivenFunnelService';
 import { FunnelManager } from './FunnelManager';
 import { SaveStatusIndicator } from './SaveStatusIndicator';
 import { FunnelSettingsModal } from './FunnelSettingsModal';

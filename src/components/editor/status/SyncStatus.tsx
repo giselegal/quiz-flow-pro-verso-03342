@@ -13,7 +13,7 @@ import {
   Wifi,
   WifiOff,
 } from 'lucide-react';
-import type { AutoSaveState } from '@/services/schemaDrivenFunnelService';
+import type { AutoSaveState } from '@/services/__deprecated/schemaDrivenFunnelService';
 
 interface SyncStatusProps {
   autoSaveState: AutoSaveState;
