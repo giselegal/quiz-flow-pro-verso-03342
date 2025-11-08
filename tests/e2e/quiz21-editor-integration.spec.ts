@@ -23,8 +23,17 @@ async function closeStartupModal(page: Page) {
 }
 
 async function waitForEditorReady(page: Page) {
-  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
-  await expect(page.getByTestId('column-steps')).toBeVisible();
+  const layout = page.getByTestId('modular-layout');
+  const fallbackRoot = page.locator('[data-editor="modular-enhanced"], .qm-editor').first();
+
+  try {
+    await expect(layout).toBeVisible({ timeout: 12000 });
+  } catch {
+    await expect(fallbackRoot).toBeVisible({ timeout: 12000 });
+  }
+  await expect(page.getByTestId('column-steps')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-canvas')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-properties')).toBeVisible({ timeout: 15000 });
   console.log('✅ Editor pronto para testes de integração');
 }
 
@@ -38,7 +47,7 @@ test.describe('Integration - Supabase Save/Load', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -161,7 +170,7 @@ test.describe('Integration - Fallback Offline', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -252,7 +261,7 @@ test.describe('Integration - Cache Invalidation', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -330,7 +339,7 @@ test.describe('Integration - React Query', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -417,7 +426,7 @@ test.describe('Integration - Error Handling', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -512,7 +521,7 @@ test.describe('Integration - Performance Monitoring', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });

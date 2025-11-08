@@ -286,7 +286,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                 if (!signal.aborted) {
                     appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${stepsMeta.length} steps`);
-                    
+
                     // Validar integridade das 21 etapas para quiz21StepsComplete
                     if (tid === 'quiz21StepsComplete' && stepsMeta.length === 21) {
                         validateTemplateIntegrity(tid, stepsMeta, signal);
@@ -303,20 +303,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
             }
         }
-        
+
         // Função auxiliar para validar integridade das 21 etapas
         async function validateTemplateIntegrity(tid: string, stepsMeta: any[], signal: AbortSignal) {
             try {
-                const expectedSteps = Array.from({ length: 21 }, (_, i) => 
+                const expectedSteps = Array.from({ length: 21 }, (_, i) =>
                     `step-${String(i + 1).padStart(2, '0')}`
                 );
-                
+
                 const missingSteps: string[] = [];
                 const emptySteps: string[] = [];
-                
+
                 for (const stepId of expectedSteps) {
                     if (signal.aborted) return;
-                    
+
                     try {
                         const result = await templateService.getStep(stepId, tid, { signal });
                         if (!result.success) {
@@ -330,14 +330,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         }
                     }
                 }
-                
+
                 if (!signal.aborted) {
                     if (missingSteps.length > 0 || emptySteps.length > 0) {
                         const issues = [
                             missingSteps.length > 0 ? `${missingSteps.length} steps faltando (${missingSteps.slice(0, 3).join(', ')}${missingSteps.length > 3 ? '...' : ''})` : null,
                             emptySteps.length > 0 ? `${emptySteps.length} steps vazios (${emptySteps.slice(0, 3).join(', ')}${emptySteps.length > 3 ? '...' : ''})` : null,
                         ].filter(Boolean).join('; ');
-                        
+
                         appLogger.warn(`⚠️ [QuizModularEditor] Template incompleto: ${issues}`);
                         showToast({
                             type: 'warning',
@@ -926,7 +926,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     }}
                 >
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
-                        <div className="h-full border-r bg-white overflow-y-auto">
+                        <div className="h-full border-r bg-white overflow-y-auto" data-testid="column-steps">
                             <StepNavigatorColumn
                                 steps={navSteps}
                                 currentStepKey={currentStepKey}
@@ -954,7 +954,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     <Panel defaultSize={20} minSize={15} maxSize={30}>
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando biblioteca…</div>}>
-                            <div className="h-full border-r bg-white overflow-y-auto">
+                            <div className="h-full border-r bg-white overflow-y-auto" data-testid="column-library">
                                 <ComponentLibraryColumn
                                     currentStepKey={currentStepKey}
                                     onAddBlock={(type) => {
@@ -979,7 +979,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     <Panel defaultSize={40} minSize={30}>
                         <Suspense fallback={<div className="flex items-center justify-center h-full text-gray-500">Carregando canvas…</div>}>
-                            <div className="h-full bg-gray-50 overflow-y-auto">
+                            <div className="h-full bg-gray-50 overflow-y-auto" data-testid="column-canvas">
                                 {isLoadingTemplate ? (
                                     <div className="h-full flex items-center justify-center">
                                         <div className="text-sm text-gray-500 animate-pulse">Carregando etapas do template…</div>
@@ -1035,7 +1035,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     <Panel defaultSize={25} minSize={20} maxSize={35}>
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando propriedades…</div>}>
-                            <div className="h-full border-l bg-white overflow-y-auto">
+                            <div className="h-full border-l bg-white overflow-y-auto" data-testid="column-properties">
                                 <PropertiesColumn
                                     selectedBlock={blocks?.find(b => b.id === selectedBlockId) ?? null}
                                     onBlockUpdate={(blockId: string, updates: Partial<Block>) => updateBlock(safeCurrentStep, blockId, updates)}
@@ -1071,7 +1071,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 export default function QuizModularEditor(props: QuizModularEditorProps) {
     return (
         <EditorLoadingProvider>
-            <div data-testid="quiz-modular-production-editor-page-optimized" className="h-full w-full">
+            <div data-testid="modular-layout" className="h-full w-full">
                 <Suspense fallback={<div />}>
                     <QuizModularEditorInner {...props} />
                 </Suspense>

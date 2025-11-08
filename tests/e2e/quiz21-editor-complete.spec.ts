@@ -24,17 +24,30 @@ async function closeStartupModal(page: Page) {
   }
 }
 
-// Helper: Aguardar carregamento do editor
+// Helper: Aguardar carregamento do editor (resiliente a variações de layout)
 async function waitForEditorReady(page: Page) {
-  // Aguardar layout modular aparecer
-  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
-  
-  // Aguardar coluna de steps aparecer
-  await expect(page.getByTestId('column-steps')).toBeVisible();
-  
-  // Aguardar pelo menos um step estar presente
-  await expect(page.locator('[data-testid="step-navigator-item"]').first()).toBeVisible();
-  
+  const layout = page.getByTestId('modular-layout');
+  const fallbackRoot = page.locator('[data-editor="modular-enhanced"], .qm-editor').first();
+
+  try {
+    await expect(layout).toBeVisible({ timeout: 12000 });
+  } catch {
+    // Tentar fallback root
+    await expect(fallbackRoot).toBeVisible({ timeout: 12000 });
+  }
+
+  // Garantir colunas principais (tolerar ordem/carregamento assíncrono)
+  await expect(page.getByTestId('column-steps')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-canvas')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-properties')).toBeVisible({ timeout: 15000 });
+  // Biblioteca pode não estar presente em todos os estados iniciais; tenta mas não falha se ausente
+  const libraryVisible = await page.getByTestId('column-library').isVisible().catch(() => false);
+  if (!libraryVisible) {
+    console.log('ℹ️ Biblioteca não visível no carregamento inicial (pode ser lazy).');
+  }
+
+  // Steps
+  await expect(page.locator('[data-testid="step-navigator-item"]').first()).toBeVisible({ timeout: 15000 });
   console.log('✅ Editor quiz21StepsComplete carregado e pronto');
 }
 
@@ -59,7 +72,7 @@ test.describe('Quiz21Editor - Navegação Completa', () => {
     });
     
     // Navegar para editor com quiz21StepsComplete
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -142,7 +155,7 @@ test.describe('Quiz21Editor - Navegação Completa', () => {
 
 test.describe('Quiz21Editor - Edição de Blocos', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -238,7 +251,7 @@ test.describe('Quiz21Editor - Edição de Blocos', () => {
 
 test.describe('Quiz21Editor - Save/Load', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -286,7 +299,7 @@ test.describe('Quiz21Editor - Save/Load', () => {
 
 test.describe('Quiz21Editor - Preview Mode', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -348,7 +361,7 @@ test.describe('Quiz21Editor - Performance', () => {
   test('E2E-040: Deve carregar em menos de 5 segundos', async ({ page }) => {
     const startTime = Date.now();
     
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -363,7 +376,7 @@ test.describe('Quiz21Editor - Performance', () => {
   });
 
   test('E2E-041: Navegação entre steps deve ser rápida (<500ms)', async ({ page }) => {
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });

@@ -23,8 +23,17 @@ async function closeStartupModal(page: Page) {
 }
 
 async function waitForEditorReady(page: Page) {
-  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
-  await expect(page.getByTestId('column-steps')).toBeVisible();
+  const layout = page.getByTestId('modular-layout');
+  const fallbackRoot = page.locator('[data-editor="modular-enhanced"], .qm-editor').first();
+
+  try {
+    await expect(layout).toBeVisible({ timeout: 12000 });
+  } catch {
+    await expect(fallbackRoot).toBeVisible({ timeout: 12000 });
+  }
+  await expect(page.getByTestId('column-steps')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-canvas')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-properties')).toBeVisible({ timeout: 15000 });
   console.log('✅ Editor pronto para testes de propriedades');
 }
 
@@ -54,7 +63,7 @@ test.describe('Properties - Painel de Propriedades', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -147,7 +156,7 @@ test.describe('Properties - Edição de Campos de Texto', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -201,9 +210,9 @@ test.describe('Properties - Edição de Campos de Texto', () => {
       return;
     }
     
-    const longText = 'Este é um texto longo para testar textarea.
+  const longText = `Este é um texto longo para testar textarea.
 Com múltiplas linhas.
-E formatação.';
+E formatação.`;
     
     await textarea.clear();
     await textarea.fill(longText);
@@ -259,7 +268,7 @@ test.describe('Properties - Edição de Campos Numéricos', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -352,7 +361,7 @@ test.describe('Properties - Seleção e Checkboxes', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -459,7 +468,7 @@ test.describe('Properties - Cores e Estilos', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -534,7 +543,7 @@ test.describe('Properties - Validação Zod', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -607,7 +616,7 @@ test.describe('Properties - SchemaInterpreter', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });

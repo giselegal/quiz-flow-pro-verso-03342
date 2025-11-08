@@ -23,8 +23,17 @@ async function closeStartupModal(page: Page) {
 }
 
 async function waitForEditorReady(page: Page) {
-  await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 15000 });
-  await expect(page.getByTestId('column-steps')).toBeVisible();
+  const layout = page.getByTestId('modular-layout');
+  const fallbackRoot = page.locator('[data-editor="modular-enhanced"], .qm-editor').first();
+
+  try {
+    await expect(layout).toBeVisible({ timeout: 12000 });
+  } catch {
+    await expect(fallbackRoot).toBeVisible({ timeout: 12000 });
+  }
+  await expect(page.getByTestId('column-steps')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-canvas')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId('column-properties')).toBeVisible({ timeout: 15000 });
   console.log('✅ Editor pronto para testes de regressão');
 }
 
@@ -38,7 +47,7 @@ test.describe('Regression - Drag & Drop', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -232,7 +241,7 @@ test.describe('Regression - Undo/Redo', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -398,7 +407,7 @@ test.describe('Regression - Multi-seleção', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -554,7 +563,7 @@ test.describe('Regression - Copy/Paste', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -703,7 +712,7 @@ test.describe('Regression - Acessibilidade', () => {
     await page.addInitScript(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -828,7 +837,7 @@ test.describe('Regression - Responsividade', () => {
   test('REG-050: Deve funcionar em tablet (768x1024)', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -846,7 +855,7 @@ test.describe('Regression - Responsividade', () => {
   test('REG-051: Deve adaptar layout em mobile (375x667)', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -868,7 +877,7 @@ test.describe('Regression - Responsividade', () => {
   test('REG-052: Sidebar deve colapsar em telas pequenas', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
     
-    await page.goto('/editor?template=quiz21StepsComplete', { 
+    await page.goto('/editor?resource=quiz21StepsComplete', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
