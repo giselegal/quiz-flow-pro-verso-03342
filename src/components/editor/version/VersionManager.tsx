@@ -219,7 +219,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               currentVersion !== version.version && (
                                 <Button
                                   size="sm"
-                                  onClick={e => {
+                                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                     e.stopPropagation();
                                     handleRestore();
                                   }}

@@ -146,14 +146,14 @@ describe('Fluxo 1: Importar → Validar → Salvar', () => {
 
         vi.mocked(validateTemplate).mockReturnValue({
             success: false,
-            errors: [{ path: ['metadata', 'id'], message: 'Template inválido: falta campo id', code: 'required' }],
-        } as any);
+            errors: ['Template inválido: falta campo id'],
+        });
 
         const validationResult = validateTemplate(invalidTemplate);
 
         expect(validationResult.success).toBe(false);
-        if (!validationResult.success) {
-            expect(validationResult.errors[0].message).toContain('falta campo id');
+        if (!validationResult.success && validationResult.errors) {
+            expect(validationResult.errors[0]).toContain('falta campo id');
         }
     });
 });
