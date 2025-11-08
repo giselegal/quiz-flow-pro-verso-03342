@@ -14,7 +14,7 @@
  */
 
 import React, { ReactNode, memo, useMemo, createContext, useContext } from 'react';
-import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
 import { UnifiedDndProvider } from '@/components/editor/dnd/UnifiedDndProvider';
 import { unifiedTemplateService } from '@/services/aliases';
 import { getUnifiedComponent } from '@/registry/UnifiedComponentRegistry';

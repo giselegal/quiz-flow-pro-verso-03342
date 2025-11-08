@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProviderCanonical';
 
 export function ModularBlocksDebugPanel() {
   const editor = useEditor({ optional: true });

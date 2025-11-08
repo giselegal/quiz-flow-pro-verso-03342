@@ -17,7 +17,7 @@
  */
 
 import { useContext } from 'react';
-import { EditorContextValue } from '@/components/editor/EditorProviderUnified';
+import { EditorContextValue } from '@/components/editor/EditorProviderCanonical';
 
 // ============================================================================
 // UNIFIED EDITOR CONTEXT TYPE

@@ -10,7 +10,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProviderCanonical';
 import { generateUniqueId } from '@/utils/generateUniqueId';
 import { useStepSelection } from '@/hooks/useStepSelection';
 

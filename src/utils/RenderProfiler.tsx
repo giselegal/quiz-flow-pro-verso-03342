@@ -7,9 +7,9 @@
  * Uso:
  * ```tsx
  * <RenderProfiler id="EditorProviderUnified" logToConsole>
- *   <EditorProviderUnified>
+ *   <EditorProviderCanonical>
  *     {children}
- *   </EditorProviderUnified>
+ *   </EditorProviderCanonical>
  * </RenderProfiler>
  * ```
  */

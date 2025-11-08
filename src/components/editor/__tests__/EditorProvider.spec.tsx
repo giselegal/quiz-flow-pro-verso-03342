@@ -1,4 +1,4 @@
-import { EditorProvider as MigrationEditorProvider, useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider as MigrationEditorProvider, useEditor } from '@/components/editor/EditorProviderCanonical';
 import type { Block } from '@/types/editor';
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -23,9 +23,9 @@ describe('EditorProvider actions (unit)', () => {
     const stateRef: any = { current: null };
 
     render(
-      <MigrationEditorProvider enableSupabase={false}>
+      <EditorProviderCanonical enableSupabase={false}>
         <ConsumerBridge actionsRef={actionsRef} stateRef={stateRef} />
-      </MigrationEditorProvider>,
+      </EditorProviderCanonical>,
     );
 
     // Wait until actions are populated

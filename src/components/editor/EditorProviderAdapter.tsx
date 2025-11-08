@@ -7,7 +7,7 @@
  * MIGRAÇÃO:
  * ```tsx
  * // ❌ ANTES
- * <EditorProviderAdapter funnelId={id}>
+ * <EditorProviderCanonical funnelId={id}>
  * 
  * // ✅ DEPOIS  
  * <EditorProviderCanonical funnelId={id}>
@@ -98,7 +98,7 @@ export interface EditorProviderAdapterProps {
   autoLoad?: boolean;
 }
 
-export const EditorProviderAdapter: React.FC<EditorProviderAdapterProps> = ({
+export const EditorProviderAdapter: React.FC<EditorProviderCanonicalProps> = ({
   children,
   funnelId,
   enableSupabase = false,

@@ -24,7 +24,7 @@
 import React, { ReactNode, useMemo } from 'react';
 import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
 
 export interface EditorCompositeProviderProps {
     children: ReactNode;

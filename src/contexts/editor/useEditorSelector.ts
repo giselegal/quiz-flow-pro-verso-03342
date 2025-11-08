@@ -4,8 +4,8 @@
  * Hook simplificado para acesso ao state do editor
  */
 
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
-import type { EditorState } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/components/editor/EditorProviderCanonical';
+import type { EditorState } from '@/components/editor/EditorProviderCanonical';
 
 type Selector<T> = (state: EditorState) => T;
 

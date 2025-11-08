@@ -1,5 +1,5 @@
 import { getStepTemplate } from '@/config/templates/templates';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProviderCanonical';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
 import type { QuizStepV3 } from '@/types/quiz';

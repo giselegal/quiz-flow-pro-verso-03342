@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 // Providers necessários
-import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
 import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 

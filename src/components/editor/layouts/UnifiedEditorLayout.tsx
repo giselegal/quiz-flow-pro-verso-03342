@@ -1,7 +1,7 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { appLogger } from '@/utils/logger';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EditorProvider } from '../EditorProviderMigrationAdapter';
+import { EditorProviderCanonical as EditorProvider } from '../EditorProviderCanonical';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';

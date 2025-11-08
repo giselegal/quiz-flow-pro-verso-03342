@@ -1,7 +1,7 @@
 // TypeScript fixes for EditorProvider setState calls
 // This file contains the proper type annotations to fix all setState errors
 
-import { EditorState } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorState } from '@/components/editor/EditorProviderCanonical';
 
 export const createTypedSetState = (setState: React.Dispatch<React.SetStateAction<EditorState>>) => {
   return {

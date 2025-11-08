@@ -2,7 +2,7 @@ import React from 'react';
 import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProviderCanonical';
 import { BlockType } from '@/types/editor';
 import { Trophy, User, Palette, Target, Star, Heart, Award } from 'lucide-react';
 

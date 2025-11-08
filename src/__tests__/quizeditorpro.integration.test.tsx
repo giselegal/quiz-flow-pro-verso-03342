@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import React from 'react';
 import { render, act, waitFor } from '@testing-library/react';
-import { EditorProvider, useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
-import type { EditorState } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider, useEditor } from '@/components/editor/EditorProviderCanonical';
+import type { EditorState } from '@/components/editor/EditorProviderCanonical';
 import type { Block } from '@/types/editor';
 
 // Helpers

@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { EditorProvider } from '../components/editor/EditorProviderMigrationAdapter';
+import { EditorProviderCanonical as EditorProvider } from '../components/editor/EditorProviderCanonical';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProviderCanonical';
 
 const FunnelStagesPanel: React.FC = () => {
   const editorContext = useEditor({ optional: true });

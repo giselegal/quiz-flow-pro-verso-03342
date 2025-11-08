@@ -7,7 +7,7 @@
  * MIGRAÇÃO:
  * ```tsx
  * // ❌ ANTES
- * <EditorProviderUnified funnelId={id} enableSupabase={true}>
+ * <EditorProviderCanonical funnelId={id} enableSupabase={true}>
  * 
  * // ✅ DEPOIS
  * <EditorProviderCanonical funnelId={id} enableSupabase={true}>
@@ -160,7 +160,7 @@ const getInitialState = (enableSupabase: boolean = true): EditorState => ({
     isSupabaseEnabled: enableSupabase,
 });
 
-export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
+export const EditorProviderUnified: React.FC<EditorProviderCanonicalProps> = ({
     children,
     funnelId,
     quizId,

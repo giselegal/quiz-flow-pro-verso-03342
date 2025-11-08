@@ -47,7 +47,7 @@ export const useEditorOptional = () => {
 // ============================================================================
 
 // Para compatibilidade com EditorProvider original
-export type { EditorContextValue } from '@/components/editor/EditorProviderUnified';
+export type { EditorContextValue } from '@/components/editor/EditorProviderCanonical';
 
 // Para compatibilidade com EditorProviderMigrationAdapter
 export type { UnifiedEditorContext } from '@/hooks/useUnifiedEditor';

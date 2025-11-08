@@ -92,42 +92,42 @@ function App() {
                 <Route path="/editor/modular/:funnelId">
                   {(params) => (
                     <EditorErrorBoundary>
-                      <EditorProviderAdapter
+                      <EditorProviderCanonical
                         funnelId={params.funnelId}
                         enableSupabase={true}
                       >
                         <QuizModularEditor />
-                      </EditorProviderAdapter>
+                      </EditorProviderCanonical>
                     </EditorErrorBoundary>
                   )}
                 </Route>
 
                 <Route path="/editor/modular">
                   <EditorErrorBoundary>
-                    <EditorProviderAdapter enableSupabase={true}>
+                    <EditorProviderCanonical enableSupabase={true}>
                       <QuizModularEditor />
-                    </EditorProviderAdapter>
+                    </EditorProviderCanonical>
                   </EditorErrorBoundary>
                 </Route>
 
                 <Route path="/editor/:funnelId">
                   {(params) => (
                     <EditorErrorBoundary>
-                      <EditorProviderAdapter
+                      <EditorProviderCanonical
                         funnelId={params.funnelId}
                         enableSupabase={true}
                       >
                         <QuizModularEditor />
-                      </EditorProviderAdapter>
+                      </EditorProviderCanonical>
                     </EditorErrorBoundary>
                   )}
                 </Route>
 
                 <Route path="/editor">
                   <EditorErrorBoundary>
-                    <EditorProviderAdapter enableSupabase={true}>
+                    <EditorProviderCanonical enableSupabase={true}>
                       <QuizModularEditor />
-                    </EditorProviderAdapter>
+                    </EditorProviderCanonical>
                   </EditorErrorBoundary>
                 </Route>
 
