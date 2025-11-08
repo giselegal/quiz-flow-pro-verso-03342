@@ -232,7 +232,7 @@ export const EditorProvider: React.FC<{
   const addBlock = useCallback(
     async (type: BlockType): Promise<string> => {
       const newBlock: Block = {
-        id: generateBlockId(type, generateStableId(), activeStageId),
+        id: generateBlockId(type, generateStableId()),
         type,
         content: {},
         properties: {
