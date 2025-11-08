@@ -518,6 +518,7 @@ interface SuperUnifiedProviderProps {
     autoLoad?: boolean;
     debugMode?: boolean;
     initialFeatures?: Partial<SuperUnifiedState['features']>;
+    initialData?: UnifiedFunnelData; // 🆕 GARGALO #3 FIX: Dados pré-carregados
 }
 
 // 🎯 SUPER UNIFIED PROVIDER
@@ -527,10 +528,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     autoLoad = false,
     debugMode = false,
     initialFeatures = {},
+    initialData, // 🆕 GARGALO #3 FIX
 }) => {
     const [state, dispatch] = useReducer(superUnifiedReducer, {
         ...initialState,
         features: { ...initialState.features, ...initialFeatures },
+        currentFunnel: initialData || initialState.currentFunnel, // 🆕 Usar dados iniciais
     });
 
     const [renderStartTime] = useState(() => performance.now());

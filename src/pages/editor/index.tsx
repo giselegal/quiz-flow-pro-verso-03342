@@ -140,6 +140,12 @@ const EditorRoutesInner: React.FC = () => {
             ? resourceId
             : undefined;
 
+    // 🆕 GARGALO #3 FIX: Se for funnel local (convertido de template), passar dados diretamente
+    const initialFunnelData =
+        editorResource.resource?.source === 'local' && editorResource.resource?.data
+            ? editorResource.resource.data
+            : undefined;
+
     return (
         <>
             <EditorStartupModal
@@ -149,8 +155,9 @@ const EditorRoutesInner: React.FC = () => {
 
             <SuperUnifiedProvider
                 funnelId={funnelIdForProvider}
-                autoLoad={Boolean(funnelIdForProvider)}
+                autoLoad={Boolean(funnelIdForProvider && !initialFunnelData)}
                 debugMode={import.meta.env.DEV}
+                initialData={initialFunnelData} // 🆕 Passar dados pré-carregados
             >
                 {import.meta.env.DEV ? <SaveDebugButton /> : null}
                 <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
