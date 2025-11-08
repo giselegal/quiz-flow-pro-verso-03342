@@ -17,6 +17,7 @@ import type { UnifiedFunnel, UnifiedStage } from '@/services/UnifiedCRUDService'
 import type { Block } from '@/types/editor';
 import { templateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/utils/logger';
+import { generateFunnelId } from '@/utils/idGenerator'; // ✅ W1
 
 export interface TemplateConversionOptions {
   /** ID do template a converter */
@@ -106,7 +107,7 @@ export class TemplateToFunnelAdapter {
 
       // Criar UnifiedFunnel
       const funnel: UnifiedFunnel = {
-        id: `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: generateFunnelId(), // ✅ W1: UUID v4
         name: customName || `Funnel baseado em ${templateId}`,
         description: `Convertido do template ${templateId}`,
         stages,

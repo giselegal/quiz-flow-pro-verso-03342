@@ -83,7 +83,11 @@ import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 // 🏗️ Inicializar sistema de schemas
 initializeSchemaRegistry();
 console.log('✅ Schema system initialized');
-try { installLayerDiagnostics(); } catch { }
+try {
+  installLayerDiagnostics();
+} catch (error) {
+  console.warn('[Bootstrap] Falha ao instalar diagnostics de camadas:', error);
+}
 
 // Pré-carregar schemas críticos para evitar fallback legacy em blocos de resultado
 try {
@@ -358,7 +362,11 @@ initSentry();
 
 console.log('🔧 DEBUG: Criando root do React...');
 // Instalar guards de depreciação (alert/unload)
-try { installDeprecationGuards(); } catch { }
+try {
+  installDeprecationGuards();
+} catch (error) {
+  console.warn('[Bootstrap] Falha ao instalar guardas de deprecação:', error);
+}
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
     <App />

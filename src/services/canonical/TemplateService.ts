@@ -35,7 +35,7 @@ import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: 
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { DataSourcePriority } from '@/services/core/TemplateDataSource';
 // 🆔 ID Generator (W1: Quick Win - Replace Date.now())
-import { generateId } from '@/utils/idGenerator';
+import { generateCustomStepId, generateBlockId } from '@/utils/idGenerator';
 // 🎯 PR3: Built-in Templates Loader (JSON build-time)
 import { 
   getBuiltInTemplateById, 
@@ -1328,7 +1328,7 @@ export class TemplateService extends BaseCanonicalService {
 
         // Criar novo step com nome "Cópia de..."
         const newStepNumber = this.customSteps.size + this.activeTemplateSteps + 1;
-        const newStepId = `step-custom-${Date.now()}`;
+        const newStepId = generateCustomStepId(); // ✅ W1: UUID v4
 
         const newStep: StepInfo = {
           ...originalStep,
@@ -1341,7 +1341,7 @@ export class TemplateService extends BaseCanonicalService {
         // Duplicar blocos com novos IDs
         const duplicatedBlocks: Block[] = originalBlocks.map((block, index) => ({
           ...block,
-          id: `${newStepId}-block-${Date.now()}-${index}`,
+          id: generateBlockId(), // ✅ W1: UUID v4
         }));
 
         // Adicionar ao Map de steps customizados
@@ -1403,7 +1403,7 @@ export class TemplateService extends BaseCanonicalService {
     create: (blockData: CreateBlockDTO): ServiceResult<Block> => {
       try {
         const block: Block = {
-          id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: generateBlockId(), // ✅ W1: UUID v4
           type: this.normalizeBlockType(blockData.type) as any,
           order: 0,
           properties: blockData.properties || {},

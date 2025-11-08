@@ -758,7 +758,9 @@ export const useEditor = (): EditorContextType => {
           '⚠️ useEditor chamado fora de um EditorProvider (legacy). Retornando fallback no-op para evitar quebra. Garanta que o componente esteja embrulhado por <EditorProvider>.',
         );
       }
-    } catch { }
+    } catch (error) {
+      console.warn('[EditorContext] Falha na operação:', error);
+    }
 
     // Compor fallback no-op alinhado à interface EditorContextType
     const noop = () => { };

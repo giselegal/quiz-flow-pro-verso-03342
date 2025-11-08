@@ -837,7 +837,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         try {
                             localStorage.setItem(PANEL_LAYOUT_KEY, JSON.stringify(sizes));
                             setPanelLayout(sizes);
-                        } catch { }
+                        } catch (error) {
+                            appLogger.warn('[QuizModularEditor] Falha ao processar blocos:', error);
+                        }
                     }}
                 >
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
