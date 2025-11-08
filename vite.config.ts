@@ -200,6 +200,8 @@ export default defineConfig(({ mode }) => {
         'lucide-react',
         // ✅ Incluir cva para evitar TDZ
         'class-variance-authority',
+        // ✅ CRÍTICO: Incluir react-resizable-panels que usa forwardRef
+        'react-resizable-panels',
       ],
       exclude: [
         '@supabase/functions-js',
