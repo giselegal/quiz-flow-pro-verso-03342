@@ -2,7 +2,7 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
-import { EditorProviderUnified, useEditor } from '@/components/editor/EditorProviderUnified';
+import { EditorProviderCanonical, useEditor } from '@/components/editor/EditorProviderCanonical';
 import { templateService } from '@/services/canonical/TemplateService';
 import TemplateLoader from '@/services/editor/TemplateLoader';
 
@@ -46,9 +46,9 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         let state: any;
         const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
         render(
-            <EditorProviderUnified>
+            <EditorProviderCanonical>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>,
+            </EditorProviderCanonical>,
         );
 
         // Mock TemplateService para devolver blocos esperados para step-03
@@ -79,9 +79,9 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         let state: any;
         const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
         render(
-            <EditorProviderUnified>
+            <EditorProviderCanonical>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>,
+            </EditorProviderCanonical>,
         );
 
         vi.spyOn(templateService, 'getStep').mockResolvedValue({
@@ -108,9 +108,9 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         let state: any;
         const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
         render(
-            <EditorProviderUnified>
+            <EditorProviderCanonical>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>,
+            </EditorProviderCanonical>,
         );
 
         // Espionar TemplateLoader interno para verificar a origem detectada
@@ -141,9 +141,9 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         let state: any;
         const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
         render(
-            <EditorProviderUnified>
+            <EditorProviderCanonical>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>,
+            </EditorProviderCanonical>,
         );
 
         const loaderSpy = vi.spyOn(TemplateLoader.prototype as any, 'loadStep');
@@ -172,9 +172,9 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         let state: any;
         const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
         render(
-            <EditorProviderUnified>
+            <EditorProviderCanonical>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>,
+            </EditorProviderCanonical>,
         );
 
         const loaderSpy = vi.spyOn(TemplateLoader.prototype as any, 'loadStep');

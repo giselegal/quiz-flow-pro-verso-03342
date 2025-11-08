@@ -43,8 +43,8 @@ export function useUnifiedEditor(options: { optional: true }): UnifiedEditorCont
 export function useUnifiedEditor(options?: { optional?: boolean }): UnifiedEditorContextType | undefined {
   // Se optional for true, passar como { optional: true }, senão não passar nada
   const context = options?.optional
-    ? useEditorUnified({ optional: true })
-    : useEditorUnified();
+    ? useEditorCanonical({ optional: true })
+    : useEditorCanonical();
 
   if (!context && !options?.optional) {
     throw new Error('useUnifiedEditor deve ser usado dentro de MigrationEditorProvider');

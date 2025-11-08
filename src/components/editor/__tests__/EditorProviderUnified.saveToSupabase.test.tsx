@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
-import { EditorProviderUnified, useEditor } from '@/components/editor/EditorProviderUnified';
+import { EditorProviderCanonical, useEditor } from '@/components/editor/EditorProviderCanonical';
 
 // Definições hoisted para evitar TDZ em fábricas de vi.mock
 const m = vi.hoisted(() => {
@@ -56,9 +56,9 @@ describe('EditorProviderUnified.saveToSupabase', () => {
         } as any;
 
         render(
-            <EditorProviderUnified enableSupabase={true} funnelId="f-1" initial={initial}>
+            <EditorProviderCanonical enableSupabase={true} funnelId="f-1" initial={initial}>
                 <TriggerSave />
-            </EditorProviderUnified>,
+            </EditorProviderCanonical>,
         );
 
         await waitFor(() => {
