@@ -10,9 +10,9 @@
  */
 
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
-import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
-import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { getLogger } from '@/utils/logging';
@@ -102,12 +102,13 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🎯 UnifiedCRUDProvider: Creating funnel', { name });
 
-            const newFunnelMeta = await funnelUnifiedService.createFunnel({
+            const newFunnelMeta = await funnelService.createFunnel({
                 name,
-                description: options.description || '',
+                type: options.type || 'quiz',
                 category: options.category || 'outros',
                 context: options.context ?? context,
                 templateId: options.templateId,
+                status: 'draft',
                 ...options,
             });
 
@@ -154,40 +155,36 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
             logger.debug('unifiedCRUD', '🔍 Normalizando funnelId', { original: id, normalized: searchId });
 
-            const funnel = await enhancedFunnelService.getFunnelWithFallback(searchId, undefined, context);
+            const funnelMeta = await funnelService.getFunnel(searchId);
 
-            if (!funnel) {
+            let funnel: UnifiedFunnelData;
+
+            if (!funnelMeta) {
                 logger.warn('unifiedCRUD', '⚠️ Funil não encontrado com ID normalizado', { normalizedId: searchId, originalId: id });
-                const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id, context);
-                if (!fallbackFunnel) {
-                    throw new Error(`Funil não encontrado: ${id}`);
+                // Criar funnel fallback
+                const fallbackMeta = await funnelService.createFunnel({
+                    name: `Funnel ${id}`,
+                    type: 'quiz',
+                    context,
+                    status: 'draft'
+                });
+                funnel = adaptMetadataToUnified(fallbackMeta);
+            } else {
+                funnel = adaptMetadataToUnified(funnelMeta);
+            }
+
+            setCurrentFunnel(funnel);
+
+            // Atualizar lista
+            setFunnels(prev => {
+                const exists = prev.find(f => f.id === funnel.id);
+                if (!exists) {
+                    return [funnel, ...prev];
                 }
-                setCurrentFunnel(fallbackFunnel);
+                return prev.map(f => f.id === funnel.id ? funnel : f);
+            });
 
-                // Atualizar lista se não estiver presente
-                setFunnels(prev => {
-                    const exists = prev.find(f => f.id === fallbackFunnel.id);
-                    if (!exists) {
-                        return [fallbackFunnel, ...prev];
-                    }
-                    return prev;
-                });
-            }
-
-            if (funnel) {
-                setCurrentFunnel(funnel);
-
-                // Atualizar lista se não estiver presente
-                setFunnels(prev => {
-                    const exists = prev.find(f => f.id === funnel.id);
-                    if (!exists) {
-                        return [funnel, ...prev];
-                    }
-                    return prev.map(f => f.id === funnel.id ? funnel : f);
-                });
-
-                if (debug) logger.debug('unifiedCRUD', '✅ Funnel loaded', { id: funnel.id });
-            }
+            if (debug) logger.debug('unifiedCRUD', '✅ Funnel loaded', { id: funnel.id });
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar funil';
@@ -212,24 +209,21 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '💾 UnifiedCRUDProvider: Saving funnel', { id: targetFunnel.id });
 
-            const updatedFunnelMeta = await funnelUnifiedService.updateFunnel(
-                targetFunnel.id,
-                {
-                    name: targetFunnel.name,
-                    settings: targetFunnel.settings,
-                    metadata: {
-                        description: (targetFunnel as any).description,
-                        pages: (targetFunnel as any).pages,
-                    },
+            const updatedFunnelMeta = await funnelService.updateFunnel(targetFunnel.id, {
+                name: targetFunnel.name,
+                settings: targetFunnel.settings,
+                metadata: {
+                    description: (targetFunnel as any).description,
+                    pages: (targetFunnel as any).pages,
                 },
-            );
+            });
 
             // Atualizar estado
             if (updatedFunnelMeta) {
                 const updatedFunnel = adaptMetadataToUnified(updatedFunnelMeta);
                 setCurrentFunnel(updatedFunnel);
                 setFunnels(prev => prev.map(f => f.id === updatedFunnel.id ? updatedFunnel : f));
-                
+
                 if (debug) logger.debug('unifiedCRUD', '✅ Funnel saved', { id: updatedFunnel.id });
             }
 
@@ -250,7 +244,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '📋 UnifiedCRUDProvider: Duplicating funnel', { id });
 
-            const duplicatedFunnelMeta = await funnelUnifiedService.duplicateFunnel(id, newName);
+            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(id, newName);
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             // Atualizar listas
@@ -277,7 +271,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🗑️ UnifiedCRUDProvider: Deleting funnel', { id });
 
-            const success = await funnelUnifiedService.deleteFunnel(id);
+            const success = await funnelService.deleteFunnel(id);
 
             if (success) {
                 // Remover da lista e limpar current se necessário
@@ -307,7 +301,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🔄 UnifiedCRUDProvider: Refreshing funnels');
 
-            const funnelListMeta = await funnelUnifiedService.listFunnels({
+            const funnelListMeta = await funnelService.listFunnels({
                 context,
             });
 
