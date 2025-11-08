@@ -69,6 +69,7 @@ function SortableBlockItem({
                 if ((e.target as HTMLElement).tagName.toLowerCase() === 'button') return;
                 onSelect?.(block.id);
             }}
+            data-block-id={block.id}
         >
             <div className="flex items-center justify-between mb-1">
                 <div className={`text-xs uppercase ${isSelected

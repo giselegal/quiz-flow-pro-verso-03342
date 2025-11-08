@@ -148,7 +148,7 @@ export default function ComponentLibraryColumn({ currentStepKey, onAddBlock }: C
     const totalCategories = Object.keys(categories).length;
 
     return (
-        <div className="flex flex-col h-full bg-background">
+        <div className="flex flex-col h-full bg-background" data-testid="component-library">
             {/* Header com busca e stats */}
             <div className="p-4 border-b space-y-3">
                 <div className="flex items-center justify-between">

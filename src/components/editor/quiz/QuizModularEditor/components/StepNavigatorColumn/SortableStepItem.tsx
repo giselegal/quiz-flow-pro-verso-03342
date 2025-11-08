@@ -70,10 +70,12 @@ export function SortableStepItem({
 
         {/* Step Button */}
         <button
-          className={`flex-1 text-left px-2 py-1 rounded hover:bg-accent transition-colors ${
-            isSelected ? 'bg-accent font-medium' : ''
-          }`}
+          className={`flex-1 text-left px-2 py-1 rounded hover:bg-accent transition-colors ${isSelected ? 'bg-accent font-medium' : ''
+            }`}
           onClick={onSelect}
+          data-testid="step-navigator-item"
+          data-step-id={id}
+          data-step-order={id.match(/\d+/)?.[0] || '0'}
         >
           {title}
         </button>
@@ -94,7 +96,7 @@ export function SortableStepItem({
               <Copy className="h-4 w-4 mr-2" />
               Duplicar Etapa
             </DropdownMenuItem>
-            
+
             {isCustomStep && (
               <>
                 <DropdownMenuSeparator />
