@@ -373,7 +373,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const handleSave = useCallback(async () => {
         try {
             if (!props.templateId && !resourceId) {
-                const nowId = `custom-${Date.now()}`;
+                const nowId = `custom-${uuidv4()}`;
                 const total = loadedTemplate?.steps?.length
                     ?? Object.keys(unifiedState.editor.stepBlocks || {})
                         .map((k) => Number(k))
@@ -382,7 +382,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     ?? 1;
                 try {
                     templateService.setActiveTemplate?.(nowId, total || 1);
-                } catch { /* noop */ }
+                } catch (err) {
+                    appLogger.warn('[handleSave] setActiveTemplate failed', err);
+                }
             }
 
             // Garantir persistência de todas as etapas sujas antes do snapshot global
@@ -809,7 +811,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         const stepIndex = safeCurrentStep;
                                         addBlock(stepIndex, {
                                             type,
-                                            id: `block-${Date.now()}`,
+                                            id: `block-${uuidv4()}`,
                                             properties: {},
                                             content: {},
                                             order: (blocks || []).length
