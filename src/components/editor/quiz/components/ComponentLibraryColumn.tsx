@@ -67,7 +67,7 @@ export const ComponentLibraryColumn: React.FC<ComponentLibraryColumnProps> = ({
   const categories = Object.keys(groupedComponents);
 
   return (
-    <div className={cn('flex flex-col h-full border-r bg-muted/20', className)}>
+    <div className={cn('flex flex-col h-full border-r bg-muted/20', className)} data-testid="component-library">
       <div className="p-4 border-b bg-background space-y-3">
         <h2 className="text-lg font-semibold">Componentes</h2>
 

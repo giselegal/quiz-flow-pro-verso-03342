@@ -41,7 +41,7 @@ export const StepNavigatorColumn: React.FC<StepNavigatorColumnProps> = ({
       </div>
 
       <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin">
-        {steps.map((step) => (
+        {steps.map((step, index) => (
           <Button
             key={step.id}
             variant={currentStep === step.id ? 'default' : 'ghost'}
@@ -50,6 +50,9 @@ export const StepNavigatorColumn: React.FC<StepNavigatorColumnProps> = ({
               currentStep === step.id && 'bg-primary text-primary-foreground',
             )}
             onClick={() => onStepChange(step.id)}
+            data-testid="step-navigator-item"
+            data-step-id={step.id}
+            data-step-order={index + 1}
           >
             <div className="flex items-center justify-between flex-1">
               <span className="flex items-center gap-2">
