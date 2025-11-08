@@ -71,20 +71,20 @@ const createMockTemplate = () => ({
     },
     steps: {
         'step-01-intro': [
-            { id: 'intro-logo', type: 'IntroLogo', properties: {} },
-            { id: 'intro-title', type: 'IntroTitle', properties: {} },
+            { id: 'intro-logo', type: 'intro-logo' as const, order: 0, content: {}, properties: {} },
+            { id: 'intro-title', type: 'intro-title' as const, order: 1, content: {}, properties: {} },
         ],
         'step-02-question-1': [
-            { id: 'q1-question', type: 'QuestionBlock', properties: {} },
-            { id: 'q1-options', type: 'MultipleOptions', properties: {} },
+            { id: 'q1-question', type: 'quiz-question' as const, order: 0, content: {}, properties: {} },
+            { id: 'q1-options', type: 'options-grid' as const, order: 1, content: {}, properties: {} },
         ],
         'step-03-question-2': [
-            { id: 'q2-question', type: 'QuestionBlock', properties: {} },
-            { id: 'q2-options', type: 'MultipleOptions', properties: {} },
+            { id: 'q2-question', type: 'quiz-question' as const, order: 0, content: {}, properties: {} },
+            { id: 'q2-options', type: 'options-grid' as const, order: 1, content: {}, properties: {} },
         ],
         'step-04-result': [
-            { id: 'result-score', type: 'ScoreDisplay', properties: {} },
-            { id: 'result-message', type: 'ResultMessage', properties: {} },
+            { id: 'result-score', type: 'quiz-result' as const, order: 0, content: {}, properties: {} },
+            { id: 'result-message', type: 'text' as const, order: 1, content: {}, properties: {} },
         ],
     },
 });
@@ -146,13 +146,15 @@ describe('Fluxo 1: Importar → Validar → Salvar', () => {
 
         vi.mocked(validateTemplate).mockReturnValue({
             success: false,
-            error: new Error('Template inválido: falta campo id'),
-        });
+            errors: [{ path: ['metadata', 'id'], message: 'Template inválido: falta campo id', code: 'required' }],
+        } as any);
 
         const validationResult = validateTemplate(invalidTemplate);
 
         expect(validationResult.success).toBe(false);
-        expect(validationResult.error?.message).toContain('falta campo id');
+        if (!validationResult.success) {
+            expect(validationResult.errors[0].message).toContain('falta campo id');
+        }
     });
 });
 
