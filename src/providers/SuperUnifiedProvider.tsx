@@ -575,6 +575,53 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, [renderStartTime, debugMode]);
 
+    // 🆕 G19 FIX: Restaurar currentStep do URL ou localStorage no mount
+    useEffect(() => {
+        try {
+            if (typeof window === 'undefined') return;
+
+            // 1. Tentar restaurar da URL (prioridade máxima)
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlStep = urlParams.get('step');
+
+            if (urlStep) {
+                const stepNum = parseInt(urlStep, 10);
+                if (!isNaN(stepNum) && stepNum >= 1 && stepNum <= state.editor.totalSteps) {
+                    dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: stepNum } });
+                    if (debugMode) {
+                        console.log(`🔄 [G19] Step ${stepNum} restaurado da URL`);
+                    }
+                    return;
+                }
+            }
+
+            // 2. Tentar restaurar do localStorage (fallback)
+            const lsStep = localStorage.getItem('editor:currentStep');
+            const lsTimestamp = localStorage.getItem('editor:currentStep:timestamp');
+
+            if (lsStep && lsTimestamp) {
+                const stepNum = parseInt(lsStep, 10);
+                const timestamp = parseInt(lsTimestamp, 10);
+                const age = Date.now() - timestamp;
+
+                // Só restaurar se tiver menos de 24h (86400000ms)
+                if (!isNaN(stepNum) && stepNum >= 1 && stepNum <= state.editor.totalSteps && age < 86400000) {
+                    dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: stepNum } });
+                    if (debugMode) {
+                        console.log(`🔄 [G19] Step ${stepNum} restaurado do localStorage (${(age / 1000 / 60).toFixed(0)}min atrás)`);
+                    }
+                    return;
+                }
+            }
+
+            if (debugMode) {
+                console.log('ℹ️ [G19] Nenhum step salvo para restaurar, usando step 1');
+            }
+        } catch (error) {
+            console.error('❌ [G19] Erro ao restaurar currentStep:', error);
+        }
+    }, []); // Executar apenas no mount
+
     // 🎯 Funnel Operations
     const loadFunnels = useCallback(async () => {
         dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: true, message: 'Carregando funis...' } });
@@ -734,7 +781,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         try {
             if (SUPABASE_DISABLED) {
                 const localFunnel: UnifiedFunnelData = {
-                    id: `offline_${Date.now()}`,
+                    id: `offline_${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
                     name,
                     user_id: null,
                     description: options.description || '',
