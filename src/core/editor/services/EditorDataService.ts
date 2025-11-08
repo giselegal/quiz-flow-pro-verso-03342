@@ -93,16 +93,17 @@ class EditorDataService {
     }
 
     /**
-     * Carrega JSON de uma etapa específica
+     * Carrega JSON de uma etapa específica (v3.1)
      */
     private async loadStepJson(stepNumber: number): Promise<FunnelStep | null> {
         try {
-            const stepId = String(stepNumber).padStart(2, '0');
-            const templatePath = `/templates/step-${stepId}-v3.json`;
+            const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+            // Usar formato v3.1 individual por step
+            const templatePath = `/templates/funnels/quiz21StepsComplete/steps/${stepId}.json`;
 
             const response = await fetch(templatePath);
             if (!response.ok) {
-                console.warn(`⚠️ Template step-${stepId}-v3 não encontrado`);
+                console.warn(`⚠️ Template ${stepId} v3.1 não encontrado em ${templatePath}`);
                 return null;
             }
 

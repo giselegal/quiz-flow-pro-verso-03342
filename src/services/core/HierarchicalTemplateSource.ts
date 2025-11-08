@@ -345,16 +345,18 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   }
 
   /**
-  * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico → Registry)
-  * Tenta, em ordem:
-  *  - /public/templates/quiz21-steps/<stepId>.json
-  *  - /public/templates/<stepId>-v3.json
-  *  - /public/templates/<stepId>-template.json
-  *  - /public/templates/quiz21-complete.json (extraindo steps[stepId])
+  * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico v3.1 → Registry)
+  * Tenta, em ordem (via jsonStepLoader):
+  *  - /public/templates/funnels/quiz21StepsComplete/steps/<stepId>.json (v3.1 - PRIORIDADE)
+  *  - /public/templates/<stepId>-v3.json (v3.0 - fallback legado)
+  *  - /public/templates/blocks/<stepId>.json (fallback)
+  *  - /public/templates/quiz21-steps/<stepId>.json (fallback legado)
+  *  - /public/templates/<stepId>-template.json (fallback)
+  *  - /public/templates/quiz21-complete.json (v3.0 monolítico - fallback final)
   * Se nada existir e NÃO estiver em JSON-only, usa UnifiedTemplateRegistry (compatibilidade)
    */
   private async getFromTemplateDefault(stepId: string): Promise<Block[] | null> {
-    // 3.1 JSON dinâmico
+    // 3.1 JSON dinâmico (v3.1 primeiro, fallbacks depois)
     try {
       const { loadStepFromJson } = await import('@/templates/loaders/jsonStepLoader');
       const jsonBlocks = await loadStepFromJson(stepId);

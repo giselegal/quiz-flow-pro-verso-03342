@@ -70,10 +70,12 @@ const EditorJsonTemplatesPage: React.FC = () => {
 
     const loadTemplates = async () => {
         try {
-            // Tentar carregar templates JSON dos arquivos
+            // Carregar templates v3.1 do formato individual por step
             const templatePromises = Array.from({ length: TOTAL_STEPS }, (_, i) => {
                 const stepNumber = String(i + 1).padStart(2, '0');
-                return fetch(`/templates/step-${stepNumber}-v3.json`)
+                const stepId = `step-${stepNumber}`;
+                // Usar formato v3.1 individual
+                return fetch(`/templates/funnels/quiz21StepsComplete/steps/${stepId}.json`)
                     .then(res => res.ok ? res.json() : null)
                     .catch(() => null);
             });
@@ -84,7 +86,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
             setTemplates(validTemplates);
 
             if (validTemplates.length === 0) {
-                console.warn('⚠️ Nenhum template encontrado, gerando templates padrão...');
+                console.warn('⚠️ Nenhum template v3.1 encontrado, gerando templates padrão...');
                 generateDefaultTemplates();
             }
         } catch (error) {
