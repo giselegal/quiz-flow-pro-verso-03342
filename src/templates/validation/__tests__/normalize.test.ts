@@ -160,7 +160,7 @@ describe('templateV3Schema validation', () => {
 
   describe('normalizeId', () => {
     it('deve manter UUID v4 válido', () => {
-      const validUuid = 'block-123e4567-e89b-12d3-a456-426614174000';
+      const validUuid = 'block-550e8400-e29b-41d4-a716-446655440000';
       const result = normalizeId(validUuid);
       expect(result).toBe(validUuid);
     });
@@ -177,6 +177,7 @@ describe('templateV3Schema validation', () => {
     it('deve preservar step-N sem normalizar', () => {
       const stepId = 'step-1';
       const result = normalizeId(stepId);
+      // step-N é formato legado válido, mas deve ser preservado
       expect(result).toBe(stepId);
     });
 
@@ -270,7 +271,7 @@ describe('templateV3Schema validation', () => {
         steps: {
           'step-1': [
             {
-              id: 'block-123e4567-e89b-12d3-a456-426614174000',
+              id: 'block-550e8400-e29b-41d4-a716-446655440000',
               type: 'text',
               order: 0,
               content: { text: 'Test' },
@@ -282,7 +283,7 @@ describe('templateV3Schema validation', () => {
 
       const normalized = normalizeTemplateIds(templateWithValidUuids);
       
-      expect(normalized.steps['step-1'][0].id).toBe('block-123e4567-e89b-12d3-a456-426614174000');
+      expect(normalized.steps['step-1'][0].id).toBe('block-550e8400-e29b-41d4-a716-446655440000');
     });
   });
 
@@ -358,8 +359,9 @@ describe('templateV3Schema validation', () => {
 
   describe('isValidUUID helper', () => {
     it('deve aceitar UUID v4 válido', () => {
-      expect(isValidUUID('123e4567-e89b-12d3-a456-426614174000')).toBe(true);
+      // UUIDs v4 válidos (terceiro grupo começa com '4')
       expect(isValidUUID('550e8400-e29b-41d4-a716-446655440000')).toBe(true);
+      expect(isValidUUID('9f2495e8-6420-4cb9-84a9-920bda36d019')).toBe(true);
     });
 
     it('deve rejeitar UUIDs inválidos', () => {

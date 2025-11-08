@@ -21,7 +21,7 @@ import {
   type ValidationSuccess,
   type ValidationError,
 } from './templateV3Schema';
-import { appLogger } from '@/lib/appLogger';
+import { appLogger } from '@/utils/logger';
 
 // ============================================================================
 // Validation Functions
@@ -143,11 +143,17 @@ function normalizeBlockIds(block: Block): Block {
 
 /**
  * Normaliza um único ID:
- * - Se já é UUID válido → mantém
- * - Se é legado (Date.now()) → substitui por UUID preservando prefixo
- * - Se não tem prefixo → adiciona "block-"
+ * - step-N → preserva (formato especial para steps)
+ * - UUID v4 válido → mantém
+ * - Date.now() legado → substitui por UUID preservando prefixo
+ * - Sem prefixo → adiciona "block-" + UUID
  */
 export function normalizeId(id: string): string {
+  // Caso especial PRIMEIRO: step-N (formato válido de step, não normalizar)
+  if (/^step-\d+$/.test(id)) {
+    return id;
+  }
+  
   // Já é UUID válido com prefixo? Mantém.
   const prefix = extractIdPrefix(id);
   if (prefix) {
@@ -157,15 +163,10 @@ export function normalizeId(id: string): string {
     }
   }
   
-  // É legado? Substitui por UUID mantendo prefixo.
+  // É legado (Date.now() format)? Substitui por UUID mantendo prefixo.
   if (isLegacyId(id)) {
     const prefix = extractIdPrefix(id) || 'block-';
     return `${prefix}${uuidv4()}`;
-  }
-  
-  // Caso especial: step-N (não normalizar)
-  if (/^step-\d+$/.test(id)) {
-    return id;
   }
   
   // Não tem prefixo válido? Adiciona "block-" + UUID.
@@ -273,25 +274,3 @@ export function formatValidationWarnings(warnings: string[]): string {
   
   return lines.join('\n');
 }
-
-// ============================================================================
-// Export All
-// ============================================================================
-
-export {
-  // Validation
-  validateTemplate,
-  collectLegacyIdWarnings,
-  
-  // Normalization
-  normalizeTemplateIds,
-  normalizeBlockIds,
-  normalizeId,
-  
-  // Combined
-  validateAndNormalizeTemplate,
-  
-  // Formatting
-  formatValidationErrors,
-  formatValidationWarnings,
-};
