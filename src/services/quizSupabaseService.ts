@@ -51,7 +51,9 @@ export interface QuizResponse {
   metadata?: any;
 }
 
-const generateSessionId = () => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+import { generateSessionId } from '@/utils/idGenerator';
+
+// Reusing centralized UUID generator
 
 export const quizSupabaseService = {
   // ========== USER MANAGEMENT ==========

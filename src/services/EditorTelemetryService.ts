@@ -9,6 +9,7 @@
  */
 
 import { editorMetrics } from './editorMetrics';
+import { generateSessionId as genSessionId } from '@/utils/idGenerator';
 
 /**
  * Configuração de telemetria
@@ -272,7 +273,7 @@ export class EditorTelemetryService {
    * Gerar ID único para sessão
    */
   private generateSessionId(): string {
-    return generateSessionId();
+    return genSessionId();
   }
 
   /**

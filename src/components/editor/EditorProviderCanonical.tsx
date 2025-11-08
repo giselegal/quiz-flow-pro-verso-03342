@@ -304,7 +304,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
 
         const newBlock = {
             ...block,
-            id: generateCloneId(block.id),
+            id: generateCloneId(),
         };
 
         await addBlock(normalized, newBlock);

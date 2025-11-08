@@ -207,7 +207,7 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
     appLogger.info(`🔄 [useEditorResource] Clonando recurso:`, resource.id);
 
     // Gerar ID único para o clone
-    const cloneId = generateCloneId(resource.id);
+    const cloneId = generateCloneId();
 
     const clonedResource: EditorResource = {
       ...resource,
