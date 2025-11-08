@@ -317,12 +317,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             hasSpanTag,
             hasStrongTag,
             willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-            contentPreview: `${personalizedContent?.substring(0, 200)}...`,
+            contentPreview: `${personalizedContent?.substring(0, 200)  }...`,
           });
         }
       }
-    } catch {
-      // noop
+    } catch (error) {
+      console.warn('[TextInlineBlock] Erro ao logar detecção HTML:', error);
     }
 
     return hasHtml || hasSpanTag || hasStrongTag;

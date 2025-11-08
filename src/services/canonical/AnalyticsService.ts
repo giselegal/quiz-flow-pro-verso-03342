@@ -203,7 +203,8 @@ export class AnalyticsService extends BaseCanonicalService {
         .limit(1);
       
       return !error;
-    } catch {
+    } catch (error) {
+      console.warn('[AnalyticsService] Health check falhou, usando localStorage:', error);
       // Fallback to localStorage mode
       return this.isBrowser();
     }

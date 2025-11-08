@@ -394,14 +394,22 @@ const ResultHeaderInlineBlock = ({
   const handleImageError = useCallback((e: any) => {
     if (!imageError) {
       setImageError(true);
-      try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível'); } catch { }
+      try {
+        (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível');
+      } catch (error) {
+        console.warn('[ResultHeaderInlineBlock] Erro ao definir placeholder de imagem:', error);
+      }
     }
   }, [imageError]);
 
   const handleGuideImageError = useCallback((e: any) => {
     if (!guideImageError) {
       setGuideImageError(true);
-      try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível'); } catch { }
+      try {
+        (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível');
+      } catch (error) {
+        console.warn('[ResultHeaderInlineBlock] Erro ao definir placeholder de guia:', error);
+      }
     }
   }, [guideImageError]);
 

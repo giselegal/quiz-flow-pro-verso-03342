@@ -431,7 +431,8 @@ export class NavigationService extends BaseCanonicalService {
       
       const result = this.buildNavigationMap(testSteps);
       return result.success;
-    } catch {
+    } catch (error) {
+      console.warn('[NavigationService] Health check falhou:', error);
       return false;
     }
   }

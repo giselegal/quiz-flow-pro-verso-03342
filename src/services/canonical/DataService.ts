@@ -212,7 +212,8 @@ export class DataService extends BaseCanonicalService {
       ]);
 
       return dbOk && participantsOk && sessionsOk && resultsOk && funnelsOk && analyticsOk;
-    } catch {
+    } catch (error) {
+      console.warn('[DataService] Health check falhou:', error);
       return false;
     }
   }

@@ -324,7 +324,8 @@ export class CacheService extends BaseCanonicalService {
       this.delete(testKey);
       
       return result.success && result.data !== null;
-    } catch {
+    } catch (error) {
+      console.warn('[CacheService] Health check falhou:', error);
       return false;
     }
   }
