@@ -34,6 +34,8 @@ import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: 
 // 🎯 FASE 1: Hierarchical Template Source (SSOT)
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { DataSourcePriority } from '@/services/core/TemplateDataSource';
+// 🆔 ID Generator (W1: Quick Win - Replace Date.now())
+import { generateId } from '@/utils/idGenerator';
 // 🎯 PR3: Built-in Templates Loader (JSON build-time)
 import { 
   getBuiltInTemplateById, 
