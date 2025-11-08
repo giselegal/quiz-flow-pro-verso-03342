@@ -22,6 +22,8 @@ import type { EditorResource } from '@/types/editor-resource';
 import { validateAndNormalizeTemplate, formatValidationErrors } from '@/templates/validation/normalize';
 // Import Template Dialog
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
+// Autosave com lock e coalescing
+import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -108,7 +110,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
 
-    // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
+    // � Autosave Queue com Lock (GARGALO R1)
+    const { queueSave: queueAutosave, flush: flushAutosave } = useQueuedAutosave({
+        saveFn: async (blocks: Block[], stepKey: string) => {
+            await saveStepBlocks(parseInt(stepKey.replace(/\D/g, '')));
+        },
+        debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
+        maxRetries: 3,
+        onSuccess: (stepKey) => {
+            appLogger.info(`✅ [QueuedAutosave] Step salvo: ${stepKey}`);
+        },
+        onError: (stepKey, error) => {
+            appLogger.error(`❌ [QueuedAutosave] Falha ao salvar ${stepKey}:`, error);
+        },
+    });
+
+    // �🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
     useEffect(() => {
         try {
             if (props.funnelId) {
@@ -193,22 +210,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [props.templateId, loadedTemplate, setCurrentStep, unifiedState.editor.currentStep]);
 
-    // Auto-save por etapa (persistência granular em Supabase → funnels.config.steps)
+    // Auto-save por etapa usando Queue com Lock (evita concorrência e coalesce mudanças)
     useEffect(() => {
         if (!enableAutoSave || !isDirty) return;
 
-        const delayMs = Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000);
-        const timer = setTimeout(async () => {
-            try {
-                await saveStepBlocks(safeCurrentStep);
-                console.log(`✅ Auto-save step: ${currentStepKey}`);
-            } catch (error) {
-                console.error(`❌ Auto-save failed:`, error);
-            }
-        }, isNaN(delayMs) ? 2000 : delayMs);
+        const stepBlocks = unifiedState.editor.stepBlocks as Record<string, Block[]>;
+        const currentBlocks = stepBlocks[currentStepKey] || [];
+        queueAutosave(currentStepKey, currentBlocks);
 
-        return () => clearTimeout(timer);
-    }, [enableAutoSave, isDirty, currentStepKey, saveStepBlocks, safeCurrentStep]);
+        // Cleanup não necessário - queueAutosave já gerencia debounce interno
+    }, [enableAutoSave, isDirty, currentStepKey, unifiedState.editor.stepBlocks, queueAutosave]);
 
     // DnD sensors (usando hook seguro)
     const sensors = useSafeDndSensors();
@@ -433,6 +444,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             // Garantir persistência de todas as etapas sujas antes do snapshot global
             try {
+                // Flush autosave queue para garantir que mudanças pendentes sejam salvas
+                await flushAutosave();
                 await (unified as any).ensureAllDirtyStepsSaved?.();
             } catch (error) {
                 console.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', error);
