@@ -171,8 +171,10 @@ export const DEFAULT_ROUTES: RouteDefinition[] = [
     {
         path: '/editor-main',
         name: 'editor-main',
-        middleware: ['redirect-to-editor'], // Redirect to /editor
-        meta: { title: 'Quiz Quest - Editor (Redirected)' },
+        // REMOVIDO: rota legada '/editor-main' foi deprecada e removida do conjunto
+        // Mantemos compatibilidade por redirect middleware caso necessário.
+        middleware: [],
+        meta: { title: 'Quiz Quest - Editor (Deprecated)' },
     },
     {
         path: '/headless-editor/:funnelId?',
@@ -235,11 +237,9 @@ export const DEFAULT_GUARDS: NavigationGuard[] = [
 export const DEFAULT_MIDDLEWARE: NavigationMiddleware[] = [
     {
         id: 'redirect-to-editor',
+        // DEPRECATION: Redirect middleware kept as a soft-guard for legacy links.
         condition: (path) => path === '/editor-main',
-        handler: (_path) => {
-            console.log('Redirecting /editor-main to /editor');
-            return '/editor'; // Redirect to /editor
-        },
+        handler: (_path) => '/editor',
     },
     {
         id: 'normalize-paths',

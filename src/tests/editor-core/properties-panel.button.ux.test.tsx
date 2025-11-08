@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen, fireEvent, act, within } from '@testing-library/react';
-import { PropertiesPanel } from '@/components/editor/quiz/components/PropertiesPanel';
+import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
 import { initializeSchemaRegistry } from '@/config/schemas';
 
 beforeAll(() => {

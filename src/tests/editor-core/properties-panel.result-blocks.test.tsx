@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { PropertiesPanel } from '@/components/editor/quiz/components/PropertiesPanel';
+import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
 import ResultHeaderBlock from '@/components/editor/blocks/atomic/ResultHeaderBlock';
 import ResultDescriptionBlock from '@/components/editor/blocks/atomic/ResultDescriptionBlock';
 import ResultCTABlock from '@/components/editor/blocks/atomic/ResultCTABlock';

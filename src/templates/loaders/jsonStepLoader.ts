@@ -33,10 +33,9 @@ export async function loadStepFromJson(stepId: string): Promise<Block[] | null> 
 
   // ✅ APÓS MIGRAÇÃO v3.1: Usando APENAS formato v3.1 individual
   // Fallbacks v3.0 foram REMOVIDOS após validação completa da migração (2025-11-08)
-  const paths: string[] = [
-    // ÚNICO PATH: Formato v3.1 com arquivos individuais por etapa
-    `/templates/funnels/quiz21StepsComplete/steps/${stepId}.json`,
-  ];
+    const paths: string[] = [
+      `/templates/funnels/quiz21StepsComplete/steps/${stepId}.json`,
+    ];
 
   for (const url of paths) {
     const blocks = await tryUrl(url);

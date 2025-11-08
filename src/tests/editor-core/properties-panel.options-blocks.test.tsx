@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen, fireEvent, act, within } from '@testing-library/react';
-import { PropertiesPanel } from '@/components/editor/quiz/components/PropertiesPanel';
+import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
 import { initializeSchemaRegistry } from '@/config/schemas';
 
 beforeAll(() => {
@@ -70,7 +70,7 @@ function OptionsGridWrapper() {
             <div data-testid="preview">
                 {/* Preview mínimo: mostra imagem, pontos e categoria da primeira opção */}
                 {block.content.options[0]?.imageUrl && (
-                     
+
                     <img alt="preview" src={block.content.options[0].imageUrl} />
                 )}
                 {(block.content.options[0]?.category || typeof block.content.options[0]?.points === 'number') && (
@@ -141,7 +141,7 @@ function QuizOptionsWrapper() {
 
             <div data-testid="preview-quiz-options">
                 {block.content.options[0]?.imageUrl && (
-                     
+
                     <img alt="preview-qo" src={block.content.options[0].imageUrl} />
                 )}
                 {(block.content.options[0]?.category || typeof block.content.options[0]?.points === 'number') && (

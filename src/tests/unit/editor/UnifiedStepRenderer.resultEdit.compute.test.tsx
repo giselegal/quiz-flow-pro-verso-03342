@@ -21,7 +21,7 @@ vi.mock('@/hooks/core/useGlobalState', () => ({
     useGlobalUI: () => ({ ui: { propertiesPanelOpen: false }, togglePropertiesPanel: vi.fn() }),
 }));
 
-import { UnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
+import { UnifiedStepRenderer } from '@/components/editor/unified/UnifiedStepRenderer';
 
 
 describe('UnifiedStepRenderer - result (edit) com computeResult', () => {
