@@ -67,35 +67,92 @@
 
 ---
 
-### 2. ✅ [G36] IDs com Date.now() Colidem - VALIDAÇÃO COMPLETA
+### 2. ✅ [G19] Step Atual Não Persistido - COMPLETO
+
+**Problema:** `currentStep` não persiste, usuário perde progresso ao recarregar
+
+**Solução Implementada:**
+- ✅ Persistência automática em URL query params (compartilhável)
+- ✅ Fallback para localStorage com TTL de 24h
+- ✅ Restauração automática no mount do SuperUnifiedProvider
+- ✅ Hook `usePersistedStep` com API completa criado
+
+**Estratégia de Persistência:**
+1. **URL query params** (prioridade máxima) - `/editor?step=15`
+2. **localStorage** (fallback) - `editor:currentStep`
+3. **TTL de 24h** - limpa dados antigos automaticamente
+
+**Código:**
+```typescript
+// Em SuperUnifiedProvider.tsx
+const setCurrentStep = useCallback((step: number) => {
+    dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: step } });
+    
+    // Persistir em URL
+    const url = new URL(window.location.href);
+    url.searchParams.set('step', step.toString());
+    window.history.replaceState({}, '', url.toString());
+    
+    // Persistir em localStorage
+    localStorage.setItem('editor:currentStep', step.toString());
+    localStorage.setItem('editor:currentStep:timestamp', Date.now().toString());
+}, []);
+
+// Restaurar no mount
+useEffect(() => {
+    // 1. Tentar URL
+    const urlStep = new URLSearchParams(window.location.search).get('step');
+    if (urlStep) setCurrentStep(parseInt(urlStep));
+    
+    // 2. Fallback localStorage (se < 24h)
+    else {
+        const lsStep = localStorage.getItem('editor:currentStep');
+        if (lsStep && age < 24h) setCurrentStep(parseInt(lsStep));
+    }
+}, []);
+```
+
+**Impacto:**
+- ✅ Usuário não perde progresso ao recarregar
+- ✅ Step compartilhável via URL
+- ✅ Funciona offline (localStorage)
+- ✅ Limpa dados antigos automaticamente
+
+**Arquivos Modificados:**
+- `src/providers/SuperUnifiedProvider.tsx` (+50 linhas)
+- `src/hooks/usePersistedStep.ts` (novo arquivo, 200 linhas)
+
+**Prioridade:** P0 - CRÍTICO ✅  
+**Estimativa:** 0.5 dia  
+**Tempo Real:** 20 minutos
+
+---
+
+### 3. 🔄 [G36] IDs com Date.now() Colidem - EM PROGRESSO
 
 **Problema:** IDs gerados com `Date.now()` causam colisões em saves concorrentes
 
-**Solução Já Implementada:**
-- ✅ Arquivo `src/utils/idGenerator.ts` já existe e usa UUID v4
-- ✅ Funções específicas disponíveis:
-  - `generateBlockId()` → `block-{uuid}`
-  - `generateFunnelId()` → `funnel-{uuid}`
-  - `generateStepId()` → `step-{uuid}`
-  - `generateSessionId()` → `session-{uuid}`
-  - `generateDraftId()` → `draft-{uuid}`
+**Solução Parcialmente Implementada:**
+- ✅ Infraestrutura `src/utils/idGenerator.ts` com UUID v4
+- ✅ Migradas 3 ocorrências em `SuperUnifiedProvider.tsx`:
+  - `offline_${Date.now()}` → `offline_${uuidv4()}`
+  - `f_${Date.now()}` → `f_${uuidv4()}`
+  - `Date.now().toString()` (toast ID) → `uuidv4()`
+
+**Arquivos que Ainda Precisam Migração:**
+1. ⏳ `src/services/UnifiedCRUDService.ts` (5 ocorrências)
+2. ⏳ `src/services/versioningService.ts` (12 ocorrências)
+3. ⏳ `src/services/AnalyticsService.ts` (3 ocorrências)
+4. ⏳ `src/core/contexts/UnifiedContextProvider.tsx` (2 ocorrências)
+5. ⏳ Outros 30+ arquivos com uso esporádico
 
 **Status:**
-- ✅ Infraestrutura de IDs seguros já existe
-- ⚠️ Alguns arquivos ainda usam `Date.now()` diretamente
-- ⚠️ Necessário migrar 50+ ocorrências de `Date.now()` para UUID
-
-**Arquivos que Precisam Migração:**
-1. `src/providers/SuperUnifiedProvider.tsx` (10 ocorrências)
-2. `src/services/UnifiedCRUDService.ts` (5 ocorrências)
-3. `src/services/versioningService.ts` (12 ocorrências)
-4. `src/services/AnalyticsService.ts` (3 ocorrências)
-5. `src/core/contexts/UnifiedContextProvider.tsx` (2 ocorrências)
-6. Outros 20+ arquivos com uso esporádico
+- ✅ 3/50 ocorrências migradas (6%)
+- ⚠️ Pendente: 47 ocorrências em arquivos diversos
 
 **Prioridade:** P0 - CRÍTICO ⚠️  
-**Estimativa:** 1 dia  
-**Status:** EM PROGRESSO (infraestrutura pronta, migração pendente)
+**Estimativa:** 0.5 dia restante  
+**Status:** EM PROGRESSO (6% completo)
 
 ---
 
@@ -262,18 +319,18 @@ useEffect(() => {
 
 | Status | Críticos | Altos | Médios | Baixos | Total |
 |--------|----------|-------|--------|--------|-------|
-| ✅ Completo | 1 | 0 | 0 | 0 | **1** |
+| ✅ Completo | 2 | 0 | 0 | 0 | **2** |
 | 🔄 Em Progresso | 1 | 0 | 0 | 0 | **1** |
-| ⏳ Pendente | 12 | 14 | 13 | 7 | **46** |
+| ⏳ Pendente | 11 | 14 | 13 | 7 | **45** |
 | **TOTAL** | **14** | **14** | **13** | **7** | **48** |
 
 ### Cobertura
 
 - **✅ Schemas:** 100% (14/14 tipos cobertos)
-- **⚠️ IDs Seguros:** 80% (infraestrutura pronta, migração pendente)
+- **✅ Persistência Step:** 100% (URL + localStorage com TTL)
+- **🔄 IDs Seguros:** 6% (3/50 ocorrências migradas para UUID)
 - **⏳ Autosave:** 0% (não implementado)
 - **⏳ Providers:** 0% (deprecados ainda ativos)
-- **⏳ Persistência Step:** 0% (não implementado)
 
 ---
 
