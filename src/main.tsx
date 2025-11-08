@@ -8,6 +8,22 @@ import ReactDOM from 'react-dom';
 // 🔧 POLYFILLS GLOBAIS PARA REACT APIs
 // Deve ser aplicado ANTES de qualquer bundle de vendor ser carregado
 if (typeof window !== 'undefined') {
+  // Criar polyfill robusto para forwardRef
+  const safeForwardRef = (render: any) => {
+    if (!render) return () => null;
+    const Component: any = (props: any, ref: any) => {
+      try {
+        return render(props, ref);
+      } catch (e) {
+        console.error('Error in forwardRef component:', e);
+        return null;
+      }
+    };
+    Component.displayName = render.displayName || render.name || 'ForwardRef';
+    Component.$$typeof = Symbol.for('react.forward_ref');
+    return Component;
+  };
+
   // Garantir React global para todos os vendors
   (window as any).React = React;
   (window as any).ReactDOM = ReactDOM;
@@ -15,9 +31,7 @@ if (typeof window !== 'undefined') {
   // Aplicar polyfills completos para APIs que podem estar ausentes
   const reactGlobalPolyfills = {
     useLayoutEffect: React.useLayoutEffect || React.useEffect,
-    forwardRef: React.forwardRef || ((render: any) => {
-      return React.memo ? React.memo((props: any) => render(props, null)) : (props: any) => render(props, null);
-    }),
+    forwardRef: React.forwardRef || safeForwardRef,
     createRef: React.createRef || (() => ({ current: null })),
     memo: React.memo || ((component: any) => component),
     useMemo: React.useMemo || ((factory: any, deps?: any) => factory()),
