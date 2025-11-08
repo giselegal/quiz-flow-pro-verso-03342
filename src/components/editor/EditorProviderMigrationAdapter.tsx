@@ -8,10 +8,10 @@
  */
 
 import React, { ReactNode } from 'react';
-import { EditorProviderUnified, useEditor as useEditorUnified, EditorState } from './EditorProviderUnified';
+import { EditorProviderCanonical, useEditor as useEditorCanonical, EditorState } from './EditorProviderCanonical';
 import { UnifiedCRUDProvider } from '@/contexts';
 
-export type UnifiedEditorContextType = ReturnType<typeof useEditorUnified>;
+export type UnifiedEditorContextType = ReturnType<typeof useEditorCanonical>;
 
 // Re-export EditorState for compatibility
 export type { EditorState };
@@ -26,14 +26,14 @@ export const MigrationEditorProvider: React.FC<{
 }> = ({ children, funnelId, quizId, storageKey, enableSupabase = false }) => {
   return (
     <UnifiedCRUDProvider>
-      <EditorProviderUnified
+      <EditorProviderCanonical
         funnelId={funnelId}
         quizId={quizId}
         storageKey={storageKey}
         enableSupabase={enableSupabase}
       >
         {children}
-      </EditorProviderUnified>
+      </EditorProviderCanonical>
     </UnifiedCRUDProvider>
   );
 };
@@ -42,7 +42,7 @@ export function useUnifiedEditor(): UnifiedEditorContextType;
 export function useUnifiedEditor(options: { optional: true }): UnifiedEditorContextType | undefined;
 export function useUnifiedEditor(options?: { optional?: boolean }): UnifiedEditorContextType | undefined {
   // Se optional for true, passar como { optional: true }, senão não passar nada
-  const context = options?.optional 
+  const context = options?.optional
     ? useEditorUnified({ optional: true })
     : useEditorUnified();
 
