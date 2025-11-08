@@ -9,8 +9,9 @@
  * Substitui o QuizFunnelEditorSimplified com arquitetura modular.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useUnifiedCRUD } from '@/contexts';
+import { useStepBlocks } from '@/hooks/useStepBlocks';
 import StepCanvas from './StepCanvas';
 import PropertiesPanel from './PropertiesPanel';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -27,16 +28,6 @@ import {
     Circle,
     AlertCircle,
 } from 'lucide-react';
-
-/**
- * ⚠️ DEPRECATED: Este componente usa QuizStep de quizSteps.ts (obsoleto)
- * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
- * @todo Migrar para Block[] de TemplateService
- */
-import type { QuizStepV3 as QuizStep } from '@/types/quiz';
-
-// ✅ Mesmo tipo usado no QuizFunnelEditorWYSIWYG
-type EditableQuizStep = QuizStep & { id: string };
 
 const STEP_LABELS = [
     { index: 0, label: 'Introdução', icon: '👋', category: 'intro' },
@@ -63,29 +54,26 @@ const STEP_LABELS = [
 ];
 
 const ModularEditorLayout: React.FC = () => {
-    // 🎯 USAR MESMA ESTRUTURA DO QuizFunnelEditorWYSIWYG
+    // � GARGALO #2 FIX: Usar hook unificado
     const crud = useUnifiedCRUD();
-    const [steps, setSteps] = useState<EditableQuizStep[]>([]);
+    const { stepBlocks, totalSteps, stepKeys, hasData, dataSource } = useStepBlocks();
+
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
 
-    // ✅ Carregar steps do CRUD (igual ao QuizFunnelEditorWYSIWYG)
-    useEffect(() => {
-        const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
+    // Converter index → stepKey
+    const currentStepKey = stepKeys[currentStepIndex] || `step-${(currentStepIndex + 1).toString().padStart(2, '0')}`;
+    const currentBlocks = stepBlocks[currentStepKey] || [];
 
-        console.log('🔍 DEBUG - crud.currentFunnel:', crud.currentFunnel);
-        console.log('🔍 DEBUG - quizSteps:', existing);
-
-        if (existing && existing.length) {
-            setSteps(existing.map(s => ({ ...s })));
-            console.log('✅ Carregou', existing.length, 'steps do banco');
-        } else {
-            console.warn('⚠️ Nenhum step encontrado em crud.currentFunnel.quizSteps');
-        }
-    }, [crud.currentFunnel]);
-
-    const currentStep = steps[currentStepIndex];
+    console.log('🔍 [ModularEditorLayout] Estado atual:', {
+        dataSource,
+        totalSteps,
+        currentStepIndex,
+        currentStepKey,
+        blocksCount: currentBlocks.length,
+        hasData,
+    });
 
     // Handlers
     const handleSave = async () => {
@@ -93,9 +81,9 @@ const ModularEditorLayout: React.FC = () => {
 
         try {
             setIsSaving(true);
-            const updated = { ...crud.currentFunnel, quizSteps: steps };
-            crud.setCurrentFunnel(updated);
-            await crud.saveFunnel(updated);
+            // O salvamento agora é gerenciado pelo SuperUnifiedProvider
+            // que já possui os dados sincronizados
+            await crud.saveFunnel(crud.currentFunnel);
             console.log('✅ Steps salvos com sucesso');
         } catch (error) {
             console.error('❌ Erro ao salvar:', error);
@@ -134,13 +122,15 @@ const ModularEditorLayout: React.FC = () => {
     }
 
     // Empty state
-    if (steps.length === 0) {
+    if (!hasData || totalSteps === 0) {
         return (
             <div className="flex items-center justify-center h-full">
                 <div className="text-center text-gray-400">
                     <AlertCircle className="w-12 h-12 mx-auto mb-4" />
                     <p className="font-medium">Nenhuma etapa encontrada</p>
-                    <p className="text-sm mt-2">O funil não possui steps definidos</p>
+                    <p className="text-sm mt-2">
+                        O funil não possui steps definidos (fonte: {dataSource})
+                    </p>
                 </div>
             </div>
         );
@@ -252,7 +242,10 @@ const ModularEditorLayout: React.FC = () => {
 
                         <div className="flex items-center gap-2">
                             <Badge variant="outline" className="text-xs">
-                                Step {currentStepIndex + 1} de {steps.length}
+                                Step {currentStepIndex + 1} de {totalSteps}
+                            </Badge>
+                            <Badge variant="secondary" className="text-xs">
+                                {currentBlocks.length} blocos
                             </Badge>
                         </div>
                     </div>
@@ -260,6 +253,7 @@ const ModularEditorLayout: React.FC = () => {
 
                 {/* Canvas */}
                 <div className="flex-1 overflow-auto">
+                    {/* 🆕 GARGALO #4 FIX: StepCanvas agora usa blocks do hook unificado */}
                     <StepCanvas
                         stepIndex={currentStepIndex}
                         onSelectBlock={handleBlockSelect}
