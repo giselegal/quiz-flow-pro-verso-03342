@@ -9,7 +9,17 @@ interface MetricEntry {
   timestamp: number;
   stepId?: string;
   duration?: number;
-  type: 'load' | 'cache-hit' | 'cache-miss' | 'error' | 'render';
+  type: 
+    | 'load' 
+    | 'cache-hit' 
+    | 'cache-miss' 
+    | 'error' 
+    | 'render'
+    | 'block-action'    // FASE 5: add/edit/delete/reorder
+    | 'navigation'      // FASE 5: step changes
+    | 'save'            // FASE 5: save operations
+    | 'undo-redo'       // FASE 5: undo/redo actions
+    | 'user-interaction'; // FASE 5: clicks, inputs
   metadata?: Record<string, any>;
 }
 
@@ -104,6 +114,98 @@ class EditorMetrics {
   }
 
   /**
+   * 🆕 FASE 5: Rastrear ações de bloco
+   */
+  trackBlockAction(action: 'add' | 'edit' | 'delete' | 'reorder', blockId: string, metadata?: Record<string, any>) {
+    this.addMetric({
+      timestamp: Date.now(),
+      type: 'block-action',
+      metadata: {
+        action,
+        blockId,
+        ...metadata,
+      },
+    });
+
+    if (import.meta.env.DEV) {
+      console.debug(`🎨 [EditorMetrics] Block ${action}:`, blockId, metadata);
+    }
+  }
+
+  /**
+   * 🆕 FASE 5: Rastrear navegação entre steps
+   */
+  trackNavigation(fromStepId: string | null, toStepId: string, durationMs?: number) {
+    this.addMetric({
+      timestamp: Date.now(),
+      stepId: toStepId,
+      duration: durationMs,
+      type: 'navigation',
+      metadata: {
+        from: fromStepId,
+        to: toStepId,
+      },
+    });
+
+    if (import.meta.env.DEV) {
+      console.debug(`🧭 [EditorMetrics] Navigation: ${fromStepId || 'none'} → ${toStepId}`, durationMs ? `(${durationMs.toFixed(0)}ms)` : '');
+    }
+  }
+
+  /**
+   * 🆕 FASE 5: Rastrear operações de salvamento
+   */
+  trackSave(success: boolean, durationMs: number, metadata?: Record<string, any>) {
+    this.addMetric({
+      timestamp: Date.now(),
+      duration: durationMs,
+      type: 'save',
+      metadata: {
+        success,
+        ...metadata,
+      },
+    });
+
+    if (import.meta.env.DEV) {
+      const status = success ? '✅' : '❌';
+      console.debug(`${status} [EditorMetrics] Save ${success ? 'succeeded' : 'failed'} in ${durationMs.toFixed(0)}ms`, metadata);
+    }
+  }
+
+  /**
+   * 🆕 FASE 5: Rastrear undo/redo
+   */
+  trackUndoRedo(action: 'undo' | 'redo', metadata?: Record<string, any>) {
+    this.addMetric({
+      timestamp: Date.now(),
+      type: 'undo-redo',
+      metadata: {
+        action,
+        ...metadata,
+      },
+    });
+
+    if (import.meta.env.DEV) {
+      console.debug(`↩️ [EditorMetrics] ${action.toUpperCase()}`, metadata);
+    }
+  }
+
+  /**
+   * 🆕 FASE 5: Rastrear interação do usuário
+   */
+  trackUserInteraction(interactionType: string, target: string, metadata?: Record<string, any>) {
+    this.addMetric({
+      timestamp: Date.now(),
+      type: 'user-interaction',
+      metadata: {
+        interactionType,
+        target,
+        ...metadata,
+      },
+    });
+  }
+
+  /**
    * Adicionar métrica
    */
   private addMetric(metric: MetricEntry) {
@@ -127,6 +229,13 @@ class EditorMetrics {
     const cacheMisses = last5Min.filter(m => m.type === 'cache-miss').length;
     const errors = last5Min.filter(m => m.type === 'error').length;
     const renders = last5Min.filter(m => m.type === 'render');
+    
+    // 🆕 FASE 5: Novas métricas
+    const blockActions = last5Min.filter(m => m.type === 'block-action');
+    const navigations = last5Min.filter(m => m.type === 'navigation');
+    const saves = last5Min.filter(m => m.type === 'save');
+    const undoRedos = last5Min.filter(m => m.type === 'undo-redo');
+    const interactions = last5Min.filter(m => m.type === 'user-interaction');
 
     const avgLoadTime = loads.length > 0
       ? loads.reduce((sum, m) => sum + (m.duration || 0), 0) / loads.length
@@ -136,8 +245,16 @@ class EditorMetrics {
       ? renders.reduce((sum, m) => sum + (m.duration || 0), 0) / renders.length
       : 0;
 
+    const avgSaveTime = saves.length > 0
+      ? saves.reduce((sum, m) => sum + (m.duration || 0), 0) / saves.length
+      : 0;
+
     const cacheHitRate = (cacheHits + cacheMisses) > 0
       ? (cacheHits / (cacheHits + cacheMisses)) * 100
+      : 0;
+
+    const saveSuccessRate = saves.length > 0
+      ? (saves.filter(s => s.metadata?.success).length / saves.length) * 100
       : 0;
 
     return {
@@ -151,6 +268,14 @@ class EditorMetrics {
         totalRenders: renders.length,
         avgRenderTimeMs: avgRenderTime,
         errors,
+        // 🆕 FASE 5
+        blockActions: blockActions.length,
+        navigations: navigations.length,
+        saves: saves.length,
+        avgSaveTimeMs: avgSaveTime,
+        saveSuccessRate: `${saveSuccessRate.toFixed(1)}%`,
+        undoRedos: undoRedos.length,
+        userInteractions: interactions.length,
       },
       slowestLoads: loads
         .sort((a, b) => (b.duration || 0) - (a.duration || 0))
@@ -167,6 +292,17 @@ class EditorMetrics {
           message: m.metadata?.message,
           timestamp: new Date(m.timestamp).toISOString(),
         })),
+      // 🆕 FASE 5: Relatórios adicionais
+      blockActionBreakdown: {
+        add: blockActions.filter(a => a.metadata?.action === 'add').length,
+        edit: blockActions.filter(a => a.metadata?.action === 'edit').length,
+        delete: blockActions.filter(a => a.metadata?.action === 'delete').length,
+        reorder: blockActions.filter(a => a.metadata?.action === 'reorder').length,
+      },
+      undoRedoBreakdown: {
+        undo: undoRedos.filter(a => a.metadata?.action === 'undo').length,
+        redo: undoRedos.filter(a => a.metadata?.action === 'redo').length,
+      },
     };
   }
 
