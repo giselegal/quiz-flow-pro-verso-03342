@@ -47,9 +47,18 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<Template>> {
     try {
-      // Mapear options para formato do service
-      const serviceOptions = this.mapOptions(options);
-      return await this.service.getTemplate(id, serviceOptions);
+      // TemplateService.getTemplate não aceita options (apenas id)
+      const result = await this.service.getTemplate(id);
+      
+      // Converter tipos do TemplateService para ITemplateService
+      if (result.success) {
+        return {
+          success: true,
+          data: this.normalizeTemplate(result.data),
+        };
+      }
+      
+      return result;
     } catch (error) {
       return { success: false, error: error as Error };
     }
@@ -60,8 +69,8 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<void>> {
     try {
-      const serviceOptions = this.mapOptions(options);
-      return await this.service.saveTemplate(template, serviceOptions);
+      // TemplateService.saveTemplate não aceita options
+      return await this.service.saveTemplate(template as any);
     } catch (error) {
       return { success: false, error: error as Error };
     }
@@ -73,8 +82,24 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<Template>> {
     try {
-      const serviceOptions = this.mapOptions(options);
-      return await this.service.updateTemplate(id, updates, serviceOptions);
+      // TemplateService.updateTemplate retorna void, precisamos buscar template atualizado
+      const updateResult = await this.service.updateTemplate(id, updates as any);
+      
+      if (!updateResult.success) {
+        return updateResult as ServiceResult<Template>;
+      }
+      
+      // Buscar template atualizado
+      const getResult = await this.service.getTemplate(id);
+      
+      if (getResult.success) {
+        return {
+          success: true,
+          data: this.normalizeTemplate(getResult.data),
+        };
+      }
+      
+      return getResult;
     } catch (error) {
       return { success: false, error: error as Error };
     }
@@ -85,8 +110,8 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<void>> {
     try {
-      const serviceOptions = this.mapOptions(options);
-      return await this.service.deleteTemplate(id, serviceOptions);
+      // TemplateService.deleteTemplate não aceita options
+      return await this.service.deleteTemplate(id);
     } catch (error) {
       return { success: false, error: error as Error };
     }
@@ -97,8 +122,18 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<TemplateMetadata[]>> {
     try {
-      const serviceOptions = this.mapOptions(options);
-      return await this.service.listTemplates(filters, serviceOptions);
+      // TemplateService.listTemplates não aceita options e retorna ServiceResult<Template[]>
+      const result = this.service.listTemplates(filters);
+      
+      if (result.success) {
+        // Converter Template[] para TemplateMetadata[]
+        return {
+          success: true,
+          data: result.data.map(t => this.normalizeTemplate(t).metadata),
+        };
+      }
+      
+      return result as ServiceResult<TemplateMetadata[]>;
     } catch (error) {
       return { success: false, error: error as Error };
     }
@@ -199,8 +234,13 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<ValidationResult>> {
     try {
-      const serviceOptions = this.mapOptions(options);
-      return await this.service.validateTemplate(template, serviceOptions);
+      // TemplateService.validateTemplate é síncrono e retorna ValidationResult diretamente
+      const validationResult = this.service.validateTemplate(template as any);
+      
+      return {
+        success: true,
+        data: validationResult,
+      };
     } catch (error) {
       return { success: false, error: error as Error };
     }
@@ -228,12 +268,10 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<void>> {
     try {
-      const serviceOptions = this.mapOptions(options);
-      
       // TemplateService tem invalidateTemplate (singular)
       if (templateId === 'all') {
         // Invalidar todos os templates conhecidos
-        const templatesResult = await this.service.listTemplates({}, serviceOptions);
+        const templatesResult = this.service.listTemplates({});
         if (templatesResult.success) {
           for (const t of templatesResult.data) {
             this.service.invalidateTemplate?.(t.id);
@@ -250,7 +288,9 @@ export class TemplateServiceAdapter implements ITemplateService {
   }
 
   setActiveTemplate(templateId: string | null, totalSteps?: number): void {
-    this.service.setActiveTemplate?.(templateId, totalSteps);
+    if (templateId !== null) {
+      this.service.setActiveTemplate?.(templateId, totalSteps ?? 21);
+    }
   }
 
   setActiveFunnel(funnelId: string | null): void {
@@ -299,9 +339,28 @@ export class TemplateServiceAdapter implements ITemplateService {
     options?: TemplateOperationOptions
   ): Promise<ServiceResult<void>> {
     try {
-      const serviceOptions = this.mapOptions(options);
-      // TemplateService tem preloadNeighborsAndCritical
-      await this.service.preloadNeighborsAndCritical?.(currentStepId, neighborCount);
+      // TemplateService tem preloadNeighborsAndCritical (privado, apenas 1 arg)
+      // Implementar preload manual de vizinhos
+      const match = currentStepId.match(/step-(\d+)/);
+      if (!match) {
+        throw new Error('Invalid stepId format');
+      }
+      
+      const currentStep = parseInt(match[1], 10);
+      const promises: Promise<any>[] = [];
+      
+      for (let i = -neighborCount; i <= neighborCount; i++) {
+        if (i === 0) continue;
+        const neighborStep = currentStep + i;
+        if (neighborStep < 1 || neighborStep > 21) continue;
+        
+        const neighborStepId = `step-${String(neighborStep).padStart(2, '0')}`;
+        promises.push(
+          this.service.getStep(neighborStepId, undefined, options).catch(() => null)
+        );
+      }
+      
+      await Promise.allSettled(promises);
       return { success: true, data: undefined as void };
     } catch (error) {
       return { success: false, error: error as Error };
@@ -328,6 +387,35 @@ export class TemplateServiceAdapter implements ITemplateService {
       funnelId: options.funnelId,
       forceReload: options.forceReload,
       includeMetadata: options.includeMetadata,
+    };
+  }
+
+  /**
+   * Normalizar Template do TemplateService para ITemplateService
+   */
+  private normalizeTemplate(template: any): Template {
+    return {
+      id: template.id,
+      name: template.name,
+      description: template.description || '',
+      version: template.version || '1.0',
+      blocks: template.blocks || [],
+      metadata: {
+        id: template.metadata?.id || template.id,
+        name: template.metadata?.name || template.name,
+        description: template.metadata?.description || template.description || '',
+        version: template.metadata?.version || template.version || '1.0',
+        author: template.metadata?.author,
+        category: template.metadata?.category,
+        tags: template.metadata?.tags || [],
+        thumbnail: template.metadata?.thumbnail,
+        isPublic: template.metadata?.isPublic,
+        funnelType: template.metadata?.funnelType,
+        createdAt: template.createdAt || template.metadata?.createdAt,
+        updatedAt: template.updatedAt || template.metadata?.updatedAt,
+      },
+      createdAt: template.createdAt,
+      updatedAt: template.updatedAt,
     };
   }
 }
