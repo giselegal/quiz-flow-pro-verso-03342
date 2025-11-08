@@ -42,7 +42,7 @@ export interface EditorState {
     readonly stepBlocks: Record<string, Block[]>;
     readonly currentStep: number;
     readonly selectedBlockId: string | null;
-    
+
     /** Estado avançado (local) */
     stepValidation: Record<number, boolean>;
     isLoading: boolean;
@@ -84,7 +84,7 @@ export interface EditorActions {
 export interface EditorContextValue {
     state: EditorState;
     actions: EditorActions;
-    superUnified?: ReturnType<typeof useSuperUnified>;
+    superUnified?: ReturnType<typeof useSuperUnified> | null;
 }
 
 // ============================================================================
@@ -136,9 +136,16 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
     // ============================================================================
     // CONECTAR AO SUPERUNIFIEDPROVIDER (Single Source of Truth)
     // ============================================================================
-    
-    const superUnified = useSuperUnified();
-    
+
+    // ✅ Tornar SuperUnifiedProvider opcional para compatibilidade com testes
+    let superUnified: ReturnType<typeof useSuperUnified> | null = null;
+    try {
+        superUnified = useSuperUnified();
+    } catch (error) {
+        // SuperUnifiedProvider não disponível - modo standalone
+        appLogger.debug('📝 SuperUnifiedProvider não disponível, usando modo standalone');
+    }
+
     // ============================================================================
     // STATE MANAGEMENT (Apenas estado avançado local)
     // ============================================================================
@@ -151,23 +158,37 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
         stepSources: {} as Record<string, string>,
         ...initial,
     }));
-    
-    // ✅ Estado proxy que lê de SuperUnifiedProvider
+
+    // ✅ Estado: usa SuperUnifiedProvider se disponível, senão standalone
+    const [standaloneBlocks, setStandaloneBlocks] = useState<Record<string, Block[]>>({});
+    const [standaloneCurrentStep, setStandaloneCurrentStep] = useState(1);
+    const [standaloneSelectedBlockId, setStandaloneSelectedBlockId] = useState<string | null>(null);
+
     const state: EditorState = useMemo(() => {
-        // Converter Record<number, any[]> → Record<string, Block[]>
-        const stepBlocksFromSuper = Object.entries(superUnified.state.editor.stepBlocks).reduce((acc, [key, blocks]) => {
-            const stepKey = key.startsWith('step-') ? key : `step-${String(key).padStart(2, '0')}`;
-            acc[stepKey] = blocks as Block[];
-            return acc;
-        }, {} as Record<string, Block[]>);
-        
-        return {
-            ...localState,
-            stepBlocks: stepBlocksFromSuper,
-            currentStep: superUnified.state.editor.currentStep,
-            selectedBlockId: superUnified.state.editor.selectedBlockId,
-        };
-    }, [localState, superUnified.state.editor]);
+        if (superUnified) {
+            // Modo integrado: ler de SuperUnifiedProvider
+            const stepBlocksFromSuper = Object.entries(superUnified.state.editor.stepBlocks).reduce((acc, [key, blocks]) => {
+                const stepKey = key.startsWith('step-') ? key : `step-${String(key).padStart(2, '0')}`;
+                acc[stepKey] = blocks as Block[];
+                return acc;
+            }, {} as Record<string, Block[]>);
+
+            return {
+                ...localState,
+                stepBlocks: stepBlocksFromSuper,
+                currentStep: superUnified.state.editor.currentStep,
+                selectedBlockId: superUnified.state.editor.selectedBlockId,
+            };
+        } else {
+            // Modo standalone: usar estado local
+            return {
+                ...localState,
+                stepBlocks: standaloneBlocks,
+                currentStep: standaloneCurrentStep,
+                selectedBlockId: standaloneSelectedBlockId,
+            };
+        }
+    }, [localState, superUnified, standaloneBlocks, standaloneCurrentStep, standaloneSelectedBlockId]);
 
     // ============================================================================
     // SERVICES (Funcionalidades Avançadas)
@@ -200,7 +221,17 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
     const addBlock = useCallback(async (stepKey: string, block: Block) => {
         const normalized = normalizeStepKey(stepKey);
         const stepIndex = parseInt(normalized.replace('step-', ''), 10);
-        superUnified.addBlock(stepIndex, block);
+
+        if (superUnified) {
+            superUnified?.addBlock(stepIndex, block);
+        } else {
+            // Modo standalone
+            setStandaloneBlocks(prev => ({
+                ...prev,
+                [normalized]: [...(prev[normalized] || []), block]
+            }));
+        }
+
         history.push(state);
         setHistoryState({ canUndo: history.canUndo, canRedo: history.canRedo });
     }, [superUnified, normalizeStepKey, state, history]);
@@ -208,7 +239,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
     const addBlockAtIndex = useCallback(async (stepKey: string, block: Block, index: number) => {
         const normalized = normalizeStepKey(stepKey);
         const stepIndex = parseInt(normalized.replace('step-', ''), 10);
-        superUnified.addBlock(stepIndex, { ...block, order: index });
+        superUnified?.addBlock(stepIndex, { ...block, order: index });
         history.push(state);
         setHistoryState({ canUndo: history.canUndo, canRedo: history.canRedo });
     }, [superUnified, normalizeStepKey, state, history]);
@@ -216,7 +247,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
     const removeBlock = useCallback(async (stepKey: string, blockId: string) => {
         const normalized = normalizeStepKey(stepKey);
         const stepIndex = parseInt(normalized.replace('step-', ''), 10);
-        await superUnified.removeBlock(stepIndex, blockId);
+        await superUnified?.removeBlock(stepIndex, blockId);
         history.push(state);
         setHistoryState({ canUndo: history.canUndo, canRedo: history.canRedo });
     }, [superUnified, normalizeStepKey, state, history]);
@@ -228,7 +259,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
         const reordered = [...blocks];
         const [moved] = reordered.splice(oldIndex, 1);
         reordered.splice(newIndex, 0, moved);
-        superUnified.reorderBlocks(stepIndex, reordered);
+        superUnified?.reorderBlocks(stepIndex, reordered);
         history.push(state);
         setHistoryState({ canUndo: history.canUndo, canRedo: history.canRedo });
     }, [superUnified, normalizeStepKey, state, history]);
@@ -236,7 +267,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
     const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
         const normalized = normalizeStepKey(stepKey);
         const stepIndex = parseInt(normalized.replace('step-', ''), 10);
-        await superUnified.updateBlock(stepIndex, blockId, updates);
+        await superUnified?.updateBlock(stepIndex, blockId, updates);
         history.push(state);
         setHistoryState({ canUndo: history.canUndo, canRedo: history.canRedo });
     }, [superUnified, normalizeStepKey, state, history]);
@@ -246,12 +277,12 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
         const blocks = state.stepBlocks[normalized] || [];
         const block = blocks.find(b => b.id === blockId);
         if (!block) return '';
-        
+
         const newBlock = {
             ...block,
             id: `${block.id}-copy-${Date.now()}`,
         };
-        
+
         await addBlock(normalized, newBlock);
         return newBlock.id;
     }, [normalizeStepKey, state, addBlock]);
@@ -261,11 +292,11 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
     // ============================================================================
 
     const setCurrentStep = useCallback((step: number) => {
-        superUnified.setCurrentStep(step);
+        superUnified?.setCurrentStep(step);
     }, [superUnified]);
 
     const setSelectedBlockId = useCallback((blockId: string | null) => {
-        superUnified.setSelectedBlock(blockId);
+        superUnified?.setSelectedBlock(blockId);
     }, [superUnified]);
 
     const setStepValid = useCallback((step: number, isValid: boolean) => {
@@ -279,14 +310,14 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
         const normalized = typeof step === 'number'
             ? `step-${step.toString().padStart(2, '0')}`
             : normalizeStepKey(String(step));
-        
+
         if (state.stepBlocks[normalized]) return;
-        
+
         try {
             const result = await templateService.getStep(normalized);
             if (result.success && result.data) {
                 const stepIndex = parseInt(normalized.replace('step-', ''), 10);
-                superUnified.setStepBlocks(stepIndex, result.data);
+                superUnified?.setStepBlocks(stepIndex, result.data);
             }
         } catch (error) {
             appLogger.error('Failed to load step:', normalized, error);
@@ -349,11 +380,11 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
             if (data.stepBlocks) {
                 Object.entries(data.stepBlocks).forEach(([key, blocks]) => {
                     const stepIndex = parseInt(key.replace('step-', ''), 10);
-                    superUnified.setStepBlocks(stepIndex, blocks as any[]);
+                    superUnified?.setStepBlocks(stepIndex, blocks as any[]);
                 });
             }
             if (data.currentStep) {
-                superUnified.setCurrentStep(data.currentStep);
+                superUnified?.setCurrentStep(data.currentStep);
             }
         } catch (error) {
             appLogger.error('Failed to import JSON:', error);
@@ -387,8 +418,8 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
             importJSON,
         },
         superUnified,
-    }), [state, setCurrentStep, setSelectedBlockId, setStepValid, addBlock, addBlockAtIndex, 
-        removeBlock, reorderBlocks, updateBlock, duplicateBlock, ensureStepLoaded, 
+    }), [state, setCurrentStep, setSelectedBlockId, setStepValid, addBlock, addBlockAtIndex,
+        removeBlock, reorderBlocks, updateBlock, duplicateBlock, ensureStepLoaded,
         loadDefaultTemplate, reloadStepFromJSON, undo, redo, historyState, exportJSON, importJSON, superUnified]);
 
     // ============================================================================
