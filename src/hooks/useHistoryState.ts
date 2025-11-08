@@ -99,16 +99,30 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
         }
         // Salvar na chave contextualizada e limpar a antiga para evitar duplicidade
         setCtx(storageKey, serialized, activeContext);
-        try { localStorage.removeItem(storageKey); } catch { }
+        try { 
+            localStorage.removeItem(storageKey); 
+        } catch (error) {
+            console.warn('[useHistoryState] Erro ao remover storage legado:', error);
+        }
       } catch (error: any) {
         console.warn('Failed to save history state to localStorage:', error);
         // Disable further attempts to prevent spam
         try {
           (window as any).__DISABLE_EDITOR_PERSISTENCE__ = true;
           // Limpa chave problemática para recuperar espaço
-          try { localStorage.removeItem(storageKey); } catch { }
-          try { removeCtx(storageKey, activeContext); } catch { }
-        } catch { }
+          try { 
+              localStorage.removeItem(storageKey); 
+          } catch (err) {
+              console.warn('[useHistoryState] Erro ao limpar localStorage:', err);
+          }
+          try { 
+              removeCtx(storageKey, activeContext); 
+          } catch (err) {
+              console.warn('[useHistoryState] Erro ao remover contexto:', err);
+          }
+        } catch (error) {
+            console.warn('[useHistoryState] Erro ao desabilitar persistência:', error);
+        }
       }
     };
 

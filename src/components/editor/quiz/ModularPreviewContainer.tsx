@@ -64,7 +64,9 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
         const hasActions = !!maybeEditor?.actions;
         // eslint-disable-next-line no-console
         console.debug('[ModularPreviewContainer] Provider status:', { hasProvider, hasActions });
-    } catch { }
+    } catch (error) {
+        console.warn('[ModularPreviewContainer] Erro ao verificar provider:', error);
+    }
     const { ui, togglePropertiesPanel } = useGlobalUI();
 
     // Extrair referências estáveis

@@ -72,7 +72,9 @@ export const useBrandKit = () => {
     try {
         const crud = useUnifiedCRUDOptional();
         if (crud?.funnelContext) activeContext = crud.funnelContext;
-    } catch { }
+    } catch (error) {
+        console.warn('[useBrandKit] Erro ao obter contexto CRUD:', error);
+    }
 
     const [brandKit, setBrandKit] = useState<BrandKitConfig>(() => {
         try {
@@ -96,7 +98,11 @@ export const useBrandKit = () => {
             const serialized = JSON.stringify(brandKit);
             // Salvar contextualizado e remover legado para evitar colisões
             setCtx(STORAGE_KEY, serialized, activeContext);
-            try { localStorage.removeItem(STORAGE_KEY); } catch { }
+            try { 
+                localStorage.removeItem(STORAGE_KEY); 
+            } catch (error) {
+                console.warn('[useBrandKit] Erro ao remover storage legado:', error);
+            }
             // Aplicar CSS variables automaticamente
             applyBrandKitToDOM(brandKit);
         } catch (error) {

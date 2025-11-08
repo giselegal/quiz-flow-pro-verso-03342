@@ -312,7 +312,9 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
             StorageService.safeSetString('userName', fullResults.userName.trim());
           }
-        } catch {}
+        } catch (error) {
+          console.warn('[useSupabaseQuiz] Erro ao salvar resultado (modo offline):', error);
+        }
         return { success: true, result: normalized };
       }
     } catch (error) {
