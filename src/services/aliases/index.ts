@@ -78,8 +78,6 @@ export { ConfigurationService as ConfigurationAPI } from '@/services/Configurati
 // Funnel Services - Compatibility aliases
 // ============================================================================
 
-// FunnelUnifiedService: Usar canonical/DataService em novos códigos
-export { dataService as FunnelUnifiedService } from '@/services/canonical/DataService';
-
-// Tipo original do FunnelUnifiedService (para compatibilidade)
-export type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+// FunnelUnifiedService: DEPRECATED - Usar canonical/FunnelService em novos códigos
+// Mantido apenas para compatibilidade temporária de types
+export type { UnifiedFunnelData } from '@/services/__deprecated/FunnelUnifiedService';
