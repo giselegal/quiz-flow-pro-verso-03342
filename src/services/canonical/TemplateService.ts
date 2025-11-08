@@ -1592,8 +1592,19 @@ export class TemplateService extends BaseCanonicalService {
     options?: ServiceOptions
   ): Promise<ServiceResult<void>> {
     try {
-      // Usar registry para salvar
-      await this.registry.saveStep(stepId, blocks);
+      // Usar HierarchicalTemplateSource para salvar (USER_EDIT priority)
+      const funnelId = this.activeFunnelId || undefined;
+      
+      if (this.USE_HIERARCHICAL_SOURCE && funnelId) {
+        await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnelId);
+      } else {
+        // Fallback: salvar via registry se disponível
+        if (typeof (this.registry as any).saveStep === 'function') {
+          await (this.registry as any).saveStep(stepId, blocks);
+        } else {
+          throw new Error('Registry.saveStep not available. Set activeFunnel to save via HierarchicalSource.');
+        }
+      }
       
       // Invalidar cache
       this.invalidateTemplate(stepId);
