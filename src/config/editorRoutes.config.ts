@@ -4,7 +4,7 @@
  * ✅ TK-ED-01 COMPLETO: Editor único em produção
  * 
  * Configuração centralizada das rotas de editor
- * - QuizModularProductionEditor como ÚNICO editor oficial
+ * - QuizModularEditor como ÚNICO editor oficial
  * - Code splitting otimizado
  * - Lazy loading inteligente
  */
@@ -21,7 +21,7 @@ export const QuizModularEditor = lazy(() =>
 );
 
 // ⚠️ EDITORES DEPRECADOS REMOVIDOS (cleanup 2025-10-29)
-// QuizModularProductionEditor.tsx (4,345 linhas) → QuizModularEditor (502 linhas)
+// QuizModularEditor.tsx (4,345 linhas) → QuizModularEditor (502 linhas)
 // Redução: 86% código, 64% bundle size, 60% TTI
 // Use apenas QuizModularEditor acima
 

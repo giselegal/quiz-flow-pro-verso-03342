@@ -4,7 +4,7 @@
  * Hook consolidado que unifica TODAS as implementações de manipulação de blocos:
  * - ✅ useBlocks.ts (uuid)
  * - ✅ useBlockOperations.ts (nanoid)
- * - ✅ Código inline no QuizModularProductionEditor (Date.now())
+ * - ✅ Código inline no QuizModularEditor (Date.now())
  * 
  * Padronização:
  * - IDs sempre com nanoid(8)

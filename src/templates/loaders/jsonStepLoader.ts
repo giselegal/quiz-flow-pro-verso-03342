@@ -31,26 +31,11 @@ export async function loadStepFromJson(stepId: string): Promise<Block[] | null> 
     }
   };
 
-  // Ordem de caminhos suportados (prioridade):
-  // 1) Arquivos v3.1 individuais por step (FONTE PRINCIPAL - formato correto)
-  // 2) Arquivos v3 por step (fallback)
-  // 3) Novo padrão dedicado de blocks por step (fallback)
-  // 4) Padrão legado quiz21-steps (fallback)
-  // 5) Alternativo "-template.json" (fallback)
-  // 6) Master JSON consolidado (fallback final)
+  // ✅ APÓS MIGRAÇÃO v3.1: Usando APENAS formato v3.1 individual
+  // Fallbacks v3.0 foram REMOVIDOS após validação completa da migração (2025-11-08)
   const paths: string[] = [
-    // 1) PRIORIDADE MÁXIMA: Formato v3.1 com arquivos individuais por etapa
+    // ÚNICO PATH: Formato v3.1 com arquivos individuais por etapa
     `/templates/funnels/quiz21StepsComplete/steps/${stepId}.json`,
-    // 2) Preferência: per-step v3 JSON (ex.: step-01-v3.json)
-    `/templates/${stepId}-v3.json`,
-    // 3) Fallback: per-step blocks (v3.1)
-    `/templates/blocks/${stepId}.json`,
-    // 4) Fallback legado citado em docs
-    `/templates/quiz21-steps/${stepId}.json`,
-    // 5) Fallback alternativo "-template.json"
-    `/templates/${stepId}-template.json`,
-    // 6) Fallback final: master JSON com todos os steps
-    `/templates/quiz21-complete.json`,
   ];
 
   for (const url of paths) {

@@ -1,6 +1,6 @@
 /**
  * 🎯 HOOK: Estado Central do Editor
- * Extrai lógica de gerenciamento de estado do QuizModularProductionEditor
+ * Extrai lógica de gerenciamento de estado do QuizModularEditor
  */
 
 import { useState, useCallback } from 'react';

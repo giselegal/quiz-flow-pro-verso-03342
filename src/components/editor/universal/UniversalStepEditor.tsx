@@ -2,7 +2,7 @@
 /**
  * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
  * 
- * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ * @deprecated Use QuizModularEditor - Ver MIGRATION_EDITOR.md
  */
 
 /**
@@ -37,7 +37,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: UniversalStepEditor será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
+        'Migre para QuizModularEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const [isLoading, setIsLoading] = React.useState(true);

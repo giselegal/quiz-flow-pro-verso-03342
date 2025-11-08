@@ -2,14 +2,14 @@
  * 🔧 PATCH: Integração do Preview ao Vivo no Editor Principal
  * 
  * Este arquivo mostra como integrar o novo sistema de preview ao vivo
- * no QuizModularProductionEditor existente.
+ * no QuizModularEditor existente.
  */
 
 import React from 'react';
 import { EnhancedCanvasArea } from './components/EnhancedCanvasArea';
 import { LivePreviewProvider } from '@/providers/LivePreviewProvider';
 
-// Exemplo de como modificar o QuizModularProductionEditor.tsx
+// Exemplo de como modificar o QuizModularEditor.tsx
 
 interface IntegrationExampleProps {
     // Props do editor existente
@@ -40,7 +40,7 @@ interface IntegrationExampleProps {
     setSteps: (steps: any[]) => void;
 }
 
-const QuizModularProductionEditor: React.FC<IntegrationExampleProps> = ({
+const QuizModularEditor: React.FC<IntegrationExampleProps> = ({
     activeTab,
     setActiveTab,
     steps,
@@ -136,4 +136,4 @@ const QuizModularProductionEditor: React.FC<IntegrationExampleProps> = ({
     );
 };
 
-export default QuizModularProductionEditor;
+export default QuizModularEditor;

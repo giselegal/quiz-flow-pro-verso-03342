@@ -11,7 +11,7 @@
  *    - Recebe índices (posição antiga e nova)
  *    - Exemplo: (0, 2) - move bloco da posição 0 para posição 2
  * 
- * 3. QuizModularProductionEditor
+ * 3. QuizModularEditor
  *    - Chama: editorCtx.actions.reorderBlocks(selectedStep.id, oldIndex, newIndex)
  *    - Usa a assinatura do EditorProvider (índices)
  * 
@@ -43,7 +43,7 @@ describe('❌ INCOMPATIBILIDADE: reorderBlocks Signatures', () => {
     console.log('   exemplo:   actions.reorderBlocks("step-01", 0, 2)');
     console.log('   tipo:      Recebe ÍNDICES (posição antiga e nova)');
     
-    console.log('\n3️⃣ QuizModularProductionEditor (linha 2958):');
+    console.log('\n3️⃣ QuizModularEditor (linha 2958):');
     console.log('   chamada:   editorCtx.actions.reorderBlocks(selectedStep.id, oldIndex, newIndex)');
     console.log('   tipo:      Usa assinatura do EditorProvider (ÍNDICES)');
     

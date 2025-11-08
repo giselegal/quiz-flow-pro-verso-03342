@@ -1,6 +1,6 @@
 /**
  * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
- * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ * @deprecated Use QuizModularEditor - Ver MIGRATION_EDITOR.md
  */
 
 import React, { useState } from 'react';
@@ -46,7 +46,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
   // 🚨 Console warning para desenvolvedores
   appLogger.warn(
     '⚠️ DEPRECATED: MasterEditorWorkspace será removido em 01/nov/2025. ' +
-    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
+    'Migre para QuizModularEditor. Ver MIGRATION_EDITOR.md',
   );
 
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('editor');

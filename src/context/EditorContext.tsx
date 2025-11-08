@@ -3,7 +3,7 @@ import React, { createContext, useContext } from 'react';
 import TemplateManager from '@/utils/TemplateManager';
 
 /**
- * EditorContext (stub) - atende verificação do script. O Editor real usa QuizModularProductionEditor.
+ * EditorContext (stub) - atende verificação do script. O Editor real usa QuizModularEditor.
  */
 type EditorState = { currentStepId: string };
 const Ctx = createContext<EditorState>({ currentStepId: 'step-01' });

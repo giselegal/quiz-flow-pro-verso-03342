@@ -45,7 +45,7 @@ export interface EditorCompositeProviderProps {
  * Uso:
  * ```tsx
  * <EditorCompositeProvider funnelId="123">
- *   <QuizModularProductionEditor />
+ *   <QuizModularEditor />
  * </EditorCompositeProvider>
  * ```
  */

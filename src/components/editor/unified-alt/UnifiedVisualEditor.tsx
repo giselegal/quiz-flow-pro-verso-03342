@@ -1,6 +1,6 @@
 /**
  * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
- * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ * @deprecated Use QuizModularEditor - Ver MIGRATION_EDITOR.md
  */
 
 export type EditorTab = 'quiz' | 'result' | 'sales';
@@ -20,7 +20,7 @@ export const UnifiedVisualEditor: React.FC<UnifiedVisualEditorProps> = ({
   // 🚨 Console warning para desenvolvedores
   appLogger.warn(
     '⚠️ DEPRECATED: UnifiedVisualEditor será removido em 01/nov/2025. ' +
-    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
+    'Migre para QuizModularEditor. Ver MIGRATION_EDITOR.md',
   );
 
   return (

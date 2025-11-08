@@ -210,6 +210,7 @@ const paths: string[] = [
   // REMOVER: `/templates/${stepId}-v3.json`,
   // REMOVER: `/templates/quiz21-complete.json`,
 ];
+
 ```
 
 ---

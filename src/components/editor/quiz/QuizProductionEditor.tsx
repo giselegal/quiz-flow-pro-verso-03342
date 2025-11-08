@@ -1,6 +1,6 @@
 /**
  * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
- * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ * @deprecated Use QuizModularEditor - Ver MIGRATION_EDITOR.md
  */
 
 /**
@@ -53,7 +53,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: QuizProductionEditor será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
+        'Migre para QuizModularEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const [, setLocation] = useLocation();

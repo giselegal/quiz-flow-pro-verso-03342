@@ -46,7 +46,7 @@ interface DragEvent {
 // ========================================
 
 /**
- * Simula o handleDragEnd do QuizModularProductionEditor
+ * Simula o handleDragEnd do QuizModularEditor
  */
 function handleDragEndSimulation(
   event: DragEvent,

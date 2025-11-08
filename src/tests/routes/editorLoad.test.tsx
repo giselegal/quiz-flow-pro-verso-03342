@@ -4,7 +4,7 @@ import App from '@/App';
 import { renderAppAt } from '@/tests/utils/renderWithProviders';
 
 describe('Rota /editor - smoke render', () => {
-    it('renderiza QuizModularProductionEditor dentro do container esperado', async () => {
+    it('renderiza QuizModularEditor dentro do container esperado', async () => {
         window.history.pushState({}, 'Editor', '/editor?template=quiz21StepsComplete');
         renderAppAt('/editor?template=quiz21StepsComplete', <App />);
 

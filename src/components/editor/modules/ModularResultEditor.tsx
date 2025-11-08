@@ -1,6 +1,6 @@
 /**
  * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
- * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ * @deprecated Use QuizModularEditor - Ver MIGRATION_EDITOR.md
  */
 
 import React, { useState } from 'react';
@@ -266,7 +266,7 @@ export const ModularResultEditor: React.FC = () => {
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: ModularResultEditor será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
+        'Migre para QuizModularEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const [showLayers, setShowLayers] = useState(false);

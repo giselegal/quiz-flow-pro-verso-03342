@@ -32,8 +32,8 @@ export const TestV3Page: React.FC = () => {
             try {
                 setLoading(true);
 
-                // Tentar carregar do arquivo JSON
-                const response = await fetch('/templates/step-20-v3.json');
+                // ✅ Atualizado para v3.1: Usar formato individual por step
+                const response = await fetch('/templates/funnels/quiz21StepsComplete/steps/step-20.json');
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -41,9 +41,9 @@ export const TestV3Page: React.FC = () => {
 
                 const data = await response.json();
 
-                // Validar estrutura básica
-                if (!data.templateVersion || data.templateVersion !== '3.0') {
-                    throw new Error('Template inválido ou versão incorreta');
+                // Validar estrutura básica (aceita v3.0 e v3.1)
+                if (!data.templateVersion || (data.templateVersion !== '3.0' && data.templateVersion !== '3.1')) {
+                    throw new Error(`Template inválido ou versão incorreta: ${data.templateVersion || 'não especificada'}`);
                 }
 
                 if (!data.sections || !Array.isArray(data.sections)) {
@@ -159,8 +159,8 @@ export const TestV3Page: React.FC = () => {
                         fontFamily: 'monospace',
                         color: '#495057',
                     }}>
-                        <strong>Arquivo esperado:</strong><br />
-                        /templates/step-20-v3.json
+                        <strong>Arquivo v3.1 carregado:</strong><br />
+                        /templates/funnels/quiz21StepsComplete/steps/step-20.json
                     </div>
                     <button
                         onClick={() => window.location.reload()}
