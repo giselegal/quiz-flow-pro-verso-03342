@@ -547,7 +547,9 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     window.localStorage.getItem('supabase:disableNetwork') === 'true';
                 if (lsDisable) return true;
             }
-        } catch { /* noop */ }
+        } catch (error) {
+            console.warn('[SuperUnifiedProvider] Erro ao verificar Supabase disable flags:', error);
+        }
         return false;
     }, []);
 

@@ -404,7 +404,9 @@ export const userResponseService = {
               if (val && (val.sessionId === userId || val.userId === userId)) {
                 out.push(val);
               }
-            } catch { }
+            } catch (error) {
+              console.warn(`[userResponseService] Erro ao recuperar resposta ${k}:`, error);
+            }
           });
         return out;
       }

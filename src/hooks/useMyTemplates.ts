@@ -67,7 +67,9 @@ export const useMyTemplates = () => {
                         const legacyIds: string[] = JSON.parse(legacyListStr);
                         templateIds = legacyIds;
                         safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(legacyIds), CTX);
-                    } catch { }
+                    } catch (error) {
+                        console.warn('[useMyTemplates] Erro ao parsear lista legada:', error);
+                    }
                 } else {
                     const legacyTemplatesStr = StorageService.safeGetString('saved-templates');
                     if (legacyTemplatesStr) {
@@ -76,7 +78,9 @@ export const useMyTemplates = () => {
                             const ids = Array.isArray(legacyTemplates) ? legacyTemplates.map((t: any) => t?.id).filter(Boolean) : [];
                             templateIds = ids;
                             safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(ids), CTX);
-                        } catch { }
+                        } catch (error) {
+                            console.warn('[useMyTemplates] Erro ao parsear templates legados:', error);
+                        }
                     }
                 }
             }
