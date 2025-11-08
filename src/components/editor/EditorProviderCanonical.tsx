@@ -1,4 +1,18 @@
 /**
+ * ⚠️ DEPRECATED - NÃO USADO NA ROTA /editor
+ * 
+ * Este provider não é usado pela rota atual (/editor).
+ * A rota usa SuperUnifiedProvider diretamente.
+ * 
+ * Mantido apenas para compatibilidade com código legacy.
+ * Será removido em versão futura.
+ * 
+ * @deprecated Use SuperUnifiedProvider em rotas /editor
+ * @see src/providers/SuperUnifiedProvider.tsx
+ * @see docs/EDITOR_ARCHITECTURE.md
+ * 
+ * ---
+ * 
  * 🎯 EDITOR PROVIDER CANONICAL - FASE 1: CONSOLIDAÇÃO
  * 
  * Provider único que consolida TODAS as funcionalidades:
@@ -133,6 +147,15 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
     initial = {},
     enableSupabase = true,
 }) => {
+    // ⚠️ AVISO DE DEPRECAÇÃO
+    useEffect(() => {
+        console.warn(
+            '⚠️ [DEPRECATED] EditorProviderCanonical não é usado na rota /editor.\n' +
+            'Use SuperUnifiedProvider diretamente.\n' +
+            'Veja: docs/EDITOR_ARCHITECTURE.md'
+        );
+    }, []);
+
     // ============================================================================
     // CONECTAR AO SUPERUNIFIEDPROVIDER (Single Source of Truth)
     // ============================================================================
