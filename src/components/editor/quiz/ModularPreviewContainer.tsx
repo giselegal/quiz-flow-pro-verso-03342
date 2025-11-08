@@ -108,7 +108,9 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
                     if (firstBlockId && setSelectedBlockId) {
                         setSelectedBlockId(firstBlockId);
                     }
-                } catch { /* noop */ }
+                } catch (error) {
+                    console.warn('[ModularPreviewContainer] Erro ao processar tecla Tab:', error);
+                }
             }
         };
         window.addEventListener('keydown', onKeyDown);
@@ -201,7 +203,9 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
             if (params.has('auto')) {
                 setQsAuto(params.get('auto') === '1');
             }
-        } catch { /* noop */ }
+        } catch (error) {
+            console.warn('[ModularPreviewContainer] Erro ao parsear query params:', error);
+        }
     }, []);
 
     const effectiveParity = qsParity !== null ? qsParity : productionParityInEdit;

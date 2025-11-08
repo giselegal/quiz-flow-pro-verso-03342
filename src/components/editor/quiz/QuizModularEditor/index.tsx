@@ -432,7 +432,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }
 
             // Garantir persistência de todas as etapas sujas antes do snapshot global
-            try { await (unified as any).ensureAllDirtyStepsSaved?.(); } catch { /* noop */ }
+            try {
+                await (unified as any).ensureAllDirtyStepsSaved?.();
+            } catch (error) {
+                console.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', error);
+            }
             await saveFunnel();
 
             showToast({
@@ -466,7 +470,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 const templateOrResource = props.templateId ?? resourceId ?? null;
                 const funnel = props.funnelId ?? null;
                 await queryClient.invalidateQueries({ queryKey: stepKeys.detail(stepKey, templateOrResource, funnel) });
-            } catch { /* noop */ }
+            } catch (error) {
+                console.warn('[QuizModularEditor] Erro ao invalidar queries do React Query:', error);
+            }
 
             const result = await svc.getStep(stepKey, props.templateId ?? resourceId);
             if (result.success && result.data) {

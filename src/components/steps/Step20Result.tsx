@@ -45,7 +45,9 @@ const Step20Result: React.FC<Step20ResultProps> = ({
         ['editor_config', 'quiz_old_cache', 'temp_selections'].forEach(key => {
           try {
             localStorage.removeItem(key);
-          } catch { /* ignore */ }
+          } catch (error) {
+            console.warn(`[Step20Result] Erro ao remover chave obsoleta ${key}:`, error);
+          }
         });
       }
       
