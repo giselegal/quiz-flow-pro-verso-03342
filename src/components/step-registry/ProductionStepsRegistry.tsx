@@ -450,27 +450,15 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
         return <div className="flex items-center justify-center p-12">Carregando resultado...</div>;
     }
 
-    // Se não há blocos no template, usar StyleResultCard (legado)
-    const StyleResultCard = React.lazy(() =>
-        import('@/components/editor/quiz/components/StyleResultCard').then(m => ({
-            default: m.StyleResultCard,
-        })),
-    );
-
-    const cardProps = {
-        resultStyle: quizState?.resultStyle || 'classico',
-        userName: quizState?.userName || 'Usuário',
-        secondaryStyles: quizState?.secondaryStyles || [],
-        scores: quizState?.scores,
-        mode: 'result' as const,
-        onNext,
-        className: 'w-full',
-    };
-
+    // ⚠️ FALLBACK: Se não há blocos no template, mostrar mensagem
+    // (StyleResultCard foi arquivado durante migração v3.1)
     return (
-        <React.Suspense fallback={<div className="flex items-center justify-center p-12">Carregando resultado...</div>}>
-            <StyleResultCard {...cardProps} />
-        </React.Suspense>
+        <div className="flex flex-col items-center justify-center p-12 space-y-4">
+            <div className="text-lg font-semibold">Resultado não disponível</div>
+            <div className="text-sm text-muted-foreground">
+                Nenhum bloco de resultado encontrado para este template
+            </div>
+        </div>
     );
 };
 
@@ -492,40 +480,14 @@ const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
-    // Importar OfferMap dinamicamente
-    const OfferMap = React.lazy(() =>
-        import('@/components/editor/quiz/components/OfferMap').then(m => ({
-            default: m.OfferMap,
-        })),
-    );
-
-    // Derivar offerKey da resposta estratégica da pergunta 18
-    const strategicAnswers = quizState?.strategicAnswers || {};
-    const answer = strategicAnswers['Qual desses resultados você mais gostaria de alcançar?'];
-
-    // Mapear resposta para chave da oferta (OfferKey type)
-    const answerToKey: Record<string, 'Montar looks com mais facilidade e confiança' | 'Usar o que já tenho e me sentir estilosa' | 'Comprar com mais consciência e sem culpa' | 'Ser admirada pela imagem que transmito'> = {
-        'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
-        'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
-        'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
-        'ser-admirada': 'Ser admirada pela imagem que transmito',
-    };
-    const offerKey = answerToKey[answer] || 'Montar looks com mais facilidade e confiança' as const;    // Props para OfferMap
-    const offerMapProps = {
-        content: {
-            offerMap: data.offerMap || {},
-        },
-        mode: 'preview' as const,
-        userName: quizState?.userName || 'Usuário',
-        selectedOfferKey: offerKey,
-        onNext,
-        className: 'w-full',
-    };
-
+    // ⚠️ FALLBACK: OfferMap foi arquivado durante migração v3.1
     return (
-        <React.Suspense fallback={<div className="flex items-center justify-center p-12">Carregando oferta...</div>}>
-            <OfferMap {...offerMapProps} />
-        </React.Suspense>
+        <div className="flex flex-col items-center justify-center p-12 space-y-4">
+            <div className="text-lg font-semibold">Oferta não disponível</div>
+            <div className="text-sm text-muted-foreground">
+                Componente OfferMap foi arquivado durante migração
+            </div>
+        </div>
     );
 };
 

@@ -6,12 +6,13 @@
  * Tudo é um "EditorResource" com diferentes características
  */
 
-import React, { Suspense, useMemo, useState, useCallback } from 'react';
+import React, { Suspense, useMemo, useState, useCallback, useEffect } from 'react';
 const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
 import { SuperUnifiedProvider, useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
 import { useEditorResource } from '@/hooks/useEditorResource';
 import { detectResourceType } from '@/types/editor-resource';
+import { templateService } from '@/services/canonical/TemplateService';
 
 /**
  * 🎯 ARQUITETURA UNIFICADA
@@ -99,6 +100,24 @@ const EditorRoutesInner: React.FC = () => {
     if (supabaseDisabled) {
         console.info('🛑 Supabase desativado por flag (VITE_DISABLE_SUPABASE). Editor operando 100% offline.');
     }
+
+    // 🎯 CRITICAL FIX: Preparar template quando resourceId está presente
+    useEffect(() => {
+        if (resourceId) {
+            console.log(`🎯 Preparando template: ${resourceId}`);
+            templateService.prepareTemplate(resourceId)
+                .then((result) => {
+                    if (result.success) {
+                        console.log(`✅ Template ${resourceId} preparado com sucesso`);
+                    } else {
+                        console.warn(`⚠️ Erro ao preparar template ${resourceId}:`, result.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error(`❌ Erro ao preparar template ${resourceId}:`, error);
+                });
+        }
+    }, [resourceId]);
 
     // Detectar se deve mostrar modal na montagem inicial
     useMemo(() => {
