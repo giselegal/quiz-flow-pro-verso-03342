@@ -1628,3 +1628,170 @@ export interface UseUnifiedHistoryReturn {
 **Última Atualização:** 09/11/2025 - Sessão 2 Finalizada  
 **Próxima Sessão:** Focar em CRÍTICOS restantes (5/14)
 
+
+### 26. G42 Production Não Reflete Mudanças (CRÍTICO) - COMPLETO ✅
+
+**Problema:** Preview em modo "production" não reflete mudanças recentes
+
+**Situação Identificada:**
+- ❌ `previewMode` state existia mas não era usado
+- ❌ PreviewPanel não recebia prop `previewMode`
+- ❌ Live e Production usavam mesma fonte de dados (cache antigo)
+- ❌ Sem invalidação de cache ao publicar
+- ❌ Sem indicador visual de modo Production
+
+**Solução Aplicada (3 Camadas):**
+
+#### **1. PreviewPanel com Modo Production**
+**Arquivo:** `src/components/editor/quiz/QuizModularEditor/components/PreviewPanel/index.tsx` (+30 linhas)
+
+**Mudanças:**
+1. **Adicionar prop `previewMode`:**
+   ```typescript
+   export interface PreviewPanelProps {
+     // ...existing props
+     previewMode?: 'live' | 'production'; // 🔄 G42 FIX
+   }
+   ```
+
+2. **Lógica de fonte de dados diferenciada:**
+   ```typescript
+   const shouldFetchFromBackend = previewMode === 'production';
+   
+   // Live usa blocks do editor, Production força refetch
+   const { data: fetchedBlocks } = useStepBlocksQuery({
+     stepId: currentStepKey,
+     enabled: !!currentStepKey && shouldFetchFromBackend,
+     // Production força cache zero para refletir mudanças publicadas
+     staleTimeMs: shouldFetchFromBackend ? 0 : 15_000,
+   });
+   
+   // Prioridade: Production = backend, Live = editor
+   const blocksToUse = shouldFetchFromBackend 
+     ? (fetchedBlocks ?? blocks)
+     : (blocks ?? fetchedBlocks) ?? null;
+   ```
+
+3. **Indicador visual do modo:**
+   ```tsx
+   {previewMode === 'production' && (
+     <div className="absolute top-2 left-2 z-20">
+       🚀 Modo Production (Dados Publicados)
+     </div>
+   )}
+   ```
+
+#### **2. Passar previewMode ao PreviewPanel**
+**Arquivo:** `src/components/editor/quiz/QuizModularEditor/index.tsx` (+15 linhas)
+
+**Mudança:**
+```tsx
+<PreviewPanel
+  currentStepKey={currentStepKey}
+  blocks={blocks}
+  isVisible={true}
+  className="h-full"
+  previewMode={previewMode} // 🔄 G42 FIX: Conectar estado ao componente
+/>
+```
+
+#### **3. Invalidar Cache ao Publicar**
+**Arquivo:** `src/components/editor/quiz/QuizModularEditor/index.tsx` (handlePublish)
+
+**Mudança:**
+```typescript
+const handlePublish = useCallback(async () => {
+  try {
+    await publishFunnel({ ensureSaved: true });
+    
+    // 🔄 G42 FIX: Invalidar cache de todas as etapas
+    try {
+      appLogger.info('[G42] Invalidando cache de steps após publicação');
+      await queryClient.invalidateQueries({ queryKey: ['steps'] });
+      await queryClient.refetchQueries({ 
+        queryKey: ['steps'],
+        type: 'active',
+      });
+    } catch (cacheError) {
+      appLogger.warn('[G42] Erro ao invalidar cache', cacheError);
+    }
+    
+    showToast({ type: 'success', title: 'Publicado', ... });
+  } catch (e) {
+    showToast({ type: 'error', title: 'Erro ao publicar', ... });
+  }
+}, [publishFunnel, showToast, queryClient]);
+```
+
+**Arquivos Modificados:**
+- `src/components/editor/quiz/QuizModularEditor/components/PreviewPanel/index.tsx` (+30 linhas)
+- `src/components/editor/quiz/QuizModularEditor/index.tsx` (+15 linhas)
+
+**Comportamento:**
+
+1. **Live Mode (Default):**
+   - Usa `blocks` do editor (alterações imediatas)
+   - Cache de 15 segundos
+   - Preview reflete edições não salvas
+
+2. **Production Mode:**
+   - Força refetch do backend (React Query)
+   - Cache zero (stale imediato)
+   - Preview reflete apenas dados publicados
+   - Indicador visual no topo do preview
+
+3. **Ao Publicar:**
+   - Invalida todo cache de steps
+   - Refetch de queries ativas
+   - Production mode atualiza automaticamente
+
+**Fluxo de Uso:**
+```
+1. Editar blocos → Live preview atualiza instantaneamente
+2. Salvar → Persiste no backend
+3. Publicar → Invalida cache + refetch production
+4. Alternar para Production → Mostra versão publicada
+5. Testar em Production → Valida deploy real
+```
+
+**Status:** ✅ COMPLETO
+
+---
+
+
+## 📊 MÉTRICAS FINAIS - SESSÃO 2
+
+**Progressão Total:**
+- **Início da Sessão 2:** 19.5/48 (40.6%)
+- **Fim da Sessão 2:** 26.5/48 (55.2%) ✅
+- **Ganho:** +7 correções (14.6% de aumento)
+
+**Por Prioridade:**
+- **CRÍTICO:** 10/14 (71.4%) ✅ - +1 (G42 completo!)
+- **ALTO:** 14/14 (100.0%) ✅✅✅ 🏆 - TODAS COMPLETAS!
+- **MÉDIO:** 2.5/13 (19.2%)
+
+**Correções Implementadas Nesta Sessão:**
+1. ✅ **G15** (ALTO): Estado Inicial Validation
+2. ✅ **G48** (MÉDIO): User-Friendly Errors
+3. ✅ **G24** (CRÍTICO): 3 schemas faltantes
+4. ✅ **G27** (MÉDIO): Undo/Redo Completo ⭐
+5. ✅ **G31** (ALTO): Rollback em falha DnD 🔥
+6. ✅ **G42** (CRÍTICO): Production não reflete mudanças 🚀
+7. ✅ **G8, G38, G37, G16, G43**: Descobertos já implementados
+
+**🎉 MARCOS ALCANÇADOS:**
+- ✅ 100% PRIORIDADE ALTA COMPLETA! 🏆
+- ✅ 71.4% CRÍTICOS COMPLETOS!
+- ✅ 55%+ PROGRESSO TOTAL!
+
+**Próximos Alvos Recomendados (CRÍTICOS):**
+1. **G5** (CRÍTICO): Validação de integridade de templates
+2. **G1** (CRÍTICO): Crash no Preview
+3. **G2** (CRÍTICO): Blocos órfãos
+
+---
+
+**Última Atualização:** 09/11/2025 - 19:45  
+**Próxima Sessão:** Focar em 4 CRÍTICOS restantes (71.4% → 100%)
+

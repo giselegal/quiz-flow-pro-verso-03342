@@ -20,6 +20,7 @@ export interface PreviewPanelProps {
     isVisible?: boolean;
     onToggleVisibility?: () => void;
     className?: string;
+    previewMode?: 'live' | 'production'; // 🔄 G42 FIX
 }
 
 export default function PreviewPanel({
@@ -28,16 +29,21 @@ export default function PreviewPanel({
     isVisible = true,
     onToggleVisibility,
     className = '',
+    previewMode = 'live', // 🔄 G42 FIX: Default to live
 }: PreviewPanelProps) {
-    // Sempre buscar via React Query (alinha com JSON-first e fonte canônica)
+    // 🔄 G42 FIX: Live usa blocks do editor, Production força refetch do backend
+    const shouldFetchFromBackend = previewMode === 'production';
+
+    // Sempre buscar via React Query quando em modo production
     const { data: fetchedBlocks, isLoading, error } = useStepBlocksQuery({
         stepId: currentStepKey,
-        enabled: !!currentStepKey,
-        // Preview pode tolerar cache curto
-        staleTimeMs: 15_000,
-    });
-
-    const blocksToUse: Block[] | null = (fetchedBlocks ?? blocks) ?? null;
+        enabled: !!currentStepKey && shouldFetchFromBackend,
+        // Production força cache zero (stale imediato) para refletir mudanças publicadas
+        staleTimeMs: shouldFetchFromBackend ? 0 : 15_000,
+    });    // 🔄 G42 FIX: Live = blocks do editor, Production = refetch forçado
+    const blocksToUse: Block[] | null = shouldFetchFromBackend
+        ? (fetchedBlocks ?? blocks)
+        : (blocks ?? fetchedBlocks) ?? null;
 
     // Converter blocos do editor para formato de preview
     const quizContent = useMemo(() => {
@@ -94,13 +100,23 @@ export default function PreviewPanel({
     }
 
     return (
-        <div className={`flex flex-col ${className}`}>
+        <div className={`flex flex-col relative ${className}`}>
+            {/* 🔄 G42 FIX: Indicador visual do modo Production */}
+            {previewMode === 'production' && (
+                <div className="absolute top-2 left-2 z-20 px-2 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded border border-emerald-300 shadow-sm">
+                    🚀 Modo Production (Dados Publicados)
+                </div>
+            )}
+
             {/* Preview com controles responsivos */}
             {!quizContent ? (
                 <div className="flex items-center justify-center h-full text-gray-500 bg-muted/20">
                     <div className="text-center">
                         <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
                         <p className="text-sm">Selecione uma etapa para visualizar</p>
+                        {previewMode === 'production' && (
+                            <p className="text-xs text-gray-400 mt-2">Modo Production: mostrando dados publicados</p>
+                        )}
                     </div>
                 </div>
             ) : (

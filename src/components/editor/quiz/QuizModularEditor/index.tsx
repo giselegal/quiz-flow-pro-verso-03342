@@ -744,11 +744,24 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const handlePublish = useCallback(async () => {
         try {
             await publishFunnel({ ensureSaved: true });
+
+            // 🔄 G42 FIX: Invalidar cache de todas as etapas para forçar refetch em modo production
+            try {
+                appLogger.info('[G42] Invalidando cache de steps após publicação');
+                await queryClient.invalidateQueries({ queryKey: ['steps'] });
+                await queryClient.refetchQueries({
+                    queryKey: ['steps'],
+                    type: 'active',
+                });
+            } catch (cacheError) {
+                appLogger.warn('[G42] Erro ao invalidar cache após publicação', cacheError);
+            }
+
             showToast({ type: 'success', title: 'Publicado', message: 'Seu funil foi publicado com sucesso!' });
         } catch (e) {
             showToast({ type: 'error', title: 'Erro ao publicar', message: 'Não foi possível publicar o funil. Tente novamente.' });
         }
-    }, [publishFunnel, showToast]);
+    }, [publishFunnel, showToast, queryClient]);
 
     // Load template via button (use imported templateService)
     const handleLoadTemplate = useCallback(async () => {
@@ -1136,6 +1149,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         blocks={blocks}
                                         isVisible={true}
                                         className="h-full"
+                                        previewMode={previewMode} // 🔄 G42 FIX: Passar modo para controlar fonte de dados
                                     />
                                 )}
                             </div>
