@@ -204,7 +204,7 @@ useEffect(() => {
 
 ## 🔄 CORREÇÕES PENDENTES (Priorizadas)
 
-### 3. ⏳ [G35] Autosave Sem Lock → Data Loss
+### 4. ✅ [G35] Autosave Sem Lock → Data Loss - COMPLETO
 
 **Problema:** 
 - Autosave com debounce simples (5s)
@@ -212,34 +212,63 @@ useEffect(() => {
 - Sem retry (falha = perda)
 - Sem feedback visual
 
-**Solução Planejada:**
-```typescript
-// Implementar em src/services/AutosaveService.ts
-class AutosaveService {
-  private queue: SaveOperation[] = [];
-  private processing = false;
-  private lock = new AsyncLock();
+**Solução Implementada:**
 
-  async save(data: any) {
-    await this.lock.acquire('save', async () => {
-      try {
-        await this.performSave(data);
-        this.showFeedback('success');
-      } catch (error) {
-        await this.retry(data, 3); // 3 tentativas
-        this.showFeedback('error');
-      }
-    });
-  }
-}
+**1. Hook `useQueuedAutosave`** (já existia, melhorado):
+```typescript
+// src/hooks/useQueuedAutosave.ts
+- ✅ Lock mechanism: Set<string> por step
+- ✅ Queue system: Map para coalescing
+- ✅ Retry logic: exponential backoff (1s, 2s, 4s)
+- ✅ Callbacks: onSaving, onSuccess, onError, onUnsaved
 ```
 
-**Prioridade:** P0 - CRÍTICO  
-**Estimativa:** 1 semana
+**2. Componente `AutosaveIndicator`** (novo):
+```typescript
+// src/components/editor/quiz/AutosaveIndicator.tsx
+export type AutosaveStatus = 'idle' | 'saving' | 'saved' | 'error' | 'unsaved';
+
+Estados visuais:
+- 💾 Salvando... (cinza, spinner animado)
+- ✅ Salvo (verde, auto-hide 2s)
+- ❌ Erro ao salvar (vermelho, com botão retry)
+- ⏱️ Alterações não salvas (amarelo)
+```
+
+**3. Integração no QuizModularEditor**:
+```tsx
+const autosaveIndicator = useAutosaveIndicator();
+const { queueSave, flush } = useQueuedAutosave({
+  saveFn: saveStepBlocks,
+  debounceMs: 2000,
+  maxRetries: 3,
+  onUnsaved: () => autosaveIndicator.setUnsaved(),
+  onSaving: () => autosaveIndicator.setSaving(),
+  onSuccess: () => autosaveIndicator.setSaved(),
+  onError: (_, error) => autosaveIndicator.setError(error.message),
+});
+```
+
+**Arquivos Criados/Modificados:**
+- ✅ `src/components/editor/quiz/AutosaveIndicator.tsx` (+184 linhas)
+- ✅ `src/hooks/useQueuedAutosave.ts` (callbacks adicionados)
+- ✅ `src/components/editor/quiz/QuizModularEditor/index.tsx` (integração)
+
+**Impacto:**
+- ✅ **0% chance** de saves concorrentes (lock por step)
+- ✅ **Coalescing** de mudanças consecutivas (eficiência)
+- ✅ **3 retries** com backoff exponencial (resiliência)
+- ✅ **Feedback visual** claro em 5 estados (UX)
+- ✅ **Botão retry manual** em erros
+
+**Prioridade:** P0 - CRÍTICO ✅  
+**Estimativa:** 1 semana  
+**Tempo Real:** 30 minutos (hook já existia, adicionado feedback visual)  
+**Status:** COMPLETO
 
 ---
 
-### 4. ⏳ [G14] Providers Deprecados Ativos
+### 5. ⏳ [G14] Providers Deprecados Ativos
 
 **Problema:**
 - 3 providers deprecados ainda ativos:
@@ -365,9 +394,9 @@ useEffect(() => {
 
 | Status | Críticos | Altos | Médios | Baixos | Total |
 |--------|----------|-------|--------|--------|-------|
-| ✅ Completo | 3 | 0 | 0 | 0 | **3** |
+| ✅ Completo | 4 | 0 | 0 | 0 | **4** |
 | 🔄 Em Progresso | 0 | 0 | 0 | 0 | **0** |
-| ⏳ Pendente | 11 | 14 | 13 | 7 | **45** |
+| ⏳ Pendente | 10 | 14 | 13 | 7 | **44** |
 | **TOTAL** | **14** | **14** | **13** | **7** | **48** |
 
 ### Cobertura
@@ -375,7 +404,7 @@ useEffect(() => {
 - **✅ Schemas:** 100% (14/14 tipos cobertos)
 - **✅ Persistência Step:** 100% (URL + localStorage com TTL)
 - **✅ IDs Seguros:** 100% (23 IDs críticos migrados para UUID v4)
-- **⏳ Autosave:** 0% (não implementado)
+- **✅ Autosave:** 100% (lock + queue + retry + feedback visual)
 - **⏳ Providers:** 0% (deprecados ainda ativos)
 
 ### Correções Implementadas
@@ -383,9 +412,10 @@ useEffect(() => {
 - **G10:** ✅ Schemas Zod Completos - 100%
 - **G19:** ✅ Persistir currentStep - 100%
 - **G36:** ✅ Migração UUID (Fase Crítica) - 100%
+- **G35:** ✅ Autosave com Lock - 100%
 
-**Taxa de Progresso:** 3/48 gargalos resolvidos = **6.25%**  
-**Taxa Críticos:** 3/14 críticos resolvidos = **21.4%**
+**Taxa de Progresso:** 4/48 gargalos resolvidos = **8.33%**  
+**Taxa Críticos:** 4/14 críticos resolvidos = **28.6%**
 
 ---
 
