@@ -153,8 +153,21 @@ export function SafeDndContext({
                 {children}
                 {ActiveDragOverlay && (
                     <ActiveDragOverlay>
-                        <div className="opacity-50 bg-gray-100 border border-dashed border-gray-300 p-2 rounded">
-                            Movendo item...
+                        {/* 🆕 G30 FIX: Preview melhorada durante drag */}
+                        <div className="
+                            bg-white border-2 border-blue-500 
+                            shadow-2xl rounded-lg p-3 
+                            opacity-90 scale-105 
+                            transform rotate-2 
+                            cursor-grabbing
+                            backdrop-blur-sm
+                        ">
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                <span className="text-sm font-medium text-gray-700">
+                                    Movendo bloco...
+                                </span>
+                            </div>
                         </div>
                     </ActiveDragOverlay>
                 )}
@@ -168,6 +181,7 @@ export function SafeDndContext({
 
 /**
  * Hook seguro para sensores DnD
+ * 🆕 G30 FIX: Sensores melhorados para drop zones consistentes
  */
 export function useSafeDndSensors() {
     if (!useSensor || !useSensors || !PointerSensor) {
@@ -177,8 +191,11 @@ export function useSafeDndSensors() {
     try {
         const sensors = useSensors(
             useSensor(PointerSensor, {
+                // 🔧 G30: Reduzir distância para ativação mais responsiva
                 activationConstraint: {
-                    distance: 8,
+                    distance: 3, // Reduzido de 8px para 3px para ativação mais rápida
+                    tolerance: 5, // Adicionar tolerância para evitar ativações acidentais
+                    delay: 0, // Sem delay para feedback instantâneo
                 },
             })
         );

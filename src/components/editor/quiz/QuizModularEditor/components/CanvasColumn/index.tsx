@@ -48,15 +48,21 @@ function SortableBlockItem({
     onRemoveBlock?: (blockId: string) => void;
     onUpdateBlock?: (blockId: string, patch: Partial<Block>) => void;
 }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSafeSortable({ id: block.id });
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver } = useSafeSortable({ id: block.id });
+
     // 🆕 G30 FIX: Melhor feedback visual durante drag
     const style: React.CSSProperties = {
         transform: SafeCSS?.Transform?.toString(transform) || 'none',
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-        scale: isDragging ? '1.02' : '1',
-        boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.15)' : undefined,
-        zIndex: isDragging ? 50 : undefined,
+        transition: transition || 'transform 200ms ease, box-shadow 200ms ease',
+        opacity: isDragging ? 0.4 : 1,
+        scale: isDragging ? '1.05' : '1',
+        boxShadow: isDragging
+            ? '0 12px 24px rgba(0,0,0,0.2)'
+            : isOver
+                ? '0 4px 12px rgba(59, 130, 246, 0.3)'
+                : undefined,
+        zIndex: isDragging ? 50 : isOver ? 10 : undefined,
+        cursor: isDragging ? 'grabbing' : 'grab',
     };
 
     return (
@@ -65,18 +71,29 @@ function SortableBlockItem({
             style={style}
             {...attributes}
             {...listeners}
-            className={`border rounded p-2 relative cursor-grab active:cursor-grabbing transition-all ${isDragging
-                    ? 'border-blue-500 bg-blue-100 ring-2 ring-blue-300'
-                    : isSelected
-                        ? 'border-blue-500 bg-blue-50 shadow-sm'
-                        : 'border-border hover:border-gray-400'
-                }`}
+            className={`
+                border rounded-lg p-2 relative 
+                transition-all duration-200
+                ${isDragging
+                    ? 'border-blue-500 bg-blue-100 ring-4 ring-blue-200 shadow-xl'
+                    : isOver
+                        ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-300 shadow-lg'
+                        : isSelected
+                            ? 'border-blue-500 bg-blue-50 shadow-md'
+                            : 'border-gray-200 hover:border-gray-400 hover:shadow-sm'
+                }
+                ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}
+            `}
             onClick={e => {
                 if ((e.target as HTMLElement).tagName.toLowerCase() === 'button') return;
                 onSelect?.(block.id);
             }}
             data-block-id={block.id}
         >
+            {/* 🆕 G30 FIX: Linha de drop visual quando outro bloco está sobre este */}
+            {isOver && !isDragging && (
+                <div className="absolute -top-1 left-0 right-0 h-1 bg-blue-500 rounded-full shadow-lg animate-pulse" />
+            )}
             <div className="flex items-center justify-between mb-1">
                 <div className={`text-xs uppercase ${isSelected
                     ? 'text-blue-700 font-medium'

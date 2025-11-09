@@ -11,9 +11,10 @@ import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
-import { Eye, Edit3, Play, Save, GripVertical, Download, Upload } from 'lucide-react';
+import { Eye, Edit3, Play, Save, GripVertical, Download, Upload, Undo2, Redo2 } from 'lucide-react';
 import { appLogger } from '@/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
+import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult } from '@/utils/templateValidation';
 // Loading context (provider + hook)
 import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadingContext';
 // Arquitetura unificada de recursos
@@ -98,6 +99,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         getStepBlocks,
         setStepBlocks,
         setSelectedBlock,
+        undo,
+        redo,
+        canUndo,
+        canRedo,
         removeBlock,
         reorderBlocks,
         updateBlock,
@@ -341,9 +346,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 if (!signal.aborted) {
                     appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${stepsMeta.length} steps`);
 
-                    // Validar integridade das 21 etapas para quiz21StepsComplete
-                    if (tid === 'quiz21StepsComplete' && stepsMeta.length === 21) {
-                        validateTemplateIntegrity(tid, stepsMeta, signal);
+                    // 🔍 G5 FIX: Validar integridade completa das etapas
+                    if (stepsMeta.length > 0) {
+                        runFullValidation(tid, stepsMeta.length, signal);
                     }
                 }
             } catch (error) {
@@ -358,53 +363,55 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }
         }
 
-        // Função auxiliar para validar integridade das 21 etapas
-        async function validateTemplateIntegrity(tid: string, stepsMeta: any[], signal: AbortSignal) {
+        // 🔍 G5 FIX: Validação completa de integridade
+        async function runFullValidation(tid: string, stepCount: number, signal: AbortSignal) {
             try {
-                const expectedSteps = Array.from({ length: 21 }, (_, i) =>
-                    `step-${String(i + 1).padStart(2, '0')}`
+                appLogger.info(`[G5] Iniciando validação completa: ${tid} (${stepCount} steps)`);
+
+                const result = await validateTemplateIntegrityFull(
+                    tid,
+                    stepCount,
+                    async (stepId: string) => {
+                        if (signal.aborted) return null;
+                        const res = await templateService.getStep(stepId, tid, { signal });
+                        return res.success ? res.data : null;
+                    },
+                    {
+                        signal,
+                        validateSchemas: true,
+                        validateDependencies: true,
+                    }
                 );
 
-                const missingSteps: string[] = [];
-                const emptySteps: string[] = [];
-
-                for (const stepId of expectedSteps) {
-                    if (signal.aborted) return;
-
-                    try {
-                        const result = await templateService.getStep(stepId, tid, { signal });
-                        if (!result.success) {
-                            missingSteps.push(stepId);
-                        } else if (!result.data || result.data.length === 0) {
-                            emptySteps.push(stepId);
-                        }
-                    } catch (err) {
-                        if (!signal.aborted) {
-                            missingSteps.push(stepId);
-                        }
-                    }
-                }
-
                 if (!signal.aborted) {
-                    if (missingSteps.length > 0 || emptySteps.length > 0) {
-                        const issues = [
-                            missingSteps.length > 0 ? `${missingSteps.length} steps faltando (${missingSteps.slice(0, 3).join(', ')}${missingSteps.length > 3 ? '...' : ''})` : null,
-                            emptySteps.length > 0 ? `${emptySteps.length} steps vazios (${emptySteps.slice(0, 3).join(', ')}${emptySteps.length > 3 ? '...' : ''})` : null,
-                        ].filter(Boolean).join('; ');
+                    const formattedResult = formatValidationResult(result);
 
-                        appLogger.warn(`⚠️ [QuizModularEditor] Template incompleto: ${issues}`);
+                    if (!result.isValid) {
+                        // Erros críticos encontrados
+                        appLogger.error(`[G5] Template inválido:\n${formattedResult}`);
+                        showToast({
+                            type: 'error',
+                            title: 'Template Inválido',
+                            message: `${result.errors.filter(e => e.severity === 'critical').length} erros críticos encontrados`,
+                            duration: 6000,
+                        });
+                    } else if (result.warnings.length > 0 || result.errors.length > 0) {
+                        // Warnings ou erros não-críticos
+                        appLogger.warn(`[G5] Template com avisos:\n${formattedResult}`);
                         showToast({
                             type: 'warning',
-                            title: 'Template Incompleto',
-                            message: issues,
+                            title: 'Template com Avisos',
+                            message: `${result.warnings.length} avisos, ${result.errors.length} erros menores`,
+                            duration: 5000,
                         });
                     } else {
-                        appLogger.info(`✅ [QuizModularEditor] Validação de integridade: 21/21 steps OK`);
+                        // Template perfeito
+                        appLogger.info(`[G5] Template válido: ${result.summary.validSteps}/${result.summary.totalSteps} steps, ${result.summary.totalBlocks} blocos`);
                     }
                 }
             } catch (error) {
                 if (!signal.aborted) {
-                    appLogger.warn('[QuizModularEditor] Erro ao validar integridade do template:', error);
+                    appLogger.error('[G5] Erro ao validar integridade do template:', error);
                 }
             }
         }
@@ -518,7 +525,28 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 order: list.length,
             };
 
-            addBlock(stepIndex, newBlock);
+            // 🔄 G31 FIX: Rollback em falha de adição de bloco via DnD
+            try {
+                addBlock(stepIndex, newBlock);
+                appLogger.debug('[DnD] Bloco adicionado da biblioteca', {
+                    blockType: draggedItem.libraryType,
+                    blockId: newBlock.id,
+                });
+            } catch (error) {
+                appLogger.error('[DnD] Falha ao adicionar bloco da biblioteca, executando rollback', {
+                    error,
+                    blockType: draggedItem.libraryType,
+                });
+
+                undo();
+
+                showToast({
+                    type: 'error',
+                    title: 'Erro ao adicionar bloco',
+                    message: 'O bloco não pôde ser adicionado. Tente novamente.',
+                    duration: 4000,
+                });
+            }
             return;
         }
 
@@ -529,10 +557,39 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 const reordered = [...list];
                 const [moved] = reordered.splice(fromIndex, 1);
                 reordered.splice(toIndex, 0, moved);
-                reorderBlocks(stepIndex, reordered);
+
+                // 🔄 G31 FIX: Rollback em falha de DnD
+                try {
+                    reorderBlocks(stepIndex, reordered);
+
+                    // Se reorderBlocks é síncrono, precisamos validar após
+                    // Autosave assíncrono pode falhar depois, mas rollback fica para outra iteração
+                    appLogger.debug('[DnD] Reordenação aplicada com sucesso', {
+                        fromIndex,
+                        toIndex,
+                        blockId: activeId,
+                    });
+                } catch (error) {
+                    // Rollback: desfazer reordenação chamando undo()
+                    appLogger.error('[DnD] Falha ao reordenar blocos, executando rollback', {
+                        error,
+                        fromIndex,
+                        toIndex,
+                        blockId: activeId,
+                    });
+
+                    undo();
+
+                    showToast({
+                        type: 'error',
+                        title: 'Erro ao reordenar',
+                        message: 'A reordenação foi desfeita. Tente novamente.',
+                        duration: 4000,
+                    });
+                }
             }
         }
-    }, [dnd.handlers, blocks, safeCurrentStep, addBlock, reorderBlocks]);
+    }, [dnd.handlers, blocks, safeCurrentStep, addBlock, reorderBlocks, undo, showToast]);
 
     // Manual save
     const handleSave = useCallback(async () => {
@@ -689,12 +746,69 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Publish funnel
     const handlePublish = useCallback(async () => {
         try {
+            // 🔍 G5 FIX: Validação de integridade antes de publicar
+            if (loadedTemplate) {
+                appLogger.info('[G5] Executando validação de integridade antes da publicação');
+
+                const integrityResult = await validateTemplateIntegrityFull(
+                    props.templateId ?? resourceId ?? 'unknown',
+                    loadedTemplate.steps.length,
+                    async (stepId: string) => {
+                        const stepIndex = parseInt(stepId.replace('step-', ''), 10);
+                        if (!isNaN(stepIndex)) {
+                            return getStepBlocks(stepIndex);
+                        }
+                        return null;
+                    },
+                    {
+                        validateSchemas: true,
+                        validateDependencies: true
+                    }
+                );
+
+                const formattedResults = formatValidationResult(integrityResult);
+                appLogger.info('[G5] Resultado da validação pré-publicação:', formattedResults);
+
+                // Bloquear publicação se houver erros críticos
+                const criticalErrors = integrityResult.errors.filter(e => e.severity === 'critical');
+                if (criticalErrors.length > 0) {
+                    showToast({
+                        type: 'error',
+                        title: 'Erros críticos detectados',
+                        message: `Impossível publicar: ${criticalErrors.length} erros críticos encontrados`
+                    });
+                    return;
+                }
+
+                // Avisar sobre erros não-críticos mas permitir publicação
+                if (integrityResult.errors.length > 0) {
+                    showToast({
+                        type: 'warning',
+                        title: 'Avisos detectados',
+                        message: `${integrityResult.errors.length} problemas encontrados (não críticos)`
+                    });
+                }
+            }
+
             await publishFunnel({ ensureSaved: true });
+
+            // 🔄 G42 FIX: Invalidar cache de todas as etapas para forçar refetch em modo production
+            try {
+                appLogger.info('[G42] Invalidando cache de steps após publicação');
+                await queryClient.invalidateQueries({ queryKey: ['steps'] });
+                await queryClient.refetchQueries({
+                    queryKey: ['steps'],
+                    type: 'active',
+                });
+            } catch (cacheError) {
+                appLogger.warn('[G42] Erro ao invalidar cache após publicação', cacheError);
+            }
+
             showToast({ type: 'success', title: 'Publicado', message: 'Seu funil foi publicado com sucesso!' });
         } catch (e) {
             showToast({ type: 'error', title: 'Erro ao publicar', message: 'Não foi possível publicar o funil. Tente novamente.' });
         }
-    }, [publishFunnel, showToast]);
+    }, [publishFunnel, showToast, queryClient, loadedTemplate, props.templateId, resourceId, getStepBlocks]);
 
     // Load template via button (use imported templateService)
     const handleLoadTemplate = useCallback(async () => {
@@ -747,6 +861,45 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             // Template válido e normalizado
             const normalizedTemplate = validationResult.data;
+
+            // VALIDAÇÃO COMPLETA DE INTEGRIDADE (G5)
+            // Valida schemas, dependências, IDs únicos, etc.
+            const integrityResult = await validateTemplateIntegrityFull(
+                'import-preview',
+                Object.keys(normalizedTemplate.steps).length,
+                async (stepId: string) => {
+                    const blocks = normalizedTemplate.steps[stepId];
+                    return Array.isArray(blocks) ? (blocks as Block[]) : null;
+                },
+                {
+                    validateSchemas: true,
+                    validateDependencies: true
+                }
+            );
+
+            // Mostrar resultados da validação
+            const formattedResults = formatValidationResult(integrityResult);
+            appLogger.info('[QuizModularEditor] Validação de integridade do import:', formattedResults);
+
+            // Bloquear importação se houver erros críticos
+            const criticalErrors = integrityResult.errors.filter(e => e.severity === 'critical');
+            if (criticalErrors.length > 0) {
+                showToast({
+                    type: 'error',
+                    title: 'Template com erros críticos',
+                    message: `Encontrados ${criticalErrors.length} erros críticos que impedem a importação`
+                });
+                throw new Error(`Template possui ${criticalErrors.length} erros críticos`);
+            }
+
+            // Avisar sobre erros não-críticos mas continuar
+            if (integrityResult.errors.length > 0) {
+                showToast({
+                    type: 'warning',
+                    title: 'Template com avisos',
+                    message: `${integrityResult.errors.length} problemas detectados (não críticos)`
+                });
+            }
 
             // Exibir warnings se houver IDs legados substituídos
             if (validationResult.warnings && validationResult.warnings.length > 0) {
@@ -866,6 +1019,32 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        {/* 🔄 G27 FIX: Botões Undo/Redo */}
+                        <div className="flex items-center gap-1">
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={undo}
+                                disabled={!canUndo}
+                                className="h-7 px-2"
+                                title="Desfazer (Ctrl+Z / Cmd+Z)"
+                            >
+                                <Undo2 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={redo}
+                                disabled={!canRedo}
+                                className="h-7 px-2"
+                                title="Refazer (Ctrl+Y / Cmd+Shift+Z)"
+                            >
+                                <Redo2 className="w-4 h-4" />
+                            </Button>
+                        </div>
+
+                        <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
+
                         <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
                             <Button
                                 size="sm"
@@ -1056,6 +1235,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         blocks={blocks}
                                         isVisible={true}
                                         className="h-full"
+                                        previewMode={previewMode} // 🔄 G42 FIX: Passar modo para controlar fonte de dados
                                     />
                                 )}
                             </div>
