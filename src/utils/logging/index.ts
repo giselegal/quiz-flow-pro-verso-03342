@@ -1,46 +1,21 @@
 // src/utils/logging/index.ts
 // Entry point para o sistema de logging
 
-// Core classes
-export { default as LoggerService } from './LoggerService';
+// Core classes (IMPORT LAZY SAFE)
+// Evitar que consumidores que só precisem de tipos puxem toda a árvore.
+export type { LogLevel, LogEntry, LogTransport, LogFilter, LogFormatter } from './LoggerService';
+export type { LoggerConfig } from './LoggerConfig';
+
+// Exports dinâmicos principais - funções utilitárias que realmente inicializam logger
+// Mantidas para compatibilidade; módulos críticos agora usam proxy lazy.
 export { LoggerFactory, getLogger, useLogger } from './LoggerFactory';
 export {
     createLoggerConfig,
     getConfigForEnvironment,
     LoggingFeatures,
-    type LoggerConfig,
 } from './LoggerConfig';
 
-// Core interfaces and types from LoggerService
-export type {
-    LogLevel,
-    LogEntry,
-    LogTransport,
-    LogFilter,
-    LogFormatter,
-} from './LoggerService';
+// Removidos exports diretos de filtros/formatters/transports para reduzir bundle default.
+// Consumidores avançados devem importar diretamente do caminho específico ex:
+// import { RateLimitFilter } from '@/utils/logging/filters/RateLimitFilter';
 
-// Import for type alias
-import LoggerService from './LoggerService';
-
-// Filters
-export { LevelFilter } from './filters/LevelFilter';
-export { ContextFilter } from './filters/ContextFilter';
-export { BlockedContextFilter } from './filters/BlockedContextFilter';
-export { PerformanceFilter } from './filters/PerformanceFilter';
-export { RateLimitFilter } from './filters/RateLimitFilter';
-export { SensitiveDataFilter } from './filters/SensitiveDataFilter';
-
-// Formatters
-export { DevelopmentFormatter } from './formatters/DevelopmentFormatter';
-export { JSONFormatter } from './formatters/JSONFormatter';
-export { DefaultFormatter } from './formatters/DefaultFormatter';
-export { CompactFormatter } from './formatters/CompactFormatter';
-
-// Transports
-export { ConsoleTransport } from './transports/ConsoleTransport';
-export { StorageTransport } from './transports/StorageTransport';
-export { RemoteTransport } from './transports/RemoteTransport';
-
-// Utility types for external usage
-export type LoggerInstance = LoggerService;
