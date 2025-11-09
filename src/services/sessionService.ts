@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import { quizSupabaseService } from '@/services/aliases';
 import { StorageService } from '@/services/core/StorageService';
 
@@ -25,7 +26,7 @@ export const sessionService = {
     if (!isBrowser) return 'session_local';
     const current = StorageService.safeGetString('quiz_session_id');
     if (current) return current;
-    const localId = `session_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    const localId = `session_${uuidv4()}`; // 🆕 G36 FIX: UUID ao invés de Date.now()
     StorageService.safeSetString('quiz_session_id', localId);
     StorageService.safeSetString('quiz_session_is_uuid', 'false');
     return localId;

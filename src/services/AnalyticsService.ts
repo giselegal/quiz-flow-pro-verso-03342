@@ -2,6 +2,8 @@
  * 📊 ANALYTICS SERVICE - Sistema de Analytics e Métricas Avançadas
  */
 
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+
 export interface Metric {
     id: string;
     name: string;
@@ -66,7 +68,7 @@ export class AnalyticsService {
         tags: Record<string, string> = {},
     ): Promise<Metric> {
         const metric: Metric = {
-            id: `metric_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            id: `metric_${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
             name,
             value,
             unit,
@@ -91,7 +93,7 @@ export class AnalyticsService {
         properties: Record<string, any> = {},
     ): Promise<AnalyticsEvent> {
         const event: AnalyticsEvent = {
-            id: `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            id: `event_${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
             type,
             userId,
             funnelId,
@@ -275,7 +277,7 @@ export class AnalyticsService {
         currentValue: number,
     ): Promise<Alert> {
         const alert: Alert = {
-            id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            id: `alert_${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
             type,
             severity,
             title,

@@ -1,4 +1,6 @@
 // 📈 QUIZ ANALYTICS SERVICE
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+
 export class QuizAnalyticsService {
   /**
    * Rastrear início do quiz
@@ -56,7 +58,7 @@ export class QuizAnalyticsService {
   private static getSessionId(): string {
     let sessionId = sessionStorage.getItem('quiz_session_id');
     if (!sessionId) {
-      sessionId = `session_${  Date.now()  }_${  Math.random().toString(36).substr(2, 9)}`;
+      sessionId = `session_${uuidv4()}`; // 🆕 G36 FIX: UUID ao invés de Date.now()
       sessionStorage.setItem('quiz_session_id', sessionId);
     }
     return sessionId;

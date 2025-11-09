@@ -3,6 +3,8 @@
  * ROI Projetado: $5k-15k/mês
  */
 
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+
 export interface IntegrationConfig {
   id: string;
   name: string;
