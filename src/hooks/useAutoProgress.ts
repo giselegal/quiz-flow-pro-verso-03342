@@ -6,7 +6,7 @@
 
 import { useEffect, useCallback } from 'react';
 import type { Block } from '@/types/editor';
-import { calculateProgressValue, updateProgressInBlocks } from '@/utils/progressCalculator';
+import { calculateProgressValue, updateProgressInBlocks } from '@/lib/utils/progressCalculator';
 
 export interface UseAutoProgressOptions {
     currentStepIndex: number;

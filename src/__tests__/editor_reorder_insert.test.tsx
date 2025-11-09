@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
 import { EditorProvider, useEditor } from '@/components/editor/EditorProviderCanonical';
-import { createBlockFromComponent } from '@/utils/editorUtils';
+import { createBlockFromComponent } from '@/lib/utils/editorUtils';
 
 // Harness para executar ações e expor a ordem dos tipos no DOM
 const Harness: React.FC = () => {

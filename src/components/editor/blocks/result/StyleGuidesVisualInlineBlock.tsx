@@ -1,5 +1,5 @@
 import React from 'react';
-import { safeStylePlaceholder } from '@/utils/placeholder';
+import { safeStylePlaceholder } from '@/lib/utils/placeholder';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { Progress } from '@/components/ui/progress';

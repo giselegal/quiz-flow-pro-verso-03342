@@ -5,7 +5,7 @@
  */
 
 import { blockSchemas, BlockType, safeValidateBlockData } from '@/schemas/blockSchemas';
-import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { PerformanceOptimizer } from '@/lib/utils/performanceOptimizer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';

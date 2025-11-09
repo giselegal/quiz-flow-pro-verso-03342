@@ -3,7 +3,7 @@
  */
 import { useState, useCallback } from 'react';
 import { QuizQuestion, QuizAnswer, QuizResult } from '@/types/quiz';
-import { mapToStyleResult } from '@/utils/styleResultMapper';
+import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 
 export const useQuizLogicSimplified = (questions: QuizQuestion[]) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

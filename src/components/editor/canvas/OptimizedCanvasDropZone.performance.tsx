@@ -2,7 +2,7 @@
 // Este arquivo implementa correções diretas para problemas de renderização
 
 import React from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDndContext, useDroppable } from '@dnd-kit/core';

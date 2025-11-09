@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, ComponentType } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { EditorLoadingWrapper } from './EditorLoadingWrapper';
 
 /**

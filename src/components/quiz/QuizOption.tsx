@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { QuizOption as QuizOptionType } from '@/types/quiz';
-import { highlightStrategicWords } from '@/utils/textHighlight';
+import { highlightStrategicWords } from '@/lib/utils/textHighlight';
 import { QuizOptionImage } from './QuizOptionImage';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Check } from 'lucide-react';

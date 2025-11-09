@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { editorMetrics } from '@/utils/editorMetrics';
+import { editorMetrics } from '@/lib/utils/editorMetrics';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Download } from 'lucide-react';
 

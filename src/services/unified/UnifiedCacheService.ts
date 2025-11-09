@@ -21,7 +21,7 @@
  * @date 2025-01-17
  */
 
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // ============================================================================
 // TYPES

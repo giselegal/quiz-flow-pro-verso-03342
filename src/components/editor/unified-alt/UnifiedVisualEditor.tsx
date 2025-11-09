@@ -6,7 +6,7 @@
 export type EditorTab = 'quiz' | 'result' | 'sales';
 
 import { StyleResult } from '@/types/quiz';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 interface UnifiedVisualEditorProps {
   primaryStyle?: StyleResult;

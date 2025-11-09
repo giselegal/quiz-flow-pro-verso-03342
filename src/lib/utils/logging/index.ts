@@ -17,5 +17,5 @@ export {
 
 // Removidos exports diretos de filtros/formatters/transports para reduzir bundle default.
 // Consumidores avançados devem importar diretamente do caminho específico ex:
-// import { RateLimitFilter } from '@/utils/logging/filters/RateLimitFilter';
+// import { RateLimitFilter } from '@/lib/utils/logging/filters/RateLimitFilter';
 

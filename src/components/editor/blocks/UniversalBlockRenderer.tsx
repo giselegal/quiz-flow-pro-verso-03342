@@ -1,10 +1,10 @@
 import React, { memo, useMemo, Suspense, useEffect, useRef, CSSProperties } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { blockRendererDebug } from '@/components/editor/debug/BlockRendererDebug';
-import { cacheManager } from '@/utils/cache/LRUCache';
-import { useLogger } from '@/utils/logger/SmartLogger';
+import { cacheManager } from '@/lib/utils/cache/LRUCache';
+import { useLogger } from '@/lib/utils/logger/SmartLogger';
 
 // 🎯 UNIFIED BLOCK REGISTRY - Lazy loading com code splitting
 import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';

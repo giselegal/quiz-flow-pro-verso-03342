@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 interface EditorLoadingWrapperProps {
     children: ReactNode;

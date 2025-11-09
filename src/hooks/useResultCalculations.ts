@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { styleConfigGisele } from '@/data/styles';
-import { resolveStyleId } from '@/utils/styleIds';
+import { resolveStyleId } from '@/lib/utils/styleIds';
 import type { QuizScores } from '@/hooks/useQuizState';
 
 /**

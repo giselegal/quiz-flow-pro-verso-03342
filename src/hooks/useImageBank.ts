@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllImages } from '@/data/imageBank';
-import { preloadCriticalImages } from '@/utils/imageManager';
+import { preloadCriticalImages } from '@/lib/utils/imageManager';
 
 export const useImageBank = () => {
   const [images, setImages] = useState<any[]>([]);

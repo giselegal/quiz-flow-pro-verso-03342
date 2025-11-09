@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Card } from '@/components/ui/card';
 import { Gift, Star } from 'lucide-react';
-import { optimizeCloudinaryUrl } from '@/utils/imageUtils';
+import { optimizeCloudinaryUrl } from '@/lib/utils/imageUtils';
 // framer-motion removido para componentes fora do Canvas
 import ProgressiveImage from '@/components/ui/progressive-image';
 

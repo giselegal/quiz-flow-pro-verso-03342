@@ -1,5 +1,5 @@
 import type { Block } from '@/types/editor';
-import { TemplateManager } from '@/utils/TemplateManager';
+import { TemplateManager } from '@/lib/utils/TemplateManager';
 import { useCallback, useEffect, useState } from 'react';
 
 interface UseJsonTemplateOptions {

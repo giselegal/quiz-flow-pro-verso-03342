@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { appLogger } from '@/utils/logger';
-import { useLogger } from '@/utils/logger/SmartLogger';
-import { cacheManager } from '@/utils/cache/LRUCache';
+import { appLogger } from '@/lib/utils/logger';
+import { useLogger } from '@/lib/utils/logger/SmartLogger';
+import { cacheManager } from '@/lib/utils/cache/LRUCache';
 
 // ✅ SISTEMA DE PROPRIEDADES DE BLOCK GLOBALIZADO
 export interface BlockProperty {

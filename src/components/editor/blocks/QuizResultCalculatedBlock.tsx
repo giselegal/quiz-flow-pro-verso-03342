@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { StorageService } from '@/services/core/StorageService';
 

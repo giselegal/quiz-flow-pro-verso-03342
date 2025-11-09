@@ -8,9 +8,9 @@
  */
 
 import { Block } from '@/types/editor';
-import { templateCache } from '@/utils/TemplateCache';
+import { templateCache } from '@/lib/utils/TemplateCache';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
-import { templateKey } from '@/utils/cacheKeys';
+import { templateKey } from '@/lib/utils/cacheKeys';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { TemplateRegistry } from '@/services/canonical/TemplateService';
 

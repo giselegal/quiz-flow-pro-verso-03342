@@ -18,7 +18,7 @@ import {
   performSystemHealthCheck,
   errorManager,
   createFunnelError,
-} from '@/utils/improvedFunnelSystem';
+} from '@/lib/utils/improvedFunnelSystem';
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 

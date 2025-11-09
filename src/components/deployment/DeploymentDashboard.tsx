@@ -19,7 +19,7 @@ import {
   Shield,
   Database,
 } from 'lucide-react';
-import { runDeploymentChecklist, type DeploymentReport } from '@/utils/deploymentChecklist';
+import { runDeploymentChecklist, type DeploymentReport } from '@/lib/utils/deploymentChecklist';
 import { useProductionOptimization } from '@/hooks/useProductionOptimization';
 
 export const DeploymentDashboard: React.FC = () => {

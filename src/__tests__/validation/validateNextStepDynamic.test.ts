@@ -1,4 +1,4 @@
-import { validateNextStep, validateCompleteFunnel } from '@/utils/quizValidationUtils';
+import { validateNextStep, validateCompleteFunnel } from '@/lib/utils/quizValidationUtils';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 
 describe('validateNextStep (dinâmico / normalização)', () => {

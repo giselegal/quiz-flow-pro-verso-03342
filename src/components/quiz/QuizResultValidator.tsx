@@ -52,7 +52,7 @@ export const QuizResultValidator: React.FC = () => {
           type: 'error',
           message: 'Nenhum resultado encontrado em ambos os sistemas de storage',
           fix: async () => {
-            const { calculateAndSaveQuizResult } = await import('@/utils/quizResultCalculator');
+            const { calculateAndSaveQuizResult } = await import('@/lib/utils/quizResultCalculator');
             await calculateAndSaveQuizResult();
             checkValidation();
           },

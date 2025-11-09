@@ -4,7 +4,7 @@
  */
 
 import { Badge } from '@/components/ui/badge';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useEditorDiagnostics } from '@/hooks/useEditorDiagnostics';
@@ -18,7 +18,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { validateStep } from '@/utils/stepValidationRegistry';
+import { validateStep } from '@/lib/utils/stepValidationRegistry';
 import { QuizDataService } from '@/services/core/QuizDataService';
 
 interface DiagnosticStatusProps {

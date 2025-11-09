@@ -1,5 +1,5 @@
 import type { BlockComponentProps } from '@/types/blocks';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (

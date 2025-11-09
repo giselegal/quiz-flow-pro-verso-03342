@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabase';
-import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
+import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
 import {
     TrendingDown,
     AlertTriangle,

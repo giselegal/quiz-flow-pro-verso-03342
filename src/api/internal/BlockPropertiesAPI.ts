@@ -12,7 +12,7 @@
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
-import { IndexedDBStorageService, StorageConfig } from '@/utils/storage/IndexedDBStorageService';
+import { IndexedDBStorageService, StorageConfig } from '@/lib/utils/storage/IndexedDBStorageService';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 
 // ===== INTERFACES =====

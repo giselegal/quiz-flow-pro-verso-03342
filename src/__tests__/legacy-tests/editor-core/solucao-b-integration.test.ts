@@ -9,7 +9,7 @@ import { describe, it, expect } from 'vitest';
 
 // Import dos módulos reais da Solução B
 import { SCHEMAS, migrateProps } from '@/schemas';
-import { normalizeByType } from '@/utils/normalizeByType';
+import { normalizeByType } from '@/lib/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
 
 describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {

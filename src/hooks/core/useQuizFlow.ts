@@ -1,7 +1,7 @@
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { QuizDataService } from '@/services/core/QuizDataService';
-import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
-import { TemplateManager } from '@/utils/TemplateManager';
+import { getStepInfo as coreGetStepInfo } from '@/lib/utils/quiz21StepsRenderer';
+import { TemplateManager } from '@/lib/utils/TemplateManager';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';

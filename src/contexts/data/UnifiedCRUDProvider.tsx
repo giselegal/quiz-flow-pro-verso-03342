@@ -13,7 +13,7 @@ import React, { createContext, useContext, useCallback, useEffect, useState } fr
 import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
-import { normalizeFunnelId } from '@/utils/funnelNormalizer';
+import { normalizeFunnelId } from '@/lib/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // ============================================================================
@@ -81,7 +81,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     const logger = new Proxy({}, {
         get(_t, prop: string) {
             return (...args: any[]) => {
-                import('@/utils/logging').then(m => {
+                import('@/lib/utils/logging').then(m => {
                     try {
                         const real: any = m.getLogger();
                         const fn = real?.[prop as keyof typeof real];

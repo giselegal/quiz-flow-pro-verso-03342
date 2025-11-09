@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { autoFillNextSteps, type StepLike } from '@/utils/autoFillNextSteps';
+import { autoFillNextSteps, type StepLike } from '@/lib/utils/autoFillNextSteps';
 
 describe('autoFillNextSteps', () => {
   it('não altera quando todos nextStep já definidos', () => {

@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { notify } from '@/utils/notify';
+import { notify } from '@/lib/utils/notify';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Webhook, Zap, CheckCircle, AlertTriangle, TestTube } from 'lucide-react';

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { StyleResult } from '@/types/quiz';
 import { Block } from '@/types/editor';
 

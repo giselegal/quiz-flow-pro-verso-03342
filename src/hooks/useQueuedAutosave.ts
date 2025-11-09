@@ -20,8 +20,8 @@
  */
 
 import { useCallback, useRef, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
-import { editorMetrics } from '@/utils/editorMetrics';
+import { appLogger } from '@/lib/utils/logger';
+import { editorMetrics } from '@/lib/utils/editorMetrics';
 import type { Block } from '@/types/editor';
 
 interface SaveQueueEntry {

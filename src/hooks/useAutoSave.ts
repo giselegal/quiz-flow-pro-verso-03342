@@ -16,9 +16,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useEditor } from '@/hooks/useEditor';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
-import { convertBlocksToComponentInstances } from '@/utils/componentInstanceConverter';
+import { convertBlocksToComponentInstances } from '@/lib/utils/componentInstanceConverter';
 import { useToast } from '@/hooks/use-toast';
-import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/utils/retryWithBackoff';
+import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/lib/utils/retryWithBackoff';
 
 export type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'error';
 

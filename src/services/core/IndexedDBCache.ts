@@ -18,7 +18,7 @@
  * - Draft auto-save
  */
 
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 interface CacheEntry<T> {
   key: string;

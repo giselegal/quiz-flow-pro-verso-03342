@@ -8,7 +8,7 @@
 import { Block } from '@/types/editor';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
-import { normalizeBlockType } from '@/utils/blockNormalization';
+import { normalizeBlockType } from '@/lib/utils/blockNormalization';
 
 // ============================================================================
 // TIPOS JSON v3.0

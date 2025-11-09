@@ -2,9 +2,9 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { StyleResult } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
-import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
+import { calculateAndSaveQuizResult } from '@/lib/utils/quizResultCalculator';
 import { resultCacheService } from '@/services/core/ResultCacheService';
-import { useDebounce } from '@/utils/debounce';
+import { useDebounce } from '@/lib/utils/debounce';
 import EVENTS from '@/core/constants/events';
 
 export const useQuizResult = () => {

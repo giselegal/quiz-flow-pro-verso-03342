@@ -1,5 +1,5 @@
 import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditor } from '@/hooks/useUnifiedEditor';

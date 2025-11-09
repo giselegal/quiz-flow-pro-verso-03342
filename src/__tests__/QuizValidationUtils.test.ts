@@ -12,7 +12,7 @@ import {
     getValidStyleIds,
     getValidNextSteps,
     OFFER_MAP_KEYS,
-} from '@/utils/quizValidationUtils';
+} from '@/lib/utils/quizValidationUtils';
 import { TemplateService } from '@/services/canonical/TemplateService';
 
 describe('🛡️ Quiz Validation Utils', () => {

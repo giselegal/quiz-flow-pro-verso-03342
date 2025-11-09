@@ -1,12 +1,12 @@
 import type { BlockComponentProps } from '@/types/blocks';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
-import { safePlaceholder } from '@/utils/placeholder';
+import { safePlaceholder } from '@/lib/utils/placeholder';
 import { templateService } from '@/services/canonical/TemplateService';
 import { useStepConfig } from '@/hooks/useStepConfig'; // ✅ USAR HOOK DE CONFIGURAÇÃO
 

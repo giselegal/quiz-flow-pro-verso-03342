@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
+import hydrateSectionsWithQuizSteps from '@/lib/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { TemplateService } from '@/services/canonical/TemplateService';
 
 type Section = { type: string; id?: string; content?: any; style?: any; animation?: any };

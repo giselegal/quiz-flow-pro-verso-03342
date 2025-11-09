@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { safeLocalStorage } from '@/utils/safeLocalStorage';
+import { safeLocalStorage } from '@/lib/utils/safeLocalStorage';
 type Theme = 'dark' | 'light' | 'system';
 type ThemeProviderProps = {
   children: React.ReactNode;

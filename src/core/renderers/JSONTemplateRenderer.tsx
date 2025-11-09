@@ -8,7 +8,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import Mustache from 'mustache';
 import { getTemplatePath } from '@/config/block-complexity-map';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // Cache global de templates HTML
 const templateCache = new Map<string, string>();

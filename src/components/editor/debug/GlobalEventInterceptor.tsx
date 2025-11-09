@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 /**
  * Interceptador global para debugar eventos que podem estar interferindo no DnD

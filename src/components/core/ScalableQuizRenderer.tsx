@@ -72,7 +72,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 let tpl: any = null;
                 if (isGateEnabled) {
                     // Import dinâmico para não incluir normalizador no bundle padrão
-                    const mod = await import('@/utils/funnelNormalizer');
+                    const mod = await import('@/lib/utils/funnelNormalizer');
                     const getTemplateInfo = (mod as any).getTemplateInfo as (fid: string) => Promise<any>;
                     tpl = await getTemplateInfo(funnelId);
                     setTemplateInfo(tpl);

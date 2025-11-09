@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Eye, Palette, Settings, Type } from 'lucide-react';

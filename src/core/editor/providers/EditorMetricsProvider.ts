@@ -21,7 +21,7 @@ import {
 
 // Importar serviços de monitoramento existentes
 import { MonitoringService } from '@/services/core/MonitoringService';
-import { PerformanceMonitor } from '@/utils/performanceMonitoring';
+import { PerformanceMonitor } from '@/lib/utils/performanceMonitoring';
 import { RealTimeAnalytics } from '@/services/realTimeAnalytics';
 
 // ============================================================================

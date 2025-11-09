@@ -14,8 +14,8 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { calculateScore } from '@/utils/scoreCalculator';
-import type { Answer as ScoreAnswer, ScoringRules } from '@/utils/scoreCalculator';
+import { calculateScore } from '@/lib/utils/scoreCalculator';
+import type { Answer as ScoreAnswer, ScoringRules } from '@/lib/utils/scoreCalculator';
 
 // ============================================================================
 // TYPES

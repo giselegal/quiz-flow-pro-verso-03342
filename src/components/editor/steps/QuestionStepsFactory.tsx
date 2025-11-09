@@ -1,5 +1,5 @@
 import { generateRealQuestionTemplates } from '@/data/realQuizTemplates';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 /**
  * ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)

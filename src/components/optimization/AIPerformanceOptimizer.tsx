@@ -25,7 +25,7 @@ import {
   MemoryStick,
 } from 'lucide-react';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 
 // 🎯 TIPOS DE OTIMIZAÇÃO
 interface OptimizationStrategy {

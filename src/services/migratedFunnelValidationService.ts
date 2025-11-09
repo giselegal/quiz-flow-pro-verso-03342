@@ -9,11 +9,11 @@
  * - improvedFunnelSystem.ts para operações unificadas
  */
 
-import { validateFunnelId } from '@/utils/idValidation';
-import { validateFunnelSchema } from '@/utils/schemaValidation';
-import { errorManager, createValidationError, createStorageError, StandardizedError } from '@/utils/errorHandling';
-import { performSystemHealthCheck } from '@/utils/improvedFunnelSystem';
-import { dbToFrontend, frontendToDb } from '@/utils/namingStandards';
+import { validateFunnelId } from '@/lib/utils/idValidation';
+import { validateFunnelSchema } from '@/lib/utils/schemaValidation';
+import { errorManager, createValidationError, createStorageError, StandardizedError } from '@/lib/utils/errorHandling';
+import { performSystemHealthCheck } from '@/lib/utils/improvedFunnelSystem';
+import { dbToFrontend, frontendToDb } from '@/lib/utils/namingStandards';
 
 export interface MigratedFunnelValidationResult {
     isValid: boolean;

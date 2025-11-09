@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Block } from '@/types/editor';
-import { generateId } from '@/utils/idGenerator';
-import { getDefaultContentForType } from '@/utils/editorDefaults';
+import { generateId } from '@/lib/utils/idGenerator';
+import { getDefaultContentForType } from '@/lib/utils/editorDefaults';
 
 export const useBlockOperations = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);

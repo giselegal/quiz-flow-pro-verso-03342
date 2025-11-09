@@ -19,7 +19,7 @@
  */
 
 import React, { lazy, type ComponentType, Suspense } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { isSimpleBlock, getTemplatePath } from '@/config/block-complexity-map';
 import JSONTemplateRenderer from '@/core/renderers/JSONTemplateRenderer';
 

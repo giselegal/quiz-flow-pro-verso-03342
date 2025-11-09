@@ -2,7 +2,7 @@ import { BaseCanonicalService, ServiceResult } from '@/services/canonical/types'
 import { supabase } from '@/integrations/supabase/customClient';
 import { CacheService } from '@/services/canonical/CacheService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
-import { deepClone } from '@/utils/cloneFunnel';
+import { deepClone } from '@/lib/utils/cloneFunnel';
 import type { Funnel, FunnelFilters, FunnelPagination, CreateFunnelDTO, UpdateFunnelDTO } from '@/services/canonical/DataService';
 
 export class FunnelDataService extends BaseCanonicalService {

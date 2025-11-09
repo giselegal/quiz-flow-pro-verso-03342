@@ -16,7 +16,7 @@ import React from 'react';
 import { BaseStepProps, StepComponent, StepConfig } from './StepTypes';
 import { stepRegistry } from './StepRegistry';
 // Debug helper será carregado sob demanda para evitar import estático duplicado
-import { normalizeStepId } from '@/utils/quizStepIds';
+import { normalizeStepId } from '@/lib/utils/quizStepIds';
 
 // Import dos componentes de produção originais
 import OriginalIntroStep from '@/components/quiz/IntroStep';
@@ -108,7 +108,7 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 if (stepData?.blocks && Array.isArray(stepData.blocks)) {
                     blocks = stepData.blocks;
                 } else if (stepData?.sections && Array.isArray(stepData.sections)) {
-                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
                     blocks = convertSectionsToBlocks(stepData.sections);
                 }
 
@@ -174,7 +174,7 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 if (stepData?.blocks && Array.isArray(stepData.blocks)) {
                     blocks = stepData.blocks;
                 } else if (stepData?.sections && Array.isArray(stepData.sections)) {
-                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
                     blocks = convertSectionsToBlocks(stepData.sections);
                 }
 
@@ -259,7 +259,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 } else if (stepData?.sections && Array.isArray(stepData.sections)) {
                     // Template TS legado com sections - converter para blocks
                     console.log('🔄 [TransitionStepAdapter] Converting sections to blocks');
-                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
                     blocks = convertSectionsToBlocks(stepData.sections);
                 } else {
                     console.warn('⚠️ [TransitionStepAdapter] No blocks or sections found');
@@ -389,7 +389,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
                 } else if (stepData?.sections && Array.isArray(stepData.sections)) {
                     // Template TS legado com sections - converter para blocks
                     console.log('🔄 [ResultStepAdapter] Converting sections to blocks');
-                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
                     blocks = convertSectionsToBlocks(stepData.sections);
                 } else {
                     console.warn('⚠️ [ResultStepAdapter] No blocks or sections found');

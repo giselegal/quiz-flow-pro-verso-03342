@@ -1,5 +1,5 @@
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import ReusableComponentsPanel from '@/components/editor/ReusableComponentsPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Grid3X3, Package } from 'lucide-react';

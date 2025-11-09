@@ -6,7 +6,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
 import { PropertyCategory } from '@/hooks/useUnifiedProperties';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

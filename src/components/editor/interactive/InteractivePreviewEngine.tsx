@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Block } from '@/types/editor';
 import { ProductionPreviewEngine } from '../unified/ProductionPreviewEngine';
 import { InlineEditableBlock } from './InlineEditableBlock';

@@ -6,7 +6,7 @@
  * otimizações automáticas e inteligentes.
  */
 
-import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { PerformanceOptimizer } from '@/lib/utils/performanceOptimizer';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIsLowPerformanceDevice, useIsMobile } from './use-mobile';
 import { useDebounce } from './useDebounce';

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { StorageService } from '@/services/core/StorageService';
-import { cleanEditorLocalStorage } from '@/utils/cleanStorage';
+import { cleanEditorLocalStorage } from '@/lib/utils/cleanStorage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Share2, ArrowRight, Trophy, Star, Check, Heart } from 'lucide-react';

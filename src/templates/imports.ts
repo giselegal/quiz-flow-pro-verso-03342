@@ -8,7 +8,7 @@
 // Import estático do template principal (JSON - fonte canônica)
 import QUIZ_STYLE_21_STEPS_TEMPLATE from './quiz21StepsComplete.json';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
-import { normalizeTemplateBlocks } from '@/utils/blockNormalization';
+import { normalizeTemplateBlocks } from '@/lib/utils/blockNormalization';
 
 // Export centralizado para uso em imports dinâmicos (fonte canônica)
 export const getQuiz21StepsTemplate = () => {

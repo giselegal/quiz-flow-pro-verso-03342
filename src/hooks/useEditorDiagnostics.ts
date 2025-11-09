@@ -3,8 +3,8 @@
  * Hook para monitorar e diagnosticar o editor em tempo real
  */
 
-import * as DiagnosticsModule from '@/utils/editorDiagnostics';
-import type { DiagnosticResult as CoreDiagnosticResult, DiagnosticDetails as CoreDiagnosticDetails } from '@/utils/editorDiagnostics';
+import * as DiagnosticsModule from '@/lib/utils/editorDiagnostics';
+import type { DiagnosticResult as CoreDiagnosticResult, DiagnosticDetails as CoreDiagnosticDetails } from '@/lib/utils/editorDiagnostics';
 
 type DiagnosticResult = {
   success: boolean;
@@ -72,7 +72,7 @@ const EditorDiagnostics = {
     try { return JSON.stringify((window as any).__EDITOR_DIAGNOSTICS__ || {}, null, 2); } catch { return '{}'; }
   },
 };
-import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { PerformanceOptimizer } from '@/lib/utils/performanceOptimizer';
 import { useCallback, useEffect, useState } from 'react';
 
 interface DiagnosticState {

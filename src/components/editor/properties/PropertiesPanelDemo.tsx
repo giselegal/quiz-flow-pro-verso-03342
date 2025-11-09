@@ -18,7 +18,7 @@
  */
 
 import React from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { SinglePropertiesPanel } from './SinglePropertiesPanel';
 import { UnifiedBlock } from '@/hooks/useUnifiedProperties';
 

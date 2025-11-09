@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 /**
  * Componente de debug que monitora o estado do DnD em tempo real

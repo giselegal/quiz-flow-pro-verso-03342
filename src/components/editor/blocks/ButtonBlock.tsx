@@ -1,5 +1,5 @@
 import { InlineEditableText } from './InlineEditableText';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Button as UIButton } from '@/components/ui/button';
 import { MousePointer } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';

@@ -6,7 +6,7 @@ import {
   AddComponentInput,
   UpdateComponentInput,
 } from '@/services/funnelComponentsService';
-import { generateUniqueInstanceKey } from '@/utils/funnelIdentity';
+import { generateUniqueInstanceKey } from '@/lib/utils/funnelIdentity';
 
 interface UseFunnelComponentsProps {
   funnelId: string;

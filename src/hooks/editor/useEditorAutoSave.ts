@@ -3,7 +3,7 @@ import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce'
 import { ContextualFunnelService } from '@/services/core/ContextualFunnelService';
 import type { ContextualFunnelData } from '@/types/funnel';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
-import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
+import { getFunnelIdFromEnvOrStorage } from '@/lib/utils/funnelIdentity';
 import { useToast } from '@/hooks/use-toast';
 
 interface UseEditorAutoSaveOptions {

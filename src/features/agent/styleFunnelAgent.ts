@@ -1,5 +1,5 @@
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
+import { calculateAndSaveQuizResult } from '@/lib/utils/quizResultCalculator';
 
 export type AgentTargetStyle =
     | 'natural'

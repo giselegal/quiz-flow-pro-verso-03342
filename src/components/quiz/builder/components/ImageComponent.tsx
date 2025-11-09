@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { optimizeCloudinaryUrl } from '@/utils/imageUtils';
+import { optimizeCloudinaryUrl } from '@/lib/utils/imageUtils';
 
 interface ImageComponentProps {
   data: {

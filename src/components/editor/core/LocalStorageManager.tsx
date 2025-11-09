@@ -1,8 +1,8 @@
 import React, { useEffect, useState, memo } from 'react';
-import { appLogger } from '@/utils/logger';
-import { optimizedStorage, StorageOptimizer } from '@/utils/storageOptimization';
+import { appLogger } from '@/lib/utils/logger';
+import { optimizedStorage, StorageOptimizer } from '@/lib/utils/storageOptimization';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
-import { devLog } from '@/utils/editorUtils';
+import { devLog } from '@/lib/utils/editorUtils';
 
 interface LocalStorageManagerProps {
   // Configurações opcionais

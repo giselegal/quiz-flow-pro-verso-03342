@@ -8,7 +8,7 @@ import {
   trackComponentView,
   trackComponentClick,
   INLINE_ANIMATIONS,
-} from '@/utils/inlineComponentUtils';
+} from '@/lib/utils/inlineComponentUtils';
 import { Users, TrendingUp, Heart, Clock, Star, Award, Target, Zap, BarChart3 } from 'lucide-react';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)

@@ -10,7 +10,7 @@
 
 import { useCallback, useMemo, useEffect } from 'react';
 import { useEditorContext } from '@/components/editor/EditorProviderCanonical';
-import { editorMetrics } from '@/utils/editorMetrics';
+import { editorMetrics } from '@/lib/utils/editorMetrics';
 
 export interface EditorHistoryState {
   canUndo: boolean;

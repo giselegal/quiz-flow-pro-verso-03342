@@ -64,7 +64,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
       const stats = unifiedQuizStorage.getDataStats();
       if (stats.selectionsCount >= 3) {
         console.log('🔄 [Step20Fallback] Tentando recálculo automático...');
-        const { calculateAndSaveQuizResult } = await import('@/utils/quizResultCalculator');
+        const { calculateAndSaveQuizResult } = await import('@/lib/utils/quizResultCalculator');
         const result = await calculateAndSaveQuizResult();
         if (result) {
           setFallbackData(result);
@@ -78,7 +78,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
   const handleForceRecalculate = async () => {
     try {
       console.log('🔄 [Step20Fallback] Forçando recálculo...');
-      const { calculateAndSaveQuizResult } = await import('@/utils/quizResultCalculator');
+      const { calculateAndSaveQuizResult } = await import('@/lib/utils/quizResultCalculator');
       await calculateAndSaveQuizResult();
       retry?.();
       onRetry?.();

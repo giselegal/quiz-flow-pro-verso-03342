@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { useEditorReusableComponentsSimple } from '@/hooks/useEditorReusableComponents.simple';
 
 interface ReusableComponentsPanelProps {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
-import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
+import { getPreviewBlockKey } from '@/lib/utils/keys/previewKeys';
 
 export interface ProductionPreviewEngineProps {
   blocks: Block[];

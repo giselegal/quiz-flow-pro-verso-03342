@@ -11,11 +11,11 @@ import {
   isValidStepNumber,
   numberToStageId,
   stageIdToNumber,
-} from '@/utils/navigationHelpers';
-import { makeStepKey } from '@/utils/stepKey';
+} from '@/lib/utils/navigationHelpers';
+import { makeStepKey } from '@/lib/utils/stepKey';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';
-import { safeGetItem as safeGetItemCtx, safeSetItem as safeSetItemCtx } from '@/utils/contextualStorage';
+import { safeGetItem as safeGetItemCtx, safeSetItem as safeSetItemCtx } from '@/lib/utils/contextualStorage';
 
 /**
  * HOOK UNIFICADO DE NAVEGAÇÃO DO FUNIL

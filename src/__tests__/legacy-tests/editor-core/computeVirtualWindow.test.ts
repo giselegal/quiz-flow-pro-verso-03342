@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeVirtualWindow } from '@/utils/virtualization/computeVirtualWindow';
+import { computeVirtualWindow } from '@/lib/utils/virtualization/computeVirtualWindow';
 
 describe('computeVirtualWindow', () => {
     const base = {

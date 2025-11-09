@@ -9,7 +9,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { editorMetrics } from '@/utils/editorMetrics';
+import { editorMetrics } from '@/lib/utils/editorMetrics';
 import { EditorTelemetryService } from '../EditorTelemetryService';
 
 describe('EditorTelemetry Performance', () => {

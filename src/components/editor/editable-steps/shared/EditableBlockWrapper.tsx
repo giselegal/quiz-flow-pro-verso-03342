@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { PropertyHighlighter } from './PropertyHighlighter';
 import { LiveEditControls } from './LiveEditControls';
 import { EditableStepProps } from './EditableStepProps';

@@ -1,4 +1,4 @@
-import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { PerformanceOptimizer } from '@/lib/utils/performanceOptimizer';
 import { useCallback, useEffect, useRef } from 'react';
 
 /**

@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { AlertTriangle, RefreshCw, Bug } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StorageService } from '@/services/core/StorageService';

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import QuizApp from '@/components/quiz/QuizApp';
 import ModularPreviewContainer from '@/components/editor/quiz/ModularPreviewContainer';
 import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';

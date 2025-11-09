@@ -16,7 +16,7 @@ import type { Block } from '@/types/editor';
 import { OptimizedBlockRenderer } from '@/components/editor/OptimizedBlockRenderer';
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { getPreloadBlocks } from '@/registry/blockCategories';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // ============================================================================
 // TYPES

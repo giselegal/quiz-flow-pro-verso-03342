@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { BlockComponentProps } from '@/types/blocks';
 import { cn } from '@/lib/utils';
-import { getMarginClass, MarginProps, defaultMargins } from '@/utils/marginUtils';
+import { getMarginClass, MarginProps, defaultMargins } from '@/lib/utils/marginUtils';
 
 interface Props extends BlockComponentProps, MarginProps {
   style?: 'solid' | 'dashed' | 'dotted';

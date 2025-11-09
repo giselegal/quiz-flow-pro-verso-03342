@@ -5,12 +5,12 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { render, screen, waitFor } from '@testing-library/react';
 import { EditableBlock } from '../EditableBlock';
 import { PreviewBlock } from '../PreviewBlock';
 import { IsolatedPreview } from '../IsolatedPreview';
-import { MemoizationMetrics } from '@/utils/performance/memoization';
+import { MemoizationMetrics } from '@/lib/utils/performance/memoization';
 import { Block } from '@/types/editor';
 
 // Mock block

@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 
 // 🎯 INTERFACES DE ANALYTICS AVANÇADO
 interface PerformanceMetrics {

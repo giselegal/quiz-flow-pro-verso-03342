@@ -6,7 +6,7 @@ import { QuizFunnel, SimplePage } from '@/types/quiz';
 import styles from '@/styles/editor.module.css';
 import { ArrowDown, ArrowUp, Copy, FolderTree, MoreVertical, Plus, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { generateSemanticId } from '@/utils/semanticIdGenerator';
+import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
 
 interface FunnelManagementPanelProps {
   funnel: QuizFunnel;

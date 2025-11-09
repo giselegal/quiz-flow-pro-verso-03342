@@ -178,7 +178,7 @@ export async function printDeepDebug() {
           blocks = step.blocks;
         } else if (Array.isArray(step?.sections)) {
           hasSections = '✅';
-          const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+          const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
           blocks = convertSectionsToBlocks(step.sections);
         }
         // Enriquecer a identificação de fonte: se veio do registry mas aparenta ser JSON v3, marcar como registry(json-v3)

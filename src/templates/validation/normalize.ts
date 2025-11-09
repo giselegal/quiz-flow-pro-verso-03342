@@ -21,7 +21,7 @@ import {
   type ValidationSuccess,
   type ValidationError,
 } from './templateV3Schema';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // ============================================================================
 // Validation Functions

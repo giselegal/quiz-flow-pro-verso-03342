@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { getResponsiveImageSources, getLowQualityPlaceholder } from '@/utils/imageUtils';
-import { getImageMetadata, isImagePreloaded, getOptimizedImage } from '@/utils/imageManager';
+import { getResponsiveImageSources, getLowQualityPlaceholder } from '@/lib/utils/imageUtils';
+import { getImageMetadata, isImagePreloaded, getOptimizedImage } from '@/lib/utils/imageManager';
 
 interface OptimizedImageProps {
   src: string;

@@ -29,13 +29,13 @@ import { CanonicalServicesMonitor } from './monitoring';
 import { cacheService } from './CacheService';
 // Removido: UnifiedTemplateRegistry (dependência legacy)
 import type { Block } from '@/types/editor';
-import { editorMetrics } from '@/utils/editorMetrics'; // ✅ FASE 3.3
+import { editorMetrics } from '@/lib/utils/editorMetrics'; // ✅ FASE 3.3
 import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: Adapter para normalização
 // 🎯 FASE 1: Hierarchical Template Source (SSOT)
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { DataSourcePriority } from '@/services/core/TemplateDataSource';
 // 🆔 ID Generator (W1: Quick Win - Replace Date.now())
-import { generateCustomStepId, generateBlockId } from '@/utils/idGenerator';
+import { generateCustomStepId, generateBlockId } from '@/lib/utils/idGenerator';
 // 🎯 PR3: Built-in Templates Loader (JSON build-time)
 import { 
   getBuiltInTemplateById, 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { fixBlurryImages } from '@/utils/enhancedFixBlurryImages';
+import { fixBlurryImages } from '@/lib/utils/enhancedFixBlurryImages';
 
 interface AutoFixedImagesProps {
   children: React.ReactNode;

@@ -17,7 +17,7 @@
  */
 
 import React, { useEffect, useCallback } from 'react';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 
 // 🎯 PRODUCTION CONFIGURATION
 interface ProductionConfig {

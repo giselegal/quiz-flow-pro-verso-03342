@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { SafeIframe } from '@/components/security/SafeIframe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

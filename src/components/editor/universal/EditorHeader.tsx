@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/theme-provider';
 import EditorNoCodePanel from '../EditorNoCodePanel';

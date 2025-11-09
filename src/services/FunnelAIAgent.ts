@@ -1,4 +1,4 @@
-import { generateSemanticId } from '@/utils/semanticIdGenerator';
+import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
 
 export interface FunnelTemplate {
   meta: {

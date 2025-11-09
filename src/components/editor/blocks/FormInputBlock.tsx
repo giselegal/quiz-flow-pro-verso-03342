@@ -1,11 +1,11 @@
 import type { BlockComponentProps } from '@/types/blocks';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '@/services/userResponseService';
 import { StorageService } from '@/services/core/StorageService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { getFunnelSessionKey, getFunnelStepKey } from '@/utils/funnelStorageKeys';
+import { getFunnelSessionKey, getFunnelStepKey } from '@/lib/utils/funnelStorageKeys';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;

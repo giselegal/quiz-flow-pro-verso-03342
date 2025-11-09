@@ -5,10 +5,10 @@
  */
 
 import { useMonitoring } from '@/services/canonical/MonitoringService';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
-import { useFeatureFlags } from '@/utils/FeatureFlagManager';
+import { useFeatureFlags } from '@/lib/utils/FeatureFlagManager';
 import React, { useEffect, useMemo, useState } from 'react';
 
 // Importações DnD

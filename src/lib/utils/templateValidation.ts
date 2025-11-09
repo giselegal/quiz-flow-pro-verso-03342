@@ -14,7 +14,7 @@
 
 import { blockPropertySchemas } from '@/config/blockPropertySchemas';
 import type { Block } from '@/types/editor';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 export interface TemplateValidationResult {
     isValid: boolean;

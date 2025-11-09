@@ -9,7 +9,7 @@
 
 import { useState, useCallback } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
-import { generateBlockId } from '@/utils/idGenerator';
+import { generateBlockId } from '@/lib/utils/idGenerator';
 
 type SaveResult = { success: boolean; message: string; stepId?: string; error?: any };
 

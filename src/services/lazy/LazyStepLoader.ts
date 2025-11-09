@@ -20,7 +20,7 @@
 
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { TemplateService } from '@/services/canonical/TemplateService';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 export interface LazyLoadConfig {
   /** Quantos steps antes/depois pré-carregar (default: 1) */

@@ -1,4 +1,4 @@
-import { validateDataSync, ValidationResult } from '@/utils/validateDataSync';
+import { validateDataSync, ValidationResult } from '@/lib/utils/validateDataSync';
 import React, { useEffect, useState } from 'react';
 
 export const SyncValidationTestPage: React.FC = () => {

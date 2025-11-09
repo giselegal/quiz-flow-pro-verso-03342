@@ -1,5 +1,5 @@
 import { styleConfigGisele } from '../../data/styles';
-import { resolveStyleId } from '@/utils/styleIds';
+import { resolveStyleId } from '@/lib/utils/styleIds';
 import type { QuizStep } from '@/types/quiz';
 
 interface OfferStepProps {

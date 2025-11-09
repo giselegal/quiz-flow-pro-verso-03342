@@ -17,7 +17,7 @@
  */
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 
 // 🎯 MEMORY METRICS INTERFACE
 export interface MemoryMetrics {

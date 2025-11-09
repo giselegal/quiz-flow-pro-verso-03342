@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, FileJson, CheckCircle, XCircle, AlertCircle } from 'lucide-react';

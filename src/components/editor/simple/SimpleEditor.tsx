@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Save, Palette, Type, Eye, Settings, ArrowLeft } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
-import { safeLocalStorage } from '@/utils/safeLocalStorage';
+import { safeLocalStorage } from '@/lib/utils/safeLocalStorage';
 import { Link } from 'wouter';
 
 interface EditorConfig {

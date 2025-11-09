@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Quote, Star } from 'lucide-react';
-import { getMarginClass } from '@/utils/margins';
+import { getMarginClass } from '@/lib/utils/margins';
 
 interface TestimonialsBlockProps {
   title?: string;

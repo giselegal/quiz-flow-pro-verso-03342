@@ -1,8 +1,8 @@
 import { useDroppable } from '@dnd-kit/core';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { generateUniqueId } from '@/utils/generateUniqueId';
+import { generateUniqueId } from '@/lib/utils/generateUniqueId';
 
 interface CanvasDropZoneProps {
   children: React.ReactNode;

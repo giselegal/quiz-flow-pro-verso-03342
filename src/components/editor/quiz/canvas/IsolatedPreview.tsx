@@ -9,7 +9,7 @@
  */
 
 import React, { Suspense, useMemo, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { PreviewProvider } from '@/contexts/ui/PreviewContext';
 import { QuizFlowProvider } from '@/contexts/quiz/QuizFlowProvider';
@@ -18,7 +18,7 @@ import { Block } from '@/types/editor';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { useEditor } from '@/hooks/useEditor';
-import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
+import { getPreviewBlockKey } from '@/lib/utils/keys/previewKeys';
 import { usePreviewDataWorker } from '@/hooks/usePreviewDataWorker';
 
 export interface IsolatedPreviewProps {

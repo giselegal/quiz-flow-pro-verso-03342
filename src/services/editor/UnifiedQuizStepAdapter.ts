@@ -9,7 +9,7 @@
 
 import { EditableQuizStep, BlockComponent } from '@/components/editor/quiz/types';
 import { RuntimeStepOverride } from '@/runtime/quiz/QuizRuntimeRegistry';
-import { getBlockConfig } from '@/utils/blockConfigMerger';
+import { getBlockConfig } from '@/lib/utils/blockConfigMerger';
 
 /**
  * Extended runtime block with full properties for editor sync

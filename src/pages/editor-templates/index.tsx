@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Play, Eye, Sparkles } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
-import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
+import { cloneFunnelTemplate } from '@/lib/utils/cloneFunnel';
 import { UnifiedStorageService } from '@/services/aliases';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import EditorLayout from '@/components/layout/EditorLayout';

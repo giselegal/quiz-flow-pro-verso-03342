@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
-import { extractDragData, getDragFeedback, logDragEvent, normalizeOverId, validateDrop } from '@/utils/dragDropUtils';
+import { extractDragData, getDragFeedback, logDragEvent, normalizeOverId, validateDrop } from '@/lib/utils/dragDropUtils';
 import type { Block } from '@/types/editor';
-import { createBlockFromComponent } from '@/utils/editorUtils';
-import { logger } from '@/utils/debugLogger';
+import { createBlockFromComponent } from '@/lib/utils/editorUtils';
+import { logger } from '@/lib/utils/debugLogger';
 
 export interface UseEditorDragAndDropParams {
   currentStepData: Block[];

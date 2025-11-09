@@ -1,7 +1,7 @@
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
-import { isValidBlock, logBlockDebug, safeGetBlockProperties } from '@/utils/blockUtils';
+import { isValidBlock, logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
 import { Award, TrendingUp } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { StorageService } from '@/services/core/StorageService';

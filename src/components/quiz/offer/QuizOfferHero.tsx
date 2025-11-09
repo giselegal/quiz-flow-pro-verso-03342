@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
-import { trackButtonClick } from '@/utils/analytics';
+import { trackButtonClick } from '@/lib/utils/analytics';
 import { getCtaUrl } from '@/services/pixelManager';
 
 interface QuizOfferHeroProps {

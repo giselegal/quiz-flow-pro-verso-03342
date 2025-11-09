@@ -1,6 +1,6 @@
 import React, { useEffect, CSSProperties, memo, FC } from 'react';
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowLeft } from 'lucide-react';
 import { useImageWithFallback } from '@/hooks/useImageWithFallback';

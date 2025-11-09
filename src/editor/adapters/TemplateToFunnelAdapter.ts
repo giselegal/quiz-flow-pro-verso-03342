@@ -16,8 +16,8 @@
 import type { UnifiedFunnel, UnifiedStage } from '@/services/UnifiedCRUDService';
 import type { Block } from '@/types/editor';
 import { templateService } from '@/services/canonical/TemplateService';
-import { appLogger } from '@/utils/logger';
-import { generateFunnelId } from '@/utils/idGenerator'; // ✅ W1
+import { appLogger } from '@/lib/utils/logger';
+import { generateFunnelId } from '@/lib/utils/idGenerator'; // ✅ W1
 
 export interface TemplateConversionOptions {
   /** ID do template a converter */

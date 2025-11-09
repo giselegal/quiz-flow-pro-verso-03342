@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import type { BlockData } from '@/types/blocks';
 import { Clock, Eye, Monitor, RefreshCw, Smartphone, Tablet, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
+import { getPreviewBlockKey } from '@/lib/utils/keys/previewKeys';
 
 interface ResponsivePreviewProps {
   blocks?: BlockData[];

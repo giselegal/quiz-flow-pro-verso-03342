@@ -7,8 +7,8 @@ import React from 'react';
 // ✅ React funcionando
 
 // Imports utilitários
-import { emitQuizEvent, setQuizAnalyticsNamespace } from '@/utils/quizAnalytics';
-import sanitizeHtml from '@/utils/sanitizeHtml';
+import { emitQuizEvent, setQuizAnalyticsNamespace } from '@/lib/utils/quizAnalytics';
+import sanitizeHtml from '@/lib/utils/sanitizeHtml';
 
 // Imports Zod
 import { z } from 'zod';

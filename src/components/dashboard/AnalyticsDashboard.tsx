@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabase';
-import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
+import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
 import {
     Users,
     Target,

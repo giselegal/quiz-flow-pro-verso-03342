@@ -14,7 +14,7 @@
 import { useState, useCallback } from 'react';
 import { FunnelAIAgent } from '@/services/FunnelAIAgent';
 // import { UniversalFunnel } from '../UniversalFunnelEditor';
-// import { UnifiedCalculationEngine } from '@/utils/UnifiedCalculationEngine';
+// import { UnifiedCalculationEngine } from '@/lib/utils/UnifiedCalculationEngine';
 // import { useAI } from '@/hooks/useAI';
 import { useAnalytics } from '@/hooks/useAnalytics';
 

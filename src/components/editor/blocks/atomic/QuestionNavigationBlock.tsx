@@ -62,7 +62,7 @@ export default function QuestionNavigationBlock({
 
     // Navegação por ID configurável
     if (nextStepId) {
-      import('@/utils/stepEvents').then(({ dispatchNavigate }) =>
+      import('@/lib/utils/stepEvents').then(({ dispatchNavigate }) =>
         dispatchNavigate(nextStepId, { source: 'question-navigation:next', blockId: block.id }),
       );
       try {
@@ -84,7 +84,7 @@ export default function QuestionNavigationBlock({
 
     if (onBack) return onBack();
     if (prevStepId) {
-      import('@/utils/stepEvents').then(({ dispatchNavigate }) =>
+      import('@/lib/utils/stepEvents').then(({ dispatchNavigate }) =>
         dispatchNavigate(prevStepId, { source: 'question-navigation:back', blockId: block.id }),
       );
       try {

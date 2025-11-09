@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
+import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
 import {
   TrendingUp,
   TrendingDown,
@@ -31,10 +31,10 @@ import {
   Zap,
   Award,
 } from 'lucide-react';
-import { LANDING_PAGE_AB_TEST } from '@/utils/abtest';
+import { LANDING_PAGE_AB_TEST } from '@/lib/utils/abtest';
 import { FUNNEL_CONFIGS } from '@/services/pixelManager';
 import { toast } from '@/components/ui/use-toast';
-import { getAnalyticsEvents } from '@/utils/analytics';
+import { getAnalyticsEvents } from '@/lib/utils/analytics';
 import ABTestAlerts from './ABTestAlerts';
 
 interface ABTestMetrics {

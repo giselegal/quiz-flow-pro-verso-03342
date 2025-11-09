@@ -6,7 +6,7 @@
  */
 
 import { EditableQuizStep, BlockComponent } from '@/components/editor/quiz/types';
-import { normalizeBlockType } from '@/utils/blockNormalization';
+import { normalizeBlockType } from '@/lib/utils/blockNormalization';
 
 const ensureArray = <T,>(val: unknown): T[] => Array.isArray(val) ? (val as T[]) : [];
 const getType = (b: Partial<BlockComponent>): string => normalizeBlockType(String(b?.type || '').toLowerCase());

@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { styleConfig } from '@/config/styleConfig';
 import { Progress } from '@/components/ui/progress';
-import { safePlaceholder } from '@/utils/placeholder';
+import { safePlaceholder } from '@/lib/utils/placeholder';
 
 interface StyleCardBlockProps {
   showProgress?: boolean;

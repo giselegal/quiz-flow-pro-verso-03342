@@ -1,5 +1,5 @@
 import QuizNavigation from '@/components/quiz/QuizNavigation';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import React from 'react';
 

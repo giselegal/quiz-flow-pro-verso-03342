@@ -20,7 +20,7 @@ import React, {
     useRef,
     ReactNode,
 } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // Placeholder functions for removed providers
 const useSuperUnified = () => ({ getState: () => ({}), setState: () => { } });

@@ -22,7 +22,7 @@ import { QuizScoreDisplay } from '@/components/quiz/blocks/QuizScoreDisplay';
 
 // Sistema unificado de renderização (Fase 3)
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/core/unified';
-import sanitizeHtml from '@/utils/sanitizeHtml';
+import sanitizeHtml from '@/lib/utils/sanitizeHtml';
 import React, { Suspense, useMemo, useCallback } from 'react';
 
 // ✅ FASE 3.3: Hooks de otimização

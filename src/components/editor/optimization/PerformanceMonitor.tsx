@@ -19,7 +19,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BundleOptimizerProvider, useBundleOptimizer } from './BundleOptimizer';
 import { MemoryManagerProvider, useMemoryManager } from './MemoryManager';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 
 // 🎯 PERFORMANCE METRICS INTERFACE
 export interface PerformanceMetrics {

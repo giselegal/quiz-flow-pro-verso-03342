@@ -10,7 +10,7 @@ import { getStyleConfig } from '@/config/styleConfig';
 import { mapToFriendlyStyle, sanitizeStyleMentions } from '@/core/style/naming';
 import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
 import { getBestUserName } from '@/core/user/name';
-import { safePlaceholder, safeStylePlaceholder } from '@/utils/placeholder';
+import { safePlaceholder, safeStylePlaceholder } from '@/lib/utils/placeholder';
 
 // =====================================
 // Utils & Helpers

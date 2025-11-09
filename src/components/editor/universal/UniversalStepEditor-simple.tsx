@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 export interface UniversalStepEditorProps {
     stepId: string;

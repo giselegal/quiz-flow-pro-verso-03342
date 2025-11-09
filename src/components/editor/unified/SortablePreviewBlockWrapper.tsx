@@ -1,5 +1,5 @@
 import { Block } from '@/types/editor';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { StyleResult } from '@/types/quiz';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';

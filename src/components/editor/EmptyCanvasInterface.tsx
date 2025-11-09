@@ -1,5 +1,5 @@
 import React from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Plus, Zap, Wand2 } from 'lucide-react';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';

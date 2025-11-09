@@ -12,7 +12,7 @@ import { templateService } from '@/services/canonical/TemplateService';
  * 
  * Uso no console:
  * ```js
- * import('@/utils/clearRegistryCache').then(m => m.clearAllCaches())
+ * import('@/lib/utils/clearRegistryCache').then(m => m.clearAllCaches())
  * ```
  */
 export async function clearAllCaches(): Promise<void> {

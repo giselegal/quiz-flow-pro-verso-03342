@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useRef } from 'react';
-import { getBlockConfig } from '@/utils/blockConfigMerger';
+import { getBlockConfig } from '@/lib/utils/blockConfigMerger';
 
 export interface SyncValidationResult {
   isSynced: boolean;

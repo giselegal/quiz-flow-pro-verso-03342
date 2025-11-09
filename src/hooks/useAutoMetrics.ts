@@ -6,8 +6,8 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { editorMetrics } from '@/utils/editorMetrics';
-import { shallowEqual } from '@/utils/performanceOptimizations';
+import { editorMetrics } from '@/lib/utils/editorMetrics';
+import { shallowEqual } from '@/lib/utils/performanceOptimizations';
 
 interface UseAutoMetricsOptions {
   enabled?: boolean;

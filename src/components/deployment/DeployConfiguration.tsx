@@ -5,7 +5,7 @@
  */
 
 import { useMonitoring } from '@/services/canonical/MonitoringService';
-import { useFeatureFlags } from '@/utils/FeatureFlagManager';
+import { useFeatureFlags } from '@/lib/utils/FeatureFlagManager';
 import React, { useEffect, useState } from 'react';
 
 interface DeployConfigProps {

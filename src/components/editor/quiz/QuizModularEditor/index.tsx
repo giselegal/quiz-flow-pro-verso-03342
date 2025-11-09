@@ -12,9 +12,9 @@ import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Eye, Edit3, Play, Save, GripVertical, Download, Upload, Undo2, Redo2 } from 'lucide-react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
-import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult } from '@/utils/templateValidation';
+import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult } from '@/lib/utils/templateValidation';
 // Loading context (provider + hook)
 import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadingContext';
 // Arquitetura unificada de recursos

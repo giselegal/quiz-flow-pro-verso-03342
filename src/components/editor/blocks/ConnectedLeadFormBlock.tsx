@@ -1,5 +1,5 @@
 import ConnectedLeadForm from '@/components/forms/ConnectedLeadForm';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import React from 'react';
 

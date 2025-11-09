@@ -26,7 +26,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Sparkles, Trophy, Heart, Star } from 'lucide-react';
-import { UnifiedValidationResult } from '@/utils/validation';
+import { UnifiedValidationResult } from '@/lib/utils/validation';
 
 // =============================================
 // UNIFIED INTERFACES

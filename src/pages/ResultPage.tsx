@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import sanitizeHtml from '@/utils/sanitizeHtml';
+import sanitizeHtml from '@/lib/utils/sanitizeHtml';
 import { styleConfigGisele } from '@/data/styles';
 import { StorageService } from '@/services/core/StorageService';
 

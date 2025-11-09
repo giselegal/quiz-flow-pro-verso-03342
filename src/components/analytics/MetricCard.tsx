@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { cn } from '@/lib/utils';
 // 🚀 FASE 3.4: Tree Shaking - Import apenas ícones usados
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { dynamicIconImport } from '@/utils/dynamicIconImport';
+import { dynamicIconImport } from '@/lib/utils/dynamicIconImport';
 
 interface MetricCardProps {
   title: string;

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { TemplateManager } from '@/utils/TemplateManager';
+import { TemplateManager } from '@/lib/utils/TemplateManager';
 import { unifiedTemplateService } from '@/services/aliases';
 
 // Testa cadeia de fallback: published (override) -> template real/biblioteca -> fallback gerado

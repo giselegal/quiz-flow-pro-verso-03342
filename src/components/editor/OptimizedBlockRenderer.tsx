@@ -15,7 +15,7 @@ import type { Block } from '@/types/editor';
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { isCriticalBlock } from '@/registry/blockCategories';
 import { BlockSkeleton } from './BlockSkeleton';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 interface OptimizedBlockRendererProps {
     block: Block;

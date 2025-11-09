@@ -227,7 +227,7 @@ export const pageConfigService = createDeprecatedAlias(
 // HELPER: Log de uso de alias deprecated
 // ============================================================================
 
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 const logDeprecationWarning = (oldName: string, newName: string) => {
   if (import.meta.env.DEV) {

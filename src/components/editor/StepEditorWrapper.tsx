@@ -1,8 +1,8 @@
 // src/components/editor/StepEditorWrapper.tsx
 import React, { Suspense, useMemo } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { SCHEMAS, migrateProps } from '@/schemas';
-import { normalizeByType } from '@/utils/normalizeByType';
+import { normalizeByType } from '@/lib/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
 
 type Props = {

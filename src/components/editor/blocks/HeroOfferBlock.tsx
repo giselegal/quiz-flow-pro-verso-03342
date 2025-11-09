@@ -1,3 +1,3 @@
-import { getMarginClassLocal } from '@/utils/marginUtils';
+import { getMarginClassLocal } from '@/lib/utils/marginUtils';
 
 export { getMarginClassLocal };

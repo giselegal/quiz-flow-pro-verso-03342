@@ -2,8 +2,8 @@ import React, { createContext, useContext, ReactNode, useMemo, useCallback } fro
 import { useResultCalculations, ResultCalculations } from '@/hooks/useResultCalculations';
 import { styleConfigGisele } from '@/data/styles';
 import type { QuizScores } from '@/hooks/useQuizState';
-import { interpolate as interpolateUtil, interpolateDeep } from '@/utils/interpolate';
-import { appLogger } from '@/utils/logger';
+import { interpolate as interpolateUtil, interpolateDeep } from '@/lib/utils/interpolate';
+import { appLogger } from '@/lib/utils/logger';
 
 /**
  * 🎯 RESULT CONTEXT

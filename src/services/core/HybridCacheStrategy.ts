@@ -20,8 +20,8 @@
 
 import { UnifiedCacheService, CacheStore } from '../UnifiedCacheService';
 import { indexedDBCache } from './IndexedDBCache';
-import { performanceProfiler } from '@/utils/performanceProfiler';
-import { appLogger } from '@/utils/logger';
+import { performanceProfiler } from '@/lib/utils/performanceProfiler';
+import { appLogger } from '@/lib/utils/logger';
 
 interface HybridCacheOptions {
   /**

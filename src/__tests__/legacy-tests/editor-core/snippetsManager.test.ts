@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, expect } from 'vitest';
-import { snippetsManager } from '@/utils/snippetsManager';
+import { snippetsManager } from '@/lib/utils/snippetsManager';
 
 // Mock simples de localStorage
 class MemoryStorage {

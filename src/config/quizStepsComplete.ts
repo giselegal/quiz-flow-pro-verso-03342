@@ -140,7 +140,7 @@ export function normalizeStepBlocks(raw?: RawStepBlocks | null): StepBlocks {
   try {
     if (process.env.NODE_ENV === 'development') {
       // usar import dinâmico para evitar require() no bundle do cliente
-      import('@/utils/duplicateQuestionScanner')
+      import('@/lib/utils/duplicateQuestionScanner')
         .then(mod => {
           try {
             (mod as any).scanDuplicateQuestionIds?.(out as any);

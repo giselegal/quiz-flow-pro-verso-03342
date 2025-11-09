@@ -5,7 +5,7 @@
  */
 
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
-import { getNextStep, getPreviousStep, isValidStep } from '@/utils/quiz21StepsRenderer';
+import { getNextStep, getPreviousStep, isValidStep } from '@/lib/utils/quiz21StepsRenderer';
 import { ChevronLeft, ChevronRight, Edit, Eye, Menu, Settings } from 'lucide-react';
 import React from 'react';
 

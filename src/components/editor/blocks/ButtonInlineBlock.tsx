@@ -1,19 +1,19 @@
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState, useMemo } from 'react';
 import { sessionService } from '@/services/sessionService';
 import { userResponseService } from '@/services/userResponseService';
-import { trackQuizStart } from '@/utils/analytics';
+import { trackQuizStart } from '@/lib/utils/analytics';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { StorageService } from '@/services/core/StorageService';
 import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
 import { useQuizRulesConfig } from '@/hooks/useQuizRulesConfig';
 import { useUnifiedQuizState } from '@/hooks/useUnifiedQuizState';
 import { FUNNEL_CONFIG } from '@/config/funnel/config';
-import { appendUTMParams } from '@/utils/url';
-import { assignVariant } from '@/utils/ab';
+import { appendUTMParams } from '@/lib/utils/url';
+import { assignVariant } from '@/lib/utils/ab';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -640,7 +640,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
             // Handle step navigation
             if (action === 'next-step' && nextStepId) {
               const detail = { stepId: nextStepId, source: `button-${block?.id}` } as any;
-              import('@/utils/stepEvents').then(({ dispatchNavigate }) => dispatchNavigate(nextStepId, detail));
+              import('@/lib/utils/stepEvents').then(({ dispatchNavigate }) => dispatchNavigate(nextStepId, detail));
               return;
             }
 
@@ -697,7 +697,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                 const { schedule } = useOptimizedScheduler();
                 return schedule('button-auto-advance', () => {
                   const detail = { stepId: targetStep, source: 'step1-button' } as any;
-                  import('@/utils/stepEvents').then(({ dispatchNavigate }) => dispatchNavigate(targetStep, detail));
+                  import('@/lib/utils/stepEvents').then(({ dispatchNavigate }) => dispatchNavigate(targetStep, detail));
                 }, Number(finalAutoAdvanceDelay) || 0);
               }
             }

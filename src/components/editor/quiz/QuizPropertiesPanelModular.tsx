@@ -5,7 +5,7 @@
  */
 
 import { EditorPropertiesPanel } from '@/components/editor/unified/EditorPropertiesPanel';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React from 'react';
 

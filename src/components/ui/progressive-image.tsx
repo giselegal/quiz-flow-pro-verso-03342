@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLowQualityPlaceholder } from '@/utils/imageUtils';
+import { getLowQualityPlaceholder } from '@/lib/utils/imageUtils';
 
 interface ProgressiveImageProps {
   src: string;

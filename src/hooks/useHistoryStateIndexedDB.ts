@@ -9,7 +9,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { AdvancedStorageManager } from '@/utils/storage/AdvancedStorageSystem';
+import { AdvancedStorageManager } from '@/lib/utils/storage/AdvancedStorageSystem';
 
 export interface HistoryState<T> {
     past: T[];

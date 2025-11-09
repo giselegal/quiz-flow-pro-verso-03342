@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Star, Quote } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
 

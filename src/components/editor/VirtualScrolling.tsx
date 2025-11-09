@@ -14,10 +14,10 @@
  */
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { appLogger } from '@/utils/logger';
-import { useLogger } from '@/utils/logger/SmartLogger';
-import { cacheManager } from '@/utils/cache/LRUCache';
-import { cleanupManager, registerEventListener, registerResizeObserver } from '@/utils/cleanup/AutoCleanupSystem';
+import { appLogger } from '@/lib/utils/logger';
+import { useLogger } from '@/lib/utils/logger/SmartLogger';
+import { cacheManager } from '@/lib/utils/cache/LRUCache';
+import { cleanupManager, registerEventListener, registerResizeObserver } from '@/lib/utils/cleanup/AutoCleanupSystem';
 
 export interface VirtualItem {
   id: string;

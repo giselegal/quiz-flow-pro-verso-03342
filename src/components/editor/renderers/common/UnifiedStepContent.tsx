@@ -1,9 +1,9 @@
 import React, { memo, useMemo, useCallback } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { EditableQuizStep } from '@/components/editor/quiz/types';
-import { adaptStepData } from '@/utils/StepDataAdapter';
+import { adaptStepData } from '@/lib/utils/StepDataAdapter';
 import { useEditor } from '@/hooks/useEditor';
-import { computeResult } from '@/utils/result/computeResult';
+import { computeResult } from '@/lib/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
 // ✅ SPRINT 2 Fase 3: Migração para LazyBlockRenderer

@@ -1,5 +1,5 @@
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import React, { useEffect, useRef, CSSProperties, FC } from 'react';
 import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';

@@ -51,7 +51,7 @@ export interface QuizResponse {
   metadata?: any;
 }
 
-import { generateSessionId } from '@/utils/idGenerator';
+import { generateSessionId } from '@/lib/utils/idGenerator';
 
 // Reusing centralized UUID generator
 

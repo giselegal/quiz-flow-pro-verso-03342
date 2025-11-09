@@ -1,6 +1,6 @@
 import React from 'react';
 import { AtomicBlockProps } from '@/types/blockProps';
-import { sanitizeHtml } from '@/utils/sanitizeHtml';
+import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
 
 export default function IntroDescriptionBlock({
   block,

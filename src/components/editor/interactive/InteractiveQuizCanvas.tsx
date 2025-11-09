@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { EditorContext } from '@/contexts';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { ValidationResult } from '@/types/validation';
 import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 // import { InteractiveBlockRenderer } from './InteractiveBlockRenderer';

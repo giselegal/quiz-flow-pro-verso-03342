@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MetricCard } from '../MetricCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
+import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
 
 interface OverviewTabProps {
   analyticsData: any;

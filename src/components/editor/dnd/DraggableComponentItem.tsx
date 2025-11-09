@@ -1,5 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 

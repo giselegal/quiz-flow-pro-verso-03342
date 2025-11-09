@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { interpolate } from '@/utils/interpolate';
+import { interpolate } from '@/lib/utils/interpolate';
 
 describe('interpolate', () => {
   it('substitui tokens simples', () => {

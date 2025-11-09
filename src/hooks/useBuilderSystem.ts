@@ -8,7 +8,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { UnifiedAIOrchestrator } from '@/core/ai/UnifiedAIOrchestrator';
 import { UniversalTemplateEngine } from '@/core/templates/UniversalTemplateEngine';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 
 export interface BuilderSystemConfig {
   aiEnabled: boolean;

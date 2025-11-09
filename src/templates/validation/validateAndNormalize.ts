@@ -20,7 +20,7 @@ import {
   isLegacyId,
   extractIdPrefix,
 } from './templateV3Schema';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import type { Block } from '@/types/editor';
 
 // ============================================================================

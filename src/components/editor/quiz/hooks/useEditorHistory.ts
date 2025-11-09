@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { HistoryManager } from '@/utils/historyManager';
+import { HistoryManager } from '@/lib/utils/historyManager';
 
 export function useEditorHistory<T>(initial?: T) {
     const historyRef = useRef<HistoryManager<T> | null>(initial ? new HistoryManager<T>(initial) : null);

@@ -34,7 +34,7 @@ export interface QuizIntroBlockProps extends BlockComponentProps {
   onStart?: (nome: string) => void;
 }
 
-import { getMarginClass, type MarginProps } from '@/utils/marginUtils';
+import { getMarginClass, type MarginProps } from '@/lib/utils/marginUtils';
 
 // Variáveis de margem para compatibilidade com o sistema de controles deslizantes
 const marginTop: number | undefined = 0;

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { EditorBlock, EditableContent } from '@/types/editor';
 import { useToast } from '@/components/ui/use-toast';
-import { getDefaultContentForType } from '@/utils/editorDefaults';
+import { getDefaultContentForType } from '@/lib/utils/editorDefaults';
 
 export const useEditorActions = (
   blocks: EditorBlock[],

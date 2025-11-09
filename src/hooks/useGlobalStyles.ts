@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createGlobalStyles } from '@/utils/config/globalStyles';
+import { createGlobalStyles } from '@/lib/utils/config/globalStyles';
 import { StorageService } from '@/services/core/StorageService';
 
 interface GlobalStyles {

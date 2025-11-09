@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
-import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
+import { appLogger } from '@/lib/utils/logger';
+import { getFunnelIdFromEnvOrStorage } from '@/lib/utils/funnelIdentity';
 import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
 // Removendo dependência de schemaDrivenFunnelService legacy - usar UnifiedFunnelData minimal
 import type { UnifiedFunnelData as SchemaDrivenFunnelData } from '@/services/canonical/types';

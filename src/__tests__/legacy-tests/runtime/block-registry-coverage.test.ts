@@ -7,7 +7,7 @@ import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
 
 // Converter opcional para sections -> blocks (quando necessário)
 async function convertSectionsToBlocks(sections: any[]): Promise<any[]> {
-  const mod = await import('@/utils/sectionToBlockConverter');
+  const mod = await import('@/lib/utils/sectionToBlockConverter');
   const fn = (mod as any).convertSectionsToBlocks || (mod as any).default;
   return fn ? fn(sections) : [];
 }

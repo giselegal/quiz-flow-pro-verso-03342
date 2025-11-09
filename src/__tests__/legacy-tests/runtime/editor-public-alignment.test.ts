@@ -17,7 +17,7 @@ async function loadPublicStepBlocks(stepId: string): Promise<any[]> {
       if (Array.isArray(data)) return data;
       if (Array.isArray(data?.blocks)) return data.blocks;
       if (Array.isArray(data?.sections)) {
-        const mod = await import('@/utils/sectionToBlockConverter');
+        const mod = await import('@/lib/utils/sectionToBlockConverter');
         const fn = (mod as any).convertSectionsToBlocks || (mod as any).default;
         const converted = fn ? fn(data.sections) : [];
         if (converted.length) return converted;
@@ -32,7 +32,7 @@ async function loadPublicStepBlocks(stepId: string): Promise<any[]> {
     const step = master?.steps?.[stepId];
     if (Array.isArray(step?.blocks)) return step.blocks;
     if (Array.isArray(step?.sections)) {
-      const mod = await import('@/utils/sectionToBlockConverter');
+      const mod = await import('@/lib/utils/sectionToBlockConverter');
       const fn = (mod as any).convertSectionsToBlocks || (mod as any).default;
       return fn ? fn(step.sections) : [];
     }
@@ -73,7 +73,7 @@ describe('Alinhamento Editor (dev) vs Público (JSON)', () => {
   let editorBlocks = toCanonical(await loadEditorStepBlocks(stepId));
 
   // Normalizar tipos via block-aliases.json para comparar canônicos
-  const { normalizeBlockTypes } = await import('@/utils/blockNormalizer');
+  const { normalizeBlockTypes } = await import('@/lib/utils/blockNormalizer');
   publicBlocks = normalizeBlockTypes(publicBlocks as any);
   editorBlocks = normalizeBlockTypes(editorBlocks as any);
 

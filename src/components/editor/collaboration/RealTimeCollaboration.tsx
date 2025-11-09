@@ -22,7 +22,7 @@ import React, {
     useContext,
     ReactNode,
 } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { useEditorCore, useEditorElements, EditorElement } from '../core/EditorCore';
 
 // 🎯 COLLABORATION TYPES

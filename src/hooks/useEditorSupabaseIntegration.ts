@@ -1,6 +1,6 @@
 import { useEditorSupabase } from '@/hooks/useEditorSupabase';
 import { Block } from '@/types/editor';
-import { groupSupabaseComponentsByStep, mapBlockToSupabaseComponent } from '@/utils/supabaseMapper';
+import { groupSupabaseComponentsByStep, mapBlockToSupabaseComponent } from '@/lib/utils/supabaseMapper';
 import { useCallback, useEffect } from 'react';
 
 /**

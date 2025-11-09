@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { MemoizationMetrics } from '@/utils/performance/memoization';
+import { MemoizationMetrics } from '@/lib/utils/performance/memoization';
 
 export interface PerformanceMetrics {
   renderTime: number;

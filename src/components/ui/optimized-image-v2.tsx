@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getOptimizedImageUrl, getLowQualityPlaceholder } from '@/utils/imageManager';
+import { getOptimizedImageUrl, getLowQualityPlaceholder } from '@/lib/utils/imageManager';
 
 interface OptimizedImageProps {
   src: string;

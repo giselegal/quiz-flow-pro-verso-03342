@@ -1,7 +1,7 @@
 import caktoquizQuestions from '@/data/caktoquizQuestions';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { StyleResult, QuizQuestion, QuizResult, QuizAnswer } from '@/types/quiz';
-import { mapToStyleResult } from '@/utils/styleResultMapper';
+import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { useQuizRulesConfig } from './useQuizRulesConfig';

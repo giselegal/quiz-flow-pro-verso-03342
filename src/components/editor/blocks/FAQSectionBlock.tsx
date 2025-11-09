@@ -10,8 +10,8 @@ import {
   trackComponentClick,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from '@/utils/inlineComponentUtils';
-import { BRAND_COLORS, TYPOGRAPHY, ANIMATIONS, EFFECTS, SPACING } from '@/utils/brandDesignSystem';
+} from '@/lib/utils/inlineComponentUtils';
+import { BRAND_COLORS, TYPOGRAPHY, ANIMATIONS, EFFECTS, SPACING } from '@/lib/utils/brandDesignSystem';
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

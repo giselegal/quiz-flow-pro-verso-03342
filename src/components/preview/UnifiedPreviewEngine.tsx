@@ -10,7 +10,7 @@ import { StyleResult } from '@/types/quiz';
 import { useMemo } from 'react';
 import SortablePreviewBlockWrapper from './SortablePreviewBlockWrapper';
 import { ProductionPreviewEngine, type ProductionPreviewEngineProps } from './ProductionPreviewEngine';
-import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
+import { getPreviewBlockKey } from '@/lib/utils/keys/previewKeys';
 
 // 🏗️ TIPOS
 

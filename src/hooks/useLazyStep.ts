@@ -14,7 +14,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { lazyStepLoader, LazyLoadConfig, LoadStepOptions } from '@/services/lazy/LazyStepLoader';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 export interface UseLazyStepOptions {
   /** Step ID inicial (opcional) */

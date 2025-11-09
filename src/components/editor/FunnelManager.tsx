@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { generateId } from '@/types/unified-schema';
 import { toast } from '@/hooks/use-toast';
-import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
+import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/lib/utils/funnelIdentity';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // MIGRATED: Using new contextual service
 // import {

@@ -1,5 +1,5 @@
 import { StyleResult } from '@/types/quiz';
-import { hasPercentage } from '@/utils/type-guards';
+import { hasPercentage } from '@/lib/utils/type-guards';
 
 interface ResultPreviewProps {
   result: {

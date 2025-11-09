@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { getMarginClass } from '@/utils/margins';
+import { getMarginClass } from '@/lib/utils/margins';
 import type { BlockData } from '@/types/blocks';
 import { Award, Crown, Quote, Star } from 'lucide-react';
 

@@ -16,7 +16,7 @@ import {
   Gift,
 } from 'lucide-react';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
-import { trackButtonClick } from '@/utils/analytics';
+import { trackButtonClick } from '@/lib/utils/analytics';
 
 // Design tokens otimizados
 const tokens = {

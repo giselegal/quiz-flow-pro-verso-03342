@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { replacePlaceholders, extractPlaceholders, hasPlaceholders } from '@/utils/placeholderParser';
+import { replacePlaceholders, extractPlaceholders, hasPlaceholders } from '@/lib/utils/placeholderParser';
 
 describe('placeholderParser', () => {
     it('substitui placeholders básicos', () => {

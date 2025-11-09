@@ -9,7 +9,7 @@
  */
 
 import { editorMetrics } from './editorMetrics';
-import { generateSessionId as genSessionId } from '@/utils/idGenerator';
+import { generateSessionId as genSessionId } from '@/lib/utils/idGenerator';
 
 /**
  * Configuração de telemetria

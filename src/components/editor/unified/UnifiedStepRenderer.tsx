@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { Suspense, useMemo, lazy, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { stepRegistry } from '@/components/step-registry/StepRegistry';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { cn } from '@/lib/utils';
@@ -139,7 +139,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
 
         if (jsonDrivenEnabled) {
             // Lazy import para não bloquear render inicial
-            import('@/utils/loadJsonTemplate')
+            import('@/lib/utils/loadJsonTemplate')
                 .then(({ loadJsonTemplate }) => loadJsonTemplate(stepId))
                 .then(template => {
                     if (template && (template.templateVersion === '3.1' || template.templateVersion === '3.0')) {

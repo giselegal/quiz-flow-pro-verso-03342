@@ -1,5 +1,5 @@
 import React from 'react';
-import { notify } from '@/utils/notify';
+import { notify } from '@/lib/utils/notify';
 import {
     Edit,
     Copy,

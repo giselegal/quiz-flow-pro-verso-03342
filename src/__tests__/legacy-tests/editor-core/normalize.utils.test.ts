@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeOptions, normalizeOfferMap } from '@/utils/normalize';
+import { normalizeOptions, normalizeOfferMap } from '@/lib/utils/normalize';
 
 describe('normalize utils', () => {
   it('normalizeOptions generates deterministic ids and values', () => {

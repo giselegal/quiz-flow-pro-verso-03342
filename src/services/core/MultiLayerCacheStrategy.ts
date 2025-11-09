@@ -27,7 +27,7 @@ import { indexedDBCache } from './IndexedDBCache';
 const logger = new Proxy({}, {
   get(_t, prop: string) {
     return (...args: any[]) => {
-      import('@/utils/logging').then(m => {
+      import('@/lib/utils/logging').then(m => {
         try {
           const real: any = m.getLogger();
           const fn = real?.[prop as keyof typeof real];

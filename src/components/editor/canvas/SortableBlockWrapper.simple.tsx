@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';

@@ -1,5 +1,5 @@
 import { styleConfig } from '@/config/styleConfig';
-import { getStyleColor } from '@/utils/styleUtils';
+import { getStyleColor } from '@/lib/utils/styleUtils';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { useMemo } from 'react';
 

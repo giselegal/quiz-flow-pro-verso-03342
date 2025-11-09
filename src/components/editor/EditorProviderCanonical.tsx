@@ -45,8 +45,8 @@ import { Block } from '@/types/editor';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader, type TemplateSource } from '@/services/editor/TemplateLoader';
 import { templateService } from '@/services/canonical/TemplateService';
-import { appLogger } from '@/utils/logger';
-import { generateCloneId } from '@/utils/idGenerator';
+import { appLogger } from '@/lib/utils/logger';
+import { generateCloneId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES

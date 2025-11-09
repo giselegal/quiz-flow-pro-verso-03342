@@ -5,7 +5,7 @@ import { quizSupabaseService } from '@/services/aliases';
 import { isUUID } from '@/core/utils/id';
 import { toCanonicalAny } from './adapters';
 import { accumulateScores as accumulateCanonicalScores } from './CanonicalScorer';
-import { STYLE_TIEBREAK_ORDER, stabilizeScoresOrder } from '@/utils/styleKeywordMap';
+import { STYLE_TIEBREAK_ORDER, stabilizeScoresOrder } from '@/lib/utils/styleKeywordMap';
 
 export interface OrchestrateOptions {
     selectionsByQuestion: Record<string, string[]>;

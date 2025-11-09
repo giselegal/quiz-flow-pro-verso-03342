@@ -49,7 +49,7 @@ vi.mock('../services/unifiedTemplateService', () => {
 });
 
 import type { Block } from '@/types/editor';
-import { TemplateManager } from '@/utils/TemplateManager';
+import { TemplateManager } from '@/lib/utils/TemplateManager';
 
 describe('TemplateManager publish/unpublish flow', () => {
   const stepId = 'step-3';

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { migrateBlocksToStepMetadata, smartMigration, needsMigration } from '@/utils/stepDataMigration';
+import { migrateBlocksToStepMetadata, smartMigration, needsMigration } from '@/lib/utils/stepDataMigration';
 import type { EditableQuizStep, BlockComponent } from '@/components/editor/quiz/types';
 
 const makeStep = (blocks: Partial<BlockComponent>[], metadata?: Record<string, any>): EditableQuizStep => ({

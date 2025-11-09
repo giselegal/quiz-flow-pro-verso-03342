@@ -11,7 +11,7 @@ import {
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from '@/utils/inlineComponentUtils';
+} from '@/lib/utils/inlineComponentUtils';
 import { Crown, Star, TrendingUp, CheckCircle, Sparkles } from 'lucide-react';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)

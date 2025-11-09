@@ -19,8 +19,8 @@
 import { supabase } from '@/integrations/supabase/customClient';
 import { indexedDBService } from '../storage/IndexedDBService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { deepClone } from '@/utils/cloneFunnel';
-import { errorManager, createValidationError } from '@/utils/errorHandling';
+import { deepClone } from '@/lib/utils/cloneFunnel';
+import { errorManager, createValidationError } from '@/lib/utils/errorHandling';
 import { BaseCanonicalService, ServiceResult } from './types';
 import { CacheService } from './CacheService';
 import { participantDataService } from './data/ParticipantDataService';

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ChevronDown, ChevronRight, HelpCircle, Layers, Search, Settings } from 'lucide-react';
 import React, { useState, useCallback, useMemo } from 'react';
-import { PerformanceProfiler } from '@/utils/performance/PerformanceProfiler';
+import { PerformanceProfiler } from '@/lib/utils/performance/PerformanceProfiler';
 
 // Obter componentes disponíveis do UnifiedBlockRegistry
 const AVAILABLE_COMPONENTS = blockRegistry.getAllTypes().map(type => ({

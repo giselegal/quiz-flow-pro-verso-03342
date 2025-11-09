@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { notify } from '@/utils/notify';
+import { notify } from '@/lib/utils/notify';
 import { useLocation } from 'wouter';
 
 /**

@@ -5,7 +5,7 @@
 import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
 import { cacheService } from '@/services/UnifiedCacheService';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // 🔧 CACHE MIGRADO PARA UnifiedCacheService
 // @deprecated Inline TEMPLATE_CACHE substituído por cacheService.get('templates', key)

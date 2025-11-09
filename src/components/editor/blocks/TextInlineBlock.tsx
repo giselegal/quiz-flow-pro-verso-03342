@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { interpolate } from '@/utils/interpolate';
+import { interpolate } from '@/lib/utils/interpolate';
 import { StorageService } from '@/services/core/StorageService';
 
 /**

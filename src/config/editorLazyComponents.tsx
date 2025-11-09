@@ -8,7 +8,7 @@
  */
 
 import React, { lazy } from 'react';
-import { lazyWithRetry } from '@/utils/performanceOptimizations';
+import { lazyWithRetry } from '@/lib/utils/performanceOptimizations';
 
 /**
  * Preview de produção (~80KB)

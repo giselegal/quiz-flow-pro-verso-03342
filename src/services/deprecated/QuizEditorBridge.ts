@@ -16,7 +16,7 @@
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { supabase } from '@/integrations/supabase/customClient';
 import type { Json } from '@/integrations/supabase/types';
-import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
+import { autoFillNextSteps } from '@/lib/utils/autoFillNextSteps';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
 // ✅ FASE 4.1: Integração com serviços canônicos
@@ -33,7 +33,7 @@ import {
     convertStepToBlocks,
     convertBlocksToStep,
     validateRoundTrip,
-} from '@/utils/quizConversionUtils';
+} from '@/lib/utils/quizConversionUtils';
 
 // ✅ FASE 5: Validações de integridade testadas (550+ linhas, 22 testes)
 import {
@@ -42,7 +42,7 @@ import {
     validateNextStep,
     validateOfferMap,
     validateFormInput,
-} from '@/utils/quizValidationUtils';
+} from '@/lib/utils/quizValidationUtils';
 
 // ✅ FASE 7: Adaptador bidirecional Blocks ↔ JSON v3.0
 import { BlocksToJSONv3Adapter, type JSONv3Template } from '@/adapters/BlocksToJSONv3Adapter';

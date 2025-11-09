@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/customClient';
-import { generateInstanceKey } from '@/utils/idValidation';
+import { generateInstanceKey } from '@/lib/utils/idValidation';
 
 // Cache simples de tipos conhecidos para reduzir chamadas
 let __knownTypeKeys: Set<string> | null = null;

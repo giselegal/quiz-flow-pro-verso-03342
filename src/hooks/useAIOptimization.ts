@@ -11,7 +11,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { usePerformanceMonitor } from './usePerformanceMonitor';
 import { useAnalytics } from './useAnalytics';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 import { supabase } from '@/integrations/supabase/customClient';
 
 // 🎯 INTERFACES

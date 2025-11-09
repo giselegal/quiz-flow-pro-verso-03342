@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Editor, Frame, Element, useEditor } from '@craftjs/core';
 import { Layers } from '@craftjs/layers';
 import { cn } from '@/lib/utils';

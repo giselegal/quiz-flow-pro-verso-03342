@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeResult } from '@/utils/result/computeResult';
+import { computeResult } from '@/lib/utils/result/computeResult';
 
 describe('computeResult (basic)', () => {
     it('retorna fallback consistente quando não há respostas', () => {

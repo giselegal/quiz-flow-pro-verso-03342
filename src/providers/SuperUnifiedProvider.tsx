@@ -34,9 +34,9 @@ import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import { supabase } from '@/integrations/supabase/customClient';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { isSupabaseDisabled } from '@/integrations/supabase/flags';
-import { createLogger } from '@/utils/logger';
+import { createLogger } from '@/lib/utils/logger';
 import { blockBaseSchema } from '@/schemas/editorStateSchema';
-import { getUserFriendlyError } from '@/utils/userFriendlyErrors';
+import { getUserFriendlyError } from '@/lib/utils/userFriendlyErrors';
 import { useUnifiedHistory } from '@/hooks/useUnifiedHistory';
 
 // Logger para o SuperUnifiedProvider

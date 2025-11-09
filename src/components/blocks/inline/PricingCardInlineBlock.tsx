@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { safeGetBlockProperties } from '@/utils/blockUtils';
+import { safeGetBlockProperties } from '@/lib/utils/blockUtils';
 import { ArrowRight, Check, Crown, Sparkles, Star, Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import type { BlockComponentProps } from '@/types/blocks';

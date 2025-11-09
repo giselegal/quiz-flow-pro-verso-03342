@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from '@/utils/imageUtils';
+import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from '@/lib/utils/imageUtils';
 
 interface EnhancedProgressiveImageProps {
   src: string;

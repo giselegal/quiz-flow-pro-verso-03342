@@ -2,7 +2,7 @@ import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import { useResultOptional } from '@/contexts/ResultContext';
-import { sanitizeHtml } from '@/utils/sanitizeHtml';
+import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
 
 import type { BlockRendererCommonProps } from './QuizIntroHeaderBlock';
 

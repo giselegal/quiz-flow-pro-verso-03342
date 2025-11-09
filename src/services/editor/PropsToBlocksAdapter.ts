@@ -1,5 +1,5 @@
 // src/services/editor/PropsToBlocksAdapter.ts
-import { normalizeOptions, normalizeOfferMap } from '@/utils/normalize';
+import { normalizeOptions, normalizeOfferMap } from '@/lib/utils/normalize';
 
 export const PropsToBlocksAdapter = {
   applyPropsToBlocks: (step: any) => {

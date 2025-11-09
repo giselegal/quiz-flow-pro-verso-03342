@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 
 // Importações dos módulos da Solução B
 import { SCHEMAS, migrateProps, LATEST_SCHEMA_VERSION } from '@/schemas';
-import { normalizeByType } from '@/utils/normalizeByType';
+import { normalizeByType } from '@/lib/utils/normalizeByType';
 
 describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
 

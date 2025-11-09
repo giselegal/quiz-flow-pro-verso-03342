@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Card } from '@/components/ui/card';
 import { giseleStyleTemplate } from '@/services/templates/giseleStyleTemplate';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';

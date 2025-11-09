@@ -9,7 +9,7 @@
 
 import React, { useState } from 'react';
 import { EditorCompositeProvider } from '@/contexts/editor/EditorCompositeProvider';
-import { RenderProfiler, RenderMetricsDashboard, useRenderCounter } from '@/utils/RenderProfiler';
+import { RenderProfiler, RenderMetricsDashboard, useRenderCounter } from '@/lib/utils/RenderProfiler';
 
 // Componente filho que usa o editor context
 const EditorConsumer: React.FC = () => {

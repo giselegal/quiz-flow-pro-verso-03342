@@ -1,5 +1,5 @@
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
-import { toUnaccentedStyleId } from '@/utils/styleIds';
+import { toUnaccentedStyleId } from '@/lib/utils/styleIds';
 
 export interface ScoringRules {
   speedBonusThreshold?: number; // em segundos

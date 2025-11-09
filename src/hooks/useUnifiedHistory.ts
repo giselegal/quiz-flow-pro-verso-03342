@@ -19,9 +19,9 @@
  */
 
 import { useCallback, useEffect, useRef, useMemo } from 'react';
-import { HistoryManager } from '@/utils/historyManager';
+import { HistoryManager } from '@/lib/utils/historyManager';
 import type { Block } from '@/types/editor';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 export interface EditorHistoryState {
   stepBlocks: Record<string, Block[]>;

@@ -1,5 +1,5 @@
-import { getStepNumberFromKey, makeStepKey } from '@/utils/stepKey';
-import { track } from '@/utils/telemetryLight';
+import { getStepNumberFromKey, makeStepKey } from '@/lib/utils/stepKey';
+import { track } from '@/lib/utils/telemetryLight';
 
 export type NavigateDetail = {
     step: number | string;

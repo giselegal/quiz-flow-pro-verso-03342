@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getTemplateStatus } from '@/utils/hybridIntegration';
+import { getTemplateStatus } from '@/lib/utils/hybridIntegration';
 
 interface SystemStatus {
     templateDiagnostic: any;
@@ -18,7 +18,7 @@ const SystemDiagnosticPage: React.FC = () => {
                 console.log('🔬 [DIAGNOSTIC] Iniciando diagnóstico completo...');
 
                 // Import dinâmico do template diagnostic
-                const { default: runTemplateDiagnostic } = await import('@/utils/templateDiagnostic');
+                const { default: runTemplateDiagnostic } = await import('@/lib/utils/templateDiagnostic');
                 const templateResult = runTemplateDiagnostic();
 
                 // Status da integração híbrida

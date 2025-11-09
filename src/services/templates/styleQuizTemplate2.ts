@@ -1,5 +1,5 @@
 import { QuizBuilderState } from '@/types/quizBuilder';
-import { generateId } from '@/utils/idGenerator';
+import { generateId } from '@/lib/utils/idGenerator';
 
 export const styleQuizTemplate2: QuizBuilderState = {
   components: [

@@ -12,7 +12,7 @@
  */
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 // UI Components

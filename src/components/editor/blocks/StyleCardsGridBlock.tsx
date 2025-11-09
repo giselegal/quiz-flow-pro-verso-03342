@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Sparkles, Edit3 } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getStyleConfig } from '@/config/styleConfig';

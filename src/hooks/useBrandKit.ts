@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';
-import { safeGetItem as getCtx, safeSetItem as setCtx } from '@/utils/contextualStorage';
+import { safeGetItem as getCtx, safeSetItem as setCtx } from '@/lib/utils/contextualStorage';
 
 /**
  * 🎨 useBrandKit - Hook para gerenciar identidade visual

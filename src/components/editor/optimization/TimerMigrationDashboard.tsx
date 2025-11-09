@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -20,7 +20,7 @@ import {
   FileText,
   TrendingUp,
 } from 'lucide-react';
-import { getMigrationStatus, TIMER_MIGRATION_LIST } from '@/utils/timerMigration';
+import { getMigrationStatus, TIMER_MIGRATION_LIST } from '@/lib/utils/timerMigration';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 interface TimerMigrationDashboardProps {

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { createContext, useContext } from 'react';
-import TemplateManager from '@/utils/TemplateManager';
+import TemplateManager from '@/lib/utils/TemplateManager';
 
 /**
  * EditorContext (stub) - atende verificação do script. O Editor real usa QuizModularEditor.

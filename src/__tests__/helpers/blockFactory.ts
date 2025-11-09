@@ -8,7 +8,7 @@
  */
 
 import type { Block, BlockType } from '@/types/editor';
-import { generateBlockId } from '@/utils/idGenerator';
+import { generateBlockId } from '@/lib/utils/idGenerator';
 
 /**
  * Cria um Block válido com todos os campos obrigatórios

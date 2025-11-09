@@ -2,7 +2,7 @@ import {
     checkForLegacyData,
     executeMigrationWithConfirmation,
     cleanupLegacyData as migrationCleanup,
-} from '@/utils/dataMigration';
+} from '@/lib/utils/dataMigration';
 
 /**
  * 🔄 EXECUÇÃO DA MIGRAÇÃO DE DADOS LEGADOS

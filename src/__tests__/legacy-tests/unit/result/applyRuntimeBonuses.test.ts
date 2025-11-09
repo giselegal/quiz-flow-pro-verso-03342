@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { applyRuntimeBonuses } from '@/utils/result/applyRuntimeBonuses';
+import { applyRuntimeBonuses } from '@/lib/utils/result/applyRuntimeBonuses';
 
 describe('applyRuntimeBonuses', () => {
   const steps = {

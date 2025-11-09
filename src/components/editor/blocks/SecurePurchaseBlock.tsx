@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { getMarginClass } from '@/utils/margins';
+import { getMarginClass } from '@/lib/utils/margins';
 import { Clock, CreditCard, Lock, Shield } from 'lucide-react';
 
 interface SecurePurchaseBlockProps {

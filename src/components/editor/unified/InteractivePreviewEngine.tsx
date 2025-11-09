@@ -10,7 +10,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { quizOrchestrator } from '@/features/orchestrators/QuizOrchestrator';

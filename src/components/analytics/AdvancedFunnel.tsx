@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // Componente placeholder - AdvancedFunnel_backup não encontrado
 const AdvancedFunnel: React.FC = () => {

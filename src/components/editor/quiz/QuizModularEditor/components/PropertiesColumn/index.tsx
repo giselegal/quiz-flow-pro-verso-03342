@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
-import { onBlockUpdate as subscribeToBlockUpdates } from '@/utils/editorEventBus';
+import { onBlockUpdate as subscribeToBlockUpdates } from '@/lib/utils/editorEventBus';
 import { normalizeBlockData, createSynchronizedBlockUpdate, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
 
 interface PropertiesColumnProps {

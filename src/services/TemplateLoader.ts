@@ -5,7 +5,7 @@
  * Permite criar múltiplos funils sem duplicar código TSX
  */
 
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { supabase } from '@/integrations/supabase/client';
 import type { Block } from '@/types/editor';
 

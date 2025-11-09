@@ -34,7 +34,7 @@ import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { Block } from '@/types/editor';
 import { HybridCacheStrategy } from './core/HybridCacheStrategy';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 // ============================================================================
 // TYPES

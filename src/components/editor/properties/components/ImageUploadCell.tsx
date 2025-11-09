@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
-import { openCloudinaryWidget } from '@/utils/cloudinary';
+import { openCloudinaryWidget } from '@/lib/utils/cloudinary';
 
 interface ImageUploadCellProps {
   imageUrl?: string;

@@ -3,8 +3,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { AspectRatio } from '../ui/aspect-ratio';
-import { getFallbackStyle } from '@/utils/styleUtils';
-import { isImagePreloaded, getOptimizedImage, getImageMetadata } from '@/utils/imageManager';
+import { getFallbackStyle } from '@/lib/utils/styleUtils';
+import { isImagePreloaded, getOptimizedImage, getImageMetadata } from '@/lib/utils/imageManager';
 import OptimizedImage from '../ui/OptimizedImage';
 
 interface QuizOptionImageProps {

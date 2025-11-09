@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Button } from '@/components/ui/button';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { useMemo } from 'react';
 import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 

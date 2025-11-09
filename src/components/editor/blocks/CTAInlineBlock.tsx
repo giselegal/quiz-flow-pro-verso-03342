@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
 import InlineEditableText from './base/InlineEditableText';
@@ -13,7 +13,7 @@ import {
   RESPONSIVE_PATTERNS,
   getThemeClasses,
   INLINE_ANIMATIONS,
-} from '@/utils/inlineComponentUtils';
+} from '@/lib/utils/inlineComponentUtils';
 import {
   BRAND_COLORS,
   TYPOGRAPHY,
@@ -21,7 +21,7 @@ import {
   ANIMATIONS,
   EFFECTS,
   RESPONSIVE_PATTERNS as BRAND_RESPONSIVE,
-} from '@/utils/brandDesignSystem';
+} from '@/lib/utils/brandDesignSystem';
 import {
   ArrowRight,
   ShoppingCart,

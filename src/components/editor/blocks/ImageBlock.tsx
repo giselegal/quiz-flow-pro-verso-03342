@@ -1,7 +1,7 @@
 import React from 'react';
 import { Upload } from 'lucide-react';
 import { EditableContent } from '@/types/editor';
-import { safePlaceholder } from '@/utils/placeholder';
+import { safePlaceholder } from '@/lib/utils/placeholder';
 
 interface ImageBlockProps {
   content: EditableContent;

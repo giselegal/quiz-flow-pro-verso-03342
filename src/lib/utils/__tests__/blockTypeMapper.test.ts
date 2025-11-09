@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { mapBlockType } from '@/utils/blockTypeMapper';
-import { safeGetTemplateBlocks } from '@/utils/templateConverter';
+import { mapBlockType } from '@/lib/utils/blockTypeMapper';
+import { safeGetTemplateBlocks } from '@/lib/utils/templateConverter';
 
 describe('blockTypeMapper', () => {
   it('maps Step 21 aliases correctly', () => {

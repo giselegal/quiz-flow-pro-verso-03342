@@ -12,7 +12,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useLazyStep } from '@/hooks/useLazyStep';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 export interface LazyQuizRuntimeContainerProps {
   /** ID do funnel (opcional) */

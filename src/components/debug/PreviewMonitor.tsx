@@ -9,8 +9,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { configurationCache } from '@/utils/ConfigurationCache';
-import { supabaseInterceptor } from '@/utils/SupabaseInterceptor';
+import { configurationCache } from '@/lib/utils/ConfigurationCache';
+import { supabaseInterceptor } from '@/lib/utils/SupabaseInterceptor';
 import {
     Activity,
     Database,

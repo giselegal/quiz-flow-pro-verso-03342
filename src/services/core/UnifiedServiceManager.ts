@@ -5,7 +5,7 @@
  * por 12 services essenciais com responsabilidades bem definidas
  */
 
-import { EventEmitter } from '@/utils/EventEmitter';
+import { EventEmitter } from '@/lib/utils/EventEmitter';
 
 // ============================================================================
 // CORE SERVICE INTERFACES

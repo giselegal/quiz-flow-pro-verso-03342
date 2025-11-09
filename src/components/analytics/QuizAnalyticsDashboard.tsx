@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
-import { getQuizEvents, getQuizMetrics, clearQuizEvents, flushQuizEvents, flushQuizEventsWithRetry } from '@/utils/quizAnalytics';
+import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
+import { getQuizEvents, getQuizMetrics, clearQuizEvents, flushQuizEvents, flushQuizEventsWithRetry } from '@/lib/utils/quizAnalytics';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 

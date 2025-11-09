@@ -12,9 +12,9 @@ import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { useLogger } from '@/utils/logger/SmartLogger';
+import { useLogger } from '@/lib/utils/logger/SmartLogger';
 import { Trash2, GripVertical, Copy } from 'lucide-react';
-import { blockPropsAreEqual, MemoizationMetrics } from '@/utils/performance/memoization';
+import { blockPropsAreEqual, MemoizationMetrics } from '@/lib/utils/performance/memoization';
 
 export interface EditableBlockProps {
   block: Block;

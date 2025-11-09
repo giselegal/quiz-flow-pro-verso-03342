@@ -12,14 +12,14 @@
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
-import { resolveStyleId } from '@/utils/styleIds';
+import { resolveStyleId } from '@/lib/utils/styleIds';
 import { templateService } from '@/services/canonical/TemplateService';
-import { computeResult } from '@/utils/result/computeResult';
-import { applyRuntimeBonuses } from '@/utils/result/applyRuntimeBonuses';
+import { computeResult } from '@/lib/utils/result/computeResult';
+import { applyRuntimeBonuses } from '@/lib/utils/result/applyRuntimeBonuses';
 import { useMasterRuntime } from '@/hooks/useMasterRuntime';
 import { getEffectiveRequiredSelections, shouldAutoAdvance } from '@/lib/quiz/requiredSelections';
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
-import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
+import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/lib/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useFeatureFlags } from './useFeatureFlags';

@@ -6,14 +6,14 @@
  */
 
 import { Button } from '@/components/ui/button';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { cn } from '@/lib/utils';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
-import { getStepCategory, getStepType, getStepTitle, getStepDescription, getStepIcon } from '@/utils/stepMeta';
+import { getStepCategory, getStepType, getStepTitle, getStepDescription, getStepIcon } from '@/lib/utils/stepMeta';
 import {
   ArrowRight,
   Calculator,

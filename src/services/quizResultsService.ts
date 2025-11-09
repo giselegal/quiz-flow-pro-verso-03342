@@ -1,7 +1,7 @@
 import { styleConfig, type StyleConfig } from '@/config/styleConfig';
 import { supabase } from '@/integrations/supabase/customClient';
 import { StorageService } from '@/services/core/StorageService';
-import { STYLE_KEYWORDS_MAPPING, STYLE_TIEBREAK_ORDER } from '@/utils/styleKeywordMap';
+import { STYLE_KEYWORDS_MAPPING, STYLE_TIEBREAK_ORDER } from '@/lib/utils/styleKeywordMap';
 
 /**
  * 🎯 Serviço para cálculo e armazenamento de resultados do quiz

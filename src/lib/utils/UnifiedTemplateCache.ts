@@ -7,7 +7,7 @@
  * MIGRAÇÃO:
  * ```typescript
  * // ❌ ANTES
- * import { unifiedCache } from '@/utils/UnifiedTemplateCache';
+ * import { unifiedCache } from '@/lib/utils/UnifiedTemplateCache';
  * 
  * // ✅ DEPOIS
  * import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';

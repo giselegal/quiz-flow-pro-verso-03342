@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { dynamicIconImport } from '@/utils/dynamicIconImport';
+import { dynamicIconImport } from '@/lib/utils/dynamicIconImport';
 
 interface IconBlockPreviewProps {
   content: {

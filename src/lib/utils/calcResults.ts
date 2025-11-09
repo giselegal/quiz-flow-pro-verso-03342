@@ -10,7 +10,7 @@
  */
 
 import { QuizAnswer, StyleResult, ComputedResult } from '@/types/quiz';
-import { mapToStyleResult } from '@/utils/styleResultMapper';
+import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 
 // ===== ENGINE CONFIGURATION =====
 export const ENGINE_VERSION = '2.0.0';

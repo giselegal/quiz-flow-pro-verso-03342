@@ -7,7 +7,7 @@
  * - [ ] Otimiza performance se necessário
  */
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 
 interface Props {
   children: ReactNode;

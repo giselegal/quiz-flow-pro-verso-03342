@@ -14,8 +14,8 @@ import {
 } from '@/types/editor-resource';
 import { templateService } from '@/services/canonical/TemplateService';
 import { templateToFunnelAdapter } from '@/editor/adapters/TemplateToFunnelAdapter';
-import { appLogger } from '@/utils/logger';
-import { generateDraftId, generateCloneId } from '@/utils/idGenerator';
+import { appLogger } from '@/lib/utils/logger';
+import { generateDraftId, generateCloneId } from '@/lib/utils/idGenerator';
 
 export interface UseEditorResourceOptions {
   /** ID do recurso a carregar (opcional - se não informado, modo "novo") */

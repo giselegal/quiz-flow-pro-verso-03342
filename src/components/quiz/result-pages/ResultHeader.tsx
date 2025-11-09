@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { StepTemplateIds } from '@/utils/semanticIdGenerator';
+import { StepTemplateIds } from '@/lib/utils/semanticIdGenerator';
 import Logo from '../ui/logo';
 
 interface ResultHeaderProps {

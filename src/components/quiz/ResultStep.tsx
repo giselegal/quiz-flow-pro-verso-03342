@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { styleConfigGisele } from '../../data/styles';
-import { resolveStyleId } from '@/utils/styleIds';
+import { resolveStyleId } from '@/lib/utils/styleIds';
 import type { QuizStep } from '@/types/quiz';
 import type { QuizScores } from '../../hooks/useQuizState';
 import { useImageWithFallback } from '../../hooks/useImageWithFallback';

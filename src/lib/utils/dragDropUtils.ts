@@ -1,8 +1,8 @@
 import { Block } from '@/types/editor';
 import type { Active, Over } from '@dnd-kit/core'; // type-only import para evitar incluir runtime de dnd-kit no bundle principal
-import { logger } from '@/utils/debugLogger';
-import { parseUniqueId } from '@/utils/generateUniqueId';
-import { makeStepKey } from '@/utils/stepKey';
+import { logger } from '@/lib/utils/debugLogger';
+import { parseUniqueId } from '@/lib/utils/generateUniqueId';
+import { makeStepKey } from '@/lib/utils/stepKey';
 
 /**
  * 🎯 Utilitários para Drag & Drop mais seguros

@@ -12,7 +12,7 @@
  *   validateData, 
  *   sanitizeHtml,
  *   ValidationEngine 
- * } from '@/utils/validation';
+ * } from '@/lib/utils/validation';
  * ```
  */
 

@@ -7,7 +7,7 @@
 
 import React, { useMemo, useCallback } from 'react';
 import { useEditor } from '@/components/editor/EditorProviderCanonical';
-import { logger } from '@/utils/debugLogger';
+import { logger } from '@/lib/utils/debugLogger';
 
 export interface UniversalPropertiesPanelProps {
     selectedBlockId: string | null;

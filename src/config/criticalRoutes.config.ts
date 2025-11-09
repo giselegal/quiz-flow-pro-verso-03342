@@ -4,7 +4,7 @@
  * Define quais rotas devem ser preloaded e com qual prioridade
  */
 
-import { routePreloader } from '@/utils/routePreloader';
+import { routePreloader } from '@/lib/utils/routePreloader';
 
 // 🎯 HIGH PRIORITY (preload on app init)
 export const CRITICAL_ROUTES = {

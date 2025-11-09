@@ -16,8 +16,8 @@ import { useCallback } from 'react';
 import { useUnifiedCRUD } from '@/contexts/data/UnifiedCRUDProvider';
 import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import type { Block } from '@/types/editor';
-import { appLogger } from '@/utils/logger';
-import { generateBlockId } from '@/utils/idGenerator';
+import { appLogger } from '@/lib/utils/logger';
+import { generateBlockId } from '@/lib/utils/idGenerator';
 
 export interface UseBlockMutationsOptions {
   /** Step key (ex: 'step-01') */

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { validateStep } from '@/utils/stepValidationRegistry';
+import { validateStep } from '@/lib/utils/stepValidationRegistry';
 
 type Ctx = {
     currentStep: number;

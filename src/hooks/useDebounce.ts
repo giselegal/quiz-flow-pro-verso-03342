@@ -3,7 +3,7 @@
 // =====================================================================
 
 import { useEffect, useState } from 'react';
-import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { PerformanceOptimizer } from '@/lib/utils/performanceOptimizer';
 
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);

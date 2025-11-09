@@ -15,7 +15,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { useUnifiedVersioning } from '@/hooks/core/useUnifiedVersioning';
 import { UnifiedFunnel } from '@/services/UnifiedCRUDService';
 import { VersionSnapshot, VersionComparison } from '@/services/VersioningService';

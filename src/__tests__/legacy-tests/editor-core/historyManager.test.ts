@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { HistoryManager } from '@/utils/historyManager';
+import { HistoryManager } from '@/lib/utils/historyManager';
 
 describe('HistoryManager', () => {
     it('realiza push e undo/redo básico', () => {

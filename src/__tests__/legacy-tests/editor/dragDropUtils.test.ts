@@ -1,5 +1,5 @@
 import type { Block } from '@/types/editor';
-import { validateDrop } from '@/utils/dragDropUtils';
+import { validateDrop } from '@/lib/utils/dragDropUtils';
 import { describe, expect, it } from 'vitest';
 
 // Helpers para criar Active/Over mínimos aceitos pelo validateDrop

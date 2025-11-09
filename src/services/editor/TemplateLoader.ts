@@ -19,11 +19,11 @@ import { Block } from '@/types/editor';
 // ✅ CORREÇÃO: Remover import direto do .ts
 // import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
-import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
+import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/lib/utils/templateConverter';
 // 🔧 Removido dependência de utils/loadStepTemplates para evitar eager-loading de bundles
-import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
+import hydrateSectionsWithQuizSteps from '@/lib/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
-import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
+import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/lib/utils/cacheKeys';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
@@ -33,8 +33,8 @@ import { funnelComponentsService } from '@/services/funnelComponentsService';
 
 // Alias para compatibilidade
 const unifiedCache = unifiedCacheService;
-import { convertComponentInstancesToBlocks, filterValidInstances } from '@/utils/componentInstanceConverter';
-import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/utils/retryWithBackoff';
+import { convertComponentInstancesToBlocks, filterValidInstances } from '@/lib/utils/componentInstanceConverter';
+import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/lib/utils/retryWithBackoff';
 
 export type TemplateSource =
   | 'normalized-json'

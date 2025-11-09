@@ -13,8 +13,8 @@ import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { useLogger } from '@/utils/logger/SmartLogger';
-import { shallowEqual, MemoizationMetrics } from '@/utils/performance/memoization';
+import { useLogger } from '@/lib/utils/logger/SmartLogger';
+import { shallowEqual, MemoizationMetrics } from '@/lib/utils/performance/memoization';
 
 export interface PreviewBlockProps {
   block: Block;

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useFunnelStageActivation } from '@/utils/FunnelStageActivator';
+import { useFunnelStageActivation } from '@/lib/utils/FunnelStageActivator';
 import { Activity, ArrowRight, CheckCircle, Circle, Play, RotateCcw } from 'lucide-react';
 
 interface FunnelDebugPanelProps {

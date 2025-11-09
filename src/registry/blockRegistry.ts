@@ -10,7 +10,7 @@
 
 import { lazy, ComponentType, LazyExoticComponent } from 'react';
 import type { Block } from '@/types/editor';
-import { perfLogger } from '@/utils/performanceLogger';
+import { perfLogger } from '@/lib/utils/performanceLogger';
 
 export interface BlockRendererProps {
   block: Block;

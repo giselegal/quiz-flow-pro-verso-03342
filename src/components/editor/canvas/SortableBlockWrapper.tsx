@@ -1,5 +1,5 @@
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { usePreview } from '@/contexts';
@@ -11,7 +11,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useEditor } from '@/components/editor/EditorProviderCanonical';
-import { generateUniqueId } from '@/utils/generateUniqueId';
+import { generateUniqueId } from '@/lib/utils/generateUniqueId';
 import { useStepSelection } from '@/hooks/useStepSelection';
 
 interface SortableBlockWrapperProps {

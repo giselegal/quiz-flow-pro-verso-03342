@@ -1,6 +1,6 @@
 // 📋 Template Gallery - Sistema de Gerenciamento de Templates (Otimizado)
 import { Button } from '@/components/ui/button';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import {
   Dialog,
   DialogContent,

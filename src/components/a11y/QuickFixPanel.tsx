@@ -22,7 +22,7 @@ import {
   fixDecorativeIcons,
   fixInputLabels,
   type QuickFixResult,
-} from '@/utils/a11yQuickFix';
+} from '@/lib/utils/a11yQuickFix';
 
 interface FixOption {
   id: string;

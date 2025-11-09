@@ -31,7 +31,7 @@ import {
   DataSourceOptions,
 } from './TemplateDataSource';
 import { supabase } from '@/lib/supabase';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { IndexedTemplateCache } from './IndexedTemplateCache';
 
 /**

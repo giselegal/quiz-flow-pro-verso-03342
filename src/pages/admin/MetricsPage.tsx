@@ -11,7 +11,7 @@ import {
   Download,
   RefreshCw,
 } from 'lucide-react';
-import { getCachedImport, loadRecharts } from '@/utils/heavyImports';
+import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
 
 // Mock data for demonstration
 const conversionsData = [

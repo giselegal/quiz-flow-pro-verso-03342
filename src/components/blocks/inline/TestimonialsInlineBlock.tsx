@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
-import { safeGetBlockProperties, logBlockDebug } from '@/utils/blockUtils';
+import { safeGetBlockProperties, logBlockDebug } from '@/lib/utils/blockUtils';
 
 /**
  * TestimonialsInlineBlock - Seção de depoimentos

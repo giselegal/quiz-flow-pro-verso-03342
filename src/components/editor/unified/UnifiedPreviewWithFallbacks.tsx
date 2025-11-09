@@ -14,7 +14,7 @@
  */
 
 import React, { useMemo, useState, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
+import { appLogger } from '@/lib/utils/logger';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { UnifiedPreviewEngine, UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';

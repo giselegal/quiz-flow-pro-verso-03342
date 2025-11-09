@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
-import { safeGetItem, safeSetItem } from '@/utils/contextualStorage';
+import { safeGetItem, safeSetItem } from '@/lib/utils/contextualStorage';
 import { StorageService } from '@/services/core/StorageService';
 
 export interface UserTemplate {

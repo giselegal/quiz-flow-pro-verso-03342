@@ -10,8 +10,8 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { appLogger } from '@/utils/logger';
-import { HistoryManager } from '@/utils/historyManager';
+import { appLogger } from '@/lib/utils/logger';
+import { HistoryManager } from '@/lib/utils/historyManager';
 import type { EditableQuizStep } from '../types';
 
 interface EditorStateManagerProps {
