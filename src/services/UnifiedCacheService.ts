@@ -24,9 +24,26 @@
 
 import { LRUCache } from 'lru-cache';
 import { editorEventBus } from '@/lib/editorEventBus';
-import { getLogger } from '@/utils/logging';
 
-const logger = getLogger();
+// Lazy logger shim para evitar carregar o sistema de logging no chunk principal
+const logger = new Proxy({}, {
+  get(_t, prop: string) {
+    return (...args: any[]) => {
+      // Import dinâmico: carrega logger-core apenas quando necessário
+      import('@/utils/logging').then(m => {
+        try {
+          const real: any = m.getLogger();
+          const fn = real?.[prop as keyof typeof real];
+          if (typeof fn === 'function') {
+            fn.apply(real, args);
+          }
+        } catch (_) {
+          // fallback silencioso
+        }
+      });
+    };
+  }
+}) as any;
 
 interface CacheOptions {
   max: number;           // Máximo de entradas

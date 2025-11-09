@@ -1,9 +1,20 @@
 /**
  * Serviço para gerenciar múltiplos Facebook Pixels no sistema
  */
-import { getLogger } from '@/utils/logging';
-
-const logger = getLogger();
+// Lazy logger via import dinâmico para não inflar chunk principal
+const logger = new Proxy({}, {
+  get(_t, prop: string) {
+    return (...args: any[]) => {
+      import('@/utils/logging').then(m => {
+        try {
+          const real: any = m.getLogger();
+          const fn = real?.[prop as keyof typeof real];
+          if (typeof fn === 'function') fn.apply(real, args);
+        } catch (_) {}
+      });
+    };
+  }
+}) as any;
 
 interface FunnelConfig {
   pixelId: string;

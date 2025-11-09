@@ -154,6 +154,29 @@ export default defineConfig(({ mode }) => {
         output: {
           // Manter defaults do Vite/Rollup e apenas nomear chunks
           chunkFileNames: 'assets/[name]-[hash].js',
+          // Estratégia inicial de separação de chunks pesados para reduzir impacto no bundle principal.
+          // Mantém número de chunks controlado e foca em cargas opcionais (a11y, logger, editor pesado).
+          manualChunks(id) {
+            // Vendor / libs externas grandes
+            if (id.includes('node_modules/axe-core')) return 'a11y';
+            if (id.includes('node_modules/@axe-core/react')) return 'a11y-react';
+            if (id.includes('node_modules/lru-cache')) return 'cache-lib';
+
+            // Radix UI agrupado (evitar múltiplos pequenos chunks se usado amplamente)
+            if (id.includes('node_modules/@radix-ui')) return 'radix-ui';
+
+            // Logging system (todos arquivos internos de logging)
+            if (id.includes('/src/utils/logging/')) return 'logger-core';
+
+            // Editor específico (dnd-kit / craft) caso presentes
+            if (id.includes('node_modules/@dnd-kit')) return 'editor-dnd';
+            if (id.includes('node_modules/craftjs') || id.includes('node_modules/@craftjs')) return 'editor-craft';
+
+            // React e núcleo mantidos no vendor principal para não fragmentar demais
+            if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'react-vendor';
+
+            // Fallback: deixar split padrão do Vite para outros módulos
+          },
         },
       },
     },

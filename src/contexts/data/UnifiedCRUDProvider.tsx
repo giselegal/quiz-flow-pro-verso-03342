@@ -15,7 +15,6 @@ import type { UnifiedFunnelData } from '@/services/__deprecated/FunnelUnifiedSer
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { getLogger } from '@/utils/logging';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -78,7 +77,20 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     debug = false,
     context = FunnelContext.EDITOR,
 }) => {
-    const logger = getLogger();
+    // Lazy logger via import dinâmico para não puxar LoggerFactory no caminho crítico
+    const logger = new Proxy({}, {
+        get(_t, prop: string) {
+            return (...args: any[]) => {
+                import('@/utils/logging').then(m => {
+                    try {
+                        const real: any = m.getLogger();
+                        const fn = real?.[prop as keyof typeof real];
+                        if (typeof fn === 'function') fn.apply(real, args);
+                    } catch (_) { }
+                });
+            };
+        }
+    }) as any;
     logger.debug('unifiedCRUD', '🔧 UnifiedCRUDProvider: Rendering', { funnelId, autoLoad, debug, context });
 
     // ========================================================================
