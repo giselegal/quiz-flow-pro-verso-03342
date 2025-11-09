@@ -1,12 +1,69 @@
-# 🎯 Quiz Quest Challenge Verse
+# 🎯 Quiz Flow Pro - Verso 03342
 
-Sistema interativo de criação e gerenciamento de quizzes com arquitetura consolidada de alta performance.
+Sistema interativo profissional de criação e gerenciamento de quizzes e funis de conversão com arquitetura consolidada de alta performance.
+
+[![Performance](https://img.shields.io/badge/Performance-Excelente-success)]()
+[![Bundle Size](https://img.shields.io/badge/Bundle-180KB-success)]()
+[![Tests](https://img.shields.io/badge/Tests-Passing-success)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)]()
+[![React](https://img.shields.io/badge/React-18-blue)]()
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# 1. Instalar dependências
+npm install
+
+# 2. Executar em desenvolvimento
+npm run dev
+
+# 3. Acessar aplicação
+# Editor: http://localhost:5173/editor
+# Dashboard: http://localhost:5173/admin
+```
+
+### Primeiro Acesso
+1. Acesse `/editor` para criar seu primeiro funil
+2. Arraste componentes da biblioteca para o canvas
+3. Configure propriedades no painel direito
+4. Salve e publique seu funil
+
+---
+
+## 📊 Status do Projeto
+
+**Última Atualização:** 09 de Novembro de 2025
+
+| Aspecto | Status | Métrica |
+|---------|--------|---------|
+| **Performance** | 🟢 Excelente | 180KB bundle, ~2s TTI |
+| **Testes** | 🟢 Bom | 3/3 integration tests passing |
+| **Build** | 🟢 OK | Sem erros TypeScript |
+| **Manutenibilidade** | 🟡 Em melhoria | Quick Wins em andamento |
+
+**📋 Quick Wins em Execução:**
+- ✅ **Organização da raiz** - 142 arquivos movidos para `.archive/`
+- 🔄 **Documentação básica** - README melhorado (em andamento)
+- ⏳ **Correção @ts-nocheck** - 10 arquivos prioritários
+- ⏳ **Testes críticos** - Coverage de serviços principais
+
+Ver: [RESUMO_EXECUTIVO_ANALISE.md](./RESUMO_EXECUTIVO_ANALISE.md) para análise completa
+
+---
 
 ## 📚 Documentação
 
+### Guias Principais
 - **[Sistema de Templates](./docs/TEMPLATE_SYSTEM.md)** - Documentação completa do sistema v3.1
 - **[React Query Hooks](./docs/REACT_QUERY_HOOKS.md)** - Guia completo de hooks
 - **[Guia de Testes](./docs/TESTING_GUIDE.md)** - Estratégia e exemplos de testes
+
+### Análise e Planejamento
+- **[Resumo Executivo](./RESUMO_EXECUTIVO_ANALISE.md)** - Visão geral e plano de ação
+- **[Documentação Completa](./docs/)** - Índice de toda documentação
+- **[Scripts Arquivados](./.archive/)** - Scripts históricos organizados
 
 ## 🏗️ Arquitetura Consolidada
 
@@ -149,50 +206,135 @@ npm run export-templates:verbose
 - **Exemplos:** `docs/examples/` - Snippets e exemplos práticos
 - **Scripts:** `scripts/` - Scripts de automação e análise
 
-## 🚀 Como Executar
+## �️ Comandos Principais
 
+### Desenvolvimento
 ```bash
-# Instalar dependências
-npm install
-
-# Executar em desenvolvimento
-npm run dev
-
-# Build para produção
-npm run build
+npm run dev              # Servidor de desenvolvimento (http://localhost:5173)
+npm run build            # Build de produção
+npm run preview          # Preview do build de produção
+npm test                 # Executar testes unitários
+npm run test:integration # Executar testes de integração
 ```
 
-## 📝 Scripts Disponíveis
+### Exportar Templates
+```bash
+npm run export-templates -- --template=quiz21StepsComplete  # Template específico
+npm run export-templates:all                                 # Todos os templates
+npm run export-templates:verbose                            # Com logs detalhados
+```
 
-- `npm run dev` - Servidor de desenvolvimento
-- `npm run build` - Build de produção
-- `npm run preview` - Preview do build
-- `npm run lovable:prepare` - Preparação para deploy
+### Manutenção
+```bash
+npm run lint             # Verificar código com ESLint
+npm run type-check       # Verificar tipos TypeScript
+npm run lovable:prepare  # Preparação para deploy
+```
+
+---
+
+## �️ Estrutura do Projeto
+
+```
+quiz-flow-pro-verso-03342/
+├── .archive/              # 📦 Scripts históricos e temporários (142 arquivos)
+│   ├── scripts-debug/     # Scripts de diagnóstico
+│   ├── scripts-correcao/  # Scripts de correção e fix
+│   ├── scripts-analise/   # Scripts de análise
+│   ├── scripts-teste/     # Scripts de teste
+│   └── relatorios-html/   # Relatórios históricos
+├── docs/                  # 📚 Documentação completa
+│   ├── analysis/          # Análises técnicas
+│   ├── architecture/      # Arquitetura do sistema
+│   ├── guides/            # Guias práticos
+│   └── INDEX.md           # Índice de documentação
+├── public/                # Arquivos públicos e assets
+├── src/                   # 💻 Código-fonte principal
+│   ├── components/        # Componentes React (1,501 arquivos)
+│   │   ├── blocks/        # Blocos de conteúdo
+│   │   ├── editor/        # Editor visual
+│   │   ├── quiz-builder/  # Construtor de quiz
+│   │   └── ui/            # Componentes de interface
+│   ├── config/            # Configurações (154 arquivos)
+│   ├── contexts/          # Context API (38 arquivos)
+│   ├── hooks/             # Custom hooks (255 arquivos)
+│   ├── lib/               # Bibliotecas utilitárias (332 arquivos)
+│   ├── pages/             # Páginas da aplicação (93 arquivos)
+│   ├── services/          # Serviços de negócio (251 arquivos)
+│   ├── templates/         # Templates de funis (24 arquivos)
+│   └── types/             # Definições TypeScript (77 arquivos)
+├── scripts/               # Scripts de automação
+├── server/                # Servidor backend
+└── package.json           # Dependências e scripts
+```
+
+**Total:** ~3,145 arquivos de código-fonte
 
 ## 🏆 Características Técnicas
 
 ### Performance
-
-- **Code Splitting:** Carregamento otimizado
-- **Lazy Loading:** Componentes sob demanda
-- **Memoização:** React.memo e useMemo estratégicos
+- **Code Splitting:** 10+ chunks inteligentes (react-vendor, radix-ui, forms, editor-dnd, analytics, admin)
+- **Lazy Loading:** Componentes e rotas sob demanda via React.lazy
+- **Memoização:** React.memo e useMemo estratégicos (QuizModularEditor otimizado)
+- **Tree-shaking:** lodash-es para imports otimizados
+- **Bundle Optimization:** Terser minification, drop console.* em produção
 
 ### Qualidade de Código
-
-- **TypeScript:** Tipagem completa
+- **TypeScript:** Tipagem completa (⚠️ 207 arquivos com @ts-nocheck em remoção)
 - **ESLint:** Linting automatizado
-- **Prettier:** Formatação consistente
-- **Estrutura Modular:** Separação clara de responsabilidades
+- **Testing:** Vitest com 3/3 testes de integração passando
+- **Estrutura Modular:** 15 pastas principais, separação clara de responsabilidades
 
 ### UX/UI
-
-- **Design System:** Componentes consistentes
-- **Responsividade:** Adaptação completa a devices
-- **Acessibilidade:** Suporte a screen readers
-- **Performance Visual:** Animações suaves
+- **Design System:** Componentes Radix UI + Tailwind CSS
+- **Responsividade:** Mobile-first, adaptação completa
+- **Acessibilidade:** ARIA labels e suporte a screen readers
+- **Performance Visual:** Animações suaves com Framer Motion
 
 ---
 
-Desenvolvido com ❤️ para criação de funis de conversão eficazes.
+## 🤝 Contribuindo
 
-Arquitetura atual e análise sistêmica: veja docs/ARCHITECTURE.md
+### Estrutura de Commits
+```
+feat: Nova funcionalidade
+fix: Correção de bug
+refactor: Refatoração de código
+docs: Atualização de documentação
+test: Adição ou correção de testes
+perf: Melhoria de performance
+```
+
+### Fluxo de Desenvolvimento
+1. Crie uma branch a partir de `main`
+2. Faça suas alterações com commits semânticos
+3. Execute `npm test` para validar
+4. Execute `npm run build` para verificar build
+5. Abra Pull Request com descrição detalhada
+
+### Padrões de Código
+- Use TypeScript para novos arquivos
+- Evite `@ts-nocheck` (objetivo: 0%)
+- Adicione testes para novas funcionalidades
+- Documente funções complexas com JSDoc
+- Mantenha componentes < 300 linhas quando possível
+
+---
+
+## 📞 Suporte e Contato
+
+- **Issues:** [GitHub Issues](https://github.com/giselegal/quiz-flow-pro-verso-03342/issues)
+- **Documentação:** [docs/INDEX.md](./docs/INDEX.md)
+- **Análise Técnica:** [RESUMO_EXECUTIVO_ANALISE.md](./RESUMO_EXECUTIVO_ANALISE.md)
+
+---
+
+## 📜 Licença
+
+Projeto proprietário - Todos os direitos reservados.
+
+---
+
+**Desenvolvido com ❤️ para criação de funis de conversão eficazes.**
+
+*Última atualização: 09 de Novembro de 2025*
