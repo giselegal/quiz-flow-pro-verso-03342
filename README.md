@@ -295,29 +295,34 @@ quiz-flow-pro-verso-03342/
 
 ## 🤝 Contribuindo
 
-### Estrutura de Commits
-```
-feat: Nova funcionalidade
-fix: Correção de bug
-refactor: Refatoração de código
-docs: Atualização de documentação
-test: Adição ou correção de testes
-perf: Melhoria de performance
+Contribuições são bem-vindas! Por favor, leia nosso **[Guia de Contribuição](./CONTRIBUTING.md)** para detalhes sobre:
+
+- 📋 Código de conduta
+- 🚀 Setup do ambiente
+- 📝 Padrões de código e commits semânticos
+- 🧪 Como escrever e executar testes
+- 🔀 Processo de Pull Request
+
+### Quick Start para Contribuidores
+
+```bash
+# 1. Fork e clone o repositório
+git clone https://github.com/SEU_USUARIO/quiz-flow-pro-verso-03342.git
+
+# 2. Crie uma branch
+git checkout -b feature/minha-feature
+
+# 3. Faça suas alterações e teste
+npm test && npm run build
+
+# 4. Commit com mensagem semântica
+git commit -m "feat: adiciona nova funcionalidade"
+
+# 5. Push e abra PR
+git push origin feature/minha-feature
 ```
 
-### Fluxo de Desenvolvimento
-1. Crie uma branch a partir de `main`
-2. Faça suas alterações com commits semânticos
-3. Execute `npm test` para validar
-4. Execute `npm run build` para verificar build
-5. Abra Pull Request com descrição detalhada
-
-### Padrões de Código
-- Use TypeScript para novos arquivos
-- Evite `@ts-nocheck` (objetivo: 0%)
-- Adicione testes para novas funcionalidades
-- Documente funções complexas com JSDoc
-- Mantenha componentes < 300 linhas quando possível
+Ver: **[CONTRIBUTING.md](./CONTRIBUTING.md)** para guia completo
 
 ---
 
