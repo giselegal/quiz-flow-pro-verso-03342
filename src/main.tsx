@@ -320,28 +320,46 @@ if (typeof window !== 'undefined') {
 console.log('🚀 Inicializando serviços Supabase...');
 console.log('🔧 DEBUG: main.tsx carregado');
 
-// 🔧 DIAGNOSTIC: Testar template
-import runTemplateDiagnostic from './utils/templateDiagnostic';
-import { getTemplateStatus } from './utils/hybridIntegration';
-import { startPeriodicVersionCheck } from './utils/checkBuildVersion';
+// 🔧 DIAGNOSTIC: Testar template (lazy/dev)
+defer(() => {
+  if (!import.meta.env.DEV) return; // diagnóstico só em dev
+  import('./utils/templateDiagnostic')
+    .then((mod) => {
+      try {
+        const fn = (mod as any).default || (mod as any).runTemplateDiagnostic;
+        const diagnosticResult = typeof fn === 'function' ? fn() : undefined;
+        console.log('🔬 [MAIN] Template diagnostic (lazy):', diagnosticResult);
+      } catch (e) {
+        console.warn('⚠️ [MAIN] Falha ao rodar template diagnostic (lazy):', e);
+      }
+    })
+    .catch((e) => console.warn('⚠️ [MAIN] Import diagnóstico falhou:', e));
+});
 
-const diagnosticResult = runTemplateDiagnostic();
-console.log('🔬 [MAIN] Template diagnostic:', diagnosticResult);
-
-// Testar integração híbrida
-getTemplateStatus().then(status => {
-  console.log('🔬 [MAIN] Hybrid integration status:', status);
-}).catch(error => {
-  console.error('❌ [MAIN] Hybrid integration error:', error);
+// Testar integração híbrida (lazy)
+defer(() => {
+  import('./utils/hybridIntegration')
+    .then(({ getTemplateStatus }) =>
+      getTemplateStatus()
+        .then((status) => console.log('🔬 [MAIN] Hybrid integration status (lazy):', status))
+        .catch((error) => console.error('❌ [MAIN] Hybrid integration error (lazy):', error))
+    )
+    .catch((e) => console.warn('⚠️ [MAIN] Import hybridIntegration falhou:', e));
 });
 
 // 🔄 Versão / prevenção de 404 de chunks desatualizados
 if (typeof window !== 'undefined') {
-  try {
-    startPeriodicVersionCheck(180000); // a cada 3 min
-  } catch (e) {
-    console.warn('[VersionCheck] Falha ao iniciar verificação de versão:', e);
-  }
+  defer(() => {
+    import('./utils/checkBuildVersion')
+      .then(({ startPeriodicVersionCheck }) => {
+        try {
+          startPeriodicVersionCheck(180000); // a cada 3 min
+        } catch (e) {
+          console.warn('[VersionCheck] Falha ao iniciar verificação de versão (lazy):', e);
+        }
+      })
+      .catch((e) => console.warn('[VersionCheck] Falha import lazy:', e));
+  });
 }
 
 // 🧹 DEV: Garantir que nenhum Service Worker legado interfira em localhost

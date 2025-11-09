@@ -141,7 +141,4 @@ export function loadEditorBlockSchemas(): void {
   console.log(`[EditorBlockSchemas] ✅ ${totalSchemas} schemas de blocos carregados (${schemas.length} JSON + ${Object.keys(blockPropertySchemas).length} TypeScript)`);
 }
 
-/**
- * Auto-load ao importar este módulo
- */
-loadEditorBlockSchemas();
+// Nota: Auto-load removido para permitir controle de timing pelo bootstrap
