@@ -18,20 +18,11 @@ export {
   default as UnifiedAppProviderDefault,
 } from './UnifiedAppProvider';
 
-// ❌ REMOVIDO: ConsolidatedProvider (substituído por UnifiedAppProvider)
-// Mantido export vazio para evitar erro imediato em algum import residual durante migração incremental.
-// Após confirmar zero imports via grep/CI, remover linhas abaixo.
-// export { ConsolidatedProvider, default as ConsolidatedProviderDefault } from './ConsolidatedProvider';
-
 // 🔧 INTERNO: Usado internamente por UnifiedAppProvider (exposto apenas para testes e extensão avançada)
 export { default as SuperUnifiedProvider, useSuperUnified } from './SuperUnifiedProvider';
 
-// ❌ REMOVIDO: FunnelMasterProvider e hooks associados
-// Hooks substituídos por API CRUD unificada (useUnifiedCRUD / selectors específicos)
-// export { FunnelMasterProvider, useFunnelMaster, useFunnels, useUnifiedFunnel, useFunnelConfig, useQuizFlow, useQuiz21Steps } from './FunnelMasterProvider';
-
-// ❌ REMOVIDO: OptimizedProviderStack (função absorvida em UnifiedAppProvider)
-// export { default as OptimizedProviderStack } from './OptimizedProviderStack';
+// 🎥 FEATURE: Live preview via WebSocket (usado em editor avançado)
+export { default as LivePreviewProvider, useLivePreview } from './LivePreviewProvider';
 
 // 🔧 INTERNOS: Runtime providers para editor (mantidos)
 export { EditorRuntimeProviders } from '@/contexts';
