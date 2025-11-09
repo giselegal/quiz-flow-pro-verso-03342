@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import type { TemplateDraftShared } from '@/lib/shared/templateEngineTypes';
 import { useToast } from '@/hooks/use-toast';
 

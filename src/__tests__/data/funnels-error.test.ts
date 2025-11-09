@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { funnelDataService } from '@/services/canonical/data/FunnelDataService';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 
 describe('FunnelDataService error handling', () => {
   beforeEach(() => { vi.restoreAllMocks(); vi.clearAllMocks(); });

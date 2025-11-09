@@ -1,4 +1,4 @@
-import type { Database } from '@/integrations/supabase/types';
+import type { Database } from '@/services/integrations/supabase/types';
 import { createClient } from '@supabase/supabase-js';
 
 // Configuração segura para SSR

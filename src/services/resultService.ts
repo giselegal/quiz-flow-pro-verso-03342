@@ -1,4 +1,4 @@
-import type { Database } from '@/integrations/supabase/types';
+import type { Database } from '@/services/integrations/supabase/types';
 import { supabase } from '@/lib/supabase';
 
 export type QuizResult = Database['public']['Tables']['quiz_results']['Row'];

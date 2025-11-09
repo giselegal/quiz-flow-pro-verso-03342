@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import GenericFallback from '@/components/core/fallbacks/GenericFallback';
 import IntroFallback from '@/components/core/fallbacks/IntroFallback';
 import QuestionFallback from '@/components/core/fallbacks/QuestionFallback';

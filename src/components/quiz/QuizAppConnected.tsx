@@ -12,7 +12,7 @@
 'use client';
 
 import { useQuizState } from '../../hooks/useQuizState';
-import { useOptionalQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { useOptionalQuizRuntimeRegistry } from '@/core/runtime/quiz/QuizRuntimeRegistry';
 import { useComponentConfiguration } from '../../hooks/useComponentConfiguration';
 // 🆕 SISTEMA DE PONTUAÇÃO
 import { useQuizStore } from '@/store/quizStore';

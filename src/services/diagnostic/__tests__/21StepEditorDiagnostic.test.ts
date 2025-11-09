@@ -2,7 +2,7 @@
  * Test for 21-step editor diagnostic system
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { run21StepDiagnostic } from '@/diagnostic/21StepEditorDiagnostic';
+import { run21StepDiagnostic } from '@/services/diagnostic/21StepEditorDiagnostic';
 
 // Mock window object for tests
 const mockWindow: any = {

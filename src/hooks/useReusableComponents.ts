@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
+import { getSupabaseClient } from '@/services/integrations/supabase/supabaseLazy';
 
 // ============================================================================
 // TIPOS PARA COMPONENTES REUTILIZÁVEIS

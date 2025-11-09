@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { isSimpleBlock, getTemplatePath, getComponentPath, BLOCK_COMPLEXITY_MAP } from '@/config/block-complexity-map';
-import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { UnifiedBlockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 
 // Converter opcional para sections -> blocks (quando necessário)
 async function convertSectionsToBlocks(sections: any[]): Promise<any[]> {

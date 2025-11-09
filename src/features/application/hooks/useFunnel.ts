@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Funnel, Page, Block } from '@/core/domains';
-import { FunnelService, FunnelSession, FunnelAnalytics } from '@/application/services/FunnelService';
+import { FunnelService, FunnelSession, FunnelAnalytics } from '@/features/application/services/FunnelService';
 
 const funnelService = new FunnelService();
 

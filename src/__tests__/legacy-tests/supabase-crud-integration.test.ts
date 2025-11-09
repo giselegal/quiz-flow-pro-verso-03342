@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/services/integrations/supabase/client';
 
 // IDs de teste para cleanup
 const testIds: string[] = [];

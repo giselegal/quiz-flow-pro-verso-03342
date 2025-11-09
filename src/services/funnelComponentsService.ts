@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { generateInstanceKey } from '@/lib/utils/idValidation';
 
 // Cache simples de tipos conhecidos para reduzir chamadas

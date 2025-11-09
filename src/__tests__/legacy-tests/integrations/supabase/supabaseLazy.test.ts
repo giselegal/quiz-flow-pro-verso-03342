@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getSupabaseClient, resetSupabaseLazyCache } from '@/integrations/supabase/supabaseLazy';
+import { getSupabaseClient, resetSupabaseLazyCache } from '@/services/integrations/supabase/supabaseLazy';
 
 // Helper para manipular env de forma controlada
 function withEnv(vars: Record<string, string | undefined>, fn: () => Promise<void>) {

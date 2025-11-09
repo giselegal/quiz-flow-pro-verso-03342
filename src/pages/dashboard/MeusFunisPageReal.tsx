@@ -31,7 +31,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
 import { funnelService } from '@/services/canonical/FunnelService';
 import { templateService } from '@/services/canonical/TemplateService';

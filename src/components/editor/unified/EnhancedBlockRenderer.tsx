@@ -6,7 +6,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';

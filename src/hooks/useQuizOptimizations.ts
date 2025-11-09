@@ -12,8 +12,8 @@
 
 import { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { getPreloadBlocks } from '@/registry/blockCategories';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
+import { getPreloadBlocks } from '@/core/registry/blockCategories';
 import { appLogger } from '@/lib/utils/logger';
 
 // ============================================================================

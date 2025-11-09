@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { useUnifiedEditorState } from '@/hooks/useUnifiedEditorState';
 
 interface PerformanceMetrics {

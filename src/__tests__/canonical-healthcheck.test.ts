@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { dataService } from '@/services/canonical/DataService';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { participantDataService } from '@/services/canonical/data/ParticipantDataService';
 import { sessionDataService } from '@/services/canonical/data/SessionDataService';
 import { resultDataService } from '@/services/canonical/data/ResultDataService';

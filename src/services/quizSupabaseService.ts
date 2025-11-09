@@ -1,5 +1,5 @@
-import { supabase } from '@/integrations/supabase/customClient';
-import type { Database } from '@/integrations/supabase/types';
+import { supabase } from '@/services/integrations/supabase/customClient';
+import type { Database } from '@/services/integrations/supabase/types';
 import type { InsertQuizConversion } from '@/types/unified-schema'; // Importar do unified-schema
 
 type InsertQuizUser = Database['public']['Tables']['quiz_users']['Insert'];

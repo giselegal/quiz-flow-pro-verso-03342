@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 describe('question-hero-05 - Teste Completo', () => {

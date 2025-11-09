@@ -10,7 +10,7 @@
  * SPRINT 2 - Substituição de localhost por Supabase real
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/services/integrations/supabase/client';
 import type { EditorStep } from '@/store/editorStore';
 
 // ============================================================================

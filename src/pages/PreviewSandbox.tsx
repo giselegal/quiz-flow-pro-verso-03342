@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { QuizRuntimeContainer } from '@/runtime/quiz/QuizRuntimeContainer';
+import { QuizRuntimeContainer } from '@/core/runtime/quiz/QuizRuntimeContainer';
 import type { PreviewMessage } from '@/components/editor/preview/IsolatedPreviewIframe';
 
 export default function PreviewSandbox() {

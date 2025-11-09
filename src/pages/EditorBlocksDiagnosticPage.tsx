@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useEditor } from '@/hooks/useEditor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { Button } from '@/components/ui/button';
 
 const SourceBadge: React.FC<{ source?: string }> = ({ source }) => {

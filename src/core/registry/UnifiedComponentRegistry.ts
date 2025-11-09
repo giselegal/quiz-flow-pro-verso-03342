@@ -10,7 +10,7 @@
  */
 
 import React, { type ComponentType } from 'react';
-import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { UnifiedBlockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 
 // ⚡ APENAS 5 BLOCOS CRÍTICOS - Evita duplicação
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';

@@ -177,7 +177,7 @@ export class UnifiedCRUDService {
   private async loadFromSupabase(): Promise<void> {
     try {
       // Usar loader seguro para evitar multi-instâncias/SSR
-      const { getSupabaseClient } = await import('@/integrations/supabase/supabaseLazy');
+      const { getSupabaseClient } = await import('@/services/integrations/supabase/supabaseLazy');
       const supabase = await getSupabaseClient({ mockOnMissingEnv: true });
 
       // Carregar funis do Supabase
@@ -231,7 +231,7 @@ export class UnifiedCRUDService {
    */
   private async syncToSupabase(data: Record<string, any>): Promise<void> {
     try {
-      const { getSupabaseClient } = await import('@/integrations/supabase/supabaseLazy');
+      const { getSupabaseClient } = await import('@/services/integrations/supabase/supabaseLazy');
       const supabase = await getSupabaseClient({ mockOnMissingEnv: true });
 
       // Sincronizar cada funnel

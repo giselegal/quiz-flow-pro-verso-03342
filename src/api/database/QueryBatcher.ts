@@ -13,7 +13,7 @@
  * ✅ Cache integration
  */
 
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 
 // Alias para compatibilidade

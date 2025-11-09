@@ -1,4 +1,4 @@
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

@@ -14,8 +14,8 @@ import React, { useMemo, useRef, useCallback, useEffect } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type { Block } from '@/types/editor';
 import { OptimizedBlockRenderer } from '@/components/editor/OptimizedBlockRenderer';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { getPreloadBlocks } from '@/registry/blockCategories';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
+import { getPreloadBlocks } from '@/core/registry/blockCategories';
 import { appLogger } from '@/lib/utils/logger';
 
 // ============================================================================

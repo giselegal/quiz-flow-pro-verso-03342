@@ -1,5 +1,5 @@
 import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import type { BlockData } from '@/types/blocks';
 import { cn } from '@/lib/utils';
 import React from 'react';

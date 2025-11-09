@@ -7,7 +7,7 @@ import { cacheManager } from '@/lib/utils/cache/LRUCache';
 import { useLogger } from '@/lib/utils/logger/SmartLogger';
 
 // 🎯 UNIFIED BLOCK REGISTRY - Lazy loading com code splitting
-import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { UnifiedBlockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 
 // 🔄 REMOVIDOS 90+ imports estáticos - Agora usa UnifiedBlockRegistry
 // Todos os componentes são carregados via lazy loading ou cache do registry

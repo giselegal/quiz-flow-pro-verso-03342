@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { resultDataService } from '@/services/canonical/data/ResultDataService';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 
 describe('ResultDataService error handling', () => {
   beforeEach(() => { vi.restoreAllMocks(); vi.clearAllMocks(); });

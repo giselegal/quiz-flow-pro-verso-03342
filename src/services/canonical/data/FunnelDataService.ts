@@ -1,5 +1,5 @@
 import { BaseCanonicalService, ServiceResult } from '@/services/canonical/types';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { CacheService } from '@/services/canonical/CacheService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
 import { deepClone } from '@/lib/utils/cloneFunnel';

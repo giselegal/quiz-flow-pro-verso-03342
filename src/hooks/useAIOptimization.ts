@@ -12,7 +12,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { usePerformanceMonitor } from './usePerformanceMonitor';
 import { useAnalytics } from './useAnalytics';
 import { logger } from '@/lib/utils/debugLogger';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 
 // 🎯 INTERFACES
 interface PerformanceMetrics {

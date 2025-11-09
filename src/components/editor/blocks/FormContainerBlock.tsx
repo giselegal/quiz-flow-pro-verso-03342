@@ -1,4 +1,4 @@
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import React, { useEffect, useRef, CSSProperties, FC } from 'react';

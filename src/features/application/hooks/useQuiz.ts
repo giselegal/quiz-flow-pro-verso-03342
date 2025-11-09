@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Quiz, Question, ResultProfile } from '@/core/domains';
-import { QuizService, QuizSession, QuizAnalytics } from '@/application/services/QuizService';
+import { QuizService, QuizSession, QuizAnalytics } from '@/features/application/services/QuizService';
 
 const quizService = new QuizService();
 

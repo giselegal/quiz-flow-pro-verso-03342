@@ -12,7 +12,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
 import { TemplateService } from '@/services/canonical/TemplateService';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
 interface UseUnifiedQuizLoaderOptions {

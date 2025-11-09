@@ -16,7 +16,7 @@
  * - And 22 more data-related services
  */
 
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { indexedDBService } from '../storage/IndexedDBService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { deepClone } from '@/lib/utils/cloneFunnel';

@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { blockRegistry, getRegistryStats, type BlockType } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry, getRegistryStats, type BlockType } from '@/core/registry/UnifiedBlockRegistry';
 import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback';
 
 // Cache simples para manter identidade estável por tipo

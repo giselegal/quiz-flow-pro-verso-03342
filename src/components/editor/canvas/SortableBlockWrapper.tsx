@@ -1,4 +1,4 @@
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';

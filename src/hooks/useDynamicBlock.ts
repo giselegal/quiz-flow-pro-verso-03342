@@ -7,7 +7,7 @@
  */
 
 import { ComponentType, useMemo } from 'react';
-import { blockRegistry, type BlockType, prefetchBlock, prefetchBlocks, getRegistryStats } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry, type BlockType, prefetchBlock, prefetchBlocks, getRegistryStats } from '@/core/registry/UnifiedBlockRegistry';
 
 export interface UseDynamicBlockOptions {
   preload?: boolean;

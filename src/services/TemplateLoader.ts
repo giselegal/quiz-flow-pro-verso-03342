@@ -6,7 +6,7 @@
  */
 
 import { appLogger } from '@/lib/utils/logger';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/services/integrations/supabase/client';
 import type { Block } from '@/types/editor';
 
 /**

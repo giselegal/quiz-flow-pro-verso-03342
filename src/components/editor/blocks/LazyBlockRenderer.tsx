@@ -15,7 +15,7 @@
 import React, { memo, Suspense, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
-import { blockRegistry } from '@/registry/blockRegistry';
+import { blockRegistry } from '@/core/registry/blockRegistry';
 import { BlockSkeleton } from './BlockSkeleton';
 import { useBlockLoading } from '@/hooks/useBlockLoading';
 

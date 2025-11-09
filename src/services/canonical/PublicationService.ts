@@ -21,7 +21,7 @@
 import { BaseCanonicalService, ServiceResult } from '@/services/canonical/types';
 import { FunnelDataService } from './data/FunnelDataService';
 import { FunnelSettingsService } from './data/FunnelSettingsService';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { CanonicalServicesMonitor } from './monitoring';
 import type { PublicationSettings } from './data/FunnelSettingsService';
 

@@ -9,7 +9,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LazyBlockRenderer } from '../LazyBlockRenderer';
 import { EditorLoadingProvider } from '@/contexts/EditorLoadingContext';
-import { blockRegistry } from '@/registry/blockRegistry';
+import { blockRegistry } from '@/core/registry/blockRegistry';
 import type { Block } from '@/types/editor';
 
 // Mock do blockRegistry

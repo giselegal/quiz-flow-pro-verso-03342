@@ -8,7 +8,7 @@
  */
 
 import { EditableQuizStep, BlockComponent } from '@/components/editor/quiz/types';
-import { RuntimeStepOverride } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { RuntimeStepOverride } from '@/core/runtime/quiz/QuizRuntimeRegistry';
 import { getBlockConfig } from '@/lib/utils/blockConfigMerger';
 
 /**

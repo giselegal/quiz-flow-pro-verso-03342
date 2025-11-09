@@ -7,7 +7,7 @@
 import { Heading, Image, Minus, MousePointer, Type } from 'lucide-react';
 import React from 'react';
 import type { BlockDefinition } from '../types/editor';
-import { blockRegistry, getRegistryStats as getUnifiedStats } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry, getRegistryStats as getUnifiedStats } from '@/core/registry/UnifiedBlockRegistry';
 
 // Criar proxy object para compatibilidade com código que acessa ENHANCED_BLOCK_REGISTRY[type]
 export const ENHANCED_BLOCK_REGISTRY = new Proxy({} as Record<string, React.ComponentType<any>>, {

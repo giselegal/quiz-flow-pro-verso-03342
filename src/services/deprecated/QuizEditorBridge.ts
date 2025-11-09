@@ -14,14 +14,14 @@
 
 // Legacy sources removidos: usar TemplateService como fonte canônica
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
-import { supabase } from '@/integrations/supabase/customClient';
-import type { Json } from '@/integrations/supabase/types';
+import { supabase } from '@/services/integrations/supabase/customClient';
+import type { Json } from '@/services/integrations/supabase/types';
 import { autoFillNextSteps } from '@/lib/utils/autoFillNextSteps';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
 // ✅ FASE 4.1: Integração com serviços canônicos
 import { navigationService } from '@/services/canonical/NavigationService';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { templateService } from '@/services/canonical/TemplateService';
 
 // @TEMP: Helper para forçar reconhecimento de tabelas recém adicionadas nos tipos gerados

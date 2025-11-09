@@ -2,7 +2,7 @@ import { useAuth } from '@/contexts';
 import { supabase } from '../integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';
 // import { Funnel } from '../types/unified-schema';
-import type { Json } from '@/integrations/supabase/types';
+import type { Json } from '@/services/integrations/supabase/types';
 import { useEffect, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 

@@ -6,7 +6,7 @@
  * Mapeia entidades Funnel, Page e Block para as tabelas do banco.
  */
 
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { Funnel, Page, Block } from '@/core/domains';
 
 interface SupabaseFunnel {

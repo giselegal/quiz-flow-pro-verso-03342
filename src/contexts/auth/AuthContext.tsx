@@ -1,6 +1,6 @@
 import type { Session } from '@supabase/supabase-js';
-import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
-import { isSupabaseDisabled, isSupabaseEnabled } from '@/integrations/supabase/flags';
+import { getSupabaseClient } from '@/services/integrations/supabase/supabaseLazy';
+import { isSupabaseDisabled, isSupabaseEnabled } from '@/services/integrations/supabase/flags';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 const DISABLE = isSupabaseDisabled();
 const ENABLE = isSupabaseEnabled();

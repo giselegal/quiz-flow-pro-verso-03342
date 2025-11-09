@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigationSafe } from '@/hooks/useNavigationSafe';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/services/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

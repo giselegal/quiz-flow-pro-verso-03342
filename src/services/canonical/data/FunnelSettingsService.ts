@@ -16,10 +16,10 @@
  */
 
 import { BaseCanonicalService, ServiceResult } from '@/services/canonical/types';
-import { supabase } from '@/integrations/supabase/customClient';
+import { supabase } from '@/services/integrations/supabase/customClient';
 import { CacheService } from '@/services/canonical/CacheService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
-import type { Json } from '@/integrations/supabase/types';
+import type { Json } from '@/services/integrations/supabase/types';
 
 // ============================================================================
 // TYPES

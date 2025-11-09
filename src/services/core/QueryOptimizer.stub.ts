@@ -1,5 +1,5 @@
 // STUB: QueryOptimizer - simplified version to avoid build errors
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/services/integrations/supabase/client';
 
 export class QueryOptimizer {
   async selectFields<T = any>(table: string, fields: string[], filter?: Record<string, any>): Promise<T[]> {

@@ -12,8 +12,8 @@
 
 import React, { Suspense, memo, useMemo } from 'react';
 import type { Block } from '@/types/editor';
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { isCriticalBlock } from '@/registry/blockCategories';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
+import { isCriticalBlock } from '@/core/registry/blockCategories';
 import { BlockSkeleton } from './BlockSkeleton';
 import { appLogger } from '@/lib/utils/logger';
 

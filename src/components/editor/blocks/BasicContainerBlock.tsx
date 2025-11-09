@@ -1,4 +1,4 @@
-import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import React from 'react';
 

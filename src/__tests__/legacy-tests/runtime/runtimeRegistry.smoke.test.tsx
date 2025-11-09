@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/core/runtime/quiz/QuizRuntimeRegistry';
 import { useQuizState } from '@/hooks/useQuizState';
 
 // Mapa de steps override mínimo

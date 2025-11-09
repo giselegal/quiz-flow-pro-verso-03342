@@ -30,8 +30,8 @@ import { styleConfigGisele } from '@/data/styles';
 // import { Undo2, Redo2 } from 'lucide-react';
 
 // Imports runtime
-import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
-import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
+import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/core/runtime/quiz/QuizRuntimeRegistry';
+import { editorStepsToRuntimeMap } from '@/core/runtime/quiz/editorAdapter';
 import QuizAppConnected from '@/components/quiz/QuizAppConnected';
 
 interface QuizFunnelEditorProps {
