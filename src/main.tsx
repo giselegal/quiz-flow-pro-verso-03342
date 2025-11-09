@@ -62,34 +62,64 @@ defer(() => {
   }
 });
 
-// ✅ W3: Validar templates built-ins no bootstrap
-import { validateBuiltInTemplate } from '@/templates/validation/validateAndNormalize';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/imports';
-
-// Validar template principal em idle (não bloquear interação inicial)
-defer(() => {
-  try {
-    const templateData = {
-      metadata: {
-        name: 'Quiz de Estilo 21 Etapas',
-        version: '3.0.0',
-        description: 'Template completo de 21 etapas para quiz de estilo pessoal',
-      },
-      steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
-    };
-    const validationResult = validateBuiltInTemplate('quiz21StepsComplete', templateData);
-    if (validationResult.success) {
-      console.log('✅ Built-in template "quiz21StepsComplete" validado (idle)');
-      if (validationResult.warnings?.length) {
-        console.warn('⚠️ Built-in template warnings:', validationResult.warnings);
-      }
-    } else {
-      console.error('❌ Built-in template "quiz21StepsComplete" inválido:', validationResult.errors);
-    }
-  } catch (error) {
-    console.error('❌ Erro ao validar built-in template (idle):', error);
-  }
-});
+// ✅ W3 (lazy): Validar template built-in somente após primeira interação do usuário
+// Removidos imports estáticos para tirar custo de validação do caminho crítico de bootstrap
+let templateValidationScheduled = false;
+const scheduleTemplateValidation = () => {
+  // Usa idle para não competir com pintura após interação
+  defer(() => {
+    // Encadeia imports dinâmicos; cada chunk só carrega se realmente necessário
+    Promise.all([
+      import('@/templates/validation/validateAndNormalize'),
+      import('@/templates/imports'),
+    ])
+      .then(([validationMod, importsMod]) => {
+        const { validateBuiltInTemplate } = validationMod;
+        const { QUIZ_STYLE_21_STEPS_TEMPLATE } = importsMod as any;
+        try {
+          const templateData = {
+            metadata: {
+              name: 'Quiz de Estilo 21 Etapas',
+              version: '3.0.0',
+              description: 'Template completo de 21 etapas para quiz de estilo pessoal',
+            },
+            steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+          };
+          const validationResult = validateBuiltInTemplate('quiz21StepsComplete', templateData);
+          if (validationResult.success) {
+            console.log('✅ (lazy) Built-in template "quiz21StepsComplete" validado');
+            if (validationResult.warnings?.length) {
+              console.warn('⚠️ Built-in template warnings:', validationResult.warnings);
+            }
+          } else {
+            console.error('❌ (lazy) Built-in template inválido:', validationResult.errors);
+          }
+        } catch (error) {
+          console.error('❌ Erro ao validar built-in template (lazy):', error);
+        }
+      })
+      .catch((err) => {
+        console.warn('⚠️ Falha import dinâmica para validação de template:', err);
+      });
+  });
+};
+const triggerTemplateValidation = () => {
+  if (templateValidationScheduled) return;
+  templateValidationScheduled = true;
+  scheduleTemplateValidation();
+  // Garantir remoção dos listeners (defensive) caso múltiplos eventos disparem quase juntos
+  ['click', 'keydown', 'pointerdown', 'touchstart'].forEach((evt) => {
+    try { window.removeEventListener(evt, triggerTemplateValidation); } catch { /* noop */ }
+  });
+};
+if (typeof window !== 'undefined') {
+  // Agenda após primeira interação real do usuário
+  ['click', 'keydown', 'pointerdown', 'touchstart'].forEach((evt) => {
+    window.addEventListener(evt, triggerTemplateValidation, { once: true });
+  });
+  // Fallback: se usuário não interagir em até 5s, ainda assim validamos em segundo plano
+  setTimeout(() => triggerTemplateValidation(), 5000);
+}
 
 defer(() => {
   try { installLayerDiagnostics(); } catch (error) {
@@ -98,52 +128,40 @@ defer(() => {
 });
 
 // Pré-carregar schemas críticos para evitar fallback legacy em blocos de resultado
-defer(() => {
-  try {
-    SchemaAPI.preload(
-      'result-header',
-      'result-description',
-      'result-image',
-      'result-cta',
-      'result-progress-bars',
-      'result-main',
-      'result-style',
-      'result-characteristics',
-      'result-secondary-styles',
-      'result-cta-primary',
-      'result-cta-secondary',
-      'result-share',
-      'options-grid',
-      'quiz-options',
-      'question-title',
-      'question-text',
-      'question-number',
-      'question-progress',
-      'question-instructions',
-      'question-navigation',
-      'quiz-navigation',
-      'text-inline',
-      'image',
-      'button',
-      'intro-logo',
-      'intro-title',
-      'intro-image',
-      'intro-description',
-      'intro-form',
-      'intro-logo-header',
-      'quiz-intro-header',
-      'transition-title',
-      'transition-text',
-      'transition-loader',
-      'transition-progress',
-      'transition-message',
-      'offer-hero',
-      'pricing',
-      'benefits',
-      'guarantee',
-      'urgency-timer-inline'
-    );
-  } catch { /* ignore preload errors in dev */ }
+// Dividir preload em batches para evitar monopolizar o primeiro idle e permitir cancelamento futuro
+const schemaPreloadBatches: string[][] = [
+  [
+    // Result blocks (prioridade em funis de resultado)
+    'result-header', 'result-description', 'result-image', 'result-cta', 'result-progress-bars',
+    'result-main', 'result-style', 'result-characteristics', 'result-secondary-styles',
+    'result-cta-primary', 'result-cta-secondary', 'result-share'
+  ],
+  [
+    // Question + opções + componentes atômicos
+    'options-grid', 'quiz-options', 'question-title', 'question-text', 'question-number', 'question-progress',
+    'question-instructions', 'question-navigation', 'quiz-navigation', 'text-inline', 'image', 'button'
+  ],
+  [
+    // Intro / Transition / Offer
+    'intro-logo', 'intro-title', 'intro-image', 'intro-description', 'intro-form', 'intro-logo-header', 'quiz-intro-header',
+    'transition-title', 'transition-text', 'transition-loader', 'transition-progress', 'transition-message',
+    'offer-hero', 'pricing', 'benefits', 'guarantee', 'urgency-timer-inline'
+  ],
+];
+schemaPreloadBatches.forEach((batch, i) => {
+  // Escalonar cada batch ~100ms após o anterior para suavizar carga
+  setTimeout(() => {
+    defer(() => {
+      try {
+        SchemaAPI.preload(...batch);
+        if (import.meta.env.DEV) {
+          console.log(`🔄 Preload schemas batch ${i + 1}/${schemaPreloadBatches.length}:`, batch.length);
+        }
+      } catch (e) {
+        if (import.meta.env.DEV) console.warn('⚠️ Falha preload batch', i + 1, e);
+      }
+    });
+  }, i * 100);
 });
 
 // 🧹 FASE 1: Emergency localStorage cleanup on startup if quota exceeded
