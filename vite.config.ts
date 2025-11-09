@@ -160,7 +160,12 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       // Voltar ao comportamento padrão, minimizando interferência
       force: false,
-      include: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
+      // Pré-bundle de libs grandes usadas no primeiro render para reduzir transformação fria (DEV)
+      include: [
+        'react', 'react-dom', 'react/jsx-runtime', 'react-dom/client',
+        'wouter', 'react-helmet-async', 'zod',
+        '@radix-ui/react-dialog', '@radix-ui/react-toast', '@radix-ui/react-popover', '@radix-ui/react-dropdown-menu'
+      ],
       esbuildOptions: {
         target: 'es2020',
         keepNames: true,
