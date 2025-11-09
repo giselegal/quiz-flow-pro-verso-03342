@@ -2,7 +2,7 @@ import { useFunnels } from '@/contexts';
 import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
-import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
+import { useStepNavigationStore } from '@/store/useStepNavigationStore';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 // ✅ FASE 3: Interface adaptadora para compatibilidade entre core e legacy

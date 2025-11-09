@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentProps } from '@/interfaces/quiz';
+import { ComponentProps } from '@/types/quiz';
 import styles from '@/styles/quiz.module.css';
 
 interface FAQItem {

@@ -19,7 +19,7 @@ export default defineConfig({
     setupFiles: [
       './src/test/setup.ts',
       './src/__tests__/setup/indexeddb.mock.ts',
-      './src/tests/setup/mockTemplatesApi.ts'
+      './src/__tests__/legacy-tests/setup/mockTemplatesApi.ts'
     ],
     css: true,
     // Garante que mocks e espioes sejam limpos entre testes para evitar retenção de memória

@@ -7,7 +7,7 @@ import {
   useGlobalNavigationConfig,
   useNavigationConfigStats,
   useStepNavigationConfig,
-} from '@/stores/useStepNavigationStore';
+} from '@/store/useStepNavigationStore';
 import {
   BarChart3,
   Download,

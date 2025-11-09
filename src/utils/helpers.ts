@@ -7,7 +7,7 @@
  * - [ ] Separar dados default de estilos default (responsabilidades distintas)
  */
 
-import { SimpleComponent, QuizOption, BonusItem, FaqItem } from '@/interfaces/quiz';
+import { SimpleComponent, QuizOption, BonusItem, FaqItem } from '@/types/quiz';
 import PlaceholderUtils from './placeholderUtils';
 import { appLogger } from './logger';
 

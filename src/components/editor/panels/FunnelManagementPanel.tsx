@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { QuizFunnel, SimplePage } from '@/interfaces/quiz';
+import { QuizFunnel, SimplePage } from '@/types/quiz';
 import styles from '@/styles/editor.module.css';
 import { ArrowDown, ArrowUp, Copy, FolderTree, MoreVertical, Plus, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
