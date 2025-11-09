@@ -21,7 +21,7 @@ import { getEffectiveRequiredSelections, shouldAutoAdvance } from '@/lib/quiz/re
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
-import { quizEditorBridge } from '@/services/canonical/TemplateService';
+import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useFeatureFlags } from './useFeatureFlags';
 import { useTemplateLoader } from './useTemplateLoader';
 import { navigationService } from '@/services/canonical/NavigationService';
