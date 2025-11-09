@@ -126,20 +126,57 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
         || quizState?.answers?.[stepId.replace('step-0', 'step-')]
         || [];
 
-    // Usar o renderer modular de perguntas (v3)
-    const { ModularQuestionStep } = require('@/components/quiz-modular');
+    // ✅ CORREÇÃO: Usar BlockTypeRenderer diretamente (ModularQuestionStep foi deprecado)
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#deac6d]" />
+                <span className="ml-3 text-[#5b4135]">Carregando pergunta...</span>
+            </div>
+        );
+    }
+
+    if (templateBlocks.length === 0) {
+        return (
+            <div className="p-8 text-center text-red-600">
+                ⚠️ Nenhum bloco encontrado para {stepId}
+            </div>
+        );
+    }
+
+    // Importar BlockTypeRenderer dinamicamente
+    const BlockTypeRenderer = React.lazy(() =>
+        import('@/components/editor/quiz/renderers/BlockTypeRenderer').then(m => ({ default: m.BlockTypeRenderer }))
+    );
 
     return (
-        <ModularQuestionStep
-            data={{ id: stepId, ...data }}
-            blocks={templateBlocks as any}
-            isEditable={Boolean(isEditable)}
-            currentAnswers={currentAnswers}
-            onAnswersChange={(answers: string[]) => {
-                onSave({ [stepId]: answers });
-            }}
-            {...otherProps}
-        />
+        <div className="question-step-container">
+            <React.Suspense fallback={<div className="flex justify-center p-4"><div className="animate-spin h-6 w-6 border-2 border-[#deac6d] border-t-transparent rounded-full" /></div>}>
+                {templateBlocks.map((block: any) => (
+                    <BlockTypeRenderer
+                        key={block.id}
+                        block={block}
+                        sessionData={{
+                            answers: currentAnswers,
+                            userName: quizState?.userName,
+                            [`answers_${stepId}`]: currentAnswers,
+                        }}
+                        onUpdate={(blockId: string, updates: any) => {
+                            // Atualizar respostas quando usuário faz seleção
+                            if (updates.answers) {
+                                onSave({ [stepId]: updates.answers });
+                            }
+                            // Também aceitar formato alternativo
+                            if (updates[`answers_${stepId}`]) {
+                                onSave({ [stepId]: updates[`answers_${stepId}`] });
+                            }
+                        }}
+                        mode={isEditable ? 'editable' : 'preview'}
+                        {...otherProps}
+                    />
+                ))}
+            </React.Suspense>
+        </div>
     );
 };
 
@@ -192,19 +229,58 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
         || quizState?.answers?.[stepId.replace('step-0', 'step-')]?.[0]
         || '';
 
-    const { ModularStrategicQuestionStep } = require('@/components/quiz-modular');
+    // ✅ CORREÇÃO: Usar BlockTypeRenderer diretamente (ModularStrategicQuestionStep foi deprecado)
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#deac6d]" />
+                <span className="ml-3 text-[#5b4135]">Carregando pergunta...</span>
+            </div>
+        );
+    }
+
+    if (templateBlocks.length === 0) {
+        return (
+            <div className="p-8 text-center text-red-600">
+                ⚠️ Nenhum bloco encontrado para {stepId}
+            </div>
+        );
+    }
+
+    // Importar BlockTypeRenderer dinamicamente
+    const BlockTypeRenderer = React.lazy(() =>
+        import('@/components/editor/quiz/renderers/BlockTypeRenderer').then(m => ({ default: m.BlockTypeRenderer }))
+    );
+
+    const currentAnswerArray = currentAnswer ? [currentAnswer] : [];
 
     return (
-        <ModularStrategicQuestionStep
-            data={{ id: stepId, ...data }}
-            blocks={templateBlocks as any}
-            isEditable={Boolean(isEditable)}
-            currentAnswer={currentAnswer}
-            onAnswerChange={(answerId: string) => {
-                onSave({ [stepId]: [answerId] });
-            }}
-            {...otherProps}
-        />
+        <div className="strategic-question-step-container">
+            <React.Suspense fallback={<div className="flex justify-center p-4"><div className="animate-spin h-6 w-6 border-2 border-[#deac6d] border-t-transparent rounded-full" /></div>}>
+                {templateBlocks.map((block: any) => (
+                    <BlockTypeRenderer
+                        key={block.id}
+                        block={block}
+                        sessionData={{
+                            answers: currentAnswerArray,
+                            userName: quizState?.userName,
+                            [`answers_${stepId}`]: currentAnswerArray,
+                        }}
+                        onUpdate={(blockId: string, updates: any) => {
+                            // Strategic questions aceitam apenas 1 resposta
+                            if (updates.answers && Array.isArray(updates.answers)) {
+                                onSave({ [stepId]: updates.answers });
+                            }
+                            if (updates[`answers_${stepId}`] && Array.isArray(updates[`answers_${stepId}`])) {
+                                onSave({ [stepId]: updates[`answers_${stepId}`] });
+                            }
+                        }}
+                        mode={isEditable ? 'editable' : 'preview'}
+                        {...otherProps}
+                    />
+                ))}
+            </React.Suspense>
+        </div>
     );
 };
 
