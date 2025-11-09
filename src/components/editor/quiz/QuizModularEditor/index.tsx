@@ -24,6 +24,8 @@ import { validateAndNormalizeTemplate, formatValidationErrors } from '@/template
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 // Autosave com lock e coalescing
 import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
+// Autosave feedback visual
+import { AutosaveIndicator, useAutosaveIndicator } from '../AutosaveIndicator';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -110,18 +112,31 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
 
-    // � Autosave Queue com Lock (GARGALO R1)
+    // 💾 Autosave Indicator (Feedback Visual)
+    const autosaveIndicator = useAutosaveIndicator();
+
+    // 🔒 Autosave Queue com Lock (GARGALO R1 + G35)
     const { queueSave: queueAutosave, flush: flushAutosave } = useQueuedAutosave({
         saveFn: async (blocks: Block[], stepKey: string) => {
             await saveStepBlocks(parseInt(stepKey.replace(/\D/g, '')));
         },
         debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         maxRetries: 3,
+        onUnsaved: (stepKey) => {
+            appLogger.debug(`⏱️ [Autosave] Alterações não salvas em ${stepKey}`);
+            autosaveIndicator.setUnsaved();
+        },
+        onSaving: (stepKey) => {
+            appLogger.debug(`💾 [Autosave] Salvando ${stepKey}...`);
+            autosaveIndicator.setSaving();
+        },
         onSuccess: (stepKey) => {
-            appLogger.info(`✅ [QueuedAutosave] Step salvo: ${stepKey}`);
+            appLogger.info(`✅ [Autosave] Step salvo: ${stepKey}`);
+            autosaveIndicator.setSaved();
         },
         onError: (stepKey, error) => {
-            appLogger.error(`❌ [QueuedAutosave] Falha ao salvar ${stepKey}:`, error);
+            appLogger.error(`❌ [Autosave] Falha ao salvar ${stepKey}:`, error);
+            autosaveIndicator.setError(error.message);
         },
     });
 
@@ -857,17 +872,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         )}
 
                         {enableAutoSave && (
-                            <div className="text-xs flex items-center gap-2 animate-fade-in">
-                                {unifiedState.ui.isLoading ? (
-                                    <span className="text-blue-600 flex items-center gap-1">
-                                        <span className="animate-spin">🔄</span> Salvando...
-                                    </span>
-                                ) : isDirty ? (
-                                    <span className="text-orange-600">📝 Não salvo</span>
-                                ) : (
-                                    <span className="text-green-600">✅ Salvo agora</span>
-                                )}
-                            </div>
+                            <AutosaveIndicator
+                                status={autosaveIndicator.status}
+                                errorMessage={autosaveIndicator.errorMessage}
+                                onRetry={() => {
+                                    const stepBlocks = unifiedState.editor.stepBlocks as Record<string, Block[]>;
+                                    const blocks = stepBlocks[currentStepKey] || [];
+                                    if (currentStepKey && blocks.length > 0) {
+                                        queueAutosave(currentStepKey, blocks);
+                                    }
+                                }}
+                                className="animate-fade-in"
+                            />
                         )}
 
                         <Button

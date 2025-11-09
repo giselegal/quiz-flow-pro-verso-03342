@@ -46,6 +46,12 @@ interface UseQueuedAutosaveOptions {
   
   /** Callback executado após falha final */
   onError?: (stepKey: string, error: Error) => void;
+  
+  /** Callback executado quando inicia save (para feedback visual) */
+  onSaving?: (stepKey: string) => void;
+  
+  /** Callback executado quando save entra na fila (unsaved indicator) */
+  onUnsaved?: (stepKey: string) => void;
 }
 
 interface UseQueuedAutosaveReturn {
@@ -75,6 +81,8 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
     maxRetries = 3,
     onSuccess,
     onError,
+    onSaving,
+    onUnsaved,
   } = options;
 
   // Fila de saves pendentes (Map para coalescing)
@@ -108,6 +116,11 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
       // Remove da fila e marca como "saving"
       saveQueue.current.delete(stepKey);
       savingKeys.current.add(stepKey);
+      
+      // Feedback visual: iniciando save
+      if (onSaving) {
+        onSaving(stepKey);
+      }
 
       try {
         // Telemetria: save iniciado
@@ -190,6 +203,11 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
       timestamp: Date.now(),
       retryCount: 0,
     });
+    
+    // Feedback visual: alterações não salvas
+    if (onUnsaved) {
+      onUnsaved(stepKey);
+    }
 
     // Debounce: aguarda estabilização antes de processar
     if (debounceTimer.current) {
@@ -201,7 +219,7 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
     }, debounceMs);
 
     appLogger.debug(`📝 [QueuedAutosave] Save enfileirado para ${stepKey} (queue size: ${saveQueue.current.size})`);
-  }, [debounceMs, processSaveQueue]);
+  }, [debounceMs, processSaveQueue, onUnsaved]);
 
   /**
    * Força processamento imediato da fila
