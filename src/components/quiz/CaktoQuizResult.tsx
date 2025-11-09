@@ -1,4 +1,11 @@
-// @ts-nocheck
-// Suppressed for build compatibility
-export const CaktoQuizResult = (props: any) => <div>CaktoQuizResult</div>;
+import React from 'react';
+
+interface CaktoQuizResultProps {
+    [key: string]: unknown;
+}
+
+export const CaktoQuizResult: React.FC<CaktoQuizResultProps> = () => (
+    <div>CaktoQuizResult</div>
+);
+
 export default CaktoQuizResult;

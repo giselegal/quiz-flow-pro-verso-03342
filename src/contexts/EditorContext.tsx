@@ -1,6 +1,5 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
-import TemplateManager from '@/lib/utils/TemplateManager';
+import { TemplateManager } from '@/lib/utils/TemplateManager';
 
 /**
  * EditorContext (stub) - atende verificação do script. O Editor real usa QuizModularEditor.
@@ -8,20 +7,24 @@ import TemplateManager from '@/lib/utils/TemplateManager';
 type EditorState = { currentStepId: string };
 const Ctx = createContext<EditorState>({ currentStepId: 'step-01' });
 
-export function useEditorContext() {
+export function useEditorContext(): EditorState {
     return useContext(Ctx);
 }
 
-export async function ensureTemplatesPreloaded() {
+export async function ensureTemplatesPreloaded(): Promise<void> {
     // Satisfaz: TemplateManager.preloadCommonTemplates
     await TemplateManager.preloadCommonTemplates();
 }
 
-export async function loadCurrentStepBlocks(stepId: string) {
+export async function loadCurrentStepBlocks(stepId: string): Promise<unknown> {
     // Satisfaz: await TemplateManager.loadStepBlocks
     return await TemplateManager.loadStepBlocks(stepId);
 }
 
-export default function EditorContextProvider({ children }: { children: React.ReactNode }) {
+interface EditorContextProviderProps {
+    children: React.ReactNode;
+}
+
+export default function EditorContextProvider({ children }: EditorContextProviderProps): JSX.Element {
     return <Ctx.Provider value={{ currentStepId: 'step-01' }}>{children}</Ctx.Provider>;
 }

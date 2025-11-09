@@ -1,4 +1,3 @@
-// @ts-nocheck
-// Suppressed for build compatibility - legacy quiz data format
-export const caktoQuizQuestions = [] as any;
+// Legacy quiz data format - empty array for backward compatibility
+export const caktoQuizQuestions: unknown[] = [];
 export default caktoQuizQuestions;

@@ -1,10 +1,10 @@
-// @ts-nocheck
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export interface EditableSectionProps {
   title: string;
-  content: any;
-  onChange: (newContent: any) => void;
+  content: unknown;
+  onChange: (newContent: unknown) => void;
 }
 
 const EditableSection: React.FC<EditableSectionProps> = ({ title, content, onChange }) => {

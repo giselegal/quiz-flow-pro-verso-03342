@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 OPTIMIZATION SYSTEM INDEX (TEMPORARILY DISABLED)
  * 
@@ -6,7 +5,19 @@
  * All optimization features will be re-enabled in a future release.
  */
 
-export const OptimizationSystem = {
+interface SystemStatus {
+  isEnabled: boolean;
+}
+
+interface OptimizationSystemConfig extends SystemStatus {
+  version: string;
+  reason: string;
+  BundleOptimizer: SystemStatus;
+  LazyLoadingSystem: SystemStatus;
+  TreeShakingAnalyzer: SystemStatus;
+}
+
+export const OptimizationSystem: OptimizationSystemConfig = {
   isEnabled: false,
   version: '0.1.0-disabled',
   reason: 'Temporarily disabled due to dependency issues',
