@@ -23,23 +23,27 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
 
         setIsEditorMode(isEditor);
 
+        // 🔧 FIX: Validação rigorosa do projectId para evitar erro 405
+        const hasValidProjectId = projectId && projectId.trim().length > 0 && projectId !== 'undefined' && projectId !== 'null';
+        
         // Habilitar Lovable somente quando:
         // - Estiver rodando dentro do preview (iframe) OU
         // - Flag explícita VITE_ENABLE_LOVABLE=true
-        const shouldEnableLovable = isEditor && (inIframe || enableFlag) && !!projectId;
+        // - E tem um projectId VÁLIDO (não vazio, não undefined, não null)
+        const shouldEnableLovable = isEditor && (inIframe || enableFlag) && hasValidProjectId;
 
         if (shouldEnableLovable) {
           (window as any).LOVABLE_CONFIG = {
-            projectId,
+            projectId: projectId!, // Garantido como string válida pela validação acima
             apiBaseUrl: 'https://api.lovable.dev',
           };
 
           // Log informativo para diagnóstico
           // eslint-disable-next-line no-console
-          console.info('[Lovable] Configuração ativada', {
+          console.info('[Lovable] ✅ Configuração ativada com projectId válido', {
             inIframe,
             enableFlag,
-            hasProjectId: !!projectId,
+            projectId: projectId!.substring(0, 8) + '...', // Mostrar apenas início do ID
             path: window.location.pathname,
           });
 
@@ -56,7 +60,17 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
             if ((window as any).LOVABLE_CONFIG) {
               delete (window as any).LOVABLE_CONFIG;
               // eslint-disable-next-line no-console
-              console.info('[Lovable] Desativado (sem iframe/flag ou sem projectId)');
+              console.info('[Lovable] ⚠️ Desativado', {
+                reason: !hasValidProjectId 
+                  ? 'projectId inválido/ausente' 
+                  : !isEditor 
+                  ? 'não está em rota de editor' 
+                  : 'sem iframe e sem flag de ativação',
+                hasValidProjectId,
+                isEditor,
+                inIframe,
+                enableFlag
+              });
             }
           } catch { }
         }

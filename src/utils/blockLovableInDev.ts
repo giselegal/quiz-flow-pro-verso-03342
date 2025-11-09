@@ -43,7 +43,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                 urlString = String(url);
             }
             if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
-                console.warn('🚫 Bloqueada requisição para Lovable/SDK em desenvolvimento:', url);
+                console.warn('🚫 Bloqueada requisição para Lovable/SDK em desenvolvimento:', urlString);
 
                 // Retornar mock específico para diferentes endpoints
                 if (urlString.includes('sourceConfig')) {
@@ -56,13 +56,20 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                         headers: { 'Content-Type': 'application/json' },
                     }));
                 }
-                // Endpoint específico citado nos logs: /projects/:id/collaborators → retornar 200 vazio
-                if (/\/projects\/.+\/collaborators/.test(urlString)) {
-                    return Promise.resolve(new Response(JSON.stringify({ collaborators: [] }), {
+                
+                // 🔧 FIX: Bloquear /projects//collaborators (sem ID) e /projects/:id/collaborators
+                if (urlString.includes('/projects/') && urlString.includes('/collaborators')) {
+                    console.info('✅ Bloqueada chamada /projects//collaborators - retornando mock vazio');
+                    return Promise.resolve(new Response(JSON.stringify({ 
+                        collaborators: [],
+                        message: 'Lovable API disabled in development',
+                        status: 'blocked'
+                    }), {
                         status: 200,
                         headers: { 'Content-Type': 'application/json' },
                     }));
                 }
+                
                 // Em vez de rejeitar (gerando erros no console), retornamos resposta neutra
                 return Promise.resolve(new Response(JSON.stringify({
                     status: 'blocked_in_dev',
