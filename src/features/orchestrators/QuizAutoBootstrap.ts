@@ -13,7 +13,7 @@ import { quizOrchestrator } from './QuizOrchestrator';
 import { quizDataPipeline } from './QuizDataPipeline';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { templateService } from '@/services/canonical/TemplateService';
-import { styleCalculationEngine } from '@/engines/StyleCalculationEngine';
+import { styleCalculationEngine } from '@/features/engines/StyleCalculationEngine';
 
 export interface BootstrapConfig {
   funnelId?: string;

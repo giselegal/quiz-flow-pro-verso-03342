@@ -3,7 +3,7 @@ import LazyBoundary from '@/components/common/LazyBoundary';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
-import StabilizedCanvas from '@/canvas/StabilizedCanvas';
+import StabilizedCanvas from '@/components/canvas/StabilizedCanvas';
 import PreviewModeRenderer from '@/components/editor/renderers/PreviewModeRenderer';
 
 // Removido LazyScalableQuizRenderer: StabilizedCanvas já encapsula preview com lazy interno

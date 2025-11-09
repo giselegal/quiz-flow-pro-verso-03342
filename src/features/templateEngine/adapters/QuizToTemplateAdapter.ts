@@ -4,7 +4,7 @@
  */
 
 import { nanoid } from 'nanoid';
-import type { TemplateDraftShared, StageShared, ComponentSharedBase, StageType } from '@/shared/templateEngineTypes';
+import type { TemplateDraftShared, StageShared, ComponentSharedBase, StageType } from '@/lib/shared/templateEngineTypes';
 
 export interface QuizStep {
   id?: string;

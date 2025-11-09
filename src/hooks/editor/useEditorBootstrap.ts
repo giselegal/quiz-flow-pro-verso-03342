@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useUnifiedCRUD } from '@/contexts';
-import { editorEvents } from '@/events/editorEvents';
+import { editorEvents } from '@/lib/events/editorEvents';
 import { templateService } from '@/services/canonical/TemplateService';
 
 // Reusar tipo de modo localmente (evitar import circular se houver)

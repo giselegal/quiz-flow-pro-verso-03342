@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
-import { cva } from '@/shims/safe-cva';
+import { cva } from '@/lib/shims/safe-cva';
 import { type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';

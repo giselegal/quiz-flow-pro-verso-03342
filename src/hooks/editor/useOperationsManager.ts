@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { editorEvents } from '@/events/editorEvents';
+import { editorEvents } from '@/lib/events/editorEvents';
 
 export interface OperationStatus {
     key: string;

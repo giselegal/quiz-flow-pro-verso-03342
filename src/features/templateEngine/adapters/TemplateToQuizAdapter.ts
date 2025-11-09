@@ -3,7 +3,7 @@
  * Converte formato do Template Engine de volta para estrutura legada de quiz
  */
 
-import type { TemplateDraftShared, StageShared, ComponentSharedBase } from '@/shared/templateEngineTypes';
+import type { TemplateDraftShared, StageShared, ComponentSharedBase } from '@/lib/shared/templateEngineTypes';
 import type { QuizStep } from './QuizToTemplateAdapter';
 
 export class TemplateToQuizAdapter {

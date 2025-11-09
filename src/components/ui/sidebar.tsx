@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cva } from '@/shims/safe-cva';
+import { cva } from '@/lib/shims/safe-cva';
 import { type VariantProps } from 'class-variance-authority';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
