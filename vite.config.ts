@@ -98,53 +98,33 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       cssMinify: 'lightningcss',
       cssCodeSplit: true,
-      // 🚀 FASE 2: Otimizações de build
       target: 'es2020',
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: isProd, // Remove console.* em produção
-          drop_debugger: isProd,
-          pure_funcs: isProd ? ['console.log', 'console.info', 'console.debug'] : [],
-        },
-        format: {
-          comments: false, // Remove comentários
-        },
-      },
-      // Aumentar limite de aviso de chunk size (default: 500kb)
-      chunkSizeWarningLimit: 1000,
-      // Reportar tamanhos comprimidos
-      reportCompressedSize: true,
-      // 🎯 FASE 3 TASK 7: Otimizações de bundle
-      // ⚠️ CORREÇÃO TDZ: Usar esbuild em DEV (mais rápido) e terser CONSERVADOR em PROD
-      // Terser com configurações conservadoras para evitar "Cannot access 'X' before initialization"
-      minify: isProd ? 'terser' : false, // ✅ Sem minify em DEV
-      // 🔧 Otimização moderada: reduz tamanho mantendo segurança contra TDZ comuns
+      // 🚀 FASE 2: Minificação otimizada
+      minify: isProd ? 'terser' : false,
+      // 🔧 Terser com configurações balanceadas
       terserOptions: isProd ? ({
         compress: {
-          inline: 2,            // permitir alguma inlining segura
-          reduce_funcs: true,   // reduzir funções inline simples
-          reduce_vars: true,    // reduzir vars simples
-          passes: 2,            // duas passagens para melhor compressão
-          drop_console: true,   // remover console.*
-          drop_debugger: true,  // remover debugger
-          hoist_funs: false,    // manter para evitar edge-cases
+          inline: 2,
+          reduce_funcs: true,
+          reduce_vars: true,
+          passes: 2,
+          drop_console: true,
+          drop_debugger: true,
+          hoist_funs: false, // Evitar TDZ
           hoist_vars: false,
-          // manter side_effects default (true) mas proteger libs sensíveis via moduleSideEffects
+          pure_funcs: ['console.log', 'console.info', 'console.debug'],
         },
         mangle: {
-          keep_fnames: true,      // preservar nomes (debug + SSR safety)
+          keep_fnames: true,
           keep_classnames: true,
         },
         format: { comments: false },
       } as any) : undefined,
-      target: 'es2020',
-      // 🧹 FASE 1: Remove console.* in production builds
-      drop: mode === 'production' ? ['console', 'debugger'] : [],
-      // Ativar sourcemaps somente em staging para facilitar diagnóstico (React #418, vendor chunks)
+      // Sourcemaps apenas em staging
       sourcemap: isStaging ? true : false,
-      // 🎯 FASE 6: Chunk size limits otimizados
-      chunkSizeWarningLimit: 500, // Warning em 500 kB (antes era padrão 500)
+      // 🎯 FASE 2: Chunk size warning em 1MB (aumentado de 500kb)
+      chunkSizeWarningLimit: 1000,
+      reportCompressedSize: true,
       rollupOptions: {
         onwarn(warning, warn) {
           // Suprimir warnings específicos que não são críticos
