@@ -176,16 +176,16 @@ export default defineConfig(({ mode }) => {
               // SOLUÇÃO DEFINITIVA: NÃO separar React em chunks diferentes
               // React, ReactDOM, UI components (Radix) E DND-KIT vão TODOS para o MESMO chunk
               // Isto garante que React esteja disponível quando qualquer lib tentar usar React hooks
-              if (id.includes('/react/') || id.includes('/react-dom/') || 
-                  id.includes('/scheduler/') || id.includes('/react-is/') ||
-                  id.includes('@radix-ui') || id.includes('lucide-react') ||
-                  id.includes('@dnd-kit') ||
-                  id.includes('class-variance-authority')) { // ✅ Incluir cva no vendor principal
+              if (id.includes('/react/') || id.includes('/react-dom/') ||
+                id.includes('/scheduler/') || id.includes('/react-is/') ||
+                id.includes('@radix-ui') || id.includes('lucide-react') ||
+                id.includes('@dnd-kit') ||
+                id.includes('class-variance-authority')) { // ✅ Incluir cva no vendor principal
                 return 'vendor'; // TUDO no mesmo chunk - sem problemas de ordem
               }
-              
+
               if (!isDev && id.includes('recharts')) return 'charts-vendor';
-              
+
               // Outros node_modules vão para vendor genérico
               return 'vendor-misc';
             }
@@ -197,8 +197,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     optimizeDeps: {
-      // 🔧 FIX: Forçar re-otimização para garantir que react-preload seja processado corretamente
-      force: true,
+      // 🔧 FIX: Não forçar re-otimização em toda inicialização (apenas quando necessário)
+      force: false,
       include: [
         'react',
         'react-dom',
@@ -228,6 +228,8 @@ export default defineConfig(({ mode }) => {
         target: 'es2020',
         loader: { '.js': 'jsx', '.ts': 'tsx' },
         keepNames: true, // Preservar nomes de funções/classes
+        // 🔧 FIX: Definir formato de módulo explícito
+        format: 'esm',
       },
     },
     define: {
