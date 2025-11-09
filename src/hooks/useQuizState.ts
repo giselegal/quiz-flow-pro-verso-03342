@@ -11,7 +11,7 @@
  */
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { styleMapping, type StyleId } from '../data/styles';
+import { styleMapping, type StyleId } from '@/services/data/styles';
 import { resolveStyleId } from '@/lib/utils/styleIds';
 import { templateService } from '@/services/canonical/TemplateService';
 import { computeResult } from '@/lib/utils/result/computeResult';

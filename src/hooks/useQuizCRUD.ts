@@ -1,5 +1,5 @@
 import { useAuth } from '@/contexts';
-import { supabase } from '../integrations/supabase/client';
+import { supabase } from '@/services/integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';
 // import { Funnel } from '../types/unified-schema';
 import type { Json } from '@/services/integrations/supabase/types';

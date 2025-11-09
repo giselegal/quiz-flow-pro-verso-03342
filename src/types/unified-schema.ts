@@ -18,7 +18,7 @@
  * - quiz_users
  */
 
-import { Database } from '../integrations/supabase/types';
+import { Database } from '@/services/integrations/supabase/types';
 import { z } from 'zod';
 
 // =============================================================================
