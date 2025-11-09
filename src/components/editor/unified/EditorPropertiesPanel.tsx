@@ -375,8 +375,24 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
     const value = getPropertyValue(property);
     const hasChanges = tempValues[property.key] !== undefined;
 
+    // 🆕 G25 FIX: Optimistic Updates - aplica mudanças imediatamente
     const updateValue = (newValue: any) => {
       updateTempValue(property, newValue);
+
+      // Optimistic update: aplica imediatamente no bloco
+      if (selectedBlock) {
+        const keys = property.key.split('.');
+        const updates: any = {};
+        let current = updates;
+
+        for (let i = 0; i < keys.length - 1; i++) {
+          current[keys[i]] = {};
+          current = current[keys[i]];
+        }
+        current[keys[keys.length - 1]] = newValue;
+
+        onBlockUpdate(selectedBlock.id, updates);
+      }
     };
 
     switch (property.type) {

@@ -26,6 +26,8 @@ import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
 // Autosave feedback visual
 import { AutosaveIndicator, useAutosaveIndicator } from '../AutosaveIndicator';
+// 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
+import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -160,6 +162,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }
         };
     }, [props.funnelId]);
+
+    // 🆕 G20 & G28 FIX: Prefetch inteligente de steps adjacentes
+    useStepPrefetch({
+        currentStepId: currentStepKey,
+        funnelId: props.funnelId,
+        totalSteps: 21,
+        enabled: true,
+        radius: 1, // Prefetch step anterior e próximo
+        debounceMs: 100, // Prefetch rápido após navegação
+    });
 
     // Local UI state
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
