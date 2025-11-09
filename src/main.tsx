@@ -8,6 +8,12 @@ const defer = (fn: () => void) => {
     setTimeout(fn, 0);
   }
 };
+// PERF: marcar início do bootstrap
+try {
+  if (typeof performance !== 'undefined' && 'mark' in performance) {
+    performance.mark('bootstrap:start');
+  }
+} catch { }
 // Marcar para inicializar somente se habilitado e após render inicial
 let sentryInitializedEarly = false;
 if (import.meta.env.PROD && initializeSentry) {
@@ -421,6 +427,11 @@ if (!sentryInitializedEarly) {
 }
 
 console.log('🔧 DEBUG: Criando root do React...');
+try {
+  if (typeof performance !== 'undefined' && 'mark' in performance) {
+    performance.mark('react:render:start');
+  }
+} catch { }
 // Instalar guards de depreciação (alert/unload)
 try {
   installDeprecationGuards();
@@ -434,4 +445,18 @@ createRoot(document.getElementById('root')!).render(
     </Suspense>
   </ClientLayout>,
 );
+// PERF: medir TTFP (Time To First Paint) aproximado
+try {
+  if (typeof performance !== 'undefined' && 'mark' in performance && 'measure' in performance) {
+    requestAnimationFrame(() => {
+      try {
+        performance.mark('react:paint');
+        performance.measure('ttfp', 'bootstrap:start', 'react:paint');
+        const entries = performance.getEntriesByName('ttfp');
+        const entry = entries[entries.length - 1];
+        if (entry) console.log(`[PERF] TTFP ms: ${Math.round(entry.duration)}`);
+      } catch { }
+    });
+  }
+} catch { }
 console.log('✅ DEBUG: App renderizado com sucesso');

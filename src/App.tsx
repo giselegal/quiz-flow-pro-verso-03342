@@ -106,6 +106,17 @@ function AppCore() {
     console.log('🚀 AppCore rendering...');
 
     useEffect(() => {
+        // PERF: marcar e medir tempo até o primeiro useEffect do App
+        try {
+            if (typeof performance !== 'undefined' && 'mark' in performance && 'measure' in performance) {
+                performance.mark('app:useEffect');
+                performance.measure('time-to-app-useEffect', 'bootstrap:start', 'app:useEffect');
+                const entries = performance.getEntriesByName('time-to-app-useEffect');
+                const entry = entries[entries.length - 1];
+                if (entry) console.log(`[PERF] App useEffect ms: ${Math.round(entry.duration)}`);
+            }
+        } catch { }
+
         console.log('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
 
         // 🚀 P2: Setup critical routes preload
