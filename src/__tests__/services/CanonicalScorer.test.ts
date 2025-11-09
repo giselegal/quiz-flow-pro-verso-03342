@@ -280,21 +280,20 @@ describe('CanonicalScorer', () => {
     });
 
     it('deve tratar pontos não numéricos como zero', () => {
-      const quiz: CanonicalQuiz = {
-        id: 'quiz1',
-        title: 'Test Quiz',
-        questions: [
+      const quiz: Quiz = {
+        blocks: [
           {
             id: 'q1',
-            text: 'Question 1',
-            kind: 'scored',
-            options: [
-              { id: 'opt1', text: 'Option 1', score: { styleA: 'invalid' as any } },
-              { id: 'opt2', text: 'Option 2', score: { styleB: 20 } },
-            ],
+            questionData: {
+              scored: true,
+              options: [
+                { id: 'opt1', label: 'Opção 1', score: { styleA: 'invalid' as any } },
+                { id: 'opt2', label: 'Opção 2', score: { styleB: 20 } },
+              ],
+            },
           },
         ],
-      };
+      } as Quiz;
 
       const answers: Answers = {
         q1: ['opt1', 'opt2'],
@@ -302,7 +301,9 @@ describe('CanonicalScorer', () => {
 
       const scores = accumulateScores(quiz, answers);
 
+      // A função mantém a chave com valor 0 para scores não numéricos
       expect(scores).toEqual({
+        styleA: 0,
         styleB: 20,
       });
     });
