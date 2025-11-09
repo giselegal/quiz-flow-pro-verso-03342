@@ -197,8 +197,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     optimizeDeps: {
-      // 🔧 FIX: Força pre-bundling de React para evitar problemas de módulo undefined
-      force: mode === 'development', // Forçar rebuild em dev quando necessário
+      // 🔧 FIX: Forçar re-otimização para garantir que react-preload seja processado corretamente
+      force: true,
       include: [
         'react',
         'react-dom',
@@ -206,7 +206,6 @@ export default defineConfig(({ mode }) => {
         'react/jsx-dev-runtime',
         'react-dom/client',
         'react-is',
-        'scheduler',
         'scheduler',
         'prop-types',
         'object-assign',
@@ -228,9 +227,8 @@ export default defineConfig(({ mode }) => {
       esbuildOptions: {
         target: 'es2020',
         loader: { '.js': 'jsx', '.ts': 'tsx' },
+        keepNames: true, // Preservar nomes de funções/classes
       },
-      // Forçar re-otimização para garantir que react-preload seja processado
-      force: true,
     },
     define: {
       global: 'globalThis',
