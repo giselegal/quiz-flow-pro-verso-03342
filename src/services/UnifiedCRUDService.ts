@@ -14,6 +14,7 @@
  * ✅ Performance monitoring
  */
 
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import { Block, BlockType } from '@/types/editor';
 import { toast } from '@/hooks/use-toast';
 import { versioningService } from './versioningService';
@@ -350,7 +351,7 @@ export class UnifiedCRUDService {
     const now = new Date();
 
     return {
-      id: data.id || `funnel-${Date.now()}`,
+      id: data.id || `funnel-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: data.name || 'Funil Sem Nome',
       description: data.description || '',
       stages: Array.isArray(data.stages) ? data.stages.map(this.validateAndNormalizeStage) : [],
@@ -394,7 +395,7 @@ export class UnifiedCRUDService {
    */
   private validateAndNormalizeBlock = (data: any, index: number = 0): Block => {
     return {
-      id: data.id || `block-${Date.now()}-${index}`,
+      id: data.id || `block-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       type: data.type || 'text',
       order: typeof data.order === 'number' ? data.order : index,
       content: data.content || {},
@@ -430,7 +431,7 @@ export class UnifiedCRUDService {
   private registerOperation(operation: Omit<CRUDOperation, 'id' | 'timestamp'>): CRUDOperation {
     const fullOperation: CRUDOperation = {
       ...operation,
-      id: `op-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `op-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       timestamp: new Date(),
     };
 

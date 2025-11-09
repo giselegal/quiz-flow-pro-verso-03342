@@ -1,14 +1,17 @@
 /**
- * 🚀 USE STEP PREFETCH
+ * 🚀 USE STEP PREFETCH - G20 & G28 FIX
  * 
  * Fase 2.4 - Performance Optimization
  * 
  * Hook para prefetch de steps adjacentes (N-1, N+1)
  * Melhora UX ao navegar entre etapas, carregando em background
+ * 
+ * 🆕 G20 FIX: Intelligent prefetch para navegação instantânea
+ * 🆕 G28 FIX: AbortController para cancelar requests obsoletos
  */
 
 import { useEffect, useRef } from 'react';
-import { TemplateLoader } from '@/services/editor/TemplateLoader';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 
 export interface UseStepPrefetchOptions {
   /** Step atual (formato: 'step-01') */
@@ -21,7 +24,7 @@ export interface UseStepPrefetchOptions {
   enabled?: boolean;
   /** Raio de prefetch (quantos steps antes/depois, default: 1) */
   radius?: number;
-  /** Debounce em ms (default: 500) */
+  /** Debounce em ms (default: 100 - reduzido para prefetch mais rápido) */
   debounceMs?: number;
 }
 
@@ -46,19 +49,13 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
     totalSteps = 21,
     enabled = true,
     radius = 1,
-    debounceMs = 500,
+    debounceMs = 100, // 🆕 G20: Reduzido de 500ms para 100ms (prefetch mais rápido)
   } = options;
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const prefetchedRef = useRef<Set<string>>(new Set());
-  const loaderRef = useRef<TemplateLoader | null>(null);
-
-  // Inicializar loader (singleton)
-  useEffect(() => {
-    if (!loaderRef.current) {
-      loaderRef.current = TemplateLoader.getInstance();
-    }
-  }, []);
+  // 🆕 G28 FIX: AbortController para cancelar requests obsoletos
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   /**
    * Extrair número do step (step-05 → 5)
@@ -77,24 +74,23 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
 
   /**
    * Prefetch de um step específico
+   * 🆕 G20 FIX: Usa HierarchicalTemplateSource para cache unificado
    */
   const prefetchStep = async (stepId: string) => {
-    if (!loaderRef.current || !enabled) return;
+    if (!enabled) return;
     if (prefetchedRef.current.has(stepId)) return; // Já prefetchado
 
     try {
-      const mode = funnelId ? 'funnel' : 'template';
-      const id = funnelId || undefined;
+      console.log(`🚀 [G20] Prefetching ${stepId}...`);
 
-      console.log(`🚀 [useStepPrefetch] Prefetching ${stepId}...`);
-
-      // Carregar step em background (usa cache se disponível)
-      await loaderRef.current.loadStep(stepId);
+      // 🆕 G20: Usar HierarchicalTemplateSource (SSOT)
+      await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
 
       prefetchedRef.current.add(stepId);
-      console.log(`✅ [useStepPrefetch] ${stepId} prefetched`);
+      console.log(`✅ [G20] ${stepId} prefetched e em cache`);
     } catch (error) {
-      console.warn(`⚠️ [useStepPrefetch] Erro ao prefetch ${stepId}:`, error);
+      // Ignorar erros de prefetch (não afetar UX)
+      console.debug(`⚠️ [G20] Erro ao prefetch ${stepId}:`, error);
     }
   };
 
@@ -128,27 +124,42 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
   };
 
   /**
-   * Reagir a mudanças no step atual (com debounce)
+   * Reagir a mudanças no step atual (com debounce + AbortController)
+   * 🆕 G28 FIX: Cancelar prefetch anterior ao mudar de step
    */
   useEffect(() => {
     if (!enabled || !currentStepId) return;
+
+    // 🆕 G28: Cancelar prefetch anterior
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      console.log('🚫 [G28] Prefetch anterior cancelado');
+    }
+
+    // Criar novo AbortController
+    abortControllerRef.current = new AbortController();
 
     // Limpar timer anterior
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
 
-    // Agendar prefetch com debounce
+    // Agendar prefetch com debounce (reduzido para 100ms)
     debounceTimerRef.current = setTimeout(() => {
-      prefetchAdjacent();
+      if (!abortControllerRef.current?.signal.aborted) {
+        prefetchAdjacent();
+      }
     }, debounceMs);
 
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
-  }, [currentStepId, funnelId, enabled, radius, totalSteps]);
+  }, [currentStepId, funnelId, enabled, radius, totalSteps, debounceMs]);
 
   /**
    * Limpar cache de prefetch ao desmontar
@@ -156,6 +167,9 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
   useEffect(() => {
     return () => {
       prefetchedRef.current.clear();
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, []);
 }

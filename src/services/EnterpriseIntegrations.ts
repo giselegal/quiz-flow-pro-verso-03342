@@ -3,6 +3,8 @@
  * ROI Projetado: $5k-15k/mês
  */
 
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+
 export interface IntegrationConfig {
   id: string;
   name: string;
@@ -42,7 +44,7 @@ export class EnterpriseIntegrations {
   // 🔌 CRM INTEGRATIONS
   async integrateHubSpot(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `hubspot-${  Date.now()}`,
+      id: `hubspot-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'HubSpot CRM',
       type: 'crm',
       status: 'configuring',
@@ -81,7 +83,7 @@ export class EnterpriseIntegrations {
 
   async integrateSalesforce(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `salesforce-${  Date.now()}`,
+      id: `salesforce-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'Salesforce CRM',
       type: 'crm',
       status: 'configuring',
@@ -107,7 +109,7 @@ export class EnterpriseIntegrations {
   // 📧 EMAIL MARKETING INTEGRATIONS
   async integrateMailchimp(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `mailchimp-${  Date.now()}`,
+      id: `mailchimp-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'Mailchimp',
       type: 'email',
       status: 'active',
@@ -130,7 +132,7 @@ export class EnterpriseIntegrations {
 
   async integrateKlaviyo(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `klaviyo-${  Date.now()}`,
+      id: `klaviyo-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'Klaviyo',
       type: 'email',
       status: 'active',
@@ -153,7 +155,7 @@ export class EnterpriseIntegrations {
   // 🛒 ECOMMERCE INTEGRATIONS
   async integrateShopify(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `shopify-${  Date.now()}`,
+      id: `shopify-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'Shopify',
       type: 'ecommerce',
       status: 'active',
@@ -178,7 +180,7 @@ export class EnterpriseIntegrations {
   // 💳 PAYMENT INTEGRATIONS
   async integrateStripe(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `stripe-${  Date.now()}`,
+      id: `stripe-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'Stripe',
       type: 'payment',
       status: 'active',
@@ -203,7 +205,7 @@ export class EnterpriseIntegrations {
   // 📊 ANALYTICS INTEGRATIONS
   async integrateGoogleAnalytics(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `ga4-${  Date.now()}`,
+      id: `ga4-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'Google Analytics 4',
       type: 'analytics',
       status: 'active',
@@ -228,7 +230,7 @@ export class EnterpriseIntegrations {
   // 🤖 AUTOMATION INTEGRATIONS
   async integrateZapier(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: `zapier-${  Date.now()}`,
+      id: `zapier-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: 'Zapier',
       type: 'automation',
       status: 'active',

@@ -24,6 +24,10 @@ import { validateAndNormalizeTemplate, formatValidationErrors } from '@/template
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 // Autosave com lock e coalescing
 import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
+// Autosave feedback visual
+import { AutosaveIndicator, useAutosaveIndicator } from '../AutosaveIndicator';
+// 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
+import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -110,18 +114,31 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
 
-    // � Autosave Queue com Lock (GARGALO R1)
+    // 💾 Autosave Indicator (Feedback Visual)
+    const autosaveIndicator = useAutosaveIndicator();
+
+    // 🔒 Autosave Queue com Lock (GARGALO R1 + G35)
     const { queueSave: queueAutosave, flush: flushAutosave } = useQueuedAutosave({
         saveFn: async (blocks: Block[], stepKey: string) => {
             await saveStepBlocks(parseInt(stepKey.replace(/\D/g, '')));
         },
         debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         maxRetries: 3,
+        onUnsaved: (stepKey) => {
+            appLogger.debug(`⏱️ [Autosave] Alterações não salvas em ${stepKey}`);
+            autosaveIndicator.setUnsaved();
+        },
+        onSaving: (stepKey) => {
+            appLogger.debug(`💾 [Autosave] Salvando ${stepKey}...`);
+            autosaveIndicator.setSaving();
+        },
         onSuccess: (stepKey) => {
-            appLogger.info(`✅ [QueuedAutosave] Step salvo: ${stepKey}`);
+            appLogger.info(`✅ [Autosave] Step salvo: ${stepKey}`);
+            autosaveIndicator.setSaved();
         },
         onError: (stepKey, error) => {
-            appLogger.error(`❌ [QueuedAutosave] Falha ao salvar ${stepKey}:`, error);
+            appLogger.error(`❌ [Autosave] Falha ao salvar ${stepKey}:`, error);
+            autosaveIndicator.setError(error.message);
         },
     });
 
@@ -146,11 +163,48 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         };
     }, [props.funnelId]);
 
+    // 🆕 G20 & G28 FIX: Prefetch inteligente de steps adjacentes
+    useStepPrefetch({
+        currentStepId: currentStepKey,
+        funnelId: props.funnelId,
+        totalSteps: 21,
+        enabled: true,
+        radius: 1, // Prefetch step anterior e próximo
+        debounceMs: 100, // Prefetch rápido após navegação
+    });
+
     // Local UI state
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [templateLoadError, setTemplateLoadError] = useState(false);
+
+    // 🆕 G17 FIX: Memoizar callbacks para evitar re-renders em componentes filhos
+    const handleSelectStep = useCallback((key: string) => {
+        if (key === currentStepKey) return;
+
+        if (loadedTemplate?.steps?.length) {
+            const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
+            const newStep = index >= 0 ? index + 1 : 1;
+            if (newStep !== safeCurrentStep) setCurrentStep(newStep);
+            return;
+        }
+        const match = key.match(/step-(\d{1,2})/i);
+        const num = match ? parseInt(match[1], 10) : 1;
+        if (num !== safeCurrentStep) setCurrentStep(num);
+    }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep]);
+
+    const handleAddBlock = useCallback((type: string) => {
+        const stepIndex = safeCurrentStep;
+        const currentBlocks = getStepBlocks(stepIndex);
+        addBlock(stepIndex, {
+            type,
+            id: `block-${uuidv4()}`,
+            properties: {},
+            content: {},
+            order: currentBlocks.length
+        });
+    }, [safeCurrentStep, addBlock, getStepBlocks]);
     const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
     // Persist layout
@@ -857,17 +911,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         )}
 
                         {enableAutoSave && (
-                            <div className="text-xs flex items-center gap-2 animate-fade-in">
-                                {unifiedState.ui.isLoading ? (
-                                    <span className="text-blue-600 flex items-center gap-1">
-                                        <span className="animate-spin">🔄</span> Salvando...
-                                    </span>
-                                ) : isDirty ? (
-                                    <span className="text-orange-600">📝 Não salvo</span>
-                                ) : (
-                                    <span className="text-green-600">✅ Salvo agora</span>
-                                )}
-                            </div>
+                            <AutosaveIndicator
+                                status={autosaveIndicator.status}
+                                errorMessage={autosaveIndicator.errorMessage}
+                                onRetry={() => {
+                                    const stepBlocks = unifiedState.editor.stepBlocks as Record<string, Block[]>;
+                                    const blocks = stepBlocks[currentStepKey] || [];
+                                    if (currentStepKey && blocks.length > 0) {
+                                        queueAutosave(currentStepKey, blocks);
+                                    }
+                                }}
+                                className="animate-fade-in"
+                            />
                         )}
 
                         <Button
@@ -930,19 +985,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <StepNavigatorColumn
                                 steps={navSteps}
                                 currentStepKey={currentStepKey}
-                                onSelectStep={(key: string) => {
-                                    if (key === currentStepKey) return;
-
-                                    if (loadedTemplate?.steps?.length) {
-                                        const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
-                                        const newStep = index >= 0 ? index + 1 : 1;
-                                        if (newStep !== safeCurrentStep) setCurrentStep(newStep);
-                                        return;
-                                    }
-                                    const match = key.match(/step-(\d{1,2})/i);
-                                    const num = match ? parseInt(match[1], 10) : 1;
-                                    if (num !== safeCurrentStep) setCurrentStep(num);
-                                }}
+                                onSelectStep={handleSelectStep}
                             />
                         </div>
                     </Panel>
@@ -957,16 +1000,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <div className="h-full border-r bg-white overflow-y-auto" data-testid="column-library">
                                 <ComponentLibraryColumn
                                     currentStepKey={currentStepKey}
-                                    onAddBlock={(type) => {
-                                        const stepIndex = safeCurrentStep;
-                                        addBlock(stepIndex, {
-                                            type,
-                                            id: `block-${uuidv4()}`,
-                                            properties: {},
-                                            content: {},
-                                            order: (blocks || []).length
-                                        });
-                                    }}
+                                    onAddBlock={handleAddBlock}
                                 />
                             </div>
                         </Suspense>

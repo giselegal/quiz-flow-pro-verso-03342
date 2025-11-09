@@ -33,6 +33,10 @@ import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import { supabase } from '@/integrations/supabase/customClient';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { isSupabaseDisabled } from '@/integrations/supabase/flags';
+import { createLogger } from '@/utils/logger';
+
+// Logger para o SuperUnifiedProvider
+const logger = createLogger({ namespace: 'SuperUnifiedProvider' });
 
 // 🎯 CONSOLIDATED TYPES
 interface UnifiedFunnelData {
@@ -572,7 +576,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         });
 
         if (debugMode) {
-            console.log('🚀 SuperUnifiedProvider render time:', `${renderTime.toFixed(2)}ms`);
+            logger.debug(`Render time: ${renderTime.toFixed(2)}ms`);
         }
     }, [renderStartTime, debugMode]);
 
@@ -590,7 +594,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 if (!isNaN(stepNum) && stepNum >= 1 && stepNum <= state.editor.totalSteps) {
                     dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: stepNum } });
                     if (debugMode) {
-                        console.log(`🔄 [G19] Step ${stepNum} restaurado da URL`);
+                        logger.info('[G19] Step restaurado da URL', { stepNum });
                     }
                     return;
                 }
@@ -609,19 +613,64 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 if (!isNaN(stepNum) && stepNum >= 1 && stepNum <= state.editor.totalSteps && age < 86400000) {
                     dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: stepNum } });
                     if (debugMode) {
-                        console.log(`🔄 [G19] Step ${stepNum} restaurado do localStorage (${(age / 1000 / 60).toFixed(0)}min atrás)`);
+                        logger.info('[G19] Step restaurado do localStorage', { stepNum, ageMinutes: (age / 1000 / 60).toFixed(0) });
                     }
                     return;
                 }
             }
 
             if (debugMode) {
-                console.log('ℹ️ [G19] Nenhum step salvo para restaurar, usando step 1');
+                logger.info('[G19] Nenhum step salvo para restaurar, usando step 1');
             }
         } catch (error) {
             console.error('❌ [G19] Erro ao restaurar currentStep:', error);
         }
     }, []); // Executar apenas no mount
+
+    // 🆕 G4 FIX: Listener para sincronização entre tabs via BroadcastChannel
+    useEffect(() => {
+        if (typeof BroadcastChannel === 'undefined' || typeof window === 'undefined') return;
+
+        const channel = new BroadcastChannel('quiz-editor-sync');
+
+        const handleMessage = async (event: MessageEvent) => {
+            if (event.data?.type === 'STEP_UPDATED') {
+                const { funnelId, stepId, stepIndex } = event.data.payload;
+
+                // Só recarregar se for do funil atual
+                if (funnelId === state.currentFunnel?.id) {
+                    try {
+                        // Invalidar cache local e recarregar blocos
+                        await hierarchicalTemplateSource.invalidate(stepId, funnelId);
+
+                        // Recarregar blocos do step atualizado
+                        const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
+                        if (result?.data) {
+                            dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex, blocks: result.data } });
+                            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
+
+                            if (debugMode) {
+                                logger.info('[G4] Step sincronizado de outra tab', { stepIndex });
+                            }
+                        }
+                    } catch (error) {
+                        logger.warn('[G4] Erro ao sincronizar step', { error });
+                    }
+                }
+            }
+        };
+
+        channel.addEventListener('message', handleMessage);
+
+        if (debugMode) {
+            logger.info('[G4] BroadcastChannel iniciado para sincronização entre tabs');
+        }
+
+        return () => {
+            channel.removeEventListener('message', handleMessage);
+            channel.close();
+        };
+    }, [state.currentFunnel?.id, debugMode]); // Reagir apenas a mudanças no funnel ativo
 
     // 🎯 Funnel Operations
     const loadFunnels = useCallback(async () => {
@@ -629,7 +678,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
         // Modo offline: não faz chamadas ao Supabase, mantém estado atual
         if (SUPABASE_DISABLED) {
-            if (debugMode) console.log('🛑 [loadFunnels] Supabase desativado → retornando estado local');
+            if (debugMode) logger.info('[loadFunnels] Supabase desativado - retornando estado local');
             dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: false } });
             return;
         }
@@ -653,7 +702,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'SET_FUNNELS', payload: normalized });
 
             if (debugMode) {
-                console.log('✅ Funnels loaded:', data?.length || 0);
+                logger.info('Funnels loaded', { count: data?.length || 0 });
             }
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'funnels', error: error.message } });
@@ -681,7 +730,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
         try {
             if (SUPABASE_DISABLED) {
-                if (debugMode) console.log('🛑 [loadFunnel] Supabase desativado → usando cache/in-memory');
+                if (debugMode) logger.info('[loadFunnel] Supabase desativado - usando cache/in-memory');
                 const cached = state.cache.funnels[id];
                 if (cached) {
                     dispatch({ type: 'SET_CURRENT_FUNNEL', payload: cached });
@@ -739,7 +788,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
         try {
             if (SUPABASE_DISABLED) {
-                if (debugMode) console.log('🛑 [saveFunnel] Supabase desativado → atualização apenas local');
+                if (debugMode) logger.info('[saveFunnel] Supabase desativado - atualização apenas local');
                 dispatch({ type: 'UPDATE_FUNNEL', payload: { id: funnelToSave.id, updates: { ...funnelToSave, updated_at: new Date().toISOString() } } });
                 dispatch({ type: 'SET_EDITOR_STATE', payload: { isDirty: false, lastSaved: Date.now() } });
                 dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: false } });
@@ -832,7 +881,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     const deleteFunnel = useCallback(async (id: string) => {
         try {
             if (SUPABASE_DISABLED) {
-                if (debugMode) console.log('🛑 [deleteFunnel] Supabase desativado → remoção apenas local');
+                if (debugMode) logger.info('[deleteFunnel] Supabase desativado - remoção apenas local');
                 dispatch({ type: 'SET_FUNNELS', payload: state.funnels.filter(f => f.id !== id) });
                 if (state.currentFunnel?.id === id) {
                     dispatch({ type: 'SET_CURRENT_FUNNEL', payload: null });
@@ -893,7 +942,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 localStorage.setItem('editor:currentStep:timestamp', Date.now().toString());
 
                 if (debugMode) {
-                    console.log(`💾 [G19] Step ${step} persistido em URL e localStorage`);
+                    logger.info('[G19] Step persistido em URL e localStorage', { step });
                 }
             }
         } catch (error) {
@@ -934,6 +983,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [state.editor.stepBlocks]);
 
     // 💾 Persistência por etapa (USER_EDIT → Supabase funnels.config.steps[stepId])
+    // 🆕 G4 FIX: Invalidação coordenada de cache L1/L2 + Broadcast entre tabs
     const saveStepBlocks = useCallback(async (stepIndex: number) => {
         const funnel = state.currentFunnel;
         if (!funnel?.id) return; // sem funil ativo, não persiste
@@ -941,8 +991,30 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
         const blocks = state.editor.stepBlocks[stepIndex] || [];
         try {
+            // 1️⃣ Salvar no Supabase (fonte primária USER_EDIT)
             await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnel.id);
+
+            // 2️⃣ G4: Invalidar cache L1 (Memory) + L2 (IndexedDB) via método unificado
+            await hierarchicalTemplateSource.invalidate(stepId, funnel.id);
+            if (debugMode) logger.debug('[G4] Cache L1+L2 invalidado', { stepId })
+
+            // 4️⃣ G4: Broadcast para outras tabs (sincronização entre abas)
+            try {
+                if (typeof BroadcastChannel !== 'undefined') {
+                    const channel = new BroadcastChannel('quiz-editor-sync');
+                    channel.postMessage({
+                        type: 'STEP_UPDATED',
+                        payload: { funnelId: funnel.id, stepId, stepIndex, timestamp: Date.now() }
+                    });
+                    channel.close();
+                    if (debugMode) logger.debug('[G4] Broadcast enviado', { stepId });
+                }
+            } catch (e) {
+                console.warn('[G4] Erro ao fazer broadcast:', e);
+            }
+
             dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
+            if (debugMode) logger.info('[G4] Step salvo com invalidação coordenada', { stepId });
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'step-save', error: error?.message || String(error) } });
             throw error;
@@ -982,7 +1054,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: true, message: 'Publicando…' } });
         try {
             if (SUPABASE_DISABLED) {
-                if (debugMode) console.log('🛑 [publishFunnel] Supabase desativado → atualização somente local');
+                if (debugMode) logger.info('[publishFunnel] Supabase desativado - atualização somente local');
                 const updates: any = {
                     status: 'published',
                     is_published: true,

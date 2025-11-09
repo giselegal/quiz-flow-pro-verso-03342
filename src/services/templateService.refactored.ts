@@ -10,6 +10,7 @@
  * SPRINT 2 - Implementação com cache e validação
  */
 
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import type { EditorStep } from '@/store/editorStore';
 import type { Block } from '@/types/editor';
 
@@ -136,7 +137,7 @@ class TemplateServiceRefactored {
   cloneTemplate(template: Template, newName?: string): Template {
     return {
       ...template,
-      id: `clone-${Date.now()}`,
+      id: `clone-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: newName || `${template.name} (Cópia)`,
       steps: template.steps.map((step) => this.cloneStep(step)),
     };
@@ -148,7 +149,7 @@ class TemplateServiceRefactored {
   private cloneStep(step: EditorStep): EditorStep {
     return {
       ...step,
-      id: `step-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `step-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       blocks: step.blocks.map((block) => this.cloneBlock(block)),
     };
   }
@@ -159,7 +160,7 @@ class TemplateServiceRefactored {
   private cloneBlock(block: Block): Block {
     return {
       ...block,
-      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `block-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
     };
   }
 
@@ -249,7 +250,7 @@ class TemplateServiceRefactored {
     steps: EditorStep[];
   }): Template {
     const template: Template = {
-      id: `custom-${Date.now()}`,
+      id: `custom-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       name: data.name,
       description: data.description,
       category: data.category,
