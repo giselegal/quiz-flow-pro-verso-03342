@@ -5,9 +5,19 @@ import { useEffect } from 'react';
  *
  * Hook que força a ativação do painel de preview do Lovable
  * e configura o ambiente para visualização em tempo real
+ * 
+ * ⚠️ APENAS ATIVADO COM VITE_ENABLE_LOVABLE_PREVIEW=true
  */
 export const useLovablePreview = () => {
   useEffect(() => {
+    // 🛡️ FIX: Verificar se Lovable está explicitamente habilitado
+    const isEnabled = import.meta.env?.VITE_ENABLE_LOVABLE_PREVIEW === 'true';
+    
+    if (!isEnabled) {
+      console.info('[Lovable Preview] Desabilitado. Use VITE_ENABLE_LOVABLE_PREVIEW=true para habilitar.');
+      return;
+    }
+    
     // Força configuração global do Lovable
     if (typeof window !== 'undefined') {
       // Configuração avançada do Lovable

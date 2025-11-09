@@ -16,13 +16,16 @@ const DISABLED_FLAG = import.meta.env?.VITE_DISABLE_LOVABLE_WINDOW === 'true';
 
 // Só ativa fora do /editor, fora de DEV e quando explicitamente habilitado
 const shouldActivateLovable = (): boolean => {
+  // 🛡️ FIX: Desabilitar por padrão para evitar requisições não autorizadas à API Lovable
+  // Apenas ativar se EXPLICITAMENTE habilitado via variável de ambiente
   if (DISABLED_FLAG) return false;
+  if (!ENABLED_FLAG) return false; // ✅ Requer habilitação explícita
   if (DEV && !ENABLED_FLAG) return false; // Em dev, precisa habilitar manualmente
   try {
     const path = typeof window !== 'undefined' ? window.location.pathname : '';
     if (/^\/?editor(\b|\/)/.test(path)) return false; // Não ativar no editor
-  } catch {}
-  return ENABLED_FLAG || (!!PROD && !DEV);
+  } catch { }
+  return ENABLED_FLAG && (!!PROD || !!DEV);
 };
 
 export const LovableWindowActivator: React.FC = () => {
