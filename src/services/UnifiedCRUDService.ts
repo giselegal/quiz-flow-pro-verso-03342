@@ -20,6 +20,9 @@ import { toast } from '@/hooks/use-toast';
 import { versioningService } from './versioningService';
 import { historyManager } from './HistoryManager';
 import { StorageService } from '@/services/core/StorageService';
+import { createLogger } from '@/utils/logger'; // 🆕 G46 FIX: Structured logging
+
+const logger = createLogger({ namespace: 'UnifiedCRUDService' });
 
 // Tipos principais
 export interface UnifiedFunnel {
@@ -139,9 +142,9 @@ export class UnifiedCRUDService {
       // Configurar auto-cleanup de operações antigas
       setInterval(() => this.cleanupOldOperations(), 5 * 60 * 1000); // 5 minutos
 
-      console.log('✅ UnifiedCRUDService inicializado com sucesso');
+      logger.info('UnifiedCRUDService inicializado com sucesso');
     } catch (error) {
-      console.error('❌ Erro ao inicializar UnifiedCRUDService:', error);
+      logger.error('Erro ao inicializar UnifiedCRUDService', { error });
     }
   }
 
