@@ -539,9 +539,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         ...initialState,
         features: { ...initialState.features, ...initialFeatures },
         currentFunnel: initialData || initialState.currentFunnel, // 🆕 Usar dados iniciais
-    });
-
-    const [renderStartTime] = useState(() => performance.now());
+    }); const [renderStartTime] = useState(() => performance.now());
 
     // Flag única de desativação total de Supabase (env ou localStorage)
     const SUPABASE_DISABLED = useMemo(() => {
