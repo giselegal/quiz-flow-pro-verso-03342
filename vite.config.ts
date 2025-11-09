@@ -166,75 +166,18 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: true,
         },
         output: {
-          // 🔧 FIX: Forçar formato ESM
-          format: 'es',
-          // Nomes de arquivos para chunks
+          // Manter defaults do Vite/Rollup e apenas nomear chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🚀 CODE SPLITTING MAIS GRANULAR
-          // Separação por domínios para reduzir o payload inicial e melhorar cache
-          manualChunks: (id) => {
-            const isDev = mode !== 'production';
-
-            if (id.includes('node_modules')) {
-              // 🔧 CRITICAL: Incluir use-sync-external-store junto com React
-              if (id.includes('/react') ||
-                id.includes('/scheduler') ||
-                id.includes('use-sync-external-store') ||
-                id.includes('@radix-ui') ||
-                id.includes('lucide-react') ||
-                id.includes('@dnd-kit') ||
-                id.includes('class-variance-authority')) {
-                return 'vendor'; // Tudo junto no mesmo chunk
-              }
-
-              if (!isDev && id.includes('recharts')) return 'charts-vendor';
-
-              // Outros node_modules
-              return 'vendor-misc';
-            }
-
-            if (id.includes('/src/components/editor/')) return 'editor';
-            if (id.includes('/src/runtime/quiz')) return 'quiz-runtime';
-          },
         },
       },
     },
     optimizeDeps: {
-      // 🔧 FIX: Forçar otimização para resolver problemas de módulos
-      force: true,
-      include: [
-        'react',
-        'react-dom',
-        'react/jsx-runtime',
-        'react/jsx-dev-runtime',
-        'react-dom/client',
-        'react-is',
-        'scheduler',
-        'prop-types',
-        'object-assign',
-        'use-sync-external-store/shim',
-        'use-sync-external-store/shim/with-selector',
-        'wouter',
-        // Incluir APIs críticas que podem causar problemas se não pré-bundladas
-        '@radix-ui/react-slot',
-        '@radix-ui/react-portal',
-        'lucide-react',
-        // ✅ Incluir cva para evitar TDZ
-        'class-variance-authority',
-        // ✅ CRÍTICO: Incluir react-resizable-panels que usa forwardRef
-        'react-resizable-panels',
-      ],
-      exclude: [
-        '@supabase/functions-js',
-        // Em produção podemos excluir 'recharts' para manter chunk separado; em dev deixamos esbuild pré-bundle
-        ...(mode === 'production' ? ['recharts'] : []),
-      ],
+      // Voltar ao comportamento padrão, minimizando interferência
+      force: false,
+      include: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
       esbuildOptions: {
         target: 'es2020',
-        loader: { '.js': 'jsx', '.ts': 'tsx' },
-        keepNames: true, // Preservar nomes de funções/classes
-        // 🔧 FIX: Definir formato de módulo explícito
-        format: 'esm',
+        keepNames: true,
       },
     },
     define: {
