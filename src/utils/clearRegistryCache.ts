@@ -1,7 +1,7 @@
 /**
  * 🗑️ CLEAR REGISTRY CACHE - Utilitário de debug
  * 
- * Limpa todos os caches do UnifiedTemplateRegistry
+ * Limpa todos os caches do TemplateService
  * Útil após alterações no código de normalização
  */
 
@@ -19,13 +19,9 @@ export async function clearAllCaches(): Promise<void> {
   console.group('🗑️ Limpando todos os caches...');
   
   try {
-    // 1. Limpar L1 (Memory)
-    templateService.clearL1();
-    console.log('✅ L1 Cache (Memory) limpo');
-    
-    // 2. Limpar L2 (IndexedDB)
-    await templateService.clearL2();
-    console.log('✅ L2 Cache (IndexedDB) limpo');
+    // Limpar cache do TemplateService (Memory + IndexedDB)
+    templateService.clearCache();
+    console.log('✅ Cache (Memory) limpo');
     
     // 3. Limpar versão do localStorage
     try {
@@ -45,11 +41,11 @@ export async function clearAllCaches(): Promise<void> {
 }
 
 /**
- * Limpar apenas L1 (mais rápido)
+ * Limpar apenas cache em memória (mais rápido)
  */
 export function clearMemoryCache(): void {
-  templateService.clearL1();
-  console.log('✅ L1 Cache limpo - recarregue a página');
+  templateService.clearCache();
+  console.log('✅ Cache limpo - recarregue a página');
 }
 
 /**

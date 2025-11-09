@@ -14,7 +14,7 @@ export * from './templateService';
 // Template & Block Services
 // NavigationService moved to canonical - use: import { navigationService } from '@/services/canonical/NavigationService';
 export { TemplateRegistry } from './TemplateRegistry';
-export { UnifiedTemplateRegistry } from './UnifiedTemplateRegistry';
+// UnifiedTemplateRegistry removido - use templateService from @/services/canonical/TemplateService
 
 // Cache Services
 export { UnifiedCacheService } from './UnifiedCacheService';

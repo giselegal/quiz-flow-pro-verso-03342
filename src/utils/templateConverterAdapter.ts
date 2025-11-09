@@ -1,14 +1,14 @@
 /**
  * 🔄 TEMPLATE CONVERTER ADAPTER - FASE 1.3
  * 
- * Adaptador temporário que redireciona chamadas antigas para UnifiedTemplateRegistry
+ * Adaptador temporário que redireciona chamadas antigas para TemplateService
  * Elimina conversões de formato mantendo compatibilidade
  * 
  * MIGRAÇÃO:
  * 1. Substituir chamadas diretas por templateService.getStep()
  * 2. Remover este adaptador após migração completa
  * 
- * @deprecated Use UnifiedTemplateRegistry diretamente
+ * @deprecated Use templateService from @/services/canonical/TemplateService diretamente
  */
 
 import { BlockComponent } from '@/components/editor/quiz/types';

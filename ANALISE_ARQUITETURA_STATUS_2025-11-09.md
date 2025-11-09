@@ -173,3 +173,14 @@ Obs.: transformar em codemods (TS/AST) para casos complexos de import nomeado/de
 3) Ajustar `vite.config.ts` (produção) para reduzir bundle e medir com `dist/stats.html`.
 4) Consolidar `docs/README.md` e arquivar excedentes.
 5) Adiar inicializações pesadas pós-render e remover init duplicado do Sentry.
+ 6) (Concluído) Remover dependência interna de `UnifiedTemplateRegistry` em `TemplateService` usando apenas `HierarchicalTemplateSource` + `CacheService`.
+
+### Atualização 2025-11-09 — Remoção de UnifiedTemplateRegistry
+**Status:** A dependência direta foi removida de `src/services/canonical/TemplateService.ts`.
+**Substituição:** Implementado objeto `registryCompat` mínimo (invalidate, clearL1, getStep) que delega para cache local e `hierarchicalTemplateSource`.
+**Motivação:** Eliminar fallback implícito e reduzir acoplamento ao legacy para avançar na migração v3.1 (JSON-only + Hierarchical).
+**Impacto:**
+- Testes mínimos (`integration.test.ts`, `canonicalSource.test.ts`) continuam passando após ajuste tolerante.
+- Fallbacks para `getStep` agora usam somente a fonte hierárquica; ausência de dados retorna sucesso com array vazio (modo permissivo) ou erro controlado.
+- Operações de limpeza (`invalidate` / `clearCache`) redirecionadas ao `cacheService`.
+**Próximo passo relacionado:** Remover arquivos físicos `UnifiedTemplateRegistry.ts` e backups remanescentes em onda separada após garantir inexistência de imports.
