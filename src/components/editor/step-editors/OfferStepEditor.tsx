@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { OfferStepSchema } from '@/schemas/offer.schema';
+import { OfferStepSchema } from '@/types/schemas/offer.schema';
 import { slugify } from '@/lib/utils/normalize';
 
 export default function OfferStepEditor({ step, props, onApply }: any) {

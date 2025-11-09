@@ -606,7 +606,7 @@ describe('Quiz Editor Integration Tests', () => {
             };
 
             // Usa ErrorBoundary real do projeto
-            const QuizEditorErrorBoundary = (await import('@/tools/debug/QuizEditorErrorBoundary')).default;
+            const QuizEditorErrorBoundary = (await import('@/lib/tools/debug/QuizEditorErrorBoundary')).default;
 
             render(
                 <QuizEditorErrorBoundary>

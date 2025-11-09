@@ -46,7 +46,7 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
 
   // Fonte canônica migrada: usar TS gerado em templates/quiz21StepsComplete
   const { QUIZ_STYLE_21_STEPS_TEMPLATE: QUIZ_STEPS } = await import('@/templates/quiz21StepsComplete');
-      const { styleMapping } = await import('@/data/styles');
+      const { styleMapping } = await import('@/services/data/styles');
 
       const endTime = performance.now();
       const loadTime = endTime - startTime;
@@ -123,7 +123,7 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
 
   describe('📊 Performance de Cálculos', () => {
     it('deve processar pontuações rapidamente', async () => {
-      const { styleMapping } = await import('@/data/styles');
+      const { styleMapping } = await import('@/services/data/styles');
 
       const mockAnswers = {
         'step-2': ['option1'],

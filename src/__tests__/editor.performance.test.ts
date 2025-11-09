@@ -6,7 +6,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TemplateService } from '@/services/canonical/TemplateService';
-import { STEP_ORDER } from '@/data/quizStepsLazy';
+import { STEP_ORDER } from '@/services/data/quizStepsLazy';
 
 describe('Editor Performance - Step Loading', () => {
     it('should load TemplateService.getInstance().getAllStepsSync() data structure quickly', () => {

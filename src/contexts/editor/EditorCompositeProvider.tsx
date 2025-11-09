@@ -22,7 +22,7 @@
  */
 
 import React, { ReactNode, useMemo } from 'react';
-import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
 

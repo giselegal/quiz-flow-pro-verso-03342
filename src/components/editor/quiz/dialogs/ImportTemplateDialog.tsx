@@ -28,7 +28,7 @@ import {
   validateTemplate as zodValidateTemplate,
   type Template,
   type ValidationResult
-} from '@/schemas/templateSchema';
+} from '@/types/schemas/templateSchema';
 import {
   normalizeAndValidateTemplateV3,
   isNormalizeSuccess,

@@ -1,4 +1,4 @@
-import caktoquizQuestions from '@/data/caktoquizQuestions';
+import caktoquizQuestions from '@/services/data/caktoquizQuestions';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { StyleResult, QuizQuestion, QuizResult, QuizAnswer } from '@/types/quiz';
 import { mapToStyleResult } from '@/lib/utils/styleResultMapper';

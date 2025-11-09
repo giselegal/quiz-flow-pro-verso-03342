@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { QuestionStepSchema } from '@/schemas/question.schema';
+import { QuestionStepSchema } from '@/types/schemas/question.schema';
 
 type FormValues = typeof QuestionStepSchema._type;
 

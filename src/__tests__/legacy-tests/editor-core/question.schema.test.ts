@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { QuestionStepSchema } from '@/schemas/question.schema';
+import { QuestionStepSchema } from '@/types/schemas/question.schema';
 
 describe('QuestionStepSchema', () => {
   it('accepts minimal valid question', () => {

@@ -12,7 +12,7 @@ import React, { useMemo } from 'react';
 import { ResponsivePreviewFrame } from '@/components/editor/preview/ResponsivePreviewFrame';
 import { Eye, EyeOff } from 'lucide-react';
 import type { Block } from '@/types/editor';
-import { useStepBlocksQuery } from '@/api/steps/hooks';
+import { useStepBlocksQuery } from '@/services/api/steps/hooks';
 
 export interface PreviewPanelProps {
     currentStepKey: string | null;

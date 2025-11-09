@@ -6,7 +6,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { QuizBlockSchema } from '@/schemas/enhanced-block-schemas';
+import { QuizBlockSchema } from '@/types/schemas/enhanced-block-schemas';
 import { schemaValidator } from '@/core/schema/SchemaValidator';
 import { blockSchemas } from '@/lib/validation';
 

@@ -21,7 +21,7 @@ import {
   type Template,
   type Step,
   type Block,
-} from '@/schemas/templateSchema';
+} from '@/types/schemas/templateSchema';
 
 describe('templateSchema - Validação de Blocos', () => {
   describe('validateBlock - Casos de Sucesso', () => {

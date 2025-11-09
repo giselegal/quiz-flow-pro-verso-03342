@@ -23,7 +23,7 @@ import { Separator } from '@/components/ui/separator';
 
 // Imports dados
 import { templateService } from '@/services/canonical/TemplateService';
-import { styleConfigGisele } from '@/data/styles';
+import { styleConfigGisele } from '@/services/data/styles';
 
 // Imports ícones
 // import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, RefreshCw, ListTree } from 'lucide-react';

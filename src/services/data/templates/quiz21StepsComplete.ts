@@ -7,7 +7,7 @@
  * SPRINT 4 - Consolidação de dados
  */
 
-import type { EditorStep } from '@/store/editorStore';
+import type { EditorStep } from '@/contexts/store/editorStore';
 import type { Block } from '@/types/editor';
 
 // ============================================================================

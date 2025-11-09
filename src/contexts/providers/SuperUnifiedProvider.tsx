@@ -35,7 +35,7 @@ import { supabase } from '@/services/integrations/supabase/customClient';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { isSupabaseDisabled } from '@/services/integrations/supabase/flags';
 import { createLogger } from '@/lib/utils/logger';
-import { blockBaseSchema } from '@/schemas/editorStateSchema';
+import { blockBaseSchema } from '@/types/schemas/editorStateSchema';
 import { getUserFriendlyError } from '@/lib/utils/userFriendlyErrors';
 import { useUnifiedHistory } from '@/hooks/useUnifiedHistory';
 

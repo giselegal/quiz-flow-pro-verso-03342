@@ -12,7 +12,7 @@
  */
 
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
-import { styleMapping, type StyleId } from '@/data/styles';
+import { styleMapping, type StyleId } from '@/services/data/styles';
 import { templateService } from '@/services/canonical/TemplateService';
 
 // ================================

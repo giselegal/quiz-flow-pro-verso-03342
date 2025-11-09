@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { renderHook, act } from '@testing-library/react';
 import { StorageService } from '@/services/core/StorageService';
-import caktoquizQuestions from '@/data/caktoquizQuestions';
+import caktoquizQuestions from '@/services/data/caktoquizQuestions';
 
 /**
  * E2E leve do núcleo lógico: coleta de nome, respostas q1–q10, cálculo e persistência do resultado.

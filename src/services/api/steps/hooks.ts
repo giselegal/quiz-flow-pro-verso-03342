@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/editor';
-import { blockArraySchema } from '@/schemas/block';
+import { blockArraySchema } from '@/types/schemas/block';
 
 export const stepKeys = {
   detail: (

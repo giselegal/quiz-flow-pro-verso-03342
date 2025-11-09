@@ -1,1 +1,1 @@
-export * from '@/api/templates/client';
+export * from '@/services/api/templates/client';

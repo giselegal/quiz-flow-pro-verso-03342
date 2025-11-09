@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ResultStepSchema } from '@/schemas/result.schema';
+import { ResultStepSchema } from '@/types/schemas/result.schema';
 
 export default function ResultStepEditor({ step, props, onApply }: any) {
     const { register, handleSubmit, reset, watch, setValue } = useForm({ resolver: zodResolver(ResultStepSchema), defaultValues: props });

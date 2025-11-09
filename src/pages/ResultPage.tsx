@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import sanitizeHtml from '@/lib/utils/sanitizeHtml';
-import { styleConfigGisele } from '@/data/styles';
+import { styleConfigGisele } from '@/services/data/styles';
 import { StorageService } from '@/services/core/StorageService';
 
 interface PersistedResultPayload {

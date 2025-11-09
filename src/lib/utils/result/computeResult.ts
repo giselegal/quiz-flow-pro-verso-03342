@@ -24,7 +24,7 @@
 
 import { templateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
-import { styleMapping } from '@/data/styles';
+import { styleMapping } from '@/services/data/styles';
 import { toUnaccentedStyleId } from '@/lib/utils/styleIds';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
 

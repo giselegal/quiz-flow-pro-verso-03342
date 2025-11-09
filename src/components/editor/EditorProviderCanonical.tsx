@@ -39,7 +39,7 @@
 
 import * as React from 'react';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState, useRef, useMemo } from 'react';
-import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
 import { EditorHistoryService } from '@/services/editor/HistoryService';

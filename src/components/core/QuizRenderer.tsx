@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 // Validação centralizada cobre regras por etapa
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
-import { useStepNavigationStore } from '@/store/useStepNavigationStore';
+import { useStepNavigationStore } from '@/contexts/store/useStepNavigationStore';
 import { StorageService } from '@/services/core/StorageService';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 // V3.0 Template Support

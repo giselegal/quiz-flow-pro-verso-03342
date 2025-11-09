@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { quizTemplates, QuizTemplate } from '@/data/quizTemplates';
+import { quizTemplates, QuizTemplate } from '@/services/data/quizTemplates';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {

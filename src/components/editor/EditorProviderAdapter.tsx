@@ -18,9 +18,9 @@
 
 import React, { createContext, useContext, useEffect } from 'react';
 import { appLogger } from '@/lib/utils/logger';
-import { useEditorStore } from '@/store/editorStore';
+import { useEditorStore } from '@/contexts/store/editorStore';
 import { useEditorConsolidated } from '@/hooks/useEditorConsolidated';
-import type { EditorStep } from '@/store/editorStore';
+import type { EditorStep } from '@/contexts/store/editorStore';
 
 // ============================================================================
 // TYPES - Mantém API antiga para compatibilidade

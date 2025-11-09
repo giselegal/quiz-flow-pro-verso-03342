@@ -11,7 +11,7 @@
  */
 
 import { supabase } from '@/services/integrations/supabase/client';
-import type { EditorStep } from '@/store/editorStore';
+import type { EditorStep } from '@/contexts/store/editorStore';
 
 // ============================================================================
 // TYPES

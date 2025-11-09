@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IntroStepSchema } from '@/schemas/intro.schema';
+import { IntroStepSchema } from '@/types/schemas/intro.schema';
 
 type FormValues = typeof IntroStepSchema._type;
 

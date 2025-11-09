@@ -332,7 +332,7 @@ describe('EditorJsonTemplatesPage', () => {
         });
 
         it('deve exibir erro ao tentar salvar JSON inválido', async () => {
-            const { QuizStepAdapter } = await import('@/adapters/QuizStepAdapter');
+            const { QuizStepAdapter } = await import('@/lib/adapters/QuizStepAdapter');
 
             // Forçar erro de validação
             vi.mocked(QuizStepAdapter.fromJSON).mockImplementationOnce(() => {

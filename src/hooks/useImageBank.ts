@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllImages } from '@/data/imageBank';
+import { getAllImages } from '@/services/data/imageBank';
 import { preloadCriticalImages } from '@/lib/utils/imageManager';
 
 export const useImageBank = () => {

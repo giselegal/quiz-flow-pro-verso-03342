@@ -8,7 +8,7 @@
  * ❌ REMOVIDOS: ConsolidatedProvider, FunnelMasterProvider, OptimizedProviderStack
  *
  * MIGRAÇÃO:
- * - Substitua qualquer import antigo por: import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+ * - Substitua qualquer import antigo por: import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
  * - Hooks antigos (useFunnels, useQuiz21Steps, etc) agora vivem em contextos unificados (useUnifiedCRUD / selectors específicos)
  */
 

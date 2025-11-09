@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { DeploymentDashboard } from '@/components/deployment/DeploymentDashboard';
 import { SecuritySettingsPage } from '@/components/security/SecuritySettingsPage';
-import { useSecurity } from '@/providers/SecurityProvider';
+import { useSecurity } from '@/contexts/providers/SecurityProvider';
 import { 
   Activity, 
   Shield, 

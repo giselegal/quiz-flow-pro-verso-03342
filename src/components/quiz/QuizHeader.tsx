@@ -1,6 +1,6 @@
 // @ts-nocheck
-import caktoquizQuestions from '@/data/caktoquizQuestions';
-import { calculateQuizScore } from '@/data/correctQuizQuestions';
+import caktoquizQuestions from '@/services/data/caktoquizQuestions';
+import { calculateQuizScore } from '@/services/data/correctQuizQuestions';
 import { useMemo } from 'react';
 import { AnimatedWrapper } from '../ui/animated-wrapper';
 import { Progress } from '../ui/progress';

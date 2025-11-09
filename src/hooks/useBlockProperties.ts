@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { blockPropertiesAPI, type BlockDefinition, type PropertyChangeEvent } from '@/api/internal/BlockPropertiesAPI';
+import { blockPropertiesAPI, type BlockDefinition, type PropertyChangeEvent } from '@/services/api/internal/BlockPropertiesAPI';
 
 // ===== INTERFACES =====
 

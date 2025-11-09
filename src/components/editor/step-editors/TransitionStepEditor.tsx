@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TransitionStepSchema } from '@/schemas/transition.schema';
+import { TransitionStepSchema } from '@/types/schemas/transition.schema';
 
 export default function TransitionStepEditor({ step, props, onApply }: any) {
     const { register, handleSubmit, reset } = useForm({ resolver: zodResolver(TransitionStepSchema), defaultValues: props });

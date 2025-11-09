@@ -2,7 +2,7 @@
 import '@/utils/reactPolyfills';
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { stepKeys } from '@/api/steps/hooks';
+import { stepKeys } from '@/services/api/steps/hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';

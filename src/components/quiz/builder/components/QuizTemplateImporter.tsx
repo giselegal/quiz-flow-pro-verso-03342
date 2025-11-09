@@ -22,7 +22,7 @@ import { styleQuizTemplate2 } from '@/services/templates/styleQuizTemplate2';
 import { QuizBuilderState } from '@/types/quizBuilder';
 import { QuizTemplate } from '@/types/quizTemplate';
 import { createBuilderStateFromQuiz } from '@/services/quizBuilderService';
-import caktoquizQuestions from '@/data/caktoquizQuestions';
+import caktoquizQuestions from '@/services/data/caktoquizQuestions';
 import { QuizQuestion } from '@/types/quiz';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';

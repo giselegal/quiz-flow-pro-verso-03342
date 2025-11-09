@@ -8,7 +8,7 @@
  * para SuperUnifiedProvider sem quebrar funcionalidades.
  */
 
-import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 
 export const usePureBuilderCompat = () => {
     const {

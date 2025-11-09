@@ -11,7 +11,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
-import type { EditorStep } from '@/store/editorStore';
+import type { EditorStep } from '@/contexts/store/editorStore';
 import type { Block } from '@/types/editor';
 
 // ============================================================================

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProviderCanonical as EditorProvider } from '../components/editor/EditorProviderCanonical';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';

@@ -25,7 +25,7 @@ import { useBlockProperties } from '@/hooks/useBlockProperties';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 // Substitui hook legado de funis do FunnelMasterProvider
 import { useUnifiedFunnel } from '@/contexts';
-import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
+import { type BlockPropertySchema } from '@/services/api/internal/BlockPropertiesAPI';
 
 // ===== INTERFACES =====
 

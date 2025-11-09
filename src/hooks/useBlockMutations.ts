@@ -14,7 +14,7 @@
 
 import { useCallback } from 'react';
 import { useUnifiedCRUD } from '@/contexts/data/UnifiedCRUDProvider';
-import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/logger';
 import { generateBlockId } from '@/lib/utils/idGenerator';

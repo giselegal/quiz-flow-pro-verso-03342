@@ -5,7 +5,7 @@ import { TemplateManager } from '@/lib/utils/TemplateManager';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
-import { useStepNavigationStore } from '@/store/useStepNavigationStore';
+import { useStepNavigationStore } from '@/contexts/store/useStepNavigationStore';
 
 export interface QuizFlowProps {
   mode?: 'production' | 'preview' | 'editor';

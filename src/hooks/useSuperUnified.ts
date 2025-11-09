@@ -8,7 +8,7 @@
  */
 
 import { useContext } from 'react';
-import { SuperUnifiedContext } from '@/providers/SuperUnifiedProvider';
+import { SuperUnifiedContext } from '@/contexts/providers/SuperUnifiedProvider';
 
 export const useSuperUnified = () => {
   const context = useContext(SuperUnifiedContext);

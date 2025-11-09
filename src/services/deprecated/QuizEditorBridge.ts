@@ -45,7 +45,7 @@ import {
 } from '@/lib/utils/quizValidationUtils';
 
 // ✅ FASE 7: Adaptador bidirecional Blocks ↔ JSON v3.0
-import { BlocksToJSONv3Adapter, type JSONv3Template } from '@/adapters/BlocksToJSONv3Adapter';
+import { BlocksToJSONv3Adapter, type JSONv3Template } from '@/lib/adapters/BlocksToJSONv3Adapter';
 import { parseJSONv3 } from '@/types/jsonv3.schema';
 
 interface EditorQuizStep extends QuizStep {

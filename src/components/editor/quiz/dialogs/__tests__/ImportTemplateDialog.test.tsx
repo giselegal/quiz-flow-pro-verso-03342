@@ -18,7 +18,7 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { ImportTemplateDialog } from '@/components/editor/quiz/dialogs/ImportTemplateDialog';
-import { validateTemplate } from '@/schemas/templateSchema';
+import { validateTemplate } from '@/types/schemas/templateSchema';
 
 // Mock do templateSchema
 vi.mock('@/schemas/templateSchema', () => ({

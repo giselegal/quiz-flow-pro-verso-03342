@@ -16,7 +16,7 @@ import { SkeletonBlock } from '../SkeletonBlock';
 import { EmptyCanvasState } from '../EmptyCanvasState';
 import { useSafeEventListener } from '@/hooks/useSafeEventListener';
 import { useAutoMetrics } from '@/hooks/useAutoMetrics';
-import { useStepBlocksQuery } from '@/api/steps/hooks';
+import { useStepBlocksQuery } from '@/services/api/steps/hooks';
 import { normalizeBlocksData, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
 
 export type CanvasColumnProps = {

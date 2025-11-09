@@ -8,7 +8,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
-import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 
 interface ThemeToggleProps {
     className?: string;

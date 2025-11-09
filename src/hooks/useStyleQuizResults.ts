@@ -1,6 +1,6 @@
 import { QuestionOption } from '@/components/funnel-blocks/types';
 import { styleConfig } from '@/config/styleConfig';
-import { initialStyleQuizConfig } from '@/data/styleQuizResults';
+import { initialStyleQuizConfig } from '@/services/data/styleQuizResults';
 import { QuizResult, useQuizResults } from '@/hooks/useQuizResults';
 import { useEffect, useState } from 'react';
 

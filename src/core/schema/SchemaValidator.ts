@@ -6,7 +6,7 @@
  */
 
 import { schemaInterpreter } from './SchemaInterpreter';
-import { QuizBlockSchema } from '@/schemas/enhanced-block-schemas';
+import { QuizBlockSchema } from '@/types/schemas/enhanced-block-schemas';
 import { blockSchemas } from '@/lib/validation';
 import { z } from 'zod';
 

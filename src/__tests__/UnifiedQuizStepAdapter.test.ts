@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { UnifiedQuizStepAdapter, type UnifiedQuizStep } from '@/adapters/UnifiedQuizStepAdapter';
+import { UnifiedQuizStepAdapter, type UnifiedQuizStep } from '@/lib/adapters/UnifiedQuizStepAdapter';
 import { TemplateService } from '@/services/canonical/TemplateService';
 
 describe('UnifiedQuizStepAdapter', () => {

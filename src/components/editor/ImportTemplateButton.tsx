@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, FileJson, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { quizEditorBridge } from '@/services/canonical/TemplateService';
-import type { JSONv3Template } from '@/adapters/BlocksToJSONv3Adapter';
+import type { JSONv3Template } from '@/lib/adapters/BlocksToJSONv3Adapter';
 
 interface ImportTemplateProps {
     onImportSuccess?: (draftId: string) => void;

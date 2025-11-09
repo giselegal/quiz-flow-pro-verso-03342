@@ -41,10 +41,10 @@ import { PWANotifications } from './components/PWANotifications';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
 // 🚀 FASE 2: Unified Provider (arquitetura consolidada)
-import UnifiedAppProvider from '@/providers/UnifiedAppProvider';
+import UnifiedAppProvider from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
-import { SuperUnifiedProvider } from '@/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));

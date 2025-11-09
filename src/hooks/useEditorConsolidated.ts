@@ -38,7 +38,7 @@ import {
   useSelectedBlock,
   useEditorMode,
   useEditorDirtyState,
-} from '@/store/editorStore';
+} from '@/contexts/store/editorStore';
 import type { BlockType } from '@/types/editor';
 
 // ============================================================================

@@ -1,7 +1,7 @@
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { QuizOptimizedRenderer } from '@/components/quiz/QuizOptimizedRenderer';
-import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useEditor } from '@/components/editor/EditorProviderCanonical';

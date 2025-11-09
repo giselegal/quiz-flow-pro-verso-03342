@@ -8,7 +8,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
-import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 describe('Provider Canonical (UnifiedAppProvider) Sem Depreciações', () => {

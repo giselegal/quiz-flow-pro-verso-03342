@@ -15,7 +15,7 @@ import { useQuizState } from '../../hooks/useQuizState';
 import { useOptionalQuizRuntimeRegistry } from '@/core/runtime/quiz/QuizRuntimeRegistry';
 import { useComponentConfiguration } from '../../hooks/useComponentConfiguration';
 // 🆕 SISTEMA DE PONTUAÇÃO
-import { useQuizStore } from '@/store/quizStore';
+import { useQuizStore } from '@/contexts/store/quizStore';
 import { QuizScoreDisplay } from '@/components/quiz/blocks/QuizScoreDisplay';
 // Componentes originais (ainda usados como fallback para alguns casos especiais)
 

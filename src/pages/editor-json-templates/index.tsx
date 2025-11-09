@@ -19,7 +19,7 @@ import {
     RefreshCw,
 } from 'lucide-react';
 import EditorLayout from '@/components/layout/EditorLayout';
-import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
+import { QuizStepAdapter } from '@/lib/adapters/QuizStepAdapter';
 
 // Tipos
 interface JsonTemplate {

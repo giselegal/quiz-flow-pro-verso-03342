@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { SecurityProvider } from '@/providers/SecurityProvider';
+import { SecurityProvider } from '@/contexts/providers/SecurityProvider';
 import { SecurityAlert } from '@/components/security/SecurityAlert';
 import { SecurityMiddleware } from '@/components/security/SecurityMiddleware';
 import { useRateLimit } from '@/hooks/useRateLimit';

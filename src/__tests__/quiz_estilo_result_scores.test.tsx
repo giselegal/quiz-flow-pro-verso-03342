@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ResultStep from '@/components/quiz/ResultStep';
-import { styleConfigGisele } from '@/data/styles';
+import { styleConfigGisele } from '@/services/data/styles';
 
 // Este teste verifica a renderização das barras de porcentagem quando scores são fornecidos
 // e confirma a ordenação, presença do ícone 👑 no primeiro e formato de porcentagem.

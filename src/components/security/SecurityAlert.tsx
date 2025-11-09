@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { useSecurity } from '@/providers/SecurityProvider';
+import { useSecurity } from '@/contexts/providers/SecurityProvider';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { 

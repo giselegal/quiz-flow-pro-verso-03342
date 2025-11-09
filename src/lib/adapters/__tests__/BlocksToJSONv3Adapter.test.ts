@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import BlocksToJSONv3Adapter, { JSONv3Template } from '@/adapters/BlocksToJSONv3Adapter';
+import BlocksToJSONv3Adapter, { JSONv3Template } from '@/lib/adapters/BlocksToJSONv3Adapter';
 
 const makeJSON = (over: Partial<JSONv3Template> = {}): JSONv3Template => ({
   templateVersion: '3.0',

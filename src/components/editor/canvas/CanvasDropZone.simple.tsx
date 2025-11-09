@@ -12,7 +12,7 @@ import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import { useGlobalEventManager } from '@/lib/utils/OptimizedGlobalEventManager';
-import { HookOrderDebugger } from '@/tools/debug/HookOrderDebugger';
+import { HookOrderDebugger } from '@/lib/tools/debug/HookOrderDebugger';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import EmptyCanvasInterface from '@/components/editor/EmptyCanvasInterface';
 

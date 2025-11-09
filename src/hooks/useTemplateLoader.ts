@@ -4,7 +4,7 @@ import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
 import type { QuizStepV3 } from '@/types/quiz';
 import { TemplateService } from '@/services/canonical/TemplateService';
-import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
+import { QuizStepAdapter } from '@/lib/adapters/QuizStepAdapter';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
 
 type StageTemplate = any;

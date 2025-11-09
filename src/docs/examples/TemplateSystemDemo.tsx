@@ -34,7 +34,7 @@ import {
     AlertCircle,
     Loader2,
 } from 'lucide-react';
-import type { Template } from '@/schemas/templateSchema';
+import type { Template } from '@/types/schemas/templateSchema';
 
 /**
  * Lista de steps do template demo

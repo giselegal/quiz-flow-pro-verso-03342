@@ -22,7 +22,7 @@ import {
     usePrefetchTemplateStep,
 } from '@/services/hooks';
 import { templateService } from '@/services/canonical/TemplateService';
-import { validateTemplate } from '@/schemas/templateSchema';
+import { validateTemplate } from '@/types/schemas/templateSchema';
 
 // Mock do TemplateService
 vi.mock('@/services/canonical/TemplateService', () => ({

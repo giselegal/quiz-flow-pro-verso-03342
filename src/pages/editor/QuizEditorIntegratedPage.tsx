@@ -20,7 +20,7 @@ import {
 
 // Providers necessários
 import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
-import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // Components especializados
@@ -32,7 +32,7 @@ import { useTemplateLoader } from '@/hooks/useTemplateLoader';
 import { useNotification } from '@/components/ui/Notification';
 
 // Services
-import { QuizToEditorAdapter } from '@/adapters/QuizToEditorAdapter';
+import { QuizToEditorAdapter } from '@/lib/adapters/QuizToEditorAdapter';
 
 interface QuizEditorIntegratedPageProps {
   funnelId?: string;

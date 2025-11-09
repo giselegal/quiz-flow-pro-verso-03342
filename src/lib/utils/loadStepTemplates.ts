@@ -19,10 +19,10 @@ const unifiedCache = unifiedCacheService;
 
 // Nota: Mantendo imports legados como referência, mas não utilizando no runtime
 // Para compatibilidade histórica apenas
-import step12Template from '@/data/modularSteps/step-12.json';
-import step13Template from '@/data/modularSteps/step-13.json';
-import step19Template from '@/data/modularSteps/step-19.json';
-import step20Template from '@/data/modularSteps/step-20.json';
+import step12Template from '@/services/data/modularSteps/step-12.json';
+import step13Template from '@/services/data/modularSteps/step-13.json';
+import step19Template from '@/services/data/modularSteps/step-19.json';
+import step20Template from '@/services/data/modularSteps/step-20.json';
 
 interface StepTemplate {
   id: string;

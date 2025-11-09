@@ -3,7 +3,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useQuizStages } from './useQuizStages';
 import { useQuizComponents } from './useQuizComponents';
 import { generateInitialStages, createBuilderStateFromQuiz } from '@/services/quizBuilderService';
-import caktoquizQuestions from '@/data/caktoquizQuestions';
+import caktoquizQuestions from '@/services/data/caktoquizQuestions';
 
 const STORAGE_KEY = 'quiz_builder_data';
 

@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
-import caktoquizQuestions from '@/data/caktoquizQuestions';
+import caktoquizQuestions from '@/services/data/caktoquizQuestions';
 
 interface ConnectedTemplateWrapperProps {
   children: React.ReactNode;

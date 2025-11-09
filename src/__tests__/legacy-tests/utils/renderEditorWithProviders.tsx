@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SuperUnifiedProvider } from '@/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor';
 
 export interface RenderEditorOptions {

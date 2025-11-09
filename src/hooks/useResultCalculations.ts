@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { styleConfigGisele } from '@/data/styles';
+import { styleConfigGisele } from '@/services/data/styles';
 import { resolveStyleId } from '@/lib/utils/styleIds';
 import type { QuizScores } from '@/hooks/useQuizState';
 

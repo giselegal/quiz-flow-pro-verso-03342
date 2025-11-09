@@ -1,14 +1,14 @@
 import React, { ReactElement } from 'react';
 import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SuperUnifiedProvider } from '@/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { Router } from 'wouter';
 import { memoryLocation } from 'wouter/memory-location';
 import { HelmetProvider } from 'react-helmet-async';
 // Providers reais (podem ser simplificados/mocados se necessário)
 import { ThemeProvider as CustomThemeProvider } from '@/contexts';
 import { AuthProvider } from '@/contexts';
-import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { MonitoringProvider } from '@/components/monitoring/MonitoringProvider';
 
 interface Options { path?: string; }

@@ -1,4 +1,4 @@
-import { generateRealQuestionTemplates } from '@/data/realQuizTemplates';
+import { generateRealQuestionTemplates } from '@/services/data/realQuizTemplates';
 import { appLogger } from '@/lib/utils/logger';
 
 /**

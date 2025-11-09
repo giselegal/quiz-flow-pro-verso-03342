@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { EnhancedCanvasArea } from './components/EnhancedCanvasArea';
-import { LivePreviewProvider } from '@/providers/LivePreviewProvider';
+import { LivePreviewProvider } from '@/contexts/providers/LivePreviewProvider';
 
 // Exemplo de como modificar o QuizModularEditor.tsx
 

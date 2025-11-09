@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import UniversalQuizStep from '@/components/universal/UniversalQuizStep';
-import { BlockPropertiesAPI } from '@/api/internal/BlockPropertiesAPI';
+import { BlockPropertiesAPI } from '@/services/api/internal/BlockPropertiesAPI';
 import { masterTemplateService } from '@/services/templates/MasterTemplateService';
 import { QuizStepRouter } from '@/components/router/QuizStepRouter';
 import SpecializedStepAdapter from '@/components/adapters/SpecializedStepAdapter';

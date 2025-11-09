@@ -12,8 +12,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep, QuizOptionV3 as QuizOption } from '@/types/quiz';
-import { styleMapping, type StyleId } from '@/data/styles';
-import { STEP_ORDER } from '@/data/quizStepsLazy';
+import { styleMapping, type StyleId } from '@/services/data/styles';
+import { STEP_ORDER } from '@/services/data/quizStepsLazy';
 
 // Mock do editor bridge
 vi.mock('@/services/QuizEditorBridge');

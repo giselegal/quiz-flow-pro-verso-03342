@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import EditorJsonTemplatesPage from '../index';
-import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
+import { QuizStepAdapter } from '@/lib/adapters/QuizStepAdapter';
 
 // Mock do EditorLayout
 vi.mock('@/components/layout/EditorLayout', () => ({

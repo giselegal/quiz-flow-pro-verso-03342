@@ -4,7 +4,7 @@
  * Integra React Hook Form com Zod para validação tipada
  */
 
-import { blockSchemas, BlockType, safeValidateBlockData } from '@/schemas/blockSchemas';
+import { blockSchemas, BlockType, safeValidateBlockData } from '@/types/schemas/blockSchemas';
 import { PerformanceOptimizer } from '@/lib/utils/performanceOptimizer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect } from 'react';
