@@ -1,6 +1,10 @@
 // 🛡️ CRITICAL: Importar React Preload PRIMEIRO ANTES DE TUDO
 import './react-preload';
 
+// 🔍 G47 FIX: Inicializar Sentry ANTES de qualquer outra coisa
+import { initializeSentry } from '@/config/sentry.config';
+initializeSentry();
+
 // Agora importar React normalmente (já está global)
 import React from 'react';
 import ReactDOM from 'react-dom';

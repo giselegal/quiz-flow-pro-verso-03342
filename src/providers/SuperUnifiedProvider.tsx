@@ -553,7 +553,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 if (lsDisable) return true;
             }
         } catch (error) {
-            console.warn('[SuperUnifiedProvider] Erro ao verificar Supabase disable flags:', error);
+            logger.warn('[SuperUnifiedProvider] Erro ao verificar Supabase disable flags', { error });
         }
         return false;
     }, []);
@@ -623,7 +623,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 logger.info('[G19] Nenhum step salvo para restaurar, usando step 1');
             }
         } catch (error) {
-            console.error('❌ [G19] Erro ao restaurar currentStep:', error);
+            logger.error('[G19] Erro ao restaurar currentStep', { error });
         }
     }, []); // Executar apenas no mount
 
@@ -705,6 +705,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 logger.info('Funnels loaded', { count: data?.length || 0 });
             }
         } catch (error: any) {
+            logger.error('[loadFunnels] Falha ao carregar funnels', { error: error.message, stack: error.stack });
             dispatch({ type: 'SET_ERROR', payload: { section: 'funnels', error: error.message } });
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: false } });
@@ -774,6 +775,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             dispatch({ type: 'SET_CURRENT_FUNNEL', payload: normalized });
         } catch (error: any) {
+            logger.error('[loadFunnel] Falha ao carregar funnel', { funnelId: id, error: error.message, stack: error.stack });
             dispatch({ type: 'SET_ERROR', payload: { section: 'funnel', error: error.message } });
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'funnel', loading: false } });
@@ -816,6 +818,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'UPDATE_FUNNEL', payload: { id: data.id, updates: data } });
             dispatch({ type: 'SET_EDITOR_STATE', payload: { isDirty: false, lastSaved: Date.now() } });
         } catch (error: any) {
+            logger.error('[saveFunnel] Falha ao salvar funnel', { funnelId: funnelToSave.id, error: error.message, stack: error.stack });
             dispatch({ type: 'SET_ERROR', payload: { section: 'save', error: error.message } });
             throw error;
         } finally {
@@ -871,6 +874,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             return data;
         } catch (error: any) {
+            logger.error('[createFunnel] Falha ao criar funnel', { funnelName: name, error: error.message, stack: error.stack });
             dispatch({ type: 'SET_ERROR', payload: { section: 'create', error: error.message } });
             throw error;
         } finally {
@@ -903,6 +907,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             return true;
         } catch (error: any) {
+            logger.error('[deleteFunnel] Falha ao deletar funnel', { funnelId: id, error: error.message, stack: error.stack });
             dispatch({ type: 'SET_ERROR', payload: { section: 'delete', error: error.message } });
             return false;
         }
