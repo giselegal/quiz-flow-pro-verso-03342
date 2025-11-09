@@ -522,7 +522,28 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 order: list.length,
             };
 
-            addBlock(stepIndex, newBlock);
+            // 🔄 G31 FIX: Rollback em falha de adição de bloco via DnD
+            try {
+                addBlock(stepIndex, newBlock);
+                appLogger.debug('[DnD] Bloco adicionado da biblioteca', {
+                    blockType: draggedItem.libraryType,
+                    blockId: newBlock.id,
+                });
+            } catch (error) {
+                appLogger.error('[DnD] Falha ao adicionar bloco da biblioteca, executando rollback', {
+                    error,
+                    blockType: draggedItem.libraryType,
+                });
+
+                undo();
+
+                showToast({
+                    type: 'error',
+                    title: 'Erro ao adicionar bloco',
+                    message: 'O bloco não pôde ser adicionado. Tente novamente.',
+                    duration: 4000,
+                });
+            }
             return;
         }
 
@@ -533,10 +554,39 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 const reordered = [...list];
                 const [moved] = reordered.splice(fromIndex, 1);
                 reordered.splice(toIndex, 0, moved);
-                reorderBlocks(stepIndex, reordered);
+
+                // 🔄 G31 FIX: Rollback em falha de DnD
+                try {
+                    reorderBlocks(stepIndex, reordered);
+
+                    // Se reorderBlocks é síncrono, precisamos validar após
+                    // Autosave assíncrono pode falhar depois, mas rollback fica para outra iteração
+                    appLogger.debug('[DnD] Reordenação aplicada com sucesso', {
+                        fromIndex,
+                        toIndex,
+                        blockId: activeId,
+                    });
+                } catch (error) {
+                    // Rollback: desfazer reordenação chamando undo()
+                    appLogger.error('[DnD] Falha ao reordenar blocos, executando rollback', {
+                        error,
+                        fromIndex,
+                        toIndex,
+                        blockId: activeId,
+                    });
+
+                    undo();
+
+                    showToast({
+                        type: 'error',
+                        title: 'Erro ao reordenar',
+                        message: 'A reordenação foi desfeita. Tente novamente.',
+                        duration: 4000,
+                    });
+                }
             }
         }
-    }, [dnd.handlers, blocks, safeCurrentStep, addBlock, reorderBlocks]);
+    }, [dnd.handlers, blocks, safeCurrentStep, addBlock, reorderBlocks, undo, showToast]);
 
     // Manual save
     const handleSave = useCallback(async () => {
