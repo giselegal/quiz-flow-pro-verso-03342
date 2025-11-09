@@ -2,7 +2,7 @@
 if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || import.meta.env.DEV)) {
     // Detectar se estamos dentro do iframe do preview do Lovable
     const isInLovablePreview = window.self !== window.top;
-    
+
     // IMPORTANTE: Não bloquear se estivermos no preview do Lovable
     if (isInLovablePreview) {
         console.log('✅ Preview do Lovable detectado - mantendo conexões ativas');
@@ -11,7 +11,9 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
         const originalWebSocket = window.WebSocket;
         (window as any).WebSocket = function (url: string | URL, protocols?: string | string[]) {
             if (url.toString().includes('lovable.dev')) {
-                console.warn('🚫 Bloqueada conexão WebSocket para Lovable em desenvolvimento:', url);
+                if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
+                    console.warn('🚫 Bloqueada conexão WebSocket para Lovable em desenvolvimento:', url);
+                }
                 // Retornar um mock WebSocket que não faz nada
                 return {
                     close: () => { },
@@ -29,8 +31,8 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
         };
 
         // Interceptar fetch para APIs do Lovable (incluindo SDK)
-    const originalFetch = window.fetch;
-    window.fetch = function (url: RequestInfo | URL, options?: RequestInit) {
+        const originalFetch = window.fetch;
+        window.fetch = function (url: RequestInfo | URL, options?: RequestInit) {
             // Normaliza Request/URL/string para capturar endpoints chamados via Request objects
             let urlString: string;
             if (typeof url === 'string') {
@@ -43,7 +45,10 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                 urlString = String(url);
             }
             if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
-                console.warn('🚫 Bloqueada requisição para Lovable/SDK em desenvolvimento:', urlString);
+                // Silencioso em produção - apenas logar em debug extremo
+                if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
+                    console.warn('🚫 Bloqueada requisição para Lovable/SDK em desenvolvimento:', urlString);
+                }
 
                 // Retornar mock específico para diferentes endpoints
                 if (urlString.includes('sourceConfig')) {
@@ -56,20 +61,23 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                         headers: { 'Content-Type': 'application/json' },
                     }));
                 }
-                
+
                 // 🔧 FIX: Bloquear /projects//collaborators (sem ID) e /projects/:id/collaborators
                 if (urlString.includes('/projects/') && urlString.includes('/collaborators')) {
-                    console.info('✅ Bloqueada chamada /projects//collaborators - retornando mock vazio');
-                    return Promise.resolve(new Response(JSON.stringify({ 
+                    // Silencioso - não logar para evitar poluição do console
+                    return Promise.resolve(new Response(JSON.stringify({
                         collaborators: [],
                         message: 'Lovable API disabled in development',
                         status: 'blocked'
                     }), {
                         status: 200,
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                        },
                     }));
                 }
-                
+
                 // Em vez de rejeitar (gerando erros no console), retornamos resposta neutra
                 return Promise.resolve(new Response(JSON.stringify({
                     status: 'blocked_in_dev',
@@ -94,7 +102,9 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                 (this as any).__lovableBlocked = shouldBlock;
 
                 if (shouldBlock) {
-                    console.warn('🚫 Bloqueada XHR para Lovable/SDK em desenvolvimento:', urlString);
+                    if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
+                        console.warn('🚫 Bloqueada XHR para Lovable/SDK em desenvolvimento:', urlString);
+                    }
                     (this as any).__lovableMockResponse = JSON.stringify({
                         status: 'blocked_in_dev',
                         ok: true,
@@ -159,14 +169,14 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                 const originalSrcSetter = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src')?.set;
                 if (originalSrcSetter) {
                     Object.defineProperty(scriptElement, 'src', {
-                        set (value: string) {
+                        set(value: string) {
                             if (value && value.includes('lovable.dev')) {
                                 console.warn('🚫 Bloqueado script Lovable em desenvolvimento:', value);
                                 return;
                             }
                             originalSrcSetter.call(this, value);
                         },
-                        get () {
+                        get() {
                             return this.getAttribute('src');
                         },
                     });
