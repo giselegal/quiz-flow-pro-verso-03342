@@ -101,37 +101,25 @@ export default defineConfig(({ mode }) => {
       // 🎯 FASE 3 TASK 7: Otimizações de bundle
       // ⚠️ CORREÇÃO TDZ: Usar esbuild em DEV (mais rápido) e terser CONSERVADOR em PROD
       // Terser com configurações conservadoras para evitar "Cannot access 'X' before initialization"
-      minify: isProd ? 'terser' : false, // ✅ SEM minify em DEV para debug
+      minify: isProd ? 'terser' : false, // ✅ Sem minify em DEV
+      // 🔧 Otimização moderada: reduz tamanho mantendo segurança contra TDZ comuns
       terserOptions: isProd ? ({
         compress: {
-          // 🛡️ EXTREMAMENTE conservador para evitar TDZ
-          inline: 0, // ✅ NÃO fazer inline de funções
-          reduce_funcs: false, // ✅ NÃO reduzir funções
-          reduce_vars: false, // ✅ NÃO reduzir variáveis
-          passes: 1, // ✅ Apenas 1 passe
-          sequences: false, // ✅ NÃO combinar statements
-          conditionals: false, // ✅ NÃO otimizar condicionais
-          comparisons: false, // ✅ NÃO otimizar comparações
-          evaluate: false, // ✅ NÃO avaliar expressões constantes
-          booleans: false, // ✅ NÃO otimizar booleanos
-          loops: false, // ✅ NÃO otimizar loops
-          unused: false, // ✅ NÃO remover código não usado (pode quebrar side effects)
-          hoist_funs: false, // ✅ NÃO mover funções para o topo
-          hoist_vars: false, // ✅ NÃO mover vars para o topo
-          if_return: false, // ✅ NÃO otimizar if/return
-          join_vars: false, // ✅ NÃO juntar declarações de var
-          side_effects: false, // ✅ NÃO remover expressões sem efeito aparente
-          warnings: false,
-          drop_console: true, // ✅ Remover apenas console (seguro)
+          inline: 2,            // permitir alguma inlining segura
+          reduce_funcs: true,   // reduzir funções inline simples
+          reduce_vars: true,    // reduzir vars simples
+          passes: 2,            // duas passagens para melhor compressão
+          drop_console: true,   // remover console.*
+          drop_debugger: true,  // remover debugger
+          hoist_funs: false,    // manter para evitar edge-cases
+          hoist_vars: false,
+          // manter side_effects default (true) mas proteger libs sensíveis via moduleSideEffects
         },
         mangle: {
-          keep_fnames: true, // ✅ Preservar nomes de funções
-          keep_classnames: true, // ✅ Preservar nomes de classes
+          keep_fnames: true,      // preservar nomes (debug + SSR safety)
+          keep_classnames: true,
         },
-        format: {
-          comments: false,
-          beautify: false,
-        },
+        format: { comments: false },
       } as any) : undefined,
       target: 'es2020',
       // 🧹 FASE 1: Remove console.* in production builds
@@ -158,12 +146,10 @@ export default defineConfig(({ mode }) => {
         ],
         // ⚠️ Treeshake mais conservador para evitar quebras em vendors (ex.: recharts)
         treeshake: {
-          // Preservar efeitos de módulos externos (node_modules) para não reordenar inicializações internas
-          moduleSideEffects: true,
-          // Preservar possíveis side effects em leituras de propriedades
-          propertyReadSideEffects: true,
-          // Manter deotimização padrão em try/catch
-          tryCatchDeoptimization: true,
+          // Mais agressivo para código próprio; manter efeitos em node_modules especificados caso necessário
+          moduleSideEffects: (id) => /node_modules\/(recharts|@sentry|lucide-react)/.test(id),
+          propertyReadSideEffects: false,
+          tryCatchDeoptimization: false,
         },
         output: {
           // Manter defaults do Vite/Rollup e apenas nomear chunks

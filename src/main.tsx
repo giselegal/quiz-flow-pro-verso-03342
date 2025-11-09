@@ -1,6 +1,20 @@
 //  G47 FIX: Inicializar Sentry ANTES de qualquer outra coisa
+// SENTRY: adiar inicialização para após primeiro paint (evita bloquear bootstrap)
 import { initializeSentry } from '@/config/sentry.config';
-initializeSentry();
+const defer = (fn: () => void) => {
+  if ('requestIdleCallback' in window) {
+    (window as any).requestIdleCallback(fn, { timeout: 2000 });
+  } else {
+    setTimeout(fn, 0);
+  }
+};
+// Marcar para inicializar somente se habilitado e após render inicial
+let sentryInitializedEarly = false;
+if (import.meta.env.PROD && initializeSentry) {
+  // Em produção ainda podemos inicializar cedo se necessário (feature flag futura)
+  sentryInitializedEarly = true;
+  initializeSentry();
+}
 
 // Importar React normalmente
 import React from 'react';
@@ -38,102 +52,99 @@ import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🏗️ Inicializar sistema de schemas
-initializeSchemaRegistry();
-console.log('✅ Schema system initialized');
+// Adiar schema registry para pós-paint (reduz custo de tempo até primeiro render)
+defer(() => {
+  try {
+    initializeSchemaRegistry();
+    console.log('✅ Schema system initialized (deferred)');
+  } catch (e) {
+    console.warn('⚠️ Falha ao inicializar schema registry (deferred):', e);
+  }
+});
 
 // ✅ W3: Validar templates built-ins no bootstrap
 import { validateBuiltInTemplate } from '@/templates/validation/validateAndNormalize';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/imports';
 
-try {
-  const templateData = {
-    metadata: {
-      name: 'Quiz de Estilo 21 Etapas',
-      version: '3.0.0',
-      description: 'Template completo de 21 etapas para quiz de estilo pessoal',
-    },
-    steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
-  };
-
-  const validationResult = validateBuiltInTemplate('quiz21StepsComplete', templateData);
-
-  if (validationResult.success) {
-    console.log('✅ Built-in template "quiz21StepsComplete" validado com sucesso');
-    if (validationResult.warnings && validationResult.warnings.length > 0) {
-      console.warn('⚠️ Built-in template warnings:', validationResult.warnings);
+// Validar template principal em idle (não bloquear interação inicial)
+defer(() => {
+  try {
+    const templateData = {
+      metadata: {
+        name: 'Quiz de Estilo 21 Etapas',
+        version: '3.0.0',
+        description: 'Template completo de 21 etapas para quiz de estilo pessoal',
+      },
+      steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+    };
+    const validationResult = validateBuiltInTemplate('quiz21StepsComplete', templateData);
+    if (validationResult.success) {
+      console.log('✅ Built-in template "quiz21StepsComplete" validado (idle)');
+      if (validationResult.warnings?.length) {
+        console.warn('⚠️ Built-in template warnings:', validationResult.warnings);
+      }
+    } else {
+      console.error('❌ Built-in template "quiz21StepsComplete" inválido:', validationResult.errors);
     }
-  } else {
-    console.error('❌ Built-in template "quiz21StepsComplete" inválido:', validationResult.errors);
+  } catch (error) {
+    console.error('❌ Erro ao validar built-in template (idle):', error);
   }
-} catch (error) {
-  console.error('❌ Erro ao validar built-in template:', error);
-}
+});
 
-try {
-  installLayerDiagnostics();
-} catch (error) {
-  console.warn('[Bootstrap] Falha ao instalar diagnostics de camadas:', error);
-}
+defer(() => {
+  try { installLayerDiagnostics(); } catch (error) {
+    console.warn('[Bootstrap] Falha ao instalar diagnostics de camadas (idle):', error);
+  }
+});
 
 // Pré-carregar schemas críticos para evitar fallback legacy em blocos de resultado
-try {
-  // Resultado (Step 20)
-  SchemaAPI.preload(
-    'result-header',
-    'result-description',
-    'result-image',
-    'result-cta',
-    'result-progress-bars',
-    'result-main',
-    'result-style',
-    'result-characteristics',
-    'result-secondary-styles',
-    'result-cta-primary',
-    'result-cta-secondary',
-    'result-share',
-  );
-  // Perguntas (Steps 02–18)
-  SchemaAPI.preload(
-    'options-grid',
-    'quiz-options',
-    'question-title',
-    'question-text',
-    'question-number',
-    'question-progress',
-    'question-instructions',
-    'question-navigation',
-    'quiz-navigation',
-    'text-inline',
-    'image',
-    'button',
-  );
-  // Intro (Step 01)
-  SchemaAPI.preload(
-    'intro-logo',
-    'intro-title',
-    'intro-image',
-    'intro-description',
-    'intro-form',
-    'intro-logo-header',
-    'quiz-intro-header',
-  );
-  // Transição (Steps 12 & 19)
-  SchemaAPI.preload(
-    'transition-title',
-    'transition-text',
-    'transition-loader',
-    'transition-progress',
-    'transition-message',
-  );
-  // Oferta (Step 21)
-  SchemaAPI.preload(
-    'offer-hero',
-    'pricing',
-    'benefits',
-    'guarantee',
-    'urgency-timer-inline',
-  );
-} catch { /* ignore preload errors in dev */ }
+defer(() => {
+  try {
+    SchemaAPI.preload(
+      'result-header',
+      'result-description',
+      'result-image',
+      'result-cta',
+      'result-progress-bars',
+      'result-main',
+      'result-style',
+      'result-characteristics',
+      'result-secondary-styles',
+      'result-cta-primary',
+      'result-cta-secondary',
+      'result-share',
+      'options-grid',
+      'quiz-options',
+      'question-title',
+      'question-text',
+      'question-number',
+      'question-progress',
+      'question-instructions',
+      'question-navigation',
+      'quiz-navigation',
+      'text-inline',
+      'image',
+      'button',
+      'intro-logo',
+      'intro-title',
+      'intro-image',
+      'intro-description',
+      'intro-form',
+      'intro-logo-header',
+      'quiz-intro-header',
+      'transition-title',
+      'transition-text',
+      'transition-loader',
+      'transition-progress',
+      'transition-message',
+      'offer-hero',
+      'pricing',
+      'benefits',
+      'guarantee',
+      'urgency-timer-inline'
+    );
+  } catch { /* ignore preload errors in dev */ }
+});
 
 // 🧹 FASE 1: Emergency localStorage cleanup on startup if quota exceeded
 if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
@@ -362,7 +373,12 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 // O serviço é inicializado automaticamente na importação
 
 // 🔍 SENTRY: Inicializar antes do React
-initSentry();
+// Se não inicializou cedo, inicializar em idle (dev ou quando flag habilitar)
+if (!sentryInitializedEarly) {
+  defer(() => {
+    try { initSentry(); } catch (e) { console.warn('⚠️ Falha initSentry (idle):', e); }
+  });
+}
 
 console.log('🔧 DEBUG: Criando root do React...');
 // Instalar guards de depreciação (alert/unload)
