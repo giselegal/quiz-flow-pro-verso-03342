@@ -5,66 +5,8 @@ import './react-preload';
 import { initializeSentry } from '@/config/sentry.config';
 initializeSentry();
 
-// Agora importar React normalmente (já está global)
+// Agora importar React normalmente (já está global via react-preload)
 import React from 'react';
-import ReactDOM from 'react-dom';
-
-// 🔧 POLYFILLS GLOBAIS PARA REACT APIs
-// Deve ser aplicado ANTES de qualquer bundle de vendor ser carregado
-if (typeof window !== 'undefined') {
-  // Criar polyfill robusto para forwardRef
-  const safeForwardRef = (render: any) => {
-    if (!render) return () => null;
-    const Component: any = (props: any, ref: any) => {
-      try {
-        return render(props, ref);
-      } catch (e) {
-        console.error('Error in forwardRef component:', e);
-        return null;
-      }
-    };
-    Component.displayName = render.displayName || render.name || 'ForwardRef';
-    Component.$$typeof = Symbol.for('react.forward_ref');
-    return Component;
-  };
-
-  // Garantir React global para todos os vendors
-  (window as any).React = React;
-  (window as any).ReactDOM = ReactDOM;
-
-  // Aplicar polyfills completos para APIs que podem estar ausentes
-  const reactGlobalPolyfills = {
-    useLayoutEffect: React.useLayoutEffect || React.useEffect,
-    forwardRef: React.forwardRef || safeForwardRef,
-    createRef: React.createRef || (() => ({ current: null })),
-    memo: React.memo || ((component: any) => component),
-    useMemo: React.useMemo || ((factory: any, deps?: any) => factory()),
-    useCallback: React.useCallback || ((callback: any, deps?: any) => callback),
-    useImperativeHandle: React.useImperativeHandle || (() => { }),
-    Fragment: React.Fragment || ((props: any) => props.children),
-    StrictMode: React.StrictMode || ((props: any) => props.children),
-    Suspense: React.Suspense || ((props: any) => props.children || props.fallback || null)
-  };
-
-  // Aplicar patches no React global para vendor bundles
-  Object.assign(React, reactGlobalPolyfills);
-
-  // Garantir que window.React tenha todos os polyfills
-  (window as any).React = { ...React, ...reactGlobalPolyfills };
-
-  // CRÍTICO: Verificar se forwardRef está disponível
-  if (!React.forwardRef) {
-    console.error('❌ React.forwardRef não está disponível! Aplicando polyfill de emergência...');
-    (React as any).forwardRef = reactGlobalPolyfills.forwardRef;
-  }
-
-  console.log('🔧 [main.tsx] Polyfills React aplicados globalmente', {
-    hasForwardRef: !!React.forwardRef,
-    hasWindow: typeof window !== 'undefined',
-    windowReact: !!(window as any).React,
-  });
-}
-
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import ClientLayout from './components/ClientLayout';

@@ -1,48 +1,48 @@
-// 🛡️ REACT GLOBAL PRELOAD - CRITICAL
+// 🛡️ REACT GLOBAL PRELOAD - CRITICAL FIX
 // Este arquivo DEVE ser carregado ANTES de qualquer outro módulo
-// Garante que React esteja disponível globalmente para todos os vendors
+// Garante que React esteja disponível globalmente para evitar erros de "exports undefined"
 
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 
-// Expor React globalmente IMEDIATAMENTE
+// 🔧 FIX: Expor React globalmente ANTES de qualquer vendor bundle tentar acessá-lo
 if (typeof window !== 'undefined') {
-  // Criar stubs mínimos ANTES de qualquer vendor tocar em React
-  const safeForwardRef = (render: any) => {
-    // Mantém assinatura aproximada; ignora ref forwarding real se indisponível
-    const Component = (props: any, ref: any) => render(props, ref);
-    Component.displayName = render.displayName || render.name || 'ForwardRefStub';
-    return Component;
-  };
-
-  // Garantir APIs críticas (forwardRef era a que estourava em vendor)
-  // Não sobrescrever bindings de import (imutáveis em ESBuild). Criar shim separado.
-  const reactShim: any = {
+  // Garantir que React está disponível em múltiplos formatos para compatibilidade
+  const reactModule = {
     ...React,
-    forwardRef: (React as any).forwardRef || safeForwardRef,
-    createRef: (React as any).createRef || (() => ({ current: null })),
-    memo: (React as any).memo || ((c: any) => c),
+    default: React,
+    __esModule: true,
   };
 
-  // Expor múltiplos aliases porque alguns bundles minificados procuram variantes
-  // Expor shim como React global para vendors minificados que acessam via window.React.forwardRef
-  (window as any).React = reactShim;
+  // Expor React em todos os formatos possíveis que vendors minificados podem procurar
+  (window as any).React = reactModule;
   (window as any).ReactDOM = ReactDOM;
-  (window as any).React__default = reactShim;        // comum em output ESM convertido
-  (window as any).ReactDefault = reactShim;          // fallback adicional
-  try { (globalThis as any).React = reactShim; } catch { /* ignore */ }
 
-  // Flag para outros módulos saberem que preload já rodou
+  // 🔧 FIX: Criar objeto "exports" que vendors CommonJS minificados esperam encontrar
+  if (!(window as any).exports) {
+    (window as any).exports = {};
+  }
+  (window as any).exports.React = reactModule;
+  (window as any).exports.default = reactModule;
+
+  // Garantir que module.exports também existe
+  if (!(window as any).module) {
+    (window as any).module = { exports: {} };
+  }
+  (window as any).module.exports = reactModule;
+  (window as any).module.exports.default = reactModule;
+
+  // Flag para indicar que preload está completo
   (window as any).__REACT_PRELOAD_READY__ = true;
 
-  console.log('✅ [react-preload] React shim global criado', {
-    hasForwardRef: !!reactShim.forwardRef,
-    hasMemo: !!reactShim.memo,
-    hasCreateRef: !!reactShim.createRef,
-    aliases: ['React', 'React__default', 'ReactDefault'],
-    shim: true,
+  console.log('✅ [react-preload] React módulo global configurado', {
+    hasReact: !!window.React,
+    hasExports: !!(window as any).exports,
+    hasModuleExports: !!(window as any).module?.exports,
+    reactVersion: React.version,
   });
 }
 
-// Re-exportar para que main.tsx possa importar normalmente
+// Re-exportar para importações normais
+export default React;
 export { React, ReactDOM };
