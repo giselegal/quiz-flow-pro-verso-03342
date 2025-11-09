@@ -17,7 +17,8 @@ import {
     MoveUp, MoveDown, Sparkles,
 } from 'lucide-react';
 import { blocksRegistry, type PropSchema, type PropKind } from '@/core/blocks/registry';
-import { debounce } from 'lodash';
+// 🚀 FASE 2: Usar lodash-es para tree-shaking
+import debounce from 'lodash-es/debounce';
 
 interface RegistryPropertiesPanelProps {
     selectedBlock: any;

@@ -1279,6 +1279,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 }
 
 /**
+ * 🚀 FASE 2: Memoize inner component para evitar re-renders desnecessários
+ */
+const MemoizedQuizModularEditorInner = React.memo(QuizModularEditorInner);
+
+/**
  * Default export wraps inner component with EditorLoadingProvider so useEditorLoading()
  * inside QuizModularEditorInner is always safe.
  */
@@ -1287,7 +1292,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
         <EditorLoadingProvider>
             <div data-testid="modular-layout" className="h-full w-full">
                 <Suspense fallback={<div />}>
-                    <QuizModularEditorInner {...props} />
+                    <MemoizedQuizModularEditorInner {...props} />
                 </Suspense>
             </div>
         </EditorLoadingProvider>

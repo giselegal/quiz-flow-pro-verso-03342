@@ -98,6 +98,23 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       cssMinify: 'lightningcss',
       cssCodeSplit: true,
+      // 🚀 FASE 2: Otimizações de build
+      target: 'es2020',
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: isProd, // Remove console.* em produção
+          drop_debugger: isProd,
+          pure_funcs: isProd ? ['console.log', 'console.info', 'console.debug'] : [],
+        },
+        format: {
+          comments: false, // Remove comentários
+        },
+      },
+      // Aumentar limite de aviso de chunk size (default: 500kb)
+      chunkSizeWarningLimit: 1000,
+      // Reportar tamanhos comprimidos
+      reportCompressedSize: true,
       // 🎯 FASE 3 TASK 7: Otimizações de bundle
       // ⚠️ CORREÇÃO TDZ: Usar esbuild em DEV (mais rápido) e terser CONSERVADOR em PROD
       // Terser com configurações conservadoras para evitar "Cannot access 'X' before initialization"
@@ -154,28 +171,59 @@ export default defineConfig(({ mode }) => {
         output: {
           // Manter defaults do Vite/Rollup e apenas nomear chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // Estratégia inicial de separação de chunks pesados para reduzir impacto no bundle principal.
-          // Mantém número de chunks controlado e foca em cargas opcionais (a11y, logger, editor pesado).
+          // 🚀 FASE 2: Estratégia otimizada de code splitting
+          // Separação inteligente de chunks para melhor performance e cache
           manualChunks(id) {
-            // Vendor / libs externas grandes
+            // ===== VENDORS EXTERNOS =====
+            // A11y (carregamento sob demanda)
             if (id.includes('node_modules/axe-core')) return 'a11y';
             if (id.includes('node_modules/@axe-core/react')) return 'a11y-react';
+            
+            // Cache lib
             if (id.includes('node_modules/lru-cache')) return 'cache-lib';
+            
+            // Lodash (tree-shakeable)
+            if (id.includes('node_modules/lodash')) return 'lodash';
 
-            // Radix UI agrupado (evitar múltiplos pequenos chunks se usado amplamente)
+            // Radix UI (UI components - cacheável)
             if (id.includes('node_modules/@radix-ui')) return 'radix-ui';
+            
+            // Lucide icons (cacheável, usado em múltiplas páginas)
+            if (id.includes('node_modules/lucide-react')) return 'icons';
 
-            // Logging system (todos arquivos internos de logging)
-            if (id.includes('/src/utils/logging/')) return 'logger-core';
+            // Wouter (router - crítico mas pequeno)
+            if (id.includes('node_modules/wouter')) return 'router';
+            
+            // Form libs (react-hook-form + zod)
+            if (id.includes('node_modules/react-hook-form') || 
+                id.includes('node_modules/@hookform') ||
+                id.includes('node_modules/zod')) return 'forms';
 
-            // Editor específico (dnd-kit / craft) caso presentes
+            // ===== EDITOR ESPECÍFICO =====
+            // DND Kit (editor drag-and-drop)
             if (id.includes('node_modules/@dnd-kit')) return 'editor-dnd';
+            
+            // Craft.js (editor visual)
             if (id.includes('node_modules/craftjs') || id.includes('node_modules/@craftjs')) return 'editor-craft';
 
-            // React e núcleo mantidos no vendor principal para não fragmentar demais
-            if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'react-vendor';
+            // ===== ANALYTICS (lazy) =====
+            if (id.includes('node_modules/recharts')) return 'analytics-charts';
+            if (id.includes('/src/components/analytics/')) return 'analytics-components';
 
-            // Fallback: deixar split padrão do Vite para outros módulos
+            // ===== CÓDIGO INTERNO =====
+            // Logging system (ferramentas de debug)
+            if (id.includes('/src/lib/utils/logging/')) return 'logger-core';
+            
+            // Admin routes (lazy loading)
+            if (id.includes('/src/pages/admin/') || 
+                id.includes('/src/components/admin/')) return 'admin';
+
+            // ===== REACT CORE =====
+            // React e ReactDOM juntos para evitar duplicação
+            if (id.includes('node_modules/react') || 
+                id.includes('node_modules/react-dom')) return 'react-vendor';
+
+            // Fallback: split automático do Vite
           },
         },
       },
