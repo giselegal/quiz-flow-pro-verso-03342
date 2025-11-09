@@ -223,7 +223,7 @@ function AppCore() {
                                     {/* 🎓 DEMO DO SISTEMA DE TEMPLATES */}
                                     <Route path="/demo/templates">
                                         <Suspense fallback={<PageLoadingFallback message="Carregando demo..." />}>
-                                            {React.createElement(lazy(() => import('./examples/TemplateSystemDemo')))}
+                                            {React.createElement(lazy(() => import('./docs/examples/TemplateSystemDemo')))}
                                         </Suspense>
                                     </Route>
 

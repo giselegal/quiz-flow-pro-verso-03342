@@ -41,7 +41,7 @@ export default async function runTemplateDiagnostic(): Promise<TemplateDiagnosti
 
     try {
         // Dynamic import para evitar bundle bloat
-        const templateModule = await import('../templates/quiz21StepsComplete');
+        const templateModule = await import('../../templates/quiz21StepsComplete');
         const QUIZ_STYLE_21_STEPS_TEMPLATE = templateModule.QUIZ_STYLE_21_STEPS_TEMPLATE;
 
         if (QUIZ_STYLE_21_STEPS_TEMPLATE) {

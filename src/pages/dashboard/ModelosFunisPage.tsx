@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+// import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import {
   Search,
   Filter,
@@ -65,8 +65,8 @@ const ModelosFunisPage: React.FC = () => {
         console.log('📋 Carregando modelos de funis...');
 
         // Carregar dados reais
-        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
-        setRealTimeMetrics(metrics);
+        // const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        // setRealTimeMetrics(metrics);
 
         // Converter templates para modelos
         const funnelModels: FunnelModel[] = AVAILABLE_TEMPLATES.map(template => ({

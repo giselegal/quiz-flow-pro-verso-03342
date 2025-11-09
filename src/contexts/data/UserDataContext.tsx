@@ -6,7 +6,7 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from '../../integrations/supabase/client';
+import { supabase } from '../../services/integrations/supabase/client';
 import { QuizUser, QuizSession, InsertQuizUser, InsertQuizSession } from '../../types/unified-schema';
 import { StorageService } from '@/services/core/StorageService';
 
