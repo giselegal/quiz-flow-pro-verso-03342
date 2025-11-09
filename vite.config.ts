@@ -15,6 +15,8 @@ export default defineConfig(({ mode }) => {
   return {
     base: '/',
     envPrefix: 'VITE_',
+    // 🔧 FIX: Forçar modo ESM para evitar problemas com CommonJS
+    mode: mode,
     plugins: [
       react({
         // 🔧 FIX: Configuração aprimorada para resolver problemas de módulo React
@@ -164,6 +166,8 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: true,
         },
         output: {
+          // 🔧 FIX: Forçar formato ESM
+          format: 'es',
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
           // 🚀 CODE SPLITTING MAIS GRANULAR
