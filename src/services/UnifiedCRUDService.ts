@@ -160,14 +160,14 @@ export class UnifiedCRUDService {
         Object.entries(parsed).forEach(([id, funnelData]) => {
           this.funnels.set(id, this.validateAndNormalizeFunnel(funnelData as any));
         });
-        console.log(`📥 ${this.funnels.size} funis carregados do localStorage`);
+        logger.info('Funis carregados do localStorage', { count: this.funnels.size });
       }
 
       // Integração com Supabase para dados remotos
       await this.loadFromSupabase();
 
     } catch (error) {
-      console.warn('⚠️ Erro ao carregar dados persistidos:', error);
+      logger.warn('Erro ao carregar dados persistidos', { error });
     }
   }
 
