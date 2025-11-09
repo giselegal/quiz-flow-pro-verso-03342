@@ -26,7 +26,12 @@ export default defineConfig(({ mode }) => {
           parserOpts: {
             plugins: ['jsx', 'typescript'],
           },
+          compact: false, // Não compactar - ajuda debug
+          retainLines: mode !== 'production', // Manter linhas em dev
         },
+        // Garantir que React seja sempre incluído
+        include: /\.(jsx|tsx|js|ts)$/,
+        exclude: /node_modules\/(?!(@radix-ui|lucide-react))/,
       }),
       visualizer({
         open: false,
@@ -192,12 +197,16 @@ export default defineConfig(({ mode }) => {
       },
     },
     optimizeDeps: {
+      // 🔧 FIX: Força pre-bundling de React para evitar problemas de módulo undefined
+      force: mode === 'development', // Forçar rebuild em dev quando necessário
       include: [
         'react',
         'react-dom',
         'react/jsx-runtime',
+        'react/jsx-dev-runtime',
         'react-dom/client',
         'react-is',
+        'scheduler',
         'scheduler',
         'prop-types',
         'object-assign',
