@@ -22,6 +22,12 @@ export function scanDirectory(dir, extensions = ['.ts', '.tsx', '.js', '.jsx']) 
     
     for (const item of items) {
       const fullPath = path.join(currentDir, item);
+      
+      // Verificar se o arquivo/diretório existe (pular links simbólicos quebrados)
+      if (!fs.existsSync(fullPath)) {
+        continue;
+      }
+      
       const stat = fs.statSync(fullPath);
       
       // Ignorar node_modules, dist, build, etc.
