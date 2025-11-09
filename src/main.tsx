@@ -1,6 +1,11 @@
 // 🛡️ CRITICAL: Importar React Preload PRIMEIRO ANTES DE TUDO
 import './react-preload';
 
+// ⚠️ AGUARDAR preload estar completo antes de continuar
+if (typeof window !== 'undefined' && !(window as any).__REACT_PRELOAD_READY__) {
+  throw new Error('React preload não foi completado! Verifique a ordem de importação.');
+}
+
 // 🔍 G47 FIX: Inicializar Sentry ANTES de qualquer outra coisa
 import { initializeSentry } from '@/config/sentry.config';
 initializeSentry();
