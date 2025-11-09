@@ -33,7 +33,7 @@ import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallba
 import { PageLoadingFallback } from './components/LoadingSpinner';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
-import { loadTemplateOverrides } from '@/bootstrap/loadTemplateOverrides';
+import { loadTemplateOverrides } from '@/config/bootstrap/loadTemplateOverrides';
 // ✅ CORREÇÃO 1: Carregar schemas na raiz da aplicação
 import { loadDefaultSchemas } from '@/core/schema/loadDefaultSchemas';
 // 🚀 FASE 3.5: PWA Notifications
