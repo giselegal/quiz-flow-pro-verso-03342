@@ -169,24 +169,23 @@ export default defineConfig(({ mode }) => {
           // 🚀 CODE SPLITTING MAIS GRANULAR
           // Separação por domínios para reduzir o payload inicial e melhorar cache
           manualChunks: (id) => {
-            // Evitar separar recharts em DEV para mitigar ReferenceError (TDZ) em chunk isolado
             const isDev = mode !== 'production';
 
             if (id.includes('node_modules')) {
-              // SOLUÇÃO DEFINITIVA: NÃO separar React em chunks diferentes
-              // React, ReactDOM, UI components (Radix) E DND-KIT vão TODOS para o MESMO chunk
-              // Isto garante que React esteja disponível quando qualquer lib tentar usar React hooks
-              if (id.includes('/react/') || id.includes('/react-dom/') ||
-                id.includes('/scheduler/') || id.includes('/react-is/') ||
-                id.includes('@radix-ui') || id.includes('lucide-react') ||
+              // 🔧 CRITICAL: Incluir use-sync-external-store junto com React
+              if (id.includes('/react') ||
+                id.includes('/scheduler') ||
+                id.includes('use-sync-external-store') ||
+                id.includes('@radix-ui') ||
+                id.includes('lucide-react') ||
                 id.includes('@dnd-kit') ||
-                id.includes('class-variance-authority')) { // ✅ Incluir cva no vendor principal
-                return 'vendor'; // TUDO no mesmo chunk - sem problemas de ordem
+                id.includes('class-variance-authority')) {
+                return 'vendor'; // Tudo junto no mesmo chunk
               }
 
               if (!isDev && id.includes('recharts')) return 'charts-vendor';
 
-              // Outros node_modules vão para vendor genérico
+              // Outros node_modules
               return 'vendor-misc';
             }
 
@@ -197,8 +196,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     optimizeDeps: {
-      // 🔧 FIX: Não forçar re-otimização em toda inicialização (apenas quando necessário)
-      force: false,
+      // 🔧 FIX: Forçar otimização para resolver problemas de módulos
+      force: true,
       include: [
         'react',
         'react-dom',
@@ -209,6 +208,8 @@ export default defineConfig(({ mode }) => {
         'scheduler',
         'prop-types',
         'object-assign',
+        'use-sync-external-store/shim',
+        'use-sync-external-store/shim/with-selector',
         'wouter',
         // Incluir APIs críticas que podem causar problemas se não pré-bundladas
         '@radix-ui/react-slot',
