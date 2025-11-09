@@ -153,7 +153,9 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
             navigator.sendBeacon = function (url: string | URL, data?: BodyInit | null) {
                 const urlString = typeof url === 'string' ? url : url.toString();
                 if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
-                    console.warn('🚫 Bloqueado sendBeacon para Lovable em desenvolvimento:', urlString);
+                    if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
+                        console.warn('🚫 Bloqueado sendBeacon para Lovable em desenvolvimento:', urlString);
+                    }
                     return true;
                 }
                 return originalSendBeacon(url, data);
@@ -171,7 +173,9 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                     Object.defineProperty(scriptElement, 'src', {
                         set(value: string) {
                             if (value && value.includes('lovable.dev')) {
-                                console.warn('🚫 Bloqueado script Lovable em desenvolvimento:', value);
+                                if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
+                                    console.warn('🚫 Bloqueado script Lovable em desenvolvimento:', value);
+                                }
                                 return;
                             }
                             originalSrcSetter.call(this, value);
