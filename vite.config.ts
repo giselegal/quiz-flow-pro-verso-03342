@@ -17,11 +17,15 @@ export default defineConfig(({ mode }) => {
     envPrefix: 'VITE_',
     plugins: [
       react({
-        // Configuração explícita para evitar problemas com forwardRef
+        // 🔧 FIX: Configuração aprimorada para resolver problemas de módulo React
         jsxRuntime: 'automatic',
         jsxImportSource: 'react',
         babel: {
           plugins: [],
+          // Preservar order de importações
+          parserOpts: {
+            plugins: ['jsx', 'typescript'],
+          },
         },
       }),
       visualizer({
@@ -36,11 +40,15 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
         '@templates': path.resolve(__dirname, './src/templates'),
-        // CRÍTICO: Garantir que React seja sempre resolvido do mesmo lugar
+        // 🔧 FIX: Garantir que React seja sempre resolvido do mesmo lugar
         'react': path.resolve(__dirname, './node_modules/react'),
         'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+        'react/jsx-runtime': path.resolve(__dirname, './node_modules/react/jsx-runtime'),
+        'react/jsx-dev-runtime': path.resolve(__dirname, './node_modules/react/jsx-dev-runtime'),
       },
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
+      // 🔧 FIX: Extensões de arquivo explícitas
+      extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
     },
     server: {
       host: '0.0.0.0',
