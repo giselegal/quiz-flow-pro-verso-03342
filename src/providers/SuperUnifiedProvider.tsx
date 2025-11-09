@@ -623,6 +623,51 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, []); // Executar apenas no mount
 
+    // 🆕 G4 FIX: Listener para sincronização entre tabs via BroadcastChannel
+    useEffect(() => {
+        if (typeof BroadcastChannel === 'undefined' || typeof window === 'undefined') return;
+
+        const channel = new BroadcastChannel('quiz-editor-sync');
+
+        const handleMessage = async (event: MessageEvent) => {
+            if (event.data?.type === 'STEP_UPDATED') {
+                const { funnelId, stepId, stepIndex } = event.data.payload;
+
+                // Só recarregar se for do funil atual
+                if (funnelId === state.currentFunnel?.id) {
+                    try {
+                        // Invalidar cache local e recarregar blocos
+                        await hierarchicalTemplateSource.invalidate(stepId, funnelId);
+
+                        // Recarregar blocos do step atualizado
+                        const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
+                        if (result?.data) {
+                            dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex, blocks: result.data } });
+                            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
+
+                            if (debugMode) {
+                                console.log(`📡 [G4] Step ${stepIndex} sincronizado de outra tab`);
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('[G4] Erro ao sincronizar step:', error);
+                    }
+                }
+            }
+        };
+
+        channel.addEventListener('message', handleMessage);
+
+        if (debugMode) {
+            console.log('📡 [G4] BroadcastChannel iniciado para sincronização entre tabs');
+        }
+
+        return () => {
+            channel.removeEventListener('message', handleMessage);
+            channel.close();
+        };
+    }, [state.currentFunnel?.id, debugMode]); // Reagir apenas a mudanças no funnel ativo
+
     // 🎯 Funnel Operations
     const loadFunnels = useCallback(async () => {
         dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: true, message: 'Carregando funis...' } });
@@ -934,6 +979,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [state.editor.stepBlocks]);
 
     // 💾 Persistência por etapa (USER_EDIT → Supabase funnels.config.steps[stepId])
+    // 🆕 G4 FIX: Invalidação coordenada de cache L1/L2 + Broadcast entre tabs
     const saveStepBlocks = useCallback(async (stepIndex: number) => {
         const funnel = state.currentFunnel;
         if (!funnel?.id) return; // sem funil ativo, não persiste
@@ -941,8 +987,30 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
         const blocks = state.editor.stepBlocks[stepIndex] || [];
         try {
+            // 1️⃣ Salvar no Supabase (fonte primária USER_EDIT)
             await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnel.id);
+
+            // 2️⃣ G4: Invalidar cache L1 (Memory) + L2 (IndexedDB) via método unificado
+            await hierarchicalTemplateSource.invalidate(stepId, funnel.id);
+            if (debugMode) console.log(`🗑️ [G4] Cache L1+L2 invalidado: ${stepId}`)
+
+            // 4️⃣ G4: Broadcast para outras tabs (sincronização entre abas)
+            try {
+                if (typeof BroadcastChannel !== 'undefined') {
+                    const channel = new BroadcastChannel('quiz-editor-sync');
+                    channel.postMessage({
+                        type: 'STEP_UPDATED',
+                        payload: { funnelId: funnel.id, stepId, stepIndex, timestamp: Date.now() }
+                    });
+                    channel.close();
+                    if (debugMode) console.log(`📡 [G4] Broadcast enviado: ${stepId}`);
+                }
+            } catch (e) {
+                console.warn('[G4] Erro ao fazer broadcast:', e);
+            }
+
             dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
+            if (debugMode) console.log(`✅ [G4] ${stepId} salvo com invalidação coordenada`);
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'step-save', error: error?.message || String(error) } });
             throw error;
