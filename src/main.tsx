@@ -429,7 +429,7 @@ try {
 }
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
-    <Suspense fallback={<div data-testid="boot-splash" />}> 
+    <Suspense fallback={<div data-testid="boot-splash" />}>
       <LazyApp />
     </Suspense>
   </ClientLayout>,
