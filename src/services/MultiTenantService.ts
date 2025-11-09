@@ -3,6 +3,8 @@
  * ROI Projetado: $8k-20k/mês
  */
 
+import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+
 export interface TenantConfig {
   id: string;
   name: string;
@@ -44,7 +46,7 @@ export class MultiTenantService {
   // 🏢 GESTÃO DE TENANTS
   async createTenant(config: Omit<TenantConfig, 'id'>): Promise<TenantConfig> {
     const tenant: TenantConfig = {
-      id: `tenant-${Date.now()}`,
+      id: `tenant-${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
       ...config,
     };
 
