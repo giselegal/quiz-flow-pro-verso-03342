@@ -1,6 +1,6 @@
 // @ts-nocheck
 // Facebook Pixel utility functions
-import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from '../services/pixelManager';
+import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from '@/services/pixelManager';
 
 // Use the same type definition as in global.d.ts
 declare global {

@@ -7,7 +7,7 @@
  */
 
 // APLICAR POLYFILLS PRIMEIRO
-import '@/utils/reactPolyfills';
+import '@/lib/utils/reactPolyfills';
 import React, { Suspense } from 'react';
 
 // CORREÇÃO GLOBAL ROBUSTA para React APIs

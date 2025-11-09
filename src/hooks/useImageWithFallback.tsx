@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { imageCache } from '../utils/imageCache';
+import { imageCache } from '@/lib/utils/imageCache';
 
 interface UseImageWithFallbackOptions {
     width?: number;

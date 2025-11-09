@@ -1,5 +1,5 @@
 import { QuizResult, StyleType } from '@/types/quiz';
-import { trackPixelEvent } from '../utils/facebookPixel';
+import { trackPixelEvent } from '@/lib/utils/facebookPixel';
 import { StorageService } from '@/services/core/StorageService';
 
 export interface QuizSession {
