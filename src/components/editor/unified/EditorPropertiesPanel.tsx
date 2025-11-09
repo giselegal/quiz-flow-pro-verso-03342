@@ -23,6 +23,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { validateBlockData } from '@/hooks/usePropertyValidation';
 import {
   ChevronDown,
   ChevronRight,
@@ -38,6 +39,7 @@ import {
   Settings,
   Trash2,
   Type,
+  AlertCircle,
 } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 
@@ -105,6 +107,9 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
 
   // Estado local para valores temporários (antes de salvar)
   const [tempValues, setTempValues] = useState<Record<string, any>>({});
+
+  // 🛡️ G26 + G11: Estado de validação
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Propriedades padrão baseadas no tipo de bloco
   const defaultProperties = useMemo((): PropertyConfig[] => {
@@ -374,61 +379,111 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
   const renderPropertyField = (property: PropertyConfig) => {
     const value = getPropertyValue(property);
     const hasChanges = tempValues[property.key] !== undefined;
+    const error = validationErrors[property.key];
 
     // 🆕 G25 FIX: Optimistic Updates - aplica mudanças imediatamente
+    // 🛡️ G26 + G11 FIX: Validação em tempo real
     const updateValue = (newValue: any) => {
       updateTempValue(property, newValue);
 
-      // Optimistic update: aplica imediatamente no bloco
-      if (selectedBlock) {
-        const keys = property.key.split('.');
-        const updates: any = {};
-        let current = updates;
+      // G26: Validação em tempo real
+      const validationResult = validateBlockData([property], { [property.key]: newValue });
 
-        for (let i = 0; i < keys.length - 1; i++) {
-          current[keys[i]] = {};
-          current = current[keys[i]];
+      if (!validationResult.success) {
+        setValidationErrors(prev => ({
+          ...prev,
+          [property.key]: validationResult.errors[0]?.message || 'Valor inválido',
+        }));
+      } else {
+        // Limpa erro se validação passou
+        setValidationErrors(prev => {
+          const { [property.key]: _, ...rest } = prev;
+          return rest;
+        });
+
+        // Optimistic update: aplica imediatamente no bloco
+        if (selectedBlock) {
+          const keys = property.key.split('.');
+          const updates: any = {};
+          let current = updates;
+
+          for (let i = 0; i < keys.length - 1; i++) {
+            current[keys[i]] = {};
+            current = current[keys[i]];
+          }
+          current[keys[keys.length - 1]] = newValue;
+
+          onBlockUpdate(selectedBlock.id, updates);
         }
-        current[keys[keys.length - 1]] = newValue;
-
-        onBlockUpdate(selectedBlock.id, updates);
       }
     };
 
     switch (property.type) {
       case 'text':
         return (
-          <Input
-            value={value || ''}
-            onChange={e => updateValue(e.target.value)}
-            placeholder={property.label}
-            className={cn(hasChanges && 'border-blue-500')}
-          />
+          <div className="space-y-1">
+            <Input
+              value={value || ''}
+              onChange={e => updateValue(e.target.value)}
+              placeholder={property.label}
+              className={cn(
+                hasChanges && !error && 'border-blue-500',
+                error && 'border-red-500 focus-visible:ring-red-500'
+              )}
+            />
+            {error && (
+              <div className="flex items-center gap-1 text-xs text-red-600">
+                <AlertCircle className="h-3 w-3" />
+                <span>{error}</span>
+              </div>
+            )}
+          </div>
         );
 
       case 'textarea':
         return (
-          <Textarea
-            value={value || ''}
-            onChange={e => updateValue(e.target.value)}
-            placeholder={property.label}
-            className={cn('min-h-[80px]', hasChanges && 'border-blue-500')}
-          />
+          <div className="space-y-1">
+            <Textarea
+              value={value || ''}
+              onChange={e => updateValue(e.target.value)}
+              placeholder={property.label}
+              className={cn(
+                'min-h-[80px]',
+                hasChanges && !error && 'border-blue-500',
+                error && 'border-red-500 focus-visible:ring-red-500'
+              )}
+            />
+            {error && (
+              <div className="flex items-center gap-1 text-xs text-red-600">
+                <AlertCircle className="h-3 w-3" />
+                <span>{error}</span>
+              </div>
+            )}
+          </div>
         );
 
       case 'number':
         return (
-          <Input
-            type="number"
-            value={value || ''}
-            onChange={e => updateValue(Number(e.target.value))}
-            min={property.validation?.min}
-            max={property.validation?.max}
-            className={cn(hasChanges && 'border-blue-500')}
-          />
-        );
-
-      case 'select':
+          <div className="space-y-1">
+            <Input
+              type="number"
+              value={value || ''}
+              onChange={e => updateValue(Number(e.target.value))}
+              min={property.validation?.min}
+              max={property.validation?.max}
+              className={cn(
+                hasChanges && !error && 'border-blue-500',
+                error && 'border-red-500 focus-visible:ring-red-500'
+              )}
+            />
+            {error && (
+              <div className="flex items-center gap-1 text-xs text-red-600">
+                <AlertCircle className="h-3 w-3" />
+                <span>{error}</span>
+              </div>
+            )}
+          </div>
+        ); case 'select':
         return (
           <Select value={value || ''} onValueChange={updateValue}>
             <SelectTrigger className={cn(hasChanges && 'border-blue-500')}>
