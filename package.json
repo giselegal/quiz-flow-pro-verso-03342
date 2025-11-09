@@ -15,6 +15,8 @@
     "db:apply-remote:with-rls": "bash scripts/sql/apply-remote.sh --with-rls",
     "migrate:template-keys": "node scripts/migrate-templates-rename-keys.js",
     "migrate:options": "node scripts/migrate-options-blocks.mjs",
+    "migrate:providers": "node scripts/migrate-providers.js",
+    "migrate:services": "node scripts/migrate-services.js",
     "checklist": "node scripts/gerenciar-checklist.js",
     "verificar": "node scripts/verificador-21-etapas.mjs",
     "analisar-etapas": "node scripts/analisador-etapas.mjs",
