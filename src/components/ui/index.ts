@@ -6,8 +6,8 @@
 
 // Loading components
 export { LoadingSpinner } from './loading-spinner';
-export { default as LoadingFallback } from './loading-fallback';
-export { default as EnhancedLoadingFallback } from './enhanced-loading-fallback';
+export { LoadingFallback } from './loading-fallback';
+export { EnhancedLoadingFallback } from './enhanced-loading-fallback';
 
 // Error components
 export { ErrorMessage } from './error-message';
@@ -59,17 +59,17 @@ export { HoverCard } from './hover-card';
 
 // Image components
 export { OptimizedImage } from './optimized-image';
-export { ProgressiveImage } from './progressive-image';
+export { default as ProgressiveImage } from './progressive-image';
 
 // Brand components
-export { BrandHeader } from './BrandHeader';
-export { QuizFlowLogo } from './QuizFlowLogo';
+export { default as BrandHeader } from './BrandHeader';
+export { default as QuizFlowLogo } from './QuizFlowLogo';
 
 // Specialized components
 export { ColorPicker } from './ColorPicker';
 export { ImageUploader } from './ImageUploader';
 export { ValidationFeedback } from './ValidationFeedback';
 export { PropertyGroup } from './PropertyGroup';
-export { GoldButton } from './GoldButton';
+export { default as GoldButton } from './GoldButton';
 export { CountdownTimer } from './countdown-timer';
 export { LimitedStockIndicator } from './limited-stock-indicator';
