@@ -31,8 +31,8 @@ export { InteractivePreviewEngine } from './InteractivePreviewEngine';
 export type { InteractivePreviewEngineProps } from './InteractivePreviewEngine';
 
 // 🗄️ SERVIÇOS DE CACHE
-export { templatesCacheService } from '@/services/TemplatesCacheService';
-export type { CacheConfig, CacheStats } from '@/services/TemplatesCacheService';
+export { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
+export type { CacheConfig, CacheStats } from '@/services/unified/UnifiedCacheService';
 
 // 🎯 SERVIÇOS CRUD
 export { unifiedCRUDService } from '@/services/UnifiedCRUDService';
@@ -138,7 +138,7 @@ export const getUnifiedSystemDiagnostics = () => {
       componentsLoaded: {
         RealStagesProvider: false,
         UnifiedPreviewWithFallbacks: false,
-        templatesCacheService: false,
+        unifiedCacheService: false,
       },
       version: '2.0.0-unified',
       ticketImplemented: 'Ticket #2 - Pipeline de Etapas e Preview em Tempo Real',

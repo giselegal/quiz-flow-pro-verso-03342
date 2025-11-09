@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import TemplateEditorService, { SaveResult } from '@/services/TemplateEditorService';
+import TemplateEditorService, { SaveResult } from '@/services/canonical/TemplateService';
 
 export function useTemplateEditor() {
     const [saving, setSaving] = useState(false);

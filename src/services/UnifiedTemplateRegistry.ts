@@ -8,4 +8,4 @@
  */
 
 export * from '@/services/deprecated/UnifiedTemplateRegistry';
-export { templateRegistry } from '@/services/deprecated/UnifiedTemplateRegistry';
+export { templateService } from '@/services/deprecated/UnifiedTemplateRegistry';

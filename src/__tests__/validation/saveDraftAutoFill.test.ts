@@ -1,4 +1,4 @@
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { quizEditorBridge } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { vi } from 'vitest';
 

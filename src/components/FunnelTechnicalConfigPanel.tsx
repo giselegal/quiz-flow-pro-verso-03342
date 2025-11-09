@@ -24,7 +24,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Save, Check, AlertTriangle, Settings, Eye, Copy } from 'lucide-react';
 
 import { FunnelConfigGenerator } from '@/services/FunnelConfigGenerator';
-import { FunnelConfigPersistenceService } from '@/services/FunnelConfigPersistenceService';
+import { FunnelConfigPersistenceService } from '@/services/canonical/FunnelService';
 import type {
     FunnelConfig,
     FunnelSEOOverrides,

@@ -518,4 +518,4 @@ export class UnifiedTemplateRegistry {
 }
 
 // Singleton export
-export const templateRegistry = UnifiedTemplateRegistry.getInstance();
+export const templateService = UnifiedTemplateRegistry.getInstance();

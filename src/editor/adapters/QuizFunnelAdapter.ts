@@ -1,6 +1,6 @@
 import { IFunnelAdapter } from './FunnelAdapterTypes';
 import type { FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
-import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import type { UnifiedFunnelData } from '@/services/canonical/FunnelService';
 
 export class QuizFunnelAdapter implements IFunnelAdapter {
     readonly type = 'quiz';

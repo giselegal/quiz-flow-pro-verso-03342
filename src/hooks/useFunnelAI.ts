@@ -7,7 +7,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { HybridTemplateService } from '@/services/aliases';
 import { activateFunnelAI, checkFunnelAIStatus } from '../utils/funnelAIActivator';
-import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';
+import { AIEnhancedHybridTemplateService } from '@/services/canonical/TemplateService';
 
 interface AIStatus {
     enabled: boolean;

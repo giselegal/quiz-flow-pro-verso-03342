@@ -24,7 +24,7 @@ import {
   UnifiedStage, 
   CRUDResult, 
 } from '@/services/UnifiedCRUDService';
-import { templatesCacheService } from '@/services/TemplatesCacheService';
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 
 // Tipos principais
 export interface ProductionEditorState {
@@ -233,7 +233,7 @@ export const useUnifiedEditorProduction = (
 
         // Preload cache se habilitado
         if (enableCache) {
-          await templatesCacheService.preloadFunnel(id);
+          await unifiedCacheService.preloadFunnel(id);
         }
 
         console.log(`✅ Funnel carregado: ${id}`);
@@ -278,7 +278,7 @@ export const useUnifiedEditorProduction = (
 
         // Atualizar cache
         if (enableCache) {
-          await templatesCacheService.invalidateFunnel(state.funnel.id);
+          await unifiedCacheService.invalidateFunnel(state.funnel.id);
         }
 
         console.log('✅ Funnel salvo com sucesso');
@@ -403,7 +403,7 @@ export const useUnifiedEditorProduction = (
 
         // Limpar cache
         if (enableCache) {
-          templatesCacheService.clearFunnel(id);
+          unifiedCacheService.clearFunnel(id);
         }
 
         console.log(`✅ Funnel excluído: ${id}`);
@@ -980,7 +980,7 @@ export const useUnifiedEditorProduction = (
     if (!enableCache) return;
 
     try {
-      await templatesCacheService.refreshCache();
+      await unifiedCacheService.refreshCache();
       console.log('✅ Cache atualizado');
     } catch (error) {
       console.warn('⚠️ Erro ao atualizar cache:', error);
@@ -990,7 +990,7 @@ export const useUnifiedEditorProduction = (
   const clearCache = useCallback((): void => {
     if (!enableCache) return;
 
-    templatesCacheService.clearCache();
+    unifiedCacheService.clearCache();
     unifiedCRUDService.clearCache();
     console.log('🧹 Cache limpo');
   }, [enableCache]);
@@ -1000,11 +1000,11 @@ export const useUnifiedEditorProduction = (
       return { hitRate: 0, totalCached: 0, memoryUsage: 0 };
     }
 
-    const templatesStats = templatesCacheService.getStats();
+    const templatesStats = unifiedCacheService.getStats();
     const crudStats = unifiedCRUDService.getStats();
     
     return {
-      hitRate: templatesCacheService.getHitRate(),
+      hitRate: unifiedCacheService.getHitRate(),
       totalCached: templatesStats.totalEntries + crudStats.totalFunnels,
       memoryUsage: templatesStats.totalSize,
     };

@@ -12,7 +12,7 @@ import { templateCache } from '@/utils/TemplateCache';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { templateKey } from '@/utils/cacheKeys';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
-import { TemplateRegistry } from '@/services/TemplateRegistry';
+import { TemplateRegistry } from '@/services/canonical/TemplateService';
 
 // Alias para compatibilidade
 const unifiedCache = unifiedCacheService;

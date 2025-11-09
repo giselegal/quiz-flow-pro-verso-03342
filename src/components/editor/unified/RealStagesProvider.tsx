@@ -16,7 +16,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
-import { templatesCacheService } from '@/services/TemplatesCacheService';
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 
 // Tipos
 interface QuizStage {
@@ -172,7 +172,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       let blocks: Block[] = [];
 
       if (enableCache) {
-        blocks = await templatesCacheService.getStepTemplate(stepNumber, config.funnelId);
+        blocks = await unifiedCacheService.getStepTemplate(stepNumber, config.funnelId);
       } else {
         // Carregamento direto sem cache
         blocks = await loadStepDirect(stepNumber);
@@ -307,7 +307,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       if (enableCache) {
         const stepNumber = extractStepNumber(stageId);
         const stepKey = `step-${stepNumber.toString().padStart(2, '0')}`;
-        templatesCacheService.invalidateStep(stepKey);
+        unifiedCacheService.invalidateStep(stepKey);
       }
 
       appLogger.debug(`✅ Etapa removida: ${stageId}`);
@@ -334,7 +334,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       if (enableCache) {
         const stepNumber = extractStepNumber(stageId);
         const stepKey = `step-${stepNumber.toString().padStart(2, '0')}`;
-        templatesCacheService.invalidateStep(stepKey);
+        unifiedCacheService.invalidateStep(stepKey);
       }
 
       setLoadedStages(prev => {
@@ -403,7 +403,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       }
 
       const stepNumber = extractStepNumber(stageId);
-      return await templatesCacheService.getStepTemplate(stepNumber, config.funnelId);
+      return await unifiedCacheService.getStepTemplate(stepNumber, config.funnelId);
     },
 
     updateStageBlocks: async (stageId: string, blocks: Block[]) => {
@@ -411,7 +411,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       if (enableCache) {
         const stepNumber = extractStepNumber(stageId);
         const stepKey = `step-${stepNumber.toString().padStart(2, '0')}`;
-        templatesCacheService.invalidateStep(stepKey);
+        unifiedCacheService.invalidateStep(stepKey);
       }
 
       // Atualizar estado da etapa
@@ -444,9 +444,9 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       return { hitRate: 0, totalCached: 0, memoryUsage: 0 };
     }
 
-    const stats = templatesCacheService.getStats();
+    const stats = unifiedCacheService.getStats();
     return {
-      hitRate: templatesCacheService.getHitRate(),
+      hitRate: unifiedCacheService.getHitRate(),
       totalCached: stats.totalEntries,
       memoryUsage: stats.totalSize,
     };

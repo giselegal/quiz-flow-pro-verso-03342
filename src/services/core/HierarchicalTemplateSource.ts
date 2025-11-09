@@ -465,8 +465,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
     // Invalidar também cache do registry
     try {
-      const { templateRegistry } = await import('@/services/deprecated/UnifiedTemplateRegistry');
-      await templateRegistry.invalidate(stepId);
+      const { templateService } = await import('@/services/deprecated/UnifiedTemplateRegistry');
+      await templateService.invalidate(stepId);
     } catch (error) {
       appLogger.debug('[HierarchicalSource] Registry invalidation skipped:', error);
     }

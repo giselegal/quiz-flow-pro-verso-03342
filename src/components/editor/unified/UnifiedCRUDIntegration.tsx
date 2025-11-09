@@ -21,7 +21,7 @@ import {
   UnifiedStage, 
   CRUDResult, 
 } from '@/services/UnifiedCRUDService';
-import { templatesCacheService } from '@/services/TemplatesCacheService';
+import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 
 // Tipos de integração
 interface CRUDIntegrationState {
@@ -184,7 +184,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
 
         // Atualizar cache se habilitado
         if (enableCache) {
-          await templatesCacheService.preloadFunnel(funnelId);
+          await unifiedCacheService.preloadFunnel(funnelId);
         }
 
         appLogger.debug(`✅ Funnel carregado: ${funnelId}`);
@@ -222,7 +222,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
 
         // Atualizar cache
         if (enableCache) {
-          await templatesCacheService.invalidateFunnel(state.activeFunnel.id);
+          await unifiedCacheService.invalidateFunnel(state.activeFunnel.id);
         }
 
         appLogger.debug('✅ Funnel salvo com sucesso');
@@ -329,7 +329,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
 
         // Limpar cache
         if (enableCache) {
-          templatesCacheService.clearFunnel(funnelId);
+          unifiedCacheService.clearFunnel(funnelId);
         }
 
         appLogger.debug(`✅ Funnel excluído: ${funnelId}`);
@@ -715,7 +715,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
     if (!enableCache) return;
 
     try {
-      await templatesCacheService.refreshCache();
+      await unifiedCacheService.refreshCache();
       appLogger.debug('✅ Cache atualizado');
     } catch (error) {
       appLogger.warn('⚠️ Erro ao atualizar cache:', error);
@@ -725,7 +725,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
   const clearCache = useCallback((): void => {
     if (!enableCache) return;
 
-    templatesCacheService.clearCache();
+    unifiedCacheService.clearCache();
     unifiedCRUDService.clearCache();
     appLogger.debug('🧹 Cache limpo');
   }, [enableCache]);
@@ -735,11 +735,11 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
       return { hitRate: 0, totalCached: 0, memoryUsage: 0 };
     }
 
-    const templatesStats = templatesCacheService.getStats();
+    const templatesStats = unifiedCacheService.getStats();
     const crudStats = unifiedCRUDService.getStats();
     
     return {
-      hitRate: templatesCacheService.getHitRate(),
+      hitRate: unifiedCacheService.getHitRate(),
       totalCached: templatesStats.totalEntries + crudStats.totalFunnels,
       memoryUsage: templatesStats.totalSize,
     };

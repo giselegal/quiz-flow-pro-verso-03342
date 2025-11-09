@@ -6,7 +6,7 @@
  * Espera um arquivo /templates/index.json com { files: string[] } e arquivos sob /templates/*.json
  * Servidos a partir de public/ em Vite.
  */
-import { TemplateRegistry } from '@/services/TemplateRegistry';
+import { TemplateRegistry } from '@/services/canonical/TemplateService';
 import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
 
 const DEFAULT_INDEX_PATH = '/templates/index.json';

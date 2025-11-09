@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Save, Loader2, Settings, Copy, RefreshCw } from 'lucide-react';
 
-import { FunnelConfigPersistenceService } from '@/services/FunnelConfigPersistenceService';
+import { FunnelConfigPersistenceService } from '@/services/canonical/FunnelService';
 import {
     FunnelConfig,
     FunnelSEOOverrides,

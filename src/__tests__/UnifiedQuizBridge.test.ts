@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { UnifiedQuizBridge } from '@/services/UnifiedQuizBridge';
+import { UnifiedQuizBridge } from '@/services/canonical/TemplateService';
 
 describe('UnifiedQuizBridge', () => {
   let bridge: UnifiedQuizBridge;

@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Download, FileJson, CheckCircle, XCircle } from 'lucide-react';
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { quizEditorBridge } from '@/services/canonical/TemplateService';
 
 interface ExportTemplateButtonProps {
     funnelId: string;

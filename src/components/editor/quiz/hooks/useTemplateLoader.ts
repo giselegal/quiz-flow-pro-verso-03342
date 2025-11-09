@@ -19,7 +19,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { appLogger } from '@/utils/logger';
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { quizEditorBridge } from '@/services/canonical/TemplateService';
 import { UnifiedCacheService } from '@/services/UnifiedCacheService';
 import type { EditableQuizStep } from '../types';
 import { TemplateService } from '@/services/canonical/TemplateService';

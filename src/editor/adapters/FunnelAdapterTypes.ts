@@ -2,7 +2,7 @@
 // Permite converter entre UnifiedFunnelData (fonte persistida) e FunnelSnapshot (usado pela fachada)
 
 import type { FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
-import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import type { UnifiedFunnelData } from '@/services/canonical/FunnelService';
 
 export interface IFunnelAdapter {
     readonly type: string;

@@ -5,7 +5,7 @@
  * Elimina conversões de formato mantendo compatibilidade
  * 
  * MIGRAÇÃO:
- * 1. Substituir chamadas diretas por templateRegistry.getStep()
+ * 1. Substituir chamadas diretas por templateService.getStep()
  * 2. Remover este adaptador após migração completa
  * 
  * @deprecated Use UnifiedTemplateRegistry diretamente
@@ -13,38 +13,38 @@
 
 import { BlockComponent } from '@/components/editor/quiz/types';
 import { Block, BlockType } from '@/types/editor';
-import { templateRegistry } from '@/services/UnifiedTemplateRegistry';
+import { templateService } from '@/services/canonical/TemplateService';
 
 /**
- * @deprecated Use templateRegistry.getStep() diretamente (retorna Block[])
+ * @deprecated Use templateService.getStep() diretamente (retorna Block[])
  */
 export async function safeGetTemplateBlocksAsync(
   stepId: string,
   _template?: any,
   _funnelId?: string,
 ): Promise<BlockComponent[]> {
-  console.warn('⚠️ safeGetTemplateBlocksAsync is deprecated. Use templateRegistry.getStep() instead.');
+  console.warn('⚠️ safeGetTemplateBlocksAsync is deprecated. Use templateService.getStep() instead.');
   
   // Usar novo registry
-  const blocks = await templateRegistry.getStep(stepId);
+  const blocks = await templateService.getStep(stepId);
   
   // Converter Block[] → BlockComponent[] (última conversão)
   return blocksToBlockComponents(blocks as any as Block[]);
 }
 
 /**
- * @deprecated Versão síncrona - Use versão async ou templateRegistry
+ * @deprecated Versão síncrona - Use versão async ou templateService
  */
 export function safeGetTemplateBlocks(
   stepId: string,
   _template?: any,
   _funnelId?: string,
 ): BlockComponent[] {
-  console.warn('⚠️ safeGetTemplateBlocks (sync) is deprecated. Use templateRegistry.getStep() instead.');
+  console.warn('⚠️ safeGetTemplateBlocks (sync) is deprecated. Use templateService.getStep() instead.');
   
   // Fallback: tentar L1 cache síncrono
   // Nota: Isso só funciona se o step já foi carregado anteriormente
-  const cached = (templateRegistry as any).l1Cache?.get(stepId);
+  const cached = (templateService as any).l1Cache?.get(stepId);
   
   if (cached) {
     return blocksToBlockComponents(cached);
@@ -52,7 +52,7 @@ export function safeGetTemplateBlocks(
   
   // Sem cache: retornar vazio e triggerar carregamento assíncrono
   console.warn(`⚠️ ${stepId} não está em L1 cache. Carregando...`);
-  templateRegistry.getStep(stepId).then(blocks => {
+  templateService.getStep(stepId).then(blocks => {
     console.log(`✅ ${stepId} carregado assíncrono`);
   });
   

@@ -5,7 +5,7 @@
  */
 
 import { HybridTemplateService } from '@/services/aliases';
-import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';
+import { AIEnhancedHybridTemplateService } from '@/services/canonical/TemplateService';
 
 /**
  * 🎯 Configurações otimizadas da IA do funil

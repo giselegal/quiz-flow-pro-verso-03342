@@ -1,4 +1,4 @@
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { quizEditorBridge } from '@/services/canonical/TemplateService';
 import { vi, describe, it, expect } from 'vitest';
 
 // Mock supabase para salvar draft

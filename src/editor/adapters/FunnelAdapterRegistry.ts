@@ -1,4 +1,4 @@
-import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import type { UnifiedFunnelData } from '@/services/canonical/FunnelService';
 import { IFunnelAdapter, AdapterResolution } from './FunnelAdapterTypes';
 import { quizFunnelAdapter } from './QuizFunnelAdapter';
 import type { FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';

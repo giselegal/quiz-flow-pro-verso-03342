@@ -5,7 +5,7 @@
  * Útil após alterações no código de normalização
  */
 
-import { templateRegistry } from '@/services/UnifiedTemplateRegistry';
+import { templateService } from '@/services/canonical/TemplateService';
 
 /**
  * Limpar cache e forçar recarga dos templates
@@ -20,11 +20,11 @@ export async function clearAllCaches(): Promise<void> {
   
   try {
     // 1. Limpar L1 (Memory)
-    templateRegistry.clearL1();
+    templateService.clearL1();
     console.log('✅ L1 Cache (Memory) limpo');
     
     // 2. Limpar L2 (IndexedDB)
-    await templateRegistry.clearL2();
+    await templateService.clearL2();
     console.log('✅ L2 Cache (IndexedDB) limpo');
     
     // 3. Limpar versão do localStorage
@@ -48,7 +48,7 @@ export async function clearAllCaches(): Promise<void> {
  * Limpar apenas L1 (mais rápido)
  */
 export function clearMemoryCache(): void {
-  templateRegistry.clearL1();
+  templateService.clearL1();
   console.log('✅ L1 Cache limpo - recarregue a página');
 }
 

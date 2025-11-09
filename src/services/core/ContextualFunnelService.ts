@@ -13,7 +13,7 @@
 
 import { FunnelContext, generateContextualId, extractContextFromId } from '@/core/contexts/FunnelContext';
 import { ContextualStorageService } from './ContextualStorageService';
-import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import type { UnifiedFunnelData } from '@/services/canonical/FunnelService';
 
 export interface ContextualFunnelMetadata {
   id: string;

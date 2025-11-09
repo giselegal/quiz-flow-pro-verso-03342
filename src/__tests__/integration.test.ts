@@ -6,7 +6,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { HybridTemplateService } from '@/services/aliases';
-import TemplateEditorService from '@/services/TemplateEditorService';
+import TemplateEditorService from '@/services/canonical/TemplateService';
 
 describe('Integration: Template Edit → Save → Reload Flow', () => {
 

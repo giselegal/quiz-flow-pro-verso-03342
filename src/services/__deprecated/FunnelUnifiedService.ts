@@ -6,7 +6,7 @@
  */
 
 export type { UnifiedFunnel as UnifiedFunnelData, UnifiedStage } from '@/services/UnifiedCRUDService';
-export { funnelService as funnelUnifiedService, funnelService as FunnelUnifiedService } from '@/services/canonical/FunnelService';
+export { funnelService as funnelService, funnelService as FunnelUnifiedService } from '@/services/canonical/FunnelService';
 export { adaptMetadataToUnified, adaptUnifiedToMetadata } from '@/services/canonical/FunnelAdapter';
 
 // Silenciado: redirect funcionando corretamente

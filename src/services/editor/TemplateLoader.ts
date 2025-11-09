@@ -24,7 +24,7 @@ import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templa
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
-import { TemplateRegistry } from '@/services/TemplateRegistry';
+import { TemplateRegistry } from '@/services/canonical/TemplateService';
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import blockAliasMap from '@/config/block-aliases.json';

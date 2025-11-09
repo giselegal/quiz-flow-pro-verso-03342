@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import TemplateEditorService, { SaveResult } from '@/services/TemplateEditorService';
+import TemplateEditorService, { SaveResult } from '@/services/canonical/TemplateService';
 
 describe('TemplateEditorService', () => {
 

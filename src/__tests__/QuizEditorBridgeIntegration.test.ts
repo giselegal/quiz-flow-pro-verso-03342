@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { quizEditorBridge } from '@/services/canonical/TemplateService';
 import { TemplateService } from '@/services/canonical/TemplateService';
 
 describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {

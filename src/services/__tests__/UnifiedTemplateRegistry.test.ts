@@ -5,7 +5,7 @@ vi.mock('@templates/embedded', () => ({ default: {} }));
 
 async function getRegistry() {
   const mod = await import('../UnifiedTemplateRegistry');
-  return mod.templateRegistry as typeof mod.templateRegistry;
+  return mod.templateService as typeof mod.templateService;
 }
 
 // Minimal Block type align for test assertions
@@ -31,9 +31,9 @@ describe('UnifiedTemplateRegistry', () => {
   });
 
   it('loads step from per-step JSON and caches in L1', async () => {
-    const templateRegistry = await getRegistry();
+    const templateService = await getRegistry();
     // Ensure clean caches
-    await templateRegistry.clearAll();
+    await templateService.clearAll();
 
     const stepId = 'step-01';
     const blocks: Block[] = [
@@ -56,20 +56,20 @@ describe('UnifiedTemplateRegistry', () => {
 
     global.fetch = fetchSpy as any;
 
-    const first = await templateRegistry.getStep(stepId);
+    const first = await templateService.getStep(stepId);
     expect(first).toHaveLength(2);
     expect(first[0].id).toBe('b1');
     expect(fetchSpy).toHaveBeenCalledTimes(1);
 
     // Second call should hit L1 cache and not call fetch again
-    const second = await templateRegistry.getStep(stepId);
+    const second = await templateService.getStep(stepId);
     expect(second).toHaveLength(2);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it('falls back to -v3 and plain /templates when blocks file missing', async () => {
-    const templateRegistry = await getRegistry();
-    await templateRegistry.clearAll();
+    const templateService = await getRegistry();
+    await templateService.clearAll();
 
     const stepId = 'step-02';
     const blocks: Block[] = [
@@ -91,7 +91,7 @@ describe('UnifiedTemplateRegistry', () => {
 
     global.fetch = fetchSpy as any;
 
-    const result = await templateRegistry.getStep(stepId);
+    const result = await templateService.getStep(stepId);
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe('x1');
     // Should have attempted blocks first, then -v3

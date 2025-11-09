@@ -20,7 +20,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor';
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { quizEditorBridge } from '@/services/canonical/TemplateService';
 import { useQuizState } from '@/hooks/useQuizState';
 import QuizApp from '@/components/quiz/QuizApp';
 import { TemplateService } from '@/services/canonical/TemplateService';
