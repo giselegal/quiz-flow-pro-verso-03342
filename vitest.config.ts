@@ -17,7 +17,7 @@ export default defineConfig({
       ['src/migration/**', 'node'],
     ],
     setupFiles: [
-      './src/test/setup.ts',
+      './src/__tests__/test-setup.ts',
       './src/__tests__/setup/indexeddb.mock.ts',
       './src/__tests__/legacy-tests/setup/mockTemplatesApi.ts'
     ],
