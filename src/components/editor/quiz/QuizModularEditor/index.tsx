@@ -178,6 +178,32 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [templateLoadError, setTemplateLoadError] = useState(false);
+
+    // 🆕 G17 FIX: Memoizar callbacks para evitar re-renders em componentes filhos
+    const handleSelectStep = useCallback((key: string) => {
+        if (key === currentStepKey) return;
+
+        if (loadedTemplate?.steps?.length) {
+            const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
+            const newStep = index >= 0 ? index + 1 : 1;
+            if (newStep !== safeCurrentStep) setCurrentStep(newStep);
+            return;
+        }
+        const match = key.match(/step-(\d{1,2})/i);
+        const num = match ? parseInt(match[1], 10) : 1;
+        if (num !== safeCurrentStep) setCurrentStep(num);
+    }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep]);
+
+    const handleAddBlock = useCallback((type: string) => {
+        const stepIndex = safeCurrentStep;
+        addBlock(stepIndex, {
+            type,
+            id: `block-${uuidv4()}`,
+            properties: {},
+            content: {},
+            order: (blocks || []).length
+        });
+    }, [safeCurrentStep, addBlock, blocks]);
     const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
     // Persist layout
