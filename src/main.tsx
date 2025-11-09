@@ -31,22 +31,22 @@ import './index.css';
 // 🔍 SENTRY: Error tracking e performance monitoring
 import { initSentry } from '@/lib/sentry';
 // Silenciador de logs em produção (pode ser desativado via VITE_DEBUG_LOGS=true)
-import './shims/consoleSilencer';
+import './lib/shims/consoleSilencer';
 import './styles/design-system.css';
 // 🚀 SUPABASE: Inicialização do serviço de dados
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
-import { initBrowserCleanup } from './utils/browserCleanup';
-import { cleanupConsoleWarnings } from './utils/development';
+import { initBrowserCleanup } from './lib/utils/browserCleanup';
+import { cleanupConsoleWarnings } from './lib/utils/development';
 // 🔧 WEBSOCKET: Otimizador para resolver problemas de reconexão
-import { initializeWebSocketOptimization } from './utils/websocket-optimizer';
+import { initializeWebSocketOptimization } from './lib/utils/websocket-optimizer';
 // 📊 RUDDERSTACK: Otimizador para resolver problemas de analytics
-import { initializeRudderStackOptimization } from './utils/rudderstack-optimizer';
+import { initializeRudderStackOptimization } from './lib/utils/rudderstack-optimizer';
 // 🛡️ Deprecation guards: evitar alert cross-origin e listeners de unload
-import { installDeprecationGuards } from './utils/deprecationGuards';
+import { installDeprecationGuards } from './lib/utils/deprecationGuards';
 // 🛡️ DEVELOPMENT: Bloquear conexões Lovable em desenvolvimento
-import './utils/blockLovableInDev';
+import './lib/utils/blockLovableInDev';
 // 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
-import './utils/canvasPerformanceControl';
+import './lib/utils/canvasPerformanceControl';
 // ✨ MODULAR STEPS: adiar auto-registro dos componentes para pós-paint
 defer(() => {
   import('./components/steps').catch((e) => {
@@ -54,7 +54,7 @@ defer(() => {
   });
 });
 // 🧪 Layer diagnostics (dev only)
-import installLayerDiagnostics from './utils/layerDiagnostics';
+import installLayerDiagnostics from './lib/utils/layerDiagnostics';
 // 🏗️ SCHEMA SYSTEM: Inicializa o sistema modular de schemas com lazy loading
 import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 // 🤖 AI: IA do funil auto-ativada via utils
@@ -333,7 +333,7 @@ console.log('🔧 DEBUG: main.tsx carregado');
 // 🔧 DIAGNOSTIC: Testar template (lazy/dev)
 defer(() => {
   if (!import.meta.env.DEV) return; // diagnóstico só em dev
-  import('./utils/templateDiagnostic')
+  import('./lib/utils/templateDiagnostic')
     .then((mod) => {
       try {
         const fn = (mod as any).default || (mod as any).runTemplateDiagnostic;
@@ -348,7 +348,7 @@ defer(() => {
 
 // Testar integração híbrida (lazy)
 defer(() => {
-  import('./utils/hybridIntegration')
+  import('./lib/utils/hybridIntegration')
     .then(({ getTemplateStatus }) =>
       getTemplateStatus()
         .then((status) => console.log('🔬 [MAIN] Hybrid integration status (lazy):', status))
@@ -360,7 +360,7 @@ defer(() => {
 // 🔄 Versão / prevenção de 404 de chunks desatualizados
 if (typeof window !== 'undefined') {
   defer(() => {
-    import('./utils/checkBuildVersion')
+    import('./lib/utils/checkBuildVersion')
       .then(({ startPeriodicVersionCheck }) => {
         try {
           startPeriodicVersionCheck(180000); // a cada 3 min
