@@ -2,10 +2,17 @@
 if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || import.meta.env.DEV)) {
     // Detectar se estamos dentro do iframe do preview do Lovable
     const isInLovablePreview = window.self !== window.top;
+    // Detectar projectId potencialmente definido via configuração global
+    const projectId = (window as any).LOVABLE_CONFIG?.projectId || (import.meta as any)?.env?.VITE_LOVABLE_PROJECT_ID;
+    const hasValidProjectId = projectId && typeof projectId === 'string' && projectId.trim() !== '' && projectId !== 'undefined' && projectId !== 'null';
 
-    // IMPORTANTE: Não bloquear se estivermos no preview do Lovable
-    if (isInLovablePreview) {
-        console.log('✅ Preview do Lovable detectado - mantendo conexões ativas');
+    // Se não há projectId válido, BLOQUEAR mesmo dentro de iframe para evitar /projects//collaborators
+    const shouldBlockAllLovable = !hasValidProjectId;
+
+    if (isInLovablePreview && !shouldBlockAllLovable) {
+        if ((import.meta as any)?.env?.VITE_DEBUG_LOVABLE === 'true') {
+            console.log('✅ Preview do Lovable detectado com projectId válido - conexões permitidas');
+        }
     } else {
         // Bloquear tentativas de conexão WebSocket para Lovable
         const originalWebSocket = window.WebSocket;
@@ -75,6 +82,18 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': '*',
                         },
+                    }));
+                }
+
+                // Se for chamada genérica e não temos projectId válido, retornar sempre bloqueado
+                if (shouldBlockAllLovable) {
+                    return Promise.resolve(new Response(JSON.stringify({
+                        status: 'blocked_no_project_id',
+                        message: 'Lovable disabled: missing valid projectId',
+                        projectId: projectId || null
+                    }), {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' }
                     }));
                 }
 
@@ -189,7 +208,9 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
             return element;
         };
 
-        console.log('🛡️ Proteção expandida contra Lovable/SDK ativada para desenvolvimento LOCAL');
+        if ((import.meta as any)?.env?.VITE_DEBUG_LOVABLE === 'true') {
+            console.log('🛡️ Proteção expandida contra Lovable/SDK ativada para desenvolvimento LOCAL', { isInLovablePreview, hasValidProjectId, projectId: projectId || null });
+        }
     }
 }
 

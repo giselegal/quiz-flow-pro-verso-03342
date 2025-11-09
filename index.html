@@ -85,6 +85,27 @@
         if (typeof window !== 'undefined') {
           // Criar um proxy robusto para React que nunca retorna undefined
           var reactStub = {
+            // Context API básica para evitar que vendors quebrem ao chamar createContext/useContext
+            createContext: function (defaultValue) {
+              var context = {
+                _currentValue: defaultValue,
+                Provider: function Provider(props) {
+                  try { context._currentValue = props && 'value' in props ? props.value : context._currentValue; } catch (e) { }
+                  return (props && props.children) || null;
+                },
+                Consumer: function Consumer(props) {
+                  try {
+                    var child = props && props.children;
+                    if (typeof child === 'function') return child(context._currentValue);
+                    return child || null;
+                  } catch (e) {
+                    console.error('[ReactStub] Error in Context.Consumer:', e); return null;
+                  }
+                }
+              };
+              return context;
+            },
+            useContext: function (ctx) { return (ctx && ctx._currentValue) !== undefined ? ctx._currentValue : undefined; },
             forwardRef: function (render) {
               if (!render) return function () { return null; };
               var Comp = function (props, ref) {
