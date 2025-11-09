@@ -49,10 +49,14 @@ function SortableBlockItem({
     onUpdateBlock?: (blockId: string, patch: Partial<Block>) => void;
 }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSafeSortable({ id: block.id });
+    // 🆕 G30 FIX: Melhor feedback visual durante drag
     const style: React.CSSProperties = {
         transform: SafeCSS?.Transform?.toString(transform) || 'none',
         transition,
-        opacity: isDragging ? 0.6 : 1,
+        opacity: isDragging ? 0.5 : 1,
+        scale: isDragging ? '1.02' : '1',
+        boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.15)' : undefined,
+        zIndex: isDragging ? 50 : undefined,
     };
 
     return (
@@ -61,9 +65,11 @@ function SortableBlockItem({
             style={style}
             {...attributes}
             {...listeners}
-            className={`border rounded p-2 relative cursor-grab active:cursor-grabbing transition-all ${isSelected
-                ? 'border-blue-500 bg-blue-50 shadow-sm'
-                : 'border-border hover:border-gray-400'
+            className={`border rounded p-2 relative cursor-grab active:cursor-grabbing transition-all ${isDragging
+                    ? 'border-blue-500 bg-blue-100 ring-2 ring-blue-300'
+                    : isSelected
+                        ? 'border-blue-500 bg-blue-50 shadow-sm'
+                        : 'border-border hover:border-gray-400'
                 }`}
             onClick={e => {
                 if ((e.target as HTMLElement).tagName.toLowerCase() === 'button') return;
@@ -286,12 +292,28 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     return (
         <div
             ref={setNodeRef}
-            className={`p-3 space-y-2 min-h-[400px] ${isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : ''}`}
+            className={`p-3 space-y-2 min-h-[400px] transition-all ${isOver
+                ? 'bg-blue-50 border-2 border-blue-400 border-dashed shadow-inner'
+                : 'border border-transparent hover:border-gray-200'
+                }`}
         >
-            <div className="text-sm font-medium mb-2">
-                {currentStepKey}
-                {isOver && <span className="text-blue-600 text-xs ml-2">Solte aqui</span>}
+            <div className="text-sm font-medium mb-2 flex items-center justify-between">
+                <span>{currentStepKey}</span>
+                {isOver && (
+                    <span className="text-blue-600 text-xs font-semibold animate-pulse bg-blue-100 px-2 py-1 rounded">
+                        ⬇️ Solte aqui para adicionar
+                    </span>
+                )}
             </div>
+            {/* 🆕 G30 FIX: Always-visible drop zone indicator quando vazio */}
+            {blocks.length === 0 && !isOver && (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all">
+                    <div className="text-gray-400 text-sm mb-2">⬇️</div>
+                    <div className="text-gray-500 text-sm">
+                        Arraste um bloco da biblioteca para começar
+                    </div>
+                </div>
+            )}
             <SafeSortableContext items={blocks.map(b => b.id)}>
                 <ul className="space-y-1">
                     {normalizeBlocksData(blocks).map((b, idx) => {
@@ -318,6 +340,15 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
                     })}
                 </ul>
             </SafeSortableContext>
+            {/* 🆕 G30 FIX: Drop zone no final da lista quando tem blocos */}
+            {blocks.length > 0 && (
+                <div className={`border-2 border-dashed rounded p-4 text-center text-xs transition-all ${isOver
+                    ? 'border-blue-400 bg-blue-100 text-blue-600'
+                    : 'border-gray-200 text-gray-400 hover:border-blue-300 hover:bg-blue-50/30'
+                    }`}>
+                    {isOver ? '⬇️ Soltar no final' : '+ Adicionar novo bloco'}
+                </div>
+            )}
         </div>
     );
 }

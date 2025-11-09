@@ -196,14 +196,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     const handleAddBlock = useCallback((type: string) => {
         const stepIndex = safeCurrentStep;
+        const currentBlocks = getStepBlocks(stepIndex);
         addBlock(stepIndex, {
             type,
             id: `block-${uuidv4()}`,
             properties: {},
             content: {},
-            order: (blocks || []).length
+            order: currentBlocks.length
         });
-    }, [safeCurrentStep, addBlock, blocks]);
+    }, [safeCurrentStep, addBlock, getStepBlocks]);
     const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
     // Persist layout
@@ -984,19 +985,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <StepNavigatorColumn
                                 steps={navSteps}
                                 currentStepKey={currentStepKey}
-                                onSelectStep={(key: string) => {
-                                    if (key === currentStepKey) return;
-
-                                    if (loadedTemplate?.steps?.length) {
-                                        const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
-                                        const newStep = index >= 0 ? index + 1 : 1;
-                                        if (newStep !== safeCurrentStep) setCurrentStep(newStep);
-                                        return;
-                                    }
-                                    const match = key.match(/step-(\d{1,2})/i);
-                                    const num = match ? parseInt(match[1], 10) : 1;
-                                    if (num !== safeCurrentStep) setCurrentStep(num);
-                                }}
+                                onSelectStep={handleSelectStep}
                             />
                         </div>
                     </Panel>
@@ -1011,16 +1000,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <div className="h-full border-r bg-white overflow-y-auto" data-testid="column-library">
                                 <ComponentLibraryColumn
                                     currentStepKey={currentStepKey}
-                                    onAddBlock={(type) => {
-                                        const stepIndex = safeCurrentStep;
-                                        addBlock(stepIndex, {
-                                            type,
-                                            id: `block-${uuidv4()}`,
-                                            properties: {},
-                                            content: {},
-                                            order: (blocks || []).length
-                                        });
-                                    }}
+                                    onAddBlock={handleAddBlock}
                                 />
                             </div>
                         </Suspense>
