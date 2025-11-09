@@ -11,7 +11,7 @@ import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
-import { Eye, Edit3, Play, Save, GripVertical, Download, Upload } from 'lucide-react';
+import { Eye, Edit3, Play, Save, GripVertical, Download, Upload, Undo2, Redo2 } from 'lucide-react';
 import { appLogger } from '@/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
 // Loading context (provider + hook)
@@ -98,6 +98,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         getStepBlocks,
         setStepBlocks,
         setSelectedBlock,
+        undo,
+        redo,
+        canUndo,
+        canRedo,
         removeBlock,
         reorderBlocks,
         updateBlock,
@@ -866,6 +870,32 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        {/* 🔄 G27 FIX: Botões Undo/Redo */}
+                        <div className="flex items-center gap-1">
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={undo}
+                                disabled={!canUndo}
+                                className="h-7 px-2"
+                                title="Desfazer (Ctrl+Z / Cmd+Z)"
+                            >
+                                <Undo2 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={redo}
+                                disabled={!canRedo}
+                                className="h-7 px-2"
+                                title="Refazer (Ctrl+Y / Cmd+Shift+Z)"
+                            >
+                                <Redo2 className="w-4 h-4" />
+                            </Button>
+                        </div>
+
+                        <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
+
                         <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
                             <Button
                                 size="sm"

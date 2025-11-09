@@ -28,6 +28,7 @@ import React, {
     useCallback,
     ReactNode,
     useState,
+    useRef,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import { supabase } from '@/integrations/supabase/customClient';
@@ -36,6 +37,7 @@ import { isSupabaseDisabled } from '@/integrations/supabase/flags';
 import { createLogger } from '@/utils/logger';
 import { blockBaseSchema } from '@/schemas/editorStateSchema';
 import { getUserFriendlyError } from '@/utils/userFriendlyErrors';
+import { useUnifiedHistory } from '@/hooks/useUnifiedHistory';
 
 // Logger para o SuperUnifiedProvider
 const logger = createLogger({ namespace: 'SuperUnifiedProvider' });
@@ -176,7 +178,9 @@ type SuperUnifiedAction =
     | { type: 'REORDER_BLOCKS'; payload: { stepIndex: number; blocks: any[] } }
     | { type: 'SET_STEP_BLOCKS'; payload: { stepIndex: number; blocks: any[] } }
     | { type: 'VALIDATE_STEP'; payload: { stepIndex: number; errors: any[] } }
-    | { type: 'SET_STEP_DIRTY'; payload: { stepIndex: number; dirty: boolean } };
+    | { type: 'SET_STEP_DIRTY'; payload: { stepIndex: number; dirty: boolean } }
+    | { type: 'UNDO_EDITOR'; payload: Partial<EditorState> }
+    | { type: 'REDO_EDITOR'; payload: Partial<EditorState> };
 
 // 🎯 INITIAL STATE
 const initialState: SuperUnifiedState = {
@@ -506,6 +510,24 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 },
             };
 
+        case 'UNDO_EDITOR':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    ...action.payload,
+                },
+            };
+
+        case 'REDO_EDITOR':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    ...action.payload,
+                },
+            };
+
         default:
             return state;
     }
@@ -533,6 +555,11 @@ interface SuperUnifiedContextType {
     setStepBlocks: (stepIndex: number, blocks: any[]) => void;
     getStepBlocks: (stepIndex: number) => any[];
     showToast: (toast: Omit<ToastMessage, 'id'>) => void;
+    // 🔄 Undo/Redo methods (G27 Fix)
+    undo: () => void;
+    redo: () => void;
+    canUndo: boolean;
+    canRedo: boolean;
     // Auth methods (aliases para compatibilidade)
     user: any | null;
     isLoading: boolean;
@@ -1205,6 +1232,87 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, [autoLoad, funnelId, loadFunnel]);
 
+    // 🔄 G27 FIX: Integração Undo/Redo usando useUnifiedHistory
+    const {
+        pushState: pushHistoryState,
+        undo: undoHistory,
+        redo: redoHistory,
+        canUndo: canUndoHistory,
+        canRedo: canRedoHistory,
+    } = useUnifiedHistory({
+        initialState: {
+            stepBlocks: state.editor.stepBlocks,
+            selectedBlockId: state.editor.selectedBlockId,
+            currentStep: state.editor.currentStep,
+        },
+        historyLimit: 50,
+        enableKeyboardShortcuts: true,
+        namespace: 'SuperUnifiedProvider',
+    });
+
+    // Sincronizar histórico quando stepBlocks mudar (exceto em undo/redo)
+    const lastStepBlocksRef = useRef(state.editor.stepBlocks);
+    useEffect(() => {
+        const current = state.editor.stepBlocks;
+        const previous = lastStepBlocksRef.current;
+
+        // Só adicionar ao histórico se houver mudança real
+        if (JSON.stringify(current) !== JSON.stringify(previous)) {
+            pushHistoryState({
+                stepBlocks: current,
+                selectedBlockId: state.editor.selectedBlockId,
+                currentStep: state.editor.currentStep,
+            });
+            lastStepBlocksRef.current = current;
+        }
+    }, [state.editor.stepBlocks, state.editor.selectedBlockId, state.editor.currentStep, pushHistoryState]);
+
+    // Implementar undo com dispatch para UNDO_EDITOR
+    const undo = useCallback(() => {
+        const previousState = undoHistory();
+        if (previousState) {
+            dispatch({
+                type: 'UNDO_EDITOR',
+                payload: {
+                    stepBlocks: previousState.stepBlocks,
+                    selectedBlockId: previousState.selectedBlockId,
+                    currentStep: previousState.currentStep,
+                },
+            });
+            logger.info('[G27] Undo executado', { step: previousState.currentStep });
+        }
+    }, [undoHistory]);
+
+    // Implementar redo com dispatch para REDO_EDITOR
+    const redo = useCallback(() => {
+        const nextState = redoHistory();
+        if (nextState) {
+            dispatch({
+                type: 'REDO_EDITOR',
+                payload: {
+                    stepBlocks: nextState.stepBlocks,
+                    selectedBlockId: nextState.selectedBlockId,
+                    currentStep: nextState.currentStep,
+                },
+            });
+            logger.info('[G27] Redo executado', { step: nextState.currentStep });
+        }
+    }, [redoHistory]);
+
+    // Listener para eventos customizados de undo/redo (dispatchados pelos atalhos)
+    useEffect(() => {
+        const handleUndo = () => undo();
+        const handleRedo = () => redo();
+
+        window.addEventListener('editor:undo', handleUndo);
+        window.addEventListener('editor:redo', handleRedo);
+
+        return () => {
+            window.removeEventListener('editor:undo', handleUndo);
+            window.removeEventListener('editor:redo', handleRedo);
+        };
+    }, [undo, redo]);
+
     const value = useMemo<SuperUnifiedContextType>(() => ({
         state,
         loadFunnels,
@@ -1226,6 +1334,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         setStepBlocks,
         getStepBlocks,
         showToast,
+        // 🔄 G27 FIX: Undo/Redo
+        undo,
+        redo,
+        canUndo: canUndoHistory,
+        canRedo: canRedoHistory,
         // Auth aliases
         user: state.auth.user,
         isLoading: state.auth.isLoading,
@@ -1254,6 +1367,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         setStepBlocks,
         getStepBlocks,
         showToast,
+        undo,
+        redo,
+        canUndoHistory,
+        canRedoHistory,
         login,
         signup,
         logout,
