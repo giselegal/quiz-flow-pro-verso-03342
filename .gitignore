@@ -125,3 +125,6 @@ scripts/archive/
 .supabase/
 supabase/access.token
 
+# Migration reports
+migration-*-report.json
+
