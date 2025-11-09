@@ -27,7 +27,7 @@
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
 import { CanonicalServicesMonitor } from './monitoring';
 import { cacheService } from './CacheService';
-import { UnifiedTemplateRegistry } from '../deprecated/UnifiedTemplateRegistry';
+// Removido: UnifiedTemplateRegistry (dependência legacy)
 import type { Block } from '@/types/editor';
 import { editorMetrics } from '@/utils/editorMetrics'; // ✅ FASE 3.3
 import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: Adapter para normalização
@@ -116,7 +116,23 @@ export interface ValidationResult {
  */
 export class TemplateService extends BaseCanonicalService {
   private static instance: TemplateService;
-  private registry: UnifiedTemplateRegistry;
+  // 🔁 Compat: substitui antiga instancia de UnifiedTemplateRegistry
+  private registryCompat = {
+    invalidate: async (key: string) => {
+      cacheService.templates.invalidate(key);
+    },
+    clearL1: () => {
+      cacheService.clearStore('templates');
+    },
+    getStep: async (stepId: string, _templateId?: string) => {
+      try {
+        const result = await hierarchicalTemplateSource.getPrimary(stepId);
+        return result.data;
+      } catch {
+        return [] as Block[];
+      }
+    }
+  };
 
   // 🎯 FASE 1: Feature Flag para novo sistema
   // Em ambientes Vite, usar import.meta.env; fallback para process.env; permite override via localStorage
@@ -214,7 +230,7 @@ export class TemplateService extends BaseCanonicalService {
 
   private constructor(options?: ServiceOptions) {
     super('TemplateService', '1.0.0', options);
-    this.registry = UnifiedTemplateRegistry.getInstance();
+  // registry legacy removido; hierarchicalTemplateSource cobre fluxo principal
   }
 
   static getInstance(options?: ServiceOptions): TemplateService {
@@ -225,7 +241,7 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   protected async onInitialize(): Promise<void> {
-    this.log('TemplateService initialized with UnifiedTemplateRegistry');
+  this.log('TemplateService initialized (UnifiedTemplateRegistry removido)');
 
     // ✅ FASE 1: Preload de steps críticos para eliminar cache MISS
     try {
@@ -273,16 +289,17 @@ export class TemplateService extends BaseCanonicalService {
             this.log(`✅ [NEW] getTemplate(${id}) carregado via HierarchicalTemplateSource (${blocks.length} blocos)`);
           } catch (err) {
             this.log(`⚠️ [NEW] Falha ao carregar ${stepId} via HierarchicalTemplateSource`, err);
-            if (!this.JSON_ONLY) {
-              // Apenas se não estiver em modo estrito tentar registro legado
-              blocks = await this.registry.getStep(stepId);
-            } else {
-              blocks = [];
-            }
+            // JSON_ONLY ativo ou falha no novo fluxo → não usar registry legacy
+            blocks = [];
           }
         } else {
-          // Legacy path (feature flag desativada)
-          blocks = await this.registry.getStep(stepId);
+          // Legacy path desativado: usar HierarchicalTemplateSource como única fonte
+          try {
+            const result = await hierarchicalTemplateSource.getPrimary(stepId);
+            blocks = result.data;
+          } catch {
+            blocks = [];
+          }
         }
 
         if (blocks && blocks.length > 0) {
@@ -511,7 +528,8 @@ export class TemplateService extends BaseCanonicalService {
     }
 
     // FASE 2: Carregar do registry (lazy loading)
-    const blocks = await this.registry.getStep(stepId, templateId);
+  // Registry legacy removido: usar hierarchicalTemplateSource (ou JSON) como fallback
+  const blocks = await this.registryCompat.getStep(stepId, templateId);
 
     // ✅ Verificar cancelamento após fetch
     if (signal?.aborted) {
@@ -604,7 +622,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       // Invalidar todos os caches
       cacheService.templates.invalidate(id);
-      await this.registry.invalidate(id);
+  await this.registryCompat.invalidate(id);
 
       this.log(`Template deleted: ${id}`);
       return this.createResult(undefined);
@@ -981,7 +999,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   invalidateTemplate(id: string): void {
     cacheService.templates.invalidate(id);
-    this.registry.invalidate(id);
+  this.registryCompat.invalidate(id);
     this.loadedSteps.delete(id); // 🚀 FASE 3.1: Limpar do lazy load
     this.log(`Template invalidated: ${id}`);
   }
@@ -1000,7 +1018,7 @@ export class TemplateService extends BaseCanonicalService {
   clearCache(): void {
     cacheService.clearStore('templates');
     // UnifiedTemplateRegistry tem clearL1()
-    this.registry.clearL1();
+  this.registryCompat.clearL1();
     this.loadedSteps.clear(); // 🚀 FASE 3.1: Limpar lazy load
     this.stepLoadPromises.clear();
     this.log('Template cache cleared');
@@ -1604,11 +1622,8 @@ export class TemplateService extends BaseCanonicalService {
         await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnelId);
       } else {
         // Fallback: salvar via registry se disponível
-        if (typeof (this.registry as any).saveStep === 'function') {
-          await (this.registry as any).saveStep(stepId, blocks);
-        } else {
-          throw new Error('Registry.saveStep not available. Set activeFunnel to save via HierarchicalSource.');
-        }
+        // Sem funnel ativo: armazenar apenas em cache local
+        cacheService.templates.set(stepId, blocks);
       }
       
       // Invalidar cache

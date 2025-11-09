@@ -7,8 +7,10 @@
  * Este arquivo será removido em versão futura.
  */
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { EditorProviderCanonical, useEditor as useEditorCanonical, EditorState } from './EditorProviderCanonical';
+// ❌ DEPRECATED: MigrationEditorProvider
+// Mantido apenas temporariamente para evitar quebra abrupta. Será removido após confirmação de zero imports.
 import { UnifiedCRUDProvider } from '@/contexts';
 
 export type UnifiedEditorContextType = ReturnType<typeof useEditorCanonical>;
@@ -24,18 +26,13 @@ export const MigrationEditorProvider: React.FC<{
   enableSupabase?: boolean;
   legacyMode?: boolean;
 }> = ({ children, funnelId, quizId, storageKey, enableSupabase = false }) => {
-  return (
-    <UnifiedCRUDProvider>
-      <EditorProviderCanonical
-        funnelId={funnelId}
-        quizId={quizId}
-        storageKey={storageKey}
-        enableSupabase={enableSupabase}
-      >
-        {children}
-      </EditorProviderCanonical>
-    </UnifiedCRUDProvider>
-  );
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn('[DEPRECATED] MigrationEditorProvider - use EditorProviderCanonical diretamente.');
+    }
+  }, []);
+  return <EditorProviderCanonical>{children}</EditorProviderCanonical>;
 };
 
 export function useUnifiedEditor(): UnifiedEditorContextType;
@@ -54,7 +51,7 @@ export function useUnifiedEditor(options?: { optional?: boolean }): UnifiedEdito
 }
 
 export const useEditor = useUnifiedEditor;
-export const EditorProvider = MigrationEditorProvider;
+export const EditorProvider = EditorProviderCanonical;
 export default MigrationEditorProvider;
 
 export type { UnifiedEditorContextType as EditorContextValue };

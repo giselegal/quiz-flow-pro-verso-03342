@@ -12,7 +12,16 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { History, Clock, User, RotateCcw, Save, FileText, GitBranch } from 'lucide-react';
-import type { FunnelVersion } from '@/services/__deprecated/schemaDrivenFunnelService';
+// Tipo híbrido para versões (compatibilidade durante migração)
+interface FunnelVersion {
+  id: string;
+  name?: string;
+  createdAt: Date | string;
+  version?: number;
+  isAutoSave?: boolean;
+  description?: string;
+  data?: { pages: Array<{ blocks: any[] }> };
+}
 
 interface VersionManagerProps {
   versions: FunnelVersion[];
@@ -151,7 +160,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                     </div>
                   ) : (
                     versions
-                      .sort((a, b) => b.version - a.version)
+                      .sort((a, b) => (b.version || 0) - (a.version || 0))
                       .map(version => (
                         <div
                           key={version.id}
@@ -173,13 +182,15 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                                     currentVersion === version.version ? 'default' : 'outline'
                                   }
                                 >
-                                  v{version.version}
+                                  v{version.version || 0}
                                   {currentVersion === version.version && ' (atual)'}
                                 </Badge>
 
-                                <Badge variant={version.isAutoSave ? 'secondary' : 'outline'}>
-                                  {version.isAutoSave ? 'Auto-save' : 'Manual'}
-                                </Badge>
+                                {typeof version.isAutoSave !== 'undefined' && (
+                                  <Badge variant={version.isAutoSave ? 'secondary' : 'outline'}>
+                                    {version.isAutoSave ? 'Auto-save' : 'Manual'}
+                                  </Badge>
+                                )}
                               </div>
 
                               <p className="font-medium text-sm mb-1">
@@ -189,24 +200,24 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               <div style={{ color: '#8B7355' }}>
                                 <div className="flex items-center space-x-1">
                                   <Clock className="w-3 h-3" />
-                                  <span>{formatDate(version.createdAt)}</span>
+                                  <span>{formatDate(new Date(version.createdAt))}</span>
                                 </div>
                                 <span>•</span>
-                                <span>{getTimeDifference(version.createdAt)}</span>
+                                <span>{getTimeDifference(new Date(version.createdAt))}</span>
                               </div>
 
                               {/* Informações da versão */}
                               <div style={{ color: '#6B4F43' }}>
                                 <span>
-                                  {version.data.pages.length} página
-                                  {version.data.pages.length !== 1 ? 's' : ''} •{' '}
-                                  {version.data.pages.reduce(
-                                    (total: number, page: any) => total + page.blocks.length,
+                                  {(version.data?.pages?.length || 0)} página
+                                  {(version.data?.pages?.length || 0) !== 1 ? 's' : ''} •{' '}
+                                  {(version.data?.pages || []).reduce(
+                                    (total: number, page: any) => total + (page.blocks?.length || 0),
                                     0,
                                   )}{' '}
                                   bloco
-                                  {version.data.pages.reduce(
-                                    (total: number, page: any) => total + page.blocks.length,
+                                  {(version.data?.pages || []).reduce(
+                                    (total: number, page: any) => total + (page.blocks?.length || 0),
                                     0,
                                   ) !== 1
                                     ? 's'

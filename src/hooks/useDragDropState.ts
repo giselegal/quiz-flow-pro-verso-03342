@@ -1,6 +1,6 @@
 import { Block } from '@/types/editor';
 import { DragData, extractDragData, validateDrop } from '@/utils/dragDropUtils';
-import { Active, Over } from '@dnd-kit/core';
+import type { Active, Over } from '@dnd-kit/core'; // type-only import; evita carregar código dnd-kit fora do editor
 import { useCallback, useState } from 'react';
 
 interface UseDragDropStateReturn {

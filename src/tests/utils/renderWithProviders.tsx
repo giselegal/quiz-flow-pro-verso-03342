@@ -8,7 +8,7 @@ import { HelmetProvider } from 'react-helmet-async';
 // Providers reais (podem ser simplificados/mocados se necessário)
 import { ThemeProvider as CustomThemeProvider } from '@/contexts';
 import { AuthProvider } from '@/contexts';
-import OptimizedProviderStack from '@/providers/OptimizedProviderStack';
+import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
 import { SecurityProvider } from '@/providers/SecurityProvider';
 import { MonitoringProvider } from '@/components/monitoring/MonitoringProvider';
 
@@ -25,11 +25,11 @@ export function renderWithProviders(ui: ReactElement, { path = '/' }: Options = 
                         <AuthProvider>
                             <SecurityProvider>
                                 <MonitoringProvider enableAlerts={false} enableAnalytics={false}>
-                                    <OptimizedProviderStack enableLazyLoading={false} enableComponentCaching={false} debugMode={false}>
+                                    <UnifiedAppProvider debugMode={false} autoLoad>
                                         <Router hook={location.hook}>
                                             {ui}
                                         </Router>
-                                    </OptimizedProviderStack>
+                                    </UnifiedAppProvider>
                                 </MonitoringProvider>
                             </SecurityProvider>
                         </AuthProvider>

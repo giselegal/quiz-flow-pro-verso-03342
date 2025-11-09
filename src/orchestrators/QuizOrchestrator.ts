@@ -11,8 +11,16 @@
  */
 
 import { unifiedQuizStorage, UnifiedQuizData } from '@/services/core/UnifiedQuizStorage';
-import { HybridTemplateService } from '@/services/aliases';
-import type { StepTemplate } from '@/services/aliases';
+// Migrado: substituir HybridTemplateService por TemplateService canônico
+import { TemplateService } from '@/services/canonical/TemplateService';
+// StepTemplate legacy substituído por tipo mínimo interno
+interface StepTemplate {
+  name: string;
+  type: string;
+  blocks?: any[];
+  behavior: { autoAdvance: boolean; autoAdvanceDelay: number };
+  validation: { required: boolean; requiredSelections?: number };
+}
 import { ValidationResult } from '@/hooks/useStepValidation';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 import { Block } from '@/types/editor';
@@ -123,11 +131,18 @@ class QuizOrchestrator {
       const currentStep = quizData.metadata.currentStep || 1;
 
       // 2. Carregar configuração da etapa atual
-      const stepConfig = await HybridTemplateService.getStepConfig(currentStep);
-      
-      // 3. Carregar template/blocos da etapa
-      const template = await HybridTemplateService.getTemplate('quiz21StepsComplete');
-      const currentBlocks = this.getBlocksForStep(template, currentStep);
+      // 2. Carregar blocos via TemplateService canônico
+      const stepId = `step-${String(currentStep).padStart(2, '0')}`;
+      const stepResult = await TemplateService.getInstance().getStep(stepId);
+      const currentBlocks = stepResult.success ? stepResult.data : [];
+      // Configuração mínima derivada (antes vinha do HybridTemplateService)
+      const stepConfig: StepTemplate = {
+        name: `Etapa ${currentStep}`,
+        type: 'generic',
+        blocks: currentBlocks,
+        behavior: { autoAdvance: false, autoAdvanceDelay: 1500 },
+        validation: { required: true, requiredSelections: this.deriveRequiredSelections(currentStep) },
+      };
 
       // 4. Validar estado inicial
       const validationResult = this.validateStepData(currentStep, quizData);
@@ -191,9 +206,16 @@ class QuizOrchestrator {
       await this.saveCurrentStepProgress();
 
       // 3. Carregar configuração da nova etapa
-      const stepConfig = await HybridTemplateService.getStepConfig(targetStep);
-      const template = await HybridTemplateService.getTemplate('quiz21StepsComplete');
-      const newBlocks = this.getBlocksForStep(template, targetStep);
+      const targetStepId = `step-${String(targetStep).padStart(2, '0')}`;
+      const stepResult = await TemplateService.getInstance().getStep(targetStepId);
+      const newBlocks = stepResult.success ? stepResult.data : [];
+      const stepConfig: StepTemplate = {
+        name: `Etapa ${targetStep}`,
+        type: 'generic',
+        blocks: newBlocks,
+        behavior: { autoAdvance: false, autoAdvanceDelay: 1500 },
+        validation: { required: true, requiredSelections: this.deriveRequiredSelections(targetStep) },
+      };
 
       // 4. Atualizar progresso no storage
       unifiedQuizStorage.updateProgress(targetStep);
@@ -469,9 +491,11 @@ class QuizOrchestrator {
     }
   }
 
-  private getBlocksForStep(template: any, step: number): Block[] {
-    const stepKey = `step-${step}`;
-    return template[stepKey] || [];
+  // Derivar número de seleções exigidas baseado na fase
+  private deriveRequiredSelections(step: number): number | undefined {
+    if (isScoringPhase(step)) return 3;
+    if (isStrategicPhase(step)) return 1;
+    return undefined;
   }
 
   private calculateCategoryScores(selections: Record<string, string[]>): Record<string, number> {

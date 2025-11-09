@@ -178,3 +178,44 @@ export abstract class BaseCanonicalService implements ICanonicalService {
     return { success: false, error };
   }
 }
+
+// ============================================================================
+// LEGACY COMPAT TYPES (Phase: Deprecated Services Removal)
+// ============================================================================
+// UnifiedFunnelData: tipo híbrido de transição que cobre tanto o formato
+// canônico (FunnelMetadata) quanto campos usados no runtime do editor
+// (UnifiedCRUDService). Evita dependências de serviços legados.
+import type { FunnelMetadata } from './FunnelService';
+import type { UnifiedStage } from '@/services/UnifiedCRUDService';
+import type { FunnelContext } from '@/core/contexts/FunnelContext';
+
+export interface UnifiedFunnelData {
+  id: string;
+  name: string;
+  description?: string;
+  version?: string | number;
+  isPublished?: boolean;
+  pages?: Array<{ id: string; blocks?: any[]; [k: string]: any }>;
+  lastModified?: Date | string;
+  theme?: string; // usado por componentes legacy (FunnelHeader)
+
+  // Canonical
+  type?: FunnelMetadata['type'];
+  category?: string;
+  context?: FunnelContext;
+  templateId?: string;
+  status?: FunnelMetadata['status'];
+  isActive?: boolean;
+  config?: Record<string, any>;
+  metadata?: Record<string, any>;
+
+  // Editor runtime
+  stages?: UnifiedStage[];
+  settings?: Record<string, any>;
+  userId?: string;
+
+  // Datas flexíveis
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}
+

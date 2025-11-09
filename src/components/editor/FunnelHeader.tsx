@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { appLogger } from '@/utils/logger';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
-import type { SchemaDrivenFunnelData } from '@/services/__deprecated/schemaDrivenFunnelService';
+// Removendo dependência de schemaDrivenFunnelService legacy - usar UnifiedFunnelData minimal
+import type { UnifiedFunnelData as SchemaDrivenFunnelData } from '@/services/canonical/types';
 import { FunnelManager } from './FunnelManager';
 import { SaveStatusIndicator } from './SaveStatusIndicator';
 import { FunnelSettingsModal } from './FunnelSettingsModal';
@@ -74,7 +75,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
             config: {},
             createdAt: new Date('2024-01-01'),
             lastModified: new Date(),
-            user_id: 'template',
+            userId: 'template',
           });
         } else {
           // Para funis personalizados, buscar no Supabase
@@ -94,7 +95,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
               config: {},
               createdAt: new Date(),
               lastModified: new Date(),
-              user_id: 'unknown',
+              userId: 'unknown',
             });
           }
         }
@@ -296,13 +297,13 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                 <strong>Version:</strong> {currentFunnel.version || 1}
               </span>
               <span>
-                <strong>Created:</strong> {currentFunnel.createdAt?.toLocaleDateString() || 'N/A'}
+                <strong>Created:</strong> {currentFunnel?.createdAt ? new Date(currentFunnel.createdAt as any).toLocaleDateString() : 'N/A'}
               </span>
               <span>
-                <strong>Modified:</strong> {currentFunnel.lastModified?.toLocaleDateString() || 'N/A'}
+                <strong>Modified:</strong> {currentFunnel?.lastModified ? new Date(currentFunnel.lastModified as any).toLocaleDateString() : 'N/A'}
               </span>
               <span>
-                <strong>Pages:</strong> {Array.isArray(currentFunnel.pages) ? currentFunnel.pages.length : 0}
+                <strong>Pages:</strong> {Array.isArray(currentFunnel?.pages) ? currentFunnel.pages.length : 0}
               </span>
             </div>
           </div>

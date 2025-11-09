@@ -3,7 +3,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Home, RotateCcw } from 'lucide-react';
 import React from 'react';
 import { useLocation } from 'wouter';
-import { useQuiz21Steps } from '@/providers/FunnelMasterProvider';
+// Substitui hook legado de navegação por integração com QuizFlowProvider
+import { useQuizFlow } from '@/contexts/quiz/QuizFlowProvider';
 import { QuizBackendStatus } from './QuizBackendStatus';
 
 interface Quiz21StepsNavigationProps {
@@ -37,22 +38,22 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
 }) => {
   const [, setLocation] = useLocation();
 
-  const {
-    currentStep,
-    totalSteps,
-    canGoNext,
-    canGoPrevious,
-    isCurrentStepComplete,
-    autoAdvanceEnabled,
-    goToNextStep,
-    goToPreviousStep,
-    resetQuiz,
-    getProgress,
-    getStepRequirements,
-    userName,
-    answers,
-    currentStepSelections,
-  } = useQuiz21Steps();
+  const flow = useQuizFlow();
+  // Shim para API antiga (TODO: integrar requisitos reais e respostas)
+  const currentStep = flow.currentStep;
+  const totalSteps = flow.totalSteps;
+  const canGoNext = currentStep < totalSteps;
+  const canGoPrevious = currentStep > 1;
+  const isCurrentStepComplete = flow.canProceed;
+  const autoAdvanceEnabled = false;
+  const goToNextStep = flow.next;
+  const goToPreviousStep = flow.previous;
+  const resetQuiz = () => flow.goTo(1);
+  const getProgress = () => flow.progress;
+  const getStepRequirements = () => ({ requiredSelections: 1 });
+  const userName: string | null = null;
+  const answers: any[] = [];
+  const currentStepSelections: Record<string, any> = {};
 
   const progress = getProgress();
   const stepRequirements = getStepRequirements();
@@ -158,11 +159,10 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
                   </span>
                   {getSelectionInfo() && (
                     <span
-                      className={`text-xs px-2 py-1 rounded ${
-                        isCurrentStepComplete
+                      className={`text-xs px-2 py-1 rounded ${isCurrentStepComplete
                           ? 'bg-green-100 text-green-700'
                           : 'bg-orange-100 text-orange-700'
-                      }`}
+                        }`}
                     >
                       {getSelectionInfo()}
                     </span>
@@ -218,15 +218,14 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
                 disabled={!canGoNext}
                 variant={nextButtonActive ? 'default' : 'outline'}
                 size="sm"
-                className={`h-9 px-3 ${
-                  nextButtonActive
+                className={`h-9 px-3 ${nextButtonActive
                     ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg animate-pulse'
                     : ''
-                }`}
+                  }`}
               >
                 {autoAdvanceEnabled &&
-                stepRequirements.requiredSelections > 0 &&
-                !isCurrentStepComplete
+                  stepRequirements.requiredSelections > 0 &&
+                  !isCurrentStepComplete
                   ? `Selecione ${stepRequirements.requiredSelections - selectionsCount} mais`
                   : 'Avançar'}
                 <ChevronRight className="h-4 w-4 ml-1" />
@@ -272,10 +271,10 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
           {/* 🔍 BACKEND STATUS */}
           {showBackendStatus && funnelId && (
             <div className="mt-3 pt-3 border-t border-stone-200">
-              <QuizBackendStatus 
-                funnelId={funnelId} 
-                variant="compact" 
-                showDetails={variant === 'full'} 
+              <QuizBackendStatus
+                funnelId={funnelId}
+                variant="compact"
+                showDetails={variant === 'full'}
               />
             </div>
           )}

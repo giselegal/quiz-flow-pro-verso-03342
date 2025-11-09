@@ -4,8 +4,7 @@
  * Script para ativar e configurar a IA do funil automaticamente
  */
 
-import { HybridTemplateService } from '@/services/aliases';
-import { AIEnhancedHybridTemplateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 
 /**
  * 🎯 Configurações otimizadas da IA do funil
@@ -29,10 +28,11 @@ export function activateFunnelAI() {
         console.log('=====================================');
 
         // Ativar IA com configurações otimizadas
-        AIEnhancedHybridTemplateService.enableAI(OPTIMAL_AI_CONFIG);
+    // IA legacy removida: placeholder para futura integração canônica
+    console.log('ℹ️ IA legacy removida – usando placeholder');
 
         // Definir contexto inicial inteligente
-        AIEnhancedHybridTemplateService.setAIContext({
+        const aiContext = {
             userId: `user_${  Date.now()}`,
             userName: 'Usuário',
             previousAnswers: {},
@@ -48,19 +48,18 @@ export function activateFunnelAI() {
                 dropOffPoints: [],
                 conversionRate: 0,
             },
-        });
+        };
+        (window as any).__funnelAIContext = aiContext;
 
         // Verificar status
-        const status = AIEnhancedHybridTemplateService.getAIStatus();
-
-        console.log('✅ IA DO FUNIL ATIVADA!');
-        console.log('📊 Status da IA:', {
-            'Habilitada': status.enabled ? '✅' : '❌',
-            'Serviço ativo': status.hasService ? '✅' : '❌',
-            'Personalização': status.config.personalizationEnabled ? '✅' : '❌',
-            'Otimização': status.config.optimizationEnabled ? '✅' : '❌',
-            'Geração de conteúdo': status.config.contentGenerationEnabled ? '✅' : '❌',
-            'Fallback': status.config.fallbackEnabled ? '✅' : '❌',
+        console.log('✅ Placeholder de IA aplicado!');
+        console.log('📊 Status da IA (simulado):', {
+            'Habilitada': '✅',
+            'Serviço ativo': '❌ (legacy removido)',
+            'Personalização': '🔄 futura',
+            'Otimização': '🔄 futura',
+            'Geração de conteúdo': '🔄 futura',
+            'Fallback': '✅ básico',
         });
 
         console.log('🎯 FUNCIONALIDADES ATIVAS:');
@@ -78,13 +77,8 @@ export function activateFunnelAI() {
 
         // Tentar ativação simplificada
         try {
-            AIEnhancedHybridTemplateService.enableAI({
-                enabled: true,
-                fallbackEnabled: true,
-                personalizationEnabled: false,
-                optimizationEnabled: false,
-                contentGenerationEnabled: false,
-            });
+            // Modo simplificado: apenas marca contexto
+            (window as any).__funnelAIContextFallback = { enabled: true };
 
             console.log('⚠️ IA ativada em modo simplificado');
             return true;
@@ -100,15 +94,11 @@ export function activateFunnelAI() {
  * 🔧 Verificar status da IA
  */
 export function checkFunnelAIStatus() {
-    const status = AIEnhancedHybridTemplateService.getAIStatus();
-
-    console.log('📊 STATUS DA IA DO FUNIL:');
+    const ctx = (window as any).__funnelAIContext || null;
+    console.log('📊 STATUS DA IA (placeholder):');
     console.log('========================');
-    console.log('Habilitada:', status.enabled ? '✅' : '❌');
-    console.log('Serviço ativo:', status.hasService ? '✅' : '❌');
-    console.log('Configurações:', status.config);
-
-    return status;
+    console.log('Contexto presente:', ctx ? '✅' : '❌');
+    return { enabled: !!ctx, context: ctx } as any;
 }
 
 /**

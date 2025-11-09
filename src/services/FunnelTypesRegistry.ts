@@ -5,7 +5,8 @@
  * que podem ser editados no ModernUnifiedEditor
  */
 
-import HybridTemplateService from './deprecated/HybridTemplateService';
+// Migrado: usar TemplateService canônico
+import { templateService } from '@/services/canonical/TemplateService';
 
 // ============================================================================
 // INTERFACES
@@ -56,7 +57,7 @@ export const FUNNEL_TYPES: Record<string, FunnelType> = {
         defaultSteps: 21,
         supportsAI: true,
         hasCustomLogic: true,
-        templateService: HybridTemplateService,
+    templateService: templateService,
         editorConfig: {
             showStepNavigation: true,
             showProgressBar: true,
@@ -223,37 +224,27 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
         throw new Error(`Tipo de funil inválido: ${typeId}`);
     }
 
-    // Para o quiz de estilo, usar HybridTemplateService
+    // Para o quiz de estilo, usar TemplateService canônico
     if (typeId === 'quiz-estilo-21-steps' && funnelType.templateService) {
-        console.log('🎯 Carregando quiz usando HybridTemplateService...');
+        console.log('🎯 Carregando quiz usando TemplateService (canônico)...');
 
         try {
-            const svc = funnelType.templateService;
+            const svc = funnelType.templateService as typeof templateService;
             const stepCount = funnelType.defaultSteps || 21;
-
-            const hasGetStepConfig = typeof svc.getStepConfig === 'function';
-            const hasGetGlobalConfig = typeof svc.getGlobalConfig === 'function';
-
-            if (!hasGetStepConfig) {
-                console.warn('⚠️ templateService.getStepConfig ausente – usando steps placeholders');
-            }
-            if (!hasGetGlobalConfig) {
-                console.warn('⚠️ templateService.getGlobalConfig ausente – usando globalConfig fallback');
-            }
 
             // Carregar todas as etapas (com fallback resiliente)
             const steps = [] as any[];
             for (let i = 1; i <= stepCount; i++) {
                 try {
-                    const stepConfig = hasGetStepConfig ? await svc.getStepConfig(i) : null;
+                    const stepId = `step-${String(i).padStart(2, '0')}`;
+                    const res = await svc.getStep(stepId);
+                    const blocks = res.success ? res.data : [];
                     steps.push({
                         stepNumber: i,
-                        ...(stepConfig || {
-                            name: `Etapa ${i}`,
-                            type: 'generic',
-                            blocks: [],
-                            placeholder: true,
-                        }),
+                        name: `Etapa ${i}`,
+                        type: 'generic',
+                        blocks,
+                        placeholder: blocks.length === 0,
                     });
                 } catch (stepErr) {
                     console.warn(`⚠️ Falha carregando step ${i}, usando placeholder:`, stepErr);
@@ -268,22 +259,13 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                 }
             }
 
-            // Config global com fallback mínimo
-            let globalConfig: any;
-            try {
-                globalConfig = hasGetGlobalConfig ? svc.getGlobalConfig() : null;
-            } catch (gcErr) {
-                console.warn('⚠️ Erro ao obter globalConfig, usando fallback:', gcErr);
-                globalConfig = null;
-            }
-            if (!globalConfig || typeof globalConfig !== 'object') {
-                globalConfig = {
-                    navigation: { autoAdvanceSteps: [], manualAdvanceSteps: [], defaultAutoAdvanceDelay: 1500 },
-                    validation: { globalRules: {}, strictMode: false },
-                    ui: { theme: 'default' },
-                    analytics: { enabled: false },
-                };
-            }
+            // Config global mínima (sem dependência de método legado)
+            const globalConfig = {
+                navigation: { autoAdvanceSteps: [], manualAdvanceSteps: [], defaultAutoAdvanceDelay: 1500 },
+                validation: { globalRules: {}, strictMode: false },
+                ui: { theme: 'default' },
+                analytics: { enabled: false },
+            };
 
             return {
                 id: funnelId,
@@ -294,8 +276,7 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                 totalSteps: stepCount,
                 isQuiz: true,
                 _resilience: {
-                    hasGetStepConfig,
-                    hasGetGlobalConfig,
+                    canonical: true,
                 },
             };
         } catch (error) {
@@ -329,19 +310,23 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
         throw new Error(`Tipo de funil inválido: ${typeId}`);
     }
 
-    // Para o quiz de estilo, usar HybridTemplateService
+    // Para o quiz de estilo, usar TemplateService canônico
     if (typeId === 'quiz-estilo-21-steps' && funnelType.templateService) {
-        console.log('💾 Salvando quiz usando HybridTemplateService...');
+        console.log('💾 Salvando quiz usando TemplateService (canônico)...');
 
         try {
             // Salvar cada step modificado
+            let saved = 0;
             if (config.steps) {
                 for (const step of config.steps) {
                     if (step.modified) {
-                        await funnelType.templateService.saveStepOverride(
-                            step.stepNumber,
-                            step,
-                        );
+                        const stepId = `step-${String(step.stepNumber).padStart(2, '0')}`;
+                        const blocks = Array.isArray(step.blocks) ? step.blocks : [];
+                        const result = await templateService.saveStep(stepId, blocks);
+                        if (!result.success) {
+                            throw result.error;
+                        }
+                        saved += 1;
                     }
                 }
             }
@@ -349,7 +334,7 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
             return {
                 success: true,
                 message: `Quiz ${funnelId} salvo com sucesso`,
-                savedSteps: config.steps?.filter((s: any) => s.modified)?.length || 0,
+                savedSteps: saved,
             };
         } catch (error) {
             console.error('Erro ao salvar quiz:', error);

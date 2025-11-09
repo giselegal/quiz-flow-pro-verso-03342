@@ -17,7 +17,7 @@ declare module '../../services/NotificationService' {
 declare module './UnifiedTemplateService' {
   export const UnifiedTemplateService: any;
   export const unifiedTemplateService: any;
-  export const HybridTemplateService: any;
+  // HybridTemplateService removido
 }
 
 declare module './UnifiedStorageService' {
@@ -36,7 +36,7 @@ declare module '@/services/aliases' {
   export const templateService: any;
   export const unifiedTemplateService: any;
   export const UnifiedStorageService: any;
-  export const HybridTemplateService: any;
+  // HybridTemplateService removido
   export type StepTemplate = any;
   export const ConfigurationAPI: any;
   export const quizSupabaseService: any;

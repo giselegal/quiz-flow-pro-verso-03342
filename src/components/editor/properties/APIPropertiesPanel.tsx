@@ -23,7 +23,8 @@ import { AlertCircle, RefreshCw, Check, X, Database } from 'lucide-react';
 
 import { useBlockProperties } from '@/hooks/useBlockProperties';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
-import { useFunnels } from '@/providers/FunnelMasterProvider';
+// Substitui hook legado de funis do FunnelMasterProvider
+import { useUnifiedFunnel } from '@/contexts';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
 // ===== INTERFACES =====
@@ -53,7 +54,7 @@ const FunnelDataDisplay: React.FC<{
     blockType: string;
 }> = memo(({ blockId, blockType }) => {
     const builder = usePureBuilder();
-    const funnelsContext = useFunnels();
+    const funnelsContext = useUnifiedFunnel();
 
     // 🛡️ DEFENSIVE GUARD: Verificar se builder está disponível  
     if (!builder?.state) {
@@ -78,8 +79,9 @@ const FunnelDataDisplay: React.FC<{
 
             // TODO: Implement template blocks loading
 
+            // Ajustado para usar API do UnifiedFunnelContext
             return {
-                funnelId: funnelsContext?.currentFunnel?.id || 'local-funnel',
+                funnelId: funnelsContext?.funnelId || 'local-funnel',
                 currentStep: stepState.currentStep,
                 totalSteps: Object.keys(stepState.stepBlocks).length || 21, // Dinâmico baseado nos dados reais
                 blockIndex: currentStepBlocks.findIndex((b: any) => b.id === blockId) + 1,
@@ -95,7 +97,7 @@ const FunnelDataDisplay: React.FC<{
                 blockProperties: currentBlock?.properties,
                 blockOrder: currentBlock ? currentStepBlocks.indexOf(currentBlock) : -1,
                 // Status de integração
-                isConnectedToFunnel: !!currentBlock && !!funnelsContext,
+                isConnectedToFunnel: !!currentBlock && !!funnelsContext?.funnel,
                 canSaveToDatabase: false,
             };
         } catch (error) {

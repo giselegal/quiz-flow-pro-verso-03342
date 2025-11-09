@@ -11,7 +11,7 @@
 
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
 import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
-import type { UnifiedFunnelData } from '@/services/__deprecated/FunnelUnifiedService';
+import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';

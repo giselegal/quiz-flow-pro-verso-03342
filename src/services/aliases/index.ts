@@ -48,9 +48,10 @@ export { default as MasterTemplateService } from '@/services/templates/MasterTem
 
 // ===== Compatibilidade com ServiceAliases (ponte de migração) =====
 // Template layer (legados com depreciação)
-export { default as HybridTemplateService } from '@/services/deprecated/HybridTemplateService';
+// REMOVIDO: HybridTemplateService (deprecated) – usar templateService canônico
+// export { default as HybridTemplateService } from '@/services/deprecated/HybridTemplateService';
 // Tipos úteis expostos via barrel para imports estáveis
-export type { StepTemplate } from '@/services/deprecated/HybridTemplateService';
+// export type { StepTemplate } from '@/services/deprecated/HybridTemplateService';
 
 // Storage compatível (já exportado acima como classe)
 // export { StorageService } from '@/services/canonical/StorageService';
@@ -80,4 +81,4 @@ export { ConfigurationService as ConfigurationAPI } from '@/services/Configurati
 
 // FunnelUnifiedService: DEPRECATED - Usar canonical/FunnelService em novos códigos
 // Mantido apenas para compatibilidade temporária de types
-export type { UnifiedFunnelData } from '@/services/__deprecated/FunnelUnifiedService';
+export type { UnifiedFunnelData } from '@/services/canonical/types';

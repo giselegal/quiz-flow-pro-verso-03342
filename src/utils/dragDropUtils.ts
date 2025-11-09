@@ -1,5 +1,5 @@
 import { Block } from '@/types/editor';
-import { Active, Over } from '@dnd-kit/core';
+import type { Active, Over } from '@dnd-kit/core'; // type-only import para evitar incluir runtime de dnd-kit no bundle principal
 import { logger } from '@/utils/debugLogger';
 import { parseUniqueId } from '@/utils/generateUniqueId';
 import { makeStepKey } from '@/utils/stepKey';

@@ -1,4 +1,5 @@
-import { UserComponent } from '@craftjs/core';
+import type { UserComponent } from '@craftjs/core';
+import type React from 'react';
 
 // Tipos base para propriedades dos módulos
 export interface BaseModuleProps {

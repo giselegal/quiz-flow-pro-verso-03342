@@ -14,14 +14,15 @@
 // ============================================================================
 
 // ✅ OFFICIAL - Provider único recomendado (use este!)
-export {
-    EditorProviderCanonical,
-    EditorProviderCanonical as EditorProvider,
-    useEditor,
-    type EditorState,
-    type EditorContextValue,
-    type EditorActions
-} from './EditorProviderCanonical';
+import {
+    HeaderSection,
+    UserInfoSection,
+    ProgressSection,
+    MainImageSection,
+    ModularResultHeaderBlock,
+    LazyModularResultEditor,
+    LazyResponsivePreview,
+} from './modules';
 
 // ⚠️ DEPRECATED - Aliases de compatibilidade (serão removidos)
 /** @deprecated Use EditorProviderCanonical */
@@ -30,8 +31,7 @@ export { EditorProviderCanonical as EditorProviderUnified } from './EditorProvid
 /** @deprecated Use useEditor from EditorProviderCanonical */
 export { useEditor as useEditorOptional } from './EditorProviderCanonical';
 
-/** @deprecated Use EditorProviderCanonical */
-export { MigrationEditorProvider } from './EditorProviderMigrationAdapter';
+// ❌ REMOVIDO: MigrationEditorProvider (use EditorProviderCanonical diretamente)
 
 // 🆕 FASE 3: Compatibility hooks
 export { usePureBuilder, usePureBuilderCompat } from '@/hooks/usePureBuilderCompat';
@@ -73,7 +73,6 @@ export {
     UserInfoSection,
     ProgressSection,
     MainImageSection,
-    ModularResultEditor,
     ModularResultHeaderBlock,
 } from './modules';
 
@@ -84,6 +83,9 @@ export type {
     MainImageSectionProps,
     ModularResultHeaderProps,
 } from './modules';
+
+// Reexport helpers para uso lazy (ex: const ModularResultEditor = React.lazy(LazyModularResultEditor))
+export { LazyModularResultEditor, LazyResponsivePreview } from './modules';
 
 // ============================================================================
 // CONFIGURAÇÕES E CONSTANTES

@@ -11,7 +11,18 @@
 import { Block } from '@/types/editor';
 import { EditorHistoryService } from './HistoryService';
 import { TemplateLoader } from './TemplateLoader';
-import { arrayMove } from '@dnd-kit/sortable';
+// Removido import de '@dnd-kit/sortable' para evitar que dnd-kit vaze para chunks de serviços.
+// Implementação mínima de arrayMove suficiente para reordenação local.
+const arrayMove = <T,>(items: T[], from: number, to: number): T[] => {
+  if (from === to) return items.slice();
+  const copy = items.slice();
+  const startIndex = from < 0 ? copy.length + from : from;
+  if (startIndex < 0 || startIndex >= copy.length) return copy; // guarda defensiva
+  const [item] = copy.splice(startIndex, 1);
+  const endIndex = to < 0 ? copy.length + to : to;
+  copy.splice(endIndex, 0, item);
+  return copy;
+};
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;

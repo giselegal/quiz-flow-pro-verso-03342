@@ -5,9 +5,9 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
-import { HybridTemplateService } from '@/services/aliases';
+// REMOVIDO: HybridTemplateService – usar apenas templateService + IA canônica
 import { activateFunnelAI, checkFunnelAIStatus } from '../utils/funnelAIActivator';
-import { AIEnhancedHybridTemplateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 
 interface AIStatus {
     enabled: boolean;
@@ -88,7 +88,8 @@ export function useFunnelAI(): UseFunnelAIReturn {
     // ⏸️ Desabilitar IA
     const disableAI = useCallback(() => {
         try {
-            AIEnhancedHybridTemplateService.disableAI();
+            // Placeholder: desabilitar IA (canônico ainda não implementado) – limpar cache de steps
+            templateService.clearCache();
             refreshStatus();
         } catch (error) {
             setAIStatus(prev => ({
@@ -101,7 +102,10 @@ export function useFunnelAI(): UseFunnelAIReturn {
     // 🧠 Definir contexto da IA
     const setAIContext = useCallback((context: any) => {
         try {
-            AIEnhancedHybridTemplateService.setAIContext(context);
+            // Placeholder: armazenar contexto em window para futura IA
+            if (typeof window !== 'undefined') {
+                (window as any).__AI_CONTEXT__ = context;
+            }
         } catch (error) {
             console.warn('⚠️ Erro ao definir contexto da IA:', error);
         }
@@ -114,7 +118,15 @@ export function useFunnelAI(): UseFunnelAIReturn {
                 setAIContext(context);
             }
 
-            return await AIEnhancedHybridTemplateService.getStepConfig(stepNumber, context);
+            // Placeholder: retornar bloco configurado + contexto simulado
+            const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+            const res = await templateService.getStep(stepId);
+            return {
+                stepNumber,
+                blocks: res.success ? res.data : [],
+                aiContext: context,
+                optimized: false,
+            };
         } catch (error) {
             console.error('❌ Erro ao obter step otimizado:', error);
             throw error;

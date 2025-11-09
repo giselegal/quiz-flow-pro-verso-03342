@@ -19,7 +19,9 @@ export { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 // ✏️ EDITOR
 export { EditorProvider, useEditor } from './editor/EditorContext';
 export { EditorContext } from './editor/EditorContext';
-export { MigrationEditorProvider, useUnifiedEditor } from '../components/editor/EditorProviderMigrationAdapter';
+// ❌ REMOVIDO: MigrationEditorProvider (use EditorProvider diretamente)
+// Compat: reexporta useEditor como useUnifiedEditor para manter chamadas existentes funcionando
+export { useEditor as useUnifiedEditor } from './editor/EditorContext';
 // EditorDndContext.tsx está vazio - removido
 export { EditorQuizProvider, useEditorQuiz } from './editor/EditorQuizContext';
 export { EditorRuntimeProviders } from './editor/EditorRuntimeProviders';

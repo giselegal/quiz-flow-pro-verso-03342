@@ -12,7 +12,7 @@
 import { quizOrchestrator } from './QuizOrchestrator';
 import { quizDataPipeline } from './QuizDataPipeline';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { HybridTemplateService } from '@/services/aliases';
+import { templateService } from '@/services/canonical/TemplateService';
 import { styleCalculationEngine } from '@/engines/StyleCalculationEngine';
 
 export interface BootstrapConfig {
@@ -143,7 +143,7 @@ class QuizAutoBootstrap {
     this.stopHealthMonitoring();
     
     // Limpar caches
-    HybridTemplateService.clearCache();
+  templateService.clearCache();
     styleCalculationEngine.clearCache();
     
     // Reinicializar
@@ -194,8 +194,8 @@ class QuizAutoBootstrap {
 
       // Verificar Templates
       try {
-        const template = await HybridTemplateService.getTemplate('quiz21StepsComplete');
-        if (!template) {
+        const prep = await templateService.prepareTemplate('quiz21StepsComplete');
+        if (!prep.success) {
           health.templates = 'error';
         }
       } catch (error) {
@@ -311,16 +311,13 @@ class QuizAutoBootstrap {
 
     try {
       const templateId = this.config.templateId || 'quiz21StepsComplete';
-      const template = await HybridTemplateService.getTemplate(templateId);
-      
-      if (!template) {
-        throw new Error(`Template ${templateId} não encontrado`);
+      const prep = await templateService.prepareTemplate(templateId);
+      if (!prep.success) {
+        throw prep.error || new Error(`Falha ao preparar template ${templateId}`);
       }
-
-      console.log('📄 Templates carregados:', {
-        templateId,
-        stepsCount: Object.keys(template).length,
-      });
+      const steps = templateService.steps.list();
+      const stepsCount = steps.success ? steps.data.length : 0;
+      console.log('📄 Templates preparados:', { templateId, stepsCount });
     } catch (error) {
       throw new Error(`Falha no carregamento de templates: ${error}`);
     }

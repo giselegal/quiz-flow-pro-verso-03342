@@ -12,10 +12,17 @@ export {
     ModularResultHeaderBlock,
 } from './ModularResultHeader';
 
-export {
-    ModularResultEditor,
-    ResponsivePreview,
-} from './ModularResultEditor';
+// Lazy boundary para evitar carregamento antecipado de craftjs.
+export const LazyModularResultEditor = async () =>
+    import('./ModularResultEditor').then(m => ({ default: m.ModularResultEditor }));
+export const LazyResponsivePreview = async () =>
+    import('./ModularResultEditor').then(m => ({ default: m.ResponsivePreview }));
+
+/**
+ * NOTA: ModularResultEditor está deprecated e agora só deve ser
+ * carregado via import dinâmico. Para usar em React:
+ * const ModularResultEditor = React.lazy(LazyModularResultEditor);
+ */
 
 export {
     Step20SystemSelector,

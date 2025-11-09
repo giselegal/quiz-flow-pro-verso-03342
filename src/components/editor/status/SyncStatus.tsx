@@ -13,7 +13,15 @@ import {
   Wifi,
   WifiOff,
 } from 'lucide-react';
-import type { AutoSaveState } from '@/services/__deprecated/schemaDrivenFunnelService';
+// Estrutura de estado de auto-save compatível (híbrida)
+interface AutoSaveState {
+  pendingChanges?: number;
+  errorCount?: number;
+  lastSaved?: Date;
+  lastSavedAt?: Date | string;
+  enabled?: boolean;
+  interval?: number;
+}
 
 interface SyncStatusProps {
   autoSaveState: AutoSaveState;
@@ -73,8 +81,9 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
       return `Erro no auto-save (${autoSaveState.errorCount})`;
     }
 
-    if (autoSaveState.lastSaved) {
-      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSaved.getTime()) / 1000);
+    const lastSavedDate = autoSaveState.lastSaved || (autoSaveState.lastSavedAt ? new Date(autoSaveState.lastSavedAt) : undefined);
+    if (lastSavedDate) {
+      const timeDiff = Math.floor((Date.now() - lastSavedDate.getTime()) / 1000);
       if (timeDiff < 60) {
         return `Salvo há ${timeDiff}s`;
       } else if (timeDiff < 3600) {
@@ -189,10 +198,10 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         )}
 
         {/* Última sincronização */}
-        {autoSaveState.lastSaved && (
+        {(autoSaveState.lastSaved || autoSaveState.lastSavedAt) && (
           <div style={{ color: '#8B7355' }}>
             <History className="w-3 h-3" />
-            <span>Última sincronização: {autoSaveState.lastSaved.toLocaleTimeString()}</span>
+            <span>Última sincronização: {(autoSaveState.lastSaved ? autoSaveState.lastSaved : new Date(autoSaveState.lastSavedAt as any)).toLocaleTimeString()}</span>
           </div>
         )}
 

@@ -30,7 +30,7 @@ import {
     Zap,
     Shield,
 } from 'lucide-react';
-import { HybridTemplateService } from '@/services/aliases';
+import { templateService } from '@/services/canonical/TemplateService';
 
 interface StepBehaviorConfig {
     stepNumber: number;
@@ -68,19 +68,36 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
 
         try {
             for (let step = 1; step <= 21; step++) {
-                const config = await HybridTemplateService.getStepConfig(step);
+                const stepId = `step-${String(step).padStart(2, '0')}`;
+                const res = await templateService.getStep(stepId);
+                // Procurar bloco de configuração persistido
+                let behaviorBlock = res.success ? res.data.find(b => b.type === 'ConfigBlock') : null;
+                const behavior = behaviorBlock?.properties?.behavior || {
+                    autoAdvance: false,
+                    autoAdvanceDelay: 1500,
+                    showProgress: true,
+                    allowBack: true,
+                };
+                const validation = behaviorBlock?.properties?.validation || {
+                    type: 'selection',
+                    required: true,
+                    requiredSelections: 1,
+                    maxSelections: 3,
+                    minLength: 0,
+                    message: '',
+                };
                 configs.push({
                     stepNumber: step,
-                    autoAdvance: config.behavior.autoAdvance,
-                    autoAdvanceDelay: config.behavior.autoAdvanceDelay,
-                    showProgress: config.behavior.showProgress,
-                    allowBack: config.behavior.allowBack,
-                    validationType: config.validation.type,
-                    required: config.validation.required,
-                    requiredSelections: config.validation.requiredSelections,
-                    maxSelections: config.validation.maxSelections,
-                    minLength: config.validation.minLength,
-                    validationMessage: config.validation.message,
+                    autoAdvance: behavior.autoAdvance,
+                    autoAdvanceDelay: behavior.autoAdvanceDelay,
+                    showProgress: behavior.showProgress,
+                    allowBack: behavior.allowBack,
+                    validationType: validation.type,
+                    required: validation.required,
+                    requiredSelections: validation.requiredSelections,
+                    maxSelections: validation.maxSelections,
+                    minLength: validation.minLength,
+                    validationMessage: validation.message,
                 });
             }
             setConfigurations(configs);
@@ -129,7 +146,23 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                 },
             };
 
-            await HybridTemplateService.saveStepOverride(stepNumber, stepTemplate);
+            // Persistir como bloco de configuração dentro do step
+            const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+            const existing = await templateService.getStep(stepId);
+            const otherBlocks = existing.success ? existing.data.filter(b => b.type !== 'ConfigBlock') : [];
+            const configBlock = {
+                id: `config-${stepId}`,
+                type: 'ConfigBlock',
+                order: 0,
+                properties: {
+                    behavior: stepTemplate.behavior,
+                    validation: stepTemplate.validation,
+                },
+                content: {},
+            };
+            const newBlocks = [configBlock, ...otherBlocks.map((b, idx) => ({ ...b, order: idx + 1 }))];
+            const saveRes = await templateService.saveStep(stepId, newBlocks);
+            if (!saveRes.success) throw saveRes.error;
 
             toast({
                 title: 'Configuração Salva!',
@@ -170,7 +203,7 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
     };
 
     const resetToDefaults = async () => {
-        HybridTemplateService.clearCache();
+        templateService.clearCache();
         await loadAllConfigurations();
         toast({
             title: 'Configurações Resetadas',

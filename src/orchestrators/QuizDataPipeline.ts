@@ -7,7 +7,8 @@
 
 import { Block } from '@/types/editor';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { HybridTemplateService } from '@/services/aliases';
+// Migrado: usar TemplateService canônico via adapter, evitando HybridTemplateService
+import { TemplateService } from '@/services/canonical/TemplateService';
 
 export interface DataPipelineStage {
   name: string;
@@ -74,7 +75,7 @@ class QuizDataPipeline {
     await this.initializeStage('template-loading', 'processing');
 
     try {
-      const template = await HybridTemplateService.getTemplate(templateId);
+  const template = await TemplateService.getInstance().getTemplate(templateId);
       
       if (!template) {
         throw new Error(`Template ${templateId} não encontrado`);
@@ -115,10 +116,19 @@ class QuizDataPipeline {
 
     try {
       const stepKey = `step-${step}`;
-      const stepBlocks = template[stepKey] || [];
+  const stepBlocks = template[stepKey] || [];
       
       // Aplicar configurações dinâmicas baseadas na etapa
-      const stepConfig = await HybridTemplateService.getStepConfig(step);
+      // Em TemplateService canônico, configuração de step é obtida via getStep/steps.get
+      const stepId = `step-${String(step).padStart(2, '0')}`;
+  const stepBlocksResult = await TemplateService.getInstance().getStep(stepId);
+  const stepBlocksCanonical = stepBlocksResult.success ? stepBlocksResult.data : [];
+      // Config mínima derivada (compat):
+      const stepConfig = {
+        validation: { required: true, requiredSelections: 3 },
+        behavior: { autoAdvance: false, autoAdvanceDelay: 1500 },
+  blocksCount: stepBlocksCanonical.length,
+      } as any;
       const renderedBlocks = this.applyStepConfiguration(stepBlocks, stepConfig);
 
       const transformation: DataTransformation = {

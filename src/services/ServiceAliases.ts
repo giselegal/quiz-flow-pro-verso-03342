@@ -53,10 +53,8 @@ export const TemplateFunnelService = createDeprecatedAlias(
 // ============================================================================
 
 import { UnifiedTemplateService } from './UnifiedTemplateService';
-import HybridTemplateServiceClass from './HybridTemplateService';
 // Exportar canônicos diretamente para facilitar migração por barrel
 export { UnifiedTemplateService } from './UnifiedTemplateService';
-export { default as HybridTemplateService } from './HybridTemplateService';
 
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const TemplateService = createDeprecatedAlias(
@@ -72,12 +70,7 @@ export const JsonTemplateService = createDeprecatedAlias(
   'UnifiedTemplateService',
 );
 
-/** @deprecated Use HybridTemplateService (default import) para templates AI-enhanced */
-export const AIEnhancedHybridTemplateService = createDeprecatedAlias(
-  HybridTemplateServiceClass as any,
-  'AIEnhancedHybridTemplateService',
-  'HybridTemplateService (default export)',
-);
+// AIEnhancedHybridTemplateService removido (sem alias)
 
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const TemplateEditorService = createDeprecatedAlias(

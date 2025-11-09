@@ -19,8 +19,10 @@ import { Block } from '@/types/editor';
 const ScalableQuizRendererLazy = React.lazy(() => import('@/components/core/ScalableQuizRenderer').then(m => ({ default: m.default })));
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { useStepSelection } from '@/hooks/useStepSelection';
-import { DndContext, DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
+// Substituir import direto do runtime dnd-kit por carregamento lazy exclusivo do editor.
+// Mantemos apenas tipos para não puxar o bundle pesado em contextos não-editor.
+import type { DragEndEvent } from '@dnd-kit/core';
+import ReactDndRuntimeBoundary from '@/components/editor/quiz/QuizModularEditor/components/SafeDndContext';
 
 interface StabilizedCanvasProps {
   blocks: Block[];
@@ -58,13 +60,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   const renderCountRef = useRef<number>(0);
 
   // 🎯 DRAG & DROP - Configurar sensors
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8, // Evita ativação acidental ao clicar
-      },
-    }),
-  );
+  // Removido sensors diretos; SafeDndContext interna gerencia isso quando DnD está habilitado.
 
   // 📊 DEBUG TRACKING
   renderCountRef.current++;
@@ -242,11 +238,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
 
   // 🛠️ EDIT MODE RENDERER
   const renderEditMode = useCallback(() => (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
+    <ReactDndRuntimeBoundary onDragEnd={handleDragEnd}>
       <div
         ref={canvasRef}
         key={canvasKey}
@@ -277,9 +269,8 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
           />
         </div>
       </div>
-    </DndContext>
+    </ReactDndRuntimeBoundary>
   ), [
-    sensors,
     handleDragEnd,
     canvasKey,
     stabilizedBlocks,
