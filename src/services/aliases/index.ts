@@ -57,13 +57,12 @@ export { default as MasterTemplateService } from '@/services/templates/MasterTem
 // export { StorageService } from '@/services/canonical/StorageService';
 
 // Quiz e dados auxiliares
-export { QUIZ_21_COMPLETE_DATA } from '@/services/deprecated/Quiz21CompleteService';
+// REMOVED: QUIZ_21_COMPLETE_DATA (serviço Quiz21CompleteService removido - usar templateService canônico)
 export { quizDataService } from '@/services/quizDataService';
 export { quizSupabaseService } from '@/services/quizSupabaseService';
 
 // ⚠️ DEPRECATED: Use quizDataService ou quizSupabaseService
-/** @deprecated Use quizDataService para gestão de sessões ou quizSupabaseService para persistência */
-export { quizService } from '@/services/deprecated/quizService';
+// REMOVED: quizService (serviço removido - usar quizDataService ou quizSupabaseService)
 
 // Validação e Analytics (barrel compatível)
 export { funnelValidationService } from '@/services/funnelValidationService';
