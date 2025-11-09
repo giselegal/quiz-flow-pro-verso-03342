@@ -123,21 +123,50 @@ function AppCore() {
             console.warn('[TemplateOverrides] init error', err);
         }
 
-        // Initialize services with idle callback
+        // (lazy) Carregar schemas padrão + blocos somente após primeira interação ou idle
+        const scheduleSchemaLoad = () => {
+            if ('requestIdleCallback' in window) {
+                (window as any).requestIdleCallback(() => {
+                    try {
+                        loadDefaultSchemas();
+                        console.log('✅ (lazy) Default + editor block schemas loaded');
+                    } catch (e) {
+                        console.warn('⚠️ Falha ao carregar schemas (lazy):', e);
+                    }
+                }, { timeout: 2000 });
+            } else {
+                setTimeout(() => {
+                    try { loadDefaultSchemas(); } catch {/* noop */ }
+                }, 500);
+            }
+        };
+        // Primeira interação acelera carregamento
+        const firstInteraction = () => {
+            scheduleSchemaLoad();
+            ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(evt => {
+                try { window.removeEventListener(evt, firstInteraction); } catch {/* noop */ }
+            });
+        };
+        ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(evt => {
+            window.addEventListener(evt, firstInteraction, { once: true });
+        });
+        // Fallback: se usuário não interagir em 3s, carrega em segundo plano
+        setTimeout(() => scheduleSchemaLoad(), 3000);
+
+        // Initialize services with idle callback (defer health checks)
         const initializeServices = () => {
             try {
                 serviceManager.healthCheckAll().then(results => {
-                    console.log('🔧 Service Health Check:', results);
+                    console.log('🔧 Service Health Check (lazy):', results);
                 });
             } catch (error) {
-                console.warn('⚠️ Service initialization failed:', error);
+                console.warn('⚠️ Service initialization failed (lazy):', error);
             }
         };
-
         if ('requestIdleCallback' in window) {
             (window as any).requestIdleCallback(initializeServices, { timeout: 3000 });
         } else {
-            setTimeout(initializeServices, 1000);
+            setTimeout(initializeServices, 1500);
         }
     }, []);
 

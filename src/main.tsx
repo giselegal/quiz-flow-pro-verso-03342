@@ -17,9 +17,9 @@ if (import.meta.env.PROD && initializeSentry) {
 }
 
 // Importar React normalmente
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
+const LazyApp = lazy(() => import('./App'));
 import ClientLayout from './components/ClientLayout';
 import './index.css';
 // 🔍 SENTRY: Error tracking e performance monitoring
@@ -41,8 +41,12 @@ import { installDeprecationGuards } from './utils/deprecationGuards';
 import './utils/blockLovableInDev';
 // 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
 import './utils/canvasPerformanceControl';
-// ✨ MODULAR STEPS: Sistema modular de steps - auto-registro dos componentes
-import './components/steps';
+// ✨ MODULAR STEPS: adiar auto-registro dos componentes para pós-paint
+defer(() => {
+  import('./components/steps').catch((e) => {
+    if (import.meta.env.DEV) console.warn('[Bootstrap] Falha ao importar steps (lazy):', e);
+  });
+});
 // 🧪 Layer diagnostics (dev only)
 import installLayerDiagnostics from './utils/layerDiagnostics';
 // 🏗️ SCHEMA SYSTEM: Inicializa o sistema modular de schemas com lazy loading
@@ -425,7 +429,9 @@ try {
 }
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
-    <App />
+    <Suspense fallback={<div data-testid="boot-splash" />}> 
+      <LazyApp />
+    </Suspense>
   </ClientLayout>,
 );
 console.log('✅ DEBUG: App renderizado com sucesso');
