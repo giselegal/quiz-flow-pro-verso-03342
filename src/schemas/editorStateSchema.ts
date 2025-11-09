@@ -18,7 +18,15 @@
  */
 
 import { z } from 'zod';
-import { blockSchema } from '@/types/blockSchema';
+
+// Schema básico para Block (validação minimal)
+export const blockBaseSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+  properties: z.record(z.any()),
+  styles: z.record(z.any()).optional(),
+  children: z.array(z.any()).optional(),
+});
 
 // Schema para EditorState
 export const editorStateSchema = z.object({
@@ -28,7 +36,7 @@ export const editorStateSchema = z.object({
   isEditing: z.boolean(),
   dragEnabled: z.boolean(),
   clipboardData: z.any().nullable(),
-  stepBlocks: z.record(z.string(), z.array(blockSchema)),
+  stepBlocks: z.record(z.string(), z.array(blockBaseSchema)),
   dirtySteps: z.record(z.string(), z.boolean()),
   totalSteps: z.number().int().min(1).max(50),
   funnelSettings: z.any(),

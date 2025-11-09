@@ -34,6 +34,8 @@ import { supabase } from '@/integrations/supabase/customClient';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { isSupabaseDisabled } from '@/integrations/supabase/flags';
 import { createLogger } from '@/utils/logger';
+import { blockBaseSchema } from '@/schemas/editorStateSchema';
+import { getUserFriendlyError } from '@/utils/userFriendlyErrors';
 
 // Logger para o SuperUnifiedProvider
 const logger = createLogger({ namespace: 'SuperUnifiedProvider' });
@@ -446,17 +448,44 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 },
             };
 
-        case 'SET_STEP_BLOCKS':
+        case 'SET_STEP_BLOCKS': {
+            // 🛡️ G15 FIX: Validar blocos antes de armazenar
+            const validBlocks: any[] = [];
+            const invalidBlocks: any[] = [];
+
+            for (const block of action.payload.blocks) {
+                const validation = blockBaseSchema.safeParse(block);
+                if (validation.success) {
+                    validBlocks.push(validation.data);
+                } else {
+                    invalidBlocks.push({ block, errors: validation.error.issues });
+                    logger.warn('[SET_STEP_BLOCKS] Bloco inválido detectado', {
+                        stepIndex: action.payload.stepIndex,
+                        blockId: block?.id,
+                        errors: validation.error.issues,
+                    });
+                }
+            }
+
+            if (invalidBlocks.length > 0) {
+                logger.error('[SET_STEP_BLOCKS] Blocos inválidos ignorados', {
+                    stepIndex: action.payload.stepIndex,
+                    invalidCount: invalidBlocks.length,
+                    totalCount: action.payload.blocks.length,
+                });
+            }
+
             return {
                 ...state,
                 editor: {
                     ...state.editor,
                     stepBlocks: {
                         ...state.editor.stepBlocks,
-                        [action.payload.stepIndex]: action.payload.blocks,
+                        [action.payload.stepIndex]: validBlocks,
                     },
                 },
             };
+        }
 
         case 'VALIDATE_STEP':
             return {
@@ -1137,7 +1166,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             if (error) throw error;
             dispatch({ type: 'SET_AUTH_STATE', payload: { user: data.user, isAuthenticated: true, isLoading: false } });
         } catch (error: any) {
-            dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message, isLoading: false } });
+            // 💬 G48 FIX: Mensagem user-friendly
+            const friendlyError = getUserFriendlyError(error, 'fazer login');
+            logger.error('[login] Falha ao fazer login', { error: error.message });
+            dispatch({ type: 'SET_AUTH_STATE', payload: { error: friendlyError.message, isLoading: false } });
             throw error;
         }
     }, []);
