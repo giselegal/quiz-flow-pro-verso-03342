@@ -95,22 +95,25 @@ HierarchicalTemplateSource usa cadeia de prioridade:
 
 ### `/editor?resource=quiz21StepsComplete` precisa existir no Supabase?
 
-**Resposta: NÃO**
+**Resposta: NÃO** (mas a terminologia é confusa - veja nota abaixo)
 
-**Motivo**: `quiz21StepsComplete` é um **template**, não um funil.
+**Motivo**: `quiz21StepsComplete` é um **Funnel Template** (modelo de funil), não uma Funnel Instance.
 
-- **Templates**: Arquivos JSON estáticos em `/public/templates/`
-- **Funnels**: Instâncias editáveis no banco de dados (UUID)
+- **Funnel Templates**: Modelos de workflows completos em `/public/templates/` (read-only)
+- **Funnel Instances**: Cópias editáveis no banco de dados (UUID)
 
 **O que acontece**:
-1. `quiz21StepsComplete` é carregado dos arquivos JSON
-2. Usuário pode visualizar e testar
-3. Se salvar alterações → Sistema cria NOVO registro em `funnels` com UUID
-4. Esse novo funil SIM precisa existir no Supabase
+1. `quiz21StepsComplete` é carregado dos arquivos JSON (template read-only)
+2. Usuário pode visualizar e testar o workflow completo
+3. Se salvar alterações → Sistema cria NOVO registro em `funnels` com UUID (instance)
+4. Essa nova instance SIM precisa existir no Supabase
 
 **Exemplo**:
-- Template: `/editor?resource=quiz21StepsComplete` (JSON)
-- Funnel editado: `/editor?resource=f47ac10b-58cc-4372-a567-0e02b2c3d479` (Supabase)
+- Funnel Template: `/editor?resource=quiz21StepsComplete` (JSON, read-only)
+- Funnel Instance: `/editor?resource=f47ac10b-58cc-4372-a567-0e02b2c3d479` (Supabase, editável)
+
+**⚠️ Nota sobre Terminologia**: 
+`quiz21StepsComplete` **É tecnicamente um funil** (workflow de 21 etapas), mas o código atual chama de "template" para distinguir de instâncias editáveis. Ver `ARCHITECTURE_CLARIFICATION.md` para proposta de melhoria da nomenclatura.
 
 ## 🚀 Próximos Passos
 
