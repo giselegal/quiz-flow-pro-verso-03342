@@ -24,36 +24,46 @@
 -- SECTION 2: RLS POLICIES - FUNNELS
 -- ============================================================================
 
--- Dropar políticas antigas se existirem
-DROP POLICY IF EXISTS "Users can view their own funnels" ON funnels;
-DROP POLICY IF EXISTS "Users can create their own funnels" ON funnels;
-DROP POLICY IF EXISTS "Users can update their own funnels" ON funnels;
-DROP POLICY IF EXISTS "Users can delete their own funnels" ON funnels;
-DROP POLICY IF EXISTS "Public can view active funnels" ON funnels;
+DO $$
+DECLARE
+  user_col TEXT;
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables 
+    WHERE table_schema = 'public' AND table_name = 'funnels'
+  ) THEN
+    -- Detectar nome da coluna de user (user_id, owner_id, created_by, etc)
+    SELECT column_name INTO user_col
+    FROM information_schema.columns
+    WHERE table_schema = 'public' 
+    AND table_name = 'funnels'
+    AND column_name IN ('user_id', 'owner_id', 'created_by', 'author_id');
+    
+    IF user_col IS NOT NULL THEN
+      -- Dropar políticas antigas
+      EXECUTE 'DROP POLICY IF EXISTS "Users can view their own funnels" ON funnels';
+      EXECUTE 'DROP POLICY IF EXISTS "Users can create their own funnels" ON funnels';
+      EXECUTE 'DROP POLICY IF EXISTS "Users can update their own funnels" ON funnels';
+      EXECUTE 'DROP POLICY IF EXISTS "Users can delete their own funnels" ON funnels';
+      EXECUTE 'DROP POLICY IF EXISTS "Public can view active funnels" ON funnels';
 
--- Habilitar RLS
-ALTER TABLE funnels ENABLE ROW LEVEL SECURITY;
+      -- Habilitar RLS
+      ALTER TABLE funnels ENABLE ROW LEVEL SECURITY;
 
--- SELECT: Users podem ver seus próprios funis + funis públicos (se colunas existirem)
-CREATE POLICY "funnels_select_policy" ON funnels
-  FOR SELECT
-  USING (auth.uid()::text = user_id);
-
--- INSERT: Users podem criar funis para si mesmos
-CREATE POLICY "funnels_insert_policy" ON funnels
-  FOR INSERT
-  WITH CHECK (auth.uid()::text = user_id);
-
--- UPDATE: Users podem atualizar apenas seus próprios funis
-CREATE POLICY "funnels_update_policy" ON funnels
-  FOR UPDATE
-  USING (auth.uid()::text = user_id)
-  WITH CHECK (auth.uid()::text = user_id);
-
--- DELETE: Users podem deletar apenas seus próprios funis
-CREATE POLICY "funnels_delete_policy" ON funnels
-  FOR DELETE
-  USING (auth.uid()::text = user_id);
+      -- Criar policies usando a coluna detectada
+      EXECUTE format('CREATE POLICY "funnels_select_policy" ON funnels FOR SELECT USING (auth.uid()::text = %I)', user_col);
+      EXECUTE format('CREATE POLICY "funnels_insert_policy" ON funnels FOR INSERT WITH CHECK (auth.uid()::text = %I)', user_col);
+      EXECUTE format('CREATE POLICY "funnels_update_policy" ON funnels FOR UPDATE USING (auth.uid()::text = %I) WITH CHECK (auth.uid()::text = %I)', user_col, user_col);
+      EXECUTE format('CREATE POLICY "funnels_delete_policy" ON funnels FOR DELETE USING (auth.uid()::text = %I)', user_col);
+      
+      RAISE NOTICE '✅ RLS policies criadas para funnels (coluna: %)', user_col;
+    ELSE
+      RAISE NOTICE '⚠️  Tabela funnels existe mas não tem coluna user_id/owner_id - pulando RLS';
+    END IF;
+  ELSE
+    RAISE NOTICE '⚠️  Tabela funnels não existe - pulando';
+  END IF;
+END $$;
 
 -- ============================================================================
 -- SECTION 3: RLS POLICIES - QUIZ_PRODUCTION
