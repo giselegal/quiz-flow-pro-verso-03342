@@ -7,6 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🚀 Quiz Flow Pro Verso | Vista-se de Você! - Gisele Galvão</title>
   <meta name="description" content="Descubra seu estilo pessoal único com nosso quiz interativo." />
+  <!-- 🛡️ CSP: endurece execução bloqueando domínios Lovable em dev/preview.
+    Ajuste conforme necessário para adicionar novas origens confiáveis. -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; frame-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';" />
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#4F46E5">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -60,6 +64,8 @@
         var isFn = typeof window.__assign === 'function';
         if (!isFn) {
           console.warn('[Guard] __assign ausente ou inválida. Reinjetando fallback seguro.');
+          // Marcar para diagnóstico em runtime (checado no main.tsx em dev)
+          window.__ASSIGN_GUARD_APPLIED = true;
           window.__assign = Object.assign || function (target) {
             for (var i = 1; i < arguments.length; i++) { var src = arguments[i]; for (var k in src) if (Object.prototype.hasOwnProperty.call(src, k)) target[k] = src[k]; }
             return target;
