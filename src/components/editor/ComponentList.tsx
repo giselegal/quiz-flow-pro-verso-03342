@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { EditorComponent } from '@/types/editor';

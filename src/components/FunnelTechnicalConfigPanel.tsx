@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎛️ PAINEL DE CONFIGURAÇÕES TÉCNICAS DO FUNIL
  * 

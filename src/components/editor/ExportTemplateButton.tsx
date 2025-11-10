@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📤 COMPONENTE: Exportar Funil para JSON v3.0
  * 

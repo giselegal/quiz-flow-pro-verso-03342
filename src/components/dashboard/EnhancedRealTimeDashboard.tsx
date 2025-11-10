@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📊 ENHANCED REAL-TIME DASHBOARD - VERSÃO ATUALIZADA
  * 

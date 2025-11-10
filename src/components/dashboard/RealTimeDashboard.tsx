@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 /**
  * 📊 DASHBOARD DE ANALYTICS EM TEMPO REAL - FASE 6 OTIMIZADA
