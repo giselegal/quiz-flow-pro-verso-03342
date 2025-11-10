@@ -264,9 +264,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             .sort((a, b) => a - b);
 
         if (indexes.length === 0) {
-            return [1, 2].map((i) => ({
-                key: `step-${String(i).padStart(2, '0')}`,
-                title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
+            // 🔧 FIX: Gerar todos 21 steps ao invés de apenas 2
+            return Array.from({ length: 21 }, (_, i) => ({
+                key: `step-${String(i + 1).padStart(2, '0')}`,
+                title: `${String(i + 1).padStart(2, '0')} - Etapa ${i + 1}`,
             }));
         }
 

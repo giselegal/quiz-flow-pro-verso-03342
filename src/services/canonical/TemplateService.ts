@@ -1163,8 +1163,15 @@ export class TemplateService extends BaseCanonicalService {
         const steps: StepInfo[] = [];
 
         // 1. Adicionar steps do template (se houver)
-        const totalSteps = this.activeTemplateSteps;
+        // 🔧 FIX: Se activeTemplateSteps não foi setado (=0), usar 21 steps por padrão para quiz21StepsComplete
+        let totalSteps = this.activeTemplateSteps;
+        if (totalSteps === 0 && this.activeTemplateId === 'quiz21StepsComplete') {
+          totalSteps = 21;
+          appLogger.warn(`⚠️ [TemplateService.steps.list] activeTemplateSteps não setado, usando fallback de 21 steps`);
+        }
+        
         appLogger.info(`🔍 [TemplateService.steps.list] activeTemplateSteps = ${totalSteps}, activeTemplateId = ${this.activeTemplateId}`);
+        
         for (let i = 1; i <= totalSteps; i++) {
           const info = this.STEP_MAPPING[i] || {
             name: `Etapa ${i}`,
