@@ -638,7 +638,7 @@ export interface CSSVariables {
 /**
  * Resultado da detecção de versão
  */
-export type TemplateVersion = '1.0' | '2.0' | '2.1' | '3.0' | '3.1';
+export type TemplateVersion = '1.0' | '2.0' | '2.1' | '3.0' | '3.1' | '3.2';
 
 /**
  * Template unificado (v2 ou v3)

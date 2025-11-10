@@ -3,7 +3,7 @@
  * Este arquivo define a estrutura alvo para migrar todos os steps.
  */
 
-export type CanonicalTemplateVersion = '3.0' | '3.1';
+export type CanonicalTemplateVersion = '3.0' | '3.1' | '3.2';
 
 export interface BaseBlockConfig {
     id?: string;            // ID opcional interno do bloco
@@ -94,7 +94,7 @@ export interface NormalizedTemplateMaster {
 export function assertUnifiedStep(step: UnifiedStep): void {
     if (!step.id.startsWith('step-')) throw new Error(`Step id inválido: ${  step.id}`);
     if (!Array.isArray(step.blocks) || !step.blocks.length) throw new Error(`Step sem blocks: ${  step.id}`);
-    if (step.templateVersion !== '3.0' && step.templateVersion !== '3.1') {
+    if (!['3.0', '3.1', '3.2'].includes(step.templateVersion)) {
         throw new Error(`Versão incorreta no step ${step.id}: esperado 3.0 ou 3.1, recebido ${step.templateVersion}`);
     }
 }

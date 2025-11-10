@@ -51,10 +51,11 @@ export const stepMetadataSchema = z.object({
 });
 
 /**
- * Step schema (v3.1 format with blocks array)
+ * Step schema (v3.1+ format with blocks array)
+ * Suporta v3.0, v3.1, v3.2
  */
 export const stepV31Schema = z.object({
-  templateVersion: z.literal('3.1').optional(),
+  templateVersion: z.enum(['3.0', '3.1', '3.2']).optional(),
   metadata: stepMetadataSchema,
   blocks: z.array(blockSchema).min(1, 'Step deve conter pelo menos um bloco'),
 });
