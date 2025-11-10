@@ -210,17 +210,21 @@ if (import.meta.env.DEV) {
 }
 
 // � Interceptor simples para bloquear logs externos em dev (Grafana/gpt-engineer)
-// Ativado somente com flag explícita para evitar efeitos colaterais em preview/prod
+// Em ambientes de preview (lovable.app / lovableproject.com), habilite por padrão
 if (typeof window !== 'undefined') {
-  const ENABLE_NETWORK_INTERCEPTORS = (import.meta as any)?.env?.VITE_ENABLE_NETWORK_INTERCEPTORS === 'true';
-  const isDevOrPreview = import.meta.env.DEV || (typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname));
+  const isDevOrPreview = import.meta.env.DEV || (typeof location !== 'undefined' && /lovable\.app|lovableproject\.com|stackblitz\.io|codesandbox\.io/.test(location.hostname));
+  // Política: em preview, ligar interceptores por padrão, a menos que explicitamente desativado
+  const envEnable = (import.meta as any)?.env?.VITE_ENABLE_NETWORK_INTERCEPTORS;
+  const ENABLE_NETWORK_INTERCEPTORS = envEnable === 'true' || (isDevOrPreview && envEnable !== 'false');
 
   // Guard: só ativa interceptores quando flag estiver ligada
   if (ENABLE_NETWORK_INTERCEPTORS && isDevOrPreview) {
     const originalFetch = window.fetch.bind(window);
     window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
       const url = typeof input === 'string' ? input : input.toString();
-      const DISABLE_SUPABASE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
+      // Em preview, desabilitar Supabase por padrão, exceto se explicitamente liberado
+      const envDisableSupabase = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE;
+      const DISABLE_SUPABASE = envDisableSupabase === 'true' || (isDevOrPreview && envDisableSupabase !== 'false');
       try {
         (window as any).__USE_CLOUDINARY__ = ((import.meta as any)?.env?.VITE_ENABLE_CLOUDINARY === 'true');
       } catch (error) {
