@@ -35,6 +35,17 @@ function useResourceIdFromLocation(): string | undefined {
     // Prioridade 1: Novo parâmetro unificado
     const resourceId = params.get('resource');
     if (resourceId) {
+        // ✅ G1 FIX: Limpar TODOS os params legados quando resource= está presente
+        const legacyParams = ['template', 'funnelId', 'funnel', 'id'];
+        const hasLegacyParams = legacyParams.some(key => params.has(key));
+        
+        if (hasLegacyParams) {
+            const newUrl = new URL(window.location.href);
+            legacyParams.forEach(key => newUrl.searchParams.delete(key));
+            window.history.replaceState({}, '', newUrl.toString());
+            appLogger.info('🧹 [G1] Params legados limpos da URL');
+        }
+        
         appLogger.info('🎯 Recurso carregado:', { data: [resourceId] });
         return resourceId;
     }
@@ -102,23 +113,8 @@ const EditorRoutesInner: React.FC = () => {
         appLogger.info('🛑 Supabase desativado por flag (VITE_DISABLE_SUPABASE). Editor operando 100% offline.');
     }
 
-    // 🎯 CRITICAL FIX: Preparar template quando resourceId está presente
-    useEffect(() => {
-        if (resourceId) {
-            appLogger.info(`🎯 Preparando template: ${resourceId}`);
-            templateService.prepareTemplate(resourceId)
-                .then((result) => {
-                    if (result.success) {
-                        appLogger.info(`✅ Template ${resourceId} preparado com sucesso`);
-                    } else {
-                        appLogger.warn(`⚠️ Erro ao preparar template ${resourceId}:`, { data: [result.error] });
-                    }
-                })
-                .catch((error) => {
-                    appLogger.error(`❌ Erro ao preparar template ${resourceId}:`, { data: [error] });
-                });
-        }
-    }, [resourceId]);
+    // ✅ G4 FIX: prepareTemplate() agora é chamado APENAS em useEditorResource.loadResource()
+    // Removido daqui para eliminar preparação duplicada (2/3)
 
     // Detectar se deve mostrar modal na montagem inicial
     useMemo(() => {

@@ -185,8 +185,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [templateLoadError, setTemplateLoadError] = useState(false);
 
     // 🆕 G17 FIX: Memoizar callbacks para evitar re-renders em componentes filhos
-    const handleSelectStep = useCallback((key: string) => {
+    const handleSelectStep = useCallback(async (key: string) => {
         if (key === currentStepKey) return;
+
+        // ✅ G2 FIX: Lazy load do step quando usuário navegar para ele
+        const tid = props.templateId ?? resourceId;
+        if (tid) {
+            try {
+                appLogger.info(`🔄 [G2] Lazy loading step: ${key}`);
+                const stepResult = await templateService.getStep(key, tid);
+                if (stepResult.success) {
+                    appLogger.info(`✅ [G2] Step ${key} carregado sob demanda`);
+                }
+            } catch (error) {
+                appLogger.warn(`⚠️ [G2] Erro ao carregar step ${key}:`, { data: [error] });
+                // Continuar mesmo com erro - usar fallback
+            }
+        }
 
         if (loadedTemplate?.steps?.length) {
             const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
@@ -197,7 +212,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         const match = key.match(/step-(\d{1,2})/i);
         const num = match ? parseInt(match[1], 10) : 1;
         if (num !== safeCurrentStep) setCurrentStep(num);
-    }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep]);
+    }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep, props.templateId, resourceId]);
 
     const handleAddBlock = useCallback((type: string) => {
         const stepIndex = safeCurrentStep;
@@ -286,7 +301,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // normalize order helper
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
-    // Lazy template preparation when a templateId/resourceId exists
+    // ✅ G4 FIX: Template preparation agora é feito APENAS em useEditorResource.loadResource()
+    // Mantemos aqui APENAS a validação e setup de steps metadata
     useEffect(() => {
         if (!props.templateId && !resourceId) {
             appLogger.info('🎨 [QuizModularEditor] Modo canvas vazio - sem template');
@@ -302,9 +318,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             try {
                 const svc: any = templateService;
                 const tid = props.templateId ?? resourceId!;
-                appLogger.info(`🔍 [QuizModularEditor] Preparando template (lazy): ${tid}`);
+                appLogger.info(`🔍 [QuizModularEditor] Carregando metadata do template: ${tid}`);
 
-                // Add await and pass signal if supported
+                // Buscar lista de steps
                 const templateStepsResult = await svc.steps?.list?.({ signal }) ?? { success: false };
                 let stepsMeta: any[] = [];
                 if (templateStepsResult.success && Array.isArray(templateStepsResult.data)) {
@@ -322,29 +338,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     setCurrentStep(1);
                 }
 
-                try {
-                    await svc.prepareTemplate?.(tid, { signal });
-                } catch (e) {
-                    if (!signal.aborted) {
-                        appLogger.warn('[QuizModularEditor] prepareTemplate falhou, usando fallback de 21 etapas', e);
-                        try {
-                            svc.setActiveTemplate?.(tid, 21);
-                        } catch (err) {
-                            appLogger.warn('[QuizModularEditor] setActiveTemplate fallback failed', err);
-                        }
-                    }
-                }
-
-                try {
-                    await svc.preloadTemplate?.(tid, { signal });
-                } catch (err) {
-                    if (!signal.aborted) {
-                        appLogger.warn('[QuizModularEditor] preloadTemplate failed', err);
-                    }
-                }
+                // ✅ G4 FIX: prepareTemplate() e preloadTemplate() REMOVIDOS
+                // Já executados em useEditorResource.loadResource()
 
                 if (!signal.aborted) {
-                    appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${stepsMeta.length} steps`);
+                    appLogger.info(`✅ [QuizModularEditor] Metadata carregada: ${stepsMeta.length} steps`);
 
                     // 🔍 G5 FIX: Validar integridade completa das etapas
                     if (stepsMeta.length > 0) {
