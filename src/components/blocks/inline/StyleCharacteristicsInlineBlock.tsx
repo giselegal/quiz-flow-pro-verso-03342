@@ -1,6 +1,15 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface StyleCharacteristicsInlineBlockProps {
+  block: any;
+  isSelected?: boolean;
+  onClick?: () => void;
+  onPropertyChange?: () => void;
+  disabled?: boolean;
+  className?: string;
+}
+
 const StyleCharacteristicsInlineBlock = ({
   block,
   isSelected = false,
@@ -8,7 +17,7 @@ const StyleCharacteristicsInlineBlock = ({
   onPropertyChange = () => {},
   disabled = false,
   className = '',
-}) => {
+}: StyleCharacteristicsInlineBlockProps) => {
   const {
     title = 'Características do Seu Estilo',
     description = 'Veja o que define o seu perfil único',

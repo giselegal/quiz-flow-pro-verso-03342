@@ -117,3 +117,12 @@ export function runWhenIdle(callback: () => void, timeout = 2000): void {
     setTimeout(callback, timeout);
   }
 }
+
+// Optimized timers
+export const optimizedSetTimeout = (callback: () => void, delay: number): NodeJS.Timeout => {
+  return setTimeout(callback, delay);
+};
+
+export const optimizedSetInterval = (callback: () => void, delay: number): NodeJS.Timeout => {
+  return setInterval(callback, delay);
+};

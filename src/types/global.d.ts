@@ -27,3 +27,17 @@ interface EventTarget {
   getAttribute?: (name: string) => string | null;
   textContent?: string | null;
 }
+
+// Global appLogger declarations
+declare const appLogger: {
+  info: (...args: any[]) => void;
+  warn: (...args: any[]) => void;
+  error: (...args: any[]) => void;
+  debug: (...args: any[]) => void;
+};
+
+// Margin variables (for compatibility with old code)
+declare const marginTop: any;
+declare const marginBottom: any;
+declare const marginLeft: any;
+declare const marginRight: any;

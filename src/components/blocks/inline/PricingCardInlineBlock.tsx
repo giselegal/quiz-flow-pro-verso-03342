@@ -333,7 +333,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
               variantStyles.button,
               isHovered && 'transform scale-105',
             )}
-            onClick={e => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               if (buttonUrl && buttonUrl !== '#') {
                 window.open(buttonUrl, '_blank');

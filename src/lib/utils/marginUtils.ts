@@ -3,7 +3,23 @@
  * Função para converter valores de margem em classes Tailwind
  */
 
-export const getMarginClassLocal = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right'): string => {
+export interface MarginProps {
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
+}
+
+export const defaultMargins: MarginProps = {
+  marginTop: 0,
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+};
+
+export const getMarginClassLocal = (value: string | number, type?: 'top' | 'bottom' | 'left' | 'right'): string => {
+  if (!type) return '';
+
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';
