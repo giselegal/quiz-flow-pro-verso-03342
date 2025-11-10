@@ -1,7 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import Step20Result from '@/components/steps/Step20Result';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 CAKTO QUIZ RESULT - WRAPPER PARA STEP20

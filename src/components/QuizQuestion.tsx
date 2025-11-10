@@ -1,9 +1,25 @@
-// @ts-nocheck
 import { useQuestionScroll } from '@/hooks/useQuestionScroll';
 
+interface QuestionOption {
+  id: string;
+  text: string;
+}
+
+interface Question {
+  id: string;
+  title?: string;
+  imageUrl?: string;
+  options?: QuestionOption[];
+}
+
+interface Answer {
+  questionId: string;
+  selectedOption: string;
+}
+
 interface QuizQuestionProps {
-  question: any;
-  onAnswer: (answer: any) => void;
+  question: Question;
+  onAnswer: (answer: Answer) => void;
   currentAnswers: string[];
   showQuestionImage?: boolean;
   autoAdvance?: boolean;
@@ -33,14 +49,13 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       )}
 
       <div className="space-y-3">
-        {question?.options?.map((option: any) => (
+        {question?.options?.map((option) => (
           <div
             key={option.id}
-            className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-              currentAnswers.includes(option.id)
-                ? 'bg-[#B89B7A]/20 border-[#B89B7A]'
-                : 'hover:bg-gray-50'
-            }`}
+            className={`p-3 border rounded-lg cursor-pointer transition-colors ${currentAnswers.includes(option.id)
+              ? 'bg-[#B89B7A]/20 border-[#B89B7A]'
+              : 'hover:bg-gray-50'
+              }`}
             onClick={() => onAnswer({ questionId: question.id, selectedOption: option.id })}
           >
             <span>{option.text}</span>

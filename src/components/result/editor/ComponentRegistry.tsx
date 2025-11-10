@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 export const COMPONENT_CATEGORIES = [
   { id: 'text', name: 'Texto', icon: '📝' },

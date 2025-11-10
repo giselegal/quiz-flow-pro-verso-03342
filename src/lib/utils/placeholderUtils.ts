@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Utility functions for generating placeholder content
 
 export const generatePlaceholderText = (length: number = 50): string => {
