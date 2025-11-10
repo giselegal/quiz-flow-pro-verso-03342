@@ -107,9 +107,9 @@ function processTemplateFile(filePath: string): { stepId: string; data: any } | 
         // Detectar versão do template
         const templateVersion = jsonTemplate.templateVersion || '2.0';
 
-        if (templateVersion === '3.0') {
-            // Template v3.0: preservar estrutura completa (sections)
-            log(`  ✓ ${stepId} (v3.0): ${jsonTemplate.sections?.length || 0} seções`, colors.green);
+        if (['3.0', '3.1', '3.2'].includes(templateVersion)) {
+            // Template v3.x: preservar estrutura completa (sections ou blocks)
+            log(`  ✓ ${stepId} (v${templateVersion}): ${jsonTemplate.sections?.length || jsonTemplate.blocks?.length || 0} itens`, colors.green);
             return { stepId, data: jsonTemplate };
         } else {
             // Template v2.0: converter blocos (comportamento original)
@@ -328,7 +328,7 @@ async function main() {
             // Contar versões
             if (Array.isArray(result.data)) {
                 v2Count++;
-            } else if (result.data.templateVersion === '3.0') {
+            } else if (['3.0', '3.1', '3.2'].includes(result.data.templateVersion)) {
                 v3Count++;
             }
         } else {
@@ -374,12 +374,12 @@ ${generateFileFooter()}`;
     const v2Templates = Object.values(templateRecord).filter(data => Array.isArray(data));
     const totalBlocks = v2Templates.reduce((sum, blocks) => sum + blocks.length, 0);
 
-    // Contar seções total (apenas v3.0)
+    // Contar seções total (v3.x)
     const v3Templates = Object.values(templateRecord).filter(data =>
-        data && typeof data === 'object' && data.templateVersion === '3.0'
+        data && typeof data === 'object' && ['3.0', '3.1', '3.2'].includes(data.templateVersion)
     );
     const totalSections = v3Templates.reduce((sum, template) =>
-        sum + (template.sections?.length || 0), 0
+        sum + (template.sections?.length || template.blocks?.length || 0), 0
     );
 
     log(`\n📊 Estatísticas:`, colors.blue);

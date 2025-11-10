@@ -190,7 +190,8 @@ export class TemplateFormatAdapter {
       return '3.1';
     }
     if (template.sections && Array.isArray(template.sections)) {
-      return template.templateVersion === '3.0' ? '3.0' : '2.0';
+      // Aceita v3.0, v3.1, v3.2 como formatos v3
+      return ['3.0', '3.1', '3.2'].includes(template.templateVersion) ? '3.0' : '2.0';
     }
     return 'unknown';
   }

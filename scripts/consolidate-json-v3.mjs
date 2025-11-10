@@ -45,9 +45,9 @@ for (let i = 1; i <= 21; i++) {
     try {
         const stepData = JSON.parse(readFileSync(stepFile, 'utf-8'));
 
-        // Validar que é v3.0
-        if (stepData.templateVersion !== '3.0') {
-            console.warn(`⚠️  ${stepId}: Versão incorreta (${stepData.templateVersion})`);
+        // Validar que é v3.x
+        if (!['3.0', '3.1', '3.2'].includes(stepData.templateVersion)) {
+            console.warn(`⚠️  ${stepId}: Versão incorreta (${stepData.templateVersion}), esperado v3.x`);
         }
 
         // Adicionar ao consolidado
