@@ -271,14 +271,16 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
     // Nenhuma fonte funcionou - log detalhado
     appLogger.error(`❌ [HierarchicalSource] NENHUMA FONTE disponível para ${stepId}`);
-    console.table({
-      'Step ID': stepId,
-      'Funnel ID': funnelId || 'N/A',
-      'Template Ativo': this.activeTemplateId,
-      'USER_EDIT (Supabase)': this.ONLINE_DISABLED ? '❌ Desabilitado' : (funnelId ? '✅ Tentado' : '⚠️ Sem funnelId'),
-      'ADMIN_OVERRIDE': this.ONLINE_DISABLED || this.JSON_ONLY ? '❌ Desabilitado' : '✅ Tentado',
-      'TEMPLATE_DEFAULT (JSON)': `✅ Tentado (${this.activeTemplateId})`,
-      'FALLBACK (TS)': isFallbackDisabled() ? '❌ Desabilitado' : '✅ Tentado',
+    appLogger.error('[HierarchicalSource] Diagnóstico:', {
+      data: [{
+        stepId,
+        funnelId: funnelId || 'N/A',
+        templateAtivo: this.activeTemplateId,
+        userEdit: this.ONLINE_DISABLED ? 'Desabilitado' : (funnelId ? 'Tentado' : 'Sem funnelId'),
+        adminOverride: this.ONLINE_DISABLED || this.JSON_ONLY ? 'Desabilitado' : 'Tentado',
+        templateDefault: `Tentado (${this.activeTemplateId})`,
+        fallback: isFallbackDisabled() ? 'Desabilitado' : 'Tentado'
+      }]
     });
     
     throw new Error(`No data source available for step: ${stepId}`);
