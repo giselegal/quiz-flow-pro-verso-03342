@@ -347,7 +347,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
           return null;
         }
         // Outros erros podem ser transientes; apenas log leve e continuar
-        appLogger.debug('[HierarchicalSource] Admin override error:', { stepId, error });
+        appLogger.debug('[HierarchicalSource] Admin override error:', { data: [{ stepId, error }] });
         return null;
       }
       if (Array.isArray(data) && data.length > 0) {
@@ -355,7 +355,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       }
       return null;
     } catch (error) {
-      appLogger.debug('[HierarchicalSource] Admin override not found:', stepId);
+      appLogger.debug('[HierarchicalSource] Admin override not found:', { data: [{ stepId }] });
       return null;
     }
   }
@@ -376,7 +376,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
         return jsonBlocks;
       }
     } catch (error) {
-      appLogger.debug('[HierarchicalSource] JSON default loader falhou para', stepId, error);
+      appLogger.debug('[HierarchicalSource] JSON default loader falhou:', { data: [{ stepId, error }] });
     }
 
     // ✅ Registry removido - modo JSON-only permanente
@@ -395,7 +395,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
       return blocks || null;
     } catch (error) {
-      appLogger.debug('[HierarchicalSource] Fallback not found:', stepId);
+      appLogger.debug('[HierarchicalSource] Fallback not found:', { data: [{ stepId }] });
       return null;
     }
   }
@@ -451,7 +451,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
       this.log(stepId, 'SAVED', DataSourcePriority.USER_EDIT);
     } catch (error) {
-      appLogger.error('[HierarchicalSource] Failed to save:', error);
+      appLogger.error('[HierarchicalSource] Failed to save:', error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   }
@@ -468,7 +468,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       const { templateService } = await import('@/services/canonical/TemplateService');
       templateService.invalidateStepCache(stepId);
     } catch (error) {
-      appLogger.debug('[HierarchicalSource] Registry invalidation skipped:', error);
+      appLogger.debug('[HierarchicalSource] Registry invalidation skipped:', { data: [{ error }] });
     }
 
     this.log(stepId, 'INVALIDATED');

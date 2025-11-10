@@ -342,7 +342,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
                 superUnified?.setStepBlocks(stepIndex, result.data);
             }
         } catch (error) {
-            appLogger.error('Failed to load step:', normalized, error);
+            appLogger.error('Failed to load step:', error instanceof Error ? error : new Error(`Failed to load ${normalized}`), { data: [{ step: normalized }] });
         }
     }, [state.stepBlocks, normalizeStepKey, superUnified]);
 
@@ -409,7 +409,7 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
                 superUnified?.setCurrentStep(data.currentStep);
             }
         } catch (error) {
-            appLogger.error('Failed to import JSON:', error);
+            appLogger.error('Failed to import JSON:', error instanceof Error ? error : new Error('JSON import failed'), { data: [{ error }] });
         }
     }, [superUnified]);
 

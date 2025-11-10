@@ -416,7 +416,7 @@ export class UnifiedBlockRegistry {
 
           return module;
         } catch (error) {
-          appLogger.error(`[UnifiedBlockRegistry] ❌ Failed to load lazy component: ${type}`, error);
+          appLogger.error(`[UnifiedBlockRegistry] ❌ Failed to load lazy component: ${type}`, error instanceof Error ? error : new Error(`Failed to load ${type}`));
           throw error;
         }
       };
@@ -482,7 +482,7 @@ export class UnifiedBlockRegistry {
       throw new Error(`Component not found: ${type}`);
     } catch (error) {
       this.recordMetric(type, performance.now() - startTime, true, false);
-      appLogger.error(`[UnifiedBlockRegistry] Failed to load "${type}":`, error);
+      appLogger.error(`[UnifiedBlockRegistry] Failed to load "${type}":`, error instanceof Error ? error : new Error(`Failed to load ${type}`));
 
       // Return fallback on error
       return this.getFallbackComponent(type) || TextInlineBlock;
@@ -509,7 +509,7 @@ export class UnifiedBlockRegistry {
         await this.getComponentAsync(type);
         appLogger.debug(`[UnifiedBlockRegistry] Prefetched: ${type}`);
       } catch (error) {
-        appLogger.warn(`[UnifiedBlockRegistry] Prefetch failed for ${type}:`, error);
+        appLogger.warn(`[UnifiedBlockRegistry] Prefetch failed for ${type}:`, { data: [{ type, error }] });
       }
     }
   }

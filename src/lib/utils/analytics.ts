@@ -19,6 +19,7 @@ interface CustomEventData {
   action: string;
   label: string;
   value?: number;
+  [key: string]: any; // Index signature para compatibilidade com LogContext
 }
 
 interface TimingData {
@@ -26,6 +27,7 @@ interface TimingData {
   variable: string;
   value: number;
   label?: string;
+  [key: string]: any; // Index signature para compatibilidade com LogContext
 }
 
 // Function to track a generic event
