@@ -38,25 +38,25 @@ ALTER TABLE funnels ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "funnels_select_policy" ON funnels
   FOR SELECT
   USING (
-    auth.uid() = user_id OR 
+    auth.uid()::text = user_id OR 
     (is_active = true AND is_public = true)
   );
 
 -- INSERT: Users podem criar funis para si mesmos
 CREATE POLICY "funnels_insert_policy" ON funnels
   FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- UPDATE: Users podem atualizar apenas seus próprios funis
 CREATE POLICY "funnels_update_policy" ON funnels
   FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- DELETE: Users podem deletar apenas seus próprios funis
 CREATE POLICY "funnels_delete_policy" ON funnels
   FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 -- ============================================================================
 -- SECTION 3: RLS POLICIES - QUIZ_PRODUCTION
@@ -76,25 +76,25 @@ ALTER TABLE quiz_production ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "quiz_production_select_policy" ON quiz_production
   FOR SELECT
   USING (
-    auth.uid() = user_id OR 
+    auth.uid()::text = user_id OR 
     is_active = true
   );
 
 -- INSERT: Users podem criar quizzes para si mesmos
 CREATE POLICY "quiz_production_insert_policy" ON quiz_production
   FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- UPDATE: Users podem atualizar apenas seus próprios quizzes
 CREATE POLICY "quiz_production_update_policy" ON quiz_production
   FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- DELETE: Users podem deletar apenas seus próprios quizzes
 CREATE POLICY "quiz_production_delete_policy" ON quiz_production
   FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 -- ============================================================================
 -- SECTION 4: RLS POLICIES - COMPONENT_INSTANCES
@@ -116,7 +116,7 @@ CREATE POLICY "component_instances_select_policy" ON component_instances
     EXISTS (
       SELECT 1 FROM funnels
       WHERE funnels.id = component_instances.funnel_id
-      AND funnels.user_id = auth.uid()
+      AND funnels.user_id = auth.uid()::text
     )
   );
 
@@ -127,7 +127,7 @@ CREATE POLICY "component_instances_insert_policy" ON component_instances
     EXISTS (
       SELECT 1 FROM funnels
       WHERE funnels.id = component_instances.funnel_id
-      AND funnels.user_id = auth.uid()
+      AND funnels.user_id = auth.uid()::text
     )
   );
 
@@ -138,7 +138,7 @@ CREATE POLICY "component_instances_update_policy" ON component_instances
     EXISTS (
       SELECT 1 FROM funnels
       WHERE funnels.id = component_instances.funnel_id
-      AND funnels.user_id = auth.uid()
+      AND funnels.user_id = auth.uid()::text
     )
   );
 
@@ -149,7 +149,7 @@ CREATE POLICY "component_instances_delete_policy" ON component_instances
     EXISTS (
       SELECT 1 FROM funnels
       WHERE funnels.id = component_instances.funnel_id
-      AND funnels.user_id = auth.uid()
+      AND funnels.user_id = auth.uid()::text
     )
   );
 
@@ -170,7 +170,7 @@ ALTER TABLE quiz_sessions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "quiz_sessions_select_policy" ON quiz_sessions
   FOR SELECT
   USING (
-    auth.uid() = user_id OR
+    auth.uid()::text = user_id OR
     user_id IS NULL -- Sessões anônimas (temporário para migração)
   );
 
@@ -183,14 +183,14 @@ CREATE POLICY "quiz_sessions_insert_policy" ON quiz_sessions
 CREATE POLICY "quiz_sessions_update_policy" ON quiz_sessions
   FOR UPDATE
   USING (
-    auth.uid() = user_id OR
+    auth.uid()::text = user_id OR
     user_id IS NULL -- Permitir update em sessões anônimas
   );
 
 -- DELETE: Não permitir delete direto (usar soft delete)
 CREATE POLICY "quiz_sessions_delete_policy" ON quiz_sessions
   FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 -- ============================================================================
 -- SECTION 6: RLS POLICIES - ANALYTICS TABLES
@@ -240,7 +240,7 @@ BEGIN
   RETURN EXISTS (
     SELECT 1 FROM funnels
     WHERE id = funnel_id_param
-    AND user_id = auth.uid()
+    AND user_id = auth.uid()::text
   );
 END;
 $$;
@@ -255,7 +255,7 @@ BEGIN
   RETURN EXISTS (
     SELECT 1 FROM quiz_production
     WHERE id = quiz_id_param
-    AND user_id = auth.uid()
+    AND user_id = auth.uid()::text
   );
 END;
 $$;
@@ -318,7 +318,7 @@ BEGIN
       WHEN TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'quiz_production' THEN 'medium'
       ELSE 'low'
     END,
-    auth.uid(),
+    auth.uid()::text,
     inet_client_addr()::TEXT
   );
   
