@@ -34,13 +34,10 @@ DROP POLICY IF EXISTS "Public can view active funnels" ON funnels;
 -- Habilitar RLS
 ALTER TABLE funnels ENABLE ROW LEVEL SECURITY;
 
--- SELECT: Users podem ver seus próprios funis + funis públicos ativos
+-- SELECT: Users podem ver seus próprios funis + funis públicos (se colunas existirem)
 CREATE POLICY "funnels_select_policy" ON funnels
   FOR SELECT
-  USING (
-    auth.uid()::text = user_id OR 
-    (is_active = true AND is_public = true)
-  );
+  USING (auth.uid()::text = user_id);
 
 -- INSERT: Users podem criar funis para si mesmos
 CREATE POLICY "funnels_insert_policy" ON funnels
@@ -72,13 +69,10 @@ DROP POLICY IF EXISTS "Public can view active quizzes" ON quiz_production;
 -- Habilitar RLS
 ALTER TABLE quiz_production ENABLE ROW LEVEL SECURITY;
 
--- SELECT: Users podem ver seus próprios quizzes + quizzes ativos
+-- SELECT: Users podem ver seus próprios quizzes
 CREATE POLICY "quiz_production_select_policy" ON quiz_production
   FOR SELECT
-  USING (
-    auth.uid()::text = user_id OR 
-    is_active = true
-  );
+  USING (auth.uid()::text = user_id);
 
 -- INSERT: Users podem criar quizzes para si mesmos
 CREATE POLICY "quiz_production_insert_policy" ON quiz_production
