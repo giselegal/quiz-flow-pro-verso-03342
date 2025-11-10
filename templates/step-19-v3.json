@@ -1,0 +1,48 @@
+{
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-19",
+    "name": "Transição (Blocos)",
+    "description": "Tela de transição para avançar ao resultado",
+    "category": "transition",
+    "tags": [
+      "transition",
+      "navigation"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "trans-19",
+      "type": "transition.next",
+      "config": {
+        "title": "Você chegou até aqui — e isso já diz muito sobre você.",
+        "message": "",
+        "paragraphs": [
+          "Poucas mulheres se permitem parar e olhar para si com tanta intenção. E o que vem agora é mais do que um simples resultado — é o início de uma nova forma de se enxergar.",
+          "Seu Estilo Predominante vai revelar muito sobre como você comunica sua essência ao mundo. Mas o mais importante é o que você vai fazer com essa descoberta.",
+          "Em seguida, você vai conhecer um caminho completo para aplicar o seu estilo na prática — com leveza, estratégia e propósito. Um método criado para transformar não só o seu guarda-roupa, mas também a forma como você se apresenta e se sente todos os dias."
+        ],
+        "buttonLabel": "Ver meu resultado agora",
+        "autoAdvanceMs": 0
+      },
+      "properties": {
+        "title": "Você chegou até aqui — e isso já diz muito sobre você.",
+        "message": "",
+        "paragraphs": [
+          "Poucas mulheres se permitem parar e olhar para si com tanta intenção. E o que vem agora é mais do que um simples resultado — é o início de uma nova forma de se enxergar.",
+          "Seu Estilo Predominante vai revelar muito sobre como você comunica sua essência ao mundo. Mas o mais importante é o que você vai fazer com essa descoberta.",
+          "Em seguida, você vai conhecer um caminho completo para aplicar o seu estilo na prática — com leveza, estratégia e propósito. Um método criado para transformar não só o seu guarda-roupa, mas também a forma como você se apresenta e se sente todos os dias."
+        ],
+        "buttonLabel": "Ver meu resultado agora",
+        "autoAdvanceMs": 0
+      }
+    }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-19-transition"
+  }
+}

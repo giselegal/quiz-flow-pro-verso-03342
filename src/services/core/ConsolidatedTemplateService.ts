@@ -12,6 +12,8 @@
 import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
 import { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
+import { processTemplate } from '@/services/TemplateProcessor';
+import type { DynamicTemplate } from '@/types/dynamic-template';
 
 // ============================================================================
 // INTERFACES
@@ -481,20 +483,41 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
   }
 
   private convertJSONTemplate(jsonData: any, templateId: string): FullTemplate {
+    // ✅ PROCESSA TEMPLATES DINÂMICOS (v3.2+)
+    let processedData = jsonData;
+    
+    if (jsonData.templateVersion === '3.2' && jsonData.blocks) {
+      appLogger.info(`🔄 Processando template dinâmico: ${templateId}`);
+      
+      const result = processTemplate(jsonData as DynamicTemplate);
+      
+      if (result.success && result.template) {
+        processedData = result.template;
+        appLogger.info(`✅ Template processado: ${result.stats?.variablesReplaced} variáveis substituídas`);
+        
+        if (result.warnings && result.warnings.length > 0) {
+          appLogger.warn(`⚠️ Avisos ao processar ${templateId}:`, { warnings: result.warnings });
+        }
+      } else {
+        appLogger.error(`❌ Erro ao processar template dinâmico ${templateId}:`, new Error(result.error || 'Erro desconhecido'));
+        // Fallback: usa dados originais
+      }
+    }
+    
     return {
       id: templateId,
-      name: jsonData.name || templateId,
-      description: jsonData.description || '',
-      category: jsonData.category || 'custom',
-      version: jsonData.version || '1.0.0',
-      stepCount: jsonData.steps?.length || 1,
-      tags: jsonData.tags || [],
-      createdAt: new Date(jsonData.createdAt) || new Date(),
-      updatedAt: new Date(jsonData.updatedAt) || new Date(),
-      isOfficial: jsonData.isOfficial || false,
-      usageCount: jsonData.usageCount || 0,
-      steps: jsonData.steps || [],
-      globalConfig: jsonData.globalConfig || {},
+      name: processedData.name || templateId,
+      description: processedData.description || '',
+      category: processedData.category || 'custom',
+      version: processedData.version || '1.0.0',
+      stepCount: processedData.steps?.length || 1,
+      tags: processedData.tags || [],
+      createdAt: new Date(processedData.createdAt) || new Date(),
+      updatedAt: new Date(processedData.updatedAt) || new Date(),
+      isOfficial: processedData.isOfficial || false,
+      usageCount: processedData.usageCount || 0,
+      steps: processedData.steps || [],
+      globalConfig: processedData.globalConfig || {},
     };
   }
 

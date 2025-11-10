@@ -1,0 +1,204 @@
+{
+    "funnelId": "quiz21StepsComplete",
+    "name": "Quiz 21 Steps Complete",
+    "version": "1.0.0",
+    "totalSteps": 21,
+    "description": "Quiz completo de 21 etapas com sistema escalável",
+    "theme": "fashion",
+    "analytics": {
+        "trackingId": "quiz21StepsComplete",
+        "enableGoogleAnalytics": true,
+        "enableFacebookPixel": true,
+        "customEvents": [
+            "quiz_start",
+            "quiz_complete",
+            "step_completed"
+        ]
+    },
+    "globalSettings": {
+        "allowBack": true,
+        "showProgress": true,
+        "autoSave": true,
+        "sessionTimeout": 1800,
+        "maxRetries": 3
+    },
+    "ui": {
+        "primaryColor": "#B89B7A",
+        "secondaryColor": "#8B7355",
+        "fontFamily": "Inter",
+        "borderRadius": "8px",
+        "maxWidth": "2xl"
+    },
+    "steps": {
+        "1": {
+            "type": "intro",
+            "category": "welcome",
+            "autoAdvance": false,
+            "validation": "none"
+        },
+        "2": {
+            "type": "question",
+            "category": "profile",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "3": {
+            "type": "question",
+            "category": "profile",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "4": {
+            "type": "question",
+            "category": "preferences",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "5": {
+            "type": "question",
+            "category": "preferences",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "6": {
+            "type": "question",
+            "category": "style",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "7": {
+            "type": "question",
+            "category": "style",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "8": {
+            "type": "question",
+            "category": "style",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "9": {
+            "type": "question",
+            "category": "lifestyle",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "10": {
+            "type": "question",
+            "category": "lifestyle",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "11": {
+            "type": "question",
+            "category": "body",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "12": {
+            "type": "question",
+            "category": "body",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "13": {
+            "type": "question",
+            "category": "body",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "14": {
+            "type": "question",
+            "category": "colors",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "15": {
+            "type": "question",
+            "category": "colors",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "16": {
+            "type": "question",
+            "category": "occasion",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "17": {
+            "type": "question",
+            "category": "budget",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "18": {
+            "type": "question",
+            "category": "final",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "19": {
+            "type": "leadCapture",
+            "category": "contact",
+            "autoAdvance": false,
+            "validation": "email"
+        },
+        "20": {
+            "type": "processing",
+            "category": "system",
+            "autoAdvance": true,
+            "validation": "none",
+            "autoAdvanceDelay": 3000
+        },
+        "21": {
+            "type": "result",
+            "category": "final",
+            "autoAdvance": false,
+            "validation": "none"
+        }
+    },
+    "validation": {
+        "required": {
+            "type": "selection",
+            "minSelections": 1,
+            "message": "Por favor, selecione uma opção para continuar"
+        },
+        "email": {
+            "type": "input",
+            "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+            "message": "Por favor, digite um email válido"
+        },
+        "none": {
+            "type": "none",
+            "message": ""
+        }
+    },
+    "behavior": {
+        "autoAdvance": {
+            "enabled": false,
+            "defaultDelay": 3000,
+            "steps": [
+                20
+            ]
+        },
+        "analytics": {
+            "trackStepViews": true,
+            "trackSelections": true,
+            "trackCompletions": true
+        }
+    },
+    "integrations": {
+        "api": {
+            "endpoint": "/api/quiz/submit",
+            "realTimeData": true,
+            "fallbackData": "UNIFIED_TEMPLATE_REGISTRY"
+        },
+        "email": {
+            "provider": "mailchimp",
+            "listId": "quiz21steps"
+        }
+    },
+    "created": "2024-09-19T00:00:00Z",
+    "updated": "2024-09-19T00:00:00Z"
+}

@@ -1,0 +1,48 @@
+{
+  "// COMENTÁRIO": "Este é um exemplo de como os JSONs DEVERIAM ser estruturados",
+  "// PROBLEMA ATUAL": "config e properties 100% duplicados, cores hardcoded, URLs hardcoded",
+  
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-01",
+    "name": "Intro (Blocos)",
+    "description": "Etapa inicial com hero e formulário de nome",
+    "category": "intro",
+    "tags": ["intro", "form"]
+  },
+  
+  "// SOLUÇÃO 1": "Remover duplicação - usar APENAS properties OU config, não ambos",
+  "blocks": [
+    {
+      "id": "hero-1",
+      "type": "hero-block",
+      "properties": {
+        "titleHtml": "<span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">Chega</span>...",
+        "imageUrl": "{{assets.cloudinary.hero}}/hero-intro.png",
+        "logoUrl": "{{assets.cloudinary.logo}}/logo.png"
+      }
+    }
+  ],
+  
+  "// SOLUÇÃO 2": "Extrair configurações para arquivo central",
+  "theme": {
+    "colors": {
+      "// NOTA": "Essas cores devem vir de src/config/theme.ts",
+      "primary": "var(--color-primary)",
+      "secondary": "var(--color-secondary)",
+      "background": "var(--color-background)"
+    }
+  },
+  
+  "// SOLUÇÃO 3": "Assets centralizados (environment variables)",
+  "assets": {
+    "cloudinary": {
+      "// NOTA": "Deve vir de .env como VITE_CLOUDINARY_BASE_URL",
+      "baseUrl": "{{VITE_CLOUDINARY_BASE_URL}}",
+      "hero": "/hero",
+      "logo": "/branding"
+    }
+  },
+  
+  "// RESULTADO": "JSONs 60% menores, fácil de manter, sem duplicação"
+}
