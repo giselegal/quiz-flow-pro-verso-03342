@@ -11,7 +11,7 @@
  */
 
 import React, { useState, useEffect, useRef, memo } from 'react';
-import { useResponsiveOptimization } from '../../utils/imageOptimizationManager';
+import { useResponsiveOptimization } from '@/lib/utils/imageOptimizationManager';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface EnhancedOptimizedImageProps {
