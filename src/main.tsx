@@ -201,7 +201,12 @@ if (import.meta.env.DEV) {
   }
   // Inicializar otimizadores para desenvolvimento
   initializeWebSocketOptimization();
-  initializeRudderStackOptimization();
+  const DISABLE_ANALYTICS = (import.meta as any)?.env?.VITE_DISABLE_ANALYTICS === 'true';
+  if (!DISABLE_ANALYTICS) {
+    initializeRudderStackOptimization();
+  } else {
+    try { appLogger.info('🚫 Analytics desativado via VITE_DISABLE_ANALYTICS'); } catch { }
+  }
 }
 
 // � Interceptor simples para bloquear logs externos em dev (Grafana/gpt-engineer)
@@ -323,6 +328,25 @@ if (typeof window !== 'undefined') {
       }
     });
   }
+}
+
+// Sanity check pós-bootstrap para __assign em dev: detecta se guard foi aplicado
+if (import.meta.env.DEV) {
+  defer(() => {
+    try {
+      const assignOk = typeof (window as any).__assign === 'function';
+      const guardApplied = (window as any).__ASSIGN_GUARD_APPLIED === true;
+      if (!assignOk) {
+        appLogger.warn('[Sanity] __assign ausente após bootstrap (dev)');
+      } else if (guardApplied) {
+        appLogger.info('[Sanity] __assign ativa (fallback guard aplicado)');
+      } else {
+        appLogger.info('[Sanity] __assign ok (native/vendor)');
+      }
+    } catch (e) {
+      try { appLogger.warn('[Sanity] Falha ao checar __assign:', { data: [e] }); } catch { }
+    }
+  });
 }
 
 // �🚀 SUPABASE: Configuração inicial do serviço
