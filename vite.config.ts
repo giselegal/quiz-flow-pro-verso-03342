@@ -214,7 +214,7 @@ export default defineConfig(({ mode }) => {
       // Pré-bundle de libs grandes usadas no primeiro render para reduzir transformação fria (DEV)
       include: [
         'react', 'react-dom', 'react/jsx-runtime', 'react-dom/client',
-        'wouter', 'react-helmet-async', 'zod',
+        'wouter', 'react-helmet-async', 'zod', 'tslib',
         '@radix-ui/react-dialog', '@radix-ui/react-toast', '@radix-ui/react-popover', '@radix-ui/react-dropdown-menu'
       ],
       esbuildOptions: {

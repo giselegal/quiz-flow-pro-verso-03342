@@ -24,27 +24,27 @@
       width: 100%;
     }
   </style>
-  <!-- 🛡️ EARLY LOVABLE BLOCKER: Bloquear requisições Lovable ANTES de qualquer script -->
+  <!-- 🛡️ EARLY LOVABLE BLOCKER (apenas fetch; não intercepta XHR) -->
   <script>
     (function () {
       if (typeof window === 'undefined') return;
       const isInLovablePreview = window.self !== window.top;
-      if (isInLovablePreview) return; // Permitir no preview
+      if (isInLovablePreview) return; // Permitir quando embutido (ex: preview oficial)
+
+      const BLOCK_PATTERNS = ['lovable.dev', 'lovableproject.com', '/_sandbox/'];
+      const shouldBlock = (urlString) => BLOCK_PATTERNS.some(p => urlString.includes(p));
 
       const originalFetch = window.fetch;
       window.fetch = function (url, options) {
         const urlString = typeof url === 'string' ? url : url.toString();
-        if (urlString.includes('lovable.dev')) {
-          // Silenciosamente retornar mock 200
-          return Promise.resolve(new Response(JSON.stringify({
-            status: 'blocked',
-            message: 'Lovable disabled in development'
-          }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-          }));
+        if (shouldBlock(urlString)) {
+          console.info('🛡️ (fetch) bloqueado:', urlString);
+          return Promise.resolve(new Response(
+            JSON.stringify({ status: 'blocked', message: 'Lovable disabled in local dev' }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } }
+          ));
         }
-        return originalFetch.call(window, url, options);
+        return originalFetch.call(this, url, options);
       };
     })();
   </script>
