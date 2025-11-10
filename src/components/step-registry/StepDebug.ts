@@ -184,7 +184,10 @@ export async function printDeepDebug() {
         }
         // Enriquecer a identificação de fonte: se veio do registry mas aparenta ser JSON v3, marcar como registry(json-v3)
         if (fonte === 'registry') {
-          const looksLikeV3 = !!(effectiveStep && (effectiveStep.templateVersion === '3.0' || Array.isArray((effectiveStep as any).sections)));
+          const looksLikeV3 = !!(effectiveStep && (
+            ['3.0', '3.1', '3.2'].includes(effectiveStep.templateVersion) || 
+            Array.isArray((effectiveStep as any).sections)
+          ));
           if (looksLikeV3) {
             fonte = 'registry';
             // adiciona um rótulo visível no console de grupo
@@ -221,7 +224,8 @@ export async function printDeepDebug() {
 
       // Imprimir JSON efetivo de cada step em grupo colapsado
       try {
-        const extra = (effectiveStep && (effectiveStep as any).templateVersion === '3.0') ? ' • json-v3' : '';
+        const version = (effectiveStep as any)?.templateVersion;
+        const extra = (version && ['3.0', '3.1', '3.2'].includes(version)) ? ` • json-v${version}` : '';
         console.groupCollapsed(`📄 JSON ${id} (fonte: ${fonte}${extra})`);
         appLogger.info(String(effectiveStep));
         console.groupEnd();

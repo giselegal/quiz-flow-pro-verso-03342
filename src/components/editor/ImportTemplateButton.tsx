@@ -40,8 +40,8 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
                 const content = await file.text();
                 const json = JSON.parse(content) as JSONv3Template;
 
-                if (!json.templateVersion || json.templateVersion !== '3.0') {
-                    throw new Error(`Arquivo ${file.name} não é um template JSON v3.0 válido`);
+                if (!json.templateVersion || !['3.0', '3.1', '3.2'].includes(json.templateVersion)) {
+                    throw new Error(`Arquivo ${file.name} não é um template JSON v3.x válido (versão: ${json.templateVersion || 'não especificada'})`);
                 }
 
                 templates[json.metadata.id] = json;
@@ -119,8 +119,8 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
                 {status !== 'idle' && (
                     <div
                         className={`flex items-start gap-2 p-3 rounded-lg ${status === 'success'
-                                ? 'bg-green-50 text-green-800 border border-green-200'
-                                : 'bg-red-50 text-red-800 border border-red-200'
+                            ? 'bg-green-50 text-green-800 border border-green-200'
+                            : 'bg-red-50 text-red-800 border border-red-200'
                             }`}
                     >
                         {status === 'success' ? (
@@ -138,7 +138,7 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
                         <div className="text-sm text-blue-800">
                             <p className="font-medium mb-1">Formato esperado:</p>
                             <ul className="list-disc list-inside space-y-1 text-xs">
-                                <li>Arquivo .json com templateVersion: "3.0"</li>
+                                <li>Arquivo .json com templateVersion: "3.0", "3.1" ou "3.2"</li>
                                 <li>Deve conter: metadata, sections, navigation</li>
                                 <li>Múltiplos arquivos serão mesclados em um funil</li>
                             </ul>

@@ -439,7 +439,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
         const allTemplates = require('@/templates/quiz21StepsComplete');
         const templateV3 = allTemplates.QUIZ_STYLE_21_STEPS_TEMPLATE['step-20'] as TemplateV3;
 
-        if (templateV3 && templateV3.templateVersion === '3.0') {
+        if (templateV3 && ['3.0', '3.1', '3.2'].includes(templateV3.templateVersion)) {
           return (
             <V3Renderer
               template={templateV3}

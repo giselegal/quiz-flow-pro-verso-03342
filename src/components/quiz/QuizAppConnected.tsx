@@ -57,14 +57,16 @@ interface QuizAppConnectedProps {
 
 export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, previewMode = false, initialStepId, initialConfig }: QuizAppConnectedProps) {
     // 🐛 DEBUG CRÍTICO: Log de props recebidas
-    appLogger.info('🎯 QuizAppConnected RENDERIZADO', { data: [{
+    appLogger.info('🎯 QuizAppConnected RENDERIZADO', {
+        data: [{
             funnelId,
             editorMode,
             previewMode,
             initialStepId,
             hasInitialConfig: !!initialConfig,
             timestamp: new Date().toISOString(),
-        }] });
+        }]
+    });
 
     // Registrar steps de produção (seguro chamar múltiplas vezes - stepRegistry lida com duplicatas)
     useEffect(() => {
@@ -90,10 +92,12 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         const registry = useOptionalQuizRuntimeRegistry();
         if (registry && registry.steps && Object.keys(registry.steps).length) {
             externalSteps = registry.steps;
-            appLogger.info(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, { data: [{
-                            stepIds: Object.keys(externalSteps),
-                            firstStepSample: externalSteps[Object.keys(externalSteps)[0]],
-                        }] });
+            appLogger.info(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, {
+                data: [{
+                    stepIds: Object.keys(externalSteps),
+                    firstStepSample: externalSteps[Object.keys(externalSteps)[0]],
+                }]
+            });
         } else {
             appLogger.info('⚠️ Registry vazio ou ausente - usando fallback');
         }
@@ -196,11 +200,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         // Recalcular pontuação total
         quizStoreUpdateScore();
 
-        appLogger.info('✅ Resposta salva com pontuação:', { data: [{
-                    stepId,
-                    timeSpent: timeSpent.toFixed(2) + 's',
-                    score: isCorrect ? 10 : 0,
-                }] });
+        appLogger.info('✅ Resposta salva com pontuação:', {
+            data: [{
+                stepId,
+                timeSpent: timeSpent.toFixed(2) + 's',
+                score: isCorrect ? 10 : 0,
+            }]
+        });
     }, [
         questionStartTime,
         addAnswer,
@@ -295,12 +301,14 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         const isQuestion = currentStepData.type === 'question';
         const isStrategic = currentStepData.type === 'strategic-question';
 
-        appLogger.info(`🔍 Auto-avanço check [${state.currentStep}]:`, { data: [{
-                    type: currentStepData.type,
-                    isQuestion,
-                    isStrategic,
-                    requiredSelections: currentStepData.requiredSelections,
-                }] });
+        appLogger.info(`🔍 Auto-avanço check [${state.currentStep}]:`, {
+            data: [{
+                type: currentStepData.type,
+                isQuestion,
+                isStrategic,
+                requiredSelections: currentStepData.requiredSelections,
+            }]
+        });
 
         if (!isQuestion && !isStrategic) {
             appLogger.info(`⏭️ Skip auto-avanço: tipo '${currentStepData.type}' não é pergunta`);
@@ -318,18 +326,22 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         if (isStrategic) {
             // Perguntas estratégicas: avançar imediatamente após selecionar
             shouldAutoAdvance = !!strategicAnswer;
-            appLogger.info(`🎯 Estratégica [${state.currentStep}]:`, { data: [{
-                            strategicAnswer,
-                            shouldAutoAdvance,
-                        }] });
+            appLogger.info(`🎯 Estratégica [${state.currentStep}]:`, {
+                data: [{
+                    strategicAnswer,
+                    shouldAutoAdvance,
+                }]
+            });
         } else {
             // Perguntas normais: avançar quando atingir requiredSelections
             shouldAutoAdvance = currentAnswers.length === requiredCount;
-            appLogger.info(`📝 Pergunta [${state.currentStep}]:`, { data: [{
-                            currentAnswers: currentAnswers.length,
-                            requiredCount,
-                            shouldAutoAdvance,
-                        }] });
+            appLogger.info(`📝 Pergunta [${state.currentStep}]:`, {
+                data: [{
+                    currentAnswers: currentAnswers.length,
+                    requiredCount,
+                    shouldAutoAdvance,
+                }]
+            });
         }
 
         if (shouldAutoAdvance) {
@@ -604,7 +616,10 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         </div>
                     )}
                     {def.render({
-                        config: { ...def.defaultConfig, ...block.config },
+                        config: {
+                            ...def.defaultConfig,
+                            ...(block.config || block.properties || block.content || {})
+                        },
                         state: {
                             userProfile: state.userProfile,
                             onNameSubmit: (name: string) => { setUserName(name); nextStep(); },

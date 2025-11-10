@@ -19,14 +19,14 @@ export type BlockInstance = z.infer<typeof BlockInstanceSchema>;
 
 // Template minimalista por etapa baseado apenas em blocos (v3.1)
 export const StepBlocksTemplateSchema = z.object({
-    templateVersion: z.literal('3.1'),
+    stepId: z.string().min(1, 'Step ID é obrigatório'),
     metadata: z.object({
-        id: z.string().min(1),
-        name: z.string().default(''),
-        description: z.string().default(''),
-        category: z.string().default(''),
-        tags: z.array(z.string()).default([]),
+        id: z.string(),
+        title: z.string(),
+        description: z.string().optional(),
+        version: z.string().optional(),
     }),
+    templateVersion: z.enum(['3.0', '3.1', '3.2']),
     theme: z.record(z.any()).optional(),
     layout: z.record(z.any()).optional(),
     blocks: z.array(BlockInstanceSchema).default([]),

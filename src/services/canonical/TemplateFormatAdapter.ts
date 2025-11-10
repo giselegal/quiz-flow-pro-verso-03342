@@ -117,12 +117,14 @@ export class TemplateFormatAdapter {
    */
   private normalizeBlock(block: any): Block {
     const normalizedType = TYPE_ALIASES[block.type] || block.type;
+    const { getBlockConfig } = require('@/lib/utils/blockConfigMerger');
+    const config = getBlockConfig(block);
     
     return {
       ...block,
       type: normalizedType as any,
-      content: block.content || block.config || block.properties || {},
-      properties: block.properties || block.config || {},
+      content: config,
+      properties: config,
     };
   }
 

@@ -141,7 +141,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
             import('@/lib/utils/loadJsonTemplate')
                 .then(({ loadJsonTemplate }) => loadJsonTemplate(stepId))
                 .then(template => {
-                    if (template && (template.templateVersion === '3.1' || template.templateVersion === '3.0')) {
+                    if (template && ['3.0', '3.1', '3.2'].includes(template.templateVersion)) {
                         appLogger.debug('✅ [JSON-DRIVEN] Template carregado:', stepId);
                         // Template será usado no próximo render via state update
                     } else {

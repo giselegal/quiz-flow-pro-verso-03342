@@ -92,15 +92,20 @@ export class UnifiedQuizStepAdapter {
       nextStep: runtime.nextStep,
       
       // 🎯 RESTAURAR blocos completos com TODAS as props
-      blocks: (extendedRuntime.blocks || []).map((block: ExtendedRuntimeBlock) => ({
-        id: block.id,
-        type: block.type,
-        order: block.order || 0,
-        parentId: block.parentId || null,
-        // 🎯 RESTAURAR estrutura: properties tem prioridade, config como fallback
-        properties: block.properties || block.config || {},
-        content: block.content || {},
-      })),
+      blocks: (extendedRuntime.blocks || []).map((block: ExtendedRuntimeBlock) => {
+        // 🎯 USAR getBlockConfig para prioridade correta: config > properties > content
+        const { getBlockConfig } = require('@/lib/utils/blockConfigMerger');
+        const config = getBlockConfig(block);
+        
+        return {
+          id: block.id,
+          type: block.type,
+          order: block.order || 0,
+          parentId: block.parentId || null,
+          properties: config,
+          content: block.content || {},
+        };
+      }),
       
       // 🎯 METADADOS completos
       title: runtime.title,

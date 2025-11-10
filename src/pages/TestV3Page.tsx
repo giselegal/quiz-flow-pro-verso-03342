@@ -42,8 +42,8 @@ export const TestV3Page: React.FC = () => {
 
                 const data = await response.json();
 
-                // Validar estrutura básica (aceita v3.0 e v3.1)
-                if (!data.templateVersion || (data.templateVersion !== '3.0' && data.templateVersion !== '3.1')) {
+                // Validar estrutura básica (aceita v3.0, v3.1 e v3.2)
+                if (!data.templateVersion || !['3.0', '3.1', '3.2'].includes(data.templateVersion)) {
                     throw new Error(`Template inválido ou versão incorreta: ${data.templateVersion || 'não especificada'}`);
                 }
 

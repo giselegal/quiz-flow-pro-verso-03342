@@ -59,10 +59,9 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   // Inicializar valores locais quando bloco muda
   useEffect(() => {
     if (block) {
-      setLocalValues({
-        ...block.content,
-        ...block.properties,
-      });
+      // 🎯 USAR getBlockConfig para prioridade correta: config > properties > content
+      const { getBlockConfig } = require('@/lib/utils/blockConfigMerger');
+      setLocalValues(getBlockConfig(block));
       setHasChanges(false);
     }
   }, [block?.id]);
