@@ -52,8 +52,7 @@ export default defineConfig(({ mode }) => {
         'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
         'react/jsx-runtime': path.resolve(__dirname, './node_modules/react/jsx-runtime'),
         'react/jsx-dev-runtime': path.resolve(__dirname, './node_modules/react/jsx-dev-runtime'),
-        // 🔧 FIX CRÍTICO: Forçar versão ESM do tslib para que __assign seja função
-        'tslib': path.resolve(__dirname, './node_modules/tslib/tslib.es6.js'),
+  // Removido alias manual de 'tslib' para deixar Vite resolver corretamente
       },
       dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
       // 🔧 FIX: Extensões de arquivo explícitas
