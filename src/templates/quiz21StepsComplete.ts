@@ -11,12 +11,11 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-11-07T12:30:23.724Z
+ * Gerado em: 2025-11-10T14:11:32.403Z
  * Versão: 3.0.0
  */
 
 import { Block } from '../types/editor';
-import { appLogger } from '@/lib/utils/appLogger';
 
 // 🔧 PERFORMANCE E CACHE OTIMIZADO
 const TEMPLATE_CACHE = new Map<string, Block[]>();
@@ -34,7 +33,7 @@ export function getStepTemplate(stepId: string): Block[] | null {
     return template;
   }
 
-  appLogger.warn(`⚠️ Template ${stepId} not found`);
+  console.warn(`⚠️ Template ${stepId} not found`);
   return null;
 }
 
@@ -52,7 +51,7 @@ export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): 
 
   const baseTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
   if (!baseTemplate) {
-    appLogger.warn(`⚠️ Template ${stepId} not found for funnel ${funnelId}`);
+    console.warn(`⚠️ Template ${stepId} not found for funnel ${funnelId}`);
     return null;
   }
 
@@ -96,30 +95,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "properties": {
         "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 132,
-        "logoHeight": 55,
-        "showLogo": true,
-        "logoPosition": "center",
         "showProgress": true,
-        "progressValue": 5,
-        "progressMax": 100,
-        "progressHeight": 4,
-        "progressStyle": "bar",
-        "progressColor": "#B89B7A",
-        "progressBackgroundColor": "#E5DDD5",
-        "showBackButton": false,
-        "backButtonStyle": "icon",
-        "backButtonPosition": "left",
-        "headerStyle": "default",
-        "backgroundColor": "#FAF9F7",
-        "showBorder": false,
-        "isSticky": false,
-        "enableAnimation": true,
-        "marginTop": 0,
-        "marginBottom": 16,
-        "contentMaxWidth": 640,
-        "animationType": "fade",
-        "animationDuration": 300
+        "progressValue": 5
       },
       "content": {}
     },
