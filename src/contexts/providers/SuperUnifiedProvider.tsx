@@ -568,6 +568,8 @@ interface SuperUnifiedContextType {
     signup: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
     signOut: () => Promise<void>;
+    resetPassword: (email: string) => Promise<void>;
+    signInWithGoogle: () => Promise<void>;
 }
 
 // 🎯 CONTEXT
@@ -1226,6 +1228,47 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, []);
 
+    const resetPassword = useCallback(async (email: string) => {
+        dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/auth/reset-password`,
+            });
+            if (error) throw error;
+            dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: false } });
+            appLogger.info('Password reset email sent', { data: [{ email }] });
+        } catch (error: any) {
+            const friendlyError = getUserFriendlyError(error, 'enviar email de recuperação');
+            logger.error('[resetPassword] Falha ao enviar email', { error: error.message });
+            dispatch({ type: 'SET_AUTH_STATE', payload: { error: friendlyError.message, isLoading: false } });
+            throw error;
+        }
+    }, []);
+
+    const signInWithGoogle = useCallback(async () => {
+        dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
+        try {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/admin`,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    },
+                },
+            });
+            if (error) throw error;
+            // OAuth redirect will handle the rest
+            appLogger.info('Google OAuth initiated', { data: [{ url: data.url }] });
+        } catch (error: any) {
+            const friendlyError = getUserFriendlyError(error, 'fazer login com Google');
+            logger.error('[signInWithGoogle] Falha no OAuth', { error: error.message });
+            dispatch({ type: 'SET_AUTH_STATE', payload: { error: friendlyError.message, isLoading: false } });
+            throw error;
+        }
+    }, []);
+
     // Auto-load funnel
     useEffect(() => {
         if (autoLoad && funnelId) {
@@ -1347,6 +1390,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         signup,
         logout,
         signOut: logout, // Alias
+        resetPassword,
+        signInWithGoogle,
     }), [
         state,
         loadFunnels,
@@ -1375,6 +1420,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         login,
         signup,
         logout,
+        resetPassword,
+        signInWithGoogle,
     ]);
 
     return (

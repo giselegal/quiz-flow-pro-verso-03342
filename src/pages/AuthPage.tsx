@@ -10,14 +10,14 @@ import { useLocation } from 'wouter';
 
 const AuthPage: React.FC = () => {
   const [location, setLocation] = useLocation();
-  
+
   // Check for ?mode=signup query parameter
   const getInitialMode = () => {
     if (typeof window === 'undefined') return true;
     const params = new URLSearchParams(window.location.search);
     return params.get('mode') !== 'signup';
   };
-  
+
   const [isLogin, setIsLogin] = useState(getInitialMode());
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,8 +26,7 @@ const AuthPage: React.FC = () => {
   const [error, setError] = useState('');
   const [resetEmailSent, setResetEmailSent] = useState(false);
 
-  const { login, signup } = useAuth();
-  // Note: Password reset will be implemented later with proper Supabase setup
+  const { login, signup, resetPassword, signInWithGoogle } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,18 +65,26 @@ const AuthPage: React.FC = () => {
     setError('');
 
     try {
-      // TODO: Implement password reset with Supabase
+      await resetPassword(email);
       setResetEmailSent(true);
-    } catch (err) {
-      setError('Erro ao enviar email de recuperação');
+    } catch (err: any) {
+      setError(err.message || 'Erro ao enviar email de recuperação');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    // TODO: Implement Google OAuth with Supabase
-    setError('Login com Google será implementado em breve');
+    setIsLoading(true);
+    setError('');
+
+    try {
+      await signInWithGoogle();
+      // OAuth redirect will handle navigation
+    } catch (err: any) {
+      setError(err.message || 'Erro ao fazer login com Google');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -120,7 +127,7 @@ const AuthPage: React.FC = () => {
           variant="outline"
           className="w-full mb-6 h-12 border-gray-200 hover:bg-brand-lightBlue/10 transition-all duration-200"
           onClick={handleGoogleSignIn}
-          disabled={false}
+          disabled={isLoading}
         >
           <Chrome className="w-5 h-5 mr-3 text-brand-brightBlue" />
           <span className="text-brand-darkBlue">Continuar com Google</span>
