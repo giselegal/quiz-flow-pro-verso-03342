@@ -134,7 +134,7 @@ test.describe('📝 Editor de Funis - Funcionalidades Básicas', () => {
             await firstInput.fill(testText);
             await page.waitForTimeout(500);
 
-            const value = await firstInput.inputValue().catch(() => await firstInput.textContent());
+            const value = await firstInput.inputValue().catch(async () => await firstInput.textContent());
             expect(value).toContain('teste');
 
             console.log('✅ Texto editado com sucesso');

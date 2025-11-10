@@ -157,7 +157,7 @@ test.describe('🏢 Admin Dashboard - Seções Principais', () => {
     
     let foundMetrics = false;
     for (const element of elements) {
-      const text = await element.textContent().catch(() => '');
+      const text = await element.textContent().catch(() => '') || '';
       if (numberPattern.test(text)) {
         foundMetrics = true;
         console.log(`✅ Métrica encontrada: ${text.trim()}`);
