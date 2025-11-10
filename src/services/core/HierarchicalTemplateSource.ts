@@ -271,14 +271,16 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
     // Nenhuma fonte funcionou - log detalhado
     appLogger.error(`❌ [HierarchicalSource] NENHUMA FONTE disponível para ${stepId}`);
-    console.table({
-      'Step ID': stepId,
-      'Funnel ID': funnelId || 'N/A',
-      'Template Ativo': this.activeTemplateId,
-      'USER_EDIT (Supabase)': this.ONLINE_DISABLED ? '❌ Desabilitado' : (funnelId ? '✅ Tentado' : '⚠️ Sem funnelId'),
-      'ADMIN_OVERRIDE': this.ONLINE_DISABLED || this.JSON_ONLY ? '❌ Desabilitado' : '✅ Tentado',
-      'TEMPLATE_DEFAULT (JSON)': `✅ Tentado (${this.activeTemplateId})`,
-      'FALLBACK (TS)': isFallbackDisabled() ? '❌ Desabilitado' : '✅ Tentado',
+    appLogger.error('[HierarchicalSource] Diagnóstico:', {
+      data: [{
+        stepId,
+        funnelId: funnelId || 'N/A',
+        templateAtivo: this.activeTemplateId,
+        userEdit: this.ONLINE_DISABLED ? 'Desabilitado' : (funnelId ? 'Tentado' : 'Sem funnelId'),
+        adminOverride: this.ONLINE_DISABLED || this.JSON_ONLY ? 'Desabilitado' : 'Tentado',
+        templateDefault: `Tentado (${this.activeTemplateId})`,
+        fallback: isFallbackDisabled() ? 'Desabilitado' : 'Tentado'
+      }]
     });
     
     throw new Error(`No data source available for step: ${stepId}`);
@@ -343,7 +345,20 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       // Se a tabela não existir ou RLS bloquear, Supabase tende a retornar error (status 404 / 401)
       if (error) {
         // Tratar 404 silenciosamente como ausência de override sem poluir console
-        if ((error as any)?.code === 'PGRST116' || (error as any)?.message?.includes('404')) {
+        // Códigos conhecidos: PGRST116 (not found), PGRST301 (não encontrado), 404 (not found)
+        const errorCode = (error as any)?.code;
+        const errorMessage = (error as any)?.message?.toLowerCase() || '';
+        const errorHint = (error as any)?.hint?.toLowerCase() || '';
+        const isNotFound = errorCode === 'PGRST116' || 
+                          errorCode === 'PGRST301' ||
+                          errorCode === '42P01' || // PostgreSQL: relation does not exist
+                          errorMessage.includes('404') ||
+                          errorMessage.includes('not found') ||
+                          errorMessage.includes('relation') && errorMessage.includes('does not exist') ||
+                          errorHint.includes('not found');
+        
+        if (isNotFound) {
+          // Silenciar completamente erros 404 esperados
           return null;
         }
         // Outros erros podem ser transientes; apenas log leve e continuar
@@ -355,6 +370,13 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       }
       return null;
     } catch (error) {
+      // Silenciar erros esperados de tabela não existente
+      const errorMessage = (error as Error)?.message?.toLowerCase() || '';
+      if (errorMessage.includes('404') || 
+          errorMessage.includes('not found') ||
+          errorMessage.includes('relation') && errorMessage.includes('does not exist')) {
+        return null;
+      }
       appLogger.debug('[HierarchicalSource] Admin override not found:', { data: [{ stepId }] });
       return null;
     }
