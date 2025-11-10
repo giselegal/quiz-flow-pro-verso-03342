@@ -31,7 +31,7 @@
       const isInLovablePreview = window.self !== window.top;
       if (isInLovablePreview) return; // Permitir quando embutido (ex: preview oficial)
 
-  const BLOCK_PATTERNS = ['lovable.dev', 'api.lovable.dev', 'lovableproject.com', '/_sandbox/'];
+      const BLOCK_PATTERNS = ['lovable.dev', 'api.lovable.dev', 'lovableproject.com', '/_sandbox/'];
       const shouldBlock = (urlString) => BLOCK_PATTERNS.some(p => urlString.includes(p));
 
       const originalFetch = window.fetch;
