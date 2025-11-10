@@ -1,0 +1,96 @@
+{
+  "id": "step-01",
+  "type": "intro",
+  "title": "Introdução",
+  "metadata": {
+    "name": "Step 01 - Introdução",
+    "description": "Passo inicial do quiz com captura de nome do participante",
+    "category": "quiz-intro",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "block-intro-header",
+      "type": "quiz-intro-header",
+      "position": 0,
+      "content": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
+        "showProgress": false,
+        "progressValue": 0
+      }
+    },
+    {
+      "id": "block-intro-title",
+      "type": "text-inline",
+      "position": 1,
+      "content": {
+        "text": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+      },
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-2xl sm:text-3xl md:text-4xl",
+        "fontWeight": "font-normal",
+        "className": "text-[#432818]",
+        "fontFamily": "\"Playfair Display\", serif"
+      }
+    },
+    {
+      "id": "block-intro-image",
+      "type": "image-display-inline",
+      "position": 2,
+      "properties": {
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        "alt": "Descubra seu estilo predominante",
+        "maxWidth": "300px",
+        "objectFit": "contain",
+        "rounded": true,
+        "margin": "auto"
+      }
+    },
+    {
+      "id": "block-intro-description",
+      "type": "text-inline",
+      "position": 3,
+      "content": {
+        "text": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança."
+      },
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-sm md:text-base",
+        "className": "text-gray-700 max-w-md mx-auto leading-relaxed"
+      }
+    },
+    {
+      "id": "block-intro-form",
+      "type": "intro-form",
+      "position": 4,
+      "properties": {
+        "label": "Antes de começarmos, como posso te chamar?",
+        "placeholder": "Digite seu primeiro nome aqui...",
+        "buttonText": "Quero Descobrir meu Estilo Agora!",
+        "buttonVariant": "primary",
+        "privacyNotice": "Seu nome é necessário para personalizar sua experiência.",
+        "inputAlignment": "center",
+        "maxWidth": "320px",
+        "margin": "auto"
+      }
+    },
+    {
+      "id": "block-footer-copyright",
+      "type": "text-inline",
+      "position": 5,
+      "content": {
+        "text": "© {currentYear} Gisele Galvão - Todos os direitos reservados"
+      },
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-xs",
+        "className": "text-gray-500 pt-6 tracking-wide"
+      }
+    }
+  ],
+  "navigation": {
+    "nextStep": "step-02"
+  }
+}

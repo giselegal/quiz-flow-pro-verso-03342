@@ -1,0 +1,46 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-17-strategic-v3",
+    "name": "Q15 - Transformação (Estratégica)",
+    "description": "Questão estratégica 5 sobre objetivos e resultados",
+    "category": "strategic-question",
+    "questionNumber": 15,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:33:47.498Z",
+    "updatedAt": "2025-10-13T00:33:47.498Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
+  "sections": [],
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 1,
+        "maxItems": 1,
+        "errorMessage": "Por favor, selecione uma opção"
+      }
+    }
+  },
+  "behavior": {}
+}

@@ -1,0 +1,136 @@
+{
+  "id": "step-18",
+  "type": "strategic-question",
+  "title": "Q16 - Resultado (Estratégica)",
+  "metadata": {
+    "name": "Q16 - Resultado (Estratégica)",
+    "description": "Questão estratégica 6 sobre objetivos e resultados",
+    "category": "strategic-question",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "progress-bar-step-18",
+      "type": "question-progress",
+      "position": 0,
+      "content": {
+        "stepNumber": 18,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "properties": {
+        "padding": 8
+      }
+    },
+    {
+      "id": "step-18-question-title",
+      "type": "question-title",
+      "position": 1,
+      "content": {
+        "text": "Qual desses resultados você mais gostaria de alcançar?"
+      },
+      "properties": {
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-18",
+      "type": "question-hero",
+      "position": 2,
+      "content": {
+        "questionNumber": "Q16 - RESULTADO",
+        "questionText": "Qual desses resultados você mais gostaria de alcançar?",
+        "currentQuestion": 16,
+        "totalQuestions": 13,
+        "progressValue": 81,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "properties": {
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-18",
+      "type": "options grid",
+      "position": 3,
+      "content": {
+        "options": [
+          {
+            "id": "montar-looks-facilidade",
+            "text": "Montar looks com mais facilidade e confiança",
+            "value": "montar-looks-facilidade"
+          },
+          {
+            "id": "usar-que-tenho",
+            "text": "Usar o que já tenho e me sentir estilosa",
+            "value": "usar-que-tenho"
+          },
+          {
+            "id": "comprar-consciencia",
+            "text": "Comprar com mais consciência e sem culpa",
+            "value": "comprar-consciencia"
+          },
+          {
+            "id": "ser-admirada",
+            "text": "Ser admirada pela imagem que transmito",
+            "value": "ser-admirada"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "properties": {
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-18-cta-next",
+      "type": "CTAButton",
+      "position": 4,
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      }
+    }
+  ],
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  }
+}

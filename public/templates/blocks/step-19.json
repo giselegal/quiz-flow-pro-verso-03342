@@ -1,0 +1,55 @@
+{
+  "id": "step-19",
+  "title": "Transição Pré-Resultado",
+  "blocks": [
+    {
+      "id": "transition-hero-19",
+      "type": "transition-hero",
+      "order": 0,
+      "properties": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32,
+        "type": "scale",
+        "duration": 500,
+        "delay": 0,
+        "easing": "ease-out"
+      },
+      "content": {
+        "title": "Obrigada por compartilhar.",
+        "subtitle": "Preparando seu resultado personalizado",
+        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+        "autoAdvanceDelay": 3000
+      },
+      "parentId": null
+    },
+    {
+      "id": "step-19-transition-text",
+      "type": "transition-text",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300
+      },
+      "content": {},
+      "parentId": null
+    },
+    {
+      "id": "step-19-transition-cta",
+      "type": "CTAButton",
+      "order": 2,
+      "properties": {},
+      "content": {
+        "label": "...",
+        "variant": "outline",
+        "size": "small"
+      },
+      "parentId": null
+    }
+  ],
+  "metadata": {
+    "version": "3.0.0",
+    "generatedFrom": "master",
+    "generatedAt": "2025-10-30T11:27:34.183Z"
+  }
+}

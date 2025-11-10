@@ -1,0 +1,107 @@
+{
+  "id": "step-09",
+  "type": "question",
+  "title": "Pergunta 8 – Calçados",
+  "metadata": {
+    "name": "Step 09 - Pergunta 8 de Estilo",
+    "description": "Etapa 9 do quiz: identifique o tipo de calçado que mais representa seu estilo de vida.",
+    "category": "quiz-question",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "block-progress-bar-09",
+      "type": "quiz-progress-bar",
+      "position": 0,
+      "content": {
+        "progressValue": "{progressPercent}",
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "properties": {
+        "showPercentage": true,
+        "textAlign": "center"
+      }
+    },
+    {
+      "id": "block-progress-text-09",
+      "type": "text-inline",
+      "position": 1,
+      "content": {
+        "text": "Você concluiu <strong>{progressPercent}%</strong> do teste."
+      },
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-sm md:text-base",
+        "className": "text-gray-600 mb-2"
+      }
+    },
+    {
+      "id": "block-question-title-09",
+      "type": "text-inline",
+      "position": 2,
+      "content": {
+        "text": "Quais desses calçados você mais usa?"
+      },
+      "properties": {
+        "fontFamily": "\"Playfair Display\", serif",
+        "fontWeight": "font-bold",
+        "fontSize": "text-2xl sm:text-3xl",
+        "textAlign": "center",
+        "className": "text-[#432818]"
+      }
+    },
+    {
+      "id": "block-options-grid-09",
+      "type": "quiz-options-grid",
+      "position": 3,
+      "properties": {
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": "medium",
+        "validationMessage": "Selecione 3 opções para continuar"
+      },
+      "content": {
+        "options": [
+          { "id": "natural-08", "text": "Tênis, rasteirinhas ou sapatos confortáveis", "value": "natural" },
+          { "id": "classico-08", "text": "Scarpin ou mocassim estruturado", "value": "classico" },
+          { "id": "contemporaneo-08", "text": "Bota de salto médio ou coturno fashion", "value": "contemporaneo" },
+          { "id": "elegante-08", "text": "Salto fino ou sandália minimalista", "value": "elegante" },
+          { "id": "romantico-08", "text": "Sapatilhas delicadas ou sandálias femininas", "value": "romantico" },
+          { "id": "sexy-08", "text": "Sandália alta ou bota poderosa", "value": "sexy" },
+          { "id": "dramatico-08", "text": "Sapatos estruturados e de design marcante", "value": "dramatico" },
+          { "id": "criativo-08", "text": "Calçados coloridos e fora do comum", "value": "criativo" }
+        ]
+      }
+    },
+    {
+      "id": "block-next-button-09",
+      "type": "quiz-button",
+      "position": 4,
+      "properties": {
+        "variant": "primary",
+        "size": "large",
+        "align": "center"
+      },
+      "content": {
+        "label": "Avançar",
+        "href": "#next"
+      }
+    }
+  ],
+  "validation": {
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Selecione exatamente 3 opções para continuar"
+      }
+    }
+  },
+  "navigation": {
+    "nextStep": "step-10"
+  }
+}

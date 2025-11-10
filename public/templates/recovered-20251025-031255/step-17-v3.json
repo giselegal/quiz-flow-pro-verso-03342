@@ -1,0 +1,132 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-17-strategic-v3",
+    "name": "Q15 - Transformação (Estratégica)",
+    "description": "Questão estratégica 5 sobre objetivos e resultados",
+    "category": "strategic-question",
+    "tags": [
+      "quiz",
+      "style",
+      "strategic",
+      "goals"
+    ],
+    "questionNumber": 15,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:33:47.498Z",
+    "updatedAt": "2025-10-13T00:33:47.498Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    },
+    "spacing": {
+      "sm": 8,
+      "md": 16,
+      "lg": 24,
+      "xl": 32
+    },
+    "borderRadius": {
+      "sm": 4,
+      "md": 8,
+      "lg": 12,
+      "xl": 16
+    }
+  },
+  "sections": [
+    { "type": "question-progress", "id": "q17-progress", "content": { "currentQuestion": 5, "totalQuestions": 6, "progressValue": 83, "showProgress": true }, "style": { "backgroundColor": "transparent", "padding": 8 }, "animation": { "type": "fade", "duration": 220, "delay": 0, "easing": "ease-out" } },
+    { "type": "question-number", "id": "q17-number", "content": { "text": "5 de 6", "questionNumber": "5 de 6" }, "style": { "textAlign": "center", "marginBottom": 4 }, "animation": { "type": "fade", "duration": 220, "delay": 20, "easing": "ease-out" } },
+  { "type": "question-text", "id": "q17-text", "content": { "text": "Você acredita que ter um passo a passo para alinhar seu estilo à sua essência pode acelerar sua transformação?" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 40, "easing": "ease-out" } },
+    { "type": "question-instructions", "id": "q17-instructions", "content": { "text": "Selecione 1 opção para continuar" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 60, "easing": "ease-out" } },
+    {
+      "type": "options-grid",
+      "id": "options-grid-17",
+      "content": {
+        "options": [
+          { "id": "sim-totalmente", "text": "Sim! Sozinha é mais difícil manter consistência", "value": "sim-totalmente" },
+          { "id": "sim-ajudaria", "text": "Sim, ter um método claro ajudaria muito", "value": "sim-ajudaria" },
+          { "id": "talvez", "text": "Talvez — se for algo prático e fácil de aplicar", "value": "talvez" },
+          { "id": "nao-pronta", "text": "Ainda não sei se estou pronta pra isso", "value": "nao-pronta" }
+        ],
+        "columns": 1,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": false,
+        "imageSize": 256,
+        "autoAdvance": false,
+        "autoAdvanceDelay": 0,
+        "validationMessage": "Selecione 1 opção para continuar"
+      },
+      "style": { "backgroundColor": "transparent", "padding": 16 },
+      "animation": { "type": "slideUp", "duration": 300, "delay": 80, "easing": "ease-out" },
+      "properties": {
+        "options": [
+          { "id": "sim-totalmente", "text": "Sim! Sozinha é mais difícil manter consistência", "value": "sim-totalmente" },
+          { "id": "sim-ajudaria", "text": "Sim, ter um método claro ajudaria muito", "value": "sim-ajudaria" },
+          { "id": "talvez", "text": "Talvez — se for algo prático e fácil de aplicar", "value": "talvez" },
+          { "id": "nao-pronta", "text": "Ainda não sei se estou pronta pra isso", "value": "nao-pronta" }
+        ],
+        "columns": 1,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": false,
+        "imageSize": 256,
+        "autoAdvance": false,
+        "autoAdvanceDelay": 0,
+        "validationMessage": "Selecione 1 opção para continuar"
+      }
+    },
+    { "type": "question-navigation", "id": "q17-navigation", "content": { "backLabel": "Voltar", "nextLabel": "Avançar" }, "properties": { "showBack": true, "enableWhenValid": true }, "style": { "marginTop": 16, "textAlign": "center" }, "animation": { "type": "fade", "duration": 250, "delay": 100, "easing": "ease-out" } }
+  ],
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 1,
+        "maxItems": 1,
+        "errorMessage": "Por favor, selecione 1 opção"
+      }
+    }
+  },
+  "navigation": {
+    "nextStep": "step-18",
+    "prevStep": "step-16",
+    "allowBack": true,
+    "requiresUserInput": true,
+    "autoAdvance": false,
+    "autoAdvanceDelay": 0
+  },
+  "analytics": {
+    "events": [
+      "page_view",
+      "section_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
+    "trackingId": "step-17-strategic-v3"
+  },
+  "strategic": {
+    "isStrategic": true,
+    "weight": 1.5,
+    "impactsOffer": false
+  }
+}

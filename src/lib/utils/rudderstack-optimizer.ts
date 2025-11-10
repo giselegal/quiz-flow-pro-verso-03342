@@ -201,12 +201,7 @@ export const cleanupRudderStackOptimization = () => {
   appLogger.info('🔧 RudderStack Optimizer: Filtros removidos');
 };
 
-// Auto-inicializar em desenvolvimento (respeitando flag VITE_DISABLE_ANALYTICS)
+// Auto-inicializar em desenvolvimento
 if (process.env.NODE_ENV === 'development') {
-  const DISABLE_ANALYTICS = (import.meta as any)?.env?.VITE_DISABLE_ANALYTICS === 'true';
-  if (!DISABLE_ANALYTICS) {
-    initializeRudderStackOptimization();
-  } else {
-    try { appLogger.info('🚫 RudderStack Optimizer não inicializado (VITE_DISABLE_ANALYTICS=true)'); } catch {}
-  }
+  initializeRudderStackOptimization();
 }

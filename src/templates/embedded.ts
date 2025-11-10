@@ -1,7 +1,7 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-11-10T14:11:32.405Z
+ * Gerado automaticamente em: 2025-11-07T12:30:23.726Z
  * Total de steps: 21
  * Total de blocos: 103
  * 
@@ -51,6 +51,7 @@ const embedded: Record<string, Block[]> = {
           "animationType": "fade",
           "animationDuration": 300
         },
+        "content": {},
         "parentId": null
       },
       {

@@ -52,7 +52,6 @@ export default defineConfig(({ mode }) => {
         'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
         'react/jsx-runtime': path.resolve(__dirname, './node_modules/react/jsx-runtime'),
         'react/jsx-dev-runtime': path.resolve(__dirname, './node_modules/react/jsx-dev-runtime'),
-  // Removido alias manual de 'tslib' para deixar Vite resolver corretamente
       },
       dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
       // 🔧 FIX: Extensões de arquivo explícitas
@@ -215,7 +214,7 @@ export default defineConfig(({ mode }) => {
       // Pré-bundle de libs grandes usadas no primeiro render para reduzir transformação fria (DEV)
       include: [
         'react', 'react-dom', 'react/jsx-runtime', 'react-dom/client',
-        'wouter', 'react-helmet-async', 'zod', 'tslib',
+        'wouter', 'react-helmet-async', 'zod',
         '@radix-ui/react-dialog', '@radix-ui/react-toast', '@radix-ui/react-popover', '@radix-ui/react-dropdown-menu'
       ],
       esbuildOptions: {

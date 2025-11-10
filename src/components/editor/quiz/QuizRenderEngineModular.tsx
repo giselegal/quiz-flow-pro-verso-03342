@@ -9,8 +9,8 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import React from 'react';
 
-// Import Block Type Renderer - Specialized for Quiz blocks
-import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+// Import Universal Block Renderer
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 
 interface QuizRenderEngineProps {
   blocks: Block[];
@@ -57,21 +57,11 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
           isSelected && 'selected',
         )}
       >
-        <BlockTypeRenderer
+        <UniversalBlockRenderer
           block={block}
           isSelected={isSelected}
-          isEditable={isEditable}
-          onSelect={() => handleBlockClick(block)}
-          onOpenProperties={onBlockUpdate ? (blockId: string) => {
-            const blockToUpdate = blocks.find(b => b.id === blockId);
-            if (blockToUpdate && onBlockUpdate) {
-              onBlockUpdate(blockId, blockToUpdate);
-            }
-          } : undefined}
-          contextData={{
-            mode,
-            stepNumber: block.properties?.stepNumber,
-          }}
+          onClick={() => handleBlockClick(block)}
+          onPropertyChange={(key, value) => handlePropertyChange(block.id, key, value)}
         />
       </div>
     );

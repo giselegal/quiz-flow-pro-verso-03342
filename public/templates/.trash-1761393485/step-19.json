@@ -1,0 +1,69 @@
+{
+  "id": "step-19",
+  "type": "transition-result",
+  "title": "Transição Pré-Resultado",
+  "metadata": {
+    "name": "Transição Pré-Resultado",
+    "description": "Página de transição antes da exibição do resultado final",
+    "category": "transition-result",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "transition-hero-19",
+      "type": "transition-hero",
+      "position": 0,
+      "content": {
+        "title": "Obrigada por compartilhar.",
+        "subtitle": "Preparando seu resultado personalizado",
+        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+        "autoAdvanceDelay": 3000
+      },
+      "properties": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32,
+        "animation": {
+          "type": "scale",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-19-transition-text",
+      "type": "text-inline",
+      "position": 1,
+      "content": {},
+      "properties": {
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "step-19-transition-cta",
+      "type": "CTAButton",
+      "position": 2,
+      "content": {
+        "label": "...",
+        "variant": "outline",
+        "size": "small"
+      }
+    }
+  ],
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  }
+}

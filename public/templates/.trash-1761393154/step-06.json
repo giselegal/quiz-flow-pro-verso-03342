@@ -1,0 +1,147 @@
+{
+  "id": "step-06",
+  "type": "question",
+  "title": "Pergunta 5 – Escolhas de Look",
+  "metadata": {
+    "name": "Step 06 - Pergunta 5 de Estilo",
+    "description": "Etapa 6 do quiz: identifique os looks que mais representam seu estilo e forma de expressão.",
+    "category": "quiz-question",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "block-progress-bar-06",
+      "type": "quiz-progress-bar",
+      "position": 0,
+      "content": {
+        "progressValue": "{progressPercent}",
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "properties": {
+        "showPercentage": true,
+        "textAlign": "center"
+      }
+    },
+    {
+      "id": "block-progress-text-06",
+      "type": "text-inline",
+      "position": 1,
+      "content": {
+        "text": "Você concluiu <strong>{progressPercent}%</strong> do teste."
+      },
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-sm md:text-base",
+        "className": "text-gray-600 mb-2"
+      }
+    },
+    {
+      "id": "block-question-title-06",
+      "type": "text-inline",
+      "position": 2,
+      "content": {
+        "text": "Quais desses looks você usaria sem pensar duas vezes?"
+      },
+      "properties": {
+        "fontFamily": "\"Playfair Display\", serif",
+        "fontWeight": "font-bold",
+        "fontSize": "text-2xl sm:text-3xl",
+        "textAlign": "center",
+        "className": "text-[#432818]"
+      }
+    },
+    {
+      "id": "block-options-grid-06",
+      "type": "quiz-options-grid",
+      "position": 3,
+      "properties": {
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": "medium",
+        "validationMessage": "Selecione 3 opções para continuar"
+      },
+      "content": {
+        "options": [
+          {
+            "id": "natural-05",
+            "text": "Looks leves, fluidos e confortáveis",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico-05",
+            "text": "Looks alinhados, elegantes e atemporais",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo-05",
+            "text": "Looks modernos com toque criativo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante-05",
+            "text": "Looks de caimento perfeito e sofisticação",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico-05",
+            "text": "Looks delicados, femininos e leves",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy-05",
+            "text": "Looks marcantes e seguros de si",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico-05",
+            "text": "Looks imponentes e cheios de atitude",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo-05",
+            "text": "Looks originais, coloridos e divertidos",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "value": "criativo"
+          }
+        ]
+      }
+    },
+    {
+      "id": "block-next-button-06",
+      "type": "quiz-button",
+      "position": 4,
+      "properties": {
+        "variant": "primary",
+        "size": "large",
+        "align": "center"
+      },
+      "content": {
+        "label": "Avançar",
+        "href": "#next"
+      }
+    }
+  ],
+  "validation": {
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Selecione exatamente 3 opções para continuar"
+      }
+    }
+  },
+  "navigation": {
+    "nextStep": "step-07"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-20-atomic",
+    "name": "Resultado Personalizado - Atomic v3",
+    "description": "Step 20 com blocos atômicos reordenáveis",
+    "category": "quiz-result",
+    "tags": [
+      "quiz",
+      "style",
+      "result",
+      "offer",
+      "conversion"
+    ],
+    "createdAt": "2025-01-26T00:00:00.000Z",
+    "updatedAt": "2025-01-26T00:00:00.000Z"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#fffaf7",
+      "text": "#432818",
+      "accent": "#a08966",
+      "success": "#2d5f3f"
+    },
+    "fonts": {
+      "heading": "Playfair Display",
+      "body": "Inter"
+    }
+  },
+  "sections": [],
+  "validation": {},
+  "behavior": {}
+}

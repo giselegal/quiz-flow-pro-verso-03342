@@ -10,7 +10,7 @@ import {
 } from '../SafeDndContext';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/editor';
-import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 import { SkeletonBlock } from '../SkeletonBlock';
 import { EmptyCanvasState } from '../EmptyCanvasState';
@@ -126,22 +126,29 @@ function SortableBlockItem({
                     )}
                 </div>
             </div>
-            {/* Renderização via BlockTypeRenderer - Specialized for Quiz blocks */}
-            <BlockTypeRenderer
-                block={block}
-                isSelected={isSelected}
-                isEditable={true}
-                onSelect={(blockId: string) => onSelect?.(blockId)}
-                onOpenProperties={(blockId: string) => {
-                    if (onUpdateBlock) {
-                        onUpdateBlock(blockId, block);
-                    }
-                }}
-                contextData={{
-                    canvasMode: 'editor',
-                    stepNumber: block.properties?.stepNumber,
-                }}
-            />
+            {/* Renderização via UniversalBlockRenderer se schema existe, senão fallback */}
+            {(() => {
+                const hasSchema = schemaInterpreter.getBlockSchema(block.type) !== null;
+                if (hasSchema) {
+                    return (
+                        <UniversalBlockRenderer
+                            block={block as any}
+                            isSelected={isSelected}
+                            isPreviewing={false}
+                            onUpdate={(blockId, updates) => onUpdateBlock?.(blockId, updates)}
+                            onDelete={(blockId) => onRemoveBlock?.(blockId)}
+                            onSelect={(blockId) => onSelect?.(blockId)}
+                        />
+                    );
+                }
+                // Fallback para renderizador legado
+                return (
+                    <div className="p-2 border border-dashed border-gray-300 rounded text-xs text-gray-500">
+                        <div className="font-medium">Bloco sem schema: {block.type}</div>
+                        <div className="text-[10px] mt-1">Defina um schema JSON ou use renderizador legado</div>
+                    </div>
+                );
+            })()}
 
             {/* Quick Insert (somente quando há onUpdateBlock e conteúdo mínimo ausente) */}
             {onUpdateBlock && (
@@ -214,13 +221,11 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     // Log de diagnóstico quando props.blocks mudar
     useEffect(() => {
         if (!blocksFromProps) return;
-        appLogger.info('🔄 [CanvasColumn] Props blocks changed:', {
-            data: [{
-                currentStepKey,
-                blocksCount: blocksFromProps?.length || 0,
-                blockIds: blocksFromProps?.map(b => b.id) || [],
-            }]
-        });
+        appLogger.info('🔄 [CanvasColumn] Props blocks changed:', { data: [{
+                    currentStepKey,
+                    blocksCount: blocksFromProps?.length || 0,
+                    blockIds: blocksFromProps?.map(b => b.id) || [],
+                }] });
     }, [blocksFromProps, currentStepKey]);
 
     // ✅ SPRINT 1: Usar hook seguro para event listeners
@@ -228,14 +233,12 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         const customEvent = event as CustomEvent;
         const { stepKey, blockId } = customEvent.detail || {};
 
-        appLogger.info('🔔 [CanvasColumn] Recebeu evento block-updated:', {
-            data: [{
-                stepKey,
-                blockId,
-                currentStepKey,
-                shouldUpdate: stepKey === currentStepKey,
-            }]
-        });
+        appLogger.info('🔔 [CanvasColumn] Recebeu evento block-updated:', { data: [{
+                    stepKey,
+                    blockId,
+                    currentStepKey,
+                    shouldUpdate: stepKey === currentStepKey,
+                }] });
 
         // Se a atualização for do step atual, forçar re-render leve
         if (stepKey === currentStepKey) setTick(t => t + 1);

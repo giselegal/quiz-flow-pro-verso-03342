@@ -1,0 +1,281 @@
+{
+  "id": "step-20",
+  "type": "result-offer",
+  "title": "Resultado e Oferta Final",
+  "metadata": {
+    "name": "Step 20 - Resultado e Oferta Final",
+    "description": "Resultado personalizado do quiz com oferta do produto",
+    "category": "quiz-result",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "result-congrats",
+      "type": "result-congrats",
+      "position": 0,
+      "content": {},
+      "properties": {
+        "showCelebration": true,
+        "celebrationEmoji": "🎉",
+        "celebrationAnimation": "bounce",
+        "greetingFormat": "Olá, {userName}!",
+        "titleFormat": "Seu Estilo Predominante é:",
+        "styleNameDisplay": "{styleName}",
+        "colors": {
+          "greeting": "#432818",
+          "greetingHighlight": "#B89B7A",
+          "title": "#432818",
+          "styleName": "#B89B7A"
+        },
+        "spacing": {
+          "padding": "3rem 1.5rem",
+          "marginBottom": "2.5rem"
+        },
+        "enabled": true
+      }
+    },
+    {
+      "id": "result-main",
+      "type": "result-main",
+      "position": 1,
+      "content": {},
+      "properties": {
+        "layout": "two-column",
+        "imagePosition": "left",
+        "showStyleImage": true,
+        "styleImage": {
+          "aspectRatio": "4/5",
+          "showDecorations": true,
+          "decorationColor": "#B89B7A",
+          "fallbackEnabled": true
+        },
+        "showIntroText": true,
+        "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
+        "showDescription": true,
+        "enabled": true
+      }
+    },
+    {
+      "id": "result-progress-bars",
+      "type": "result-progress-bars",
+      "position": 2,
+      "content": {},
+      "properties": {
+        "topCount": 3,
+        "showPercentage": true,
+        "percentageFormat": "{percentage}%",
+        "animationDelay": 200,
+        "colors": {
+          "primary": "#B89B7A",
+          "secondary": "#a08966",
+          "tertiary": "#8c7757"
+        },
+        "titleFormat": "Além do {primaryStyle}, você também tem traços de:",
+        "enabled": true
+      }
+    },
+    {
+      "id": "result-secondary-styles",
+      "type": "result-secondary-styles",
+      "position": 3,
+      "content": {},
+      "properties": {
+        "showKeywords": true,
+        "keywordsTitle": "Palavras que te definem:",
+        "tagColor": "#B89B7A",
+        "tagStyle": "rounded-full",
+        "enabled": true
+      }
+    },
+    {
+      "id": "result-image",
+      "type": "result-image",
+      "position": 4,
+      "content": {},
+      "properties": {
+        "position": "center",
+        "aspectRatio": "4/5",
+        "maxWidth": "28rem",
+        "centered": true,
+        "showDecorations": false,
+        "enabled": true
+      }
+    },
+    {
+      "id": "result-description",
+      "type": "result-description",
+      "position": 5,
+      "content": {},
+      "properties": {
+        "showTransitionText": true,
+        "transitionText": "Mas lembre-se: você não é só um estilo.",
+        "showPersuasiveQuestions": true,
+        "persuasiveQuestionsTitle": "💭 Você já se perguntou...",
+        "persuasiveQuestionsIcon": "❓",
+        "showClosingMessage": true,
+        "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única.",
+        "enabled": true
+      }
+    },
+    {
+      "id": "button-cta-primary",
+      "type": "result-cta",
+      "position": 6,
+      "content": {
+        "text": "Quero Dominar Meu Estilo em 5 Passos",
+        "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      },
+      "properties": {
+        "enabled": true
+      }
+    },
+    {
+      "id": "result-share",
+      "type": "result-share",
+      "position": 7,
+      "content": {
+        "title": "Compartilhe seu resultado",
+        "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
+        "platforms": [
+          "facebook",
+          "twitter",
+          "whatsapp",
+          "linkedin"
+        ]
+      },
+      "properties": {
+        "enabled": true
+      }
+    },
+    {
+      "id": "transformation-benefits",
+      "type": "text-inline",
+      "position": 8,
+      "content": {},
+      "properties": {
+        "content": "<h3>Transforme Sua Imagem, Revele Sua Essência</h3><p>Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.</p><ul><li>🎯 Clareza de estilo para se vestir com facilidade todos os dias</li><li>🎨 Cores e formas que comunicam quem você é e o que você quer</li><li>💼 Imagem que chega primeiro: autoridade sem perder autenticidade</li><li>👗 Guarda-roupa estratégico que conversa entre si</li></ul>",
+        "align": "left",
+        "style": "rich-text",
+        "enabled": true
+      }
+    },
+    {
+      "id": "method-steps",
+      "type": "text-inline",
+      "position": 9,
+      "content": {},
+      "properties": {
+        "content": "<h3>O que você vai aprender no Método 5 Passos</h3><div><h4>🪞 Passo 1 — Estilo de Ser</h4><p>Descubra seus 3 estilos predominantes e entenda como traduzir sua personalidade no vestir.</p></div><div><h4>🎨 Passo 2 — Cores</h4><p>As cores são uma linguagem emocional. Aprenda como escolher tons que valorizam sua beleza natural.</p></div><div><h4>🧍‍♀️ Passo 3 — Biotipo</h4><p>Entenda as linhas e proporções do seu corpo e como se vestir para equilibrar formas.</p></div><div><h4>🧹 Passo 4 — Detox do Guarda-Roupa</h4><p>Um processo de autoconhecimento através do desapego.</p></div><div><h4>👗 Passo 5 — Guarda-Roupa de Sucesso</h4><p>Monte um guarda-roupa funcional e inteligente, com peças-chave e combinações rápidas.</p></div>",
+        "align": "left",
+        "style": "rich-text",
+        "enabled": true
+      }
+    },
+    {
+      "id": "button-cta-final",
+      "type": "result-cta",
+      "position": 10,
+      "content": {
+        "text": "Garantir Minha Vaga Agora",
+        "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      },
+      "properties": {
+        "enabled": true
+      }
+    },
+    {
+      "id": "offer-hero-21",
+      "type": "offer-hero",
+      "position": 11,
+      "content": {
+        "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
+        "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
+        "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
+        "urgencyMessage": "Oferta por tempo limitado!"
+      },
+      "properties": {
+        "animation": {
+          "type": "scale",
+          "duration": 500
+        }
+      }
+    },
+    {
+      "id": "pricing-21",
+      "type": "pricing",
+      "position": 12,
+      "content": {
+        "pricing": {
+          "originalPrice": 447,
+          "salePrice": 97,
+          "currency": "R$",
+          "installments": {
+            "count": 8,
+            "value": 14.11
+          }
+        },
+        "title": "Investimento que Transforma",
+        "ctaText": "Quero Transformar Meu Estilo Agora!",
+        "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj"
+      },
+      "properties": {
+        "animation": {
+          "type": "slideUp",
+          "duration": 500
+        }
+      }
+    }
+  ],
+  "offer": {
+    "productName": "5 Passos – Vista-se de Você",
+    "mentor": "Gisele Galvão",
+    "mentorTitle": "Consultora de Imagem e Branding Pessoal",
+    "description": "Uma metodologia de autoconhecimento, imagem estratégica e transformação pessoal.",
+    "pricing": {
+      "originalPrice": 447,
+      "salePrice": 97,
+      "currency": "BRL",
+      "installments": {
+        "count": 8,
+        "value": 14.11
+      },
+      "discount": {
+        "percentage": 78,
+        "label": "78% de desconto"
+      }
+    },
+    "links": {
+      "checkout": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"
+    },
+    "guarantee": {
+      "days": 7,
+      "description": "Se não fizer sentido pra você, o reembolso é simples e sem perguntas."
+    }
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#fffaf7",
+      "text": "#432818",
+      "accent": "#a08966",
+      "success": "#2d5f3f"
+    },
+    "fonts": {
+      "heading": "Playfair Display",
+      "body": "Inter"
+    }
+  }
+}

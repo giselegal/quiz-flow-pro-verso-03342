@@ -1,0 +1,106 @@
+{
+  "id": "step-03",
+  "type": "question",
+  "title": "Pergunta 2 – Personalidade Estilo",
+  "metadata": {
+    "name": "Step 03 - Pergunta 2 de Estilo",
+    "description": "Etapa 3 do quiz: segunda questão para mapear a personalidade de estilo.",
+    "category": "quiz-question",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "block-progress-bar-03",
+      "type": "quiz-progress-bar",
+      "position": 0,
+      "content": {
+        "progressValue": "{progressPercent}",
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "properties": {
+        "showPercentage": true,
+        "textAlign": "center"
+      }
+    },
+    {
+      "id": "block-progress-text-03",
+      "type": "text-inline",
+      "position": 1,
+      "content": {
+        "text": "Você concluiu <strong>{progressPercent}%</strong> do teste."
+      },
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-sm md:text-base",
+        "className": "text-gray-600 mb-2"
+      }
+    },
+    {
+      "id": "block-question-title-03",
+      "type": "text-inline",
+      "position": 2,
+      "content": {
+        "text": "Como você descreveria sua personalidade?"
+      },
+      "properties": {
+        "fontFamily": "\"Playfair Display\", serif",
+        "fontWeight": "font-bold",
+        "fontSize": "text-2xl sm:text-3xl",
+        "textAlign": "center",
+        "className": "text-[#432818]"
+      }
+    },
+    {
+      "id": "block-options-grid-03",
+      "type": "quiz-options-grid",
+      "position": 3,
+      "properties": {
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": false,
+        "validationMessage": "Selecione 3 opções para continuar"
+      },
+      "content": {
+        "options": [
+          { "id": "natural-02", "text": "Informal, espontânea, alegre, essencialista", "value": "natural" },
+          { "id": "classico-02", "text": "Conservadora, séria, organizada", "value": "classico" },
+          { "id": "contemporaneo-02", "text": "Informada, ativa, prática", "value": "contemporaneo" },
+          { "id": "elegante-02", "text": "Exigente, sofisticada, seletiva", "value": "elegante" },
+          { "id": "romantico-02", "text": "Feminina, meiga, delicada, sensível", "value": "romantico" },
+          { "id": "sexy-02", "text": "Glamorosa, vaidosa, sensual", "value": "sexy" },
+          { "id": "dramatico-02", "text": "Cosmopolita, moderna e audaciosa", "value": "dramatico" },
+          { "id": "criativo-02", "text": "Exótica, aventureira, livre", "value": "criativo" }
+        ]
+      }
+    },
+    {
+      "id": "block-next-button-03",
+      "type": "quiz-button",
+      "position": 4,
+      "properties": {
+        "variant": "primary",
+        "size": "large",
+        "align": "center"
+      },
+      "content": {
+        "label": "Avançar",
+        "href": "#next"
+      }
+    }
+  ],
+  "validation": {
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Selecione exatamente 3 opções para continuar"
+      }
+    }
+  },
+  "navigation": {
+    "nextStep": "step-04"
+  }
+}
