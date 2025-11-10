@@ -312,9 +312,9 @@ BEGIN
     SELECT 1 FROM information_schema.tables 
     WHERE table_name = 'rate_limits'
   ) THEN
+    -- Índice sem filtro WHERE com NOW() (não é IMMUTABLE)
     CREATE INDEX IF NOT EXISTS idx_rate_limits_identifier_endpoint 
-    ON rate_limits(identifier, endpoint, reset_time)
-    WHERE reset_time > EXTRACT(EPOCH FROM NOW());
+    ON rate_limits(identifier, endpoint, reset_time);
     
     RAISE NOTICE '✅ Índice rate_limits criado';
   END IF;
