@@ -34,6 +34,7 @@ import {
     EditorCanvas,
     EditorToolbar,
 } from './EditorComponents';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // REDUCER DO EDITOR
@@ -752,7 +753,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                     onPageReorder={reorderPages}
                     onPageDuplicate={(pageId) => {
                         // Implementar duplicação
-                        console.log('Duplicate page:', pageId);
+                        appLogger.info('Duplicate page:', { data: [pageId] });
                     }}
                     canEdit={state.mode === 'edit'}
                 />
@@ -784,19 +785,19 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                             onBlockSelect={selectBlock}
                             onBlockUpdate={(blockId, properties) => {
                                 // Implementar update de bloco
-                                console.log('Update block:', blockId, properties);
+                                appLogger.info('Update block:', { data: [blockId, properties] });
                             }}
                             onBlockAdd={(type, position) => {
                                 // Implementar adição de bloco
-                                console.log('Add block:', type, position);
+                                appLogger.info('Add block:', { data: [type, position] });
                             }}
                             onBlockRemove={(blockId) => {
                                 // Implementar remoção de bloco
-                                console.log('Remove block:', blockId);
+                                appLogger.info('Remove block:', { data: [blockId] });
                             }}
                             onBlockReorder={(fromIndex, toIndex) => {
                                 // Implementar reordenação de blocos
-                                console.log('Reorder blocks:', fromIndex, toIndex);
+                                appLogger.info('Reorder blocks:', { data: [fromIndex, toIndex] });
                             }}
                         />
                     )}
@@ -810,15 +811,15 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                     selectedPage={selectedPage}
                     onBlockUpdate={(blockId, properties) => {
                         // Implementar update de propriedades
-                        console.log('Update block properties:', blockId, properties);
+                        appLogger.info('Update block properties:', { data: [blockId, properties] });
                     }}
                     onPageUpdate={(pageId, settings) => {
                         // Implementar update de página
-                        console.log('Update page settings:', pageId, settings);
+                        appLogger.info('Update page settings:', { data: [pageId, settings] });
                     }}
                     onStyleUpdate={(targetId, styles) => {
                         // Implementar update de estilos
-                        console.log('Update styles:', targetId, styles);
+                        appLogger.info('Update styles:', { data: [targetId, styles] });
                     }}
                 />
             </div>

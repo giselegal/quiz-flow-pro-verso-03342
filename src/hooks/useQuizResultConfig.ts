@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ResultPageConfig } from '@/types/resultPageConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseQuizResultConfigReturn {
   config: ResultPageConfig;
@@ -75,7 +76,7 @@ export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn
       localStorage.setItem(`quiz_result_config_${category}`, JSON.stringify(config));
       return true;
     } catch (error) {
-      console.error('Error saving config:', error);
+      appLogger.error('Error saving config:', { data: [error] });
       return false;
     }
   }, [category, config]);

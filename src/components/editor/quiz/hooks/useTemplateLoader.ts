@@ -23,6 +23,7 @@ import { quizEditorBridge } from '@/services/canonical/TemplateService';
 import { UnifiedCacheService } from '@/services/UnifiedCacheService';
 import type { EditableQuizStep } from '../types';
 import { TemplateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface TemplateLoaderState {
     loading: boolean;
@@ -217,7 +218,7 @@ async function loadFromPerStepJSONs(): Promise<EditableQuizStep[] | null> {
                 });
 
                 successCount++;
-                console.log(`✅ [${stepId}] Per-step JSON carregado: ${blocks.length} blocos`);
+                appLogger.info(`✅ [${stepId}] Per-step JSON carregado: ${blocks.length} blocos`);
 
             } catch (error) {
                 appLogger.warn(`⚠️ Erro ao carregar ${stepId}:`, error);

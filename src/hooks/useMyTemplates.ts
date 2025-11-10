@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
 import { safeGetItem, safeSetItem } from '@/lib/utils/contextualStorage';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UserTemplate {
     id: string;
@@ -68,7 +69,7 @@ export const useMyTemplates = () => {
                         templateIds = legacyIds;
                         safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(legacyIds), CTX);
                     } catch (error) {
-                        console.warn('[useMyTemplates] Erro ao parsear lista legada:', error);
+                        appLogger.warn('[useMyTemplates] Erro ao parsear lista legada:', { data: [error] });
                     }
                 } else {
                     const legacyTemplatesStr = StorageService.safeGetString('saved-templates');
@@ -79,13 +80,13 @@ export const useMyTemplates = () => {
                             templateIds = ids;
                             safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(ids), CTX);
                         } catch (error) {
-                            console.warn('[useMyTemplates] Erro ao parsear templates legados:', error);
+                            appLogger.warn('[useMyTemplates] Erro ao parsear templates legados:', { data: [error] });
                         }
                     }
                 }
             }
 
-            console.log('📋 Carregando templates do contexto MY_TEMPLATES:', templateIds);
+            appLogger.info('📋 Carregando templates do contexto MY_TEMPLATES:', { data: [templateIds] });
 
             // Carregar dados completos de cada template
             const loadedTemplates: UserTemplate[] = [];
@@ -102,7 +103,7 @@ export const useMyTemplates = () => {
                         // Persistir no novo formato
                         safeSetItem(TEMPLATE_KEY_NEW(id), JSON.stringify(template), CTX);
                     } catch (e) {
-                        console.warn(`⚠️ Erro ao parsear template ${id}:`, e);
+                        appLogger.warn(`⚠️ Erro ao parsear template ${id}:`, { data: [e] });
                     }
                 }
             }
@@ -114,12 +115,12 @@ export const useMyTemplates = () => {
             loadedTemplates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
             setTemplates(loadedTemplates);
-            console.log(`✅ ${loadedTemplates.length} templates carregados do contexto MY_TEMPLATES`);
+            appLogger.info(`✅ ${loadedTemplates.length} templates carregados do contexto MY_TEMPLATES`);
 
             return loadedTemplates;
         } catch (error) {
             const errorMsg = `Erro ao carregar templates: ${error}`;
-            console.error('❌', errorMsg);
+            appLogger.error('❌', { data: [errorMsg] });
             setError(errorMsg);
             return [];
         } finally {
@@ -148,7 +149,7 @@ export const useMyTemplates = () => {
                 usageCount: 0,
             };
 
-            console.log('💾 Salvando template no contexto MY_TEMPLATES:', newTemplate);
+            appLogger.info('💾 Salvando template no contexto MY_TEMPLATES:', { data: [newTemplate] });
 
             // Salvar template individual na chave contextual
             safeSetItem(TEMPLATE_KEY_NEW(templateId), JSON.stringify(newTemplate), CTX);
@@ -161,11 +162,11 @@ export const useMyTemplates = () => {
             // Atualizar estado local
             setTemplates(prev => [newTemplate, ...prev]);
 
-            console.log(`✅ Template salvo com ID: ${templateId}`);
+            appLogger.info(`✅ Template salvo com ID: ${templateId}`);
             return templateId;
         } catch (error) {
             const errorMsg = `Erro ao salvar template: ${error}`;
-            console.error('❌', errorMsg);
+            appLogger.error('❌', { data: [errorMsg] });
             setError(errorMsg);
             throw error;
         } finally {
@@ -180,15 +181,15 @@ export const useMyTemplates = () => {
         try {
             const templateStr = safeGetItem(TEMPLATE_KEY_NEW(templateId), CTX) || localStorage.getItem(TEMPLATE_KEY_LEGACY(templateId));
             if (!templateStr) {
-                console.warn(`⚠️ Template não encontrado: ${templateId}`);
+                appLogger.warn(`⚠️ Template não encontrado: ${templateId}`);
                 return null;
             }
 
             const template = JSON.parse(templateStr);
-            console.log(`📄 Template carregado: ${templateId}`);
+            appLogger.info(`📄 Template carregado: ${templateId}`);
             return template;
         } catch (error) {
-            console.error(`❌ Erro ao carregar template ${templateId}:`, error);
+            appLogger.error(`❌ Erro ao carregar template ${templateId}:`, { data: [error] });
             return null;
         }
     }, []);
@@ -205,13 +206,13 @@ export const useMyTemplates = () => {
             try { 
                 localStorage.removeItem(TEMPLATE_KEY_LEGACY(templateId)); 
             } catch (error) {
-                console.warn('[useMyTemplates] Erro ao remover template legado:', error);
+                appLogger.warn('[useMyTemplates] Erro ao remover template legado:', { data: [error] });
             }
             try {
                 // contextualStorage não tem remove direto aqui; leitura não quebra se sobrar
                 // (poderíamos criar safeRemoveItem se necessário)
             } catch (error) {
-                console.warn('[useMyTemplates] Erro ao remover template contextual:', error);
+                appLogger.warn('[useMyTemplates] Erro ao remover template contextual:', { data: [error] });
             }
 
             // Atualizar lista de IDs
@@ -222,11 +223,11 @@ export const useMyTemplates = () => {
             // Atualizar estado local
             setTemplates(prev => prev.filter(t => t.id !== templateId));
 
-            console.log(`🗑️ Template deletado: ${templateId}`);
+            appLogger.info(`🗑️ Template deletado: ${templateId}`);
             return true;
         } catch (error) {
             const errorMsg = `Erro ao deletar template: ${error}`;
-            console.error('❌', errorMsg);
+            appLogger.error('❌', { data: [errorMsg] });
             setError(errorMsg);
             return false;
         } finally {
@@ -250,10 +251,10 @@ export const useMyTemplates = () => {
                 safeSetItem(TEMPLATE_KEY_NEW(templateId), JSON.stringify(updatedTemplate), CTX);
                 setTemplates(prev => prev.map(t => t.id === templateId ? updatedTemplate : t));
 
-                console.log(`📈 Uso incrementado para template: ${templateId}`);
+                appLogger.info(`📈 Uso incrementado para template: ${templateId}`);
             }
         } catch (error) {
-            console.error(`❌ Erro ao incrementar uso do template ${templateId}:`, error);
+            appLogger.error(`❌ Erro ao incrementar uso do template ${templateId}:`, { data: [error] });
         }
     }, [loadTemplate]);
 
@@ -277,7 +278,7 @@ export const useMyTemplates = () => {
             const legacyTemplates = JSON.parse(legacyTemplatesStr);
             if (!Array.isArray(legacyTemplates) || legacyTemplates.length === 0) return;
 
-            console.log('🔄 Migrando templates legados para contexto MY_TEMPLATES...', legacyTemplates);
+            appLogger.info('🔄 Migrando templates legados para contexto MY_TEMPLATES...', { data: [legacyTemplates] });
 
             const currentIds = currentTemplates.map(t => t.id);
 
@@ -317,9 +318,9 @@ export const useMyTemplates = () => {
             // Remover dados legados (comentado por segurança)
             // StorageService.safeRemove('saved-templates');
 
-            console.log(`✅ ${legacyTemplates.length} templates migrados para MY_TEMPLATES`);
+            appLogger.info(`✅ ${legacyTemplates.length} templates migrados para MY_TEMPLATES`);
         } catch (error) {
-            console.error('❌ Erro na migração de templates legados:', error);
+            appLogger.error('❌ Erro na migração de templates legados:', { data: [error] });
         }
     }, []);
 

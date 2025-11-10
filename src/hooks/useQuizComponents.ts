@@ -1,5 +1,6 @@
 import { QuizComponentData } from '@/types/quizBuilder';
 import { useCallback, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const useQuizComponents = () => {
   const [components, setComponents] = useState<QuizComponentData[]>([]);
@@ -36,7 +37,7 @@ export const useQuizComponents = () => {
 
   const moveComponent = useCallback((draggedId: string, targetId: string) => {
     // Implementation for moving components
-    console.log('Move component', draggedId, 'to', targetId);
+    appLogger.info('Move component', { data: [draggedId, 'to', targetId] });
   }, []);
 
   return {

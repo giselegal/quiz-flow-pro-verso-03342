@@ -5,6 +5,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { toast } from '@/components/ui/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface PublishFunnelData {
   id: string;
@@ -31,7 +32,7 @@ export interface PublishResult {
  */
 export const publishFunnel = async (funnelData: PublishFunnelData): Promise<PublishResult> => {
   try {
-    console.log('🚀 Iniciando publicação do funil:', funnelData.name);
+    appLogger.info('🚀 Iniciando publicação do funil:', { data: [funnelData.name] });
 
     // 1. Validar dados do funil
     const validation = validateFunnelData(funnelData);
@@ -57,7 +58,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
       .single();
 
     if (funnelError) {
-      console.error('❌ Erro ao salvar funil:', funnelError);
+      appLogger.error('❌ Erro ao salvar funil:', { data: [funnelError] });
       return {
         success: false,
         error: `Erro ao salvar funil: ${funnelError.message}`,
@@ -89,7 +90,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
     const pagesError = null; // Skip until funnel_pages table is created
 
     if (pagesError) {
-      console.error('❌ Erro ao salvar páginas:', pagesError);
+      appLogger.error('❌ Erro ao salvar páginas:', { data: [pagesError] });
       return {
         success: false,
         error: `Erro ao salvar páginas`,
@@ -99,7 +100,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
     // 4. Gerar URL pública
     const publicUrl = generatePublicUrl(funnelData.id);
 
-    console.log('✅ Funil publicado com sucesso!');
+    appLogger.info('✅ Funil publicado com sucesso!');
     toast({
       title: 'Funil Publicado!',
       description: `O funil "${funnelData.name}" está agora disponível publicamente.`,
@@ -111,7 +112,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
       funnelId: funnelData.id,
     };
   } catch (error) {
-    console.error('❌ Erro na publicação:', error);
+    appLogger.error('❌ Erro na publicação:', { data: [error] });
     return {
       success: false,
       error: `Erro inesperado: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
@@ -183,7 +184,7 @@ export const unpublishFunnel = async (funnelId: string): Promise<boolean> => {
       .eq('id', funnelId);
 
     if (error) {
-      console.error('❌ Erro ao despublicar funil:', error);
+      appLogger.error('❌ Erro ao despublicar funil:', { data: [error] });
       return false;
     }
 
@@ -194,7 +195,7 @@ export const unpublishFunnel = async (funnelId: string): Promise<boolean> => {
 
     return true;
   } catch (error) {
-    console.error('❌ Erro ao despublicar:', error);
+    appLogger.error('❌ Erro ao despublicar:', { data: [error] });
     return false;
   }
 };
@@ -216,7 +217,7 @@ export const checkFunnelStatus = async (
       .single();
 
     if (error) {
-      console.error('❌ Erro ao verificar status:', error);
+      appLogger.error('❌ Erro ao verificar status:', { data: [error] });
       return { isPublished: false };
     }
 
@@ -225,7 +226,7 @@ export const checkFunnelStatus = async (
       publicUrl: data?.status === 'published' ? generatePublicUrl(funnelId) : undefined,
     };
   } catch (error) {
-    console.error('❌ Erro ao verificar status:', error);
+    appLogger.error('❌ Erro ao verificar status:', { data: [error] });
     return { isPublished: false };
   }
 };

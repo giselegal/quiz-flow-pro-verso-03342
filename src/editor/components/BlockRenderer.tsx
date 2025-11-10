@@ -32,6 +32,7 @@ import { BlockData, BlockComponentProps } from '@/types/blockTypes';
 import { getBlockComponent } from '@/editor/registry/BlockComponentMap';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface BlockRendererProps {
     /** Dados do bloco a renderizar */
@@ -82,10 +83,8 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
 }) => {
     // ⚠️ DEPRECATION WARNING
     useEffect(() => {
-        console.warn(
-            '⚠️ DEPRECATED: BlockRenderer (editor/components) será removido em 21/out/2025. ' +
-            'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md',
-        );
+        appLogger.warn('⚠️ DEPRECATED: BlockRenderer (editor/components) será removido em 21/out/2025. ' +
+                    'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md');
     }, []);
 
     // Buscar componente no registry

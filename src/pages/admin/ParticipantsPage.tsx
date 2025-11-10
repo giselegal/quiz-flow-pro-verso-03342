@@ -11,6 +11,7 @@ import AnalyticsDashboard from '@/components/dashboard/AnalyticsDashboard';
 import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
 import ReportGenerator from '@/components/dashboard/ReportGenerator';
 import DashboardControls from '@/components/dashboard/DashboardControls';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const ParticipantsPage: React.FC = () => {
     const [currentView, setCurrentView] = useState<'analytics' | 'table' | 'both'>('both');
@@ -27,9 +28,9 @@ const ParticipantsPage: React.FC = () => {
             try {
                 const metrics = await realDataAnalyticsService.getRealMetrics();
                 setRealMetrics(metrics);
-                console.log('✅ Participants page carregado com dados reais:', metrics);
+                appLogger.info('✅ Participants page carregado com dados reais:', { data: [metrics] });
             } catch (error) {
-                console.error('❌ Erro ao carregar dados dos participantes:', error);
+                appLogger.error('❌ Erro ao carregar dados dos participantes:', { data: [error] });
             }
         };
 
@@ -43,7 +44,7 @@ const ParticipantsPage: React.FC = () => {
 
     const handleExport = useCallback(() => {
         // Função para exportar dados (implementar se necessário)
-        console.log('Exportar dados...');
+        appLogger.info('Exportar dados...');
     }, []);
 
     return (

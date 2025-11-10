@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface A11yIssue {
   id: string;
@@ -84,7 +85,7 @@ export function useAccessibilityAudit() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      console.error('❌ Erro ao executar auditoria:', err);
+      appLogger.error('❌ Erro ao executar auditoria:', { data: [err] });
       throw err;
     } finally {
       setIsRunning(false);

@@ -28,6 +28,7 @@ import {
     Circle,
     AlertCircle,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const STEP_LABELS = [
     { index: 0, label: 'Introdução', icon: '👋', category: 'intro' },
@@ -66,14 +67,14 @@ const ModularEditorLayout: React.FC = () => {
     const currentStepKey = stepKeys[currentStepIndex] || `step-${(currentStepIndex + 1).toString().padStart(2, '0')}`;
     const currentBlocks = stepBlocks[currentStepKey] || [];
 
-    console.log('🔍 [ModularEditorLayout] Estado atual:', {
-        dataSource,
-        totalSteps,
-        currentStepIndex,
-        currentStepKey,
-        blocksCount: currentBlocks.length,
-        hasData,
-    });
+    appLogger.info('🔍 [ModularEditorLayout] Estado atual:', { data: [{
+            dataSource,
+            totalSteps,
+            currentStepIndex,
+            currentStepKey,
+            blocksCount: currentBlocks.length,
+            hasData,
+        }] });
 
     // Handlers
     const handleSave = async () => {
@@ -84,9 +85,9 @@ const ModularEditorLayout: React.FC = () => {
             // O salvamento agora é gerenciado pelo SuperUnifiedProvider
             // que já possui os dados sincronizados
             await crud.saveFunnel(crud.currentFunnel);
-            console.log('✅ Steps salvos com sucesso');
+            appLogger.info('✅ Steps salvos com sucesso');
         } catch (error) {
-            console.error('❌ Erro ao salvar:', error);
+            appLogger.error('❌ Erro ao salvar:', { data: [error] });
         } finally {
             setIsSaving(false);
         }
@@ -102,11 +103,11 @@ const ModularEditorLayout: React.FC = () => {
     };
 
     const handlePreview = () => {
-        console.log('Preview not implemented yet');
+        appLogger.info('Preview not implemented yet');
     };
 
     const handlePublish = async () => {
-        console.log('Publish not implemented yet');
+        appLogger.info('Publish not implemented yet');
     };
 
     // Loading state

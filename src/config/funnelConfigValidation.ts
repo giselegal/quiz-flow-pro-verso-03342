@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔧 VALIDAÇÃO E DEMONSTRAÇÃO DA CONFIGURAÇÃO JSON COMPLETA
  * 
@@ -1044,7 +1045,7 @@ export function validateFunnelConfig(config: any): { isValid: boolean; errors: s
 }
 
 // 📝 EXEMPLO DE USO
-console.log('🔧 Configuração completa do funil carregada!');
-console.log('📊 Validação:', validateFunnelConfig(COMPLETE_FUNNEL_CONFIG_EXAMPLE));
+appLogger.info('🔧 Configuração completa do funil carregada!');
+appLogger.info('📊 Validação:', { data: [validateFunnelConfig(COMPLETE_FUNNEL_CONFIG_EXAMPLE)] });
 
 export default COMPLETE_FUNNEL_CONFIG_EXAMPLE;

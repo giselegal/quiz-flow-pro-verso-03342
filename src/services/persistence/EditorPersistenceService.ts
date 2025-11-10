@@ -12,6 +12,7 @@
  */
 
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface EditorSnapshot {
   id: string;
@@ -78,7 +79,7 @@ class EditorPersistenceService {
         // Notificar callbacks
         this.saveCallbacks.forEach(cb => cb(snapshot));
         
-        console.log('💾 Auto-save completed:', snapshot.id);
+        appLogger.info('💾 Auto-save completed:', { data: [snapshot.id] });
         resolve();
       }, debounceMs);
     });
@@ -99,7 +100,7 @@ class EditorPersistenceService {
     // Salvar último edit
     localStorage.setItem(STORAGE_KEYS.LAST_EDIT, Date.now().toString());
     
-    console.log('💾 Manual snapshot saved:', snapshot.id);
+    appLogger.info('💾 Manual snapshot saved:', { data: [snapshot.id] });
     return snapshot;
   }
 
@@ -191,11 +192,11 @@ class EditorPersistenceService {
     const snapshot = history.snapshots.find(s => s.id === snapshotId);
     
     if (!snapshot) {
-      console.warn(`⚠️ Snapshot not found: ${snapshotId}`);
+      appLogger.warn(`⚠️ Snapshot not found: ${snapshotId}`);
       return null;
     }
     
-    console.log('🔄 Restoring snapshot:', snapshotId);
+    appLogger.info('🔄 Restoring snapshot:', { data: [snapshotId] });
     return snapshot;
   }
 
@@ -279,7 +280,7 @@ class EditorPersistenceService {
     );
     
     this.saveHistory(history);
-    console.log('🗑️ Old history cleaned');
+    appLogger.info('🗑️ Old history cleaned');
   }
 
   /**
@@ -325,7 +326,7 @@ class EditorPersistenceService {
       clearTimeout(this.saveTimeout);
     }
     
-    console.log('🗑️ All persistence data cleared');
+    appLogger.info('🗑️ All persistence data cleared');
   }
 }
 

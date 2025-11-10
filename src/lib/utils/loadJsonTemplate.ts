@@ -6,6 +6,7 @@
  */
 
 import type { TemplateV3 } from '@/types/template-v3.types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TemplateCache {
   [stepId: string]: TemplateV3 | null;
@@ -39,7 +40,7 @@ export async function loadJsonTemplate(stepId: string): Promise<TemplateV3 | nul
       const response = await fetch(`/templates/${stepId}-template.json`);
       
       if (!response.ok) {
-        console.warn(`[loadJsonTemplate] Template não encontrado: ${stepId}`);
+        appLogger.warn(`[loadJsonTemplate] Template não encontrado: ${stepId}`);
         templateCache[stepId] = null;
         return null;
       }
@@ -48,7 +49,7 @@ export async function loadJsonTemplate(stepId: string): Promise<TemplateV3 | nul
 
       // Validar versão do template
       if (json.templateVersion !== '3.1' && json.templateVersion !== '3.0') {
-        console.warn(`[loadJsonTemplate] Versão inválida para ${stepId}:`, json.templateVersion);
+        appLogger.warn(`[loadJsonTemplate] Versão inválida para ${stepId}:`, { data: [json.templateVersion] });
         templateCache[stepId] = null;
         return null;
       }
@@ -57,7 +58,7 @@ export async function loadJsonTemplate(stepId: string): Promise<TemplateV3 | nul
       templateCache[stepId] = json;
       return json;
     } catch (error) {
-      console.error(`[loadJsonTemplate] Erro ao carregar ${stepId}:`, error);
+      appLogger.error(`[loadJsonTemplate] Erro ao carregar ${stepId}:`, { data: [error] });
       templateCache[stepId] = null;
       return null;
     } finally {

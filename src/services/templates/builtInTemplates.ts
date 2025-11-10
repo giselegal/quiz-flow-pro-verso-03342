@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🏗️ BUILT-IN TEMPLATES LOADER
  * 
@@ -36,9 +37,9 @@ for (const path in modules) {
     // Armazenar template com ID normalizado
     builtInTemplates[id] = mod;
     
-    console.log(`✅ [builtInTemplates] Loaded: ${id}`);
+    appLogger.info(`✅ [builtInTemplates] Loaded: ${id}`);
   } catch (error) {
-    console.error(`❌ [builtInTemplates] Error loading ${path}:`, error);
+    appLogger.error(`❌ [builtInTemplates] Error loading ${path}:`, { data: [error] });
   }
 }
 
@@ -59,9 +60,9 @@ export function getBuiltInTemplateById(id: string): BuiltTemplate | null {
   const template = builtInTemplates[id] ?? null;
   
   if (template) {
-    console.log(`✅ [builtInTemplates] Retrieved: ${id}`);
+    appLogger.info(`✅ [builtInTemplates] Retrieved: ${id}`);
   } else {
-    console.warn(`⚠️ [builtInTemplates] Not found: ${id}`);
+    appLogger.warn(`⚠️ [builtInTemplates] Not found: ${id}`);
   }
   
   return template;
@@ -85,6 +86,4 @@ export function listBuiltInTemplateIds(): string[] {
 }
 
 // Log de inicialização
-console.log(`🏗️ [builtInTemplates] Initialized with ${Object.keys(builtInTemplates).length} templates:`, 
-  listBuiltInTemplateIds()
-);
+appLogger.info(`🏗️ [builtInTemplates] Initialized with ${Object.keys(builtInTemplates).length} templates:`, { data: [listBuiltInTemplateIds()] });

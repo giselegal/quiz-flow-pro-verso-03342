@@ -14,6 +14,7 @@
 import { FunnelContext, generateContextualId, extractContextFromId } from '@/core/contexts/FunnelContext';
 import { ContextualStorageService } from './ContextualStorageService';
 import type { UnifiedFunnelData } from '@/services/canonical/FunnelService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface ContextualFunnelMetadata {
   id: string;
@@ -58,13 +59,13 @@ export class ContextualFunnelService {
         // Atualizar lista de funis
         await this.updateFunnelsList(contextualId, funnelWithContext.name);
         
-        console.log(`💾 [ContextualFunnel] Salvo: ${contextualId} no contexto ${this.context}`);
+        appLogger.info(`💾 [ContextualFunnel] Salvo: ${contextualId} no contexto ${this.context}`);
         return contextualId;
       }
 
       throw new Error('Falha ao salvar no storage');
     } catch (error) {
-      console.error('[ContextualFunnel] Erro ao salvar:', error);
+      appLogger.error('[ContextualFunnel] Erro ao salvar:', { data: [error] });
       throw error;
     }
   }
@@ -91,7 +92,7 @@ export class ContextualFunnelService {
         // Validar contexto
         const funnelContext = extractContextFromId(funnel.id);
         if (funnelContext !== this.context) {
-          console.warn(`⚠️ [ContextualFunnel] Contexto inválido: esperado ${this.context}, recebido ${funnelContext}`);
+          appLogger.warn(`⚠️ [ContextualFunnel] Contexto inválido: esperado ${this.context}, recebido ${funnelContext}`);
           return null;
         }
 
@@ -99,12 +100,12 @@ export class ContextualFunnelService {
         return funnel;
       }
 
-      console.warn(`⚠️ [ContextualFunnel] Funil não encontrado: ${contextualId}`);
+      appLogger.warn(`⚠️ [ContextualFunnel] Funil não encontrado: ${contextualId}`);
       
       // Tentar migrar dados legados
       return await this.tryMigrateLegacyFunnel(funnelId);
     } catch (error) {
-      console.error('[ContextualFunnel] Erro ao carregar:', error);
+      appLogger.error('[ContextualFunnel] Erro ao carregar:', { data: [error] });
       return null;
     }
   }
@@ -127,7 +128,7 @@ export class ContextualFunnelService {
       // Filtrar apenas funis deste contexto
       return list.filter(meta => meta.context === this.context);
     } catch (error) {
-      console.error('[ContextualFunnel] Erro ao listar:', error);
+      appLogger.error('[ContextualFunnel] Erro ao listar:', { data: [error] });
       return [];
     }
   }
@@ -147,13 +148,13 @@ export class ContextualFunnelService {
       if (success) {
         this.cache.delete(contextualId);
         await this.removeFromFunnelsList(contextualId);
-        console.log(`🗑️ [ContextualFunnel] Deletado: ${contextualId}`);
+        appLogger.info(`🗑️ [ContextualFunnel] Deletado: ${contextualId}`);
         return true;
       }
 
       return false;
     } catch (error) {
-      console.error('[ContextualFunnel] Erro ao deletar:', error);
+      appLogger.error('[ContextualFunnel] Erro ao deletar:', { data: [error] });
       return false;
     }
   }
@@ -182,7 +183,7 @@ export class ContextualFunnelService {
 
       return await targetService.saveFunnel(copiedFunnel);
     } catch (error) {
-      console.error('[ContextualFunnel] Erro ao copiar:', error);
+      appLogger.error('[ContextualFunnel] Erro ao copiar:', { data: [error] });
       return null;
     }
   }
@@ -254,7 +255,7 @@ export class ContextualFunnelService {
       const legacyData = this.storage.getJSON<any>(legacyKey);
 
       if (legacyData) {
-        console.log(`🔄 [ContextualFunnel] Migrando dados legados: ${legacyId}`);
+        appLogger.info(`🔄 [ContextualFunnel] Migrando dados legados: ${legacyId}`);
         
         // Adicionar contexto e salvar
         const contextualId = generateContextualId(this.context, legacyId);
@@ -275,7 +276,7 @@ export class ContextualFunnelService {
 
       return null;
     } catch (error) {
-      console.warn('[ContextualFunnel] Falha ao migrar dados legados:', error);
+      appLogger.warn('[ContextualFunnel] Falha ao migrar dados legados:', { data: [error] });
       return null;
     }
   }

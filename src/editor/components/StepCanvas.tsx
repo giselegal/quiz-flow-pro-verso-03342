@@ -18,6 +18,7 @@ import { AlertCircle } from 'lucide-react';
 
 // Importar componentes para garantir que estão registrados
 import '@/editor/components/blocks';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StepCanvasProps {
     stepIndex: number;
@@ -148,7 +149,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                 const toIndex = index;
 
                                 // TODO: Implementar reordenação via hook
-                                console.log(`Reordenar: ${fromIndex} → ${toIndex}`);
+                                appLogger.info(`Reordenar: ${fromIndex} → ${toIndex}`);
 
                                 setDragOverIndex(null);
                             }}
@@ -197,7 +198,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                     }}
                     onClick={() => {
                         // TODO: Abrir modal para adicionar bloco
-                        console.log('Adicionar bloco no final');
+                        appLogger.info('Adicionar bloco no final');
                     }}
                 >
                     <div className="text-gray-400">

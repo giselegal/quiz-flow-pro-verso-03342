@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import { quizSupabaseService } from '@/services/aliases';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const isBrowser = typeof window !== 'undefined';
 const OFFLINE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true' || process.env?.VITE_DISABLE_SUPABASE === 'true';
@@ -90,7 +91,7 @@ export const sessionService = {
 
       return { success: true, sessionId: session.id, userId: user.id } as const;
     } catch (error) {
-      console.error('Erro ao iniciar sessão do quiz:', error);
+      appLogger.error('Erro ao iniciar sessão do quiz:', { data: [error] });
       // fallback local
       const localId = this.ensureLocalSessionId();
       return { success: false, sessionId: localId } as const;

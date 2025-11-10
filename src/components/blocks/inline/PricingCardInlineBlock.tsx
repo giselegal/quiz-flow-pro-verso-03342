@@ -7,6 +7,7 @@ import { safeGetBlockProperties } from '@/lib/utils/blockUtils';
 import { ArrowRight, Check, Crown, Sparkles, Star, Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
   block: {
@@ -160,13 +161,13 @@ const PricingCardInlineBlock: React.FC<Props> = ({
   const variantStyles = getVariantStyles();
   const IconComponent = variantStyles.icon;
 
-  console.log('🛒 PricingCardInlineBlock render:', {
-    blockId: block.id,
-    hasProperties: !!properties,
-    title,
-    currentPrice,
-    variant,
-  });
+  appLogger.info('🛒 PricingCardInlineBlock render:', { data: [{
+        blockId: block.id,
+        hasProperties: !!properties,
+        title,
+        currentPrice,
+        variant,
+      }] });
 
   return (
     <div className="relative group">

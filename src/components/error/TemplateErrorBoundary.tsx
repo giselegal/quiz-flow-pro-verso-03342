@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TemplateErrorBoundaryState {
   hasError: boolean;
@@ -17,15 +18,15 @@ export class TemplateErrorBoundary extends React.Component<TemplateErrorBoundary
   }
 
   static getDerivedStateFromError(error: Error): TemplateErrorBoundaryState {
-    console.error('🚨 TemplateErrorBoundary capturou erro:', error);
-    console.error('📍 Stack do erro:', error.stack);
-    console.error('💡 Nome do erro:', error.name);
-    console.error('📝 Mensagem do erro:', error.message);
+    appLogger.error('🚨 TemplateErrorBoundary capturou erro:', { data: [error] });
+    appLogger.error('📍 Stack do erro:', { data: [error.stack] });
+    appLogger.error('💡 Nome do erro:', { data: [error.name] });
+    appLogger.error('📝 Mensagem do erro:', { data: [error.message] });
 
     // 🔍 DEBUG ADICIONAL: Verificar contexto específico
-    console.error('🎯 URL atual:', window.location.href);
-    console.error('🎯 Query params:', new URLSearchParams(window.location.search).toString());
-    console.error('🎯 Timestamp:', new Date().toISOString());
+    appLogger.error('🎯 URL atual:', { data: [window.location.href] });
+    appLogger.error('🎯 Query params:', { data: [new URLSearchParams(window.location.search).toString()] });
+    appLogger.error('🎯 Timestamp:', { data: [new Date().toISOString()] });
 
     if (typeof window !== 'undefined') {
       (window as any).__LAST_TEMPLATE_ERROR__ = {
@@ -36,27 +37,27 @@ export class TemplateErrorBoundary extends React.Component<TemplateErrorBoundary
         timestamp: Date.now(),
         toString: error.toString(),
       };
-      console.error('🔍 Erro salvo em window.__LAST_TEMPLATE_ERROR__');
+      appLogger.error('🔍 Erro salvo em window.__LAST_TEMPLATE_ERROR__');
 
       // 🚨 ALERTA VISUAL NO CONSOLE
-      console.error('%c🚨 ERRO CAPTURADO PELO TEMPLATE ERROR BOUNDARY', 'color: red; font-size: 20px; font-weight: bold;');
-      console.error('%c📋 Para debug: window.__LAST_TEMPLATE_ERROR__', 'color: orange; font-size: 14px;');
+      appLogger.error('%c🚨 ERRO CAPTURADO PELO TEMPLATE ERROR BOUNDARY', { data: ['color: red; font-size: 20px; font-weight: bold;'] });
+      appLogger.error('%c📋 Para debug: window.__LAST_TEMPLATE_ERROR__', { data: ['color: orange; font-size: 14px;'] });
     }
     return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('🚨 Erro detalhado no Template:', {
-      error: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-    });
+    appLogger.error('🚨 Erro detalhado no Template:', { data: [{
+            error: error.message,
+            stack: error.stack,
+            componentStack: errorInfo.componentStack,
+          }] });
   }
 
   render() {
     if (this.state.hasError) {
       // 🚨 DEBUG TEMPORÁRIO: Mostrar erro mas permitir render de children
-      console.log('🚨 [DEBUG] TemplateErrorBoundary detectou erro, mas forçando render...');
+      appLogger.info('🚨 [DEBUG] TemplateErrorBoundary detectou erro, mas forçando render...');
 
       if (this.props.fallback) {
         const FallbackComponent = this.props.fallback;
@@ -75,7 +76,7 @@ export class TemplateErrorBoundary extends React.Component<TemplateErrorBoundary
           </div>
         );
       } catch (renderError) {
-        console.error('🚨 Erro durante render forçado:', renderError);
+        appLogger.error('🚨 Erro durante render forçado:', { data: [renderError] });
         // Fallback final
         return (
           <div className="flex items-center justify-center min-h-[400px] bg-background">

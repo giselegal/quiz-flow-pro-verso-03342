@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 SISTEMA DE CONTEXTOS PARA ISOLAMENTO DE FUNIS
  * 
@@ -115,7 +116,7 @@ export const migrateDataBetweenContexts = (
     if (data) {
         localStorage.setItem(toKey, data);
         localStorage.removeItem(fromKey);
-        console.log(`🔄 Dados migrados: ${fromKey} → ${toKey}`);
+        appLogger.info(`🔄 Dados migrados: ${fromKey} → ${toKey}`);
         return true;
     }
 
@@ -150,7 +151,7 @@ export const clearContextualData = (context: FunnelContext): number => {
     const keys = listContextualStorageKeys(context);
     keys.forEach(key => localStorage.removeItem(key));
 
-    console.log(`🗑️ Limpos ${keys.length} itens do contexto ${context}`);
+    appLogger.info(`🗑️ Limpos ${keys.length} itens do contexto ${context}`);
     return keys.length;
 };
 

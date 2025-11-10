@@ -18,6 +18,7 @@ import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
 import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // 🔄 SINGLETON DO UNIFIED BLOCK REGISTRY
 const _blockRegistry = UnifiedBlockRegistry.getInstance();
@@ -60,7 +61,7 @@ export const UNIFIED_COMPONENT_REGISTRY = new Proxy(UNIQUE_COMPONENTS, {
         }
         
         // 3️⃣ Fallback para TextInlineBlock
-        console.warn(`⚠️ Componente "${prop}" não encontrado. Usando fallback TextInlineBlock.`);
+        appLogger.warn(`⚠️ Componente "${prop}" não encontrado. Usando fallback TextInlineBlock.`);
         return TextInlineBlock;
     },
     
@@ -89,26 +90,26 @@ export const preloadCriticalComponents = async (): Promise<void> => {
                 componentCache.set(componentType, component as any);
                 preloadedComponents.add(componentType);
                 // Nota: para componentes lazy, isso não força o download do chunk, mas evita lookups repetidos
-                console.log(`✅ Registry cached: ${componentType}`);
+                appLogger.info(`✅ Registry cached: ${componentType}`);
             }
         } catch (error) {
-            console.warn(`⚠️ Failed to preload ${componentType}:`, error);
+            appLogger.warn(`⚠️ Failed to preload ${componentType}:`, { data: [error] });
         }
     });
 
     await Promise.allSettled(preloadPromises);
-    console.log(`🚀 Preloaded ${preloadedComponents.size} critical components`);
+    appLogger.info(`🚀 Preloaded ${preloadedComponents.size} critical components`);
 };
 
 /**
  * 🎯 UNIFIED COMPONENT GETTER - API única consolidada
  */
 export const getUnifiedComponent = async (type: string): Promise<ComponentType<any> | null> => {
-    console.log(`🔍 getUnifiedComponent: "${type}"`);
+    appLogger.info(`🔍 getUnifiedComponent: "${type}"`);
 
     // 1. Cache hit
     if (componentCache.has(type)) {
-        console.log(`⚡ Cache hit: ${type}`);
+        appLogger.info(`⚡ Cache hit: ${type}`);
         return componentCache.get(type)!;
     }
 
@@ -117,7 +118,7 @@ export const getUnifiedComponent = async (type: string): Promise<ComponentType<a
     if (component) {
         // Nunca invoque o componente aqui; apenas retorne a referência (estática ou lazy)
         componentCache.set(type, component as any);
-        console.log(`✅ Component mapped: ${type}`);
+        appLogger.info(`✅ Component mapped: ${type}`);
         return component as any;
     }
 
@@ -125,11 +126,11 @@ export const getUnifiedComponent = async (type: string): Promise<ComponentType<a
     const fallbackComponent = getFallbackComponent(type);
     if (fallbackComponent) {
         componentCache.set(type, fallbackComponent);
-        console.log(`🎨 Fallback: ${type} → ${fallbackComponent.name}`);
+        appLogger.info(`🎨 Fallback: ${type} → ${fallbackComponent.name}`);
         return fallbackComponent;
     }
 
-    console.warn(`❌ Component not found: ${type}`);
+    appLogger.warn(`❌ Component not found: ${type}`);
     return null;
 };
 

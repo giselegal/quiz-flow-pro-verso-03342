@@ -7,6 +7,7 @@ import { MultiTenantService } from '@/services/MultiTenantService';
 import { AdvancedPersonalizationEngine } from '@/services/AdvancedPersonalizationEngine';
 import { EnterpriseIntegrations } from '@/services/EnterpriseIntegrations';
 import { WhiteLabelPlatform } from '@/services/WhiteLabelPlatform';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export default function Phase2Dashboard() {
   const [metrics, setMetrics] = useState<any>(null);
@@ -36,7 +37,7 @@ export default function Phase2Dashboard() {
 
       setMetrics(data);
     } catch (error) {
-      console.error('Error loading Phase 2 metrics:', error);
+      appLogger.error('Error loading Phase 2 metrics:', { data: [error] });
     } finally {
       setLoading(false);
     }

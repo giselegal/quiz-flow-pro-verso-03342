@@ -7,6 +7,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { getBlockConfig } from '@/lib/utils/blockConfigMerger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface SyncValidationResult {
   isSynced: boolean;
@@ -60,11 +61,11 @@ export function useSyncValidator(
       const validation = validateSync(canvasData, previewData);
 
       if (logDifferences && validation.differences.length > 0) {
-        console.warn('🔍 Sync Validator: Diferenças detectadas', {
-          differences: validation.differences,
-          canvasChecksum: validation.canvasChecksum,
-          previewChecksum: validation.previewChecksum,
-        });
+        appLogger.warn('🔍 Sync Validator: Diferenças detectadas', { data: [{
+                    differences: validation.differences,
+                    canvasChecksum: validation.canvasChecksum,
+                    previewChecksum: validation.previewChecksum,
+                  }] });
       }
 
       setResult(validation);

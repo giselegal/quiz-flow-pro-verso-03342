@@ -46,6 +46,7 @@ import {
     ModularTransitionStep as TransitionStep,
     ModularResultStep as ResultStep,
 } from '@/components/quiz-modular';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
@@ -57,14 +58,14 @@ interface QuizAppConnectedProps {
 
 export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, previewMode = false, initialStepId, initialConfig }: QuizAppConnectedProps) {
     // 🐛 DEBUG CRÍTICO: Log de props recebidas
-    console.log('🎯 QuizAppConnected RENDERIZADO', {
-        funnelId,
-        editorMode,
-        previewMode,
-        initialStepId,
-        hasInitialConfig: !!initialConfig,
-        timestamp: new Date().toISOString(),
-    });
+    appLogger.info('🎯 QuizAppConnected RENDERIZADO', { data: [{
+            funnelId,
+            editorMode,
+            previewMode,
+            initialStepId,
+            hasInitialConfig: !!initialConfig,
+            timestamp: new Date().toISOString(),
+        }] });
 
     // Registrar steps de produção (seguro chamar múltiplas vezes - stepRegistry lida com duplicatas)
     useEffect(() => {
@@ -84,18 +85,18 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 blocks: step.blocks || [],
             };
         });
-        console.log(`🔄 Usando initialConfig com ${initialConfig.steps.length} steps`);
+        appLogger.info(`🔄 Usando initialConfig com ${initialConfig.steps.length} steps`);
     } else {
         // Fallback para registry se initialConfig não estiver presente
         const registry = useOptionalQuizRuntimeRegistry();
         if (registry && registry.steps && Object.keys(registry.steps).length) {
             externalSteps = registry.steps;
-            console.log(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, {
-                stepIds: Object.keys(externalSteps),
-                firstStepSample: externalSteps[Object.keys(externalSteps)[0]],
-            });
+            appLogger.info(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, { data: [{
+                            stepIds: Object.keys(externalSteps),
+                            firstStepSample: externalSteps[Object.keys(externalSteps)[0]],
+                        }] });
         } else {
-            console.log('⚠️ Registry vazio ou ausente - usando fallback');
+            appLogger.info('⚠️ Registry vazio ou ausente - usando fallback');
         }
     }
 
@@ -159,7 +160,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     useEffect(() => {
         if (!quizStoreSession) {
             quizStoreStartSession(funnelId, 21);
-            console.log('🎯 QuizStore session iniciada');
+            appLogger.info('🎯 QuizStore session iniciada');
         }
     }, [funnelId, quizStoreSession, quizStoreStartSession]);
 
@@ -196,11 +197,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         // Recalcular pontuação total
         quizStoreUpdateScore();
 
-        console.log('✅ Resposta salva com pontuação:', {
-            stepId,
-            timeSpent: timeSpent.toFixed(2) + 's',
-            score: isCorrect ? 10 : 0,
-        });
+        appLogger.info('✅ Resposta salva com pontuação:', { data: [{
+                    stepId,
+                    timeSpent: timeSpent.toFixed(2) + 's',
+                    score: isCorrect ? 10 : 0,
+                }] });
     }, [
         questionStartTime,
         addAnswer,
@@ -254,7 +255,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 const data = await loadNormalizedStep(paddedId);
                 if (!cancelled) setNormalizedStep(data);
             } catch (e) {
-                console.warn('[normalized] Falha ao carregar', paddedId, e);
+                appLogger.warn('[normalized] Falha ao carregar', { data: [paddedId, e] });
                 if (!cancelled) setNormalizedStep(null);
             }
         }
@@ -276,7 +277,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
 
         // ✅ Sync apenas se diferente (evita loops)
         if (state.currentStep !== target) {
-            console.log(`🔄 [Preview Sync] ${state.currentStep} → ${target}`);
+            appLogger.info(`🔄 [Preview Sync] ${state.currentStep} → ${target}`);
             nextStep(target);
         }
 
@@ -287,7 +288,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // Detecta quando usuário completa as seleções necessárias e avança automaticamente
     useEffect(() => {
         if (!currentStepData) {
-            console.log('🔍 Auto-avanço: currentStepData não existe');
+            appLogger.info('🔍 Auto-avanço: currentStepData não existe');
             return;
         }
 
@@ -295,15 +296,15 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         const isQuestion = currentStepData.type === 'question';
         const isStrategic = currentStepData.type === 'strategic-question';
 
-        console.log(`🔍 Auto-avanço check [${state.currentStep}]:`, {
-            type: currentStepData.type,
-            isQuestion,
-            isStrategic,
-            requiredSelections: currentStepData.requiredSelections,
-        });
+        appLogger.info(`🔍 Auto-avanço check [${state.currentStep}]:`, { data: [{
+                    type: currentStepData.type,
+                    isQuestion,
+                    isStrategic,
+                    requiredSelections: currentStepData.requiredSelections,
+                }] });
 
         if (!isQuestion && !isStrategic) {
-            console.log(`⏭️ Skip auto-avanço: tipo '${currentStepData.type}' não é pergunta`);
+            appLogger.info(`⏭️ Skip auto-avanço: tipo '${currentStepData.type}' não é pergunta`);
             return;
         }
 
@@ -318,34 +319,34 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         if (isStrategic) {
             // Perguntas estratégicas: avançar imediatamente após selecionar
             shouldAutoAdvance = !!strategicAnswer;
-            console.log(`🎯 Estratégica [${state.currentStep}]:`, {
-                strategicAnswer,
-                shouldAutoAdvance,
-            });
+            appLogger.info(`🎯 Estratégica [${state.currentStep}]:`, { data: [{
+                            strategicAnswer,
+                            shouldAutoAdvance,
+                        }] });
         } else {
             // Perguntas normais: avançar quando atingir requiredSelections
             shouldAutoAdvance = currentAnswers.length === requiredCount;
-            console.log(`📝 Pergunta [${state.currentStep}]:`, {
-                currentAnswers: currentAnswers.length,
-                requiredCount,
-                shouldAutoAdvance,
-            });
+            appLogger.info(`📝 Pergunta [${state.currentStep}]:`, { data: [{
+                            currentAnswers: currentAnswers.length,
+                            requiredCount,
+                            shouldAutoAdvance,
+                        }] });
         }
 
         if (shouldAutoAdvance) {
-            console.log(`⏰ Agendando auto-avanço em 800ms para ${state.currentStep}`);
+            appLogger.info(`⏰ Agendando auto-avanço em 800ms para ${state.currentStep}`);
             // Aguardar 800ms antes de avançar para dar feedback visual
             const timeout = setTimeout(() => {
-                console.log(`✨ Auto-avanço: ${state.currentStep} → próxima step`);
+                appLogger.info(`✨ Auto-avanço: ${state.currentStep} → próxima step`);
                 nextStep();
             }, 800);
 
             return () => {
-                console.log(`🚫 Cleanup timeout de auto-avanço para ${state.currentStep}`);
+                appLogger.info(`🚫 Cleanup timeout de auto-avanço para ${state.currentStep}`);
                 clearTimeout(timeout);
             };
         } else {
-            console.log(`⏸️ Auto-avanço NÃO acionado: aguardando seleções em ${state.currentStep}`);
+            appLogger.info(`⏸️ Auto-avanço NÃO acionado: aguardando seleções em ${state.currentStep}`);
         }
     }, [
         state.currentStep,
@@ -545,7 +546,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 <div><strong>Configurações:</strong> {Object.keys(mergedConfig).length}</div>
                 <div className="pt-2 border-t border-gray-200">
                     <div className="text-blue-600 cursor-pointer hover:underline"
-                        onClick={() => console.log('Config:', mergedConfig)}>
+                        onClick={() => appLogger.info('Config:', { data: [mergedConfig] })}>
                         Ver Configuração →
                     </div>
                 </div>
@@ -701,7 +702,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         // ✅ CORREÇÃO: Apenas 'offer' usa BlocksRuntimeRenderer direto
         // 'result' deve passar pelo ResultStepAdapter para ter ResultProvider
         const hasBlocks = ['offer'].includes(type) && (currentStepData as any).blocks?.length;
-        console.log('🔍 [shouldUseBlocks]', { stepId: currentStepId, type, hasBlocks, blocks: (currentStepData as any).blocks?.length });
+        appLogger.info('🔍 [shouldUseBlocks]', { data: [{ stepId: currentStepId, type, hasBlocks, blocks: (currentStepData as any).blocks?.length }] });
         return hasBlocks;
     };
 
@@ -975,7 +976,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 ) : currentStepData.type === 'transition-result' ? (
                     // Fallback para tipo legado ainda não registrado
                     (() => {
-                        console.log('⚠️ [transition-result bypass]', { stepId: currentStepId, type: currentStepData.type });
+                        appLogger.info('⚠️ [transition-result bypass]', { data: [{ stepId: currentStepId, type: currentStepData.type }] });
                         const transitionBlocks = (currentStepData as any).blocks || [];
                         return (
                             <TransitionStep
@@ -987,7 +988,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     })()
                 ) : (
                     (() => {
-                        console.log('✅ [UnifiedStepRenderer path]', { stepId: currentStepId, type: currentStepData.type });
+                        appLogger.info('✅ [UnifiedStepRenderer path]', { data: [{ stepId: currentStepId, type: currentStepData.type }] });
                         return (
                             <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
                                 <div className="max-w-6xl mx-auto px-4 py-8">

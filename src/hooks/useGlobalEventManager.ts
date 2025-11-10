@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 GERENCIADOR CENTRAL DE EVENT LISTENERS
@@ -34,7 +35,7 @@ export const useGlobalEventManager = (): GlobalEventManager => {
                     try {
                         handler(event);
                     } catch (error) {
-                        console.error(`Error in ${type} event handler:`, error);
+                        appLogger.error(`Error in ${type} event handler:`, { data: [error] });
                     }
                 });
             }

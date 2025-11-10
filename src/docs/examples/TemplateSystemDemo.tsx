@@ -35,6 +35,7 @@ import {
     Loader2,
 } from 'lucide-react';
 import type { Template } from '@/types/schemas/templateSchema';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Lista de steps do template demo
@@ -68,7 +69,7 @@ export function TemplateSystemDemo() {
     } = useTemplateStep(currentStepId, {
         templateId: TEMPLATE_ID,
         onSuccess: (data) => {
-            console.log('✅ Step loaded:', currentStepId, data.length, 'blocks');
+            appLogger.info('✅ Step loaded:', { data: [currentStepId, data.length, 'blocks'] });
         },
     });
 
@@ -82,7 +83,7 @@ export function TemplateSystemDemo() {
         isSuccess: isPrepared,
     } = usePrepareTemplate({
         onSuccess: () => {
-            console.log('✅ Template prepared successfully');
+            appLogger.info('✅ Template prepared successfully');
         },
     });
 
@@ -90,7 +91,7 @@ export function TemplateSystemDemo() {
     useEffect(() => {
         const nextIndex = currentStepIndex + 1;
         if (nextIndex < DEMO_STEPS.length) {
-            console.log('🔄 Prefetching next step:', DEMO_STEPS[nextIndex]);
+            appLogger.info('🔄 Prefetching next step:', { data: [DEMO_STEPS[nextIndex]] });
             prefetchStep(DEMO_STEPS[nextIndex], { templateId: TEMPLATE_ID });
         }
     }, [currentStepIndex, prefetchStep]);
@@ -117,18 +118,18 @@ export function TemplateSystemDemo() {
 
     const handleInvalidateCache = () => {
         queryClient.invalidateQueries({ queryKey: templateKeys.all });
-        console.log('🔄 Cache invalidated');
+        appLogger.info('🔄 Cache invalidated');
     };
 
     const handleImportTemplate = (template: Template, stepId?: string) => {
         setImportedTemplate(template);
         setIsImportDialogOpen(false);
 
-        console.log('📥 Template imported:', {
-            id: template.metadata.id,
-            name: template.metadata.name,
-            totalSteps: Object.keys(template.steps).length,
-        });
+        appLogger.info('📥 Template imported:', { data: [{
+                    id: template.metadata.id,
+                    name: template.metadata.name,
+                    totalSteps: Object.keys(template.steps).length,
+                }] });
     };
 
     return (

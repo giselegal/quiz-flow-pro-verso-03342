@@ -8,6 +8,7 @@
 
 import { ConfigurationAPI } from '@/services/aliases';
 import { QUIZ_COMPONENTS_DEFINITIONS } from '@/types/componentConfiguration';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -115,12 +116,12 @@ export class DynamicMasterJSONGenerator {
 
     async generateMasterJSON(funnelId?: string): Promise<DynamicMasterJSON> {
         try {
-            console.log(`🏗️ Generating dynamic master JSON${funnelId ? ` for ${funnelId}` : ''}`);
+            appLogger.info(`🏗️ Generating dynamic master JSON${funnelId ? ` for ${funnelId}` : ''}`);
 
             // Verificar cache
             const cacheKey = funnelId || 'default';
             if (this.cache.has(cacheKey)) {
-                console.log(`💨 Using cached master JSON: ${cacheKey}`);
+                appLogger.info(`💨 Using cached master JSON: ${cacheKey}`);
                 return this.cache.get(cacheKey)!;
             }
 
@@ -170,12 +171,12 @@ export class DynamicMasterJSONGenerator {
             this.cache.set(cacheKey, masterJSON);
             setTimeout(() => this.cache.delete(cacheKey), this.cacheTimeout);
 
-            console.log(`✅ Master JSON generated successfully: ${Object.keys(masterJSON.steps).length} steps, ${Object.keys(masterJSON.components).length} components`);
+            appLogger.info(`✅ Master JSON generated successfully: ${Object.keys(masterJSON.steps).length} steps, ${Object.keys(masterJSON.components).length} components`);
 
             return masterJSON;
 
         } catch (error) {
-            console.error('❌ Error generating master JSON:', error);
+            appLogger.error('❌ Error generating master JSON:', { data: [error] });
             throw error;
         }
     }
@@ -214,7 +215,7 @@ export class DynamicMasterJSONGenerator {
             };
 
         } catch (error) {
-            console.warn('⚠️ Using default global config:', error);
+            appLogger.warn('⚠️ Using default global config:', { data: [error] });
             return this.getDefaultGlobalConfig();
         }
     }
@@ -259,7 +260,7 @@ export class DynamicMasterJSONGenerator {
             };
 
         } catch (error) {
-            console.warn('⚠️ Using default theme config:', error);
+            appLogger.warn('⚠️ Using default theme config:', { data: [error] });
             return this.getDefaultThemeConfig();
         }
     }
@@ -311,7 +312,7 @@ export class DynamicMasterJSONGenerator {
                 };
 
             } catch (error) {
-                console.warn(`⚠️ Error generating config for step ${stepNumber}:`, error);
+                appLogger.warn(`⚠️ Error generating config for step ${stepNumber}:`, { data: [error] });
                 // Usar configuração padrão
                 stepsConfig[`step-${stepNumber}`] = this.getDefaultStepConfig(stepNumber);
             }
@@ -391,7 +392,7 @@ export class DynamicMasterJSONGenerator {
                 };
 
             } catch (error) {
-                console.warn(`⚠️ No API config found for ${componentId}, using defaults`);
+                appLogger.warn(`⚠️ No API config found for ${componentId}, using defaults`);
                 componentsConfig[componentId] = {
                     definition,
                     defaultProperties: definition.defaultProperties,
@@ -536,7 +537,7 @@ export class DynamicMasterJSONGenerator {
             // Evitar qualquer referência a 'fs' no bundle do browser.
             // Caso precise salvar em arquivo, use um util Node-only separado.
             if (typeof window !== 'undefined') {
-                console.warn('⚠️ generateAndSaveJSON: Ignorando writeFile no browser. Forneça apenas funnelId e consuma a string retornada ou use util Node-only para salvar.');
+                appLogger.warn('⚠️ generateAndSaveJSON: Ignorando writeFile no browser. Forneça apenas funnelId e consuma a string retornada ou use util Node-only para salvar.');
             } else {
                 // Ambiente Node (SSR/tests): não usar import estático para evitar bundling no client.
                 try {
@@ -545,9 +546,9 @@ export class DynamicMasterJSONGenerator {
                     const fsMod = await import('node:fs');
                     (fsMod as any).writeFileSync(outputPath, jsonString);
                     // eslint-disable-next-line no-console
-                    console.log(`💾 Master JSON saved to: ${outputPath}`);
+                    appLogger.info(`💾 Master JSON saved to: ${outputPath}`);
                 } catch (e) {
-                    console.warn('⚠️ generateAndSaveJSON: Falha ao salvar arquivo no ambiente atual:', e);
+                    appLogger.warn('⚠️ generateAndSaveJSON: Falha ao salvar arquivo no ambiente atual:', { data: [e] });
                 }
             }
         }
@@ -561,7 +562,7 @@ export class DynamicMasterJSONGenerator {
     invalidateCache(funnelId?: string): void {
         const cacheKey = funnelId || 'default';
         this.cache.delete(cacheKey);
-        console.log(`🗑️ Cache invalidated: ${cacheKey}`);
+        appLogger.info(`🗑️ Cache invalidated: ${cacheKey}`);
     }
 
     /**

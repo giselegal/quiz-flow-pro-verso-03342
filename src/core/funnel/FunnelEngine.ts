@@ -12,6 +12,7 @@ import {
     NavigationDirection,
 } from './types';
 import { funnelCore } from './FunnelCore';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // FUNNEL ENGINE CLASS
@@ -52,7 +53,7 @@ export class FunnelEngine {
 
             return newState;
         } catch (error) {
-            console.error('[FunnelEngine] Error processing action:', error);
+            appLogger.error('[FunnelEngine] Error processing action:', { data: [error] });
 
             // Emitir evento de erro
             funnelCore.emitEvent({
@@ -99,7 +100,7 @@ export class FunnelEngine {
                 return this.handleSettingsUpdate(newState, action);
 
             default:
-                console.warn(`[FunnelEngine] Unknown action type: ${action.type}`);
+                appLogger.warn(`[FunnelEngine] Unknown action type: ${action.type}`);
                 return newState;
         }
     }

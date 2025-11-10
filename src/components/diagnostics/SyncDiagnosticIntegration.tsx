@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { CanvasPreviewSyncPanel } from './CanvasPreviewSyncDiagnostic';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Adicionar o painel de diagnóstico ao App principal
 export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) => {
@@ -32,12 +33,12 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
 
                             // Auto-start monitoring se testes falharam
                             if (results.failed > 0 && window.startSyncDiagnostic) {
-                                console.log('🔄 Iniciando monitoramento automático devido a falhas...');
+                                appLogger.info('🔄 Iniciando monitoramento automático devido a falhas...');
                                 window.startSyncDiagnostic();
                             }
                         }
                     } catch (error) {
-                        console.warn('Erro ao executar diagnóstico automático:', error);
+                        appLogger.warn('Erro ao executar diagnóstico automático:', { data: [error] });
                     }
                 }, 2000); // Aguardar 2s para app carregar
             }
@@ -275,7 +276,7 @@ export const useSyncMonitoring = () => {
                 }));
 
             } catch (error) {
-                console.warn('Erro ao verificar sincronização:', error);
+                appLogger.warn('Erro ao verificar sincronização:', { data: [error] });
             }
         };
 

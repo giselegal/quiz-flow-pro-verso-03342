@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Fashion Image AI Service - Stub
  * TODO: Implementar geração de imagens com IA
@@ -22,7 +23,7 @@ export class FashionImageAI {
     constructor(private config: { provider: string; apiKey: string; style?: string }) {}
 
     async generateImage(request: FashionImageRequest): Promise<ImageGenerationResponse> {
-        console.warn('FashionImageAI: Stub implementation');
+        appLogger.warn('FashionImageAI: Stub implementation');
         throw new Error('FashionImageAI not implemented yet');
     }
 
@@ -31,12 +32,12 @@ export class FashionImageAI {
     }
 
     async batchGenerate(requests: FashionImageRequest[]): Promise<ImageGenerationResponse[]> {
-        console.warn('FashionImageAI: Stub implementation');
+        appLogger.warn('FashionImageAI: Stub implementation');
         throw new Error('FashionImageAI not implemented yet');
     }
 
     async generateOutfitVariations(request: FashionImageRequest, count: number): Promise<ImageGenerationResponse[]> {
-        console.warn('FashionImageAI: Stub implementation');
+        appLogger.warn('FashionImageAI: Stub implementation');
         return Array(count).fill({ 
             url: '', 
             created: Date.now(), 

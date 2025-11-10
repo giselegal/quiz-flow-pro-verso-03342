@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { imageCache } from '@/lib/utils/imageCache';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseImageWithFallbackOptions {
     width?: number;
@@ -58,7 +59,7 @@ export const useImageWithFallback = (
             setIsError(false);
             setIsLoading(false);
         } catch (error) {
-            console.warn('Erro ao criar placeholder:', error);
+            appLogger.warn('Erro ao criar placeholder:', { data: [error] });
             // Fallback extremo: retornar string vazia ao invés de SVG
             setSrc('');
             setIsFallback(true);
@@ -80,10 +81,10 @@ export const useImageWithFallback = (
         try {
             // Verificar se já temos no cache (apenas para URLs externas)
             if (enableCache && !imageUrl.startsWith('/') && !imageUrl.includes('localhost')) {
-                console.log('📦 Verificando cache para:', imageUrl);
+                appLogger.info('📦 Verificando cache para:', { data: [imageUrl] });
                 const cachedSrc = await imageCache.getImage(imageUrl, width, height);
                 if (cachedSrc) {
-                    console.log('✅ Imagem encontrada no cache');
+                    appLogger.info('✅ Imagem encontrada no cache');
                     setSrc(cachedSrc);
                     setIsFallback(false);
                     setIsError(false);
@@ -91,7 +92,7 @@ export const useImageWithFallback = (
                     return;
                 }
             } else {
-                console.log('🔄 Pulando cache para URL local:', imageUrl);
+                appLogger.info('🔄 Pulando cache para URL local:', { data: [imageUrl] });
             }
 
             // Tentar carregar a imagem original
@@ -101,11 +102,11 @@ export const useImageWithFallback = (
 
             const loadPromise = new Promise<void>((resolve, reject) => {
                 img.onload = () => {
-                    console.log('✅ Imagem carregada com sucesso:', imageUrl);
+                    appLogger.info('✅ Imagem carregada com sucesso:', { data: [imageUrl] });
                     resolve();
                 };
                 img.onerror = () => {
-                    console.error('❌ Erro ao carregar imagem:', imageUrl);
+                    appLogger.error('❌ Erro ao carregar imagem:', { data: [imageUrl] });
                     reject(new Error('Falha ao carregar imagem'));
                 };
                 img.src = imageUrl;
@@ -146,22 +147,22 @@ export const useImageWithFallback = (
                                             originalUrl: imageUrl,
                                         });
                                     } catch (cacheError) {
-                                        console.warn('⚠️ Erro ao armazenar imagem no cache:', cacheError);
+                                        appLogger.warn('⚠️ Erro ao armazenar imagem no cache:', { data: [cacheError] });
                                     }
                                 }
                             }, 'image/png', 0.8);
                         }
                     } else {
                         // ✅ CORREÇÃO: Para imagens cross-origin, apenas logar e pular cache
-                        console.log('🔒 Imagem cross-origin não pode ser cacheada:', imageUrl);
+                        appLogger.info('🔒 Imagem cross-origin não pode ser cacheada:', { data: [imageUrl] });
                     }
                 } catch (cacheError) {
-                    console.warn('⚠️ Erro ao processar imagem para cache:', cacheError);
+                    appLogger.warn('⚠️ Erro ao processar imagem para cache:', { data: [cacheError] });
                 }
             }
 
         } catch (error) {
-            console.warn(`Tentativa ${retry + 1} falhou para ${imageUrl}:`, error);
+            appLogger.warn(`Tentativa ${retry + 1} falhou para ${imageUrl}:`, { data: [error] });
 
             // Tentar novamente se ainda temos tentativas
             if (retry < retryCount) {
@@ -280,7 +281,7 @@ export const usePlaceholder = (
                 setSrc(placeholderSrc);
                 setIsLoading(false);
             } catch (error) {
-                console.warn('Erro ao carregar placeholder:', error);
+                appLogger.warn('Erro ao carregar placeholder:', { data: [error] });
                 setIsLoading(false);
             }
         };

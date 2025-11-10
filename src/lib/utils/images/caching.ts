@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { ImageCacheEntry } from './types';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const IMAGE_CACHE_KEY = 'image_cache';
 
@@ -9,7 +10,7 @@ export const getImageCache = (): { [url: string]: ImageCacheEntry } => {
     const cache = localStorage.getItem(IMAGE_CACHE_KEY);
     return cache ? JSON.parse(cache) : {};
   } catch (error) {
-    console.warn('Could not load image cache from localStorage:', error);
+    appLogger.warn('Could not load image cache from localStorage:', { data: [error] });
     return {};
   }
 };
@@ -28,7 +29,7 @@ export const getImageFromCache = (url: string): ImageCacheEntry | undefined => {
     try {
       localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
     } catch (error) {
-      console.warn('Could not update cache timestamp:', error);
+      appLogger.warn('Could not update cache timestamp:', { data: [error] });
     }
   }
   return entry;
@@ -48,7 +49,7 @@ export const addToCache = (url: string, metadata: any): ImageCacheEntry => {
     cache[url] = cacheEntry;
     StorageService.safeSetJSON('image_cache', cache);
   } catch (error) {
-    console.warn('Could not save to cache:', error);
+    appLogger.warn('Could not save to cache:', { data: [error] });
   }
 
   return cacheEntry;
@@ -60,7 +61,7 @@ export const updateImageCache = (url: string, updates: Partial<ImageCacheEntry>)
     cache[url] = { ...cache[url], ...updates };
     localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
   } catch (error) {
-    console.warn('Could not update image cache:', error);
+    appLogger.warn('Could not update image cache:', { data: [error] });
   }
 };
 
@@ -76,7 +77,7 @@ export const clearImageCache = (): void => {
   try {
     localStorage.removeItem(IMAGE_CACHE_KEY);
   } catch (error) {
-    console.warn('Could not clear image cache:', error);
+    appLogger.warn('Could not clear image cache:', { data: [error] });
   }
 };
 
@@ -86,6 +87,6 @@ export const removeImageFromCache = (url: string): void => {
     delete cache[url];
     localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
   } catch (error) {
-    console.warn('Could not remove image from cache:', error);
+    appLogger.warn('Could not remove image from cache:', { data: [error] });
   }
 };

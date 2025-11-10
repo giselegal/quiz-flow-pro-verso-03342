@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚀 LRU CACHE IMPLEMENTATION
  * 
@@ -240,7 +241,7 @@ export class LRUCache<T> {
                     const value = await loader(key);
                     this.set(key, value);
                 } catch (error) {
-                    console.warn(`Prefetch failed for key "${key}":`, error);
+                    appLogger.warn(`Prefetch failed for key "${key}":`, { data: [error] });
                 }
             }),
         ).then(() => { });
@@ -337,7 +338,7 @@ if (typeof window !== 'undefined') {
     setInterval(() => {
         const cleaned = cacheManager.cleanupAll();
         if (cleaned > 0) {
-            console.log(`🗑️ Cache cleanup: ${cleaned} expired entries removed`);
+            appLogger.info(`🗑️ Cache cleanup: ${cleaned} expired entries removed`);
         }
     }, 5 * 60 * 1000);
 }

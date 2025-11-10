@@ -31,6 +31,7 @@ import {
     Download,
 } from 'lucide-react';
 import { useTheme } from '@/styles/themes';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -107,7 +108,7 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                 }
             }
 
-            console.log('✅ Métricas carregadas:', metrics.length);
+            appLogger.info('✅ Métricas carregadas:', { data: [metrics.length] });
 
             // Enriquecer com métricas detalhadas e comparação
             const enrichedMetrics: FunnelMetricsWithDetails[] = await Promise.all(
@@ -153,7 +154,7 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
             setTotalMetrics(totals);
 
         } catch (error) {
-            console.error('❌ Erro ao carregar métricas:', error);
+            appLogger.error('❌ Erro ao carregar métricas:', { data: [error] });
         } finally {
             setIsLoading(false);
         }
@@ -171,9 +172,9 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                 await loadFacebookMetrics();
             }
 
-            console.log(result.message);
+            appLogger.info(String(result.message));
         } catch (error) {
-            console.error('❌ Erro na sincronização:', error);
+            appLogger.error('❌ Erro na sincronização:', { data: [error] });
         } finally {
             setIsSyncing(false);
         }

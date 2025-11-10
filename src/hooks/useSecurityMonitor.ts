@@ -5,6 +5,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SystemStatus {
   overall_status: 'healthy' | 'warning' | 'critical';
@@ -56,7 +57,7 @@ export const useSecurityMonitor = () => {
   const recordMetric = useCallback(async (metric: SecurityMetric) => {
     try {
       if (!supabase?.functions?.invoke) {
-        console.warn('⚠️ Supabase functions not available');
+        appLogger.warn('⚠️ Supabase functions not available');
         return null;
       }
 
@@ -67,7 +68,7 @@ export const useSecurityMonitor = () => {
       if (error) throw error;
       return data;
     } catch (err) {
-      console.error('Error recording metric:', err);
+      appLogger.error('Error recording metric:', { data: [err] });
       throw err;
     }
   }, []);
@@ -75,7 +76,7 @@ export const useSecurityMonitor = () => {
   const logSecurityEvent = useCallback(async (event: SecurityEvent) => {
     try {
       if (!supabase?.functions?.invoke) {
-        console.warn('⚠️ Supabase functions not available');
+        appLogger.warn('⚠️ Supabase functions not available');
         return null;
       }
 
@@ -86,7 +87,7 @@ export const useSecurityMonitor = () => {
       if (error) throw error;
       return data;
     } catch (err) {
-      console.error('Error logging security event:', err);
+      appLogger.error('Error logging security event:', { data: [err] });
       throw err;
     }
   }, []);

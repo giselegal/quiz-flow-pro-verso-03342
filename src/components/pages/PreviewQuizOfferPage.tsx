@@ -13,6 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Configuração de URLs das imagens
 const HERO_IMAGE_URL =
@@ -281,7 +282,7 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
 const PreviewQuizOfferPage: React.FC = () => {
   // Função para rastreamento de cliques (mock)
   const trackButtonClick = useCallback((buttonId: string, action: string, page: string) => {
-    console.log('Rastreando clique (mock):', { buttonId, action, page });
+    appLogger.info('Rastreando clique (mock):', { data: [{ buttonId, action, page }] });
   }, []);
 
   // Função para lidar com cliques no CTA

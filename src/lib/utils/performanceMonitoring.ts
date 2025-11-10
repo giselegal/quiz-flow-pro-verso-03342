@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Performance monitoring e analytics
 interface PerformanceMetrics {
@@ -54,12 +55,12 @@ class PerformanceMonitor {
     // Core Web Vitals
     this.monitorWebVitals();
 
-    console.log('🚀 Performance monitoring started');
+    appLogger.info('🚀 Performance monitoring started');
   }
 
   stopMonitoring() {
     this.isMonitoring = false;
-    console.log('⏹️ Performance monitoring stopped');
+    appLogger.info('⏹️ Performance monitoring stopped');
   }
 
   private monitorFPS() {
@@ -215,7 +216,7 @@ class PerformanceMonitor {
 
     // Log critical events
     if (category === 'error' || (category === 'performance' && this.isCriticalMetric(name, data))) {
-      console.warn(`[Performance] ${name}:`, data);
+      appLogger.warn(`[Performance] ${name}:`, { data: [data] });
     }
   }
 
@@ -266,7 +267,7 @@ class PerformanceMonitor {
       recommendations: this.getRecommendations(metrics, events),
     };
 
-    console.log('📊 Performance Report:', report);
+    appLogger.info('📊 Performance Report:', { data: [report] });
     return report;
   }
 

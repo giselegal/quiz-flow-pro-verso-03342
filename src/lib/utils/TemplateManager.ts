@@ -10,6 +10,7 @@ export const TEMPLATE_FILES: string[] = Array.from({ length: 21 }, (_, i) => {
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '../types/editor';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 TEMPLATE MANAGER - FASE 2 CONSOLIDADO
@@ -31,7 +32,7 @@ export class TemplateManager {
     // Note: canonical TemplateService doesn't support funnelId parameter yet
     const result = await templateService.getStep(stepId);
     if (!result.success || !result.data) {
-      console.warn(`[TemplateManager] Failed to load ${stepId}:`, result.success ? 'No data' : 'Error');
+      appLogger.warn(`[TemplateManager] Failed to load ${stepId}:`, { data: [result.success ? 'No data' : 'Error'] });
       return [];
     }
     const raw = result.data;
@@ -49,7 +50,7 @@ export class TemplateManager {
 
   static publishStep(stepId: string, blocks: Block[]): void {
     // Just log for now - actual implementation would save to database
-    console.log(`Publishing step ${stepId} with ${blocks.length} blocks`);
+    appLogger.info(`Publishing step ${stepId} with ${blocks.length} blocks`);
     // templateService doesn't have publishStep - this is a no-op legacy method
   }
 
@@ -68,7 +69,7 @@ export class TemplateManager {
     // Simply fetch again - the service handles its own caching
     const result = await templateService.getStep(stepId);
     if (!result.success || !result.data) {
-      console.warn(`[TemplateManager] Failed to reload ${stepId}:`, result.success ? 'No data' : 'Error');
+      appLogger.warn(`[TemplateManager] Failed to reload ${stepId}:`, { data: [result.success ? 'No data' : 'Error'] });
       return [];
     }
     const raw = result.data;
@@ -94,6 +95,6 @@ export class TemplateManager {
 
   static clearCache(): void {
     // Canonical TemplateService handles its own cache - this is a no-op
-    console.log('[TemplateManager] Cache clear requested (handled by service)');
+    appLogger.info('[TemplateManager] Cache clear requested (handled by service)');
   }
 }

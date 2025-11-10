@@ -8,6 +8,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { z } from 'zod';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SecurityContextType {
   isSecure: boolean;
@@ -57,9 +58,9 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
       // Initialize rate limiting
       await checkRateLimit();
       
-      console.log('🔒 Security initialized:', { isSecure: isHttps || isLocalhost });
+      appLogger.info('🔒 Security initialized:', { data: [{ isSecure: isHttps || isLocalhost }] });
     } catch (error) {
-      console.error('❌ Security initialization failed:', error);
+      appLogger.error('❌ Security initialization failed:', { data: [error] });
     }
   };
 
@@ -71,7 +72,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
         resetTime: Date.now() + 3600000,
       });
     } catch (error) {
-      console.error('❌ Rate limit check failed:', error);
+      appLogger.error('❌ Rate limit check failed:', { data: [error] });
     }
   };
 
@@ -80,7 +81,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
       schema.parse(input);
       return true;
     } catch (error) {
-      console.warn('⚠️ Input validation failed:', error);
+      appLogger.warn('⚠️ Input validation failed:', { data: [error] });
       logSecurityEvent('input_validation_failed', { input: input.substring(0, 50), error });
       return false;
     }
@@ -108,7 +109,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
         },
       });
     } catch (error) {
-      console.error('❌ Security event logging failed:', error);
+      appLogger.error('❌ Security event logging failed:', { data: [error] });
     }
   };
 

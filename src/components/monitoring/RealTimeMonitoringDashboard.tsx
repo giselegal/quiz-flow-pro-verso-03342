@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useSecurityMonitor } from '@/hooks/useSecurityMonitor';
 import { Activity, AlertTriangle, CheckCircle, XCircle, Database, Zap } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface MetricCardProps {
   title: string;
@@ -76,7 +77,7 @@ export const RealTimeMonitoringDashboard: React.FC = () => {
           getMetrics(),
         ]);
       } catch (err) {
-        console.error('Failed to refresh monitoring data:', err);
+        appLogger.error('Failed to refresh monitoring data:', { data: [err] });
       }
     };
 

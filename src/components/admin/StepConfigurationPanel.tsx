@@ -31,6 +31,7 @@ import {
     Shield,
 } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StepBehaviorConfig {
     stepNumber: number;
@@ -102,7 +103,7 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
             }
             setConfigurations(configs);
         } catch (error) {
-            console.error('Erro ao carregar configurações:', error);
+            appLogger.error('Erro ao carregar configurações:', { data: [error] });
             toast({
                 title: 'Erro',
                 description: 'Não foi possível carregar as configurações das etapas.',
@@ -169,7 +170,7 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                 description: `Etapa ${stepNumber} configurada com sucesso.`,
             });
         } catch (error) {
-            console.error('Erro ao salvar:', error);
+            appLogger.error('Erro ao salvar:', { data: [error] });
             toast({
                 title: 'Erro',
                 description: 'Não foi possível salvar a configuração.',
@@ -191,7 +192,7 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                 description: 'Todas as 21 etapas foram configuradas com sucesso.',
             });
         } catch (error) {
-            console.error('Erro ao salvar todas:', error);
+            appLogger.error('Erro ao salvar todas:', { data: [error] });
             toast({
                 title: 'Erro',
                 description: 'Erro ao salvar algumas configurações.',

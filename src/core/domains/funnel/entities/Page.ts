@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 PAGE ENTITY - Core Business Object
  * 
@@ -273,11 +274,11 @@ export class Page {
     
     // Validações de SEO
     if (updatedSEO.title.length > 60) {
-      console.warn('Título SEO muito longo (> 60 caracteres)');
+      appLogger.warn('Título SEO muito longo (> 60 caracteres)');
     }
     
     if (updatedSEO.description.length > 160) {
-      console.warn('Descrição SEO muito longa (> 160 caracteres)');
+      appLogger.warn('Descrição SEO muito longa (> 160 caracteres)');
     }
 
     return new Page(

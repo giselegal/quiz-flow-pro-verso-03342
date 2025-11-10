@@ -23,6 +23,7 @@ import {
     Search, Brain, Crown, Download, Eye, Copy, Star,
     Sparkles, FileText, Target, Layout, Layers, Palette, Zap,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===============================
 // 🎯 UNIVERSAL TEMPLATE TYPES
@@ -884,7 +885,7 @@ export const UniversalTemplateBrowser: React.FC = () => {
 
     const handleTemplateAction = useCallback(async (action: string, templateId: string) => {
         // Track template action (analytics integration to be implemented)
-        console.log('Template action:', action, templateId);
+        appLogger.info('Template action:', { data: [action, templateId] });
 
         switch (action) {
             case 'preview':
@@ -892,7 +893,7 @@ export const UniversalTemplateBrowser: React.FC = () => {
                 break;
             case 'clone':
                 const clonedId = engine.cloneTemplate(templateId);
-                console.log('Template cloned:', clonedId);
+                appLogger.info('Template cloned:', { data: [clonedId] });
                 loadTemplates();
                 break;
             case 'download':

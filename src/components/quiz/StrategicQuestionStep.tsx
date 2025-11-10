@@ -1,4 +1,5 @@
 import type { QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StrategicQuestionStepProps {
     data: QuizStep;
@@ -20,7 +21,7 @@ export default function StrategicQuestionStep({
     const safeOnAnswerChange: (answer: string) => void =
         typeof onAnswerChange === 'function' ? onAnswerChange : (answer: string) => {
             if (process.env.NODE_ENV === 'development') {
-                console.warn('[StrategicQuestionStep] onAnswerChange ausente ou inválido – noop usado. answer=', answer);
+                appLogger.warn('[StrategicQuestionStep] onAnswerChange ausente ou inválido – noop usado. answer=', { data: [answer] });
             }
         };
     const handleOptionClick = (optionId: string) => {

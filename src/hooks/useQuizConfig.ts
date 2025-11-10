@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos para configuração do quiz editável
 export interface QuizStep {
@@ -57,13 +58,13 @@ export const useQuizConfig = () => {
         const questions = extractQuestionsFromConfig(config);
         setQuizQuestions(questions);
 
-        console.log('📥 Configuração do quiz carregada:', {
-          pages: config.pages?.length || 0,
-          questions: questions.length,
-        });
+        appLogger.info('📥 Configuração do quiz carregada:', { data: [{
+                    pages: config.pages?.length || 0,
+                    questions: questions.length,
+                  }] });
       }
     } catch (error) {
-      console.warn('Erro ao carregar configuração do quiz:', error);
+      appLogger.warn('Erro ao carregar configuração do quiz:', { data: [error] });
     } finally {
       setIsLoading(false);
     }

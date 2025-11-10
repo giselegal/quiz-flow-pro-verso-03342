@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🧹 LIMPEZA DE WARNINGS DO NAVEGADOR
  *
@@ -41,7 +42,7 @@ const cleanupBrowserWarnings = () => {
     'iframe[sandbox*="allow-scripts"][sandbox*="allow-same-origin"]',
   );
   iframes.forEach(iframe => {
-    console.warn('⚠️ Iframe sandbox potentially insecure:', iframe);
+    appLogger.warn('⚠️ Iframe sandbox potentially insecure:', { data: [iframe] });
     // Estratégia conservadora: manter scripts, remover same-origin a menos que esteja marcado explicitamente
     const el = iframe as HTMLIFrameElement;
     const current = el.getAttribute('sandbox') || '';
@@ -57,14 +58,14 @@ const cleanupBrowserWarnings = () => {
 const ensureSinglePixel = () => {
   // Verifica se já existe um pixel carregado
   if (window.fbq && (window.fbq as any).loaded) {
-    console.log('✅ Facebook Pixel já carregado, evitando duplicação');
+    appLogger.info('✅ Facebook Pixel já carregado, evitando duplicação');
     return;
   }
 
   // Limpa possíveis pixels duplicados
   const existingPixelScripts = document.querySelectorAll('script[src*="fbevents.js"]');
   if (existingPixelScripts.length > 1) {
-    console.warn('⚠️ Múltiplos scripts do Facebook Pixel detectados, removendo duplicatas');
+    appLogger.warn('⚠️ Múltiplos scripts do Facebook Pixel detectados, removendo duplicatas');
     // Remove duplicatas (mantém apenas o primeiro)
     for (let i = 1; i < existingPixelScripts.length; i++) {
       existingPixelScripts[i].remove();
@@ -87,7 +88,7 @@ const optimizePreloadResources = () => {
         if (as === 'image') {
           const img = document.querySelector(`img[src="${href}"]`);
           if (!img) {
-            console.warn('⚠️ Preloaded image not used:', href);
+            appLogger.warn('⚠️ Preloaded image not used:', { data: [href] });
           }
         }
 
@@ -95,7 +96,7 @@ const optimizePreloadResources = () => {
         if (as === 'script') {
           const script = document.querySelector(`script[src="${href}"]`);
           if (!script) {
-            console.warn('⚠️ Preloaded script not used:', href);
+            appLogger.warn('⚠️ Preloaded script not used:', { data: [href] });
           }
         }
 
@@ -103,7 +104,7 @@ const optimizePreloadResources = () => {
         if (as === 'style') {
           const style = document.querySelector(`link[href="${href}"]`);
           if (!style) {
-            console.warn('⚠️ Preloaded stylesheet not used:', href);
+            appLogger.warn('⚠️ Preloaded stylesheet not used:', { data: [href] });
           }
         }
       }, 5000); // Verifica após 5 segundos
@@ -142,7 +143,7 @@ const setupBrowserOptimizations = () => {
 
 // 5. Execução automática na inicialização
 export const initBrowserCleanup = () => {
-  console.log('🧹 Iniciando limpeza de warnings do navegador...');
+  appLogger.info('🧹 Iniciando limpeza de warnings do navegador...');
 
   // Executa imediatamente se o DOM estiver pronto
   if (document.readyState === 'loading') {
@@ -159,7 +160,7 @@ export const initBrowserCleanup = () => {
     setupBrowserOptimizations();
   }
 
-  console.log('✅ Limpeza de warnings configurada');
+  appLogger.info('✅ Limpeza de warnings configurada');
 };
 
 // 6. Execução no carregamento da janela

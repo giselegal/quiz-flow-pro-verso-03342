@@ -25,6 +25,7 @@ import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useFeatureFlags } from './useFeatureFlags';
 import { useTemplateLoader } from './useTemplateLoader';
 import { navigationService } from '@/services/canonical/NavigationService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * ✅ MIGRADO: Agora usa TemplateService.getInstance() ao invés de QUIZ_STEPS/STEP_ORDER
@@ -114,11 +115,11 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       setIsLoading(true);
       quizEditorBridge.loadForRuntime(funnelId)
         .then(steps => {
-          console.log('✅ Steps carregados do bridge:', Object.keys(steps).length);
+          appLogger.info('✅ Steps carregados do bridge:', { data: [Object.keys(steps).length] });
           setLoadedSteps(steps);
         })
         .catch(err => {
-          console.error('❌ Erro ao carregar steps:', err);
+          appLogger.error('❌ Erro ao carregar steps:', { data: [err] });
           setLoadedSteps(QUIZ_STEPS_FALLBACK); // Fallback do TemplateService
         })
         .finally(() => setIsLoading(false));
@@ -161,11 +162,11 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     // Carregar template assíncrono
     (async () => {
       try {
-        console.log(`🔄 [useQuizState] Carregando JSON template para step ${stepNumber}...`);
+        appLogger.info(`🔄 [useQuizState] Carregando JSON template para step ${stepNumber}...`);
         const template = await loadQuizEstiloTemplate(stepNumber);
 
         if (template) {
-          console.log(`✅ [useQuizState] Template ${stepNumber} carregado com sucesso`);
+          appLogger.info(`✅ [useQuizState] Template ${stepNumber} carregado com sucesso`);
 
           // Prefetch próximos steps se habilitado
           if (enablePrefetch) {
@@ -173,7 +174,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
           }
         }
       } catch (error) {
-        console.error(`❌ [useQuizState] Erro ao carregar template ${stepNumber}:`, error);
+        appLogger.error(`❌ [useQuizState] Erro ao carregar template ${stepNumber}:`, { data: [error] });
         // Fallback silencioso - QUIZ_STEPS será usado
       }
     })();
@@ -244,7 +245,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
   // Calcular resultado do quiz
   const calculateResult = useCallback(() => {
-    console.log('🔄 [useQuizState] Calculando resultado via computeResult util...');
+    appLogger.info('🔄 [useQuizState] Calculando resultado via computeResult util...');
     // Passa steps explicitamente a partir da fonte atual para evitar fallback legado
     const base = computeResult({ answers: state.answers, steps: stepsSource as any });
 
@@ -264,7 +265,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
         adjustedScores = out.scores;
         ordered = out.orderedStyleIds;
       } catch (e) {
-        console.warn('⚠️ Falha ao aplicar scoringRules, usando base:', e);
+        appLogger.warn('⚠️ Falha ao aplicar scoringRules, usando base:', { data: [e] });
       }
     }
 

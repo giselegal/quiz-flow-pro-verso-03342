@@ -20,6 +20,7 @@ import { Button } from '../ui/button';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { UnifiedCalculationEngine } from '../../utils/UnifiedCalculationEngine';
 import { Switch } from '../ui/switch';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface MLPredictionsOverlayProps {
     onClose: () => void;
@@ -208,7 +209,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
 
             // Conectar com UnifiedCalculationEngine para dados reais
             const engine = new UnifiedCalculationEngine();
-            console.log('🧠 ML conectado com UnifiedCalculationEngine:', engine);
+            appLogger.info('🧠 ML conectado com UnifiedCalculationEngine:', { data: [engine] });
 
             trackEvent('ml_analysis_completed', {
                 predictions: predictions.length,
@@ -216,7 +217,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
             });
 
         } catch (error) {
-            console.error('❌ Erro na análise ML:', error);
+            appLogger.error('❌ Erro na análise ML:', { data: [error] });
         } finally {
             setIsProcessing(false);
         }

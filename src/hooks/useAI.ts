@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseAIOptions {
     model?: 'gpt-4o' | 'gpt-4o-mini' | 'claude-3.5-sonnet' | 'llama-3.1-405b';
@@ -58,7 +59,7 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
             setError(errorMessage);
-            console.error('❌ AI Request Error:', err);
+            appLogger.error('❌ AI Request Error:', { data: [err] });
             return null;
         } finally {
             setIsLoading(false);

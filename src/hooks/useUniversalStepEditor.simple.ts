@@ -5,6 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UniversalStepData {
   id: string;
@@ -20,7 +21,7 @@ export const useUniversalStepEditorSimple = () => {
 
   const loadStep = useCallback(async (stepId: string) => {
     setIsLoading(true);
-    console.log('📥 Carregando step:', stepId);
+    appLogger.info('📥 Carregando step:', { data: [stepId] });
     
     // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -31,7 +32,7 @@ export const useUniversalStepEditorSimple = () => {
 
   const saveStep = useCallback(async (stepId: string, data: any) => {
     setIsLoading(true);
-    console.log('💾 Salvando step:', stepId, data);
+    appLogger.info('💾 Salvando step:', { data: [stepId, data] });
     
     // Simulate saving
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -44,7 +45,7 @@ export const useUniversalStepEditorSimple = () => {
   }, []);
 
   const handleError = useCallback((error: any) => {
-    console.error('❌ Error in Universal Step Editor:', error);
+    appLogger.error('❌ Error in Universal Step Editor:', { data: [error] });
   }, []);
 
   return {

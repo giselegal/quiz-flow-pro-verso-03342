@@ -16,6 +16,7 @@ import {
 } from '../types';
 import { funnelEngine, FunnelActions } from '../FunnelEngine';
 import { funnelCore } from '../FunnelCore';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // MAIN FUNNEL HOOK
@@ -358,7 +359,7 @@ function saveProgressToStorage(state: FunnelState) {
         };
         localStorage.setItem(key, JSON.stringify(data));
     } catch (error) {
-        console.warn('[useFunnel] Failed to save progress:', error);
+        appLogger.warn('[useFunnel] Failed to save progress:', { data: [error] });
     }
 }
 
@@ -371,7 +372,7 @@ export function loadProgressFromStorage(funnelId: string) {
         const data = localStorage.getItem(key);
         return data ? JSON.parse(data) : null;
     } catch (error) {
-        console.warn('[useFunnel] Failed to load progress:', error);
+        appLogger.warn('[useFunnel] Failed to load progress:', { data: [error] });
         return null;
     }
 }

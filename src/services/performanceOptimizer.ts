@@ -9,6 +9,7 @@
 
 import { HybridFunnelData } from './improvedFunnelSystem';
 import { UnifiedTemplate } from '../config/unifiedTemplatesRegistry';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ==========================================
 // 🎯 TIPOS E INTERFACES
@@ -348,7 +349,7 @@ export class SmartPaginator<T> {
             const result = await fetchFunction(nextPage, this.config.pageSize);
             this.cache.set(cacheKey, result, this.config.maxPages * 60000); // TTL estendido para preload
         } catch (error) {
-            console.warn(`Falha no pré-carregamento da página ${nextPage}:`, error);
+            appLogger.warn(`Falha no pré-carregamento da página ${nextPage}:`, { data: [error] });
         }
     }
 

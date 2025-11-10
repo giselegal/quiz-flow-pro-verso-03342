@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // TODO: Migrar tipos de unifiedAnalytics (arquivado) para RealDataAnalyticsService
 type DashboardMetrics = any;
@@ -198,7 +199,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
 
         try {
             // TODO: Migrar para realDataAnalyticsService.getDashboardMetrics()
-            console.warn('getDashboardMetrics: unifiedAnalytics arquivado, retornando dados mock');
+            appLogger.warn('getDashboardMetrics: unifiedAnalytics arquivado, retornando dados mock');
             const metrics = null; // await realDataAnalyticsService.getDashboardMetrics();
             performanceTracker.current.recordCacheHit(); // Service handles caching
 
@@ -212,7 +213,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
             retryCounters.current.metrics = 0;
 
         } catch (error) {
-            console.error('Error refreshing metrics:', error);
+            appLogger.error('Error refreshing metrics:', { data: [error] });
             performanceTracker.current.recordCacheMiss();
 
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -244,7 +245,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
 
         try {
             // TODO: Migrar para realDataAnalyticsService.getParticipantsDetails()
-            console.warn('getParticipantsDetails: unifiedAnalytics arquivado, retornando dados mock');
+            appLogger.warn('getParticipantsDetails: unifiedAnalytics arquivado, retornando dados mock');
             const result: any = null; // await realDataAnalyticsService.getParticipantsDetails();
             performanceTracker.current.recordCacheHit();
 
@@ -263,7 +264,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
             retryCounters.current.participants = 0;
 
         } catch (error) {
-            console.error('Error refreshing participants:', error);
+            appLogger.error('Error refreshing participants:', { data: [error] });
             performanceTracker.current.recordCacheMiss();
 
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -295,7 +296,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
 
         try {
             // TODO: Migrar para realDataAnalyticsService.getRealTimeMetrics()
-            console.warn('getRealTimeMetrics: unifiedAnalytics arquivado, retornando dados mock');
+            appLogger.warn('getRealTimeMetrics: unifiedAnalytics arquivado, retornando dados mock');
             const realTimeMetrics = null; // await realDataAnalyticsService.getRealTimeMetrics();
             performanceTracker.current.recordCacheHit();
 
@@ -309,7 +310,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
             retryCounters.current.realTime = 0;
 
         } catch (error) {
-            console.error('Error refreshing real-time metrics:', error);
+            appLogger.error('Error refreshing real-time metrics:', { data: [error] });
             performanceTracker.current.recordCacheMiss();
 
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';

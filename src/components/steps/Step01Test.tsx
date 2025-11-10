@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { stepRegistry, StepRenderer } from './index';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Componente de teste para verificar o funcionamento
 const Step01TestComponent: React.FC = () => {
@@ -19,9 +20,9 @@ const Step01TestComponent: React.FC = () => {
     };
 
     const mockHandlers = {
-        onNext: () => console.log('🔄 Próximo step solicitado'),
-        onPrevious: () => console.log('🔄 Step anterior solicitado'),
-        onSave: (data: any) => console.log('💾 Dados salvos:', data),
+        onNext: () => appLogger.info('🔄 Próximo step solicitado'),
+        onPrevious: () => appLogger.info('🔄 Step anterior solicitado'),
+        onSave: (data: any) => appLogger.info('💾 Dados salvos:', { data: [data] }),
     };
 
     // Verificar se o step está registrado

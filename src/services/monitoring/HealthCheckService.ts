@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🏥 HEALTH CHECK SERVICE - Phase 3 Implementation
  * Monitoramento de saúde do sistema em tempo real
@@ -45,7 +46,7 @@ class HealthCheckService {
   startMonitoring(intervalMs: number = 30000) {
     // Desabilitar monitoramento em desenvolvimento para evitar erros de conexão
     if (import.meta.env.DEV || import.meta.env.MODE === 'development') {
-      console.log('🏥 Health monitoring disabled in development mode');
+      appLogger.info('🏥 Health monitoring disabled in development mode');
       return;
     }
 
@@ -58,7 +59,7 @@ class HealthCheckService {
       this.notifyCallbacks(health);
     }, intervalMs);
 
-    console.log('🏥 Health monitoring started');
+    appLogger.info('🏥 Health monitoring started');
   }
 
   /**
@@ -292,7 +293,7 @@ class HealthCheckService {
       try {
         callback(status);
       } catch (error) {
-        console.error('Health callback error:', error);
+        appLogger.error('Health callback error:', { data: [error] });
       }
     });
   }

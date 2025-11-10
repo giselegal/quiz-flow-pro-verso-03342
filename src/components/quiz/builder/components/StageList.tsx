@@ -3,6 +3,7 @@ import { QuizStage } from '@/types/quizBuilder';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Eye, Settings, Trash2 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StageListProps {
   stages: QuizStage[];
@@ -40,7 +41,7 @@ const StageList: React.FC<StageListProps> = ({
 
   const handleResultPreview = (result: any) => {
     // Handle result preview logic
-    console.log('Previewing result:', result);
+    appLogger.info('Previewing result:', { data: [result] });
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Code2, Eye, EyeOff, Play, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EditableScriptProps {
     code: string;
@@ -50,9 +51,9 @@ export default function EditableScript({
                 document.head.removeChild(script);
             }, 100);
 
-            console.log('Script executado com sucesso');
+            appLogger.info('Script executado com sucesso');
         } catch (error) {
-            console.error('Erro ao executar script:', error);
+            appLogger.error('Erro ao executar script:', { data: [error] });
         }
     };
 

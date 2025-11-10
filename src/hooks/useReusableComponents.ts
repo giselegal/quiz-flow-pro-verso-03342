@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getSupabaseClient } from '@/services/integrations/supabase/supabaseLazy';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TIPOS PARA COMPONENTES REUTILIZÁVEIS
@@ -65,7 +66,7 @@ export const useReusableComponents = (quizId?: string) => {
       setSupabaseClient(client);
       return client;
     } catch (e) {
-      console.warn('[useReusableComponents] Supabase indisponível (mock).');
+      appLogger.warn('[useReusableComponents] Supabase indisponível (mock).');
       setSupabaseClient(null);
       return null;
     }

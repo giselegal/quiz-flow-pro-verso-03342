@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AlertTriangle, CheckCircle, Play, RefreshCw, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface MigrationStatus {
   hasSchema: boolean;
@@ -54,7 +55,7 @@ export function MigrationPanel() {
         setStatus(data.status);
       }
     } catch (error) {
-      console.error('Erro ao verificar status:', error);
+      appLogger.error('Erro ao verificar status:', { data: [error] });
     } finally {
       setIsLoading(false);
     }

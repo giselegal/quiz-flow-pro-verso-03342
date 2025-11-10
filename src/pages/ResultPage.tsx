@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import sanitizeHtml from '@/lib/utils/sanitizeHtml';
 import { styleConfigGisele } from '@/services/data/styles';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PersistedResultPayload {
     userName?: string;
@@ -44,7 +45,7 @@ const ResultPage: React.FC = () => {
             const offerRaw = StorageService.safeGetString('quizSelectedOffer');
             if (offerRaw) setOffer(JSON.parse(offerRaw));
         } catch (e) {
-            console.warn('Falha ao carregar resultado persistido:', e);
+            appLogger.warn('Falha ao carregar resultado persistido:', { data: [e] });
         } finally {
             setLoading(false);
         }

@@ -9,6 +9,7 @@ import { SecurityAlert } from '@/components/security/SecurityAlert';
 import { SecurityMiddleware } from '@/components/security/SecurityMiddleware';
 import { useRateLimit } from '@/hooks/useRateLimit';
 import { useBackupSystem } from '@/hooks/useBackupSystem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SystemIntegrationProps {
   children: React.ReactNode;
@@ -21,17 +22,17 @@ export const SystemIntegration: React.FC<SystemIntegrationProps> = ({ children }
 
   // Inicialização do sistema integrado
   useEffect(() => {
-    console.log('🚀 [SYSTEM] Inicializando integração completa...');
+    appLogger.info('🚀 [SYSTEM] Inicializando integração completa...');
     
     // Log do status de todos os sistemas
-    console.log('📊 [SYSTEM] Status dos sistemas:', {
-      rateLimit: !rateLimitHook.isLoading,
-      backup: !backupHook.isLoading,
-      responsive: isDesktop ? 'desktop' : 'mobile',
-    });
+    appLogger.info('📊 [SYSTEM] Status dos sistemas:', { data: [{
+            rateLimit: !rateLimitHook.isLoading,
+            backup: !backupHook.isLoading,
+            responsive: isDesktop ? 'desktop' : 'mobile',
+          }] });
 
     return () => {
-      console.log('🔄 [SYSTEM] Limpando integração...');
+      appLogger.info('🔄 [SYSTEM] Limpando integração...');
     };
   }, [rateLimitHook.isLoading, backupHook.isLoading, isDesktop]);
 

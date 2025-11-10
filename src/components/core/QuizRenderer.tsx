@@ -11,6 +11,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 // V3.0 Template Support
 import V3Renderer from './V3Renderer';
 import type { TemplateV3, UserData } from '@/types/template-v3.types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizRendererProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -86,7 +87,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       try {
         goToStep?.(currentStepOverride);
       } catch (error) {
-        console.warn('[QuizRenderer] Erro ao aplicar currentStepOverride:', error);
+        appLogger.warn('[QuizRenderer] Erro ao aplicar currentStepOverride:', { data: [error] });
       }
     }
   }, [currentStepOverride, currentStep, goToStep]);
@@ -114,7 +115,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       const cfg = getStepConfig(`step-${stepNum}`);
       return { stepConfig: cfg } as any;
     } catch (error) {
-      console.warn('[QuizRenderer] Erro ao obter stepConfig:', error);
+      appLogger.warn('[QuizRenderer] Erro ao obter stepConfig:', { data: [error] });
       return { stepConfig: undefined } as any;
     }
   }, [currentStep, currentStepOverride, getStepConfig]);
@@ -140,7 +141,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
           const r = StorageService.safeGetJSON('quizResult');
           return !!r && !!r.primaryStyle;
         } catch (error) {
-          console.warn('[QuizRenderer] Erro ao verificar quizResult:', error);
+          appLogger.warn('[QuizRenderer] Erro ao verificar quizResult:', { data: [error] });
           return false;
         }
       })();
@@ -163,14 +164,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
           try {
             sessionStorage.setItem('quizResultPreview', JSON.stringify(minimal));
           } catch (error) {
-            console.warn('[QuizRenderer] Erro ao salvar resultado no sessionStorage:', error);
+            appLogger.warn('[QuizRenderer] Erro ao salvar resultado no sessionStorage:', { data: [error] });
           }
         } catch (error) {
-          console.warn('[QuizRenderer] Erro ao calcular resultado final:', error);
+          appLogger.warn('[QuizRenderer] Erro ao calcular resultado final:', { data: [error] });
         }
       }
     } catch (error) {
-      console.warn('[QuizRenderer] Erro no cálculo de resultados:', error);
+      appLogger.warn('[QuizRenderer] Erro no cálculo de resultados:', { data: [error] });
     }
   }, [mode, previewEditable, currentStep, currentStepOverride]); // Proper dependency array
 
@@ -182,7 +183,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       const stepNum = currentStepOverride ?? currentStep;
       (window as any).__quizCurrentStep = stepNum;
     } catch (error) {
-      console.warn('[QuizRenderer] Erro ao expor __quizCurrentStep:', error);
+      appLogger.warn('[QuizRenderer] Erro ao expor __quizCurrentStep:', { data: [error] });
     }
   }, [currentStep, currentStepOverride]);
 
@@ -213,12 +214,12 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       const targetStep = e.detail?.stepId ?? e.detail?.to;
 
       if (typeof targetStep === 'number' && targetStep >= 1 && targetStep <= 21) {
-        console.log('🎯 QuizRenderer: Navegando para etapa', targetStep);
+        appLogger.info('🎯 QuizRenderer: Navegando para etapa', { data: [targetStep] });
         try {
           if (goToStep) goToStep(targetStep);
           else if (targetStep > currentStep && nextStep) nextStep();
         } catch (error) {
-          console.error('❌ Erro na navegação:', error);
+          appLogger.error('❌ Erro na navegação:', { data: [error] });
         }
       }
     };
@@ -261,7 +262,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
         completedAt: result.completedAt || new Date().toISOString(),
       };
     } catch (error) {
-      console.error('Error getting user data:', error);
+      appLogger.error('Error getting user data:', { data: [error] });
       return undefined;
     }
   }, []);
@@ -287,10 +288,10 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
 
       // Console em dev
       if (process.env.NODE_ENV === 'development') {
-        console.log('📊 Analytics:', eventName, data);
+        appLogger.info('📊 Analytics:', { data: [eventName, data] });
       }
     } catch (error) {
-      console.error('Analytics error:', error);
+      appLogger.error('Analytics error:', { data: [error] });
     }
   }, []);
 
@@ -450,7 +451,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
           );
         }
       } catch (error) {
-        console.warn('Failed to load v3 template, falling back to v2:', error);
+        appLogger.warn('Failed to load v3 template, falling back to v2:', { data: [error] });
         // Fallback para renderização v2.0
       }
     }

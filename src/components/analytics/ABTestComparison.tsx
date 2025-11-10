@@ -36,6 +36,7 @@ import { FUNNEL_CONFIGS } from '@/services/pixelManager';
 import { toast } from '@/components/ui/use-toast';
 import { getAnalyticsEvents } from '@/lib/utils/analytics';
 import ABTestAlerts from './ABTestAlerts';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ABTestMetrics {
   variant: 'A' | 'B';
@@ -80,7 +81,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
     let mounted = true;
     getCachedImport('recharts-bundle', loadRecharts)
       .then((mod) => { if (mounted) setCharts(mod); })
-      .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+      .catch((err) => appLogger.warn('Falha ao carregar Recharts dinamicamente:', { data: [err] }));
     return () => { mounted = false; };
   }, []);
 
@@ -123,7 +124,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
       setSignificance(isSignificant);
       setWinner(winningVariant);
     } catch (error) {
-      console.error('Erro ao carregar dados do teste A/B:', error);
+      appLogger.error('Erro ao carregar dados do teste A/B:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Não foi possível carregar os dados do teste A/B',

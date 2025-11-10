@@ -19,6 +19,7 @@ import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { convertBlocksToComponentInstances } from '@/lib/utils/componentInstanceConverter';
 import { useToast } from '@/hooks/use-toast';
 import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/lib/utils/retryWithBackoff';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'error';
 
@@ -87,12 +88,12 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
    */
   const performSave = useCallback(async () => {
     if (!enabled || !funnelId || !editor) {
-      console.log('⏭️ [useAutoSave] Save pulado (disabled, sem funnelId ou sem editor)');
+      appLogger.info('⏭️ [useAutoSave] Save pulado (disabled, sem funnelId ou sem editor)');
       return;
     }
 
     if (saveInProgressRef.current) {
-      console.log('⏭️ [useAutoSave] Save já em progresso, pulando');
+      appLogger.info('⏭️ [useAutoSave] Save já em progresso, pulando');
       return;
     }
 
@@ -104,12 +105,12 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
 
       const stepBlocks = editor.state.stepBlocks;
       if (!stepBlocks || Object.keys(stepBlocks).length === 0) {
-        console.warn('⚠️ [useAutoSave] Sem blocos para salvar');
+        appLogger.warn('⚠️ [useAutoSave] Sem blocos para salvar');
         setStatus('idle');
         return;
       }
 
-      console.log(`💾 [useAutoSave] Salvando ${Object.keys(stepBlocks).length} steps...`);
+      appLogger.info(`💾 [useAutoSave] Salvando ${Object.keys(stepBlocks).length} steps...`);
 
       let savedCount = 0;
       let errorCount = 0;
@@ -122,7 +123,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
         // Extrair número do step
         const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10);
         if (isNaN(stepNumber)) {
-          console.warn(`⚠️ [useAutoSave] Step number inválido: ${stepKey}`);
+          appLogger.warn(`⚠️ [useAutoSave] Step number inválido: ${stepKey}`);
           continue;
         }
 
@@ -134,7 +135,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
               maxAttempts: maxRetries,
               baseDelayMs: 1000,
               onRetry: (attempt, error) => {
-                console.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (getComponents):`, error.message);
+                appLogger.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (getComponents):`, { data: [error.message] });
                 setRetryInfo({ attempt, maxAttempts: maxRetries });
               },
               shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
@@ -149,7 +150,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
                 maxAttempts: maxRetries,
                 baseDelayMs: 1000,
                 onRetry: (attempt, error) => {
-                  console.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (deleteComponent):`, error.message);
+                  appLogger.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (deleteComponent):`, { data: [error.message] });
                   setRetryInfo({ attempt, maxAttempts: maxRetries });
                 },
                 shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
@@ -179,7 +180,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
                 maxAttempts: maxRetries,
                 baseDelayMs: 1000,
                 onRetry: (attempt, error) => {
-                  console.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (addComponent):`, error.message);
+                  appLogger.warn(`🔄 [useAutoSave] Retry ${attempt}/${maxRetries} (addComponent):`, { data: [error.message] });
                   setRetryInfo({ attempt, maxAttempts: maxRetries });
                 },
                 shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
@@ -188,10 +189,10 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
           }
 
           savedCount++;
-          console.log(`✅ [useAutoSave] Step ${stepNumber} salvo (${blocks.length} blocos)`);
+          appLogger.info(`✅ [useAutoSave] Step ${stepNumber} salvo (${blocks.length} blocos)`);
         } catch (err) {
           errorCount++;
-          console.error(`❌ [useAutoSave] Erro ao salvar step ${stepNumber}:`, err);
+          appLogger.error(`❌ [useAutoSave] Erro ao salvar step ${stepNumber}:`, { data: [err] });
         }
       }
 
@@ -200,7 +201,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
 
       if (errorCount === 0) {
         setStatus('saved');
-        console.log(`✅ [useAutoSave] ${savedCount} steps salvos com sucesso`);
+        appLogger.info(`✅ [useAutoSave] ${savedCount} steps salvos com sucesso`);
         
         // Resetar para idle após 2s
         setTimeout(() => {
@@ -217,7 +218,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
       setLastError(err);
       setRetryInfo(null); // Limpar retry info em erro final
 
-      console.error('❌ [useAutoSave] Erro crítico:', err);
+      appLogger.error('❌ [useAutoSave] Erro crítico:', { data: [err] });
 
       if (!suppressToast) {
         toast({
@@ -278,7 +279,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
       setStatus('idle');
-      console.log('🚫 [useAutoSave] Save cancelado');
+      appLogger.info('🚫 [useAutoSave] Save cancelado');
     }
   }, []);
 
@@ -293,7 +294,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
 
     // Comparar com estado anterior
     if (currentState !== previousStateRef.current && previousStateRef.current !== '') {
-      console.log('🔄 [useAutoSave] Mudança detectada, agendando save...');
+      appLogger.info('🔄 [useAutoSave] Mudança detectada, agendando save...');
       scheduleSave();
     }
 

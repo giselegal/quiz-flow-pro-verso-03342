@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { notify } from '@/lib/utils/notify';
 import { useLocation } from 'wouter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Hook para navegação segura que evita problemas com tela branca
@@ -13,8 +14,8 @@ export const useNavigationSafe = () => {
     (path: string) => {
       try {
         // Log detalhado para debugging
-        console.log('🚀 [NavigationSafe] Navegando para:', path);
-        console.log('🚀 [NavigationSafe] Estado atual da página:', window.location.href);
+        appLogger.info('🚀 [NavigationSafe] Navegando para:', { data: [path] });
+        appLogger.info('🚀 [NavigationSafe] Estado atual da página:', { data: [window.location.href] });
 
         // Validação da rota
         if (!path || path.length === 0) {
@@ -24,17 +25,17 @@ export const useNavigationSafe = () => {
         // Navegação interna segura
         setLocation(path);
 
-        console.log('✅ [NavigationSafe] Navegação bem-sucedida');
+        appLogger.info('✅ [NavigationSafe] Navegação bem-sucedida');
       } catch (error) {
-        console.error('❌ [NavigationSafe] Erro na navegação:', error);
-        console.log('🔄 [NavigationSafe] Tentando fallback...');
+        appLogger.error('❌ [NavigationSafe] Erro na navegação:', { data: [error] });
+        appLogger.info('🔄 [NavigationSafe] Tentando fallback...');
 
         // Fallback para navegação direta
         try {
           window.location.href = path;
-          console.log('✅ [NavigationSafe] Fallback bem-sucedido');
+          appLogger.info('✅ [NavigationSafe] Fallback bem-sucedido');
         } catch (fallbackError) {
-          console.error('❌ [NavigationSafe] Erro no fallback:', fallbackError);
+          appLogger.error('❌ [NavigationSafe] Erro no fallback:', { data: [fallbackError] });
           notify(`Erro na navegação para ${path}. Por favor, recarregue a página.`, 'error', 'Navegação falhou');
         }
       }
@@ -72,7 +73,7 @@ export const useNavigationSafe = () => {
           navigateTo(path);
         }
       } catch (error) {
-        console.error('Erro ao abrir nova aba:', error);
+        appLogger.error('Erro ao abrir nova aba:', { data: [error] });
         navigateTo(path);
       }
     },

@@ -14,6 +14,7 @@ import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/lib/adapters/UnifiedQ
 import { TemplateService } from '@/services/canonical/TemplateService';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseUnifiedQuizLoaderOptions {
   funnelId?: string;
@@ -57,7 +58,7 @@ export function useUnifiedQuizLoader(
         case 'database':
           // Carregar do Supabase (quando tabela quiz_production for criada)
           // TODO: Implementar após criar tabela quiz_production
-          console.warn('Database source not yet implemented - falling back to TemplateService');
+          appLogger.warn('Database source not yet implemented - falling back to TemplateService');
           const templateService = TemplateService.getInstance();
           const dbFallbackResult = await templateService.getStep(stepId);
           if (dbFallbackResult.success) {
@@ -93,7 +94,7 @@ export function useUnifiedQuizLoader(
       
       return unifiedStep;
     } catch (err) {
-      console.error(`Failed to load step ${stepId}:`, err);
+      appLogger.error(`Failed to load step ${stepId}:`, { data: [err] });
       setError(err as Error);
       return null;
     }

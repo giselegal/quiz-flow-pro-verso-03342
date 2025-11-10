@@ -34,6 +34,7 @@ import { QuizFunnelCard } from '@/components/dashboard/QuizFunnelCard';
 import { unifiedCRUDService } from '@/services/UnifiedCRUDService';
 import { versioningService } from '@/services/versioningService';
 import { analyticsService } from '@/services/AnalyticsService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizFunnel {
   id: string;
@@ -148,7 +149,7 @@ const QuizFunnelsPage: React.FC = () => {
 
       setFunnels(formattedFunnels);
     } catch (error) {
-      console.error('❌ Erro ao carregar funis quiz:', error);
+      appLogger.error('❌ Erro ao carregar funis quiz:', { data: [error] });
     } finally {
       setIsLoading(false);
     }
@@ -165,7 +166,7 @@ const QuizFunnelsPage: React.FC = () => {
       // Abrir editor com o funil
       window.open(`/editor?funnel=${funnelId}&type=quiz`, '_blank');
     } catch (error) {
-      console.error('❌ Erro ao abrir editor:', error);
+      appLogger.error('❌ Erro ao abrir editor:', { data: [error] });
     }
   };
 
@@ -192,7 +193,7 @@ const QuizFunnelsPage: React.FC = () => {
         await loadQuizFunnels();
       }
     } catch (error) {
-      console.error('❌ Erro ao publicar funil:', error);
+      appLogger.error('❌ Erro ao publicar funil:', { data: [error] });
     }
   };
 

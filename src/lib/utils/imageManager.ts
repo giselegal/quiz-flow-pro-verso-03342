@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ImageOptimizationOptions, PreloadOptions } from './images/types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const getOptimizedImageUrl = (
   src: string,
@@ -124,7 +125,7 @@ export const preloadCriticalImages = async (
         ];
         break;
       default:
-        console.warn(`Unknown critical images context: ${context}`);
+        appLogger.warn(`Unknown critical images context: ${context}`);
         return;
     }
   } else if (Array.isArray(context)) {
@@ -174,7 +175,7 @@ export const preloadCriticalImages = async (
           );
           break;
         default:
-          console.warn(`Unknown critical images context: ${ctx}`);
+          appLogger.warn(`Unknown critical images context: ${ctx}`);
       }
     });
   }
@@ -254,6 +255,6 @@ export const preloadImagesByCategory = (
     );
   }
 
-  console.warn(`Unknown category: ${category}`);
+  appLogger.warn(`Unknown category: ${category}`);
   return Promise.resolve();
 };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 // import { useRouter } from 'next/router'; // Comentado para React puro
 import { useFunnelConfig } from '../editor/FunnelConfigProvider';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseFunnelNavigationOptions {
   initialStep?: number;
@@ -53,7 +54,7 @@ export function useFunnelNavigation({
           }
         }
       } catch (error) {
-        console.error('Erro ao carregar estado do funil:', error);
+        appLogger.error('Erro ao carregar estado do funil:', { data: [error] });
       }
     }
   }, []);

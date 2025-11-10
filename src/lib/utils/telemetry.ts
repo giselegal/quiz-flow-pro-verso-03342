@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // Wrapper seguro para telemetria (ex.: lovable)
 // - Desabilita via REACT_APP_DISABLE_TELEMETRY=true
 // - Captura erros e sempre resolve para evitar "uncaught (in promise)"
@@ -14,7 +15,7 @@ export function initTelemetry(rawClient?: any) {
   } catch (err) {
     // não propagar
      
-    console.warn('telemetry init failed (ignored):', err);
+    appLogger.warn('telemetry init failed (ignored):', { data: [err] });
     client = null;
   }
 }
@@ -34,7 +35,7 @@ export async function capture(eventName: string, payload?: any) {
   } catch (err) {
     // não propagar erro para a aplicação
     // eslint-disable-next-line no-console
-    console.debug('telemetry capture error (ignored):', err);
+    appLogger.debug('telemetry capture error (ignored):', { data: [err] });
     return { ok: false, error: String(err) };
   }
 }

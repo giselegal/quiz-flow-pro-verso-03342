@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 type Listener<T = any> = (payload: T) => void;
 
 interface EventMap {
@@ -30,7 +31,7 @@ class EditorEventBus {
         const arr = this.listeners[event];
         if (!arr || arr.length === 0) return;
         for (const l of arr) {
-            try { l(payload); } catch (e) { console.warn('[editorEvents] listener error', e); }
+            try { l(payload); } catch (e) { appLogger.warn('[editorEvents] listener error', { data: [e] }); }
         }
     }
 }

@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizUserAnswer {
   stepId: number;
@@ -60,7 +61,7 @@ export const useQuizUserProgress = ({
         try {
           return JSON.parse(savedProgress);
         } catch (e) {
-          console.error('Erro ao carregar progresso salvo:', e);
+          appLogger.error('Erro ao carregar progresso salvo:', { data: [e] });
         }
       }
     }
@@ -202,9 +203,9 @@ export const useQuizUserProgress = ({
         //   body: JSON.stringify(progress),
         // });
         // const data = await response.json();
-        console.log('Progresso sincronizado com backend:', progress);
+        appLogger.info('Progresso sincronizado com backend:', { data: [progress] });
       } catch (error) {
-        console.error('Erro ao sincronizar progresso:', error);
+        appLogger.error('Erro ao sincronizar progresso:', { data: [error] });
       }
     };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { initializeTemplates } from '../../services/initializeTemplates';
 import { Button } from '../ui/button';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const TemplateInitializer: React.FC = () => {
   const [isInitializing, setIsInitializing] = useState(false);
@@ -19,7 +20,7 @@ export const TemplateInitializer: React.FC = () => {
         setStatus('❌ Erro ao inicializar templates.');
       }
     } catch (error) {
-      console.error('Erro na inicialização:', error);
+      appLogger.error('Erro na inicialização:', { data: [error] });
       setStatus('❌ Erro inesperado durante a inicialização.');
     } finally {
       setIsInitializing(false);

@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // @ts-nocheck
 /**
  * 🎯 CORE SERVICES INDEX - CONSOLIDAÇÃO ARQUITETURAL
@@ -179,9 +180,9 @@ export function cleanupCoreServices() {
         const loadingService = getMasterLoadingService();
         loadingService.forceCleanup();
 
-        console.log('Core services cleaned up successfully');
+        appLogger.info('Core services cleaned up successfully');
     } catch (error) {
-        console.error('Error during core services cleanup:', error);
+        appLogger.error('Error during core services cleanup:', { data: [error] });
     }
 }
 
@@ -209,7 +210,7 @@ export function getAllServiceStats() {
             timestamp: new Date().toISOString(),
         };
     } catch (error) {
-        console.error('Error getting service stats:', error);
+        appLogger.error('Error getting service stats:', { data: [error] });
         return { error: error instanceof Error ? error.message : String(error) };
     }
 }

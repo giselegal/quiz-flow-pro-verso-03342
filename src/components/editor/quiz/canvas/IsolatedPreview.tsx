@@ -9,7 +9,6 @@
  */
 
 import React, { Suspense, useMemo, useEffect } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { PreviewProvider } from '@/contexts/ui/PreviewContext';
 import { QuizFlowProvider } from '@/contexts/quiz/QuizFlowProvider';
@@ -20,6 +19,7 @@ import { usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { useEditor } from '@/hooks/useEditor';
 import { getPreviewBlockKey } from '@/lib/utils/keys/previewKeys';
 import { usePreviewDataWorker } from '@/hooks/usePreviewDataWorker';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface IsolatedPreviewProps {
   blocks: Block[];
@@ -110,11 +110,11 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
   useEffect(() => {
     if (previewMeta) {
       // Telemetria leve (desativável futuramente por flag)
-      console.debug('📊 PreviewDataWorker result:', {
-        metas: previewMeta.metas.slice(0, 3), // limitar log
-        total: previewMeta.metas.length,
-        processedAt: previewMeta.processedAt,
-      });
+      appLogger.debug('📊 PreviewDataWorker result:', { data: [{
+                metas: previewMeta.metas.slice(0, 3), // limitar log
+                total: previewMeta.metas.length,
+                processedAt: previewMeta.processedAt,
+              }] });
     }
   }, [previewMeta]);
 

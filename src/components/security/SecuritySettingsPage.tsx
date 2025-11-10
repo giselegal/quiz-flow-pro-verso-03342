@@ -29,6 +29,7 @@ import {
   Settings,
   RefreshCw,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SecuritySettings {
   id?: string;
@@ -84,7 +85,7 @@ export const SecuritySettingsPage: React.FC = () => {
       };
       setSettings(defaultSettings);
     } catch (error) {
-      console.error('Failed to load security settings:', error);
+      appLogger.error('Failed to load security settings:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Falha ao carregar configurações de segurança.',
@@ -103,7 +104,7 @@ export const SecuritySettingsPage: React.FC = () => {
       const backups = await listBackups(user.id, 5);
       setRecentBackups(backups);
     } catch (error) {
-      console.error('Failed to load recent backups:', error);
+      appLogger.error('Failed to load recent backups:', { data: [error] });
     }
   };
 
@@ -143,7 +144,7 @@ export const SecuritySettingsPage: React.FC = () => {
       });
 
     } catch (error) {
-      console.error('Failed to save security settings:', error);
+      appLogger.error('Failed to save security settings:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Falha ao salvar configurações.',
@@ -174,7 +175,7 @@ export const SecuritySettingsPage: React.FC = () => {
       await loadRecentBackups();
 
     } catch (error) {
-      console.error('Backup creation failed:', error);
+      appLogger.error('Backup creation failed:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Falha ao criar backup.',
@@ -192,7 +193,7 @@ export const SecuritySettingsPage: React.FC = () => {
       });
       await loadRecentBackups();
     } catch (error) {
-      console.error('Cleanup failed:', error);
+      appLogger.error('Cleanup failed:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Falha ao limpar backups antigos.',

@@ -5,6 +5,7 @@ import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { useQuizRulesConfig } from './useQuizRulesConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ✅ INTERFACE PARA QUESTÕES ESTRATÉGICAS
 interface StrategicAnswer {
@@ -43,11 +44,11 @@ export const useQuizLogic = () => {
     setUserName(cleanName);
 
     // ✅ TRACKING: Log da captura do nome
-    console.log('👤 NOME CAPTURADO:', {
-      name: cleanName,
-      timestamp: new Date().toISOString(),
-      step: 1,
-    });
+    appLogger.info('👤 NOME CAPTURADO:', { data: [{
+            name: cleanName,
+            timestamp: new Date().toISOString(),
+            step: 1,
+          }] });
 
     // Persistir em ambas as chaves por compatibilidade
     if (cleanName) {
@@ -83,13 +84,13 @@ export const useQuizLogic = () => {
       setStrategicAnswers(prev => [...prev, strategicAnswer]);
 
       // ✅ TRACKING: Enviar métricas sem afetar cálculo
-      console.log('📊 MÉTRICA ESTRATÉGICA:', {
-        questionId,
-        optionId,
-        category,
-        strategicType,
-        timestamp: strategicAnswer.timestamp,
-      });
+      appLogger.info('📊 MÉTRICA ESTRATÉGICA:', { data: [{
+                  questionId,
+                  optionId,
+                  category,
+                  strategicType,
+                  timestamp: strategicAnswer.timestamp,
+                }] });
 
       // TODO: Integrar com analytics/Supabase para métricas
       // trackStrategicInteraction(strategicAnswer);
@@ -145,7 +146,7 @@ export const useQuizLogic = () => {
   const calculateResults = useCallback(
     (answers: QuizAnswer[]): QuizResult => {
       // ✅ NOVO: Usar UnifiedCalculationEngine consolidado
-      console.log('🎯 useQuizLogic: Usando UnifiedCalculationEngine para cálculo');
+      appLogger.info('🎯 useQuizLogic: Usando UnifiedCalculationEngine para cálculo');
 
       const currentUserName =
         userName ||
@@ -210,16 +211,16 @@ export const useQuizLogic = () => {
           userData: engineResult.userData,
         };
 
-        console.log('✅ useQuizLogic: Resultado calculado via UnifiedCalculationEngine:', {
-          primaryStyle: mappedResult.primaryStyle?.category || mappedResult.primaryStyle?.name,
-          percentage: mappedResult.primaryStyle?.percentage,
-          totalQuestions: mappedResult.totalQuestions,
-          usingCentralizedConfig: !!config,
-        });
+        appLogger.info('✅ useQuizLogic: Resultado calculado via UnifiedCalculationEngine:', { data: [{
+                    primaryStyle: mappedResult.primaryStyle?.category || mappedResult.primaryStyle?.name,
+                    percentage: mappedResult.primaryStyle?.percentage,
+                    totalQuestions: mappedResult.totalQuestions,
+                    usingCentralizedConfig: !!config,
+                  }] });
 
         return mappedResult;
       } catch (error) {
-        console.warn('⚠️ useQuizLogic: Erro no UnifiedCalculationEngine, usando fallback:', error);
+        appLogger.warn('⚠️ useQuizLogic: Erro no UnifiedCalculationEngine, usando fallback:', { data: [error] });
 
         // FALLBACK: Manter implementação original como backup
         const styleScores = calculateStyleScores(answers);
@@ -256,7 +257,7 @@ export const useQuizLogic = () => {
           },
         };
 
-        console.log('✅ useQuizLogic: Usando algoritmo fallback');
+        appLogger.info('✅ useQuizLogic: Usando algoritmo fallback');
         return result;
       }
     },

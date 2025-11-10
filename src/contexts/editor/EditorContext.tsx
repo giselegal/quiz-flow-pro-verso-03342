@@ -22,6 +22,7 @@ import React, {
   useRef,
 } from 'react';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 // import { useTemplateValidation } from '../hooks/useTemplateValidation';
 
 // Função wrapper para carregar templates usando TemplateManager
@@ -31,7 +32,7 @@ const getStepTemplate = async (stepNumber: number, funnelId?: string) => {
     const blocks = await TemplateManager.loadStepBlocks(stepId, funnelId);
     return blocks && blocks.length > 0 ? { blocks } : null;
   } catch (error) {
-    console.error(`Erro ao carregar template da etapa ${stepNumber}:`, error);
+    appLogger.error(`Erro ao carregar template da etapa ${stepNumber}:`, { data: [error] });
     return null;
   }
 };
@@ -216,7 +217,7 @@ export const EditorProvider: React.FC<{
         // Carrega a etapa inicial via stageActions, que já usa cache e mapeamento tipado
         await stageActions.setActiveStage('step-1');
       } catch (e) {
-        console.error('❌ Erro ao carregar etapa inicial:', e);
+        appLogger.error('❌ Erro ao carregar etapa inicial:', { data: [e] });
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -243,7 +244,7 @@ export const EditorProvider: React.FC<{
       };
 
       dispatch({ type: 'ADD_BLOCK', payload: newBlock });
-      console.log('🔗 Block created with funnelId:', currentFunnelId);
+      appLogger.info('🔗 Block created with funnelId:', { data: [currentFunnelId] });
       return newBlock.id;
     },
     [state.blocks.length, currentFunnelId],
@@ -261,23 +262,20 @@ export const EditorProvider: React.FC<{
   const replaceBlocks = useCallback((blocks: Block[]) => {
     const sorted = (blocks || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     const normalized = sorted.map((b, i) => ({ ...b, order: i }));
-    console.log(
-      '🧩 replaceBlocks ->',
-      normalized.map(b => ({ id: b.id, type: b.type, order: b.order })),
-    );
+    appLogger.info('🧩 replaceBlocks ->', { data: [normalized.map(b => ({ id: b.id, type: b.type, order: b.order }))] });
     dispatch({ type: 'SET_BLOCKS', payload: normalized });
   }, []);
 
   const reorderBlocks = useCallback(
     (startIndex: number, endIndex: number) => {
-      console.log('🔄 EditorContext.reorderBlocks:', {
-        startIndex,
-        endIndex,
-        blocksCount: state.blocks.length,
-      });
+      appLogger.info('🔄 EditorContext.reorderBlocks:', { data: [{
+                  startIndex,
+                  endIndex,
+                  blocksCount: state.blocks.length,
+                }] });
 
       if (startIndex === endIndex) {
-        console.log('⚠️ Índices iguais, nenhuma alteração necessária');
+        appLogger.info('⚠️ Índices iguais, nenhuma alteração necessária');
         return;
       }
 
@@ -287,11 +285,11 @@ export const EditorProvider: React.FC<{
         endIndex < 0 ||
         endIndex >= state.blocks.length
       ) {
-        console.error('❌ Índices inválidos para reordenação:', {
-          startIndex,
-          endIndex,
-          blocksCount: state.blocks.length,
-        });
+        appLogger.error('❌ Índices inválidos para reordenação:', { data: [{
+                    startIndex,
+                    endIndex,
+                    blocksCount: state.blocks.length,
+                  }] });
         return;
       }
 
@@ -300,10 +298,10 @@ export const EditorProvider: React.FC<{
 
       // Remove o item da posição antiga e o insere na nova posição
       const [reorderedItem] = newBlocks.splice(startIndex, 1);
-      console.log('🔄 Item removido:', reorderedItem.id);
+      appLogger.info('🔄 Item removido:', { data: [reorderedItem.id] });
 
       newBlocks.splice(endIndex, 0, reorderedItem);
-      console.log('🔄 Item inserido na nova posição:', endIndex);
+      appLogger.info('🔄 Item inserido na nova posição:', { data: [endIndex] });
 
       // Atualiza as ordens dos blocos
       const reorderedBlocks = newBlocks.map((block, index) => ({
@@ -311,10 +309,7 @@ export const EditorProvider: React.FC<{
         order: index,
       }));
 
-      console.log(
-        '✅ Blocos reordenados com sucesso:',
-        reorderedBlocks.map(b => ({ id: b.id, order: b.order })),
-      );
+      appLogger.info('✅ Blocos reordenados com sucesso:', { data: [reorderedBlocks.map(b => ({ id: b.id, order: b.order }))] });
 
       dispatch({ type: 'SET_BLOCKS', payload: reorderedBlocks });
     },
@@ -348,8 +343,8 @@ export const EditorProvider: React.FC<{
   );
 
   const save = useCallback(async () => {
-    console.log('💾 Saving funnel with ID:', currentFunnelId);
-    console.log('📊 Blocks to save:', state.blocks.length);
+    appLogger.info('💾 Saving funnel with ID:', { data: [currentFunnelId] });
+    appLogger.info('📊 Blocks to save:', { data: [state.blocks.length] });
 
     try {
       // Preparar dados para salvamento
@@ -378,14 +373,14 @@ export const EditorProvider: React.FC<{
       const result = { success: true, error: null };
 
       if (result.success) {
-        console.log('✅ Funnel salvo com sucesso!');
+        appLogger.info('✅ Funnel salvo com sucesso!');
         toast({
           title: 'Sucesso!',
           description: 'Funnel salvo com sucesso.',
           variant: 'default',
         });
       } else {
-        console.warn('⚠️ Salvamento parcial:', result.error);
+        appLogger.warn('⚠️ Salvamento parcial:', { data: [result.error] });
         toast({
           title: 'Aviso',
           description: result.error || 'Salvamento parcial - dados salvos localmente.',
@@ -393,7 +388,7 @@ export const EditorProvider: React.FC<{
         });
       }
     } catch (error) {
-      console.error('❌ Erro ao salvar funnel:', error);
+      appLogger.error('❌ Erro ao salvar funnel:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Erro ao salvar. Tente novamente.',
@@ -518,18 +513,18 @@ export const EditorProvider: React.FC<{
             }
           }
         } catch (error) {
-          console.error('❌ Erro ao carregar blocos da etapa:', error);
+          appLogger.error('❌ Erro ao carregar blocos da etapa:', { data: [error] });
           dispatch({ type: 'SET_BLOCKS', payload: [] });
         } finally {
           setIsLoadingStage(false);
         }
       },
       addStage: () => {
-        console.log('Add stage not implemented yet');
+        appLogger.info('Add stage not implemented yet');
         return `step-${stages.length + 1}`;
       },
       removeStage: (id: string) => {
-        console.log('Remove stage not implemented:', id);
+        appLogger.info('Remove stage not implemented:', { data: [id] });
       },
       isLoadingStage,
     }),
@@ -571,7 +566,7 @@ export const EditorProvider: React.FC<{
       setIsPreviewing,
       viewportSize: 'xl' as const,
       setViewportSize: (size: string) => {
-        console.log('Setting viewport size:', size);
+        appLogger.info('Setting viewport size:', { data: [size] });
       },
     }),
     [state.isPreviewing, state.isGlobalStylesOpen, setIsPreviewing],
@@ -585,7 +580,7 @@ export const EditorProvider: React.FC<{
       isQuizCompleted: false,
       strategicAnswers: [],
       setUserNameFromInput: (name: string) => {
-        console.log('Setting username:', name);
+        appLogger.info('Setting username:', { data: [name] });
       },
       answerStrategicQuestion: (
         questionId: string,
@@ -593,7 +588,7 @@ export const EditorProvider: React.FC<{
         category: string,
         type: string,
       ) => {
-        console.log('Strategic answer:', { questionId, optionId, category, type });
+        appLogger.info('Strategic answer:', { data: [{ questionId, optionId, category, type }] });
       },
     }),
     [],
@@ -603,21 +598,21 @@ export const EditorProvider: React.FC<{
   const templateActions = useMemo(
     () => ({
       loadTemplate: (templateId: string) => {
-        console.log('Loading template:', templateId);
+        appLogger.info('Loading template:', { data: [templateId] });
         // Implementação futura
       },
       saveTemplate: () => {
-        console.log('Saving template');
+        appLogger.info('Saving template');
       },
       loadTemplateByStep: async (step: number) => {
-        console.log('🔄 Loading template by step via templateService:', step);
+        appLogger.info('🔄 Loading template by step via templateService:', { data: [step] });
         try {
           const { default: templateService } = await import('../../services/templateService');
           await templateService.getTemplate(`step-${step}`);
           const templateBlocks: any[] = [];
 
           if (templateBlocks.length > 0) {
-            console.log(`✅ Template carregado com sucesso: ${templateBlocks.length} blocos`);
+            appLogger.info(`✅ Template carregado com sucesso: ${templateBlocks.length} blocos`);
 
             // Fallback block conversion since method doesn't exist
             const editorBlocks: any[] = [];
@@ -625,11 +620,11 @@ export const EditorProvider: React.FC<{
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
             return true;
           } else {
-            console.warn(`⚠️ Template para etapa ${step} não contém blocos`);
+            appLogger.warn(`⚠️ Template para etapa ${step} não contém blocos`);
             return false;
           }
         } catch (error) {
-          console.error(`❌ Erro ao carregar template para etapa ${step}:`, error);
+          appLogger.error(`❌ Erro ao carregar template para etapa ${step}:`, { data: [error] });
           // fallback para getStepTemplate em caso de falha do serviço
           try {
             await getStepTemplate(step, currentFunnelId);
@@ -654,7 +649,7 @@ export const EditorProvider: React.FC<{
         await save();
       },
       load: async () => {
-        console.log('🔄 Loading funnel with ID:', currentFunnelId);
+        appLogger.info('🔄 Loading funnel with ID:', { data: [currentFunnelId] });
         // Here you would load funnel data from backend
       },
       saveFunnel: async () => {
@@ -754,12 +749,10 @@ export const useEditor = (): EditorContextType => {
     try {
       // Logs de diagnóstico mínimos (sem spam em produção)
       if (typeof window !== 'undefined' && (import.meta as any)?.env?.DEV) {
-        console.warn(
-          '⚠️ useEditor chamado fora de um EditorProvider (legacy). Retornando fallback no-op para evitar quebra. Garanta que o componente esteja embrulhado por <EditorProvider>.',
-        );
+        appLogger.warn('⚠️ useEditor chamado fora de um EditorProvider (legacy). Retornando fallback no-op para evitar quebra. Garanta que o componente esteja embrulhado por <EditorProvider>.');
       }
     } catch (error) {
-      console.warn('[EditorContext] Falha na operação:', error);
+      appLogger.warn('[EditorContext] Falha na operação:', { data: [error] });
     }
 
     // Compor fallback no-op alinhado à interface EditorContextType

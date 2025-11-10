@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link, Target, Copy } from 'lucide-react';
 import { FunnelUTMConfig } from '@/templates/funnel-configs/quiz21StepsComplete.config';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UTMConfigTabProps {
     utm: FunnelUTMConfig;
@@ -39,9 +40,9 @@ export default function UTMConfigTab({ utm, onUpdate, disabled = false }: UTMCon
         if (!exampleURL) return;
         try {
             await navigator.clipboard.writeText(exampleURL);
-            console.log('🔗 URL UTM copiada para área de transferência');
+            appLogger.info('🔗 URL UTM copiada para área de transferência');
         } catch (err) {
-            console.error('❌ Erro ao copiar URL:', err);
+            appLogger.error('❌ Erro ao copiar URL:', { data: [err] });
         }
     };
 

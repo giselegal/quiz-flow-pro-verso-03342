@@ -40,6 +40,7 @@ import {
   useEditorDirtyState,
 } from '@/contexts/store/editorStore';
 import type { BlockType } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // HOOK CONSOLIDADO
@@ -182,7 +183,7 @@ export function useEditorConsolidated() {
       store.markClean();
       return { success: true };
     } catch (error) {
-      console.error('Error saving:', error);
+      appLogger.error('Error saving:', { data: [error] });
       return { success: false, error };
     } finally {
       store.setSaving(false);

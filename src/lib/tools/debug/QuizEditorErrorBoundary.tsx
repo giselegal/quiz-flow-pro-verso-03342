@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
     children: React.ReactNode;
@@ -21,8 +22,8 @@ class QuizEditorErrorBoundary extends React.Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        console.error('🚨 QuizFunnelEditor Error:', error);
-        console.error('🚨 Error Info:', errorInfo);
+        appLogger.error('🚨 QuizFunnelEditor Error:', { data: [error] });
+        appLogger.error('🚨 Error Info:', { data: [errorInfo] });
         this.setState({ error, errorInfo });
     }
 

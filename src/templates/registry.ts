@@ -19,6 +19,7 @@ import {
   hasBuiltInTemplate,
   listBuiltInTemplateIds 
 } from '@/services/templates/builtInTemplates';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface TemplateMetadata {
   id: string;
@@ -52,7 +53,7 @@ const TEMPLATE_REGISTRY: Record<string, () => Promise<FullTemplate>> = {
 
 // 🎯 TEMPLATE LOADER PRINCIPAL - QUIZ 21 STEPS
 async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
-  console.log('🎯 [TemplateRegistry] Carregando quiz21StepsComplete...');
+  appLogger.info('🎯 [TemplateRegistry] Carregando quiz21StepsComplete...');
   
   const steps: Record<string, Block[]> = {};
   let totalSteps = 0;
@@ -83,7 +84,7 @@ async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
     totalSteps,
   };
 
-  console.log(`✅ [TemplateRegistry] Template carregado: ${totalSteps} etapas`);
+  appLogger.info(`✅ [TemplateRegistry] Template carregado: ${totalSteps} etapas`);
   return template;
 }
 
@@ -199,21 +200,21 @@ async function loadROITemplate(): Promise<FullTemplate> {
  * PRIORIDADE: 1) Built-in JSON, 2) TypeScript modules, 3) Backend
  */
 export async function loadFullTemplate(templateId: string): Promise<FullTemplate | null> {
-  console.log(`🎯 [TemplateRegistry] Tentando carregar template: ${templateId}`);
+  appLogger.info(`🎯 [TemplateRegistry] Tentando carregar template: ${templateId}`);
   
   // 1️⃣ PRIORIDADE: Verificar se existe template JSON built-in
   if (hasBuiltInTemplate(templateId)) {
-    console.log(`✅ [TemplateRegistry] Usando template JSON built-in: ${templateId}`);
+    appLogger.info(`✅ [TemplateRegistry] Usando template JSON built-in: ${templateId}`);
     try {
       const builtInTemplate = getBuiltInTemplateById(templateId);
       if (builtInTemplate) {
         // Normalizar template JSON para formato FullTemplate
         const normalized = normalizeBuiltInTemplate(builtInTemplate, templateId);
-        console.log(`✅ [TemplateRegistry] Template JSON carregado: ${templateId}`);
+        appLogger.info(`✅ [TemplateRegistry] Template JSON carregado: ${templateId}`);
         return normalized;
       }
     } catch (error) {
-      console.error(`❌ [TemplateRegistry] Erro ao carregar built-in JSON ${templateId}:`, error);
+      appLogger.error(`❌ [TemplateRegistry] Erro ao carregar built-in JSON ${templateId}:`, { data: [error] });
       // Continuar para fallback
     }
   }
@@ -221,18 +222,18 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
   // 2️⃣ FALLBACK: Usar registry TypeScript
   const loader = TEMPLATE_REGISTRY[templateId];
   if (!loader) {
-    console.warn(`⚠️ [TemplateRegistry] Template não encontrado: ${templateId}`);
-    console.log('📋 [TemplateRegistry] Templates disponíveis (TS):', Object.keys(TEMPLATE_REGISTRY));
-    console.log('📋 [TemplateRegistry] Templates disponíveis (JSON):', listBuiltInTemplateIds());
+    appLogger.warn(`⚠️ [TemplateRegistry] Template não encontrado: ${templateId}`);
+    appLogger.info('📋 [TemplateRegistry] Templates disponíveis (TS):', { data: [Object.keys(TEMPLATE_REGISTRY)] });
+    appLogger.info('📋 [TemplateRegistry] Templates disponíveis (JSON):', { data: [listBuiltInTemplateIds()] });
     return null;
   }
 
   try {
     const template = await loader();
-    console.log(`✅ [TemplateRegistry] Template .ts carregado com sucesso: ${templateId}`);
+    appLogger.info(`✅ [TemplateRegistry] Template .ts carregado com sucesso: ${templateId}`);
     return template;
   } catch (error) {
-    console.error(`❌ [TemplateRegistry] Erro ao carregar template ${templateId}:`, error);
+    appLogger.error(`❌ [TemplateRegistry] Erro ao carregar template ${templateId}:`, { data: [error] });
     return null;
   }
 }
@@ -284,7 +285,7 @@ function normalizeBuiltInTemplate(builtIn: any, templateId: string): FullTemplat
  * Converte template para formato esperado pelo editor
  */
 export function convertTemplateToEditorFormat(template: FullTemplate): any {
-  console.log(`🔄 [TemplateRegistry] Convertendo template para formato do editor: ${template.id}`);
+  appLogger.info(`🔄 [TemplateRegistry] Convertendo template para formato do editor: ${template.id}`);
   
   // O formato já está correto (steps com Block[])
   return {

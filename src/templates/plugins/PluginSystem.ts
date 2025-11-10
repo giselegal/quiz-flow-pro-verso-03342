@@ -118,7 +118,7 @@ class PluginSystem {
             name: plugin.name,
         }, 'system');
 
-        console.log(`🔌 Plugin ${plugin.name} instalado com sucesso`);
+        appLogger.info(`🔌 Plugin ${plugin.name} instalado com sucesso`);
     }
 
     /**
@@ -131,7 +131,7 @@ class PluginSystem {
         }
 
         if (this.activePlugins.has(pluginId)) {
-            console.warn(`Plugin ${pluginId} já está ativo`);
+            appLogger.warn(`Plugin ${pluginId} já está ativo`);
             return;
         }
 
@@ -176,7 +176,7 @@ class PluginSystem {
             name: plugin.name,
         }, templateId);
 
-        console.log(`✅ Plugin ${plugin.name} ativado`);
+        appLogger.info(`✅ Plugin ${plugin.name} ativado`);
     }
 
     /**
@@ -225,7 +225,7 @@ class PluginSystem {
             name: plugin.name,
         }, templateId);
 
-        console.log(`❌ Plugin ${plugin.name} desativado`);
+        appLogger.info(`❌ Plugin ${plugin.name} desativado`);
     }
 
     /**
@@ -254,7 +254,7 @@ class PluginSystem {
             name: plugin.name,
         }, templateId);
 
-        console.log(`🗑️ Plugin ${plugin.name} desinstalado`);
+        appLogger.info(`🗑️ Plugin ${plugin.name} desinstalado`);
     }
 
     /**
@@ -368,6 +368,7 @@ export const pluginSystem = new PluginSystem();
  * Hook para usar plugins em componentes React
  */
 import { useState, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export function usePluginSystem(templateId: string) {
     const [activePlugins, setActivePlugins] = useState<TemplatePlugin[]>([]);

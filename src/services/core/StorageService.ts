@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * StorageService – wrappers seguros para armazenamento no navegador
  * - JSON seguro (parse/stringify)
@@ -26,7 +27,7 @@ export const StorageService = {
       return this._mem.get(key) ?? null;
     } catch (e) {
       if ((import.meta as any)?.env?.DEV)
-        console.warn('[StorageService] getString falhou:', e);
+        appLogger.warn('[StorageService] getString falhou:', { data: [e] });
       return this._mem.get(key) ?? null;
     }
   },
@@ -39,7 +40,7 @@ export const StorageService = {
       if (!raw) return null;
       return JSON.parse(raw) as T;
     } catch (e) {
-      if ((import.meta as any)?.env?.DEV) console.warn('[StorageService] getJSON falhou:', e);
+      if ((import.meta as any)?.env?.DEV) appLogger.warn('[StorageService] getJSON falhou:', { data: [e] });
       const raw = this._mem.get(key);
       return raw ? (JSON.parse(raw) as T) : null;
     }
@@ -70,7 +71,7 @@ export const StorageService = {
         return true;
       } catch (e2) {
         if ((import.meta as any)?.env?.DEV)
-          console.warn('[StorageService] setJSON falhou (local e session):', e, e2);
+          appLogger.warn('[StorageService] setJSON falhou (local e session):', { data: [e, e2] });
         this._mem.set(key, JSON.stringify(value));
         return true;
       }
@@ -98,7 +99,7 @@ export const StorageService = {
         return true;
       } catch (e2) {
         if ((import.meta as any)?.env?.DEV)
-          console.warn('[StorageService] setString falhou:', e, e2);
+          appLogger.warn('[StorageService] setString falhou:', { data: [e, e2] });
         this._mem.set(key, value);
         return true;
       }
@@ -121,7 +122,7 @@ export const StorageService = {
         return true;
       } catch (e2) {
         if ((import.meta as any)?.env?.DEV)
-          console.warn('[StorageService] remove falhou:', e, e2);
+          appLogger.warn('[StorageService] remove falhou:', { data: [e, e2] });
         this._mem.delete(key);
         return true;
       }

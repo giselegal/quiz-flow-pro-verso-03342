@@ -1,5 +1,6 @@
 import type { BlockComponentProps } from '@/types/blocks';
 import QuizOptionsGridBlock from './QuizOptionsGridBlock';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Wrapper/Adaptador para o QuizOptionsGridBlock no contexto do Editor
@@ -19,18 +20,18 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
   ...otherProps
 }) => {
   // 🔍 DEBUG: Log das propriedades recebidas
-  console.log('🔍 EditorOptionsGridBlock - props recebidas:', {
-    blockId: block.id,
-    blockType: block.type,
-    properties: block.properties,
-    content: (block as any).content, // Verificar se há content também
-    hasOptions: !!block.properties?.options,
-    hasContentOptions: !!(block as any).content?.options,
-    optionsLength: Array.isArray(block.properties?.options) ? block.properties.options.length : 0,
-    contentOptionsLength: Array.isArray((block as any).content?.options)
-      ? (block as any).content.options.length
-      : 0,
-  });
+  appLogger.info('🔍 EditorOptionsGridBlock - props recebidas:', { data: [{
+        blockId: block.id,
+        blockType: block.type,
+        properties: block.properties,
+        content: (block as any).content, // Verificar se há content também
+        hasOptions: !!block.properties?.options,
+        hasContentOptions: !!(block as any).content?.options,
+        optionsLength: Array.isArray(block.properties?.options) ? block.properties.options.length : 0,
+        contentOptionsLength: Array.isArray((block as any).content?.options)
+          ? (block as any).content.options.length
+          : 0,
+      }] });
 
   // Adaptação: extrair propriedades do block e repassar
   const handlePropertyChange = (property: string, value: any) => {
@@ -47,7 +48,7 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
     (!finalProperties.options || finalProperties.options.length === 0) &&
     (block as any).content?.options
   ) {
-    console.log('🔧 EditorOptionsGridBlock: Usando content.options ao invés de properties.options');
+    appLogger.info('🔧 EditorOptionsGridBlock: Usando content.options ao invés de properties.options');
     finalProperties = {
       ...finalProperties,
       ...(block as any).content,

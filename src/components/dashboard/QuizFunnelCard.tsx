@@ -26,6 +26,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { Link } from 'wouter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizFunnelCardProps {
   funnelId: string;
@@ -76,7 +77,7 @@ export function QuizFunnelCard({
         window.open(`/editor?funnel=${funnelId}&type=quiz`, '_blank');
       }
     } catch (error) {
-      console.error('❌ Erro ao abrir editor:', error);
+      appLogger.error('❌ Erro ao abrir editor:', { data: [error] });
     } finally {
       setIsLoading(false);
     }

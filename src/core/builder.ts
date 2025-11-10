@@ -7,6 +7,7 @@
  */
 
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interfaces do Builder System
 export interface FunnelStep {
@@ -43,7 +44,7 @@ export class FunnelBuilder {
   private steps: FunnelStep[] = [];
 
   constructor(template?: string) {
-    console.log('🏗️ FunnelBuilder created with template:', template);
+    appLogger.info('🏗️ FunnelBuilder created with template:', { data: [template] });
     
     // Se for template quiz21StepsComplete, inicializar com dados reais
     if (template === 'quiz21StepsComplete') {
@@ -56,10 +57,10 @@ export class FunnelBuilder {
   }
 
   private initializeFromQuiz21Steps() {
-    console.log('🎯 Inicializando FunnelBuilder com dados (assíncrono) do quiz21StepsComplete...');
+    appLogger.info('🎯 Inicializando FunnelBuilder com dados (assíncrono) do quiz21StepsComplete...');
     // Carregar de forma assíncrona para evitar import estático do template TS
     this.initializeFromQuiz21StepsAsync().catch((e) => {
-      console.warn('⚠️ Falha na inicialização assíncrona do FunnelBuilder, usando defaults:', e);
+      appLogger.warn('⚠️ Falha na inicialização assíncrona do FunnelBuilder, usando defaults:', { data: [e] });
       this.steps = [];
       this.config = {
         id: 'quiz21StepsComplete',
@@ -126,7 +127,7 @@ export class FunnelBuilder {
       },
     } as any;
 
-    console.log(`✅ FunnelBuilder inicializado com ${steps.length} etapas funcionais`);
+    appLogger.info(`✅ FunnelBuilder inicializado com ${steps.length} etapas funcionais`);
   }
 
   private getStepCategory(stepNumber: number): string {
@@ -220,7 +221,7 @@ export class FunnelBuilder {
   complete() {
     if (this.currentStep) {
       this.steps.push(this.currentStep as FunnelStep);
-      console.log('✅ Step completed:', this.currentStep.name);
+      appLogger.info('✅ Step completed:', { data: [this.currentStep.name] });
       this.currentStep = null;
     }
     return this;
@@ -278,13 +279,13 @@ export class FunnelBuilder {
       metadata: this.config.metadata || {},
     };
 
-    console.log(`🏗️ Funnel construído com ${finalConfig.totalSteps} etapas:`, finalConfig);
+    appLogger.info(`🏗️ Funnel construído com ${finalConfig.totalSteps} etapas:`, { data: [finalConfig] });
     return finalConfig;
   }
 }
 
 export const createFunnelFromTemplate = (template: string): any => {
-  console.log('📋 Creating funnel from template:', template);
+  appLogger.info('📋 Creating funnel from template:', { data: [template] });
   
   const builder = new FunnelBuilder(template);
   

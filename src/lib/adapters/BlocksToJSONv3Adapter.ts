@@ -9,6 +9,7 @@ import { Block } from '@/types/editor';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
 import { normalizeBlockType } from '@/lib/utils/blockNormalization';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TIPOS JSON v3.0
@@ -134,7 +135,7 @@ export class BlocksToJSONv3Adapter {
      */
     static jsonv3ToBlocks(json: JSONv3Template): Block[] {
         // Validar superficialmente; se já veio validado, parse não altera
-        try { JSONv3TemplateSchema.parse(json); } catch (e) { console.warn('⚠️ JSON v3 inválido recebido em jsonv3ToBlocks:', e); }
+        try { JSONv3TemplateSchema.parse(json); } catch (e) { appLogger.warn('⚠️ JSON v3 inválido recebido em jsonv3ToBlocks:', { data: [e] }); }
         return json.sections.map((section, index) => {
             const block = this.sectionToBlock(section, index);
             // Normalizar tipo canônico

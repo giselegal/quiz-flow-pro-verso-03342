@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { FixBlurryImagesOptions } from './images/types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FixedImage {
   element: HTMLImageElement;
@@ -35,7 +36,7 @@ export function fixBlurryIntroQuizImages(
     const images = targetElement.querySelectorAll('img');
 
     if (options.debug) {
-      console.log(`[fixBlurryIntroQuizImages] Analisando ${images.length} imagens`);
+      appLogger.info(`[fixBlurryIntroQuizImages] Analisando ${images.length} imagens`);
     }
 
     // Para cada imagem, verifique se precisa ser otimizada
@@ -43,7 +44,7 @@ export function fixBlurryIntroQuizImages(
       // Ignore imagens já processadas
       if (img.dataset.optimized === 'true' && !options.forceOptimize) {
         if (options.debug) {
-          console.log(`[fixBlurryIntroQuizImages] Imagem já otimizada: ${img.src}`);
+          appLogger.info(`[fixBlurryIntroQuizImages] Imagem já otimizada: ${img.src}`);
         }
         return;
       }
@@ -79,19 +80,19 @@ export function fixBlurryIntroQuizImages(
         fixedImages.push(img);
 
         if (options.debug) {
-          console.log('[fixBlurryIntroQuizImages] Imagem otimizada:', {
-            original: originalSrc,
-            optimized: newSrc,
-          });
+          appLogger.info('[fixBlurryIntroQuizImages] Imagem otimizada:', { data: [{
+                        original: originalSrc,
+                        optimized: newSrc,
+                      }] });
         }
       }
     });
 
     if (options.debug) {
-      console.log(`[fixBlurryIntroQuizImages] Total de imagens otimizadas: ${fixedImages.length}`);
+      appLogger.info(`[fixBlurryIntroQuizImages] Total de imagens otimizadas: ${fixedImages.length}`);
     }
   } catch (error) {
-    console.error('[fixBlurryIntroQuizImages] Erro ao otimizar imagens:', error);
+    appLogger.error('[fixBlurryIntroQuizImages] Erro ao otimizar imagens:', { data: [error] });
   }
 
   return fixedImages;
@@ -117,7 +118,7 @@ function applyOptimizations(imageUrl: string, options: FixBlurryImagesOptions): 
     // Retorna URL original se não conseguir otimizar
     return imageUrl;
   } catch (error) {
-    console.error('[applyOptimizations] Erro ao otimizar URL:', error);
+    appLogger.error('[applyOptimizations] Erro ao otimizar URL:', { data: [error] });
     return imageUrl;
   }
 }

@@ -5,6 +5,7 @@
  */
 
 import { optimizedSetTimeout, optimizedRAF, cleanupAllTimers } from './performanceOptimizations';
+import { appLogger } from '@/lib/utils/appLogger';
 
 class PerformanceManager {
   private isInitialized = false;
@@ -25,7 +26,7 @@ class PerformanceManager {
     
     // Log apenas em desenvolvimento
     if (process.env.NODE_ENV === 'development') {
-      console.log('🚀 Performance Manager initialized');
+      appLogger.info('🚀 Performance Manager initialized');
     }
   }
 
@@ -52,7 +53,7 @@ class PerformanceManager {
 
     // Log imediato apenas para erros críticos
     if (level === 'error') {
-      console.error(`🚨 ${message}`, data);
+      appLogger.error(`🚨 ${message}`, { data: [data] });
     }
   }
 
@@ -157,7 +158,7 @@ class PerformanceManager {
     this.isInitialized = false;
     
     if (process.env.NODE_ENV === 'development') {
-      console.log('🧹 Performance Manager cleanup completed');
+      appLogger.info('🧹 Performance Manager cleanup completed');
     }
   }
 

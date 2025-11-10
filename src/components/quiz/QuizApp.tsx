@@ -6,6 +6,7 @@ import { useQuizState } from '../../hooks/useQuizState';
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/core/unified';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
 import { useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 COMPONENTE PRINCIPAL DO QUIZ - GISELE GALVÃO
@@ -56,7 +57,7 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
     const currentStepId = getStepIdFromCurrentStep(state.currentStep);
 
     // 🔍 DEBUG: Verificar stepId
-    console.log('🎯 [QuizApp] currentStepId:', currentStepId, '| state.currentStep:', state.currentStep);
+    appLogger.info('🎯 [QuizApp] currentStepId:', { data: [currentStepId, '| state.currentStep:', state.currentStep] });
 
     // Preparar quiz state para UnifiedStepRenderer
     const unifiedQuizState = {

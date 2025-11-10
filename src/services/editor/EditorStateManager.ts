@@ -11,6 +11,7 @@
 import { Block } from '@/types/editor';
 import { EditorHistoryService } from './HistoryService';
 import { TemplateLoader } from './TemplateLoader';
+import { appLogger } from '@/lib/utils/appLogger';
 // Removido import de '@dnd-kit/sortable' para evitar que dnd-kit vaze para chunks de serviços.
 // Implementação mínima de arrayMove suficiente para reordenação local.
 const arrayMove = <T,>(items: T[], from: number, to: number): T[] => {
@@ -463,7 +464,7 @@ export class EditorStateManager {
 
     // Skip se já carregado
     if (existingBlocks && existingBlocks.length > 0) {
-      console.log(`⏭️ Skip: ${normalizedKey} já carregado`);
+      appLogger.info(`⏭️ Skip: ${normalizedKey} já carregado`);
       return {};
     }
 
@@ -481,7 +482,7 @@ export class EditorStateManager {
         },
       };
     } catch (error) {
-      console.error(`❌ Erro ao carregar ${normalizedKey}:`, error);
+      appLogger.error(`❌ Erro ao carregar ${normalizedKey}:`, { data: [error] });
       return {};
     }
   }

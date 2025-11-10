@@ -9,6 +9,7 @@
  */
 
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Flag para controlar se o serviço já foi inicializado
 let isInitialized = false;
@@ -17,10 +18,10 @@ let isInitialized = false;
  * Inicializa o TemplateService com fallback seguro
  */
 export const initializeHybridTemplateService = async (): Promise<typeof templateService> => {
-    console.log('🔧 [TEMPLATE] Inicializando TemplateService...');
+    appLogger.info('🔧 [TEMPLATE] Inicializando TemplateService...');
 
     if (isInitialized) {
-        console.log('✅ [TEMPLATE] Serviço já inicializado');
+        appLogger.info('✅ [TEMPLATE] Serviço já inicializado');
         return templateService;
     }
 
@@ -29,17 +30,17 @@ export const initializeHybridTemplateService = async (): Promise<typeof template
         const templateResult = await templateService.getTemplate('quiz21StepsComplete');
 
         if (!templateResult.success || !templateResult.data) {
-            console.log('✅ [TEMPLATE] Template carregado dinamicamente via HierarchicalTemplateSource');
+            appLogger.info('✅ [TEMPLATE] Template carregado dinamicamente via HierarchicalTemplateSource');
             // HierarchicalTemplateSource gerencia fallbacks automaticamente
         } else {
-            console.log('✅ [TEMPLATE] Template carregado com sucesso');
+            appLogger.info('✅ [TEMPLATE] Template carregado com sucesso');
         }
 
         isInitialized = true;
         return templateService;
 
     } catch (error) {
-        console.error('❌ [TEMPLATE] Erro ao inicializar serviço:', error);
+        appLogger.error('❌ [TEMPLATE] Erro ao inicializar serviço:', { data: [error] });
 
         // Fallback crítico: marcar como inicializado mesmo com erro
         isInitialized = true;
@@ -51,7 +52,7 @@ export const initializeHybridTemplateService = async (): Promise<typeof template
  * Versão integrada do createFunnelFromTemplate que usa TemplateService
  */
 export const createIntegratedFunnel = async (templateName: string = 'quiz21StepsComplete') => {
-    console.log('🚀 [HYBRID] Criando funil integrado:', templateName);
+    appLogger.info('🚀 [HYBRID] Criando funil integrado:', { data: [templateName] });
 
     try {
         // Inicializar serviço se necessário
@@ -61,15 +62,15 @@ export const createIntegratedFunnel = async (templateName: string = 'quiz21Steps
         const templateResult = await templateService.getTemplate(templateName);
 
         if (!templateResult.success || !templateResult.data) {
-            console.error('❌ [TEMPLATE] Template não encontrado:', templateName);
+            appLogger.error('❌ [TEMPLATE] Template não encontrado:', { data: [templateName] });
             return null;
         }
 
-        console.log('✅ [TEMPLATE] Funil integrado criado com sucesso');
+        appLogger.info('✅ [TEMPLATE] Funil integrado criado com sucesso');
         return templateResult.data;
 
     } catch (error) {
-        console.error('❌ [TEMPLATE] Erro ao criar funil integrado:', error);
+        appLogger.error('❌ [TEMPLATE] Erro ao criar funil integrado:', { data: [error] });
         return null;
     }
 };

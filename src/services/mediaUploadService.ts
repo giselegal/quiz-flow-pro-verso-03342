@@ -4,6 +4,7 @@
 // =============================================================================
 
 import { supabase } from '../lib/supabase';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TIPOS
@@ -129,12 +130,12 @@ export class MediaUploadService {
         ? `${options.folder}/${fileName}`
         : this.getStoragePath(fileType, fileName);
 
-      console.log('📤 [Upload] Starting upload:', {
-        fileName,
-        fileType,
-        storagePath,
-        fileSize: file.size,
-      });
+      appLogger.info('📤 [Upload] Starting upload:', { data: [{
+                fileName,
+                fileType,
+                storagePath,
+                fileSize: file.size,
+              }] });
 
       // Simular progresso (Supabase não tem callback de progresso nativo)
       if (options.onProgress) {
@@ -150,7 +151,7 @@ export class MediaUploadService {
         });
 
       if (error) {
-        console.error('❌ [Upload] Supabase upload failed:', error);
+        appLogger.error('❌ [Upload] Supabase upload failed:', { data: [error] });
         return {
           success: false,
           error: error.message,
@@ -171,10 +172,10 @@ export class MediaUploadService {
         .from(STORAGE_BUCKET)
         .getPublicUrl(storagePath);
 
-      console.log('✅ [Upload] Upload successful:', {
-        path: data.path,
-        publicUrl: publicUrlData.publicUrl,
-      });
+      appLogger.info('✅ [Upload] Upload successful:', { data: [{
+                path: data.path,
+                publicUrl: publicUrlData.publicUrl,
+              }] });
 
       return {
         success: true,
@@ -186,7 +187,7 @@ export class MediaUploadService {
         fileType: file.type,
       };
     } catch (error) {
-      console.error('❌ [Upload] Upload error:', error);
+      appLogger.error('❌ [Upload] Upload error:', { data: [error] });
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Erro desconhecido no upload',
@@ -210,7 +211,7 @@ export class MediaUploadService {
     const results: UploadResult[] = [];
     const fileArray = Array.from(files);
 
-    console.log(`📤 [Upload] Starting batch upload of ${fileArray.length} files`);
+    appLogger.info(`📤 [Upload] Starting batch upload of ${fileArray.length} files`);
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -225,9 +226,7 @@ export class MediaUploadService {
       options.onFileComplete?.(i, result);
     }
 
-    console.log(
-      `✅ [Upload] Batch upload complete. Success: ${results.filter(r => r.success).length}/${results.length}`,
-    );
+    appLogger.info(`✅ [Upload] Batch upload complete. Success: ${results.filter(r => r.success).length}/${results.length}`);
     return results;
   }
 
@@ -272,7 +271,7 @@ export class MediaUploadService {
         onProgress: options.onProgress,
       });
     } catch (error) {
-      console.error('❌ [Upload] Image upload error:', error);
+      appLogger.error('❌ [Upload] Image upload error:', { data: [error] });
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Erro no upload da imagem',
@@ -349,14 +348,14 @@ export class MediaUploadService {
       const { error } = await supabase.storage.from(STORAGE_BUCKET).remove([path]);
 
       if (error) {
-        console.error('❌ [Upload] Delete failed:', error);
+        appLogger.error('❌ [Upload] Delete failed:', { data: [error] });
         return { success: false, error: error.message };
       }
 
-      console.log('🗑️ [Upload] File deleted successfully:', path);
+      appLogger.info('🗑️ [Upload] File deleted successfully:', { data: [path] });
       return { success: true };
     } catch (error) {
-      console.error('❌ [Upload] Delete error:', error);
+      appLogger.error('❌ [Upload] Delete error:', { data: [error] });
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Erro ao deletar arquivo',
@@ -375,13 +374,13 @@ export class MediaUploadService {
       const { data, error } = await supabase.storage.from(STORAGE_BUCKET).list(folder);
 
       if (error) {
-        console.error('❌ [Upload] List failed:', error);
+        appLogger.error('❌ [Upload] List failed:', { data: [error] });
         return { success: false, error: error.message };
       }
 
       return { success: true, files: data };
     } catch (error) {
-      console.error('❌ [Upload] List error:', error);
+      appLogger.error('❌ [Upload] List error:', { data: [error] });
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Erro ao listar arquivos',

@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🌐 BROWSER-COMPATIBLE EVENT EMITTER
  * 
@@ -24,7 +25,7 @@ export class EventEmitter {
 
         // Avisar se exceder o limite de listeners
         if (listeners.length > this.maxListeners) {
-            console.warn(`MaxListenersExceededWarning: ${listeners.length} listeners added for event "${eventName}"`);
+            appLogger.warn(`MaxListenersExceededWarning: ${listeners.length} listeners added for event "${eventName}"`);
         }
 
         return this;
@@ -88,7 +89,7 @@ export class EventEmitter {
             try {
                 listener(...args);
             } catch (error) {
-                console.error(`Error in listener for event "${eventName}":`, error);
+                appLogger.error(`Error in listener for event "${eventName}":`, { data: [error] });
             }
         });
 

@@ -14,6 +14,7 @@ import { AVAILABLE_TEMPLATES, TemplateConfig } from '@/config/templates';
 import { templateLibraryService, type FunnelTemplate } from '@/services/templateLibraryService';
 import { getUnifiedTemplates, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 import useMyTemplates from '@/hooks/useMyTemplates';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const TemplateDiagnosticPage: React.FC = () => {
     const [diagnostics, setDiagnostics] = useState<any>({});
@@ -27,7 +28,7 @@ const TemplateDiagnosticPage: React.FC = () => {
         const results: any = {};
 
         try {
-            console.log('🔍 Iniciando diagnóstico de templates...');
+            appLogger.info('🔍 Iniciando diagnóstico de templates...');
 
             // 1. Testar configuração estática de templates
             results.staticConfig = {
@@ -117,12 +118,12 @@ const TemplateDiagnosticPage: React.FC = () => {
                 };
             }
 
-            console.log('🔍 Diagnóstico completo:', results);
+            appLogger.info('🔍 Diagnóstico completo:', { data: [results] });
             setDiagnostics(results);
 
 
         } catch (error: any) {
-            console.error('❌ Erro no diagnóstico:', error);
+            appLogger.error('❌ Erro no diagnóstico:', { data: [error] });
             results.general = {
                 status: 'error',
                 error: error?.message || String(error),

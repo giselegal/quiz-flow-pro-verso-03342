@@ -4,6 +4,7 @@ import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
 import { useStepNavigationStore } from '@/contexts/store/useStepNavigationStore';
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ✅ FASE 3: Interface adaptadora para compatibilidade entre core e legacy
 interface AdaptedFunnelStep {
@@ -105,18 +106,18 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   debug = false,
 }) => {
   // 🔍 DEBUG: Log inicial detalhado
-  console.log('🚀 Quiz21StepsProvider: Iniciando com debug =', debug);
+  appLogger.info('🚀 Quiz21StepsProvider: Iniciando com debug =', { data: [debug] });
 
   // 🎯 INTEGRAÇÃO COM FUNNELS CONTEXT
   const funnelsContext = useFunnels();
 
   // 🔍 DEBUG: Verificar se o FunnelsContext está disponível
-  console.log('🔍 Quiz21StepsProvider: FunnelsContext disponível?', !!funnelsContext);
-  console.log('🔍 Quiz21StepsProvider: FunnelsContext data:', {
-    hasSteps: !!funnelsContext?.steps,
-    stepsLength: funnelsContext?.steps?.length || 0,
-    currentFunnelId: funnelsContext?.currentFunnelId,
-  });
+  appLogger.info('🔍 Quiz21StepsProvider: FunnelsContext disponível?', { data: [!!funnelsContext] });
+  appLogger.info('🔍 Quiz21StepsProvider: FunnelsContext data:', { data: [{
+        hasSteps: !!funnelsContext?.steps,
+        stepsLength: funnelsContext?.steps?.length || 0,
+        currentFunnelId: funnelsContext?.currentFunnelId,
+      }] });
 
   // 🎯 INTEGRAÇÃO: FunnelsContext para dados das etapas
   let funnels = funnelsContext;
@@ -125,14 +126,14 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   try {
     const rawSteps = funnels.steps || [];
     steps = rawSteps.map(adaptLegacyStep);
-    console.log('✅ Quiz21StepsProvider: Steps adaptados com sucesso:', {
-      rawStepsLength: rawSteps.length,
-      adaptedStepsLength: steps.length,
-      currentFunnelId: funnels.currentFunnelId,
-      firstStepAdapted: steps[0] ? `${steps[0].name} (${steps[0].type})` : 'nenhum',
-    });
+    appLogger.info('✅ Quiz21StepsProvider: Steps adaptados com sucesso:', { data: [{
+            rawStepsLength: rawSteps.length,
+            adaptedStepsLength: steps.length,
+            currentFunnelId: funnels.currentFunnelId,
+            firstStepAdapted: steps[0] ? `${steps[0].name} (${steps[0].type})` : 'nenhum',
+          }] });
   } catch (error) {
-    console.error('❌ Quiz21StepsProvider: Erro ao acessar FunnelsContext:', error);
+    appLogger.error('❌ Quiz21StepsProvider: Erro ao acessar FunnelsContext:', { data: [error] });
     // Fallback temporário para debug
     steps = [];
     funnels = {
@@ -153,32 +154,32 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
 
   // 🔍 DEBUG CRÍTICO: Verificar se o contexto está funcionando
   React.useEffect(() => {
-    console.log('🔍 CONTEXT DEBUG:', {
-      // funnelsExists: !!funnels, // Comentado - variável não utilizada
-      // funnelsType: typeof funnels, // Comentado - variável não utilizada
-      stepsExists: !!steps,
-      stepsLength: steps?.length || 0,
-      // funnelsKeys: funnels ? Object.keys(funnels) : 'null', // Comentado - variável não utilizada
-      stepsSample: steps?.slice(0, 2),
-    });
+    appLogger.info('🔍 CONTEXT DEBUG:', { data: [{
+            // funnelsExists: !!funnels, // Comentado - variável não utilizada
+            // funnelsType: typeof funnels, // Comentado - variável não utilizada
+            stepsExists: !!steps,
+            stepsLength: steps?.length || 0,
+            // funnelsKeys: funnels ? Object.keys(funnels) : 'null', // Comentado - variável não utilizada
+            stepsSample: steps?.slice(0, 2),
+          }] });
   }, [steps]); // Removido 'funnels' das dependências
 
   // 🔍 VERIFICAÇÃO CRÍTICA: Garantir que as etapas foram carregadas
   React.useEffect(() => {
     if (debug) {
-      console.log('🔍 VERIFICAÇÃO CRÍTICA - Quiz21StepsProvider:');
-      console.log('  - FunnelsContext disponível:', !!funnels);
-      console.log('  - Steps disponíveis:', !!steps);
-      console.log('  - Quantidade de steps:', steps?.length || 0);
-      console.log('  - Primeira step:', steps?.[0] || 'nenhuma');
-      console.log('  - Última step:', steps?.[steps.length - 1] || 'nenhuma');
+      appLogger.info('🔍 VERIFICAÇÃO CRÍTICA - Quiz21StepsProvider:');
+      appLogger.info('  - FunnelsContext disponível:', { data: [!!funnels] });
+      appLogger.info('  - Steps disponíveis:', { data: [!!steps] });
+      appLogger.info('  - Quantidade de steps:', { data: [steps?.length || 0] });
+      appLogger.info('  - Primeira step:', { data: [steps?.[0] || 'nenhuma'] });
+      appLogger.info('  - Última step:', { data: [steps?.[steps.length - 1] || 'nenhuma'] });
 
       if (!steps || steps.length === 0) {
-        console.error('🔴 PROBLEMA IDENTIFICADO: Steps não carregadas pelo FunnelsContext!');
-        console.error('🔴 Possible Solutions:');
-        console.error('  1. Verificar se FunnelsProvider está antes de Quiz21StepsProvider');
-        console.error('  2. Verificar se template "quiz-estilo-completo" existe');
-        console.error('  3. Verificar se inicialização do FunnelsProvider está correta');
+        appLogger.error('🔴 PROBLEMA IDENTIFICADO: Steps não carregadas pelo FunnelsContext!');
+        appLogger.error('🔴 Possible Solutions:');
+        appLogger.error('  1. Verificar se FunnelsProvider está antes de Quiz21StepsProvider');
+        appLogger.error('  2. Verificar se template "quiz-estilo-completo" existe');
+        appLogger.error('  3. Verificar se inicialização do FunnelsProvider está correta');
       }
     }
   }, [steps, funnels, debug]); // Removido 'funnels' das dependências
@@ -255,12 +256,12 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   const goToStep = useCallback(
     (step: number) => {
       if (step < 1 || step > totalSteps) {
-        console.warn(`🎯 Quiz21Steps: Etapa ${step} inválida (1-${totalSteps})`);
+        appLogger.warn(`🎯 Quiz21Steps: Etapa ${step} inválida (1-${totalSteps})`);
         return;
       }
 
       // 📊 ANALYTICS: Track step viewed (simplified - tracking service consolidated)
-      console.log(`📊 Step ${step} viewed`);
+      appLogger.info(`📊 Step ${step} viewed`);
       // TODO: Implement tracking in consolidated analytics service
 
       // 📊 ANALYTICS: Track step completion antes de mudar
@@ -292,7 +293,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       setActiveStageId(stageId);
 
       if (debug) {
-        console.log('🎯 Quiz21Steps: Navegou para etapa', step, 'stageId:', stageId);
+        appLogger.info('🎯 Quiz21Steps: Navegou para etapa', { data: [step, 'stageId:', stageId] });
       }
     },
     [currentStep, answers, trackStepComplete, trackStepStart, debug, totalSteps],
@@ -328,7 +329,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       }
 
       // 📊 ANALYTICS: Rastrear início do quiz (simplified - tracking service consolidated)
-      console.log(`📊 Quiz started by: ${name}`);
+      appLogger.info(`📊 Quiz started by: ${name}`);
       // TODO: Implement tracking in consolidated analytics service
 
       // Salvar em session data
@@ -339,7 +340,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       }));
 
       if (debug) {
-        console.log('🎯 Quiz21Steps: Nome definido:', name);
+        appLogger.info('🎯 Quiz21Steps: Nome definido:', { data: [name] });
       }
     },
     [setUserNameFromInput, supabaseSession.id, startSupabaseQuiz, debug],
@@ -360,7 +361,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       saveSupabaseAnswer({ questionId, optionId });
 
       // 📊 ANALYTICS: Rastrear seleção de opção (simplified - tracking service consolidated)
-      console.log(`📊 Option ${optionId} selected at step ${currentStep}`);
+      appLogger.info(`📊 Option ${optionId} selected at step ${currentStep}`);
       // TODO: Implement tracking in consolidated analytics service
 
       // Atualizar seleções da etapa atual
@@ -387,7 +388,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       }));
 
       if (debug) {
-        console.log('🎯 Quiz21Steps: Resposta salva:', { questionId, optionId, step: currentStep });
+        appLogger.info('🎯 Quiz21Steps: Resposta salva:', { data: [{ questionId, optionId, step: currentStep }] });
       }
 
       // Auto-advance se as condições forem atendidas
@@ -397,7 +398,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
 
         if (requirements.autoAdvance && newSelectionsCount >= requirements.requiredSelections) {
           if (debug) {
-            console.log('🎯 Quiz21Steps: Auto-advance acionado');
+            appLogger.info('🎯 Quiz21Steps: Auto-advance acionado');
           }
           goToNextStep();
         }
@@ -420,7 +421,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       setCurrentStepSelections(selections);
 
       if (debug) {
-        console.log('🎯 Quiz21Steps: Seleções atualizadas:', selections);
+        appLogger.info('🎯 Quiz21Steps: Seleções atualizadas:', { data: [selections] });
       }
     },
     [debug],
@@ -434,7 +435,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     setActiveStageId('step-1');
 
     if (debug) {
-      console.log('🎯 Quiz21Steps: Quiz reiniciado');
+      appLogger.info('🎯 Quiz21Steps: Quiz reiniciado');
     }
   }, [debug]);
 
@@ -451,11 +452,11 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     setTimeout(() => {
       if (quizLogicResult) {
         // 📊 ANALYTICS: Track quiz completion (simplified - tracking service consolidated)
-        console.log('📊 Quiz completed:', quizLogicResult);
+        appLogger.info('📊 Quiz completed:', { data: [quizLogicResult] });
         // TODO: Implement tracking in consolidated analytics service
 
         if (debug) {
-          console.log('🎯 Quiz21Steps: Quiz completado com analytics:', quizLogicResult);
+          appLogger.info('🎯 Quiz21Steps: Quiz completado com analytics:', { data: [quizLogicResult] });
         }
       }
     }, 100); // Pequeno delay para garantir que quizLogicResult foi atualizado
@@ -491,31 +492,31 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   // Debug logs
   React.useEffect(() => {
     if (debug) {
-      console.log('🎯 Quiz21Steps: Estado atualizado:', {
-        currentStep,
-        activeStageId,
-        userName,
-        answersCount: answers.length,
-        sessionDataKeys: Object.keys(sessionData),
-        stepsCount: steps.length,
-        supabaseSessionId: supabaseSession.id,
-        isSupabaseLoading,
-        funnelsProvider: {
-          hasSteps: steps && steps.length > 0,
-          stepsLength: steps?.length || 0,
-          firstStepId: steps?.[0]?.id || 'nenhum',
-          lastStepId: steps?.[steps.length - 1]?.id || 'nenhum',
-        },
-      });
+      appLogger.info('🎯 Quiz21Steps: Estado atualizado:', { data: [{
+                currentStep,
+                activeStageId,
+                userName,
+                answersCount: answers.length,
+                sessionDataKeys: Object.keys(sessionData),
+                stepsCount: steps.length,
+                supabaseSessionId: supabaseSession.id,
+                isSupabaseLoading,
+                funnelsProvider: {
+                  hasSteps: steps && steps.length > 0,
+                  stepsLength: steps?.length || 0,
+                  firstStepId: steps?.[0]?.id || 'nenhum',
+                  lastStepId: steps?.[steps.length - 1]?.id || 'nenhum',
+                },
+              }] });
 
       // 🔍 PONTO CEGO: Verificar se as etapas realmente estão sendo fornecidas pelo FunnelsContext
       if (!steps || steps.length === 0) {
-        console.error('🔴 PONTO CEGO IDENTIFICADO: FunnelsContext não está fornecendo etapas!');
-        console.error('🔴 Possíveis causas:');
-        console.error('  - FunnelsProvider não inicializado');
-        console.error('  - Template não encontrado');
-        console.error('  - Erro na configuração do currentFunnelId');
-        console.error('  - Problema na importação dos templates');
+        appLogger.error('🔴 PONTO CEGO IDENTIFICADO: FunnelsContext não está fornecendo etapas!');
+        appLogger.error('🔴 Possíveis causas:');
+        appLogger.error('  - FunnelsProvider não inicializado');
+        appLogger.error('  - Template não encontrado');
+        appLogger.error('  - Erro na configuração do currentFunnelId');
+        appLogger.error('  - Problema na importação dos templates');
       }
     }
   }, [

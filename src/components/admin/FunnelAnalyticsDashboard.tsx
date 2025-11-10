@@ -29,6 +29,7 @@ import {
     Download,
     Upload,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface GoogleAnalyticsConfig {
     enabled: boolean;
@@ -136,7 +137,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
             try {
                 setConfig(JSON.parse(saved));
             } catch (error) {
-                console.warn('Erro ao carregar config analytics:', error);
+                appLogger.warn('Erro ao carregar config analytics:', { data: [error] });
             }
         }
     }, [funnelId]);
@@ -154,7 +155,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
             onConfigUpdate?.(updatedConfig);
             setHasChanges(false);
         } catch (error) {
-            console.error('Erro ao salvar config analytics:', error);
+            appLogger.error('Erro ao salvar config analytics:', { data: [error] });
         } finally {
             setIsLoading(false);
         }
@@ -238,7 +239,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
                 });
                 setHasChanges(true);
             } catch (error) {
-                console.error('Erro ao importar config:', error);
+                appLogger.error('Erro ao importar config:', { data: [error] });
                 alert('Erro ao importar arquivo. Verifique se é um JSON válido.');
             }
         };

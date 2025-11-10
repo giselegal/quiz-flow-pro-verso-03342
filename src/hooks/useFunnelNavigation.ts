@@ -16,6 +16,7 @@ import { makeStepKey } from '@/lib/utils/stepKey';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';
 import { safeGetItem as safeGetItemCtx, safeSetItem as safeSetItemCtx } from '@/lib/utils/contextualStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * HOOK UNIFICADO DE NAVEGAÇÃO DO FUNIL
@@ -42,7 +43,7 @@ export const useFunnelNavigation = () => {
       storageDisabledRef.current = true; // Evita futuras tentativas
       try {
         if ((import.meta as any)?.env?.DEV) {
-          console.warn('localStorage.setItem desativado após falha:', key, (e as any)?.message || e);
+          appLogger.warn('localStorage.setItem desativado após falha:', { data: [key, (e as any)?.message || e] });
         }
       } catch { }
     }
@@ -56,7 +57,7 @@ export const useFunnelNavigation = () => {
       storageDisabledRef.current = true;
       try {
         if ((import.meta as any)?.env?.DEV) {
-          console.warn('localStorage.getItem desativado após falha:', key, (e as any)?.message || e);
+          appLogger.warn('localStorage.getItem desativado após falha:', { data: [key, (e as any)?.message || e] });
         }
       } catch { }
     }
@@ -102,7 +103,7 @@ export const useFunnelNavigation = () => {
     if (lastSavedStageIdRef.current !== activeStageId) {
       lastSavedStageIdRef.current = activeStageId;
       safeSetItem('funnel-current-step', activeStageId);
-      try { console.log(`📌 Etapa persistida: ${activeStageId} (${stepName})`); } catch { }
+      try { appLogger.info(`📌 Etapa persistida: ${activeStageId} (${stepName})`); } catch { }
     }
   }, [activeStageId, stepName]);
 
@@ -130,17 +131,17 @@ export const useFunnelNavigation = () => {
   const navigateToStep = useCallback(
     async (stepNumber: number) => {
       if (!isValidStepNumber(stepNumber) || isLoadingTemplate) {
-        console.warn(`❌ Navegação inválida ou em carregamento: ${stepNumber}`);
+        appLogger.warn(`❌ Navegação inválida ou em carregamento: ${stepNumber}`);
         return;
       }
 
       const targetStageId = numberToStageId(stepNumber);
-      console.log(`🚀 Navegando para etapa ${stepNumber} (${getStepName(stepNumber)})`);
+      appLogger.info(`🚀 Navegando para etapa ${stepNumber} (${getStepName(stepNumber)})`);
 
       try {
         // Carregar template se necessário
         if (!validateStepContent(stepNumber)) {
-          console.log(`📝 Carregando template para etapa ${stepNumber}...`);
+          appLogger.info(`📝 Carregando template para etapa ${stepNumber}...`);
           await loadTemplateByStep(stepNumber);
         }
 
@@ -154,7 +155,7 @@ export const useFunnelNavigation = () => {
           }),
         );
       } catch (error) {
-        console.error(`❌ Erro na navegação para etapa ${stepNumber}:`, error);
+        appLogger.error(`❌ Erro na navegação para etapa ${stepNumber}:`, { data: [error] });
       }
     },
     [setActiveStage, loadTemplateByStep, isLoadingTemplate, validateStepContent],
@@ -180,7 +181,7 @@ export const useFunnelNavigation = () => {
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      console.log(`💾 Salvando progresso da etapa ${currentStepNumber}...`);
+      appLogger.info(`💾 Salvando progresso da etapa ${currentStepNumber}...`);
 
       // Simular salvamento (implementar Supabase depois)
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -194,9 +195,9 @@ export const useFunnelNavigation = () => {
         }),
       );
 
-      console.log(`✅ Etapa ${currentStepNumber} salva com sucesso`);
+      appLogger.info(`✅ Etapa ${currentStepNumber} salva com sucesso`);
     } catch (error) {
-      console.error('❌ Erro ao salvar:', error);
+      appLogger.error('❌ Erro ao salvar:', { data: [error] });
     } finally {
       setIsSaving(false);
     }
@@ -205,7 +206,7 @@ export const useFunnelNavigation = () => {
   // Preview da etapa
   const handlePreview = useCallback(() => {
     const previewUrl = `/step/${currentStepNumber}`;
-    console.log(`👁️ Abrindo preview: ${previewUrl}`);
+    appLogger.info(`👁️ Abrindo preview: ${previewUrl}`);
     window.open(previewUrl, '_blank', 'noopener,noreferrer');
   }, [currentStepNumber]);
 
@@ -248,7 +249,7 @@ export const useFunnelNavigation = () => {
     if (savedStep && savedStep !== activeStageId) {
       const savedStepNumber = stageIdToNumber(savedStep);
       if (isValidStepNumber(savedStepNumber)) {
-        console.log(`🔄 Recuperando etapa salva: ${savedStep}`);
+        appLogger.info(`🔄 Recuperando etapa salva: ${savedStep}`);
         navigateToStep(savedStepNumber);
       }
     }

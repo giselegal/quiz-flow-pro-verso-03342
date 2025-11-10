@@ -1,6 +1,7 @@
 import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { useQuizFlow } from '@/contexts';
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PreviewContextType {
   isPreviewing: boolean;
@@ -27,7 +28,7 @@ const PreviewContext = createContext<PreviewContextType | undefined>(undefined);
 const usePreview = () => {
   const context = useContext(PreviewContext);
   if (!context) {
-    console.warn('usePreview called outside PreviewProvider, returning fallback');
+    appLogger.warn('usePreview called outside PreviewProvider, returning fallback');
     // Return fallback values instead of throwing
     return {
       isPreviewing: false,
@@ -77,9 +78,9 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       if (newValue) {
         // Iniciando preview - resetar sessão
         setSessionData({});
-        console.log('🚀 Preview Mode: ATIVADO');
+        appLogger.info('🚀 Preview Mode: ATIVADO');
       } else {
-        console.log('🚀 Preview Mode: DESATIVADO');
+        appLogger.info('🚀 Preview Mode: DESATIVADO');
       }
       return newValue;
     });
@@ -88,12 +89,12 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
   const startPreview = useCallback(() => {
     setIsPreviewing(true);
     setSessionData({});
-    console.log('🚀 Preview Mode: INICIADO');
+    appLogger.info('🚀 Preview Mode: INICIADO');
   }, []);
 
   const stopPreview = useCallback(() => {
     setIsPreviewing(false);
-    console.log('🚀 Preview Mode: PARADO');
+    appLogger.info('🚀 Preview Mode: PARADO');
   }, []);
 
   const goToNextStep = useCallback(() => {
@@ -102,7 +103,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       if (isPreviewing && funnelId) {
         const newStep = currentStep + 1;
         const newUrl = `/dashboard/funnel/${funnelId}/step/${newStep}`;
-        console.log('🚀 Preview: Navegando para etapa', newStep, '-', newUrl);
+        appLogger.info('🚀 Preview: Navegando para etapa', { data: [newStep, '-', newUrl] });
       }
     }
   }, [currentStep, canGoNext, next, isPreviewing, funnelId]);
@@ -113,7 +114,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       if (isPreviewing && funnelId) {
         const prev = currentStep - 1;
         const newUrl = `/dashboard/funnel/${funnelId}/step/${prev}`;
-        console.log('🚀 Preview: Navegando para etapa', prev, '-', newUrl);
+        appLogger.info('🚀 Preview: Navegando para etapa', { data: [prev, '-', newUrl] });
       }
     }
   }, [currentStep, canGoPrevious, previous, isPreviewing, funnelId]);
@@ -127,9 +128,9 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       }
       if (stepNumber && stepNumber >= 1 && stepNumber <= effectiveTotal) {
         goTo(stepNumber);
-        console.log('🚀 Preview: Navegou diretamente para etapa', stepNumber, 'via ID:', stepId);
+        appLogger.info('🚀 Preview: Navegou diretamente para etapa', { data: [stepNumber, 'via ID:', stepId] });
       } else {
-        console.warn('🚨 Preview: Número/ID de etapa inválido:', stepId);
+        appLogger.warn('🚨 Preview: Número/ID de etapa inválido:', { data: [stepId] });
       }
     },
     [effectiveTotal, goTo],
@@ -139,7 +140,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
     (step: number) => {
       if (step >= 1 && step <= effectiveTotal) {
         goTo(step);
-        console.log('🚀 Preview: Definiu etapa atual para', step);
+        appLogger.info('🚀 Preview: Definiu etapa atual para', { data: [step] });
       }
     },
     [effectiveTotal, goTo],
@@ -150,13 +151,13 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       ...prev,
       [key]: value,
     }));
-    console.log('🚀 Preview: Dados da sessão atualizados:', { key, value });
+    appLogger.info('🚀 Preview: Dados da sessão atualizados:', { data: [{ key, value }] });
   }, []);
 
   const resetSession = useCallback(() => {
     setSessionData({});
     goTo(1);
-    console.log('🚀 Preview: Sessão resetada');
+    appLogger.info('🚀 Preview: Sessão resetada');
   }, [goTo]);
 
   const contextValue: PreviewContextType = {
@@ -194,7 +195,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
 
     const handleQuizStart = (event: CustomEvent) => {
       if (isPreviewing) {
-        console.log('🚀 Preview: Quiz started with user data:', event.detail);
+        appLogger.info('🚀 Preview: Quiz started with user data:', { data: [event.detail] });
         updateSessionData('userName', event.detail?.userName || 'Anonymous');
         updateSessionData('startTime', event.detail?.timestamp || Date.now());
       }

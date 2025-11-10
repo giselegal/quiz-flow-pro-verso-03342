@@ -8,6 +8,7 @@ import { useEffect, useState, useCallback } from 'react';
 // REMOVIDO: HybridTemplateService – usar apenas templateService + IA canônica
 import { activateFunnelAI, checkFunnelAIStatus } from '../utils/funnelAIActivator';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface AIStatus {
     enabled: boolean;
@@ -107,7 +108,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
                 (window as any).__AI_CONTEXT__ = context;
             }
         } catch (error) {
-            console.warn('⚠️ Erro ao definir contexto da IA:', error);
+            appLogger.warn('⚠️ Erro ao definir contexto da IA:', { data: [error] });
         }
     }, []);
 
@@ -128,7 +129,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
                 optimized: false,
             };
         } catch (error) {
-            console.error('❌ Erro ao obter step otimizado:', error);
+            appLogger.error('❌ Erro ao obter step otimizado:', { data: [error] });
             throw error;
         }
     }, [setAIContext]);

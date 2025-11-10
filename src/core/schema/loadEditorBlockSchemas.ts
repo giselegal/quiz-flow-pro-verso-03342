@@ -41,6 +41,7 @@ import layoutSpacerSchema from '@/config/schemas/blocks/layout-spacer.json';
 
 // Import blockPropertySchemas for FASE 2 integration
 import { blockPropertySchemas } from '@/config/blockPropertySchemas';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Carrega todos os schemas de blocos do editor com validação Zod
@@ -138,7 +139,7 @@ export function loadEditorBlockSchemas(): void {
   } as any);
 
   const totalSchemas = schemas.length + Object.keys(blockPropertySchemas).length;
-  console.log(`[EditorBlockSchemas] ✅ ${totalSchemas} schemas de blocos carregados (${schemas.length} JSON + ${Object.keys(blockPropertySchemas).length} TypeScript)`);
+  appLogger.info(`[EditorBlockSchemas] ✅ ${totalSchemas} schemas de blocos carregados (${schemas.length} JSON + ${Object.keys(blockPropertySchemas).length} TypeScript)`);
 }
 
 // Nota: Auto-load removido para permitir controle de timing pelo bootstrap

@@ -8,6 +8,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { useUnifiedEditorState } from '@/hooks/useUnifiedEditorState';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PerformanceMetrics {
   renderTime: number;
@@ -111,14 +112,14 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     try {
       const score = calculatePerformanceScore();
       // Metrics recording disabled - table 'real_time_metrics' not available
-      console.log('📊 Performance Metrics:', {
-        renderTime: metrics.renderTime.toFixed(2),
-        memoryUsage: metrics.memoryUsage,
-        cacheHitRate: metrics.cacheHitRate.toFixed(1),
-        performanceScore: score.toFixed(1),
-      });
+      appLogger.info('📊 Performance Metrics:', { data: [{
+                renderTime: metrics.renderTime.toFixed(2),
+                memoryUsage: metrics.memoryUsage,
+                cacheHitRate: metrics.cacheHitRate.toFixed(1),
+                performanceScore: score.toFixed(1),
+              }] });
     } catch (error) {
-      console.error('❌ Failed to record metrics:', error);
+      appLogger.error('❌ Failed to record metrics:', { data: [error] });
     }
   }, [currentFunnel, metrics, calculatePerformanceScore]);
 
@@ -129,11 +130,11 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     const performanceScore = calculatePerformanceScore();
     
     if (performanceScore < 70) {
-      console.log('🔧 Auto-optimization triggered', { score: performanceScore });
+      appLogger.info('🔧 Auto-optimization triggered', { data: [{ score: performanceScore }] });
       
       // Clear cache if it's too large
       if (cache.size > 100) {
-        console.log('🧹 Clearing large cache');
+        appLogger.info('🧹 Clearing large cache');
         // Note: This would need to be implemented in the state
       }
       

@@ -1,6 +1,7 @@
 // @ts-nocheck
 // Facebook Pixel utility functions
 import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from '@/services/pixelManager';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Use the same type definition as in global.d.ts
 declare global {
@@ -30,12 +31,12 @@ const attachDebugTools = (): void => {
   try {
     window.__pixelTest = (eventName = 'TestEvent', params: any = {}) => {
       if (!window.fbq) {
-        console.warn('[Pixel] fbq not ready for test');
+        appLogger.warn('[Pixel] fbq not ready for test');
         return;
       }
       const payload = { ...params, test: true, ts: Date.now(), pixel_id: window.__ACTIVE_PIXEL_ID };
       window.fbq('trackCustom', eventName, payload);
-      console.log(`[Pixel] Test event '${eventName}' sent`, payload);
+      appLogger.info(`[Pixel] Test event '${eventName}' sent`, { data: [payload] });
     };
   } catch {}
 };
@@ -48,7 +49,7 @@ const attachDebugTools = (): void => {
 export const initFacebookPixel = (pixelId: string): boolean => {
   try {
     if (!pixelId) {
-      console.warn('Facebook Pixel ID not provided');
+      appLogger.warn('Facebook Pixel ID not provided');
       return false;
     }
 
@@ -56,7 +57,7 @@ export const initFacebookPixel = (pixelId: string): boolean => {
 
     // Avoid re-initializing the same Pixel ID
     if (window.__ACTIVE_PIXEL_ID === pixelId && window.fbq) {
-      console.log(`[Pixel] Facebook Pixel already initialized with ID: ${pixelId}`);
+      appLogger.info(`[Pixel] Facebook Pixel already initialized with ID: ${pixelId}`);
       attachDebugTools();
       return true;
     }
@@ -77,10 +78,10 @@ export const initFacebookPixel = (pixelId: string): boolean => {
     window.__ACTIVE_PIXEL_ID = pixelId;
     attachDebugTools();
 
-    console.log(`Facebook Pixel initialized with ID: ${pixelId}`);
+    appLogger.info(`Facebook Pixel initialized with ID: ${pixelId}`);
     return true;
   } catch (error) {
-    console.error('Error initializing Facebook Pixel:', error);
+    appLogger.error('Error initializing Facebook Pixel:', { data: [error] });
     return false;
   }
 };
@@ -93,15 +94,15 @@ export const initFacebookPixel = (pixelId: string): boolean => {
 export const trackPixelEvent = (eventName: string, params?: Record<string, unknown>): void => {
   try {
     if (typeof window === 'undefined' || !window.fbq) {
-      console.warn('Facebook Pixel not initialized');
+      appLogger.warn('Facebook Pixel not initialized');
       return;
     }
 
     window.fbq('track', eventName, params);
 
-    console.log(`Tracked Facebook Pixel event: ${eventName}`, params || '');
+    appLogger.info(`Tracked Facebook Pixel event: ${eventName}`, { data: [params || ''] });
   } catch (error) {
-    console.error(`Error tracking Facebook Pixel event ${eventName}:`, error);
+    appLogger.error(`Error tracking Facebook Pixel event ${eventName}:`, { data: [error] });
   }
 };
 
@@ -119,10 +120,10 @@ export const trackPageView = (url?: string): void => {
     // window.fbq('track', 'PageView');
 
     if (url) {
-      console.log(`Facebook Pixel PageView removido para otimização: ${url}`);
+      appLogger.info(`Facebook Pixel PageView removido para otimização: ${url}`);
     }
   } catch (error) {
-    console.error('Error tracking Facebook Pixel PageView:', error);
+    appLogger.error('Error tracking Facebook Pixel PageView:', { data: [error] });
   }
 };
 
@@ -135,7 +136,7 @@ export const loadFacebookPixel = (): void => {
 
     if (pixelId) {
       initFacebookPixel(pixelId);
-      console.log(`Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`);
+      appLogger.info(`Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`);
 
       // Dispara evento de inicialização específico do funil
       trackFunnelEvent('PixelInitialized', {
@@ -144,10 +145,10 @@ export const loadFacebookPixel = (): void => {
         page_url: window.location.href,
       });
     } else {
-      console.warn('No Facebook Pixel ID found for current route');
+      appLogger.warn('No Facebook Pixel ID found for current route');
     }
   } catch (error) {
-    console.error('Error loading Facebook Pixel:', error);
+    appLogger.error('Error loading Facebook Pixel:', { data: [error] });
   }
 };
 

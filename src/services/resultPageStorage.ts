@@ -1,4 +1,5 @@
 import { ResultPageConfig } from '@/types/resultPageConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const STORAGE_KEY_PREFIX = 'result_page_config_';
 
@@ -6,16 +7,16 @@ export const resultPageStorage = {
   save: (config: ResultPageConfig): boolean => {
     try {
       if (!config || !config.styleType) {
-        console.error('Configuração inválida ou styleType não definido');
+        appLogger.error('Configuração inválida ou styleType não definido');
         return false;
       }
 
       const key = `${STORAGE_KEY_PREFIX}${config.styleType}`;
       localStorage.setItem(key, JSON.stringify(config));
-      console.log(`Configuração salva para ${config.styleType}`);
+      appLogger.info(`Configuração salva para ${config.styleType}`);
       return true;
     } catch (error) {
-      console.error('Erro ao salvar configuração:', error);
+      appLogger.error('Erro ao salvar configuração:', { data: [error] });
       return false;
     }
   },
@@ -23,7 +24,7 @@ export const resultPageStorage = {
   load: (styleType: string): ResultPageConfig | null => {
     try {
       if (!styleType) {
-        console.error('styleType não definido');
+        appLogger.error('styleType não definido');
         return null;
       }
 
@@ -31,14 +32,14 @@ export const resultPageStorage = {
       const storedConfig = localStorage.getItem(key);
 
       if (storedConfig) {
-        console.log(`Configuração carregada para ${styleType}`);
+        appLogger.info(`Configuração carregada para ${styleType}`);
         return JSON.parse(storedConfig);
       } else {
-        console.log(`Nenhuma configuração encontrada para ${styleType}`);
+        appLogger.info(`Nenhuma configuração encontrada para ${styleType}`);
         return null;
       }
     } catch (error) {
-      console.error('Erro ao carregar configuração:', error);
+      appLogger.error('Erro ao carregar configuração:', { data: [error] });
       return null;
     }
   },
@@ -46,16 +47,16 @@ export const resultPageStorage = {
   delete: (styleType: string): boolean => {
     try {
       if (!styleType) {
-        console.error('styleType não definido');
+        appLogger.error('styleType não definido');
         return false;
       }
 
       const key = `${STORAGE_KEY_PREFIX}${styleType}`;
       localStorage.removeItem(key);
-      console.log(`Configuração excluída para ${styleType}`);
+      appLogger.info(`Configuração excluída para ${styleType}`);
       return true;
     } catch (error) {
-      console.error('Erro ao excluir configuração:', error);
+      appLogger.error('Erro ao excluir configuração:', { data: [error] });
       return false;
     }
   },
@@ -71,7 +72,7 @@ export const resultPageStorage = {
       }
       return styles;
     } catch (error) {
-      console.error('Erro ao obter estilos:', error);
+      appLogger.error('Erro ao obter estilos:', { data: [error] });
       return [];
     }
   },

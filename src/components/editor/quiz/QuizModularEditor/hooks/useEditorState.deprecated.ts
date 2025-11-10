@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * ⚠️ DEPRECATED: useEditorState
  * 
@@ -29,9 +30,7 @@
 export { useEditorState } from './useEditorState';
 
 if (process.env.NODE_ENV === 'development') {
-  console.warn(
-    '⚠️ [DEPRECATED] useEditorState está deprecated.\n' +
-    'Use useSuperUnified() ao invés.\n' +
-    'Veja: src/components/editor/quiz/QuizModularEditor/hooks/useEditorState.deprecated.ts'
-  );
+  appLogger.warn('⚠️ [DEPRECATED] useEditorState está deprecated.\n' +
+        'Use useSuperUnified() ao invés.\n' +
+        'Veja: src/components/editor/quiz/QuizModularEditor/hooks/useEditorState.deprecated.ts');
 }

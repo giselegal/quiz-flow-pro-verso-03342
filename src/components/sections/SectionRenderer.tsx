@@ -16,6 +16,7 @@ import type {
     OfferSystem,
     UserData,
 } from '@/types/template-v3.types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // LAZY IMPORTS - Code splitting por section
@@ -167,7 +168,7 @@ class SectionErrorBoundary extends React.Component<
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        console.error(`Error in section ${this.props.sectionId}:`, error, errorInfo);
+        appLogger.error(`Error in section ${this.props.sectionId}:`, { data: [error, errorInfo] });
     }
 
     render() {
@@ -271,7 +272,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
 
     // Section type desconhecido
     if (!Component) {
-        console.warn(`Unknown section type: ${section.type}`);
+        appLogger.warn(`Unknown section type: ${section.type}`);
 
         return (
             <div

@@ -19,6 +19,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { Switch } from '../ui/switch';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface AdvancedExportSystemProps {
     onClose: () => void;
@@ -264,7 +265,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             });
 
         } catch (error) {
-            console.error('❌ Erro na exportação:', error);
+            appLogger.error('❌ Erro na exportação:', { data: [error] });
         } finally {
             setIsExporting(false);
             setSelectedFormats([]);

@@ -21,6 +21,7 @@ import {
     WifiOff,
     RefreshCw,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PreviewMonitorProps {
     isVisible?: boolean;
@@ -88,7 +89,7 @@ const PreviewMonitor: React.FC<PreviewMonitorProps> = ({
                 },
             }));
         } catch (error) {
-            console.warn('Erro ao atualizar stats do monitor:', error);
+            appLogger.warn('Erro ao atualizar stats do monitor:', { data: [error] });
         }
     };
 

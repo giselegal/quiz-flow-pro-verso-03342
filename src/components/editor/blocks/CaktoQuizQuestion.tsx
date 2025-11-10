@@ -9,7 +9,6 @@
 import React from 'react';
 import { EditableContent } from '@/types/editor';
 import QuizQuestionBlock from '../quiz/QuizQuestionBlock';
-import { appLogger } from '@/lib/utils/logger';
 
 interface CaktoQuizQuestionProps {
   id?: string;

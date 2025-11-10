@@ -10,6 +10,7 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type ViewMode = 'edit' | 'preview';
 export type PreviewDevice = 'desktop' | 'mobile' | 'tablet';
@@ -48,7 +49,7 @@ export const useEditorMode = create<EditorModeState>()(
 
       // Actions
       setViewMode: (mode) => {
-        console.log('🔄 EditorMode: Mudando para', mode);
+        appLogger.info('🔄 EditorMode: Mudando para', { data: [mode] });
         // Reset preview session ao entrar em preview mode
         if (mode === 'preview') {
           set({ viewMode: mode, previewSessionData: {} });
@@ -58,19 +59,19 @@ export const useEditorMode = create<EditorModeState>()(
       },
 
       setPreviewDevice: (device) => {
-        console.log('📱 EditorMode: Mudando device para', device);
+        appLogger.info('📱 EditorMode: Mudando device para', { data: [device] });
         set({ previewDevice: device });
       },
 
       toggleViewMode: () => {
         const current = get().viewMode;
         const next = current === 'edit' ? 'preview' : 'edit';
-        console.log('🔄 EditorMode: Toggle', current, '→', next);
+        appLogger.info('🔄 EditorMode: Toggle', { data: [current, '→', next] });
         get().setViewMode(next);
       },
 
       updatePreviewSessionData: (key, value) => {
-        console.log('💾 EditorMode: Atualizando preview session', { key, value });
+        appLogger.info('💾 EditorMode: Atualizando preview session', { data: [{ key, value }] });
         set(state => ({
           previewSessionData: {
             ...state.previewSessionData,
@@ -80,7 +81,7 @@ export const useEditorMode = create<EditorModeState>()(
       },
 
       resetPreviewSession: () => {
-        console.log('🔄 EditorMode: Resetando preview session');
+        appLogger.info('🔄 EditorMode: Resetando preview session');
         set({ previewSessionData: {} });
       },
 

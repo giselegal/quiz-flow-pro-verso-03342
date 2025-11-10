@@ -1,5 +1,6 @@
+import { appLogger } from '@/lib/utils/appLogger';
 export default function IntroStepDebug({ data, onNameSubmit }: any) {
-    console.log('🔍 DEBUG IntroStep - dados recebidos:', data);
+    appLogger.info('🔍 DEBUG IntroStep - dados recebidos:', { data: [data] });
 
     return (
         <div style={{ padding: '20px', background: '#f5f5f5', margin: '20px' }}>

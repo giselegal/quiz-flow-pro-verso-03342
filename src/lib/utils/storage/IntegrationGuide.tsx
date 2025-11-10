@@ -15,6 +15,7 @@ import {
     FunnelSyncProvider,
     UserSyncProvider,
 } from '../storage/SyncedContexts';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * EXEMPLO 1: Configuração do Provider Principal (App.tsx)
@@ -49,7 +50,7 @@ export const EditorComponent: React.FC = () => {
     // Exemplo de uso com lazy loading
     React.useEffect(() => {
         // O estado já carrega automaticamente via context
-        console.log('Editor state loaded:', editorState);
+        appLogger.info('Editor state loaded:', { data: [editorState] });
     }, [editorState]);
 
     const handleAddTextBlock = async () => {
@@ -69,7 +70,7 @@ export const EditorComponent: React.FC = () => {
 
     const handleSaveEditor = async () => {
         await saveState();
-        console.log('Estado salvo!');
+        appLogger.info('Estado salvo!');
     };
 
     if (isLoading) {
@@ -340,7 +341,7 @@ export const useAutoSave = (data: any, namespace: string, key: string, delay = 2
                     advancedStorage.setItem(key, data, { namespace }),
                 );
             } catch (error) {
-                console.error('Erro no auto-save:', error);
+                appLogger.error('Erro no auto-save:', { data: [error] });
             } finally {
                 setIsSaving(false);
             }

@@ -32,6 +32,7 @@ import { ptBR } from 'date-fns/locale';
 import { Plus, Copy, Trash2, Edit, Check, X } from 'lucide-react';
 import { styleQuizTemplate } from '@/services/templates/styleQuizTemplate';
 import { toast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TemplateSelectorProps {
   onSelectTemplate: (templateId: string) => void;
@@ -93,7 +94,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
         description: 'O novo template foi criado com sucesso.',
       });
     } catch (error) {
-      console.error('Erro ao criar template:', error);
+      appLogger.error('Erro ao criar template:', { data: [error] });
       toast({
         title: 'Erro ao criar template',
         description: 'Não foi possível criar o novo template.',
@@ -114,7 +115,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
         });
       }
     } catch (error) {
-      console.error('Erro ao duplicar template:', error);
+      appLogger.error('Erro ao duplicar template:', { data: [error] });
       toast({
         title: 'Erro ao duplicar',
         description: 'Não foi possível duplicar o template.',
@@ -136,7 +137,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
         });
       }
     } catch (error) {
-      console.error('Erro ao excluir template:', error);
+      appLogger.error('Erro ao excluir template:', { data: [error] });
       toast({
         title: 'Erro ao excluir',
         description: 'Não foi possível excluir o template.',

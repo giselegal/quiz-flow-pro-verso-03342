@@ -1,6 +1,7 @@
 import { Block, BlockType } from '@/types/editor';
 import { nanoid } from 'nanoid';
 import { getBlockDefinition } from '@/core/blocks/registry';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🔧 Utilitários para geração de IDs e manipulação de blocos
@@ -86,7 +87,7 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
     // Ambiente sem DOM (ex.: teste node) – não falha, apenas retorna false
     return false;
   } catch (err) {
-    console.error('Failed to copy to clipboard:', err);
+    appLogger.error('Failed to copy to clipboard:', { data: [err] });
     return false;
   }
 };
@@ -96,7 +97,7 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
  */
 export const devLog = (message: string, ...args: any[]): void => {
   if (process.env.NODE_ENV === 'development') {
-    console.log(`🎯 [QuizEditor] ${message}`, ...args);
+    appLogger.info(`🎯 [QuizEditor] ${message}`, { data: [...args] });
   }
 };
 

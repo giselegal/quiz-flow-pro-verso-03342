@@ -6,6 +6,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { MemoizationMetrics } from '@/lib/utils/performance/memoization';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface PerformanceMetrics {
   renderTime: number;
@@ -60,7 +61,7 @@ export function usePerformanceMonitor(componentName?: string): PerformanceMetric
     });
     
     if (renderTime > 50 && componentName && process.env.NODE_ENV === 'development') {
-      console.warn(`⚠️ Slow render: ${componentName} took ${renderTime.toFixed(2)}ms`);
+      appLogger.warn(`⚠️ Slow render: ${componentName} took ${renderTime.toFixed(2)}ms`);
     }
   });
 
@@ -78,7 +79,7 @@ export function useRenderCounter(componentName: string): number {
     renderCount.current += 1;
     
     if (process.env.NODE_ENV === 'development') {
-      console.log(`🔄 ${componentName} rendered ${renderCount.current} times`);
+      appLogger.info(`🔄 ${componentName} rendered ${renderCount.current} times`);
     }
   });
   
@@ -105,9 +106,7 @@ export function useMemoryLeakDetector(componentName: string): void {
       
       // Warning se cresceu mais de 10MB
       if (diffMB > 10 && process.env.NODE_ENV === 'development') {
-        console.warn(
-          `🚨 Possible memory leak in ${componentName}: +${diffMB.toFixed(2)}MB`,
-        );
+        appLogger.warn(`🚨 Possible memory leak in ${componentName}: +${diffMB.toFixed(2)}MB`);
       }
     }
   });
@@ -123,7 +122,7 @@ export function useMountTime(componentName: string): void {
     const mounted = performance.now() - mountTime.current;
     
     if (process.env.NODE_ENV === 'development') {
-      console.log(`⏱️ ${componentName} mounted in ${mounted.toFixed(2)}ms`);
+      appLogger.info(`⏱️ ${componentName} mounted in ${mounted.toFixed(2)}ms`);
     }
     
     return () => {
@@ -131,7 +130,7 @@ export function useMountTime(componentName: string): void {
       const lifetime = unmountTime - mountTime.current;
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`👋 ${componentName} unmounted after ${lifetime.toFixed(2)}ms`);
+        appLogger.info(`👋 ${componentName} unmounted after ${lifetime.toFixed(2)}ms`);
       }
     };
   }, [componentName]);

@@ -52,6 +52,7 @@ export interface QuizResponse {
 }
 
 import { generateSessionId } from '@/lib/utils/idGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Reusing centralized UUID generator
 
@@ -102,7 +103,7 @@ export const quizSupabaseService = {
         createdAt: new Date(data.created_at!),
       };
     } catch (error) {
-      console.error('Erro ao criar usuário de quiz:', error);
+      appLogger.error('Erro ao criar usuário de quiz:', { data: [error] });
       throw error;
     }
   },
@@ -131,7 +132,7 @@ export const quizSupabaseService = {
         createdAt: new Date(data.created_at!),
       };
     } catch (error) {
-      console.error('Erro ao buscar usuário por session ID:', error);
+      appLogger.error('Erro ao buscar usuário por session ID:', { data: [error] });
       return null;
     }
   },
@@ -179,7 +180,7 @@ export const quizSupabaseService = {
         metadata: data.metadata,
       };
     } catch (error) {
-      console.error('Erro ao criar sessão de quiz:', error);
+      appLogger.error('Erro ao criar sessão de quiz:', { data: [error] });
       throw error;
     }
   },
@@ -209,7 +210,7 @@ export const quizSupabaseService = {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Erro ao atualizar sessão:', error);
+      appLogger.error('Erro ao atualizar sessão:', { data: [error] });
       return false;
     }
   },
@@ -240,7 +241,7 @@ export const quizSupabaseService = {
         metadata: data.metadata,
       };
     } catch (error) {
-      console.error('Erro ao buscar sessão:', error);
+      appLogger.error('Erro ao buscar sessão:', { data: [error] });
       return null;
     }
   },
@@ -292,7 +293,7 @@ export const quizSupabaseService = {
         metadata: data.metadata,
       };
     } catch (error) {
-      console.error('Erro ao salvar resposta:', error);
+      appLogger.error('Erro ao salvar resposta:', { data: [error] });
       throw error;
     }
   },
@@ -321,7 +322,7 @@ export const quizSupabaseService = {
         metadata: response.metadata,
       }));
     } catch (error) {
-      console.error('Erro ao buscar respostas:', error);
+      appLogger.error('Erro ao buscar respostas:', { data: [error] });
       return [];
     }
   },
@@ -356,7 +357,7 @@ export const quizSupabaseService = {
       if (error) throw error;
       return data.id;
     } catch (error) {
-      console.error('Erro ao salvar resultado:', error);
+      appLogger.error('Erro ao salvar resultado:', { data: [error] });
       throw error;
     }
   },
@@ -372,7 +373,7 @@ export const quizSupabaseService = {
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     } catch (error) {
-      console.error('Erro ao buscar resultado:', error);
+      appLogger.error('Erro ao buscar resultado:', { data: [error] });
       return null;
     }
   },
@@ -398,7 +399,7 @@ export const quizSupabaseService = {
 
       if (error) throw error;
     } catch (error) {
-      console.error('Erro ao rastrear evento:', error);
+      appLogger.error('Erro ao rastrear evento:', { data: [error] });
       // Não fazer throw aqui para não quebrar o fluxo principal
     }
   },
@@ -418,7 +419,7 @@ export const quizSupabaseService = {
     try {
       // NOTA: Tabela quiz_conversions não existe no schema atual
       // TODO: Criar migration ou usar tabela alternativa
-      console.warn('recordConversion: Tabela quiz_conversions não implementada no schema');
+      appLogger.warn('recordConversion: Tabela quiz_conversions não implementada no schema');
       
       const insertData: InsertQuizConversion = {
         session_id: conversionData.sessionId,
@@ -438,7 +439,7 @@ export const quizSupabaseService = {
       return data.id;
       */
     } catch (error) {
-      console.error('Erro ao registrar conversão:', error);
+      appLogger.error('Erro ao registrar conversão:', { data: [error] });
       throw error;
     }
   },
@@ -465,7 +466,7 @@ export const saveUserSession = async (sessionData: any) => {
 
     return { success: true, userId: user.id, sessionId: session.id };
   } catch (error) {
-    console.error('Erro ao salvar sessão:', error);
+    appLogger.error('Erro ao salvar sessão:', { data: [error] });
     return { success: false, error };
   }
 };
@@ -475,7 +476,7 @@ export const saveQuizResponse = async (responseData: any) => {
     await quizSupabaseService.saveQuizResponse(responseData);
     return { success: true };
   } catch (error) {
-    console.error('Erro ao salvar resposta:', error);
+    appLogger.error('Erro ao salvar resposta:', { data: [error] });
     return { success: false, error };
   }
 };
@@ -502,7 +503,7 @@ export const getQuizAnalytics = async (funnelId: string) => {
       completionRate: totalSessions ? Math.round((completedSessions / totalSessions) * 100) : 0,
     };
   } catch (error) {
-    console.error('Erro ao buscar analytics:', error);
+    appLogger.error('Erro ao buscar analytics:', { data: [error] });
     return {
       totalResponses: 0,
       averageScore: 0,

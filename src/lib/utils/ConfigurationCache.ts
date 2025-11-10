@@ -9,6 +9,7 @@
  */
 
 import { cacheService } from '@/services/UnifiedCacheService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface CacheEntry<T> {
     data: T;
@@ -20,7 +21,7 @@ class ConfigurationCache {
     private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
 
     constructor() {
-        console.warn('⚠️ ConfigurationCache is deprecated. Use UnifiedCacheService instead.');
+        appLogger.warn('⚠️ ConfigurationCache is deprecated. Use UnifiedCacheService instead.');
     }
 
     /**
@@ -62,7 +63,7 @@ class ConfigurationCache {
      * @deprecated Garbage collection agora é automático via LRU
      */
     cleanup(): void {
-        console.warn('⚠️ cleanup() is deprecated. UnifiedCacheService uses automatic LRU eviction.');
+        appLogger.warn('⚠️ cleanup() is deprecated. UnifiedCacheService uses automatic LRU eviction.');
     }
 
     /**

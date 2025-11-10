@@ -27,6 +27,7 @@ import { validateFunnelId, validateStepNumber } from './idValidation';
 import { validateFunnelSchema } from './schemaValidation';
 import { normalizeIdentifiers, dbToFrontend } from './namingStandards';
 import { errorManager, createValidationError, createStorageError } from './errorHandling';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Valida dados completos de funil com todas as verificações
@@ -109,7 +110,7 @@ export const sanitizeAndNormalizeFunnelData = (rawData: any) => {
         const validation = validateFunnelData(frontendData);
 
         if (!validation.isValid) {
-            console.warn('⚠️ Data normalization resulted in invalid data:', validation.errors);
+            appLogger.warn('⚠️ Data normalization resulted in invalid data:', { data: [validation.errors] });
         }
 
         return {
@@ -158,12 +159,12 @@ export const migrateToNewSystem = async (legacyData: any[]) => {
                 results.migratedData.push(migrated.data);
             } else {
                 results.failed++;
-                console.error('❌ Migration failed for item:', item.id || 'unknown', migrated.errors);
+                appLogger.error('❌ Migration failed for item:', { data: [item.id || 'unknown', migrated.errors] });
             }
 
             if (migrated.warnings.length > 0) {
                 results.warnings++;
-                console.warn('⚠️ Migration warnings for item:', item.id || 'unknown', migrated.warnings);
+                appLogger.warn('⚠️ Migration warnings for item:', { data: [item.id || 'unknown', migrated.warnings] });
             }
 
         } catch (error) {
@@ -177,7 +178,7 @@ export const migrateToNewSystem = async (legacyData: any[]) => {
         }
     }
 
-    console.log(`✅ Migration completed: ${results.success} success, ${results.failed} failed, ${results.warnings} warnings`);
+    appLogger.info(`✅ Migration completed: ${results.success} success, ${results.failed} failed, ${results.warnings} warnings`);
     return results;
 };
 

@@ -1,5 +1,6 @@
 import FunnelProgressBar from '../shared/FunnelProgressBar';
 import { CountdownTimer } from '@/components/ui/countdown-timer';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface OfferPageStepProps {
   stepNumber?: number;
@@ -53,7 +54,7 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
             <div className="mb-8">
               <CountdownTimer
                 duration={countdown.duration}
-                onComplete={() => console.log('Countdown completed')}
+                onComplete={() => appLogger.info('Countdown completed')}
               />
             </div>
           )}

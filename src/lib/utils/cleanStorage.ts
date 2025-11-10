@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // @ts-nocheck
 /**
  * Utility to clean localStorage from invalid quiz-question blocks
@@ -21,11 +22,11 @@ export const cleanEditorLocalStorage = () => {
     config.blocks = config.blocks.filter((block: any) => {
       const isQuizQuestion = block.type === 'quiz-question';
       if (isQuizQuestion) {
-        console.warn('🧹 Removing invalid quiz-question block:', {
-          id: block.id,
-          type: block.type,
-          content: block.content,
-        });
+        appLogger.warn('🧹 Removing invalid quiz-question block:', { data: [{
+                    id: block.id,
+                    type: block.type,
+                    content: block.content,
+                  }] });
       }
       return !isQuizQuestion;
     });
@@ -34,15 +35,13 @@ export const cleanEditorLocalStorage = () => {
     localStorage.setItem('editor_config', JSON.stringify(config));
 
     if (quizQuestionsBefore > 0) {
-      console.log(
-        `✅ Cleaned ${quizQuestionsBefore} invalid quiz-question blocks from localStorage`,
-      );
+      appLogger.info(`✅ Cleaned ${quizQuestionsBefore} invalid quiz-question blocks from localStorage`);
       return quizQuestionsBefore;
     }
 
     return 0;
   } catch (error) {
-    console.error('❌ Error cleaning localStorage:', error);
+    appLogger.error('❌ Error cleaning localStorage:', { data: [error] });
     return 0;
   }
 };
@@ -59,7 +58,7 @@ export const cleanStorageForStep20 = () => {
     const maxSize = 5 * 1024 * 1024; // 5MB
     let cleaned = 0;
     
-    console.log(`📊 [Step20] localStorage usage: ${(usage / 1024 / 1024).toFixed(2)}MB`);
+    appLogger.info(`📊 [Step20] localStorage usage: ${(usage / 1024 / 1024).toFixed(2)}MB`);
     
     // Lista de chaves para limpeza
     const keysToClean = [
@@ -76,13 +75,13 @@ export const cleanStorageForStep20 = () => {
       if (localStorage.getItem(key)) {
         localStorage.removeItem(key);
         cleaned++;
-        console.log(`🧹 Removed obsolete key: ${key}`);
+        appLogger.info(`🧹 Removed obsolete key: ${key}`);
       }
     });
     
     // Se ainda estiver próximo do limite, limpar dados antigos
     if (usage > maxSize * 0.8) {
-      console.warn('🚨 [Step20] localStorage próximo do limite, limpeza agressiva...');
+      appLogger.warn('🚨 [Step20] localStorage próximo do limite, limpeza agressiva...');
       
       // Preservar apenas dados essenciais
       const essentialKeys = ['userName', 'user_name', 'quizResult', 'userSelections', 'quizAnswers'];
@@ -100,12 +99,12 @@ export const cleanStorageForStep20 = () => {
         try {
           localStorage.setItem(key, value);
         } catch (e) {
-          console.warn(`⚠️ Failed to restore ${key}:`, e);
+          appLogger.warn(`⚠️ Failed to restore ${key}:`, { data: [e] });
         }
       });
       
       cleaned += 10; // Aproximado
-      console.log('🧹 Performed aggressive cleanup, restored essential data only');
+      appLogger.info('🧹 Performed aggressive cleanup, restored essential data only');
     }
     
     // Limpar editor_config corrompido
@@ -116,20 +115,20 @@ export const cleanStorageForStep20 = () => {
         if (!parsed || typeof parsed !== 'object') {
           localStorage.removeItem('editor_config');
           cleaned++;
-          console.log('🧹 Removed corrupted editor_config');
+          appLogger.info('🧹 Removed corrupted editor_config');
         }
       }
     } catch {
       localStorage.removeItem('editor_config');
       cleaned++;
-      console.log('🧹 Removed unparseable editor_config');
+      appLogger.info('🧹 Removed unparseable editor_config');
     }
     
-    console.log(`✅ [Step20] Cleaned ${cleaned} items from localStorage`);
+    appLogger.info(`✅ [Step20] Cleaned ${cleaned} items from localStorage`);
     return cleaned;
     
   } catch (error) {
-    console.error('❌ [Step20] Error in storage cleanup:', error);
+    appLogger.error('❌ [Step20] Error in storage cleanup:', { data: [error] });
     return 0;
   }
 };
@@ -137,8 +136,8 @@ export const cleanStorageForStep20 = () => {
 export const clearEditorLocalStorage = () => {
   try {
     localStorage.removeItem('editor_config');
-    console.log('✅ Cleared editor localStorage');
+    appLogger.info('✅ Cleared editor localStorage');
   } catch (error) {
-    console.error('❌ Error clearing localStorage:', error);
+    appLogger.error('❌ Error clearing localStorage:', { data: [error] });
   }
 };

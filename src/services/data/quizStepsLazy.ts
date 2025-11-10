@@ -14,6 +14,7 @@
 
 import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Cache em memória dos steps já carregados
 const stepsCache = new Map<string, QuizStep>();
@@ -49,7 +50,7 @@ export async function loadQuizStep(stepId: string): Promise<QuizStep | null> {
 
             return null;
         } catch (error) {
-            console.error(`Erro ao carregar step ${stepId}:`, error);
+            appLogger.error(`Erro ao carregar step ${stepId}:`, { data: [error] });
             return null;
         } finally {
             loadingPromises.delete(stepId);
@@ -99,7 +100,7 @@ export function preloadAdjacentSteps(currentStepId: string, range: number = 2) {
     if (toPreload.length > 0) {
         // Fire and forget - não bloqueia
         loadQuizSteps(toPreload).catch(err => {
-            console.warn('Falha ao pré-carregar steps adjacentes:', err);
+            appLogger.warn('Falha ao pré-carregar steps adjacentes:', { data: [err] });
         });
     }
 }
@@ -123,7 +124,7 @@ export async function loadAllQuizSteps(): Promise<Map<string, QuizStep>> {
 
         return stepsMap;
     } catch (error) {
-        console.error('Erro ao carregar todos os steps:', error);
+        appLogger.error('Erro ao carregar todos os steps:', { data: [error] });
         return new Map();
     }
 }

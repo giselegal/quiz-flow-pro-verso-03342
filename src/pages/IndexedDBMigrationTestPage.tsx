@@ -2,6 +2,7 @@
 import React from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const IndexedDBMigrationTestPage: React.FC = () => {
     const [testResults, setTestResults] = React.useState<string[]>([]);
@@ -102,7 +103,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
 
         } catch (error: any) {
             addLog(`❌ Erro durante o teste: ${error.message}`);
-            console.error('Erro completo:', error);
+            appLogger.error('Erro completo:', { data: [error] });
         } finally {
             setIsLoading(false);
         }

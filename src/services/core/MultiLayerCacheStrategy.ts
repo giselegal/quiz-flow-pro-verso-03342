@@ -22,6 +22,7 @@
 
 import { UnifiedCacheService, CacheStore } from '../UnifiedCacheService';
 import { indexedDBCache } from './IndexedDBCache';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Lazy logger para evitar carregar LoggerFactory no bootstrap inicial
 const logger = new Proxy({}, {
@@ -385,7 +386,7 @@ Overall:
    * Log métricas no console
    */
   logMetrics(): void {
-    console.log(this.generateReport());
+    appLogger.info(String(this.generateReport()));
   }
 
   /**

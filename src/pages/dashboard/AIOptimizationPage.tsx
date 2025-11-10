@@ -19,6 +19,7 @@ import {
   RefreshCw,
   CheckCircle,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const AIOptimizationPage: React.FC = () => {
   // Real data integration
@@ -30,9 +31,9 @@ export const AIOptimizationPage: React.FC = () => {
       try {
         const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
         setRealTimeMetrics(metrics);
-        console.log('✅ ' + 'AIOptimizationPage.tsx' + ' carregado com dados reais:', metrics);
+        appLogger.info('✅ ' + 'AIOptimizationPage.tsx' + ' carregado com dados reais:', { data: [metrics] });
       } catch (error) {
-        console.error('❌ Erro ao carregar dados reais:', error);
+        appLogger.error('❌ Erro ao carregar dados reais:', { data: [error] });
       } finally {
         setIsLoading(false);
       }

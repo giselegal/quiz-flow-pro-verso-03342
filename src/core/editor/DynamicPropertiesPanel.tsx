@@ -3,6 +3,7 @@ import { useHeadlessEditor } from './HeadlessEditorProvider';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { FunnelStep } from '../../types/quiz-schema';
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type PanelTab = 'step' | 'global' | 'style' | 'publish';
 
@@ -35,12 +36,12 @@ export const DynamicPropertiesPanel: React.FC = () => {
 
   // 🎯 FUNÇÕES REAIS DE ATUALIZAÇÃO
   const updateStep = (stepId: string, updates: any) => {
-    console.log('🔄 Atualizando step:', stepId, updates);
+    appLogger.info('🔄 Atualizando step:', { data: [stepId, updates] });
     // Implementar lógica de atualização de step via builder actions
   };
 
   const updateGlobalSettings = (updates: any) => {
-    console.log('🌍 Atualizando configurações globais:', updates);
+    appLogger.info('🌍 Atualizando configurações globais:', { data: [updates] });
     // Implementar lógica de atualização global
   };
 
@@ -66,7 +67,7 @@ export const DynamicPropertiesPanel: React.FC = () => {
 
   // 🔧 DEFININDO handleStepUpdate que estava faltando
   const handleStepUpdate = (field: string, value: any) => {
-    console.log('🔄 Atualizando campo da etapa:', field, value);
+    appLogger.info('🔄 Atualizando campo da etapa:', { data: [field, value] });
     // Implementar lógica real de atualização conforme necessário
   };
 
@@ -197,7 +198,7 @@ const StepPropertiesPanel: React.FC<{
                 type="text"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 value={currentStep.name || ''}
-                onChange={(e) => console.log('Nome atualizado:', e.target.value)}
+                onChange={(e) => appLogger.info('Nome atualizado:', { data: [e.target.value] })}
               />
             </div>
 
@@ -207,7 +208,7 @@ const StepPropertiesPanel: React.FC<{
               <select
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 value={currentStep.type || ''}
-                onChange={(e) => console.log('Tipo atualizado:', e.target.value)}
+                onChange={(e) => appLogger.info('Tipo atualizado:', { data: [e.target.value] })}
               >
                 <option value="intro">Introdução</option>
                 <option value="question">Pergunta</option>
@@ -222,7 +223,7 @@ const StepPropertiesPanel: React.FC<{
               <textarea
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm h-20"
                 value={currentStep.description || ''}
-                onChange={(e) => console.log('Descrição atualizada:', e.target.value)}
+                onChange={(e) => appLogger.info('Descrição atualizada:', { data: [e.target.value] })}
               />
             </div>
 
@@ -235,7 +236,7 @@ const StepPropertiesPanel: React.FC<{
                     type="checkbox"
                     className="mr-2"
                     checked={currentStep.settings?.showProgress || false}
-                    onChange={(e) => console.log('Show Progress:', e.target.checked)}
+                    onChange={(e) => appLogger.info('Show Progress:', { data: [e.target.checked] })}
                   />
                   <span className="text-sm text-gray-700">Mostrar Progresso</span>
                 </label>
@@ -245,7 +246,7 @@ const StepPropertiesPanel: React.FC<{
                     type="checkbox"
                     className="mr-2"
                     checked={currentStep.settings?.showBackButton || false}
-                    onChange={(e) => console.log('Show Back Button:', e.target.checked)}
+                    onChange={(e) => appLogger.info('Show Back Button:', { data: [e.target.checked] })}
                   />
                   <span className="text-sm text-gray-700">Mostrar Botão Voltar</span>
                 </label>
@@ -255,7 +256,7 @@ const StepPropertiesPanel: React.FC<{
                     type="checkbox"
                     className="mr-2"
                     checked={currentStep.settings?.allowSkip || false}
-                    onChange={(e) => console.log('Allow Skip:', e.target.checked)}
+                    onChange={(e) => appLogger.info('Allow Skip:', { data: [e.target.checked] })}
                   />
                   <span className="text-sm text-gray-700">Permitir Pular</span>
                 </label>

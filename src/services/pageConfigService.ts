@@ -1,5 +1,6 @@
 import type { BlockData } from './funnelService';
 import { getDefaultPageConfig } from '../data/defaultPageConfigs';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface PageStyles {
   backgroundColor?: string;
@@ -77,7 +78,7 @@ class PageConfigService {
 
       return defaultConfig;
     } catch (error) {
-      console.error('Erro ao buscar configuração da página:', error);
+      appLogger.error('Erro ao buscar configuração da página:', { data: [error] });
 
       // Em caso de erro, retornar configuração padrão
       const defaultConfig = this.getDefaultPageConfig(pageId);
@@ -111,7 +112,7 @@ class PageConfigService {
 
       return true;
     } catch (error) {
-      console.error('Error saving page config:', error);
+      appLogger.error('Error saving page config:', { data: [error] });
 
       // Fallback para localStorage
       try {
@@ -119,7 +120,7 @@ class PageConfigService {
         this.cache.set(config.pageId, config);
         return true;
       } catch (localError) {
-        console.error('Failed to save to localStorage:', localError);
+        appLogger.error('Failed to save to localStorage:', { data: [localError] });
         return false;
       }
     }
@@ -265,7 +266,7 @@ class PageConfigService {
         return JSON.parse(stored);
       }
     } catch (error) {
-      console.warn('Erro ao ler do localStorage:', error);
+      appLogger.warn('Erro ao ler do localStorage:', { data: [error] });
     }
     return null;
   }
@@ -277,7 +278,7 @@ class PageConfigService {
     try {
       localStorage.setItem(`page-config-${pageId}`, JSON.stringify(config));
     } catch (error) {
-      console.warn('Erro ao salvar no localStorage:', error);
+      appLogger.warn('Erro ao salvar no localStorage:', { data: [error] });
     }
   }
 

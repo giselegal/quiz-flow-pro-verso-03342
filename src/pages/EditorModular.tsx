@@ -19,6 +19,7 @@ import { UniversalBlock } from '@/components/core/UniversalBlock';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { loadComponentsFromRegistry, groupComponentsByCategory, createElementFromSchema } from '@/core/editor/SchemaComponentAdapter';
 import { Check, X, Code, Eye, Layers, Plus } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TestBlock {
   id: string;
@@ -37,7 +38,7 @@ export default function EditorModular() {
 
   // Carregar schemas
   useEffect(() => {
-    console.log('[EditorModular] Inicializando...');
+    appLogger.info('[EditorModular] Inicializando...');
     loadDefaultSchemas();
     
     const comps = loadComponentsFromRegistry();
@@ -47,7 +48,7 @@ export default function EditorModular() {
     setCategories(cats);
     setLoaded(isSchemasLoaded());
     
-    console.log(`[EditorModular] ✅ ${comps.length} componentes carregados`);
+    appLogger.info(`[EditorModular] ✅ ${comps.length} componentes carregados`);
   }, []);
 
   const addTestBlock = (type: string) => {
@@ -62,9 +63,9 @@ export default function EditorModular() {
       
       setTestBlocks(prev => [...prev, newBlock]);
       setSelectedBlock(newBlock);
-      console.log('[EditorModular] Bloco adicionado:', newBlock);
+      appLogger.info('[EditorModular] Bloco adicionado:', { data: [newBlock] });
     } catch (error) {
-      console.error('[EditorModular] Erro ao adicionar bloco:', error);
+      appLogger.error('[EditorModular] Erro ao adicionar bloco:', { data: [error] });
     }
   };
 

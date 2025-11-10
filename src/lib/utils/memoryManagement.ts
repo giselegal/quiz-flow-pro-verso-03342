@@ -9,7 +9,7 @@
 
 import { PerformanceOptimizer } from './performanceOptimizer';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { appLogger } from './logger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos mínimos para migração
 interface EventListenerEntry {
@@ -226,7 +226,7 @@ export const useMemoryLeakDetector = () => {
       const entries = list.getEntries();
       entries.forEach(entry => {
         if (entry.entryType === 'measure' && entry.name.includes('memory')) {
-          console.log('Memory measurement:', entry);
+          appLogger.info('Memory measurement:', { data: [entry] });
         }
       });
     });

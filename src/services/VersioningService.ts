@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // Stub VersioningService to fix import errors
 export interface VersionChange {
   id: string;
@@ -25,7 +26,7 @@ export type HistoryFilter = 'all' | 'create' | 'update' | 'delete' | 'restore';
 
 export class VersioningService {
   async createVersion(data: any): Promise<void> {
-    console.log('Creating version:', data);
+    appLogger.info('Creating version:', { data: [data] });
   }
 
   async getVersionHistory(): Promise<VersionChange[]> {
@@ -33,7 +34,7 @@ export class VersioningService {
   }
 
   async restoreVersion(versionId: string): Promise<void> {
-    console.log('Restoring version:', versionId);
+    appLogger.info('Restoring version:', { data: [versionId] });
   }
 
   async createSnapshot(data: any): Promise<VersionSnapshot> {
@@ -58,7 +59,7 @@ export class VersioningService {
   }
 
   async recordChange(type: VersionChange['type'], description: string): Promise<void> {
-    console.log('Recording change:', type, description);
+    appLogger.info('Recording change:', { data: [type, description] });
   }
 }
 

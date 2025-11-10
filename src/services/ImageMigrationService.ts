@@ -67,7 +67,7 @@ class ImageMigrationService {
             optimizedSize?: number;
         }>;
     }> {
-        console.log('🚀 Iniciando migração do template Quiz-Estilo...');
+        appLogger.info('🚀 Iniciando migração do template Quiz-Estilo...');
 
         // URLs das imagens do quiz-estilo identificadas
         const quizEstiloImages = [
@@ -161,7 +161,7 @@ class ImageMigrationService {
         // Migrar cada imagem
         for (const image of quizEstiloImages) {
             try {
-                console.log(`📥 Migrando imagem: ${image.url}`);
+                appLogger.info(`📥 Migrando imagem: ${image.url}`);
 
                 await optimizedImageStorage.getCachedImage(
                     image.url,
@@ -180,7 +180,7 @@ class ImageMigrationService {
                 });
 
                 migrated++;
-                console.log(`✅ Sucesso: ${image.url}`);
+                appLogger.info(`✅ Sucesso: ${image.url}`);
 
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
@@ -193,7 +193,7 @@ class ImageMigrationService {
                 });
 
                 failed++;
-                console.error(`❌ Falha: ${image.url} - ${errorMessage}`);
+                appLogger.error(`❌ Falha: ${image.url} - ${errorMessage}`);
             }
         }
 
@@ -215,7 +215,7 @@ class ImageMigrationService {
             details,
         };
 
-        console.log('🏁 Migração do Quiz-Estilo concluída:', result.stats);
+        appLogger.info('🏁 Migração do Quiz-Estilo concluída:', { data: [result.stats] });
 
         return result;
     }
@@ -232,8 +232,8 @@ class ImageMigrationService {
         this.migrationInProgress = true;
         this.results = [];
 
-        console.log('🚀 Iniciando migração de imagens dos templates...');
-        console.log(`📊 Total de templates: ${templates.length}`);
+        appLogger.info('🚀 Iniciando migração de imagens dos templates...');
+        appLogger.info(`📊 Total de templates: ${templates.length}`);
 
         const stats: MigrationStats = {
             totalTemplates: templates.length,
@@ -262,7 +262,7 @@ class ImageMigrationService {
                         stats.failed++;
                     }
                 } else {
-                    console.error(`❌ Erro na migração do template ${template.id}:`, result.reason);
+                    appLogger.error(`❌ Erro na migração do template ${template.id}:`, { data: [result.reason] });
                     stats.failed++;
                     this.results.push({
                         success: false,
@@ -285,7 +285,7 @@ class ImageMigrationService {
 
         this.migrationInProgress = false;
 
-        console.log('✅ Migração concluída!', stats);
+        appLogger.info('✅ Migração concluída!', { data: [stats] });
         return stats;
     }
 
@@ -303,7 +303,7 @@ class ImageMigrationService {
         };
 
         try {
-            console.log(`📥 Migrando template: ${template.name}`);
+            appLogger.info(`📥 Migrando template: ${template.name}`);
 
             // Migrar thumbnail
             if (template.thumbnailUrl) {
@@ -318,11 +318,11 @@ class ImageMigrationService {
                             format: 'webp',
                         },
                     );
-                    console.log(`✅ Thumbnail migrado: ${template.id}`);
+                    appLogger.info(`✅ Thumbnail migrado: ${template.id}`);
                 } catch (error) {
                     const errorMsg = `Erro no thumbnail: ${error instanceof Error ? error.message : 'Erro desconhecido'}`;
                     result.errors.push(errorMsg);
-                    console.error(`❌ ${errorMsg}`);
+                    appLogger.error(`❌ ${errorMsg}`);
                 }
             }
 
@@ -339,11 +339,11 @@ class ImageMigrationService {
                             format: 'webp',
                         },
                     );
-                    console.log(`✅ Imagem principal migrada: ${template.id}`);
+                    appLogger.info(`✅ Imagem principal migrada: ${template.id}`);
                 } catch (error) {
                     const errorMsg = `Erro na imagem principal: ${error instanceof Error ? error.message : 'Erro desconhecido'}`;
                     result.errors.push(errorMsg);
-                    console.error(`❌ ${errorMsg}`);
+                    appLogger.error(`❌ ${errorMsg}`);
                 }
             }
 
@@ -357,7 +357,7 @@ class ImageMigrationService {
 
         } catch (error) {
             result.errors.push(`Erro geral: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
-            console.error(`❌ Erro na migração do template ${template.id}:`, error);
+            appLogger.error(`❌ Erro na migração do template ${template.id}:`, { data: [error] });
             return result;
         }
     }
@@ -376,7 +376,7 @@ class ImageMigrationService {
             stats.spaceSaved = Math.round(estimatedOriginalSize * (stats.compressionRatio / 100));
 
         } catch (error) {
-            console.error('❌ Erro ao calcular estatísticas finais:', error);
+            appLogger.error('❌ Erro ao calcular estatísticas finais:', { data: [error] });
         }
     }
 
@@ -399,7 +399,7 @@ class ImageMigrationService {
         );
 
         if (failedTemplates.length === 0) {
-            console.log('✅ Não há migrações falhadas para tentar novamente');
+            appLogger.info('✅ Não há migrações falhadas para tentar novamente');
             return {
                 totalTemplates: 0,
                 successful: 0,
@@ -409,7 +409,7 @@ class ImageMigrationService {
             };
         }
 
-        console.log(`🔄 Tentando novamente ${failedTemplates.length} migrações falhadas...`);
+        appLogger.info(`🔄 Tentando novamente ${failedTemplates.length} migrações falhadas...`);
         return this.migrateTemplateImages(failedTemplates);
     }
 
@@ -477,6 +477,7 @@ export async function migrateCurrentTemplates(): Promise<MigrationStats> {
 // ============================================================================
 
 import { useState, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export function useMigrationStatus() {
     const [isRunning, setIsRunning] = useState(false);
@@ -491,12 +492,12 @@ export function useMigrationStatus() {
             const migrationStats = await migrateCurrentTemplates();
             setStats(migrationStats);
 
-            console.log('🎉 Migração concluída com sucesso!', migrationStats);
+            appLogger.info('🎉 Migração concluída com sucesso!', { data: [migrationStats] });
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido na migração';
             setError(errorMessage);
-            console.error('❌ Erro na migração:', err);
+            appLogger.error('❌ Erro na migração:', { data: [err] });
         } finally {
             setIsRunning(false);
         }
@@ -506,9 +507,9 @@ export function useMigrationStatus() {
         try {
             await optimizedImageStorage.clearCache();
             setStats(null);
-            console.log('🧹 Cache limpo com sucesso');
+            appLogger.info('🧹 Cache limpo com sucesso');
         } catch (err) {
-            console.error('❌ Erro ao limpar cache:', err);
+            appLogger.error('❌ Erro ao limpar cache:', { data: [err] });
         }
     }, []);
 

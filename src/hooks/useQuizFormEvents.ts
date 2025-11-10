@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * HOOK PARA EVENTOS DE FORMULÁRIO DO QUIZ
@@ -29,7 +30,7 @@ export const useQuizFormEvents = ({
   const handleFormChange = useCallback(
     (event: CustomEvent<QuizFormEventData>) => {
       const { detail } = event;
-      console.log('🎯 Quiz form change:', detail);
+      appLogger.info('🎯 Quiz form change:', { data: [detail] });
 
       if (onFormChange) {
         onFormChange(detail);
@@ -42,7 +43,7 @@ export const useQuizFormEvents = ({
   const handleFormComplete = useCallback(
     (event: CustomEvent<QuizFormEventData>) => {
       const { detail } = event;
-      console.log('✅ Quiz form complete:', detail);
+      appLogger.info('✅ Quiz form complete:', { data: [detail] });
 
       if (onFormComplete) {
         onFormComplete(detail);
@@ -55,7 +56,7 @@ export const useQuizFormEvents = ({
   const handleInputChange = useCallback(
     (event: CustomEvent<QuizFormEventData>) => {
       const { detail } = event;
-      console.log('📝 Quiz input change:', detail);
+      appLogger.info('📝 Quiz input change:', { data: [detail] });
 
       if (onInputChange) {
         onInputChange(detail);

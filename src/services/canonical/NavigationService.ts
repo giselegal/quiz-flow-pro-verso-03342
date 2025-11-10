@@ -24,6 +24,7 @@
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
 import { CanonicalServicesMonitor } from './monitoring';
 import { getConfiguredNextStep, isStepEnabled } from '@/config/quizNavigation';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -432,7 +433,7 @@ export class NavigationService extends BaseCanonicalService {
       const result = this.buildNavigationMap(testSteps);
       return result.success;
     } catch (error) {
-      console.warn('[NavigationService] Health check falhou:', error);
+      appLogger.warn('[NavigationService] Health check falhou:', { data: [error] });
       return false;
     }
   }
@@ -483,7 +484,7 @@ if (typeof window !== 'undefined') {
  * @deprecated Use navigationService diretamente
  */
 export function getNavigationService(): NavigationService {
-  console.warn('[NavigationService] getNavigationService() is deprecated. Use navigationService directly.');
+  appLogger.warn('[NavigationService] getNavigationService() is deprecated. Use navigationService directly.');
   return navigationService;
 }
 

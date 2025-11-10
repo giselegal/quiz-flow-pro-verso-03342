@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface CanvasConfiguration {
   width: number;
@@ -40,12 +41,12 @@ export const useCanvasConfiguration = () => {
 
   const loadAndApplyStep20 = useCallback(() => {
     setIsStep20Loaded(true);
-    console.log('Step 20 loaded and applied');
+    appLogger.info('Step 20 loaded and applied');
   }, []);
 
   const loadAndApplyStep21 = useCallback(() => {
     setIsStep21Loaded(true);
-    console.log('Step 21 loaded and applied');
+    appLogger.info('Step 21 loaded and applied');
   }, []);
 
   const getResultComponents = useCallback(() => {

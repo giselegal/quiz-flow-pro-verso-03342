@@ -6,6 +6,7 @@
 import { trackSaleConversion } from './analytics';
 import { generateSemanticId } from './semanticIdGenerator';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interfaces para dados do webhook Hotmart
 export interface HotmartBuyer {
@@ -104,23 +105,23 @@ export class HotmartWebhookManager {
       // Armazenar também no localStorage para persistência
       this.persistUserData(email, userData);
 
-      console.log('[Hotmart Webhook] Dados do usuário armazenados:', {
-        email,
-        userData,
-      });
+      appLogger.info('[Hotmart Webhook] Dados do usuário armazenados:', { data: [{
+                email,
+                userData,
+              }] });
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro ao armazenar dados do usuário:', error);
+      appLogger.error('[Hotmart Webhook] Erro ao armazenar dados do usuário:', { data: [error] });
     }
   }
 
   // Processar webhook recebido da Hotmart
   public async processWebhook(webhookData: HotmartWebhookData): Promise<void> {
     try {
-      console.log('[Hotmart Webhook] Processando webhook:', webhookData);
+      appLogger.info('[Hotmart Webhook] Processando webhook:', { data: [webhookData] });
 
       // Validar webhook ID
       if (!this.validateWebhookId(webhookData.webhook_id)) {
-        console.warn('[Hotmart Webhook] ID do webhook inválido:', webhookData.webhook_id);
+        appLogger.warn('[Hotmart Webhook] ID do webhook inválido:', { data: [webhookData.webhook_id] });
         return;
       }
 
@@ -140,16 +141,16 @@ export class HotmartWebhookManager {
           break;
 
         default:
-          console.log('[Hotmart Webhook] Evento não tratado:', webhookData.event);
+          appLogger.info('[Hotmart Webhook] Evento não tratado:', { data: [webhookData.event] });
       }
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro ao processar webhook:', error);
+      appLogger.error('[Hotmart Webhook] Erro ao processar webhook:', { data: [error] });
     }
   }
 
   // Tratar compra aprovada
   private async handlePurchaseApproved(data: HotmartWebhookData): Promise<void> {
-    console.log('[Hotmart Webhook] Compra aprovada:', data.data.transaction.id);
+    appLogger.info('[Hotmart Webhook] Compra aprovada:', { data: [data.data.transaction.id] });
 
     try {
       // Buscar dados do usuário armazenados
@@ -157,7 +158,7 @@ export class HotmartWebhookManager {
       const userData = this.getUserData(userEmail);
 
       if (!userData) {
-        console.warn('[Hotmart Webhook] Dados do usuário não encontrados para:', userEmail);
+        appLogger.warn('[Hotmart Webhook] Dados do usuário não encontrados para:', { data: [userEmail] });
         // Mesmo assim, processar a venda sem UTMs
       }
 
@@ -175,10 +176,7 @@ export class HotmartWebhookManager {
       // Enviar evento Purchase para Facebook Pixel
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'Purchase', purchaseEventData);
-        console.log(
-          '[Hotmart Webhook] Evento Purchase enviado ao Facebook Pixel:',
-          purchaseEventData,
-        );
+        appLogger.info('[Hotmart Webhook] Evento Purchase enviado ao Facebook Pixel:', { data: [purchaseEventData] });
       }
 
       // Enviar para Google Analytics se disponível
@@ -197,7 +195,7 @@ export class HotmartWebhookManager {
           ],
           ...userData?.utm_parameters,
         });
-        console.log('[Hotmart Webhook] Evento purchase enviado ao Google Analytics');
+        appLogger.info('[Hotmart Webhook] Evento purchase enviado ao Google Analytics');
       }
 
       // Usar o sistema de analytics interno
@@ -210,13 +208,13 @@ export class HotmartWebhookManager {
       // Notificar outros sistemas se necessário
       await this.notifyExternalSystems(data, userData);
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro ao processar compra aprovada:', error);
+      appLogger.error('[Hotmart Webhook] Erro ao processar compra aprovada:', { data: [error] });
     }
   }
 
   // Tratar cancelamento de compra
   private async handlePurchaseCanceled(data: HotmartWebhookData): Promise<void> {
-    console.log('[Hotmart Webhook] Compra cancelada:', data.data.transaction.id);
+    appLogger.info('[Hotmart Webhook] Compra cancelada:', { data: [data.data.transaction.id] });
 
     // Enviar evento de cancelamento se necessário
     if (typeof window !== 'undefined' && window.fbq) {
@@ -231,7 +229,7 @@ export class HotmartWebhookManager {
 
   // Tratar reembolso de compra
   private async handlePurchaseRefunded(data: HotmartWebhookData): Promise<void> {
-    console.log('[Hotmart Webhook] Compra reembolsada:', data.data.transaction.id);
+    appLogger.info('[Hotmart Webhook] Compra reembolsada:', { data: [data.data.transaction.id] });
 
     // Enviar evento de reembolso se necessário
     if (typeof window !== 'undefined' && window.fbq) {
@@ -272,7 +270,7 @@ export class HotmartWebhookManager {
       const stored = localStorage.getItem(key);
       return stored ? JSON.parse(stored) : undefined;
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro ao recuperar dados do storage:', error);
+      appLogger.error('[Hotmart Webhook] Erro ao recuperar dados do storage:', { data: [error] });
       return undefined;
     }
   }
@@ -283,7 +281,7 @@ export class HotmartWebhookManager {
       const key = `user_data_${email}`;
       localStorage.setItem(key, JSON.stringify(userData));
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro ao persistir dados:', error);
+      appLogger.error('[Hotmart Webhook] Erro ao persistir dados:', { data: [error] });
     }
   }
 
@@ -329,9 +327,9 @@ export class HotmartWebhookManager {
           }
         }
       }
-      console.log('[Hotmart Webhook] Dados de usuário carregados:', this.userDataStore.size);
+      appLogger.info('[Hotmart Webhook] Dados de usuário carregados:', { data: [this.userDataStore.size] });
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro ao carregar dados iniciais:', error);
+      appLogger.error('[Hotmart Webhook] Erro ao carregar dados iniciais:', { data: [error] });
     }
   }
 
@@ -342,7 +340,7 @@ export class HotmartWebhookManager {
   ): Promise<void> {
     try {
       // Aqui você pode adicionar integrações com CRM, Email Marketing, etc.
-      console.log('[Hotmart Webhook] Notificando sistemas externos...');
+      appLogger.info('[Hotmart Webhook] Notificando sistemas externos...');
 
       // Exemplo: Enviar para API de CRM
       // await this.sendToCRM(data, userData);
@@ -350,7 +348,7 @@ export class HotmartWebhookManager {
       // Exemplo: Enviar para Email Marketing
       // await this.sendToEmailMarketing(data, userData);
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro ao notificar sistemas externos:', error);
+      appLogger.error('[Hotmart Webhook] Erro ao notificar sistemas externos:', { data: [error] });
     }
   }
 
@@ -385,9 +383,9 @@ export class HotmartWebhookManager {
         }
       }
 
-      console.log('[Hotmart Webhook] Limpeza de dados antigos concluída');
+      appLogger.info('[Hotmart Webhook] Limpeza de dados antigos concluída');
     } catch (error) {
-      console.error('[Hotmart Webhook] Erro na limpeza de dados:', error);
+      appLogger.error('[Hotmart Webhook] Erro na limpeza de dados:', { data: [error] });
     }
   }
 }
@@ -403,7 +401,7 @@ export const storeUserForHotmart = (email: string, additionalData?: Partial<User
 // Função para simular webhook em desenvolvimento (apenas para testes)
 export const simulateHotmartWebhook = (email: string, transactionId?: string) => {
   if (process.env.NODE_ENV !== 'development') {
-    console.warn('[Hotmart Webhook] Simulação disponível apenas em desenvolvimento');
+    appLogger.warn('[Hotmart Webhook] Simulação disponível apenas em desenvolvimento');
     return;
   }
 
@@ -450,6 +448,6 @@ export const simulateHotmartWebhook = (email: string, transactionId?: string) =>
     timestamp: new Date().toISOString(),
   };
 
-  console.log('[Hotmart Webhook] Simulando webhook:', mockWebhookData);
+  appLogger.info('[Hotmart Webhook] Simulando webhook:', { data: [mockWebhookData] });
   hotmartWebhookManager.processWebhook(mockWebhookData);
 };

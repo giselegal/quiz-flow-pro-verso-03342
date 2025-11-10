@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔧 NORMALIZADOR DE FUNNEL ID
  * 
@@ -45,7 +46,7 @@ export const normalizeFunnelId = (funnelId: string | null | undefined): Normaliz
   // 🔧 CORREÇÃO: Tratar IDs com padrão "funnel_timestamp_suffix"
   if (funnelId.match(/^funnel_\d+_[a-zA-Z0-9]+$/)) {
     // ID genérico, provavelmente deve ser canvas vazio
-    console.log('🔍 ID genérico detectado, retornando empty-canvas:', funnelId);
+    appLogger.info('🔍 ID genérico detectado, retornando empty-canvas:', { data: [funnelId] });
     return {
       baseId: 'empty-canvas',
       originalId,
@@ -75,14 +76,14 @@ export const normalizeFunnelId = (funnelId: string | null | undefined): Normaliz
  * Obtém informações do template baseado no funnelId normalizado
  */
 export const getTemplateInfo = async (funnelId: string) => {
-  console.log('🔍 getTemplateInfo chamado com funnelId:', funnelId);
+  appLogger.info('🔍 getTemplateInfo chamado com funnelId:', { data: [funnelId] });
 
   const normalized = normalizeFunnelId(funnelId);
-  console.log('📋 Resultado normalizado:', normalized);
+  appLogger.info('📋 Resultado normalizado:', { data: [normalized] });
 
   // 🆕 CANVAS VAZIO: Se baseId é empty-canvas, retornar info vazia
   if (normalized.baseId === 'empty-canvas') {
-    console.log('🆕 Retornando info para canvas vazio');
+    appLogger.info('🆕 Retornando info para canvas vazio');
     return {
       ...normalized,
       template: null,
@@ -97,7 +98,7 @@ export const getTemplateInfo = async (funnelId: string) => {
     const template = registry.UNIFIED_TEMPLATE_REGISTRY[normalized.baseId];
 
     if (template) {
-      console.log('✅ Template encontrado no registro unificado:', template);
+      appLogger.info('✅ Template encontrado no registro unificado:', { data: [template] });
       return {
         ...normalized,
         template,
@@ -106,7 +107,7 @@ export const getTemplateInfo = async (funnelId: string) => {
       };
     }
   } catch (error) {
-    console.warn('⚠️ Erro ao carregar template do registro unificado:', error);
+    appLogger.warn('⚠️ Erro ao carregar template do registro unificado:', { data: [error] });
   }
 
   // Fallback: tentar templateLibraryService
@@ -115,7 +116,7 @@ export const getTemplateInfo = async (funnelId: string) => {
     const template = templateLibraryService.getById(normalized.baseId);
 
     if (template) {
-      console.log('✅ Template encontrado no templateLibraryService:', template);
+      appLogger.info('✅ Template encontrado no templateLibraryService:', { data: [template] });
       return {
         ...normalized,
         template,
@@ -124,11 +125,11 @@ export const getTemplateInfo = async (funnelId: string) => {
       };
     }
   } catch (error) {
-    console.warn('⚠️ Erro ao carregar template do templateLibraryService:', error);
+    appLogger.warn('⚠️ Erro ao carregar template do templateLibraryService:', { data: [error] });
   }
 
   // Fallback: retornar info básica
-  console.log('⚠️ Usando fallback para:', normalized.baseId);
+  appLogger.info('⚠️ Usando fallback para:', { data: [normalized.baseId] });
   return {
     ...normalized,
     template: null,

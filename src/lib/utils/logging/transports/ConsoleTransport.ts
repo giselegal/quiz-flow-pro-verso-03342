@@ -3,6 +3,7 @@ import type { LogTransport, LogEntry } from '../LoggerService';
 import type { LoggerConfig } from '../LoggerConfig';
 import type { LogFormatter } from '../formatters/LogFormatter';
 import { DevelopmentFormatter } from '../formatters/DevelopmentFormatter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export class ConsoleTransport implements LogTransport {
     private formatter: LogFormatter;
@@ -19,19 +20,19 @@ export class ConsoleTransport implements LogTransport {
         switch (entry.level) {
             case 'TRACE':
             case 'DEBUG':
-                console.debug(formatted);
+                appLogger.debug(String(formatted));
                 break;
             case 'INFO':
-                console.info(formatted);
+                appLogger.info(String(formatted));
                 break;
             case 'WARN':
-                console.warn(formatted);
+                appLogger.warn(String(formatted));
                 break;
             case 'ERROR':
             case 'FATAL':
-                console.error(formatted);
+                appLogger.error(String(formatted));
                 if (entry.data && this.config.includeStackTrace) {
-                    console.error('Additional data:', entry.data);
+                    appLogger.error('Additional data:', { data: [entry.data] });
                 }
                 break;
         }

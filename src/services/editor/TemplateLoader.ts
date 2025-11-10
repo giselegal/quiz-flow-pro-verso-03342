@@ -35,6 +35,7 @@ import { funnelComponentsService } from '@/services/funnelComponentsService';
 const unifiedCache = unifiedCacheService;
 import { convertComponentInstancesToBlocks, filterValidInstances } from '@/lib/utils/componentInstanceConverter';
 import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/lib/utils/retryWithBackoff';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type TemplateSource =
   | 'normalized-json'
@@ -103,12 +104,12 @@ export class TemplateLoader {
     const funnelId = params.get('funnelId') || params.get('funnel');
 
     if (templateId && !funnelId) {
-      console.log('🎨 [TemplateLoader] Modo TEMPLATE detectado:', templateId);
+      appLogger.info('🎨 [TemplateLoader] Modo TEMPLATE detectado:', { data: [templateId] });
       return { mode: 'template', id: templateId };
     }
 
     if (funnelId) {
-      console.log('💾 [TemplateLoader] Modo FUNNEL detectado:', funnelId);
+      appLogger.info('💾 [TemplateLoader] Modo FUNNEL detectado:', { data: [funnelId] });
       return { mode: 'funnel', id: funnelId };
     }
 
@@ -127,7 +128,7 @@ export class TemplateLoader {
     const cacheKey = stepBlocksKey(normalizedKey);
     if (unifiedCache.has(cacheKey)) {
       this.metrics.cacheHits++;
-      console.log(`⚡ [Cache HIT] ${normalizedKey}`);
+      appLogger.info(`⚡ [Cache HIT] ${normalizedKey}`);
       
       const blocks = unifiedCache.get(cacheKey);
       return { blocks: blocks || [], source: 'normalized-json' }; // source genérico para cache
@@ -138,7 +139,7 @@ export class TemplateLoader {
     // De-dup: se já existe um carregamento em andamento para esse step, reutiliza a mesma promise
     const existing = this.inFlightLoads.get(normalizedKey);
     if (existing) {
-      console.log(`⏭️ Reutilizando carregamento em andamento para ${normalizedKey}`);
+      appLogger.info(`⏭️ Reutilizando carregamento em andamento para ${normalizedKey}`);
       return existing;
     }
 
@@ -149,18 +150,18 @@ export class TemplateLoader {
         
         // 🎯 FIX 1.3: DETECTAR MODO PRIMEIRO
         const { mode, id } = this.detectMode();
-        console.log(`🎯 Modo detectado: ${mode} (ID: ${id || 'N/A'})`);
+        appLogger.info(`🎯 Modo detectado: ${mode} (ID: ${id || 'N/A'})`);
 
         // ============================================================
         // � MODO TEMPLATE: Prioriza fontes locais (JSON público)
         // ============================================================
         if (mode === 'template') {
-          console.log('🎨 [MODO TEMPLATE] Usando estratégia LOCAL-FIRST');
+          appLogger.info('🎨 [MODO TEMPLATE] Usando estratégia LOCAL-FIRST');
 
           // 1. JSON público individual (PRIORIDADE MÁXIMA em template mode)
           const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
           if (fromPublic) {
-            console.log('✅ Template mode: Carregado de JSON público');
+            appLogger.info('✅ Template mode: Carregado de JSON público');
             return fromPublic;
           }
 
@@ -168,13 +169,13 @@ export class TemplateLoader {
           if (TEMPLATE_SOURCES.useMasterJSON) {
             const fromMaster = await this.loadFromMasterJSON(normalizedKey);
             if (fromMaster) {
-              console.log('✅ Template mode: Carregado de Master JSON');
+              appLogger.info('✅ Template mode: Carregado de Master JSON');
               return fromMaster;
             }
           }
 
           // 3. TypeScript template (fallback final)
-          console.log('🔄 Template mode: Usando fallback TypeScript');
+          appLogger.info('🔄 Template mode: Usando fallback TypeScript');
           return await this.loadFromTypescript(normalizedKey);
         }
 
@@ -182,31 +183,31 @@ export class TemplateLoader {
         // 💾 MODO FUNNEL: Prioriza Supabase (quando implementado)
         // ============================================================
         if (mode === 'funnel') {
-          console.log('💾 [MODO FUNNEL] Usando estratégia SUPABASE-FIRST');
+          appLogger.info('💾 [MODO FUNNEL] Usando estratégia SUPABASE-FIRST');
 
           // ✅ FASE 2.1: Implementado carregamento do Supabase
           const fromSupabase = await this.loadFromSupabase(id!, normalizedKey);
           if (fromSupabase) {
-            console.log('✅ Funnel mode: Carregado do Supabase');
+            appLogger.info('✅ Funnel mode: Carregado do Supabase');
             return fromSupabase;
           }
 
           // Fallback: JSON público (para funnels que ainda não têm dados no Supabase)
           const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
           if (fromPublic) {
-            console.log('⚠️ Funnel mode: Carregado de JSON público (fallback)');
+            appLogger.info('⚠️ Funnel mode: Carregado de JSON público (fallback)');
             return fromPublic;
           }
 
           // Fallback: TypeScript
-          console.log('🔄 Funnel mode: Usando fallback TypeScript');
+          appLogger.info('🔄 Funnel mode: Usando fallback TypeScript');
           return await this.loadFromTypescript(normalizedKey);
         }
 
         // ============================================================
         // ❓ MODO DESCONHECIDO: Usa estratégia cascata original
         // ============================================================
-        console.log('❓ [MODO DESCONHECIDO] Usando estratégia cascata');
+        appLogger.info('❓ [MODO DESCONHECIDO] Usando estratégia cascata');
 
         // Preferência explícita: quando ?template=quiz21StepsComplete estiver na URL do /editor,
         // priorizamos os JSONs individuais gerados em public/templates/step-XX.json
@@ -239,17 +240,17 @@ export class TemplateLoader {
         if (cached) return cached;
 
         // Estratégia 2: Master JSON público (PRIORIDADE quando flag ativa!)
-        console.log('🔍 Verificando flag useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
+        appLogger.info('🔍 Verificando flag useMasterJSON:', { data: [TEMPLATE_SOURCES.useMasterJSON] });
         if (TEMPLATE_SOURCES.useMasterJSON) {
-          console.log('✅ Flag useMasterJSON está TRUE - tentando carregar master JSON...');
+          appLogger.info('✅ Flag useMasterJSON está TRUE - tentando carregar master JSON...');
           const fromMaster = await this.loadFromMasterJSON(normalizedKey);
           if (fromMaster) {
-            console.log(`🎉 Master JSON SUCCESS: ${fromMaster.blocks.length} blocos, source: ${fromMaster.source}`);
+            appLogger.info(`🎉 Master JSON SUCCESS: ${fromMaster.blocks.length} blocos, source: ${fromMaster.source}`);
             return fromMaster;
           }
-          console.warn('⚠️ loadFromMasterJSON retornou null - tentando outras fontes...');
+          appLogger.warn('⚠️ loadFromMasterJSON retornou null - tentando outras fontes...');
         } else {
-          console.warn('❌ Flag useMasterJSON está FALSE - pulando master JSON');
+          appLogger.warn('❌ Flag useMasterJSON está FALSE - pulando master JSON');
         }
 
         // Estratégia 3: TemplateRegistry (fonte canônica em memória - FALLBACK)
@@ -269,7 +270,7 @@ export class TemplateLoader {
         }
 
         // Estratégia 6: TypeScript template (fallback)
-        console.warn('🔄 Caindo no fallback TypeScript template');
+        appLogger.warn('🔄 Caindo no fallback TypeScript template');
         return await this.loadFromTypescript(normalizedKey);
       } finally {
         console.groupEnd();
@@ -286,7 +287,7 @@ export class TemplateLoader {
       this.metrics.loadTimes.push(loadTime);
       
       if (import.meta.env.DEV) {
-        console.log(`📊 [loadStep] ${normalizedKey} carregado em ${loadTime.toFixed(0)}ms (source: ${result.source})`);
+        appLogger.info(`📊 [loadStep] ${normalizedKey} carregado em ${loadTime.toFixed(0)}ms (source: ${result.source})`);
       }
       
       return result;
@@ -303,12 +304,12 @@ export class TemplateLoader {
    */
   private async loadFromSupabase(funnelId: string, normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
-      console.log(`💾 [loadFromSupabase] Carregando: funnel=${funnelId}, step=${normalizedKey}`);
+      appLogger.info(`💾 [loadFromSupabase] Carregando: funnel=${funnelId}, step=${normalizedKey}`);
 
       // Extrair número da etapa (step-01 → 1)
       const stepNumber = parseInt(normalizedKey.replace(/\D/g, ''), 10);
       if (isNaN(stepNumber)) {
-        console.warn(`⚠️ [loadFromSupabase] Step number inválido: ${normalizedKey}`);
+        appLogger.warn(`⚠️ [loadFromSupabase] Step number inválido: ${normalizedKey}`);
         return null;
       }
 
@@ -319,24 +320,24 @@ export class TemplateLoader {
           maxAttempts: 3,
           baseDelayMs: 1000,
           onRetry: (attempt, error) => {
-            console.warn(`🔄 [loadFromSupabase] Retry ${attempt}/3 para step ${stepNumber}:`, error.message);
+            appLogger.warn(`🔄 [loadFromSupabase] Retry ${attempt}/3 para step ${stepNumber}:`, { data: [error.message] });
           },
           shouldRetry: (error) => isNetworkError(error) || isSupabaseError(error),
         }
       );
 
       if (!instances || instances.length === 0) {
-        console.log(`⚠️ [loadFromSupabase] Nenhum component_instance encontrado para step ${stepNumber}`);
+        appLogger.info(`⚠️ [loadFromSupabase] Nenhum component_instance encontrado para step ${stepNumber}`);
         return null;
       }
 
-      console.log(`✅ [loadFromSupabase] ${instances.length} component_instances encontrados`);
+      appLogger.info(`✅ [loadFromSupabase] ${instances.length} component_instances encontrados`);
 
       // Filtrar instâncias inválidas
       const validInstances = filterValidInstances(instances);
 
       if (validInstances.length === 0) {
-        console.warn(`⚠️ [loadFromSupabase] Todas as instâncias eram inválidas`);
+        appLogger.warn(`⚠️ [loadFromSupabase] Todas as instâncias eram inválidas`);
         return null;
       }
 
@@ -344,18 +345,18 @@ export class TemplateLoader {
       const blocks = convertComponentInstancesToBlocks(validInstances);
 
       if (blocks.length === 0) {
-        console.warn(`⚠️ [loadFromSupabase] Conversão resultou em 0 blocos`);
+        appLogger.warn(`⚠️ [loadFromSupabase] Conversão resultou em 0 blocos`);
         return null;
       }
 
       // Cache os blocos
       unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
-      console.log(`📦 Supabase → ${normalizedKey}: ${blocks.length} blocos`);
+      appLogger.info(`📦 Supabase → ${normalizedKey}: ${blocks.length} blocos`);
 
       return { blocks, source: 'supabase' };
     } catch (error) {
-      console.error(`❌ [loadFromSupabase] Erro ao carregar do Supabase após retries:`, error);
+      appLogger.error(`❌ [loadFromSupabase] Erro ao carregar do Supabase após retries:`, { data: [error] });
       // Retornar null para permitir fallback
       return null;
     }
@@ -613,7 +614,7 @@ export class TemplateLoader {
             }
           }
         } catch (e) {
-          console.warn('⚠️ Falha no adaptador de blocos para editor:', e);
+          appLogger.warn('⚠️ Falha no adaptador de blocos para editor:', { data: [e] });
         }
       } else if (Array.isArray(data?.sections)) {
         // Caminho 2: JSON v3 no formato sections[] → converter para Block[]
@@ -626,7 +627,7 @@ export class TemplateLoader {
           const blocksComponents = convertTemplateToBlocks({ [normalizedKey]: hydrated });
           blocks = blockComponentsToBlocks(blocksComponents);
         } catch (e) {
-          console.warn('⚠️ Falha ao converter sections→blocks para', normalizedKey, e);
+          appLogger.warn('⚠️ Falha ao converter sections→blocks para', { data: [normalizedKey, e] });
           return null;
         }
       } else {
@@ -634,10 +635,10 @@ export class TemplateLoader {
       }
 
       unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-      console.log(`📦 Public step JSON → ${normalizedKey}: ${blocks.length} blocos`);
+      appLogger.info(`📦 Public step JSON → ${normalizedKey}: ${blocks.length} blocos`);
       return { blocks, source: 'individual-json' };
     } catch (e) {
-      console.warn('⚠️ Erro ao carregar JSON público individual:', normalizedKey, e);
+      appLogger.warn('⚠️ Erro ao carregar JSON público individual:', { data: [normalizedKey, e] });
       return null;
     }
   }
@@ -650,12 +651,12 @@ export class TemplateLoader {
       const blocks = await consolidatedTemplateService.getStepBlocks(normalizedKey);
       if (Array.isArray(blocks) && blocks.length > 0) {
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-        console.log(`📦 Consolidated → ${normalizedKey}: ${blocks.length} blocos`);
+        appLogger.info(`📦 Consolidated → ${normalizedKey}: ${blocks.length} blocos`);
         return { blocks: blocks as Block[], source: 'consolidated' };
       }
       return null;
     } catch (e) {
-      console.warn('⚠️ Erro ao carregar via consolidatedTemplateService:', normalizedKey, e);
+      appLogger.warn('⚠️ Erro ao carregar via consolidatedTemplateService:', { data: [normalizedKey, e] });
       return null;
     }
   }
@@ -667,7 +668,7 @@ export class TemplateLoader {
     try {
       const registry = TemplateRegistry.getInstance();
       if (!registry.has(normalizedKey)) {
-        console.warn(`⚠️ [TemplateRegistry] Template não encontrado: ${normalizedKey}`);
+        appLogger.warn(`⚠️ [TemplateRegistry] Template não encontrado: ${normalizedKey}`);
         return null;
       }
 
@@ -679,10 +680,10 @@ export class TemplateLoader {
       const blocks = blockComponentsToBlocks(blockComponents);
 
       unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-      console.log(`📦 Registry → ${normalizedKey}: ${blocks.length} blocos`);
+      appLogger.info(`📦 Registry → ${normalizedKey}: ${blocks.length} blocos`);
       return { blocks, source: 'modular-json' }; // CORRIGIDO: era 'ts-template'
     } catch (e) {
-      console.warn('⚠️ Erro ao carregar do TemplateRegistry:', e);
+      appLogger.warn('⚠️ Erro ao carregar do TemplateRegistry:', { data: [e] });
       return null;
     }
   }
@@ -714,75 +715,75 @@ export class TemplateLoader {
    */
   private async loadFromMasterJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
-      console.log('🔍 [loadFromMasterJSON] Iniciando...');
+      appLogger.info('🔍 [loadFromMasterJSON] Iniciando...');
 
       if (typeof window === 'undefined' || !window.location) {
-        console.warn('⚠️ [loadFromMasterJSON] window ou window.location não disponível');
+        appLogger.warn('⚠️ [loadFromMasterJSON] window ou window.location não disponível');
         return null;
       }
 
       // Carregar master JSON uma vez
       if (!this.masterTemplateRef) {
-        console.log('🔍 [loadFromMasterJSON] Master JSON não está em memória, tentando carregar...');
+        appLogger.info('🔍 [loadFromMasterJSON] Master JSON não está em memória, tentando carregar...');
 
         const cachedMaster = unifiedCache.get(masterTemplateKey());
         if (cachedMaster) {
-          console.log('✅ [loadFromMasterJSON] Master JSON encontrado no cache');
+          appLogger.info('✅ [loadFromMasterJSON] Master JSON encontrado no cache');
           this.masterTemplateRef = cachedMaster;
         } else {
-          console.log('🔍 [loadFromMasterJSON] Fazendo fetch de /templates/quiz21-complete.json...');
+          appLogger.info('🔍 [loadFromMasterJSON] Fazendo fetch de /templates/quiz21-complete.json...');
 
           // Retry com exponential backoff
           let lastError: any = null;
           for (let attempt = 0; attempt < 3; attempt++) {
             try {
-              console.log(`🔍 [loadFromMasterJSON] Tentativa ${attempt + 1}/3...`);
+              appLogger.info(`🔍 [loadFromMasterJSON] Tentativa ${attempt + 1}/3...`);
               const resp = await fetch('/templates/quiz21-complete.json', {
                 cache: 'force-cache',
               });
 
-              console.log(`📊 [loadFromMasterJSON] Response status: ${resp.status}, ok: ${resp.ok}`);
+              appLogger.info(`📊 [loadFromMasterJSON] Response status: ${resp.status}, ok: ${resp.ok}`);
 
               if (resp.ok) {
                 this.masterTemplateRef = await resp.json();
                 unifiedCache.set(masterTemplateKey(), this.masterTemplateRef);
-                console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
-                console.log('📊 Steps no master:', Object.keys(this.masterTemplateRef?.steps || {}).length);
+                appLogger.info(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
+                appLogger.info('📊 Steps no master:', { data: [Object.keys(this.masterTemplateRef?.steps || {}).length] });
                 break;
               } else {
                 lastError = new Error(`HTTP ${resp.status}`);
-                console.warn(`⚠️ Tentativa ${attempt + 1}/3 falhou:`, resp.status);
+                appLogger.warn(`⚠️ Tentativa ${attempt + 1}/3 falhou:`, { data: [resp.status] });
               }
             } catch (err) {
               lastError = err;
-              console.warn(`⚠️ Tentativa ${attempt + 1}/3 erro de rede:`, err);
+              appLogger.warn(`⚠️ Tentativa ${attempt + 1}/3 erro de rede:`, { data: [err] });
             }
             if (attempt < 2) {
               await new Promise(resolve => setTimeout(resolve, 200 * Math.pow(2, attempt)));
             }
           }
           if (!this.masterTemplateRef) {
-            console.error('❌ Falha ao carregar master JSON após 3 tentativas:', lastError);
+            appLogger.error('❌ Falha ao carregar master JSON após 3 tentativas:', { data: [lastError] });
             return null;
           }
         }
       } else {
-        console.log('✅ [loadFromMasterJSON] Master JSON já estava em memória');
+        appLogger.info('✅ [loadFromMasterJSON] Master JSON já estava em memória');
       }
 
       const master = this.masterTemplateRef;
-      console.log('🔍 [loadFromMasterJSON] Procurando step:', normalizedKey);
-      console.log('🔍 [loadFromMasterJSON] Steps disponíveis:', Object.keys(master?.steps || {}));
+      appLogger.info('🔍 [loadFromMasterJSON] Procurando step:', { data: [normalizedKey] });
+      appLogger.info('🔍 [loadFromMasterJSON] Steps disponíveis:', { data: [Object.keys(master?.steps || {})] });
 
       const stepConfig = master?.steps?.[normalizedKey];
       if (!stepConfig) {
-        console.warn(`⚠️ Master JSON carregado, mas step não encontrado: ${normalizedKey}`);
+        appLogger.warn(`⚠️ Master JSON carregado, mas step não encontrado: ${normalizedKey}`);
         return null;
       }
 
-      console.log(`✅ [loadFromMasterJSON] Step ${normalizedKey} encontrado!`);
-      console.log('📊 [loadFromMasterJSON] Blocks no step:', stepConfig.blocks?.length || 0);
-      console.log('📊 [loadFromMasterJSON] Sections no step:', stepConfig.sections?.length || 0);
+      appLogger.info(`✅ [loadFromMasterJSON] Step ${normalizedKey} encontrado!`);
+      appLogger.info('📊 [loadFromMasterJSON] Blocks no step:', { data: [stepConfig.blocks?.length || 0] });
+      appLogger.info('📊 [loadFromMasterJSON] Sections no step:', { data: [stepConfig.sections?.length || 0] });
 
       // ✅ PRIORIDADE: Se step tem blocks[], usar diretamente!
       if (Array.isArray(stepConfig.blocks) && stepConfig.blocks.length > 0) {
@@ -798,7 +799,7 @@ export class TemplateLoader {
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
-        console.log(`📦 Master JSON (blocks) → ${normalizedKey}: ${blocks.length} blocos`);
+        appLogger.info(`📦 Master JSON (blocks) → ${normalizedKey}: ${blocks.length} blocos`);
         return { blocks, source: 'master-json' };
       }
 
@@ -815,15 +816,15 @@ export class TemplateLoader {
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
-        console.log(`📦 Master JSON (sections) → ${normalizedKey}: ${blocks.length} blocos`);
+        appLogger.info(`📦 Master JSON (sections) → ${normalizedKey}: ${blocks.length} blocos`);
         return { blocks, source: 'master-json' };
       }
 
-      console.warn(`⚠️ Step ${normalizedKey} não tem blocks[] nem sections[]`);
+      appLogger.warn(`⚠️ Step ${normalizedKey} não tem blocks[] nem sections[]`);
       return null;
     } catch (e) {
-      console.error('❌ [loadFromMasterJSON] Erro crítico:', e);
-      console.warn('⚠️ Erro ao carregar master JSON:', e);
+      appLogger.error('❌ [loadFromMasterJSON] Erro crítico:', { data: [e] });
+      appLogger.warn('⚠️ Erro ao carregar master JSON:', { data: [e] });
     }
     return null;
   }
@@ -841,7 +842,7 @@ export class TemplateLoader {
       // Cache normalizado
       const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
       if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
-        console.log(`📦 Normalized cache hit: ${normalizedKey}`);
+        appLogger.info(`📦 Normalized cache hit: ${normalizedKey}`);
         return { blocks: normalizedCache, source: 'normalized-json' };
       }
 
@@ -864,15 +865,15 @@ export class TemplateLoader {
           unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
           unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
-          console.log(`📦 Normalized JSON → ${normalizedKey}: ${blocks.length} blocos`);
+          appLogger.info(`📦 Normalized JSON → ${normalizedKey}: ${blocks.length} blocos`);
           return { blocks, source: 'normalized-json' };
         }
       } catch (e) {
-        console.warn('⚠️ loadNormalized falhou:', e);
+        appLogger.warn('⚠️ loadNormalized falhou:', { data: [e] });
       }
     } catch (e) {
       // Silent fail para gate disabled
-      console.warn('⚠️ loadNormalized falhou (gate desabilitado ou erro não crítico):', e);
+      appLogger.warn('⚠️ loadNormalized falhou (gate desabilitado ou erro não crítico):', { data: [e] });
     }
     return null;
   }
@@ -889,12 +890,12 @@ export class TemplateLoader {
       }
 
       const blocks = result.data as Block[];
-      console.log(`📦 Modular (TemplateService) → ${normalizedKey}: ${blocks.length} blocos`);
+      appLogger.info(`📦 Modular (TemplateService) → ${normalizedKey}: ${blocks.length} blocos`);
 
       unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
       return { blocks, source: 'modular-json' };
     } catch (e) {
-      console.warn('⚠️ Erro ao carregar template modular (TemplateService):', normalizedKey, e);
+      appLogger.warn('⚠️ Erro ao carregar template modular (TemplateService):', { data: [normalizedKey, e] });
       return null;
     }
   }
@@ -904,19 +905,19 @@ export class TemplateLoader {
    * ✅ CORREÇÃO: Agora usa hierarchicalTemplateSource
    */
   private async loadFromTypescript(normalizedKey: string): Promise<LoadedTemplate> {
-    console.log(`📦 Fallback: HierarchicalTemplateSource → ${normalizedKey}`);
+    appLogger.info(`📦 Fallback: HierarchicalTemplateSource → ${normalizedKey}`);
 
     // ✅ FASE 1.2: Migrado para usar hierarchicalTemplateSource
     const result = await hierarchicalTemplateSource.getPrimary(normalizedKey);
     const stepBlocks = result?.data || [];
     
     if (!stepBlocks || stepBlocks.length === 0) {
-      console.warn(`⚠️ Step ${normalizedKey} não encontrado via hierarchicalTemplateSource`);
+      appLogger.warn(`⚠️ Step ${normalizedKey} não encontrado via hierarchicalTemplateSource`);
       return { blocks: [], source: 'ts-template' };
     }
 
     unifiedCache.set(stepBlocksKey(normalizedKey), stepBlocks);
-    console.log(`📦 HierarchicalSource → ${normalizedKey}: ${stepBlocks.length} blocos`);
+    appLogger.info(`📦 HierarchicalSource → ${normalizedKey}: ${stepBlocks.length} blocos`);
 
     return { blocks: stepBlocks, source: 'ts-template' };
   }
@@ -946,7 +947,7 @@ export class TemplateLoader {
     const startTime = performance.now();
     const results = { loaded: 0, cached: 0, failed: 0 };
 
-    console.log(`🔥 [warmCache] Warming ${stepIds.length} steps...`);
+    appLogger.info(`🔥 [warmCache] Warming ${stepIds.length} steps...`);
 
     const promises = stepIds.map(async (stepId) => {
       try {
@@ -961,7 +962,7 @@ export class TemplateLoader {
         await this.loadStep(stepId);
         results.loaded++;
       } catch (error) {
-        console.warn(`⚠️ [warmCache] Falha ao carregar ${stepId}:`, error);
+        appLogger.warn(`⚠️ [warmCache] Falha ao carregar ${stepId}:`, { data: [error] });
         results.failed++;
       }
     });
@@ -969,10 +970,7 @@ export class TemplateLoader {
     await Promise.allSettled(promises);
 
     const duration = performance.now() - startTime;
-    console.log(
-      `✅ [warmCache] Completo em ${duration.toFixed(0)}ms:`,
-      `${results.loaded} loaded, ${results.cached} cached, ${results.failed} failed`
-    );
+    appLogger.info(`✅ [warmCache] Completo em ${duration.toFixed(0)}ms:`, { data: [`${results.loaded} loaded, ${results.cached} cached, ${results.failed} failed`] });
 
     return results;
   }

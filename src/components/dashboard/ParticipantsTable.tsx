@@ -28,6 +28,7 @@ import {
     Palette,
     RefreshCw,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -115,13 +116,13 @@ const ParticipantsTable: React.FC = () => {
                 .order('started_at', { ascending: false });
 
             if (sessionsError) {
-                console.error('Erro ao carregar sessões:', sessionsError);
-                console.error('Detalhes do erro:', sessionsError.message);
+                appLogger.error('Erro ao carregar sessões:', { data: [sessionsError] });
+                appLogger.error('Detalhes do erro:', { data: [sessionsError.message] });
                 return;
             }
 
-            console.log('✅ Sessions carregadas:', sessions?.length || 0);
-            console.log('📊 Primeira sessão de exemplo:', sessions?.[0]);
+            appLogger.info('✅ Sessions carregadas:', { data: [sessions?.length || 0] });
+            appLogger.info('📊 Primeira sessão de exemplo:', { data: [sessions?.[0]] });
 
             // Combinar dados
             const participantsData: ParticipantResponse[] = (sessions || []).map(session => {
@@ -163,7 +164,7 @@ const ParticipantsTable: React.FC = () => {
             setAvailableStyles(styles);
 
         } catch (error) {
-            console.error('Erro ao carregar dados:', error);
+            appLogger.error('Erro ao carregar dados:', { data: [error] });
         } finally {
             setIsLoading(false);
         }
@@ -191,7 +192,7 @@ const ParticipantsTable: React.FC = () => {
                 setSelectedParticipant(sessionId);
             }
         } catch (error) {
-            console.error('Erro ao carregar detalhes:', error);
+            appLogger.error('Erro ao carregar detalhes:', { data: [error] });
         }
     };
 

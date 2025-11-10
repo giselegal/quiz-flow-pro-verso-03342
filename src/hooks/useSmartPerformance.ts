@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIsLowPerformanceDevice, useIsMobile } from './use-mobile';
 import { useDebounce } from './useDebounce';
 import { usePerformanceOptimization } from './usePerformanceOptimization';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 Hook composto para performance completa
@@ -243,7 +244,7 @@ export const useOptimizedQuizStep = (
         );
         setPreloadComplete(true);
       } catch (error) {
-        console.warn(`Erro no preload do step ${stepId + 1}:`, error);
+        appLogger.warn(`Erro no preload do step ${stepId + 1}:`, { data: [error] });
       } finally {
         setIsPreloading(false);
       }

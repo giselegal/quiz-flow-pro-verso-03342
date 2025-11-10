@@ -3,7 +3,8 @@
  * ROI Projetado: $8k-20k/mês
  */
 
-import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+import { v4 as uuidv4 } from 'uuid';
+import { appLogger } from '@/lib/utils/appLogger'; // 🆕 G36 FIX: Import UUID
 
 export interface TenantConfig {
   id: string;
@@ -52,12 +53,12 @@ export class MultiTenantService {
 
     this.tenants.set(tenant.id, tenant);
 
-    console.log('🏢 Novo tenant criado:', {
-      id: tenant.id,
-      name: tenant.name,
-      plan: tenant.billing.plan,
-      projectedRevenue: tenant.billing.monthlyRevenue,
-    });
+    appLogger.info('🏢 Novo tenant criado:', { data: [{
+            id: tenant.id,
+            name: tenant.name,
+            plan: tenant.billing.plan,
+            projectedRevenue: tenant.billing.monthlyRevenue,
+          }] });
 
     return tenant;
   }

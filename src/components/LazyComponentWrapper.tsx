@@ -10,6 +10,7 @@
 
 import React, { Suspense, ComponentType, ReactNode } from 'react';
 import { EnhancedLoadingFallback } from './ui/enhanced-loading-fallback';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface LazyComponentWrapperProps {
   component: ComponentType<any>;
@@ -37,7 +38,7 @@ class LazyErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: any) {
-    console.error('Lazy component error:', error, errorInfo);
+    appLogger.error('Lazy component error:', { data: [error, errorInfo] });
     this.props.onError?.(error);
   }
 

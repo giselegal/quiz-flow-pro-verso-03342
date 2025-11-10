@@ -11,6 +11,7 @@
 
 import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -91,7 +92,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       // 1. Verificar cache
       const cached = this.getCached<FullTemplate>(templateId);
       if (cached) {
-        console.log(`⚡ Template cache hit: ${templateId}`);
+        appLogger.info(`⚡ Template cache hit: ${templateId}`);
         return cached;
       }
 
@@ -136,15 +137,15 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       try {
         const template = await loadMethod();
         if (template) {
-          console.log(`✅ Template carregado: ${templateId}`);
+          appLogger.info(`✅ Template carregado: ${templateId}`);
           return template;
         }
       } catch (error) {
-        console.warn(`⚠️ Método de carregamento falhou para ${templateId}:`, error);
+        appLogger.warn(`⚠️ Método de carregamento falhou para ${templateId}:`, { data: [error] });
       }
     }
 
-    console.error(`❌ Falha ao carregar template: ${templateId}`);
+    appLogger.error(`❌ Falha ao carregar template: ${templateId}`);
     return null;
   }
 
@@ -166,7 +167,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       }
       return null;
     } catch (error) {
-      console.warn('Registry load failed:', error);
+      appLogger.warn('Registry load failed:', { data: [error] });
       return null;
     }
   }
@@ -227,7 +228,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       }
       return null;
     } catch (error) {
-      console.warn('TypeScript load failed:', error);
+      appLogger.warn('TypeScript load failed:', { data: [error] });
       return null;
     }
   }
@@ -278,7 +279,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
 
       return null;
     } catch (error) {
-      console.warn('JSON load failed:', error);
+      appLogger.warn('JSON load failed:', { data: [error] });
       return null;
     }
   }
@@ -523,22 +524,22 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       'step-1', 'step-2', 'step-12', 'step-20',
     ];
 
-    console.log('🚀 Preloading critical templates...');
+    appLogger.info('🚀 Preloading critical templates...');
     const startTime = performance.now();
 
     const preloadPromises = criticalTemplates.map(async (templateId) => {
       try {
         await this.getTemplate(templateId);
-        console.log(`✅ Preloaded: ${templateId}`);
+        appLogger.info(`✅ Preloaded: ${templateId}`);
       } catch (error) {
-        console.warn(`⚠️ Failed to preload ${templateId}:`, error);
+        appLogger.warn(`⚠️ Failed to preload ${templateId}:`, { data: [error] });
       }
     });
 
     await Promise.allSettled(preloadPromises);
 
     const duration = performance.now() - startTime;
-    console.log(`🎯 Preload completed in ${duration.toFixed(2)}ms`);
+    appLogger.info(`🎯 Preload completed in ${duration.toFixed(2)}ms`);
   }
 
   /**

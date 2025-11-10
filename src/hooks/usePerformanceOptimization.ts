@@ -15,6 +15,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PerformanceState {
   fps: number;
@@ -72,7 +73,7 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
       try {
         callback();
       } catch (error) {
-        console.error('Debounced callback error:', error);
+        appLogger.error('Debounced callback error:', { data: [error] });
       } finally {
         // Clean up
         activeTimeouts.current.delete(timer);
@@ -97,7 +98,7 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
     try {
       callback();
     } catch (error) {
-      console.error('Throttled callback error:', error);
+      appLogger.error('Throttled callback error:', { data: [error] });
     }
 
     // Set throttle
@@ -134,7 +135,7 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
     // Clear throttle flags
     throttleTimers.current.clear();
 
-    console.log('All timers and intervals cleaned up');
+    appLogger.info('All timers and intervals cleaned up');
   }, []);
 
   // Render optimization - only re-render if dependencies actually changed
@@ -194,13 +195,13 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
 
       // Log performance warnings
       if (fps < 30) {
-        console.warn(`Low FPS detected: ${fps}fps`);
+        appLogger.warn(`Low FPS detected: ${fps}fps`);
       }
       if (memoryUsage > 80) {
-        console.warn(`High memory usage: ${memoryUsage}%`);
+        appLogger.warn(`High memory usage: ${memoryUsage}%`);
       }
       if (activeTimeouts.current.size > 20) {
-        console.warn(`High timeout count: ${activeTimeouts.current.size}`);
+        appLogger.warn(`High timeout count: ${activeTimeouts.current.size}`);
       }
     }
   }, []);
@@ -241,7 +242,7 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
     const cleanup = setInterval(() => {
       // Force cleanup of old debounce timers if we have too many
       if (debounceTimers.current.size > 50) {
-        console.warn('Too many debounce timers, forcing cleanup');
+        appLogger.warn('Too many debounce timers, forcing cleanup');
         const oldestKeys = Array.from(debounceTimers.current.keys()).slice(0, 25);
         oldestKeys.forEach(key => {
           const timer = debounceTimers.current.get(key);

@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -80,7 +81,7 @@ class AdvancedCache<T = any> {
             this.persistentStorage = localStorage;
             this.loadPersistentCache();
         } catch (e) {
-            console.warn('Cache persistente não disponível:', e);
+            appLogger.warn('Cache persistente não disponível:', { data: [e] });
         }
         
         // Cleanup periódico
@@ -129,7 +130,7 @@ class AdvancedCache<T = any> {
             }
             
         } catch (error) {
-            console.error('Erro ao salvar no cache:', error);
+            appLogger.error('Erro ao salvar no cache:', { data: [error] });
         }
     }
     
@@ -171,7 +172,7 @@ class AdvancedCache<T = any> {
             return entry.data;
             
         } catch (error) {
-            console.error('Erro ao recuperar do cache:', error);
+            appLogger.error('Erro ao recuperar do cache:', { data: [error] });
             return null;
         }
     }
@@ -243,7 +244,7 @@ class AdvancedCache<T = any> {
                         const data = await loader();
                         this.set(key, data);
                     } catch (error) {
-                        console.warn(`Preload failed for ${key}:`, error);
+                        appLogger.warn(`Preload failed for ${key}:`, { data: [error] });
                     }
                 }
             }),
@@ -363,7 +364,7 @@ class AdvancedCache<T = any> {
             };
             this.persistentStorage!.setItem(persistKey, JSON.stringify(persistData));
         } catch (error) {
-            console.warn('Falha ao persistir cache:', error);
+            appLogger.warn('Falha ao persistir cache:', { data: [error] });
         }
     }
     
@@ -390,7 +391,7 @@ class AdvancedCache<T = any> {
                     }
                 }
             } catch (error) {
-                console.warn(`Falha ao carregar cache persistente para ${key}:`, error);
+                appLogger.warn(`Falha ao carregar cache persistente para ${key}:`, { data: [error] });
             }
         });
     }

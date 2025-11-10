@@ -6,6 +6,7 @@
  */
 
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface MigrationResult {
     success: boolean;
@@ -26,7 +27,7 @@ export const migrateLegacyFunnelData = (): MigrationResult => {
     };
 
     try {
-        console.log('🔄 Iniciando migração de dados legados...');
+        appLogger.info('🔄 Iniciando migração de dados legados...');
 
         // Padrões de chaves antigas que precisam ser migradas
         const legacyPatterns = [
@@ -44,7 +45,7 @@ export const migrateLegacyFunnelData = (): MigrationResult => {
             if (key) allKeys.push(key);
         }
 
-        console.log(`📊 Encontradas ${allKeys.length} chaves no localStorage`);
+        appLogger.info(`📊 Encontradas ${allKeys.length} chaves no localStorage`);
 
         // Migrar cada chave que corresponde aos padrões legados
         for (const key of allKeys) {
@@ -71,9 +72,9 @@ export const migrateLegacyFunnelData = (): MigrationResult => {
 
         result.success = result.errors.length === 0;
 
-        console.log('✅ Migração concluída:');
-        console.log(`  - Itens migrados: ${result.migratedItems}`);
-        console.log(`  - Erros: ${result.errors.length}`);
+        appLogger.info('✅ Migração concluída:');
+        appLogger.info(`  - Itens migrados: ${result.migratedItems}`);
+        appLogger.info(`  - Erros: ${result.errors.length}`);
 
         return result;
     } catch (error) {
@@ -114,20 +115,20 @@ const migrateSingleKey = (oldKey: string, targetContext: FunnelContext): boolean
 
         // Verificar se a nova chave já existe
         if (localStorage.getItem(newKey)) {
-            console.log(`⚠️ Chave contextual já existe: ${newKey}`);
+            appLogger.info(`⚠️ Chave contextual já existe: ${newKey}`);
             return false;
         }
 
         // Migrar dados
         localStorage.setItem(newKey, data);
-        console.log(`🔄 Migrado: ${oldKey} → ${newKey}`);
+        appLogger.info(`🔄 Migrado: ${oldKey} → ${newKey}`);
 
         // Remover chave antiga (opcional - comentado por segurança)
         // localStorage.removeItem(oldKey);
 
         return true;
     } catch (error) {
-        console.error(`❌ Erro ao migrar chave ${oldKey}:`, error);
+        appLogger.error(`❌ Erro ao migrar chave ${oldKey}:`, { data: [error] });
         return false;
     }
 };
@@ -227,13 +228,13 @@ export const cleanupLegacyData = (): number => {
             if (key.startsWith(legacyKey) || key === legacyKey) {
                 localStorage.removeItem(key);
                 removedCount++;
-                console.log(`🗑️ Removido dado legado: ${key}`);
+                appLogger.info(`🗑️ Removido dado legado: ${key}`);
                 break;
             }
         }
     }
 
-    console.log(`🧹 Limpeza concluída: ${removedCount} itens legados removidos`);
+    appLogger.info(`🧹 Limpeza concluída: ${removedCount} itens legados removidos`);
     return removedCount;
 };
 
@@ -245,7 +246,7 @@ export const executeMigrationWithConfirmation = (): Promise<MigrationResult> => 
         const hasLegacyData = checkForLegacyData();
 
         if (!hasLegacyData) {
-            console.log('✅ Nenhum dado legado encontrado');
+            appLogger.info('✅ Nenhum dado legado encontrado');
             resolve({
                 success: true,
                 migratedItems: 0,
@@ -255,11 +256,11 @@ export const executeMigrationWithConfirmation = (): Promise<MigrationResult> => 
             return;
         }
 
-        console.log('⚠️ Dados legados encontrados. Iniciando migração...');
+        appLogger.info('⚠️ Dados legados encontrados. Iniciando migração...');
         const result = migrateLegacyFunnelData();
 
         if (result.success && result.migratedItems > 0) {
-            console.log('🎉 Migração bem-sucedida!');
+            appLogger.info('🎉 Migração bem-sucedida!');
 
             // Opcional: limpar dados legados após migração
             // const cleanedCount = cleanupLegacyData();

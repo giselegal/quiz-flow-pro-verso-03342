@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Optimized Image Storage Service - Stub
  * TODO: Implementar otimização e armazenamento de imagens
@@ -30,12 +31,12 @@ export class OptimizedImageStorage {
         file: File,
         options?: ImageOptimizationOptions
     ): Promise<OptimizedImageResult> {
-        console.warn('OptimizedImageStorage: Stub implementation');
+        appLogger.warn('OptimizedImageStorage: Stub implementation');
         throw new Error('OptimizedImageStorage not implemented yet');
     }
 
     async getOptimizedUrl(originalUrl: string): Promise<string> {
-        console.warn('OptimizedImageStorage: Stub implementation');
+        appLogger.warn('OptimizedImageStorage: Stub implementation');
         return originalUrl;
     }
 
@@ -84,7 +85,7 @@ export class OptimizedImageStorage {
             try { 
                 URL.revokeObjectURL(entry.url); 
             } catch (error) {
-                console.warn('[OptimizedImageStorage] Erro ao revogar ObjectURL:', error);
+                appLogger.warn('[OptimizedImageStorage] Erro ao revogar ObjectURL:', { data: [error] });
             }
         }
         this.cache.clear();

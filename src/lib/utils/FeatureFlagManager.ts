@@ -1,4 +1,5 @@
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎛️ SISTEMA DE FEATURE FLAGS
  *
@@ -134,12 +135,12 @@ export class FeatureFlagManager {
    */
   setFlag(flagName: keyof FeatureFlags, value: boolean): void {
     if (this.config.environment !== 'development') {
-      console.warn('🚫 Feature flags só podem ser alteradas em desenvolvimento');
+      appLogger.warn('🚫 Feature flags só podem ser alteradas em desenvolvimento');
       return;
     }
 
     localStorage.setItem(`flag_${flagName}`, String(value));
-    console.log(`🎛️ Flag ${flagName} definida como ${value}`);
+    appLogger.info(`🎛️ Flag ${flagName} definida como ${value}`);
   }
 
   /**
@@ -147,7 +148,7 @@ export class FeatureFlagManager {
    */
   resetFlags(): void {
     if (this.config.environment !== 'development') {
-      console.warn('🚫 Reset de flags só disponível em desenvolvimento');
+      appLogger.warn('🚫 Reset de flags só disponível em desenvolvimento');
       return;
     }
 
@@ -155,7 +156,7 @@ export class FeatureFlagManager {
       localStorage.removeItem(`flag_${flagName}`);
     });
 
-    console.log('🔄 Todas as flags foram resetadas');
+    appLogger.info('🔄 Todas as flags foram resetadas');
   }
 
   /**
@@ -238,7 +239,7 @@ if (typeof window !== 'undefined' && import.meta.env.MODE === 'development') {
       FeatureFlagManager.getInstance().setFlag('enableSystemValidation', true),
   };
 
-  console.log('🎛️ Debug console disponível em window.quizFlags');
+  appLogger.info('🎛️ Debug console disponível em window.quizFlags');
 }
 
 export default FeatureFlagManager;

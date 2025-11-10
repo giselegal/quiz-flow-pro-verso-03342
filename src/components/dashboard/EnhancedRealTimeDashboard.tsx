@@ -23,6 +23,7 @@ import {
     Monitor,
     BarChart3,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -201,22 +202,22 @@ const EnhancedRealTimeDashboard: React.FC = () => {
     const loadDashboardData = async () => {
         try {
             setIsLoading(true);
-            console.log('📊 EnhancedRealTimeDashboard: Carregando métricas em tempo real...');
+            appLogger.info('📊 EnhancedRealTimeDashboard: Carregando métricas em tempo real...');
 
             const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
             setRealTimeMetrics(metrics);
             setLastUpdated(new Date());
 
-            console.log('✅ Real-time metrics loaded:', {
-                totalSessions: metrics.totalSessions,
-                activeUsersRealTime: metrics.activeUsersRealTime,
-                sessionsLastHour: metrics.sessionsLastHour,
-                conversionRate: metrics.conversionRate,
-                source: 'EnhancedUnifiedDataService (Supabase)',
-            });
+            appLogger.info('✅ Real-time metrics loaded:', { data: [{
+                            totalSessions: metrics.totalSessions,
+                            activeUsersRealTime: metrics.activeUsersRealTime,
+                            sessionsLastHour: metrics.sessionsLastHour,
+                            conversionRate: metrics.conversionRate,
+                            source: 'EnhancedUnifiedDataService (Supabase)',
+                        }] });
 
         } catch (error) {
-            console.error('❌ Erro ao carregar métricas em tempo real:', error);
+            appLogger.error('❌ Erro ao carregar métricas em tempo real:', { data: [error] });
         } finally {
             setIsLoading(false);
         }
@@ -240,7 +241,7 @@ const EnhancedRealTimeDashboard: React.FC = () => {
         const unsubscribe = EnhancedUnifiedDataService.subscribeToRealTimeUpdates((metrics) => {
             setRealTimeMetrics(metrics);
             setLastUpdated(new Date());
-            console.log('🔄 Real-time data updated automatically');
+            appLogger.info('🔄 Real-time data updated automatically');
         });
 
         return () => {

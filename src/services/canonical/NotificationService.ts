@@ -13,6 +13,7 @@
  */
 
 import { BaseCanonicalService, ServiceResult } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -725,7 +726,7 @@ export class NotificationService extends BaseCanonicalService {
         try {
           callback(data);
         } catch (error) {
-          console.error(`Error in event listener for ${event}:`, error);
+          appLogger.error(`Error in event listener for ${event}:`, { data: [error] });
         }
       });
     }

@@ -14,6 +14,7 @@ import { Loader2 } from 'lucide-react';
 // 🎯 COMPONENTES CRÍTICOS LAZY LOADED
 // Import from centralized LazyCharts instead of direct recharts import
 import { LazyAreaChart } from '@/components/charts/LazyCharts';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const LazyModernUnifiedEditor = lazy(() =>
     import('@/pages/editor/ModernUnifiedEditor').then(module => ({
@@ -140,6 +141,6 @@ export const preloadCriticalComponents = () => {
 
 // 📊 BUNDLE SIZE TRACKING
 if (typeof window !== 'undefined' && import.meta.env.DEV) {
-    console.log('🚀 Performance Optimized Components Loaded');
-    console.log('📦 Bundle reduction expected: ~40% on initial load');
+    appLogger.info('🚀 Performance Optimized Components Loaded');
+    appLogger.info('📦 Bundle reduction expected: ~40% on initial load');
 }

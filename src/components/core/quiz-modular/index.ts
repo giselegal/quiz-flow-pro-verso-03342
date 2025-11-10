@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // ❌ DEPRECATED - Componentes Modular* foram removidos da arquitetura v3.0
 // A nova arquitetura usa BlockTypeRenderer diretamente via UnifiedStepContent
 // 
@@ -10,7 +11,7 @@
 
 const DeprecatedComponent = () => {
     if (typeof window !== 'undefined') {
-        console.warn('⚠️ DEPRECATED: Componente Modular* foi removido. Use BlockTypeRenderer diretamente.');
+        appLogger.warn('⚠️ DEPRECATED: Componente Modular* foi removido. Use BlockTypeRenderer diretamente.');
     }
     return null;
 };

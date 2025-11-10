@@ -29,6 +29,7 @@ import { resultDataService } from './data/ResultDataService';
 import { funnelDataService } from './data/FunnelDataService';
 import { analyticsDataService } from './data/AnalyticsDataService';
 import { CanonicalServicesMonitor } from './monitoring';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -213,7 +214,7 @@ export class DataService extends BaseCanonicalService {
 
       return dbOk && participantsOk && sessionsOk && resultsOk && funnelsOk && analyticsOk;
     } catch (error) {
-      console.warn('[DataService] Health check falhou:', error);
+      appLogger.warn('[DataService] Health check falhou:', { data: [error] });
       return false;
     }
   }

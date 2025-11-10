@@ -7,6 +7,7 @@ import { useEffect, useCallback, useState } from 'react';
 import { healthCheckService, type HealthStatus } from '@/services/monitoring/HealthCheckService';
 import { analyticsService } from '@/services/AnalyticsService';
 import { errorTrackingService, type ErrorReport } from '@/services/monitoring/ErrorTrackingService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface MonitoringState {
   healthStatus: HealthStatus | null;
@@ -88,9 +89,9 @@ export const useMonitoring = (options?: {
         isMonitoring: true,
       }));
 
-      console.log('📊 Monitoring started');
+      appLogger.info('📊 Monitoring started');
     } catch (error) {
-      console.error('Failed to start monitoring:', error);
+      appLogger.error('Failed to start monitoring:', { data: [error] });
     }
   }, [healthCheckInterval]);
 
@@ -104,7 +105,7 @@ export const useMonitoring = (options?: {
       isMonitoring: false,
     }));
 
-    console.log('📊 Monitoring stopped');
+    appLogger.info('📊 Monitoring stopped');
   }, []);
 
   /**
@@ -120,7 +121,7 @@ export const useMonitoring = (options?: {
       }));
       return health;
     } catch (error) {
-      console.error('Health check failed:', error);
+      appLogger.error('Health check failed:', { data: [error] });
       return null;
     }
   }, []);

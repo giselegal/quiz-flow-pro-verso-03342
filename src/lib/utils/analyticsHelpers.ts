@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { getAnalyticsEvents } from './analytics';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Get cached metrics or calculate if not in cache
 export const getCachedMetrics = (timeRange: '7d' | '30d' | 'all') => {
@@ -36,7 +37,7 @@ export const getCachedMetrics = (timeRange: '7d' | '30d' | 'all') => {
 
     return ensureMetricsStructure(metrics);
   } catch (error) {
-    console.error('Error getting cached metrics:', error);
+    appLogger.error('Error getting cached metrics:', { data: [error] });
     // Return default metrics structure to prevent undefined errors
     return getDefaultMetrics();
   }
@@ -81,9 +82,9 @@ export const resetMetricsCache = () => {
     StorageService.safeRemove('analytics_metrics_cache_7d');
     StorageService.safeRemove('analytics_metrics_cache_30d');
     StorageService.safeRemove('analytics_metrics_cache_all');
-    console.log('Metrics cache reset');
+    appLogger.info('Metrics cache reset');
   } catch (error) {
-    console.error('Error resetting metrics cache:', error);
+    appLogger.error('Error resetting metrics cache:', { data: [error] });
   }
 };
 

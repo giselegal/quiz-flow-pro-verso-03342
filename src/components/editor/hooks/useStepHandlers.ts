@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizStep {
   id: string;
@@ -22,7 +23,7 @@ export const useStepHandlers = (
 ) => {
   const handleStepSelect = useCallback(
     (stepId: string) => {
-      console.log(`🎯 Selecionando etapa: ${stepId}`);
+      appLogger.info(`🎯 Selecionando etapa: ${stepId}`);
       setSelectedStepId(stepId);
       setSelectedBlockId(null); // Clear block selection when changing steps
 
@@ -30,13 +31,13 @@ export const useStepHandlers = (
       // Verificar se a etapa já tem blocos, se não tiver, popular automaticamente
       const selectedStep = steps.find(step => step.id === stepId);
       if (selectedStep && selectedStep.blocksCount === 0) {
-        console.log(`📝 Etapa ${stepId} está vazia, populando automaticamente...`);
+        appLogger.info(`📝 Etapa ${stepId} está vazia, populando automaticamente...`);
         // Carregar conteúdo da etapa automaticamente
         setTimeout(() => {
           handlePopulateStep(stepId);
         }, 100);
       } else {
-        console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
+        appLogger.info(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
       }
     },
     [steps, setSelectedStepId, setSelectedBlockId, handlePopulateStep],
@@ -107,7 +108,7 @@ export const useStepHandlers = (
 
   const handleStepReorder = useCallback((draggedId: string, targetId: string) => {
     // TODO: Implement drag and drop reordering
-    console.log('Reorder step', draggedId, 'to', targetId);
+    appLogger.info('Reorder step', { data: [draggedId, 'to', targetId] });
   }, []);
 
   return {

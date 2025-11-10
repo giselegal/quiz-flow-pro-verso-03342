@@ -12,6 +12,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Mock data for demonstration
 const conversionsData = [
@@ -43,7 +44,7 @@ const MetricsPage: React.FC = () => {
     let mounted = true;
     getCachedImport('recharts-bundle', loadRecharts)
       .then(mod => { if (mounted) setCharts(mod); })
-      .catch(err => { console.warn('Falha ao carregar Recharts dinamicamente:', err); });
+      .catch(err => { appLogger.warn('Falha ao carregar Recharts dinamicamente:', { data: [err] }); });
     return () => { mounted = false; };
   }, []);
 

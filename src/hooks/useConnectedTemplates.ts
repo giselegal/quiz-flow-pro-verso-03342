@@ -7,6 +7,7 @@ import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplate
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useQuizLogic } from './useQuizLogic';
 import { useSupabaseQuiz } from './useSupabaseQuiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface ConnectedTemplateConfig {
   stepNumber: number;
@@ -54,7 +55,7 @@ export const useConnectedTemplates = () => {
         
         setQuestionsData(questions);
       } catch (error) {
-        console.error('❌ Erro ao carregar questões:', error);
+        appLogger.error('❌ Erro ao carregar questões:', { data: [error] });
       } finally {
         setIsLoading(false);
       }
@@ -106,7 +107,7 @@ export const useConnectedTemplates = () => {
     async (stepNumber: number, selectedOptions: string[]) => {
       const config = templateConfigs[stepNumber];
       if (!config || !config.questionData) {
-        console.error(`❌ Template config not found for step ${stepNumber}`);
+        appLogger.error(`❌ Template config not found for step ${stepNumber}`);
         return false;
       }
 
@@ -116,14 +117,14 @@ export const useConnectedTemplates = () => {
           await quizLogic.answerQuestion(config.questionId, selectedOptions[0]);
         }
 
-        console.log(`✅ Connected Template Step ${stepNumber}: Resposta salva`, {
-          questionId: config.questionId,
-          selectedOptions,
-        });
+        appLogger.info(`✅ Connected Template Step ${stepNumber}: Resposta salva`, { data: [{
+                    questionId: config.questionId,
+                    selectedOptions,
+                  }] });
 
         return true;
       } catch (error) {
-        console.error(`❌ Connected Template Step ${stepNumber}: Erro ao salvar`, error);
+        appLogger.error(`❌ Connected Template Step ${stepNumber}: Erro ao salvar`, { data: [error] });
         return false;
       }
     },

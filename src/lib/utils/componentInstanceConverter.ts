@@ -14,6 +14,7 @@
 
 import { Block } from '@/types/editor';
 import type { ComponentInstance } from '@/services/funnelComponentsService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Converte array de ComponentInstance (Supabase) para Block[] (Editor)
@@ -121,10 +122,7 @@ export function filterValidInstances(instances: any[]): ComponentInstance[] {
   }
 
   if (invalid.length > 0) {
-    console.warn(
-      `⚠️ ${invalid.length} component instance(s) inválida(s) filtrada(s)`,
-      invalid
-    );
+    appLogger.warn(`⚠️ ${invalid.length} component instance(s) inválida(s) filtrada(s)`, { data: [invalid] });
   }
 
   return valid;

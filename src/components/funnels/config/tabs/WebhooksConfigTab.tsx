@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Webhook, Zap, CheckCircle, AlertTriangle, TestTube } from 'lucide-react';
 import { FunnelWebhooksConfig } from '@/templates/funnel-configs/quiz21StepsComplete.config';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface WebhooksConfigTabProps {
     webhooks: FunnelWebhooksConfig;
@@ -48,12 +49,12 @@ export default function WebhooksConfigTab({ webhooks, onUpdate, disabled = false
         }
 
         try {
-            console.log(`🧪 Testando webhook ${type}: ${url}`);
+            appLogger.info(`🧪 Testando webhook ${type}: ${url}`);
             // Aqui você implementaria o teste real do webhook
             // Por enquanto, apenas simula o teste
             notify(`Teste de webhook enviado para: ${url}`, 'success', 'Webhook');
         } catch (error) {
-            console.error('❌ Erro no teste do webhook:', error);
+            appLogger.error('❌ Erro no teste do webhook:', { data: [error] });
             notify('Erro ao testar webhook. Verifique a URL e tente novamente.', 'error', 'Webhook');
         }
     };

@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🗝️ FUNNEL STORAGE KEYS
  * 
@@ -89,7 +90,7 @@ export const clearFunnelData = (funnelId: string): void => {
         localStorage.removeItem(key);
     });
 
-    console.log(`🗑️ Removidos ${keysToRemove.length} itens do funil ${funnelId}`);
+    appLogger.info(`🗑️ Removidos ${keysToRemove.length} itens do funil ${funnelId}`);
 };
 
 /**
@@ -145,8 +146,8 @@ export const migrateLegacyData = (funnelId: string): void => {
     });
 
     if (migratedKeys.length > 0) {
-        console.log(`🔄 Migrados ${migratedKeys.length} itens para o funil ${funnelId}:`);
-        migratedKeys.forEach(migration => console.log(`  ${migration}`));
+        appLogger.info(`🔄 Migrados ${migratedKeys.length} itens para o funil ${funnelId}:`);
+        migratedKeys.forEach(migration => appLogger.info(`  ${migration}`));
     }
 };
 

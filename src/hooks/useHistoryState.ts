@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';
 import { safeGetItem as getCtx, safeSetItem as setCtx, safeRemoveItem as removeCtx } from '@/lib/utils/contextualStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface HistoryState<T> {
   past: T[];
@@ -63,7 +64,7 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
           };
         }
       } catch (error) {
-        console.warn('Failed to load history state from localStorage:', error);
+        appLogger.warn('Failed to load history state from localStorage:', { data: [error] });
       }
     }
     return {
@@ -93,7 +94,7 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
         const serialized = JSON.stringify(toPersist);
         // Guardar: evita salvar estados grandes demais
         if (serialized.length > 500_000) {
-          console.warn('History persistence skipped: payload too large (~', serialized.length, 'bytes)');
+          appLogger.warn('History persistence skipped: payload too large (~', { data: [serialized.length, 'bytes)'] });
           (window as any).__DISABLE_EDITOR_PERSISTENCE__ = true;
           return;
         }
@@ -102,10 +103,10 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
         try { 
             localStorage.removeItem(storageKey); 
         } catch (error) {
-            console.warn('[useHistoryState] Erro ao remover storage legado:', error);
+            appLogger.warn('[useHistoryState] Erro ao remover storage legado:', { data: [error] });
         }
       } catch (error: any) {
-        console.warn('Failed to save history state to localStorage:', error);
+        appLogger.warn('Failed to save history state to localStorage:', { data: [error] });
         // Disable further attempts to prevent spam
         try {
           (window as any).__DISABLE_EDITOR_PERSISTENCE__ = true;
@@ -113,15 +114,15 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
           try { 
               localStorage.removeItem(storageKey); 
           } catch (err) {
-              console.warn('[useHistoryState] Erro ao limpar localStorage:', err);
+              appLogger.warn('[useHistoryState] Erro ao limpar localStorage:', { data: [err] });
           }
           try { 
               removeCtx(storageKey, activeContext); 
           } catch (err) {
-              console.warn('[useHistoryState] Erro ao remover contexto:', err);
+              appLogger.warn('[useHistoryState] Erro ao remover contexto:', { data: [err] });
           }
         } catch (error) {
-            console.warn('[useHistoryState] Erro ao desabilitar persistência:', error);
+            appLogger.warn('[useHistoryState] Erro ao desabilitar persistência:', { data: [error] });
         }
       }
     };

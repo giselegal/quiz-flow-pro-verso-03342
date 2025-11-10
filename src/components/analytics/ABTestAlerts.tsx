@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ABTestMetrics {
   variant: 'A' | 'B';
@@ -212,7 +213,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
 
       setLastCheck(now);
     } catch (error) {
-      console.error('Erro ao verificar alertas:', error);
+      appLogger.error('Erro ao verificar alertas:', { data: [error] });
     }
   };
 

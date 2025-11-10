@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🧠 INTELLIGENT CACHE SYSTEM - FASE 2: TEMPLATE CACHING
  * 
@@ -68,7 +69,7 @@ class IntelligentCacheSystem<T = any> {
     
     if (!entry) {
       this.stats.misses++;
-      console.log(`❌ Cache miss: ${key}`);
+      appLogger.info(`❌ Cache miss: ${key}`);
       return null;
     }
 
@@ -78,7 +79,7 @@ class IntelligentCacheSystem<T = any> {
     if (isExpired) {
       this.cache.delete(key);
       this.stats.misses++;
-      console.log(`⏰ Cache expired: ${key}`);
+      appLogger.info(`⏰ Cache expired: ${key}`);
       return null;
     }
 
@@ -87,7 +88,7 @@ class IntelligentCacheSystem<T = any> {
     entry.lastAccessed = now;
     this.stats.hits++;
     
-    console.log(`✅ Cache hit: ${key} (${entry.accessCount} accesses)`);
+    appLogger.info(`✅ Cache hit: ${key} (${entry.accessCount} accesses)`);
     return entry.data;
   }
 
@@ -123,7 +124,7 @@ class IntelligentCacheSystem<T = any> {
     };
 
     this.cache.set(key, entry);
-    console.log(`💾 Cached: ${key} (${priority}, ${ttl}ms TTL, ${size} bytes)`);
+    appLogger.info(`💾 Cached: ${key} (${priority}, ${ttl}ms TTL, ${size} bytes)`);
   }
 
   /**
@@ -165,7 +166,7 @@ class IntelligentCacheSystem<T = any> {
     }
 
     this.stats.invalidations += invalidated;
-    console.log(`🗑️ Invalidated ${invalidated} entries for pattern: ${pattern}`);
+    appLogger.info(`🗑️ Invalidated ${invalidated} entries for pattern: ${pattern}`);
     return invalidated;
   }
 
@@ -198,7 +199,7 @@ class IntelligentCacheSystem<T = any> {
       this.stats.evictions++;
     }
 
-    console.log(`🧹 Evicted ${toRemove} least used entries`);
+    appLogger.info(`🧹 Evicted ${toRemove} least used entries`);
   }
 
   /**
@@ -244,7 +245,7 @@ class IntelligentCacheSystem<T = any> {
     }
 
     if (cleaned > 0) {
-      console.log(`🧹 Cleaned ${cleaned} expired entries`);
+      appLogger.info(`🧹 Cleaned ${cleaned} expired entries`);
     }
   }
 
@@ -288,7 +289,7 @@ class IntelligentCacheSystem<T = any> {
     entry.timestamp = Date.now();
     entry.size = this.estimateSize(newData);
     
-    console.log(`🔄 Refreshed: ${key}`);
+    appLogger.info(`🔄 Refreshed: ${key}`);
     return true;
   }
 
@@ -299,7 +300,7 @@ class IntelligentCacheSystem<T = any> {
     const count = this.cache.size;
     this.cache.clear();
     this.stats = { hits: 0, misses: 0, evictions: 0, invalidations: 0 };
-    console.log(`🗑️ Cleared entire cache (${count} entries)`);
+    appLogger.info(`🗑️ Cleared entire cache (${count} entries)`);
   }
 
   /**

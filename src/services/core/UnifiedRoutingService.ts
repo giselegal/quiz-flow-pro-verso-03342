@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 UNIFIED ROUTING SERVICE
  * 
@@ -151,7 +152,7 @@ class UnifiedRoutingServiceImpl {
             window.dispatchEvent(evt);
         }
 
-        console.log(`🧭 UnifiedRouting: Navegando para ${path}`, this.currentContext);
+        appLogger.info(`🧭 UnifiedRouting: Navegando para ${path}`, { data: [this.currentContext] });
     }
 
     /**
@@ -366,7 +367,7 @@ class UnifiedRoutingServiceImpl {
     clearNavigationHistory(): void {
         this.navigationHistory = [];
         this.currentContext = null;
-        console.log('🧹 UnifiedRouting: Histórico de navegação limpo');
+        appLogger.info('🧹 UnifiedRouting: Histórico de navegação limpo');
     }
 }
 

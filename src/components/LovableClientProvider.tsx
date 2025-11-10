@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface LovableProviderProps {
   children: React.ReactNode;
@@ -40,18 +41,18 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
 
           // Log informativo para diagnóstico
           // eslint-disable-next-line no-console
-          console.info('[Lovable] ✅ Configuração ativada com projectId válido', {
-            inIframe,
-            enableFlag,
-            projectId: projectId!.substring(0, 8) + '...', // Mostrar apenas início do ID
-            path: window.location.pathname,
-          });
+          appLogger.info('[Lovable] ✅ Configuração ativada com projectId válido', { data: [{
+                        inIframe,
+                        enableFlag,
+                        projectId: projectId!.substring(0, 8) + '...', // Mostrar apenas início do ID
+                        path: window.location.pathname,
+                      }] });
 
           return () => {
             try {
               delete (window as any).LOVABLE_CONFIG;
             } catch (error) {
-              console.warn('Error cleaning up Lovable config:', error);
+              appLogger.warn('Error cleaning up Lovable config:', { data: [error] });
             }
           };
         } else {
@@ -60,22 +61,22 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
             if ((window as any).LOVABLE_CONFIG) {
               delete (window as any).LOVABLE_CONFIG;
               // eslint-disable-next-line no-console
-              console.info('[Lovable] ⚠️ Desativado', {
-                reason: !hasValidProjectId 
-                  ? 'projectId inválido/ausente' 
-                  : !isEditor 
-                  ? 'não está em rota de editor' 
-                  : 'sem iframe e sem flag de ativação',
-                hasValidProjectId,
-                isEditor,
-                inIframe,
-                enableFlag
-              });
+              appLogger.info('[Lovable] ⚠️ Desativado', { data: [{
+                                reason: !hasValidProjectId 
+                                  ? 'projectId inválido/ausente' 
+                                  : !isEditor 
+                                  ? 'não está em rota de editor' 
+                                  : 'sem iframe e sem flag de ativação',
+                                hasValidProjectId,
+                                isEditor,
+                                inIframe,
+                                enableFlag
+                              }] });
             }
           } catch { }
         }
       } catch (error) {
-        console.warn('Error setting up Lovable config:', error);
+        appLogger.warn('Error setting up Lovable config:', { data: [error] });
         setIsEditorMode(false);
       }
     }

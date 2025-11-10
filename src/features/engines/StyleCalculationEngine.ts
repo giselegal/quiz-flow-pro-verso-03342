@@ -10,6 +10,7 @@
  */
 
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface StyleCategory {
   id: string;
@@ -97,10 +98,10 @@ class StyleCalculationEngine {
       throw new Error('Dados insuficientes para calcular resultado');
     }
 
-    console.log('🎨 StyleCalculationEngine: Iniciando cálculo...', {
-      selections: Object.keys(quizData.selections).length,
-      userData: quizData.formData,
-    });
+    appLogger.info('🎨 StyleCalculationEngine: Iniciando cálculo...', { data: [{
+            selections: Object.keys(quizData.selections).length,
+            userData: quizData.formData,
+          }] });
 
     // 1. Calcular pontuações por categoria
     const categoryScores = this.calculateCategoryScores(quizData.selections);
@@ -143,11 +144,11 @@ class StyleCalculationEngine {
     const cacheKey = this.generateCacheKey(quizData);
     this.calculationCache.set(cacheKey, result);
 
-    console.log('✅ StyleCalculationEngine: Cálculo concluído', {
-      dominantStyle: dominantStyle.name,
-      confidence,
-      totalScore: result.totalScore,
-    });
+    appLogger.info('✅ StyleCalculationEngine: Cálculo concluído', { data: [{
+            dominantStyle: dominantStyle.name,
+            confidence,
+            totalScore: result.totalScore,
+          }] });
 
     return result;
   }
@@ -202,7 +203,7 @@ class StyleCalculationEngine {
    */
   clearCache(): void {
     this.calculationCache.clear();
-    console.log('🔄 StyleCalculationEngine: Cache limpo');
+    appLogger.info('🔄 StyleCalculationEngine: Cache limpo');
   }
 
   // Métodos privados

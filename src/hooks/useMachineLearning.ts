@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🧠 USE MACHINE LEARNING PATTERNS - APRENDIZADO DE MÁQUINA AVANÇADO
@@ -231,7 +232,7 @@ export function useMachineLearning(
             }));
 
         } catch (error) {
-            console.error('ML training failed:', error);
+            appLogger.error('ML training failed:', { data: [error] });
             setState(prev => ({ ...prev, isTraining: false }));
         }
     }, [state.isTraining, minDataThreshold]);
@@ -262,7 +263,7 @@ export function useMachineLearning(
             }));
 
         } catch (error) {
-            console.error('Pattern discovery failed:', error);
+            appLogger.error('Pattern discovery failed:', { data: [error] });
             setState(prev => ({ ...prev, isAnalyzing: false }));
         }
     }, [state.isAnalyzing, patternTypes, state.patterns, onPatternDiscovered]);
@@ -289,7 +290,7 @@ export function useMachineLearning(
             }));
 
         } catch (error) {
-            console.error('Anomaly detection failed:', error);
+            appLogger.error('Anomaly detection failed:', { data: [error] });
         }
     }, [state.anomalies, onAnomalyDetected]);
 
@@ -303,7 +304,7 @@ export function useMachineLearning(
 
             setState(prev => ({ ...prev, segments }));
         } catch (error) {
-            console.error('User segmentation failed:', error);
+            appLogger.error('User segmentation failed:', { data: [error] });
         }
     }, []);
 
@@ -321,7 +322,7 @@ export function useMachineLearning(
             setState(prev => ({ ...prev, insights }));
             onInsightsGenerated?.(insights);
         } catch (error) {
-            console.error('Insight generation failed:', error);
+            appLogger.error('Insight generation failed:', { data: [error] });
         }
     }, [state.patterns, state.models, onInsightsGenerated]);
 
@@ -335,7 +336,7 @@ export function useMachineLearning(
 
             return await mlEngine.current.predict(modelId, features);
         } catch (error) {
-            console.error('Prediction failed:', error);
+            appLogger.error('Prediction failed:', { data: [error] });
             return null;
         }
     }, [state.models]);
@@ -351,7 +352,7 @@ export function useMachineLearning(
                 state.segments,
             );
         } catch (error) {
-            console.error('Personalized recommendations failed:', error);
+            appLogger.error('Personalized recommendations failed:', { data: [error] });
             return [];
         }
     }, [state.segments]);

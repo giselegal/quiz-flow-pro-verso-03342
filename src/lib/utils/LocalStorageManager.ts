@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚨 SISTEMA DE LIMPEZA AUTOMÁTICA DO LOCALSTORAGE
  * 
@@ -63,7 +64,7 @@ class LocalStorageManager {
      * Limpar dados antigos e desnecessários
      */
     static cleanup(): { cleaned: number; freedSpace: number } {
-        console.log('🧹 Iniciando limpeza automática do localStorage...');
+        appLogger.info('🧹 Iniciando limpeza automática do localStorage...');
 
         let cleaned = 0;
         let freedSpace = 0;
@@ -107,11 +108,11 @@ class LocalStorageManager {
                 localStorage.removeItem(key);
                 cleaned++;
             } catch (error) {
-                console.warn(`Erro ao remover chave: ${key}`, error);
+                appLogger.warn(`Erro ao remover chave: ${key}`, { data: [error] });
             }
         });
 
-        console.log(`✅ Limpeza concluída: ${cleaned} chaves removidas, ${(freedSpace / 1024).toFixed(2)} KB liberados`);
+        appLogger.info(`✅ Limpeza concluída: ${cleaned} chaves removidas, ${(freedSpace / 1024).toFixed(2)} KB liberados`);
 
         return { cleaned, freedSpace };
     }
@@ -159,15 +160,15 @@ class LocalStorageManager {
                 attempts++;
 
                 if (error?.name === 'QuotaExceededError') {
-                    console.warn(`⚠️ Quota exceeded (tentativa ${attempts}), fazendo limpeza...`);
+                    appLogger.warn(`⚠️ Quota exceeded (tentativa ${attempts}), fazendo limpeza...`);
                     this.cleanup();
 
                     if (attempts === this.MAX_ATTEMPTS) {
-                        console.error('❌ Falha ao salvar após múltiplas tentativas de limpeza');
+                        appLogger.error('❌ Falha ao salvar após múltiplas tentativas de limpeza');
                         return false;
                     }
                 } else {
-                    console.error('❌ Erro inesperado ao salvar no localStorage:', error);
+                    appLogger.error('❌ Erro inesperado ao salvar no localStorage:', { data: [error] });
                     return false;
                 }
             }
@@ -183,7 +184,7 @@ class LocalStorageManager {
         try {
             return localStorage.getItem(key);
         } catch (error) {
-            console.warn(`⚠️ Erro ao obter item do localStorage: ${key}`, error);
+            appLogger.warn(`⚠️ Erro ao obter item do localStorage: ${key}`, { data: [error] });
             return null;
         }
     }
@@ -196,7 +197,7 @@ class LocalStorageManager {
             localStorage.removeItem(key);
             return true;
         } catch (error) {
-            console.warn(`⚠️ Erro ao remover item do localStorage: ${key}`, error);
+            appLogger.warn(`⚠️ Erro ao remover item do localStorage: ${key}`, { data: [error] });
             return false;
         }
     }
@@ -208,7 +209,7 @@ class LocalStorageManager {
         // Verificar a cada 5 minutos
         setInterval(() => {
             if (this.isNearLimit()) {
-                console.log('📊 LocalStorage próximo do limite, executando limpeza preventiva...');
+                appLogger.info('📊 LocalStorage próximo do limite, executando limpeza preventiva...');
                 this.cleanup();
             }
         }, 5 * 60 * 1000);
@@ -218,7 +219,7 @@ class LocalStorageManager {
             this.cleanup();
         }
 
-        console.log('👁️ Monitoramento do localStorage iniciado');
+        appLogger.info('👁️ Monitoramento do localStorage iniciado');
     }
 }
 

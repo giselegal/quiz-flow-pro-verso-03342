@@ -1,6 +1,7 @@
 // Hook leve de estado do editor (Fase 1.3)
 // Próximos incrementos: desfazer/refazer, seleção, dirty-state, persistência.
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type EditorState = {
   currentStepKey: string | null;
@@ -46,7 +47,7 @@ export function useEditorState(initialStepKey?: string) {
     setState((prev) => {
       const last = historyRef.current.pop()!;
       futureRef.current.push(prev);
-      console.log('🔙 Undo: restored state', { historySize: historyRef.current.length, futureSize: futureRef.current.length });
+      appLogger.info('🔙 Undo: restored state', { data: [{ historySize: historyRef.current.length, futureSize: futureRef.current.length }] });
       return last;
     });
   }, []);
@@ -56,7 +57,7 @@ export function useEditorState(initialStepKey?: string) {
     setState((prev) => {
       const next = futureRef.current.pop()!;
       historyRef.current.push(prev);
-      console.log('🔜 Redo: restored state', { historySize: historyRef.current.length, futureSize: futureRef.current.length });
+      appLogger.info('🔜 Redo: restored state', { data: [{ historySize: historyRef.current.length, futureSize: futureRef.current.length }] });
       return next;
     });
   }, []);

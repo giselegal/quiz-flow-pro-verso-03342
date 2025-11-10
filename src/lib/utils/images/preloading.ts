@@ -3,6 +3,7 @@ import { type BankImage, getAllImages, getImageById } from '@/services/data/imag
 import { optimizeCloudinaryUrl } from './optimization';
 import { PreloadOptions, ImageCacheEntry } from './types';
 import { updateImageCache, hasImageWithStatus } from './caching';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Verifica se uma imagem já foi pré-carregada
@@ -29,7 +30,7 @@ export const preloadImagesByIds = (
 
     return preloadImages(images, options);
   } catch (error) {
-    console.error('[Image Manager] Erro ao pré-carregar imagens por ID:', error);
+    appLogger.error('[Image Manager] Erro ao pré-carregar imagens por ID:', { data: [error] });
     return Promise.resolve(false);
   }
 };
@@ -53,7 +54,7 @@ export const preloadImagesByUrls = (
 
     return preloadImages(images, options);
   } catch (error) {
-    console.error('[Image Manager] Erro ao pré-carregar imagens por URL:', error);
+    appLogger.error('[Image Manager] Erro ao pré-carregar imagens por URL:', { data: [error] });
     return Promise.resolve(false);
   }
 };
@@ -106,7 +107,7 @@ export const preloadImages = (
         };
 
         img.onerror = () => {
-          console.warn(`[Image Manager] Falha ao carregar imagem: ${src}`);
+          appLogger.warn(`[Image Manager] Falha ao carregar imagem: ${src}`);
           updateImageCache(src, { url: src, loadStatus: 'error' });
           loaded++;
           if (onProgress) onProgress(loaded, total);
@@ -163,16 +164,14 @@ export const preloadImagesByCategory = (
     );
 
     if (categoryImages.length === 0) {
-      console.warn(`[Image Manager] Nenhuma imagem encontrada na categoria '${categoryName}'`);
+      appLogger.warn(`[Image Manager] Nenhuma imagem encontrada na categoria '${categoryName}'`);
       return Promise.resolve(false);
     }
 
-    console.log(
-      `[Image Manager] Pré-carregando ${categoryImages.length} imagens da categoria '${categoryName}'`,
-    );
+    appLogger.info(`[Image Manager] Pré-carregando ${categoryImages.length} imagens da categoria '${categoryName}'`);
     return preloadImages(categoryImages, options);
   } catch (error) {
-    console.error('[Image Manager] Erro ao pré-carregar categoria:', error);
+    appLogger.error('[Image Manager] Erro ao pré-carregar categoria:', { data: [error] });
     return Promise.resolve(false);
   }
 };
@@ -236,9 +235,7 @@ const preloadBySection = async (
     });
 
     if (sectionImages.length === 0) {
-      console.warn(
-        `[Image Manager] Nenhuma imagem crítica encontrada para seções: ${sections.join(', ')}`,
-      );
+      appLogger.warn(`[Image Manager] Nenhuma imagem crítica encontrada para seções: ${sections.join(', ')}`);
       return Promise.resolve(false);
     }
 
@@ -254,12 +251,10 @@ const preloadBySection = async (
       );
     });
 
-    console.log(
-      `[Image Manager] Pré-carregando ${sectionImages.length} imagens críticas para: ${sections.join(', ')}`,
-    );
+    appLogger.info(`[Image Manager] Pré-carregando ${sectionImages.length} imagens críticas para: ${sections.join(', ')}`);
     return preloadImages(sectionImages, options);
   } catch (error) {
-    console.error('[Image Manager] Erro ao pré-carregar imagens críticas:', error);
+    appLogger.error('[Image Manager] Erro ao pré-carregar imagens críticas:', { data: [error] });
     return Promise.resolve(false);
   }
 };

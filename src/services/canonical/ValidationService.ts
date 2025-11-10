@@ -16,6 +16,7 @@
 
 import { BaseCanonicalService, ServiceResult } from './types';
 import { DataService } from './DataService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -462,7 +463,7 @@ export class ValidationService extends BaseCanonicalService {
       new URL(url);
       return { success: true, data: true };
     } catch (error) {
-      console.warn('[ValidationService] URL inválida:', url, error);
+      appLogger.warn('[ValidationService] URL inválida:', { data: [url, error] });
       return { success: true, data: false };
     }
   }

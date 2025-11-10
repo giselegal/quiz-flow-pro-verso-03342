@@ -10,6 +10,7 @@
 import * as React from 'react';
 import { Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Função auxiliar para criar lazy components de forma segura
 const createSafeLazyComponent = (componentName: string) => {
@@ -27,7 +28,7 @@ const createSafeLazyComponent = (componentName: string) => {
 
             return { default: Component };
         } catch (error) {
-            console.error(`Failed to load recharts component ${componentName}:`, error);
+            appLogger.error(`Failed to load recharts component ${componentName}:`, { data: [error] });
             // Fallback component
             return {
                 default: () => React.createElement('div', {

@@ -2,6 +2,7 @@
 // Este arquivo deve ser usado como referência para configurar o endpoint webhook
 
 import { hotmartWebhookManager, HotmartWebhookData } from '../utils/hotmartWebhook';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * IMPORTANTE: Para aplicações SPA (Single Page Application) como esta,
@@ -40,12 +41,12 @@ export async function handleHotmartWebhook(request: Request): Promise<Response> 
     }
 
     // Log do webhook recebido
-    console.log('[Hotmart Webhook API] Webhook recebido:', {
-      event: webhookData.event,
-      transaction_id: webhookData.data.transaction?.id,
-      buyer_email: webhookData.data.buyer?.email,
-      timestamp: webhookData.timestamp,
-    });
+    appLogger.info('[Hotmart Webhook API] Webhook recebido:', { data: [{
+            event: webhookData.event,
+            transaction_id: webhookData.data.transaction?.id,
+            buyer_email: webhookData.data.buyer?.email,
+            timestamp: webhookData.timestamp,
+          }] });
 
     // Processar webhook
     await hotmartWebhookManager.processWebhook(webhookData);
@@ -58,7 +59,7 @@ export async function handleHotmartWebhook(request: Request): Promise<Response> 
       },
     });
   } catch (error) {
-    console.error('[Hotmart Webhook API] Erro ao processar webhook:', error);
+    appLogger.error('[Hotmart Webhook API] Erro ao processar webhook:', { data: [error] });
 
     // Retornar erro 500 para que Hotmart tente reenviar
     return new Response('Internal server error', { status: 500 });
@@ -84,16 +85,16 @@ export const expressWebhookHandler = (req: any, res: any) => {
     hotmartWebhookManager
       .processWebhook(webhookData)
       .then(() => {
-        console.log('[Hotmart Webhook] Processado com sucesso');
+        appLogger.info('[Hotmart Webhook] Processado com sucesso');
       })
       .catch(error => {
-        console.error('[Hotmart Webhook] Erro no processamento:', error);
+        appLogger.error('[Hotmart Webhook] Erro no processamento:', { data: [error] });
       });
 
     // Responder imediatamente para Hotmart
     res.status(200).send('OK');
   } catch (error) {
-    console.error('[Hotmart Webhook Express] Erro:', error);
+    appLogger.error('[Hotmart Webhook Express] Erro:', { data: [error] });
     res.status(500).send('Internal server error');
   }
 };

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { toast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface SupabaseComponent {
   id: string;
@@ -74,11 +75,11 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
           updated_at: item.updated_at || null,
         })),
       );
-      console.log('✅ Componentes carregados do Supabase:', data?.length || 0);
+      appLogger.info('✅ Componentes carregados do Supabase:', { data: [data?.length || 0] });
     } catch (err: any) {
       const errorMessage = `Erro ao carregar componentes: ${err.message}`;
       setError(errorMessage);
-      console.error('❌', errorMessage);
+      appLogger.error('❌', { data: [errorMessage] });
       toast({
         title: 'Erro',
         description: errorMessage,
@@ -153,7 +154,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         };
 
         setComponents(prev => [...prev, componentWithDefaults]);
-        console.log('✅ Componente adicionado ao Supabase:', componentWithDefaults.id);
+        appLogger.info('✅ Componente adicionado ao Supabase:', { data: [componentWithDefaults.id] });
 
         toast({
           title: 'Sucesso',
@@ -164,7 +165,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       } catch (err: any) {
         const errorMessage = `Erro ao adicionar componente: ${err.message}`;
         setError(errorMessage);
-        console.error('❌', errorMessage);
+        appLogger.error('❌', { data: [errorMessage] });
         toast({
           title: 'Erro',
           description: errorMessage,
@@ -227,12 +228,12 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
           prev.map(comp => (comp.id === componentId ? updatedComponent : comp)),
         );
 
-        console.log('✅ Componente atualizado no Supabase:', componentId);
+        appLogger.info('✅ Componente atualizado no Supabase:', { data: [componentId] });
         return true;
       } catch (err: any) {
         const errorMessage = `Erro ao atualizar componente: ${err.message}`;
         setError(errorMessage);
-        console.error('❌', errorMessage);
+        appLogger.error('❌', { data: [errorMessage] });
         toast({
           title: 'Erro',
           description: errorMessage,
@@ -262,7 +263,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       }
 
       setComponents(prev => prev.filter(comp => comp.id !== componentId));
-      console.log('✅ Componente removido do Supabase:', componentId);
+      appLogger.info('✅ Componente removido do Supabase:', { data: [componentId] });
 
       toast({
         title: 'Sucesso',
@@ -273,7 +274,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
     } catch (err: any) {
       const errorMessage = `Erro ao remover componente: ${err.message}`;
       setError(errorMessage);
-      console.error('❌', errorMessage);
+      appLogger.error('❌', { data: [errorMessage] });
       toast({
         title: 'Erro',
         description: errorMessage,
@@ -314,12 +315,12 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         }
 
         setComponents(reorderedComponents);
-        console.log('✅ Componentes reordenados no Supabase');
+        appLogger.info('✅ Componentes reordenados no Supabase');
         return true;
       } catch (err: any) {
         const errorMessage = `Erro ao reordenar componentes: ${err.message}`;
         setError(errorMessage);
-        console.error('❌', errorMessage);
+        appLogger.error('❌', { data: [errorMessage] });
         toast({
           title: 'Erro',
           description: errorMessage,

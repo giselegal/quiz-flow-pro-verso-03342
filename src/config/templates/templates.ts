@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 TEMPLATES DAS 21 ETAPAS - CARREGAMENTO PRIORITÁRIO DE DADOS REAIS
  *
@@ -101,26 +102,26 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
   
   try {
-    console.log(`🔍 Carregando template para step ${stepNumber} (${stepId})`);
+    appLogger.info(`🔍 Carregando template para step ${stepNumber} (${stepId})`);
 
     // 🏆 PRIORIDADE 1: Templates v3 híbridos via HTTP
     if (typeof window !== 'undefined') {
       const templatePath = `/templates/step-${stepId}-v3.json`;
       
       try {
-        console.log(`📥 Fazendo fetch: ${templatePath}`);
+        appLogger.info(`📥 Fazendo fetch: ${templatePath}`);
         const response = await fetch(templatePath);
         
         if (response.ok) {
           const rawTemplate = await response.json();
           const template = normalizeTemplateV3(rawTemplate, stepNumber);
-          console.log(`✅ Template v3 carregado via HTTP: step ${stepNumber}`);
-          console.log('📊 Template info:', {
-            version: template.templateVersion,
-            sections: template.sections?.length || 0,
-            blocks: template.blocks?.length || 0,
-            id: template.metadata?.id,
-          });
+          appLogger.info(`✅ Template v3 carregado via HTTP: step ${stepNumber}`);
+          appLogger.info('📊 Template info:', { data: [{
+                        version: template.templateVersion,
+                        sections: template.sections?.length || 0,
+                        blocks: template.blocks?.length || 0,
+                        id: template.metadata?.id,
+                      }] });
           
           // Converter template v3 para formato compatível com editor
           if (template.sections && Array.isArray(template.sections)) {
@@ -140,13 +141,13 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
             // Template v2 com blocos
             return template;
           } else {
-            console.warn(`⚠️ Template ${stepNumber} tem estrutura inválida`);
+            appLogger.warn(`⚠️ Template ${stepNumber} tem estrutura inválida`);
           }
         } else {
-          console.warn(`⚠️ HTTP ${response.status} para template ${stepNumber}: ${templatePath}`);
+          appLogger.warn(`⚠️ HTTP ${response.status} para template ${stepNumber}: ${templatePath}`);
         }
       } catch (fetchError) {
-        console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
+        appLogger.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, { data: [fetchError] });
       }
     }
 
@@ -155,7 +156,7 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
       const localPath = `./step-${stepId}.json`;
       const rawLocal = localTemplates[localPath];
       if (rawLocal && (rawLocal.blocks || rawLocal.sections)) {
-        console.log(`📁 Template local carregado: ${stepNumber}`);
+        appLogger.info(`📁 Template local carregado: ${stepNumber}`);
         const template = normalizeTemplateV3(rawLocal, stepNumber);
         // Converter sections (se existir) para blocks padronizados
         if (template.sections && Array.isArray(template.sections)) {
@@ -172,14 +173,14 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
         }
         return template;
       } else {
-        console.warn(`⚠️ Template local não encontrado para step ${stepNumber} em ${localPath}`);
+        appLogger.warn(`⚠️ Template local não encontrado para step ${stepNumber} em ${localPath}`);
       }
     }
 
-    console.warn(`❌ NENHUM TEMPLATE encontrado para step ${stepNumber}`);
+    appLogger.warn(`❌ NENHUM TEMPLATE encontrado para step ${stepNumber}`);
     return null;
   } catch (error) {
-    console.error(`❌ Erro ao carregar template ${stepNumber}:`, error);
+    appLogger.error(`❌ Erro ao carregar template ${stepNumber}:`, { data: [error] });
     return null;
   }
 }
@@ -234,12 +235,12 @@ export async function getStepTemplate(stepNumber: number): Promise<any> {
   const template = await loadRealTemplate(stepNumber);
   if (template) {
     templateCache.set(stepNumber, template);
-    console.log(`🏆 Template REAL cacheado: ${stepNumber}`);
+    appLogger.info(`🏆 Template REAL cacheado: ${stepNumber}`);
     return template;
   }
 
   // Se não encontrou template real, retornar null ao invés de fallback
-  console.warn(`❌ NENHUM TEMPLATE REAL disponível para step ${stepNumber}`);
+  appLogger.warn(`❌ NENHUM TEMPLATE REAL disponível para step ${stepNumber}`);
   return null;
 }
 
@@ -248,7 +249,7 @@ export async function getStepTemplate(stepNumber: number): Promise<any> {
  */
 export function clearTemplateCache(): void {
   templateCache.clear();
-  console.log('🗑️ Template cache limpo - templates reais serão recarregados');
+  appLogger.info('🗑️ Template cache limpo - templates reais serão recarregados');
 }
 
 /**

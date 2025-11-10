@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UtmParameters {
   source?: string;
@@ -60,12 +61,12 @@ export const useUtmParameters = () => {
 
       const result = await response.json();
       if (result.success) {
-        console.log('UTM parameters saved successfully');
+        appLogger.info('UTM parameters saved successfully');
       } else {
-        console.error('Error saving UTM parameters:', result.error);
+        appLogger.error('Error saving UTM parameters:', { data: [result.error] });
       }
     } catch (error) {
-      console.error('Error in saveUtmToServer:', error);
+      appLogger.error('Error in saveUtmToServer:', { data: [error] });
     }
   };
 
@@ -93,7 +94,7 @@ export const useUtmParameters = () => {
       // Armazenar parâmetros UTM no localStorage para persistência
       if (Object.keys(utmParams).length > 0) {
         StorageService.safeSetJSON('utm_parameters', utmParams);
-        console.log('UTM parameters captured:', utmParams);
+        appLogger.info('UTM parameters captured:', { data: [utmParams] });
       } else {
         // Tentar recuperar parâmetros do localStorage se não houver na URL
         const storedUtmParams = StorageService.safeGetString('utm_parameters');
@@ -104,7 +105,7 @@ export const useUtmParameters = () => {
 
       return utmParams;
     } catch (error) {
-      console.error('Error capturing UTM parameters:', error);
+      appLogger.error('Error capturing UTM parameters:', { data: [error] });
       return {};
     }
   };
@@ -150,7 +151,7 @@ export const useUtmParameters = () => {
 
       return urlObj.toString();
     } catch (error) {
-      console.error('Error adding UTM parameters to URL:', error);
+      appLogger.error('Error adding UTM parameters to URL:', { data: [error] });
       return url;
     }
   };

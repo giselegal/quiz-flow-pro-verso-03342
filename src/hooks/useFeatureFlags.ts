@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FeatureFlags {
     useJsonTemplates: boolean;
@@ -64,7 +65,7 @@ function loadFromLocalStorage(): Partial<FeatureFlags> {
             return JSON.parse(stored);
         }
     } catch (err) {
-        console.warn('Erro ao carregar feature flags do localStorage:', err);
+        appLogger.warn('Erro ao carregar feature flags do localStorage:', { data: [err] });
     }
     return {};
 }
@@ -127,10 +128,10 @@ export function setFeatureFlag(flag: keyof FeatureFlags, value: boolean) {
         const flags = stored ? JSON.parse(stored) : {};
         flags[flag] = value;
         StorageService.safeSetJSON('featureFlags', flags);
-        console.log(`✅ Feature flag '${flag}' definida como ${value}`);
+        appLogger.info(`✅ Feature flag '${flag}' definida como ${value}`);
         window.location.reload(); // Reload para aplicar
     } catch (err) {
-        console.error('Erro ao salvar feature flag:', err);
+        appLogger.error('Erro ao salvar feature flag:', { data: [err] });
     }
 }
 
@@ -139,12 +140,12 @@ export function setFeatureFlag(flag: keyof FeatureFlags, value: boolean) {
  */
 export function debugFeatureFlags() {
     const stored = StorageService.safeGetString('featureFlags');
-    console.log('🚩 Feature Flags:');
-    console.log('  - Env VITE_USE_JSON_TEMPLATES:', import.meta.env.VITE_USE_JSON_TEMPLATES);
-    console.log('  - Env VITE_JSON_TEMPLATES_ROLLOUT:', import.meta.env.VITE_JSON_TEMPLATES_ROLLOUT);
-    console.log('  - localStorage:', stored);
-    console.log('\n💡 Para ativar manualmente:');
-    console.log('  setFeatureFlag("useJsonTemplates", true)');
+    appLogger.info('🚩 Feature Flags:');
+    appLogger.info('  - Env VITE_USE_JSON_TEMPLATES:', { data: [import.meta.env.VITE_USE_JSON_TEMPLATES] });
+    appLogger.info('  - Env VITE_JSON_TEMPLATES_ROLLOUT:', { data: [import.meta.env.VITE_JSON_TEMPLATES_ROLLOUT] });
+    appLogger.info('  - localStorage:', { data: [stored] });
+    appLogger.info('\n💡 Para ativar manualmente:');
+    appLogger.info('  setFeatureFlag("useJsonTemplates", true)');
 }
 
 // Exportar para uso no console

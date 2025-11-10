@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { DragEndEvent, DragOverEvent, DragStartEvent, UniqueIdentifier } from '@dnd-kit/core'
 import type { Block } from '@/types/editor'
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type DraggedItem = {
   id: string
@@ -52,11 +53,11 @@ export function useDndSystem() {
 
     // Log para debug (pode ser removido depois)
     if (process.env.NODE_ENV === 'development') {
-      console.log('[DnD] DragOver:', {
-        activeId: active.id,
-        overId: over.id,
-        draggedItemType: draggedItem?.type,
-      })
+      appLogger.info('[DnD] DragOver:', { data: [{
+                activeId: active.id,
+                overId: over.id,
+                draggedItemType: draggedItem?.type,
+              }] })
     }
 
     // Forçar re-render para atualizar estados visuais

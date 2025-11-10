@@ -17,6 +17,7 @@ import { ResultDisplay } from '@/components/ui/ResultDisplay';
 // Carrega módulo modular via barrel neutro, evitando dependência estática em editor/*
 const ModularResultHeaderBlock = React.lazy(() => import('@/components/core/modules').then(m => ({ default: m.ModularResultHeaderBlock })));
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Step20FallbackTemplateProps {
   className?: string;
@@ -63,7 +64,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
       // Fonte 3: Tentar recalcular se há seleções
       const stats = unifiedQuizStorage.getDataStats();
       if (stats.selectionsCount >= 3) {
-        console.log('🔄 [Step20Fallback] Tentando recálculo automático...');
+        appLogger.info('🔄 [Step20Fallback] Tentando recálculo automático...');
         const { calculateAndSaveQuizResult } = await import('@/lib/utils/quizResultCalculator');
         const result = await calculateAndSaveQuizResult();
         if (result) {
@@ -71,20 +72,20 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
         }
       }
     } catch (error) {
-      console.error('❌ [Step20Fallback] Erro ao carregar dados:', error);
+      appLogger.error('❌ [Step20Fallback] Erro ao carregar dados:', { data: [error] });
     }
   };
 
   const handleForceRecalculate = async () => {
     try {
-      console.log('🔄 [Step20Fallback] Forçando recálculo...');
+      appLogger.info('🔄 [Step20Fallback] Forçando recálculo...');
       const { calculateAndSaveQuizResult } = await import('@/lib/utils/quizResultCalculator');
       await calculateAndSaveQuizResult();
       retry?.();
       onRetry?.();
       window.location.reload(); // Fallback final
     } catch (error) {
-      console.error('❌ [Step20Fallback] Falha no recálculo forçado:', error);
+      appLogger.error('❌ [Step20Fallback] Falha no recálculo forçado:', { data: [error] });
     }
   };
 
@@ -201,7 +202,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
             }}
             isSelected={false}
             onPropertyChange={(key, value) => {
-              console.log('🔄 [Step20Template] Propriedade modular atualizada:', key, value);
+              appLogger.info('🔄 [Step20Template] Propriedade modular atualizada:', { data: [key, value] });
             }}
             className="transition-all duration-300"
           />

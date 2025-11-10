@@ -11,6 +11,7 @@
 import { useCallback, useMemo, useEffect } from 'react';
 import { useEditorContext } from '@/components/editor/EditorProviderCanonical';
 import { editorMetrics } from '@/lib/utils/editorMetrics';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface EditorHistoryState {
   canUndo: boolean;
@@ -64,7 +65,7 @@ export function useEditorHistory(): UseEditorHistoryReturn {
    */
   const undo = useCallback(() => {
     if (!history.canUndo) {
-      console.warn('[useEditorHistory] Não há ações para desfazer');
+      appLogger.warn('[useEditorHistory] Não há ações para desfazer');
       return;
     }
 
@@ -83,10 +84,10 @@ export function useEditorHistory(): UseEditorHistoryReturn {
       });
 
       if (import.meta.env.DEV) {
-        console.log('↩️ [useEditorHistory] Undo executado', {
-          duration: `${duration.toFixed(2)}ms`,
-          historySize: history.size,
-        });
+        appLogger.info('↩️ [useEditorHistory] Undo executado', { data: [{
+                    duration: `${duration.toFixed(2)}ms`,
+                    historySize: history.size,
+                  }] });
       }
     }
   }, [history, updateStepBlocks]);
@@ -96,7 +97,7 @@ export function useEditorHistory(): UseEditorHistoryReturn {
    */
   const redo = useCallback(() => {
     if (!history.canRedo) {
-      console.warn('[useEditorHistory] Não há ações para refazer');
+      appLogger.warn('[useEditorHistory] Não há ações para refazer');
       return;
     }
 
@@ -115,10 +116,10 @@ export function useEditorHistory(): UseEditorHistoryReturn {
       });
 
       if (import.meta.env.DEV) {
-        console.log('↪️ [useEditorHistory] Redo executado', {
-          duration: `${duration.toFixed(2)}ms`,
-          historySize: history.size,
-        });
+        appLogger.info('↪️ [useEditorHistory] Redo executado', { data: [{
+                    duration: `${duration.toFixed(2)}ms`,
+                    historySize: history.size,
+                  }] });
       }
     }
   }, [history, updateStepBlocks]);
@@ -130,7 +131,7 @@ export function useEditorHistory(): UseEditorHistoryReturn {
     history.clear();
     
     if (import.meta.env.DEV) {
-      console.log('🗑️ [useEditorHistory] Histórico limpo');
+      appLogger.info('🗑️ [useEditorHistory] Histórico limpo');
     }
   }, [history]);
 

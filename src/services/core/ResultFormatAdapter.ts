@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 ADAPTADOR UNIFICADO DE RESULTADOS - FASE 3
  * 
@@ -287,7 +288,7 @@ export class ResultFormatAdapter {
     }
 
     // Fallback: tentar extrair informações básicas
-    console.warn('⚠️ Formato de dados não reconhecido, criando fallback');
+    appLogger.warn('⚠️ Formato de dados não reconhecido, criando fallback');
     return this.createFallbackResult('unknown', userName);
   }
 

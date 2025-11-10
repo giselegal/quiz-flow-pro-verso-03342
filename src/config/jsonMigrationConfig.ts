@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // 🔄 CONFIGURAÇÃO CENTRALIZADA DE MIGRAÇÃO PARA TEMPLATES JSON
 // Este arquivo facilita a migração e manutenção dos templates
 
@@ -89,9 +90,9 @@ export const validateMigration = (): boolean => {
   );
 };
 
-console.log('🔄 Migração para Templates JSON:', {
+appLogger.info('🔄 Migração para Templates JSON:', { data: [{
   isComplete: validateMigration(),
   totalSteps: 21,
   readySteps: Object.values(MIGRATION_PROGRESS.stepsStatus).filter(s => s.includes('✅')).length,
   config: MIGRATION_CONFIG,
-});
+}] });

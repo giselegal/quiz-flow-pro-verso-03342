@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import NoCodeEditorIntegration from '@/components/editor/properties/NoCodeEditorIntegration';
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Mock de bloco para teste
 const mockBlock: Block = {
@@ -36,7 +37,7 @@ export default function TestQuizBuilderPage() {
   const [activeStage] = useState('step-1');
 
   const handleUpdate = (blockId: string, updates: Record<string, any>) => {
-    console.log('📝 Atualizando bloco:', { blockId, updates });
+    appLogger.info('📝 Atualizando bloco:', { data: [{ blockId, updates }] });
     
     if (selectedBlock && selectedBlock.id === blockId) {
       setSelectedBlock({
@@ -47,11 +48,11 @@ export default function TestQuizBuilderPage() {
   };
 
   const handleDuplicate = (blockId: string) => {
-    console.log('📋 Duplicando bloco:', blockId);
+    appLogger.info('📋 Duplicando bloco:', { data: [blockId] });
   };
 
   const handleDelete = (blockId: string) => {
-    console.log('🗑️ Deletando bloco:', blockId);
+    appLogger.info('🗑️ Deletando bloco:', { data: [blockId] });
     setSelectedBlock(null);
   };
 

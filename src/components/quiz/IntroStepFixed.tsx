@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import type { QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface IntroStepProps {
     data: QuizStep;
@@ -12,9 +13,9 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
     const [nome, setNome] = useState('');
 
     // 🔍 DEBUG: Vamos ver exatamente o que está chegando
-    console.log('🔍 IntroStepSimple - data recebido:', JSON.stringify(data, null, 2));
-    console.log('🔍 IntroStepSimple - data existe?', !!data);
-    console.log('🔍 IntroStepSimple - data.title:', data?.title);
+    appLogger.info('🔍 IntroStepSimple - data recebido:', { data: [JSON.stringify(data, null, 2)] });
+    appLogger.info('🔍 IntroStepSimple - data existe?', { data: [!!data] });
+    appLogger.info('🔍 IntroStepSimple - data.title:', { data: [data?.title] });
 
     // 🚨 FALLBACK TOTAL se data não existir
     const safeData = data || {

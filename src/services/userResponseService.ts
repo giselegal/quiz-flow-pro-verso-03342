@@ -2,6 +2,7 @@
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { sessionService } from '@/services/sessionService';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const OFFLINE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true' || process.env?.VITE_DISABLE_SUPABASE === 'true';
 const isBrowser = typeof window !== 'undefined';
@@ -52,7 +53,7 @@ export const userResponseService = {
       arr.push(response);
       StorageService.safeSetJSON('quiz_pending_responses', arr);
     } catch (error) {
-      console.warn('[userResponseService] Erro ao enfileirar resposta pendente:', error);
+      appLogger.warn('[userResponseService] Erro ao enfileirar resposta pendente:', { data: [error] });
     }
   },
 
@@ -100,7 +101,7 @@ export const userResponseService = {
       return mock;
     }
     try {
-      console.log('📝 Creating quiz user in Supabase:', userData);
+      appLogger.info('📝 Creating quiz user in Supabase:', { data: [userData] });
 
       const { data, error } = await supabase
         .from('quiz_users')
@@ -115,11 +116,11 @@ export const userResponseService = {
         .single();
 
       if (error) {
-        console.error('❌ Error creating quiz user:', error);
+        appLogger.error('❌ Error creating quiz user:', { data: [error] });
         throw error;
       }
 
-      console.log('✅ Quiz user created successfully:', data);
+      appLogger.info('✅ Quiz user created successfully:', { data: [data] });
       return {
         id: data.id,
         session_id: data.session_id,
@@ -128,7 +129,7 @@ export const userResponseService = {
         created_at: new Date(data.created_at),
       };
     } catch (error) {
-      console.error('❌ Failed to create quiz user:', error);
+      appLogger.error('❌ Failed to create quiz user:', { data: [error] });
       throw error;
     }
   },
@@ -159,10 +160,7 @@ export const userResponseService = {
     }
     // Se o sessionId não for um UUID válido (ex.: "session_..."), não tente salvar no Supabase
     if (!isValidUUID(response.sessionId)) {
-      console.warn(
-        '⚠️ Supabase disabled for this response: session_id is not a valid UUID, using local fallback.',
-        response.sessionId,
-      );
+      appLogger.warn('⚠️ Supabase disabled for this response: session_id is not a valid UUID, using local fallback.', { data: [response.sessionId] });
       const fallbackResponse: UserResponse = {
         id: `response_${Date.now()}`,
         userId: response.userId,
@@ -182,12 +180,12 @@ export const userResponseService = {
         // Enfileirar para tentar enviar quando obtivermos uma sessão UUID
         this.enqueuePending(response);
       } catch (error) {
-        console.warn('[userResponseService] Erro ao salvar resposta fallback:', error);
+        appLogger.warn('[userResponseService] Erro ao salvar resposta fallback:', { data: [error] });
       }
       return fallbackResponse;
     }
     try {
-      console.log('📝 Saving response to Supabase:', response);
+      appLogger.info('📝 Saving response to Supabase:', { data: [response] });
 
       // Mapear step para número
       const stepNumber = parseInt(response.step.replace(/\D/g, '')) || 1;
@@ -220,11 +218,11 @@ export const userResponseService = {
         .select();
 
       if (error) {
-        console.error('❌ Error saving response:', error);
+        appLogger.error('❌ Error saving response:', { data: [error] });
         throw error;
       }
 
-      console.log('✅ Response saved successfully:', data);
+      appLogger.info('✅ Response saved successfully:', { data: [data] });
 
       const responseRecord = Array.isArray(data) ? data[0] : data;
 
@@ -238,7 +236,7 @@ export const userResponseService = {
         created_at: new Date(responseRecord.responded_at),
       };
     } catch (error) {
-      console.error('❌ Failed to save response:', error);
+      appLogger.error('❌ Failed to save response:', { data: [error] });
       // Fallback to local storage if Supabase fails
       const fallbackResponse: UserResponse = {
         id: `response_${Date.now()}`,
@@ -261,9 +259,9 @@ export const userResponseService = {
           StorageService.safeSetJSON(`quiz_response_${componentKey}`, fallbackResponse);
         }
       } catch (error) {
-        console.warn('[userResponseService] Erro ao salvar resposta por componentKey:', error);
+        appLogger.warn('[userResponseService] Erro ao salvar resposta por componentKey:', { data: [error] });
       }
-      console.log('📦 Saved response to localStorage as fallback');
+      appLogger.info('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }
   },
@@ -357,7 +355,7 @@ export const userResponseService = {
       }
       return '';
     } catch (error) {
-      console.error('❌ Failed to get response:', error);
+      appLogger.error('❌ Failed to get response:', { data: [error] });
       // Fallback
       const stored = StorageService.safeGetJSON<any>(`quiz_response_${componentId}`);
       if (stored) {
@@ -405,14 +403,14 @@ export const userResponseService = {
                 out.push(val);
               }
             } catch (error) {
-              console.warn(`[userResponseService] Erro ao recuperar resposta ${k}:`, error);
+              appLogger.warn(`[userResponseService] Erro ao recuperar resposta ${k}:`, { data: [error] });
             }
           });
         return out;
       }
       // Evitar erro 400 por filtro inválido: se não for UUID, retornar vazio
       if (!isValidUUID(userId)) {
-        console.warn('⚠️ Skipping Supabase getResponses: session_id is not a valid UUID');
+        appLogger.warn('⚠️ Skipping Supabase getResponses: session_id is not a valid UUID');
         return [];
       }
       const { data, error } = await supabase
@@ -433,7 +431,7 @@ export const userResponseService = {
         created_at: new Date(item.responded_at),
       }));
     } catch (error) {
-      console.error('❌ Failed to get responses:', error);
+      appLogger.error('❌ Failed to get responses:', { data: [error] });
       return [];
     }
   },
@@ -441,12 +439,12 @@ export const userResponseService = {
   saveStepResponse(stepId: string, response: any, funnelId?: string): void {
     // 🎯 USAR FUNNEL ID PARA CHAVE ÚNICA
     const storageKey = funnelId ? `quiz_step_${funnelId}_${stepId}` : `quiz_step_${stepId}`;
-    console.log('💾 Saving step response locally with funnelId:', storageKey, response);
+    appLogger.info('💾 Saving step response locally with funnelId:', { data: [storageKey, response] });
     StorageService.safeSetJSON(storageKey, response);
   },
 
   saveUserName(userId: string, name: string): void {
-    console.log('👤 Saving user name:', userId, name);
+    appLogger.info('👤 Saving user name:', { data: [userId, name] });
     StorageService.safeSetString(`quiz_user_name_${userId}`, name);
   },
 
@@ -462,10 +460,10 @@ export const userResponseService = {
       const { error } = await supabase.from('quiz_step_responses').delete().eq('id', id);
 
       if (error) throw error;
-      console.log('🗑️ Response deleted successfully');
+      appLogger.info('🗑️ Response deleted successfully');
       return true;
     } catch (error) {
-      console.error('❌ Failed to delete response:', error);
+      appLogger.error('❌ Failed to delete response:', { data: [error] });
       return false;
     }
   },

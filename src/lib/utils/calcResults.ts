@@ -11,6 +11,7 @@
 
 import { QuizAnswer, StyleResult, ComputedResult } from '@/types/quiz';
 import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===== ENGINE CONFIGURATION =====
 export const ENGINE_VERSION = '2.0.0';
@@ -194,7 +195,7 @@ export class CalculationEngine {
 
     } catch (error) {
       // Fallback to basic calculation if enhanced fails
-      console.error('Enhanced calculation failed, falling back to basic:', error);
+      appLogger.error('Enhanced calculation failed, falling back to basic:', { data: [error] });
       return this.fallbackCalculation(userResponses.responses);
     }
   }
@@ -280,7 +281,7 @@ export class CalculationEngine {
       const schemaString = JSON.stringify(quizDefinition, null, 0);
       return simpleHash(schemaString);
     } catch (error) {
-      console.warn('Could not calculate schema hash:', error);
+      appLogger.warn('Could not calculate schema hash:', { data: [error] });
       return 'unknown';
     }
   }

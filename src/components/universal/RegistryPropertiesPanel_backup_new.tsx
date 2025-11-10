@@ -19,6 +19,7 @@ import {
 import { blocksRegistry, type PropSchema, type PropKind } from '@/core/blocks/registry';
 // 🚀 FASE 2: Usar lodash-es para tree-shaking
 import debounce from 'lodash-es/debounce';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface RegistryPropertiesPanelProps {
     selectedBlock: any;
@@ -118,7 +119,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
                 setTimeout(() => setSaveProgress(0), 1000);
 
             } catch (error) {
-                console.error('❌ Erro ao salvar no backend:', error);
+                appLogger.error('❌ Erro ao salvar no backend:', { data: [error] });
                 setSaveProgress(0);
             } finally {
                 setIsSaving(false);

@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useLocation } from 'wouter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🧭 Hook personalizado para navegação centralizada
@@ -35,7 +36,7 @@ export const useNavigation = () => {
         // Preload da rota se solicitado
         if (preload) {
             // TODO: Implementar preload inteligente de componentes lazy
-            console.log(`🚀 Preloading route: ${finalPath}`);
+            appLogger.info(`🚀 Preloading route: ${finalPath}`);
         }
 
         if (replace) {

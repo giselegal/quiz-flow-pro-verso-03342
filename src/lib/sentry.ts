@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Configuração do Sentry para rastreamento de erros em produção
@@ -25,14 +26,14 @@ const isProduction = import.meta.env.PROD;
 export function initSentry(config?: Partial<SentryConfig>) {
   // Não inicializar em desenvolvimento, a menos que explicitamente solicitado
   if (isDevelopment && !import.meta.env.VITE_SENTRY_ENABLE_DEV) {
-    console.info('🔧 Sentry disabled in development mode');
+    appLogger.info('🔧 Sentry disabled in development mode');
     return;
   }
 
   const sentryDsn = import.meta.env.VITE_SENTRY_DSN || config?.dsn;
 
   if (!sentryDsn) {
-    console.warn('⚠️ Sentry DSN not configured. Error tracking disabled.');
+    appLogger.warn('⚠️ Sentry DSN not configured. Error tracking disabled.');
     return;
   }
 
@@ -74,7 +75,7 @@ export function initSentry(config?: Partial<SentryConfig>) {
     },
   });
 
-  console.info('✅ Sentry initialized successfully');
+  appLogger.info('✅ Sentry initialized successfully');
 }
 
 /**

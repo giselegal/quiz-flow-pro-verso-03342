@@ -13,6 +13,7 @@ import {
     useTrackingConfiguration,
     useThemeConfiguration,
 } from '@/hooks/useConfiguration';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TIPOS PARA INTEGRAÇÃO
@@ -83,12 +84,12 @@ export function useRouteConfiguration() {
     // Aplicar configurações automaticamente
     useEffect(() => {
         if (config && routeConfig) {
-            console.log(`✅ [RouteConfig] Aplicando configuração para rota: ${location} -> funil: ${config.funnel.id}`);
+            appLogger.info(`✅ [RouteConfig] Aplicando configuração para rota: ${location} -> funil: ${config.funnel.id}`);
 
             // Disparar eventos de tracking se configurados
             if (routeConfig.trackingEvents) {
                 routeConfig.trackingEvents.forEach(event => {
-                    console.log(`📊 [RouteConfig] Evento de tracking: ${event}`);
+                    appLogger.info(`📊 [RouteConfig] Evento de tracking: ${event}`);
                     // Aqui você dispararia o evento real
                 });
             }
@@ -120,7 +121,7 @@ export function useAutoSEO(customSEO?: Partial<SEOMetaData>) {
     // Aplicar meta tags automaticamente
     useEffect(() => {
         if (metaTags && Array.isArray(metaTags)) {
-            console.log('🔍 [AutoSEO] Aplicando meta tags para:', location);
+            appLogger.info('🔍 [AutoSEO] Aplicando meta tags para:', { data: [location] });
 
             // Limpar meta tags anteriores do funil
             const existingFunnelMetas = document.querySelectorAll('meta[data-funnel-seo]');
@@ -161,7 +162,7 @@ export function useAutoSEO(customSEO?: Partial<SEOMetaData>) {
         appliedMetaTags: metaTags,
         updateSEO: (newSEO: Partial<SEOMetaData>) => {
             // Atualizar SEO customizado dinamicamente
-            console.log('🔄 [AutoSEO] Atualizando SEO:', newSEO);
+            appLogger.info('🔄 [AutoSEO] Atualizando SEO:', { data: [newSEO] });
         },
     };
 }
@@ -181,16 +182,16 @@ export function useAutoTracking() {
     // Inicializar tracking automaticamente
     useEffect(() => {
         if (trackingConfig) {
-            console.log('📊 [AutoTracking] Configurando tracking para:', location);
+            appLogger.info('📊 [AutoTracking] Configurando tracking para:', { data: [location] });
 
             // Google Analytics
             if (trackingConfig.googleAnalytics?.enabled) {
                 const { trackingId, events } = trackingConfig.googleAnalytics;
-                console.log(`🔍 [GA] Inicializando: ${trackingId}`);
+                appLogger.info(`🔍 [GA] Inicializando: ${trackingId}`);
 
                 // Disparar página view
                 if (events?.pageView) {
-                    console.log(`📄 [GA] Page view: ${location}`);
+                    appLogger.info(`📄 [GA] Page view: ${location}`);
                     // gtag('config', trackingId, { page_path: location });
                 }
             }
@@ -198,11 +199,11 @@ export function useAutoTracking() {
             // Facebook Pixel
             if (trackingConfig.facebookPixel?.enabled) {
                 const { pixelId, events } = trackingConfig.facebookPixel;
-                console.log(`📊 [FB] Inicializando: ${pixelId}`);
+                appLogger.info(`📊 [FB] Inicializando: ${pixelId}`);
 
                 // Disparar page view
                 if (events?.pageView) {
-                    console.log(`📄 [FB] Page view: ${location}`);
+                    appLogger.info(`📄 [FB] Page view: ${location}`);
                     // fbq('track', 'PageView');
                 }
             }
@@ -210,10 +211,10 @@ export function useAutoTracking() {
             // Google Tag Manager
             if (trackingConfig.googleTagManager?.enabled) {
                 const { containerId } = trackingConfig.googleTagManager;
-                console.log(`🏷️ [GTM] Container: ${containerId}`);
+                appLogger.info(`🏷️ [GTM] Container: ${containerId}`);
 
                 // Disparar evento customizado
-                console.log(`📄 [GTM] Route change: ${location}`);
+                appLogger.info(`📄 [GTM] Route change: ${location}`);
                 // dataLayer.push({ event: 'route_change', page: location });
             }
         }
@@ -223,23 +224,23 @@ export function useAutoTracking() {
     const trackEvent = useCallback((eventName: string, parameters?: Record<string, any>) => {
         if (!trackingConfig) return;
 
-        console.log(`📊 [AutoTracking] Evento: ${eventName}`, parameters);
+        appLogger.info(`📊 [AutoTracking] Evento: ${eventName}`, { data: [parameters] });
 
         // Google Analytics
         if (trackingConfig.googleAnalytics?.enabled) {
-            console.log(`🔍 [GA] Evento: ${eventName}`);
+            appLogger.info(`🔍 [GA] Evento: ${eventName}`);
             // gtag('event', eventName, parameters);
         }
 
         // Facebook Pixel
         if (trackingConfig.facebookPixel?.enabled) {
-            console.log(`📊 [FB] Evento: ${eventName}`);
+            appLogger.info(`📊 [FB] Evento: ${eventName}`);
             // fbq('track', eventName, parameters);
         }
 
         // Google Tag Manager
         if (trackingConfig.googleTagManager?.enabled) {
-            console.log(`🏷️ [GTM] Evento: ${eventName}`);
+            appLogger.info(`🏷️ [GTM] Evento: ${eventName}`);
             // dataLayer.push({ event: eventName, ...parameters });
         }
     }, [trackingConfig]);
@@ -279,7 +280,7 @@ export function useAutoTheme() {
     // Aplicar tema automaticamente
     useEffect(() => {
         if (colors) {
-            console.log('🎨 [AutoTheme] Aplicando cores:', colors);
+            appLogger.info('🎨 [AutoTheme] Aplicando cores:', { data: [colors] });
 
             // Aplicar variáveis CSS customizadas
             const root = document.documentElement;
@@ -289,7 +290,7 @@ export function useAutoTheme() {
         }
 
         if (fonts && typeof fonts === 'string') {
-            console.log('🔤 [AutoTheme] Aplicando fonte:', fonts);
+            appLogger.info('🔤 [AutoTheme] Aplicando fonte:', { data: [fonts] });
             document.documentElement.style.setProperty('--funnel-font-family', fonts);
         }
 
@@ -303,7 +304,7 @@ export function useAutoTheme() {
     // Cleanup ao trocar de funil
     useEffect(() => {
         return () => {
-            console.log('🧹 [AutoTheme] Limpando tema anterior');
+            appLogger.info('🧹 [AutoTheme] Limpando tema anterior');
             const root = document.documentElement;
             root.style.removeProperty('--funnel-primary-color');
             root.style.removeProperty('--funnel-secondary-color');
@@ -363,10 +364,10 @@ export function useAutoConfiguration(options?: {
         // Função utilitária para debug
         debug: () => {
             console.group('🔧 [AutoConfiguration] Status');
-            console.log('📍 Rota:', routeConfig);
-            console.log('🔍 SEO:', seoConfig);
-            console.log('📊 Tracking:', trackingConfig);
-            console.log('🎨 Tema:', themeConfig);
+            appLogger.info('📍 Rota:', { data: [routeConfig] });
+            appLogger.info('🔍 SEO:', { data: [seoConfig] });
+            appLogger.info('📊 Tracking:', { data: [trackingConfig] });
+            appLogger.info('🎨 Tema:', { data: [themeConfig] });
             console.groupEnd();
         },
     };
@@ -386,10 +387,10 @@ export function registerRoute(mapping: RouteConfigMapping) {
 
     if (existingIndex >= 0) {
         ROUTE_FUNNEL_MAPPING[existingIndex] = mapping;
-        console.log(`🔄 [RouteConfig] Rota atualizada: ${mapping.path} -> ${mapping.funnelId}`);
+        appLogger.info(`🔄 [RouteConfig] Rota atualizada: ${mapping.path} -> ${mapping.funnelId}`);
     } else {
         ROUTE_FUNNEL_MAPPING.push(mapping);
-        console.log(`✅ [RouteConfig] Nova rota registrada: ${mapping.path} -> ${mapping.funnelId}`);
+        appLogger.info(`✅ [RouteConfig] Nova rota registrada: ${mapping.path} -> ${mapping.funnelId}`);
     }
 }
 

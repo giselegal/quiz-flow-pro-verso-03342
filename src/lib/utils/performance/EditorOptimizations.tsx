@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Configurações de performance para componentes específicos
 export const PERFORMANCE_CONFIG = {
@@ -160,7 +161,7 @@ export function useMemoryMonitor(componentName: string) {
         // Log warning se componente renderizar muito frequentemente
         const elapsed = Date.now() - startTime.current;
         if (renderCount.current > 20 && elapsed < 5000) {
-            console.warn(`⚠️ Possible memory leak in ${componentName}: ${renderCount.current} renders in ${elapsed}ms`);
+            appLogger.warn(`⚠️ Possible memory leak in ${componentName}: ${renderCount.current} renders in ${elapsed}ms`);
         }
     });
 
@@ -168,7 +169,7 @@ export function useMemoryMonitor(componentName: string) {
     React.useEffect(() => {
         return () => {
             if (renderCount.current > 50) {
-                console.info(`📊 ${componentName} cleanup: ${renderCount.current} total renders`);
+                appLogger.info(`📊 ${componentName} cleanup: ${renderCount.current} total renders`);
             }
         };
     }, [componentName]);

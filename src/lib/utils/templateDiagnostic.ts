@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔧 DIAGNOSTIC SCRIPT - SOMENTE DEV
  * 
@@ -27,7 +28,7 @@ interface TemplateDiagnosticResult {
 export default async function runTemplateDiagnostic(): Promise<TemplateDiagnosticResult> {
     // Verificar se está em DEV
     if (import.meta.env.PROD) {
-        console.warn('⚠️ [DIAGNOSTIC] Diagnóstico desabilitado em produção');
+        appLogger.warn('⚠️ [DIAGNOSTIC] Diagnóstico desabilitado em produção');
         return {
             templateLoaded: false,
             stepCount: 0,
@@ -37,7 +38,7 @@ export default async function runTemplateDiagnostic(): Promise<TemplateDiagnosti
         };
     }
 
-    console.log('🔧 [DIAGNOSTIC] Testando carregamento do template...');
+    appLogger.info('🔧 [DIAGNOSTIC] Testando carregamento do template...');
 
     try {
         // Dynamic import para evitar bundle bloat
@@ -45,22 +46,22 @@ export default async function runTemplateDiagnostic(): Promise<TemplateDiagnosti
         const QUIZ_STYLE_21_STEPS_TEMPLATE = templateModule.QUIZ_STYLE_21_STEPS_TEMPLATE;
 
         if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
-            console.log('✅ [DIAGNOSTIC] Template carregado com sucesso!');
-            console.log('📊 [DIAGNOSTIC] Número de etapas:', Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length);
+            appLogger.info('✅ [DIAGNOSTIC] Template carregado com sucesso!');
+            appLogger.info('📊 [DIAGNOSTIC] Número de etapas:', { data: [Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length] });
 
             // Verificar primeira etapa
             const firstStep = Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE)[0];
             if (firstStep) {
                 const firstStepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[firstStep];
-                console.log('🎯 [DIAGNOSTIC] Primeira etapa:', firstStep);
-                console.log('🧩 [DIAGNOSTIC] Blocos na primeira etapa:', firstStepBlocks?.length || 0);
+                appLogger.info('🎯 [DIAGNOSTIC] Primeira etapa:', { data: [firstStep] });
+                appLogger.info('🧩 [DIAGNOSTIC] Blocos na primeira etapa:', { data: [firstStepBlocks?.length || 0] });
 
                 if (firstStepBlocks && firstStepBlocks.length > 0) {
-                    console.log('📝 [DIAGNOSTIC] Primeiro bloco:', {
-                        id: firstStepBlocks[0]?.id,
-                        type: firstStepBlocks[0]?.type,
-                        hasContent: !!firstStepBlocks[0]?.content,
-                    });
+                    appLogger.info('📝 [DIAGNOSTIC] Primeiro bloco:', { data: [{
+                                            id: firstStepBlocks[0]?.id,
+                                            type: firstStepBlocks[0]?.type,
+                                            hasContent: !!firstStepBlocks[0]?.content,
+                                        }] });
                 }
             }
 
@@ -71,23 +72,23 @@ export default async function runTemplateDiagnostic(): Promise<TemplateDiagnosti
             Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
                 if (!blocks || blocks.length === 0) {
                     emptySteps++;
-                    console.log(`⚠️ [DIAGNOSTIC] Etapa vazia encontrada: ${stepKey}`);
+                    appLogger.info(`⚠️ [DIAGNOSTIC] Etapa vazia encontrada: ${stepKey}`);
                 } else {
                     totalBlocks += blocks.length;
                 }
             });
 
-            console.log('📈 [DIAGNOSTIC] Estatísticas:', {
-                totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
-                emptySteps,
-                totalBlocks,
-                averageBlocksPerStep: totalBlocks / Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
-            });
+            appLogger.info('📈 [DIAGNOSTIC] Estatísticas:', { data: [{
+                            totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
+                            emptySteps,
+                            totalBlocks,
+                            averageBlocksPerStep: totalBlocks / Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
+                        }] });
 
             // Testar se o módulo está acessível globalmente
             if (typeof window !== 'undefined') {
                 (window as any).__DIAGNOSTIC_TEMPLATE__ = QUIZ_STYLE_21_STEPS_TEMPLATE;
-                console.log('🌍 [DIAGNOSTIC] Template disponível em window.__DIAGNOSTIC_TEMPLATE__');
+                appLogger.info('🌍 [DIAGNOSTIC] Template disponível em window.__DIAGNOSTIC_TEMPLATE__');
             }
 
             return {
@@ -97,7 +98,7 @@ export default async function runTemplateDiagnostic(): Promise<TemplateDiagnosti
                 source: 'dynamic-import',
             };
         } else {
-            console.error('❌ [DIAGNOSTIC] Template não carregado! Verifique imports.');
+            appLogger.error('❌ [DIAGNOSTIC] Template não carregado! Verifique imports.');
             return {
                 templateLoaded: false,
                 stepCount: 0,
@@ -107,7 +108,7 @@ export default async function runTemplateDiagnostic(): Promise<TemplateDiagnosti
             };
         }
     } catch (error) {
-        console.error('❌ [DIAGNOSTIC] Erro ao carregar template:', error);
+        appLogger.error('❌ [DIAGNOSTIC] Erro ao carregar template:', { data: [error] });
         return {
             templateLoaded: false,
             stepCount: 0,

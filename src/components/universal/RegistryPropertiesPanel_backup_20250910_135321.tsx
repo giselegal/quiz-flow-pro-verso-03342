@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface RegistryPropertiesPanelProps {
   selectedBlock: any;
@@ -102,7 +103,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
           setTimeout(() => setSaveStatus('idle'), 2000);
 
         } catch (error) {
-          console.error('❌ Erro ao salvar:', error);
+          appLogger.error('❌ Erro ao salvar:', { data: [error] });
           setSaveStatus('error');
           setTimeout(() => setSaveStatus('idle'), 3000);
         } finally {

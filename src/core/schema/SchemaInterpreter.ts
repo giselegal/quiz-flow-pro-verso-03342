@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 SCHEMA INTERPRETER - FASE 1 Registry Universal Dinâmico
  * 
@@ -53,7 +54,7 @@ export class SchemaInterpreter {
    * Carrega definição de schema JSON
    */
   loadSchema(schema: SchemaDefinition): void {
-    console.log(`[SchemaInterpreter] Carregando ${Object.keys(schema.blockTypes).length} tipos de blocos`);
+    appLogger.info(`[SchemaInterpreter] Carregando ${Object.keys(schema.blockTypes).length} tipos de blocos`);
     
     Object.entries(schema.blockTypes).forEach(([type, definition]) => {
       this.schemas.set(type, definition);

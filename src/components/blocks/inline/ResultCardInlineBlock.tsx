@@ -6,6 +6,7 @@ import { Award, TrendingUp } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { StorageService } from '@/services/core/StorageService';
 import { getStyleConfig } from '@/config/styleConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const interpolate = (text: string, vars: Record<string, any>) => {
   if (!text) return '';
@@ -28,7 +29,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
 }) => {
   // 🛡️ Validação e logging de debug
   if (!isValidBlock(block)) {
-    console.error('❌ ResultCardInlineBlock: Bloco inválido recebido', block);
+    appLogger.error('❌ ResultCardInlineBlock: Bloco inválido recebido', { data: [block] });
     return <div style={{ color: '#432818' }}>Erro: Bloco inválido</div>;
   }
 

@@ -13,6 +13,7 @@ import {
     GlobalFunnelState,
 } from '@/hooks/core/useGlobalState';
 import { EventEmitter } from '@/lib/utils/EventEmitter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interfaces simplificadas
 export interface StateSnapshot {
@@ -60,7 +61,7 @@ export class GlobalStateService extends EventEmitter {
             this.isInitialized = true;
             this.emit('initialized', this.cache);
         } catch (error) {
-            console.error('Failed to initialize GlobalStateService:', error);
+            appLogger.error('Failed to initialize GlobalStateService:', { data: [error] });
             throw error;
         }
     }
@@ -236,7 +237,7 @@ export class GlobalStateService extends EventEmitter {
                 try {
                     callback(newState);
                 } catch (error) {
-                    console.error(`Error in ${stateType} subscriber:`, error);
+                    appLogger.error(`Error in ${stateType} subscriber:`, { data: [error] });
                 }
             });
         }

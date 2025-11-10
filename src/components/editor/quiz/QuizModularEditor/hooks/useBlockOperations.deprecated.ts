@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * ⚠️ DEPRECATED: useBlockOperations
  * 
@@ -30,9 +31,7 @@
 export { useBlockOperations } from './useBlockOperations';
 
 if (process.env.NODE_ENV === 'development') {
-  console.warn(
-    '⚠️ [DEPRECATED] useBlockOperations está deprecated.\n' +
-    'Use useSuperUnified() ao invés.\n' +
-    'Veja: src/components/editor/quiz/QuizModularEditor/hooks/useBlockOperations.deprecated.ts'
-  );
+  appLogger.warn('⚠️ [DEPRECATED] useBlockOperations está deprecated.\n' +
+        'Use useSuperUnified() ao invés.\n' +
+        'Veja: src/components/editor/quiz/QuizModularEditor/hooks/useBlockOperations.deprecated.ts');
 }

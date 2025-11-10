@@ -35,6 +35,7 @@ import {
     Target,
     Award,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // COMPONENTES DE MÉTRICAS
@@ -230,7 +231,7 @@ export const RealTimeDashboard: React.FC = () => {
     const loadData = async () => {
         try {
             setIsLoading(true);
-            console.log('📊 RealTimeDashboard: Carregando dados via EnhancedUnifiedDataService...');
+            appLogger.info('📊 RealTimeDashboard: Carregando dados via EnhancedUnifiedDataService...');
             const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
 
             // Converter métricas do EnhancedUnifiedDataService para DashboardData
@@ -259,7 +260,7 @@ export const RealTimeDashboard: React.FC = () => {
 
             setDashboardData(data);
         } catch (error) {
-            console.error('Erro ao carregar dados:', error);
+            appLogger.error('Erro ao carregar dados:', { data: [error] });
             // Fallback para dados mock
             setDashboardData({
                 totalSessions: 42,

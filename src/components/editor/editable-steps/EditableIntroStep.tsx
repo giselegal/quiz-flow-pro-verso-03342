@@ -7,7 +7,6 @@
  */
 
 import React, { useMemo } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import IntroStep from '../../quiz/IntroStep';
 import { EditableBlockWrapper } from './shared/EditableBlockWrapper';
 import { EditableStepProps } from './shared/EditableStepProps';

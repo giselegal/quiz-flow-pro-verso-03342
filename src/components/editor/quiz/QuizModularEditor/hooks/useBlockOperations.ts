@@ -5,6 +5,7 @@ import type { Block } from '@/types/editor';
 import { toast } from '@/hooks/use-toast';
 import { validateBlock } from '@/core/validation/UnifiedBlockValidator';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type ValidationError = {
   field: string;
@@ -37,25 +38,25 @@ export function useBlockOperations(): UseBlockOperations {
   const ensureLoaded = useCallback(async (stepKey: string | null, templateId?: string) => {
     if (!stepKey) return;
     if (byStep[stepKey]) {
-      console.log(`✅ [useBlockOperations] Step ${stepKey} já carregado (${byStep[stepKey].length} blocos)`);
+      appLogger.info(`✅ [useBlockOperations] Step ${stepKey} já carregado (${byStep[stepKey].length} blocos)`);
       return;
     }
     if (loadingRef.current[stepKey]) {
-      console.log(`⏳ [useBlockOperations] Step ${stepKey} já está sendo carregado...`);
+      appLogger.info(`⏳ [useBlockOperations] Step ${stepKey} já está sendo carregado...`);
       return;
     }
     
     loadingRef.current[stepKey] = true;
-    console.log(`🔄 [useBlockOperations] Carregando step ${stepKey}${templateId ? ` (template: ${templateId})` : ''}...`);
+    appLogger.info(`🔄 [useBlockOperations] Carregando step ${stepKey}${templateId ? ` (template: ${templateId})` : ''}...`);
     
     try {
       // Passar templateId para templateService se disponível
       const res = await templateService.getStep(stepKey, templateId);
       if (res.success) {
-        console.log(`✅ [useBlockOperations] Step ${stepKey} carregado (${res.data.length} blocos)`);
+        appLogger.info(`✅ [useBlockOperations] Step ${stepKey} carregado (${res.data.length} blocos)`);
         setByStep((prev) => ({ ...prev, [stepKey]: res.data }));
       } else {
-        console.warn(`⚠️ [useBlockOperations] Step ${stepKey} não encontrado ou vazio`);
+        appLogger.warn(`⚠️ [useBlockOperations] Step ${stepKey} não encontrado ou vazio`);
         setByStep((prev) => ({ ...prev, [stepKey]: [] }));
       }
     } finally {
@@ -67,7 +68,7 @@ export function useBlockOperations(): UseBlockOperations {
   const loadStepFromTemplate = useCallback((stepKey: string, blocks: Block[]) => {
     if (!stepKey || !blocks) return;
     
-    console.log(`🎨 [useBlockOperations] Carregando step ${stepKey} do template (${blocks.length} blocos)`);
+    appLogger.info(`🎨 [useBlockOperations] Carregando step ${stepKey} do template (${blocks.length} blocos)`);
     
     setByStep((prev) => ({
       ...prev,
@@ -168,12 +169,12 @@ export function useBlockOperations(): UseBlockOperations {
         return prev;
       }
 
-      console.log(`✅ [useBlockOperations] Bloco atualizado: ${blockId}`, {
-        stepKey,
-        type: updated.type,
-        propertiesKeys: Object.keys(updated.properties || {}),
-        contentKeys: Object.keys(updated.content || {}),
-      });
+      appLogger.info(`✅ [useBlockOperations] Bloco atualizado: ${blockId}`, { data: [{
+                stepKey,
+                type: updated.type,
+                propertiesKeys: Object.keys(updated.properties || {}),
+                contentKeys: Object.keys(updated.content || {}),
+              }] });
 
       const next = [...list];
       next[idx] = updated;

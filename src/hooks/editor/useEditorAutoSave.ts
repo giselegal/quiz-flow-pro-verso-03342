@@ -5,6 +5,7 @@ import type { ContextualFunnelData } from '@/types/funnel';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
 import { getFunnelIdFromEnvOrStorage } from '@/lib/utils/funnelIdentity';
 import { useToast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseEditorAutoSaveOptions {
   funnelId?: string;
@@ -68,13 +69,13 @@ export const useEditorAutoSave = ({
   // 💾 Função de salvamento
   const saveFunction = useCallback(async (dataToSave: any) => {
     try {
-      console.log('💾 Salvando dados do funil:', currentFunnelId);
+      appLogger.info('💾 Salvando dados do funil:', { data: [currentFunnelId] });
       setSaveStatus('saving');
       setErrorMessage(undefined);
 
       // Para funis do template, não tentar salvar no Supabase
       if (currentFunnelId.startsWith('template-') || currentFunnelId === 'default-funnel') {
-        console.log('📋 Funil template/default - salvando apenas localmente');
+        appLogger.info('📋 Funil template/default - salvando apenas localmente');
 
         // Salvar no localStorage como backup usando chave contextual
         try {
@@ -88,7 +89,7 @@ export const useEditorAutoSave = ({
             }),
           );
         } catch (err) {
-          console.warn('⚠️ Erro ao salvar no localStorage:', err);
+          appLogger.warn('⚠️ Erro ao salvar no localStorage:', { data: [err] });
         }
       } else {
         // Para funis personalizados, salvar no Supabase usando o serviço contextual
@@ -103,7 +104,7 @@ export const useEditorAutoSave = ({
 
         await contextualFunnelService.saveFunnel(contextualData as any);
 
-        console.log('✅ Dados salvos no Supabase com sucesso');
+        appLogger.info('✅ Dados salvos no Supabase com sucesso');
       }
 
       // Atualizar estado de sucesso
@@ -121,7 +122,7 @@ export const useEditorAutoSave = ({
       }
 
     } catch (error) {
-      console.error('❌ Erro ao salvar dados:', error);
+      appLogger.error('❌ Erro ao salvar dados:', { data: [error] });
       setSaveStatus('error');
       setErrorMessage(error instanceof Error ? error.message : 'Erro desconhecido');
 
@@ -152,7 +153,7 @@ export const useEditorAutoSave = ({
       await forceAutoSave();
     } catch (error) {
       // Erro já tratado no saveFunction
-      console.error('Erro no salvamento manual:', error);
+      appLogger.error('Erro no salvamento manual:', { data: [error] });
     }
   }, [forceAutoSave]);
 

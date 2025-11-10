@@ -1,5 +1,4 @@
 import React from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
 interface EditorTransitionStepProps {

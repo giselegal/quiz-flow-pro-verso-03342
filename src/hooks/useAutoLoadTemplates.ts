@@ -1,6 +1,7 @@
 import { useEditor } from '@/hooks/useUnifiedEditor';
 import { useFunnels } from '@/contexts';
 import { useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Hook para carregar automaticamente os templates das etapas
@@ -18,13 +19,13 @@ export const useAutoLoadTemplates = (): {
 
     const loadStepTemplate = async () => {
       try {
-        console.log(`🔄 Carregando template para etapa: ${activeStageId}`);
+        appLogger.info(`🔄 Carregando template para etapa: ${activeStageId}`);
 
         // Obter blocos do template da etapa atual
         const templateBlocks = getTemplateBlocks(currentFunnelId, activeStageId);
 
         if (templateBlocks && templateBlocks.length > 0) {
-          console.log(`✅ Carregados ${templateBlocks.length} blocos para etapa ${activeStageId}`);
+          appLogger.info(`✅ Carregados ${templateBlocks.length} blocos para etapa ${activeStageId}`);
 
           // Converter e carregar os blocos no editor
           const editorBlocks = templateBlocks.map((block, index) => ({
@@ -37,11 +38,11 @@ export const useAutoLoadTemplates = (): {
           // O dispatch será acessado diretamente no componente que usa este hook
           return editorBlocks;
         } else {
-          console.warn(`⚠️ Nenhum bloco encontrado para etapa ${activeStageId}`);
+          appLogger.warn(`⚠️ Nenhum bloco encontrado para etapa ${activeStageId}`);
           return [];
         }
       } catch (error) {
-        console.error('❌ Erro ao carregar template da etapa:', error);
+        appLogger.error('❌ Erro ao carregar template da etapa:', { data: [error] });
         return [];
       }
     };

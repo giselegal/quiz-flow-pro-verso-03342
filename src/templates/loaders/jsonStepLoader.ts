@@ -1,4 +1,5 @@
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Carrega blocos de um step a partir de JSON dinâmico no diretório public.
@@ -45,16 +46,16 @@ export async function loadStepFromJson(
     `/templates/funnels/${templateId}/steps/${stepId}.json`,
   ];
 
-  console.log(`🔍 [jsonStepLoader] Tentando carregar: ${paths[0]}`);
+  appLogger.info(`🔍 [jsonStepLoader] Tentando carregar: ${paths[0]}`);
 
   for (const url of paths) {
     const blocks = await tryUrl(url);
     if (blocks && blocks.length > 0) {
-      console.log(`✅ [jsonStepLoader] Carregado ${blocks.length} blocos de ${url}`);
+      appLogger.info(`✅ [jsonStepLoader] Carregado ${blocks.length} blocos de ${url}`);
       return blocks;
     }
   }
 
-  console.warn(`⚠️ [jsonStepLoader] Nenhum bloco encontrado para ${stepId} no template ${templateId}`);
+  appLogger.warn(`⚠️ [jsonStepLoader] Nenhum bloco encontrado para ${stepId} no template ${templateId}`);
   return null;
 }

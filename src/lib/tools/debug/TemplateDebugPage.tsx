@@ -5,13 +5,14 @@
 import React, { useEffect, useState } from 'react';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { normalizeStepBlocks } from '@/config/quizStepsComplete';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const TemplateDebugPage: React.FC = () => {
     const [templateInfo, setTemplateInfo] = useState<any>(null);
     const [normalizedInfo, setNormalizedInfo] = useState<any>(null);
 
     useEffect(() => {
-        console.log('🔍 TemplateDebugPage mounted');
+        appLogger.info('🔍 TemplateDebugPage mounted');
 
         // 1. Verificar template bruto
         const templateData = {
@@ -26,7 +27,7 @@ const TemplateDebugPage: React.FC = () => {
                 ]) : [],
         };
 
-        console.log('📦 Raw template data:', templateData);
+        appLogger.info('📦 Raw template data:', { data: [templateData] });
         setTemplateInfo(templateData);
 
         // 2. Verificar normalização
@@ -50,7 +51,7 @@ const TemplateDebugPage: React.FC = () => {
                 };
             }
 
-            console.log('🔧 Normalized data:', normalizedData);
+            appLogger.info('🔧 Normalized data:', { data: [normalizedData] });
             setNormalizedInfo(normalizedData);
         }
     }, []);

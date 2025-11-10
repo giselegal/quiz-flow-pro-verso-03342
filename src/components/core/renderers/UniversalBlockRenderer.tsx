@@ -8,6 +8,7 @@ import QuestionFallback from '@/components/core/fallbacks/QuestionFallback';
 import TransitionFallback from '@/components/core/fallbacks/TransitionFallback';
 import ResultFallback from '@/components/core/fallbacks/ResultFallback';
 import OfferFallback from '@/components/core/fallbacks/OfferFallback';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UniversalBlockRendererProps {
   block: Block;
@@ -47,11 +48,11 @@ class BlockErrorBoundary extends React.Component<{ block: Block; children?: Reac
   componentDidCatch(error: any, info: any) {
     // Log não-invasivo para diagnóstico
 
-    console.error('[UniversalBlockRenderer] erro ao renderizar bloco', {
-      block: this.props.block,
-      error,
-      info,
-    });
+    appLogger.error('[UniversalBlockRenderer] erro ao renderizar bloco', { data: [{
+            block: this.props.block,
+            error,
+            info,
+          }] });
   }
 
   componentDidUpdate(prevProps: Readonly<{ block: Block }>) {
@@ -90,19 +91,19 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 }) => {
   // Debug log para question-hero
   if (block.type === 'question-hero') {
-    console.log('🎯 [UniversalBlockRenderer] Renderizando question-hero:', {
-      blockId: block.id,
-      type: block.type,
-      content: block.content,
-      properties: block.properties
-    });
+    appLogger.info('🎯 [UniversalBlockRenderer] Renderizando question-hero:', { data: [{
+            blockId: block.id,
+            type: block.type,
+            content: block.content,
+            properties: block.properties
+          }] });
   }
 
   // Resolver componente via UnifiedBlockRegistry
   const EnhancedComponent = blockRegistry.getComponent(block.type);
 
   if (block.type === 'question-hero' && !EnhancedComponent) {
-    console.error('❌ [UniversalBlockRenderer] Componente question-hero NÃO encontrado no registry!');
+    appLogger.error('❌ [UniversalBlockRenderer] Componente question-hero NÃO encontrado no registry!');
   }
 
   const handleClick = React.useMemo(() => {

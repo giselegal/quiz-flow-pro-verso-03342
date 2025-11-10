@@ -45,6 +45,7 @@ import {
   Type,
 } from 'lucide-react';
 import React, { useId } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // A interface UnifiedBlock é importada do hook, garantindo consistência
 interface EnhancedUniversalPropertiesPanelProps {
@@ -101,18 +102,18 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       : null;
 
   if (debugInfo) {
-    console.log('🎯 EnhancedUniversalPropertiesPanel:', debugInfo);
+    appLogger.info('🎯 EnhancedUniversalPropertiesPanel:', { data: [debugInfo] });
   }
 
   // Log específico para quiz-intro-header
   if (actualBlock?.type === 'quiz-intro-header') {
-    console.log('🏠 [quiz-intro-header] Debug específico:', {
-      blockId: actualBlock.id,
-      blockType: actualBlock.type,
-      blockProperties: actualBlock.properties,
-      hookPropertiesGenerated: properties?.length || 0,
-      hookPropertiesPreview: properties?.slice(0, 5)?.map(p => ({ key: p.key, value: p.value })),
-    });
+    appLogger.info('🏠 [quiz-intro-header] Debug específico:', { data: [{
+            blockId: actualBlock.id,
+            blockType: actualBlock.type,
+            blockProperties: actualBlock.properties,
+            hookPropertiesGenerated: properties?.length || 0,
+            hookPropertiesPreview: properties?.slice(0, 5)?.map(p => ({ key: p.key, value: p.value })),
+          }] });
   }
 
   // Se nenhum bloco estiver selecionado, exibe uma mensagem
@@ -265,7 +266,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               <Switch
                 checked={!!value}
                 onCheckedChange={checked => {
-                  console.log('🎯 EnhancedPanel SWITCH mudou:', { key, checked, label });
+                  appLogger.info('🎯 EnhancedPanel SWITCH mudou:', { data: [{ key, checked, label }] });
                   updateProperty(key, checked);
                 }}
               />
@@ -517,7 +518,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             }
           }}
           onValidationError={errors => {
-            console.warn('⚠️ Erros de validação no OptionsGrid:', errors);
+            appLogger.warn('⚠️ Erros de validação no OptionsGrid:', { data: [errors] });
           }}
         />
       </div>

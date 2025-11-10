@@ -6,12 +6,13 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Aplicar polyfills imediatamente na importação
 (function applyReactPolyfills() {
     if (typeof window === 'undefined') return;
 
-    console.log('🔧 [ReactPolyfills] Aplicando correções React...');
+    appLogger.info('🔧 [ReactPolyfills] Aplicando correções React...');
 
     // Garantir que React está disponível globalmente
     (window as any).React = React;
@@ -62,7 +63,7 @@ import React from 'react';
     // Marcar como aplicado
     (window as any).__REACT_POLYFILLS_READY__ = true;
     
-    console.log('✅ [ReactPolyfills] Todas as APIs React foram normalizadas');
+    appLogger.info('✅ [ReactPolyfills] Todas as APIs React foram normalizadas');
 })();
 
 export default React;

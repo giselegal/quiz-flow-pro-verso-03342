@@ -10,6 +10,7 @@
  */
 
 import { FunnelTemplate } from '@/config/funnelTemplates';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES E INTERFACES
@@ -119,7 +120,7 @@ export function deepClone<T>(obj: T): T {
         }
         return cloned as T;
     } catch (error) {
-        console.warn('⚠️ Fallback para JSON clone:', error);
+        appLogger.warn('⚠️ Fallback para JSON clone:', { data: [error] });
         return JSON.parse(JSON.stringify(obj));
     }
 }
@@ -153,7 +154,7 @@ export function deepCloneWithNewIds<T extends Record<string, any>>(
             cleanMetadata(cloned);
         }
 
-        console.log(`✅ Deep clone concluído em ${Date.now() - startTime}ms com ${idMapping.size} IDs regenerados`);
+        appLogger.info(`✅ Deep clone concluído em ${Date.now() - startTime}ms com ${idMapping.size} IDs regenerados`);
 
         return {
             original: obj,
@@ -164,7 +165,7 @@ export function deepCloneWithNewIds<T extends Record<string, any>>(
         };
 
     } catch (error) {
-        console.error('❌ Erro no deep clone:', error);
+        appLogger.error('❌ Erro no deep clone:', { data: [error] });
         return {
             original: obj,
             cloned: obj, // Fallback para objeto original
@@ -415,7 +416,7 @@ export function verifyIsolation<T>(original: T, cloned: T): boolean {
         return true; // Primitivos são sempre isolados
 
     } catch (error) {
-        console.warn('⚠️ Não foi possível verificar isolamento:', error);
+        appLogger.warn('⚠️ Não foi possível verificar isolamento:', { data: [error] });
         return false;
     }
 }

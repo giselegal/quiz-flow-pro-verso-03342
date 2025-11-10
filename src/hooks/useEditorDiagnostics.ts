@@ -74,6 +74,7 @@ const EditorDiagnostics = {
 };
 import { PerformanceOptimizer } from '@/lib/utils/performanceOptimizer';
 import { useCallback, useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface DiagnosticState {
   isRunning: boolean;
@@ -110,7 +111,7 @@ export const useEditorDiagnostics = (options?: {
     setState(prev => ({ ...prev, isRunning: true }));
 
     try {
-      console.log('🔍 Iniciando diagnóstico do editor...');
+      appLogger.info('🔍 Iniciando diagnóstico do editor...');
       const results = await EditorDiagnostics.runFullDiagnostic();
 
       setState(prev => ({
@@ -122,13 +123,13 @@ export const useEditorDiagnostics = (options?: {
 
       // Auto-fix se habilitado e há erros
       if (autoFix && results.some(r => r.status === 'error')) {
-        console.log('🔧 Aplicando correções automáticas...');
+        appLogger.info('🔧 Aplicando correções automáticas...');
         await EditorDiagnostics.applyAutomaticFixes();
       }
 
       return results;
     } catch (error) {
-      console.error('❌ Erro no diagnóstico:', error);
+      appLogger.error('❌ Erro no diagnóstico:', { data: [error] });
       setState(prev => ({ ...prev, isRunning: false }));
       throw error;
     } finally {
@@ -155,7 +156,7 @@ export const useEditorDiagnostics = (options?: {
   // 🔧 Aplicar correções manuais
   const applyFixes = useCallback(async () => {
     try {
-      console.log('🔧 Aplicando correções manuais...');
+      appLogger.info('🔧 Aplicando correções manuais...');
       const fixes = await EditorDiagnostics.applyAutomaticFixes();
 
       // Re-executar diagnóstico após correções
@@ -163,7 +164,7 @@ export const useEditorDiagnostics = (options?: {
 
       return fixes;
     } catch (error) {
-      console.error('❌ Erro ao aplicar correções:', error);
+      appLogger.error('❌ Erro ao aplicar correções:', { data: [error] });
       throw error;
     }
   }, [runDiagnostic]);
@@ -185,7 +186,7 @@ export const useEditorDiagnostics = (options?: {
       const id = PerformanceOptimizer.schedule(
         () => {
           runDiagnostic().catch(error => {
-            console.error('❌ Erro no diagnóstico automático:', error);
+            appLogger.error('❌ Erro no diagnóstico automático:', { data: [error] });
           });
         },
         2000,
@@ -201,7 +202,7 @@ export const useEditorDiagnostics = (options?: {
     const intervalId = PerformanceOptimizer.scheduleInterval(
       () => {
         runDiagnostic().catch(error => {
-          console.error('❌ Erro no diagnóstico periódico:', error);
+          appLogger.error('❌ Erro no diagnóstico periódico:', { data: [error] });
         });
       },
       interval,

@@ -15,6 +15,7 @@ import {
   normalizeStageId,
   generateInstanceKey,
 } from './idValidation';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Obtém ID do funil com validação rigorosa de várias fontes
@@ -27,10 +28,10 @@ export const getFunnelIdFromEnvOrStorage = (): string | null => {
     if (fromUrl) {
       const validation = validateFunnelId(fromUrl);
       if (validation.isValid) {
-        console.log('✅ FunnelId válido da URL:', validation.normalized);
+        appLogger.info('✅ FunnelId válido da URL:', { data: [validation.normalized] });
         return validation.normalized!;
       } else {
-        console.warn('⚠️ FunnelId inválido na URL:', validation.error);
+        appLogger.warn('⚠️ FunnelId inválido na URL:', { data: [validation.error] });
       }
     }
 
@@ -39,10 +40,10 @@ export const getFunnelIdFromEnvOrStorage = (): string | null => {
     if (fromLs) {
       const validation = validateFunnelId(fromLs);
       if (validation.isValid) {
-        console.log('✅ FunnelId válido do localStorage:', validation.normalized);
+        appLogger.info('✅ FunnelId válido do localStorage:', { data: [validation.normalized] });
         return validation.normalized!;
       } else {
-        console.warn('⚠️ FunnelId inválido no localStorage:', validation.error);
+        appLogger.warn('⚠️ FunnelId inválido no localStorage:', { data: [validation.error] });
         // Remove ID inválido do localStorage
         StorageService.safeRemove('editor:funnelId');
       }
@@ -53,18 +54,18 @@ export const getFunnelIdFromEnvOrStorage = (): string | null => {
     if (fromEnv) {
       const validation = validateFunnelId(fromEnv);
       if (validation.isValid) {
-        console.log('✅ FunnelId válido do env:', validation.normalized);
+        appLogger.info('✅ FunnelId válido do env:', { data: [validation.normalized] });
         return validation.normalized!;
       } else {
-        console.warn('⚠️ FunnelId inválido no env:', validation.error);
+        appLogger.warn('⚠️ FunnelId inválido no env:', { data: [validation.error] });
       }
     }
 
     // Nenhum fallback fixo - deixar que o sistema decida baseado na escolha do usuário
-    console.log('⚠️ Nenhum FunnelId encontrado - retornando null para permitir seleção de template');
+    appLogger.info('⚠️ Nenhum FunnelId encontrado - retornando null para permitir seleção de template');
     return null;
   } catch (error) {
-    console.error('❌ Erro ao obter FunnelId:', error);
+    appLogger.error('❌ Erro ao obter FunnelId:', { data: [error] });
     return null;
   }
 };
@@ -77,15 +78,15 @@ export const saveFunnelIdToStorage = (funnelId: string): boolean => {
     const validation = validateFunnelId(funnelId);
 
     if (!validation.isValid) {
-      console.error('❌ Tentativa de salvar FunnelId inválido:', validation.error);
+      appLogger.error('❌ Tentativa de salvar FunnelId inválido:', { data: [validation.error] });
       return false;
     }
 
     StorageService.safeSetString('editor:funnelId', validation.normalized!);
-    console.log('✅ FunnelId válido salvo:', validation.normalized);
+    appLogger.info('✅ FunnelId válido salvo:', { data: [validation.normalized] });
     return true;
   } catch (error) {
-    console.error('❌ Erro ao salvar FunnelId:', error);
+    appLogger.error('❌ Erro ao salvar FunnelId:', { data: [error] });
     return false;
   }
 };
@@ -133,7 +134,7 @@ export const isValidFunnelId = (funnelId: string | null | undefined): boolean =>
   const isValid = uuidV4Pattern.test(funnelId) || templatePattern.test(funnelId) || defaultPattern.test(funnelId);
 
   if (!isValid) {
-    console.warn(`⚠️ FunnelId inválido: ${funnelId}`);
+    appLogger.warn(`⚠️ FunnelId inválido: ${funnelId}`);
   }
 
   return isValid;

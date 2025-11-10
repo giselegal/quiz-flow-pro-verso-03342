@@ -102,22 +102,23 @@ export {
 // =============================================
 
 import { checkLegacyLoadingUsage } from './LegacyLoadingAdapters';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Initialize loading services
  */
 export function initializeLoadingServices(): void {
-    console.log('🎯 Loading Services initialized');
-    console.log('   ✅ MasterLoadingService ready');
-    console.log('   🔄 Legacy adapters available');
-    console.log('   📢 Use masterLoadingService for new code');
+    appLogger.info('🎯 Loading Services initialized');
+    appLogger.info('   ✅ MasterLoadingService ready');
+    appLogger.info('   🔄 Legacy adapters available');
+    appLogger.info('   📢 Use masterLoadingService for new code');
 
     // Check for legacy usage
     const { hasLegacyUsage, recommendations } = checkLegacyLoadingUsage();
 
     if (hasLegacyUsage) {
-        console.warn('⚠️ Legacy loading hook usage detected');
-        recommendations.forEach((rec: string) => console.warn(`   📝 ${rec}`));
+        appLogger.warn('⚠️ Legacy loading hook usage detected');
+        recommendations.forEach((rec: string) => appLogger.warn(`   📝 ${rec}`));
     }
 }
 
@@ -149,7 +150,7 @@ export async function getGlobalLoadingState(): Promise<{
             warnings: [],
         };
     } catch (error) {
-        console.warn('Failed to get global loading state:', error);
+        appLogger.warn('Failed to get global loading state:', { data: [error] });
         return {
             isLoading: false,
             errors: [],
@@ -164,7 +165,7 @@ export async function getGlobalLoadingState(): Promise<{
 export async function clearAllLoadingStates(): Promise<void> {
     const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
     masterLoadingService.clearAllStates();
-    console.log('🧹 All loading states cleared');
+    appLogger.info('🧹 All loading states cleared');
 }
 
 /**
@@ -173,7 +174,7 @@ export async function clearAllLoadingStates(): Promise<void> {
 export async function resetLoadingMetrics(): Promise<void> {
     const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
     masterLoadingService.resetPerformanceMetrics();
-    console.log('📊 Loading performance metrics reset');
+    appLogger.info('📊 Loading performance metrics reset');
 }
 
 /**
@@ -204,7 +205,7 @@ export async function getLoadingPerformanceSummary(): Promise<{
 // Initialize on import
 initializeLoadingServices();
 
-console.log('🎯 Loading Hooks Module loaded successfully');
-console.log('   📦 masterLoadingService: Main unified service');
-console.log('   🔧 Legacy adapters: Full backward compatibility');
-console.log('   🚀 Ready for use!');
+appLogger.info('🎯 Loading Hooks Module loaded successfully');
+appLogger.info('   📦 masterLoadingService: Main unified service');
+appLogger.info('   🔧 Legacy adapters: Full backward compatibility');
+appLogger.info('   🚀 Ready for use!');

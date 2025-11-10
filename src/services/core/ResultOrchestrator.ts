@@ -6,6 +6,7 @@ import { isUUID } from '@/core/utils/id';
 import { toCanonicalAny } from './adapters';
 import { accumulateScores as accumulateCanonicalScores } from './CanonicalScorer';
 import { STYLE_TIEBREAK_ORDER, stabilizeScoresOrder } from '@/lib/utils/styleKeywordMap';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface OrchestrateOptions {
     selectionsByQuestion: Record<string, string[]>;
@@ -104,7 +105,7 @@ export const ResultOrchestrator = {
                     nextSteps: [],
                 });
             } catch (e) {
-                console.warn('[ResultOrchestrator] Falha ao persistir no Supabase:', e);
+                appLogger.warn('[ResultOrchestrator] Falha ao persistir no Supabase:', { data: [e] });
             }
         }
         return { payload, total, resultId } as const;

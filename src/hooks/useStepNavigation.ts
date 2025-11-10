@@ -5,6 +5,7 @@ import { templateService } from '@/services/canonical/TemplateService';
 import { useCallback, useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { useLocation } from 'wouter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 Hook para navegação funcional das 21 etapas
@@ -85,9 +86,9 @@ export const useStepNavigation = (initialStep: number = 1) => {
         isLoading: false,
       }));
 
-      console.log('✅ Sessão do quiz inicializada:', newSession.id);
+      appLogger.info('✅ Sessão do quiz inicializada:', { data: [newSession.id] });
     } catch (error) {
-      console.error('❌ Erro ao inicializar sessão:', error);
+      appLogger.error('❌ Erro ao inicializar sessão:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Não foi possível inicializar o quiz',
@@ -130,14 +131,14 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
         setStepData(prev => new Map(prev.set(stepNumber, data)));
 
-        console.log(`✅ Dados da etapa ${stepNumber} carregados:`, {
-          isQuizStep,
-          stepsCount: Array.isArray(template.blocks) ? template.blocks.length : 0,
-        });
+        appLogger.info(`✅ Dados da etapa ${stepNumber} carregados:`, { data: [{
+                    isQuizStep,
+                    stepsCount: Array.isArray(template.blocks) ? template.blocks.length : 0,
+                  }] });
 
         return data;
       } catch (error) {
-        console.error(`❌ Erro ao carregar etapa ${stepNumber}:`, error);
+        appLogger.error(`❌ Erro ao carregar etapa ${stepNumber}:`, { data: [error] });
         throw error;
       }
     },
@@ -176,9 +177,9 @@ export const useStepNavigation = (initialStep: number = 1) => {
           });
         }
 
-        console.log(`🚀 Navegou para etapa ${stepNumber}`);
+        appLogger.info(`🚀 Navegou para etapa ${stepNumber}`);
       } catch (error) {
-        console.error(`❌ Erro ao navegar para etapa ${stepNumber}:`, error);
+        appLogger.error(`❌ Erro ao navegar para etapa ${stepNumber}:`, { data: [error] });
         setState(prev => ({ ...prev, isLoading: false }));
 
         toast({
@@ -245,9 +246,9 @@ export const useStepNavigation = (initialStep: number = 1) => {
           }));
         }
 
-        console.log(`💾 Resposta salva para ${questionId}:`, response);
+        appLogger.info(`💾 Resposta salva para ${questionId}:`, { data: [response] });
       } catch (error) {
-        console.error('❌ Erro ao salvar resposta:', error);
+        appLogger.error('❌ Erro ao salvar resposta:', { data: [error] });
         toast({
           title: 'Erro ao Salvar',
           description: 'Não foi possível salvar sua resposta',
@@ -300,9 +301,9 @@ export const useStepNavigation = (initialStep: number = 1) => {
         variant: 'default',
       });
 
-      console.log('🎉 Quiz finalizado com sucesso!');
+      appLogger.info('🎉 Quiz finalizado com sucesso!');
     } catch (error) {
-      console.error('❌ Erro ao finalizar quiz:', error);
+      appLogger.error('❌ Erro ao finalizar quiz:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Não foi possível finalizar o quiz',
@@ -319,7 +320,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
       if (!session) return null;
 
       try {
-        console.log('📊 Iniciando cálculo de resultados...');
+        appLogger.info('📊 Iniciando cálculo de resultados...');
 
         // Importar serviço de resultados
         const { quizResultsService } = await import('@/services/quizResultsService');
@@ -336,10 +337,10 @@ export const useStepNavigation = (initialStep: number = 1) => {
         // Calcular resultados completos
         const results = await quizResultsService.calculateResults(sessionForCalculation);
 
-        console.log('✅ Resultados calculados:', {
-          primaryStyle: results.styleProfile.primaryStyle,
-          completionScore: results.completionScore,
-        });
+        appLogger.info('✅ Resultados calculados:', { data: [{
+                    primaryStyle: results.styleProfile.primaryStyle,
+                    completionScore: results.completionScore,
+                  }] });
 
         // ✅ Normalizar e persistir no core para a Etapa 20 (consumo pelos blocos via useQuizResult)
         try {
@@ -377,7 +378,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
             StorageService.safeSetString('quizUserName', (results as any).userName);
           }
         } catch (e) {
-          console.warn('Não foi possível normalizar/persistir resultado no core:', e);
+          appLogger.warn('Não foi possível normalizar/persistir resultado no core:', { data: [e] });
         }
 
         return {
@@ -397,7 +398,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
           fullResults: results,
         };
       } catch (error) {
-        console.error('❌ Erro no cálculo de resultados:', error);
+        appLogger.error('❌ Erro no cálculo de resultados:', { data: [error] });
 
         // Fallback para cálculo básico
         const totalAnswers = Object.keys(responses).length;

@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
   children: ReactNode;
@@ -15,13 +16,13 @@ export class QuizErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    console.error('QuizErrorBoundary capturou erro:', error);
+    appLogger.error('QuizErrorBoundary capturou erro:', { data: [error] });
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('QuizErrorBoundary - Error:', error);
-    console.error('QuizErrorBoundary - Error Info:', errorInfo);
+    appLogger.error('QuizErrorBoundary - Error:', { data: [error] });
+    appLogger.error('QuizErrorBoundary - Error Info:', { data: [errorInfo] });
   }
 
   public render() {

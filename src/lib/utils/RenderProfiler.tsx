@@ -15,6 +15,7 @@
  */
 
 import React, { Profiler, ProfilerOnRenderCallback, useRef, useState, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface RenderMetrics {
     id: string;
@@ -74,12 +75,12 @@ export const RenderProfiler: React.FC<RenderProfilerProps> = ({
 
         // Log no console se habilitado
         if (logToConsole) {
-            console.log(`[PROFILER] ${profilerId} (${phase})`, {
-                renderCount: metrics.renderCount,
-                actualDuration: `${actualDuration.toFixed(2)}ms`,
-                baseDuration: `${baseDuration.toFixed(2)}ms`,
-                commitTime: new Date(commitTime).toISOString(),
-            });
+            appLogger.info(`[PROFILER] ${profilerId} (${phase})`, { data: [{
+                            renderCount: metrics.renderCount,
+                            actualDuration: `${actualDuration.toFixed(2)}ms`,
+                            baseDuration: `${baseDuration.toFixed(2)}ms`,
+                            commitTime: new Date(commitTime).toISOString(),
+                        }] });
         }
 
         // Callback customizado
@@ -188,7 +189,7 @@ export function useRenderCounter(componentName: string, logToConsole = false): n
     useEffect(() => {
         renderCountRef.current += 1;
         if (logToConsole) {
-            console.log(`[RENDER] ${componentName} renderizado ${renderCountRef.current}x`);
+            appLogger.info(`[RENDER] ${componentName} renderizado ${renderCountRef.current}x`);
         }
     });
 

@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface EditorAction {
   type: 'add' | 'delete' | 'move' | 'edit' | 'bulk';
@@ -79,7 +80,7 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
         currentIndex: prev.currentIndex - 1,
       }));
     } catch (error) {
-      console.error('Erro ao desfazer ação:', error);
+      appLogger.error('Erro ao desfazer ação:', { data: [error] });
     } finally {
       isUndoing.current = false;
     }
@@ -101,7 +102,7 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
         currentIndex: nextIndex,
       }));
     } catch (error) {
-      console.error('Erro ao refazer ação:', error);
+      appLogger.error('Erro ao refazer ação:', { data: [error] });
     } finally {
       isRedoing.current = false;
     }

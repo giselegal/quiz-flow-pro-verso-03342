@@ -12,6 +12,7 @@
  */
 
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface NormalizedBlock extends Block {
     properties: Record<string, any>;
@@ -111,15 +112,15 @@ export function isBlockNormalized(block: Block): boolean {
 export const normalizerLogger = {
     debug: (msg: string, data: any) => {
         if (localStorage.getItem('DEBUG_NORMALIZER') === 'true') {
-            console.log(`🔄 [BlockNormalizer] ${msg}`, data);
+            appLogger.info(`🔄 [BlockNormalizer] ${msg}`, { data: [data] });
         }
     },
 
     warn: (msg: string, data: any) => {
-        console.warn(`⚠️ [BlockNormalizer] ${msg}`, data);
+        appLogger.warn(`⚠️ [BlockNormalizer] ${msg}`, { data: [data] });
     },
 
     error: (msg: string, data: any) => {
-        console.error(`❌ [BlockNormalizer] ${msg}`, data);
+        appLogger.error(`❌ [BlockNormalizer] ${msg}`, { data: [data] });
     }
 };

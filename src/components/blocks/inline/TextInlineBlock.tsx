@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -278,16 +279,16 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         if (!g.__TEXT_INLINE_LOGS.has(hash)) {
           g.__TEXT_INLINE_LOGS.add(hash);
           // eslint-disable-next-line no-console
-          console.log('� TextInlineBlock DEBUG COMPLETO:', {
-            blockId: block?.id,
-            rawContent: personalizedContent,
-            contentLength: personalizedContent?.length,
-            hasHtml,
-            hasSpanTag,
-            hasStrongTag,
-            willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-            contentPreview: `${personalizedContent?.substring(0, 200)  }...`,
-          });
+          appLogger.info('� TextInlineBlock DEBUG COMPLETO:', { data: [{
+                        blockId: block?.id,
+                        rawContent: personalizedContent,
+                        contentLength: personalizedContent?.length,
+                        hasHtml,
+                        hasSpanTag,
+                        hasStrongTag,
+                        willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
+                        contentPreview: `${personalizedContent?.substring(0, 200)  }...`,
+                      }] });
         }
       }
     } catch {

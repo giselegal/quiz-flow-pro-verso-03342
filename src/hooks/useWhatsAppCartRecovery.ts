@@ -15,6 +15,7 @@ import {
   initializeWhatsAppAgent,
   getWhatsAppAgent,
 } from '@/services/WhatsAppCartRecoveryAgent';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Mock interfaces for compatibility
 interface WhatsAppRecoveryStats {
@@ -163,7 +164,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
       return true;
 
     } catch (error) {
-      console.error('❌ Erro ao configurar WhatsApp Recovery:', error);
+      appLogger.error('❌ Erro ao configurar WhatsApp Recovery:', { data: [error] });
       setState(prev => ({
         ...prev,
         loading: false,
@@ -186,7 +187,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
         error: null,
       }));
       
-      console.log('✅ WhatsApp Cart Recovery iniciado');
+      appLogger.info('✅ WhatsApp Cart Recovery iniciado');
     }
   }, [agent]);
 
@@ -201,7 +202,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
         isActive: false,
       }));
       
-      console.log('⏹️ WhatsApp Cart Recovery parado');
+      appLogger.info('⏹️ WhatsApp Cart Recovery parado');
     }
   }, [agent]);
 
@@ -217,11 +218,11 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
 
       setState(prev => ({ ...prev, loading: false }));
       
-      console.log('✅ Mensagem de teste enviada para:', phone);
+      appLogger.info('✅ Mensagem de teste enviada para:', { data: [phone] });
       return true;
 
     } catch (error) {
-      console.error('❌ Erro ao enviar mensagem de teste:', error);
+      appLogger.error('❌ Erro ao enviar mensagem de teste:', { data: [error] });
       setState(prev => ({
         ...prev,
         loading: false,
@@ -304,7 +305,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
           recentActivity: [newActivity, ...prev.recentActivity.slice(0, 9)],
         }));
 
-        console.log('🛒 Carrinho abandonado detectado (simulado):', mockAbandonment);
+        appLogger.info('🛒 Carrinho abandonado detectado (simulado):', { data: [mockAbandonment] });
       }, 60000); // A cada minuto
 
       return () => clearInterval(interval);

@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔄 BLOCK TYPE MAPPER v4.0 - CONSOLIDADO
  *
@@ -139,7 +140,7 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
  */
 export function mapBlockType(templateType: string): string {
   if (!templateType) {
-    console.warn('[blockTypeMapper] Empty block type, using fallback');
+    appLogger.warn('[blockTypeMapper] Empty block type, using fallback');
     return 'text-inline';
   }
 
@@ -148,7 +149,7 @@ export function mapBlockType(templateType: string): string {
   // 1. Verificar mapeamento direto
   if (BLOCK_TYPE_MAP[key]) {
     const mapped = BLOCK_TYPE_MAP[key];
-    console.debug(`[blockTypeMapper] Mapped: ${key} → ${mapped}`);
+    appLogger.debug(`[blockTypeMapper] Mapped: ${key} → ${mapped}`);
     return mapped;
   }
   
@@ -156,14 +157,14 @@ export function mapBlockType(templateType: string): string {
   const capitalized = key.charAt(0).toUpperCase() + key.slice(1);
   if (BLOCK_TYPE_MAP[capitalized]) {
     const mapped = BLOCK_TYPE_MAP[capitalized];
-    console.debug(`[blockTypeMapper] Mapped (capitalized): ${key} → ${mapped}`);
+    appLogger.debug(`[blockTypeMapper] Mapped (capitalized): ${key} → ${mapped}`);
     return mapped;
   }
   
   const lowercase = key.charAt(0).toLowerCase() + key.slice(1);
   if (BLOCK_TYPE_MAP[lowercase]) {
     const mapped = BLOCK_TYPE_MAP[lowercase];
-    console.debug(`[blockTypeMapper] Mapped (lowercase): ${key} → ${mapped}`);
+    appLogger.debug(`[blockTypeMapper] Mapped (lowercase): ${key} → ${mapped}`);
     return mapped;
   }
   
@@ -173,7 +174,7 @@ export function mapBlockType(templateType: string): string {
   }
   
   // 4. Tipo desconhecido - log warning e usar fallback
-  console.warn(`[blockTypeMapper] Unknown block type: "${key}", using fallback "text-inline"`);
+  appLogger.warn(`[blockTypeMapper] Unknown block type: "${key}", using fallback "text-inline"`);
   return 'text-inline';
 }
 

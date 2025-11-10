@@ -15,6 +15,7 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Plus, X } from 'lucide-react';
 import { schemaInterpreter, PropertySchema } from '@/core/schema/SchemaInterpreter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface DynamicPropertyControlsProps {
   elementType: string;
@@ -33,12 +34,12 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
   const schema = schemaInterpreter.getBlockSchema(elementType);
 
   // ✅ CORREÇÃO 2: Debug logging detalhado
-  console.log('🎛️ [DynamicPropertyControls] Renderizando:', {
-    elementType,
-    hasSchema: !!schema,
-    propertiesKeys: Object.keys(properties),
-    schemaPropertiesKeys: schema ? Object.keys(schema.properties) : []
-  });
+  appLogger.info('🎛️ [DynamicPropertyControls] Renderizando:', { data: [{
+        elementType,
+        hasSchema: !!schema,
+        propertiesKeys: Object.keys(properties),
+        schemaPropertiesKeys: schema ? Object.keys(schema.properties) : []
+      }] });
 
   if (!schema) {
     return (

@@ -10,6 +10,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { analyticsService, Metric, AnalyticsEvent, Alert } from '../../services/AnalyticsService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface AnalyticsState {
   // Métricas
@@ -103,7 +104,7 @@ export function useUnifiedAnalytics(
 
       setState(prev => ({ ...prev, isLoading: false }));
     } catch (error) {
-      console.error('❌ Erro ao inicializar analytics:', error);
+      appLogger.error('❌ Erro ao inicializar analytics:', { data: [error] });
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -134,7 +135,7 @@ export function useUnifiedAnalytics(
         };
       });
     } catch (error) {
-      console.error('❌ Erro ao registrar métrica:', error);
+      appLogger.error('❌ Erro ao registrar métrica:', { data: [error] });
     }
   }, []);
 
@@ -155,7 +156,7 @@ export function useUnifiedAnalytics(
         lastUpdate: new Date(),
       }));
     } catch (error) {
-      console.error('❌ Erro ao registrar evento:', error);
+      appLogger.error('❌ Erro ao registrar evento:', { data: [error] });
     }
   }, [userId, funnelId]);
 
@@ -178,7 +179,7 @@ export function useUnifiedAnalytics(
         );
       }
     } catch (error) {
-      console.error('❌ Erro ao coletar métricas de performance:', error);
+      appLogger.error('❌ Erro ao coletar métricas de performance:', { data: [error] });
     }
   }, [recordMetric]);
 
@@ -200,7 +201,7 @@ export function useUnifiedAnalytics(
         );
       }
     } catch (error) {
-      console.error('❌ Erro ao coletar métricas de colaboração:', error);
+      appLogger.error('❌ Erro ao coletar métricas de colaboração:', { data: [error] });
     }
   }, [funnelId, recordMetric]);
 
@@ -222,7 +223,7 @@ export function useUnifiedAnalytics(
         );
       }
     } catch (error) {
-      console.error('❌ Erro ao coletar métricas de versionamento:', error);
+      appLogger.error('❌ Erro ao coletar métricas de versionamento:', { data: [error] });
     }
   }, [funnelId, recordMetric]);
 
@@ -246,7 +247,7 @@ export function useUnifiedAnalytics(
         }
       }
     } catch (error) {
-      console.error('❌ Erro ao coletar métricas de uso:', error);
+      appLogger.error('❌ Erro ao coletar métricas de uso:', { data: [error] });
     }
   }, [recordMetric]);
 
@@ -271,7 +272,7 @@ export function useUnifiedAnalytics(
         lastUpdate: new Date(),
       }));
     } catch (error) {
-      console.error('❌ Erro ao criar alerta:', error);
+      appLogger.error('❌ Erro ao criar alerta:', { data: [error] });
     }
   }, []);
 
@@ -291,7 +292,7 @@ export function useUnifiedAnalytics(
         lastUpdate: new Date(),
       }));
     } catch (error) {
-      console.error('❌ Erro ao resolver alerta:', error);
+      appLogger.error('❌ Erro ao resolver alerta:', { data: [error] });
     }
   }, [userId]);
 
@@ -331,7 +332,7 @@ export function useUnifiedAnalytics(
         error: null,
       }));
     } catch (error) {
-      console.error('❌ Erro ao atualizar analytics:', error);
+      appLogger.error('❌ Erro ao atualizar analytics:', { data: [error] });
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -367,10 +368,10 @@ export function useUnifiedAnalytics(
         URL.revokeObjectURL(url);
       } else if (format === 'csv') {
         // Implementar exportação CSV
-        console.log('📤 Exportação CSV não implementada ainda');
+        appLogger.info('📤 Exportação CSV não implementada ainda');
       }
     } catch (error) {
-      console.error('❌ Erro ao exportar dados:', error);
+      appLogger.error('❌ Erro ao exportar dados:', { data: [error] });
     }
   }, [funnelId, userId, state]);
 

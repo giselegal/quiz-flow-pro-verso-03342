@@ -9,6 +9,7 @@
  */
 
 import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const usePureBuilderCompat = () => {
     const {
@@ -49,27 +50,27 @@ export const usePureBuilderCompat = () => {
             
             // Block operations (placeholder)
             addBlock: async (stepKey: string, block: any) => {
-                console.log('🔄 usePureBuilderCompat: addBlock', { stepKey, block });
+                appLogger.info('🔄 usePureBuilderCompat: addBlock', { data: [{ stepKey, block }] });
             },
             updateBlock: async (stepKey: string, blockId: string, updates: any) => {
-                console.log('🔄 usePureBuilderCompat: updateBlock', { stepKey, blockId, updates });
+                appLogger.info('🔄 usePureBuilderCompat: updateBlock', { data: [{ stepKey, blockId, updates }] });
             },
             removeBlock: async (stepKey: string, blockId: string) => {
-                console.log('🔄 usePureBuilderCompat: removeBlock', { stepKey, blockId });
+                appLogger.info('🔄 usePureBuilderCompat: removeBlock', { data: [{ stepKey, blockId }] });
             },
             
             // Step operations
             ensureStepLoaded: async (step: number) => {
-                console.log('🔄 usePureBuilderCompat: ensureStepLoaded', step);
+                appLogger.info('🔄 usePureBuilderCompat: ensureStepLoaded', { data: [step] });
             },
             preloadAdjacentSteps: async (currentStep: number) => {
-                console.log('🔄 usePureBuilderCompat: preloadAdjacentSteps', currentStep);
+                appLogger.info('🔄 usePureBuilderCompat: preloadAdjacentSteps', { data: [currentStep] });
             },
             clearUnusedSteps: () => {
-                console.log('🔄 usePureBuilderCompat: clearUnusedSteps');
+                appLogger.info('🔄 usePureBuilderCompat: clearUnusedSteps');
             },
             setStepValid: (step: number, isValid: boolean) => {
-                console.log('🔄 usePureBuilderCompat: setStepValid', { step, isValid });
+                appLogger.info('🔄 usePureBuilderCompat: setStepValid', { data: [{ step, isValid }] });
             },
             
             // JSON operations
@@ -77,38 +78,38 @@ export const usePureBuilderCompat = () => {
                 return JSON.stringify(state.currentFunnel || {});
             },
             importJSON: (json: string) => {
-                console.log('🔄 usePureBuilderCompat: importJSON', json);
+                appLogger.info('🔄 usePureBuilderCompat: importJSON', { data: [json] });
             },
             
             // Canvas vazio
             createFirstStep: async () => {
-                console.log('🔄 usePureBuilderCompat: createFirstStep');
+                appLogger.info('🔄 usePureBuilderCompat: createFirstStep');
             },
             
             // Builder System specific
             calculateResults: async () => {
-                console.log('🔄 usePureBuilderCompat: calculateResults');
+                appLogger.info('🔄 usePureBuilderCompat: calculateResults');
                 return {};
             },
             optimizeFunnel: async () => {
-                console.log('🔄 usePureBuilderCompat: optimizeFunnel');
+                appLogger.info('🔄 usePureBuilderCompat: optimizeFunnel');
             },
             generateAnalytics: () => {
-                console.log('🔄 usePureBuilderCompat: generateAnalytics');
+                appLogger.info('🔄 usePureBuilderCompat: generateAnalytics');
                 return {};
             },
             validateFunnel: async () => {
-                console.log('🔄 usePureBuilderCompat: validateFunnel');
+                appLogger.info('🔄 usePureBuilderCompat: validateFunnel');
                 return {};
             },
             
             // Duplication and Templates
             cloneFunnel: (newName?: string, newId?: string) => {
-                console.log('🔄 usePureBuilderCompat: cloneFunnel', { newName, newId });
+                appLogger.info('🔄 usePureBuilderCompat: cloneFunnel', { data: [{ newName, newId }] });
                 return {};
             },
             createFromTemplate: async (templateName: string, customName?: string) => {
-                console.log('🔄 usePureBuilderCompat: createFromTemplate', { templateName, customName });
+                appLogger.info('🔄 usePureBuilderCompat: createFromTemplate', { data: [{ templateName, customName }] });
                 return {};
             },
             
@@ -116,19 +117,19 @@ export const usePureBuilderCompat = () => {
             canUndo: false,
             canRedo: false,
             undo: () => {
-                console.log('🔄 usePureBuilderCompat: undo');
+                appLogger.info('🔄 usePureBuilderCompat: undo');
             },
             redo: () => {
-                console.log('🔄 usePureBuilderCompat: redo');
+                appLogger.info('🔄 usePureBuilderCompat: redo');
             },
             addBlockAtIndex: async (stepKey: string, block: any, index: number) => {
-                console.log('🔄 usePureBuilderCompat: addBlockAtIndex', { stepKey, block, index });
+                appLogger.info('🔄 usePureBuilderCompat: addBlockAtIndex', { data: [{ stepKey, block, index }] });
             },
             reorderBlocks: async (stepKey: string, oldIndex: number, newIndex: number) => {
-                console.log('🔄 usePureBuilderCompat: reorderBlocks', { stepKey, oldIndex, newIndex });
+                appLogger.info('🔄 usePureBuilderCompat: reorderBlocks', { data: [{ stepKey, oldIndex, newIndex }] });
             },
             loadDefaultTemplate: () => {
-                console.log('🔄 usePureBuilderCompat: loadDefaultTemplate');
+                appLogger.info('🔄 usePureBuilderCompat: loadDefaultTemplate');
             },
         },
     };

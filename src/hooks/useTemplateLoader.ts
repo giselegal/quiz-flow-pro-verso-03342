@@ -6,6 +6,7 @@ import type { QuizStepV3 } from '@/types/quiz';
 import { TemplateService } from '@/services/canonical/TemplateService';
 import { QuizStepAdapter } from '@/lib/adapters/QuizStepAdapter';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type StageTemplate = any;
 
@@ -64,7 +65,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
       // 1. Verificar cache
       if (templateCache[stepId]) {
-        console.log(`✅ Template ${stepId} carregado do cache`);
+        appLogger.info(`✅ Template ${stepId} carregado do cache`);
         return templateCache[stepId];
       }
 
@@ -73,7 +74,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
       try {
         // 2. Usar TemplateService canonical
-        console.log(`📥 Carregando template via TemplateService: ${stepId}`);
+        appLogger.info(`📥 Carregando template via TemplateService: ${stepId}`);
         const templateService = TemplateService.getInstance();
         const result = await templateService.getStep(stepId);
 
@@ -82,19 +83,19 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         }
 
         // 3. Adaptar blocos para QuizStep
-        console.log(`🔄 Adaptando template ${stepId} para QuizStep`);
+        appLogger.info(`🔄 Adaptando template ${stepId} para QuizStep`);
         const blocks = result.data;
   const adapted = QuizStepAdapter.fromBlocks(blocks, stepId);
 
         // 4. Salvar no cache
         templateCache[stepId] = adapted;
 
-        console.log(`✅ Template ${stepId} carregado com sucesso via TemplateService`);
+        appLogger.info(`✅ Template ${stepId} carregado com sucesso via TemplateService`);
         return adapted;
 
       } catch (err) {
         const error = err as Error;
-        console.error(`❌ Erro ao carregar template ${stepId}:`, error);
+        appLogger.error(`❌ Erro ao carregar template ${stepId}:`, { data: [error] });
         setError(error);
         throw error;
 
@@ -122,7 +123,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
               step,
             ])
             .catch(err => {
-              console.error(`Erro ao carregar step ${stepNumber}:`, err);
+              appLogger.error(`Erro ao carregar step ${stepNumber}:`, { data: [err] });
               return null;
             });
         });
@@ -132,12 +133,12 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
         const stepsMap = Object.fromEntries(validResults);
 
-        console.log(`✅ Templates carregados via TemplateService: ${Object.keys(stepsMap).length}/${TOTAL_STEPS}`);
+        appLogger.info(`✅ Templates carregados via TemplateService: ${Object.keys(stepsMap).length}/${TOTAL_STEPS}`);
 
         return stepsMap;
 
       } catch (err) {
-        console.error('❌ Erro ao carregar templates:', err);
+        appLogger.error('❌ Erro ao carregar templates:', { data: [err] });
         setError(err as Error);
         throw err;
 
@@ -173,7 +174,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
     Object.keys(templateCache).forEach(key => {
       delete templateCache[key];
     });
-    console.log('🗑️ Cache de templates limpo');
+    appLogger.info('🗑️ Cache de templates limpo');
   }, []);
 
   // Carregar metadata de todos os templates
@@ -211,7 +212,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
     async (stageId: string): Promise<StageTemplate | null> => {
       // ✅ Guard: método só funciona dentro do editor
       if (!state?.stepBlocks) {
-        console.warn('⚠️ loadTemplate não disponível fora do EditorProvider');
+        appLogger.warn('⚠️ loadTemplate não disponível fora do EditorProvider');
         return null;
       }
 

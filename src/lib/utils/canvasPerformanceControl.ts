@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚀 CONTROLE DE DEBUG - CANVAS PERFORMANCE
  * 
@@ -17,7 +18,7 @@ if (typeof window !== 'undefined') {
         (window as any).__DND_LOGS.clear();
     }
 
-    console.log('🎯 Canvas Performance: Debug logs desabilitados para melhor performance');
+    appLogger.info('🎯 Canvas Performance: Debug logs desabilitados para melhor performance');
 }
 
 // Função para habilitar debug temporariamente (apenas desenvolvimento)
@@ -26,7 +27,7 @@ export const enableCanvasDebug = () => {
         if (typeof window !== 'undefined') {
             (window as any).__DND_DEBUG = true;
             (window as any).__CANVAS_STYLES_DEBUG = true;
-            console.log('🔍 Canvas Performance: Debug logs habilitados');
+            appLogger.info('🔍 Canvas Performance: Debug logs habilitados');
         }
     }
 };
@@ -36,7 +37,7 @@ export const disableCanvasDebug = () => {
     if (typeof window !== 'undefined') {
         (window as any).__DND_DEBUG = false;
         (window as any).__CANVAS_STYLES_DEBUG = false;
-        console.log('🎯 Canvas Performance: Debug logs desabilitados');
+        appLogger.info('🎯 Canvas Performance: Debug logs desabilitados');
     }
 };
 

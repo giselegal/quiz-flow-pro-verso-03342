@@ -12,6 +12,7 @@ import { EditorProviderCanonical, useEditor as useEditorCanonical, EditorState }
 // ❌ DEPRECATED: MigrationEditorProvider
 // Mantido apenas temporariamente para evitar quebra abrupta. Será removido após confirmação de zero imports.
 import { UnifiedCRUDProvider } from '@/contexts';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type UnifiedEditorContextType = ReturnType<typeof useEditorCanonical>;
 
@@ -29,7 +30,7 @@ export const MigrationEditorProvider: React.FC<{
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.warn('[DEPRECATED] MigrationEditorProvider - use EditorProviderCanonical diretamente.');
+      appLogger.warn('[DEPRECATED] MigrationEditorProvider - use EditorProviderCanonical diretamente.');
     }
   }, []);
   return <EditorProviderCanonical>{children}</EditorProviderCanonical>;

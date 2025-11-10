@@ -10,6 +10,7 @@ import { stepRegistry } from './StepRegistry';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { getStepTemplate } from '@/templates/imports';
 import { TemplateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type Row = {
   '#': number;
@@ -100,11 +101,11 @@ export function printFullStepsDebug() {
     const table = Object.fromEntries(
       rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest]),
     );
-    console.log('🧩 Debug Completo de Etapas (StepRegistry × QUIZ_STEPS)');
+    appLogger.info('🧩 Debug Completo de Etapas (StepRegistry × QUIZ_STEPS)');
     console.table(table);
-    console.log('💡 Dica: chame window.printFullStepsDebug() para reimprimir a qualquer momento.');
+    appLogger.info('💡 Dica: chame window.printFullStepsDebug() para reimprimir a qualquer momento.');
   } catch (e) {
-    console.error('❌ Falha ao gerar debug completo de etapas:', e);
+    appLogger.error('❌ Falha ao gerar debug completo de etapas:', { data: [e] });
   }
 }
 
@@ -222,7 +223,7 @@ export async function printDeepDebug() {
       try {
         const extra = (effectiveStep && (effectiveStep as any).templateVersion === '3.0') ? ' • json-v3' : '';
         console.groupCollapsed(`📄 JSON ${id} (fonte: ${fonte}${extra})`);
-        console.log(effectiveStep);
+        appLogger.info(String(effectiveStep));
         console.groupEnd();
       } catch { }
     }
@@ -232,11 +233,11 @@ export async function printDeepDebug() {
     const table = Object.fromEntries(
       rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest]),
     );
-    console.log('🧩 Debug Completo (Profundo) • StepRegistry × QUIZ_STEPS × Template');
+    appLogger.info('🧩 Debug Completo (Profundo) • StepRegistry × QUIZ_STEPS × Template');
     console.table(table);
-    console.log('💡 Dica: chame window.printFullStepsDebugDeep() para reimprimir esta versão completa.');
+    appLogger.info('💡 Dica: chame window.printFullStepsDebugDeep() para reimprimir esta versão completa.');
   } catch (e) {
-    console.error('❌ Falha ao gerar debug profundo de etapas:', e);
+    appLogger.error('❌ Falha ao gerar debug profundo de etapas:', { data: [e] });
   }
 }
 

@@ -15,19 +15,20 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useAuth } from '@/contexts';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const Home: React.FC = () => {
-  console.log('🏠 Home component rendering...');
-  console.log('🏠 Home: Mounting component');
+  appLogger.info('🏠 Home component rendering...');
+  appLogger.info('🏠 Home: Mounting component');
 
   const { user, logout } = useAuth();
-  console.log('🏠 Home: useAuth called, user:', user ? 'authenticated' : 'not authenticated');
+  appLogger.info('🏠 Home: useAuth called, user:', { data: [user ? 'authenticated' : 'not authenticated'] });
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
   // Navigation helper function
   const navigate = (path: string) => {
-    console.log('🔄 Navigating to:', path);
+    appLogger.info('🔄 Navigating to:', { data: [path] });
     setLocation(path);
   };
 

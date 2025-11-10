@@ -17,6 +17,7 @@ import { VersionChange, VersionSnapshot } from './versioningService';
 import { UnifiedFunnel, UnifiedStage } from './UnifiedCRUDService';
 import { Block } from '@/types/editor';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TIPOS E INTERFACES
@@ -117,14 +118,14 @@ export class HistoryManager {
    * 🚀 INICIALIZAÇÃO DO SERVIÇO
    */
   private async initializeService(): Promise<void> {
-    console.log('🚀 Inicializando HistoryManager...');
+    appLogger.info('🚀 Inicializando HistoryManager...');
     
     try {
       await this.loadPersistedHistory();
       this.scheduleCleanup();
-      console.log('✅ HistoryManager inicializado com sucesso');
+      appLogger.info('✅ HistoryManager inicializado com sucesso');
     } catch (error) {
-      console.error('❌ Erro ao inicializar HistoryManager:', error);
+      appLogger.error('❌ Erro ao inicializar HistoryManager:', { data: [error] });
     }
   }
 
@@ -146,10 +147,10 @@ export class HistoryManager {
         Object.entries(parsed).forEach(([id, entryData]) => {
           this.history.set(id, this.validateAndNormalizeEntry(entryData as any));
         });
-        console.log(`📥 ${this.history.size} entradas de histórico carregadas`);
+        appLogger.info(`📥 ${this.history.size} entradas de histórico carregadas`);
       }
     } catch (error) {
-      console.warn('⚠️ Erro ao carregar histórico persistido:', error);
+      appLogger.warn('⚠️ Erro ao carregar histórico persistido:', { data: [error] });
     }
   }
 
@@ -160,9 +161,9 @@ export class HistoryManager {
     try {
       const historyData = Object.fromEntries(this.history.entries());
       StorageService.safeSetJSON('history:entries', historyData);
-      console.log('💾 Histórico persistido com sucesso');
+      appLogger.info('💾 Histórico persistido com sucesso');
     } catch (error) {
-      console.error('❌ Erro ao persistir histórico:', error);
+      appLogger.error('❌ Erro ao persistir histórico:', { data: [error] });
     }
   }
 
@@ -232,10 +233,10 @@ export class HistoryManager {
       // Persistir
       await this.persistHistory();
 
-      console.log(`📝 Entrada adicionada ao histórico: ${entryId}`);
+      appLogger.info(`📝 Entrada adicionada ao histórico: ${entryId}`);
       return entry;
     } catch (error) {
-      console.error('❌ Erro ao adicionar entrada ao histórico:', error);
+      appLogger.error('❌ Erro ao adicionar entrada ao histórico:', { data: [error] });
       throw error;
     }
   }
@@ -449,7 +450,7 @@ export class HistoryManager {
     }
     
     await this.persistHistory();
-    console.log(`🧹 ${entriesToDelete.length} entradas antigas removidas`);
+    appLogger.info(`🧹 ${entriesToDelete.length} entradas antigas removidas`);
   }
 
   /**
@@ -546,7 +547,7 @@ export class HistoryManager {
   clearAll(): void {
     this.history.clear();
     StorageService.safeRemove('history:entries');
-    console.log('🧹 Todo o histórico foi limpo');
+    appLogger.info('🧹 Todo o histórico foi limpo');
   }
 }
 

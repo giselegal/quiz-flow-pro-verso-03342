@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // Complete Quiz Data with all 21 steps and scoring logic
 
 export interface QuizOption {
@@ -499,7 +500,7 @@ export function saveUserResponse(key: string, value: any): void {
       localStorage.setItem('quizUserName', value);
     }
   } catch (error) {
-    console.error('Error saving user response:', error);
+    appLogger.error('Error saving user response:', { data: [error] });
   }
 }
 
@@ -508,7 +509,7 @@ export function loadUserResponses(): Record<string, any> {
   try {
     return JSON.parse(localStorage.getItem('quizResponses') || '{}');
   } catch (error) {
-    console.error('Error loading user responses:', error);
+    appLogger.error('Error loading user responses:', { data: [error] });
     return {};
   }
 }

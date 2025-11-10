@@ -9,6 +9,7 @@ import { StorageService } from './StorageService';
 import { ContextualStorageService } from './ContextualStorageService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EVENTS from '@/core/constants/events';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UnifiedQuizData {
   // Seleções de múltipla escolha (ex: etapas 2-19)
@@ -145,7 +146,7 @@ class UnifiedQuizStorageService {
 
     // Se estamos na etapa 20, sempre permitir o cálculo
     if (isResultStep) {
-      console.log('🎯 Etapa 20 detectada: permitindo cálculo de resultado');
+      appLogger.info('🎯 Etapa 20 detectada: permitindo cálculo de resultado');
       return true;
     }
 
@@ -188,7 +189,7 @@ class UnifiedQuizStorageService {
   }
 
   private migrateLegacyData(): UnifiedQuizData {
-    console.log('🔄 UnifiedQuizStorage: Migrando dados legados...');
+    appLogger.info('🔄 UnifiedQuizStorage: Migrando dados legados...');
 
     const userSelections = StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {};
     const quizAnswers = StorageService.safeGetJSON<Record<string, any>>('quizAnswers') || {};
@@ -211,10 +212,10 @@ class UnifiedQuizStorageService {
     // Salvar dados migrados
     this.saveData(unified);
 
-    console.log('✅ UnifiedQuizStorage: Migração concluída', {
-      selections: Object.keys(unified.selections).length,
-      formData: Object.keys(unified.formData).length,
-    });
+    appLogger.info('✅ UnifiedQuizStorage: Migração concluída', { data: [{
+            selections: Object.keys(unified.selections).length,
+            formData: Object.keys(unified.formData).length,
+          }] });
 
     return unified;
   }

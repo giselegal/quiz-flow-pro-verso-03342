@@ -17,6 +17,7 @@ import {
     Users,
     Zap,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -164,7 +165,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
                 .select('*');
 
             if (sessionsError) {
-                console.error('Erro ao buscar sessões:', sessionsError);
+                appLogger.error('Erro ao buscar sessões:', { data: [sessionsError] });
                 return;
             }
 
@@ -174,7 +175,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
                 .select('*');
 
             if (responsesError) {
-                console.error('Erro ao buscar respostas:', responsesError);
+                appLogger.error('Erro ao buscar respostas:', { data: [responsesError] });
             }
 
             // Processar dados do funil
@@ -186,7 +187,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
             setHeatmapData(processedHeatmap);
 
         } catch (error) {
-            console.error('Erro ao buscar dados avançados:', error);
+            appLogger.error('Erro ao buscar dados avançados:', { data: [error] });
         } finally {
             setLoading(false);
         }
@@ -297,7 +298,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
         let mounted = true;
         getCachedImport('recharts-bundle', loadRecharts)
             .then((mod) => { if (mounted) setCharts(mod); })
-            .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+            .catch((err) => appLogger.warn('Falha ao carregar Recharts dinamicamente:', { data: [err] }));
         return () => { mounted = false; };
     }, []);
 

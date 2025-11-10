@@ -6,6 +6,7 @@
  */
 
 import { useCallback, type DependencyList } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -97,7 +98,7 @@ class PerformanceLogger {
     this.performanceMarks.delete(key);
 
     if (logResult && this.debugMode) {
-      console.log(`⏱️ Performance [${key}]: ${duration.toFixed(2)}ms`);
+      appLogger.info(`⏱️ Performance [${key}]: ${duration.toFixed(2)}ms`);
     }
 
     return duration;

@@ -2,7 +2,8 @@
  * 📊 ANALYTICS SERVICE - Sistema de Analytics e Métricas Avançadas
  */
 
-import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+import { v4 as uuidv4 } from 'uuid';
+import { appLogger } from '@/lib/utils/appLogger'; // 🆕 G36 FIX: Import UUID
 
 export interface Metric {
     id: string;
@@ -56,7 +57,7 @@ export class AnalyticsService {
     private maxStoredMetricsPerCategory = 100;
 
     constructor() {
-        console.log('✅ AnalyticsService inicializado');
+        appLogger.info('✅ AnalyticsService inicializado');
         this.restoreFromStorage();
     }
 
@@ -81,7 +82,7 @@ export class AnalyticsService {
         categoryMetrics.push(metric);
         this.metrics.set(category, categoryMetrics);
 
-        console.log(`📊 Métrica registrada: ${name} = ${value} ${unit}`);
+        appLogger.info(`📊 Métrica registrada: ${name} = ${value} ${unit}`);
         this.persistToStorage();
         return metric;
     }
@@ -109,21 +110,21 @@ export class AnalyticsService {
         };
 
         this.events.push(event);
-        console.log(`🎯 Evento registrado: ${type} para usuário ${userId}`);
+        appLogger.info(`🎯 Evento registrado: ${type} para usuário ${userId}`);
         this.pruneIfNeeded();
         this.persistToStorage();
         return event;
     }
 
     trackEvent(eventName: string, properties: Record<string, any> = {}): void {
-        console.log(`📊 Tracking event: ${eventName}`, properties);
+        appLogger.info(`📊 Tracking event: ${eventName}`, { data: [properties] });
         // Mapear para recordEvent mínimo (anônimo/sem funil) para rastreabilidade leve
         this.recordEvent(eventName, 'anonymous', 'unknown', properties).catch(() => { /* noop */ });
     }
 
     // Métodos adicionais usados por useMonitoring (no-op / simples por enquanto)
     trackError(error: Error, component?: string) {
-        console.log('🚨 trackError', { message: error.message, component });
+        appLogger.info('🚨 trackError', { data: [{ message: error.message, component }] });
         this.recordMetric('errors.total', 1, 'count', 'system', { component: component || 'unknown' });
         this.recordEvent('error', 'anonymous', 'unknown', { message: error.message, component }).catch(() => { /* noop */ });
     }
@@ -135,7 +136,7 @@ export class AnalyticsService {
     }
 
     trackEditorAction(action: string, details: Record<string, any> = {}) {
-        console.log('🛠️ editorAction', action, details);
+        appLogger.info('🛠️ editorAction', { data: [action, details] });
         this.recordEvent('editor_action', details.userId || 'anonymous', details.funnelId || 'unknown', { action, ...details });
     }
 
@@ -289,7 +290,7 @@ export class AnalyticsService {
         };
 
         this.alerts.push(alert);
-        console.log(`🚨 Alerta criado: ${title} (${severity})`);
+        appLogger.info(`🚨 Alerta criado: ${title} (${severity})`);
         this.persistToStorage();
         return alert;
     }

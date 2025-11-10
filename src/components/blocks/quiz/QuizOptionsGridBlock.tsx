@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { QuizBlockProps } from './types';
 import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz
@@ -133,21 +134,21 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   // 🔍 DEBUG DETALHADO - LOG DE TODAS AS PROPRIEDADES
-  console.log('🔍 QuizOptionsGridBlock DEBUG COMPLETO:', {
-    id,
-    properties,
-    optionsFromProperties: properties?.options,
-    propertiesKeys: properties ? Object.keys(properties) : [],
-    allProps: { properties, id, onPropertyChange, ...props },
-  });
+  appLogger.info('🔍 QuizOptionsGridBlock DEBUG COMPLETO:', { data: [{
+        id,
+        properties,
+        optionsFromProperties: properties?.options,
+        propertiesKeys: properties ? Object.keys(properties) : [],
+        allProps: { properties, id, onPropertyChange, ...props },
+      }] });
 
   // Extrair as opções - pode ser array de objetos ou string
   const parseOptions = (options: any) => {
-    console.log('QuizOptionsGridBlock - parseOptions input:', options);
+    appLogger.info('QuizOptionsGridBlock - parseOptions input:', { data: [options] });
 
     // Se já é um array de objetos, retornar diretamente
     if (Array.isArray(options) && options.length > 0 && typeof options[0] === 'object') {
-      console.log('QuizOptionsGridBlock - returning object array:', options);
+      appLogger.info('QuizOptionsGridBlock - returning object array:', { data: [options] });
       return options;
     }
 
@@ -162,26 +163,26 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
           value: `option-${index}`,
           imageUrl: '',
         }));
-      console.log('QuizOptionsGridBlock - returning parsed string:', parsed);
+      appLogger.info('QuizOptionsGridBlock - returning parsed string:', { data: [parsed] });
       return parsed;
     }
 
     // Fallback: retornar array vazio
-    console.log('QuizOptionsGridBlock - returning empty array');
+    appLogger.info('QuizOptionsGridBlock - returning empty array');
     return [];
   };
 
   const options = parseOptions(properties?.options || []);
 
   // LOG DE DEBUG - vamos ver o que está acontecendo
-  console.log('🔍 QuizOptionsGridBlock DEBUG:', {
-    id,
-    propertiesOptions: properties?.options,
-    optionsLength: options?.length,
-    firstOption: options?.[0],
-    properties: Object.keys(properties || {}),
-    fullOptions: options,
-  });
+  appLogger.info('🔍 QuizOptionsGridBlock DEBUG:', { data: [{
+        id,
+        propertiesOptions: properties?.options,
+        optionsLength: options?.length,
+        firstOption: options?.[0],
+        properties: Object.keys(properties || {}),
+        fullOptions: options,
+      }] });
 
   // Se não há opções, mostrar um placeholder de debug
   if (!options || options.length === 0) {
@@ -354,16 +355,16 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     : `grid-cols-${finalColumns}`;
 
   // Log para debug da detecção automática
-  console.log('🔍 Auto-detecção de colunas:', {
-    hasImages,
-    autoColumns,
-    finalColumns,
-    columnsConfig: columns,
-    gridColumnsClass,
-    optionsWithImages: options.filter(opt => opt.imageUrl).length,
-    totalOptions: options.length,
-    layout: hasImages ? '2 colunas (mobile + desktop)' : '1 coluna (todos dispositivos)',
-  });
+  appLogger.info('🔍 Auto-detecção de colunas:', { data: [{
+        hasImages,
+        autoColumns,
+        finalColumns,
+        columnsConfig: columns,
+        gridColumnsClass,
+        optionsWithImages: options.filter(opt => opt.imageUrl).length,
+        totalOptions: options.length,
+        layout: hasImages ? '2 colunas (mobile + desktop)' : '1 coluna (todos dispositivos)',
+      }] });
 
   // Calcular tamanho da imagem
   const finalImageWidth = imageWidth || imageSize;

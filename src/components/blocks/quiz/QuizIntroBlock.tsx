@@ -35,6 +35,7 @@ export interface QuizIntroBlockProps extends BlockComponentProps {
 }
 
 import { getMarginClass, type MarginProps } from '@/lib/utils/marginUtils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Variáveis de margem para compatibilidade com o sistema de controles deslizantes
 const marginTop: number | undefined = 0;
@@ -57,7 +58,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
   // Validação defensiva para evitar erro quando block ou properties não existem
   if (!block || !block.properties) {
-    console.warn('QuizIntroBlock: block ou block.properties não foi fornecido', { block });
+    appLogger.warn('QuizIntroBlock: block ou block.properties não foi fornecido', { data: [{ block }] });
     return (
       <div style={{ borderColor: '#B89B7A' }}>
         <p style={{ color: '#432818' }}>Erro: Configuração do bloco inválida</p>

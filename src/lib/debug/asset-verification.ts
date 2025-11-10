@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔍 VERIFICAÇÃO DE ASSETS - DIAGNÓSTICO DE 404
  * 
@@ -5,7 +6,7 @@
  */
 
 export function verifyAssets() {
-  console.log('🔍 Verificando assets...');
+  appLogger.info('🔍 Verificando assets...');
   
   // Lista de assets que podem estar causando 404
   const problematicAssets = [
@@ -21,11 +22,11 @@ export function verifyAssets() {
     link.as = 'script';
     
     link.onload = () => {
-      console.log(`✅ Asset carregado: ${asset}`);
+      appLogger.info(`✅ Asset carregado: ${asset}`);
     };
     
     link.onerror = () => {
-      console.warn(`❌ Asset não encontrado: ${asset}`);
+      appLogger.warn(`❌ Asset não encontrado: ${asset}`);
       // Tentar encontrar asset similar
       findSimilarAsset(asset);
     };
@@ -46,14 +47,14 @@ function findSimilarAsset(missingAsset: string) {
   });
   
   if (similarAssets.length > 0) {
-    console.log(`🔍 Assets similares encontrados para ${prefix}:`, similarAssets.map(s => s.getAttribute('src')));
+    appLogger.info(`🔍 Assets similares encontrados para ${prefix}:`, { data: [similarAssets.map(s => s.getAttribute('src'))] });
   } else {
-    console.warn(`❌ Nenhum asset similar encontrado para ${prefix}`);
+    appLogger.warn(`❌ Nenhum asset similar encontrado para ${prefix}`);
   }
 }
 
 // Executar verificação
 if (typeof window !== 'undefined') {
   (window as any).verifyAssets = verifyAssets;
-  console.log('🔍 Função de verificação disponível em window.verifyAssets()');
+  appLogger.info('🔍 Função de verificação disponível em window.verifyAssets()');
 }

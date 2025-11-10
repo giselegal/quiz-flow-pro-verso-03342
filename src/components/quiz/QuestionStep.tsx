@@ -1,4 +1,5 @@
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuestionStepProps {
     data: QuizStep;
@@ -21,7 +22,7 @@ export default function QuestionStep({
     const safeOnAnswersChange: (answers: string[]) => void =
         typeof onAnswersChange === 'function' ? onAnswersChange : () => {
             if (process.env.NODE_ENV === 'development') {
-                console.warn('[QuestionStep] onAnswersChange ausente ou inválido – usando noop. Verifique adaptador/registry.');
+                appLogger.warn('[QuestionStep] onAnswersChange ausente ou inválido – usando noop. Verifique adaptador/registry.');
             }
         };
     // Verificação de segurança para currentAnswers

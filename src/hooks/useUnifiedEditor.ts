@@ -18,6 +18,7 @@
 
 import { useContext } from 'react';
 import { EditorContextValue } from '@/components/editor/EditorProviderCanonical';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // UNIFIED EDITOR CONTEXT TYPE
@@ -198,7 +199,7 @@ export const useEditor = (): UnifiedEditorContext => {
             // Silently ignore
         }
 
-        console.error('🚨 useEditor: Nenhum EditorProvider encontrado', errorDetails);
+        appLogger.error('🚨 useEditor: Nenhum EditorProvider encontrado', { data: [errorDetails] });
 
         throw new Error(
             '🚨 useEditor must be used within an EditorProvider\n\n' +
@@ -224,7 +225,7 @@ export const useEditorOptional = (): UnifiedEditorContext | undefined => {
         return useEditor();
     } catch (error) {
         if (process.env.NODE_ENV === 'development') {
-            console.warn('⚠️ useEditorOptional: Editor context not available:', error);
+            appLogger.warn('⚠️ useEditorOptional: Editor context not available:', { data: [error] });
         }
         return undefined;
     }

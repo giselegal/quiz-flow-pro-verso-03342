@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * PERFORMANCE MANAGER
  *
@@ -292,7 +293,7 @@ export class PerformanceManager {
       }
     }, 30000);
 
-    console.log('🚀 Performance monitoring started');
+    appLogger.info('🚀 Performance monitoring started');
   }
 
   static stopMonitoring(): void {
@@ -304,7 +305,7 @@ export class PerformanceManager {
     }
 
     this.isMonitoring = false;
-    console.log('⏹️ Performance monitoring stopped');
+    appLogger.info('⏹️ Performance monitoring stopped');
   }
 
   // =============================================================================

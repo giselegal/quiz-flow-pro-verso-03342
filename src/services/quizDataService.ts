@@ -1,6 +1,7 @@
 import { QuizResult, StyleType } from '@/types/quiz';
 import { trackPixelEvent } from '@/lib/utils/facebookPixel';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizSession {
   sessionId: string;
@@ -135,7 +136,7 @@ class QuizDataService {
       timestamp: new Date().toISOString(),
     });
 
-    console.log('Quiz session started:', sessionId);
+    appLogger.info('Quiz session started:', { data: [sessionId] });
     return sessionId;
   }
 
@@ -149,7 +150,7 @@ class QuizDataService {
     responseTime: number,
   ): void {
     if (!this.currentSession) {
-      console.warn('No active session to add answer');
+      appLogger.warn('No active session to add answer');
       return;
     }
 
@@ -174,7 +175,7 @@ class QuizDataService {
       timestamp: new Date().toISOString(),
     });
 
-    console.log(`Answer added for question ${questionId}:`, selectedOptions);
+    appLogger.info(`Answer added for question ${questionId}:`, { data: [selectedOptions] });
   }
 
   // Rastrear evento de clique
@@ -223,7 +224,7 @@ class QuizDataService {
   // Finalizar sessão com resultado
   finishSession(result: QuizResult): void {
     if (!this.currentSession) {
-      console.warn('No active session to finish');
+      appLogger.warn('No active session to finish');
       return;
     }
 
@@ -244,7 +245,7 @@ class QuizDataService {
       timestamp: new Date().toISOString(),
     });
 
-    console.log('Quiz session completed:', this.currentSession.sessionId);
+    appLogger.info('Quiz session completed:', { data: [this.currentSession.sessionId] });
   }
 
   // Obter sessão atual
@@ -261,7 +262,7 @@ class QuizDataService {
         return this.currentSession;
       }
     } catch (error) {
-      console.error('Error loading session:', error);
+      appLogger.error('Error loading session:', { data: [error] });
     }
     return null;
   }
@@ -272,7 +273,7 @@ class QuizDataService {
       const sessions = StorageService.safeGetString('completed_quiz_sessions');
       return sessions ? JSON.parse(sessions) : [];
     } catch (error) {
-      console.error('Error loading completed sessions:', error);
+      appLogger.error('Error loading completed sessions:', { data: [error] });
       return [];
     }
   }
@@ -310,7 +311,7 @@ class QuizDataService {
     StorageService.safeRemove('current_quiz_session');
     StorageService.safeRemove('completed_quiz_sessions');
     StorageService.safeRemove('quiz_analytics_events');
-    console.log('All quiz data cleared');
+    appLogger.info('All quiz data cleared');
   }
 
   // Métodos privados
@@ -416,7 +417,7 @@ class QuizDataService {
     }
 
     this.funnelConfig = this.FUNNEL_CONFIGS[funnelKey];
-    console.log('Initialized funnel config:', this.funnelConfig?.funnelName);
+    appLogger.info('Initialized funnel config:', { data: [this.funnelConfig?.funnelName] });
   }
 
   // Capturar parâmetros UTM da URL
@@ -445,7 +446,7 @@ class QuizDataService {
     // Salvar UTM no localStorage
     if (Object.keys(this.utmParameters).length > 0) {
       StorageService.safeSetJSON('quiz_utm_parameters', this.utmParameters);
-      console.log('UTM parameters captured:', this.utmParameters);
+      appLogger.info('UTM parameters captured:', { data: [this.utmParameters] });
     }
   }
 
@@ -461,7 +462,7 @@ class QuizDataService {
         ...this.utmParameters,
       });
     } catch (error) {
-      console.warn('Error tracking Facebook Pixel event:', error);
+      appLogger.warn('Error tracking Facebook Pixel event:', { data: [error] });
     }
   }
 
@@ -478,7 +479,7 @@ class QuizDataService {
         ...data,
       });
     } catch (error) {
-      console.warn('Error tracking Google Analytics event:', error);
+      appLogger.warn('Error tracking Google Analytics event:', { data: [error] });
     }
   }
 
@@ -508,9 +509,9 @@ class QuizDataService {
       this.trackFacebookPixelEvent(eventName, data);
       this.trackGoogleAnalyticsEvent(eventName, data);
 
-      console.log(`[Analytics] Event tracked: ${eventName}`, data);
+      appLogger.info(`[Analytics] Event tracked: ${eventName}`, { data: [data] });
     } catch (error) {
-      console.warn('Error tracking event:', error);
+      appLogger.warn('Error tracking event:', { data: [error] });
     }
   }
 

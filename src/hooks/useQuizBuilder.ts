@@ -4,6 +4,7 @@ import { useQuizStages } from './useQuizStages';
 import { useQuizComponents } from './useQuizComponents';
 import { generateInitialStages, createBuilderStateFromQuiz } from '@/services/quizBuilderService';
 import caktoquizQuestions from '@/services/data/caktoquizQuestions';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const STORAGE_KEY = 'quiz_builder_data';
 
@@ -22,11 +23,11 @@ export const useQuizBuilder = () => {
 
   // Add missing methods for compatibility
   const moveStage = useCallback((stageId: string, direction: 'up' | 'down') => {
-    console.log('Moving stage:', stageId, direction);
+    appLogger.info('Moving stage:', { data: [stageId, direction] });
   }, []);
 
   const initializeStages = useCallback((newStages: any[]) => {
-    console.log('Initializing stages:', newStages);
+    appLogger.info('Initializing stages:', { data: [newStages] });
   }, []);
 
   const {
@@ -64,7 +65,7 @@ export const useQuizBuilder = () => {
           }
         }
       } catch (error) {
-        console.error('Error loading quiz data:', error);
+        appLogger.error('Error loading quiz data:', { data: [error] });
         // Fallback to generated stages if there's an error
         const { stages: initialStages, components: initialComponents } = generateInitialStages();
         initializeStages(initialStages);
@@ -97,7 +98,7 @@ export const useQuizBuilder = () => {
           }),
         );
       } catch (error) {
-        console.error('Error saving quiz data:', error);
+        appLogger.error('Error saving quiz data:', { data: [error] });
         toast({
           title: 'Error saving',
           description: 'Could not save quiz changes.',
@@ -118,7 +119,7 @@ export const useQuizBuilder = () => {
       );
       return true;
     } catch (error) {
-      console.error('Error saving quiz data:', error);
+      appLogger.error('Error saving quiz data:', { data: [error] });
       toast({
         title: 'Error saving',
         description: 'Could not save quiz changes.',

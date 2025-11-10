@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔄 LAZY SCHEMA LOADER - SPRINT 3
  * 
@@ -84,7 +85,7 @@ async function loadSchemaFromRegistry(blockType: BlockType): Promise<BlockSchema
     // TODO: Implementar import dinâmico real quando schemas forem modularizados
     // const schema = await import(`@/components/editor/quiz/schema/${blockType}.schema.ts`);
     
-    console.log(`📦 Loading schema for: ${blockType}`);
+    appLogger.info(`📦 Loading schema for: ${blockType}`);
     
     // Por enquanto retorna schema básico
     return {
@@ -93,7 +94,7 @@ async function loadSchemaFromRegistry(blockType: BlockType): Promise<BlockSchema
       groups: [],
     };
   } catch (error) {
-    console.warn(`⚠️ Failed to load schema for ${blockType}:`, error);
+    appLogger.warn(`⚠️ Failed to load schema for ${blockType}:`, { data: [error] });
     return null;
   }
 }
@@ -102,13 +103,13 @@ async function loadSchemaFromRegistry(blockType: BlockType): Promise<BlockSchema
  * Preload de schemas comuns
  */
 export async function preloadCommonSchemas(): Promise<void> {
-  console.log('🔄 Preloading common schemas...');
+  appLogger.info('🔄 Preloading common schemas...');
   
   const promises = COMMON_SCHEMAS.map(blockType => loadBlockSchema(blockType));
   
   await Promise.allSettled(promises);
   
-  console.log(`✅ Preloaded ${schemaCache.size} schemas`);
+  appLogger.info(`✅ Preloaded ${schemaCache.size} schemas`);
 }
 
 /**
@@ -147,7 +148,7 @@ export function isSchemaLoaded(blockType: BlockType): boolean {
 export function clearSchemaCache(): void {
   schemaCache.clear();
   loadingPromises.clear();
-  console.log('🗑️ Schema cache cleared');
+  appLogger.info('🗑️ Schema cache cleared');
 }
 
 /**

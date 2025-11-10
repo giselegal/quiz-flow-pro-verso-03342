@@ -193,8 +193,8 @@ export class MonitoringService extends BaseCanonicalService {
 
       // Log to console in dev mode
       if (this.options.debug) {
-        console.error(`[${severity.toUpperCase()}] Error in ${component || 'unknown'}:`, errorMessage);
-        if (errorStack) console.error(errorStack);
+        appLogger.error(`[${severity.toUpperCase()}] Error in ${component || 'unknown'}:`, { data: [errorMessage] });
+        if (errorStack) appLogger.error(String(errorStack));
       }
 
       // Create alert for high/critical errors
@@ -753,6 +753,7 @@ export const monitoringService = MonitoringService.getInstance();
 // ============================================================================
 
 import { useState, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * React Hook for monitoring
@@ -780,7 +781,7 @@ export const useMonitoring = () => {
   }, []);
 
   const trackEvent = (event: string, data?: any) => {
-    console.log('[MonitoringService] Event tracked:', event, data);
+    appLogger.info('[MonitoringService] Event tracked:', { data: [event, data] });
   };
 
   const trackError = (error: Error, context?: any) => {

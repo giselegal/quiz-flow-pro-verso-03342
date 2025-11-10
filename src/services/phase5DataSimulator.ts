@@ -1,4 +1,5 @@
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 FASE 5: SIMULAÇÃO DE DADOS LOCAIS
  * 
@@ -317,7 +318,7 @@ export function generateResults(): SimulatedResult[] {
 
 // Initialize all data
 export function initializePhase5Data(): SimulatedDataStructure {
-    console.log('🚀 Inicializando dados da Fase 5...');
+    appLogger.info('🚀 Inicializando dados da Fase 5...');
 
     generateSessions();
     generateResponses();
@@ -326,13 +327,13 @@ export function initializePhase5Data(): SimulatedDataStructure {
     // Store in localStorage for persistence
     StorageService.safeSetJSON('phase5_simulated_data', simulatedData);
 
-    console.log('✅ Dados da Fase 5 inicializados:', {
-        funnels: simulatedData.funnels.length,
-        users: simulatedData.users.length,
-        sessions: simulatedData.sessions?.length ?? 0,
-        responses: simulatedData.responses?.length ?? 0,
-        results: simulatedData.results?.length ?? 0,
-    });
+    appLogger.info('✅ Dados da Fase 5 inicializados:', { data: [{
+            funnels: simulatedData.funnels.length,
+            users: simulatedData.users.length,
+            sessions: simulatedData.sessions?.length ?? 0,
+            responses: simulatedData.responses?.length ?? 0,
+            results: simulatedData.results?.length ?? 0,
+        }] });
 
     return simulatedData;
 }
@@ -347,7 +348,7 @@ export function getPhase5Data(): SimulatedDataStructure {
             Object.assign(simulatedData, data);
             return data;
         } catch (e) {
-            console.warn('Failed to parse stored data, reinitializing...');
+            appLogger.warn('Failed to parse stored data, reinitializing...');
         }
     }
 

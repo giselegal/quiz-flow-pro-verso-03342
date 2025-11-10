@@ -14,6 +14,7 @@ import type {
     TemplateVersion,
     AnyTemplate,
 } from '@/types/template-v3.types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Classe principal do adapter
@@ -89,7 +90,7 @@ export class TemplateAdapter {
         }
 
         // Fallback para v2.0
-        console.warn('Não foi possível detectar versão do template, assumindo v2.0');
+        appLogger.warn('Não foi possível detectar versão do template, assumindo v2.0');
         return '2.0';
     }
 
@@ -260,9 +261,7 @@ export class TemplateAdapter {
         }
 
         if (errors.length > 0) {
-            console.warn(
-                `Template v2.0 com problemas:\n${errors.map(e => `  - ${e}`).join('\n')}`,
-            );
+            appLogger.warn(`Template v2.0 com problemas:\n${errors.map(e => `  - ${e}`).join('\n')}`);
         }
 
         return template as TemplateV2;

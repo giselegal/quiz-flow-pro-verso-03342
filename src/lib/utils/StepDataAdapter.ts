@@ -16,6 +16,7 @@
 import { EditableQuizStep, StepType } from '@/components/editor/quiz/types';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 DEFAULTS POR TIPO DE STEP
@@ -246,7 +247,7 @@ function validateAdaptedData(data: QuizStep): void {
   
   // Log errors (não bloqueia renderização, usa fallbacks)
   if (errors.length > 0) {
-    console.warn(`⚠️ Step ${data.id} validation warnings:`, errors);
+    appLogger.warn(`⚠️ Step ${data.id} validation warnings:`, { data: [errors] });
   }
 }
 

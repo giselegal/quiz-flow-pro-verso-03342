@@ -13,6 +13,7 @@
 
 import React from 'react';
 import UniversalQuizStep from '@/components/universal/UniversalQuizStep';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SpecializedStepAdapterProps {
     stepNumber: number;
@@ -40,7 +41,7 @@ export const SpecializedStepAdapter: React.FC<SpecializedStepAdapterProps> = ({
     onBack,
     funnelId = 'quiz21StepsComplete',
 }) => {
-    console.log(`🔄 SpecializedStepAdapter: Adaptando step ${stepNumber} para UniversalQuizStep`);
+    appLogger.info(`🔄 SpecializedStepAdapter: Adaptando step ${stepNumber} para UniversalQuizStep`);
 
     return (
         <UniversalQuizStep
@@ -48,7 +49,7 @@ export const SpecializedStepAdapter: React.FC<SpecializedStepAdapterProps> = ({
             stepNumber={stepNumber}
             data={data}
             onNext={onNext}
-            onBack={onBack || (() => console.log('No onBack handler provided'))}
+            onBack={onBack || (() => appLogger.info('No onBack handler provided'))}
         />
     );
 };

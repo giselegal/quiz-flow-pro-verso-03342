@@ -15,6 +15,7 @@
 import type { Block as EditorBlock, BlockType } from '@/types/editor';
 import type { Block as QuizCoreBlock } from '@/types/quizCore';
 import type { FunnelBlock } from '@/editor/facade/FunnelEditingFacade';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Interface canônica unificada (baseada em types/editor.ts)
@@ -261,7 +262,7 @@ export class BlockAdapter {
     }
 
     // Fallback: tratar como CanonicalBlock mesmo que inválido
-    console.warn('⚠️ [BlockAdapter] Unable to detect block type, assuming canonical format');
+    appLogger.warn('⚠️ [BlockAdapter] Unable to detect block type, assuming canonical format');
     return input as CanonicalBlock;
   }
 

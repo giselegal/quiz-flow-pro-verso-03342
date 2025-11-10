@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { QuizResult } from '@/hooks/useQuizResults';
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface original para uso direto
 interface QuizResultsBlockProps {
@@ -98,7 +99,7 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
     if (allProps.onReset) {
       allProps.onReset();
     } else {
-      console.log('🔄 Reset quiz requested');
+      appLogger.info('🔄 Reset quiz requested');
     }
   };
 
@@ -106,7 +107,7 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
     if (allProps.onShare) {
       allProps.onShare();
     } else {
-      console.log('📤 Share result requested');
+      appLogger.info('📤 Share result requested');
     }
   };
 
@@ -136,7 +137,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
 }) => {
   // ✅ CORREÇÃO: Verificação de segurança para result
   if (!result) {
-    console.warn('QuizResultsBlock: result prop is undefined, usando dados padrão');
+    appLogger.warn('QuizResultsBlock: result prop is undefined, usando dados padrão');
     const defaultResult: QuizResult = {
       id: 'default-result',
       title: 'Seu Resultado',

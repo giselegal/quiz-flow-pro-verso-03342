@@ -8,6 +8,7 @@
  */
 
 import { STEP_TEMPLATES_MAPPING } from '@/config/stepTemplatesMapping';
+import { appLogger } from '@/lib/utils/appLogger';
 // ✅ CORREÇÃO: Comentado import direto - validação deve ser refatorada para usar HierarchicalTemplateSource
 // import { QUIZ_QUESTIONS_COMPLETE } from '@/templates/quiz21StepsComplete';
 
@@ -87,30 +88,30 @@ export function validateDataSync(): ValidationResult {
 export function runValidation(): void {
   const result = validateDataSync();
 
-  console.log('🔍 === VALIDAÇÃO DE SINCRONIZAÇÃO DE DADOS ===');
-  console.log(`Status: ${result.isValid ? '✅ VÁLIDO' : '❌ INVÁLIDO'}`);
-  console.log(`Steps no Quiz: ${result.details.totalStepsInQuiz}`);
-  console.log(`Steps no Mapping: ${result.details.totalStepsInMapping}`);
+  appLogger.info('🔍 === VALIDAÇÃO DE SINCRONIZAÇÃO DE DADOS ===');
+  appLogger.info(`Status: ${result.isValid ? '✅ VÁLIDO' : '❌ INVÁLIDO'}`);
+  appLogger.info(`Steps no Quiz: ${result.details.totalStepsInQuiz}`);
+  appLogger.info(`Steps no Mapping: ${result.details.totalStepsInMapping}`);
 
   if (result.errors.length > 0) {
-    console.log('\n❌ ERROS ENCONTRADOS:');
-    result.errors.forEach(error => console.log(error));
+    appLogger.info('\n❌ ERROS ENCONTRADOS:');
+    result.errors.forEach(error => appLogger.info(String(error)));
   }
 
   if (result.warnings.length > 0) {
-    console.log('\n⚠️ AVISOS:');
-    result.warnings.forEach(warning => console.log(warning));
+    appLogger.info('\n⚠️ AVISOS:');
+    result.warnings.forEach(warning => appLogger.info(String(warning)));
   }
 
   if (result.details.missingSteps.length > 0) {
-    console.log(`\n🔍 Steps ausentes no mapping: ${result.details.missingSteps.join(', ')}`);
+    appLogger.info(`\n🔍 Steps ausentes no mapping: ${result.details.missingSteps.join(', ')}`);
   }
 
   if (result.details.extraSteps.length > 0) {
-    console.log(`\n🔍 Steps extras no mapping: ${result.details.extraSteps.join(', ')}`);
+    appLogger.info(`\n🔍 Steps extras no mapping: ${result.details.extraSteps.join(', ')}`);
   }
 
-  console.log('🔍 === FIM DA VALIDAÇÃO ===\n');
+  appLogger.info('🔍 === FIM DA VALIDAÇÃO ===\n');
 }
 
 // Auto-executar se estiver em desenvolvimento

@@ -1,4 +1,3 @@
-import { appLogger } from '@/lib/utils/logger';
 interface QuizNavigationIntegrationProps {
   properties: {
     showPrevious?: boolean;

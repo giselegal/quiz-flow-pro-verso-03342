@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getTemplateStatus } from '@/lib/utils/hybridIntegration';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SystemStatus {
     templateDiagnostic: any;
@@ -15,7 +16,7 @@ const SystemDiagnosticPage: React.FC = () => {
     useEffect(() => {
         const runDiagnostic = async () => {
             try {
-                console.log('🔬 [DIAGNOSTIC] Iniciando diagnóstico completo...');
+                appLogger.info('🔬 [DIAGNOSTIC] Iniciando diagnóstico completo...');
 
                 // Import dinâmico do template diagnostic
                 const { default: runTemplateDiagnostic } = await import('@/lib/utils/templateDiagnostic');
@@ -30,11 +31,11 @@ const SystemDiagnosticPage: React.FC = () => {
                     timestamp: new Date().toISOString(),
                 };
 
-                console.log('✅ [DIAGNOSTIC] Diagnóstico completo:', systemStatus);
+                appLogger.info('✅ [DIAGNOSTIC] Diagnóstico completo:', { data: [systemStatus] });
                 setStatus(systemStatus);
 
             } catch (error) {
-                console.error('❌ [DIAGNOSTIC] Erro no diagnóstico:', error);
+                appLogger.error('❌ [DIAGNOSTIC] Erro no diagnóstico:', { data: [error] });
                 setError(error instanceof Error ? error.message : 'Erro desconhecido');
             } finally {
                 setLoading(false);

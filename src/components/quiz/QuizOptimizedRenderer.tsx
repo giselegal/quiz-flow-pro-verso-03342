@@ -24,6 +24,7 @@ import {
   CheckCircle2,
   Activity, 
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizOptimizedRendererProps {
   funnelId: string;
@@ -93,7 +94,7 @@ export const QuizOptimizedRenderer: React.FC<QuizOptimizedRendererProps> = ({
 
     // Aqui você implementaria a aplicação das sugestões
     // Por enquanto, apenas loggar
-    console.log('🤖 Applying AI suggestion:', suggestion);
+    appLogger.info('🤖 Applying AI suggestion:', { data: [suggestion] });
     
     trackQuizEvent('ai_suggestion_applied', {
       suggestion,

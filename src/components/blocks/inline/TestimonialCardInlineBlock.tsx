@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Quote } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * TestimonialCardInlineBlock - Componente modular de depoimento
@@ -15,7 +16,7 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
 }) => {
   // Validate block and properties
   if (!block || !block.properties) {
-    console.warn('TestimonialCardInlineBlock: block or block.properties is undefined');
+    appLogger.warn('TestimonialCardInlineBlock: block or block.properties is undefined');
     return null;
   }
 

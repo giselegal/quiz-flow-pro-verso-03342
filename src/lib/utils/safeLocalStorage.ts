@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Safe localStorage wrapper for SSR compatibility
  */
@@ -7,7 +8,7 @@ export const safeLocalStorage = {
     try {
       return localStorage.getItem(key);
     } catch (error) {
-      console.warn('localStorage.getItem failed:', error);
+      appLogger.warn('localStorage.getItem failed:', { data: [error] });
       return null;
     }
   },
@@ -17,7 +18,7 @@ export const safeLocalStorage = {
     try {
       localStorage.setItem(key, value);
     } catch (error) {
-      console.warn('localStorage.setItem failed:', error);
+      appLogger.warn('localStorage.setItem failed:', { data: [error] });
     }
   },
   removeItem: (key: string): void => {
@@ -25,7 +26,7 @@ export const safeLocalStorage = {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.warn('localStorage.removeItem failed:', error);
+      appLogger.warn('localStorage.removeItem failed:', { data: [error] });
     }
   },
   clear: (): void => {
@@ -33,7 +34,7 @@ export const safeLocalStorage = {
     try {
       localStorage.clear();
     } catch (error) {
-      console.warn('localStorage.clear failed:', error);
+      appLogger.warn('localStorage.clear failed:', { data: [error] });
     }
   },
 };

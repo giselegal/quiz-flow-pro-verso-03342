@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { runDeploymentChecklist, type DeploymentReport } from '@/lib/utils/deploymentChecklist';
 import { useProductionOptimization } from '@/hooks/useProductionOptimization';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const DeploymentDashboard: React.FC = () => {
   const [report, setReport] = useState<DeploymentReport | null>(null);
@@ -33,7 +34,7 @@ export const DeploymentDashboard: React.FC = () => {
       const newReport = await runDeploymentChecklist();
       setReport(newReport);
     } catch (error) {
-      console.error('Erro ao executar checklist:', error);
+      appLogger.error('Erro ao executar checklist:', { data: [error] });
     } finally {
       setIsLoading(false);
     }

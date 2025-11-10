@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * WebSocket Console Optimizer
  * Controla reconexões de websocket e filtra spam de console
@@ -235,7 +236,7 @@ export const websocketOptimizer = new WebSocketOptimizer();
 
 // Função para inicializar otimizações
 export const initializeWebSocketOptimization = () => {
-  console.log('🔧 WebSocket Optimizer: Filtros aplicados');
+  appLogger.info('🔧 WebSocket Optimizer: Filtros aplicados');
   
   // Configurar WebSocket se disponível
   if (typeof window !== 'undefined' && window.WebSocket) {
@@ -252,7 +253,7 @@ export const initializeWebSocketOptimization = () => {
 // Função para limpar otimizações
 export const cleanupWebSocketOptimization = () => {
   websocketOptimizer.restoreConsole();
-  console.log('🔧 WebSocket Optimizer: Filtros removidos');
+  appLogger.info('🔧 WebSocket Optimizer: Filtros removidos');
 };
 
 // Auto-inicializar em desenvolvimento

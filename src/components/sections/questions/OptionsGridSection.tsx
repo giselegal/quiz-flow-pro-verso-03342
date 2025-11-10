@@ -10,6 +10,7 @@ import { AnimatedTransition } from '../shared/AnimatedTransition';
 import { DesignTokens } from '@/styles/design-tokens';
 import { useResponsive } from '@/hooks/useResponsive';
 import type { BaseSectionProps } from '@/types/section-types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizOption {
     id: string;
@@ -114,10 +115,10 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
     const optionsArray = ensureArray<QuizOption>(options);
 
     if (import.meta?.env?.DEV && !Array.isArray(options)) {
-        console.warn('⚠️ OptionsGridSection: content.options não é um array. Shape recebido:', {
-            type: typeof options,
-            keys: options && typeof options === 'object' ? Object.keys(options as any) : undefined,
-        });
+        appLogger.warn('⚠️ OptionsGridSection: content.options não é um array. Shape recebido:', { data: [{
+                    type: typeof options,
+                    keys: options && typeof options === 'object' ? Object.keys(options as any) : undefined,
+                }] });
     }
 
     // Sincronizar com prop externa

@@ -17,6 +17,7 @@
 
 import { QuizFunnelSchema, FunnelStep, StepType } from '@/types/quiz-schema';
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 // import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
 // import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '../templates/quiz21StepsComplete';
 
@@ -29,7 +30,7 @@ export class QuizTemplateAdapter {
    * Converte o template quiz21StepsComplete para o novo esquema unificado
    */
   static async convertLegacyTemplate(): Promise<QuizFunnelSchema> {
-    console.log('🔄 Iniciando conversão do template legacy para esquema unificado...');
+    appLogger.info('🔄 Iniciando conversão do template legacy para esquema unificado...');
 
     const legacyTemplate = this.loadLegacyTemplate();
     const unifiedSchema = await this.transformToUnifiedSchema(legacyTemplate);
@@ -40,7 +41,7 @@ export class QuizTemplateAdapter {
       throw new Error(`Conversão falhou: ${validation.errors.join(', ')}`);
     }
 
-    console.log('✅ Conversão concluída com sucesso');
+    appLogger.info('✅ Conversão concluída com sucesso');
     return unifiedSchema;
   }
 

@@ -13,6 +13,7 @@
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ContextualStorageService } from './ContextualStorageService';
 import { StorageService } from './StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface MigrationReport {
   started: string;
@@ -117,7 +118,7 @@ export class StorageMigrationService {
         }
       }
     } catch (e) {
-      console.error('[Migration] Erro ao detectar chaves legadas:', e);
+      appLogger.error('[Migration] Erro ao detectar chaves legadas:', { data: [e] });
     }
 
     return legacyKeys;
@@ -147,10 +148,10 @@ export class StorageMigrationService {
         data: backup,
       });
 
-      console.log(`💾 [Migration] Backup criado com ${Object.keys(backup).length} chaves`);
+      appLogger.info(`💾 [Migration] Backup criado com ${Object.keys(backup).length} chaves`);
       return true;
     } catch (e) {
-      console.error('[Migration] Erro ao criar backup:', e);
+      appLogger.error('[Migration] Erro ao criar backup:', { data: [e] });
       return false;
     }
   }
@@ -168,7 +169,7 @@ export class StorageMigrationService {
       }>(this.BACKUP_KEY);
 
       if (!backupData) {
-        console.warn('[Migration] Nenhum backup encontrado');
+        appLogger.warn('[Migration] Nenhum backup encontrado');
         return false;
       }
 
@@ -180,10 +181,10 @@ export class StorageMigrationService {
         localStorage.setItem(key, value);
       });
 
-      console.log(`♻️ [Migration] Backup restaurado (${Object.keys(backupData.data).length} chaves)`);
+      appLogger.info(`♻️ [Migration] Backup restaurado (${Object.keys(backupData.data).length} chaves)`);
       return true;
     } catch (e) {
-      console.error('[Migration] Erro ao restaurar backup:', e);
+      appLogger.error('[Migration] Erro ao restaurar backup:', { data: [e] });
       return false;
     }
   }
@@ -206,11 +207,11 @@ export class StorageMigrationService {
     };
 
     try {
-      console.log('🔄 [Migration] Iniciando migração de dados...');
+      appLogger.info('🔄 [Migration] Iniciando migração de dados...');
 
       // Verificar se já foi migrado
       if (this.isMigrated()) {
-        console.log('✅ [Migration] Dados já migrados');
+        appLogger.info('✅ [Migration] Dados já migrados');
         report.success = true;
         report.completed = new Date().toISOString();
         report.duration = Date.now() - startTime;
@@ -227,7 +228,7 @@ export class StorageMigrationService {
       const legacyKeys = this.detectLegacyKeys();
       report.totalKeys = legacyKeys.length;
 
-      console.log(`📋 [Migration] Encontradas ${legacyKeys.length} chaves legadas`);
+      appLogger.info(`📋 [Migration] Encontradas ${legacyKeys.length} chaves legadas`);
 
       // Usar regras customizadas ou padrão
       const rules = customRules || this.DEFAULT_RULES;
@@ -261,7 +262,7 @@ export class StorageMigrationService {
             // Remover chave legada
             StorageService.safeRemove(legacyKey);
             report.migratedKeys++;
-            console.log(`  ✓ ${legacyKey} → ${rule.targetContext}-${newKey}`);
+            appLogger.info(`  ✓ ${legacyKey} → ${rule.targetContext}-${newKey}`);
           } else {
             report.errors.push({
               key: legacyKey,
@@ -273,7 +274,7 @@ export class StorageMigrationService {
             key: legacyKey,
             error: String(error),
           });
-          console.error(`  ✗ Erro ao migrar ${legacyKey}:`, error);
+          appLogger.error(`  ✗ Erro ao migrar ${legacyKey}:`, { data: [error] });
         }
       }
 
@@ -284,19 +285,19 @@ export class StorageMigrationService {
       report.completed = new Date().toISOString();
       report.duration = Date.now() - startTime;
 
-      console.log('✅ [Migration] Migração concluída:', {
-        migradas: report.migratedKeys,
-        puladas: report.skippedKeys,
-        erros: report.errors.length,
-        duração: `${report.duration}ms`,
-      });
+      appLogger.info('✅ [Migration] Migração concluída:', { data: [{
+                migradas: report.migratedKeys,
+                puladas: report.skippedKeys,
+                erros: report.errors.length,
+                duração: `${report.duration}ms`,
+              }] });
 
       return report;
     } catch (error) {
-      console.error('❌ [Migration] Erro crítico na migração:', error);
+      appLogger.error('❌ [Migration] Erro crítico na migração:', { data: [error] });
       
       // Tentar restaurar backup
-      console.log('♻️ [Migration] Tentando restaurar backup...');
+      appLogger.info('♻️ [Migration] Tentando restaurar backup...');
       this.restoreBackup();
 
       report.success = false;

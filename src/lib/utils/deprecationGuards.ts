@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Deprecation guards for browser APIs that are being phased out.
  * - Replaces window.alert with a non-blocking notifier when inside cross-origin iframes
@@ -27,7 +28,7 @@ function replaceWindowAlert() {
         // cross-origin, continua
       }
       // Fallback: console em vez de alert bloqueante
-      try { console.warn('ALERT (suprimido):', text); } catch { /* noop */ }
+      try { appLogger.warn('ALERT (suprimido):', { data: [text] }); } catch { /* noop */ }
       // Opcional: manter compatibilidade em ambientes que precisem do alert síncrono
       if (!isPreviewHost() && !import.meta.env.DEV) {
         try { originalAlert?.(text); } catch { /* noop */ }
@@ -46,7 +47,7 @@ function patchUnloadListeners() {
     (window as any).addEventListener = (type: any, listener: any, options?: any) => {
       if (type === 'unload') {
         if (!warnedOnce) {
-          try { console.warn('⚠️ Redirecionando listener de "unload" para "pagehide"'); } catch {}
+          try { appLogger.warn('⚠️ Redirecionando listener de "unload" para "pagehide"'); } catch {}
           warnedOnce = true;
         }
         return originalAdd('pagehide', listener as any, options as any);

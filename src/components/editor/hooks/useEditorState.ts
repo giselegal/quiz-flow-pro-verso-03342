@@ -1,6 +1,7 @@
 import { EditorBlock } from '@/types/editor';
 import { useCallback, useState } from 'react';
 import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EditorState {
   blocks: EditorBlock[];
@@ -69,7 +70,7 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
 
   const setCurrentStep = useCallback((step: number) => {
     // Implementation for step navigation if needed
-    console.log('Setting current step:', step);
+    appLogger.info('Setting current step:', { data: [step] });
   }, []);
 
   return {

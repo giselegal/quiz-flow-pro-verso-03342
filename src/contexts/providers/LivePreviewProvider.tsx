@@ -6,6 +6,7 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -149,7 +150,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
     const connect = useCallback((funnelId: string) => {
         if (wsRef.current?.readyState === WebSocket.OPEN) {
             if (enableDebug) {
-                console.log('🌐 Already connected to WebSocket');
+                appLogger.info('🌐 Already connected to WebSocket');
             }
             return;
         }
@@ -166,7 +167,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
             const url = getWebSocketUrl(funnelId);
 
             if (enableDebug) {
-                console.log('🌐 Connecting to WebSocket:', url);
+                appLogger.info('🌐 Connecting to WebSocket:', { data: [url] });
             }
 
             const ws = new WebSocket(url);
@@ -184,7 +185,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                 startHeartbeat();
 
                 if (enableDebug) {
-                    console.log('🌐 WebSocket connected successfully');
+                    appLogger.info('🌐 WebSocket connected successfully');
                 }
             };
 
@@ -211,7 +212,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                         try {
                             listener(message);
                         } catch (error) {
-                            console.error('🌐 Message listener error:', error);
+                            appLogger.error('🌐 Message listener error:', { data: [error] });
                         }
                     });
 
@@ -221,7 +222,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                             try {
                                 listener(message.stepId!, message.data);
                             } catch (error) {
-                                console.error('🌐 Step change listener error:', error);
+                                appLogger.error('🌐 Step change listener error:', { data: [error] });
                             }
                         });
                     } else if (message.type === 'step-update' && message.stepId) {
@@ -229,16 +230,16 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                             try {
                                 listener(message.stepId!, message.data);
                             } catch (error) {
-                                console.error('🌐 Step update listener error:', error);
+                                appLogger.error('🌐 Step update listener error:', { data: [error] });
                             }
                         });
                     }
 
                     if (enableDebug) {
-                        console.log('🌐 Received message:', message);
+                        appLogger.info('🌐 Received message:', { data: [message] });
                     }
                 } catch (error) {
-                    console.error('🌐 Failed to parse WebSocket message:', error);
+                    appLogger.error('🌐 Failed to parse WebSocket message:', { data: [error] });
                 }
             };
 
@@ -252,7 +253,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                 stopHeartbeat();
 
                 if (enableDebug) {
-                    console.log('🌐 WebSocket closed:', event.code, event.reason);
+                    appLogger.info('🌐 WebSocket closed:', { data: [event.code, event.reason] });
                 }
 
                 // Auto-reconnect if enabled
@@ -276,7 +277,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                 }));
 
                 if (enableDebug) {
-                    console.error('🌐 WebSocket error:', error);
+                    appLogger.error('🌐 WebSocket error:', { data: [error] });
                 }
             };
 
@@ -288,7 +289,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
             }));
 
             if (enableDebug) {
-                console.error('🌐 Failed to create WebSocket connection:', error);
+                appLogger.error('🌐 Failed to create WebSocket connection:', { data: [error] });
             }
         }
     }, [
@@ -322,7 +323,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
         }));
 
         if (enableDebug) {
-            console.log('🌐 WebSocket disconnected');
+            appLogger.info('🌐 WebSocket disconnected');
         }
     }, [stopHeartbeat, enableDebug]);
 
@@ -337,7 +338,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
     const sendMessage = useCallback((message: Omit<LivePreviewMessage, 'timestamp' | 'source'>) => {
         if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
             if (enableDebug) {
-                console.warn('🌐 Cannot send message: WebSocket not connected');
+                appLogger.warn('🌐 Cannot send message: WebSocket not connected');
             }
             return;
         }
@@ -352,10 +353,10 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
             wsRef.current.send(JSON.stringify(fullMessage));
 
             if (enableDebug) {
-                console.log('🌐 Sent message:', fullMessage);
+                appLogger.info('🌐 Sent message:', { data: [fullMessage] });
             }
         } catch (error) {
-            console.error('🌐 Failed to send message:', error);
+            appLogger.error('🌐 Failed to send message:', { data: [error] });
         }
     }, [enableDebug]);
 

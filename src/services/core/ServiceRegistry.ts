@@ -8,6 +8,7 @@
 import { serviceManager } from './UnifiedServiceManager';
 import { consolidatedTemplateService } from './ConsolidatedTemplateService';
 import { consolidatedFunnelService } from './ConsolidatedFunnelService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // ESSENTIAL SERVICES (12 CORE SERVICES)
@@ -123,7 +124,7 @@ export class ServiceRegistry {
    * 🚀 INITIALIZE ESSENTIAL SERVICES
    */
   async initializeEssentialServices(): Promise<void> {
-    console.log('🚀 Initializing essential services...');
+    appLogger.info('🚀 Initializing essential services...');
 
     try {
       // Register consolidated services
@@ -139,12 +140,12 @@ export class ServiceRegistry {
         .filter(([_, healthy]) => healthy)
         .map(([name]) => name);
 
-      console.log('✅ Essential services initialized:', healthyServices);
+      appLogger.info('✅ Essential services initialized:', { data: [healthyServices] });
 
       this.logMigration(`Essential services initialized: ${healthyServices.length}/2 healthy`);
 
     } catch (error) {
-      console.error('❌ Failed to initialize essential services:', error);
+      appLogger.error('❌ Failed to initialize essential services:', { data: [error] });
       this.logMigration(`Failed to initialize: ${error}`);
       throw error;
     }
@@ -154,7 +155,7 @@ export class ServiceRegistry {
    * 🧹 DEPRECATE OLD SERVICES
    */
   deprecateOldServices(): void {
-    console.log('🧹 Deprecating old services...');
+    appLogger.info('🧹 Deprecating old services...');
 
     let deprecatedCount = 0;
 
@@ -169,11 +170,11 @@ export class ServiceRegistry {
         this.logMigration(`Deprecated: ${serviceName}`);
 
       } catch (error) {
-        console.warn(`⚠️ Failed to deprecate ${serviceName}:`, error);
+        appLogger.warn(`⚠️ Failed to deprecate ${serviceName}:`, { data: [error] });
       }
     }
 
-    console.log(`✅ Deprecated ${deprecatedCount}/${DEPRECATED_SERVICES.length} services`);
+    appLogger.info(`✅ Deprecated ${deprecatedCount}/${DEPRECATED_SERVICES.length} services`);
   }
 
   /**

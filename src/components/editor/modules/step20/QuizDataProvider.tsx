@@ -1,5 +1,4 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getBestUserName } from '@/core/user/name';
 import { mapToFriendlyStyle } from '@/core/style/naming';

@@ -23,6 +23,7 @@ import {
     TrendingUp,
     Loader2,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -137,7 +138,7 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             }
 
         } catch (error) {
-            console.error('Erro ao gerar relatório:', error);
+            appLogger.error('Erro ao gerar relatório:', { data: [error] });
             alert('Erro ao gerar relatório. Tente novamente.');
         } finally {
             setIsGenerating(false);

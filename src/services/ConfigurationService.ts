@@ -11,6 +11,7 @@ import { APP_CONFIG } from '@/config/AppConfig';
 import { QUIZ21_STEPS_CONFIG, type FunnelConfig, mergeFunnelWithAppConfig } from '@/templates/funnel-configs/quiz21StepsComplete.config';
 import type { AppConfig } from '@/config/AppConfig';
 import { FunnelConfigGenerator, COMMON_FUNNELS_CONFIGS } from '@/services/FunnelConfigGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -74,11 +75,11 @@ export class ConfigurationService {
         // Verificar cache
         if (this.cache.has(cacheKey)) {
             const cached = this.cache.get(cacheKey)!;
-            console.log(`✅ [ConfigService] Cache hit para ${context.funnelId}`);
+            appLogger.info(`✅ [ConfigService] Cache hit para ${context.funnelId}`);
             return cached;
         }
 
-        console.log(`🔄 [ConfigService] Gerando configuração para ${context.funnelId}...`);
+        appLogger.info(`🔄 [ConfigService] Gerando configuração para ${context.funnelId}...`);
 
         // Obter configuração do funil
         const funnelConfig = this.getFunnelConfig(context.funnelId);
@@ -106,7 +107,7 @@ export class ConfigurationService {
         this.cache.set(cacheKey, finalConfig);
         this.scheduleCacheCleanup(cacheKey);
 
-        console.log(`✅ [ConfigService] Configuração gerada para ${context.funnelId}`);
+        appLogger.info(`✅ [ConfigService] Configuração gerada para ${context.funnelId}`);
         return finalConfig;
     }
 
@@ -120,7 +121,7 @@ export class ConfigurationService {
 
         if (!config) {
             // 🚀 GERAÇÃO AUTOMÁTICA: Se não existe, criar baseado no ID
-            console.log(`⚡ Gerando configuração automática para funil: ${funnelId}`);
+            appLogger.info(`⚡ Gerando configuração automática para funil: ${funnelId}`);
 
             // Detectar categoria baseada no ID
             let category: 'quiz' | 'sales' | 'lead-magnet' | 'assessment' | 'survey' | 'other' = 'other';
@@ -145,7 +146,7 @@ export class ConfigurationService {
             // Armazenar no registry para próximas consultas
             FUNNEL_CONFIGS_REGISTRY[funnelId] = config;
 
-            console.log(`✅ Configuração gerada e armazenada para: ${funnelId}`);
+            appLogger.info(`✅ Configuração gerada e armazenada para: ${funnelId}`);
         }
 
         return config;
@@ -193,7 +194,7 @@ export class ConfigurationService {
     private scheduleCacheCleanup(key: string): void {
         setTimeout(() => {
             this.cache.delete(key);
-            console.log(`🗑️ [ConfigService] Cache limpo para ${key}`);
+            appLogger.info(`🗑️ [ConfigService] Cache limpo para ${key}`);
         }, this.cacheTimeout);
     }
 
@@ -206,10 +207,10 @@ export class ConfigurationService {
                 key.startsWith(funnelId),
             );
             keysToDelete.forEach(key => this.cache.delete(key));
-            console.log(`🗑️ [ConfigService] Cache invalidado para funil ${funnelId}`);
+            appLogger.info(`🗑️ [ConfigService] Cache invalidado para funil ${funnelId}`);
         } else {
             this.cache.clear();
-            console.log('🗑️ [ConfigService] Todo cache invalidado');
+            appLogger.info('🗑️ [ConfigService] Todo cache invalidado');
         }
     }
 

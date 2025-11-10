@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Hook simplificado para histórico de propriedades
 export const usePropertyHistory = () => {
@@ -6,11 +7,11 @@ export const usePropertyHistory = () => {
   const [canRedo] = useState(false);
 
   const undo = useCallback(() => {
-    console.log('Undo (placeholder)');
+    appLogger.info('Undo (placeholder)');
   }, []);
 
   const redo = useCallback(() => {
-    console.log('Redo (placeholder)');
+    appLogger.info('Redo (placeholder)');
   }, []);
 
   return {

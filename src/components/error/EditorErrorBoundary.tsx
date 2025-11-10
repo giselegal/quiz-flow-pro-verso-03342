@@ -1,4 +1,5 @@
 import React, { Component, ReactNode } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EditorErrorBoundaryState {
   hasError: boolean;
@@ -25,7 +26,7 @@ export class EditorErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Editor Error Boundary caught an error:', error, errorInfo);
+    appLogger.error('Editor Error Boundary caught an error:', { data: [error, errorInfo] });
     this.setState({ errorInfo });
   }
 

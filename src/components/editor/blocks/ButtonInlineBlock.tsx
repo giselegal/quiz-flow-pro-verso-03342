@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState, useMemo } from 'react';

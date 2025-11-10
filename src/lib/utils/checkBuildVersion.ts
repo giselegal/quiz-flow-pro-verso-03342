@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔍 checkBuildVersion - Verifica se há uma versão mais recente da aplicação.
  * Busca /build-meta.json e compara com cache local.
@@ -50,7 +51,7 @@ export function startPeriodicVersionCheck(intervalMs = 120000) {
     const disabledHostSubstrings = ['lovableproject.com', 'localhost', '127.0.0.1', '0.0.0.0'];
     const host = window.location.hostname || '';
     if (disabledHostSubstrings.some((s) => host.includes(s))) {
-        console.info('[VersionCheck] desabilitado neste host:', host);
+        appLogger.info('[VersionCheck] desabilitado neste host:', { data: [host] });
         return undefined as any;
     }
 
@@ -58,18 +59,18 @@ export function startPeriodicVersionCheck(intervalMs = 120000) {
     (async () => {
         const ok = await checkBuildVersion({
             onNewVersion: () => {
-                console.info('[VersionCheck] Nova versão detectada, recarregando para sincronizar chunks.');
+                appLogger.info('[VersionCheck] Nova versão detectada, recarregando para sincronizar chunks.');
                 window.location.reload();
             },
         });
         if (!ok) {
-            console.info('[VersionCheck] build-meta.json ausente; verificação periódica desativada.');
+            appLogger.info('[VersionCheck] build-meta.json ausente; verificação periódica desativada.');
             return;
         }
         timer = setInterval(() => {
             checkBuildVersion({
                 onNewVersion: () => {
-                    console.info('[VersionCheck] Nova versão detectada (interval), recarregando.');
+                    appLogger.info('[VersionCheck] Nova versão detectada (interval), recarregando.');
                     window.location.reload();
                 },
             });

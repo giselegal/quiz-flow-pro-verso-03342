@@ -1,5 +1,4 @@
 import type { BlockComponentProps } from '@/types/blocks';
-import { appLogger } from '@/lib/utils/logger';
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';

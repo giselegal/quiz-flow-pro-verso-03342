@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Nota:
@@ -269,7 +270,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
               }}
               onClick={() => {
                 if (enableProductionMode && content.action) {
-                  console.log('🔘 Button action:', content.action);
+                  appLogger.info('🔘 Button action:', { data: [content.action] });
                 }
               }}
             >

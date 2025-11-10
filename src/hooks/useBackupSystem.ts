@@ -5,6 +5,7 @@
 
 import { useState, useCallback } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface BackupJob {
   id: string;
@@ -46,7 +47,7 @@ export const useBackupSystem = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create backup';
       setError(errorMessage);
-      console.error('Backup creation error:', err);
+      appLogger.error('Backup creation error:', { data: [err] });
       throw err;
     } finally {
       setIsLoading(false);
@@ -72,7 +73,7 @@ export const useBackupSystem = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to list backups';
       setError(errorMessage);
-      console.error('List backups error:', err);
+      appLogger.error('List backups error:', { data: [err] });
       return [];
     } finally {
       setIsLoading(false);
@@ -94,7 +95,7 @@ export const useBackupSystem = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get backup status';
       setError(errorMessage);
-      console.error('Backup status error:', err);
+      appLogger.error('Backup status error:', { data: [err] });
       return null;
     } finally {
       setIsLoading(false);
@@ -124,7 +125,7 @@ export const useBackupSystem = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to restore backup';
       setError(errorMessage);
-      console.error('Backup restore error:', err);
+      appLogger.error('Backup restore error:', { data: [err] });
       throw err;
     } finally {
       setIsLoading(false);
@@ -149,7 +150,7 @@ export const useBackupSystem = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to schedule backup';
       setError(errorMessage);
-      console.error('Schedule backup error:', err);
+      appLogger.error('Schedule backup error:', { data: [err] });
       throw err;
     } finally {
       setIsLoading(false);
@@ -169,7 +170,7 @@ export const useBackupSystem = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to cleanup backups';
       setError(errorMessage);
-      console.error('Cleanup backups error:', err);
+      appLogger.error('Cleanup backups error:', { data: [err] });
       throw err;
     } finally {
       setIsLoading(false);

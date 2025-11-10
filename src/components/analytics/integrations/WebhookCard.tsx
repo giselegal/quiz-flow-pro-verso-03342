@@ -14,6 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface WebhookCardProps {
   initialUrl?: string;
@@ -49,7 +50,7 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
       title: 'Testing Webhook connection',
       description: 'Connection test initiated. Please check the console for results.',
     });
-    console.log('Testing connection to Webhook...');
+    appLogger.info('Testing connection to Webhook...');
   };
 
   return (

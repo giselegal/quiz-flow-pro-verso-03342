@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface HookOrderDebuggerProps {
   componentName: string;
@@ -31,14 +32,14 @@ export const HookOrderDebugger: React.FC<HookOrderDebuggerProps> = ({
       const previousOrder = previousHookCalls.current.join('|');
       
       if (currentOrder !== previousOrder) {
-        console.error('🚨 HOOK ORDER VIOLATION DETECTED!', {
-          component: componentName,
-          renderCount: renderCount.current,
-          previousOrder,
-          currentOrder,
-          hookCalls,
-          previousHookCalls: previousHookCalls.current,
-        });
+        appLogger.error('🚨 HOOK ORDER VIOLATION DETECTED!', { data: [{
+                    component: componentName,
+                    renderCount: renderCount.current,
+                    previousOrder,
+                    currentOrder,
+                    hookCalls,
+                    previousHookCalls: previousHookCalls.current,
+                  }] });
         
         // Identificar qual hook mudou
         const changes: string[] = [];
@@ -49,7 +50,7 @@ export const HookOrderDebugger: React.FC<HookOrderDebuggerProps> = ({
         });
         
         if (changes.length > 0) {
-          console.error('Hook changes detected:', changes);
+          appLogger.error('Hook changes detected:', { data: [changes] });
         }
       }
     }
@@ -60,10 +61,10 @@ export const HookOrderDebugger: React.FC<HookOrderDebuggerProps> = ({
   // Log render info no desenvolvimento
   useEffect(() => {
     if (enabled) {
-      console.log(`🔍 ${componentName} render #${renderCount.current}:`, {
-        hookCount: hookCalls.length,
-        hooks: hookCalls,
-      });
+      appLogger.info(`🔍 ${componentName} render #${renderCount.current}:`, { data: [{
+                hookCount: hookCalls.length,
+                hooks: hookCalls,
+              }] });
     }
   });
   

@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ImageOptimizationConfig {
     quality: {
@@ -69,7 +70,7 @@ class ImageOptimizationManager {
      */
     updateConfig(newConfig: Partial<ImageOptimizationConfig>) {
         this.config = { ...this.config, ...newConfig };
-        console.log('📐 Image optimization config updated:', this.config);
+        appLogger.info('📐 Image optimization config updated:', { data: [this.config] });
     }
 
     /**
@@ -88,14 +89,14 @@ class ImageOptimizationManager {
                 formats: ['webp', 'jpeg'], // Remove AVIF para conexões lentas
                 compressionLevel: 'high',
             });
-            console.log('🐌 Slow connection detected, using aggressive compression');
+            appLogger.info('🐌 Slow connection detected, using aggressive compression');
         } else if (effectiveType === '4g' && downlink > 10) {
             this.updateConfig({
                 quality: { webp: 90, avif: 85, jpeg: 90 },
                 formats: ['avif', 'webp', 'jpeg'],
                 compressionLevel: 'low',
             });
-            console.log('🚀 Fast connection detected, using high quality');
+            appLogger.info('🚀 Fast connection detected, using high quality');
         }
     }
 
@@ -131,10 +132,10 @@ class ImageOptimizationManager {
                 }
             }
 
-            console.log(`📸 Generated ${Object.keys(results).length} responsive variants for ${imageSrc}`);
+            appLogger.info(`📸 Generated ${Object.keys(results).length} responsive variants for ${imageSrc}`);
             return results;
         } catch (error) {
-            console.error('❌ Failed to generate responsive images:', error);
+            appLogger.error('❌ Failed to generate responsive images:', { data: [error] });
             return { fallback: imageSrc };
         }
     }
@@ -151,7 +152,7 @@ class ImageOptimizationManager {
 
         // Verifica cache primeiro
         if (this.cache.has(cacheKey)) {
-            console.log(`💾 Cache hit for ${cacheKey}`);
+            appLogger.info(`💾 Cache hit for ${cacheKey}`);
             return URL.createObjectURL(this.cache.get(cacheKey)!);
         }
 
@@ -184,7 +185,7 @@ class ImageOptimizationManager {
 
             return optimizedUrl;
         } catch (error) {
-            console.error(`❌ Failed to process image ${src}:`, error);
+            appLogger.error(`❌ Failed to process image ${src}:`, { data: [error] });
             return src; // Fallback para original
         }
     }
@@ -218,7 +219,7 @@ class ImageOptimizationManager {
         this.metrics.set(imageSrc, metrics);
 
         if (import.meta.env.DEV) {
-            console.log(`📊 Image metrics recorded for ${imageSrc}:`, metrics);
+            appLogger.info(`📊 Image metrics recorded for ${imageSrc}:`, { data: [metrics] });
         }
     }
 
@@ -245,7 +246,7 @@ class ImageOptimizationManager {
             });
         }
 
-        console.log(`🧹 Cache cleanup: removed ${cleaned} entries`);
+        appLogger.info(`🧹 Cache cleanup: removed ${cleaned} entries`);
     }
 
     /**
@@ -298,7 +299,7 @@ class ImageOptimizationManager {
             this.cleanupCache();
         }, 10 * 60 * 1000); // A cada 10 minutos
 
-        console.log('🚀 Image Optimization Manager initialized');
+        appLogger.info('🚀 Image Optimization Manager initialized');
     }
 }
 
@@ -326,7 +327,7 @@ export const useResponsiveOptimization = (
                 setIsLoading(false);
             })
             .catch(error => {
-                console.error('Failed to optimize images:', error);
+                appLogger.error('Failed to optimize images:', { data: [error] });
                 setOptimizedImages({ fallback: src });
                 setIsLoading(false);
             });
@@ -360,7 +361,7 @@ if (typeof window !== 'undefined') {
     if (import.meta.env.DEV) {
         window.addEventListener('pagehide', () => {
             const report = imageOptimizer.getPerformanceReport();
-            console.log('📊 Image Optimization Report:', report);
+            appLogger.info('📊 Image Optimization Report:', { data: [report] });
         });
     }
 }

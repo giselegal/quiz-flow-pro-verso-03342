@@ -1,5 +1,6 @@
 import { SupabaseComponent } from '@/hooks/useEditorSupabase';
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Mapeia um componente do Supabase para um Block da UI
@@ -53,7 +54,7 @@ export const mapBlockToSupabaseComponent = (
 export const groupSupabaseComponentsByStep = (
   components: SupabaseComponent[],
 ): Record<string, Block[]> => {
-  console.log('🔄 Grouping Supabase components by step:', components.length);
+  appLogger.info('🔄 Grouping Supabase components by step:', { data: [components.length] });
 
   const grouped: Record<string, Block[]> = {};
 
@@ -69,14 +70,14 @@ export const groupSupabaseComponentsByStep = (
       const block = mapSupabaseComponentToBlock(component);
       grouped[stepKey].push(block);
     } catch (error) {
-      console.error('❌ Error mapping component:', component.id, error);
+      appLogger.error('❌ Error mapping component:', { data: [component.id, error] });
     }
   });
 
   // Ordenar blocos por order_index dentro de cada step
   Object.keys(grouped).forEach(stepKey => {
     grouped[stepKey].sort((a, b) => (a.order || 0) - (b.order || 0));
-    console.log(`✅ Step ${stepKey}: ${grouped[stepKey].length} blocks`);
+    appLogger.info(`✅ Step ${stepKey}: ${grouped[stepKey].length} blocks`);
   });
 
   return grouped;
@@ -91,7 +92,7 @@ export const extractStepNumberFromKey = (stepKey: string): number => {
   const stepNumber = match ? parseInt(match[1], 10) : 1;
 
   if (isNaN(stepNumber) || stepNumber < 1) {
-    console.warn('⚠️ Invalid step key:', stepKey, 'defaulting to 1');
+    appLogger.warn('⚠️ Invalid step key:', { data: [stepKey, 'defaulting to 1'] });
     return 1;
   }
 

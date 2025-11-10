@@ -2,6 +2,7 @@ import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { useQuizFlow } from '@/contexts';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Hook simplificado para navegação offline (sem Supabase)
@@ -41,13 +42,13 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
   const goToStep = useCallback(
     async (stepNumber: number) => {
       if (stepNumber < 1 || stepNumber > TOTAL_STEPS) {
-        console.warn(`Etapa ${stepNumber} é inválida`);
+        appLogger.warn(`Etapa ${stepNumber} é inválida`);
         return;
       }
 
       goTo(stepNumber);
       setLocation(`/step/${stepNumber}`);
-      console.log(`🚀 Navegação offline para etapa ${stepNumber}`);
+      appLogger.info(`🚀 Navegação offline para etapa ${stepNumber}`);
     },
     [setLocation, goTo],
   );
@@ -66,13 +67,13 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
 
   // Salvar resposta (mock)
   const saveResponse = useCallback(async (questionId: string, response: any) => {
-    console.log(`💾 Resposta offline salva para ${questionId}:`, response);
+    appLogger.info(`💾 Resposta offline salva para ${questionId}:`, { data: [response] });
     // Mock - não salva no banco
   }, []);
 
   // Completar quiz (mock)
   const completeQuiz = useCallback(async () => {
-    console.log('🎉 Quiz offline finalizado!');
+    appLogger.info('🎉 Quiz offline finalizado!');
     setLocation('/quiz/resultado-offline');
   }, [setLocation]);
 

@@ -20,6 +20,7 @@ import { useEffect, useRef, useMemo } from 'react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TYPES AND INTERFACES
@@ -223,7 +224,7 @@ const useGlobalStore = create<GlobalStore>()(
             }));
           }
         } catch (error) {
-          console.warn('Failed to load global config:', error);
+          appLogger.warn('Failed to load global config:', { data: [error] });
         } finally {
           set({ isLoading: false });
         }
@@ -234,7 +235,7 @@ const useGlobalStore = create<GlobalStore>()(
           const { config } = get();
           StorageService.safeSetJSON('global-app-config', config);
         } catch (error) {
-          console.error('Failed to save global config:', error);
+          appLogger.error('Failed to save global config:', { data: [error] });
         }
       },
 
@@ -409,7 +410,7 @@ const useGlobalStore = create<GlobalStore>()(
             lastUpdated: new Date(),
           });
         } catch (error) {
-          console.error('Failed to initialize global state:', error);
+          appLogger.error('Failed to initialize global state:', { data: [error] });
         } finally {
           set({ isLoading: false });
         }

@@ -11,6 +11,7 @@ import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
 import { FunnelSettingsService } from '@/services/funnelSettingsService';
 import { Save, X, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FunnelSettingsModalProps {
     funnelId: string;
@@ -46,13 +47,13 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
             const loadedSettings = await FunnelSettingsService.loadSettings(funnelId);
             if (loadedSettings) {
                 setSettings(loadedSettings);
-                console.log('✅ Configurações carregadas para o funil:', funnelId, loadedSettings);
+                appLogger.info('✅ Configurações carregadas para o funil:', { data: [funnelId, loadedSettings] });
             } else {
                 setSettings(defaultFunnelSettings);
-                console.log('📝 Usando configurações padrão para o funil:', funnelId);
+                appLogger.info('📝 Usando configurações padrão para o funil:', { data: [funnelId] });
             }
         } catch (error) {
-            console.error('❌ Erro ao carregar configurações:', error);
+            appLogger.error('❌ Erro ao carregar configurações:', { data: [error] });
             setSettings(defaultFunnelSettings);
             toast({
                 title: 'Erro ao carregar configurações',
@@ -80,7 +81,7 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
 
             onClose();
         } catch (error) {
-            console.error('❌ Erro ao salvar configurações:', error);
+            appLogger.error('❌ Erro ao salvar configurações:', { data: [error] });
             toast({
                 title: 'Erro ao salvar',
                 description: 'Não foi possível salvar as configurações. Tente novamente.',
@@ -127,7 +128,7 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
                 description: 'Arquivo de configurações baixado com sucesso.',
             });
         } catch (error) {
-            console.error('❌ Erro ao exportar configurações:', error);
+            appLogger.error('❌ Erro ao exportar configurações:', { data: [error] });
             toast({
                 title: 'Erro ao exportar',
                 description: 'Não foi possível exportar as configurações.',

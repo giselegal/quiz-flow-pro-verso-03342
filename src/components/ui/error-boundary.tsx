@@ -1,6 +1,7 @@
 // Error Boundary com analytics e recovery
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from './button';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
   children: ReactNode;
@@ -23,7 +24,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    appLogger.error('ErrorBoundary caught an error:', { data: [error, errorInfo] });
 
     this.setState({ error, errorInfo });
 

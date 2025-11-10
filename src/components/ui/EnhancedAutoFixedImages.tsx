@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { fixBlurryImages } from '@/lib/utils/enhancedFixBlurryImages';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface AutoFixedImagesProps {
   children: React.ReactNode;
@@ -35,7 +36,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
           const lcpEntry = entries.getEntries().at(-1);
           if (lcpEntry) {
             lcpOccurred = true;
-            console.log('LCP detectado:', lcpEntry.startTime);
+            appLogger.info('LCP detectado:', { data: [lcpEntry.startTime] });
 
             // Executar a correção um pouco depois do LCP
             if ('requestIdleCallback' in window) {
@@ -43,7 +44,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
               window.requestIdleCallback(
                 () => {
                   if (wrapperRef.current) {
-                    console.log('Executando correção após LCP (via requestIdleCallback)');
+                    appLogger.info('Executando correção após LCP (via requestIdleCallback)');
                     fixBlurryImages(wrapperRef.current);
                   }
                 },
@@ -52,7 +53,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             } else {
               setTimeout(() => {
                 if (wrapperRef.current) {
-                  console.log('Executando correção após LCP (via setTimeout)');
+                  appLogger.info('Executando correção após LCP (via setTimeout)');
                   fixBlurryImages(wrapperRef.current);
                 }
               }, 800);
@@ -72,7 +73,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         // Fallback: Se após 3 segundos o LCP ainda não ocorreu, executar mesmo assim
         setTimeout(() => {
           if (!lcpOccurred && wrapperRef.current) {
-            console.log('Fallback: Executando correção após timeout sem LCP detectado');
+            appLogger.info('Fallback: Executando correção após timeout sem LCP detectado');
             fixBlurryImages(wrapperRef.current);
             lcpObserver.disconnect();
           }
@@ -81,19 +82,17 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         // Fallback para navegadores sem suporte a PerformanceObserver
         setTimeout(() => {
           if (wrapperRef.current) {
-            console.log(
-              'Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)',
-            );
+            appLogger.info('Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)');
             fixBlurryImages(wrapperRef.current);
           }
         }, 2000);
       }
     } catch (error) {
       // Proteção contra erros em navegadores incompatíveis
-      console.error('Erro ao configurar detecção de LCP:', error);
+      appLogger.error('Erro ao configurar detecção de LCP:', { data: [error] });
       setTimeout(() => {
         if (wrapperRef.current) {
-          console.log('Executando correção após erro na detecção de LCP');
+          appLogger.info('Executando correção após erro na detecção de LCP');
           fixBlurryImages(wrapperRef.current);
         }
       }, 2000);
@@ -139,7 +138,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             window.requestIdleCallback(
               () => {
                 if (wrapperRef.current) {
-                  console.log('Executando correção após mutações (via requestIdleCallback)');
+                  appLogger.info('Executando correção após mutações (via requestIdleCallback)');
                   fixBlurryImages(wrapperRef.current);
                   pendingCorrection = false;
                 }
@@ -149,7 +148,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
           } else {
             setTimeout(() => {
               if (wrapperRef.current) {
-                console.log('Executando correção após mutações (via setTimeout)');
+                appLogger.info('Executando correção após mutações (via setTimeout)');
                 fixBlurryImages(wrapperRef.current);
                 pendingCorrection = false;
               }

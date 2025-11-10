@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react';
 import { masterTemplateService } from '@/services/templates/MasterTemplateService';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para configuração de step (adaptada do HybridTemplateService)
 interface StepConfig {
@@ -159,10 +160,10 @@ export const useStepConfig = ({
 
                 if (mounted) {
                     setConfig(stepConfig);
-                    console.log(`✅ useStepConfig: ${funnelId} step ${stepNumber} carregado`, stepConfig);
+                    appLogger.info(`✅ useStepConfig: ${funnelId} step ${stepNumber} carregado`, { data: [stepConfig] });
                 }
             } catch (error) {
-                console.error(`❌ useStepConfig: Erro ao carregar ${funnelId} step ${stepNumber}:`, error);
+                appLogger.error(`❌ useStepConfig: Erro ao carregar ${funnelId} step ${stepNumber}:`, { data: [error] });
             } finally {
                 if (mounted) {
                     setIsLoading(false);
@@ -226,7 +227,7 @@ export const useStepConfig = ({
         }
 
         const timer = setTimeout(() => {
-            console.log(`⚡ Auto-avanço: ${funnelId} step ${stepNumber}`);
+            appLogger.info(`⚡ Auto-avanço: ${funnelId} step ${stepNumber}`);
             if (onAutoAdvance) {
                 onAutoAdvance();
             }
@@ -249,11 +250,11 @@ export const useStepConfig = ({
             });
         }
 
-        console.log(`📊 Analytics: ${config.analytics.eventName}`, {
-            funnelId,
-            stepNumber,
-            type: config.metadata.type,
-        });
+        appLogger.info(`📊 Analytics: ${config.analytics.eventName}`, { data: [{
+                    funnelId,
+                    stepNumber,
+                    type: config.metadata.type,
+                }] });
     }, [config, funnelId, stepNumber]);
 
     // Funções helper
@@ -290,7 +291,7 @@ export const useStepConfig = ({
 
     const saveOverride = async (changes: Partial<StepConfig>) => {
         // TODO: Implementar saveStepOverride no masterTemplateService
-        console.warn('saveOverride: Funcionalidade temporariamente desabilitada');
+        appLogger.warn('saveOverride: Funcionalidade temporariamente desabilitada');
         // await masterTemplateService.saveStepOverride(funnelId, stepNumber, changes);
         // const newConfig = await masterTemplateService.getStepConfig(funnelId, stepNumber);
         // setConfig(newConfig);

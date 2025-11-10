@@ -14,6 +14,7 @@ import {
 } from '../types';
 import { funnelCore } from '../FunnelCore';
 import { funnelEngine } from '../FunnelEngine';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -107,7 +108,7 @@ export function useFunnelState(
         try {
             return JSON.stringify(state);
         } catch (error) {
-            console.error('[useFunnelState] Serialization error:', error);
+            appLogger.error('[useFunnelState] Serialization error:', { data: [error] });
             return '{}';
         }
     }, [state]);
@@ -119,7 +120,7 @@ export function useFunnelState(
             dispatch({ type: 'reset', payload: { preserveUserData: false } });
             // Aplicar o estado deserializado...
         } catch (error) {
-            console.error('[useFunnelState] Deserialization error:', error);
+            appLogger.error('[useFunnelState] Deserialization error:', { data: [error] });
         }
     }, []);
 
@@ -133,7 +134,7 @@ export function useFunnelState(
             // Executar validação automática se habilitada
             const validationResult = funnelCore.validateStep(currentStep, state);
             if (!validationResult.isValid && validationResult.errors.length > 0) {
-                console.log('[useFunnelState] Validation errors:', validationResult.errors);
+                appLogger.info('[useFunnelState] Validation errors:', { data: [validationResult.errors] });
             }
         }
     }, [state.currentStep, state.userData, options.autoValidate, currentStep]);
@@ -205,7 +206,7 @@ export function useFunnelPersistence(
             setLastSaved(new Date());
         } catch (error) {
             setSaveError(error as Error);
-            console.error('[useFunnelPersistence] Save error:', error);
+            appLogger.error('[useFunnelPersistence] Save error:', { data: [error] });
         } finally {
             setIsSaving(false);
         }
@@ -216,7 +217,7 @@ export function useFunnelPersistence(
             const saved = localStorage.getItem(storageKey);
             return saved ? JSON.parse(saved) : null;
         } catch (error) {
-            console.error('[useFunnelPersistence] Load error:', error);
+            appLogger.error('[useFunnelPersistence] Load error:', { data: [error] });
             return null;
         }
     }, [storageKey]);

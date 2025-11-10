@@ -13,7 +13,7 @@
  */
 
 import { devLog } from '@/lib/utils/editorUtils';
-import { appLogger } from '../logger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos mínimos para migração
 export interface StorageChangeEvent {
@@ -239,7 +239,7 @@ export class AdvancedStorageManager {
 
             return true;
         } catch (error) {
-            console.error('Erro ao salvar item:', error);
+            appLogger.error('Erro ao salvar item:', { data: [error] });
             return this.fallbackToLocalStorage(key, value, options.namespace);
         }
     }
@@ -291,7 +291,7 @@ export class AdvancedStorageManager {
 
             return parsedValue;
         } catch (error) {
-            console.error('Erro ao recuperar item:', error);
+            appLogger.error('Erro ao recuperar item:', { data: [error] });
             return this.fallbackGetFromLocalStorage(key, namespace);
         }
     }
@@ -327,7 +327,7 @@ export class AdvancedStorageManager {
 
             return true;
         } catch (error) {
-            console.error('Erro ao deletar item:', error);
+            appLogger.error('Erro ao deletar item:', { data: [error] });
             return false;
         }
     }
@@ -357,7 +357,7 @@ export class AdvancedStorageManager {
                     tags: item.metadata?.tags,
                 }));
         } catch (error) {
-            console.error('Erro ao listar items:', error);
+            appLogger.error('Erro ao listar items:', { data: [error] });
             return [];
         }
     }
@@ -433,7 +433,7 @@ export class AdvancedStorageManager {
             devLog(`Limpeza concluída: ${cleaned} itens removidos`);
             return cleaned;
         } catch (error) {
-            console.error('Erro na limpeza:', error);
+            appLogger.error('Erro na limpeza:', { data: [error] });
             return 0;
         }
     }
@@ -488,7 +488,7 @@ export class AdvancedStorageManager {
                 compressionSavings,
             };
         } catch (error) {
-            console.error('Erro ao obter métricas:', error);
+            appLogger.error('Erro ao obter métricas:', { data: [error] });
             return {
                 itemCount: 0,
                 totalSize: 0,
@@ -533,13 +533,13 @@ export class AdvancedStorageManager {
                         migrated++;
                     }
                 } catch (error) {
-                    console.warn(`Falha ao migrar ${key}:`, error);
+                    appLogger.warn(`Falha ao migrar ${key}:`, { data: [error] });
                 }
             }
 
             devLog(`Migração concluída: ${migrated} itens movidos do localStorage`);
         } catch (error) {
-            console.error('Erro na migração:', error);
+            appLogger.error('Erro na migração:', { data: [error] });
         }
 
         return migrated;
@@ -621,7 +621,7 @@ export class AdvancedStorageManager {
             localStorage.setItem(storageKey, JSON.stringify({ value, timestamp: Date.now() }));
             return true;
         } catch (error) {
-            console.error('Fallback localStorage também falhou:', error);
+            appLogger.error('Fallback localStorage também falhou:', { data: [error] });
             return false;
         }
     }
@@ -632,7 +632,7 @@ export class AdvancedStorageManager {
             const item = localStorage.getItem(storageKey);
             return item ? JSON.parse(item).value : null;
         } catch (error) {
-            console.error('Fallback get localStorage falhou:', error);
+            appLogger.error('Fallback get localStorage falhou:', { data: [error] });
             return null;
         }
     }

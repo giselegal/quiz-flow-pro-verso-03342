@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SimpleFormContainerBlockProps {
     block: {
@@ -39,7 +40,7 @@ const SimpleFormContainerBlock: React.FC<SimpleFormContainerBlockProps> = ({
         if (!previewMode) return;
 
         if (inputValue.trim()) {
-            console.log('Nome coletado:', inputValue.trim());
+            appLogger.info('Nome coletado:', { data: [inputValue.trim()] });
             // Aqui você pode adicionar a lógica para salvar o nome
         } else {
             alert(requiredMessage);

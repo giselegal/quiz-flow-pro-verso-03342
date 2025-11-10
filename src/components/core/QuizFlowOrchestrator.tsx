@@ -6,6 +6,7 @@
 
 import { Block } from '@/types/editor';
 import React, { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // 📊 TIPOS DO ORQUESTRADOR
 interface QuizFlowState {
@@ -133,7 +134,7 @@ export const QuizFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     // ❌ REMOVIDO: Carregamento automático do template de 21 etapas
     // dispatch({ type: 'LOAD_STEP_DATA', payload: QUIZ_STYLE_21_STEPS_TEMPLATE });
-    console.log('📊 QuizFlowProvider: Aguardando dados dinâmicos ao invés de forçar template');
+    appLogger.info('📊 QuizFlowProvider: Aguardando dados dinâmicos ao invés de forçar template');
   }, []);
 
   // 🎯 AÇÕES DO ORQUESTRADOR

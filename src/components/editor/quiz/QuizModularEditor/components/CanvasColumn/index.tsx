@@ -18,6 +18,7 @@ import { useSafeEventListener } from '@/hooks/useSafeEventListener';
 import { useAutoMetrics } from '@/hooks/useAutoMetrics';
 import { useStepBlocksQuery } from '@/services/api/steps/hooks';
 import { normalizeBlocksData, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type CanvasColumnProps = {
     currentStepKey: string | null;
@@ -220,11 +221,11 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
     // Log de diagnóstico quando props.blocks mudar
     useEffect(() => {
         if (!blocksFromProps) return;
-        console.log('🔄 [CanvasColumn] Props blocks changed:', {
-            currentStepKey,
-            blocksCount: blocksFromProps?.length || 0,
-            blockIds: blocksFromProps?.map(b => b.id) || [],
-        });
+        appLogger.info('🔄 [CanvasColumn] Props blocks changed:', { data: [{
+                    currentStepKey,
+                    blocksCount: blocksFromProps?.length || 0,
+                    blockIds: blocksFromProps?.map(b => b.id) || [],
+                }] });
     }, [blocksFromProps, currentStepKey]);
 
     // ✅ SPRINT 1: Usar hook seguro para event listeners
@@ -232,12 +233,12 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         const customEvent = event as CustomEvent;
         const { stepKey, blockId } = customEvent.detail || {};
 
-        console.log('🔔 [CanvasColumn] Recebeu evento block-updated:', {
-            stepKey,
-            blockId,
-            currentStepKey,
-            shouldUpdate: stepKey === currentStepKey,
-        });
+        appLogger.info('🔔 [CanvasColumn] Recebeu evento block-updated:', { data: [{
+                    stepKey,
+                    blockId,
+                    currentStepKey,
+                    shouldUpdate: stepKey === currentStepKey,
+                }] });
 
         // Se a atualização for do step atual, forçar re-render leve
         if (stepKey === currentStepKey) setTick(t => t + 1);

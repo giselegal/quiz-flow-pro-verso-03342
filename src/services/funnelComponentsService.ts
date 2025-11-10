@@ -1,5 +1,6 @@
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { generateInstanceKey } from '@/lib/utils/idValidation';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Cache simples de tipos conhecidos para reduzir chamadas
 let __knownTypeKeys: Set<string> | null = null;
@@ -75,7 +76,7 @@ export const funnelComponentsService = {
   async getComponents(params: { funnelId: string; stepNumber: number }) {
     const { funnelId, stepNumber } = params;
 
-    console.log(`🔍 Buscando componentes: funil=${funnelId}, etapa=${stepNumber}`);
+    appLogger.info(`🔍 Buscando componentes: funil=${funnelId}, etapa=${stepNumber}`);
 
     const { data, error } = await supabase
       .from('component_instances')
@@ -85,11 +86,11 @@ export const funnelComponentsService = {
       .order('order_index', { ascending: true });
 
     if (error) {
-      console.error('❌ Erro ao buscar componentes:', error);
+      appLogger.error('❌ Erro ao buscar componentes:', { data: [error] });
       throw error;
     }
 
-    console.log(`✅ Encontrados ${data?.length || 0} componentes`);
+    appLogger.info(`✅ Encontrados ${data?.length || 0} componentes`);
     return (data || []) as unknown as ComponentInstance[];
   },
 
@@ -102,7 +103,7 @@ export const funnelComponentsService = {
   async syncStepComponents(params: { funnelId: string; stepNumber: number; blocks: Array<{ id: string; type: string; order?: number; properties?: Record<string, any>; content?: Record<string, any> }> }) {
     const { funnelId, stepNumber, blocks } = params;
 
-    console.log(`🧩 Sincronizando ${blocks.length} blocks para step ${stepNumber} (funnel=${funnelId})`);
+    appLogger.info(`🧩 Sincronizando ${blocks.length} blocks para step ${stepNumber} (funnel=${funnelId})`);
 
     // Preparar payloads (antes de qualquer operação) para permitir RPC
     const knownTypes = await ensureKnownTypes();
@@ -111,7 +112,7 @@ export const funnelComponentsService = {
       if (knownTypes.size > 0 && !knownTypes.has(typeKey)) {
         const fallback = pickFallbackType(knownTypes, 'text-inline');
         if (fallback) {
-          console.warn(`⚠️ Tipo desconhecido "${typeKey}" — usando fallback "${fallback}"`);
+          appLogger.warn(`⚠️ Tipo desconhecido "${typeKey}" — usando fallback "${fallback}"`);
           typeKey = fallback;
         }
       }
@@ -139,20 +140,20 @@ export const funnelComponentsService = {
         const res: any = Array.isArray(data) ? data[0] : data;
         const hasErrors = res && (res.errors?.length > 0);
         if (!hasErrors) {
-          console.log(`✅ RPC sync concluído: ${res?.inserted_count ?? payloads.length} itens`);
+          appLogger.info(`✅ RPC sync concluído: ${res?.inserted_count ?? payloads.length} itens`);
           return true;
         }
-        console.warn('⚠️ RPC sync retornou errors, seguindo para fallback...', res.errors);
+        appLogger.warn('⚠️ RPC sync retornou errors, seguindo para fallback...', { data: [res.errors] });
       } else if (error) {
         // Função ausente ou schema não suportado → fallback
         if (String(error.code) === '42883' || String(error.message || '').includes('function')) {
-          console.warn('⚠️ RPC batch_sync_components_for_step não disponível. Usando fallback.');
+          appLogger.warn('⚠️ RPC batch_sync_components_for_step não disponível. Usando fallback.');
         } else {
-          console.warn('⚠️ RPC batch_sync_components_for_step falhou. Usando fallback.', error);
+          appLogger.warn('⚠️ RPC batch_sync_components_for_step falhou. Usando fallback.', { data: [error] });
         }
       }
     } catch (e) {
-      console.warn('⚠️ Falha ao executar RPC sync, aplicando fallback...', (e as any)?.message);
+      appLogger.warn('⚠️ Falha ao executar RPC sync, aplicando fallback...', { data: [(e as any)?.message] });
     }
 
     // 2) Fallback: Limpar existentes do step e inserir
@@ -163,7 +164,7 @@ export const funnelComponentsService = {
       .eq('step_number', stepNumber);
 
     if (!blocks || blocks.length === 0) {
-      console.log('ℹ️ Nenhum bloco para inserir após limpeza');
+      appLogger.info('ℹ️ Nenhum bloco para inserir após limpeza');
       return true;
     }
 
@@ -176,13 +177,13 @@ export const funnelComponentsService = {
       }))
     );
     if (!bulk.error) {
-      console.log(`✅ Bulk insert concluído: ${payloads.length} itens`);
+      appLogger.info(`✅ Bulk insert concluído: ${payloads.length} itens`);
       return true;
     }
 
     const errMsg = String(bulk.error?.message || '');
     const errCode = String((bulk as any).error?.code || '');
-    console.warn('⚠️ Bulk insert falhou, aplicando fallback item-a-item...', { code: errCode, msg: errMsg });
+    appLogger.warn('⚠️ Bulk insert falhou, aplicando fallback item-a-item...', { data: [{ code: errCode, msg: errMsg }] });
 
     // 4) Fallback final: insere um a um via addComponent
     for (let i = 0; i < (blocks || []).length; i++) {
@@ -197,12 +198,12 @@ export const funnelComponentsService = {
           properties: { ...(b.properties || {}), ...(b.content || {}) },
         });
       } catch (e) {
-        console.error('❌ Falha ao inserir componente no fallback', { i, blockId: b?.id, err: (e as any)?.message });
+        appLogger.error('❌ Falha ao inserir componente no fallback', { data: [{ i, blockId: b?.id, err: (e as any)?.message }] });
         throw e;
       }
     }
 
-    console.log(`✅ Fallback concluído: ${blocks.length} itens inseridos`);
+    appLogger.info(`✅ Fallback concluído: ${blocks.length} itens inseridos`);
     return true;
   },
 
@@ -220,7 +221,7 @@ export const funnelComponentsService = {
       stageId = null,
     } = input;
 
-    console.log(`➕ Adicionando componente: ${componentTypeKey} na posição ${orderIndex}`);
+    appLogger.info(`➕ Adicionando componente: ${componentTypeKey} na posição ${orderIndex}`);
 
     // garantir que o tipo exista quando usando schema novo
     const knownTypes = await ensureKnownTypes();
@@ -228,7 +229,7 @@ export const funnelComponentsService = {
     if (knownTypes.size > 0 && !knownTypes.has(typeKeyToUse)) {
       const fallback = pickFallbackType(knownTypes, 'text-inline');
       if (fallback) {
-        console.warn(`⚠️ Tipo desconhecido "${typeKeyToUse}". Usando fallback "${fallback}"`);
+        appLogger.warn(`⚠️ Tipo desconhecido "${typeKeyToUse}". Usando fallback "${fallback}"`);
         typeKeyToUse = fallback;
       }
     }
@@ -268,7 +269,7 @@ export const funnelComponentsService = {
         const types = await ensureKnownTypes();
         const alt = pickFallbackType(types, 'text-inline') || pickFallbackType(types, null);
         if (alt) {
-          console.warn(`🔁 Retentando insert com type_key fallback: ${alt}`);
+          appLogger.warn(`🔁 Retentando insert com type_key fallback: ${alt}`);
           const { data, error } = await supabase
             .from('component_instances')
             .insert({ ...payloadNew, component_type_key: alt })
@@ -284,7 +285,7 @@ export const funnelComponentsService = {
 
       // 2) Coluna desconhecida (schema antigo) → usar payload legado
       if (!inserted && (code === '42703' || msg.includes('column') || msg.includes('properties'))) {
-        console.warn('🔁 Schema antigo detectado, tentando insert legado...');
+        appLogger.warn('🔁 Schema antigo detectado, tentando insert legado...');
         const legacyPayload = {
           funnel_id: funnelId,
           component_type_id: null,
@@ -307,11 +308,11 @@ export const funnelComponentsService = {
     }
 
     if (!inserted) {
-      console.error('❌ Erro ao adicionar componente:', insertError);
+      appLogger.error('❌ Erro ao adicionar componente:', { data: [insertError] });
       throw insertError || new Error('Insert falhou');
     }
 
-    console.log(`✅ Componente adicionado: ${inserted.id}`);
+    appLogger.info(`✅ Componente adicionado: ${inserted.id}`);
     return inserted as unknown as ComponentInstance;
   },
 
@@ -321,7 +322,7 @@ export const funnelComponentsService = {
   async updateComponent(input: UpdateComponentInput) {
     const { id, ...updates } = input;
 
-    console.log(`🔄 Atualizando componente: ${id}`);
+    appLogger.info(`🔄 Atualizando componente: ${id}`);
 
     const { data, error } = await supabase
       .from('component_instances')
@@ -331,11 +332,11 @@ export const funnelComponentsService = {
       .single();
 
     if (error) {
-      console.error('❌ Erro ao atualizar componente:', error);
+      appLogger.error('❌ Erro ao atualizar componente:', { data: [error] });
       throw error;
     }
 
-    console.log(`✅ Componente atualizado: ${data.id}`);
+    appLogger.info(`✅ Componente atualizado: ${data.id}`);
     return data as unknown as ComponentInstance;
   },
 
@@ -343,16 +344,16 @@ export const funnelComponentsService = {
    * Remove componente
    */
   async deleteComponent(id: string) {
-    console.log(`🗑️ Removendo componente: ${id}`);
+    appLogger.info(`🗑️ Removendo componente: ${id}`);
 
     const { error } = await supabase.from('component_instances').delete().eq('id', id);
 
     if (error) {
-      console.error('❌ Erro ao remover componente:', error);
+      appLogger.error('❌ Erro ao remover componente:', { data: [error] });
       throw error;
     }
 
-    console.log(`✅ Componente removido: ${id}`);
+    appLogger.info(`✅ Componente removido: ${id}`);
     return true;
   },
 
@@ -363,7 +364,7 @@ export const funnelComponentsService = {
   async reorderComponents(params: { funnelId: string; stepNumber: number; newOrderIds: string[] }) {
     const { funnelId, stepNumber, newOrderIds } = params;
 
-    console.log(`🔀 Reordenando componentes: ${newOrderIds.length} itens`);
+    appLogger.info(`🔀 Reordenando componentes: ${newOrderIds.length} itens`);
 
     // Buscar estado atual para validação
     const current = await this.getComponents({ funnelId, stepNumber });
@@ -392,7 +393,7 @@ export const funnelComponentsService = {
     }
 
     // ✅ FASE 4.2: Usar batch update para atomicidade
-    console.log('🔄 Aplicando nova ordem em lote...');
+    appLogger.info('🔄 Aplicando nova ordem em lote...');
 
     const updates = newOrderIds.map((id, index) => ({
       id,
@@ -401,7 +402,7 @@ export const funnelComponentsService = {
 
     await this.batchUpdateComponents(updates);
 
-    console.log(`✅ Reordenação concluída: ${newOrderIds.length} componentes`);
+    appLogger.info(`✅ Reordenação concluída: ${newOrderIds.length} componentes`);
     return true;
   },
 
@@ -418,7 +419,7 @@ export const funnelComponentsService = {
    * - Rollback automático em caso de erro
    */
   async batchUpdateComponents(updates: UpdateComponentInput[]) {
-    console.log(`🔄 Executando batch update de ${updates.length} componentes...`);
+    appLogger.info(`🔄 Executando batch update de ${updates.length} componentes...`);
 
     // Preparar payload para RPC
     const rpcPayload = updates.map(update => ({
@@ -439,7 +440,7 @@ export const funnelComponentsService = {
 
       if (!error && data) {
         const resultAny: any = Array.isArray(data) ? data[0] : data;
-        console.log(`✅ Batch update (RPC) concluído: ${resultAny?.updated_count || updates.length} componentes`);
+        appLogger.info(`✅ Batch update (RPC) concluído: ${resultAny?.updated_count || updates.length} componentes`);
         return {
           success: true,
           updated: resultAny?.updated_count || updates.length,
@@ -449,7 +450,7 @@ export const funnelComponentsService = {
 
       // Se RPC não existe (migration não aplicada), usar fallback
       if (error?.message?.includes('function') || error?.code === '42883') {
-        console.warn('⚠️ RPC batch_update_components não disponível, usando fallback...');
+        appLogger.warn('⚠️ RPC batch_update_components não disponível, usando fallback...');
         throw new Error('RPC_NOT_AVAILABLE');
       }
 
@@ -458,7 +459,7 @@ export const funnelComponentsService = {
     } catch (error: any) {
       // Fallback: Usar Promise.all para quasi-atomicidade
       if (error?.message === 'RPC_NOT_AVAILABLE' || error?.code === '42883') {
-        console.log('🔄 Usando fallback Promise.all para batch update...');
+        appLogger.info('🔄 Usando fallback Promise.all para batch update...');
 
         const updatePromises = updates.map(update => {
           const { id, ...fields } = update;
@@ -473,16 +474,16 @@ export const funnelComponentsService = {
         // Verificar se algum update falhou
         const errors = results.filter(r => r.error);
         if (errors.length > 0) {
-          console.error('❌ Erros no batch update (fallback):', errors);
+          appLogger.error('❌ Erros no batch update (fallback):', { data: [errors] });
           throw new Error(`Batch update falhou: ${errors.length} de ${updates.length} updates falharam`);
         }
 
-        console.log(`✅ Batch update (fallback) concluído: ${updates.length} componentes`);
+        appLogger.info(`✅ Batch update (fallback) concluído: ${updates.length} componentes`);
         return { success: true, updated: updates.length, errors: [] };
       }
 
       // Erro inesperado
-      console.error('❌ Erro no batch update:', error);
+      appLogger.error('❌ Erro no batch update:', { data: [error] });
       throw error;
     }
   },
@@ -491,7 +492,7 @@ export const funnelComponentsService = {
    * Busca tipos de componentes disponíveis
    */
   async getComponentTypes() {
-    console.log('🔍 Buscando tipos de componentes...');
+    appLogger.info('🔍 Buscando tipos de componentes...');
 
     const { data, error } = await supabase
       .from('component_types')
@@ -501,11 +502,11 @@ export const funnelComponentsService = {
       .order('display_name', { ascending: true });
 
     if (error) {
-      console.error('❌ Erro ao buscar tipos de componentes:', error);
+      appLogger.error('❌ Erro ao buscar tipos de componentes:', { data: [error] });
       throw error;
     }
 
-    console.log(`✅ Encontrados ${data?.length || 0} tipos de componentes`);
+    appLogger.info(`✅ Encontrados ${data?.length || 0} tipos de componentes`);
     return data || [];
   },
 };

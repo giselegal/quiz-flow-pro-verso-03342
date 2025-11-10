@@ -32,6 +32,7 @@ import type {
     FunnelUTMConfig,
     FunnelWebhooksConfig,
 } from '@/templates/funnel-configs/quiz21StepsComplete.config';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -73,14 +74,14 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
     const loadConfiguration = useCallback(async () => {
         setLoading(true);
         try {
-            console.log(`📂 Carregando configuração para funil: ${funnelId}`);
+            appLogger.info(`📂 Carregando configuração para funil: ${funnelId}`);
 
             // Tentar carregar configuração existente
             let loadedConfig = await persistenceService.loadConfig(funnelId);
 
             if (!loadedConfig) {
                 // Se não existe, gerar uma nova usando o template
-                console.log(`🏭 Gerando nova configuração para funil: ${funnelId}`);
+                appLogger.info(`🏭 Gerando nova configuração para funil: ${funnelId}`);
                 const generatedConfig = FunnelConfigGenerator.generateQuickConfig(funnelId, `Funil ${funnelId}`, 'quiz');
 
                 // Salvar a configuração gerada
@@ -92,10 +93,10 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
 
             setConfig(loadedConfig.config);
             setOriginalConfig(loadedConfig.config);
-            console.log('✅ Configuração carregada com sucesso');
+            appLogger.info('✅ Configuração carregada com sucesso');
 
         } catch (error) {
-            console.error('❌ Erro ao carregar configuração:', error);
+            appLogger.error('❌ Erro ao carregar configuração:', { data: [error] });
 
             // Fallback: gerar configuração básica
             const fallbackConfig = FunnelConfigGenerator.generateQuickConfig(funnelId, `Funil ${funnelId}`, 'quiz');
@@ -184,7 +185,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
 
         setSaving(true);
         try {
-            console.log('💾 Salvando configuração via FunnelConfigPersistenceService:', config);
+            appLogger.info('💾 Salvando configuração via FunnelConfigPersistenceService:', { data: [config] });
 
             // Salvar usando o serviço de persistência com validação completa
             const savedData = await persistenceService.saveConfig(
@@ -206,10 +207,10 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
             // Disparar callback para componente pai
             onConfigChange?.(config);
 
-            console.log('✅ Configuração salva com sucesso:', savedData);
+            appLogger.info('✅ Configuração salva com sucesso:', { data: [savedData] });
 
         } catch (error) {
-            console.error('❌ Erro ao salvar configuração:', error);
+            appLogger.error('❌ Erro ao salvar configuração:', { data: [error] });
             // TODO: Mostrar toast de erro para o usuário
         } finally {
             setSaving(false);

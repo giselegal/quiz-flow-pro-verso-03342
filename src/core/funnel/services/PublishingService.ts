@@ -7,6 +7,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { FunnelState } from '../types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -85,7 +86,7 @@ export class PublishingService {
         funnelState: FunnelState,
         options: PublishOptions,
     ): Promise<PublishResult> {
-        console.log(`🚀 Iniciando publicação do funil: ${options.funnelId}`);
+        appLogger.info(`🚀 Iniciando publicação do funil: ${options.funnelId}`);
         const startTime = Date.now();
 
         try {
@@ -139,8 +140,8 @@ export class PublishingService {
                 deployResult.publishedUrl!,
             );
 
-            console.log(`✅ Funil publicado com sucesso: ${options.funnelId}`);
-            console.log(`🔗 URL: ${deployResult.publishedUrl}`);
+            appLogger.info(`✅ Funil publicado com sucesso: ${options.funnelId}`);
+            appLogger.info(`🔗 URL: ${deployResult.publishedUrl}`);
 
             return {
                 ...deployResult,
@@ -150,7 +151,7 @@ export class PublishingService {
             };
 
         } catch (error) {
-            console.error('❌ Erro durante publicação:', error);
+            appLogger.error('❌ Erro durante publicação:', { data: [error] });
 
             const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
 
@@ -166,19 +167,19 @@ export class PublishingService {
      * Despublica um funil
      */
     async unpublishFunnel(funnelId: string): Promise<boolean> {
-        console.log(`🔄 Despublicando funil: ${funnelId}`);
+        appLogger.info(`🔄 Despublicando funil: ${funnelId}`);
 
         try {
             // Atualizar status no Supabase
             const success = await this.updateFunnelPublishStatus(funnelId, false);
 
             if (success) {
-                console.log(`✅ Funil despublicado: ${funnelId}`);
+                appLogger.info(`✅ Funil despublicado: ${funnelId}`);
             }
 
             return success;
         } catch (error) {
-            console.error('❌ Erro ao despublicar funil:', error);
+            appLogger.error('❌ Erro ao despublicar funil:', { data: [error] });
             return false;
         }
     }
@@ -203,7 +204,7 @@ export class PublishingService {
                 .single();
 
             if (error) {
-                console.error('❌ Erro ao verificar status:', error);
+                appLogger.error('❌ Erro ao verificar status:', { data: [error] });
                 return { isPublished: false };
             }
 
@@ -217,7 +218,7 @@ export class PublishingService {
                 lastDeployment,
             };
         } catch (error) {
-            console.error('❌ Erro ao obter status:', error);
+            appLogger.error('❌ Erro ao obter status:', { data: [error] });
             return { isPublished: false };
         }
     }
@@ -351,12 +352,12 @@ export class PublishingService {
     }
 
     private async simulateDeployProcess(deploymentId: string): Promise<void> {
-        console.log(`⚙️ Construindo deployment ${deploymentId}...`);
+        appLogger.info(`⚙️ Construindo deployment ${deploymentId}...`);
 
         // Simular tempo de build
         await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
-        console.log(`📦 Deployment ${deploymentId} construído`);
+        appLogger.info(`📦 Deployment ${deploymentId} construído`);
     }
 
     private generateUrls(options: PublishOptions): {
@@ -393,9 +394,9 @@ export class PublishingService {
             const key = `deployment-${info.id}`;
             localStorage.setItem(key, JSON.stringify(info));
 
-            console.log(`💾 Informações de deployment salvas: ${info.id}`);
+            appLogger.info(`💾 Informações de deployment salvas: ${info.id}`);
         } catch (error) {
-            console.warn('⚠️ Erro ao salvar deployment info:', error);
+            appLogger.warn('⚠️ Erro ao salvar deployment info:', { data: [error] });
         }
     }
 
@@ -406,7 +407,7 @@ export class PublishingService {
     ): Promise<boolean> {
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível');
+                appLogger.warn('⚠️ Supabase não disponível');
                 return false;
             }
 
@@ -425,13 +426,13 @@ export class PublishingService {
                 .eq('id', funnelId);
 
             if (error) {
-                console.error('❌ Erro ao atualizar status:', error);
+                appLogger.error('❌ Erro ao atualizar status:', { data: [error] });
                 return false;
             }
 
             return true;
         } catch (error) {
-            console.error('❌ Erro ao atualizar status:', error);
+            appLogger.error('❌ Erro ao atualizar status:', { data: [error] });
             return false;
         }
     }
@@ -504,7 +505,7 @@ export class PublishingService {
         }
 
         if (cleanedCount > 0) {
-            console.log(`🧹 ${cleanedCount} deployments antigos removidos`);
+            appLogger.info(`🧹 ${cleanedCount} deployments antigos removidos`);
         }
 
         return cleanedCount;

@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🧹 SISTEMA DE AUTO-CLEANUP
  * 
@@ -96,12 +97,12 @@ export class AutoCleanupManager {
     this.stats.totalResources++;
     this.stats.resourcesByType[resource.type]++;
 
-    console.debug('🧹 Resource registered:', {
-      id,
-      type: resource.type,
-      name: resource.name,
-      componentId: resource.componentId,
-    });
+    appLogger.debug('🧹 Resource registered:', { data: [{
+            id,
+            type: resource.type,
+            name: resource.name,
+            componentId: resource.componentId,
+          }] });
 
     return id;
   }
@@ -113,7 +114,7 @@ export class AutoCleanupManager {
     const resource = this.resources.get(resourceId);
 
     if (!resource) {
-      console.warn(`⚠️ Resource not found for cleanup: ${resourceId}`);
+      appLogger.warn(`⚠️ Resource not found for cleanup: ${resourceId}`);
       return false;
     }
 
@@ -126,16 +127,16 @@ export class AutoCleanupManager {
       this.stats.cleanedByType[resource.type]++;
       this.stats.lastCleanup = Date.now();
 
-      console.debug('✅ Resource cleaned:', {
-        id: resourceId,
-        type: resource.type,
-        name: resource.name,
-        age: Date.now() - resource.createdAt,
-      });
+      appLogger.debug('✅ Resource cleaned:', { data: [{
+                id: resourceId,
+                type: resource.type,
+                name: resource.name,
+                age: Date.now() - resource.createdAt,
+              }] });
 
       return true;
     } catch (error) {
-      console.error(`❌ Failed to cleanup resource ${resourceId}:`, error);
+      appLogger.error(`❌ Failed to cleanup resource ${resourceId}:`, { data: [error] });
       return false;
     }
   }
@@ -155,10 +156,10 @@ export class AutoCleanupManager {
       }
     }
 
-    console.info('🧹 Component cleanup completed:', {
-      componentId,
-      resourcesCleaned: cleanedCount,
-    });
+    appLogger.info('🧹 Component cleanup completed:', { data: [{
+            componentId,
+            resourcesCleaned: cleanedCount,
+          }] });
 
     return cleanedCount;
   }
@@ -178,10 +179,10 @@ export class AutoCleanupManager {
       }
     }
 
-    console.info('🧹 Type cleanup completed:', {
-      type,
-      resourcesCleaned: cleanedCount,
-    });
+    appLogger.info('🧹 Type cleanup completed:', { data: [{
+            type,
+            resourcesCleaned: cleanedCount,
+          }] });
 
     return cleanedCount;
   }
@@ -203,10 +204,10 @@ export class AutoCleanupManager {
     }
 
     if (cleanedCount > 0) {
-      console.info('🧹 Age-based cleanup completed:', {
-        maxAgeMs,
-        resourcesCleaned: cleanedCount,
-      });
+      appLogger.info('🧹 Age-based cleanup completed:', { data: [{
+                maxAgeMs,
+                resourcesCleaned: cleanedCount,
+              }] });
     }
 
     return cleanedCount;
@@ -225,9 +226,9 @@ export class AutoCleanupManager {
       }
     }
 
-    console.info('🧹 Complete cleanup finished:', {
-      resourcesCleaned: cleanedCount,
-    });
+    appLogger.info('🧹 Complete cleanup finished:', { data: [{
+            resourcesCleaned: cleanedCount,
+          }] });
 
     return cleanedCount;
   }
@@ -406,18 +407,18 @@ export const startAutoCleanup = (intervalMs: number = 2 * 60 * 1000): void => { 
   autoCleanupTimer = setInterval(() => {
     const cleaned = cleanupManager.cleanupByAge();
     if (cleaned > 0) {
-      console.info(`🧹 Auto-cleanup executed: ${cleaned} resources cleaned`);
+      appLogger.info(`🧹 Auto-cleanup executed: ${cleaned} resources cleaned`);
     }
   }, intervalMs);
 
-  console.info(`�� Auto-cleanup started: running every ${intervalMs}ms`);
+  appLogger.info(`�� Auto-cleanup started: running every ${intervalMs}ms`);
 };
 
 export const stopAutoCleanup = (): void => {
   if (autoCleanupTimer) {
     clearInterval(autoCleanupTimer);
     autoCleanupTimer = null;
-    console.info('🧹 Auto-cleanup stopped');
+    appLogger.info('🧹 Auto-cleanup stopped');
   }
 };
 
@@ -428,7 +429,7 @@ if (typeof window !== 'undefined') {
   // Cleanup ao sair da página (pagehide para evitar depreciação de unload)
   window.addEventListener('pagehide', () => {
     const cleaned = cleanupManager.cleanupAll();
-    console.info(`🧹 Page unload cleanup: ${cleaned} resources cleaned`);
+    appLogger.info(`🧹 Page unload cleanup: ${cleaned} resources cleaned`);
   });
 }
 

@@ -6,6 +6,7 @@ import {
 } from '@/types/quizBuilder';
 import { generateId } from '@/lib/utils/idGenerator';
 import { ResultPageConfig } from '@/types/resultPageConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Function to create a basic quiz builder state with initial stages
 export const generateInitialStages = () => {
@@ -217,7 +218,7 @@ export const loadQuizResultConfig = (styleType: string) => {
     }
     return null;
   } catch (error) {
-    console.error('Error loading quiz result config:', error);
+    appLogger.error('Error loading quiz result config:', { data: [error] });
     return null;
   }
 };

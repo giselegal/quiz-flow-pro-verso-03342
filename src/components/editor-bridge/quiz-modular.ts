@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // 🔗 Editor-Bridge (quiz-modular)
 // ❌ DEPRECATED - Este arquivo está deprecated desde 2025-10-29
 // Os componentes Modular* foram substituídos por renderização direta de blocos via BlockTypeRenderer
@@ -20,7 +21,7 @@ export const DEPRECATED_MESSAGE = 'Use BlockTypeRenderer para renderizar blocos 
 // Retornam componentes placeholder que exibem mensagem de deprecation
 const DeprecatedComponent = () => {
     if (typeof window !== 'undefined') {
-        console.warn('⚠️ DEPRECATED: Componente Modular* foi removido. Use BlockTypeRenderer diretamente.');
+        appLogger.warn('⚠️ DEPRECATED: Componente Modular* foi removido. Use BlockTypeRenderer diretamente.');
     }
     return null;
 };

@@ -38,6 +38,7 @@ import { createLogger } from '@/lib/utils/logger';
 import { blockBaseSchema } from '@/types/schemas/editorStateSchema';
 import { getUserFriendlyError } from '@/lib/utils/userFriendlyErrors';
 import { useUnifiedHistory } from '@/hooks/useUnifiedHistory';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Logger para o SuperUnifiedProvider
 const logger = createLogger({ namespace: 'SuperUnifiedProvider' });
@@ -613,7 +614,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, []);
 
     if (SUPABASE_DISABLED && debugMode) {
-        console.info('🛑 [SuperUnifiedProvider] Supabase DESATIVADO - todas operações serão offline/in-memory');
+        appLogger.info('🛑 [SuperUnifiedProvider] Supabase DESATIVADO - todas operações serão offline/in-memory');
     }
 
     // 📊 Performance tracking
@@ -1005,7 +1006,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             }
         } catch (error) {
-            console.error('❌ [G19] Erro ao persistir currentStep:', error);
+            appLogger.error('❌ [G19] Erro ao persistir currentStep:', { data: [error] });
         }
     }, [debugMode]);
 
@@ -1069,7 +1070,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     if (debugMode) logger.debug('[G4] Broadcast enviado', { stepId });
                 }
             } catch (e) {
-                console.warn('[G4] Erro ao fazer broadcast:', e);
+                appLogger.warn('[G4] Erro ao fazer broadcast:', { data: [e] });
             }
 
             dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });

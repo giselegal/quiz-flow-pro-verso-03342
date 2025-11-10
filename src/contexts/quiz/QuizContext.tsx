@@ -4,6 +4,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { QuizResult, StyleResult } from '@/types/quiz';
 import { QuizFlowProvider } from '@/contexts';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Define the context type
 type QuizContextType = ReturnType<typeof useQuizLogic> & {
@@ -34,16 +35,14 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     warnedRef.current = true;
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
        
-      console.warn(
-        '[Deprecation] QuizProvider está obsoleto. Migre para QuizFlowProvider e use os hooks/serviços de resultado atuais.',
-      );
+      appLogger.warn('[Deprecation] QuizProvider está obsoleto. Migre para QuizFlowProvider e use os hooks/serviços de resultado atuais.');
     }
   }, []);
 
   // Define all context functions before returning the provider
   const startQuiz = async (name: string, email: string, quizId: string) => {
     try {
-      console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
+      appLogger.info(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
       return { id: '1', name, email };
     } catch (error) {
       toast({
@@ -59,7 +58,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     answers: Array<{ questionId: string; optionId: string; points: number }>,
   ) => {
     try {
-      console.log('Submitting answers:', answers);
+      appLogger.info('Submitting answers:', { data: [answers] });
     } catch (error) {
       toast({
         title: 'Erro ao salvar respostas',
@@ -72,13 +71,13 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const submitResults = async (results: QuizResult) => {
     try {
-      console.log('Results submitted:', results);
+      appLogger.info('Results submitted:', { data: [results] });
       // Persistência local para compatibilidade com componentes que leem quizResult
       try {
         StorageService.safeSetJSON('quizResult', results);
         window.dispatchEvent(new Event('quiz-result-updated'));
       } catch (e) {
-        console.debug('QuizProvider: falha ao persistir quizResult localmente', e);
+        appLogger.debug('QuizProvider: falha ao persistir quizResult localmente', { data: [e] });
       }
       window.location.href = '/resultado';
     } catch (error) {
@@ -136,7 +135,7 @@ export const useQuiz = () => {
       }
       return null;
     } catch (error) {
-      console.error('Error loading quiz result:', error);
+      appLogger.error('Error loading quiz result:', { data: [error] });
       return null;
     }
   };
@@ -147,7 +146,7 @@ export const useQuiz = () => {
     ...quizResult,
     startQuiz: async (name: string, email: string, quizId: string) => {
       try {
-        console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
+        appLogger.info(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
         return { id: '1', name, email };
       } catch (error) {
         toast({
@@ -163,7 +162,7 @@ export const useQuiz = () => {
       answers: Array<{ questionId: string; optionId: string; points: number }>,
     ) => {
       try {
-        console.log('Submitting answers:', answers);
+        appLogger.info('Submitting answers:', { data: [answers] });
       } catch (error) {
         toast({
           title: 'Erro ao salvar respostas',
@@ -176,13 +175,13 @@ export const useQuiz = () => {
 
     submitResults: async (results: QuizResult) => {
       try {
-        console.log('Results submitted:', results);
+        appLogger.info('Results submitted:', { data: [results] });
         // Persistência local + evento para compatibilidade
         try {
           StorageService.safeSetJSON('quizResult', results);
           window.dispatchEvent(new Event('quiz-result-updated'));
         } catch (e) {
-          console.debug('useQuiz: falha ao persistir quizResult localmente', e);
+          appLogger.debug('useQuiz: falha ao persistir quizResult localmente', { data: [e] });
         }
         window.location.href = '/resultado';
       } catch (error) {

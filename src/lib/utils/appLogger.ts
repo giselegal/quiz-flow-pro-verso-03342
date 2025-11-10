@@ -60,7 +60,7 @@ class AppLogger {
 
   private detectEnvironment(): 'development' | 'production' | 'test' | 'edge' {
     // Edge Function detection (Deno)
-    if (typeof Deno !== 'undefined') {
+    if (typeof (globalThis as any).Deno !== 'undefined') {
       return 'edge';
     }
     

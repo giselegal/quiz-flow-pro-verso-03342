@@ -13,6 +13,7 @@ import {
     OfferSection,
     GuaranteeSection,
 } from './result';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ResultStepProps {
     data: QuizStep;
@@ -108,24 +109,22 @@ export default function ResultStep({
 }: ResultStepProps) {
     // ⚠️ DEPRECATION WARNING (Development Only)
     if (process.env.NODE_ENV === 'development') {
-        console.warn(
-            '⚠️ COMPONENTE LEGADO DETECTADO: ResultStep.tsx\n\n' +
-            '📋 PROBLEMAS:\n' +
-            '  • 469 linhas monolíticas (difícil manutenção)\n' +
-            '  • UI hardcoded (não configurável via JSON)\n' +
-            '  • Lógica de cálculo acoplada\n' +
-            '  • Não modular (viola atomic blocks)\n\n' +
-            '✅ MIGRAÇÃO:\n' +
-            '  • Template: @/templates/step-20.json\n' +
-            '  • Blocks: result-main, result-style, result-cta-primary, result-cta-secondary\n' +
-            '  • Hook: useResultCalculations (@/hooks/useResultCalculations.ts)\n' +
-            '  • Context: ResultContext (@/contexts/ResultContext.tsx)\n\n' +
-            '📚 DOCS:\n' +
-            '  • ANALISE_ACOPLAMENTO_STEPS_12_19_20.md\n' +
-            '  • LOGICA_CALCULOS_RESULTADOS.md\n' +
-            '  • PLANO_ACAO_DESACOPLAMENTO.md\n\n' +
-            '🗑️ REMOÇÃO: Planejada para v2.0',
-        );
+        appLogger.warn('⚠️ COMPONENTE LEGADO DETECTADO: ResultStep.tsx\n\n' +
+                    '📋 PROBLEMAS:\n' +
+                    '  • 469 linhas monolíticas (difícil manutenção)\n' +
+                    '  • UI hardcoded (não configurável via JSON)\n' +
+                    '  • Lógica de cálculo acoplada\n' +
+                    '  • Não modular (viola atomic blocks)\n\n' +
+                    '✅ MIGRAÇÃO:\n' +
+                    '  • Template: @/templates/step-20.json\n' +
+                    '  • Blocks: result-main, result-style, result-cta-primary, result-cta-secondary\n' +
+                    '  • Hook: useResultCalculations (@/hooks/useResultCalculations.ts)\n' +
+                    '  • Context: ResultContext (@/contexts/ResultContext.tsx)\n\n' +
+                    '📚 DOCS:\n' +
+                    '  • ANALISE_ACOPLAMENTO_STEPS_12_19_20.md\n' +
+                    '  • LOGICA_CALCULOS_RESULTADOS.md\n' +
+                    '  • PLANO_ACAO_DESACOPLAMENTO.md\n\n' +
+                    '🗑️ REMOÇÃO: Planejada para v2.0');
     }
 
     // Estados para interatividade
@@ -136,7 +135,7 @@ export default function ResultStep({
 
     // Se não encontrar o estilo, usar o primeiro disponível como fallback
     if (!styleConfig) {
-        console.warn(`⚠️ Estilo "${userProfile.resultStyle}" não encontrado, usando fallback`);
+        appLogger.warn(`⚠️ Estilo "${userProfile.resultStyle}" não encontrado, usando fallback`);
         const firstStyle = Object.keys(styleConfigGisele)[0];
         styleConfig = styleConfigGisele[firstStyle];
     }

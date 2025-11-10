@@ -26,6 +26,7 @@
 import React, { useEffect } from 'react';
 import { Block, FAQItem } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface BlockRendererProps {
   block: Block;
@@ -42,10 +43,8 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 }) => {
   // ⚠️ DEPRECATION WARNING
   useEffect(() => {
-    console.warn(
-      '⚠️ DEPRECATED: BlockRenderer (result/editor) será removido em 21/out/2025. ' +
-      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md',
-    );
+    appLogger.warn('⚠️ DEPRECATED: BlockRenderer (result/editor) será removido em 21/out/2025. ' +
+            'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md');
   }, []);
 
   const content = block.content || {};

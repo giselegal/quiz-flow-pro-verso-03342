@@ -3,6 +3,7 @@ import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
 import { getQuizEvents, getQuizMetrics, clearQuizEvents, flushQuizEvents, flushQuizEventsWithRetry } from '@/lib/utils/quizAnalytics';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FilterState {
     sessionId: string;
@@ -34,7 +35,7 @@ const QuizAnalyticsDashboard: React.FC = () => {
         let mounted = true;
         getCachedImport('recharts-bundle', loadRecharts)
             .then((mod) => { if (mounted) setCharts(mod); })
-            .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+            .catch((err) => appLogger.warn('Falha ao carregar Recharts dinamicamente:', { data: [err] }));
         return () => { mounted = false; };
     }, []);
 

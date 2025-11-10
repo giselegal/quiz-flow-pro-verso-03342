@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useToast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseAutoSaveWithDebounceOptions {
   data: any;
@@ -42,7 +43,7 @@ export const useAutoSaveWithDebounce = ({
         });
       }
     } catch (error) {
-      console.error('Auto-save error:', error);
+      appLogger.error('Auto-save error:', { data: [error] });
 
       if (showToasts) {
         toast({

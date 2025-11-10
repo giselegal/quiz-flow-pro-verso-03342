@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // @ts-nocheck
 /**
  * 🚀 PERFORMANCE OPTIMIZER
@@ -33,7 +34,7 @@ class AnimationFrameScheduler {
       try {
         callback();
       } catch (error) {
-        console.error('Animation frame callback error:', error);
+        appLogger.error('Animation frame callback error:', { data: [error] });
       }
     });
   }
@@ -67,7 +68,7 @@ class MessageChannelScheduler {
       try {
         callback();
       } catch (error) {
-        console.error('MessageChannel callback error:', error);
+        appLogger.error('MessageChannel callback error:', { data: [error] });
       }
     });
   }
@@ -184,7 +185,7 @@ export const QUIZ_PERF = {
       try {
         window.performance.measure(name, startMark, endMark);
       } catch (e) {
-        console.error('Error measuring performance:', e);
+        appLogger.error('Error measuring performance:', { data: [e] });
       }
     }
   },
@@ -218,7 +219,7 @@ export const PerformanceOptimizer = {
       }
       return id;
     } catch (error) {
-      console.warn('PerformanceOptimizer.schedule fallback:', error);
+      appLogger.warn('PerformanceOptimizer.schedule fallback:', { data: [error] });
       // Fallback seguro para setTimeout nativo
       const id = setTimeout(callback, Math.max(delay, 0)) as unknown as number;
       __tracked.timeouts.add(id);
@@ -241,7 +242,7 @@ export const PerformanceOptimizer = {
       }
       return id;
     } catch (error) {
-      console.warn('PerformanceOptimizer.scheduleInterval fallback:', error);
+      appLogger.warn('PerformanceOptimizer.scheduleInterval fallback:', { data: [error] });
       // Fallback seguro para setInterval nativo
       const id = setInterval(callback, Math.max(delay, 16)) as unknown as number;
       __tracked.intervals.add(id);
@@ -255,7 +256,7 @@ export const PerformanceOptimizer = {
     try {
       return OptimizedDebounce.create(fn, delay, key);
     } catch (error) {
-      console.warn('PerformanceOptimizer.debounce fallback:', error);
+      appLogger.warn('PerformanceOptimizer.debounce fallback:', { data: [error] });
       // Fallback simples para debounce
       let timeoutId: any;
       const debouncedFn = ((...args: any[]) => {
@@ -342,7 +343,7 @@ export function initPerformanceObservers() {
 
       if (lastEntry) {
         const lcp = lastEntry.startTime;
-        console.log(`[Performance] LCP: ${lcp.toFixed(0)}ms`);
+        appLogger.info(`[Performance] LCP: ${lcp.toFixed(0)}ms`);
 
         // Armazenar para análise
         (window as any).quizPerformanceMetrics = {
@@ -363,7 +364,7 @@ export function initPerformanceObservers() {
           ? customEntry.processingStart - customEntry.startTime
           : 0;
 
-        console.log(`[Performance] FID: ${fid.toFixed(0)}ms`);
+        appLogger.info(`[Performance] FID: ${fid.toFixed(0)}ms`);
 
         // Armazenar para análise
         (window as any).quizPerformanceMetrics = {
@@ -402,7 +403,7 @@ export function initPerformanceObservers() {
 
     return [lcpObserver, fidObserver, clsObserver];
   } catch (error) {
-    console.error('[Performance] Error initializing observers:', error);
+    appLogger.error('[Performance] Error initializing observers:', { data: [error] });
     return [];
   }
 }

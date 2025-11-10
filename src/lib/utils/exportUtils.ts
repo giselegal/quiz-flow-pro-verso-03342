@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // @ts-nocheck
 export const exportProjectAsJson = (config: any) => {
   try {
@@ -26,7 +27,7 @@ export const exportProjectAsJson = (config: any) => {
 
     return true;
   } catch (error) {
-    console.error('Error exporting JSON:', error);
+    appLogger.error('Error exporting JSON:', { data: [error] });
     return false;
   }
 };
@@ -35,7 +36,7 @@ export const parseJsonConfig = (jsonText: string): any => {
   try {
     return JSON.parse(jsonText);
   } catch (error) {
-    console.error('Error parsing JSON:', error);
+    appLogger.error('Error parsing JSON:', { data: [error] });
     throw new Error('Invalid JSON format');
   }
 };

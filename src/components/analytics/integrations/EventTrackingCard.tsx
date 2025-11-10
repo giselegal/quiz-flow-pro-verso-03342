@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EventTrackingCardProps {
   initialEnabled?: boolean;
@@ -69,7 +70,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
       if (storedTrackLinks !== null) setTrackLinks(storedTrackLinks === 'true');
       if (storedTrackImages !== null) setTrackImages(storedTrackImages === 'true');
     } catch (error) {
-      console.error('Error loading event tracking settings:', error);
+      appLogger.error('Error loading event tracking settings:', { data: [error] });
     }
   }, []);
 

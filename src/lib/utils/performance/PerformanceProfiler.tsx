@@ -6,6 +6,7 @@
  */
 
 import React, { Profiler, ProfilerOnRenderCallback, useEffect, useRef, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos para métricas customizadas
 export interface PerformanceMetrics {
@@ -59,13 +60,13 @@ class PerformanceStore {
 
         // Alerta para renders lentos
         if (metric.actualDuration > this.renderThreshold) {
-            console.warn(`🐌 Slow render detected in ${metric.componentName}: ${metric.actualDuration.toFixed(2)}ms`);
+            appLogger.warn(`🐌 Slow render detected in ${metric.componentName}: ${metric.actualDuration.toFixed(2)}ms`);
         }
 
         // Alerta para muitos re-renders
         const recentRenders = this.getRecentRenders(metric.componentName, 1000); // 1 segundo
         if (recentRenders.length > this.renderCountThreshold) {
-            console.warn(`🔄 Excessive re-renders in ${metric.componentName}: ${recentRenders.length} renders in 1s`);
+            appLogger.warn(`🔄 Excessive re-renders in ${metric.componentName}: ${recentRenders.length} renders in 1s`);
         }
     }
 
@@ -248,7 +249,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
 
         // Log opcional
         if (enableLogging) {
-            console.log(`📊 ${id} rendered in ${actualDuration.toFixed(2)}ms (${phase})`);
+            appLogger.info(`📊 ${id} rendered in ${actualDuration.toFixed(2)}ms (${phase})`);
         }
     };
 
@@ -291,7 +292,7 @@ export const useRenderTracker = (componentName: string, dependencies: any[]) => 
     );
 
     if (renderCountRef.current > 1 && !depsChanged) {
-        console.warn(`🔄 Unnecessary render in ${componentName} (render #${renderCountRef.current})`);
+        appLogger.warn(`🔄 Unnecessary render in ${componentName} (render #${renderCountRef.current})`);
     }
 
     prevDepsRef.current = dependencies;

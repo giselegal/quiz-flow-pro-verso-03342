@@ -23,6 +23,7 @@ import {
   fixInputLabels,
   type QuickFixResult,
 } from '@/lib/utils/a11yQuickFix';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FixOption {
   id: string;
@@ -91,7 +92,7 @@ export function QuickFixPanel() {
         const clone = document.body.cloneNode(true) as HTMLElement;
         results[fix.id] = fix.fixFunction(clone);
       } catch (error) {
-        console.error(`Erro ao preview ${fix.id}:`, error);
+        appLogger.error(`Erro ao preview ${fix.id}:`, { data: [error] });
         results[fix.id] = {
           fixed: 0,
           skipped: 0,
@@ -122,7 +123,7 @@ export function QuickFixPanel() {
         setIsApplying(false);
       }, 500);
     } catch (error) {
-      console.error('Erro ao aplicar correções:', error);
+      appLogger.error('Erro ao aplicar correções:', { data: [error] });
       setIsApplying(false);
     }
   };

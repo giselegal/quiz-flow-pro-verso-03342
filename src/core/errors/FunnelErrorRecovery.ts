@@ -12,6 +12,7 @@
 
 import { FunnelError, FunnelErrorFactory } from './FunnelError';
 import { FunnelErrorCode, RecoveryStrategy } from './FunnelErrorCodes';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -396,7 +397,7 @@ export class FunnelErrorRecovery {
                         clearedItems++;
                     }
                 } catch (idbError) {
-                    console.warn('Failed to clear IndexedDB:', idbError);
+                    appLogger.warn('Failed to clear IndexedDB:', { data: [idbError] });
                 }
             }
 
@@ -411,7 +412,7 @@ export class FunnelErrorRecovery {
                         }
                     }
                 } catch (swError) {
-                    console.warn('Failed to clear Service Worker cache:', swError);
+                    appLogger.warn('Failed to clear Service Worker cache:', { data: [swError] });
                 }
             }
 

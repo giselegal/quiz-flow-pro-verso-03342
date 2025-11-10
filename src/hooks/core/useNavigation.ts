@@ -21,6 +21,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useRoute } from 'wouter';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TYPES AND INTERFACES
@@ -209,7 +210,7 @@ export const DEFAULT_GUARDS: NavigationGuard[] = [
         },
         message: 'You have unsaved changes. Are you sure you want to leave?',
         onBlock: (targetPath) => {
-            console.log('Navigation blocked due to unsaved changes:', targetPath);
+            appLogger.info('Navigation blocked due to unsaved changes:', { data: [targetPath] });
         },
         onAllow: (_targetPath) => {
             StorageService.safeRemove('editor-unsaved-changes');
@@ -408,7 +409,7 @@ export const useNavigation = () => {
         options: NavigationOptions = {},
     ): Promise<boolean> => {
         if (state.isNavigating) {
-            console.warn('Navigation already in progress');
+            appLogger.warn('Navigation already in progress');
             return false;
         }
 
@@ -447,7 +448,7 @@ export const useNavigation = () => {
             return true;
 
         } catch (error) {
-            console.error('Navigation error:', error);
+            appLogger.error('Navigation error:', { data: [error] });
             return false;
         } finally {
             // Clear navigation state after a short delay

@@ -96,14 +96,14 @@ class TemplateEventSystem {
                 try {
                     handler(event);
                 } catch (error) {
-                    console.error(`Erro no handler do evento ${type}:`, error);
+                    appLogger.error(`Erro no handler do evento ${type}:`, { data: [error] });
                 }
             });
         }
 
         // Log para desenvolvimento
         if (process.env.NODE_ENV === 'development') {
-            console.log(`📡 Template Event [${type}]:`, event);
+            appLogger.info(`📡 Template Event [${type}]:`, { data: [event] });
         }
     }
 
@@ -143,6 +143,7 @@ export const templateEventSystem = new TemplateEventSystem();
  * Hook para usar o sistema de eventos em componentes React
  */
 import { useEffect, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export function useTemplateEvents<T = any>(
     type: TemplateEventType,

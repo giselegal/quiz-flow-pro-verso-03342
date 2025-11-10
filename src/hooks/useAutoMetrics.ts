@@ -8,6 +8,7 @@
 import { useEffect, useRef } from 'react';
 import { editorMetrics } from '@/lib/utils/editorMetrics';
 import { shallowEqual } from '@/lib/utils/performanceOptimizations';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseAutoMetricsOptions {
   enabled?: boolean;
@@ -61,10 +62,7 @@ export function useAutoMetrics(
 
     // Log se exceder threshold
     if (renderCount > logThreshold && renderCount % 5 === 0) {
-      console.warn(
-        `⚠️ [useAutoMetrics] High re-render count for "${componentName}": ${renderCount}`,
-        { renderDuration: `${renderDuration.toFixed(2)}ms` }
-      );
+      appLogger.warn(`⚠️ [useAutoMetrics] High re-render count for "${componentName}": ${renderCount}`, { data: [{ renderDuration: `${renderDuration.toFixed(2)}ms` }] });
     }
 
     // Track props changes se habilitado
@@ -77,10 +75,7 @@ export function useAutoMetrics(
         );
 
         if (import.meta.env.DEV && changedKeys.length > 0) {
-          console.debug(
-            `🔄 [useAutoMetrics] "${componentName}" re-rendered due to props:`,
-            changedKeys
-          );
+          appLogger.debug(`🔄 [useAutoMetrics] "${componentName}" re-rendered due to props:`, { data: [changedKeys] });
         }
 
         editorMetrics.trackPropsChange(componentName, changedKeys);
@@ -104,9 +99,7 @@ export function useAutoMetrics(
       });
 
       if (import.meta.env.DEV && totalRenders > logThreshold) {
-        console.info(
-          `📊 [useAutoMetrics] "${componentName}" unmounted after ${totalRenders} renders`
-        );
+        appLogger.info(`📊 [useAutoMetrics] "${componentName}" unmounted after ${totalRenders} renders`);
       }
     };
   }, []);
@@ -121,7 +114,7 @@ export function useRenderCount(componentName: string) {
 
   useEffect(() => {
     if (import.meta.env.DEV && renderCountRef.current % 10 === 0) {
-      console.debug(`🔄 [RenderCount] "${componentName}": ${renderCountRef.current}`);
+      appLogger.debug(`🔄 [RenderCount] "${componentName}": ${renderCountRef.current}`);
     }
   });
 

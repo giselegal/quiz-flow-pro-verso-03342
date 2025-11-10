@@ -12,6 +12,7 @@ import { AlertTriangle, CheckCircle, XCircle, Activity, TrendingUp, Clock, Users
 import { healthCheckService, type HealthStatus } from '@/services/monitoring/HealthCheckService';
 import { analyticsService } from '@/services/monitoring/AnalyticsService';
 import { errorTrackingService, type ErrorStats } from '@/services/monitoring/ErrorTrackingService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface MonitoringDashboardProps {
   className?: string;
@@ -50,7 +51,7 @@ export const MonitoringDashboard: React.FC<MonitoringDashboardProps> = ({ classN
       const status = await healthCheckService.performHealthCheck();
       setHealthStatus(status);
     } catch (error) {
-      console.error('Failed to load health status:', error);
+      appLogger.error('Failed to load health status:', { data: [error] });
     }
   };
 

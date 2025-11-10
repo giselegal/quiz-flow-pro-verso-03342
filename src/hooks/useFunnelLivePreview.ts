@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type LiveSteps = Record<string, any>;
 
@@ -17,7 +18,7 @@ export function useFunnelLivePreview(funnelId?: string) {
         
         // ⚠️ Desabilitar WebSocket em Lovable (não tem backend WS)
         if (isLovable && !isDev) {
-            console.warn('[useFunnelLivePreview] WebSocket desabilitado em ambiente Lovable Cloud');
+            appLogger.warn('[useFunnelLivePreview] WebSocket desabilitado em ambiente Lovable Cloud');
             return;
         }
         

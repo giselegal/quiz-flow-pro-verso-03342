@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Image, Upload } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EnhancedImagePropertiesProps {
   data: any;
@@ -71,7 +72,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
                 id="image-upload"
                 onChange={e => {
                   // Implementar lógica de upload
-                  console.log('Implementar lógica de upload', e.target.files);
+                  appLogger.info('Implementar lógica de upload', { data: [e.target.files] });
                 }}
               />
             </Card>

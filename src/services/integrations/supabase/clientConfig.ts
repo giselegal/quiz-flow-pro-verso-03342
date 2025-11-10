@@ -9,6 +9,7 @@
  */
 
 import { SupabaseClientOptions } from '@supabase/supabase-js';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Detecta se está em modo editor
@@ -110,9 +111,9 @@ export const handleRealtimeError = (error: Error): void => {
   const isIgnorable = ignorableErrors.some(msg => errorMessage.includes(msg));
 
   if (!isIgnorable) {
-    console.error('🔴 [Supabase Realtime] Error:', error);
+    appLogger.error('🔴 [Supabase Realtime] Error:', { data: [error] });
   } else if (import.meta.env.DEV) {
-    console.debug('🟡 [Supabase Realtime] Transient error (safe to ignore):', errorMessage);
+    appLogger.debug('🟡 [Supabase Realtime] Transient error (safe to ignore):', { data: [errorMessage] });
   }
 };
 

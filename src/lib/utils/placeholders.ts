@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Utilitários para gerar imagens placeholder locais
  * DEPRECATED: Use imageCache.ts e useImageWithFallback.tsx para melhor performance
@@ -14,7 +15,7 @@ export const generatePlaceholderSVG = (
     backgroundColor: string = '#f1f5f9',
     textColor: string = '#64748b',
 ): string => {
-    console.warn('generatePlaceholderSVG is deprecated. Use imageCache.getOrCreatePlaceholder() for better performance.');
+    appLogger.warn('generatePlaceholderSVG is deprecated. Use imageCache.getOrCreatePlaceholder() for better performance.');
 
     const svgContent = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +53,7 @@ export const PLACEHOLDERS = {
  * @deprecated Use useImageCache() hook instead
  */
 export const usePlaceholder = () => {
-    console.warn('usePlaceholder from placeholders.ts is deprecated. Use useImageCache() from imageCache.ts instead.');
+    appLogger.warn('usePlaceholder from placeholders.ts is deprecated. Use useImageCache() from imageCache.ts instead.');
 
     return {
         generateSVG: generatePlaceholderSVG,
@@ -64,7 +65,7 @@ export const usePlaceholder = () => {
  * @deprecated Use useImageWithFallback() hook for automatic replacement
  */
 export const replacePlaceholderUrls = (url: string): string => {
-    console.warn('replacePlaceholderUrls is deprecated. Use useImageWithFallback() hook for automatic fallback handling.');
+    appLogger.warn('replacePlaceholderUrls is deprecated. Use useImageWithFallback() hook for automatic fallback handling.');
 
     // Verifica se é uma URL de via.placeholder.com
     if (url.includes('via.placeholder.com')) {

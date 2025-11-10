@@ -12,7 +12,6 @@ import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Eye, Edit3, Play, Save, GripVertical, Download, Upload, Undo2, Redo2 } from 'lucide-react';
-import { appLogger } from '@/lib/utils/logger';
 import { templateService } from '@/services/canonical/TemplateService';
 import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult } from '@/lib/utils/templateValidation';
 // Loading context (provider + hook)
@@ -41,6 +40,7 @@ const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 
 // Error boundary
 import { StepErrorBoundary } from '../StepErrorBoundary';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Dev-only metrics panel
 let MetricsPanel: React.LazyExoticComponent<React.ComponentType<any>> | null = null;
@@ -48,7 +48,7 @@ if (import.meta.env.DEV) {
     try {
         MetricsPanel = React.lazy(() => import('./components/MetricsPanel').catch(() => ({ default: () => null })));
     } catch (e) {
-        console.warn('MetricsPanel failed to load:', e);
+        appLogger.warn('MetricsPanel failed to load:', { data: [e] });
     }
 }
 
@@ -156,14 +156,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 templateService.setActiveFunnel?.(null);
             }
         } catch (error) {
-            console.warn('[QuizModularEditor] Erro ao configurar funnel ativo:', error);
+            appLogger.warn('[QuizModularEditor] Erro ao configurar funnel ativo:', { data: [error] });
         }
 
         return () => {
             try {
                 templateService.setActiveFunnel?.(null);
             } catch (error) {
-                console.warn('[QuizModularEditor] Erro ao limpar funnel ativo:', error);
+                appLogger.warn('[QuizModularEditor] Erro ao limpar funnel ativo:', { data: [error] });
             }
         };
     }, [props.funnelId]);
@@ -225,7 +225,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
             }
         } catch (error) {
-            console.warn('[QuizModularEditor] Erro ao restaurar layout de painéis:', error);
+            appLogger.warn('[QuizModularEditor] Erro ao restaurar layout de painéis:', { data: [error] });
         }
     }, []);
 
@@ -615,7 +615,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 await flushAutosave();
                 await (unified as any).ensureAllDirtyStepsSaved?.();
             } catch (error) {
-                console.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', error);
+                appLogger.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', { data: [error] });
             }
             await saveFunnel();
 
@@ -651,7 +651,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 const funnel = props.funnelId ?? null;
                 await queryClient.invalidateQueries({ queryKey: stepKeys.detail(stepKey, templateOrResource, funnel) });
             } catch (error) {
-                console.warn('[QuizModularEditor] Erro ao invalidar queries do React Query:', error);
+                appLogger.warn('[QuizModularEditor] Erro ao invalidar queries do React Query:', { data: [error] });
             }
 
             const result = await svc.getStep(stepKey, props.templateId ?? resourceId);
@@ -683,7 +683,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             a.click();
             URL.revokeObjectURL(url);
         } catch (e) {
-            console.error('Erro ao exportar JSON:', e);
+            appLogger.error('Erro ao exportar JSON:', { data: [e] });
         }
     }, [unifiedState.editor.stepBlocks, safeCurrentStep, props.templateId, loadedTemplate, resourceId]);
 
@@ -739,7 +739,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             a.click();
             URL.revokeObjectURL(url);
         } catch (e) {
-            console.error('Erro ao exportar JSON v3:', e);
+            appLogger.error('Erro ao exportar JSON v3:', { data: [e] });
         }
     }, [unifiedState.editor.stepBlocks, props.templateId, loadedTemplate, resourceId]);
 

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { QuickFixPanel } from './QuickFixPanel';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface A11yIssue {
   id: string;
@@ -58,14 +59,14 @@ export const AccessibilityAuditor: React.FC = () => {
       };
 
       // Executar análise no documento inteiro
-      console.log('🔍 Iniciando análise de acessibilidade...');
+      appLogger.info('🔍 Iniciando análise de acessibilidade...');
       const results = await axe.default.run(document, config);
       
-      console.log('📊 Análise completa:', {
-        violations: results.violations.length,
-        passes: results.passes.length,
-        incomplete: results.incomplete.length,
-      });
+      appLogger.info('📊 Análise completa:', { data: [{
+                violations: results.violations.length,
+                passes: results.passes.length,
+                incomplete: results.incomplete.length,
+              }] });
 
       // Processar violações
       const processedIssues: A11yIssue[] = results.violations.map((violation) => ({
@@ -90,15 +91,15 @@ export const AccessibilityAuditor: React.FC = () => {
       setLastRun(new Date());
 
       // Log resumo
-      console.log('✅ Auditoria concluída:', {
-        total: processedIssues.length,
-        critical: processedIssues.filter(i => i.impact === 'critical').length,
-        serious: processedIssues.filter(i => i.impact === 'serious').length,
-        moderate: processedIssues.filter(i => i.impact === 'moderate').length,
-        minor: processedIssues.filter(i => i.impact === 'minor').length,
-      });
+      appLogger.info('✅ Auditoria concluída:', { data: [{
+                total: processedIssues.length,
+                critical: processedIssues.filter(i => i.impact === 'critical').length,
+                serious: processedIssues.filter(i => i.impact === 'serious').length,
+                moderate: processedIssues.filter(i => i.impact === 'moderate').length,
+                minor: processedIssues.filter(i => i.impact === 'minor').length,
+              }] });
     } catch (error) {
-      console.error('❌ Erro ao executar auditoria de acessibilidade:', error);
+      appLogger.error('❌ Erro ao executar auditoria de acessibilidade:', { data: [error] });
       
       // Exibir erro para o usuário
       const errorIssue: A11yIssue = {

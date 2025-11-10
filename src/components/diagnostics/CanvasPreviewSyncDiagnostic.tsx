@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SyncIssue {
     type: 'sync_delay' | 'missing_update' | 'stale_data' | 'render_loop' | 'event_lost';
@@ -319,7 +320,7 @@ class CanvasPreviewSyncDiagnostic {
     }
 
     private autoFixIssue(issue: SyncIssue) {
-        console.log(`🔧 Auto-fix para: ${issue.description}`);
+        appLogger.info(`🔧 Auto-fix para: ${issue.description}`);
 
         switch (issue.type) {
             case 'missing_update':
@@ -605,7 +606,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
 
             <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #555' }}>
                 <button
-                    onClick={() => console.log(diagnostic.generateReport())}
+                    onClick={() => appLogger.info(String(diagnostic.generateReport()))}
                     style={{
                         width: '100%',
                         padding: '8px',

@@ -45,7 +45,7 @@ export function createOptimizedRealtimeSubscription(
   // ✅ FASE 3: Desabilitar no modo editor
   if (isEditorMode()) {
     if (import.meta.env.DEV) {
-      console.debug('🟡 [Realtime] Disabled in editor mode');
+      appLogger.debug('🟡 [Realtime] Disabled in editor mode');
     }
     return {
       channel: null,
@@ -105,7 +105,7 @@ export function createOptimizedRealtimeSubscription(
         } catch (error) {
           // Ignorar erros de cleanup
           if (import.meta.env.DEV) {
-            console.debug('🟡 [Realtime] Cleanup error (safe to ignore):', error);
+            appLogger.debug('🟡 [Realtime] Cleanup error (safe to ignore):', { data: [error] });
           }
         }
       }
@@ -136,3 +136,4 @@ export function useOptimizedRealtime(
 
 // Import React for hook
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';

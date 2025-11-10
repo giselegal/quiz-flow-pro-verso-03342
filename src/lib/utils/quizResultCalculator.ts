@@ -13,9 +13,10 @@ import { ResultOrchestrator } from '@/services/core/ResultOrchestrator';
 import { StorageService } from '@/services/core/StorageService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { resultCacheService } from '@/services/core/ResultCacheService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const calculateAndSaveQuizResult = async () => {
-  console.log('🔄 Iniciando cálculo do resultado do quiz...');
+  appLogger.info('🔄 Iniciando cálculo do resultado do quiz...');
 
   try {
     // 1. Tentar usar dados unificados primeiro
@@ -28,7 +29,7 @@ export const calculateAndSaveQuizResult = async () => {
     if (Object.keys(userSelections).length > 0) {
       const cachedResult = resultCacheService.get(userSelections, userName);
       if (cachedResult) {
-        console.log('✅ Resultado recuperado do cache no quizResultCalculator');
+        appLogger.info('✅ Resultado recuperado do cache no quizResultCalculator');
         
         // Salvar resultado em ambos os sistemas
         try { StorageService.safeSetJSON('quizResult', cachedResult); } catch { }
@@ -40,7 +41,7 @@ export const calculateAndSaveQuizResult = async () => {
 
     // 2. Fallback para dados legados se necessário
     if (Object.keys(userSelections).length === 0) {
-      console.log('📦 Usando dados legados como fallback...');
+      appLogger.info('📦 Usando dados legados como fallback...');
       userSelections = StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {};
 
       if (!userName) {
@@ -49,11 +50,11 @@ export const calculateAndSaveQuizResult = async () => {
       }
     }
 
-    console.log('📊 Dados coletados:', {
-      userSelections: Object.keys(userSelections).length,
-      userName: Boolean(userName),
-      source: Object.keys(unifiedData.selections).length > 0 ? 'unified' : 'legacy',
-    });
+    appLogger.info('📊 Dados coletados:', { data: [{
+            userSelections: Object.keys(userSelections).length,
+            userName: Boolean(userName),
+            source: Object.keys(unifiedData.selections).length > 0 ? 'unified' : 'legacy',
+          }] });
 
     // 3. Validar se há dados suficientes (gating)
     const hasSelections = Object.keys(userSelections).length > 0;
@@ -62,10 +63,10 @@ export const calculateAndSaveQuizResult = async () => {
     const isResultStep = unifiedData.metadata?.currentStep === 20;
 
     if (!hasSelections) {
-      console.warn('⚠️ Nenhuma seleção encontrada para cálculo');
+      appLogger.warn('⚠️ Nenhuma seleção encontrada para cálculo');
       // Na etapa 20, não persiste fallback para evitar sobrepor resultado real e travas
       if (isResultStep) {
-        console.log('🎯 Etapa 20: sem seleções — retornando fallback NÃO persistente');
+        appLogger.info('🎯 Etapa 20: sem seleções — retornando fallback NÃO persistente');
         return createFallbackResult(userName || 'Usuário', { persist: false });
       }
       // Fora da etapa 20, também não persistir fallback
@@ -73,23 +74,23 @@ export const calculateAndSaveQuizResult = async () => {
     }
 
     if (!hasEnough && !isResultStep) {
-      console.warn('⚠️ Dados insuficientes segundo UnifiedQuizStorage.hasEnoughDataForResult()');
+      appLogger.warn('⚠️ Dados insuficientes segundo UnifiedQuizStorage.hasEnoughDataForResult()');
       // Não persistir fallback quando threshold não atingido
       return createFallbackResult(userName || 'Usuário', { persist: false });
     }
 
     // Na etapa 20, sempre calcular resultado
     if (isResultStep) {
-      console.log('🎯 Etapa 20: prosseguindo com cálculo de resultado');
+      appLogger.info('🎯 Etapa 20: prosseguindo com cálculo de resultado');
     }
 
     // 4. Validar qualidade dos dados
     const selectionCount = Object.keys(userSelections).length;
     if (selectionCount < 5) {
-      console.warn(`⚠️ Poucas seleções para resultado confiável: ${selectionCount}/10+`);
+      appLogger.warn(`⚠️ Poucas seleções para resultado confiável: ${selectionCount}/10+`);
     }
 
-    console.log('👤 Calculando para usuário:', userName || 'Usuário');
+    appLogger.info('👤 Calculando para usuário:', { data: [userName || 'Usuário'] });
 
     // 5. Executar cálculo usando ResultOrchestrator
     const result = await ResultOrchestrator.run({
@@ -98,11 +99,11 @@ export const calculateAndSaveQuizResult = async () => {
       persistToSupabase: false, // Para etapa 20, não precisa persistir no Supabase
     });
 
-    console.log('✅ Resultado calculado com sucesso:', {
-      primaryStyle: result.payload.primaryStyle,
-      total: result.total,
-      selectionCount,
-    });
+    appLogger.info('✅ Resultado calculado com sucesso:', { data: [{
+            primaryStyle: result.payload.primaryStyle,
+            total: result.total,
+            selectionCount,
+          }] });
 
     // 🎯 FASE 1: Armazenar no cache para futuras consultas
     resultCacheService.set(userSelections, result.payload, userName);
@@ -117,7 +118,7 @@ export const calculateAndSaveQuizResult = async () => {
     return result.payload;
 
   } catch (error) {
-    console.error('❌ Erro ao calcular resultado:', error);
+    appLogger.error('❌ Erro ao calcular resultado:', { data: [error] });
     // Persistir fallback em erro real de execução
     return createFallbackResult(StorageService.safeGetString('userName') || 'Usuário', { persist: true });
   }
@@ -127,7 +128,7 @@ export const calculateAndSaveQuizResult = async () => {
  * Cria resultado de fallback quando cálculo falha
  */
 function createFallbackResult(userName: string, opts: { persist?: boolean } = {}) {
-  console.log('🔄 Criando resultado de fallback...');
+  appLogger.info('🔄 Criando resultado de fallback...');
   const persist = opts.persist !== false; // padrão: persiste apenas quando chamado em erro real
 
   // Fallback NEUTRO não enviesado: usado quando não há dados suficientes ou em erro.
@@ -151,9 +152,9 @@ function createFallbackResult(userName: string, opts: { persist?: boolean } = {}
     // Salvar em ambos os sistemas
     StorageService.safeSetJSON('quizResult', fallbackResult);
     unifiedQuizStorage.saveResult(fallbackResult);
-    console.log('✅ Resultado de fallback salvo');
+    appLogger.info('✅ Resultado de fallback salvo');
   } else {
-    console.log('ℹ️ Fallback não persistido (dados insuficientes)');
+    appLogger.info('ℹ️ Fallback não persistido (dados insuficientes)');
   }
   return fallbackResult;
 }

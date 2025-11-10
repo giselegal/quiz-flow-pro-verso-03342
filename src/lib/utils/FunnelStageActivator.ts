@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { FunnelStage } from '@/types/editor';
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Sistema de Ativação Automática das Etapas
@@ -111,7 +112,7 @@ export class FunnelStageActivator {
       try {
         callback(stage);
       } catch (error) {
-        console.error('Erro no listener de ativação:', error);
+        appLogger.error('Erro no listener de ativação:', { data: [error] });
       }
     });
   }
@@ -122,11 +123,11 @@ export class FunnelStageActivator {
   registerAnswer(questionId: string, answer: any, stepNumber: number) {
     this.userAnswers[questionId] = answer;
 
-    console.log(`📝 Resposta registrada - Q${stepNumber}:`, {
-      questionId,
-      answer,
-      totalAnswers: Object.keys(this.userAnswers).length,
-    });
+    appLogger.info(`📝 Resposta registrada - Q${stepNumber}:`, { data: [{
+            questionId,
+            answer,
+            totalAnswers: Object.keys(this.userAnswers).length,
+          }] });
 
     this.checkActivationRules(stepNumber);
   }
@@ -137,7 +138,7 @@ export class FunnelStageActivator {
   registerFieldFilled(fieldName: string, value: string) {
     this.userAnswers[fieldName] = value;
 
-    console.log('📝 Campo preenchido:', { fieldName, value });
+    appLogger.info('📝 Campo preenchido:', { data: [{ fieldName, value }] });
 
     // Verificar ativação da etapa 1 (nome preenchido)
     if (fieldName === 'userName' && value.trim().length >= 2) {
@@ -156,7 +157,7 @@ export class FunnelStageActivator {
       const currentAnswers = this.getAnswersForStep(currentStep);
 
       if (currentAnswers.length >= rules.questions.minSelections) {
-        console.log(`✅ Etapa ${currentStep} completa, ativando próxima`);
+        appLogger.info(`✅ Etapa ${currentStep} completa, ativando próxima`);
 
         if (rules.questions.autoAdvance) {
           this.activateStage(currentStep + 1);
@@ -169,7 +170,7 @@ export class FunnelStageActivator {
       const currentAnswers = this.getAnswersForStep(currentStep);
 
       if (currentAnswers.length >= 1) {
-        console.log(`✅ Etapa estratégica ${currentStep} completa`);
+        appLogger.info(`✅ Etapa estratégica ${currentStep} completa`);
         // Não avança automaticamente - requere clique manual
       }
     }
@@ -202,13 +203,13 @@ export class FunnelStageActivator {
    */
   activateStage(stepNumber: number) {
     if (this.activatedStages.has(stepNumber)) {
-      console.log(`⚠️ Etapa ${stepNumber} já está ativada`);
+      appLogger.info(`⚠️ Etapa ${stepNumber} já está ativada`);
       return;
     }
 
     this.activatedStages.add(stepNumber);
 
-    console.log(`🚀 Ativando etapa ${stepNumber}`);
+    appLogger.info(`🚀 Ativando etapa ${stepNumber}`);
 
     // Criar objeto de etapa para notificação
     const stage: FunnelStage = {
@@ -311,7 +312,7 @@ export class FunnelStageActivator {
   reset() {
     this.activatedStages.clear();
     this.userAnswers = {};
-    console.log('🔄 Sistema de ativação resetado');
+    appLogger.info('🔄 Sistema de ativação resetado');
   }
 
   /**

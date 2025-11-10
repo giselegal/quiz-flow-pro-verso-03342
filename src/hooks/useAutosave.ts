@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseAutosaveOptions {
   data: any;
@@ -30,7 +31,7 @@ export const useAutosave = ({
       await onSave(data);
       setLastSaved(new Date());
     } catch (error) {
-      console.error('Erro ao salvar:', error);
+      appLogger.error('Erro ao salvar:', { data: [error] });
     } finally {
       setIsSaving(false);
     }

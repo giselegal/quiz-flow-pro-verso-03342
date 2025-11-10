@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚧 STUB SERVICE - UnifiedDataService
  * 
@@ -23,22 +24,22 @@ export class UnifiedDataService {
   private static cache: Map<string, any> = new Map();
 
   static async saveFunnel(funnelData: Partial<UnifiedFunnel>): Promise<UnifiedFunnel> {
-    console.warn('⚠️ UnifiedDataService.saveFunnel() stub called');
+    appLogger.warn('⚠️ UnifiedDataService.saveFunnel() stub called');
     return { id: funnelData.id || 'stub-id', name: funnelData.name || 'Stub Funnel', ...funnelData };
   }
 
   static async getFunnels(): Promise<UnifiedFunnel[]> {
-    console.warn('⚠️ UnifiedDataService.getFunnels() stub called');
+    appLogger.warn('⚠️ UnifiedDataService.getFunnels() stub called');
     return [];
   }
 
   static async deleteFunnel(funnelId: string): Promise<boolean> {
-    console.warn('⚠️ UnifiedDataService.deleteFunnel() stub called');
+    appLogger.warn('⚠️ UnifiedDataService.deleteFunnel() stub called');
     return true;
   }
 
   static async getDashboardMetrics(): Promise<DashboardMetrics> {
-    console.warn('⚠️ UnifiedDataService.getDashboardMetrics() stub called');
+    appLogger.warn('⚠️ UnifiedDataService.getDashboardMetrics() stub called');
     return {
       totalFunnels: 0,
       activeFunnels: 0,

@@ -22,8 +22,9 @@ export type { BaseStepProps, StepComponent } from '../step-registry/StepTypes';
 
 // Importar stepRegistry localmente para usar no log
 import { stepRegistry } from '../step-registry/StepRegistry';
+import { appLogger } from '@/lib/utils/appLogger';
 
-console.log('📱 Steps modulares carregados:', {
+appLogger.info('📱 Steps modulares carregados:', { data: [{
     total: stepRegistry.getAll().length,
     steps: stepRegistry.getAll().map(s => s.name),
-});
+}] });

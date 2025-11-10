@@ -16,6 +16,7 @@
  */
 
 import { Block } from '../types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // 🔧 PERFORMANCE E CACHE OTIMIZADO
 const TEMPLATE_CACHE = new Map<string, Block[]>();
@@ -33,7 +34,7 @@ export function getStepTemplate(stepId: string): Block[] | null {
     return template;
   }
 
-  console.warn(`⚠️ Template ${stepId} not found`);
+  appLogger.warn(`⚠️ Template ${stepId} not found`);
   return null;
 }
 
@@ -51,7 +52,7 @@ export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): 
 
   const baseTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
   if (!baseTemplate) {
-    console.warn(`⚠️ Template ${stepId} not found for funnel ${funnelId}`);
+    appLogger.warn(`⚠️ Template ${stepId} not found for funnel ${funnelId}`);
     return null;
   }
 

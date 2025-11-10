@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import type { QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface IntroStepProps {
     data: QuizStep;
@@ -12,10 +13,10 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
     const [nome, setNome] = useState('');
 
     // 🔍 DEBUG: Vamos ver exatamente o que está chegando
-    console.log('🔍 IntroStepSimple - data recebido:', data);
-    console.log('🔍 IntroStepSimple - data.title:', data?.title);
-    console.log('🔍 IntroStepSimple - data.buttonText:', data?.buttonText);
-    console.log('🔍 IntroStepSimple - data.image:', data?.image); const handleSubmit = (e?: React.FormEvent) => {
+    appLogger.info('🔍 IntroStepSimple - data recebido:', { data: [data] });
+    appLogger.info('🔍 IntroStepSimple - data.title:', { data: [data?.title] });
+    appLogger.info('🔍 IntroStepSimple - data.buttonText:', { data: [data?.buttonText] });
+    appLogger.info('🔍 IntroStepSimple - data.image:', { data: [data?.image] }); const handleSubmit = (e?: React.FormEvent) => {
         e?.preventDefault();
         if (nome.trim()) {
             onNameSubmit(nome.trim());

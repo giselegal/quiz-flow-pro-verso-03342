@@ -1,5 +1,6 @@
 // Safe context hook that provides fallback values
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const createSafeContext = <T>(contextName: string, defaultValue?: T) => {
   const Context = React.createContext<T | undefined>(defaultValue);
@@ -9,7 +10,7 @@ export const createSafeContext = <T>(contextName: string, defaultValue?: T) => {
   const useContext = (): T => {
     const context = React.useContext(Context);
     if (context === undefined && !defaultValue) {
-      console.warn(`${contextName} context not found, using fallback`);
+      appLogger.warn(`${contextName} context not found, using fallback`);
       // Return a minimal fallback instead of throwing
       return {} as T;
     }
@@ -25,7 +26,7 @@ export const createSafeHook = <T>(hookFn: () => T, fallbackValue: T, hookName: s
     try {
       return hookFn();
     } catch (error) {
-      console.warn(`${hookName} hook failed, using fallback:`, error);
+      appLogger.warn(`${hookName} hook failed, using fallback:`, { data: [error] });
       return fallbackValue;
     }
   };

@@ -15,6 +15,7 @@ import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { normalizeFunnelId } from '@/lib/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -130,7 +131,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             setCurrentFunnel(newFunnel);
             setFunnels(prev => [newFunnel, ...prev]);
 
-            if (debug) console.log('✅ Funnel created:', newFunnel.id);
+            if (debug) appLogger.info('✅ Funnel created:', { data: [newFunnel.id] });
             return newFunnel;
 
         } catch (err) {

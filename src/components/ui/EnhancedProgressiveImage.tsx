@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from '@/lib/utils/imageUtils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EnhancedProgressiveImageProps {
   src: string;
@@ -51,7 +52,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
   };
 
   const handleError = () => {
-    console.warn(`[EnhancedProgressiveImage] Erro ao carregar: ${src}`);
+    appLogger.warn(`[EnhancedProgressiveImage] Erro ao carregar: ${src}`);
     if (retryCount < maxRetries) {
       setTimeout(() => {
         setRetryCount(prev => prev + 1);
@@ -76,7 +77,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!loaded && !error) {
-        console.warn(`[EnhancedProgressiveImage] Timeout para: ${src}`);
+        appLogger.warn(`[EnhancedProgressiveImage] Timeout para: ${src}`);
         setLoaded(true);
         if (onLoad) onLoad();
       }

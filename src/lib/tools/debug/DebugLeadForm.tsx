@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * COMPONENTE DE DEBUG PARA TESTAR O LEAD FORM
@@ -6,7 +7,7 @@ import React from 'react';
  */
 const DebugLeadForm: React.FC = () => {
   const handleTestLeadForm = () => {
-    console.log('🧪 Teste de debug do LeadFormBlock');
+    appLogger.info('🧪 Teste de debug do LeadFormBlock');
 
     // Simular dados do bloco
     const mockBlock = {
@@ -22,7 +23,7 @@ const DebugLeadForm: React.FC = () => {
       },
     };
 
-    console.log('🎯 Mock block criado:', mockBlock);
+    appLogger.info('🎯 Mock block criado:', { data: [mockBlock] });
 
     // Disparar evento para teste
     window.dispatchEvent(

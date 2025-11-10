@@ -12,6 +12,7 @@
 
 import { FunnelError, FunnelErrorFactory } from './FunnelError';
 import { FunnelErrorCode, ErrorSeverity, RecoveryStrategy } from './FunnelErrorCodes';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -337,7 +338,7 @@ export class FunnelErrorHandler {
                 });
                 return true;
             } catch (logError) {
-                console.error('Failed to log error remotely:', logError);
+                appLogger.error('Failed to log error remotely:', { data: [logError] });
                 return false;
             }
         }
@@ -372,7 +373,7 @@ export class FunnelErrorHandler {
                     body: JSON.stringify(analyticsData),
                 });
             } catch (analyticsError) {
-                console.warn('Failed to send error analytics:', analyticsError);
+                appLogger.warn('Failed to send error analytics:', { data: [analyticsError] });
             }
         }
 
@@ -455,14 +456,14 @@ export class FunnelErrorHandler {
 
                 if (recovered) {
                     error.markResolved();
-                    console.info(`[FunnelError] Recovery successful for ${error.code}`);
+                    appLogger.info(`[FunnelError] Recovery successful for ${error.code}`);
                 } else if (error.canAutoRecover()) {
                     // Tentar novamente se ainda possível
                     await this.attemptRecovery(error);
                 }
 
             } catch (recoveryError) {
-                console.error(`[FunnelError] Recovery failed for ${error.code}:`, recoveryError);
+                appLogger.error(`[FunnelError] Recovery failed for ${error.code}:`, { data: [recoveryError] });
             } finally {
                 this.retryTimeouts.delete(recoveryId);
             }
@@ -509,7 +510,7 @@ export class FunnelErrorHandler {
     private async retryLastOperation(error: FunnelError): Promise<boolean> {
         // Esta implementação dependeria de ter armazenado a operação original
         // Por enquanto, retornamos true para simular sucesso
-        console.info(`[FunnelError] Retrying operation for ${error.code}`);
+        appLogger.info(`[FunnelError] Retrying operation for ${error.code}`);
         return true;
     }
 
@@ -517,7 +518,7 @@ export class FunnelErrorHandler {
      * Usar alternativa (ex: localStorage em vez de IndexedDB)
      */
     private async fallbackToAlternative(error: FunnelError): Promise<boolean> {
-        console.info(`[FunnelError] Using fallback strategy for ${error.code}`);
+        appLogger.info(`[FunnelError] Using fallback strategy for ${error.code}`);
 
         if (error.code === FunnelErrorCode.INDEXEDDB_NOT_SUPPORTED ||
             error.code === FunnelErrorCode.STORAGE_ERROR) {
@@ -533,7 +534,7 @@ export class FunnelErrorHandler {
      * Ativar modo offline
      */
     private async enableOfflineMode(error: FunnelError): Promise<boolean> {
-        console.info(`[FunnelError] Enabling offline mode due to ${error.code}`);
+        appLogger.info(`[FunnelError] Enabling offline mode due to ${error.code}`);
 
         // Broadcast evento de modo offline
         window.dispatchEvent(new CustomEvent('funnelOfflineMode', {
@@ -547,7 +548,7 @@ export class FunnelErrorHandler {
      * Limpar cache relacionado
      */
     private async clearRelatedCache(error: FunnelError): Promise<boolean> {
-        console.info(`[FunnelError] Clearing cache for ${error.code}`);
+        appLogger.info(`[FunnelError] Clearing cache for ${error.code}`);
 
         try {
             // Limpar localStorage relacionado a funis
@@ -572,7 +573,7 @@ export class FunnelErrorHandler {
      * Agendar recarga de página
      */
     private async schedulePageReload(error: FunnelError): Promise<boolean> {
-        console.warn(`[FunnelError] Scheduling page reload due to ${error.code}`);
+        appLogger.warn(`[FunnelError] Scheduling page reload due to ${error.code}`);
 
         // Dar tempo para salvar dados pendentes
         setTimeout(() => {
@@ -666,7 +667,7 @@ export class FunnelErrorHandler {
             try {
                 listener(error, this.context);
             } catch (listenerError) {
-                console.error('Error in error listener:', listenerError);
+                appLogger.error('Error in error listener:', { data: [listenerError] });
             }
         });
     }
@@ -675,7 +676,7 @@ export class FunnelErrorHandler {
      * Disparar alerta
      */
     private triggerAlert(type: string, data: any): void {
-        console.warn(`[FunnelError Alert] ${type}:`, data);
+        appLogger.warn(`[FunnelError Alert] ${type}:`, { data: [data] });
 
         // Aqui poderia integrar com sistemas de alerta como Slack, email, etc.
         if (this.config.debugMode) {

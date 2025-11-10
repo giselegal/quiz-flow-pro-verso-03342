@@ -28,6 +28,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizTemplateImporterProps {
   isOpen: boolean;
@@ -143,7 +144,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       });
       onClose();
     } catch (error) {
-      console.error('Erro ao importar template:', error);
+      appLogger.error('Erro ao importar template:', { data: [error] });
       toast({
         title: 'Erro ao importar template',
         description: 'Não foi possível importar o template selecionado.',
@@ -177,11 +178,11 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
         try {
           const savedResultConfig = StorageService.safeGetString('quiz_result_config_Elegante');
           if (savedResultConfig) {
-            console.log('Found existing result configuration, integrating with builder state');
+            appLogger.info('Found existing result configuration, integrating with builder state');
             // In a real implementation, we would merge the result config with the builder state
           }
         } catch (error) {
-          console.error('Error loading saved result config:', error);
+          appLogger.error('Error loading saved result config:', { data: [error] });
         }
       } else {
         // Import from result page
@@ -200,7 +201,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       });
       onClose();
     } catch (error) {
-      console.error('Erro ao importar conteúdo:', error);
+      appLogger.error('Erro ao importar conteúdo:', { data: [error] });
       toast({
         title: 'Erro ao importar',
         description: 'Não foi possível importar o conteúdo selecionado.',

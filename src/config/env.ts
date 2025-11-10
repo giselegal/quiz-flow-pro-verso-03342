@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const toBool = (v: unknown) => String(v).toLowerCase() === 'true';
 const toNumber = (v: unknown, fallback?: number) => {
@@ -101,7 +102,7 @@ const parsed = EnvSchema.safeParse(raw);
 if (!parsed.success) {
   if ((import.meta as any)?.env?.DEV) {
      
-    console.warn('Env validation warnings:', parsed.error.flatten());
+    appLogger.warn('Env validation warnings:', { data: [parsed.error.flatten()] });
   }
 }
 

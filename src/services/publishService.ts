@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 export interface PublishOptions {
   funnelId: string;
   environment: 'staging' | 'production';
@@ -16,7 +17,7 @@ export class PublishService {
   static async publishFunnel(options: PublishOptions): Promise<PublishResult> {
     try {
       // Simplified publish service
-      console.log('Would publish funnel:', options.funnelId);
+      appLogger.info('Would publish funnel:', { data: [options.funnelId] });
       return {
         success: true,
         url: `https://quiz.example.com/${options.funnelId}`,

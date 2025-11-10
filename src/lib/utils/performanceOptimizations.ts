@@ -4,6 +4,7 @@
  */
 
 import { lazy, ComponentType, LazyExoticComponent } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Lazy loading com retry
 export function lazyWithRetry<T extends ComponentType<any>>(
@@ -98,12 +99,12 @@ export async function measurePerformance<T>(
     const result = await fn();
     const end = performance.now();
     if (process.env.NODE_ENV === 'development') {
-      console.log(`⏱️ ${name}: ${(end - start).toFixed(2)}ms`);
+      appLogger.info(`⏱️ ${name}: ${(end - start).toFixed(2)}ms`);
     }
     return result;
   } catch (error) {
     const end = performance.now();
-    console.error(`❌ ${name} failed after ${(end - start).toFixed(2)}ms`, error);
+    appLogger.error(`❌ ${name} failed after ${(end - start).toFixed(2)}ms`, { data: [error] });
     throw error;
   }
 }

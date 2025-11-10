@@ -12,6 +12,7 @@
 
 import { supabase } from '@/services/integrations/supabase/client';
 import type { EditorStep } from '@/contexts/store/editorStore';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -88,7 +89,7 @@ class FunnelServiceRefactored {
 
       return this.mapFunnelFromDB(data);
     } catch (error) {
-      console.error('Error creating funnel:', error);
+      appLogger.error('Error creating funnel:', { data: [error] });
       throw new Error('Failed to create funnel');
     }
   }
@@ -109,7 +110,7 @@ class FunnelServiceRefactored {
 
       return this.mapFunnelFromDB(data);
     } catch (error) {
-      console.error('Error fetching funnel:', error);
+      appLogger.error('Error fetching funnel:', { data: [error] });
       throw new Error('Failed to fetch funnel');
     }
   }
@@ -130,7 +131,7 @@ class FunnelServiceRefactored {
 
       return { funnel, pages };
     } catch (error) {
-      console.error('Error fetching funnel with pages:', error);
+      appLogger.error('Error fetching funnel with pages:', { data: [error] });
       throw new Error('Failed to fetch funnel with pages');
     }
   }
@@ -151,7 +152,7 @@ class FunnelServiceRefactored {
 
       return (data || []).map(this.mapFunnelFromDB);
     } catch (error) {
-      console.error('Error fetching user funnels:', error);
+      appLogger.error('Error fetching user funnels:', { data: [error] });
       throw new Error('Failed to fetch user funnels');
     }
   }
@@ -182,7 +183,7 @@ class FunnelServiceRefactored {
 
       return this.mapFunnelFromDB(data);
     } catch (error) {
-      console.error('Error updating funnel:', error);
+      appLogger.error('Error updating funnel:', { data: [error] });
       throw new Error('Failed to update funnel');
     }
   }
@@ -207,7 +208,7 @@ class FunnelServiceRefactored {
 
       return this.mapFunnelFromDB(data);
     } catch (error) {
-      console.error('Error updating page blocks:', error);
+      appLogger.error('Error updating page blocks:', { data: [error] });
       throw new Error('Failed to update page blocks');
     }
   }
@@ -234,7 +235,7 @@ class FunnelServiceRefactored {
 
       return this.mapFunnelFromDB(data);
     } catch (error) {
-      console.error('Error publishing funnel:', error);
+      appLogger.error('Error publishing funnel:', { data: [error] });
       throw new Error('Failed to publish funnel');
     }
   }
@@ -255,7 +256,7 @@ class FunnelServiceRefactored {
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error deleting funnel:', error);
+      appLogger.error('Error deleting funnel:', { data: [error] });
       throw new Error('Failed to delete funnel');
     }
   }
@@ -281,7 +282,7 @@ class FunnelServiceRefactored {
         },
       });
     } catch (error) {
-      console.error('Error duplicating funnel:', error);
+      appLogger.error('Error duplicating funnel:', { data: [error] });
       throw new Error('Failed to duplicate funnel');
     }
   }
@@ -303,7 +304,7 @@ class FunnelServiceRefactored {
 
       return (data || []).map(this.mapFunnelFromDB);
     } catch (error) {
-      console.error('Error fetching published funnels:', error);
+      appLogger.error('Error fetching published funnels:', { data: [error] });
       throw new Error('Failed to fetch published funnels');
     }
   }
@@ -332,7 +333,7 @@ class FunnelServiceRefactored {
         return funnel;
       }
     } catch (error) {
-      console.error('Error saving funnel:', error);
+      appLogger.error('Error saving funnel:', { data: [error] });
       throw new Error('Failed to save funnel');
     }
   }

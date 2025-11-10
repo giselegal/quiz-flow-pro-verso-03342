@@ -7,7 +7,7 @@
  * - [ ] Separar transformações por provider em classes especializadas
  */
 
-import { appLogger } from './logger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos mínimos para migração
 type OptimizedImageUrl = string;
@@ -65,7 +65,7 @@ export function resizeImage(url: ImageUrl, width: number, height?: number): Opti
 
     return url;
   } catch (error) {
-    console.error('Error resizing image:', error);
+    appLogger.error('Error resizing image:', { data: [error] });
     return url;
   }
 }
@@ -108,7 +108,7 @@ export function optimizeImage(
 
     return url;
   } catch (error) {
-    console.error('Error optimizing image:', error);
+    appLogger.error('Error optimizing image:', { data: [error] });
     return url;
   }
 }

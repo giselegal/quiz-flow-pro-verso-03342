@@ -5,6 +5,7 @@
 // ⚠️ CRITICAL: Importar React de forma padrão (ESM)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // 🔧 FIX: Expor React globalmente APENAS se necessário (em desenvolvimento)
 if (typeof window !== 'undefined') {
@@ -16,11 +17,11 @@ if (typeof window !== 'undefined') {
   (window as any).__REACT_PRELOAD_READY__ = true;
 
   if (import.meta.env.DEV) {
-    console.log('✅ [react-preload] React configurado', {
-      hasReact: !!React,
-      hasReactDOM: !!ReactDOM,
-      reactVersion: React.version,
-    });
+    appLogger.info('✅ [react-preload] React configurado', { data: [{
+            hasReact: !!React,
+            hasReactDOM: !!ReactDOM,
+            reactVersion: React.version,
+          }] });
   }
 }
 

@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import type { UnifiedBlockComponentProps } from '@/types/core';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface LeadFormBlockProps extends UnifiedBlockComponentProps {
   fields?: string[];
@@ -211,7 +212,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
       }
 
     } catch (error) {
-      console.error('Form submission error:', error);
+      appLogger.error('Form submission error:', { data: [error] });
       setErrors({ submit: 'Erro ao enviar formulário. Tente novamente.' });
     } finally {
       setIsSubmitting(false);

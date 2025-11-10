@@ -6,6 +6,7 @@
  */
 
 import { EventEmitter } from '@/lib/utils/EventEmitter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // CORE SERVICE INTERFACES
@@ -125,7 +126,7 @@ export class UnifiedServiceManager extends EventEmitter {
     const name = service.getName();
 
     if (this.services.has(name)) {
-      console.warn(`⚠️ Service ${name} já registrado - substituindo...`);
+      appLogger.warn(`⚠️ Service ${name} já registrado - substituindo...`);
     }
 
     this.services.set(name, service);
@@ -139,7 +140,7 @@ export class UnifiedServiceManager extends EventEmitter {
       this.emit('service:operation:error', { service: name, ...data });
     });
 
-    console.log(`✅ Service registrado: ${name}`);
+    appLogger.info(`✅ Service registrado: ${name}`);
   }
 
   /**
@@ -173,7 +174,7 @@ export class UnifiedServiceManager extends EventEmitter {
         results[name] = await service.healthCheck();
       } catch (error) {
         results[name] = false;
-        console.error(`❌ Health check failed for ${name}:`, error);
+        appLogger.error(`❌ Health check failed for ${name}:`, { data: [error] });
       }
     });
 
@@ -190,13 +191,13 @@ export class UnifiedServiceManager extends EventEmitter {
         service.clearCache();
         service.removeAllListeners();
       } catch (error) {
-        console.error(`❌ Erro ao limpar service ${name}:`, error);
+        appLogger.error(`❌ Erro ao limpar service ${name}:`, { data: [error] });
       }
     }
 
     this.services.clear();
     this.removeAllListeners();
-    console.log('🧹 UnifiedServiceManager limpo');
+    appLogger.info('🧹 UnifiedServiceManager limpo');
   }
 
   /**

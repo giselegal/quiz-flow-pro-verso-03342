@@ -9,6 +9,7 @@ import { Block } from '@/types/editor';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 // Migrado: usar TemplateService canônico via adapter, evitando HybridTemplateService
 import { TemplateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface DataPipelineStage {
   name: string;
@@ -58,11 +59,11 @@ class QuizDataPipeline {
       },
     };
 
-    console.log('🔄 QuizDataPipeline: Pipeline inicializado', {
-      sessionId,
-      funnelId,
-      userId,
-    });
+    appLogger.info('🔄 QuizDataPipeline: Pipeline inicializado', { data: [{
+            sessionId,
+            funnelId,
+            userId,
+          }] });
 
     await this.initializeStage('initialization', 'completed', this.context);
   }
@@ -95,10 +96,10 @@ class QuizDataPipeline {
       this.transformations.push(transformation);
       await this.completeStage('template-loading', transformation.output);
 
-      console.log('📄 Pipeline: Template carregado', {
-        templateId,
-        stepsCount: transformation.output.stepsCount,
-      });
+      appLogger.info('📄 Pipeline: Template carregado', { data: [{
+                templateId,
+                stepsCount: transformation.output.stepsCount,
+              }] });
 
       return template;
     } catch (error) {
@@ -146,11 +147,11 @@ class QuizDataPipeline {
       this.transformations.push(transformation);
       await this.completeStage('block-rendering', transformation.output);
 
-      console.log('🎨 Pipeline: Blocos renderizados', {
-        step,
-        blocksCount: renderedBlocks.length,
-        autoAdvance: stepConfig.behavior.autoAdvance,
-      });
+      appLogger.info('🎨 Pipeline: Blocos renderizados', { data: [{
+                step,
+                blocksCount: renderedBlocks.length,
+                autoAdvance: stepConfig.behavior.autoAdvance,
+              }] });
 
       return renderedBlocks;
     } catch (error) {
@@ -187,11 +188,11 @@ class QuizDataPipeline {
       this.transformations.push(transformation);
       await this.completeStage('data-collection', transformation.output);
 
-      console.log('📥 Pipeline: Dados coletados', {
-        step,
-        dataType: transformation.output.dataType,
-        dataSize: JSON.stringify(normalizedData).length,
-      });
+      appLogger.info('📥 Pipeline: Dados coletados', { data: [{
+                step,
+                dataType: transformation.output.dataType,
+                dataSize: JSON.stringify(normalizedData).length,
+              }] });
 
       return normalizedData;
     } catch (error) {
@@ -220,11 +221,11 @@ class QuizDataPipeline {
       this.transformations.push(transformation);
       await this.completeStage('data-validation', transformation.output);
 
-      console.log('✅ Pipeline: Dados validados', {
-        step,
-        isValid: validation.isValid,
-        errorsCount: validation.errors.length,
-      });
+      appLogger.info('✅ Pipeline: Dados validados', { data: [{
+                step,
+                isValid: validation.isValid,
+                errorsCount: validation.errors.length,
+              }] });
 
       return validation;
     } catch (error) {
@@ -252,7 +253,7 @@ class QuizDataPipeline {
           remoteSuccess = true;
         }
       } catch (supabaseError) {
-        console.warn('⚠️ Pipeline: Falha no Supabase, continuando com dados locais:', supabaseError);
+        appLogger.warn('⚠️ Pipeline: Falha no Supabase, continuando com dados locais:', { data: [supabaseError] });
       }
 
       const result = { local: localSuccess, remote: remoteSuccess };
@@ -267,11 +268,11 @@ class QuizDataPipeline {
       this.transformations.push(transformation);
       await this.completeStage('data-persistence', transformation.output);
 
-      console.log('💾 Pipeline: Dados persistidos', {
-        step,
-        local: localSuccess,
-        remote: remoteSuccess,
-      });
+      appLogger.info('💾 Pipeline: Dados persistidos', { data: [{
+                step,
+                local: localSuccess,
+                remote: remoteSuccess,
+              }] });
 
       return result;
     } catch (error) {
@@ -330,11 +331,11 @@ class QuizDataPipeline {
       this.transformations.push(transformation);
       await this.completeStage('result-calculation', transformation.output);
 
-      console.log('🎯 Pipeline: Resultado calculado', {
-        dominantStyle,
-        categoriesCount: Object.keys(categoryScores).length,
-        totalScore: Object.values(categoryScores).reduce((a, b) => a + b, 0),
-      });
+      appLogger.info('🎯 Pipeline: Resultado calculado', { data: [{
+                dominantStyle,
+                categoriesCount: Object.keys(categoryScores).length,
+                totalScore: Object.values(categoryScores).reduce((a, b) => a + b, 0),
+              }] });
 
       return result;
     } catch (error) {
@@ -490,7 +491,7 @@ class QuizDataPipeline {
         return unifiedQuizStorage.updateSelections(`step-${step}`, data.selectedOptions);
       }
     } catch (error) {
-      console.error('❌ Pipeline: Erro ao salvar localmente:', error);
+      appLogger.error('❌ Pipeline: Erro ao salvar localmente:', { data: [error] });
       return false;
     }
   }
@@ -518,7 +519,7 @@ class QuizDataPipeline {
     //   throw new Error(`Erro do Supabase: ${error.message}`);
     // }
     
-    console.log('💾 Dados salvos (simulado):', payload);
+    appLogger.info('💾 Dados salvos (simulado):', { data: [payload] });
   }
 
   private calculateCategoryScores(selections: Record<string, string[]>): Record<string, number> {

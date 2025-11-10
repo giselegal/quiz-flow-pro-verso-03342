@@ -1,6 +1,7 @@
 import { useAuth } from '@/contexts';
 import { StyleResult } from '@/types/quiz';
 import { useCallback, useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UserStyleData {
   primaryStyle?: StyleResult;
@@ -44,7 +45,7 @@ export const useUserDataPersistence = () => {
         }
       } catch (err) {
         setError('Erro ao carregar dados do usuário');
-        console.error('Erro ao carregar dados:', err);
+        appLogger.error('Erro ao carregar dados:', { data: [err] });
       } finally {
         setIsLoading(false);
       }
@@ -69,7 +70,7 @@ export const useUserDataPersistence = () => {
         setError(null);
       } catch (err) {
         setError('Erro ao salvar dados do usuário');
-        console.error('Erro ao salvar dados:', err);
+        appLogger.error('Erro ao salvar dados:', { data: [err] });
       }
     },
     [userData, user],
@@ -92,7 +93,7 @@ export const useUserDataPersistence = () => {
       setError(null);
     } catch (err) {
       setError('Erro ao limpar dados do usuário');
-      console.error('Erro ao limpar dados:', err);
+      appLogger.error('Erro ao limpar dados:', { data: [err] });
     }
   }, [user]);
 

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 // import { Button } from '@/components/ui/button'; // Commented - not used
 import type { QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TransitionStepProps {
     data: QuizStep;
@@ -53,11 +54,9 @@ export default function TransitionStep({ data, onComplete }: TransitionStepProps
     // ⚠️ Log de deprecação em desenvolvimento
     useEffect(() => {
         if (process.env.NODE_ENV === 'development') {
-            console.warn(
-                '⚠️ TransitionStep está deprecated e será removido na v2.0. ' +
-                'Migre para blocos atômicos no template JSON. ' +
-                'Ver ANALISE_ACOPLAMENTO_STEPS_12_19_20.md',
-            );
+            appLogger.warn('⚠️ TransitionStep está deprecated e será removido na v2.0. ' +
+                            'Migre para blocos atômicos no template JSON. ' +
+                            'Ver ANALISE_ACOPLAMENTO_STEPS_12_19_20.md');
         }
     }, []);
 

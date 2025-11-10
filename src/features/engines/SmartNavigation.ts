@@ -12,6 +12,7 @@
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { templateService } from '@/services/canonical/TemplateService';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface NavigationState {
   currentStep: number;
@@ -95,10 +96,10 @@ class SmartNavigation {
    * 🚀 INICIALIZAR NAVEGAÇÃO
    */
   async initialize(): Promise<void> {
-    console.log('🧭 SmartNavigation: Inicializando...', {
-      currentStep: this.state.currentStep,
-      totalSteps: this.config.totalSteps,
-    });
+    appLogger.info('🧭 SmartNavigation: Inicializando...', { data: [{
+            currentStep: this.state.currentStep,
+            totalSteps: this.config.totalSteps,
+          }] });
 
     // Carregar configuração da etapa atual
     await this.loadStepConfig(this.state.currentStep);
@@ -106,7 +107,7 @@ class SmartNavigation {
     // Validar etapa atual
     await this.validateAndUpdateState();
     
-    console.log('✅ SmartNavigation: Inicializado com sucesso');
+    appLogger.info('✅ SmartNavigation: Inicializado com sucesso');
   }
 
   /**
@@ -114,20 +115,20 @@ class SmartNavigation {
    */
   async goToStep(targetStep: number): Promise<boolean> {
     if (targetStep < 1 || targetStep > this.config.totalSteps) {
-      console.warn('⚠️ SmartNavigation: Etapa inválida:', targetStep);
+      appLogger.warn('⚠️ SmartNavigation: Etapa inválida:', { data: [targetStep] });
       return false;
     }
 
     if (this.state.isAutoAdvancing) {
-      console.log('⏸️ SmartNavigation: Navegação bloqueada (auto-advancing)');
+      appLogger.info('⏸️ SmartNavigation: Navegação bloqueada (auto-advancing)');
       return false;
     }
 
     try {
-      console.log('🧭 SmartNavigation: Navegando para etapa', {
-        from: this.state.currentStep,
-        to: targetStep,
-      });
+      appLogger.info('🧭 SmartNavigation: Navegando para etapa', { data: [{
+                from: this.state.currentStep,
+                to: targetStep,
+              }] });
 
       // Cancelar auto-advance se ativo
       this.cancelAutoAdvance();
@@ -160,7 +161,7 @@ class SmartNavigation {
 
       return true;
     } catch (error) {
-      console.error('❌ SmartNavigation: Erro na navegação:', error);
+      appLogger.error('❌ SmartNavigation: Erro na navegação:', { data: [error] });
       return false;
     }
   }
@@ -170,7 +171,7 @@ class SmartNavigation {
    */
   async goNext(): Promise<boolean> {
     if (!this.state.canGoNext) {
-      console.log('⛔ SmartNavigation: Não pode avançar - validação necessária');
+      appLogger.info('⛔ SmartNavigation: Não pode avançar - validação necessária');
       return false;
     }
 
@@ -183,7 +184,7 @@ class SmartNavigation {
    */
   async goPrevious(): Promise<boolean> {
     if (!this.state.canGoPrevious) {
-      console.log('⛔ SmartNavigation: Não pode voltar da primeira etapa');
+      appLogger.info('⛔ SmartNavigation: Não pode voltar da primeira etapa');
       return false;
     }
 
@@ -211,7 +212,7 @@ class SmartNavigation {
 
       return validation.isValid;
     } catch (error) {
-      console.error('❌ SmartNavigation: Erro na validação:', error);
+      appLogger.error('❌ SmartNavigation: Erro na validação:', { data: [error] });
       return false;
     }
   }
@@ -243,7 +244,7 @@ class SmartNavigation {
       }, 100); // Debounce para evitar validações excessivas
 
     } catch (error) {
-      console.error('❌ SmartNavigation: Erro ao atualizar dados:', error);
+      appLogger.error('❌ SmartNavigation: Erro ao atualizar dados:', { data: [error] });
     }
   }
 
@@ -254,7 +255,7 @@ class SmartNavigation {
     const stepConfig = this.stepConfigs.get(this.state.currentStep);
     
     if (!stepConfig?.behavior.autoAdvance || !this.state.stepValidation.isValid) {
-      console.log('⚠️ SmartNavigation: Auto-advance não habilitado ou etapa inválida');
+      appLogger.info('⚠️ SmartNavigation: Auto-advance não habilitado ou etapa inválida');
       return;
     }
 
@@ -262,10 +263,10 @@ class SmartNavigation {
 
     const delay = stepConfig.behavior.autoAdvanceDelay;
     
-    console.log('🚀 SmartNavigation: Iniciando auto-advance', {
-      currentStep: this.state.currentStep,
-      delay,
-    });
+    appLogger.info('🚀 SmartNavigation: Iniciando auto-advance', { data: [{
+            currentStep: this.state.currentStep,
+            delay,
+          }] });
 
     this.updateState({
       isAutoAdvancing: true,
@@ -473,7 +474,7 @@ class SmartNavigation {
   private completeAutoAdvance(): void {
     this.cancelAutoAdvance();
     
-    console.log('✅ SmartNavigation: Auto-advance completo');
+    appLogger.info('✅ SmartNavigation: Auto-advance completo');
     
     // Callback de conclusão
     this.config.onAutoAdvanceComplete?.();

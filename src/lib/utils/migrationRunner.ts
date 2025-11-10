@@ -3,6 +3,7 @@ import {
     executeMigrationWithConfirmation,
     cleanupLegacyData as migrationCleanup,
 } from '@/lib/utils/dataMigration';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🔄 EXECUÇÃO DA MIGRAÇÃO DE DADOS LEGADOS
@@ -11,25 +12,25 @@ import {
  */
 
 export const runDataMigration = async () => {
-    console.log('🚀 Iniciando migração de dados legados para sistema contextual...');
+    appLogger.info('🚀 Iniciando migração de dados legados para sistema contextual...');
 
     try {
         // Usar a função de migração automática
         const result = await executeMigrationWithConfirmation();
 
         if (result.success) {
-            console.log('✅ Migração de dados concluída com sucesso!');
-            console.log('📊 Resumo da migração:');
-            console.log(`- Itens migrados: ${result.migratedItems}`);
-            result.details.forEach(detail => console.log(`  ${detail}`));
+            appLogger.info('✅ Migração de dados concluída com sucesso!');
+            appLogger.info('📊 Resumo da migração:');
+            appLogger.info(`- Itens migrados: ${result.migratedItems}`);
+            result.details.forEach(detail => appLogger.info(`  ${detail}`));
         } else {
-            console.error('❌ Erro durante a migração:', result.errors);
+            appLogger.error('❌ Erro durante a migração:', { data: [result.errors] });
         }
 
         return result;
 
     } catch (error) {
-        console.error('❌ Erro durante a migração:', error);
+        appLogger.error('❌ Erro durante a migração:', { data: [error] });
         return {
             success: false,
             migratedItems: 0,
@@ -43,14 +44,14 @@ export const runDataMigration = async () => {
  * 🧹 LIMPEZA DE DADOS LEGADOS (USE COM CUIDADO)
  */
 export const cleanupLegacyData = () => {
-    console.log('🧹 Executando limpeza de dados legados...');
+    appLogger.info('🧹 Executando limpeza de dados legados...');
 
     try {
         const cleanedCount = migrationCleanup();
-        console.log(`✅ Limpeza concluída: ${cleanedCount} itens removidos`);
+        appLogger.info(`✅ Limpeza concluída: ${cleanedCount} itens removidos`);
         return cleanedCount;
     } catch (error) {
-        console.error('❌ Erro durante limpeza:', error);
+        appLogger.error('❌ Erro durante limpeza:', { data: [error] });
         return 0;
     }
 };
@@ -61,10 +62,10 @@ export const autoMigration = async () => {
     const hasLegacyData = checkForLegacyData();
 
     if (hasLegacyData) {
-        console.log('🔍 Dados legados detectados - executando migração automática...');
+        appLogger.info('🔍 Dados legados detectados - executando migração automática...');
         return await runDataMigration();
     } else {
-        console.log('✅ Nenhum dado legado encontrado - migração não necessária');
+        appLogger.info('✅ Nenhum dado legado encontrado - migração não necessária');
         return {
             success: true,
             migratedItems: 0,

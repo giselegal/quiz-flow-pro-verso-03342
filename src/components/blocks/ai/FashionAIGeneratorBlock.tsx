@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { Block } from '@/types/editor';
 import type { QuizResult } from '@/types/ai-quiz-result';
 import { Loader2, Sparkles, RefreshCw, Download, Heart } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FashionAIGeneratorContent {
     title: string;
@@ -102,7 +103,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
 
         try {
             // Simula geração de imagens por enquanto
-            console.log(`🎨 Gerando ${properties.imageCount} imagens para estilo: ${currentStyle}`);
+            appLogger.info(`🎨 Gerando ${properties.imageCount} imagens para estilo: ${currentStyle}`);
 
             // URLs de placeholder baseadas no estilo
             const placeholderImages = [
@@ -117,7 +118,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
             setGeneratedImages(placeholderImages.slice(0, properties.imageCount));
             setRetryCount(0);
         } catch (error) {
-            console.error('Erro na geração de imagens:', error);
+            appLogger.error('Erro na geração de imagens:', { data: [error] });
             setError('Erro ao gerar imagens. Tente novamente.');
 
             if (retryCount < properties.retryAttempts) {

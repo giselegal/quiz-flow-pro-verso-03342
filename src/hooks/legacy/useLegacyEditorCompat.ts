@@ -20,6 +20,7 @@
  */
 
 import { useEditor } from '@/hooks/useEditor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES - API antiga do EditorProvider
@@ -95,17 +96,17 @@ export function useLegacyEditorCompat(): LegacyEditorAPI {
 
   // Stage operations (simplificadas)
   const addStage = async (name: string): Promise<string> => {
-    console.warn('[LegacyEditorCompat] addStage not fully implemented');
+    appLogger.warn('[LegacyEditorCompat] addStage not fully implemented');
     const newStepKey = `step-${(stages.length + 1).toString().padStart(2, '0')}`;
     return newStepKey;
   };
 
   const updateStage = async (id: string, updates: Partial<LegacyEditorStage>): Promise<void> => {
-    console.warn('[LegacyEditorCompat] updateStage not fully implemented', { id, updates });
+    appLogger.warn('[LegacyEditorCompat] updateStage not fully implemented', { data: [{ id, updates }] });
   };
 
   const deleteStage = async (id: string): Promise<void> => {
-    console.warn('[LegacyEditorCompat] deleteStage not fully implemented', { id });
+    appLogger.warn('[LegacyEditorCompat] deleteStage not fully implemented', { data: [{ id }] });
   };
 
   const setActiveStage = (id: string): void => {
@@ -153,12 +154,12 @@ export function useLegacyEditorCompat(): LegacyEditorAPI {
 
   // Persistence
   const saveFunnel = async (): Promise<void> => {
-    console.warn('[LegacyEditorCompat] saveFunnel not implemented');
+    appLogger.warn('[LegacyEditorCompat] saveFunnel not implemented');
   };
 
   // UI
   const setIsPreviewing = (value: boolean): void => {
-    console.warn('[LegacyEditorCompat] setIsPreviewing not implemented', value);
+    appLogger.warn('[LegacyEditorCompat] setIsPreviewing not implemented', { data: [value] });
   };
 
   return {

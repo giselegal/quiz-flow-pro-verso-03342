@@ -31,6 +31,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 import { SortableStepItem } from './SortableStepItem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type StepNavigatorColumnProps = {
     initialStepKey?: string;
@@ -120,7 +121,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                 });
             }
         } catch (error) {
-            console.error('Erro ao adicionar etapa:', error);
+            appLogger.error('Erro ao adicionar etapa:', { data: [error] });
             toast({
                 title: 'Erro ao criar etapa',
                 description: 'Ocorreu um erro inesperado',
@@ -157,7 +158,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                 });
             }
         } catch (error) {
-            console.error('Erro ao deletar etapa:', error);
+            appLogger.error('Erro ao deletar etapa:', { data: [error] });
             toast({
                 title: 'Erro ao deletar',
                 description: 'Ocorreu um erro inesperado',
@@ -202,7 +203,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                 });
             }
         } catch (error) {
-            console.error('Erro ao duplicar etapa:', error);
+            appLogger.error('Erro ao duplicar etapa:', { data: [error] });
             toast({
                 title: 'Erro ao duplicar',
                 description: 'Ocorreu um erro inesperado',
@@ -253,7 +254,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
         } catch (error) {
             // Reverter em caso de erro
             setLocalItems(items);
-            console.error('Erro ao reordenar etapas:', error);
+            appLogger.error('Erro ao reordenar etapas:', { data: [error] });
             toast({
                 title: 'Erro ao reordenar',
                 description: 'Ocorreu um erro inesperado',

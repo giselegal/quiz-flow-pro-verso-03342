@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🏷️ WHITE-LABEL PLATFORM - Enterprise Branding
  * ROI Projetado: $7k-20k/mês
@@ -101,12 +102,12 @@ export class WhiteLabelPlatform {
     this.clients.set(clientId, client);
     this.brandConfigs.set(brandId, brandConfig);
 
-    console.log('🏷️ White-label client created:', {
-      client: config.name,
-      plan: config.plan,
-      domain: brandConfig.domain,
-      monthlyRevenue: client.billing.monthlyFee,
-    });
+    appLogger.info('🏷️ White-label client created:', { data: [{
+            client: config.name,
+            plan: config.plan,
+            domain: brandConfig.domain,
+            monthlyRevenue: client.billing.monthlyFee,
+          }] });
 
     return client;
   }
@@ -204,19 +205,19 @@ export class WhiteLabelPlatform {
 
     client.brandConfig.domain = domain;
 
-    console.log('🌐 Custom domain configured:', {
-      client: client.name,
-      domain,
-      ssl: sslStatus,
-      dnsConfig,
-    });
+    appLogger.info('🌐 Custom domain configured:', { data: [{
+            client: client.name,
+            domain,
+            ssl: sslStatus,
+            dnsConfig,
+          }] });
 
     return true;
   }
 
   private async setupSSL(domain: string): Promise<boolean> {
     // SSL certificate automation
-    console.log('🔒 Setting up SSL for:', domain);
+    appLogger.info('🔒 Setting up SSL for:', { data: [domain] });
     return true; // Simulated success
   }
 
@@ -428,11 +429,11 @@ export class WhiteLabelPlatform {
 
     const apiKey = `wl_${client.id}_${Date.now()}`;
     
-    console.log('🔑 API key generated:', {
-      client: client.name,
-      keyPreview: `${apiKey.substring(0, 20)  }...`,
-      permissions: ['read', 'write', 'analytics'],
-    });
+    appLogger.info('🔑 API key generated:', { data: [{
+            client: client.name,
+            keyPreview: `${apiKey.substring(0, 20)  }...`,
+            permissions: ['read', 'write', 'analytics'],
+          }] });
 
     return apiKey;
   }
@@ -463,11 +464,11 @@ export class WhiteLabelPlatform {
     client.features = this.getPlanFeatures(newPlan);
     client.billing = { ...client.billing, ...this.getPlanBilling(newPlan) };
 
-    console.log('⬆️ Client plan upgraded:', {
-      client: client.name,
-      newPlan,
-      newMonthlyFee: client.billing.monthlyFee,
-    });
+    appLogger.info('⬆️ Client plan upgraded:', { data: [{
+            client: client.name,
+            newPlan,
+            newMonthlyFee: client.billing.monthlyFee,
+          }] });
 
     return true;
   }

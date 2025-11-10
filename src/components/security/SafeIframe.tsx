@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * SafeIframe
@@ -74,7 +75,7 @@ export const SafeIframe: React.FC<SafeIframeProps> = ({
     // Auto-enable para players confiáveis se o dev não desabilitou explicitamente
     if (!allowScripts && requiresPlayerScripts && isTrusted) {
         effectiveAllowScripts = true;
-        if (debug) console.log('[SafeIframe] Auto habilitando allow-scripts para player confiável:', src);
+        if (debug) appLogger.info('[SafeIframe] Auto habilitando allow-scripts para player confiável:', { data: [src] });
     }
 
     if (allowForms) sandboxTokens.add('allow-forms');
@@ -94,13 +95,13 @@ export const SafeIframe: React.FC<SafeIframeProps> = ({
 
     if (sandboxTokens.has('allow-scripts') && sandboxTokens.has('allow-same-origin') && trustLevel !== 'trusted') {
         sandboxTokens.delete('allow-same-origin');
-        if (debug) console.warn('[SafeIframe] Removido allow-same-origin (combinação com scripts) para evitar escape:', src);
+        if (debug) appLogger.warn('[SafeIframe] Removido allow-same-origin (combinação com scripts) para evitar escape:', { data: [src] });
     }
 
     const sandboxFinal = Array.from(sandboxTokens).join(' ');
 
     if (debug) {
-        console.log('[SafeIframe] mount', { src, sandboxFinal, isTrusted, trustLevel });
+        appLogger.info('[SafeIframe] mount', { data: [{ src, sandboxFinal, isTrusted, trustLevel }] });
     }
 
     // Construir atributo allow (feature policy) mínimo necessário, mergeando se usuário forneceu algo

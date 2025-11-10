@@ -10,6 +10,7 @@
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
 import { cacheService as unifiedCache, CacheStore } from '../UnifiedCacheService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Cache statistics por categoria
@@ -325,7 +326,7 @@ export class CacheService extends BaseCanonicalService {
       
       return result.success && result.data !== null;
     } catch (error) {
-      console.warn('[CacheService] Health check falhou:', error);
+      appLogger.warn('[CacheService] Health check falhou:', { data: [error] });
       return false;
     }
   }

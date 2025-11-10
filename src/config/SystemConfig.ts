@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 CONFIGURAÇÃO PRINCIPAL DO SISTEMA INTEGRADO
  *
@@ -135,7 +136,7 @@ export const initializeQuizSystem = async () => {
   const environment = (process.env.NODE_ENV as keyof typeof FEATURE_FLAGS) || 'development';
   const config = FEATURE_FLAGS[environment];
 
-  console.log(`🚀 Inicializando sistema Quiz (${environment})`, config);
+  appLogger.info(`🚀 Inicializando sistema Quiz (${environment})`, { data: [config] });
 
   // Configurar feature flags
   if (typeof window !== 'undefined') {
@@ -152,7 +153,7 @@ export const initializeQuizSystem = async () => {
     // Salvar configuração atual
     sessionStorage.setItem('quiz_active_config', JSON.stringify(flags));
 
-    console.log('🎛️ Feature flags ativas:', flags);
+    appLogger.info('🎛️ Feature flags ativas:', { data: [flags] });
   }
 
   return config;
@@ -190,7 +191,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     }),
   };
 
-  console.log('🔧 Debug helpers disponíveis em window.quizDebug');
+  appLogger.info('🔧 Debug helpers disponíveis em window.quizDebug');
 }
 
 export default {

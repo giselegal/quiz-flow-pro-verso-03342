@@ -2,6 +2,7 @@ import { styleConfig } from '@/config/styleConfig';
 import { getStyleColor } from '@/lib/utils/styleUtils';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { useMemo } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface StyleResultForHeader {
   name: string;
@@ -27,12 +28,12 @@ export const useStyleResultsForHeader = (): StyleResultsForHeader => {
   const { primaryStyle, secondaryStyles } = useQuizResult();
 
   return useMemo(() => {
-    console.log('🎯 useStyleResultsForHeader - Dados reais:', { primaryStyle, secondaryStyles });
+    appLogger.info('🎯 useStyleResultsForHeader - Dados reais:', { data: [{ primaryStyle, secondaryStyles }] });
 
     const createStyleResult = (name: string, percentage: number): StyleResultForHeader => {
       const config = styleConfig[name];
       if (!config) {
-        console.warn(`⚠️ Estilo não encontrado: ${name}`);
+        appLogger.warn(`⚠️ Estilo não encontrado: ${name}`);
         return {
           name,
           description: 'Estilo não encontrado',
@@ -61,7 +62,7 @@ export const useStyleResultsForHeader = (): StyleResultsForHeader => {
         { name: (secondaryStyles[1].style || 'Natural'), percentage: Math.round((secondaryStyles[1].percentage ?? 0)) },
       ];
 
-      console.log('✅ Usando dados REAIS do quiz:', realStyles);
+      appLogger.info('✅ Usando dados REAIS do quiz:', { data: [realStyles] });
 
       return {
         primaryStyle: createStyleResult(realStyles[0].name, realStyles[0].percentage),
@@ -77,7 +78,7 @@ export const useStyleResultsForHeader = (): StyleResultsForHeader => {
       { name: 'Clássico', percentage: 27 },
     ];
 
-    console.log('📝 Usando dados MOCK (preview):', mockStyles);
+    appLogger.info('📝 Usando dados MOCK (preview):', { data: [mockStyles] });
 
     return {
       primaryStyle: createStyleResult(mockStyles[0].name, mockStyles[0].percentage),

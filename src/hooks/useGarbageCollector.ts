@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🧹 GARBAGE COLLECTION OPTIMIZER
@@ -70,10 +71,10 @@ export const useGarbageCollector = (options: MemoryCleanupOptions = {}) => {
       lastCleanupRef.current = now;
 
       if (process.env.NODE_ENV === 'development') {
-        console.log('🧹 Memory cleanup performed');
+        appLogger.info('🧹 Memory cleanup performed');
       }
     } catch (error) {
-      console.warn('⚠️ Cleanup error:', error);
+      appLogger.warn('⚠️ Cleanup error:', { data: [error] });
     }
   }, [intervalMs, aggressiveCleanup]);
 
@@ -148,7 +149,7 @@ export const useComponentCleanup = (componentId: string) => {
       try {
         callback();
       } catch (error) {
-        console.warn(`⚠️ Cleanup error for ${componentId}:`, error);
+        appLogger.warn(`⚠️ Cleanup error for ${componentId}:`, { data: [error] });
       }
     });
     cleanupCallbacksRef.current.clear();

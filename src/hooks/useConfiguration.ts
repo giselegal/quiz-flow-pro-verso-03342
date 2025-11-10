@@ -12,6 +12,7 @@ import {
     type ConfigurationContext,
     getCurrentFunnelConfiguration,
 } from '@/services/ConfigurationService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TIPOS DO HOOK
@@ -74,12 +75,12 @@ export function useConfiguration(options: UseConfigurationOptions = {}): UseConf
             }
 
             setConfig(loadedConfig);
-            console.log(`✅ [useConfiguration] Configuração carregada para funil: ${loadedConfig.funnel.id}`);
+            appLogger.info(`✅ [useConfiguration] Configuração carregada para funil: ${loadedConfig.funnel.id}`);
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido ao carregar configuração';
             setError(errorMessage);
-            console.error('❌ [useConfiguration] Erro ao carregar configuração:', err);
+            appLogger.error('❌ [useConfiguration] Erro ao carregar configuração:', { data: [err] });
         } finally {
             setIsLoading(false);
         }

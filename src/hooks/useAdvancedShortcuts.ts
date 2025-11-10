@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface ShortcutConfig {
   key: string;
@@ -76,7 +77,7 @@ export const useAdvancedShortcuts = ({
           try {
             handler(keyEvent);
           } catch (error) {
-            console.error(`Erro ao executar shortcut "${name}":`, error);
+            appLogger.error(`Erro ao executar shortcut "${name}":`, { data: [error] });
           }
           break;
         }

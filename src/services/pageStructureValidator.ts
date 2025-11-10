@@ -3,6 +3,7 @@ import { generateSemanticId } from '../utils/semanticIdGenerator';
 // Placeholder service to avoid complex type issues
 
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Page {
   id: string;
@@ -160,14 +161,10 @@ export class PageStructureValidator {
       if (!validation.isValid || validation.warnings.length > 0) {
         if (validation.fixedPage) {
           pagesFixed++;
-          console.log(
-            `🔧 Página corrigida: "${page.title || page.name}" (${validation.errors.length} erros, ${validation.warnings.length} avisos)`,
-          );
+          appLogger.info(`🔧 Página corrigida: "${page.title || page.name}" (${validation.errors.length} erros, ${validation.warnings.length} avisos)`);
           return validation.fixedPage;
         } else {
-          console.error(
-            `❌ Erro crítico: Falha ao corrigir a página "${page.title || page.name}". Retornando página original.`,
-          );
+          appLogger.error(`❌ Erro crítico: Falha ao corrigir a página "${page.title || page.name}". Retornando página original.`);
           return page;
         }
       }
@@ -197,13 +194,11 @@ export class PageStructureValidator {
     }
 
     if (validation.fixedPage) {
-      console.log(`✅ Página "${page.title || page.name}" corrigida para ser schema-driven`);
+      appLogger.info(`✅ Página "${page.title || page.name}" corrigida para ser schema-driven`);
       return validation.fixedPage;
     }
 
-    console.warn(
-      `⚠️ Recriando página "${page.title || page.name}" com estrutura schema-driven básica devido a falha na correção.`,
-    );
+    appLogger.warn(`⚠️ Recriando página "${page.title || page.name}" com estrutura schema-driven básica devido a falha na correção.`);
     return {
       id: page.id || `rebuilt-${Date.now()}`,
       name: page.name || 'Página Reconstruída',

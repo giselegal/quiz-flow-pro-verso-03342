@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createGlobalStyles } from '@/lib/utils/config/globalStyles';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface GlobalStyles {
   primaryColor?: string;
@@ -23,7 +24,7 @@ export const useGlobalStyles = () => {
         return { ...defaultStyles, ...JSON.parse(saved) };
       }
     } catch (error) {
-      console.warn('Erro ao carregar estilos salvos:', error);
+      appLogger.warn('Erro ao carregar estilos salvos:', { data: [error] });
     }
 
     return defaultStyles;
@@ -37,7 +38,7 @@ export const useGlobalStyles = () => {
     try {
       StorageService.safeSetJSON('globalStyles', updatedStyles);
     } catch (error) {
-      console.warn('Erro ao salvar estilos:', error);
+      appLogger.warn('Erro ao salvar estilos:', { data: [error] });
     }
 
     // Aplicar estilos CSS customizados ao documento

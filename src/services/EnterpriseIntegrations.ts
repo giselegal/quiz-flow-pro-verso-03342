@@ -3,7 +3,8 @@
  * ROI Projetado: $5k-15k/mês
  */
 
-import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+import { v4 as uuidv4 } from 'uuid';
+import { appLogger } from '@/lib/utils/appLogger'; // 🆕 G36 FIX: Import UUID
 
 export interface IntegrationConfig {
   id: string;
@@ -67,14 +68,14 @@ export class EnterpriseIntegrations {
       await this.testConnection(integration);
       integration.status = 'active';
       
-      console.log('✅ HubSpot integration active:', {
-        portalId: config.portalId,
-        features: ['contacts', 'deals', 'analytics'],
-        expectedROI: '$2k-6k/mês',
-      });
+      appLogger.info('✅ HubSpot integration active:', { data: [{
+                portalId: config.portalId,
+                features: ['contacts', 'deals', 'analytics'],
+                expectedROI: '$2k-6k/mês',
+              }] });
     } catch (error) {
       integration.status = 'error';
-      console.error('❌ HubSpot integration failed:', error);
+      appLogger.error('❌ HubSpot integration failed:', { data: [error] });
     }
 
     this.integrations.set(integration.id, integration);
@@ -290,12 +291,12 @@ export class EnterpriseIntegrations {
       const duration = Date.now() - startTime;
       const nextSync = new Date(Date.now() + (60 * 60 * 1000)); // 1 hour
 
-      console.log('✅ Sync completed:', {
-        integration: integration.name,
-        processed: successCount,
-        duration: `${duration}ms`,
-        nextSync,
-      });
+      appLogger.info('✅ Sync completed:', { data: [{
+                integration: integration.name,
+                processed: successCount,
+                duration: `${duration}ms`,
+                nextSync,
+              }] });
 
       return {
         success: true,
@@ -350,25 +351,25 @@ export class EnterpriseIntegrations {
 
   private async syncToCRM(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // CRM-specific sync logic
-    console.log(`📞 Syncing ${data.length} records to CRM`);
+    appLogger.info(`📞 Syncing ${data.length} records to CRM`);
     return Math.floor(data.length * 0.95); // 95% success rate
   }
 
   private async syncToEmail(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // Email platform sync logic
-    console.log(`📧 Syncing ${data.length} contacts to Email Platform`);
+    appLogger.info(`📧 Syncing ${data.length} contacts to Email Platform`);
     return Math.floor(data.length * 0.98); // 98% success rate
   }
 
   private async syncToEcommerce(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // Ecommerce platform sync logic
-    console.log(`🛒 Syncing ${data.length} records to Ecommerce Platform`);
+    appLogger.info(`🛒 Syncing ${data.length} records to Ecommerce Platform`);
     return Math.floor(data.length * 0.92); // 92% success rate
   }
 
   private async syncToAnalytics(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // Analytics platform sync logic
-    console.log(`📊 Syncing ${data.length} events to Analytics Platform`);
+    appLogger.info(`📊 Syncing ${data.length} events to Analytics Platform`);
     return Math.floor(data.length * 0.97); // 97% success rate
   }
 
@@ -407,7 +408,7 @@ export class EnterpriseIntegrations {
 
   private initializeDefaultIntegrations() {
     // Initialize with common integrations for demo
-    console.log('🔧 Initializing enterprise integrations...');
+    appLogger.info('🔧 Initializing enterprise integrations...');
   }
 
   // 🌐 PUBLIC API

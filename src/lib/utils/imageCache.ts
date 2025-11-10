@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Sistema de cache de imagens usando IndexedDB
  * Armazena placeholders e imagens localmente para performance e offline
@@ -140,7 +141,7 @@ class ImageCacheManager {
 
             return blobUrl;
         } catch (error) {
-            console.warn('Erro ao armazenar imagem no cache:', error);
+            appLogger.warn('Erro ao armazenar imagem no cache:', { data: [error] });
             throw error;
         }
     }
@@ -189,7 +190,7 @@ class ImageCacheManager {
 
             return blobUrl;
         } catch (error) {
-            console.warn('Erro ao recuperar imagem do cache:', error);
+            appLogger.warn('Erro ao recuperar imagem do cache:', { data: [error] });
             return null;
         }
     }
@@ -215,7 +216,7 @@ class ImageCacheManager {
                 request.onerror = () => reject(request.error);
             });
         } catch (error) {
-            console.warn('Erro ao remover imagem do cache:', error);
+            appLogger.warn('Erro ao remover imagem do cache:', { data: [error] });
         }
     }
 
@@ -249,7 +250,7 @@ class ImageCacheManager {
             });
         } catch (error) {
             // Fallback para data URL se IndexedDB falhar
-            console.warn('Fallback para data URL devido a erro no cache:', error);
+            appLogger.warn('Fallback para data URL devido a erro no cache:', { data: [error] });
             return URL.createObjectURL(blob);
         }
     }
@@ -285,7 +286,7 @@ class ImageCacheManager {
                 }
             };
         } catch (error) {
-            console.warn('Erro ao limpar imagens expiradas:', error);
+            appLogger.warn('Erro ao limpar imagens expiradas:', { data: [error] });
         }
     }
 
@@ -363,7 +364,7 @@ class ImageCacheManager {
                 request.onerror = () => reject(request.error);
             });
         } catch (error) {
-            console.warn('Erro ao limpar cache:', error);
+            appLogger.warn('Erro ao limpar cache:', { data: [error] });
         }
     }
 }

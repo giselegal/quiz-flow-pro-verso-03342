@@ -3,6 +3,7 @@ import { HeadlessEditorProvider } from './HeadlessEditorProvider';
 import { DynamicPropertiesPanel } from './DynamicPropertiesPanel';
 import { LivePreviewSystem } from './LivePreviewSystem';
 import { InstantPublishingSystem } from './InstantPublishingSystem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type EditorView = 'canvas' | 'preview' | 'publish';
 
@@ -18,7 +19,7 @@ export const HeadlessVisualEditor: React.FC<HeadlessVisualEditorProps> = ({
   const [activeView, setActiveView] = useState<EditorView>('canvas');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  console.log('🎯 HeadlessVisualEditor inicializado com:', { funnelId, templateId });
+  appLogger.info('🎯 HeadlessVisualEditor inicializado com:', { data: [{ funnelId, templateId }] });
 
   return (
     <HeadlessEditorProvider

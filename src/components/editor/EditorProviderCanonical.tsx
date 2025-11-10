@@ -45,8 +45,8 @@ import { Block } from '@/types/editor';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader, type TemplateSource } from '@/services/editor/TemplateLoader';
 import { templateService } from '@/services/canonical/TemplateService';
-import { appLogger } from '@/lib/utils/logger';
 import { generateCloneId } from '@/lib/utils/idGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -150,11 +150,9 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
 }) => {
     // ⚠️ AVISO DE DEPRECAÇÃO
     useEffect(() => {
-        console.warn(
-            '⚠️ [DEPRECATED] EditorProviderCanonical não é usado na rota /editor.\n' +
+        appLogger.warn('⚠️ [DEPRECATED] EditorProviderCanonical não é usado na rota /editor.\n' +
             'Use SuperUnifiedProvider diretamente.\n' +
-            'Veja: docs/EDITOR_ARCHITECTURE.md'
-        );
+            'Veja: docs/EDITOR_ARCHITECTURE.md');
     }, []);
 
     // ============================================================================

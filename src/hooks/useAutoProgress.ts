@@ -7,6 +7,7 @@
 import { useEffect, useCallback } from 'react';
 import type { Block } from '@/types/editor';
 import { calculateProgressValue, updateProgressInBlocks } from '@/lib/utils/progressCalculator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UseAutoProgressOptions {
     currentStepIndex: number;
@@ -47,7 +48,7 @@ export function useAutoProgress(options: UseAutoProgressOptions) {
             const updatedBlocks = updateProgressInBlocks(blocks, currentStepIndex, totalSteps);
             onUpdateBlocks(updatedBlocks);
 
-            console.log(`🔄 [useAutoProgress] Progresso atualizado: ${expectedProgress}%`);
+            appLogger.info(`🔄 [useAutoProgress] Progresso atualizado: ${expectedProgress}%`);
         }
     }, [enabled, blocks, currentStepIndex, totalSteps, expectedProgress, needsUpdate, onUpdateBlocks]);
 

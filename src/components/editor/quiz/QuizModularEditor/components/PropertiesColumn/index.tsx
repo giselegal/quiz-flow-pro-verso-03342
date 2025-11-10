@@ -14,6 +14,7 @@ import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyCont
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 import { onBlockUpdate as subscribeToBlockUpdates } from '@/lib/utils/editorEventBus';
 import { normalizeBlockData, createSynchronizedBlockUpdate, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PropertiesColumnProps {
     selectedBlock: Block | null;
@@ -80,14 +81,14 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             setIsDirty(false);
 
             // ✅ CORREÇÃO 2: Debug logging detalhado
-            console.log('🔍 [PropertiesColumn] selectedBlock changed:', {
-                id: selectedBlock?.id,
-                type: selectedBlock?.type,
-                hasProperties: !!selectedBlock?.properties && Object.keys(selectedBlock.properties).length,
-                hasContent: !!selectedBlock?.content && Object.keys(selectedBlock.content).length,
-                editedProperties: Object.keys(merged),
-                hasSchema: schema !== null
-            });
+            appLogger.info('🔍 [PropertiesColumn] selectedBlock changed:', { data: [{
+                            id: selectedBlock?.id,
+                            type: selectedBlock?.type,
+                            hasProperties: !!selectedBlock?.properties && Object.keys(selectedBlock.properties).length,
+                            hasContent: !!selectedBlock?.content && Object.keys(selectedBlock.content).length,
+                            editedProperties: Object.keys(merged),
+                            hasSchema: schema !== null
+                        }] });
         } else {
             setEditedProperties({});
             setIsDirty(false);

@@ -6,6 +6,7 @@
  */
 
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Limpar cache e forçar recarga dos templates
@@ -21,20 +22,20 @@ export async function clearAllCaches(): Promise<void> {
   try {
     // Limpar cache do TemplateService (Memory + IndexedDB)
     templateService.clearCache();
-    console.log('✅ Cache (Memory) limpo');
+    appLogger.info('✅ Cache (Memory) limpo');
     
     // 3. Limpar versão do localStorage
     try {
       localStorage.removeItem('registry-cache-version');
-      console.log('✅ localStorage limpo');
+      appLogger.info('✅ localStorage limpo');
     } catch {
-      console.warn('⚠️ Não foi possível limpar localStorage');
+      appLogger.warn('⚠️ Não foi possível limpar localStorage');
     }
     
-    console.log('\n✅ Todos os caches limpos com sucesso!');
-    console.log('💡 Recarregue a página (Ctrl+Shift+R) para aplicar as mudanças');
+    appLogger.info('\n✅ Todos os caches limpos com sucesso!');
+    appLogger.info('💡 Recarregue a página (Ctrl+Shift+R) para aplicar as mudanças');
   } catch (error) {
-    console.error('❌ Erro ao limpar caches:', error);
+    appLogger.error('❌ Erro ao limpar caches:', { data: [error] });
   }
   
   console.groupEnd();
@@ -45,7 +46,7 @@ export async function clearAllCaches(): Promise<void> {
  */
 export function clearMemoryCache(): void {
   templateService.clearCache();
-  console.log('✅ Cache limpo - recarregue a página');
+  appLogger.info('✅ Cache limpo - recarregue a página');
 }
 
 /**
@@ -54,5 +55,5 @@ export function clearMemoryCache(): void {
 if (typeof window !== 'undefined') {
   (window as any).clearRegistryCache = clearAllCaches;
   (window as any).clearMemoryCache = clearMemoryCache;
-  console.log('💡 Debug utils disponíveis: clearRegistryCache() ou clearMemoryCache()');
+  appLogger.info('💡 Debug utils disponíveis: clearRegistryCache() ou clearMemoryCache()');
 }

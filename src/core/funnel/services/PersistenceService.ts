@@ -7,6 +7,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { FunnelState } from '../types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface FunnelPersistenceData {
     id: string;
@@ -64,11 +65,11 @@ export class PersistenceService {
         state: FunnelState,
         options: SaveFunnelOptions = {},
     ): Promise<FunnelPersistenceData> {
-        console.log(`💾 Salvando funil: ${state.id}`);
+        appLogger.info(`💾 Salvando funil: ${state.id}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, salvando apenas localmente');
+                appLogger.warn('⚠️ Supabase não disponível, salvando apenas localmente');
                 return this.saveToLocalStorage(state, options);
             }
 
@@ -104,11 +105,11 @@ export class PersistenceService {
                     .single();
 
                 if (error) {
-                    console.error('❌ Erro ao atualizar funil:', error);
+                    appLogger.error('❌ Erro ao atualizar funil:', { data: [error] });
                     return this.saveToLocalStorage(state, options);
                 }
 
-                console.log(`✅ Funil atualizado: ${state.id}`);
+                appLogger.info(`✅ Funil atualizado: ${state.id}`);
                 return this.convertToFunnelPersistenceData(data, state);
             } else {
                 // Criar novo
@@ -119,15 +120,15 @@ export class PersistenceService {
                     .single();
 
                 if (error) {
-                    console.error('❌ Erro ao criar funil:', error);
+                    appLogger.error('❌ Erro ao criar funil:', { data: [error] });
                     return this.saveToLocalStorage(state, options);
                 }
 
-                console.log(`✅ Funil criado: ${state.id}`);
+                appLogger.info(`✅ Funil criado: ${state.id}`);
                 return this.convertToFunnelPersistenceData(data, state);
             }
         } catch (error) {
-            console.error('Error in saveFunnel:', error);
+            appLogger.error('Error in saveFunnel:', { data: [error] });
             return this.saveToLocalStorage(state, options);
         }
     }
@@ -139,11 +140,11 @@ export class PersistenceService {
         funnelId: string,
         options: LoadFunnelOptions = {},
     ): Promise<FunnelState | null> {
-        console.log(`📖 Carregando funil: ${funnelId}`);
+        appLogger.info(`📖 Carregando funil: ${funnelId}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, carregando do localStorage');
+                appLogger.warn('⚠️ Supabase não disponível, carregando do localStorage');
                 return this.loadFromLocalStorage(funnelId);
             }
 
@@ -163,17 +164,17 @@ export class PersistenceService {
             const { data, error } = await query.single();
 
             if (error || !data) {
-                console.warn(`⚠️ Funil não encontrado no Supabase: ${funnelId}`);
+                appLogger.warn(`⚠️ Funil não encontrado no Supabase: ${funnelId}`);
                 return this.loadFromLocalStorage(funnelId);
             }
 
             // Converter dados do Supabase para FunnelState (mudado de 'settings' para 'config')
             const funnelState = data.config as unknown as FunnelState;
 
-            console.log(`✅ Funil carregado: ${funnelId}`);
+            appLogger.info(`✅ Funil carregado: ${funnelId}`);
             return funnelState;
         } catch (error) {
-            console.error('Error in loadFunnel:', error);
+            appLogger.error('Error in loadFunnel:', { data: [error] });
             return this.loadFromLocalStorage(funnelId);
         }
     }
@@ -185,11 +186,11 @@ export class PersistenceService {
         userId?: string,
         options: LoadFunnelOptions = {},
     ): Promise<FunnelListItem[]> {
-        console.log(`📋 Listando funis do usuário: ${userId}`);
+        appLogger.info(`📋 Listando funis do usuário: ${userId}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, carregando do localStorage');
+                appLogger.warn('⚠️ Supabase não disponível, carregando do localStorage');
                 return this.listFromLocalStorage();
             }
 
@@ -219,7 +220,7 @@ export class PersistenceService {
             const { data, error } = await query;
 
             if (error) {
-                console.error('❌ Erro ao listar funis:', error);
+                appLogger.error('❌ Erro ao listar funis:', { data: [error] });
                 return this.listFromLocalStorage();
             }
 
@@ -235,10 +236,10 @@ export class PersistenceService {
                 usage_count: 0, // TODO: Implementar contagem de uso
             }));
 
-            console.log(`✅ Encontrados ${funnelList.length} funis`);
+            appLogger.info(`✅ Encontrados ${funnelList.length} funis`);
             return funnelList;
         } catch (error) {
-            console.error('Error in listFunnels:', error);
+            appLogger.error('Error in listFunnels:', { data: [error] });
             return this.listFromLocalStorage();
         }
     }
@@ -247,11 +248,11 @@ export class PersistenceService {
      * Remove um funil
      */
     async deleteFunnel(funnelId: string, userId?: string): Promise<boolean> {
-        console.log(`🗑️ Removendo funil: ${funnelId}`);
+        appLogger.info(`🗑️ Removendo funil: ${funnelId}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, removendo do localStorage');
+                appLogger.warn('⚠️ Supabase não disponível, removendo do localStorage');
                 return this.deleteFromLocalStorage(funnelId);
             }
 
@@ -267,17 +268,17 @@ export class PersistenceService {
             const { error } = await query;
 
             if (error) {
-                console.error('❌ Erro ao remover funil:', error);
+                appLogger.error('❌ Erro ao remover funil:', { data: [error] });
                 return false;
             }
 
             // Também remover do localStorage como limpeza
             this.deleteFromLocalStorage(funnelId);
 
-            console.log(`✅ Funil removido: ${funnelId}`);
+            appLogger.info(`✅ Funil removido: ${funnelId}`);
             return true;
         } catch (error) {
-            console.error('Error in deleteFunnel:', error);
+            appLogger.error('Error in deleteFunnel:', { data: [error] });
             return false;
         }
     }
@@ -286,11 +287,11 @@ export class PersistenceService {
      * Publica/despublica um funil
      */
     async publishFunnel(funnelId: string, isPublished: boolean, userId?: string): Promise<boolean> {
-        console.log(`📢 ${isPublished ? 'Publicando' : 'Despublicando'} funil: ${funnelId}`);
+        appLogger.info(`📢 ${isPublished ? 'Publicando' : 'Despublicando'} funil: ${funnelId}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, não é possível publicar');
+                appLogger.warn('⚠️ Supabase não disponível, não é possível publicar');
                 return false;
             }
 
@@ -309,14 +310,14 @@ export class PersistenceService {
             const { error } = await query;
 
             if (error) {
-                console.error('❌ Erro ao publicar funil:', error);
+                appLogger.error('❌ Erro ao publicar funil:', { data: [error] });
                 return false;
             }
 
-            console.log(`✅ Funil ${isPublished ? 'publicado' : 'despublicado'}: ${funnelId}`);
+            appLogger.info(`✅ Funil ${isPublished ? 'publicado' : 'despublicado'}: ${funnelId}`);
             return true;
         } catch (error) {
-            console.error('Error in publishFunnel:', error);
+            appLogger.error('Error in publishFunnel:', { data: [error] });
             return false;
         }
     }
@@ -363,7 +364,7 @@ export class PersistenceService {
 
         localStorage.setItem('funnels-list', JSON.stringify(funnelsList));
 
-        console.log(`✅ Funil salvo localmente: ${state.id}`);
+        appLogger.info(`✅ Funil salvo localmente: ${state.id}`);
         return data;
     }
 
@@ -375,7 +376,7 @@ export class PersistenceService {
             const parsed = JSON.parse(data) as FunnelPersistenceData;
             return parsed.funnel_data as FunnelState;
         } catch (error) {
-            console.error('Error loading from localStorage:', error);
+            appLogger.error('Error loading from localStorage:', { data: [error] });
             return null;
         }
     }
@@ -385,7 +386,7 @@ export class PersistenceService {
             const data = localStorage.getItem('funnels-list');
             return data ? JSON.parse(data) : [];
         } catch (error) {
-            console.error('Error listing from localStorage:', error);
+            appLogger.error('Error listing from localStorage:', { data: [error] });
             return [];
         }
     }
@@ -399,10 +400,10 @@ export class PersistenceService {
             const filtered = funnelsList.filter(f => f.id !== funnelId);
             localStorage.setItem('funnels-list', JSON.stringify(filtered));
 
-            console.log(`✅ Funil removido localmente: ${funnelId}`);
+            appLogger.info(`✅ Funil removido localmente: ${funnelId}`);
             return true;
         } catch (error) {
-            console.error('Error deleting from localStorage:', error);
+            appLogger.error('Error deleting from localStorage:', { data: [error] });
             return false;
         }
     }
@@ -428,13 +429,13 @@ export class PersistenceService {
                 .single();
 
             if (error && error.code !== 'PGRST116') { // PGRST116 = not found
-                console.warn('❌ Erro ao verificar existência do funil:', error);
+                appLogger.warn('❌ Erro ao verificar existência do funil:', { data: [error] });
                 return false;
             }
 
             return !!data;
         } catch (error) {
-            console.warn('❌ Erro ao verificar existência do funil:', error);
+            appLogger.warn('❌ Erro ao verificar existência do funil:', { data: [error] });
             return false;
         }
     }

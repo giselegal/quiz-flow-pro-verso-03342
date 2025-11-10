@@ -11,6 +11,7 @@
 
 import { Block, BlockType } from '@/types/editor';
 import { MASTER_BLOCK_REGISTRY } from '@/config/masterSchema';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos simples para o serviço
 export interface EditorOperation {
@@ -253,7 +254,7 @@ class UnifiedEditorService {
             try {
                 callback(state);
             } catch (error) {
-                console.error('Error in subscriber callback:', error);
+                appLogger.error('Error in subscriber callback:', { data: [error] });
             }
         });
     }

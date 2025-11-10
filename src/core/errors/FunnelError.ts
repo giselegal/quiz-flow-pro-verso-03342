@@ -16,6 +16,7 @@ import {
     ErrorSeverity,
     RecoveryStrategy,
 } from './FunnelErrorCodes';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES E TIPOS
@@ -132,7 +133,7 @@ export class FunnelError extends Error {
 
         // Se não encontrar definição, usar valores padrão
         if (!definition) {
-            console.warn(`FunnelError: Unknown error code ${code}, using defaults`);
+            appLogger.warn(`FunnelError: Unknown error code ${code}, using defaults`);
             this.definition = {
                 code,
                 userMessage: finalMessage,

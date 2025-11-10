@@ -14,6 +14,7 @@
  */
 
 import React, { lazy, ComponentType, Suspense } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // 🎯 CHUNK SPLITTING STRATEGY
 enum ChunkPriority {
@@ -112,12 +113,12 @@ class BundleOptimizer {
     const config = CHUNK_REGISTRY[chunkName];
     
     if (!config) {
-      console.warn(`⚠️ Chunk ${chunkName} not found in registry`);
+      appLogger.warn(`⚠️ Chunk ${chunkName} not found in registry`);
     }
 
     // Create lazy component with custom loading logic
     const LazyComponent = lazy(async () => {
-      console.log(`📦 Loading chunk: ${chunkName} (${config?.priority || 'unknown'})`);
+      appLogger.info(`📦 Loading chunk: ${chunkName} (${config?.priority || 'unknown'})`);
       const startTime = performance.now();
       
       try {
@@ -125,12 +126,12 @@ class BundleOptimizer {
         const loadTime = performance.now() - startTime;
         
         this.loadedChunks.add(chunkName);
-        console.log(`✅ Chunk loaded: ${chunkName} in ${loadTime.toFixed(2)}ms`);
+        appLogger.info(`✅ Chunk loaded: ${chunkName} in ${loadTime.toFixed(2)}ms`);
         
         this.updateBundleStats(chunkName, config);
         return module;
       } catch (error) {
-        console.error(`❌ Failed to load chunk ${chunkName}:`, error);
+        appLogger.error(`❌ Failed to load chunk ${chunkName}:`, { data: [error] });
         throw error;
       }
     });
@@ -147,7 +148,7 @@ class BundleOptimizer {
    * 🎯 PRELOAD STRATEGY - Preload baseado em prioridade
    */
   async preloadHighPriorityChunks(): Promise<void> {
-    console.log('🚀 Starting high-priority chunk preloading...');
+    appLogger.info('🚀 Starting high-priority chunk preloading...');
     
     const highPriorityChunks = Object.entries(CHUNK_REGISTRY)
       .filter(([, config]) => config.priority === ChunkPriority.HIGH && config.preload)
@@ -159,7 +160,7 @@ class BundleOptimizer {
 
     await Promise.allSettled(preloadPromises);
     this.bundleStats.highPriorityLoaded = true;
-    console.log('✅ High-priority chunks preloaded');
+    appLogger.info('✅ High-priority chunks preloaded');
   }
 
   /**
@@ -174,16 +175,16 @@ class BundleOptimizer {
     
     try {
       // Simulate preloading (in real implementation, this would use dynamic imports)
-      console.log(`⚡ Preloading chunk: ${chunkName}`);
+      appLogger.info(`⚡ Preloading chunk: ${chunkName}`);
       
       // Add small delay to simulate real loading
       await new Promise(resolve => setTimeout(resolve, 10));
       
       this.preloadingChunks.delete(chunkName);
-      console.log(`✅ Preloaded: ${chunkName}`);
+      appLogger.info(`✅ Preloaded: ${chunkName}`);
     } catch (error) {
       this.preloadingChunks.delete(chunkName);
-      console.warn(`⚠️ Failed to preload ${chunkName}:`, error);
+      appLogger.warn(`⚠️ Failed to preload ${chunkName}:`, { data: [error] });
     }
   }
 
@@ -212,7 +213,7 @@ class BundleOptimizer {
    * 📊 UPDATE BUNDLE STATS
    */
   private updateBundleStats(chunkName: string, config?: ChunkConfig): void {
-    console.log(`📊 Updating bundle stats for: ${chunkName}`);
+    appLogger.info(`📊 Updating bundle stats for: ${chunkName}`);
     if (config?.estimatedSize) {
       const sizeKB = parseInt(config.estimatedSize.replace('KB', ''));
       this.bundleStats.loadedSize += sizeKB;
@@ -292,7 +293,7 @@ class BundleOptimizer {
    */
   cleanupUnusedChunks(): void {
     // In a real implementation, this would unload chunks that haven't been used recently
-    console.log('🧹 Cleanup unused chunks (placeholder)');
+    appLogger.info('🧹 Cleanup unused chunks (placeholder)');
   }
 }
 

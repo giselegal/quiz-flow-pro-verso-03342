@@ -50,6 +50,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const TEMPLATE_CATEGORIES = {
     'custom': 'Personalizado',
@@ -84,14 +85,14 @@ const MyTemplatesPage: React.FC = () => {
         const loadThumbnails = async () => {
             if (templates.length === 0) return;
 
-            console.log('🖼️ Carregando thumbnails para', templates.length, 'templates...');
+            appLogger.info('🖼️ Carregando thumbnails para', { data: [templates.length, 'templates...'] });
 
             const thumbnailPromises = templates.map(async (template) => {
                 try {
                     const thumbnailUrl = await getTemplateThumbnail(template.id);
                     return { id: template.id, url: thumbnailUrl };
                 } catch (error) {
-                    console.error(`Erro ao carregar thumbnail para ${template.id}:`, error);
+                    appLogger.error(`Erro ao carregar thumbnail para ${template.id}:`, { data: [error] });
                     return { id: template.id, url: '' };
                 }
             });
@@ -103,7 +104,7 @@ const MyTemplatesPage: React.FC = () => {
             }, {} as Record<string, string>);
 
             setThumbnails(thumbnailMap);
-            console.log('✅ Thumbnails carregados:', Object.keys(thumbnailMap).length);
+            appLogger.info('✅ Thumbnails carregados:', { data: [Object.keys(thumbnailMap).length] });
         };
 
         loadThumbnails();
@@ -123,7 +124,7 @@ const MyTemplatesPage: React.FC = () => {
      * Editar template - abre no editor
      */
     const handleEditTemplate = async (template: UserTemplate) => {
-        console.log('✏️ Editando template:', template.id);
+        appLogger.info('✏️ Editando template:', { data: [template.id] });
 
         try {
             // Incrementar contador de uso
@@ -132,7 +133,7 @@ const MyTemplatesPage: React.FC = () => {
             // Navegar para o editor com o template
             setLocation(`/editor?template=${encodeURIComponent(template.id)}&context=my-templates`);
         } catch (error) {
-            console.error('❌ Erro ao editar template:', error);
+            appLogger.error('❌ Erro ao editar template:', { data: [error] });
         }
     };
 
@@ -140,7 +141,7 @@ const MyTemplatesPage: React.FC = () => {
      * Usar template - cria novo funil baseado no template
      */
     const handleUseTemplate = async (template: UserTemplate) => {
-        console.log('🚀 Usando template para criar novo funil:', template.id);
+        appLogger.info('🚀 Usando template para criar novo funil:', { data: [template.id] });
 
         try {
             // Incrementar contador de uso
@@ -152,7 +153,7 @@ const MyTemplatesPage: React.FC = () => {
             // Navegar para o editor criando um novo funil
             setLocation(`/editor?template=${encodeURIComponent(template.id)}&funnel=${newFunnelId}&context=my-funnels&mode=create`);
         } catch (error) {
-            console.error('❌ Erro ao usar template:', error);
+            appLogger.error('❌ Erro ao usar template:', { data: [error] });
         }
     };
 
@@ -160,7 +161,7 @@ const MyTemplatesPage: React.FC = () => {
      * Visualizar template
      */
     const handlePreviewTemplate = async (template: UserTemplate) => {
-        console.log('👁️ Visualizando template:', template.id);
+        appLogger.info('👁️ Visualizando template:', { data: [template.id] });
 
         try {
             // Incrementar contador de uso
@@ -169,7 +170,7 @@ const MyTemplatesPage: React.FC = () => {
             // Navegar para preview
             setLocation(`/preview?template=${encodeURIComponent(template.id)}&context=my-templates`);
         } catch (error) {
-            console.error('❌ Erro ao visualizar template:', error);
+            appLogger.error('❌ Erro ao visualizar template:', { data: [error] });
         }
     };
 
@@ -177,13 +178,13 @@ const MyTemplatesPage: React.FC = () => {
      * Duplicar template
      */
     const handleDuplicateTemplate = async (template: UserTemplate) => {
-        console.log('📋 Duplicando template:', template.id);
+        appLogger.info('📋 Duplicando template:', { data: [template.id] });
 
         try {
             // Navegar para editor com template duplicado
             setLocation(`/editor?duplicate=${encodeURIComponent(template.id)}&context=my-templates`);
         } catch (error) {
-            console.error('❌ Erro ao duplicar template:', error);
+            appLogger.error('❌ Erro ao duplicar template:', { data: [error] });
         }
     };    /**
      * Confirmar exclusão de template
@@ -191,15 +192,15 @@ const MyTemplatesPage: React.FC = () => {
     const handleDeleteTemplate = async () => {
         if (!templateToDelete) return;
 
-        console.log('🗑️ Deletando template:', templateToDelete.id);
+        appLogger.info('🗑️ Deletando template:', { data: [templateToDelete.id] });
 
         try {
             const success = await deleteTemplate(templateToDelete.id);
             if (success) {
-                console.log('✅ Template deletado com sucesso');
+                appLogger.info('✅ Template deletado com sucesso');
             }
         } catch (error) {
-            console.error('❌ Erro ao deletar template:', error);
+            appLogger.error('❌ Erro ao deletar template:', { data: [error] });
         } finally {
             setTemplateToDelete(null);
         }

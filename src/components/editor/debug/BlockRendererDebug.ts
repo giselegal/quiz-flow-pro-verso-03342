@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔍 BLOCK RENDERER DEBUG UTILITIES
  * 
@@ -43,11 +44,11 @@ class BlockRendererDebug {
 
         // Log renders lentos
         if (stats.renderTime > 50) {
-            console.warn('⚠️ Render lento detectado:', {
-                blockType: stats.blockType,
-                renderTime: `${stats.renderTime.toFixed(2)}ms`,
-                blockId: stats.blockId,
-            });
+            appLogger.warn('⚠️ Render lento detectado:', { data: [{
+                            blockType: stats.blockType,
+                            renderTime: `${stats.renderTime.toFixed(2)}ms`,
+                            blockId: stats.blockId,
+                        }] });
         }
     }
 
@@ -134,30 +135,30 @@ class BlockRendererDebug {
 
         console.group('📊 Block Renderer Performance Report');
 
-        console.log('📈 Estatísticas Gerais:', {
-            totalRenders: report.totalRenders,
-            avgRenderTime: `${report.avgRenderTime}ms`,
-            slowRenders: `${report.slowRenders} (${report.slowRenderPercentage}%)`,
-            uniqueComponents: report.uniqueComponentTypes,
-        });
+        appLogger.info('📈 Estatísticas Gerais:', { data: [{
+                    totalRenders: report.totalRenders,
+                    avgRenderTime: `${report.avgRenderTime}ms`,
+                    slowRenders: `${report.slowRenders} (${report.slowRenderPercentage}%)`,
+                    uniqueComponents: report.uniqueComponentTypes,
+                }] });
 
-        console.log('🗂️ Cache Stats:', report.cacheStats);
+        appLogger.info('🗂️ Cache Stats:', { data: [report.cacheStats] });
 
-        console.log('🎯 Top 5 Componentes Mais Utilizados:');
+        appLogger.info('🎯 Top 5 Componentes Mais Utilizados:');
         Object.entries(typeStats)
             .sort(([, a], [, b]) => b.count - a.count)
             .slice(0, 5)
             .forEach(([type, stats]) => {
-                console.log(`  ${type}: ${stats.count} renders (${stats.avgRenderTime}ms avg)`);
+                appLogger.info(`  ${type}: ${stats.count} renders (${stats.avgRenderTime}ms avg)`);
             });
 
-        console.log('⚠️ Componentes Mais Lentos:');
+        appLogger.info('⚠️ Componentes Mais Lentos:');
         Object.entries(typeStats)
             .filter(([, stats]) => stats.avgRenderTime > 30)
             .sort(([, a], [, b]) => b.avgRenderTime - a.avgRenderTime)
             .slice(0, 5)
             .forEach(([type, stats]) => {
-                console.log(`  ${type}: ${stats.avgRenderTime}ms avg (${stats.slowRenders} slow)`);
+                appLogger.info(`  ${type}: ${stats.avgRenderTime}ms avg (${stats.slowRenders} slow)`);
             });
 
         console.groupEnd();
@@ -176,7 +177,7 @@ if (typeof window !== 'undefined') {
         clear: () => blockRendererDebug.clearStats(),
     };
 
-    console.log('🔍 Block Renderer Debug disponível em: window.__blockRendererDebug');
+    appLogger.info('🔍 Block Renderer Debug disponível em: window.__blockRendererDebug');
 }
 
 export default blockRendererDebug;

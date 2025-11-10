@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
 import { EditorProviderCanonical } from '@/components/editor/EditorProviderCanonical';
 import { useEditorOptional } from '@/hooks/useEditor';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface ModularPreviewContainerProps {
     funnelId?: string;
@@ -63,9 +63,9 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
         const hasProvider = !!maybeEditor;
         const hasActions = !!maybeEditor?.actions;
         // eslint-disable-next-line no-console
-        console.debug('[ModularPreviewContainer] Provider status:', { hasProvider, hasActions });
+        appLogger.debug('[ModularPreviewContainer] Provider status:', { data: [{ hasProvider, hasActions }] });
     } catch (error) {
-        console.warn('[ModularPreviewContainer] Erro ao verificar provider:', error);
+        appLogger.warn('[ModularPreviewContainer] Erro ao verificar provider:', { data: [error] });
     }
     const { ui, togglePropertiesPanel } = useGlobalUI();
 
@@ -109,7 +109,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
                         setSelectedBlockId(firstBlockId);
                     }
                 } catch (error) {
-                    console.warn('[ModularPreviewContainer] Erro ao processar tecla Tab:', error);
+                    appLogger.warn('[ModularPreviewContainer] Erro ao processar tecla Tab:', { data: [error] });
                 }
             }
         };
@@ -204,7 +204,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
                 setQsAuto(params.get('auto') === '1');
             }
         } catch (error) {
-            console.warn('[ModularPreviewContainer] Erro ao parsear query params:', error);
+            appLogger.warn('[ModularPreviewContainer] Erro ao parsear query params:', { data: [error] });
         }
     }, []);
 

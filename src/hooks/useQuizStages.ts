@@ -5,6 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizStage {
   id: string;
@@ -26,24 +27,24 @@ export const useQuizStages = () => {
     };
     
     setStages(prev => [...prev, newStage]);
-    console.log('➕ Stage adicionado:', newStage);
+    appLogger.info('➕ Stage adicionado:', { data: [newStage] });
   }, []);
 
   const updateStage = useCallback((stageId: string, updates: Partial<QuizStage>) => {
     setStages(prev => prev.map(stage => 
       stage.id === stageId ? { ...stage, ...updates } : stage,
     ));
-    console.log('🔄 Stage atualizado:', stageId, updates);
+    appLogger.info('🔄 Stage atualizado:', { data: [stageId, updates] });
   }, []);
 
   const removeStage = useCallback((stageId: string) => {
     setStages(prev => prev.filter(stage => stage.id !== stageId));
-    console.log('🗑️ Stage removido:', stageId);
+    appLogger.info('🗑️ Stage removido:', { data: [stageId] });
   }, []);
 
   const goToStage = useCallback((stageId: string) => {
     setCurrentStage(stageId);
-    console.log('📍 Navegando para stage:', stageId);
+    appLogger.info('📍 Navegando para stage:', { data: [stageId] });
   }, []);
 
   return {

@@ -9,6 +9,7 @@
 import QUIZ_STYLE_21_STEPS_TEMPLATE from './quiz21StepsComplete.json';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
 import { normalizeTemplateBlocks } from '@/lib/utils/blockNormalization';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Export centralizado para uso em imports dinâmicos (fonte canônica)
 export const getQuiz21StepsTemplate = () => {
@@ -57,7 +58,7 @@ function readPreferSectionsV3(): boolean {
     if (ls === '1') return true;
     if (ls === '0') return false;
   } catch (error) {
-    console.warn('[imports] Erro ao verificar preferência sectionsV3:', error);
+    appLogger.warn('[imports] Erro ao verificar preferência sectionsV3:', { data: [error] });
   }
   const w = window as any;
   return !!w.__editorPreferSectionsV3;
@@ -109,7 +110,7 @@ export const loadTemplate = async (templateId: string) => {
                   registry.registerOverride(stepId, json as any);
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
-                    console.log(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
+                    appLogger.info(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
                   }
                   return true;
                 }
@@ -121,7 +122,7 @@ export const loadTemplate = async (templateId: string) => {
                   registry.registerOverride(stepId, json as any);
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
-                    console.log(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
+                    appLogger.info(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
                   }
                   return true;
                 }
@@ -134,7 +135,7 @@ export const loadTemplate = async (templateId: string) => {
                   registry.registerOverride(stepId, json as any);
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
-                    console.log(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
+                    appLogger.info(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
                   }
                   return true;
                 }
@@ -146,14 +147,14 @@ export const loadTemplate = async (templateId: string) => {
                   registry.registerOverride(stepId, json as any);
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
-                    console.log(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
+                    appLogger.info(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
                   }
                   return true;
                 }
               }
               return false;
             } catch (error) {
-              console.warn(`[imports] Erro ao carregar JSON v3 para step ${stepId}:`, error);
+              appLogger.warn(`[imports] Erro ao carregar JSON v3 para step ${stepId}:`, { data: [error] });
               return false;
             } finally {
               // Marcar como tentado para evitar spam de 404; novo build/refresh limpa este estado.
@@ -166,7 +167,7 @@ export const loadTemplate = async (templateId: string) => {
       try { 
         await w.__jsonV3InFlight.get(stepId); 
       } catch (error) {
-        console.warn(`[imports] Erro ao aguardar carregamento JSON v3 (step ${stepId}):`, error);
+        appLogger.warn(`[imports] Erro ao aguardar carregamento JSON v3 (step ${stepId}):`, { data: [error] });
       }
       // limpeza de referência em voo após término
       w.__jsonV3InFlight.delete(stepId);
@@ -177,7 +178,7 @@ export const loadTemplate = async (templateId: string) => {
   const { step, source: stepSource } = getStepTemplate(stepId);
 
   if (process.env.NODE_ENV === 'development') {
-    console.log(`📦 [loadTemplate] step=${stepId} • source=${stepSource}`);
+    appLogger.info(`📦 [loadTemplate] step=${stepId} • source=${stepSource}`);
   }
 
   return {
@@ -205,7 +206,7 @@ try {
 
       // Verificar se já existe
       if (registry.has(normalizedKey)) {
-        console.warn(`⚠️  Step '${normalizedKey}' já está registrado. Sobrescrevendo...`);
+        appLogger.warn(`⚠️  Step '${normalizedKey}' já está registrado. Sobrescrevendo...`);
       }
 
       // normaliza tipos (aliases → canônico 'options-grid')
@@ -218,10 +219,10 @@ try {
     }
   }
 
-  console.log(`✅ TemplateRegistry registrado: ${registered} steps`);
-  console.log('📋 Steps registrados:', registeredKeys.sort());
+  appLogger.info(`✅ TemplateRegistry registrado: ${registered} steps`);
+  appLogger.info('📋 Steps registrados:', { data: [registeredKeys.sort()] });
 } catch (err) {
-  console.error('❌ Erro ao registrar templates no TemplateRegistry:', err);
+  appLogger.error('❌ Erro ao registrar templates no TemplateRegistry:', { data: [err] });
 }
 
 // 🌐 Browser-only: pré-carregar overrides JSON v3 para steps conhecidos (1..21)
@@ -263,7 +264,7 @@ if (typeof window !== 'undefined') {
                       registry.registerOverride(id, json as any);
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
-                        console.log(`🧩 [imports] Override JSON ${firstUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
+                        appLogger.info(`🧩 [imports] Override JSON ${firstUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
                       }
                       return true;
                     }
@@ -274,13 +275,13 @@ if (typeof window !== 'undefined') {
                       registry.registerOverride(id, json as any);
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
-                        console.log(`🧩 [imports] Override JSON ${secondUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
+                        appLogger.info(`🧩 [imports] Override JSON ${secondUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
                       }
                       return true;
                     }
                     return false;
                   } catch (error) {
-                    console.warn(`[imports] Erro ao pré-carregar JSON para ${id}:`, error);
+                    appLogger.warn(`[imports] Erro ao pré-carregar JSON para ${id}:`, { data: [error] });
                     return false;
                   } finally {
                     w.__jsonV3Attempts.add(id);
@@ -291,13 +292,13 @@ if (typeof window !== 'undefined') {
             try { 
               await w.__jsonV3InFlight.get(id); 
             } catch (error) {
-              console.warn(`[imports] Erro ao aguardar pré-carregamento para ${id}:`, error);
+              appLogger.warn(`[imports] Erro ao aguardar pré-carregamento para ${id}:`, { data: [error] });
             }
             w.__jsonV3InFlight.delete(id);
           }),
         );
       } catch (error) {
-        console.warn('[imports] Erro ao iniciar pré-carregamento JSON v3:', error);
+        appLogger.warn('[imports] Erro ao iniciar pré-carregamento JSON v3:', { data: [error] });
       }
     }, 0);
   }

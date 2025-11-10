@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import { appLogger } from '@/lib/utils/logger';
 
 interface AdminRouteProps {
   children: React.ReactNode;

@@ -10,6 +10,7 @@
 
 import { editorMetrics } from './editorMetrics';
 import { generateSessionId as genSessionId } from '@/lib/utils/idGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Configuração de telemetria
@@ -126,7 +127,7 @@ export class EditorTelemetryService {
     this.sessionStartMetrics = editorMetrics.getReport();
 
     if (this.config.logToConsole) {
-      console.log('📊 [Telemetry] Session started:', sessionId);
+      appLogger.info('📊 [Telemetry] Session started:', { data: [sessionId] });
     }
 
     return sessionId;
@@ -144,12 +145,12 @@ export class EditorTelemetryService {
     const report = this.getSessionReport();
 
     if (this.config.logToConsole) {
-      console.log('📊 [Telemetry] Session ended:', report);
+      appLogger.info('📊 [Telemetry] Session ended:', { data: [report] });
     }
 
     if (this.config.sendToServer && this.config.serverEndpoint) {
       this.sendToServer(report).catch(err => 
-        console.error('Failed to send telemetry:', err)
+        appLogger.error('Failed to send telemetry:', { data: [err] })
       );
     }
 
@@ -249,7 +250,7 @@ export class EditorTelemetryService {
     editorMetrics.clear();
 
     if (this.config.logToConsole) {
-      console.log('📊 [Telemetry] Data cleared');
+      appLogger.info('📊 [Telemetry] Data cleared');
     }
   }
 
@@ -295,7 +296,7 @@ export class EditorTelemetryService {
         throw new Error(`HTTP ${response.status}`);
       }
     } catch (error) {
-      console.error('Failed to send telemetry to server:', error);
+      appLogger.error('Failed to send telemetry to server:', { data: [error] });
       throw error;
     }
   }
@@ -306,16 +307,16 @@ export class EditorTelemetryService {
   logReport() {
     const report = this.getSessionReport();
     if (!report) {
-      console.log('📊 [Telemetry] No active session');
+      appLogger.info('📊 [Telemetry] No active session');
       return;
     }
 
     console.group('📊 Editor Telemetry Report');
-    console.log(`Session ID: ${report.session.sessionId}`);
-    console.log(`Duration: ${(report.duration / 1000).toFixed(1)}s`);
-    console.log('\n📝 Metrics:');
+    appLogger.info(`Session ID: ${report.session.sessionId}`);
+    appLogger.info(`Duration: ${(report.duration / 1000).toFixed(1)}s`);
+    appLogger.info('\n📝 Metrics:');
     console.table(report.metrics);
-    console.log('\n⚡ Performance:');
+    appLogger.info('\n⚡ Performance:');
     console.table(report.performance);
     console.groupEnd();
   }

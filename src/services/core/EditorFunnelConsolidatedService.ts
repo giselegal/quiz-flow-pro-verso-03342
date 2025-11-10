@@ -14,6 +14,7 @@
 
 import { supabaseApiClient } from './SupabaseApiClient';
 import { unifiedTemplateService } from '@/services/aliases';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -86,7 +87,7 @@ class EditorFunnelConsolidatedService {
     private getFromCache<T>(key: string): T | null {
         const cached = this.cache.get(key);
         if (cached && Date.now() - cached.timestamp < cached.ttl) {
-            console.log(`📊 Consolidated Cache hit: ${key}`);
+            appLogger.info(`📊 Consolidated Cache hit: ${key}`);
             return cached.data;
         }
         return null;
@@ -150,11 +151,11 @@ class EditorFunnelConsolidatedService {
 
             // Fallback to Supabase - note: getTemplates method doesn't exist in current SupabaseApiClient
             // For now, we'll skip this fallback to avoid errors
-            console.warn(`❌ Template ${templateId} not found in UnifiedTemplateService`);
+            appLogger.warn(`❌ Template ${templateId} not found in UnifiedTemplateService`);
             return null;
 
         } catch (error) {
-            console.error('Error getting consolidated template:', error);
+            appLogger.error('Error getting consolidated template:', { data: [error] });
             return null;
         }
     }
@@ -200,7 +201,7 @@ class EditorFunnelConsolidatedService {
                     }
                 }
             } catch (error) {
-                console.warn('Error loading from UnifiedTemplateService:', error);
+                appLogger.warn('Error loading from UnifiedTemplateService:', { data: [error] });
             }
 
             // Get additional templates from Supabase if needed
@@ -209,11 +210,11 @@ class EditorFunnelConsolidatedService {
 
             // Cache results
             this.setCache(cacheKey, templates);
-            console.log(`✅ Loaded ${templates.length} consolidated templates`);
+            appLogger.info(`✅ Loaded ${templates.length} consolidated templates`);
             return templates;
 
         } catch (error) {
-            console.error('Error getting consolidated templates:', error);
+            appLogger.error('Error getting consolidated templates:', { data: [error] });
             return [];
         }
     }
@@ -235,7 +236,7 @@ class EditorFunnelConsolidatedService {
             const response = await supabaseApiClient.getFunnelById(funnelId);
 
             if (response.status !== 'success' || !response.data) {
-                console.warn(`❌ Funnel ${funnelId} not found`);
+                appLogger.warn(`❌ Funnel ${funnelId} not found`);
                 return null;
             }
 
@@ -257,7 +258,7 @@ class EditorFunnelConsolidatedService {
             return consolidatedFunnel;
 
         } catch (error) {
-            console.error('Error getting consolidated funnel:', error);
+            appLogger.error('Error getting consolidated funnel:', { data: [error] });
             return null;
         }
     }
@@ -281,7 +282,7 @@ class EditorFunnelConsolidatedService {
             });
 
             if (response.status !== 'success' || !response.data) {
-                console.warn('❌ No funnels found');
+                appLogger.warn('❌ No funnels found');
                 return [];
             }
 
@@ -304,11 +305,11 @@ class EditorFunnelConsolidatedService {
 
             // Cache results
             this.setCache(cacheKey, funnels);
-            console.log(`✅ Loaded ${funnels.length} consolidated funnels`);
+            appLogger.info(`✅ Loaded ${funnels.length} consolidated funnels`);
             return funnels;
 
         } catch (error) {
-            console.error('Error getting consolidated funnels:', error);
+            appLogger.error('Error getting consolidated funnels:', { data: [error] });
             return [];
         }
     }
@@ -336,7 +337,7 @@ class EditorFunnelConsolidatedService {
                 .single();
 
             if (error) {
-                console.error('Error creating funnel:', error);
+                appLogger.error('Error creating funnel:', { data: [error] });
                 return null;
             }
 
@@ -355,11 +356,11 @@ class EditorFunnelConsolidatedService {
                 updated_at: data.updated_at || new Date().toISOString(),
             };
 
-            console.log(`✅ Created funnel: ${data.id}`);
+            appLogger.info(`✅ Created funnel: ${data.id}`);
             return consolidatedFunnel;
 
         } catch (error) {
-            console.error('Error creating consolidated funnel:', error);
+            appLogger.error('Error creating consolidated funnel:', { data: [error] });
             return null;
         }
     }
@@ -381,7 +382,7 @@ class EditorFunnelConsolidatedService {
         };
 
         this.editorSessions.set(sessionId, session);
-        console.log(`🎨 Editor session started: ${sessionId}`);
+        appLogger.info(`🎨 Editor session started: ${sessionId}`);
         return sessionId;
     }
 
@@ -396,14 +397,14 @@ class EditorFunnelConsolidatedService {
         }
 
         Object.assign(session, updates);
-        console.log(`🔄 Editor session updated: ${sessionId}`);
+        appLogger.info(`🔄 Editor session updated: ${sessionId}`);
         return true;
     }
 
     endEditorSession(sessionId: string): boolean {
         const deleted = this.editorSessions.delete(sessionId);
         if (deleted) {
-            console.log(`🏁 Editor session ended: ${sessionId}`);
+            appLogger.info(`🏁 Editor session ended: ${sessionId}`);
         }
         return deleted;
     }
@@ -436,7 +437,7 @@ class EditorFunnelConsolidatedService {
                 },
             ];
         } catch (error) {
-            console.error('Error loading funnel steps:', error);
+            appLogger.error('Error loading funnel steps:', { data: [error] });
             return [];
         }
     }
@@ -509,7 +510,7 @@ class EditorFunnelConsolidatedService {
 
     clearAllCaches(): void {
         this.cache.clear();
-        console.log('🗑️ All consolidated cache cleared');
+        appLogger.info('🗑️ All consolidated cache cleared');
     }
 }
 

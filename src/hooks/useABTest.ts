@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface ABTestVariation {
   id: string;
@@ -104,7 +105,7 @@ export const useABTest = (type: 'result' | 'sales') => {
 
         setIsLoading(false);
       } catch (error) {
-        console.error('Erro ao determinar variação A/B:', error);
+        appLogger.error('Erro ao determinar variação A/B:', { data: [error] });
         setIsLoading(false);
       }
     };
@@ -132,11 +133,9 @@ export const useABTest = (type: 'result' | 'sales') => {
       timestamps.push(new Date().toISOString());
       localStorage.setItem(timestampKey, JSON.stringify(timestamps));
 
-      console.log(
-        `Conversão registrada para teste ${activeTest.id}, variação ${currentVariation.id}`,
-      );
+      appLogger.info(`Conversão registrada para teste ${activeTest.id}, variação ${currentVariation.id}`);
     } catch (error) {
-      console.error('Erro ao registrar conversão:', error);
+      appLogger.error('Erro ao registrar conversão:', { data: [error] });
     }
   };
 

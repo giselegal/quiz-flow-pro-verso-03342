@@ -1,5 +1,6 @@
 import { StorageService } from '@/services/core/StorageService';
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface DraftIndexEntry {
     stepKey: string;
@@ -41,7 +42,7 @@ export const DraftPersistence = {
         try {
             localStorage.removeItem(STEP_KEY(quizId, stepKey));
         } catch (error) {
-            console.warn('[DraftPersistence] Erro ao remover step draft:', error);
+            appLogger.warn('[DraftPersistence] Erro ao remover step draft:', { data: [error] });
         }
         const idx = this.getIndex(quizId);
         if (idx[stepKey]) {

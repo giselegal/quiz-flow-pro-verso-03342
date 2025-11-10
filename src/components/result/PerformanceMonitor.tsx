@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos para o monitoramento de desempenho
 interface PerformanceMetrics {
@@ -62,14 +63,14 @@ const PerformanceMonitor: React.FC = () => {
       });
 
       // Registra em analytics (simulado com console.log)
-      console.log('===== MÉTRICAS DE DESEMPENHO =====');
-      console.log(`Pré-carregamento ativo: ${preloadedResults ? 'Sim' : 'Não'}`);
-      console.log(`Tempo de carregamento da página: ${resultPageLoadTime}ms`);
-      console.log(`Tempo total (fim do quiz até carregamento): ${totalLoadTime}ms`);
+      appLogger.info('===== MÉTRICAS DE DESEMPENHO =====');
+      appLogger.info(`Pré-carregamento ativo: ${preloadedResults ? 'Sim' : 'Não'}`);
+      appLogger.info(`Tempo de carregamento da página: ${resultPageLoadTime}ms`);
+      appLogger.info(`Tempo total (fim do quiz até carregamento): ${totalLoadTime}ms`);
       if (preloadBenefit) {
-        console.log(`Benefício estimado do pré-carregamento: ${preloadBenefit}%`);
+        appLogger.info(`Benefício estimado do pré-carregamento: ${preloadBenefit}%`);
       }
-      console.log('===============================');
+      appLogger.info('===============================');
 
       // Limpa os dados de timestamp para não afetar futuras visitas
       StorageService.safeRemove('quizCompletedAt');

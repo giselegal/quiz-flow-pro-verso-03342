@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🗃️ HYBRID STORAGE SERVICE - SISTEMA REAL RESTAURADO
  * 
@@ -36,7 +37,7 @@ class HybridStorageService {
    * 🚀 INICIALIZAÇÃO DO SISTEMA HÍBRIDO
    */
   async init(): Promise<void> {
-    console.log('🚀 Inicializando HybridStorageService...');
+    appLogger.info('🚀 Inicializando HybridStorageService...');
     
     if (this.config.useIndexedDB) {
       await this.initIndexedDB();
@@ -45,7 +46,7 @@ class HybridStorageService {
     // Limpar cache expirado na inicialização
     this.cleanupExpiredCache();
     
-    console.log('✅ HybridStorageService inicializado com sucesso');
+    appLogger.info('✅ HybridStorageService inicializado com sucesso');
   }
 
   /**
@@ -57,13 +58,13 @@ class HybridStorageService {
         const request = indexedDB.open(this.dbName, this.dbVersion);
         
         request.onerror = () => {
-          console.warn('⚠️ IndexedDB não disponível, usando apenas localStorage');
+          appLogger.warn('⚠️ IndexedDB não disponível, usando apenas localStorage');
           resolve();
         };
         
         request.onsuccess = () => {
           this.indexedDBReady = true;
-          console.log('✅ IndexedDB inicializado');
+          appLogger.info('✅ IndexedDB inicializado');
           resolve();
         };
         
@@ -75,7 +76,7 @@ class HybridStorageService {
         };
       });
     } catch (error) {
-      console.warn('⚠️ Erro ao inicializar IndexedDB:', error);
+      appLogger.warn('⚠️ Erro ao inicializar IndexedDB:', { data: [error] });
     }
   }
 
@@ -99,7 +100,7 @@ class HybridStorageService {
       try {
         localStorage.setItem(`funnel_${key}`, JSON.stringify(item));
       } catch (error) {
-        console.warn('⚠️ Erro ao salvar no localStorage:', error);
+        appLogger.warn('⚠️ Erro ao salvar no localStorage:', { data: [error] });
       }
     }
 
@@ -108,11 +109,11 @@ class HybridStorageService {
       try {
         await this.saveToIndexedDB(key, item);
       } catch (error) {
-        console.warn('⚠️ Erro ao salvar no IndexedDB:', error);
+        appLogger.warn('⚠️ Erro ao salvar no IndexedDB:', { data: [error] });
       }
     }
 
-    console.log(`💾 Dados salvos: ${key}`);
+    appLogger.info(`💾 Dados salvos: ${key}`);
   }
 
   /**
@@ -123,7 +124,7 @@ class HybridStorageService {
     if (this.config.memoryCache) {
       const cached = this.memoryCache.get(key);
       if (cached && this.isItemValid(cached)) {
-        console.log(`⚡ Cache hit (memória): ${key}`);
+        appLogger.info(`⚡ Cache hit (memória): ${key}`);
         return cached.data;
       }
     }
@@ -137,11 +138,11 @@ class HybridStorageService {
           if (this.config.memoryCache) {
             this.memoryCache.set(key, item);
           }
-          console.log(`💾 Carregado do IndexedDB: ${key}`);
+          appLogger.info(`💾 Carregado do IndexedDB: ${key}`);
           return item.data;
         }
       } catch (error) {
-        console.warn('⚠️ Erro ao carregar do IndexedDB:', error);
+        appLogger.warn('⚠️ Erro ao carregar do IndexedDB:', { data: [error] });
       }
     }
 
@@ -156,16 +157,16 @@ class HybridStorageService {
             if (this.config.memoryCache) {
               this.memoryCache.set(key, item);
             }
-            console.log(`📦 Carregado do localStorage: ${key}`);
+            appLogger.info(`📦 Carregado do localStorage: ${key}`);
             return item.data;
           }
         }
       } catch (error) {
-        console.warn('⚠️ Erro ao carregar do localStorage:', error);
+        appLogger.warn('⚠️ Erro ao carregar do localStorage:', { data: [error] });
       }
     }
 
-    console.log(`❌ Dados não encontrados: ${key}`);
+    appLogger.info(`❌ Dados não encontrados: ${key}`);
     return null;
   }
 
@@ -179,18 +180,18 @@ class HybridStorageService {
     try {
       localStorage.removeItem(`funnel_${key}`);
     } catch (error) {
-      console.warn('⚠️ Erro ao remover do localStorage:', error);
+      appLogger.warn('⚠️ Erro ao remover do localStorage:', { data: [error] });
     }
 
     if (this.indexedDBReady) {
       try {
         await this.deleteFromIndexedDB(key);
       } catch (error) {
-        console.warn('⚠️ Erro ao remover do IndexedDB:', error);
+        appLogger.warn('⚠️ Erro ao remover do IndexedDB:', { data: [error] });
       }
     }
 
-    console.log(`🗑️ Dados removidos: ${key}`);
+    appLogger.info(`🗑️ Dados removidos: ${key}`);
   }
 
   /**
@@ -198,7 +199,7 @@ class HybridStorageService {
    */
   cleanup(): void {
     this.cleanupExpiredCache();
-    console.log('🧹 Limpeza de cache executada');
+    appLogger.info('🧹 Limpeza de cache executada');
   }
 
   // ========================
@@ -289,7 +290,7 @@ class HybridStorageService {
     });
     
     if (expired.length > 0) {
-      console.log(`🧹 Removidos ${expired.length} itens expirados do cache`);
+      appLogger.info(`🧹 Removidos ${expired.length} itens expirados do cache`);
     }
   }
 }

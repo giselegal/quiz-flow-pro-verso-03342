@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🗄️ INDEXED DB STORAGE SERVICE - Sistema de Armazenamento Escalável
  * 
@@ -168,13 +169,13 @@ export class IndexedDBStorageService {
             const request = indexedDB.open(this.config.dbName, this.config.version);
 
             request.onerror = () => {
-                console.error('❌ Erro ao abrir IndexedDB:', request.error);
+                appLogger.error('❌ Erro ao abrir IndexedDB:', { data: [request.error] });
                 reject(request.error);
             };
 
             request.onsuccess = () => {
                 this.db = request.result;
-                console.log('✅ IndexedDB inicializado com sucesso');
+                appLogger.info('✅ IndexedDB inicializado com sucesso');
                 resolve();
             };
 
@@ -186,7 +187,7 @@ export class IndexedDBStorageService {
     }
 
     private handleUpgrade(db: IDBDatabase, oldVersion: number, newVersion: number): void {
-        console.log(`🔄 Atualizando IndexedDB: v${oldVersion} → v${newVersion}`);
+        appLogger.info(`🔄 Atualizando IndexedDB: v${oldVersion} → v${newVersion}`);
 
         // Criar object stores se não existirem
         for (const storeConfig of this.config.stores) {
@@ -206,7 +207,7 @@ export class IndexedDBStorageService {
                         );
                     }
                 }
-                console.log(`✅ Object store criado: ${storeConfig.name}`);
+                appLogger.info(`✅ Object store criado: ${storeConfig.name}`);
             }
         }
 
@@ -231,9 +232,9 @@ export class IndexedDBStorageService {
                     'readwrite',
                 );
                 migration.handler(db, transaction);
-                console.log(`✅ Migração executada: v${migration.fromVersion} → v${migration.toVersion}`);
+                appLogger.info(`✅ Migração executada: v${migration.fromVersion} → v${migration.toVersion}`);
             } catch (error) {
-                console.error(`❌ Erro na migração v${migration.fromVersion} → v${migration.toVersion}:`, error);
+                appLogger.error(`❌ Erro na migração v${migration.fromVersion} → v${migration.toVersion}:`, { data: [error] });
             }
         }
     }
@@ -278,19 +279,19 @@ export class IndexedDBStorageService {
                 const request = store.put(item);
 
                 request.onsuccess = () => {
-                    console.log(`✅ Dados salvos no IndexedDB: ${storeName}/${key}`);
+                    appLogger.info(`✅ Dados salvos no IndexedDB: ${storeName}/${key}`);
                     this.queueSync(storeName, key, 'PUT', item);
                     resolve(true);
                 };
 
                 request.onerror = () => {
-                    console.error('❌ Erro ao salvar no IndexedDB:', request.error);
+                    appLogger.error('❌ Erro ao salvar no IndexedDB:', { data: [request.error] });
                     reject(request.error);
                 };
             });
 
         } catch (error) {
-            console.error('❌ Erro no método set:', error);
+            appLogger.error('❌ Erro no método set:', { data: [error] });
             return false;
         }
     }
@@ -317,7 +318,7 @@ export class IndexedDBStorageService {
 
                     // Verificar TTL
                     if (item.ttl && Date.now() > item.timestamp + (item.ttl * 1000)) {
-                        console.log(`⏰ Item expirado removido: ${storeName}/${key}`);
+                        appLogger.info(`⏰ Item expirado removido: ${storeName}/${key}`);
                         this.delete(storeName, key);
                         resolve(null);
                         return;
@@ -329,18 +330,18 @@ export class IndexedDBStorageService {
                         data = await this.decompress(data);
                     }
 
-                    console.log(`✅ Dados carregados do IndexedDB: ${storeName}/${key}`);
+                    appLogger.info(`✅ Dados carregados do IndexedDB: ${storeName}/${key}`);
                     resolve(data);
                 };
 
                 request.onerror = () => {
-                    console.error('❌ Erro ao carregar do IndexedDB:', request.error);
+                    appLogger.error('❌ Erro ao carregar do IndexedDB:', { data: [request.error] });
                     reject(request.error);
                 };
             });
 
         } catch (error) {
-            console.error('❌ Erro no método get:', error);
+            appLogger.error('❌ Erro no método get:', { data: [error] });
             return null;
         }
     }
@@ -358,19 +359,19 @@ export class IndexedDBStorageService {
                 const request = store.delete(key);
 
                 request.onsuccess = () => {
-                    console.log(`✅ Item removido do IndexedDB: ${storeName}/${key}`);
+                    appLogger.info(`✅ Item removido do IndexedDB: ${storeName}/${key}`);
                     this.queueSync(storeName, key, 'DELETE');
                     resolve(true);
                 };
 
                 request.onerror = () => {
-                    console.error('❌ Erro ao remover do IndexedDB:', request.error);
+                    appLogger.error('❌ Erro ao remover do IndexedDB:', { data: [request.error] });
                     reject(request.error);
                 };
             });
 
         } catch (error) {
-            console.error('❌ Erro no método delete:', error);
+            appLogger.error('❌ Erro no método delete:', { data: [error] });
             return false;
         }
     }
@@ -425,13 +426,13 @@ export class IndexedDBStorageService {
                 };
 
                 request.onerror = () => {
-                    console.error('❌ Erro na consulta do IndexedDB:', request.error);
+                    appLogger.error('❌ Erro na consulta do IndexedDB:', { data: [request.error] });
                     reject(request.error);
                 };
             });
 
         } catch (error) {
-            console.error('❌ Erro no método query:', error);
+            appLogger.error('❌ Erro no método query:', { data: [error] });
             return [];
         }
     }
@@ -461,12 +462,12 @@ export class IndexedDBStorageService {
                     const request = store.clear();
 
                     request.onsuccess = () => {
-                        console.log(`✅ Store limpo: ${storeName}`);
+                        appLogger.info(`✅ Store limpo: ${storeName}`);
                         resolve(true);
                     };
 
                     request.onerror = () => {
-                        console.error('❌ Erro ao limpar store:', request.error);
+                        appLogger.error('❌ Erro ao limpar store:', { data: [request.error] });
                         reject(request.error);
                     };
                 });
@@ -475,7 +476,7 @@ export class IndexedDBStorageService {
             return true;
 
         } catch (error) {
-            console.error('❌ Erro no método clear:', error);
+            appLogger.error('❌ Erro no método clear:', { data: [error] });
             return false;
         }
     }
@@ -495,7 +496,7 @@ export class IndexedDBStorageService {
             const compressed = await this.compressString(serialized);
             return { __compressed: true, data: compressed };
         } catch (error) {
-            console.warn('⚠️ Falha na compressão, salvando dados originais:', error);
+            appLogger.warn('⚠️ Falha na compressão, salvando dados originais:', { data: [error] });
             return data;
         }
     }
@@ -508,7 +509,7 @@ export class IndexedDBStorageService {
             }
             return data;
         } catch (error) {
-            console.warn('⚠️ Falha na descompressão, retornando dados originais:', error);
+            appLogger.warn('⚠️ Falha na descompressão, retornando dados originais:', { data: [error] });
             return data;
         }
     }
@@ -586,11 +587,11 @@ export class IndexedDBStorageService {
                 for (const item of pendingItems) {
                     await this.set('sync_queue', item.id, { ...item, status: 'synced' });
                 }
-                console.log(`✅ ${pendingItems.length} itens sincronizados com servidor`);
+                appLogger.info(`✅ ${pendingItems.length} itens sincronizados com servidor`);
             }
 
         } catch (error) {
-            console.error('❌ Erro na sincronização:', error);
+            appLogger.error('❌ Erro na sincronização:', { data: [error] });
         }
     }
 
@@ -617,10 +618,10 @@ export class IndexedDBStorageService {
                 }
             }
 
-            console.log(`🧹 ${removedCount} itens expirados removidos`);
+            appLogger.info(`🧹 ${removedCount} itens expirados removidos`);
 
         } catch (error) {
-            console.error('❌ Erro na limpeza:', error);
+            appLogger.error('❌ Erro na limpeza:', { data: [error] });
         }
 
         return removedCount;
@@ -653,7 +654,7 @@ export class IndexedDBStorageService {
             }
 
         } catch (error) {
-            console.error('❌ Erro ao calcular estatísticas:', error);
+            appLogger.error('❌ Erro ao calcular estatísticas:', { data: [error] });
         }
 
         return { totalItems, totalSize, storeStats };
@@ -674,20 +675,20 @@ export class IndexedDBStorageService {
                 const deleteRequest = indexedDB.deleteDatabase(this.config.dbName);
 
                 deleteRequest.onsuccess = async () => {
-                    console.log('✅ Database resetado com sucesso');
+                    appLogger.info('✅ Database resetado com sucesso');
                     // Reinicializar
                     await this.initialize();
                     resolve(true);
                 };
 
                 deleteRequest.onerror = () => {
-                    console.error('❌ Erro ao resetar database:', deleteRequest.error);
+                    appLogger.error('❌ Erro ao resetar database:', { data: [deleteRequest.error] });
                     reject(deleteRequest.error);
                 };
             });
 
         } catch (error) {
-            console.error('❌ Erro no reset:', error);
+            appLogger.error('❌ Erro no reset:', { data: [error] });
             return false;
         }
     }
@@ -713,7 +714,7 @@ export class IndexedDBStorageService {
             return JSON.stringify(backupData);
 
         } catch (error) {
-            console.error('❌ Erro no backup:', error);
+            appLogger.error('❌ Erro no backup:', { data: [error] });
             throw error;
         }
     }
@@ -724,7 +725,7 @@ export class IndexedDBStorageService {
 
             // Verificar compatibilidade de versão
             if (backupData.version > this.config.version) {
-                console.warn('⚠️ Backup de versão superior, pode haver problemas de compatibilidade');
+                appLogger.warn('⚠️ Backup de versão superior, pode haver problemas de compatibilidade');
             }
 
             // Limpar dados existentes
@@ -741,11 +742,11 @@ export class IndexedDBStorageService {
                 }
             }
 
-            console.log('✅ Backup restaurado com sucesso');
+            appLogger.info('✅ Backup restaurado com sucesso');
             return true;
 
         } catch (error) {
-            console.error('❌ Erro na restauração:', error);
+            appLogger.error('❌ Erro na restauração:', { data: [error] });
             return false;
         }
     }
@@ -764,6 +765,6 @@ export const indexedDBStorage = IndexedDBStorageService.getInstance();
 // Auto-inicializar quando o módulo for carregado
 if (typeof window !== 'undefined') {
     indexedDBStorage.initialize().catch(error => {
-        console.error('❌ Falha na inicialização automática do IndexedDB:', error);
+        appLogger.error('❌ Falha na inicialização automática do IndexedDB:', { data: [error] });
     });
 }

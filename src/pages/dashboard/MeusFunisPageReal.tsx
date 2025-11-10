@@ -35,6 +35,7 @@ import { supabase } from '@/services/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
 import { funnelService } from '@/services/canonical/FunnelService';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -178,7 +179,7 @@ const MeusFunisPageReal: React.FC = () => {
 
             if (funnelsError) {
                 // Não abortar: seguimos apenas com drafts (Supabase pode estar sem schema ou com RLS exigindo login)
-                console.warn('⚠️ Erro ao carregar funis (seguindo com drafts):', funnelsError?.message || funnelsError);
+                appLogger.warn('⚠️ Erro ao carregar funis (seguindo com drafts):', { data: [funnelsError?.message || funnelsError] });
                 toast({
                     title: 'Continuando com rascunhos',
                     description: 'Não foi possível carregar funis publicados. Exibindo apenas rascunhos.',
@@ -197,7 +198,7 @@ const MeusFunisPageReal: React.FC = () => {
                         .in('funnel_id', funnelIds);
                     sessionsData = Array.isArray(sessionsRaw) ? sessionsRaw : [];
                 } catch (e) {
-                    console.warn('⚠️ Erro ao carregar sessões (seguindo sem métricas):', e);
+                    appLogger.warn('⚠️ Erro ao carregar sessões (seguindo sem métricas):', { data: [e] });
                     sessionsData = [];
                 }
             }
@@ -277,10 +278,10 @@ const MeusFunisPageReal: React.FC = () => {
                 totalRevenue: totalConversions * 45, // R$ 45 por conversão
             });
 
-            console.log('✅ Funis carregados:', processedFunis.length, 'funis reais');
+            appLogger.info('✅ Funis carregados:', { data: [processedFunis.length, 'funis reais'] });
 
         } catch (error) {
-            console.error('❌ Erro ao carregar funis:', error);
+            appLogger.error('❌ Erro ao carregar funis:', { data: [error] });
             toast({
                 title: 'Erro inesperado',
                 description: 'Não foi possível carregar os funis. Tente novamente.',
@@ -332,7 +333,7 @@ const MeusFunisPageReal: React.FC = () => {
 
             loadFunis(); // Recarregar dados
         } catch (error) {
-            console.error('Erro ao duplicar funil:', error);
+            appLogger.error('Erro ao duplicar funil:', { data: [error] });
             toast({
                 title: 'Erro ao duplicar',
                 description: 'Não foi possível duplicar o funil.',
@@ -361,7 +362,7 @@ const MeusFunisPageReal: React.FC = () => {
 
             loadFunis(); // Recarregar dados
         } catch (error) {
-            console.error('Erro ao excluir funil:', error);
+            appLogger.error('Erro ao excluir funil:', { data: [error] });
             toast({
                 title: 'Erro ao excluir',
                 description: 'Não foi possível excluir o funil.',
@@ -388,7 +389,7 @@ const MeusFunisPageReal: React.FC = () => {
 
             loadFunis(); // Recarregar dados
         } catch (error) {
-            console.error('Erro ao alterar status:', error);
+            appLogger.error('Erro ao alterar status:', { data: [error] });
             toast({
                 title: 'Erro ao alterar status',
                 description: 'Não foi possível alterar o status do funil.',
@@ -474,7 +475,7 @@ const MeusFunisPageReal: React.FC = () => {
             // Abrir no editor para começar a editar
             window.location.href = `/editor?resource=${encodeURIComponent(newFunnel.id)}`;
         } catch (e: any) {
-            console.error('Erro ao criar rascunho padrão:', e);
+            appLogger.error('Erro ao criar rascunho padrão:', { data: [e] });
             toast({ title: 'Erro ao criar rascunho', description: String(e?.message || e), variant: 'destructive' });
         }
     }; return (

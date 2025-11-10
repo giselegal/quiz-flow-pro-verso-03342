@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 export type BlockLike = { id?: string; questionId?: string; type?: string;[k: string]: any };
 
 export function scanDuplicateQuestionIds(allSteps: Record<string, BlockLike[]>) {
@@ -17,7 +18,7 @@ export function scanDuplicateQuestionIds(allSteps: Record<string, BlockLike[]>) 
         (window as any).__EDITOR_DUP_QID__ = duplicates;
         if (process.env.NODE_ENV === 'development' && duplicates.length) {
              
-            console.warn('[duplicateQuestionScanner] Duplicates found:', duplicates.slice(0, 5));
+            appLogger.warn('[duplicateQuestionScanner] Duplicates found:', { data: [duplicates.slice(0, 5)] });
         }
         return duplicates;
     } catch (e) {

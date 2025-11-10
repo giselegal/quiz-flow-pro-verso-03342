@@ -4,6 +4,7 @@
  */
 
 import { generateSemanticId } from './semanticIdGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Extrai propriedades de forma segura de um bloco
@@ -12,7 +13,7 @@ import { generateSemanticId } from './semanticIdGenerator';
  */
 export const safeGetBlockProperties = (block: any): Record<string, any> => {
   if (!block) {
-    console.warn('⚠️ Bloco undefined ou null');
+    appLogger.warn('⚠️ Bloco undefined ou null');
     return {};
   }
 
@@ -22,17 +23,17 @@ export const safeGetBlockProperties = (block: any): Record<string, any> => {
   let properties = block.content || block.properties || block.data || {};
 
   if (!properties || typeof properties !== 'object') {
-    console.warn(`⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`);
+    appLogger.warn(`⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`);
     properties = {};
   }
 
   // Debug log para entender a estrutura
-  console.log(`🧱 Block ${blockId} properties:`, {
-    hasContent: !!block.content,
-    hasProperties: !!block.properties,
-    hasData: !!block.data,
-    finalProps: properties,
-  });
+  appLogger.info(`🧱 Block ${blockId} properties:`, { data: [{
+        hasContent: !!block.content,
+        hasProperties: !!block.properties,
+        hasData: !!block.data,
+        finalProps: properties,
+      }] });
 
   return properties;
 };
@@ -100,13 +101,13 @@ export const validateBlockProperties = (properties: any): boolean => {
  */
 export const logBlockDebug = (componentName: string, block: any) => {
   if (process.env.NODE_ENV === 'development') {
-    console.log(`🧱 ${componentName} - Debug:`, {
-      blockId: block?.id,
-      blockType: block?.type,
-      hasProperties: !!block?.properties,
-      propertiesKeys: block?.properties ? Object.keys(block.properties) : [],
-      isValid: isValidBlock(block),
-    });
+    appLogger.info(`🧱 ${componentName} - Debug:`, { data: [{
+            blockId: block?.id,
+            blockType: block?.type,
+            hasProperties: !!block?.properties,
+            propertiesKeys: block?.properties ? Object.keys(block.properties) : [],
+            isValid: isValidBlock(block),
+          }] });
   }
 };
 

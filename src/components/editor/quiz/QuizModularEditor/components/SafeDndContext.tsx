@@ -9,6 +9,7 @@
 // APLICAR POLYFILLS PRIMEIRO
 import '@/lib/utils/reactPolyfills';
 import React, { Suspense } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // CORREÇÃO GLOBAL ROBUSTA para React APIs
 if (typeof window !== 'undefined') {
@@ -40,7 +41,7 @@ if (typeof window !== 'undefined') {
             writable: false
         });
 
-        console.log('✅ [SafeDndContext] React polyfills aplicados globalmente');
+        appLogger.info('✅ [SafeDndContext] React polyfills aplicados globalmente');
     }
 }
 
@@ -67,7 +68,7 @@ const loadDndKit = async () => {
             useSensors: dndCore.useSensors,
         };
     } catch (error) {
-        console.warn('❌ [SafeDndContext] Falha ao carregar @dnd-kit:', error);
+        appLogger.warn('❌ [SafeDndContext] Falha ao carregar @dnd-kit:', { data: [error] });
         return null;
     }
 };
@@ -174,7 +175,7 @@ export function SafeDndContext({
             </ActiveDndContext>
         );
     } catch (error) {
-        console.error('❌ [SafeDndContext] Erro ao renderizar:', error);
+        appLogger.error('❌ [SafeDndContext] Erro ao renderizar:', { data: [error] });
         return <div data-testid="safe-dnd-error">{children}</div>;
     }
 }
@@ -201,7 +202,7 @@ export function useSafeDndSensors() {
         );
         return sensors;
     } catch (error) {
-        console.error('❌ [DndWrapper] Erro ao criar sensores DnD:', error);
+        appLogger.error('❌ [DndWrapper] Erro ao criar sensores DnD:', { data: [error] });
         return [];
     }
 }
@@ -230,7 +231,7 @@ const loadDndKitModules = async () => {
         CSS = utilities.CSS;
         useDroppable = core.useDroppable;
     } catch (error) {
-        console.warn('❌ [DndWrapper] Falha ao carregar hooks DnD:', error);
+        appLogger.warn('❌ [DndWrapper] Falha ao carregar hooks DnD:', { data: [error] });
     }
 };
 
@@ -245,7 +246,7 @@ export function useSafeDroppable(options: any = {}) {
     try {
         return useDroppable(options);
     } catch (error) {
-        console.error('❌ [DndWrapper] Erro no useDroppable:', error);
+        appLogger.error('❌ [DndWrapper] Erro no useDroppable:', { data: [error] });
         return { setNodeRef: () => { }, isOver: false, active: null };
     }
 }
@@ -265,7 +266,7 @@ export function useSafeSortable(options: any = {}) {
     try {
         return useSortable(options);
     } catch (error) {
-        console.error('❌ [DndWrapper] Erro no useSortable:', error);
+        appLogger.error('❌ [DndWrapper] Erro no useSortable:', { data: [error] });
         return {
             attributes: {},
             listeners: {},
@@ -289,7 +290,7 @@ export function SafeSortableContext({ children, items, strategy = verticalListSo
             </SortableContext>
         );
     } catch (error) {
-        console.error('❌ [DndWrapper] Erro no SortableContext:', error);
+        appLogger.error('❌ [DndWrapper] Erro no SortableContext:', { data: [error] });
         return <>{children}</>;
     }
 }

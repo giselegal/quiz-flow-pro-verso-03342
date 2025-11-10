@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 LOCAL STORAGE ADAPTER - Infrastructure Implementation
  * 
@@ -66,7 +67,7 @@ export class LocalStorageAdapter implements StorageAdapter {
 
       return data;
     } catch (error) {
-      console.error('Error getting from localStorage:', error);
+      appLogger.error('Error getting from localStorage:', { data: [error] });
       return null;
     }
   }
@@ -100,7 +101,7 @@ export class LocalStorageAdapter implements StorageAdapter {
       localStorage.setItem(fullKey, JSON.stringify(entry));
       return true;
     } catch (error) {
-      console.error('Error setting to localStorage:', error);
+      appLogger.error('Error setting to localStorage:', { data: [error] });
       // Tentar limpar espaço e tentar novamente
       this.clearExpired();
       try {
@@ -124,7 +125,7 @@ export class LocalStorageAdapter implements StorageAdapter {
       localStorage.removeItem(fullKey);
       return true;
     } catch (error) {
-      console.error('Error removing from localStorage:', error);
+      appLogger.error('Error removing from localStorage:', { data: [error] });
       return false;
     }
   }
@@ -138,7 +139,7 @@ export class LocalStorageAdapter implements StorageAdapter {
       });
       return true;
     } catch (error) {
-      console.error('Error clearing localStorage:', error);
+      appLogger.error('Error clearing localStorage:', { data: [error] });
       return false;
     }
   }
@@ -207,7 +208,7 @@ export class LocalStorageAdapter implements StorageAdapter {
         },
       };
     } catch (error) {
-      console.error('Error getting with metadata:', error);
+      appLogger.error('Error getting with metadata:', { data: [error] });
       return { data: null, metadata: null };
     }
   }
@@ -226,7 +227,7 @@ export class LocalStorageAdapter implements StorageAdapter {
       localStorage.setItem(fullKey, JSON.stringify(entry));
       return true;
     } catch (error) {
-      console.error('Error updating TTL:', error);
+      appLogger.error('Error updating TTL:', { data: [error] });
       return false;
     }
   }

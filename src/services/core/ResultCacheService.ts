@@ -6,6 +6,7 @@
  */
 
 import { StorageService } from './StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface CacheEntry {
   result: any;
@@ -35,22 +36,22 @@ class ResultCacheService {
       
       const entry = cache[cacheKey];
       if (!entry) {
-        console.log('🔍 Cache miss - entrada não encontrada');
+        appLogger.info('🔍 Cache miss - entrada não encontrada');
         return null;
       }
 
       // Verificar TTL
       const now = Date.now();
       if (now - entry.timestamp > this.DEFAULT_TTL) {
-        console.log('🕐 Cache miss - entrada expirada');
+        appLogger.info('🕐 Cache miss - entrada expirada');
         this.remove(cacheKey);
         return null;
       }
 
-      console.log('✅ Cache hit - resultado recuperado do cache');
+      appLogger.info('✅ Cache hit - resultado recuperado do cache');
       return entry.result;
     } catch (error) {
-      console.warn('⚠️ Erro ao recuperar do cache:', error);
+      appLogger.warn('⚠️ Erro ao recuperar do cache:', { data: [error] });
       return null;
     }
   }
@@ -85,12 +86,12 @@ class ResultCacheService {
       const success = StorageService.safeSetJSON(this.CACHE_KEY, cache);
       
       if (success) {
-        console.log('💾 Resultado armazenado no cache');
+        appLogger.info('💾 Resultado armazenado no cache');
       }
       
       return success;
     } catch (error) {
-      console.warn('⚠️ Erro ao armazenar no cache:', error);
+      appLogger.warn('⚠️ Erro ao armazenar no cache:', { data: [error] });
       return false;
     }
   }
@@ -104,7 +105,7 @@ class ResultCacheService {
       delete cache[cacheKey];
       return StorageService.safeSetJSON(this.CACHE_KEY, cache);
     } catch (error) {
-      console.warn('⚠️ Erro ao remover do cache:', error);
+      appLogger.warn('⚠️ Erro ao remover do cache:', { data: [error] });
       return false;
     }
   }
@@ -116,7 +117,7 @@ class ResultCacheService {
     try {
       return StorageService.safeRemove(this.CACHE_KEY);
     } catch (error) {
-      console.warn('⚠️ Erro ao limpar cache:', error);
+      appLogger.warn('⚠️ Erro ao limpar cache:', { data: [error] });
       return false;
     }
   }
@@ -154,7 +155,7 @@ class ResultCacheService {
           : null,
       };
     } catch (error) {
-      console.warn('⚠️ Erro ao obter estatísticas do cache:', error);
+      appLogger.warn('⚠️ Erro ao obter estatísticas do cache:', { data: [error] });
       return {
         totalEntries: 0,
         validEntries: 0,

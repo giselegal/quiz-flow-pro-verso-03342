@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ResultPageConfig } from '@/types/resultPageConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ResultPageConfigHook {
   resultPageConfig: ResultPageConfig;
@@ -80,7 +81,7 @@ export const useResultPageConfig = (category: string): ResultPageConfigHook => {
       localStorage.setItem(`result_config_${category}`, JSON.stringify(resultPageConfig));
       return true;
     } catch (error) {
-      console.error('Error saving config:', error);
+      appLogger.error('Error saving config:', { data: [error] });
       return false;
     } finally {
       setLoading(false);

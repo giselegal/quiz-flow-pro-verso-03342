@@ -10,6 +10,7 @@
 import { useState, useCallback } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { generateBlockId } from '@/lib/utils/idGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type SaveResult = { success: boolean; message: string; stepId?: string; error?: any };
 
@@ -25,7 +26,7 @@ export function useTemplateEditor() {
     const saveStep = useCallback(async (stepId: string, stepData: any): Promise<SaveResult> => {
         setSaving(true);
         setLastSaveResult(null);
-        console.warn('[useTemplateEditor] API legacy saveStepChanges removida. Usando templateService.saveStep com heurística.');
+        appLogger.warn('[useTemplateEditor] API legacy saveStepChanges removida. Usando templateService.saveStep com heurística.');
         try {
             const blocks = Array.isArray(stepData?.blocks)
                 ? stepData.blocks
@@ -65,7 +66,7 @@ export function useTemplateEditor() {
      */
     const exportTemplate = useCallback(async (): Promise<SaveResult> => {
         setExporting(true);
-        console.warn('[useTemplateEditor] exportMasterTemplate legacy removida. Exportação direta não suportada.');
+        appLogger.warn('[useTemplateEditor] exportMasterTemplate legacy removida. Exportação direta não suportada.');
         try {
             return { success: false, message: 'Exportação legacy indisponível. Use ferramentas canônicas.' };
         } finally {
@@ -79,7 +80,7 @@ export function useTemplateEditor() {
     const importTemplate = useCallback(async (file: File): Promise<SaveResult> => {
         setImporting(true);
         setLastSaveResult(null);
-        console.warn('[useTemplateEditor] importMasterTemplate legacy removida. Importação direta não suportada.');
+        appLogger.warn('[useTemplateEditor] importMasterTemplate legacy removida. Importação direta não suportada.');
         try {
             return { success: false, message: 'Importação legacy indisponível. Use ferramentas canônicas.' };
         } finally {
@@ -91,7 +92,7 @@ export function useTemplateEditor() {
      * Valida todos os steps do master template
      */
     const validateAll = useCallback(async () => {
-        console.warn('[useTemplateEditor] validateAllSteps legacy removida.');
+        appLogger.warn('[useTemplateEditor] validateAllSteps legacy removida.');
         return { valid: 0, invalid: 0, errors: [] } as any;
     }, []);
 
@@ -99,14 +100,14 @@ export function useTemplateEditor() {
      * Limpa dados do localStorage
      */
     const clearStorage = useCallback(() => {
-        console.warn('[useTemplateEditor] clearLocalStorage legacy removida.');
+        appLogger.warn('[useTemplateEditor] clearLocalStorage legacy removida.');
     }, []);
 
     /**
      * Verifica se há dados salvos no localStorage
      */
     const hasStorageData = useCallback(() => {
-        console.warn('[useTemplateEditor] hasLocalStorageData legacy removida.');
+        appLogger.warn('[useTemplateEditor] hasLocalStorageData legacy removida.');
         return false;
     }, []);
 

@@ -2,6 +2,7 @@ import { defaultHeaderProperties } from '@/config/headerPropertiesMapping';
 import { defaultOptionsGridProperties } from '@/config/optionsGridPropertiesMapping';
 import { getBlockDefinition } from '@/core/blocks/registry';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 Enumerações e tipos fundamentais
@@ -2807,9 +2808,7 @@ export const useUnifiedProperties = (
         ];
 
       default:
-        console.warn(
-          `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas.`,
-        );
+        appLogger.warn(`🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas.`);
         return getUniversalProperties();
     }
   }, [blockType, blockId, currentBlock]);
@@ -2825,31 +2824,31 @@ export const useUnifiedProperties = (
 
   const updateProperty = useCallback(
     (key: string, value: any) => {
-      console.log('🔄 useUnifiedProperties updateProperty CHAMADO:', {
-        blockId: block?.id,
-        blockType: block?.type,
-        key,
-        value,
-        hasOnUpdate: !!onUpdateExternal,
-        currentProperties: block?.properties,
-      });
+      appLogger.info('🔄 useUnifiedProperties updateProperty CHAMADO:', { data: [{
+                  blockId: block?.id,
+                  blockType: block?.type,
+                  key,
+                  value,
+                  hasOnUpdate: !!onUpdateExternal,
+                  currentProperties: block?.properties,
+                }] });
 
       setProperties(prev => prev.map(prop => (prop.key === key ? { ...prop, value } : prop)));
 
       if (onUpdateExternal && block) {
         const updatedProps = { ...block.properties, [key]: value };
 
-        console.log('✅ useUnifiedProperties EXECUTANDO onUpdate:', {
-          blockId: block.id,
-          updatedProps,
-        });
+        appLogger.info('✅ useUnifiedProperties EXECUTANDO onUpdate:', { data: [{
+                    blockId: block.id,
+                    updatedProps,
+                  }] });
 
         onUpdateExternal(block.id, { properties: updatedProps });
       } else {
-        console.log('❌ useUnifiedProperties FALHOU:', {
-          hasOnUpdate: !!onUpdateExternal,
-          hasBlock: !!block,
-        });
+        appLogger.info('❌ useUnifiedProperties FALHOU:', { data: [{
+                    hasOnUpdate: !!onUpdateExternal,
+                    hasBlock: !!block,
+                  }] });
       }
     },
     [onUpdateExternal, block],
@@ -2874,7 +2873,7 @@ export const useUnifiedProperties = (
       case PropertyType.RANGE:
         const value = property.value;
         if (typeof value === 'object' && value !== null) {
-          console.warn(`Property ${property.key} has object value, expected number:`, value);
+          appLogger.warn(`Property ${property.key} has object value, expected number:`, { data: [value] });
           return false;
         }
         const numValue = Number(value);

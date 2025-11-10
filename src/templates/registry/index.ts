@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 REGISTRY CENTRAL DE TEMPLATES
  * 
@@ -317,7 +318,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
         // Obter metadados básicos
         const metadata = AVAILABLE_TEMPLATES[templateId];
         if (!metadata) {
-            console.error(`Template ${templateId} não encontrado no registry`);
+            appLogger.error(`Template ${templateId} não encontrado no registry`);
             return null;
         }
 
@@ -347,7 +348,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
             }
 
         } catch (importError) {
-            console.error(`Erro ao carregar template ${templateId}:`, importError);
+            appLogger.error(`Erro ao carregar template ${templateId}:`, { data: [importError] });
 
             // Emitir evento de erro
             if (typeof window !== 'undefined' && (window as any).templateEventSystem) {
@@ -404,11 +405,11 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
             }, templateId);
         }
 
-        console.log(`✅ Template ${templateId} carregado com sucesso em ${loadTime.toFixed(2)}ms`);
+        appLogger.info(`✅ Template ${templateId} carregado com sucesso em ${loadTime.toFixed(2)}ms`);
         return fullTemplate;
 
     } catch (error: any) {
-        console.error(`❌ Erro crítico ao carregar template ${templateId}:`, error);
+        appLogger.error(`❌ Erro crítico ao carregar template ${templateId}:`, { data: [error] });
 
         // Emitir evento de erro crítico
         if (typeof window !== 'undefined' && (window as any).templateEventSystem) {
@@ -433,25 +434,25 @@ export function initializeTemplateSystem(): void {
         // Sistema de eventos
         import('../events/TemplateEventSystem').then(({ templateEventSystem }) => {
             (window as any).templateEventSystem = templateEventSystem;
-            console.log('🎯 Sistema de eventos de template inicializado');
+            appLogger.info('🎯 Sistema de eventos de template inicializado');
         }).catch(() => {
-            console.log('⚠️ Sistema de eventos não disponível');
+            appLogger.info('⚠️ Sistema de eventos não disponível');
         });
 
         // Sistema de validação
         import('../validation/DynamicValidationSystem').then(({ dynamicValidationSystem }) => {
             (window as any).dynamicValidationSystem = dynamicValidationSystem;
-            console.log('✅ Sistema de validação dinâmica inicializado');
+            appLogger.info('✅ Sistema de validação dinâmica inicializado');
         }).catch(() => {
-            console.log('⚠️ Sistema de validação não disponível');
+            appLogger.info('⚠️ Sistema de validação não disponível');
         });
 
         // Sistema de plugins
         import('../plugins/PluginSystem').then(({ pluginSystem }) => {
             (window as any).pluginSystem = pluginSystem;
-            console.log('🧩 Sistema de plugins inicializado');
+            appLogger.info('🧩 Sistema de plugins inicializado');
         }).catch(() => {
-            console.log('⚠️ Sistema de plugins não disponível');
+            appLogger.info('⚠️ Sistema de plugins não disponível');
         });
     }
 }
@@ -517,7 +518,7 @@ export function clearTemplateCache(): void {
         }, 'system');
     }
 
-    console.log('🧹 Cache de templates limpo');
+    appLogger.info('🧹 Cache de templates limpo');
 }
 
 /**

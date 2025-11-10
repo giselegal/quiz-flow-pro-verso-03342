@@ -10,6 +10,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useQuizUserProgress } from './useQuizUserProgress';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface NavigationRule {
   stepId: number;
@@ -121,7 +122,7 @@ export const useUnifiedQuizNavigation = ({
   // Voltar para o step anterior
   const navigateToPreviousStep = useCallback(() => {
     if (disableBackNavigation) {
-      console.warn('Navegação de retorno está desabilitada');
+      appLogger.warn('Navegação de retorno está desabilitada');
       return;
     }
 
@@ -166,7 +167,7 @@ export const useUnifiedQuizNavigation = ({
         onStepChange(stepIndex);
       }
     } else {
-      console.error(`Step ${stepIndex} está fora do intervalo válido (0-${totalSteps - 1})`);
+      appLogger.error(`Step ${stepIndex} está fora do intervalo válido (0-${totalSteps - 1})`);
     }
   }, [goToStep, totalSteps, onStepChange]);
 
@@ -184,9 +185,7 @@ export const useUnifiedQuizNavigation = ({
 
   // Debug
   useEffect(() => {
-    console.log(
-      `🧭 useUnifiedQuizNavigation: Step ${currentStepIndex + 1}/${totalSteps} (${completionPercentage}%) - Valid: ${isCurrentStepValid}`,
-    );
+    appLogger.info(`🧭 useUnifiedQuizNavigation: Step ${currentStepIndex + 1}/${totalSteps} (${completionPercentage}%) - Valid: ${isCurrentStepValid}`);
   }, [currentStepIndex, totalSteps, completionPercentage, isCurrentStepValid]);
 
   return {

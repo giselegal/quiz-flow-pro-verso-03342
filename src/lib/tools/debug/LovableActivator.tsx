@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface LovableActivatorProps {
   forceActivate?: boolean;
@@ -33,7 +34,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
 
       try {
         if (shouldActivate && !hasConfig) {
-          console.log('🚀 Ativando Lovable...');
+          appLogger.info('🚀 Ativando Lovable...');
 
           // Configurar Lovable
           (window as any).LOVABLE_CONFIG = {
@@ -46,8 +47,8 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
           document.body.classList.add('lovable-editable-page');
           document.body.setAttribute('data-lovable-root', 'true');
 
-          console.log('✅ Lovable ativado com sucesso!');
-          console.log('📝 Config:', (window as any).LOVABLE_CONFIG);
+          appLogger.info('✅ Lovable ativado com sucesso!');
+          appLogger.info('📝 Config:', { data: [(window as any).LOVABLE_CONFIG] });
         }
 
         setLovableStatus({
@@ -59,7 +60,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
           error: null,
         });
       } catch (error) {
-        console.error('❌ Erro ao ativar Lovable:', error);
+        appLogger.error('❌ Erro ao ativar Lovable:', { data: [error] });
         setLovableStatus(prev => ({
           ...prev,
           error: error instanceof Error ? error.message : 'Erro desconhecido',
@@ -73,7 +74,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('lovable') === 'true' || urlParams.get('activate') === 'lovable') {
-        console.log('🔄 Auto-ativando Lovable baseado na URL...');
+        appLogger.info('🔄 Auto-ativando Lovable baseado na URL...');
         setLovableStatus(prev => ({ ...prev, shouldActivate: true }));
       }
     }
@@ -126,16 +127,16 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
 
         <button
           onClick={() => {
-            console.log('📊 Debug Lovable:', {
-              window_LOVABLE_CONFIG: (window as any).LOVABLE_CONFIG,
-              body_classes: document.body.className,
-              body_attributes: {
-                'data-lovable-root': document.body.getAttribute('data-lovable-root'),
-              },
-              pathname: window.location.pathname,
-              search: window.location.search,
-              href: window.location.href,
-            });
+            appLogger.info('📊 Debug Lovable:', { data: [{
+                                    window_LOVABLE_CONFIG: (window as any).LOVABLE_CONFIG,
+                                    body_classes: document.body.className,
+                                    body_attributes: {
+                                      'data-lovable-root': document.body.getAttribute('data-lovable-root'),
+                                    },
+                                    pathname: window.location.pathname,
+                                    search: window.location.search,
+                                    href: window.location.href,
+                                  }] });
           }}
           style={{ color: '#6B4F43' }}
         >

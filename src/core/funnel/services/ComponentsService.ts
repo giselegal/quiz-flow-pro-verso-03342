@@ -7,6 +7,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { FunnelComponent } from '../types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type ComponentInstance = {
     id: string;
@@ -61,11 +62,11 @@ export class ComponentsService {
     async getComponents(params: { funnelId: string; stepNumber: number }): Promise<ComponentInstance[]> {
         const { funnelId, stepNumber } = params;
 
-        console.log(`🔍 Buscando componentes: funil=${funnelId}, etapa=${stepNumber}`);
+        appLogger.info(`🔍 Buscando componentes: funil=${funnelId}, etapa=${stepNumber}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, retornando componentes vazios');
+                appLogger.warn('⚠️ Supabase não disponível, retornando componentes vazios');
                 return [];
             }
 
@@ -77,14 +78,14 @@ export class ComponentsService {
                 .order('order_index', { ascending: true });
 
             if (error) {
-                console.error('❌ Erro ao buscar componentes:', error);
+                appLogger.error('❌ Erro ao buscar componentes:', { data: [error] });
                 return [];
             }
 
-            console.log(`✅ Encontrados ${data?.length || 0} componentes`);
+            appLogger.info(`✅ Encontrados ${data?.length || 0} componentes`);
             return (data || []) as unknown as ComponentInstance[];
         } catch (error) {
-            console.error('Error in getComponents:', error);
+            appLogger.error('Error in getComponents:', { data: [error] });
             return [];
         }
     }
@@ -103,11 +104,11 @@ export class ComponentsService {
             stageId = null,
         } = input;
 
-        console.log(`➕ Adicionando componente: ${componentTypeKey} na etapa ${stepNumber}`);
+        appLogger.info(`➕ Adicionando componente: ${componentTypeKey} na etapa ${stepNumber}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, componente não será persistido');
+                appLogger.warn('⚠️ Supabase não disponível, componente não será persistido');
                 return {
                     id: `temp-${Date.now()}`,
                     instance_key: instanceKey,
@@ -139,14 +140,14 @@ export class ComponentsService {
                 .single();
 
             if (error) {
-                console.error('❌ Erro ao adicionar componente:', error);
+                appLogger.error('❌ Erro ao adicionar componente:', { data: [error] });
                 return null;
             }
 
-            console.log(`✅ Componente adicionado: ${data.id}`);
+            appLogger.info(`✅ Componente adicionado: ${data.id}`);
             return data as unknown as ComponentInstance;
         } catch (error) {
-            console.error('Error in addComponent:', error);
+            appLogger.error('Error in addComponent:', { data: [error] });
             return null;
         }
     }
@@ -157,11 +158,11 @@ export class ComponentsService {
     async updateComponent(input: UpdateComponentInput): Promise<ComponentInstance | null> {
         const { id, ...updates } = input;
 
-        console.log(`📝 Atualizando componente: ${id}`);
+        appLogger.info(`📝 Atualizando componente: ${id}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, atualização não será persistida');
+                appLogger.warn('⚠️ Supabase não disponível, atualização não será persistida');
                 return null;
             }
 
@@ -176,14 +177,14 @@ export class ComponentsService {
                 .single();
 
             if (error) {
-                console.error('❌ Erro ao atualizar componente:', error);
+                appLogger.error('❌ Erro ao atualizar componente:', { data: [error] });
                 return null;
             }
 
-            console.log(`✅ Componente atualizado: ${data.id}`);
+            appLogger.info(`✅ Componente atualizado: ${data.id}`);
             return data as unknown as ComponentInstance;
         } catch (error) {
-            console.error('Error in updateComponent:', error);
+            appLogger.error('Error in updateComponent:', { data: [error] });
             return null;
         }
     }
@@ -192,11 +193,11 @@ export class ComponentsService {
      * Remove componente
      */
     async removeComponent(componentId: string): Promise<boolean> {
-        console.log(`🗑️ Removendo componente: ${componentId}`);
+        appLogger.info(`🗑️ Removendo componente: ${componentId}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, remoção não será persistida');
+                appLogger.warn('⚠️ Supabase não disponível, remoção não será persistida');
                 return true;
             }
 
@@ -206,14 +207,14 @@ export class ComponentsService {
                 .eq('id', componentId);
 
             if (error) {
-                console.error('❌ Erro ao remover componente:', error);
+                appLogger.error('❌ Erro ao remover componente:', { data: [error] });
                 return false;
             }
 
-            console.log(`✅ Componente removido: ${componentId}`);
+            appLogger.info(`✅ Componente removido: ${componentId}`);
             return true;
         } catch (error) {
-            console.error('Error in removeComponent:', error);
+            appLogger.error('Error in removeComponent:', { data: [error] });
             return false;
         }
     }
@@ -228,11 +229,11 @@ export class ComponentsService {
     }): Promise<boolean> {
         const { funnelId, stepNumber, componentIds } = params;
 
-        console.log(`🔄 Reordenando componentes da etapa ${stepNumber}`);
+        appLogger.info(`🔄 Reordenando componentes da etapa ${stepNumber}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, reordenação não será persistida');
+                appLogger.warn('⚠️ Supabase não disponível, reordenação não será persistida');
                 return true;
             }
 
@@ -253,14 +254,14 @@ export class ComponentsService {
 
             const hasError = results.some(result => result.error);
             if (hasError) {
-                console.error('❌ Erro ao reordenar alguns componentes');
+                appLogger.error('❌ Erro ao reordenar alguns componentes');
                 return false;
             }
 
-            console.log('✅ Componentes reordenados com sucesso');
+            appLogger.info('✅ Componentes reordenados com sucesso');
             return true;
         } catch (error) {
-            console.error('Error in reorderComponents:', error);
+            appLogger.error('Error in reorderComponents:', { data: [error] });
             return false;
         }
     }
@@ -307,11 +308,11 @@ export class ComponentsService {
      * Busca todos os componentes de um funil
      */
     async getFunnelComponents(funnelId: string): Promise<ComponentInstance[]> {
-        console.log(`🔍 Buscando todos os componentes do funil: ${funnelId}`);
+        appLogger.info(`🔍 Buscando todos os componentes do funil: ${funnelId}`);
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, retornando componentes vazios');
+                appLogger.warn('⚠️ Supabase não disponível, retornando componentes vazios');
                 return [];
             }
 
@@ -323,14 +324,14 @@ export class ComponentsService {
                 .order('order_index', { ascending: true });
 
             if (error) {
-                console.error('❌ Erro ao buscar componentes do funil:', error);
+                appLogger.error('❌ Erro ao buscar componentes do funil:', { data: [error] });
                 return [];
             }
 
-            console.log(`✅ Encontrados ${data?.length || 0} componentes no funil`);
+            appLogger.info(`✅ Encontrados ${data?.length || 0} componentes no funil`);
             return (data || []) as unknown as ComponentInstance[];
         } catch (error) {
-            console.error('Error in getFunnelComponents:', error);
+            appLogger.error('Error in getFunnelComponents:', { data: [error] });
             return [];
         }
     }

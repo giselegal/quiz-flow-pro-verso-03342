@@ -10,6 +10,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 
 import { convertSectionsToBlocks } from './sectionToBlockConverter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Carrega dados da etapa e converte para formato do editor
@@ -19,21 +20,21 @@ export function loadStepBlocks(stepNumber: number): Block[] {
   const templateData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
 
   if (!templateData) {
-    console.warn(`❌ Etapa ${stepKey} não encontrada no template`);
+    appLogger.warn(`❌ Etapa ${stepKey} não encontrada no template`);
     return [];
   }
 
   // ✅ NOVO: Suporte para formato sections (v3.0) - usado no step-20
   if (templateData.sections && Array.isArray(templateData.sections)) {
-    console.log(`🔄 Convertendo ${templateData.sections.length} sections da ${stepKey} para blocos`);
+    appLogger.info(`🔄 Convertendo ${templateData.sections.length} sections da ${stepKey} para blocos`);
     const blocks = convertSectionsToBlocks(templateData.sections);
-    console.log(`✅ ${blocks.length} blocos gerados da ${stepKey}`);
+    appLogger.info(`✅ ${blocks.length} blocos gerados da ${stepKey}`);
     return blocks;
   }
 
   // ✅ Suporte para formato blocks (array direto) - etapas 1-19
   if (Array.isArray(templateData)) {
-    console.log(`✅ Carregando etapa ${stepKey} com ${templateData.length} blocos`);
+    appLogger.info(`✅ Carregando etapa ${stepKey} com ${templateData.length} blocos`);
     return templateData.map((templateBlock: any) => {
       const block: Block = {
         id: templateBlock.id,
@@ -47,7 +48,7 @@ export function loadStepBlocks(stepNumber: number): Block[] {
     });
   }
 
-  console.warn(`❌ Formato desconhecido para ${stepKey}. Esperado: sections[] ou Block[]`);
+  appLogger.warn(`❌ Formato desconhecido para ${stepKey}. Esperado: sections[] ou Block[]`);
   return [];
 }
 

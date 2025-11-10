@@ -23,6 +23,7 @@ import {
   CheckCircle,
   Clock,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface AIRecommendation {
   id: string;
@@ -109,12 +110,12 @@ const AIInsightsPage: React.FC = () => {
   ];
 
   const handleApplyRecommendation = async (recommendation: AIRecommendation) => {
-    console.log('🚀 Aplicando recomendação IA:', recommendation.title);
+    appLogger.info('🚀 Aplicando recomendação IA:', { data: [recommendation.title] });
     
     try {
       // Simulate applying the optimization
       setIsLoading(true);
-      console.log('🔧 Aplicando otimização:', recommendation.id);
+      appLogger.info('🔧 Aplicando otimização:', { data: [recommendation.id] });
       
       // Simulate processing time
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -122,42 +123,42 @@ const AIInsightsPage: React.FC = () => {
       // Update recommendation status
       setSelectedRecommendation({ ...recommendation, applied: true });
       
-      console.log('✅ Otimização aplicada com sucesso');
+      appLogger.info('✅ Otimização aplicada com sucesso');
       
     } catch (error) {
-      console.error('❌ Erro ao aplicar otimização:', error);
+      appLogger.error('❌ Erro ao aplicar otimização:', { data: [error] });
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleRequestNewAnalysis = async () => {
-    console.log('🧠 Solicitando nova análise IA...');
+    appLogger.info('🧠 Solicitando nova análise IA...');
     try {
       setIsAnalyzing(true);
       
       // Simulate analysis
-      console.log('🔄 Iniciando análise IA...');
+      appLogger.info('🔄 Iniciando análise IA...');
       await new Promise(resolve => setTimeout(resolve, 3000));
-      console.log('✅ Análise IA concluída com sucesso');
+      appLogger.info('✅ Análise IA concluída com sucesso');
       
     } catch (error) {
-      console.error('❌ Erro na análise:', error);
+      appLogger.error('❌ Erro na análise:', { data: [error] });
     } finally {
       setIsAnalyzing(false);
     }
   };
 
   const refreshInsights = async () => {
-    console.log('🔄 Atualizando insights de IA...');
+    appLogger.info('🔄 Atualizando insights de IA...');
     setIsLoading(true);
     
     try {
       // Simulate refresh
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('✅ Insights atualizados');
+      appLogger.info('✅ Insights atualizados');
     } catch (error) {
-      console.error('❌ Erro ao atualizar insights:', error);
+      appLogger.error('❌ Erro ao atualizar insights:', { data: [error] });
     } finally {
       setIsLoading(false);
     }

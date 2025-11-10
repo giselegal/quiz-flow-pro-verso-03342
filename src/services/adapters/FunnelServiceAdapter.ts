@@ -13,6 +13,7 @@
 import { funnelService, FunnelMetadata } from '@/services/canonical/FunnelService';
 import { Funnel } from '@/core/domains';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES - API antiga do FunnelUnifiedService
@@ -118,7 +119,7 @@ export class FunnelServiceAdapter {
 
       return this.toUnifiedFormat(metadata);
     } catch (error) {
-      console.error('[FunnelServiceAdapter] Error creating funnel:', error);
+      appLogger.error('[FunnelServiceAdapter] Error creating funnel:', { data: [error] });
       throw error;
     }
   }
@@ -136,7 +137,7 @@ export class FunnelServiceAdapter {
       
       return this.toUnifiedFormat(metadata, withComponents?.components || {});
     } catch (error) {
-      console.error('[FunnelServiceAdapter] Error getting funnel:', error);
+      appLogger.error('[FunnelServiceAdapter] Error getting funnel:', { data: [error] });
       return null;
     }
   }
@@ -164,7 +165,7 @@ export class FunnelServiceAdapter {
       // Se houver steps, atualizar components
       if (input.steps) {
         // TODO: Implementar atualização de components via funnelService
-        console.warn('[FunnelServiceAdapter] Step updates not yet implemented');
+        appLogger.warn('[FunnelServiceAdapter] Step updates not yet implemented');
       }
 
       if (!metadata) {
@@ -173,7 +174,7 @@ export class FunnelServiceAdapter {
 
       return this.toUnifiedFormat(metadata, input.steps);
     } catch (error) {
-      console.error('[FunnelServiceAdapter] Error updating funnel:', error);
+      appLogger.error('[FunnelServiceAdapter] Error updating funnel:', { data: [error] });
       throw error;
     }
   }
@@ -185,7 +186,7 @@ export class FunnelServiceAdapter {
     try {
       return await funnelService.deleteFunnel(id);
     } catch (error) {
-      console.error('[FunnelServiceAdapter] Error deleting funnel:', error);
+      appLogger.error('[FunnelServiceAdapter] Error deleting funnel:', { data: [error] });
       return false;
     }
   }
@@ -201,7 +202,7 @@ export class FunnelServiceAdapter {
 
       return metadataList.map(meta => this.toUnifiedFormat(meta));
     } catch (error) {
-      console.error('[FunnelServiceAdapter] Error listing funnels:', error);
+      appLogger.error('[FunnelServiceAdapter] Error listing funnels:', { data: [error] });
       return [];
     }
   }
@@ -217,7 +218,7 @@ export class FunnelServiceAdapter {
       }
       return this.toUnifiedFormat(metadata);
     } catch (error) {
-      console.error('[FunnelServiceAdapter] Error publishing funnel:', error);
+      appLogger.error('[FunnelServiceAdapter] Error publishing funnel:', { data: [error] });
       throw error;
     }
   }
@@ -238,7 +239,7 @@ export class FunnelServiceAdapter {
         templateId: original.templateId,
       });
     } catch (error) {
-      console.error('[FunnelServiceAdapter] Error duplicating funnel:', error);
+      appLogger.error('[FunnelServiceAdapter] Error duplicating funnel:', { data: [error] });
       throw error;
     }
   }

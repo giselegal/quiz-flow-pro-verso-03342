@@ -8,6 +8,7 @@
 import React, { useEffect, useRef } from 'react';
 import { stepRegistry } from './StepRegistry';
 import { BaseStepProps } from './StepTypes';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StepRendererProps extends BaseStepProps {
     stepId: string;
@@ -89,12 +90,12 @@ export const StepRenderer: React.FC<StepRendererProps> = (props) => {
 
                 // Alerta se houver duplicidade do mesmo step
                 if (sameStepContainers.length > 1) {
-                    console.warn(`🟠 [LayerDiag] Step '${id}' renderizado ${sameStepContainers.length}x simultaneamente.`);
+                    appLogger.warn(`🟠 [LayerDiag] Step '${id}' renderizado ${sameStepContainers.length}x simultaneamente.`);
                 }
 
-                console.log('[LayerDiag] StepRenderer mount', layerInfo);
+                appLogger.info('[LayerDiag] StepRenderer mount', { data: [layerInfo] });
             } catch (e) {
-                console.debug('[LayerDiag] Falha ao coletar diagnóstico de camadas', e);
+                appLogger.debug('[LayerDiag] Falha ao coletar diagnóstico de camadas', { data: [e] });
             }
         }, [stepId]);
     }

@@ -23,6 +23,7 @@ import step12Template from '@/services/data/modularSteps/step-12.json';
 import step13Template from '@/services/data/modularSteps/step-13.json';
 import step19Template from '@/services/data/modularSteps/step-19.json';
 import step20Template from '@/services/data/modularSteps/step-20.json';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StepTemplate {
   id: string;
@@ -105,7 +106,7 @@ export function loadStepTemplate(stepId: string): Block[] {
   // 2. Tentar obter do template canônico (TS)
   const canonicalTemplate = getQuiz21StepsTemplate();
   if (canonicalTemplate && canonicalTemplate[stepId]) {
-    console.log(`✅ [loadStepTemplate] Usando fonte canônica (TS) para ${stepId}`);
+    appLogger.info(`✅ [loadStepTemplate] Usando fonte canônica (TS) para ${stepId}`);
     const blocks = Array.isArray(canonicalTemplate[stepId]) ? canonicalTemplate[stepId] : [];
     
     // Salvar no cache
@@ -116,7 +117,7 @@ export function loadStepTemplate(stepId: string): Block[] {
   }
   
   // 3. Fallback para templates legados (apenas compatibilidade histórica)
-  console.warn(`⚠️ [loadStepTemplate] Fonte canônica não encontrou ${stepId}, usando fallback (deprecado)`);
+  appLogger.warn(`⚠️ [loadStepTemplate] Fonte canônica não encontrou ${stepId}, usando fallback (deprecado)`);
   const templates: Record<string, StepTemplate> = {
     'step-12': step12Template as unknown as StepTemplate,
     'step-13': step13Template as unknown as StepTemplate,
@@ -127,7 +128,7 @@ export function loadStepTemplate(stepId: string): Block[] {
   const template = templates[stepId];
 
   if (!template) {
-    console.warn(`⚠️ Template não encontrado para ${stepId}`);
+    appLogger.warn(`⚠️ Template não encontrado para ${stepId}`);
     return [];
   }
 
@@ -138,12 +139,12 @@ export function loadStepTemplate(stepId: string): Block[] {
   unifiedCache.set(cacheKey, blocks);
 
   if (import.meta.env.DEV) {
-    console.log(`✅ Template carregado para ${stepId}:`, {
-      stepId,
-      blockCount: blocks.length,
-      blockTypes: blocks.map(b => b.type),
-      cached: false,
-    });
+    appLogger.info(`✅ Template carregado para ${stepId}:`, { data: [{
+            stepId,
+            blockCount: blocks.length,
+            blockTypes: blocks.map(b => b.type),
+            cached: false,
+          }] });
   }
 
   return blocks;

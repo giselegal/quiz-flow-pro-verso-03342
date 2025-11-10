@@ -14,6 +14,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import * as Sentry from '@sentry/react';
 import { AlertTriangle, RefreshCcw, MessageSquare } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
     children: ReactNode;
@@ -63,7 +64,7 @@ class SentryErrorBoundary extends Component<Props, State> {
         });
 
         // Log no console para desenvolvimento
-        console.error('Error Boundary capturou erro:', error, errorInfo);
+        appLogger.error('Error Boundary capturou erro:', { data: [error, errorInfo] });
     }
 
     handleReset = (): void => {

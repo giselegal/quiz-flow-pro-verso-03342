@@ -1,5 +1,6 @@
 import React from 'react';
 import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🚀 EXEMPLO PRÁTICO DO SISTEMA ESCALÁVEL
@@ -10,7 +11,7 @@ import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
 
 const ScalableQuizExample: React.FC = () => {
     const handleQuizComplete = (results: any) => {
-        console.log('✅ Quiz completado!', results);
+        appLogger.info('✅ Quiz completado!', { data: [results] });
 
         // Aqui você pode:
         // - Enviar dados para API
@@ -20,7 +21,7 @@ const ScalableQuizExample: React.FC = () => {
     };
 
     const handleStepChange = (step: number, data: any) => {
-        console.log(`📍 Step ${step} alterado:`, data);
+        appLogger.info(`📍 Step ${step} alterado:`, { data: [data] });
 
         // Aqui você pode:
         // - Fazer tracking de analytics
@@ -84,7 +85,7 @@ const ScalableQuizExample: React.FC = () => {
                             funnelId="lead-magnet-fashion"
                             mode="production"
                             onComplete={(results) => {
-                                console.log('Lead capturado!', results);
+                                appLogger.info('Lead capturado!', { data: [results] });
                                 // Redirecionar para download ou thank you page
                             }}
                             onStepChange={handleStepChange}

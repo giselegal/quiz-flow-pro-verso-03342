@@ -1,4 +1,5 @@
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚨 ERROR TRACKING SERVICE - Phase 3 Implementation
  * Sentry-like error tracking with structured logging
@@ -101,7 +102,7 @@ class ErrorTrackingService {
       }
     }, true);
 
-    console.log('🚨 Error tracking initialized');
+    appLogger.info('🚨 Error tracking initialized');
   }
 
   /**
@@ -133,13 +134,13 @@ class ErrorTrackingService {
     this.notifyCallbacks(report);
 
     // Log estruturado no console
-    console.error(`🚨 [${level.toUpperCase()}] ${report.message}`, {
-      id: report.id,
-      component: context?.component,
-      action: context?.action,
-      stack: errorObj.stack,
-      metadata: context?.metadata,
-    });
+    appLogger.error(`🚨 [${level.toUpperCase()}] ${report.message}`, { data: [{
+            id: report.id,
+            component: context?.component,
+            action: context?.action,
+            stack: errorObj.stack,
+            metadata: context?.metadata,
+          }] });
 
     return report.id;
   }
@@ -310,7 +311,7 @@ class ErrorTrackingService {
           callback(error);
         }
       } catch (e) {
-        console.error('Error in error callback:', e);
+        appLogger.error('Error in error callback:', { data: [e] });
       }
     });
   }
@@ -372,6 +373,6 @@ if (typeof window !== 'undefined') {
       (errorTrackingService as any).errors = errors;
     }
   } catch (e) {
-    console.warn('Failed to load persisted errors:', e);
+    appLogger.warn('Failed to load persisted errors:', { data: [e] });
   }
 }

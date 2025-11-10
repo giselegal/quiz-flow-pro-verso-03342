@@ -17,6 +17,7 @@ import { FunnelAIAgent } from '@/services/FunnelAIAgent';
 // import { UnifiedCalculationEngine } from '@/lib/utils/UnifiedCalculationEngine';
 // import { useAI } from '@/hooks/useAI';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===============================
 // 🎯 TYPES FOR AI ORCHESTRATION
@@ -231,7 +232,7 @@ export class UnifiedAIOrchestrator {
             result.metadata.qualityScore = this.calculateQualityScore(result.providers);
 
         } catch (error: any) {
-            console.error('AI Orchestration failed:', error);
+            appLogger.error('AI Orchestration failed:', { data: [error] });
             result.success = false;
             progress.errors.push({ provider: 'orchestrator', error: error.message });
         }

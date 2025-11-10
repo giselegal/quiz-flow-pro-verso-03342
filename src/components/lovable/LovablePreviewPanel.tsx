@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface LovablePreviewPanelProps {
   children: React.ReactNode;
@@ -28,7 +29,7 @@ export const LovablePreviewPanel: React.FC<LovablePreviewPanelProps> = ({ childr
         };
       } else {
         // eslint-disable-next-line no-console
-        console.info('[Lovable] PreviewPanel não configurado: VITE_LOVABLE_PROJECT_ID ausente');
+        appLogger.info('[Lovable] PreviewPanel não configurado: VITE_LOVABLE_PROJECT_ID ausente');
       }
 
       // Adiciona classe CSS para identificação do Lovable

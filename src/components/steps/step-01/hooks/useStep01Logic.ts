@@ -7,6 +7,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useQuizState } from '@/hooks/useQuizState';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseStep01LogicProps {
     initialData?: {
@@ -71,17 +72,17 @@ export const useStep01Logic = ({
             setGlobalUserName(trimmedName);
 
             // Log para debug
-            console.log('👤 Step01: Nome capturado:', {
-                name: trimmedName,
-                timestamp: new Date().toISOString(),
-                funnelId,
-            });
+            appLogger.info('👤 Step01: Nome capturado:', { data: [{
+                            name: trimmedName,
+                            timestamp: new Date().toISOString(),
+                            funnelId,
+                        }] });
 
             // Avançar para próximo step
             onNext();
 
         } catch (error) {
-            console.error('❌ Erro ao processar nome no Step 1:', error);
+            appLogger.error('❌ Erro ao processar nome no Step 1:', { data: [error] });
         } finally {
             setIsSubmitting(false);
         }

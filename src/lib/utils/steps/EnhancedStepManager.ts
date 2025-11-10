@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔗 SISTEMA AVANÇADO DE METADADOS PARA STEPS
  * 
@@ -47,11 +48,11 @@ export interface UserPersonalizationContext {
 
 // Mock implementations
 const mockLogger: Logger = {
-    debug: (message: string, data?: any) => console.log(`[DEBUG] ${message}`, data),
-    info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data),
-    warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data),
-    error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data),
-    performance: (name: string, duration: number) => console.log(`[PERF] ${name}: ${duration}ms`),
+    debug: (message: string, data?: any) => appLogger.info(`[DEBUG] ${message}`, { data: [data] }),
+    info: (message: string, data?: any) => appLogger.info(`[INFO] ${message}`, { data: [data] }),
+    warn: (message: string, data?: any) => appLogger.warn(`[WARN] ${message}`, { data: [data] }),
+    error: (message: string, data?: any) => appLogger.error(`[ERROR] ${message}`, { data: [data] }),
+    performance: (name: string, duration: number) => appLogger.info(`[PERF] ${name}: ${duration}ms`),
 };
 
 const mockCacheManager = {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type Props = {
     label?: string;
@@ -21,7 +22,7 @@ export class SafeBoundary extends React.Component<Props, State> {
             this.props.onError?.(error);
             if (import.meta && (import.meta as any).env && (import.meta as any).env.DEV) {
                  
-                console.error(`[SafeBoundary] ${this.props.label || 'Erro no componente'}`, error, info);
+                appLogger.error(`[SafeBoundary] ${this.props.label || 'Erro no componente'}`, { data: [error, info] });
             }
         } catch { }
     }

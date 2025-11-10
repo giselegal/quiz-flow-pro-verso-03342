@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface OptimizedImageProps {
   src: string;
@@ -108,7 +109,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   const handleError = () => {
     setHasError(true);
-    console.warn(`Failed to load image: ${src}`);
+    appLogger.warn(`Failed to load image: ${src}`);
   };
 
   // Don't render anything if not in view and not priority

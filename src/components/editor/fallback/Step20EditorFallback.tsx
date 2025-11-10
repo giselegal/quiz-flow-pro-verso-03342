@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import Step20FallbackTemplate from '@/components/quiz/Step20FallbackTemplate';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';

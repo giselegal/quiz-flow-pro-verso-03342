@@ -25,6 +25,7 @@ import type {
     TrackingSettings,
     SecuritySettings,
 } from '@/services/canonical/data/FunnelSettingsService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Re-export types para compatibilidade
 export type FunnelPublicationSettings = PublicationSettings;
@@ -124,12 +125,12 @@ export function useFunnelPublication(
             if (result.success && result.data) {
                 setSettings(result.data);
             } else {
-                console.warn('Failed to load settings:', result.success ? 'No data' : result.error.message);
+                appLogger.warn('Failed to load settings:', { data: [result.success ? 'No data' : result.error.message] });
                 // Manter settings padrão
             }
         } catch (err) {
             setError(err as Error);
-            console.error('Error loading settings:', err);
+            appLogger.error('Error loading settings:', { data: [err] });
         } finally {
             setIsLoading(false);
         }
@@ -214,7 +215,7 @@ export function useFunnelPublication(
                 throw result.error;
             }
 
-            console.log('✅ Funnel published:', result.data);
+            appLogger.info('✅ Funnel published:', { data: [result.data] });
         } catch (err) {
             setError(err as Error);
             throw err;
@@ -234,7 +235,7 @@ export function useFunnelPublication(
                 throw result.error;
             }
 
-            console.log('✅ Funnel unpublished');
+            appLogger.info('✅ Funnel unpublished');
         } catch (err) {
             setError(err as Error);
             throw err;
@@ -248,7 +249,7 @@ export function useFunnelPublication(
             await loadSettings();
             setError(null);
         } catch (err) {
-            console.error('Failed to reset settings:', err);
+            appLogger.error('Failed to reset settings:', { data: [err] });
         }
     }, [loadSettings]);
 

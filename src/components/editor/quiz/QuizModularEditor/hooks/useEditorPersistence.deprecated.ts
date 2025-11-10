@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * ⚠️ DEPRECATED: useEditorPersistence
  * 
@@ -30,9 +31,7 @@
 export { useEditorPersistence } from './useEditorPersistence';
 
 if (process.env.NODE_ENV === 'development') {
-  console.warn(
-    '⚠️ [DEPRECATED] useEditorPersistence está deprecated.\n' +
-    'Use useSuperUnified() ao invés.\n' +
-    'Veja: src/components/editor/quiz/QuizModularEditor/hooks/useEditorPersistence.deprecated.ts'
-  );
+  appLogger.warn('⚠️ [DEPRECATED] useEditorPersistence está deprecated.\n' +
+        'Use useSuperUnified() ao invés.\n' +
+        'Veja: src/components/editor/quiz/QuizModularEditor/hooks/useEditorPersistence.deprecated.ts');
 }

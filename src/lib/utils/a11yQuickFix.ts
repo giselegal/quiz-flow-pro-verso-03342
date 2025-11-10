@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Quick fix utilities para problemas comuns de acessibilidade
  * 
@@ -213,8 +214,8 @@ export function fixAllCommonIssues(container: HTMLElement = document.body): {
     totalErrors: number;
   };
 } {
-  console.log('🔧 Aplicando correções automáticas de acessibilidade...');
-  console.warn('⚠️ ATENÇÃO: Revise todas as correções manualmente!');
+  appLogger.info('🔧 Aplicando correções automáticas de acessibilidade...');
+  appLogger.warn('⚠️ ATENÇÃO: Revise todas as correções manualmente!');
 
   const altText = fixMissingAltText(container);
   const buttonLabels = fixButtonLabels(container);
@@ -227,8 +228,8 @@ export function fixAllCommonIssues(container: HTMLElement = document.body): {
     totalErrors: altText.errors.length + buttonLabels.errors.length + decorativeIcons.errors.length + inputLabels.errors.length,
   };
 
-  console.log('✅ Correções aplicadas:', summary);
-  console.log('📋 Detalhes:', { altText, buttonLabels, decorativeIcons, inputLabels });
+  appLogger.info('✅ Correções aplicadas:', { data: [summary] });
+  appLogger.info('📋 Detalhes:', { data: [{ altText, buttonLabels, decorativeIcons, inputLabels }] });
 
   return { altText, buttonLabels, decorativeIcons, inputLabels, summary };
 }

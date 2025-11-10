@@ -19,6 +19,7 @@ import {
   Eye,
   Wand2,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TemplateView {
   id: string;
@@ -196,7 +197,7 @@ const AdvancedTemplates: React.FC = () => {
   ];
 
   const generateCustomTemplate = () => {
-    console.log('🎨 Gerando template personalizado...');
+    appLogger.info('🎨 Gerando template personalizado...');
     // Simula integração com sistema IA
     alert('🎨 Template personalizado será gerado em breve!');
   };

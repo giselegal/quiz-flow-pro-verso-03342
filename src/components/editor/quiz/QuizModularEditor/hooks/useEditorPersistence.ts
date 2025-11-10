@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { funnelService } from '@/services/canonical/FunnelService'
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type PersistenceOptions = {
   autoSaveInterval?: number // ms
@@ -82,7 +83,7 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
     autoSaveTimerRef.current = setTimeout(async () => {
       const pending = pendingAutoSaveRef.current
       if (pending && pending.stepKey === stepKey) {
-        console.log(`🔄 Auto-saving step: ${stepKey}`)
+        appLogger.info(`🔄 Auto-saving step: ${stepKey}`)
         await saveStepBlocks(pending.stepKey, pending.blocks)
         pendingAutoSaveRef.current = null
       }
@@ -108,7 +109,7 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
 
     const pending = pendingAutoSaveRef.current
     if (pending) {
-      console.log(`⚡ Flushing auto-save for step: ${pending.stepKey}`)
+      appLogger.info(`⚡ Flushing auto-save for step: ${pending.stepKey}`)
       await saveStepBlocks(pending.stepKey, pending.blocks)
       pendingAutoSaveRef.current = null
     }

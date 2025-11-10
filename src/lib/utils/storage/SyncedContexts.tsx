@@ -14,6 +14,7 @@ import React, {
     ReactNode,
 } from 'react';
 import { advancedStorage, StorageChangeEvent } from './AdvancedStorageSystem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ========================================
 // TYPES E INTERFACES
@@ -158,7 +159,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
                 if (stored) {
                     // Validar dados se validator fornecido
                     if (config.validator && !config.validator(stored)) {
-                        console.warn(`Dados inválidos no contexto ${config.namespace}`, stored);
+                        appLogger.warn(`Dados inválidos no contexto ${config.namespace}`, { data: [stored] });
                         return;
                     }
 
@@ -170,7 +171,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
                     dispatch({ type: 'SET_DATA', payload: finalData });
                 }
             } catch (error) {
-                console.error(`Erro ao carregar contexto ${config.namespace}:`, error);
+                appLogger.error(`Erro ao carregar contexto ${config.namespace}:`, { data: [error] });
                 dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : 'Erro desconhecido' });
             }
         }, []);
@@ -209,7 +210,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
                 }
 
             } catch (error) {
-                console.error(`Erro ao salvar contexto ${config.namespace}:`, error);
+                appLogger.error(`Erro ao salvar contexto ${config.namespace}:`, { data: [error] });
                 dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : 'Erro ao salvar' });
 
                 // Reverter update otimista em caso de erro
@@ -504,7 +505,7 @@ export const useStaleData = () => {
 export const useMigrateFromLocalStorage = () => {
     return useCallback(async () => {
         try {
-            console.log('🔄 Iniciando migração do localStorage...');
+            appLogger.info('🔄 Iniciando migração do localStorage...');
 
             const migrated = await advancedStorage.migrateFromLocalStorage([
                 'editor_',
@@ -513,11 +514,11 @@ export const useMigrateFromLocalStorage = () => {
                 'quiz_',
             ], false); // Não deletar ainda, manter backup
 
-            console.log(`✅ Migração concluída: ${migrated} itens migrados`);
+            appLogger.info(`✅ Migração concluída: ${migrated} itens migrados`);
 
             return migrated;
         } catch (error) {
-            console.error('❌ Erro na migração:', error);
+            appLogger.error('❌ Erro na migração:', { data: [error] });
             return 0;
         }
     }, []);
@@ -533,7 +534,7 @@ export const useSafeStorageCleanup = () => {
         preserveEssential?: boolean;
     } = {}) => {
         try {
-            console.log('🧹 Iniciando limpeza segura do storage...');
+            appLogger.info('🧹 Iniciando limpeza segura do storage...');
 
             const cleaned = await advancedStorage.cleanup({
                 maxAge: options.maxAge || 7 * 24 * 60 * 60 * 1000, // 7 dias
@@ -541,11 +542,11 @@ export const useSafeStorageCleanup = () => {
                 preserveEssential: options.preserveEssential !== false,
             });
 
-            console.log(`✅ Limpeza concluída: ${cleaned} itens removidos`);
+            appLogger.info(`✅ Limpeza concluída: ${cleaned} itens removidos`);
 
             return cleaned;
         } catch (error) {
-            console.error('❌ Erro na limpeza:', error);
+            appLogger.error('❌ Erro na limpeza:', { data: [error] });
             return 0;
         }
     }, []);

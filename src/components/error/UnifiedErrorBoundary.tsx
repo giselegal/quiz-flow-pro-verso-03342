@@ -13,6 +13,7 @@
  */
 
 import React, { Component, ReactNode } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UnifiedErrorBoundaryState {
   hasError: boolean;
@@ -55,9 +56,9 @@ export class UnifiedErrorBoundary extends Component<
     
     // 📊 TELEMETRIA UNIFICADA
     console.group(`🚨 UnifiedErrorBoundary [${context}]`);
-    console.error('Error:', error);
-    console.error('Error Info:', errorInfo);
-    console.error('Component Stack:', errorInfo.componentStack);
+    appLogger.error('Error:', { data: [error] });
+    appLogger.error('Error Info:', { data: [errorInfo] });
+    appLogger.error('Component Stack:', { data: [errorInfo.componentStack] });
     console.groupEnd();
 
     this.setState({ 
@@ -103,7 +104,7 @@ export class UnifiedErrorBoundary extends Component<
     const delay = Math.min(1000 * Math.pow(2, this.state.retryCount), 10000); // Exponential backoff
     
     this.retryTimeout = setTimeout(() => {
-      console.log(`🔄 Attempting auto-recovery (attempt ${this.state.retryCount + 1})`);
+      appLogger.info(`🔄 Attempting auto-recovery (attempt ${this.state.retryCount + 1})`);
       this.handleRetry();
     }, delay);
   }

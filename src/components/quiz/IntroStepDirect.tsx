@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 COMPONENTE DIRETO - ETAPA 1 
@@ -19,26 +20,26 @@ export default function IntroStepDirect({ onNameSubmit }: IntroStepDirectProps) 
 
     const handleSubmit = async (e?: React.FormEvent) => {
         e?.preventDefault();
-        console.log('🔍 TESTE: handleSubmit chamado', { nome: nome.trim() });
+        appLogger.info('🔍 TESTE: handleSubmit chamado', { data: [{ nome: nome.trim() }] });
 
         if (nome.trim()) {
             setIsSubmitting(true);
-            console.log('✅ TESTE: Nome válido, enviando...', nome.trim());
+            appLogger.info('✅ TESTE: Nome válido, enviando...', { data: [nome.trim()] });
 
             // Simular pequeno delay para mostrar o feedback
             setTimeout(() => {
                 onNameSubmit(nome.trim());
                 setIsSubmitting(false);
-                console.log('✅ TESTE: onNameSubmit executado com sucesso');
+                appLogger.info('✅ TESTE: onNameSubmit executado com sucesso');
             }, 500);
         } else {
-            console.log('❌ TESTE: Nome inválido ou vazio');
+            appLogger.info('❌ TESTE: Nome inválido ou vazio');
         }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-            console.log('⌨️ TESTE: Enter pressionado');
+            appLogger.info('⌨️ TESTE: Enter pressionado');
             handleSubmit();
         }
     }; return (

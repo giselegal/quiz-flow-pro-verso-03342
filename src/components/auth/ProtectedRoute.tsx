@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useLocation } from 'wouter';
 import { Route } from 'wouter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ProtectedRouteProps {
   path: string;
@@ -15,7 +16,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   component: Component,
   requireAuth = true,
 }) => {
-  console.log('🔒 ProtectedRoute: INICIANDO para path:', path);
+  appLogger.info('🔒 ProtectedRoute: INICIANDO para path:', { data: [path] });
 
   const { user, isLoading } = useAuth();
   const [, setLocation] = useLocation();
@@ -28,19 +29,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     window.location.hostname === 'localhost';
 
   // Enhanced debug log
-  console.log('🔒 ProtectedRoute Debug DETALHADO:', {
-    path,
-    user: !!user,
-    userDetails: user ? 'Logado' : 'Não logado',
-    isDevelopment,
-    requireAuth,
-    isLoading,
-    hostname: window.location.hostname,
-    env: import.meta.env.MODE,
-    devCheck: import.meta.env.DEV,
-    nodeEnv: process.env.NODE_ENV,
-    componentName: Component.name || 'Unknown',
-  });
+  appLogger.info('🔒 ProtectedRoute Debug DETALHADO:', { data: [{
+        path,
+        user: !!user,
+        userDetails: user ? 'Logado' : 'Não logado',
+        isDevelopment,
+        requireAuth,
+        isLoading,
+        hostname: window.location.hostname,
+        env: import.meta.env.MODE,
+        devCheck: import.meta.env.DEV,
+        nodeEnv: process.env.NODE_ENV,
+        componentName: Component.name || 'Unknown',
+      }] });
 
   return (
     <Route path={path}>
@@ -61,7 +62,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
         // If authentication is required and user is not logged in (and not in dev)
         if (requireAuth && !user && !isDevelopment) {
-          console.log('❌ ProtectedRoute: ACESSO NEGADO para', path, '- Redirecionando para /auth');
+          appLogger.info('❌ ProtectedRoute: ACESSO NEGADO para', { data: [path, '- Redirecionando para /auth'] });
           setLocation('/auth');
           return (
             <div className="min-h-screen flex items-center justify-center">
@@ -72,7 +73,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
           );
         }
 
-        console.log('✅ ProtectedRoute: ACESSO PERMITIDO para', path, '- Carregando componente');
+        appLogger.info('✅ ProtectedRoute: ACESSO PERMITIDO para', { data: [path, '- Carregando componente'] });
         return (
           <Suspense fallback={<LoadingSpinner size="lg" color="#B89B7A" />}>
             <Component />

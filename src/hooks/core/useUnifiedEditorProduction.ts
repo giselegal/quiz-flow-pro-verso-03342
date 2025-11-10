@@ -25,6 +25,7 @@ import {
   CRUDResult, 
 } from '@/services/UnifiedCRUDService';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos principais
 export interface ProductionEditorState {
@@ -202,7 +203,7 @@ export const useUnifiedEditorProduction = (
 
     autoSaveTimeoutRef.current = setTimeout(async () => {
       if (state.isDirty && state.funnel && !state.isSaving) {
-        console.log('🔄 Auto-save triggered');
+        appLogger.info('🔄 Auto-save triggered');
         await saveFunnel();
       }
     }, autoSaveInterval);
@@ -236,7 +237,7 @@ export const useUnifiedEditorProduction = (
           await unifiedCacheService.preloadFunnel(id);
         }
 
-        console.log(`✅ Funnel carregado: ${id}`);
+        appLogger.info(`✅ Funnel carregado: ${id}`);
       } else {
         throw new Error(result.error || 'Falha ao carregar funnel');
       }
@@ -248,7 +249,7 @@ export const useUnifiedEditorProduction = (
         operationInProgress: false,
       });
       
-      console.error('❌ Erro ao carregar funnel:', errorMessage);
+      appLogger.error('❌ Erro ao carregar funnel:', { data: [errorMessage] });
     } finally {
       if (enablePerformanceTracking) {
         updateMetrics('loadFunnel', Date.now() - startTime);
@@ -258,7 +259,7 @@ export const useUnifiedEditorProduction = (
 
   const saveFunnel = useCallback(async (): Promise<boolean> => {
     if (!state.funnel) {
-      console.warn('⚠️ Nenhum funnel para salvar');
+      appLogger.warn('⚠️ Nenhum funnel para salvar');
       return false;
     }
 
@@ -281,7 +282,7 @@ export const useUnifiedEditorProduction = (
           await unifiedCacheService.invalidateFunnel(state.funnel.id);
         }
 
-        console.log('✅ Funnel salvo com sucesso');
+        appLogger.info('✅ Funnel salvo com sucesso');
         return true;
       } else {
         throw new Error(result.error || 'Falha ao salvar funnel');
@@ -294,7 +295,7 @@ export const useUnifiedEditorProduction = (
         operationInProgress: false,
       });
       
-      console.error('❌ Erro ao salvar funnel:', errorMessage);
+      appLogger.error('❌ Erro ao salvar funnel:', { data: [errorMessage] });
       return false;
     } finally {
       if (enablePerformanceTracking) {
@@ -359,7 +360,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Funnel criado: ${result.data.id}`);
+        appLogger.info(`✅ Funnel criado: ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao criar funnel');
@@ -406,7 +407,7 @@ export const useUnifiedEditorProduction = (
           unifiedCacheService.clearFunnel(id);
         }
 
-        console.log(`✅ Funnel excluído: ${id}`);
+        appLogger.info(`✅ Funnel excluído: ${id}`);
         return true;
       } else {
         throw new Error(result.error || 'Falha ao excluir funnel');
@@ -418,7 +419,7 @@ export const useUnifiedEditorProduction = (
         operationInProgress: false,
       });
       
-      console.error('❌ Erro ao excluir funnel:', errorMessage);
+      appLogger.error('❌ Erro ao excluir funnel:', { data: [errorMessage] });
       return false;
     } finally {
       if (enablePerformanceTracking) {
@@ -437,7 +438,7 @@ export const useUnifiedEditorProduction = (
       if (result.success && result.data) {
         updateState({ isLoading: false, operationInProgress: false });
         
-        console.log(`✅ Funnel duplicado: ${id} -> ${result.data.id}`);
+        appLogger.info(`✅ Funnel duplicado: ${id} -> ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao duplicar funnel');
@@ -489,7 +490,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Stage adicionado: ${result.data.id}`);
+        appLogger.info(`✅ Stage adicionado: ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao adicionar stage');
@@ -528,7 +529,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Stage atualizado: ${stageId}`);
+        appLogger.info(`✅ Stage atualizado: ${stageId}`);
       } else {
         throw new Error(result.error || 'Falha ao atualizar stage');
       }
@@ -575,7 +576,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Stage excluído: ${stageId}`);
+        appLogger.info(`✅ Stage excluído: ${stageId}`);
       } else {
         throw new Error(result.error || 'Falha ao excluir stage');
       }
@@ -613,7 +614,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Stages reordenados: ${startIndex} -> ${endIndex}`);
+        appLogger.info(`✅ Stages reordenados: ${startIndex} -> ${endIndex}`);
       } else {
         throw new Error(result.error || 'Falha ao reordenar stages');
       }
@@ -671,7 +672,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Stage duplicado: ${stageId} -> ${result.data.id}`);
+        appLogger.info(`✅ Stage duplicado: ${stageId} -> ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao duplicar stage');
@@ -722,7 +723,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Block adicionado: ${result.data.id} (${type})`);
+        appLogger.info(`✅ Block adicionado: ${result.data.id} (${type})`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao adicionar block');
@@ -764,7 +765,7 @@ export const useUnifiedEditorProduction = (
         // Agendar auto-save
         scheduleAutoSave();
 
-        console.log(`✅ Block atualizado: ${blockId}`);
+        appLogger.info(`✅ Block atualizado: ${blockId}`);
       } else {
         throw new Error(result.error || 'Falha ao atualizar block');
       }
@@ -803,7 +804,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Block excluído: ${blockId}`);
+        appLogger.info(`✅ Block excluído: ${blockId}`);
       } else {
         throw new Error(result.error || 'Falha ao excluir block');
       }
@@ -842,7 +843,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Block duplicado: ${blockId} -> ${result.data.id}`);
+        appLogger.info(`✅ Block duplicado: ${blockId} -> ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao duplicar block');
@@ -881,7 +882,7 @@ export const useUnifiedEditorProduction = (
           operationInProgress: false,
         });
 
-        console.log(`✅ Blocks reordenados: ${startIndex} -> ${endIndex}`);
+        appLogger.info(`✅ Blocks reordenados: ${startIndex} -> ${endIndex}`);
       } else {
         throw new Error(result.error || 'Falha ao reordenar blocks');
       }
@@ -981,9 +982,9 @@ export const useUnifiedEditorProduction = (
 
     try {
       await unifiedCacheService.refreshCache();
-      console.log('✅ Cache atualizado');
+      appLogger.info('✅ Cache atualizado');
     } catch (error) {
-      console.warn('⚠️ Erro ao atualizar cache:', error);
+      appLogger.warn('⚠️ Erro ao atualizar cache:', { data: [error] });
     }
   }, [enableCache]);
 
@@ -992,7 +993,7 @@ export const useUnifiedEditorProduction = (
 
     unifiedCacheService.clearCache();
     unifiedCRUDService.clearCache();
-    console.log('🧹 Cache limpo');
+    appLogger.info('🧹 Cache limpo');
   }, [enableCache]);
 
   const getCacheStats = useCallback(() => {

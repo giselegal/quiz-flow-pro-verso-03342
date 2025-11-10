@@ -21,6 +21,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Mock imports para compatibilidade
 interface Logger {
@@ -91,10 +92,10 @@ export interface UserPersonalizationContext {
 
 // Mock implementations
 const mockLogger: Logger = {
-    debug: (message: string, data?: any) => console.log(`[DEBUG] ${message}`, data),
-    info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data),
-    warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data),
-    error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data),
+    debug: (message: string, data?: any) => appLogger.info(`[DEBUG] ${message}`, { data: [data] }),
+    info: (message: string, data?: any) => appLogger.info(`[INFO] ${message}`, { data: [data] }),
+    warn: (message: string, data?: any) => appLogger.warn(`[WARN] ${message}`, { data: [data] }),
+    error: (message: string, data?: any) => appLogger.error(`[ERROR] ${message}`, { data: [data] }),
 };
 
 const unifiedIDGenerator: UnifiedIDGenerator = {

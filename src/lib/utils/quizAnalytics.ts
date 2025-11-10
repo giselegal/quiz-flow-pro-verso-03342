@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { trackEvent } from './analytics';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 export type QuizAnalyticsEventType = 'step_view' | 'result_compute' | 'offer_view' | 'cta_click';
 
 interface BaseEvt { type: QuizAnalyticsEventType; ts: string; sessionId: string; userId?: string; }
@@ -90,7 +91,7 @@ export function emitQuizEvent(evt: any) {
     const draft = { ...draftBase, ts: new Date().toISOString(), sessionId, userId: resolveUserId() };
     const parsed = anyEventSchema.safeParse(draft);
     if (!parsed.success) {
-        if (typeof console !== 'undefined') console.warn('[QuizAnalytics] Evento inválido descartado', parsed.error.flatten());
+        if (typeof console !== 'undefined') appLogger.warn('[QuizAnalytics] Evento inválido descartado', { data: [parsed.error.flatten()] });
         return;
     }
     const full = parsed.data as QuizAnalyticsEvent;
@@ -114,7 +115,7 @@ export function emitQuizEvent(evt: any) {
                 break;
         }
     } catch { }
-    if (typeof console !== 'undefined') console.log('[QuizAnalytics]', full.type, full);
+    if (typeof console !== 'undefined') appLogger.info('[QuizAnalytics]', { data: [full.type, full] });
 }
 export function getQuizEvents() { return load(); }
 export function clearQuizEvents() { try { localStorage.removeItem(STORAGE_KEY); } catch { } }
@@ -181,7 +182,7 @@ export async function flushQuizEvents(opts: FlushOptions) {
             });
             flushed += slice.length;
         } catch (err) {
-            console.warn('[QuizAnalytics] Falha ao enviar batch', err);
+            appLogger.warn('[QuizAnalytics] Falha ao enviar batch', { data: [err] });
             break; // parar no primeiro erro
         }
     }
@@ -241,7 +242,7 @@ export async function flushQuizEventsWithRetry(opts: RetryFlushOptions) {
             }
         }
         if (!sent) {
-            console.warn('[QuizAnalytics] Batch falhou após retries', { batchIndex, lastErr });
+            appLogger.warn('[QuizAnalytics] Batch falhou após retries', { data: [{ batchIndex, lastErr }] });
             break; // interrompe cadeia
         }
     }

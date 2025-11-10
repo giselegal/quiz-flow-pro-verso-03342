@@ -1,6 +1,7 @@
 import { BlockComponent } from '@/components/editor/quiz/types';
 import { Block, BlockType } from '@/types/editor';
 import { mapBlockType } from './blockTypeMapper';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🔄 TEMPLATE CONVERTER UTILITY
@@ -61,7 +62,7 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
 
       if (originalType !== mappedType && typeof console !== 'undefined') {
         try {
-          console.log(`🔄 Mapeando tipo de bloco: ${originalType} → ${mappedType}`);
+          appLogger.info(`🔄 Mapeando tipo de bloco: ${originalType} → ${mappedType}`);
         } catch {/* noop */ }
       }
 
@@ -83,7 +84,7 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
   }
 
   // Fallback: empty blocks array
-  console.warn('⚠️ Template format not recognized, returning empty blocks:', template);
+  appLogger.warn('⚠️ Template format not recognized, returning empty blocks:', { data: [template] });
   return [];
 }
 
@@ -94,43 +95,43 @@ export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: 
   try {
     // Verificar e registrar fonte do template (para diagnóstico)
     const source = template._source || 'unknown';
-    console.log(`🧪 [safeGetTemplateBlocks] Template fonte: ${source} para ${stepId}`);
+    appLogger.info(`🧪 [safeGetTemplateBlocks] Template fonte: ${source} para ${stepId}`);
     
     const stepTemplate = template[stepId];
 
     if (!stepTemplate) {
-      console.warn(`⚠️ No template found for ${stepId}`);
+      appLogger.warn(`⚠️ No template found for ${stepId}`);
       return [];
     }
 
     // ✅ FASE 1: Detectar formato v3.0 com sections
     if (stepTemplate?.sections && Array.isArray(stepTemplate.sections)) {
-      console.log(`✅ Template v3.0 detectado para ${stepId}, convertendo ${stepTemplate.sections.length} sections`);
+      appLogger.info(`✅ Template v3.0 detectado para ${stepId}, convertendo ${stepTemplate.sections.length} sections`);
       const blocks = convertTemplateToBlocks(stepTemplate);
       // Preservar metadados de origem no primeiro bloco (para diagnóstico)
       if (blocks.length > 0 && source) {
         (blocks[0] as any)._templateSource = source;
       }
-      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId} (fonte: ${source})`);
+      appLogger.info(`✅ Convertidos ${blocks.length} blocos para ${stepId} (fonte: ${source})`);
       return blocks;
     }
 
     // ✅ Detectar array direto (formato legacy)
     if (Array.isArray(stepTemplate)) {
-      console.log(`✅ Template legacy (array) detectado para ${stepId}, ${stepTemplate.length} blocks`);
+      appLogger.info(`✅ Template legacy (array) detectado para ${stepId}, ${stepTemplate.length} blocks`);
       const blocks = convertTemplateToBlocks(stepTemplate);
       // Preservar metadados de origem no primeiro bloco (para diagnóstico)
       if (blocks.length > 0 && source) {
         (blocks[0] as any)._templateSource = source;
       }
-      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId} (fonte: ${source})`);
+      appLogger.info(`✅ Convertidos ${blocks.length} blocos para ${stepId} (fonte: ${source})`);
       return blocks;
     }
 
-    console.warn(`⚠️ Formato não reconhecido para ${stepId}:`, stepTemplate);
+    appLogger.warn(`⚠️ Formato não reconhecido para ${stepId}:`, { data: [stepTemplate] });
     return [];
   } catch (error) {
-    console.error(`❌ Error converting template for ${stepId}:`, error);
+    appLogger.error(`❌ Error converting template for ${stepId}:`, { data: [error] });
     return [];
   }
 }

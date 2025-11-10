@@ -4,6 +4,7 @@ import { Trash2, Plus, Settings, FileText, Palette, Globe, Rocket, AlertCircle, 
 // import { useHeadlessEditor } from './HeadlessEditorProvider';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type PanelTab = 'step' | 'global' | 'style' | 'publish';
 
@@ -40,12 +41,12 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
 
     // 🎯 FUNÇÕES REAIS DE ATUALIZAÇÃO
     const updateStep = (stepId: string, updates: any) => {
-        console.log('🔄 Atualizando step:', stepId, updates);
+        appLogger.info('🔄 Atualizando step:', { data: [stepId, updates] });
         // Implementar lógica de atualização de step via builder actions
     };
 
     const updateGlobalSettings = (updates: any) => {
-        console.log('🌍 Atualizando configurações globais:', updates);
+        appLogger.info('🌍 Atualizando configurações globais:', { data: [updates] });
         // Implementar lógica de atualização global
     };
 
@@ -401,7 +402,7 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
         setHasChanges(true);
 
         // 🎯 FEEDBACK VISUAL: Mostrar confirmação
-        console.log(`🔄 Atualizando ${field}:`, value);
+        appLogger.info(`🔄 Atualizando ${field}:`, { data: [value] });
     };
 
     const handlePropertyUpdate = (field: string, value: any) => {
@@ -424,7 +425,7 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
         setHasChanges(true);
 
         // 🎯 FEEDBACK VISUAL: Mostrar confirmação
-        console.log(`🎨 Atualizando propriedade ${field}:`, value);
+        appLogger.info(`🎨 Atualizando propriedade ${field}:`, { data: [value] });
     }; return (
         <div className="p-4 space-y-4">
             {/* 🎯 HEADER DO EDITOR */}

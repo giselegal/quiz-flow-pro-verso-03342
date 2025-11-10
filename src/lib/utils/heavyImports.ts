@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎨 HEAVY IMPORTS OPTIMIZATION (P2)
  * 
@@ -49,7 +50,7 @@ export const loadLucideIcons = async (iconNames: string[]) => {
         const icon = await import('lucide-react').then(m => m[iconName]);
         icons[iconName] = icon;
       } catch (error) {
-        console.warn(`Icon ${iconName} not found in lucide-react`);
+        appLogger.warn(`Icon ${iconName} not found in lucide-react`);
       }
     }),
   );
@@ -70,7 +71,7 @@ export const loadDateFns = async (fns: string[]): Promise<Record<string, any>> =
     if (fnName in dateFnsModule) {
       dateFns[fnName] = (dateFnsModule as any)[fnName];
     } else {
-      console.warn(`Function ${fnName} not found in date-fns`);
+      appLogger.warn(`Function ${fnName} not found in date-fns`);
     }
   });
 

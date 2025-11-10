@@ -6,6 +6,7 @@
  */
 
 import { FunnelState, FunnelSettings } from '../types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -87,7 +88,7 @@ export class LocalStorageService {
             window.localStorage.removeItem(testKey);
             return true;
         } catch (error) {
-            console.warn('⚠️ LocalStorage não disponível:', error);
+            appLogger.warn('⚠️ LocalStorage não disponível:', { data: [error] });
             return false;
         }
     }
@@ -110,7 +111,7 @@ export class LocalStorageService {
                 const age = now - (parsed.timestamp / 1000);
 
                 if (age > parsed.ttl) {
-                    console.log(`🗑️ Item expirado removido: ${key}`);
+                    appLogger.info(`🗑️ Item expirado removido: ${key}`);
                     this.removeItem(key);
                     return null;
                 }
@@ -118,7 +119,7 @@ export class LocalStorageService {
 
             return parsed;
         } catch (error) {
-            console.error('❌ Erro ao ler localStorage:', error);
+            appLogger.error('❌ Erro ao ler localStorage:', { data: [error] });
             return null;
         }
     }
@@ -149,11 +150,11 @@ export class LocalStorageService {
 
             return true;
         } catch (error) {
-            console.error('❌ Erro ao salvar no localStorage:', error);
+            appLogger.error('❌ Erro ao salvar no localStorage:', { data: [error] });
 
             // Tentar limpar itens antigos e tentar novamente
             if (error instanceof Error && error.name === 'QuotaExceededError') {
-                console.log('🧹 Quota excedida, limpando itens antigos...');
+                appLogger.info('🧹 Quota excedida, limpando itens antigos...');
                 this.cleanupExpiredItems();
 
                 try {
@@ -166,7 +167,7 @@ export class LocalStorageService {
                     window.localStorage.setItem(key, serialized);
                     return true;
                 } catch (retryError) {
-                    console.error('❌ Erro mesmo após limpeza:', retryError);
+                    appLogger.error('❌ Erro mesmo após limpeza:', { data: [retryError] });
                     return false;
                 }
             }
@@ -186,7 +187,7 @@ export class LocalStorageService {
             this.removeFromIndex(key);
             return true;
         } catch (error) {
-            console.error('❌ Erro ao remover do localStorage:', error);
+            appLogger.error('❌ Erro ao remover do localStorage:', { data: [error] });
             return false;
         }
     }
@@ -199,13 +200,13 @@ export class LocalStorageService {
      * Salva estado de funil
      */
     saveFunnel(funnelId: string, state: FunnelState): boolean {
-        console.log(`💾 Salvando funil no localStorage: ${funnelId}`);
+        appLogger.info(`💾 Salvando funil no localStorage: ${funnelId}`);
 
         const key = STORAGE_KEYS.FUNNEL(funnelId);
         const success = this.setItem(key, state, { ttl: DEFAULT_TTL });
 
         if (success) {
-            console.log(`✅ Funil salvo localmente: ${funnelId}`);
+            appLogger.info(`✅ Funil salvo localmente: ${funnelId}`);
         }
 
         return success;
@@ -215,13 +216,13 @@ export class LocalStorageService {
      * Carrega estado de funil
      */
     loadFunnel(funnelId: string): FunnelState | null {
-        console.log(`📖 Carregando funil do localStorage: ${funnelId}`);
+        appLogger.info(`📖 Carregando funil do localStorage: ${funnelId}`);
 
         const key = STORAGE_KEYS.FUNNEL(funnelId);
         const item = this.getItem<FunnelState>(key);
 
         if (item) {
-            console.log(`✅ Funil carregado localmente: ${funnelId}`);
+            appLogger.info(`✅ Funil carregado localmente: ${funnelId}`);
             return item.data;
         }
 
@@ -232,7 +233,7 @@ export class LocalStorageService {
      * Remove funil do localStorage
      */
     removeFunnel(funnelId: string): boolean {
-        console.log(`🗑️ Removendo funil do localStorage: ${funnelId}`);
+        appLogger.info(`🗑️ Removendo funil do localStorage: ${funnelId}`);
 
         const funnelKey = STORAGE_KEYS.FUNNEL(funnelId);
         const settingsKey = STORAGE_KEYS.SETTINGS(funnelId);
@@ -266,7 +267,7 @@ export class LocalStorageService {
 
             return funnelIds;
         } catch (error) {
-            console.error('❌ Erro ao listar funis:', error);
+            appLogger.error('❌ Erro ao listar funis:', { data: [error] });
             return [];
         }
     }
@@ -279,13 +280,13 @@ export class LocalStorageService {
      * Salva configurações de funil
      */
     saveSettings(funnelId: string, settings: FunnelSettings): boolean {
-        console.log(`💾 Salvando configurações no localStorage: ${funnelId}`);
+        appLogger.info(`💾 Salvando configurações no localStorage: ${funnelId}`);
 
         const key = STORAGE_KEYS.SETTINGS(funnelId);
         const success = this.setItem(key, settings, { ttl: DEFAULT_TTL });
 
         if (success) {
-            console.log(`✅ Configurações salvas localmente: ${funnelId}`);
+            appLogger.info(`✅ Configurações salvas localmente: ${funnelId}`);
         }
 
         return success;
@@ -295,13 +296,13 @@ export class LocalStorageService {
      * Carrega configurações de funil
      */
     loadSettings(funnelId: string): FunnelSettings | null {
-        console.log(`📖 Carregando configurações do localStorage: ${funnelId}`);
+        appLogger.info(`📖 Carregando configurações do localStorage: ${funnelId}`);
 
         const key = STORAGE_KEYS.SETTINGS(funnelId);
         const item = this.getItem<FunnelSettings>(key);
 
         if (item) {
-            console.log(`✅ Configurações carregadas localmente: ${funnelId}`);
+            appLogger.info(`✅ Configurações carregadas localmente: ${funnelId}`);
             return item.data;
         }
 
@@ -378,12 +379,12 @@ export class LocalStorageService {
             }
 
             if (cleanedCount > 0) {
-                console.log(`🧹 ${cleanedCount} itens expirados removidos`);
+                appLogger.info(`🧹 ${cleanedCount} itens expirados removidos`);
             }
 
             return cleanedCount;
         } catch (error) {
-            console.error('❌ Erro durante limpeza:', error);
+            appLogger.error('❌ Erro durante limpeza:', { data: [error] });
             return 0;
         }
     }
@@ -435,7 +436,7 @@ export class LocalStorageService {
                 }
             }
         } catch (error) {
-            console.error('❌ Erro ao calcular estatísticas:', error);
+            appLogger.error('❌ Erro ao calcular estatísticas:', { data: [error] });
         }
 
         return stats;
@@ -458,10 +459,10 @@ export class LocalStorageService {
                 }
             }
 
-            console.log(`🧹 ${removedCount} itens removidos do localStorage`);
+            appLogger.info(`🧹 ${removedCount} itens removidos do localStorage`);
             return true;
         } catch (error) {
-            console.error('❌ Erro ao limpar localStorage:', error);
+            appLogger.error('❌ Erro ao limpar localStorage:', { data: [error] });
             return false;
         }
     }
@@ -541,21 +542,21 @@ export function migrateLegacyFunnelData(): number {
                             if (success) {
                                 window.localStorage.removeItem(key);
                                 migratedCount++;
-                                console.log(`✅ Migrado: ${key} → ${funnelId}`);
+                                appLogger.info(`✅ Migrado: ${key} → ${funnelId}`);
                             }
                         }
                     } catch (parseError) {
-                        console.warn(`⚠️ Erro ao migrar ${key}:`, parseError);
+                        appLogger.warn(`⚠️ Erro ao migrar ${key}:`, { data: [parseError] });
                     }
                 }
             }
         }
 
         if (migratedCount > 0) {
-            console.log(`🔄 ${migratedCount} itens migrados para o novo formato`);
+            appLogger.info(`🔄 ${migratedCount} itens migrados para o novo formato`);
         }
     } catch (error) {
-        console.error('❌ Erro durante migração:', error);
+        appLogger.error('❌ Erro durante migração:', { data: [error] });
     }
 
     return migratedCount;

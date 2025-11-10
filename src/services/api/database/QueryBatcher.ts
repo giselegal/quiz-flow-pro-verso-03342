@@ -15,6 +15,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Alias para compatibilidade
 const queryCache = unifiedCacheService;
@@ -88,7 +89,7 @@ class QueryBatcher {
       
       if (cached) {
         this.stats.cacheHits++;
-        console.log(`⚡ Query cache hit: ${table}`);
+        appLogger.info(`⚡ Query cache hit: ${table}`);
         return cached;
       }
     }
@@ -98,7 +99,7 @@ class QueryBatcher {
       const existingQuery = this.findDuplicateQuery(table, deduplicationKey);
       if (existingQuery) {
         this.stats.deduplicatedQueries++;
-        console.log(`🔄 Query deduplicated: ${table}:${deduplicationKey}`);
+        appLogger.info(`🔄 Query deduplicated: ${table}:${deduplicationKey}`);
         return new Promise((resolve, reject) => {
           existingQuery.resolve = resolve;
           existingQuery.reject = reject;
@@ -138,7 +139,7 @@ class QueryBatcher {
     batch.push(batchQuery);
     this.stats.batchedQueries++;
 
-    console.log(`📦 Added to batch: ${batchKey} (${batch.length} queries)`);
+    appLogger.info(`📦 Added to batch: ${batchKey} (${batch.length} queries)`);
 
     // 🚀 EXECUTE BATCH CONDITIONS
     if (
@@ -171,7 +172,7 @@ class QueryBatcher {
     if (this.inFlightBatches.has(batchKey)) return;
     this.inFlightBatches.add(batchKey);
 
-    console.log(`🚀 Executing batch: ${batchKey} (${batch.length} queries)`);
+    appLogger.info(`🚀 Executing batch: ${batchKey} (${batch.length} queries)`);
     this.stats.networkRequests++;
 
     try {
@@ -191,9 +192,9 @@ class QueryBatcher {
         query.resolve(result);
       });
 
-      console.log(`✅ Batch executed successfully: ${batchKey}`);
+      appLogger.info(`✅ Batch executed successfully: ${batchKey}`);
     } catch (error) {
-      console.error(`❌ Batch execution failed: ${batchKey}`, error);
+      appLogger.error(`❌ Batch execution failed: ${batchKey}`, { data: [error] });
       
       // Reject all queries in batch
       batch.forEach(query => query.reject(error));
@@ -358,7 +359,7 @@ class QueryBatcher {
     const batchKeys = Array.from(this.pendingQueries.keys());
     const flushPromises = batchKeys.map(key => this.executeBatch(key));
     await Promise.allSettled(flushPromises);
-    console.log('🧹 All batches flushed');
+    appLogger.info('🧹 All batches flushed');
   }
 
   /**
@@ -373,7 +374,7 @@ class QueryBatcher {
     this.pendingQueries.clear();
     this.inFlightBatches.clear();
     
-    console.log('🛑 QueryBatcher cleaned up');
+    appLogger.info('🛑 QueryBatcher cleaned up');
   }
 }
 

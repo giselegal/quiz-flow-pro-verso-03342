@@ -1,6 +1,7 @@
 import { useEditor } from '@/components/editor/EditorProviderCanonical';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const DebugStep02: React.FC = () => {
   const editorContext = useEditor({ optional: true });
@@ -35,9 +36,9 @@ const DebugStep02: React.FC = () => {
       step02Template.forEach(async (block: any) => {
         try {
           await blockActions.addBlock(block.type);
-          console.log(`✅ Added block: ${block.type}`);
+          appLogger.info(`✅ Added block: ${block.type}`);
         } catch (error) {
-          console.error(`❌ Failed to add block ${block.type}:`, error);
+          appLogger.error(`❌ Failed to add block ${block.type}:`, { data: [error] });
         }
       });
     }

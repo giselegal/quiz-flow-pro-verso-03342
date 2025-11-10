@@ -8,6 +8,7 @@ import { AVAILABLE_TEMPLATES, TemplateService } from '../../config/templates';
 
 // Verificar hooks e serviços relacionados
 import useMyTemplates from '../../hooks/useMyTemplates';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const TemplateInvestigationPage: React.FC = () => {
     const [localStorageTemplates, setLocalStorageTemplates] = useState<any[]>([]);
@@ -23,7 +24,7 @@ const TemplateInvestigationPage: React.FC = () => {
     }, []);
 
     const investigateAllSources = async () => {
-        console.log('🕵️ Iniciando investigação completa de templates...');
+        appLogger.info('🕵️ Iniciando investigação completa de templates...');
 
         // 1. Verificar localStorage
         checkLocalStorage();
@@ -40,11 +41,11 @@ const TemplateInvestigationPage: React.FC = () => {
         // 5. Verificar cache/arquivos estáticos
         await checkStaticFiles();
 
-        console.log('🔍 Investigação completa finalizada!');
+        appLogger.info('🔍 Investigação completa finalizada!');
     };
 
     const checkLocalStorage = () => {
-        console.log('📦 Verificando localStorage...');
+        appLogger.info('📦 Verificando localStorage...');
         const keys = Object.keys(localStorage);
         const templateKeys = keys.filter(key => key.toLowerCase().includes('template'));
 
@@ -54,16 +55,16 @@ const TemplateInvestigationPage: React.FC = () => {
                 const data = JSON.parse(localStorage.getItem(key) || '{}');
                 foundTemplates.push({ key, data });
             } catch (e) {
-                console.warn(`❌ Erro ao parsear ${key}:`, e);
+                appLogger.warn(`❌ Erro ao parsear ${key}:`, { data: [e] });
             }
         });
 
         setLocalStorageTemplates(foundTemplates);
-        console.log(`📦 localStorage: ${foundTemplates.length} items encontrados`);
+        appLogger.info(`📦 localStorage: ${foundTemplates.length} items encontrados`);
     };
 
     const checkIndexedDB = async () => {
-        console.log('🗄️ Verificando IndexedDB...');
+        appLogger.info('🗄️ Verificando IndexedDB...');
         try {
             // Verificar bases comuns
             const dbs = ['templates', 'quiz-templates', 'funnel-templates'];
@@ -72,20 +73,20 @@ const TemplateInvestigationPage: React.FC = () => {
                 try {
                     const request = indexedDB.open(dbName);
                     request.onsuccess = () => {
-                        console.log(`✅ IndexedDB encontrado: ${dbName}`);
+                        appLogger.info(`✅ IndexedDB encontrado: ${dbName}`);
                         request.result.close();
                     };
                 } catch (e) {
-                    console.log(`❌ IndexedDB não encontrado: ${dbName}`);
+                    appLogger.info(`❌ IndexedDB não encontrado: ${dbName}`);
                 }
             }
         } catch (e) {
-            console.log('❌ Erro ao verificar IndexedDB:', e);
+            appLogger.info('❌ Erro ao verificar IndexedDB:', { data: [e] });
         }
     };
 
     const checkSupabase = async () => {
-        console.log('☁️ Verificando Supabase...');
+        appLogger.info('☁️ Verificando Supabase...');
         try {
             // Tentar importar e usar o cliente Supabase
             // Usar import estático para evitar warning do Vite
@@ -95,20 +96,20 @@ const TemplateInvestigationPage: React.FC = () => {
             const { data, error } = await (supabase as any).from('templates').select('*');
 
             if (error) {
-                console.log('❌ Erro Supabase:', error);
+                appLogger.info('❌ Erro Supabase:', { data: [error] });
                 setSupabaseData({ error: error.message });
             } else {
-                console.log('✅ Dados Supabase encontrados:', data);
+                appLogger.info('✅ Dados Supabase encontrados:', { data: [data] });
                 setSupabaseData(data);
             }
         } catch (e: any) {
-            console.log('❌ Erro ao acessar Supabase:', e);
+            appLogger.info('❌ Erro ao acessar Supabase:', { data: [e] });
             setSupabaseData({ error: (e?.message || String(e)) });
         }
     };
 
     const checkAPIEndpoints = async () => {
-        console.log('🌐 Verificando endpoints de API...');
+        appLogger.info('🌐 Verificando endpoints de API...');
         const endpoints = [
             '/api/templates',
             '/api/templates/list',
@@ -121,19 +122,19 @@ const TemplateInvestigationPage: React.FC = () => {
 
         for (const endpoint of endpoints) {
             try {
-                console.log(`🔍 Testando ${endpoint}...`);
+                appLogger.info(`🔍 Testando ${endpoint}...`);
                 const response = await fetch(endpoint);
                 if (response.ok) {
                     const data = await response.json();
                     results[endpoint] = data;
-                    console.log(`✅ ${endpoint} retornou dados:`, data);
+                    appLogger.info(`✅ ${endpoint} retornou dados:`, { data: [data] });
                 } else {
                     results[endpoint] = { error: `Status ${response.status}` };
-                    console.log(`❌ ${endpoint} erro: ${response.status}`);
+                    appLogger.info(`❌ ${endpoint} erro: ${response.status}`);
                 }
             } catch (e: any) {
                 results[endpoint] = { error: (e?.message || String(e)) };
-                console.log(`❌ ${endpoint} erro:`, e);
+                appLogger.info(`❌ ${endpoint} erro:`, { data: [e] });
             }
         }
 
@@ -141,7 +142,7 @@ const TemplateInvestigationPage: React.FC = () => {
     };
 
     const checkStaticFiles = async () => {
-        console.log('📁 Verificando arquivos estáticos...');
+        appLogger.info('📁 Verificando arquivos estáticos...');
         const staticFiles = [
             '/templates/templates.json',
             '/cache/templates.json',
@@ -157,7 +158,7 @@ const TemplateInvestigationPage: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     results[file] = data;
-                    console.log(`✅ ${file} encontrado:`, data);
+                    appLogger.info(`✅ ${file} encontrado:`, { data: [data] });
                 } else {
                     results[file] = { error: `Status ${response.status}` };
                 }

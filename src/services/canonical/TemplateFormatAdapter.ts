@@ -16,6 +16,7 @@
  */
 
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface TemplateV2 {
   templateVersion: '2.0' | '3.0';
@@ -88,7 +89,7 @@ export class TemplateFormatAdapter {
     }
 
     // Formato desconhecido - tentar converter
-    console.warn('[TemplateFormatAdapter] Formato desconhecido, tentando conversão genérica');
+    appLogger.warn('[TemplateFormatAdapter] Formato desconhecido, tentando conversão genérica');
     return {
       templateVersion: '3.1',
       metadata: template.metadata || {},

@@ -6,6 +6,7 @@
 import React from 'react';
 import { TemplatePlugin, PluginContext } from '../PluginSystem';
 import { TemplateEventType } from '../../events/TemplateEventSystem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Componentes React definidos primeiro
 const AnalyticsDashboard: React.FC = () => (
@@ -61,7 +62,7 @@ export const QuizAnalyticsPlugin: TemplatePlugin = {
 
     // Hook de instalação
     onInstall: (context: PluginContext) => {
-        console.log('📊 Instalando Quiz Analytics Plugin...');
+        appLogger.info('📊 Instalando Quiz Analytics Plugin...');
 
         if (typeof window !== 'undefined') {
             (window as any).quizAnalytics = {
@@ -81,7 +82,7 @@ export const QuizAnalyticsPlugin: TemplatePlugin = {
 
     // Hook de ativação
     onActivate: (context: PluginContext) => {
-        console.log('✅ Ativando Quiz Analytics Plugin...');
+        appLogger.info('✅ Ativando Quiz Analytics Plugin...');
 
         // Registrar listeners de eventos
         context.eventSystem.addEventListener('quiz_answer_selected' as TemplateEventType, (event: any) => {
@@ -137,7 +138,7 @@ export const QuizAnalyticsPlugin: TemplatePlugin = {
 
     // Hook de desinstalação
     onUninstall: (context: PluginContext) => {
-        console.log('🗑️ Desinstalando Quiz Analytics Plugin...');
+        appLogger.info('🗑️ Desinstalando Quiz Analytics Plugin...');
 
         if (typeof window !== 'undefined') {
             delete (window as any).quizAnalytics;

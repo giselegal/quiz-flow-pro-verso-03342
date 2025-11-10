@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { Block } from '@/types/editor';
 

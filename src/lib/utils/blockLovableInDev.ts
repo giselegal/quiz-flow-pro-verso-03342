@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // Desabilitar conexões Lovable APENAS em desenvolvimento local (não no preview do Lovable)
 if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || import.meta.env.DEV)) {
     // Detectar se estamos dentro do iframe do preview do Lovable
@@ -11,7 +12,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
 
     if (isInLovablePreview && !shouldBlockAllLovable) {
         if ((import.meta as any)?.env?.VITE_DEBUG_LOVABLE === 'true') {
-            console.log('✅ Preview do Lovable detectado com projectId válido - conexões permitidas');
+            appLogger.info('✅ Preview do Lovable detectado com projectId válido - conexões permitidas');
         }
     } else {
         // Bloquear tentativas de conexão WebSocket para Lovable
@@ -19,7 +20,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
         (window as any).WebSocket = function (url: string | URL, protocols?: string | string[]) {
             if (url.toString().includes('lovable.dev')) {
                 if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
-                    console.warn('🚫 Bloqueada conexão WebSocket para Lovable em desenvolvimento:', url);
+                    appLogger.warn('🚫 Bloqueada conexão WebSocket para Lovable em desenvolvimento:', { data: [url] });
                 }
                 // Retornar um mock WebSocket que não faz nada
                 return {
@@ -54,7 +55,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
             if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
                 // Silencioso em produção - apenas logar em debug extremo
                 if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
-                    console.warn('🚫 Bloqueada requisição para Lovable/SDK em desenvolvimento:', urlString);
+                    appLogger.warn('🚫 Bloqueada requisição para Lovable/SDK em desenvolvimento:', { data: [urlString] });
                 }
 
                 // Retornar mock específico para diferentes endpoints
@@ -122,7 +123,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
 
                 if (shouldBlock) {
                     if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
-                        console.warn('🚫 Bloqueada XHR para Lovable/SDK em desenvolvimento:', urlString);
+                        appLogger.warn('🚫 Bloqueada XHR para Lovable/SDK em desenvolvimento:', { data: [urlString] });
                     }
                     (this as any).__lovableMockResponse = JSON.stringify({
                         status: 'blocked_in_dev',
@@ -173,7 +174,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                 const urlString = typeof url === 'string' ? url : url.toString();
                 if (urlString.includes('lovable.dev') || urlString.includes('rs.lovable.dev')) {
                     if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
-                        console.warn('🚫 Bloqueado sendBeacon para Lovable em desenvolvimento:', urlString);
+                        appLogger.warn('🚫 Bloqueado sendBeacon para Lovable em desenvolvimento:', { data: [urlString] });
                     }
                     return true;
                 }
@@ -193,7 +194,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                         set(value: string) {
                             if (value && value.includes('lovable.dev')) {
                                 if (import.meta.env.VITE_DEBUG_LOVABLE === 'true') {
-                                    console.warn('🚫 Bloqueado script Lovable em desenvolvimento:', value);
+                                    appLogger.warn('🚫 Bloqueado script Lovable em desenvolvimento:', { data: [value] });
                                 }
                                 return;
                             }
@@ -209,7 +210,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
         };
 
         if ((import.meta as any)?.env?.VITE_DEBUG_LOVABLE === 'true') {
-            console.log('🛡️ Proteção expandida contra Lovable/SDK ativada para desenvolvimento LOCAL', { isInLovablePreview, hasValidProjectId, projectId: projectId || null });
+            appLogger.info('🛡️ Proteção expandida contra Lovable/SDK ativada para desenvolvimento LOCAL', { data: [{ isInLovablePreview, hasValidProjectId, projectId: projectId || null }] });
         }
     }
 }

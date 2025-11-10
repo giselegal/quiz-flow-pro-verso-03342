@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, AlertCircle, XCircle, RefreshCw } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface AlignmentStatus {
   overall: number;
@@ -51,7 +52,7 @@ const AlignmentDashboard: React.FC = () => {
       setStatus(mockStatus);
       
     } catch (error) {
-      console.error('Erro no check:', error);
+      appLogger.error('Erro no check:', { data: [error] });
     } finally {
       setIsChecking(false);
     }

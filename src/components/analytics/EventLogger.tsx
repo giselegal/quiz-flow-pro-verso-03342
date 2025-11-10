@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   MousePointer,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface LoggedEvent {
   type: string;
@@ -31,7 +32,7 @@ export const EventLogger: React.FC = () => {
       const loadedEvents = eventsJson ? JSON.parse(eventsJson) : [];
       setEvents(loadedEvents);
     } catch (error) {
-      console.error('Erro ao carregar eventos:', error);
+      appLogger.error('Erro ao carregar eventos:', { data: [error] });
       setEvents([]);
     }
   };

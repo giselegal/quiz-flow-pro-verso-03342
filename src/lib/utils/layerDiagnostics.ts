@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // Simple runtime helper to inspect how many step layers are on screen
 // Usage in console: debugStepLayers()
 
@@ -28,9 +29,9 @@ export function installLayerDiagnostics() {
       });
 
       console.groupCollapsed('[LayerDiag] Snapshot de camadas de step');
-      console.log('Total step-containers:', steps.length);
-      console.log('Por stepId:', Object.fromEntries(Object.entries(byId).map(([k,v]) => [k, v.length])));
-      console.log('Overlays (z>=1000):', overlays.length);
+      appLogger.info('Total step-containers:', { data: [steps.length] });
+      appLogger.info('Por stepId:', { data: [Object.fromEntries(Object.entries(byId).map(([k,v]) => [k, v.length]))] });
+      appLogger.info('Overlays (z>=1000):', { data: [overlays.length] });
       console.table(steps.map((el, i) => {
         const rect = el.getBoundingClientRect();
         return {
@@ -43,12 +44,12 @@ export function installLayerDiagnostics() {
       }));
       console.groupEnd();
     } catch (e) {
-      console.warn('[LayerDiag] Falha no snapshot de camadas', e);
+      appLogger.warn('[LayerDiag] Falha no snapshot de camadas', { data: [e] });
     }
   };
 
   if (import.meta?.env?.DEV) {
-    console.info('🧪 [LayerDiag] Comando disponível: debugStepLayers()');
+    appLogger.info('🧪 [LayerDiag] Comando disponível: debugStepLayers()');
   }
 }
 

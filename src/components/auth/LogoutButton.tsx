@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts';
 import { LogOut } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface LogoutButtonProps {
   variant?: 'default' | 'outline' | 'ghost';
@@ -18,7 +19,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
       await signOut();
       window.location.href = '/auth';
     } catch (error) {
-      console.error('Logout error:', error);
+      appLogger.error('Logout error:', { data: [error] });
     }
   };
 

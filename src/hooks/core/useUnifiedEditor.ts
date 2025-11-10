@@ -19,6 +19,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { UnifiedBlock, UnifiedStage, UnifiedFunnel } from '../../types/master-schema';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TYPES AND INTERFACES
@@ -513,7 +514,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       updateBlock,
       deleteBlock: async (_blockId: string) => {
         // Implementation for delete block
-        console.warn('Legacy deleteBlock called - implement as needed');
+        appLogger.warn('Legacy deleteBlock called - implement as needed');
       },
     }),
     [activeBlocks, state.activeStageId, addBlock, updateBlock],

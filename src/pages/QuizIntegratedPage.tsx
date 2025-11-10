@@ -9,6 +9,7 @@ import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 COMPONENTE PRINCIPAL DO QUIZ INTEGRADO COM BACKEND COMPLETO
@@ -27,7 +28,7 @@ const QuizIntegratedRenderer: React.FC = () => {
     try {
       return useEditor();
     } catch (error) {
-      console.warn('EditorContext não disponível:', error);
+      appLogger.warn('EditorContext não disponível:', { data: [error] });
       return {
         state: { stepBlocks: { 'step-1': [] } },
         actions: {
@@ -49,7 +50,7 @@ const QuizIntegratedRenderer: React.FC = () => {
     try {
       return useQuiz21Steps();
     } catch (error) {
-      console.warn('Quiz21StepsContext não disponível:', error);
+      appLogger.warn('Quiz21StepsContext não disponível:', { data: [error] });
       return { currentStep: 1 };
     }
   }, []);

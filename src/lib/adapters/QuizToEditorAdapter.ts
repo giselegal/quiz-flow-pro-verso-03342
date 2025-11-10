@@ -13,6 +13,7 @@ import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplate
 
 // Import BlockType para tipagem correta
 import { BlockType } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizStepData {
   type: 'intro' | 'question' | 'strategic-question' | 'transition' | 'result' | 'offer';
@@ -38,7 +39,7 @@ export class QuizToEditorAdapter {
    * ✅ CORREÇÃO: Agora usa hierarchicalTemplateSource (async)
    */
   static async convertQuizToEditor(funnelId?: string): Promise<EditorCompatibleData> {
-    console.log('🎯 Iniciando conversão Quiz → Editor', { funnelId });
+    appLogger.info('🎯 Iniciando conversão Quiz → Editor', { data: [{ funnelId }] });
     
     const stepBlocks: Record<string, Block[]> = {};
     const totalSteps = 21;
@@ -57,7 +58,7 @@ export class QuizToEditorAdapter {
     // Extrair metadados do quiz
     const quizMetadata = this.extractQuizMetadata();
     
-    console.log(`✅ Conversão completa: ${Object.keys(stepBlocks).length} etapas convertidas`);
+    appLogger.info(`✅ Conversão completa: ${Object.keys(stepBlocks).length} etapas convertidas`);
     
     return {
       stepBlocks,
@@ -71,7 +72,7 @@ export class QuizToEditorAdapter {
    */
   private static convertStepToBlocks(stepTemplate: any[], stepNumber: number, funnelId?: string): Block[] {
     if (!Array.isArray(stepTemplate)) {
-      console.warn(`⚠️ Template da etapa ${stepNumber} não é um array`);
+      appLogger.warn(`⚠️ Template da etapa ${stepNumber} não é um array`);
       return [];
     }
 
@@ -197,7 +198,7 @@ export class QuizToEditorAdapter {
    * 🔄 MÉTODO REVERSO: Converter editor de volta para quiz
    */
   static async convertEditorToQuiz(stepBlocks: Record<string, Block[]>): Promise<any> {
-    console.log('🔄 Convertendo Editor → Quiz');
+    appLogger.info('🔄 Convertendo Editor → Quiz');
     
     const quizTemplate: Record<string, any[]> = {};
     

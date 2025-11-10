@@ -1,4 +1,5 @@
 import { devLog } from './editorUtils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StorageQuotaInfo {
   quota: number;
@@ -174,7 +175,7 @@ export class StorageOptimizer {
       
       return true;
     } catch (error) {
-      console.error('Failed to save to localStorage:', error);
+      appLogger.error('Failed to save to localStorage:', { data: [error] });
       return false;
     }
   }
@@ -212,7 +213,7 @@ export class StorageOptimizer {
         return item;
       }
     } catch (error) {
-      console.error('Failed to get from localStorage:', error);
+      appLogger.error('Failed to get from localStorage:', { data: [error] });
       return null;
     }
   }
@@ -298,7 +299,7 @@ export class StorageOptimizer {
       }
       
     } catch (error) {
-      console.error('Storage cleanup failed:', error);
+      appLogger.error('Storage cleanup failed:', { data: [error] });
     }
     
     return cleaned;
@@ -311,7 +312,7 @@ export class StorageOptimizer {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error('Failed to remove from localStorage:', error);
+      appLogger.error('Failed to remove from localStorage:', { data: [error] });
     }
   }
 
@@ -351,7 +352,7 @@ export class StorageOptimizer {
         }
       }
     } catch (error) {
-      console.error('Failed to get storage stats:', error);
+      appLogger.error('Failed to get storage stats:', { data: [error] });
     }
 
     return {

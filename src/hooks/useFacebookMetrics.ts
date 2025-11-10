@@ -10,6 +10,7 @@ import FacebookMetricsService, {
     FunnelTrackingConfig,
     FacebookMetricDetailed,
 } from '@/services/FacebookMetricsService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UseFacebookMetricsOptions {
     funnelId?: string;
@@ -104,7 +105,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
             }
 
         } catch (error) {
-            console.error('❌ Erro ao carregar métricas:', error);
+            appLogger.error('❌ Erro ao carregar métricas:', { data: [error] });
             setState(prev => ({
                 ...prev,
                 isLoading: false,
@@ -141,7 +142,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
                 return false;
             }
         } catch (error) {
-            console.error('❌ Erro na sincronização:', error);
+            appLogger.error('❌ Erro na sincronização:', { data: [error] });
             setState(prev => ({
                 ...prev,
                 error: 'Erro ao sincronizar métricas',
@@ -166,7 +167,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
 
             return success;
         } catch (error) {
-            console.error('❌ Erro ao salvar configuração:', error);
+            appLogger.error('❌ Erro ao salvar configuração:', { data: [error] });
             return false;
         }
     }, [funnelId]);
@@ -273,7 +274,7 @@ export const useFacebookTrackingConfig = (funnelId: string) => {
             const trackingConfig = await FacebookMetricsService.getFunnelTrackingConfig(funnelId);
             setConfig(trackingConfig);
         } catch (error) {
-            console.error('❌ Erro ao carregar configuração:', error);
+            appLogger.error('❌ Erro ao carregar configuração:', { data: [error] });
         } finally {
             setIsLoading(false);
         }
@@ -293,7 +294,7 @@ export const useFacebookTrackingConfig = (funnelId: string) => {
 
             return success;
         } catch (error) {
-            console.error('❌ Erro ao salvar configuração:', error);
+            appLogger.error('❌ Erro ao salvar configuração:', { data: [error] });
             return false;
         } finally {
             setIsSaving(false);

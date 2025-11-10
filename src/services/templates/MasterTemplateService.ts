@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎨 Master Template Service - Simplified for Phase 4
  * 
@@ -38,7 +39,7 @@ export class MasterTemplateService {
    */
   async getTemplates(): Promise<UnifiedTemplate[]> {
     // Template functionality moved to core service
-    console.log('📝 MasterTemplateService: Template functionality moved to core TemplateService');
+    appLogger.info('📝 MasterTemplateService: Template functionality moved to core TemplateService');
     return [];
   }
 
@@ -47,7 +48,7 @@ export class MasterTemplateService {
    */
   async getTemplate(id: string): Promise<UnifiedTemplate | null> {
     // Template functionality moved to core service
-    console.log(`📝 MasterTemplateService: Getting template ${id} - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Getting template ${id} - functionality moved to core TemplateService`);
     return null;
   }
 
@@ -55,7 +56,7 @@ export class MasterTemplateService {
    * Search templates by query
    */
   async searchTemplates(query: string): Promise<UnifiedTemplate[]> {
-    console.log(`📝 MasterTemplateService: Searching templates for "${query}" - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Searching templates for "${query}" - functionality moved to core TemplateService`);
     return [];
   }
 
@@ -63,7 +64,7 @@ export class MasterTemplateService {
    * Get templates by category
    */
   async getTemplatesByCategory(category: string): Promise<UnifiedTemplate[]> {
-    console.log(`📝 MasterTemplateService: Getting templates for category "${category}" - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Getting templates for category "${category}" - functionality moved to core TemplateService`);
     return [];
   }
 
@@ -71,7 +72,7 @@ export class MasterTemplateService {
    * Get popular templates
    */
   async getPopularTemplates(limit: number = 10): Promise<UnifiedTemplate[]> {
-    console.log(`📝 MasterTemplateService: Getting ${limit} popular templates - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Getting ${limit} popular templates - functionality moved to core TemplateService`);
     return [];
   }
 
@@ -79,7 +80,7 @@ export class MasterTemplateService {
    * Get recent templates
    */
   async getRecentTemplates(limit: number = 10): Promise<UnifiedTemplate[]> {
-    console.log(`📝 MasterTemplateService: Getting ${limit} recent templates - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Getting ${limit} recent templates - functionality moved to core TemplateService`);
     return [];
   }
 
@@ -87,7 +88,7 @@ export class MasterTemplateService {
    * Save a template
    */
   async saveTemplate(template: Omit<UnifiedTemplate, 'id' | 'createdAt' | 'updatedAt'>): Promise<UnifiedTemplate> {
-    console.log(`📝 MasterTemplateService: Saving template "${template.name}" - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Saving template "${template.name}" - functionality moved to core TemplateService`);
     
     // Return a mock template for compatibility
     return {
@@ -102,7 +103,7 @@ export class MasterTemplateService {
    * Delete a template
    */
   async deleteTemplate(id: string): Promise<boolean> {
-    console.log(`📝 MasterTemplateService: Deleting template ${id} - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Deleting template ${id} - functionality moved to core TemplateService`);
     return true;
   }
 
@@ -110,14 +111,14 @@ export class MasterTemplateService {
    * Increment template usage count
    */
   async incrementUsageCount(id: string): Promise<void> {
-    console.log(`📝 MasterTemplateService: Incrementing usage count for template ${id} - functionality moved to core TemplateService`);
+    appLogger.info(`📝 MasterTemplateService: Incrementing usage count for template ${id} - functionality moved to core TemplateService`);
   }
 
   /**
    * Get template categories
    */
   async getCategories(): Promise<string[]> {
-    console.log('📝 MasterTemplateService: Getting template categories - functionality moved to core TemplateService');
+    appLogger.info('📝 MasterTemplateService: Getting template categories - functionality moved to core TemplateService');
     return ['business', 'lifestyle', 'education', 'entertainment'];
   }
 }

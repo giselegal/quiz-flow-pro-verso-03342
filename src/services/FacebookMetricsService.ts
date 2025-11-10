@@ -5,6 +5,7 @@
  */
 
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -100,7 +101,7 @@ export class FacebookMetricsService {
         dateEnd?: string,
     ): Promise<FunnelFacebookMetrics | null> {
         try {
-            console.log(`🔍 Buscando métricas do funil: ${funnelId}`);
+            appLogger.info(`🔍 Buscando métricas do funil: ${funnelId}`);
 
             const startDate = dateStart || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
             const endDate = dateEnd || new Date().toISOString().split('T')[0];
@@ -113,14 +114,14 @@ export class FacebookMetricsService {
             });
 
             if (error) {
-                console.error('❌ Erro ao buscar métricas do funil:', error);
+                appLogger.error('❌ Erro ao buscar métricas do funil:', { data: [error] });
                 return null;
             }
 
             return (data as any)?.[0] || null;
 
         } catch (error) {
-            console.error('❌ Erro no serviço de métricas:', error);
+            appLogger.error('❌ Erro no serviço de métricas:', { data: [error] });
             return null;
         }
     }
@@ -146,14 +147,14 @@ export class FacebookMetricsService {
                 .order('date_start', { ascending: false });
 
             if (error) {
-                console.error('❌ Erro ao buscar métricas detalhadas:', error);
+                appLogger.error('❌ Erro ao buscar métricas detalhadas:', { data: [error] });
                 return [];
             }
 
             return data || [];
 
         } catch (error) {
-            console.error('❌ Erro ao buscar métricas detalhadas:', error);
+            appLogger.error('❌ Erro ao buscar métricas detalhadas:', { data: [error] });
             return [];
         }
     }
@@ -170,14 +171,14 @@ export class FacebookMetricsService {
                 .single();
 
             if (error) {
-                console.error('❌ Erro ao buscar configuração do funil:', error);
+                appLogger.error('❌ Erro ao buscar configuração do funil:', { data: [error] });
                 return null;
             }
 
             return data;
 
         } catch (error) {
-            console.error('❌ Erro ao buscar configuração:', error);
+            appLogger.error('❌ Erro ao buscar configuração:', { data: [error] });
             return null;
         }
     }
@@ -195,15 +196,15 @@ export class FacebookMetricsService {
                 });
 
             if (error) {
-                console.error('❌ Erro ao salvar configuração:', error);
+                appLogger.error('❌ Erro ao salvar configuração:', { data: [error] });
                 return false;
             }
 
-            console.log('✅ Configuração salva com sucesso');
+            appLogger.info('✅ Configuração salva com sucesso');
             return true;
 
         } catch (error) {
-            console.error('❌ Erro ao salvar configuração:', error);
+            appLogger.error('❌ Erro ao salvar configuração:', { data: [error] });
             return false;
         }
     }
@@ -221,14 +222,14 @@ export class FacebookMetricsService {
                 .order('created_at', { ascending: false });
 
             if (error) {
-                console.error('❌ Erro ao buscar campanhas do funil:', error);
+                appLogger.error('❌ Erro ao buscar campanhas do funil:', { data: [error] });
                 return [];
             }
 
             return data || [];
 
         } catch (error) {
-            console.error('❌ Erro ao buscar campanhas:', error);
+            appLogger.error('❌ Erro ao buscar campanhas:', { data: [error] });
             return [];
         }
     }
@@ -248,7 +249,7 @@ export class FacebookMetricsService {
                 .eq('is_published', true);
 
             if (funnelsError) {
-                console.error('❌ Erro ao buscar funis:', funnelsError);
+                appLogger.error('❌ Erro ao buscar funis:', { data: [funnelsError] });
                 return [];
             }
 
@@ -265,7 +266,7 @@ export class FacebookMetricsService {
             ) as FunnelFacebookMetrics[];
 
         } catch (error) {
-            console.error('❌ Erro ao buscar métricas de todos os funis:', error);
+            appLogger.error('❌ Erro ao buscar métricas de todos os funis:', { data: [error] });
             return [];
         }
     }
@@ -276,7 +277,7 @@ export class FacebookMetricsService {
     static async syncFacebookMetrics(funnelId?: string): Promise<{ success: boolean; message: string }> {
         try {
             // TODO: Implementar integração real com Facebook Marketing API
-            console.log('🔄 Sincronizando métricas do Facebook...', funnelId ? `para funil ${funnelId}` : 'todos os funis');
+            appLogger.info('🔄 Sincronizando métricas do Facebook...', { data: [funnelId ? `para funil ${funnelId}` : 'todos os funis'] });
 
             // Por enquanto, simular sucesso
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -287,7 +288,7 @@ export class FacebookMetricsService {
             };
 
         } catch (error) {
-            console.error('❌ Erro na sincronização:', error);
+            appLogger.error('❌ Erro na sincronização:', { data: [error] });
             return {
                 success: false,
                 message: 'Erro ao sincronizar métricas',
@@ -359,7 +360,7 @@ export class FacebookMetricsService {
             return { current, previous, growth };
 
         } catch (error) {
-            console.error('❌ Erro ao calcular métricas comparativas:', error);
+            appLogger.error('❌ Erro ao calcular métricas comparativas:', { data: [error] });
             return {
                 current: null,
                 previous: null,

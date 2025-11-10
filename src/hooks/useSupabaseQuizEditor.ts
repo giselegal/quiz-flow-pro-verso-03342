@@ -2,6 +2,7 @@ import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizData {
   id?: string;
@@ -46,7 +47,7 @@ export const useSupabaseQuizEditor = () => {
   const { error } = await (supabase as any).from('quiz_users').select('count').limit(1);
 
       if (error) {
-        console.error('Erro de conexão:', error);
+        appLogger.error('Erro de conexão:', { data: [error] });
         setConnectionStatus('error');
         return false;
       }
@@ -54,7 +55,7 @@ export const useSupabaseQuizEditor = () => {
       setConnectionStatus('connected');
       return true;
     } catch (error) {
-      console.error('Erro inesperado:', error);
+      appLogger.error('Erro inesperado:', { data: [error] });
       setConnectionStatus('error');
       return false;
     }
@@ -98,7 +99,7 @@ export const useSupabaseQuizEditor = () => {
 
       return quizId;
     } catch (error) {
-      console.error('Erro ao salvar quiz:', error);
+      appLogger.error('Erro ao salvar quiz:', { data: [error] });
       toast({
         title: 'Erro ao salvar',
         description: 'Não foi possível salvar o quiz.',
@@ -125,7 +126,7 @@ export const useSupabaseQuizEditor = () => {
 
       return quiz;
     } catch (error) {
-      console.error('Erro ao carregar quiz:', error);
+      appLogger.error('Erro ao carregar quiz:', { data: [error] });
       toast({
         title: 'Erro ao carregar',
         description: 'Não foi possível carregar o quiz.',
@@ -151,7 +152,7 @@ export const useSupabaseQuizEditor = () => {
         questions_count: quiz.questions?.length || 0,
       }));
     } catch (error) {
-      console.error('Erro ao carregar lista de quizzes:', error);
+      appLogger.error('Erro ao carregar lista de quizzes:', { data: [error] });
       return [];
     }
   }, []);
@@ -170,7 +171,7 @@ export const useSupabaseQuizEditor = () => {
 
       return true;
     } catch (error) {
-      console.error('Erro ao deletar quiz:', error);
+      appLogger.error('Erro ao deletar quiz:', { data: [error] });
       toast({
         title: 'Erro ao remover',
         description: 'Não foi possível remover o quiz.',

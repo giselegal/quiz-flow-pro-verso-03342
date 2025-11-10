@@ -1,6 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
   children: ReactNode;
@@ -25,7 +26,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('🚨 GlobalErrorBoundary caught an error:', error, errorInfo);
+    appLogger.error('🚨 GlobalErrorBoundary caught an error:', { data: [error, errorInfo] });
     
     this.setState({
       error,

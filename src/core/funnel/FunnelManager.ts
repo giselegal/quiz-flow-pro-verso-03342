@@ -14,6 +14,7 @@ import {
     FunnelSettings,
     FunnelStatus,
 } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES ESPECÍFICAS DO MANAGER
@@ -82,7 +83,7 @@ export class FunnelManager {
      * Cria um novo funil a partir de um template ou do zero
      */
     async createFunnel(options: CreateFunnelOptions): Promise<FunnelState> {
-        console.log('[FunnelManager] Creating funnel:', options);
+        appLogger.info('[FunnelManager] Creating funnel:', { data: [options] });
 
         // Validar opções de entrada
         this.validateCreateOptions(options);
@@ -141,19 +142,19 @@ export class FunnelManager {
      * Carrega um funil por ID
      */
     async loadFunnel(funnelId: string): Promise<FunnelState | null> {
-        console.log('[FunnelManager] Loading funnel:', funnelId);
+        appLogger.info('[FunnelManager] Loading funnel:', { data: [funnelId] });
 
         try {
             const funnelState = await persistenceService.loadFunnel(funnelId);
 
             if (funnelState) {
                 this.validateFunnelState(funnelState);
-                console.log('[FunnelManager] Funnel loaded successfully:', funnelId);
+                appLogger.info('[FunnelManager] Funnel loaded successfully:', { data: [funnelId] });
             }
 
             return funnelState;
         } catch (error) {
-            console.error('[FunnelManager] Error loading funnel:', error);
+            appLogger.error('[FunnelManager] Error loading funnel:', { data: [error] });
             return null;
         }
     }
@@ -162,7 +163,7 @@ export class FunnelManager {
      * Salva um funil
      */
     async saveFunnel(state: FunnelState, options?: { autoPublish?: boolean; userId?: string }): Promise<void> {
-        console.log('[FunnelManager] Saving funnel:', state.id);
+        appLogger.info('[FunnelManager] Saving funnel:', { data: [state.id] });
         this.validateFunnelState(state);
 
         // Atualizar timestamp
@@ -172,7 +173,7 @@ export class FunnelManager {
             // Salvar usando PersistenceService
             await persistenceService.saveFunnel(state, options);
 
-            console.log('[FunnelManager] Funnel saved successfully:', state.id);
+            appLogger.info('[FunnelManager] Funnel saved successfully:', { data: [state.id] });
 
             // Emitir evento de salvamento
             this.core.emitEvent({
@@ -186,7 +187,7 @@ export class FunnelManager {
                 },
             });
         } catch (error) {
-            console.error('[FunnelManager] Error saving funnel:', error);
+            appLogger.error('[FunnelManager] Error saving funnel:', { data: [error] });
             throw error;
         }
     }
@@ -201,7 +202,7 @@ export class FunnelManager {
         limit?: number;
         offset?: number;
     }): Promise<any[]> {
-        console.log('[FunnelManager] Listing funnels with options:', options);
+        appLogger.info('[FunnelManager] Listing funnels with options:', { data: [options] });
 
         try {
             const loadOptions = {
@@ -210,7 +211,7 @@ export class FunnelManager {
 
             return await persistenceService.listFunnels(options?.userId, loadOptions);
         } catch (error) {
-            console.error('[FunnelManager] Error listing funnels:', error);
+            appLogger.error('[FunnelManager] Error listing funnels:', { data: [error] });
             return [];
         }
     }
@@ -219,13 +220,13 @@ export class FunnelManager {
      * Remove um funil
      */
     async deleteFunnel(funnelId: string): Promise<boolean> {
-        console.log('[FunnelManager] Deleting funnel:', funnelId);
+        appLogger.info('[FunnelManager] Deleting funnel:', { data: [funnelId] });
 
         try {
             const success = await persistenceService.deleteFunnel(funnelId);
 
             if (success) {
-                console.log('[FunnelManager] Funnel deleted successfully:', funnelId);
+                appLogger.info('[FunnelManager] Funnel deleted successfully:', { data: [funnelId] });
 
                 // Emitir evento de remoção
                 this.core.emitEvent({
@@ -238,7 +239,7 @@ export class FunnelManager {
 
             return success;
         } catch (error) {
-            console.error('[FunnelManager] Error deleting funnel:', error);
+            appLogger.error('[FunnelManager] Error deleting funnel:', { data: [error] });
             return false;
         }
     }
@@ -251,7 +252,7 @@ export class FunnelManager {
      * Lista templates disponíveis
      */
     async getTemplates(category?: string): Promise<FunnelTemplate[]> {
-        console.log('[FunnelManager] Getting templates, category:', category);
+        appLogger.info('[FunnelManager] Getting templates, category:', { data: [category] });
         return await templateService.getTemplates(category);
     }
 
@@ -259,7 +260,7 @@ export class FunnelManager {
      * Obtém um template específico
      */
     async getTemplate(templateId: string): Promise<FunnelTemplate | null> {
-        console.log('[FunnelManager] Getting template:', templateId);
+        appLogger.info('[FunnelManager] Getting template:', { data: [templateId] });
         return await templateService.getTemplate(templateId);
     }
 

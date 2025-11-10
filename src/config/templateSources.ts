@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔧 Configuração de fontes de template via flags de ambiente
  * - Desliga fetch do master JSON e JSON normalizado por padrão
@@ -34,14 +35,14 @@ export const TEMPLATE_SOURCES = {
 // 🔍 DEBUG: Log das flags carregadas (apenas em DEV)
 if (typeof window !== 'undefined' && import.meta.env.DEV) {
   console.group('🔧 Template Sources Configuration');
-  console.log('Raw env VITE_USE_MASTER_JSON:', (import.meta as any)?.env?.VITE_USE_MASTER_JSON);
-  console.log('Raw env VITE_USE_MODULAR_TEMPLATES:', (import.meta as any)?.env?.VITE_USE_MODULAR_TEMPLATES);
-  console.log('Raw env VITE_USE_NORMALIZED_JSON:', (import.meta as any)?.env?.VITE_USE_NORMALIZED_JSON);
-  console.log('isTestEnv:', isTestEnv);
-  console.log('→ useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
-  console.log('→ useNormalizedJSON:', TEMPLATE_SOURCES.useNormalizedJSON);
-  console.log('→ useModularTemplates:', TEMPLATE_SOURCES.useModularTemplates);
-  console.log('→ preferPublicStepJSON:', TEMPLATE_SOURCES.preferPublicStepJSON);
+  appLogger.info('Raw env VITE_USE_MASTER_JSON:', { data: [(import.meta as any)?.env?.VITE_USE_MASTER_JSON] });
+  appLogger.info('Raw env VITE_USE_MODULAR_TEMPLATES:', { data: [(import.meta as any)?.env?.VITE_USE_MODULAR_TEMPLATES] });
+  appLogger.info('Raw env VITE_USE_NORMALIZED_JSON:', { data: [(import.meta as any)?.env?.VITE_USE_NORMALIZED_JSON] });
+  appLogger.info('isTestEnv:', { data: [isTestEnv] });
+  appLogger.info('→ useMasterJSON:', { data: [TEMPLATE_SOURCES.useMasterJSON] });
+  appLogger.info('→ useNormalizedJSON:', { data: [TEMPLATE_SOURCES.useNormalizedJSON] });
+  appLogger.info('→ useModularTemplates:', { data: [TEMPLATE_SOURCES.useModularTemplates] });
+  appLogger.info('→ preferPublicStepJSON:', { data: [TEMPLATE_SOURCES.preferPublicStepJSON] });
   console.groupEnd();
 }
 

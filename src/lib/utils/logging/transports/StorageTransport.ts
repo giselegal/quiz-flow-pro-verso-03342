@@ -1,6 +1,7 @@
 // src/utils/logging/transports/StorageTransport.ts
 import type { LogTransport, LogEntry } from '../LoggerService';
 import type { LoggerConfig } from '../LoggerConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export class StorageTransport implements LogTransport {
     private config: LoggerConfig;
@@ -48,7 +49,7 @@ export class StorageTransport implements LogTransport {
 
             localStorage.setItem(this.storageKey, JSON.stringify(filtered));
         } catch (error) {
-            console.warn('Failed to store logs:', error);
+            appLogger.warn('Failed to store logs:', { data: [error] });
             // Try to store in session storage as fallback
             try {
                 const recentLogs = this.buffer.slice(-100);
@@ -156,7 +157,7 @@ export class StorageTransport implements LogTransport {
             sessionStorage.removeItem(this.tempStorageKey);
             this.buffer = [];
         } catch (error) {
-            console.warn('Failed to clear logs:', error);
+            appLogger.warn('Failed to clear logs:', { data: [error] });
         }
     }
 

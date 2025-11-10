@@ -10,6 +10,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { blockPropertiesAPI, type BlockDefinition, type PropertyChangeEvent } from '@/services/api/internal/BlockPropertiesAPI';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===== INTERFACES =====
 
@@ -70,11 +71,11 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
                         const defaults = await blockPropertiesAPI.getDefaultProperties(blockType, blockId);
                         setProperties(prev => ({ ...defaults, ...prev }));
 
-                        console.log(`🔗 useBlockProperties carregou dados reais para ${blockType}:`, {
-                            blockId,
-                            defaults,
-                            currentProperties: properties,
-                        });
+                        appLogger.info(`🔗 useBlockProperties carregou dados reais para ${blockType}:`, { data: [{
+                                                    blockId,
+                                                    defaults,
+                                                    currentProperties: properties,
+                                                }] });
                     }
                 }
             } catch (err) {
@@ -137,7 +138,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
             if (isValid) {
                 const saveSuccess = await blockPropertiesAPI.savePropertyToFunnel(blockId, key, processedValue);
                 if (saveSuccess) {
-                    console.log(`💾 Propriedade ${key} salva no funil com sucesso!`);
+                    appLogger.info(`💾 Propriedade ${key} salva no funil com sucesso!`);
                 }
             }
 
@@ -149,7 +150,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
 
             return isValid;
         } catch (err) {
-            console.error(`Error updating property ${key}:`, err);
+            appLogger.error(`Error updating property ${key}:`, { data: [err] });
             return false;
         }
     }, [blockId, blockType, properties, onPropertyChange, enableValidation, enableTransformation]);
@@ -166,7 +167,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
                 blockPropertiesAPI.notifyPropertyChange(blockId, blockType, key, oldValue, newValue);
             });
         } catch (err) {
-            console.error('Error resetting to defaults:', err);
+            appLogger.error('Error resetting to defaults:', { data: [err] });
         }
     }, [blockId, blockType, properties]);
 

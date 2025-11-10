@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 export interface CloudinaryOptions {
     cloudName: string;
     uploadPreset: string;
@@ -145,7 +146,7 @@ export function openCloudinaryWidget(
                 options,
                 (error: any, result: any) => {
                     if (error) {
-                        console.error('❌ Erro no upload Cloudinary:', error);
+                        appLogger.error('❌ Erro no upload Cloudinary:', { data: [error] });
                         return reject(error);
                     }
 
@@ -153,7 +154,7 @@ export function openCloudinaryWidget(
                     if (result && result.event) {
                         switch (result.event) {
                             case 'upload-added':
-                                console.log('📤 Upload iniciado');
+                                appLogger.info('📤 Upload iniciado');
                                 break;
 
                             case 'upload-progress':
@@ -168,7 +169,7 @@ export function openCloudinaryWidget(
                                 break;
 
                             case 'success':
-                                console.log('✅ Upload concluído com sucesso');
+                                appLogger.info('✅ Upload concluído com sucesso');
                                 const uploadResult: CloudinaryUploadResult = {
                                     url: result.info.url,
                                     secureUrl: result.info.secure_url,
@@ -183,7 +184,7 @@ export function openCloudinaryWidget(
                                 break;
 
                             case 'abort':
-                                console.log('🚫 Upload cancelado');
+                                appLogger.info('🚫 Upload cancelado');
                                 reject(new Error('Upload cancelado pelo usuário'));
                                 break;
                         }
@@ -193,7 +194,7 @@ export function openCloudinaryWidget(
 
             widget.open();
         } catch (e) {
-            console.error('❌ Erro ao abrir widget:', e);
+            appLogger.error('❌ Erro ao abrir widget:', { data: [e] });
             reject(e);
         }
     });

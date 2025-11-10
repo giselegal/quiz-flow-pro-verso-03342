@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 📊 ANALYTICS SERVICE - Phase 3 Implementation
  * Google Analytics 4 + Custom Editor Metrics
@@ -83,7 +84,7 @@ class AnalyticsService {
     }
 
     this.isInitialized = true;
-    console.log('📊 Analytics initialized');
+    appLogger.info('📊 Analytics initialized');
 
     // Iniciar tracking da sessão
     this.trackSessionStart();
@@ -94,7 +95,7 @@ class AnalyticsService {
    */
   trackEvent(event: CustomEvent) {
     if (!this.isInitialized || typeof window === 'undefined') {
-      console.warn('Analytics not initialized');
+      appLogger.warn('Analytics not initialized');
       return;
     }
 
@@ -109,7 +110,7 @@ class AnalyticsService {
       });
     }
 
-    console.log('📊 Event tracked:', event);
+    appLogger.info('📊 Event tracked:', { data: [event] });
   }
 
   /**
@@ -212,7 +213,7 @@ class AnalyticsService {
         this.trackPerformance('CLS', clsValue * 1000, 'score');
       }).observe({ type: 'layout-shift', buffered: true });
     } catch (error) {
-      console.warn('Web Vitals tracking failed:', error);
+      appLogger.warn('Web Vitals tracking failed:', { data: [error] });
     }
   }
 

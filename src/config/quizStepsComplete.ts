@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // utilitário para normalizar/consultar step blocks
 export type EditorBlock = any;
 export type RawStepBlocks = Record<string | number, unknown>;
@@ -38,7 +39,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
 
   if (!stepBlocks) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('🔍 getBlocksForStep: stepBlocks is null/undefined', debugInfo);
+      appLogger.warn('🔍 getBlocksForStep: stepBlocks is null/undefined', { data: [debugInfo] });
     }
     return undefined;
   }
@@ -51,22 +52,22 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
 
     // Enhanced logging for successful lookups
     if (process.env.NODE_ENV === 'development') {
-      console.log('✅ getBlocksForStep: Found blocks', {
-        ...debugInfo,
-        foundKey: key,
-        blocksCount: Array.isArray(raw) ? raw.length : 0,
-        blocksType: typeof raw,
-      });
+      appLogger.info('✅ getBlocksForStep: Found blocks', { data: [{
+                ...debugInfo,
+                foundKey: key,
+                blocksCount: Array.isArray(raw) ? raw.length : 0,
+                blocksType: typeof raw,
+              }] });
     }
 
     if (Array.isArray(raw)) {
       if (process.env.NODE_ENV === 'development' && typeof step === 'number' && step <= 3) { // Log first 3 steps for debugging
-        console.log('🔍 getBlocksForStep SUCCESS:', {
-          ...debugInfo,
-          foundKey: key,
-          blocksCount: raw.length,
-          blockTypes: raw.map(b => b?.type || 'unknown'),
-        });
+        appLogger.info('🔍 getBlocksForStep SUCCESS:', { data: [{
+                    ...debugInfo,
+                    foundKey: key,
+                    blocksCount: raw.length,
+                    blockTypes: raw.map(b => b?.type || 'unknown'),
+                  }] });
       }
       return raw as EditorBlock[];
     }
@@ -75,11 +76,11 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
       const maybe = (raw as Record<string, any>).blocks;
       if (Array.isArray(maybe)) {
         if (process.env.NODE_ENV === 'development') {
-          console.log('🔍 getBlocksForStep SUCCESS (nested blocks):', {
-            ...debugInfo,
-            foundKey: key,
-            blocksCount: maybe.length,
-          });
+          appLogger.info('🔍 getBlocksForStep SUCCESS (nested blocks):', { data: [{
+                        ...debugInfo,
+                        foundKey: key,
+                        blocksCount: maybe.length,
+                      }] });
         }
         return maybe as EditorBlock[];
       }
@@ -101,11 +102,11 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
 
   // 🔍 INVESTIGAÇÃO #3: Log failed lookups for debugging
   if (process.env.NODE_ENV === 'development') {
-    console.warn('🔍 getBlocksForStep: No blocks found', {
-      ...debugInfo,
-      availableKeys: stepBlocks ? Object.keys(stepBlocks).slice(0, 10) : [], // Limit output
-      firstKeyContent: stepBlocks ? (stepBlocks as any)[Object.keys(stepBlocks)[0]] : null,
-    });
+    appLogger.warn('🔍 getBlocksForStep: No blocks found', { data: [{
+            ...debugInfo,
+            availableKeys: stepBlocks ? Object.keys(stepBlocks).slice(0, 10) : [], // Limit output
+            firstKeyContent: stepBlocks ? (stepBlocks as any)[Object.keys(stepBlocks)[0]] : null,
+          }] });
 
     // Add failed lookups to window for debugging  
     window.__EDITOR_FAILED_BLOCK_LOOKUPS__ = window.__EDITOR_FAILED_BLOCK_LOOKUPS__ || [];

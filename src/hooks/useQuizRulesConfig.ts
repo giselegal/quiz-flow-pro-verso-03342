@@ -106,6 +106,7 @@ export interface QuizRulesConfig {
 
 // Importar o JSON diretamente (Vite suporta import de JSON)
 import quizRulesConfigData from '@/config/quizRulesConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // HOOK PRINCIPAL
@@ -125,16 +126,16 @@ export function useQuizRulesConfig() {
             const stepRule = config.stepRules[stepKey];
 
             if (!stepRule) {
-                console.warn(`⚠️ useQuizRulesConfig: Regras não encontradas para step ${stepNumber}`);
+                appLogger.warn(`⚠️ useQuizRulesConfig: Regras não encontradas para step ${stepNumber}`);
                 return null;
             }
 
-            console.log(`✅ useQuizRulesConfig: Regras carregadas para step ${stepNumber}:`, {
-                type: stepRule.type,
-                validation: stepRule.validation,
-                behavior: stepRule.behavior,
-                hasScoring: !!stepRule.scoring,
-            });
+            appLogger.info(`✅ useQuizRulesConfig: Regras carregadas para step ${stepNumber}:`, { data: [{
+                            type: stepRule.type,
+                            validation: stepRule.validation,
+                            behavior: stepRule.behavior,
+                            hasScoring: !!stepRule.scoring,
+                        }] });
 
             return stepRule;
         };
@@ -316,19 +317,19 @@ export function useQuizRulesConfig() {
             if (stepNumber) {
                 const stepRule = getStepRules(stepNumber);
                 console.group(`🔍 Quiz Rules Config - Step ${stepNumber}`);
-                console.log('Step Rule:', stepRule);
-                console.log('Should Auto Advance:', shouldAutoAdvance(stepNumber));
-                console.log('Auto Advance Delay:', getAutoAdvanceDelay(stepNumber));
-                console.log('Has Scoring:', hasScoring(stepNumber));
-                console.log('Validation Config:', getValidationConfig(stepNumber));
-                console.log('Button Config:', getButtonConfig(stepNumber));
+                appLogger.info('Step Rule:', { data: [stepRule] });
+                appLogger.info('Should Auto Advance:', { data: [shouldAutoAdvance(stepNumber)] });
+                appLogger.info('Auto Advance Delay:', { data: [getAutoAdvanceDelay(stepNumber)] });
+                appLogger.info('Has Scoring:', { data: [hasScoring(stepNumber)] });
+                appLogger.info('Validation Config:', { data: [getValidationConfig(stepNumber)] });
+                appLogger.info('Button Config:', { data: [getButtonConfig(stepNumber)] });
                 console.groupEnd();
             } else {
                 console.group('🔍 Quiz Rules Config - Global');
-                console.log('Full Config:', config);
-                console.log('Auto Advance Steps:', config.behaviorPresets.autoAdvanceSteps);
-                console.log('Scoring Steps:', config.behaviorPresets.scoringSteps);
-                console.log('Style Categories:', config.globalScoringConfig.categories);
+                appLogger.info('Full Config:', { data: [config] });
+                appLogger.info('Auto Advance Steps:', { data: [config.behaviorPresets.autoAdvanceSteps] });
+                appLogger.info('Scoring Steps:', { data: [config.behaviorPresets.scoringSteps] });
+                appLogger.info('Style Categories:', { data: [config.globalScoringConfig.categories] });
                 console.groupEnd();
             }
         };

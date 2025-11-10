@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface AdminUser {
   email: string;
@@ -47,7 +48,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const adminLogout = () => {
     // Não faz logout real, apenas simula
-    console.log('Logout simulado - acesso continua livre');
+    appLogger.info('Logout simulado - acesso continua livre');
   };
 
   const isAdminAuthenticated = true; // Sempre autenticado

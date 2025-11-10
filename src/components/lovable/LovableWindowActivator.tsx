@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 COMPONENTE PARA FORÇAR ATIVAÇÃO DA JANELA LOVABLE
@@ -146,11 +147,11 @@ export const LovableWindowActivator: React.FC = () => {
         // 10. Console log para debug
         if (DEBUG) {
           // eslint-disable-next-line no-console
-          console.log('🎯 Lovable Window Activator - ATIVO');
+          appLogger.info('🎯 Lovable Window Activator - ATIVO');
           // eslint-disable-next-line no-console
-          console.log('📊 Config:', (window as any).LOVABLE_WINDOW_CONFIG);
+          appLogger.info('📊 Config:', { data: [(window as any).LOVABLE_WINDOW_CONFIG] });
           // eslint-disable-next-line no-console
-          console.log('🚀 Eventos disparados:', windowEvents.length);
+          appLogger.info('🚀 Eventos disparados:', { data: [windowEvents.length] });
         }
 
         // Cleanup

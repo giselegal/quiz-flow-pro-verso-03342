@@ -50,13 +50,14 @@ import './lib/utils/canvasPerformanceControl';
 // ✨ MODULAR STEPS: adiar auto-registro dos componentes para pós-paint
 defer(() => {
   import('./components/steps').catch((e) => {
-    if (import.meta.env.DEV) console.warn('[Bootstrap] Falha ao importar steps (lazy):', e);
+    if (import.meta.env.DEV) appLogger.warn('[Bootstrap] Falha ao importar steps (lazy):', { data: [e] });
   });
 });
 // 🧪 Layer diagnostics (dev only)
 import installLayerDiagnostics from './lib/utils/layerDiagnostics';
 // 🏗️ SCHEMA SYSTEM: Inicializa o sistema modular de schemas com lazy loading
 import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
+import { appLogger } from '@/lib/utils/appLogger';
 // 🤖 AI: IA do funil auto-ativada via utils
 // import { activateFunnelAI } from './utils/funnelAIActivator'; // Removido - não utilizado
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
@@ -66,9 +67,9 @@ import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 defer(() => {
   try {
     initializeSchemaRegistry();
-    console.log('✅ Schema system initialized (deferred)');
+    appLogger.info('✅ Schema system initialized (deferred)');
   } catch (e) {
-    console.warn('⚠️ Falha ao inicializar schema registry (deferred):', e);
+    appLogger.warn('⚠️ Falha ao inicializar schema registry (deferred):', { data: [e] });
   }
 });
 
@@ -97,19 +98,19 @@ const scheduleTemplateValidation = () => {
           };
           const validationResult = validateBuiltInTemplate('quiz21StepsComplete', templateData);
           if (validationResult.success) {
-            console.log('✅ (lazy) Built-in template "quiz21StepsComplete" validado');
+            appLogger.info('✅ (lazy) Built-in template "quiz21StepsComplete" validado');
             if (validationResult.warnings?.length) {
-              console.warn('⚠️ Built-in template warnings:', validationResult.warnings);
+              appLogger.warn('⚠️ Built-in template warnings:', { data: [validationResult.warnings] });
             }
           } else {
-            console.error('❌ (lazy) Built-in template inválido:', validationResult.errors);
+            appLogger.error('❌ (lazy) Built-in template inválido:', { data: [validationResult.errors] });
           }
         } catch (error) {
-          console.error('❌ Erro ao validar built-in template (lazy):', error);
+          appLogger.error('❌ Erro ao validar built-in template (lazy):', { data: [error] });
         }
       })
       .catch((err) => {
-        console.warn('⚠️ Falha import dinâmica para validação de template:', err);
+        appLogger.warn('⚠️ Falha import dinâmica para validação de template:', { data: [err] });
       });
   });
 };
@@ -133,7 +134,7 @@ if (typeof window !== 'undefined') {
 
 defer(() => {
   try { installLayerDiagnostics(); } catch (error) {
-    console.warn('[Bootstrap] Falha ao instalar diagnostics de camadas (idle):', error);
+    appLogger.warn('[Bootstrap] Falha ao instalar diagnostics de camadas (idle):', { data: [error] });
   }
 });
 
@@ -165,10 +166,10 @@ schemaPreloadBatches.forEach((batch, i) => {
       try {
         SchemaAPI.preload(...batch);
         if (import.meta.env.DEV) {
-          console.log(`🔄 Preload schemas batch ${i + 1}/${schemaPreloadBatches.length}:`, batch.length);
+          appLogger.info(`🔄 Preload schemas batch ${i + 1}/${schemaPreloadBatches.length}:`, { data: [batch.length] });
         }
       } catch (e) {
-        if (import.meta.env.DEV) console.warn('⚠️ Falha preload batch', i + 1, e);
+        if (import.meta.env.DEV) appLogger.warn('⚠️ Falha preload batch', { data: [i + 1, e] });
       }
     });
   }, i * 100);
@@ -182,13 +183,13 @@ if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
     localStorage.removeItem(testKey);
   } catch (error) {
     // QuotaExceededError detected - clear localStorage
-    console.warn('⚠️ FASE 1: LocalStorage quota exceeded, clearing...');
+    appLogger.warn('⚠️ FASE 1: LocalStorage quota exceeded, clearing...');
     try {
       localStorage.clear();
       sessionStorage.clear();
-      console.log('✅ FASE 1: Storage cleared successfully');
+      appLogger.info('✅ FASE 1: Storage cleared successfully');
     } catch (clearError) {
-      console.error('❌ FASE 1: Failed to clear storage:', clearError);
+      appLogger.error('❌ FASE 1: Failed to clear storage:', { data: [clearError] });
     }
   }
 }
@@ -220,7 +221,7 @@ if (typeof window !== 'undefined') {
       try {
         (window as any).__USE_CLOUDINARY__ = ((import.meta as any)?.env?.VITE_ENABLE_CLOUDINARY === 'true');
       } catch (error) {
-        console.warn('[main.tsx] Erro ao configurar Cloudinary flag:', error);
+        appLogger.warn('[main.tsx] Erro ao configurar Cloudinary flag:', { data: [error] });
       }
       const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
       // Bloqueia logs externos em dev
@@ -231,18 +232,18 @@ if (typeof window !== 'undefined') {
       // Silencia Sentry em dev para evitar 404/429 e ruído excessivo
       if (/sentry\.io|ingest\.sentry\.io/.test(url) && (import.meta.env.DEV || isPreviewHost)) {
         try {
-          console.warn('🛑 Interceptado (Sentry desabilitado em dev):', url);
+          appLogger.warn('🛑 Interceptado (Sentry desabilitado em dev):', { data: [url] });
         } catch (error) {
-          console.warn('[main.tsx] Erro ao logar interceptação Sentry:', error);
+          appLogger.warn('[main.tsx] Erro ao logar interceptação Sentry:', { data: [error] });
         }
         return Promise.resolve(new Response(null, { status: 204 }));
       }
       // Silencia chamadas REST do Supabase quando desabilitado (evita erros 400/403 durante QA)
       if (DISABLE_SUPABASE && url.includes('.supabase.co/rest/v1/')) {
         try {
-          console.warn('🛑 Interceptado (Supabase REST desabilitado em dev):', url);
+          appLogger.warn('🛑 Interceptado (Supabase REST desabilitado em dev):', { data: [url] });
         } catch (error) {
-          console.warn('[main.tsx] Erro ao logar interceptação Supabase:', error);
+          appLogger.warn('[main.tsx] Erro ao logar interceptação Supabase:', { data: [error] });
         }
         // Responder com lista vazia ou sucesso sem corpo
         const wantsJson =
@@ -271,17 +272,17 @@ if (typeof window !== 'undefined') {
           try {
             const str = typeof url === 'string' ? url : String(url);
             if (/sentry\.io|ingest\.sentry\.io/.test(str)) {
-              console.warn('🛑 Interceptado (sendBeacon -> Sentry bloqueado):', str);
+              appLogger.warn('🛑 Interceptado (sendBeacon -> Sentry bloqueado):', { data: [str] });
               return true; // finge sucesso
             }
           } catch (error) {
-            console.warn('[main.tsx] Erro ao verificar sendBeacon Sentry:', error);
+            appLogger.warn('[main.tsx] Erro ao verificar sendBeacon Sentry:', { data: [error] });
           }
           return originalBeacon(url, data);
         };
       }
     } catch (error) {
-      console.warn('[main.tsx] Erro ao patch sendBeacon:', error);
+      appLogger.warn('[main.tsx] Erro ao patch sendBeacon:', { data: [error] });
     }
 
     // Intercepta XHR para evitar ruído em libs que não usam fetch
@@ -298,11 +299,11 @@ if (typeof window !== 'undefined') {
               const u = typeof url === 'string' ? url : url.toString();
               if (/sentry\.io|ingest\.sentry\.io/.test(u)) {
                 // Reescreve para um data: vazio e ignora
-                console.warn('🛑 Interceptado (XHR -> Sentry bloqueado):', u);
+                appLogger.warn('🛑 Interceptado (XHR -> Sentry bloqueado):', { data: [u] });
                 return originalOpen.apply(xhr, ['GET', 'data:ignored', true]);
               }
             } catch (error) {
-              console.warn('[main.tsx] Erro ao verificar XHR Sentry:', error);
+              appLogger.warn('[main.tsx] Erro ao verificar XHR Sentry:', { data: [error] });
             }
             return originalOpen.apply(xhr, [method, url as any, true]);
           } as any;
@@ -312,7 +313,7 @@ if (typeof window !== 'undefined') {
         (window as any).XMLHttpRequest = PatchedXHR as any;
       }
     } catch (error) {
-      console.warn('[main.tsx] Erro ao patch XMLHttpRequest:', error);
+      appLogger.warn('[main.tsx] Erro ao patch XMLHttpRequest:', { data: [error] });
     }
 
     // Cleanup: restaurar interceptores no pagehide para evitar depreciação de unload
@@ -320,15 +321,15 @@ if (typeof window !== 'undefined') {
       try {
         (window as any).fetch = originalFetch;
       } catch (error) {
-        console.warn('[main.tsx] Erro ao restaurar fetch original:', error);
+        appLogger.warn('[main.tsx] Erro ao restaurar fetch original:', { data: [error] });
       }
     });
   }
 }
 
 // �🚀 SUPABASE: Configuração inicial do serviço
-console.log('🚀 Inicializando serviços Supabase...');
-console.log('🔧 DEBUG: main.tsx carregado');
+appLogger.info('🚀 Inicializando serviços Supabase...');
+appLogger.info('🔧 DEBUG: main.tsx carregado');
 
 // 🔧 DIAGNOSTIC: Testar template (lazy/dev)
 defer(() => {
@@ -338,12 +339,12 @@ defer(() => {
       try {
         const fn = (mod as any).default || (mod as any).runTemplateDiagnostic;
         const diagnosticResult = typeof fn === 'function' ? fn() : undefined;
-        console.log('🔬 [MAIN] Template diagnostic (lazy):', diagnosticResult);
+        appLogger.info('🔬 [MAIN] Template diagnostic (lazy):', { data: [diagnosticResult] });
       } catch (e) {
-        console.warn('⚠️ [MAIN] Falha ao rodar template diagnostic (lazy):', e);
+        appLogger.warn('⚠️ [MAIN] Falha ao rodar template diagnostic (lazy):', { data: [e] });
       }
     })
-    .catch((e) => console.warn('⚠️ [MAIN] Import diagnóstico falhou:', e));
+    .catch((e) => appLogger.warn('⚠️ [MAIN] Import diagnóstico falhou:', { data: [e] }));
 });
 
 // Testar integração híbrida (lazy)
@@ -351,10 +352,10 @@ defer(() => {
   import('./lib/utils/hybridIntegration')
     .then(({ getTemplateStatus }) =>
       getTemplateStatus()
-        .then((status) => console.log('🔬 [MAIN] Hybrid integration status (lazy):', status))
-        .catch((error) => console.error('❌ [MAIN] Hybrid integration error (lazy):', error))
+        .then((status) => appLogger.info('🔬 [MAIN] Hybrid integration status (lazy):', { data: [status] }))
+        .catch((error) => appLogger.error('❌ [MAIN] Hybrid integration error (lazy):', { data: [error] }))
     )
-    .catch((e) => console.warn('⚠️ [MAIN] Import hybridIntegration falhou:', e));
+    .catch((e) => appLogger.warn('⚠️ [MAIN] Import hybridIntegration falhou:', { data: [e] }));
 });
 
 // 🔄 Versão / prevenção de 404 de chunks desatualizados
@@ -365,10 +366,10 @@ if (typeof window !== 'undefined') {
         try {
           startPeriodicVersionCheck(180000); // a cada 3 min
         } catch (e) {
-          console.warn('[VersionCheck] Falha ao iniciar verificação de versão (lazy):', e);
+          appLogger.warn('[VersionCheck] Falha ao iniciar verificação de versão (lazy):', { data: [e] });
         }
       })
-      .catch((e) => console.warn('[VersionCheck] Falha import lazy:', e));
+      .catch((e) => appLogger.warn('[VersionCheck] Falha import lazy:', { data: [e] }));
   });
 }
 
@@ -390,7 +391,7 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {
-        console.log('✅ Service Worker registrado:', registration.scope);
+        appLogger.info('✅ Service Worker registrado:', { data: [registration.scope] });
 
         // Verificar atualizações a cada hora
         setInterval(() => {
@@ -403,7 +404,7 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
           if (newWorker) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('🔄 Nova versão do app disponível! Recarregue para atualizar.');
+                appLogger.info('🔄 Nova versão do app disponível! Recarregue para atualizar.');
                 // Notificar usuário (pode implementar toast/banner depois)
               }
             });
@@ -411,7 +412,7 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
         });
       })
       .catch((error) => {
-        console.error('❌ Erro ao registrar Service Worker:', error);
+        appLogger.error('❌ Erro ao registrar Service Worker:', { data: [error] });
       });
   });
 }
@@ -422,11 +423,11 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 // Se não inicializou cedo, inicializar em idle (dev ou quando flag habilitar)
 if (!sentryInitializedEarly) {
   defer(() => {
-    try { initSentry(); } catch (e) { console.warn('⚠️ Falha initSentry (idle):', e); }
+    try { initSentry(); } catch (e) { appLogger.warn('⚠️ Falha initSentry (idle):', { data: [e] }); }
   });
 }
 
-console.log('🔧 DEBUG: Criando root do React...');
+appLogger.info('🔧 DEBUG: Criando root do React...');
 try {
   if (typeof performance !== 'undefined' && 'mark' in performance) {
     performance.mark('react:render:start');
@@ -436,7 +437,7 @@ try {
 try {
   installDeprecationGuards();
 } catch (error) {
-  console.warn('[Bootstrap] Falha ao instalar guardas de deprecação:', error);
+  appLogger.warn('[Bootstrap] Falha ao instalar guardas de deprecação:', { data: [error] });
 }
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
@@ -454,9 +455,9 @@ try {
         performance.measure('ttfp', 'bootstrap:start', 'react:paint');
         const entries = performance.getEntriesByName('ttfp');
         const entry = entries[entries.length - 1];
-        if (entry) console.log(`[PERF] TTFP ms: ${Math.round(entry.duration)}`);
+        if (entry) appLogger.info(`[PERF] TTFP ms: ${Math.round(entry.duration)}`);
       } catch { }
     });
   }
 } catch { }
-console.log('✅ DEBUG: App renderizado com sucesso');
+appLogger.info('✅ DEBUG: App renderizado com sucesso');

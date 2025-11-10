@@ -19,6 +19,7 @@ import {
   errorManager,
   createFunnelError,
 } from '@/lib/utils/improvedFunnelSystem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 
@@ -32,31 +33,31 @@ const MyFunnelsPage: React.FC = () => {
   const { listFunnels, loadFunnel, saveFunnel, isLoading } = useMyFunnelsPersistence();
 
   React.useEffect(() => {
-    console.log('🔍 MyFunnelsPage: Carregando funis do contexto MY_FUNNELS...');
+    appLogger.info('🔍 MyFunnelsPage: Carregando funis do contexto MY_FUNNELS...');
 
     const loadContextualFunnels = async () => {
       try {
         // ✅ Health check do sistema antes de carregar
         const systemHealth = performSystemHealthCheck();
         if (systemHealth.overall === 'critical') {
-          console.error('❌ Sistema com problemas críticos:', systemHealth.issues);
+          appLogger.error('❌ Sistema com problemas críticos:', { data: [systemHealth.issues] });
           systemHealth.issues.forEach(issue => {
             errorManager.handleError(new Error(`System Health: ${issue}`));
           });
         } else if (systemHealth.overall === 'warning') {
-          console.warn('⚠️ Sistema com warnings:', systemHealth.recommendations);
+          appLogger.warn('⚠️ Sistema com warnings:', { data: [systemHealth.recommendations] });
         } else {
-          console.log('✅ Sistema saudável - carregando funis...');
+          appLogger.info('✅ Sistema saudável - carregando funis...');
         }
 
         const contextualFunnels = await listFunnels();
-        console.log('📋 Funis contextuais carregados:', contextualFunnels);
+        appLogger.info('📋 Funis contextuais carregados:', { data: [contextualFunnels] });
 
         // ✅ Validar e normalizar dados carregados
         const normalizedFunnels = contextualFunnels.map(funnel => {
           const sanitized = sanitizeAndNormalizeFunnelData(funnel);
           if (!sanitized.isValid) {
-            console.warn(`⚠️ Funnel ${funnel.id} tem problemas:`, sanitized.errors);
+            appLogger.warn(`⚠️ Funnel ${funnel.id} tem problemas:`, { data: [sanitized.errors] });
           }
           return sanitized.data;
         });
@@ -65,11 +66,11 @@ const MyFunnelsPage: React.FC = () => {
 
         // 🚀 CORREÇÃO: Se não há funis no contexto, criar alguns de exemplo
         if (contextualFunnels.length === 0) {
-          console.log('⚠️ Nenhum funil encontrado no contexto MY_FUNNELS, criando exemplos...');
+          appLogger.info('⚠️ Nenhum funil encontrado no contexto MY_FUNNELS, criando exemplos...');
           await createInitialFunnels();
         }
       } catch (error) {
-        console.error('❌ Erro ao carregar funis contextuais:', error);
+        appLogger.error('❌ Erro ao carregar funis contextuais:', { data: [error] });
         const storageError = createFunnelError('STORAGE_NOT_AVAILABLE',
           `Failed to load funnels: ${error instanceof Error ? error.message : 'Unknown error'}`, {
           operation: 'loadContextualFunnels',
@@ -78,7 +79,7 @@ const MyFunnelsPage: React.FC = () => {
 
         // Fallback para o sistema antigo se houver erro
         const loadedFunnels = funnelLocalStore.list();
-        console.log('📋 Fallback - Funis carregados do localStorage:', loadedFunnels);
+        appLogger.info('📋 Fallback - Funis carregados do localStorage:', { data: [loadedFunnels] });
         setFunnels(loadedFunnels);
       }
     };
@@ -114,7 +115,7 @@ const MyFunnelsPage: React.FC = () => {
       const validatedFunnels = initialFunnels.map(funnel => {
         const sanitized = sanitizeAndNormalizeFunnelData(funnel);
         if (!sanitized.isValid) {
-          console.warn(`⚠️ Funnel inicial ${funnel.id} tem problemas:`, sanitized.errors);
+          appLogger.warn(`⚠️ Funnel inicial ${funnel.id} tem problemas:`, { data: [sanitized.errors] });
         }
         return sanitized.data;
       });
@@ -127,9 +128,9 @@ const MyFunnelsPage: React.FC = () => {
       // Recarregar a lista
       const updatedFunnels = await listFunnels();
       setFunnels(updatedFunnels);
-      console.log('✅ Funis iniciais criados no contexto MY_FUNNELS:', validatedFunnels);
+      appLogger.info('✅ Funis iniciais criados no contexto MY_FUNNELS:', { data: [validatedFunnels] });
     } catch (error) {
-      console.error('❌ Erro ao criar funis iniciais:', error);
+      appLogger.error('❌ Erro ao criar funis iniciais:', { data: [error] });
       const creationError = createFunnelError('FUNNEL_CREATION_FAILED',
         `Failed to create initial funnels: ${error instanceof Error ? error.message : 'Unknown error'}`, {
         operation: 'createInitialFunnels',
@@ -149,7 +150,7 @@ const MyFunnelsPage: React.FC = () => {
   };
 
   const goToEditor = async (id?: string) => {
-    console.log('🎯 Navegando para editor:', id ? `com ID ${id}` : 'novo funil');
+    appLogger.info('🎯 Navegando para editor:', { data: [id ? `com ID ${id}` : 'novo funil'] });
 
     if (id) {
       // ✅ CORRIGIDO: Usar path parameter em vez de query parameter
@@ -158,11 +159,11 @@ const MyFunnelsPage: React.FC = () => {
         if (funnelData) {
           setLocation(`/editor/${encodeURIComponent(id)}?context=my-funnels`);
         } else {
-          console.warn('⚠️ Funil não encontrado no contexto MY_FUNNELS:', id);
+          appLogger.warn('⚠️ Funil não encontrado no contexto MY_FUNNELS:', { data: [id] });
           setLocation(`/editor/${encodeURIComponent(id)}`);
         }
       } catch (error) {
-        console.error('❌ Erro ao carregar funil:', error);
+        appLogger.error('❌ Erro ao carregar funil:', { data: [error] });
         setLocation(`/editor/${encodeURIComponent(id)}`);
       }
     } else {
@@ -192,7 +193,7 @@ const MyFunnelsPage: React.FC = () => {
         // Navegar para o editor com contexto específico
         setLocation(`/editor?funnel=${encodeURIComponent(newId)}&context=my-funnels`);
       } catch (error) {
-        console.error('❌ Erro ao criar novo funil:', error);
+        appLogger.error('❌ Erro ao criar novo funil:', { data: [error] });
         // Fallback para o sistema antigo
         const legacyFunnel = {
           id: newId,
@@ -233,7 +234,7 @@ const MyFunnelsPage: React.FC = () => {
           }
         }
       } catch (e) {
-        console.warn('⚠️ Falha ao obter steps via consolidatedTemplateService. Continuando com steps vazios.', e);
+        appLogger.warn('⚠️ Falha ao obter steps via consolidatedTemplateService. Continuando com steps vazios.', { data: [e] });
       }
 
       const newFunnel = {
@@ -258,18 +259,18 @@ const MyFunnelsPage: React.FC = () => {
       const updatedFunnels = await listFunnels();
       setFunnels(updatedFunnels);
 
-      console.log('✅ Novo funil 21 etapas criado no contexto MY_FUNNELS:', newFunnel);
+      appLogger.info('✅ Novo funil 21 etapas criado no contexto MY_FUNNELS:', { data: [newFunnel] });
       setLocation(`/editor?funnel=${encodeURIComponent(newId)}&template=${templateId}&context=my-funnels`);
 
     } catch (error) {
-      console.error('❌ Erro ao criar funil 21 etapas:', error);
+      appLogger.error('❌ Erro ao criar funil 21 etapas:', { data: [error] });
       // Fallback para navegação direta
       setLocation('/editor?template=template-optimized-21-steps-funnel');
     }
   };
 
   const handlePublish = async (funnel: Funnel) => {
-    console.log('🚀 Publicando funil:', funnel.id);
+    appLogger.info('🚀 Publicando funil:', { data: [funnel.id] });
     setPublishingId(funnel.id);
 
     try {
@@ -277,7 +278,7 @@ const MyFunnelsPage: React.FC = () => {
       const fullFunnelData = await loadFunnel(funnel.id);
 
       if (!fullFunnelData) {
-        console.error('❌ Dados do funil não encontrados:', funnel.id);
+        appLogger.error('❌ Dados do funil não encontrados:', { data: [funnel.id] });
         return;
       }
 
@@ -306,13 +307,13 @@ const MyFunnelsPage: React.FC = () => {
         const updatedFunnels = await listFunnels();
         setFunnels(updatedFunnels);
 
-        console.log('✅ Funil publicado com sucesso');
+        appLogger.info('✅ Funil publicado com sucesso');
         setOpenId(funnel.id);
       } else {
-        console.error('❌ Erro na publicação:', result.error);
+        appLogger.error('❌ Erro na publicação:', { data: [result.error] });
       }
     } catch (error) {
-      console.error('❌ Erro ao publicar funil:', error);
+      appLogger.error('❌ Erro ao publicar funil:', { data: [error] });
     } finally {
       setPublishingId(null);
     }

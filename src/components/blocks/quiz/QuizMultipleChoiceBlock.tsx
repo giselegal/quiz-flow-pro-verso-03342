@@ -1,6 +1,7 @@
 import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import React, { useState } from 'react';
 import { QuizBlockProps } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * QuizMultipleChoiceBlock - Componente de escolha múltipla para quiz
@@ -107,7 +108,7 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
 
       return indices;
     } catch (error) {
-      console.error('Error parsing correct answers:', error);
+      appLogger.error('Error parsing correct answers:', { data: [error] });
       return [0]; // Retorna a primeira opção como correta por padrão
     }
   };

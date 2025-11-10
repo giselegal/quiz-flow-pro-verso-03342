@@ -4,6 +4,7 @@
  */
 
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Calcula o valor de progresso para um step baseado em sua posição
@@ -172,8 +173,8 @@ export function logProgressDebug(stepsData: Record<string, any>): void {
     const stepKeys = Object.keys(stepsData).sort();
     const totalSteps = stepKeys.length;
     
-    console.log('\n📊 DEBUG: Progresso dos Steps\n');
-    console.log('═'.repeat(60));
+    appLogger.info('\n📊 DEBUG: Progresso dos Steps\n');
+    appLogger.info('═'.repeat(60));
     
     stepKeys.forEach((stepKey, index) => {
         const stepIndex = index + 1;
@@ -186,9 +187,9 @@ export function logProgressDebug(stepsData: Record<string, any>): void {
         const actual = headerBlock?.properties?.progressValue ?? 'N/A';
         const status = actual === expected ? '✅' : '⚠️';
         
-        console.log(`${status} ${stepKey}: ${actual}% (esperado: ${expected}%)`);
+        appLogger.info(`${status} ${stepKey}: ${actual}% (esperado: ${expected}%)`);
     });
     
-    console.log('═'.repeat(60));
-    console.log('\n');
+    appLogger.info('═'.repeat(60));
+    appLogger.info('\n');
 }

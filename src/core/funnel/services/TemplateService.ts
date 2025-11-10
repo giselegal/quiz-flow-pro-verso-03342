@@ -17,6 +17,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { FunnelTemplate, TemplateCategory } from '../types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Helper para gerar IDs quando necessário
 const genId = () =>
@@ -41,7 +42,7 @@ export class TemplateService {
         try {
             // Verificar se Supabase está disponível
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, retornando templates locais');
+                appLogger.warn('⚠️ Supabase não disponível, retornando templates locais');
                 return this.getFallbackTemplates(category);
             }
 
@@ -62,7 +63,7 @@ export class TemplateService {
             const { data, error } = await query;
 
             if (error) {
-                console.error('Error fetching templates:', error);
+                appLogger.error('Error fetching templates:', { data: [error] });
                 return this.getFallbackTemplates(category);
             }
 
@@ -95,7 +96,7 @@ export class TemplateService {
                 })
             ) || this.getFallbackTemplates(category);
         } catch (error) {
-            console.error('Error in getTemplates:', error);
+            appLogger.error('Error in getTemplates:', { data: [error] });
             return this.getFallbackTemplates(category);
         }
     }
@@ -117,7 +118,7 @@ export class TemplateService {
 
             return categorized;
         } catch (error) {
-            console.error('Error organizing templates by category:', error);
+            appLogger.error('Error organizing templates by category:', { data: [error] });
             return {};
         }
     }
@@ -132,7 +133,7 @@ export class TemplateService {
             const fallbackTemplate = fallbackTemplates.find(t => t.id === templateId);
             
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, usando fallback');
+                appLogger.warn('⚠️ Supabase não disponível, usando fallback');
                 return fallbackTemplate || this.createDefaultFallbackTemplate(templateId);
             }
 
@@ -143,7 +144,7 @@ export class TemplateService {
                 .maybeSingle();
 
             if (error || !data) {
-                console.warn('⚠️ Template não encontrado no Supabase:', error);
+                appLogger.warn('⚠️ Template não encontrado no Supabase:', { data: [error] });
                 return fallbackTemplate || this.createDefaultFallbackTemplate(templateId);
             }
 
@@ -164,7 +165,7 @@ export class TemplateService {
                 updatedAt: data.updated_at || new Date().toISOString(),
             };
         } catch (error) {
-            console.error('❌ Error in getTemplate:', error);
+            appLogger.error('❌ Error in getTemplate:', { data: [error] });
             const fallbackTemplates = this.getFallbackTemplates();
             return fallbackTemplates.find(t => t.id === templateId) || this.createDefaultFallbackTemplate(templateId);
         }
@@ -183,7 +184,7 @@ export class TemplateService {
             };
 
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, template salvo apenas localmente');
+                appLogger.warn('⚠️ Supabase não disponível, template salvo apenas localmente');
                 return templateWithId;
             }
 
@@ -204,13 +205,13 @@ export class TemplateService {
                 .insert([templateRecord]);
 
             if (error) {
-                console.error('Error saving template:', error);
+                appLogger.error('Error saving template:', { data: [error] });
                 return templateWithId; // Retorna template local como fallback
             }
 
             return templateWithId;
         } catch (error) {
-            console.error('Error in saveTemplate:', error);
+            appLogger.error('Error in saveTemplate:', { data: [error] });
             throw error;
         }
     }
@@ -221,14 +222,14 @@ export class TemplateService {
     async incrementUsageCount(_templateId: string): Promise<void> {
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, contagem não atualizada');
+                appLogger.warn('⚠️ Supabase não disponível, contagem não atualizada');
                 return;
             }
 
             // For funnels table, we don't have usage_count, so skip this
-            console.log('Usage count increment skipped - not available in funnels table');
+            appLogger.info('Usage count increment skipped - not available in funnels table');
         } catch (error) {
-            console.error('Error in incrementUsageCount:', error);
+            appLogger.error('Error in incrementUsageCount:', { data: [error] });
         }
     }
 
@@ -244,7 +245,7 @@ export class TemplateService {
             // Por enquanto, usar apenas fallback até a tabela ser criada
             return this.getFallbackCategories();
         } catch (error) {
-            console.error('Error in getCategories:', error);
+            appLogger.error('Error in getCategories:', { data: [error] });
             return this.getFallbackCategories();
         }
     }

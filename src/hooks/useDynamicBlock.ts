@@ -8,6 +8,7 @@
 
 import { ComponentType, useMemo } from 'react';
 import { blockRegistry, type BlockType, prefetchBlock, prefetchBlocks, getRegistryStats } from '@/core/registry/UnifiedBlockRegistry';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UseDynamicBlockOptions {
   preload?: boolean;
@@ -25,7 +26,7 @@ export function useDynamicBlock(
   // Preload if requested
   if (preload) {
     prefetchBlock(type).catch(err => {
-      console.warn(`[useDynamicBlock] Preload failed for ${type}:`, err);
+      appLogger.warn(`[useDynamicBlock] Preload failed for ${type}:`, { data: [err] });
     });
   }
 

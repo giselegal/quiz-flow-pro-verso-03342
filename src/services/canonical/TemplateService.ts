@@ -43,6 +43,7 @@ import {
   listBuiltInTemplateIds 
 } from '@/services/templates/builtInTemplates';
 import { loadFullTemplate } from '@/templates/registry';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Template metadata
@@ -150,7 +151,7 @@ export class TemplateService extends BaseCanonicalService {
         // @ts-ignore - import.meta pode não existir em alguns ambientes de teste
         rawVite = (import.meta as any)?.env?.VITE_ENABLE_HIERARCHICAL_SOURCE;
       } catch (error) {
-        console.warn('[TemplateService] Erro ao acessar import.meta.env:', error);
+        appLogger.warn('[TemplateService] Erro ao acessar import.meta.env:', { data: [error] });
       }
       if (typeof rawVite === 'string') return rawVite === 'true';
 
@@ -158,7 +159,7 @@ export class TemplateService extends BaseCanonicalService {
       const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_ENABLE_HIERARCHICAL_SOURCE : undefined);
       if (typeof rawNode === 'string') return rawNode === 'true';
     } catch (error) {
-      console.warn('[TemplateService] Erro ao verificar HIERARCHICAL_SOURCE:', error);
+      appLogger.warn('[TemplateService] Erro ao verificar HIERARCHICAL_SOURCE:', { data: [error] });
     }
     // Padrão: habilitar o novo pipeline por padrão
     return true;
@@ -182,13 +183,13 @@ export class TemplateService extends BaseCanonicalService {
         // @ts-ignore
         rawVite = (import.meta as any)?.env?.VITE_TEMPLATE_JSON_ONLY;
       } catch (error) {
-        console.warn('[TemplateService] Erro ao acessar import.meta.env (JSON_ONLY):', error);
+        appLogger.warn('[TemplateService] Erro ao acessar import.meta.env (JSON_ONLY):', { data: [error] });
       }
       if (typeof rawVite === 'string') return rawVite === 'true';
       const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_JSON_ONLY : undefined);
       if (typeof rawNode === 'string') return rawNode === 'true';
     } catch (error) {
-      console.warn('[TemplateService] Erro ao verificar TEMPLATE_JSON_ONLY:', error);
+      appLogger.warn('[TemplateService] Erro ao verificar TEMPLATE_JSON_ONLY:', { data: [error] });
     }
     // Padrão: priorizar JSON-only (pode ser desativado por env/localStorage quando necessário)
     return true;
@@ -724,7 +725,7 @@ export class TemplateService extends BaseCanonicalService {
   setActiveTemplate(templateId: string, totalSteps: number): void {
     this.activeTemplateId = templateId;
     this.activeTemplateSteps = totalSteps;
-    console.log(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} com ${totalSteps} etapas`);
+    appLogger.info(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} com ${totalSteps} etapas`);
     this.log(`✅ Template ativo: ${templateId} (${totalSteps} etapas)`);
     
     // 🆕 Sincronizar com HierarchicalTemplateSource
@@ -1054,11 +1055,11 @@ export class TemplateService extends BaseCanonicalService {
     const stats = this.getCacheStats();
     
     console.group('📊 Template Cache Stats');
-    console.log(`Cache Hit Rate: ${stats.cacheHitRate}`);
-    console.log(`Steps in Memory: ${stats.stepsLoadedInMemory}`);
-    console.log(`Pending Loads: ${stats.pendingLoads}`);
-    console.log(`Avg Load Time: ${stats.avgLoadTimeMs.toFixed(0)}ms`);
-    console.log('\nDetailed Report:', stats.lastReport);
+    appLogger.info(`Cache Hit Rate: ${stats.cacheHitRate}`);
+    appLogger.info(`Steps in Memory: ${stats.stepsLoadedInMemory}`);
+    appLogger.info(`Pending Loads: ${stats.pendingLoads}`);
+    appLogger.info(`Avg Load Time: ${stats.avgLoadTimeMs.toFixed(0)}ms`);
+    appLogger.info('\nDetailed Report:', { data: [stats.lastReport] });
     console.groupEnd();
   }
 
@@ -1163,7 +1164,7 @@ export class TemplateService extends BaseCanonicalService {
 
         // 1. Adicionar steps do template (se houver)
         const totalSteps = this.activeTemplateSteps;
-        console.log(`🔍 [TemplateService.steps.list] activeTemplateSteps = ${totalSteps}, activeTemplateId = ${this.activeTemplateId}`);
+        appLogger.info(`🔍 [TemplateService.steps.list] activeTemplateSteps = ${totalSteps}, activeTemplateId = ${this.activeTemplateId}`);
         for (let i = 1; i <= totalSteps; i++) {
           const info = this.STEP_MAPPING[i] || {
             name: `Etapa ${i}`,
@@ -1495,7 +1496,7 @@ export class TemplateService extends BaseCanonicalService {
       const result = await this.steps.get(1);
       return result.success;
     } catch (error) {
-      console.warn('[TemplateService] Health check falhou:', error);
+      appLogger.warn('[TemplateService] Health check falhou:', { data: [error] });
       return false;
     }
   }

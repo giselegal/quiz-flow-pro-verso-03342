@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ScrollSyncContextType {
   canvasScrollRef: React.RefObject<HTMLDivElement>;
@@ -13,7 +14,7 @@ const ScrollSyncContext = createContext<ScrollSyncContextType | undefined>(undef
 export const useScrollSync = () => {
   const context = useContext(ScrollSyncContext);
   if (!context) {
-    console.warn('useScrollSync called outside ScrollSyncProvider, returning fallback');
+    appLogger.warn('useScrollSync called outside ScrollSyncProvider, returning fallback');
     // Return fallback refs and functions
     return {
       canvasScrollRef: React.useRef<HTMLDivElement>(null),

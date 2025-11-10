@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Hook para propriedades de container e gerar classes CSS
@@ -33,7 +34,7 @@ export interface ContainerProperties {
 export const useContainerProperties = (properties: ContainerProperties = {}) => {
   // 🎯 CACHE: Memoização com dependências específicas para evitar 13+ recálculos por render
   return useMemo(() => {
-    console.log('🏗️ useContainerProperties calculando (memoizado):', properties);
+    appLogger.info('🏗️ useContainerProperties calculando (memoizado):', { data: [properties] });
 
     const {
       containerWidth = 'full',

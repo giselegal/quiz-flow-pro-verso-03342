@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
 import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface OptionItem {
   id: string;
@@ -74,11 +75,11 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
   // Debug leve (somente em dev)
   if (import.meta?.env?.DEV) {
     // eslint-disable-next-line no-console
-    console.debug('OptionsGridInlineBlock:', {
-      blockId: block.id,
-      optionsCount: options.length,
-      selectedCount: selectedOptions.length,
-    });
+    appLogger.debug('OptionsGridInlineBlock:', { data: [{
+            blockId: block.id,
+            optionsCount: options.length,
+            selectedCount: selectedOptions.length,
+          }] });
   }
 
   const handleOptionClick = (optionId: string) => {

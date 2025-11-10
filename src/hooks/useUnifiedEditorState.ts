@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EditorState {
   // Estado do Editor
@@ -192,7 +193,7 @@ export const useEditorPerformance = () => {
     
     return {
       logBlocksCount: (count: number) => {
-        console.log(`📊 Editor Performance: ${count} blocks in state`);
+        appLogger.info(`📊 Editor Performance: ${count} blocks in state`);
       },
       memoryUsage: (performance as any).memory ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024) : 0,
       cacheSize: 0,

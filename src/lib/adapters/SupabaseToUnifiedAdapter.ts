@@ -6,6 +6,7 @@
  */
 
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface SupabaseCompatibleSession {
   responses: Record<string, any>;
@@ -61,21 +62,21 @@ export const useSupabaseCompatibleQuiz = (): SupabaseCompatibleQuiz => {
       actions.answerScoredQuestion(questionId, answer);
 
       // Log compatibilidade
-      console.log('Compatibility answer submitted:', {
-        questionId,
-        answer,
-        system: 'unified_via_adapter',
-      });
+      appLogger.info('Compatibility answer submitted:', { data: [{
+                  questionId,
+                  answer,
+                  system: 'unified_via_adapter',
+                }] });
     },
 
     calculateResult: () => {
       // Note: generateResult não existe, usando método alternativo
-      console.log('Calculate result called - using existing data');
+      appLogger.info('Calculate result called - using existing data');
     },
 
     navigateToStep: (step: number) => {
       // Note: navigateToStep não existe, usando setCurrentStep
-      console.log('Navigate to step:', step);
+      appLogger.info('Navigate to step:', { data: [step] });
     },
 
     resetQuiz: () => {
@@ -85,11 +86,11 @@ export const useSupabaseCompatibleQuiz = (): SupabaseCompatibleQuiz => {
 
     saveProgress: () => {
       // Simular salvamento de progresso
-      console.log('Progress saved:', {
-        currentStep: quizState.currentStep,
-        answers: quizState.answers,
-        system: 'unified_via_adapter',
-      });
+      appLogger.info('Progress saved:', { data: [{
+                currentStep: quizState.currentStep,
+                answers: quizState.answers,
+                system: 'unified_via_adapter',
+              }] });
     },
   };
 

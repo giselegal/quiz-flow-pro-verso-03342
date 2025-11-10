@@ -7,6 +7,7 @@
 
 import { FunnelStep } from '@/types/quiz-schema';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type TemplateSource = 'template' | 'saved' | 'file';
 
@@ -56,14 +57,14 @@ class EditorDataService {
         const cacheKey = `${templateId}-${stepNumber || 'all'}`;
 
         if (this.cache.has(cacheKey)) {
-            console.log(`📋 [EditorDataService] Cache hit para ${cacheKey}`);
+            appLogger.info(`📋 [EditorDataService] Cache hit para ${cacheKey}`);
             return this.cache.get(cacheKey);
         }
 
         try {
             const steps = TEMPLATE_TO_STEPS_MAPPING[templateId];
             if (!steps) {
-                console.warn(`⚠️ Template ID '${templateId}' não encontrado no mapeamento`);
+                appLogger.warn(`⚠️ Template ID '${templateId}' não encontrado no mapeamento`);
                 return null;
             }
 
@@ -83,11 +84,11 @@ class EditorDataService {
             // Notificar ouvintes
             this.emit('schema-loaded', { templateId, stepNumber, steps: loadedSteps });
 
-            console.log(`✅ [EditorDataService] Schema carregado: ${templateId} com ${loadedSteps.length} etapas`);
+            appLogger.info(`✅ [EditorDataService] Schema carregado: ${templateId} com ${loadedSteps.length} etapas`);
             return loadedSteps;
 
         } catch (error) {
-            console.error('❌ [EditorDataService] Erro ao carregar schema:', error);
+            appLogger.error('❌ [EditorDataService] Erro ao carregar schema:', { data: [error] });
             return null;
         }
     }
@@ -103,7 +104,7 @@ class EditorDataService {
 
             const response = await fetch(templatePath);
             if (!response.ok) {
-                console.warn(`⚠️ Template ${stepId} v3.1 não encontrado em ${templatePath}`);
+                appLogger.warn(`⚠️ Template ${stepId} v3.1 não encontrado em ${templatePath}`);
                 return null;
             }
 
@@ -142,7 +143,7 @@ class EditorDataService {
             return step;
 
         } catch (error) {
-            console.error(`❌ Erro ao carregar step ${stepNumber}:`, error);
+            appLogger.error(`❌ Erro ao carregar step ${stepNumber}:`, { data: [error] });
             return null;
         }
     }
@@ -184,13 +185,13 @@ class EditorDataService {
                 // Notificar mudanças
                 this.emit('schema-updated', { templateId, stepNumber, updates });
 
-                console.log(`✅ [EditorDataService] Schema atualizado: ${templateId} step ${stepNumber}`);
+                appLogger.info(`✅ [EditorDataService] Schema atualizado: ${templateId} step ${stepNumber}`);
                 return true;
             }
 
             return false;
         } catch (error) {
-            console.error('❌ [EditorDataService] Erro ao atualizar schema:', error);
+            appLogger.error('❌ [EditorDataService] Erro ao atualizar schema:', { data: [error] });
             return false;
         }
     }
@@ -201,7 +202,7 @@ class EditorDataService {
     async saveToMultipleDestinations(templateId: string, data: any): Promise<void> {
         const promises = [
             this.saveToLocalStorage(templateId, data),
-            this.saveToSupabase(templateId, data).catch(() => console.log('Supabase não disponível')),
+            this.saveToSupabase(templateId, data).catch(() => appLogger.info('Supabase não disponível')),
         ];
 
         await Promise.allSettled(promises);
@@ -210,12 +211,12 @@ class EditorDataService {
 
     private async saveToLocalStorage(templateId: string, data: any): Promise<void> {
         localStorage.setItem(`editor-template-${templateId}`, JSON.stringify(data));
-        console.log(`💾 Salvo no localStorage: ${templateId}`);
+        appLogger.info(`💾 Salvo no localStorage: ${templateId}`);
     }
 
     private async saveToSupabase(templateId: string, _data: any): Promise<void> {
         // TODO: Implementar salvamento no Supabase quando disponível
-        console.log(`🔗 Supabase save simulado para: ${templateId}`);
+        appLogger.info(`🔗 Supabase save simulado para: ${templateId}`);
     }
 
     /**
@@ -250,7 +251,7 @@ class EditorDataService {
      */
     clearCache(): void {
         this.cache.clear();
-        console.log('🗑️ Cache do EditorDataService limpo');
+        appLogger.info('🗑️ Cache do EditorDataService limpo');
     }
 }
 

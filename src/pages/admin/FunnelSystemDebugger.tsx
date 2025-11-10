@@ -7,6 +7,7 @@ import { UnifiedStorageService } from '@/services/aliases';
 import { useLocation } from 'wouter';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { RefreshCw, Download, Trash2, Play, Bug, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface DebugLog {
     timestamp: string;
@@ -30,7 +31,7 @@ export const FunnelSystemDebugger: React.FC = () => {
             type,
         };
         setLogs(prev => [...prev, log]);
-        console.log(`[${log.timestamp}] ${message}`);
+        appLogger.info(`[${log.timestamp}] ${message}`);
     };
 
     const checkSystemStatus = () => {

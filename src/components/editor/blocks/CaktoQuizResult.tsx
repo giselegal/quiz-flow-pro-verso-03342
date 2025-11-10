@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import Step20Result from '@/components/steps/Step20Result';
 

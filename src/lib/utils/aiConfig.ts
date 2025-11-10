@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🤖 CONFIGURAÇÃO DE IA PARA FASHION QUIZ
  * 
@@ -241,7 +242,7 @@ export function logAIUsage(
         userAgent: navigator.userAgent,
     };
 
-    console.log('🤖 AI Usage:', logData);
+    appLogger.info('🤖 AI Usage:', { data: [logData] });
 
     // Aqui você pode integrar com analytics
     // gtag('event', 'ai_usage', logData);
@@ -271,7 +272,7 @@ export function reportAIError(
         userAgent: navigator.userAgent,
     };
 
-    console.error('🚨 AI Error:', errorData);
+    appLogger.error('🚨 AI Error:', { data: [errorData] });
 
     // Aqui você pode integrar com serviços de monitoramento
     // Sentry.captureException(error, { extra: errorData });

@@ -6,10 +6,11 @@
 
 import { Request, Response } from 'express';
 import MigrationService from '../../services/MigrationService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export async function POST(req: Request, res: Response) {
   try {
-    console.log('🔧 API de migração chamada');
+    appLogger.info('🔧 API de migração chamada');
 
     // Verificar se usuário tem permissão (opcional)
     const authHeader = req.headers.authorization;
@@ -21,7 +22,7 @@ export async function POST(req: Request, res: Response) {
     }
 
     // 1. Verificar status atual
-    console.log('📊 Verificando status atual...');
+    appLogger.info('📊 Verificando status atual...');
     const status = await MigrationService.checkSchemaStatus();
 
     // 2. Se não precisa migração, retornar status
@@ -35,12 +36,12 @@ export async function POST(req: Request, res: Response) {
     }
 
     // 3. Executar migração
-    console.log('⚡ Executando migração...');
+    appLogger.info('⚡ Executando migração...');
     const migrationResult = await MigrationService.executeMigrationDirect();
 
     // 4. Popular dados iniciais se migração foi bem-sucedida
     if (migrationResult.success) {
-      console.log('🌱 Populando dados iniciais...');
+      appLogger.info('🌱 Populando dados iniciais...');
       await MigrationService.seedInitialData();
     }
 
@@ -56,7 +57,7 @@ export async function POST(req: Request, res: Response) {
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('❌ Erro na API de migração:', error);
+    appLogger.error('❌ Erro na API de migração:', { data: [error] });
 
     return res.status(500).json({
       success: false,
@@ -70,7 +71,7 @@ export async function POST(req: Request, res: Response) {
 // GET para verificar status
 export async function GET(req: Request, res: Response) {
   try {
-    console.log('📊 Verificando status do schema via API...');
+    appLogger.info('📊 Verificando status do schema via API...');
 
     const status = await MigrationService.checkSchemaStatus();
 
@@ -80,7 +81,7 @@ export async function GET(req: Request, res: Response) {
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('❌ Erro ao verificar status:', error);
+    appLogger.error('❌ Erro ao verificar status:', { data: [error] });
 
     return res.status(500).json({
       success: false,

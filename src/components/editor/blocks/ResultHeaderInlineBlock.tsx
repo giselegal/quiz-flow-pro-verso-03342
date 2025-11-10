@@ -11,6 +11,7 @@ import { mapToFriendlyStyle, sanitizeStyleMentions } from '@/core/style/naming';
 import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
 import { getBestUserName } from '@/core/user/name';
 import { safePlaceholder, safeStylePlaceholder } from '@/lib/utils/placeholder';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =====================================
 // Utils & Helpers
@@ -397,7 +398,7 @@ const ResultHeaderInlineBlock = ({
       try {
         (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível');
       } catch (error) {
-        console.warn('[ResultHeaderInlineBlock] Erro ao definir placeholder de imagem:', error);
+        appLogger.warn('[ResultHeaderInlineBlock] Erro ao definir placeholder de imagem:', { data: [error] });
       }
     }
   }, [imageError]);
@@ -408,7 +409,7 @@ const ResultHeaderInlineBlock = ({
       try {
         (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível');
       } catch (error) {
-        console.warn('[ResultHeaderInlineBlock] Erro ao definir placeholder de guia:', error);
+        appLogger.warn('[ResultHeaderInlineBlock] Erro ao definir placeholder de guia:', { data: [error] });
       }
     }
   }, [guideImageError]);

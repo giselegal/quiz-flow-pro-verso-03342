@@ -8,6 +8,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { Funnel, Page, Block } from '@/core/domains';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SupabaseFunnel {
   id: string;
@@ -89,7 +90,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return funnel;
     } catch (error) {
-      console.error('Error saving funnel:', error);
+      appLogger.error('Error saving funnel:', { data: [error] });
       throw new Error(`Failed to save funnel: ${error}`);
     }
   }
@@ -114,7 +115,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return this.mapToFunnelEntity(funnelData as any, pagesData || []);
     } catch (error) {
-      console.error('Error finding funnel by id:', error);
+      appLogger.error('Error finding funnel by id:', { data: [error] });
       return null;
     }
   }
@@ -143,7 +144,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return funnels;
     } catch (error) {
-      console.error('Error finding funnels by user:', error);
+      appLogger.error('Error finding funnels by user:', { data: [error] });
       return [];
     }
   }
@@ -172,7 +173,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return funnels;
     } catch (error) {
-      console.error('Error finding published funnels:', error);
+      appLogger.error('Error finding published funnels:', { data: [error] });
       return [];
     }
   }
@@ -193,7 +194,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return !error;
     } catch (error) {
-      console.error('Error deleting funnel:', error);
+      appLogger.error('Error deleting funnel:', { data: [error] });
       return false;
     }
   }
@@ -236,7 +237,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return page;
     } catch (error) {
-      console.error('Error saving page:', error);
+      appLogger.error('Error saving page:', { data: [error] });
       throw new Error(`Failed to save page: ${error}`);
     }
   }
@@ -253,7 +254,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return (data || []).map(pageData => this.mapToPageEntity(pageData as any));
     } catch (error) {
-      console.error('Error finding pages by funnel:', error);
+      appLogger.error('Error finding pages by funnel:', { data: [error] });
       return [];
     }
   }
@@ -267,7 +268,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return !error;
     } catch (error) {
-      console.error('Error deleting page:', error);
+      appLogger.error('Error deleting page:', { data: [error] });
       return false;
     }
   }
@@ -309,7 +310,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return blocks;
     } catch (error) {
-      console.error('Error saving blocks:', error);
+      appLogger.error('Error saving blocks:', { data: [error] });
       throw new Error(`Failed to save blocks: ${error}`);
     }
   }
@@ -326,7 +327,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       return (data || []).map(componentData => this.mapToBlockEntity(componentData));
     } catch (error) {
-      console.error('Error finding blocks by page:', error);
+      appLogger.error('Error finding blocks by page:', { data: [error] });
       return [];
     }
   }

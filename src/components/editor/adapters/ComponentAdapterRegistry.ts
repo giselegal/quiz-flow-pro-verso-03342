@@ -20,6 +20,7 @@ import ResultStep from '../../quiz/ResultStep';
 import OfferStep from '../../quiz/OfferStep';
 import StrategicQuestionStep from '../../quiz/StrategicQuestionStep';
 import TransitionStep from '../../quiz/TransitionStep';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 TIPOS DE PROPS DOS COMPONENTES
@@ -111,7 +112,7 @@ export const IntroStepAdapter = createAdapter<IntroStepProps>({
     }),
     createMocks: (props) => ({
         onNameSubmit: (name: string) => {
-            console.log('[Editor Mock] IntroStep - Nome submetido:', name);
+            appLogger.info('[Editor Mock] IntroStep - Nome submetido:', { data: [name] });
         },
     }),
 });
@@ -155,7 +156,7 @@ export const QuestionStepAdapter = createAdapter<QuestionStepProps>({
     createMocks: (props) => ({
         currentAnswers: ['opt1'], // Mock de seleção para preview
         onAnswersChange: (answers: string[]) => {
-            console.log('[Editor Mock] QuestionStep - Respostas:', answers);
+            appLogger.info('[Editor Mock] QuestionStep - Respostas:', { data: [answers] });
         },
     }),
 });
@@ -200,7 +201,7 @@ export const StrategicQuestionStepAdapter = createAdapter<StrategicQuestionStepP
     createMocks: (props) => ({
         currentAnswer: props.data.options?.[0]?.id || '', // Mock primeira opção selecionada
         onAnswerChange: (answer: string) => {
-            console.log('[Editor Mock] StrategicQuestion - Resposta:', answer);
+            appLogger.info('[Editor Mock] StrategicQuestion - Resposta:', { data: [answer] });
         },
     }),
 });
@@ -237,7 +238,7 @@ export const TransitionStepAdapter = createAdapter<TransitionStepProps>({
     }),
     createMocks: (props) => ({
         onComplete: () => {
-            console.log('[Editor Mock] TransitionStep - Transição completada');
+            appLogger.info('[Editor Mock] TransitionStep - Transição completada');
         },
     }),
 });

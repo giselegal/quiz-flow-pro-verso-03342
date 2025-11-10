@@ -1,4 +1,5 @@
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔄 ROLLBACK SERVICE - Phase 4 Implementation
  * Blue-Green Deployment & Rollback Strategy
@@ -81,7 +82,7 @@ class RollbackService {
     }
 
     this.persistData();
-    console.log('🚀 New deployment registered:', newDeployment.id);
+    appLogger.info('🚀 New deployment registered:', { data: [newDeployment.id] });
     
     return newDeployment.id;
   }
@@ -92,7 +93,7 @@ class RollbackService {
   async activateDeployment(deploymentId: string): Promise<boolean> {
     const deployment = this.deployments.find(d => d.id === deploymentId);
     if (!deployment) {
-      console.error('Deployment not found:', deploymentId);
+      appLogger.error('Deployment not found:', { data: [deploymentId] });
       return false;
     }
 
@@ -111,7 +112,7 @@ class RollbackService {
       deployment.status = 'active';
       this.activeVersion = deploymentId;
 
-      console.log(`🔄 Activated deployment: ${deploymentId}`);
+      appLogger.info(`🔄 Activated deployment: ${deploymentId}`);
       
       // Iniciar monitoramento automático
       if (this.config.autoRollbackEnabled) {
@@ -122,7 +123,7 @@ class RollbackService {
       return true;
 
     } catch (error) {
-      console.error('Failed to activate deployment:', error);
+      appLogger.error('Failed to activate deployment:', { data: [error] });
       
       // Restaurar estado anterior
       if (previousActive) {
@@ -197,7 +198,7 @@ class RollbackService {
         logs,
       };
 
-      console.log('✅ Rollback successful:', result);
+      appLogger.info('✅ Rollback successful:', { data: [result] });
       return result;
 
     } catch (error) {
@@ -213,7 +214,7 @@ class RollbackService {
         logs,
       };
 
-      console.error('❌ Rollback failed:', result);
+      appLogger.error('❌ Rollback failed:', { data: [result] });
       return result;
     }
   }
@@ -330,11 +331,11 @@ class RollbackService {
         deployment.metadata.errorRate = healthCheck.details.error_rate?.value || 0;
       }
 
-      console.log(`🏥 Health monitoring - Score: ${healthCheck.score}`);
+      appLogger.info(`🏥 Health monitoring - Score: ${healthCheck.score}`);
 
       // Verificar se precisa de rollback automático
       if (healthCheck.score < this.config.healthThreshold) {
-        console.warn('⚠️ Health threshold breached, initiating auto-rollback');
+        appLogger.warn('⚠️ Health threshold breached, initiating auto-rollback');
         
         this.rollback(undefined, `Auto-rollback: Health score ${healthCheck.score} below threshold ${this.config.healthThreshold}`);
         return;
@@ -342,7 +343,7 @@ class RollbackService {
 
       // Parar monitoramento após período configurado
       if (Date.now() - monitoringStart > this.config.monitoringDuration) {
-        console.log('✅ Health monitoring completed successfully');
+        appLogger.info('✅ Health monitoring completed successfully');
         this.stopHealthMonitoring();
       }
 
@@ -380,7 +381,7 @@ class RollbackService {
   updateConfig(newConfig: Partial<RollbackConfig>) {
     this.config = { ...this.config, ...newConfig };
     this.persistData();
-    console.log('🔧 Rollback config updated:', this.config);
+    appLogger.info('🔧 Rollback config updated:', { data: [this.config] });
   }
 
   /**
@@ -403,7 +404,7 @@ class RollbackService {
         };
         StorageService.safeSetJSON('rollback_service', data);
       } catch (error) {
-        console.warn('Failed to persist rollback data:', error);
+        appLogger.warn('Failed to persist rollback data:', { data: [error] });
       }
     }
   }
@@ -422,7 +423,7 @@ class RollbackService {
           this.config = { ...this.config, ...data.config };
         }
       } catch (error) {
-        console.warn('Failed to load persisted rollback data:', error);
+        appLogger.warn('Failed to load persisted rollback data:', { data: [error] });
       }
     }
   }

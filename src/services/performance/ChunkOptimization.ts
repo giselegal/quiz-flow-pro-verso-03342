@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚀 CHUNK OPTIMIZATION SERVICE - SPRINT 3
  * 
@@ -101,7 +102,7 @@ export async function preloadAdjacentChunks(currentStepNumber: number): Promise<
   // Preload assíncrono em background
   adjacentChunks.forEach(chunkRange => {
     const chunkInfo = CHUNK_MAP[chunkRange];
-    console.log(`🔄 Preloading chunk: ${chunkRange} (steps ${chunkInfo.stepRange[0]}-${chunkInfo.stepRange[1]})`);
+    appLogger.info(`🔄 Preloading chunk: ${chunkRange} (steps ${chunkInfo.stepRange[0]}-${chunkInfo.stepRange[1]})`);
     
     // Aqui poderia fazer import dinâmico dos componentes do chunk
     // Por enquanto apenas log para demonstração
@@ -132,7 +133,7 @@ export function clearUnusedChunks(currentStepNumber: number): void {
   const toClear = allChunks.filter(c => !toKeep.includes(c));
   
   toClear.forEach(chunk => {
-    console.log(`🗑️ Clearing unused chunk: ${chunk}`);
+    appLogger.info(`🗑️ Clearing unused chunk: ${chunk}`);
     // Aqui poderia implementar lógica de clear de cache/memory
   });
 }

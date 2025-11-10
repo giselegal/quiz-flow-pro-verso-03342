@@ -35,7 +35,7 @@ class StepStateSourceImpl implements StepStateSource {
 
   setCurrentStep(step: number): void {
     if (step < 1) {
-      console.warn('[StepStateSource] Invalid step:', step, '- must be >= 1');
+      appLogger.warn('[StepStateSource] Invalid step:', { data: [step, '- must be >= 1'] });
       return;
     }
 
@@ -47,11 +47,11 @@ class StepStateSourceImpl implements StepStateSource {
     this._currentStep = step;
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('[StepStateSource] Step changed:', {
-        from: prevStep,
-        to: step,
-        listeners: this.listeners.size,
-      });
+      appLogger.info('[StepStateSource] Step changed:', { data: [{
+                from: prevStep,
+                to: step,
+                listeners: this.listeners.size,
+              }] });
     }
 
     // Notify all subscribers
@@ -59,7 +59,7 @@ class StepStateSourceImpl implements StepStateSource {
       try {
         listener(step);
       } catch (error) {
-        console.error('[StepStateSource] Listener error:', error);
+        appLogger.error('[StepStateSource] Listener error:', { data: [error] });
       }
     });
   }
@@ -68,7 +68,7 @@ class StepStateSourceImpl implements StepStateSource {
     this.listeners.add(listener);
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('[StepStateSource] Subscriber added. Total:', this.listeners.size);
+      appLogger.info('[StepStateSource] Subscriber added. Total:', { data: [this.listeners.size] });
     }
 
     // Return unsubscribe function
@@ -76,7 +76,7 @@ class StepStateSourceImpl implements StepStateSource {
       this.listeners.delete(listener);
       
       if (process.env.NODE_ENV === 'development') {
-        console.log('[StepStateSource] Subscriber removed. Total:', this.listeners.size);
+        appLogger.info('[StepStateSource] Subscriber removed. Total:', { data: [this.listeners.size] });
       }
     };
   }
@@ -85,7 +85,7 @@ class StepStateSourceImpl implements StepStateSource {
     this.listeners.clear();
     
     if (process.env.NODE_ENV === 'development') {
-      console.log('[StepStateSource] All subscribers cleared');
+      appLogger.info('[StepStateSource] All subscribers cleared');
     }
   }
 
@@ -131,6 +131,7 @@ export function resetGlobalStepStateSource(): void {
 // ============================================================================
 
 import { useState, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export function useStepStateSource(source: StepStateSource) {
   const [currentStep, setCurrentStep] = useState(source.currentStep);

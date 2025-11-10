@@ -1,6 +1,7 @@
 import type { Block } from '@/types/editor';
 import { TemplateManager } from '@/lib/utils/TemplateManager';
 import { useCallback, useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseJsonTemplateOptions {
   preload?: boolean;
@@ -43,20 +44,20 @@ export const useJsonTemplate = (
       setCurrentStepId(stepId);
 
       try {
-        console.log(`🔄 useJsonTemplate: Carregando ${stepId}...`);
+        appLogger.info(`🔄 useJsonTemplate: Carregando ${stepId}...`);
         const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
 
         setBlocks(stepBlocks);
         onLoad?.(stepId, stepBlocks);
 
-        console.log(`✅ useJsonTemplate: ${stepId} carregado com ${stepBlocks.length} blocos`);
+        appLogger.info(`✅ useJsonTemplate: ${stepId} carregado com ${stepBlocks.length} blocos`);
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
         setBlocks(fallback);
         onError?.(stepId, error);
 
-        console.error(`❌ useJsonTemplate: Erro ao carregar ${stepId}:`, error);
+        appLogger.error(`❌ useJsonTemplate: Erro ao carregar ${stepId}:`, { data: [error] });
       } finally {
         setLoading(false);
       }
@@ -84,7 +85,7 @@ export const useJsonTemplate = (
     // Pre-carregamento opcional
     if (preload) {
       TemplateManager.preloadCommonTemplates().catch(err => {
-        console.warn('⚠️ Falha no pre-carregamento:', err);
+        appLogger.warn('⚠️ Falha no pre-carregamento:', { data: [err] });
       });
     }
   }, [initialStepId, preload, loadStep]);
@@ -132,7 +133,7 @@ export const useMultiJsonTemplate = (stepIds: string[]) => {
     setErrors(errors);
     setLoading(false);
 
-    console.log('📊 useMultiJsonTemplate: Carregados', Object.keys(results).length, 'templates');
+    appLogger.info('📊 useMultiJsonTemplate: Carregados', { data: [Object.keys(results).length, 'templates'] });
   }, [stepIds]);
 
   useEffect(() => {

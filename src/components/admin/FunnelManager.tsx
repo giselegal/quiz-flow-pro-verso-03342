@@ -20,6 +20,7 @@ import {
     Settings,
     Info,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FunnelInfo {
     id: string;
@@ -66,7 +67,7 @@ const FunnelManager: React.FC = () => {
                         stepConfigurations: Object.keys(funnel.stepConfigurations || {}).length,
                     });
                 } catch (error) {
-                    console.error('Erro ao parsear funil:', error);
+                    appLogger.error('Erro ao parsear funil:', { data: [error] });
                     setFunnelInfo(null);
                 }
             } else {
@@ -78,7 +79,7 @@ const FunnelManager: React.FC = () => {
             setLastCleanup(cleanup);
 
         } catch (error) {
-            console.error('Erro na verificação:', error);
+            appLogger.error('Erro na verificação:', { data: [error] });
         }
     };
 
@@ -185,7 +186,7 @@ const FunnelManager: React.FC = () => {
             checkFunnelStatus();
 
         } catch (error) {
-            console.error('Erro na limpeza:', error);
+            appLogger.error('Erro na limpeza:', { data: [error] });
         } finally {
             setIsLoading(false);
             setProgress(0);

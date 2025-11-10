@@ -5,6 +5,7 @@
 
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface DiagnosticResults {
   timestamp: string;
@@ -38,7 +39,7 @@ export function run21StepDiagnostic(): DiagnosticResults {
   const timestamp = new Date().toISOString();
   const issues: string[] = [];
 
-  console.log('🔍 Starting 21-Step Editor Funnel Diagnostic...', { timestamp });
+  appLogger.info('🔍 Starting 21-Step Editor Funnel Diagnostic...', { data: [{ timestamp }] });
 
   // Investigation 1: Context Loading
   const contextLoading = investigateContextLoading();
@@ -100,11 +101,11 @@ export function run21StepDiagnostic(): DiagnosticResults {
     },
   };
 
-  console.log('🎯 21-Step Editor Diagnostic Complete:', {
-    overallStatus,
-    issuesCount: issues.length,
-    issues: issues.slice(0, 5), // Limit console output
-  });
+  appLogger.info('🎯 21-Step Editor Diagnostic Complete:', { data: [{
+        overallStatus,
+        issuesCount: issues.length,
+        issues: issues.slice(0, 5), // Limit console output
+      }] });
 
   // Store results for browser debugging
   if (typeof window !== 'undefined') {

@@ -21,6 +21,7 @@ import { appLogger } from '@/lib/utils/logger';
 import { useEditorStore } from '@/contexts/store/editorStore';
 import { useEditorConsolidated } from '@/hooks/useEditorConsolidated';
 import type { EditorStep } from '@/contexts/store/editorStore';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES - Mantém API antiga para compatibilidade
@@ -107,7 +108,7 @@ export const EditorProviderAdapter: React.FC<EditorProviderCanonicalProps> = ({
   useEffect(() => {
     // Aviso de depreciação conforme auditoria
     try {
-      console.warn('[DEPRECATED] EditorProviderAdapter: use EditorProviderCanonical/EditorProviderUnified em novos códigos.');
+      appLogger.warn('[DEPRECATED] EditorProviderAdapter: use EditorProviderCanonical/EditorProviderUnified em novos códigos.');
     } catch { }
   }, []);
   const editor = useEditorConsolidated();

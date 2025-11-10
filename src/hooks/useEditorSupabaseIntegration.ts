@@ -2,6 +2,7 @@ import { useEditorSupabase } from '@/hooks/useEditorSupabase';
 import { Block } from '@/types/editor';
 import { groupSupabaseComponentsByStep, mapBlockToSupabaseComponent } from '@/lib/utils/supabaseMapper';
 import { useCallback, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Hook personalizado para integrar EditorProvider com Supabase
@@ -18,7 +19,7 @@ export const useEditorSupabaseIntegration = (
   // Carregar componentes do Supabase na inicialização
   const loadSupabaseComponents = useCallback(async () => {
     if (!editorSupabase || (!funnelId && !quizId)) {
-      console.log('⚠️ Supabase not configured, skipping component load');
+      appLogger.info('⚠️ Supabase not configured, skipping component load');
       return;
     }
 
@@ -40,19 +41,16 @@ export const useEditorSupabaseIntegration = (
           isLoading: false,
         });
 
-        console.log(
-          '✅ EditorProvider: populated stepBlocks from Supabase, steps:',
-          Object.keys(groupedBlocks).length,
-        );
+        appLogger.info('✅ EditorProvider: populated stepBlocks from Supabase, steps:', { data: [Object.keys(groupedBlocks).length] });
       } else {
         setState({
           ...rawState,
           isLoading: false,
         });
-        console.log('ℹ️ No components found in Supabase for this funnel/quiz');
+        appLogger.info('ℹ️ No components found in Supabase for this funnel/quiz');
       }
     } catch (error) {
-      console.error('❌ Error loading Supabase components:', error);
+      appLogger.error('❌ Error loading Supabase components:', { data: [error] });
       setState({
         ...rawState,
         isLoading: false,
@@ -63,7 +61,7 @@ export const useEditorSupabaseIntegration = (
   // Carregar automaticamente quando editorSupabase estiver pronto
   useEffect(() => {
     if (editorSupabase && (funnelId || quizId)) {
-      console.log('🔄 Loading components from Supabase...');
+      appLogger.info('🔄 Loading components from Supabase...');
       loadSupabaseComponents();
     }
   }, [editorSupabase, funnelId, quizId, loadSupabaseComponents]);
@@ -72,7 +70,7 @@ export const useEditorSupabaseIntegration = (
   const addBlockToStep = useCallback(
     async (stepKey: string, blockData: Block): Promise<void> => {
       if (!editorSupabase) {
-        console.warn('⚠️ Supabase not available, falling back to local mode');
+        appLogger.warn('⚠️ Supabase not available, falling back to local mode');
         setState({
           ...rawState,
           stepBlocks: {
@@ -121,12 +119,12 @@ export const useEditorSupabaseIntegration = (
             },
             isLoading: false,
           });
-          console.log('✅ Block synced with Supabase:', created.id);
+          appLogger.info('✅ Block synced with Supabase:', { data: [created.id] });
         } else {
           throw new Error('Supabase addComponent returned null');
         }
       } catch (err) {
-        console.error('❌ Erro ao salvar block no Supabase, rollback optimistic update', err);
+        appLogger.error('❌ Erro ao salvar block no Supabase, rollback optimistic update', { data: [err] });
 
         // 4. Rollback - remover bloco temporário
         const currentBlocks = rawState.stepBlocks[stepKey] || [];

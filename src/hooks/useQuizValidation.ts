@@ -5,6 +5,7 @@
  */
 
 import { useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizValidationResult {
   isValid: boolean;
@@ -20,7 +21,7 @@ export interface QuizValidationOptions {
 
 export const useQuizValidation = (options: QuizValidationOptions = {}) => {
   const validate = useCallback((_data: any): QuizValidationResult => {
-    console.log('🔍 Quiz validation executed with options:', options);
+    appLogger.info('🔍 Quiz validation executed with options:', { data: [options] });
     
     // Placeholder validation logic
     return {
@@ -31,7 +32,7 @@ export const useQuizValidation = (options: QuizValidationOptions = {}) => {
   }, [options]);
 
   const validateStep = useCallback((stepData: any): QuizValidationResult => {
-    console.log('🔍 Step validation executed:', stepData);
+    appLogger.info('🔍 Step validation executed:', { data: [stepData] });
     
     return {
       isValid: true,

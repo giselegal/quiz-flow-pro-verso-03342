@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface DeprecationOptions {
   /** Nome do item deprecated */
@@ -64,7 +65,7 @@ export const deprecationWarning = (options: DeprecationOptions): void => {
       parts.push(`📖 Guia: ${migrationGuide}`);
     }
 
-    console.warn(parts.join('\n   '));
+    appLogger.warn(String(parts.join('\n   ')));
 
     if (once) {
       warnedItems.add(name);
@@ -128,9 +129,7 @@ export const initDeprecationTracking = (): void => {
     // Expor stats no console para debug
     (window as any).getDeprecationStats = getDeprecationStats;
     
-    console.log(
-      '📊 Deprecation tracking ativo. Use window.getDeprecationStats() para ver uso.',
-    );
+    appLogger.info('📊 Deprecation tracking ativo. Use window.getDeprecationStats() para ver uso.');
   }
 };
 

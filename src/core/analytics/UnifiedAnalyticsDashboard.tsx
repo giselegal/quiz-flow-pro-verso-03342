@@ -34,6 +34,7 @@ import {
     Sparkles,
     Layers,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===============================
 // 🎯 UNIFIED ANALYTICS TYPES
@@ -499,10 +500,10 @@ export const UnifiedAnalyticsDashboard: React.FC = () => {
             // Mock AI insight generation
             await new Promise(resolve => setTimeout(resolve, 1000));
             
-            console.log('AI Insights generated (mock):', { metrics });
+            appLogger.info('AI Insights generated (mock):', { data: [{ metrics }] });
             setIsProcessing(false);
         } catch (error) {
-            console.error('Failed to generate AI insights:', error);
+            appLogger.error('Failed to generate AI insights:', { data: [error] });
             setIsProcessing(false);
         }
     }, [metrics]);

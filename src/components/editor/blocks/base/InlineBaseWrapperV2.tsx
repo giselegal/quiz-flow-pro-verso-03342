@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { Edit3, Eye, Move, Copy, Trash2, MoreHorizontal } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';

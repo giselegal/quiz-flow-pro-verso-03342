@@ -8,6 +8,7 @@
 import { UnifiedDataService, UnifiedFunnel } from './UnifiedDataService';
 import { toast } from '@/hooks/use-toast';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -83,7 +84,7 @@ class EditorDashboardSyncServiceImpl {
      */
     async syncFunnelSave(funnelId: string, funnelData: Partial<UnifiedFunnel>): Promise<boolean> {
         try {
-            console.log(`🔄 EditorDashboardSync: Sincronizando salvamento do funil ${funnelId}...`);
+            appLogger.info(`🔄 EditorDashboardSync: Sincronizando salvamento do funil ${funnelId}...`);
 
             // 1. Salvar no UnifiedDataService
             const savedFunnel = await UnifiedDataService.saveFunnel(funnelData);
@@ -109,11 +110,11 @@ class EditorDashboardSyncServiceImpl {
                 autoHide: true,
             });
 
-            console.log(`✅ Funil ${funnelId} sincronizado com sucesso`);
+            appLogger.info(`✅ Funil ${funnelId} sincronizado com sucesso`);
             return true;
 
         } catch (error) {
-            console.error(`❌ Erro ao sincronizar salvamento do funil ${funnelId}:`, error);
+            appLogger.error(`❌ Erro ao sincronizar salvamento do funil ${funnelId}:`, { data: [error] });
 
             this.showNotification({
                 type: 'error',
@@ -130,7 +131,7 @@ class EditorDashboardSyncServiceImpl {
      */
     async syncFunnelPublish(funnelId: string, funnelData: Partial<UnifiedFunnel>): Promise<boolean> {
         try {
-            console.log(`🚀 EditorDashboardSync: Sincronizando publicação do funil ${funnelId}...`);
+            appLogger.info(`🚀 EditorDashboardSync: Sincronizando publicação do funil ${funnelId}...`);
 
             // 1. Marcar como publicado
             const publishedData = {
@@ -173,11 +174,11 @@ class EditorDashboardSyncServiceImpl {
                 variant: 'default',
             });
 
-            console.log(`✅ Funil ${funnelId} publicado e sincronizado`);
+            appLogger.info(`✅ Funil ${funnelId} publicado e sincronizado`);
             return true;
 
         } catch (error) {
-            console.error(`❌ Erro ao sincronizar publicação do funil ${funnelId}:`, error);
+            appLogger.error(`❌ Erro ao sincronizar publicação do funil ${funnelId}:`, { data: [error] });
 
             this.showNotification({
                 type: 'error',
@@ -194,7 +195,7 @@ class EditorDashboardSyncServiceImpl {
      */
     async syncFunnelCreate(funnelData: Partial<UnifiedFunnel>): Promise<UnifiedFunnel | null> {
         try {
-            console.log('🆕 EditorDashboardSync: Sincronizando criação de novo funil...');
+            appLogger.info('🆕 EditorDashboardSync: Sincronizando criação de novo funil...');
 
             // 1. Criar funil no UnifiedDataService
             const newFunnel = await UnifiedDataService.saveFunnel({
@@ -225,11 +226,11 @@ class EditorDashboardSyncServiceImpl {
                 autoHide: true,
             });
 
-            console.log(`✅ Novo funil ${newFunnel.id} criado e sincronizado`);
+            appLogger.info(`✅ Novo funil ${newFunnel.id} criado e sincronizado`);
             return newFunnel;
 
         } catch (error) {
-            console.error('❌ Erro ao sincronizar criação de funil:', error);
+            appLogger.error('❌ Erro ao sincronizar criação de funil:', { data: [error] });
 
             this.showNotification({
                 type: 'error',
@@ -246,7 +247,7 @@ class EditorDashboardSyncServiceImpl {
      */
     async syncFunnelDelete(funnelId: string): Promise<boolean> {
         try {
-            console.log(`🗑️ EditorDashboardSync: Sincronizando deleção do funil ${funnelId}...`);
+            appLogger.info(`🗑️ EditorDashboardSync: Sincronizando deleção do funil ${funnelId}...`);
 
             // 1. Deletar do UnifiedDataService
             const success = await UnifiedDataService.deleteFunnel(funnelId);
@@ -275,11 +276,11 @@ class EditorDashboardSyncServiceImpl {
                 autoHide: true,
             });
 
-            console.log(`✅ Funil ${funnelId} deletado e sincronizado`);
+            appLogger.info(`✅ Funil ${funnelId} deletado e sincronizado`);
             return true;
 
         } catch (error) {
-            console.error(`❌ Erro ao sincronizar deleção do funil ${funnelId}:`, error);
+            appLogger.error(`❌ Erro ao sincronizar deleção do funil ${funnelId}:`, { data: [error] });
 
             this.showNotification({
                 type: 'error',
@@ -300,7 +301,7 @@ class EditorDashboardSyncServiceImpl {
      */
     async refreshDashboardData(): Promise<void> {
         try {
-            console.log('🔄 EditorDashboardSync: Atualizando dados do dashboard...');
+            appLogger.info('🔄 EditorDashboardSync: Atualizando dados do dashboard...');
 
             // Limpar cache e recarregar dados essenciais
             UnifiedDataService.clearAllCache();
@@ -316,10 +317,10 @@ class EditorDashboardSyncServiceImpl {
                 autoHide: true,
             });
 
-            console.log('✅ Dashboard atualizado');
+            appLogger.info('✅ Dashboard atualizado');
 
         } catch (error) {
-            console.error('❌ Erro ao atualizar dashboard:', error);
+            appLogger.error('❌ Erro ao atualizar dashboard:', { data: [error] });
         }
     }
 
@@ -332,7 +333,7 @@ class EditorDashboardSyncServiceImpl {
             const localChanges = this.getUnsyncedChanges();
 
             if (localChanges.length > 0) {
-                console.log(`🔄 EditorDashboardSync: ${localChanges.length} mudanças pendentes encontradas`);
+                appLogger.info(`🔄 EditorDashboardSync: ${localChanges.length} mudanças pendentes encontradas`);
 
                 for (const change of localChanges) {
                     await this.processPendingChange(change);
@@ -340,7 +341,7 @@ class EditorDashboardSyncServiceImpl {
             }
 
         } catch (error) {
-            console.error('❌ Erro no auto-sync:', error);
+            appLogger.error('❌ Erro no auto-sync:', { data: [error] });
         }
     }
 
@@ -395,7 +396,7 @@ class EditorDashboardSyncServiceImpl {
             try {
                 callback(event);
             } catch (error) {
-                console.error('❌ Erro em callback de sincronização:', error);
+                appLogger.error('❌ Erro em callback de sincronização:', { data: [error] });
             }
         });
     }
@@ -411,7 +412,7 @@ class EditorDashboardSyncServiceImpl {
             try {
                 callback(fullNotification);
             } catch (error) {
-                console.error('❌ Erro em callback de notificação:', error);
+                appLogger.error('❌ Erro em callback de notificação:', { data: [error] });
             }
         });
     }
@@ -428,7 +429,7 @@ class EditorDashboardSyncServiceImpl {
 
     private async processPendingChange(change: any): Promise<void> {
         // Implementação para processar mudanças pendentes
-        console.log('🔄 Processando mudança pendente:', change);
+        appLogger.info('🔄 Processando mudança pendente:', { data: [change] });
     }
 
     // ========================================================================
@@ -439,7 +440,7 @@ class EditorDashboardSyncServiceImpl {
      * Conecta o editor ao sistema de sincronização
      */
     connectEditor(editorInstance: any): () => void {
-        console.log('🔗 EditorDashboardSync: Editor conectado ao sistema de sincronização');
+        appLogger.info('🔗 EditorDashboardSync: Editor conectado ao sistema de sincronização');
 
         // Configurar auto-sync a cada 30 segundos
         const autoSyncInterval = setInterval(() => {
@@ -467,7 +468,7 @@ class EditorDashboardSyncServiceImpl {
             if (typeof document !== 'undefined' && typeof document.removeEventListener === 'function') {
                 document.removeEventListener('visibilitychange', visibilityHandler);
             }
-            console.log('🔌 EditorDashboardSync: Editor desconectado');
+            appLogger.info('🔌 EditorDashboardSync: Editor desconectado');
         };
     }
 
@@ -475,11 +476,11 @@ class EditorDashboardSyncServiceImpl {
      * Conecta o dashboard ao sistema de sincronização
      */
     connectDashboard(dashboardInstance: any): () => void {
-        console.log('🔗 EditorDashboardSync: Dashboard conectado ao sistema de sincronização');
+        appLogger.info('🔗 EditorDashboardSync: Dashboard conectado ao sistema de sincronização');
 
         // Escutar eventos de sincronização para atualizar dashboard
         const unsubscribe = this.onSync((event) => {
-            console.log(`📡 Dashboard: Recebido evento de sincronização ${event.type} para funil ${event.funnelId}`);
+            appLogger.info(`📡 Dashboard: Recebido evento de sincronização ${event.type} para funil ${event.funnelId}`);
 
             // Atualizar dados do dashboard se necessário
             if (dashboardInstance && typeof dashboardInstance.refresh === 'function') {

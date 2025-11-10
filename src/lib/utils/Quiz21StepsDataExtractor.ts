@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔄 QUIZ 21 STEPS DATA EXTRACTOR - FIXED VERSION
  * 
@@ -62,7 +63,7 @@ export class Quiz21StepsDataExtractor {
         config: config || {},
       };
     } catch (error) {
-      console.error('❌ Erro ao extrair dados do template:', error);
+      appLogger.error('❌ Erro ao extrair dados do template:', { data: [error] });
       
       // Fallback seguro
       return {

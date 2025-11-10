@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔄 REDIRECT: TemplatesCacheService → UnifiedCacheService
  * 
@@ -8,5 +9,5 @@ export { unifiedCacheService as unifiedCacheService } from '@/services/unified/U
 export type { CacheConfig, CacheStats } from '@/services/unified/UnifiedCacheService';
 
 if (typeof window !== 'undefined') {
-  console.warn('[DEPRECATED] TemplatesCacheService → use @/services/unified/UnifiedCacheService');
+  appLogger.warn('[DEPRECATED] TemplatesCacheService → use @/services/unified/UnifiedCacheService');
 }

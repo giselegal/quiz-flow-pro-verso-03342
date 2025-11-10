@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { nanoid } from 'nanoid';
 import { Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export default function CreateEditableFunnel() {
   const [name, setName] = useState('Meu Quiz de Estilo');
@@ -33,7 +34,7 @@ export default function CreateEditableFunnel() {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
     } catch (error) {
-      console.error('Erro ao verificar autenticação:', error);
+      appLogger.error('Erro ao verificar autenticação:', { data: [error] });
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +76,7 @@ export default function CreateEditableFunnel() {
       }, 1000);
 
     } catch (error: any) {
-      console.error('Erro ao criar funil:', error);
+      appLogger.error('Erro ao criar funil:', { data: [error] });
       
       toast({
         title: "Erro ao criar funil",

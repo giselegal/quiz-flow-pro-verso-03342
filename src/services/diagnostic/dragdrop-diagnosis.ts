@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔍 DIAGNÓSTICO DRAG & DROP - ModularEditorPro
  * 
@@ -45,27 +46,27 @@ export const DRAGDROP_DIAGNOSIS = {
 
 // Função para debug em tempo real
 export const debugDragDrop = () => {
-    console.log('🔍 Iniciando diagnóstico Drag & Drop...');
+    appLogger.info('🔍 Iniciando diagnóstico Drag & Drop...');
 
     // Verificar contextos DnD ativos
     const dndContexts = document.querySelectorAll('[data-dnd-context]');
-    console.log(`📊 Contextos DnD encontrados: ${dndContexts.length}`);
+    appLogger.info(`📊 Contextos DnD encontrados: ${dndContexts.length}`);
 
     // Verificar elementos draggable
     const draggableElements = document.querySelectorAll('[draggable="true"], [data-dnd-draggable]');
-    console.log(`🎯 Elementos draggable: ${draggableElements.length}`);
+    appLogger.info(`🎯 Elementos draggable: ${draggableElements.length}`);
 
     // Verificar áreas droppable
     const droppableElements = document.querySelectorAll('[data-dnd-dropzone]');
-    console.log(`📥 Áreas droppable: ${droppableElements.length}`);
+    appLogger.info(`📥 Áreas droppable: ${droppableElements.length}`);
 
     // Verificar elementos com overflow-hidden
     const hiddenOverflows = document.querySelectorAll('.overflow-hidden');
-    console.log(`🚫 Elementos com overflow-hidden: ${hiddenOverflows.length}`);
+    appLogger.info(`🚫 Elementos com overflow-hidden: ${hiddenOverflows.length}`);
 
     // Verificar pointer-events
     const noPointerEvents = document.querySelectorAll('.pointer-events-none, [style*="pointer-events: none"]');
-    console.log(`🚫 Elementos com pointer-events-none: ${noPointerEvents.length}`);
+    appLogger.info(`🚫 Elementos com pointer-events-none: ${noPointerEvents.length}`);
 
     return {
         dndContexts: dndContexts.length,

@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 📊 STRUCTURED LOGGER - PHASE 3: OBSERVABILITY
  * Sistema de logging estruturado com níveis e contexto
@@ -108,7 +109,7 @@ class StructuredLogger {
     const entry = this.createLogEntry(LogLevel.DEBUG, message, context);
     
     if (this.config.enableConsole) {
-      console.debug(`🔍 ${message}`, context);
+      appLogger.debug(`🔍 ${message}`, { data: [context] });
     }
     
     this.addToBuffer(entry);
@@ -120,7 +121,7 @@ class StructuredLogger {
     const entry = this.createLogEntry(LogLevel.INFO, message, context);
     
     if (this.config.enableConsole) {
-      console.info(`ℹ️ ${message}`, context);
+      appLogger.info(`ℹ️ ${message}`, { data: [context] });
     }
     
     this.addToBuffer(entry);
@@ -132,7 +133,7 @@ class StructuredLogger {
     const entry = this.createLogEntry(LogLevel.WARN, message, context);
     
     if (this.config.enableConsole) {
-      console.warn(`⚠️ ${message}`, context);
+      appLogger.warn(`⚠️ ${message}`, { data: [context] });
     }
     
     this.addToBuffer(entry);
@@ -144,7 +145,7 @@ class StructuredLogger {
     const entry = this.createLogEntry(LogLevel.ERROR, message, context);
     
     if (this.config.enableConsole) {
-      console.error(`❌ ${message}`, context);
+      appLogger.error(`❌ ${message}`, { data: [context] });
     }
     
     this.addToBuffer(entry);
@@ -154,7 +155,7 @@ class StructuredLogger {
     const entry = this.createLogEntry(LogLevel.CRITICAL, message, context);
     
     if (this.config.enableConsole) {
-      console.error(`🚨 CRITICAL: ${message}`, context);
+      appLogger.error(`🚨 CRITICAL: ${message}`, { data: [context] });
     }
     
     this.addToBuffer(entry);
@@ -175,9 +176,9 @@ class StructuredLogger {
         await this.sendToRemote(entries, immediate);
       } catch (error) {
         // Fallback to console if remote fails
-        console.warn('Failed to send logs to remote service:', error);
+        appLogger.warn('Failed to send logs to remote service:', { data: [error] });
         entries.forEach(entry => {
-          console.log('Buffered log:', entry);
+          appLogger.info('Buffered log:', { data: [entry] });
         });
       }
     }

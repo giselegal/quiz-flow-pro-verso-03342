@@ -8,6 +8,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Link } from 'wouter';
 import { BarChartHorizontal } from 'lucide-react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const AnalyticsTab: React.FC = () => {
   const [pixelId, setPixelId] = useState(() => {
@@ -17,7 +18,7 @@ export const AnalyticsTab: React.FC = () => {
       const match = scriptContent.match(/fbq\('init', ['"]([^'"]+)['"]\)/);
       return match?.[1] || '123456789012345';
     } catch (error) {
-      console.error('Error extracting Pixel ID:', error);
+      appLogger.error('Error extracting Pixel ID:', { data: [error] });
       return '123456789012345';
     }
   });

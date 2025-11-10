@@ -24,6 +24,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Funis do usuário - em uso ativo, editados e publicados
 const meusFunis = [
@@ -225,13 +226,13 @@ const MeusFunisPage: React.FC = () => {
     });
 
     const handleEditFunil = (funilId: string) => {
-        console.log(`Editando funil: ${funilId}`);
+        appLogger.info(`Editando funil: ${funilId}`);
         // Redirecionar para o editor com o funil carregado
         window.location.href = `/editor/${funilId}`;
     };
 
     const handleDuplicateFunil = (funilId: string) => {
-        console.log(`Duplicando funil: ${funilId}`);
+        appLogger.info(`Duplicando funil: ${funilId}`);
         // Criar uma cópia do funil
         const funilOriginal = funisData.find(f => f.id === funilId);
         if (funilOriginal) {
@@ -247,7 +248,7 @@ const MeusFunisPage: React.FC = () => {
     };
 
     const handleDeleteFunil = (funilId: string) => {
-        console.log(`Excluindo funil: ${funilId}`);
+        appLogger.info(`Excluindo funil: ${funilId}`);
         if (confirm('Tem certeza que deseja excluir este funil?')) {
             setFunisData(prev => prev.filter(f => f.id !== funilId));
             notify('Funil excluído com sucesso!', 'success', 'Excluído');
@@ -255,7 +256,7 @@ const MeusFunisPage: React.FC = () => {
     };
 
     const handleToggleStatus = (funilId: string, currentStatus: string) => {
-        console.log(`Alterando status do funil ${funilId} de ${currentStatus}`);
+        appLogger.info(`Alterando status do funil ${funilId} de ${currentStatus}`);
         const newStatus = currentStatus === 'active' ? 'paused' : 'active';
         setFunisData(prev =>
             prev.map(f =>

@@ -12,6 +12,7 @@
 
 import { useEffect, useRef } from 'react';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UseStepPrefetchOptions {
   /** Step atual (formato: 'step-01') */
@@ -81,16 +82,16 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
     if (prefetchedRef.current.has(stepId)) return; // Já prefetchado
 
     try {
-      console.log(`🚀 [G20] Prefetching ${stepId}...`);
+      appLogger.info(`🚀 [G20] Prefetching ${stepId}...`);
 
       // 🆕 G20: Usar HierarchicalTemplateSource (SSOT)
       await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
 
       prefetchedRef.current.add(stepId);
-      console.log(`✅ [G20] ${stepId} prefetched e em cache`);
+      appLogger.info(`✅ [G20] ${stepId} prefetched e em cache`);
     } catch (error) {
       // Ignorar erros de prefetch (não afetar UX)
-      console.debug(`⚠️ [G20] Erro ao prefetch ${stepId}:`, error);
+      appLogger.debug(`⚠️ [G20] Erro ao prefetch ${stepId}:`, { data: [error] });
     }
   };
 
@@ -133,7 +134,7 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
     // 🆕 G28: Cancelar prefetch anterior
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
-      console.log('🚫 [G28] Prefetch anterior cancelado');
+      appLogger.info('🚫 [G28] Prefetch anterior cancelado');
     }
 
     // Criar novo AbortController

@@ -71,6 +71,7 @@ import {
 
 // Import dos hooks básicos
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===============================
 // 🎯 EDITOR TYPES & INTERFACES
@@ -867,7 +868,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
     };
 
     const handleAIOptimize = async () => {
-        console.log('AI optimization requested');
+        appLogger.info('AI optimization requested');
     };
 
     return (
@@ -1008,7 +1009,7 @@ export const UniversalVisualEditor: React.FC = () => {
 
     // Carregar schemas uma única vez
     useEffect(() => {
-        console.log('[UniversalVisualEditor] Inicializando schemas...');
+        appLogger.info('[UniversalVisualEditor] Inicializando schemas...');
         loadDefaultSchemas();
         
         const components = loadComponentsFromRegistry();
@@ -1018,7 +1019,7 @@ export const UniversalVisualEditor: React.FC = () => {
         setDynamicCategories(categories);
         setSchemasLoaded(true);
         
-        console.log(`[UniversalVisualEditor] ✅ ${components.length} componentes carregados`);
+        appLogger.info(`[UniversalVisualEditor] ✅ ${components.length} componentes carregados`);
     }, []);
 
     // Editor State
@@ -1102,9 +1103,9 @@ export const UniversalVisualEditor: React.FC = () => {
                 position,
             });
             
-            console.log('[Editor] Elemento criado do schema:', newElement.type);
+            appLogger.info('[Editor] Elemento criado do schema:', { data: [newElement.type] });
         } catch (error) {
-            console.error('[Editor] Erro ao criar elemento do schema:', error);
+            appLogger.error('[Editor] Erro ao criar elemento do schema:', { data: [error] });
             // Fallback para método anterior
             const newElement: EditorElement = {
                 id: `element-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

@@ -39,7 +39,7 @@ interface LegacyLoadingState {
  * Legacy adapter for useLoadingState
  */
 export const useLoadingState = (options: LoadingStateOptions = {}): LegacyLoadingState => {
-    console.warn('🚨 useLoadingState is deprecated. Use masterLoadingService.createComponentManager() instead.');
+    appLogger.warn('🚨 useLoadingState is deprecated. Use masterLoadingService.createComponentManager() instead.');
 
     const componentId = useRef(`loading-${Date.now()}-${Math.random()}`).current;
     const [state, setState] = useState<UnifiedLoadingState>({
@@ -128,7 +128,7 @@ interface GlobalLoadingHookReturn {
  * Legacy adapter for useGlobalLoading
  */
 export const useGlobalLoading = (): GlobalLoadingHookReturn => {
-    console.warn('🚨 useGlobalLoading is deprecated. Use masterLoadingService directly instead.');
+    appLogger.warn('🚨 useGlobalLoading is deprecated. Use masterLoadingService directly instead.');
 
     const [state, setState] = useState<GlobalLoadingState>({
         isLoading: false,
@@ -202,7 +202,7 @@ export const useFunnelLoadingState = (
     initialFunnelId?: string,
     userId?: string,
 ): FunnelLoadingState => {
-    console.warn('🚨 useFunnelLoadingState is deprecated. Use masterLoadingService.createComponentManager() instead.');
+    appLogger.warn('🚨 useFunnelLoadingState is deprecated. Use masterLoadingService.createComponentManager() instead.');
 
     const componentId = useRef(`funnel-${Date.now()}-${Math.random()}`).current;
     const [state, setState] = useState<{
@@ -349,7 +349,7 @@ export const useFunnelLoadingState = (
     }, [manager]);
 
     const clearCache = useCallback(() => {
-        console.warn('🚨 clearCache is deprecated. Use masterLoadingService.clearAllStates() instead.');
+        appLogger.warn('🚨 clearCache is deprecated. Use masterLoadingService.clearAllStates() instead.');
         masterLoadingService.clearAllStates();
     }, []);
 
@@ -380,13 +380,14 @@ export const useFunnelLoadingState = (
 // =============================================
 
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * @deprecated Use MasterLoadingProvider instead
  * Legacy GlobalLoadingProvider for backward compatibility
  */
 export const GlobalLoadingProvider = ({ children }: { children: React.ReactNode }) => {
-    console.warn('🚨 GlobalLoadingProvider is deprecated. Use MasterLoadingProvider instead.');
+    appLogger.warn('🚨 GlobalLoadingProvider is deprecated. Use MasterLoadingProvider instead.');
 
     // Just render children, the MasterLoadingService works globally
     return React.createElement(React.Fragment, null, children);
@@ -447,7 +448,7 @@ export function checkLegacyLoadingUsage(): {
         }
 
     } catch (error) {
-        console.warn('Error checking legacy loading usage:', error);
+        appLogger.warn('Error checking legacy loading usage:', { data: [error] });
         recommendations.push('Error occurred during legacy usage check');
     }
 
@@ -468,17 +469,17 @@ export async function migrateLegacyLoadingStates(): Promise<{
     const errors: string[] = [];
 
     try {
-        console.log('🔄 Starting loading state migration...');
+        appLogger.info('🔄 Starting loading state migration...');
 
         // Step 1: Check for legacy usage
         const { hasLegacyUsage, recommendations } = checkLegacyLoadingUsage();
 
         if (!hasLegacyUsage) {
-            console.log('✅ No legacy loading states found - migration not needed');
+            appLogger.info('✅ No legacy loading states found - migration not needed');
             return { migrated: 0, errors: [] };
         }
 
-        console.log('📝 Legacy usage detected:', recommendations);
+        appLogger.info('📝 Legacy usage detected:', { data: [recommendations] });
 
         // Step 2: Migrate localStorage-based loading states if any exist
         if (typeof localStorage !== 'undefined') {
@@ -495,7 +496,7 @@ export async function migrateLegacyLoadingStates(): Promise<{
                             const parsedValue = JSON.parse(value);
                             if (parsedValue && typeof parsedValue === 'object') {
                                 // This is a simplified migration - in reality would be more complex
-                                console.log(`🔄 Migrated legacy loading state: ${key}`);
+                                appLogger.info(`🔄 Migrated legacy loading state: ${key}`);
                                 migrated++;
                             }
                         }
@@ -514,7 +515,7 @@ export async function migrateLegacyLoadingStates(): Promise<{
                 const legacyElements = document.querySelectorAll('[data-legacy-loading]');
                 legacyElements.forEach((element, index) => {
                     element.removeAttribute('data-legacy-loading');
-                    console.log(`🧹 Cleaned legacy loading element ${index + 1}`);
+                    appLogger.info(`🧹 Cleaned legacy loading element ${index + 1}`);
                 });
                 migrated += legacyElements.length;
             } catch (domError) {
@@ -522,7 +523,7 @@ export async function migrateLegacyLoadingStates(): Promise<{
             }
         }
 
-        console.log(`✅ Migration completed: ${migrated} items migrated, ${errors.length} errors`);
+        appLogger.info(`✅ Migration completed: ${migrated} items migrated, ${errors.length} errors`);
 
     } catch (error) {
         errors.push(`Migration error: ${error}`);
@@ -531,5 +532,5 @@ export async function migrateLegacyLoadingStates(): Promise<{
     return { migrated, errors };
 }
 
-console.log('🎯 Legacy Loading Adapters loaded - providing 100% backward compatibility');
-console.log('📢 Consider migrating to masterLoadingService for better performance and features');
+appLogger.info('🎯 Legacy Loading Adapters loaded - providing 100% backward compatibility');
+appLogger.info('📢 Consider migrating to masterLoadingService for better performance and features');

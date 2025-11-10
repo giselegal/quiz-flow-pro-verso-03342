@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuizResult } from './useQuizResult';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para dados do usuário
 export interface UserData {
@@ -93,7 +94,7 @@ export const useDynamicData = (): DynamicContextData => {
         setUserData(JSON.parse(savedUserData));
       }
     } catch (error) {
-      console.error('Error loading user data:', error);
+      appLogger.error('Error loading user data:', { data: [error] });
     }
   }, []);
 

@@ -10,6 +10,7 @@
 
 import { useMemo, useCallback, useEffect, useState } from 'react';
 import { useFunnelFacade } from '@/pages/editor/ModernUnifiedEditor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -72,17 +73,17 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
         try {
             const steps = facade.getSteps();
 
-            console.log('🔍 useStepBlocks DEBUG - stepIndex:', stepIndex);
-            console.log('🔍 useStepBlocks DEBUG - Total steps:', steps.length);
+            appLogger.info('🔍 useStepBlocks DEBUG - stepIndex:', { data: [stepIndex] });
+            appLogger.info('🔍 useStepBlocks DEBUG - Total steps:', { data: [steps.length] });
 
             if (stepIndex < 0 || stepIndex >= steps.length) {
-                console.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de steps: ${steps.length}`);
+                appLogger.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de steps: ${steps.length}`);
                 return null;
             }
 
             const funnelStep = steps[stepIndex];
-            console.log('🔍 useStepBlocks DEBUG - Funnel Step:', funnelStep);
-            console.log('🔍 useStepBlocks DEBUG - Blocks:', funnelStep.blocks?.length || 0);
+            appLogger.info('🔍 useStepBlocks DEBUG - Funnel Step:', { data: [funnelStep] });
+            appLogger.info('🔍 useStepBlocks DEBUG - Blocks:', { data: [funnelStep.blocks?.length || 0] });
 
             // Normalizar blocos (garantir que todos têm propriedades necessárias)
             const normalizedBlocks = (funnelStep.blocks || []).map((block, idx) => ({
@@ -93,7 +94,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 properties: block.data || {},
             }));
 
-            console.log('🔍 useStepBlocks DEBUG - Normalized blocks:', normalizedBlocks);
+            appLogger.info('🔍 useStepBlocks DEBUG - Normalized blocks:', { data: [normalizedBlocks] });
 
             return {
                 id: funnelStep.id || `step-${stepIndex + 1}`,
@@ -103,7 +104,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 blocks: normalizedBlocks,
             };
         } catch (err) {
-            console.error('❌ Erro ao derivar step:', err);
+            appLogger.error('❌ Erro ao derivar step:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro desconhecido');
             return null;
         }
@@ -120,7 +121,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
      */
     const updateBlock = useCallback((blockId: string, updates: Partial<BlockData>) => {
         if (!step) {
-            console.warn('⚠️ Step não encontrado para atualizar bloco');
+            appLogger.warn('⚠️ Step não encontrado para atualizar bloco');
             return;
         }
 
@@ -128,7 +129,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(true);
             setError(null);
 
-            console.log(`🔄 Atualizando bloco ${blockId} no step ${step.id}:`, updates);
+            appLogger.info(`🔄 Atualizando bloco ${blockId} no step ${step.id}:`, { data: [updates] });
 
             // Atualizar via Facade
             facade.updateBlock(step.id, blockId, updates);
@@ -136,9 +137,9 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            console.log(`✅ Bloco ${blockId} atualizado com sucesso`);
+            appLogger.info(`✅ Bloco ${blockId} atualizado com sucesso`);
         } catch (err) {
-            console.error('❌ Erro ao atualizar bloco:', err);
+            appLogger.error('❌ Erro ao atualizar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao atualizar bloco');
         } finally {
             setIsLoading(false);
@@ -154,7 +155,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
         content: Record<string, any> = {},
     ) => {
         if (!step) {
-            console.warn('⚠️ Step não encontrado para adicionar bloco');
+            appLogger.warn('⚠️ Step não encontrado para adicionar bloco');
             return;
         }
 
@@ -171,16 +172,16 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 },
             };
 
-            console.log(`➕ Adicionando bloco ao step ${step.id}:`, newBlock);
+            appLogger.info(`➕ Adicionando bloco ao step ${step.id}:`, { data: [newBlock] });
 
             facade.addBlock(step.id, newBlock);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            console.log(`✅ Bloco ${newBlock.id} adicionado com sucesso`);
+            appLogger.info(`✅ Bloco ${newBlock.id} adicionado com sucesso`);
         } catch (err) {
-            console.error('❌ Erro ao adicionar bloco:', err);
+            appLogger.error('❌ Erro ao adicionar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao adicionar bloco');
         } finally {
             setIsLoading(false);
@@ -192,7 +193,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
      */
     const deleteBlock = useCallback((blockId: string) => {
         if (!step) {
-            console.warn('⚠️ Step não encontrado para deletar bloco');
+            appLogger.warn('⚠️ Step não encontrado para deletar bloco');
             return;
         }
 
@@ -200,16 +201,16 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(true);
             setError(null);
 
-            console.log(`🗑️ Deletando bloco ${blockId} do step ${step.id}`);
+            appLogger.info(`🗑️ Deletando bloco ${blockId} do step ${step.id}`);
 
             facade.removeBlock(step.id, blockId);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            console.log(`✅ Bloco ${blockId} deletado com sucesso`);
+            appLogger.info(`✅ Bloco ${blockId} deletado com sucesso`);
         } catch (err) {
-            console.error('❌ Erro ao deletar bloco:', err);
+            appLogger.error('❌ Erro ao deletar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao deletar bloco');
         } finally {
             setIsLoading(false);
@@ -221,7 +222,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
      */
     const duplicateBlock = useCallback((blockId: string) => {
         if (!step) {
-            console.warn('⚠️ Step não encontrado para duplicar bloco');
+            appLogger.warn('⚠️ Step não encontrado para duplicar bloco');
             return;
         }
 
@@ -243,16 +244,16 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 },
             };
 
-            console.log(`📋 Duplicando bloco ${blockId}:`, duplicate);
+            appLogger.info(`📋 Duplicando bloco ${blockId}:`, { data: [duplicate] });
 
             facade.addBlock(step.id, duplicate);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            console.log(`✅ Bloco ${blockId} duplicado com sucesso`);
+            appLogger.info(`✅ Bloco ${blockId} duplicado com sucesso`);
         } catch (err) {
-            console.error('❌ Erro ao duplicar bloco:', err);
+            appLogger.error('❌ Erro ao duplicar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao duplicar bloco');
         } finally {
             setIsLoading(false);
@@ -268,7 +269,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
      */
     const reorderBlocks = useCallback((fromIndex: number, toIndex: number) => {
         if (!step) {
-            console.warn('⚠️ Step não encontrado para reordenar blocos');
+            appLogger.warn('⚠️ Step não encontrado para reordenar blocos');
             return;
         }
 
@@ -278,7 +279,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(true);
             setError(null);
 
-            console.log(`🔄 Reordenando blocos: ${fromIndex} → ${toIndex}`);
+            appLogger.info(`🔄 Reordenando blocos: ${fromIndex} → ${toIndex}`);
 
             const reordered = [...step.blocks];
             const [moved] = reordered.splice(fromIndex, 1);
@@ -291,9 +292,9 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            console.log('✅ Blocos reordenados com sucesso');
+            appLogger.info('✅ Blocos reordenados com sucesso');
         } catch (err) {
-            console.error('❌ Erro ao reordenar blocos:', err);
+            appLogger.error('❌ Erro ao reordenar blocos:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao reordenar blocos');
         } finally {
             setIsLoading(false);
@@ -345,13 +346,13 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
 
         // Escutar mudanças nos blocos
         const unsubscribeBlocks = facade.on('blocks/changed', (payload: any) => {
-            console.log('📡 Evento blocks/changed recebido:', payload);
+            appLogger.info('📡 Evento blocks/changed recebido:', { data: [payload] });
             setUpdateTrigger(prev => prev + 1);
         });
 
         // Escutar mudanças nos steps
         const unsubscribeSteps = facade.on('steps/changed', (payload: any) => {
-            console.log('📡 Evento steps/changed recebido:', payload);
+            appLogger.info('📡 Evento steps/changed recebido:', { data: [payload] });
             setUpdateTrigger(prev => prev + 1);
         });
 

@@ -7,7 +7,7 @@
  * - [ ] Separar responsabilidades (tracking vs logging vs validation)
  */
 
-import { appLogger } from './logger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos mínimos para migração
 interface EventParams {
@@ -78,7 +78,7 @@ export const trackException = (description: string, fatal: boolean = false) => {
       fatal,
     });
   }
-  console.log(`[Analytics] Exception: ${description} - Fatal: ${fatal}`);
+  appLogger.info(`[Analytics] Exception: ${description} - Fatal: ${fatal}`);
 };
 
 // Function to set user properties
@@ -86,7 +86,7 @@ export const setUserProperties = (properties: object) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('set', 'user_properties', properties);
   }
-  console.log('[Analytics] User Properties:', properties);
+  appLogger.info('[Analytics] User Properties:', { data: [properties] });
 };
 
 // Function to track a page view
@@ -99,7 +99,7 @@ export const trackPageView = (pagePath: string, additionalData?: Record<string, 
       ...additionalData,
     });
   }
-  console.log(`[Analytics] Page view: ${pagePath}`, additionalData);
+  appLogger.info(`[Analytics] Page view: ${pagePath}`, { data: [additionalData] });
 };
 
 // Quiz specific tracking functions
@@ -111,7 +111,7 @@ export const trackQuizStart = (userName?: string, userEmail?: string) => {
       user_email: userEmail,
     });
   }
-  console.log('[Analytics] Quiz Start:', { userName, userEmail });
+  appLogger.info('[Analytics] Quiz Start:', { data: [{ userName, userEmail }] });
 };
 
 export const trackQuizAnswer = (questionId: string, answer: string) => {
@@ -122,7 +122,7 @@ export const trackQuizAnswer = (questionId: string, answer: string) => {
       answer,
     });
   }
-  console.log('[Analytics] Quiz Answer:', { questionId, answer });
+  appLogger.info('[Analytics] Quiz Answer:', { data: [{ questionId, answer }] });
 };
 
 export const trackQuizComplete = (result?: any) => {
@@ -132,7 +132,7 @@ export const trackQuizComplete = (result?: any) => {
       result_type: result?.primaryStyle?.category,
     });
   }
-  console.log('[Analytics] Quiz Complete:', { result });
+  appLogger.info('[Analytics] Quiz Complete:', { data: [{ result }] });
 };
 
 export const trackResultView = (resultType: string, data?: any) => {
@@ -143,7 +143,7 @@ export const trackResultView = (resultType: string, data?: any) => {
       ...data,
     });
   }
-  console.log('[Analytics] Result View:', { resultType, data });
+  appLogger.info('[Analytics] Result View:', { data: [{ resultType, data }] });
 };
 
 // Fix getCreativePerformance to accept no arguments and return proper format
@@ -190,7 +190,7 @@ export const trackSocialInteraction = (network: string, action: string, target: 
       social_target: target,
     });
   }
-  console.log(`[Analytics] Social Interaction: ${network} - ${action} - ${target}`);
+  appLogger.info(`[Analytics] Social Interaction: ${network} - ${action} - ${target}`);
 };
 
 // Function to track a refund
@@ -202,7 +202,7 @@ export const trackRefund = (transaction_id: string, value?: number, currency?: s
       currency,
     });
   }
-  console.log(`[Analytics] Refund: ${transaction_id} - ${value} - ${currency}`);
+  appLogger.info(`[Analytics] Refund: ${transaction_id} - ${value} - ${currency}`);
 };
 
 // Function to track a checkout progress
@@ -213,7 +213,7 @@ export const trackCheckoutProgress = (step: number, option?: string) => {
       checkout_option: option,
     });
   }
-  console.log(`[Analytics] Checkout Progress: ${step} - ${option}`);
+  appLogger.info(`[Analytics] Checkout Progress: ${step} - ${option}`);
 };
 
 // Function to track a product impression
@@ -224,7 +224,7 @@ export const trackProductImpression = (products: object[], list_name: string) =>
       item_list_name: list_name,
     });
   }
-  console.log(`[Analytics] Product Impression: ${list_name}`, products);
+  appLogger.info(`[Analytics] Product Impression: ${list_name}`, { data: [products] });
 };
 
 // Function to track a product click
@@ -236,7 +236,7 @@ export const trackProductClick = (product: object, list_name: string) => {
       item_list_name: list_name,
     });
   }
-  console.log(`[Analytics] Product Click: ${list_name}`, product);
+  appLogger.info(`[Analytics] Product Click: ${list_name}`, { data: [product] });
 };
 
 // Function to track a product detail view
@@ -246,7 +246,7 @@ export const trackProductDetailView = (product: object) => {
       items: [product],
     });
   }
-  console.log('[Analytics] Product Detail View', product);
+  appLogger.info('[Analytics] Product Detail View', { data: [product] });
 };
 
 // Function to track adding a product to the cart
@@ -256,7 +256,7 @@ export const trackAddToCart = (product: object) => {
       items: [product],
     });
   }
-  console.log('[Analytics] Add to Cart', product);
+  appLogger.info('[Analytics] Add to Cart', { data: [product] });
 };
 
 // Function to track removing a product from the cart
@@ -266,7 +266,7 @@ export const trackRemoveFromCart = (product: object) => {
       items: [product],
     });
   }
-  console.log('[Analytics] Remove from Cart', product);
+  appLogger.info('[Analytics] Remove from Cart', { data: [product] });
 };
 
 // Function to track starting a checkout process
@@ -277,7 +277,7 @@ export const trackBeginCheckout = (products: object[], coupon?: string) => {
       coupon,
     });
   }
-  console.log('[Analytics] Begin Checkout', products, coupon);
+  appLogger.info('[Analytics] Begin Checkout', { data: [products, coupon] });
 };
 
 // Function to track adding payment information
@@ -287,7 +287,7 @@ export const trackAddPaymentInfo = (payment_type: string) => {
       payment_type,
     });
   }
-  console.log('[Analytics] Add Payment Info', payment_type);
+  appLogger.info('[Analytics] Add Payment Info', { data: [payment_type] });
 };
 
 // Function to track a purchase
@@ -311,16 +311,7 @@ export const trackPurchase = (
       tax,
     });
   }
-  console.log(
-    '[Analytics] Purchase',
-    transaction_id,
-    value,
-    currency,
-    products,
-    coupon,
-    shipping,
-    tax,
-  );
+  appLogger.info('[Analytics] Purchase', { data: [transaction_id, value, currency, products, coupon, shipping, tax] });
 };
 
 export const captureUTMParameters = () => {
@@ -346,7 +337,7 @@ export const captureUTMParameters = () => {
       try {
         localStorage.setItem(key, value);
       } catch (e) {
-        console.warn(`[Analytics] Failed to store ${key} in localStorage`, e);
+        appLogger.warn(`[Analytics] Failed to store ${key} in localStorage`, { data: [e] });
       }
     }
   });
@@ -355,7 +346,7 @@ export const captureUTMParameters = () => {
     window.gtag('set', 'user_properties', utmParams);
   }
 
-  console.log('[Analytics] UTM parameters captured:', utmParams);
+  appLogger.info('[Analytics] UTM parameters captured:', { data: [utmParams] });
   return utmParams;
 };
 
@@ -385,7 +376,7 @@ export const trackButtonClick = (buttonId: string, buttonText?: string, location
     window.fbq('trackCustom', 'ButtonClick', data);
   }
 
-  console.log(`[Analytics] Button click: ${buttonText} (${buttonId})`, data);
+  appLogger.info(`[Analytics] Button click: ${buttonText} (${buttonId})`, { data: [data] });
 };
 
 export const trackSaleConversion = (
@@ -410,7 +401,7 @@ export const trackSaleConversion = (
     window.fbq('track', 'Purchase', data);
   }
 
-  console.log(`[Analytics] Sale conversion: ${value} ${currency}`, data);
+  appLogger.info(`[Analytics] Sale conversion: ${value} ${currency}`, { data: [data] });
 };
 
 // ✨ EVENTOS ESPECÍFICOS PARA FUNIL DE ESTILO
@@ -432,7 +423,7 @@ export const trackStyleQuizStart = (templateType: string = 'style_quiz') => {
     window.fbq('trackCustom', 'StyleQuizStart', data);
   }
 
-  console.log(`[Analytics] Style Quiz Started: ${templateType}`, data);
+  appLogger.info(`[Analytics] Style Quiz Started: ${templateType}`, { data: [data] });
 };
 
 export const trackStyleConsultationStart = (formData?: any) => {
@@ -454,7 +445,7 @@ export const trackStyleConsultationStart = (formData?: any) => {
     window.fbq('trackCustom', 'StyleConsultationStart', data);
   }
 
-  console.log('[Analytics] Style Consultation Started', data);
+  appLogger.info('[Analytics] Style Consultation Started', { data: [data] });
 };
 
 export const trackResultGenerated = (resultType: string, templateType: string) => {
@@ -476,7 +467,7 @@ export const trackResultGenerated = (resultType: string, templateType: string) =
     window.fbq('trackCustom', 'StyleResultGenerated', data);
   }
 
-  console.log(`[Analytics] Result Generated: ${resultType}`, data);
+  appLogger.info(`[Analytics] Result Generated: ${resultType}`, { data: [data] });
 };
 
 export const trackOfferView = (offerType: string = 'style_guide') => {
@@ -497,7 +488,7 @@ export const trackOfferView = (offerType: string = 'style_guide') => {
     window.fbq('trackCustom', 'OfferView', data);
   }
 
-  console.log(`[Analytics] Offer Viewed: ${offerType}`, data);
+  appLogger.info(`[Analytics] Offer Viewed: ${offerType}`, { data: [data] });
 };
 
 export const trackEmailCapture = (email: string, source: string = 'style_offer') => {
@@ -519,7 +510,7 @@ export const trackEmailCapture = (email: string, source: string = 'style_offer')
     window.fbq('trackCustom', 'EmailCapture', data);
   }
 
-  console.log(`[Analytics] Email Captured: ${email}`, data);
+  appLogger.info(`[Analytics] Email Captured: ${email}`, { data: [data] });
 };
 
 // 🚀 CONVERSÃO HOTMART - Link específico fornecido
@@ -548,7 +539,7 @@ export const trackHotmartClick = (source: string = 'style_result') => {
     window.fbq('trackCustom', 'HotmartClick', data);
   }
 
-  console.log('[Analytics] Hotmart Click Tracked', data);
+  appLogger.info('[Analytics] Hotmart Click Tracked', { data: [data] });
 };
 
 export const trackHotmartConversion = (transactionId?: string, value: number = 97) => {
@@ -572,7 +563,7 @@ export const trackHotmartConversion = (transactionId?: string, value: number = 9
     window.fbq('trackCustom', 'HotmartConversion', data);
   }
 
-  console.log('[Analytics] Hotmart Conversion Tracked', data);
+  appLogger.info('[Analytics] Hotmart Conversion Tracked', { data: [data] });
 };
 
 // 📊 EVENTOS DE TEMPLATES IA
@@ -594,7 +585,7 @@ export const trackAIAgentStart = (templateType: string) => {
     window.fbq('trackCustom', 'AIAgentStart', data);
   }
 
-  console.log(`[Analytics] AI Agent Started: ${templateType}`, data);
+  appLogger.info(`[Analytics] AI Agent Started: ${templateType}`, { data: [data] });
 };
 
 export const trackTemplateGenerated = (templateType: string, funnelId: string) => {
@@ -616,5 +607,5 @@ export const trackTemplateGenerated = (templateType: string, funnelId: string) =
     window.fbq('trackCustom', 'TemplateGenerated', data);
   }
 
-  console.log(`[Analytics] Template Generated: ${templateType} - ${funnelId}`, data);
+  appLogger.info(`[Analytics] Template Generated: ${templateType} - ${funnelId}`, { data: [data] });
 };

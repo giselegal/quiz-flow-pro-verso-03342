@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 📦 TEMPLATE CACHE - FASE 4
  * 
@@ -40,7 +41,7 @@ class TemplateCache {
       this.stats.hits++;
       
       if (import.meta.env.DEV) {
-        console.log(`💾 Template cache hit: ${key} (${entry.hits} hits)`);
+        appLogger.info(`💾 Template cache hit: ${key} (${entry.hits} hits)`);
       }
       
       return entry.value as T;
@@ -49,7 +50,7 @@ class TemplateCache {
     this.stats.misses++;
     
     if (import.meta.env.DEV) {
-      console.log(`❌ Template cache miss: ${key}`);
+      appLogger.info(`❌ Template cache miss: ${key}`);
     }
     
     return null;
@@ -71,7 +72,7 @@ class TemplateCache {
     });
 
     if (import.meta.env.DEV) {
-      console.log(`💾 Template cached: ${key} (cache size: ${this.cache.size}/${this.maxSize})`);
+      appLogger.info(`💾 Template cached: ${key} (cache size: ${this.cache.size}/${this.maxSize})`);
     }
   }
 
@@ -97,7 +98,7 @@ class TemplateCache {
     this.stats = { hits: 0, misses: 0, evictions: 0 };
     
     if (import.meta.env.DEV) {
-      console.log('🗑️ Template cache cleared');
+      appLogger.info('🗑️ Template cache cleared');
     }
   }
 
@@ -137,7 +138,7 @@ class TemplateCache {
       this.stats.evictions++;
       
       if (import.meta.env.DEV) {
-        console.log(`🗑️ Template cache evicted: ${oldestKey}`);
+        appLogger.info(`🗑️ Template cache evicted: ${oldestKey}`);
       }
     }
   }
@@ -156,7 +157,7 @@ class TemplateCache {
     }
     
     if (import.meta.env.DEV && count > 0) {
-      console.log(`🗑️ Invalidated ${count} cached templates matching ${pattern}`);
+      appLogger.info(`🗑️ Invalidated ${count} cached templates matching ${pattern}`);
     }
     
     return count;

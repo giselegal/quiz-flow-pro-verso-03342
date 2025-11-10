@@ -7,6 +7,7 @@
 
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { FunnelSettings, FunnelTheme } from '../types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -83,17 +84,17 @@ export class SettingsService {
      * Carrega configurações de um funil
      */
     async loadSettings(funnelId: string): Promise<FunnelSettings> {
-        console.log(`📥 Carregando configurações do funil: ${funnelId}`);
+        appLogger.info(`📥 Carregando configurações do funil: ${funnelId}`);
 
         // Verificar cache primeiro
         if (this.cache.has(funnelId)) {
-            console.log('🚀 Configurações encontradas no cache');
+            appLogger.info('🚀 Configurações encontradas no cache');
             return this.cache.get(funnelId)!;
         }
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, carregando do localStorage');
+                appLogger.warn('⚠️ Supabase não disponível, carregando do localStorage');
                 return this.loadFromLocalStorage(funnelId);
             }
 
@@ -104,11 +105,11 @@ export class SettingsService {
                 .single();
 
             if (error) {
-                console.error('❌ Erro ao carregar configurações:', error);
+                appLogger.error('❌ Erro ao carregar configurações:', { data: [error] });
 
                 // Se funil não existe, retornar configurações padrão
                 if (error.code === 'PGRST116') {
-                    console.log('ℹ️ Funil não encontrado, usando configurações padrão');
+                    appLogger.info('ℹ️ Funil não encontrado, usando configurações padrão');
                     return this.getDefaultSettings();
                 }
 
@@ -117,7 +118,7 @@ export class SettingsService {
 
             // Se não há configurações salvas, retornar padrão
             if (!data?.config) {
-                console.log('ℹ️ Nenhuma configuração encontrada, usando padrão');
+                appLogger.info('ℹ️ Nenhuma configuração encontrada, usando padrão');
                 return this.getDefaultSettings();
             }
 
@@ -127,10 +128,10 @@ export class SettingsService {
             // Cachear para próximas consultas
             this.cache.set(funnelId, settings);
 
-            console.log('✅ Configurações carregadas:', settings);
+            appLogger.info('✅ Configurações carregadas:', { data: [settings] });
             return settings;
         } catch (error) {
-            console.error('Error in loadSettings:', error);
+            appLogger.error('Error in loadSettings:', { data: [error] });
             return this.loadFromLocalStorage(funnelId);
         }
     }
@@ -139,18 +140,18 @@ export class SettingsService {
      * Salva configurações de um funil
      */
     async saveSettings(funnelId: string, settings: FunnelSettings): Promise<boolean> {
-        console.log(`💾 Salvando configurações do funil: ${funnelId}`);
+        appLogger.info(`💾 Salvando configurações do funil: ${funnelId}`);
 
         // Validar configurações
         const validation = this.validateSettings(settings);
         if (!validation.isValid) {
-            console.error('❌ Configurações inválidas:', validation.errors);
+            appLogger.error('❌ Configurações inválidas:', { data: [validation.errors] });
             throw new Error(`Invalid settings: ${validation.errors.join(', ')}`);
         }
 
         try {
             if (!supabase) {
-                console.warn('⚠️ Supabase não disponível, salvando apenas no localStorage');
+                appLogger.warn('⚠️ Supabase não disponível, salvando apenas no localStorage');
                 return this.saveToLocalStorage(funnelId, settings);
             }
 
@@ -164,7 +165,7 @@ export class SettingsService {
                 .eq('id', funnelId);
 
             if (error) {
-                console.error('❌ Erro ao salvar configurações no Supabase:', error);
+                appLogger.error('❌ Erro ao salvar configurações no Supabase:', { data: [error] });
                 return this.saveToLocalStorage(funnelId, settings);
             }
 
@@ -174,10 +175,10 @@ export class SettingsService {
             // Backup no localStorage
             this.saveToLocalStorage(funnelId, settings);
 
-            console.log(`✅ Configurações salvas: ${funnelId}`);
+            appLogger.info(`✅ Configurações salvas: ${funnelId}`);
             return true;
         } catch (error) {
-            console.error('Error in saveSettings:', error);
+            appLogger.error('Error in saveSettings:', { data: [error] });
             return this.saveToLocalStorage(funnelId, settings);
         }
     }
@@ -186,7 +187,7 @@ export class SettingsService {
      * Remove configurações de um funil
      */
     async deleteSettings(funnelId: string): Promise<boolean> {
-        console.log(`🗑️ Removendo configurações do funil: ${funnelId}`);
+        appLogger.info(`🗑️ Removendo configurações do funil: ${funnelId}`);
 
         try {
             if (supabase) {
@@ -199,7 +200,7 @@ export class SettingsService {
                     .eq('id', funnelId);
 
                 if (error) {
-                    console.error('❌ Erro ao remover configurações:', error);
+                    appLogger.error('❌ Erro ao remover configurações:', { data: [error] });
                 }
             }
 
@@ -207,10 +208,10 @@ export class SettingsService {
             this.cache.delete(funnelId);
             this.deleteFromLocalStorage(funnelId);
 
-            console.log(`✅ Configurações removidas: ${funnelId}`);
+            appLogger.info(`✅ Configurações removidas: ${funnelId}`);
             return true;
         } catch (error) {
-            console.error('Error in deleteSettings:', error);
+            appLogger.error('Error in deleteSettings:', { data: [error] });
             return false;
         }
     }
@@ -309,10 +310,10 @@ export class SettingsService {
     clearCache(funnelId?: string): void {
         if (funnelId) {
             this.cache.delete(funnelId);
-            console.log(`🧹 Cache limpo para funil: ${funnelId}`);
+            appLogger.info(`🧹 Cache limpo para funil: ${funnelId}`);
         } else {
             this.cache.clear();
-            console.log('🧹 Cache completo limpo');
+            appLogger.info('🧹 Cache completo limpo');
         }
     }
 
@@ -324,12 +325,12 @@ export class SettingsService {
         try {
             const stored = localStorage.getItem(`funnel-settings-${funnelId}`);
             if (stored) {
-                console.log('📱 Configurações carregadas do localStorage');
+                appLogger.info('📱 Configurações carregadas do localStorage');
                 const settings = JSON.parse(stored);
                 return this.mergeWithDefaults(settings);
             }
         } catch (error) {
-            console.error('❌ Erro ao carregar do localStorage:', error);
+            appLogger.error('❌ Erro ao carregar do localStorage:', { data: [error] });
         }
 
         return this.getDefaultSettings();
@@ -338,10 +339,10 @@ export class SettingsService {
     private saveToLocalStorage(funnelId: string, settings: FunnelSettings): boolean {
         try {
             localStorage.setItem(`funnel-settings-${funnelId}`, JSON.stringify(settings));
-            console.log('📱 Configurações salvas no localStorage');
+            appLogger.info('📱 Configurações salvas no localStorage');
             return true;
         } catch (error) {
-            console.error('❌ Erro ao salvar no localStorage:', error);
+            appLogger.error('❌ Erro ao salvar no localStorage:', { data: [error] });
             return false;
         }
     }
@@ -349,9 +350,9 @@ export class SettingsService {
     private deleteFromLocalStorage(funnelId: string): void {
         try {
             localStorage.removeItem(`funnel-settings-${funnelId}`);
-            console.log('📱 Configurações removidas do localStorage');
+            appLogger.info('📱 Configurações removidas do localStorage');
         } catch (error) {
-            console.error('❌ Erro ao remover do localStorage:', error);
+            appLogger.error('❌ Erro ao remover do localStorage:', { data: [error] });
         }
     }
 }

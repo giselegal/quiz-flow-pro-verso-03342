@@ -18,6 +18,7 @@
  */
 
 import { z } from 'zod';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Schema básico para Block (validação minimal)
 export const blockBaseSchema = z.object({
@@ -138,6 +139,6 @@ export function getSafeInitialState(persistedState: unknown, fallbackState: any)
     return validation.data;
   }
   
-  console.warn('⚠️ Estado persistido inválido, usando fallback:', validation.errors?.issues);
+  appLogger.warn('⚠️ Estado persistido inválido, usando fallback:', { data: [validation.errors?.issues] });
   return fallbackState;
 }

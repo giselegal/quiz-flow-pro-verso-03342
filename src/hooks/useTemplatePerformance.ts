@@ -9,6 +9,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 // ✅ CORREÇÃO: Comentado import direto do .ts - usar HierarchicalTemplateSource se necessário
 // import { getStepTemplate as getStepTemplateStatic } from '@/templates/quiz21StepsComplete';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PerformanceMetrics {
   loadTime: number;
@@ -79,7 +80,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
       return template;
 
     } catch (error) {
-      console.warn(`⚠️ Failed to load template: ${stepId}`, error);
+      appLogger.warn(`⚠️ Failed to load template: ${stepId}`, { data: [error] });
       setIsLoading(false);
       return null;
     }

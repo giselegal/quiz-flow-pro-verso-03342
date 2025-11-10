@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚧 STUB SERVICE - EnhancedUnifiedDataService
  * 
@@ -27,7 +28,7 @@ export class EnhancedUnifiedDataService {
    * TODO: Implementar integração com dados reais do Supabase
    */
   static async getRealTimeMetrics(): Promise<RealTimeMetrics> {
-    console.warn('⚠️ EnhancedUnifiedDataService.getRealTimeMetrics() está usando dados simulados');
+    appLogger.warn('⚠️ EnhancedUnifiedDataService.getRealTimeMetrics() está usando dados simulados');
     
     return {
       totalFunnels: 0,

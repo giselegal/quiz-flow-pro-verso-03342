@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 BOTÃO PARA FORÇAR ABERTURA DA JANELA LOVABLE
@@ -9,7 +10,7 @@ export const LovableWindowButton: React.FC = () => {
     if (typeof window !== 'undefined') {
       const projectId = (import.meta as any).env?.VITE_LOVABLE_PROJECT_ID as string | undefined;
       if (!projectId) {
-        console.warn('[Lovable] VITE_LOVABLE_PROJECT_ID ausente - botão não pode forçar janela');
+        appLogger.warn('[Lovable] VITE_LOVABLE_PROJECT_ID ausente - botão não pode forçar janela');
         return;
       }
       // Configuração global forçada
@@ -88,7 +89,7 @@ export const LovableWindowButton: React.FC = () => {
         '*',
       );
 
-      console.log('🎯 BOTÃO LOVABLE ACIONADO - Janela deve abrir!');
+      appLogger.info('🎯 BOTÃO LOVABLE ACIONADO - Janela deve abrir!');
     }
   };
 

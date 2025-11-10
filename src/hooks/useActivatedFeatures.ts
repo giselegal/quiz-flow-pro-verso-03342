@@ -3,6 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 // import { activatedAnalytics } from '@/services/ActivatedAnalytics';
 
 export const useActivatedFeatures = () => {
@@ -35,7 +36,7 @@ export const useActivatedFeatures = () => {
       const data = { message: 'AI Insights placeholder' };
       setInsights(data);
     } catch (error) {
-      console.error('Failed to load AI insights:', error);
+      appLogger.error('Failed to load AI insights:', { data: [error] });
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +48,7 @@ export const useActivatedFeatures = () => {
       [featureName]: true,
     }));
     
-    console.log(`🚀 Feature activated: ${featureName}`);
+    appLogger.info(`🚀 Feature activated: ${featureName}`);
   };
 
   return {

@@ -6,7 +6,6 @@
  */
 
 import { useState } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Download, FileJson, CheckCircle, XCircle } from 'lucide-react';
 import { quizEditorBridge } from '@/services/canonical/TemplateService';

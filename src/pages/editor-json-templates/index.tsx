@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import EditorLayout from '@/components/layout/EditorLayout';
 import { QuizStepAdapter } from '@/lib/adapters/QuizStepAdapter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos
 interface JsonTemplate {
@@ -86,11 +87,11 @@ const EditorJsonTemplatesPage: React.FC = () => {
             setTemplates(validTemplates);
 
             if (validTemplates.length === 0) {
-                console.warn('⚠️ Nenhum template v3.1 encontrado, gerando templates padrão...');
+                appLogger.warn('⚠️ Nenhum template v3.1 encontrado, gerando templates padrão...');
                 generateDefaultTemplates();
             }
         } catch (error) {
-            console.error('❌ Erro ao carregar templates:', error);
+            appLogger.error('❌ Erro ao carregar templates:', { data: [error] });
             generateDefaultTemplates();
         }
     };
@@ -175,7 +176,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
 
             setTimeout(() => setSuccessMessage(null), 3000);
         } catch (error) {
-            console.error('❌ Erro ao salvar template:', error);
+            appLogger.error('❌ Erro ao salvar template:', { data: [error] });
             setValidationError(
                 error instanceof Error
                     ? error.message
@@ -195,7 +196,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
             JSON.stringify(template, null, 2),
         );
 
-        console.log('💾 Template salvo no localStorage:', template.metadata.id);
+        appLogger.info('💾 Template salvo no localStorage:', { data: [template.metadata.id] });
     };
 
     const handleExportTemplate = () => {

@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -67,7 +68,7 @@ class MessageCompressor {
                 return `${char}*${match.length}`;
             });
         } catch (error) {
-            console.warn('Compression failed:', error);
+            appLogger.warn('Compression failed:', { data: [error] });
             return JSON.stringify(data);
         }
     }
@@ -81,7 +82,7 @@ class MessageCompressor {
             
             return JSON.parse(decompressed);
         } catch (error) {
-            console.warn('Decompression failed:', error);
+            appLogger.warn('Decompression failed:', { data: [error] });
             return JSON.parse(compressedData);
         }
     }
@@ -497,7 +498,7 @@ class AdvancedWebSocket {
     
     private log(...args: any[]): void {
         if (this.config.debug) {
-            console.log('[WebSocket]', ...args);
+            appLogger.info('[WebSocket]', { data: [...args] });
         }
     }
     

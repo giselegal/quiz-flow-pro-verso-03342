@@ -11,6 +11,7 @@
 import { lazy, ComponentType, LazyExoticComponent } from 'react';
 import type { Block } from '@/types/editor';
 import { perfLogger } from '@/lib/utils/performanceLogger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface BlockRendererProps {
   block: Block;
@@ -288,10 +289,10 @@ class BlockRegistry {
         
         const duration = performance.now() - startTime;
         if (import.meta.env.DEV) {
-          console.debug(`⚡ [BlockRegistry] Preloaded "${normalizedType}" in ${duration.toFixed(0)}ms`);
+          appLogger.debug(`⚡ [BlockRegistry] Preloaded "${normalizedType}" in ${duration.toFixed(0)}ms`);
         }
       } catch (error) {
-        console.error(`❌ [BlockRegistry] Failed to preload "${normalizedType}":`, error);
+        appLogger.error(`❌ [BlockRegistry] Failed to preload "${normalizedType}":`, { data: [error] });
         throw error;
       }
     })();

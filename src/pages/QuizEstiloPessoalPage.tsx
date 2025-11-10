@@ -2,6 +2,7 @@ import QuizApp from '@/components/quiz/QuizApp';
 import { Helmet } from 'react-helmet-async';
 import '@/styles/globals.css';
 import { FUNNEL_CONFIG } from '@/config/funnel/config';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 QUIZ ESTILO PESSOAL - GISELE GALVÃO
@@ -40,7 +41,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
 
     if (import.meta.env.DEV) {
         // eslint-disable-next-line no-console
-        console.log('[QuizEstiloPessoalPage] funnelId prop:', funnelId, 'draftParam:', queryDraftId, 'effective:', effectiveFunnelId);
+        appLogger.info('[QuizEstiloPessoalPage] funnelId prop:', { data: [funnelId, 'draftParam:', queryDraftId, 'effective:', effectiveFunnelId] });
     }
     return (
         <div className="quiz-estilo-page">

@@ -9,6 +9,7 @@ import { cloneFunnelTemplate } from '@/lib/utils/cloneFunnel';
 import { UnifiedStorageService } from '@/services/aliases';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import EditorLayout from '@/components/layout/EditorLayout';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const EditorTemplatesPage: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -19,16 +20,16 @@ const EditorTemplatesPage: React.FC = () => {
 
   const handleSelectTemplate = (templateId: string) => {
     try {
-      console.log('🎯 Selecionando template:', templateId);
+      appLogger.info('🎯 Selecionando template:', { data: [templateId] });
 
       // Buscar template selecionado
       const template = templates.find(t => t.id === templateId);
       if (!template) {
-        console.error('❌ Template não encontrado:', templateId);
+        appLogger.error('❌ Template não encontrado:', { data: [templateId] });
         return;
       }
 
-      console.log('📄 Template encontrado:', template);
+      appLogger.info('📄 Template encontrado:', { data: [template] });
 
       // Clonar template para criar nova instância
       // Converter UnifiedTemplate para FunnelTemplate format
@@ -54,9 +55,9 @@ const EditorTemplatesPage: React.FC = () => {
         ],
       };
 
-      console.log('🔄 Template data convertido para FunnelTemplate:', templateData);
+      appLogger.info('🔄 Template data convertido para FunnelTemplate:', { data: [templateData] });
       const clonedInstance = cloneFunnelTemplate(templateData, `${template.name} - Novo Funil`);
-      console.log('✅ Instância clonada:', clonedInstance);
+      appLogger.info('✅ Instância clonada:', { data: [clonedInstance] });
 
       // Salvar no localStorage como um funil
       const newFunnel = {
@@ -66,25 +67,25 @@ const EditorTemplatesPage: React.FC = () => {
         updatedAt: clonedInstance.createdAt,
       };
 
-      console.log('💾 Salvando funil no localStorage:', newFunnel);
+      appLogger.info('💾 Salvando funil no localStorage:', { data: [newFunnel] });
       funnelLocalStore.upsert(newFunnel);
 
       // Verificar se foi salvo
       const savedFunnel = funnelLocalStore.get(clonedInstance.id);
-      console.log('🔍 Funil salvo verificado:', savedFunnel);
+      appLogger.info('🔍 Funil salvo verificado:', { data: [savedFunnel] });
 
-      console.log('🔄 Navegando para editor com ID:', clonedInstance.id);
+      appLogger.info('🔄 Navegando para editor com ID:', { data: [clonedInstance.id] });
 
       // Navegar para o editor com o funil criado
       const editorUrl = `/editor/${encodeURIComponent(clonedInstance.id)}`;
-      console.log('🌐 URL do editor:', editorUrl);
+      appLogger.info('🌐 URL do editor:', { data: [editorUrl] });
       setLocation(editorUrl);
 
     } catch (error) {
-      console.error('❌ Erro ao selecionar template:', error);
-      console.error('❌ Stack trace:', error instanceof Error ? error.stack : 'N/A');
+      appLogger.error('❌ Erro ao selecionar template:', { data: [error] });
+      appLogger.error('❌ Stack trace:', { data: [error instanceof Error ? error.stack : 'N/A'] });
       // Fallback: navegar direto para editor
-      console.log('🔄 Navegando para editor (fallback)');
+      appLogger.info('🔄 Navegando para editor (fallback)');
       setLocation('/editor');
     }
   };

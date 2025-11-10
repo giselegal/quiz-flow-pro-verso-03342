@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎨 ADVANCED PERSONALIZATION ENGINE - AI-Powered
  * ROI Projetado: $10k-25k/mês
@@ -130,11 +131,11 @@ export class AdvancedPersonalizationEngine {
       nextBestAction: this.predictNextAction(currentBehavior),
     };
 
-    console.log('🔄 Real-time adaptation:', {
-      userId,
-      adaptations,
-      timestamp: new Date(),
-    });
+    appLogger.info('🔄 Real-time adaptation:', { data: [{
+            userId,
+            adaptations,
+            timestamp: new Date(),
+          }] });
 
     return adaptations;
   }
@@ -265,7 +266,7 @@ export class AdvancedPersonalizationEngine {
     ];
 
     // Initialize with mock data
-    console.log('🎨 Initialized personas:', defaultPersonas.length);
+    appLogger.info('🎨 Initialized personas:', { data: [defaultPersonas.length] });
   }
 
   private analyzePersonality(behaviors: any): string[] {
@@ -365,7 +366,7 @@ export class AdvancedPersonalizationEngine {
 
   private trackPersonalizationPerformance(personaId: string, rules: PersonalizationRule[]) {
     // Performance tracking logic
-    console.log('📊 Tracking personalization performance:', { personaId, rulesApplied: rules.length });
+    appLogger.info('📊 Tracking personalization performance:', { data: [{ personaId, rulesApplied: rules.length }] });
   }
 
   private calculateUrgencyLevel(_behavior: any): number {

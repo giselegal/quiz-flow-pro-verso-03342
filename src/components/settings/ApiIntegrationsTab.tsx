@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from '@/components/ui/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const ApiIntegrationsTab: React.FC = () => {
   // Google Analytics states
@@ -49,7 +50,7 @@ export const ApiIntegrationsTab: React.FC = () => {
       title: `Testing ${service} connection`,
       description: 'Connection test initiated. Please check the console for results.',
     });
-    console.log(`Testing connection to ${service}...`);
+    appLogger.info(`Testing connection to ${service}...`);
   };
 
   return (

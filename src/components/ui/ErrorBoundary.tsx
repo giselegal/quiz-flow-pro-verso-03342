@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export default class ErrorBoundary extends React.Component<any, { hasError: boolean; error?: any }> {
     constructor(props: any) {
@@ -10,7 +11,7 @@ export default class ErrorBoundary extends React.Component<any, { hasError: bool
     }
     componentDidCatch(error: any, info: any) {
         // Exibe detalhes no console para facilitar debug em ambiente de desenvolvimento
-        console.error('ErrorBoundary:', this.props?.componentName, error, info);
+        appLogger.error('ErrorBoundary:', { data: [this.props?.componentName, error, info] });
     }
     render() {
         if (this.state.hasError) {

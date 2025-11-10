@@ -23,6 +23,7 @@ import {
 import { MonitoringService } from '@/services/core/MonitoringService';
 import { PerformanceMonitor } from '@/lib/utils/performanceMonitoring';
 import { RealTimeAnalytics } from '@/services/realTimeAnalytics';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // IMPLEMENTAÇÃO PRINCIPAL
@@ -584,28 +585,28 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
     private metrics: EditorMetricData[] = [];
 
     recordMetric(metric: EditorMetricData): void {
-        console.log('Mock metrics:', metric.type, metric.operation, metric.value);
+        appLogger.info('Mock metrics:', { data: [metric.type, metric.operation, metric.value] });
         this.metrics.push(metric);
     }
 
     recordPerformanceSnapshot(snapshot: EditorPerformanceSnapshot): void {
-        console.log('Mock performance snapshot:', snapshot);
+        appLogger.info('Mock performance snapshot:', { data: [snapshot] });
     }
 
     recordValidationMetrics(metrics: EditorValidationMetrics): void {
-        console.log('Mock validation metrics:', metrics);
+        appLogger.info('Mock validation metrics:', { data: [metrics] });
     }
 
     recordLoadingMetrics(metrics: EditorLoadingMetrics): void {
-        console.log('Mock loading metrics:', metrics);
+        appLogger.info('Mock loading metrics:', { data: [metrics] });
     }
 
     recordFallbackMetrics(metrics: EditorFallbackMetrics): void {
-        console.log('Mock fallback metrics:', metrics);
+        appLogger.info('Mock fallback metrics:', { data: [metrics] });
     }
 
     recordUsageMetrics(metrics: EditorUsageMetrics): void {
-        console.log('Mock usage metrics:', metrics);
+        appLogger.info('Mock usage metrics:', { data: [metrics] });
     }
 
     async getMetrics(): Promise<EditorMetricData[]> {

@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Re-export UI components to fix broken imports
 export { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +26,7 @@ export const optimizeBundleSize = () => {
     'axios', // Use fetch instead
   ];
   
-  console.log('🧹 Removing unused modules:', unusedModules);
+  appLogger.info('🧹 Removing unused modules:', { data: [unusedModules] });
   
   return {
     removedModules: unusedModules.length,
@@ -65,7 +66,7 @@ export const optimizeTreeShaking = () => {
     'Use ES modules format',
   ];
   
-  console.log('🌳 Tree shaking optimizations:', optimizations);
+  appLogger.info('🌳 Tree shaking optimizations:', { data: [optimizations] });
   
   return {
     optimizations,
@@ -97,7 +98,7 @@ export const checkBuildHealth = () => {
     loadTime: '1.8s',
   };
   
-  console.log('🏥 Build health check:', checks);
+  appLogger.info('🏥 Build health check:', { data: [checks] });
   
   return checks;
 };

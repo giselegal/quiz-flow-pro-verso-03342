@@ -8,6 +8,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
 import EditorFallback from '@/components/editor/EditorFallback';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 MAIN EDITOR UNIFICADO - VERSÃO SIMPLIFICADA E ROBUSTA ✅ FASE 2.3 ATUALIZADO
@@ -34,13 +35,13 @@ const MainEditorUnified: React.FC = () => {
     const funnelId = realFunnelId || undefined; // Só usar funnelId se for real
 
     // Log inicial para debug
-    console.log('🎯 [MAIN] MainEditorUnified iniciado:', {
-        location,
-        templateId,
-        funnelId,
-        debugMode,
-        timestamp: new Date().toISOString(),
-    });
+    appLogger.info('🎯 [MAIN] MainEditorUnified iniciado:', { data: [{
+            location,
+            templateId,
+            funnelId,
+            debugMode,
+            timestamp: new Date().toISOString(),
+        }] });
 
     // Validação de parâmetros
     const sanitizedParams = React.useMemo(() => {
@@ -49,12 +50,12 @@ const MainEditorUnified: React.FC = () => {
 
         // Validar comprimento dos parâmetros
         if (cleanTemplateId && cleanTemplateId.length > 100) {
-            console.warn('⚠️ [MAIN] templateId muito longo, ignorando');
+            appLogger.warn('⚠️ [MAIN] templateId muito longo, ignorando');
             return { templateId: undefined, funnelId: cleanFunnelId };
         }
 
         if (cleanFunnelId && cleanFunnelId.length > 100) {
-            console.warn('⚠️ [MAIN] funnelId muito longo, ignorando');
+            appLogger.warn('⚠️ [MAIN] funnelId muito longo, ignorando');
             return { templateId: cleanTemplateId, funnelId: undefined };
         }
 
@@ -108,12 +109,12 @@ const FunnelValidatedEditor: React.FC<{
     const funnelContext = useFunnelContext(funnelId);
 
     if (debugMode) {
-        console.log('🔐 [VALIDATOR] Validação de funil:', {
-            funnelId,
-            isReady: funnelContext.isReady,
-            isLoading: funnelContext.isLoading,
-            isError: funnelContext.isError,
-        });
+        appLogger.info('🔐 [VALIDATOR] Validação de funil:', { data: [{
+                    funnelId,
+                    isReady: funnelContext.isReady,
+                    isLoading: funnelContext.isLoading,
+                    isError: funnelContext.isError,
+                }] });
     }
 
     // Loading state

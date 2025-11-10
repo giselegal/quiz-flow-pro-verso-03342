@@ -5,6 +5,7 @@
  */
 
 import { supabase } from '@/lib/supabase';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // DADOS SIMULADOS
@@ -141,7 +142,7 @@ const generateStepResponses = (sessionId: string, maxStep: number) => {
 // ============================================================================
 
 export const generateTestData = async (count: number = 50) => {
-    console.log(`🧪 Gerando ${count} participantes de teste...`);
+    appLogger.info(`🧪 Gerando ${count} participantes de teste...`);
 
     try {
         const testData = [];
@@ -157,7 +158,7 @@ export const generateTestData = async (count: number = 50) => {
             .insert(sessions);
 
         if (sessionsError) {
-            console.error('Erro ao inserir sessões:', sessionsError);
+            appLogger.error('Erro ao inserir sessões:', { data: [sessionsError] });
             return;
         }
 
@@ -173,7 +174,7 @@ export const generateTestData = async (count: number = 50) => {
                 .insert(results);
 
             if (resultsError) {
-                console.error('Erro ao inserir resultados:', resultsError);
+                appLogger.error('Erro ao inserir resultados:', { data: [resultsError] });
             }
         }
 
@@ -189,16 +190,16 @@ export const generateTestData = async (count: number = 50) => {
                     .insert(batch);
 
                 if (responsesError) {
-                    console.error('Erro ao inserir respostas:', responsesError);
+                    appLogger.error('Erro ao inserir respostas:', { data: [responsesError] });
                 }
             }
         }
 
-        console.log('✅ Dados de teste gerados com sucesso!');
-        console.log('📊 Estatísticas:');
-        console.log(`   - ${sessions.length} sessões criadas`);
-        console.log(`   - ${results.length} resultados completos`);
-        console.log(`   - ${allResponses.length} respostas por etapa`);
+        appLogger.info('✅ Dados de teste gerados com sucesso!');
+        appLogger.info('📊 Estatísticas:');
+        appLogger.info(`   - ${sessions.length} sessões criadas`);
+        appLogger.info(`   - ${results.length} resultados completos`);
+        appLogger.info(`   - ${allResponses.length} respostas por etapa`);
 
         return {
             sessions: sessions.length,
@@ -207,7 +208,7 @@ export const generateTestData = async (count: number = 50) => {
         };
 
     } catch (error) {
-        console.error('❌ Erro ao gerar dados de teste:', error);
+        appLogger.error('❌ Erro ao gerar dados de teste:', { data: [error] });
         throw error;
     }
 };
@@ -217,7 +218,7 @@ export const generateTestData = async (count: number = 50) => {
 // ============================================================================
 
 export const clearTestData = async () => {
-    console.log('🧹 Limpando dados de teste...');
+    appLogger.info('🧹 Limpando dados de teste...');
 
     try {
         // Deletar apenas dados de teste (identificados pelo prefixo session_)
@@ -236,10 +237,10 @@ export const clearTestData = async () => {
             .delete()
             .like('id', 'session_%');
 
-        console.log('✅ Dados de teste removidos com sucesso!');
+        appLogger.info('✅ Dados de teste removidos com sucesso!');
 
     } catch (error) {
-        console.error('❌ Erro ao limpar dados de teste:', error);
+        appLogger.error('❌ Erro ao limpar dados de teste:', { data: [error] });
         throw error;
     }
 };

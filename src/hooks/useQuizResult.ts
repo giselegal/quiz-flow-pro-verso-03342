@@ -6,6 +6,7 @@ import { calculateAndSaveQuizResult } from '@/lib/utils/quizResultCalculator';
 import { resultCacheService } from '@/services/core/ResultCacheService';
 import { useDebounce } from '@/lib/utils/debounce';
 import EVENTS from '@/core/constants/events';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const useQuizResult = () => {
   // 🎯 FASE 1: Cache inteligente + memoização para evitar recálculos desnecessários
@@ -49,7 +50,7 @@ export const useQuizResult = () => {
           const cachedResult = resultCacheService.get(unifiedData.selections, userName);
           
           if (cachedResult) {
-            console.log('✅ Resultado recuperado do cache no useQuizResult');
+            appLogger.info('✅ Resultado recuperado do cache no useQuizResult');
             setPrimaryStyle(cachedResult.primaryStyle ?? null);
             setSecondaryStyles(cachedResult.secondaryStyles || []);
             setIsLoading(false);
@@ -67,12 +68,12 @@ export const useQuizResult = () => {
         const result = legacyResult || unifiedResult;
         setPrimaryStyle(result.primaryStyle ?? null);
         setSecondaryStyles(result.secondaryStyles || []);
-        console.log('✅ Resultado carregado do storage:', result.primaryStyle?.style);
+        appLogger.info('✅ Resultado carregado do storage:', { data: [result.primaryStyle?.style] });
         return;
       }
 
       // ✅ Só calcular se não há resultado E há dados suficientes
-      console.log('⚠️ Nenhum resultado encontrado, verificando dados...');
+      appLogger.info('⚠️ Nenhum resultado encontrado, verificando dados...');
 
       // Verificar se há dados suficientes para calcular
       let hasEnoughData = false;
@@ -93,17 +94,17 @@ export const useQuizResult = () => {
 
       // Na etapa 20, sempre tentar calcular resultado
       if (!hasEnoughData && !isResultStep) {
-        console.warn('⚠️ Dados insuficientes para calcular resultado');
+        appLogger.warn('⚠️ Dados insuficientes para calcular resultado');
         setError('Dados insuficientes para calcular resultado');
         return;
       }
 
       if (isResultStep) {
-        console.log('🎯 Etapa 20: forçando cálculo de resultado mesmo com dados insuficientes');
+        appLogger.info('🎯 Etapa 20: forçando cálculo de resultado mesmo com dados insuficientes');
       }
 
       // ✅ Calcular com timeout (10s) e guarda global anti-concorrência
-      console.log('🔄 Iniciando cálculo com timeout e guarda global...');
+      appLogger.info('🔄 Iniciando cálculo com timeout e guarda global...');
 
       const runWithTimeout = async <T,>(p: Promise<T>, ms: number): Promise<T> => {
         let timeoutId: number | undefined;
@@ -131,7 +132,7 @@ export const useQuizResult = () => {
         })();
       } else {
         if (process.env.NODE_ENV === 'development') {
-          console.info('⏳ Cálculo de resultado já em andamento — aguardando o mesmo promise');
+          appLogger.info('⏳ Cálculo de resultado já em andamento — aguardando o mesmo promise');
         }
       }
 
@@ -159,13 +160,13 @@ export const useQuizResult = () => {
 
         // Emitir eventos para outros consumidores
         window.dispatchEvent(new Event('quiz-result-updated'));
-        console.log('✅ Resultado calculado e definido:', result.primaryStyle?.style);
+        appLogger.info('✅ Resultado calculado e definido:', { data: [result.primaryStyle?.style] });
       } else {
         throw new Error('Cálculo retornou resultado vazio');
       }
 
     } catch (error: any) {
-      console.error('❌ Erro ao carregar/calcular resultado:', error);
+      appLogger.error('❌ Erro ao carregar/calcular resultado:', { data: [error] });
       setError(error.message || 'Erro desconhecido');
 
       // Atualizar cache global de erro
@@ -177,14 +178,14 @@ export const useQuizResult = () => {
       // ✅ Retry automático até 3 vezes com delay crescente (com cleanup)
       if (retryCount < 3) {
         const delay = (retryCount + 1) * 2000; // 2s, 4s, 6s
-        console.log(`🔄 Tentativa ${retryCount + 1}/3 em ${delay}ms...`);
+        appLogger.info(`🔄 Tentativa ${retryCount + 1}/3 em ${delay}ms...`);
         const id = setTimeout(() => {
           setRetryCount(prev => prev + 1);
           loadFromStorage();
         }, delay) as unknown as number;
         timersRef.current.add(id);
       } else {
-        console.error('❌ Esgotadas tentativas de retry');
+        appLogger.error('❌ Esgotadas tentativas de retry');
       }
     } finally {
       setIsLoading(false);
@@ -228,7 +229,7 @@ export const useQuizResult = () => {
 
       // Se tiver dados suficientes (userName + algumas respostas), recalcular
       if (answerKeys.length >= 3 || answers.userName) {
-        console.log('🔄 Recalculando resultado devido a novas respostas (debounced)');
+        appLogger.info('🔄 Recalculando resultado devido a novas respostas (debounced)');
         debouncedLoadFromStorage(); // 🎯 FASE 2: Usar versão debounced
       }
     };

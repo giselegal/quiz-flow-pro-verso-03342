@@ -16,6 +16,7 @@ import { useUnifiedEditor, type UnifiedEditorReturn } from '../../hooks/core/use
 import { TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 import { FunnelContext } from './FunnelContext';
 import { useToast } from '../../components/ui/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES AND INTERFACES
@@ -171,7 +172,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
 
         try {
             if (debugMode) {
-                console.log('🔄 UnifiedContext: Loading template:', templateId);
+                appLogger.info('🔄 UnifiedContext: Loading template:', { data: [templateId] });
             }
 
             const template = TemplateRegistry.getById(templateId);
@@ -182,7 +183,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             setTemplates(prev => ({ ...prev, current: template, loading: false }));
 
             if (debugMode) {
-                console.log('✅ UnifiedContext: Template loaded:', template.name);
+                appLogger.info('✅ UnifiedContext: Template loaded:', { data: [template.name] });
             }
 
         } catch (error) {
@@ -200,7 +201,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
     const createFromTemplate = useCallback(async (templateId: string, name?: string) => {
         try {
             if (debugMode) {
-                console.log('🚀 UnifiedContext: Creating funnel from template:', templateId);
+                appLogger.info('🚀 UnifiedContext: Creating funnel from template:', { data: [templateId] });
             }
 
             // Criar funil simples baseado no template
@@ -216,7 +217,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 await editor.loadFunnel(funnelId);
 
                 if (debugMode) {
-                    console.log('✅ UnifiedContext: Funnel created and loaded:', funnelId);
+                    appLogger.info('✅ UnifiedContext: Funnel created and loaded:', { data: [funnelId] });
                 }
 
                 toast({
@@ -247,7 +248,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             }
 
             if (debugMode) {
-                console.log('💾 UnifiedContext: Saving as template:', name, description ? `with description: ${description}` : '');
+                appLogger.info('💾 UnifiedContext: Saving as template:', { data: [name, description ? `with description: ${description}` : ''] });
             }
 
             // Implementação simples para criar template customizado
@@ -264,7 +265,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             };
 
             // Aqui seria implementada a criação real do template com os dados completos
-            console.log('Template customizado criado:', templateData);
+            appLogger.info('Template customizado criado:', { data: [templateData] });
 
             if (templateId) {
                 toast({
@@ -297,7 +298,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
 
         try {
             if (debugMode) {
-                console.log('💾 UnifiedContext: Saving funnel...');
+                appLogger.info('💾 UnifiedContext: Saving funnel...');
             }
 
             const result = await editor.saveFunnel();
@@ -312,7 +313,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 setNavigation(prev => ({ ...prev, hasUnsavedChanges: false }));
 
                 if (debugMode) {
-                    console.log('✅ UnifiedContext: Funnel saved successfully');
+                    appLogger.info('✅ UnifiedContext: Funnel saved successfully');
                 }
             }
 
@@ -332,7 +333,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
 
         try {
             if (debugMode) {
-                console.log('🔄 UnifiedContext: Loading funnel:', id);
+                appLogger.info('🔄 UnifiedContext: Loading funnel:', { data: [id] });
             }
 
             await editor.loadFunnel(id);
@@ -341,7 +342,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             setNavigation(prev => ({ ...prev, hasUnsavedChanges: false }));
 
             if (debugMode) {
-                console.log('✅ UnifiedContext: Funnel loaded successfully');
+                appLogger.info('✅ UnifiedContext: Funnel loaded successfully');
             }
 
         } catch (error) {
@@ -360,7 +361,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         setPersistence(prev => ({ ...prev, autoSaveEnabled: enabled }));
 
         if (debugMode) {
-            console.log('⚙️ UnifiedContext: Auto-save', enabled ? 'enabled' : 'disabled');
+            appLogger.info('⚙️ UnifiedContext: Auto-save', { data: [enabled ? 'enabled' : 'disabled'] });
         }
     }, [debugMode]);
 
@@ -369,7 +370,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         setPersistence(prev => ({ ...prev, context }));
 
         if (debugMode) {
-            console.log('🎯 UnifiedContext: Context changed to:', context);
+            appLogger.info('🎯 UnifiedContext: Context changed to:', { data: [context] });
         }
     }, [debugMode]);
 
@@ -466,7 +467,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 const availableTemplates = TemplateRegistry.getAll();
                 setTemplates(prev => ({ ...prev, available: availableTemplates }));
             } catch (error) {
-                console.error('Failed to load available templates:', error);
+                appLogger.error('Failed to load available templates:', { data: [error] });
             }
         };
 
@@ -536,13 +537,13 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
 
     useEffect(() => {
         if (debugMode) {
-            console.log('🔧 UnifiedContext: State update', {
-                editorLoaded: !!editor.funnel,
-                templatesAvailable: templates.available.length,
-                currentTemplate: templates.current?.name,
-                isDirty: editor.isDirty,
-                context: currentContext,
-            });
+            appLogger.info('🔧 UnifiedContext: State update', { data: [{
+                            editorLoaded: !!editor.funnel,
+                            templatesAvailable: templates.available.length,
+                            currentTemplate: templates.current?.name,
+                            isDirty: editor.isDirty,
+                            context: currentContext,
+                        }] });
         }
     }, [debugMode, editor.funnel, editor.isDirty, templates, currentContext]);
 
@@ -577,7 +578,7 @@ export const useUnifiedContext = (): UnifiedContextValue => {
 export const useEditorLegacy = () => {
     const unified = useUnifiedContext();
 
-    console.warn('useEditorLegacy is deprecated. Use useUnifiedContext instead.');
+    appLogger.warn('useEditorLegacy is deprecated. Use useUnifiedContext instead.');
 
     return {
         state: {
@@ -602,7 +603,7 @@ export const useEditorLegacy = () => {
 export const useFunnelConfigLegacy = () => {
     const unified = useUnifiedContext();
 
-    console.warn('useFunnelConfigLegacy is deprecated. Use useUnifiedContext instead.');
+    appLogger.warn('useFunnelConfigLegacy is deprecated. Use useUnifiedContext instead.');
 
     return {
         config: unified.editor.funnel?.settings || {},

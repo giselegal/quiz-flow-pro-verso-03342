@@ -27,6 +27,7 @@ import {
   HistoryStats, 
 } from '@/services/HistoryManager';
 import { UnifiedFunnel } from '@/services/UnifiedCRUDService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TIPOS E INTERFACES
@@ -205,7 +206,7 @@ export const useUnifiedVersioning = (
         currentSnapshot: snapshot,
       });
 
-      console.log(`📸 Snapshot criado: ${snapshot.id} (${type})`);
+      appLogger.info(`📸 Snapshot criado: ${snapshot.id} (${type})`);
       return snapshot;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao criar snapshot';
@@ -244,7 +245,7 @@ export const useUnifiedVersioning = (
         // Atualizar dados
         await refreshData();
         
-        console.log(`🗑️ Snapshot excluído: ${id}`);
+        appLogger.info(`🗑️ Snapshot excluído: ${id}`);
       }
       
       return success;
@@ -270,7 +271,7 @@ export const useUnifiedVersioning = (
   const clearHistory = useCallback((): void => {
     historyManager.clearAll();
     refreshData();
-    console.log('🧹 Histórico limpo');
+    appLogger.info('🧹 Histórico limpo');
   }, [refreshData]);
 
   // =============================================================================
@@ -306,7 +307,7 @@ export const useUnifiedVersioning = (
         // Atualizar dados
         await refreshData();
         
-        console.log(`🔙 Funnel restaurado do snapshot: ${id}`);
+        appLogger.info(`🔙 Funnel restaurado do snapshot: ${id}`);
       }
       
       updateState({ isRestoring: false });
@@ -412,7 +413,7 @@ export const useUnifiedVersioning = (
       try {
         await createSnapshot('auto', 'Auto-snapshot periódico');
       } catch (error) {
-        console.warn('⚠️ Erro ao criar auto-snapshot:', error);
+        appLogger.warn('⚠️ Erro ao criar auto-snapshot:', { data: [error] });
       }
     }, autoSnapshotInterval * 60 * 1000);
 

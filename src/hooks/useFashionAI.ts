@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { FashionImageAI, FashionImageRequest, ImageGenerationResponse } from '../services/FashionImageAI';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseFashionAIConfig {
     provider: 'dalle3' | 'gemini' | 'stable-diffusion' | 'midjourney';
@@ -37,22 +38,22 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
         setError(null);
 
         try {
-            console.log('🎨 Gerando imagem de roupa:', request);
+            appLogger.info('🎨 Gerando imagem de roupa:', { data: [request] });
             const result = await fashionAI.generateOutfitImage(request);
 
             if (result.success) {
                 setLastGenerated(result);
-                console.log('✅ Imagem gerada com sucesso:', result.url); // Mudado de 'imageUrl' para 'url'
+                appLogger.info('✅ Imagem gerada com sucesso:', { data: [result.url] }); // Mudado de 'imageUrl' para 'url'
             } else {
                 setError(result.error || 'Erro desconhecido');
-                console.error('❌ Erro ao gerar imagem:', result.error);
+                appLogger.error('❌ Erro ao gerar imagem:', { data: [result.error] });
             }
 
             return result;
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
             setError(errorMessage);
-            console.error('❌ Erro na geração:', err);
+            appLogger.error('❌ Erro na geração:', { data: [err] });
 
             return {
                 url: '',
@@ -73,24 +74,24 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
         setError(null);
 
         try {
-            console.log('🎭 Gerando variações de roupa:', { request, count });
+            appLogger.info('🎭 Gerando variações de roupa:', { data: [{ request, count }] });
             const results = await fashionAI.generateOutfitVariations(request, count);
 
             const successful = results.filter((r: any) => r.success);
             if (successful.length > 0) {
                 setLastGenerated(successful[0]);
-                console.log('✅ Variações geradas:', successful.length);
+                appLogger.info('✅ Variações geradas:', { data: [successful.length] });
             } else {
                 const firstError = results.find((r: any) => r.error)?.error || 'Nenhuma imagem gerada';
                 setError(firstError);
-                console.error('❌ Erro ao gerar variações:', firstError);
+                appLogger.error('❌ Erro ao gerar variações:', { data: [firstError] });
             }
 
             return results;
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
             setError(errorMessage);
-            console.error('❌ Erro nas variações:', err);
+            appLogger.error('❌ Erro nas variações:', { data: [err] });
 
             return [];
         } finally {
@@ -107,7 +108,7 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
             setProviderStatus(status);
             return status;
         } catch (err) {
-            console.error('Erro ao verificar status:', err);
+            appLogger.error('Erro ao verificar status:', { data: [err] });
             return null;
         }
     }, [fashionAI]);

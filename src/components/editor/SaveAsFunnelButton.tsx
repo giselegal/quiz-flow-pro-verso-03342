@@ -23,6 +23,7 @@ import { useEditor } from '@/hooks/useEditor';
 import { funnelService } from '@/services/canonical/FunnelService';
 import { Save } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const SaveAsFunnelButton: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -75,7 +76,7 @@ export const SaveAsFunnelButton: React.FC = () => {
           }
         }
       } catch (e) {
-        console.warn('⚠️ Falha ao pré-carregar steps via TemplateService; seguindo com estado atual', e);
+        appLogger.warn('⚠️ Falha ao pré-carregar steps via TemplateService; seguindo com estado atual', { data: [e] });
       }
 
       // 3) Persistir blocos por etapa usando o caminho oficial (component_instances + bulk com fallback)
@@ -95,7 +96,7 @@ export const SaveAsFunnelButton: React.FC = () => {
       }, 500);
 
     } catch (error: any) {
-      console.error('❌ Erro ao salvar como funil:', error);
+      appLogger.error('❌ Erro ao salvar como funil:', { data: [error] });
       toast({
         title: 'Erro ao salvar',
         description: error.message || 'Tente novamente',

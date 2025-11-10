@@ -9,6 +9,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
 import caktoquizQuestions from '@/services/data/caktoquizQuestions';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ConnectedTemplateWrapperProps {
   children: React.ReactNode;
@@ -38,7 +39,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
       const { formData, isValid } = event.detail;
 
       if (stepNumber === 1 && formData?.name && isValid) {
-        console.log('👤 ConnectedTemplateWrapper: Capturando nome do usuário', formData.name);
+        appLogger.info('👤 ConnectedTemplateWrapper: Capturando nome do usuário', { data: [formData.name] });
 
         // Conectar ao useQuizLogic
         quizLogic.setUserNameFromInput(formData.name);
@@ -52,10 +53,10 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
               quizId: sessionId,
             })
             .then(result => {
-              console.log('🚀 Quiz iniciado no Supabase:', result);
+              appLogger.info('🚀 Quiz iniciado no Supabase:', { data: [result] });
             })
             .catch(error => {
-              console.error('❌ Erro ao iniciar quiz no Supabase:', error);
+              appLogger.error('❌ Erro ao iniciar quiz no Supabase:', { data: [error] });
             });
         }
       }
@@ -74,27 +75,27 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
           : [];
 
       if (stepType === 'question' && stepNumber >= 2 && stepNumber <= 11 && isValid && opts.length) {
-        console.log('📊 ConnectedTemplateWrapper: Processando respostas', {
-          stepNumber,
-          selectedOptions: opts,
-        });
+        appLogger.info('📊 ConnectedTemplateWrapper: Processando respostas', { data: [{
+                    stepNumber,
+                    selectedOptions: opts,
+                  }] });
 
         // Mapear step number para question ID
         const questionId = `q${stepNumber - 1}`; // Step 2 = q1, Step 3 = q2, etc.
 
         // Processar cada opção selecionada
         opts.forEach((optionId: string) => {
-          console.log('✅ Registrando resposta:', { questionId, optionId });
+          appLogger.info('✅ Registrando resposta:', { data: [{ questionId, optionId }] });
           quizLogic.answerQuestion(questionId, optionId);
 
           // ✅ SALVAR NO SUPABASE
           supabaseQuiz
             .saveAnswer({ questionId, optionId })
             .then(() => {
-              console.log('💾 Resposta salva no Supabase:', { questionId, optionId });
+              appLogger.info('💾 Resposta salva no Supabase:', { data: [{ questionId, optionId }] });
             })
             .catch(error => {
-              console.error('❌ Erro ao salvar no Supabase:', error);
+              appLogger.error('❌ Erro ao salvar no Supabase:', { data: [error] });
             });
         });
       }
@@ -113,10 +114,10 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
           : [];
 
       if (stepType === 'strategic' && stepNumber >= 12 && stepNumber <= 18 && isValid && opts.length) {
-        console.log('🎯 ConnectedTemplateWrapper: Processando resposta estratégica', {
-          stepNumber,
-          selectedOptions: opts,
-        });
+        appLogger.info('🎯 ConnectedTemplateWrapper: Processando resposta estratégica', { data: [{
+                    stepNumber,
+                    selectedOptions: opts,
+                  }] });
 
         // Mapear step number para strategic question ID
         const questionId = `strategic-q${stepNumber - 11}`; // Step 12 = strategic-q1, etc.
@@ -138,7 +139,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
   // ✅ HANDLER: Cálculo de resultados (Etapas 19-21)
   const handleResultCalculation = useCallback(() => {
     if (stepType === 'result' && stepNumber >= 19 && !quizLogic.quizCompleted) {
-      console.log('🏆 ConnectedTemplateWrapper: Calculando resultados finais');
+      appLogger.info('🏆 ConnectedTemplateWrapper: Calculando resultados finais');
 
       // Completar quiz e calcular scores
       quizLogic.completeQuiz();
@@ -147,10 +148,10 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
       supabaseQuiz
         .completeQuiz()
         .then(result => {
-          console.log('🎉 Resultado salvo no Supabase:', result);
+          appLogger.info('🎉 Resultado salvo no Supabase:', { data: [result] });
         })
         .catch(error => {
-          console.error('❌ Erro ao salvar resultado no Supabase:', error);
+          appLogger.error('❌ Erro ao salvar resultado no Supabase:', { data: [error] });
         });
     }
   }, [stepType, stepNumber, quizLogic, supabaseQuiz]);
@@ -182,16 +183,16 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
 
   // ✅ DEBUG: Log do estado atual
   useEffect(() => {
-    console.log('🔗 ConnectedTemplateWrapper State:', {
-      stepNumber,
-      stepType,
-      sessionId,
-      currentAnswers: quizLogic.answers.length,
-      strategicAnswers: quizLogic.strategicAnswers.length,
-      userName: quizLogic.userName,
-      quizCompleted: quizLogic.quizCompleted,
-      quizResult: quizLogic.quizResult ? 'Available' : 'Not calculated',
-    });
+    appLogger.info('🔗 ConnectedTemplateWrapper State:', { data: [{
+            stepNumber,
+            stepType,
+            sessionId,
+            currentAnswers: quizLogic.answers.length,
+            strategicAnswers: quizLogic.strategicAnswers.length,
+            userName: quizLogic.userName,
+            quizCompleted: quizLogic.quizCompleted,
+            quizResult: quizLogic.quizResult ? 'Available' : 'Not calculated',
+          }] });
   }, [
     stepNumber,
     stepType,

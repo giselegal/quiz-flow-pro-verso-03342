@@ -7,6 +7,7 @@
 
 import { resultFormatAdapter, UnifiedResult } from './ResultFormatAdapter';
 import { resultCacheService } from './ResultCacheService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type EngineStatus = 'active' | 'inactive' | 'fallback' | 'disabled';
 
@@ -49,7 +50,7 @@ export class EngineRegistry {
    * Registra um motor no sistema
    */
   register(engine: EngineDefinition): void {
-    console.log(`📝 Registrando motor: ${engine.name} (${engine.id}) - Prioridade: ${engine.priority}`);
+    appLogger.info(`📝 Registrando motor: ${engine.name} (${engine.id}) - Prioridade: ${engine.priority}`);
     
     // Validar definição do motor
     this.validateEngine(engine);
@@ -60,7 +61,7 @@ export class EngineRegistry {
       errors: [],
     });
     
-    console.log(`✅ Motor ${engine.name} registrado com sucesso`);
+    appLogger.info(`✅ Motor ${engine.name} registrado com sucesso`);
   }
 
   /**
@@ -69,7 +70,7 @@ export class EngineRegistry {
   unregister(engineId: string): boolean {
     const removed = this.engines.delete(engineId);
     if (removed) {
-      console.log(`🗑️ Motor ${engineId} removido do registro`);
+      appLogger.info(`🗑️ Motor ${engineId} removido do registro`);
     }
     return removed;
   }
@@ -88,7 +89,7 @@ export class EngineRegistry {
   ): Promise<EngineExecutionResult> {
     const { userName, useCache = true, maxRetries = 2, excludeEngines = [] } = options;
     
-    console.log('🚀 Executando cálculo com sistema de prioridades...');
+    appLogger.info('🚀 Executando cálculo com sistema de prioridades...');
 
     // 1. Verificar cache primeiro se habilitado
     if (useCache && data.selections) {
@@ -121,7 +122,7 @@ export class EngineRegistry {
     
     for (const engine of availableEngines) {
       try {
-        console.log(`🔄 Tentando motor: ${engine.name} (prioridade ${engine.priority})`);
+        appLogger.info(`🔄 Tentando motor: ${engine.name} (prioridade ${engine.priority})`);
         
         const result = await this.executeEngine(engine, data, { maxRetries });
         
@@ -139,7 +140,7 @@ export class EngineRegistry {
         
       } catch (error) {
         lastError = error instanceof Error ? error.message : 'Erro desconhecido';
-        console.warn(`⚠️ Motor ${engine.name} falhou:`, lastError);
+        appLogger.warn(`⚠️ Motor ${engine.name} falhou:`, { data: [lastError] });
         
         // Marcar erro no motor
         engine.errors = engine.errors || [];
@@ -153,7 +154,7 @@ export class EngineRegistry {
     }
 
     // 4. Se todos falharam, usar fallback
-    console.error('❌ Todos os motores falharam, usando fallback');
+    appLogger.error('❌ Todos os motores falharam, usando fallback');
     return this.createFallbackResult(lastError);
   }
 
@@ -172,7 +173,7 @@ export class EngineRegistry {
     
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(`🔄 Executando ${engine.name} (tentativa ${attempt}/${maxRetries})`);
+        appLogger.info(`🔄 Executando ${engine.name} (tentativa ${attempt}/${maxRetries})`);
         
         // Verificar saúde do motor se disponível
         if (engine.isHealthy) {
@@ -218,12 +219,12 @@ export class EngineRegistry {
         
         this.addToHistory(result);
         
-        console.log(`✅ Motor ${engine.name} executado com sucesso em ${executionTime}ms`);
+        appLogger.info(`✅ Motor ${engine.name} executado com sucesso em ${executionTime}ms`);
         return result;
         
       } catch (error) {
         lastError = error instanceof Error ? error.message : 'Erro desconhecido';
-        console.warn(`⚠️ Tentativa ${attempt} falhou para ${engine.name}:`, lastError);
+        appLogger.warn(`⚠️ Tentativa ${attempt} falhou para ${engine.name}:`, { data: [lastError] });
         
         if (attempt === maxRetries) break;
         
@@ -292,7 +293,7 @@ export class EngineRegistry {
     if (!engine) return false;
     
     engine.status = status;
-    console.log(`🔧 Motor ${engine.name} status alterado para: ${status}`);
+    appLogger.info(`🔧 Motor ${engine.name} status alterado para: ${status}`);
     return true;
   }
 
@@ -301,7 +302,7 @@ export class EngineRegistry {
    */
   clearHistory(): void {
     this.executionHistory = [];
-    console.log('🧹 Histórico de execuções limpo');
+    appLogger.info('🧹 Histórico de execuções limpo');
   }
 
   /**
@@ -351,7 +352,7 @@ export class EngineRegistry {
       },
     });
 
-    console.log('🔧 Motores padrão registrados');
+    appLogger.info('🔧 Motores padrão registrados');
   }
 
   /**
@@ -375,7 +376,7 @@ export class EngineRegistry {
     }
     
     if (this.engines.has(engine.id)) {
-      console.warn(`⚠️ Sobrescrevendo motor existente: ${engine.id}`);
+      appLogger.warn(`⚠️ Sobrescrevendo motor existente: ${engine.id}`);
     }
   }
 

@@ -1,6 +1,7 @@
 // ✅ CORREÇÃO: Comentado import direto do .ts - usar HierarchicalTemplateSource se necessário
 // import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface FunnelTemplate {
   id: string;
@@ -78,7 +79,7 @@ export const templateLibraryService = {
     const found = this.listAll().find(t => t.id === resolvedId);
     
     if (!found) {
-      console.warn('⚠️ Template não encontrado:', { originalId: id, resolvedId, availableIds: this.listAll().map(t => t.id) });
+      appLogger.warn('⚠️ Template não encontrado:', { data: [{ originalId: id, resolvedId, availableIds: this.listAll().map(t => t.id) }] });
     }
     
     return found || null;

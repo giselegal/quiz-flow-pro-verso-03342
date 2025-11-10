@@ -1,6 +1,7 @@
 import type { BlockComponentProps } from '@/types/blocks';
 import { Button } from '@/components/ui/button';
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 type MarginType = 'top' | 'bottom' | 'left' | 'right';
@@ -53,7 +54,7 @@ const getMarginClass = (value: MarginValue, type: MarginType): string => {
 const ButtonBlock: React.FC<BlockComponentProps> = ({ block, className = '' }) => {
   return (
     <div data-testid="block-button" className={`button-block ${className}`}>
-      <Button data-testid="block-header" onClick={() => console.log('Button clicked')}>
+      <Button data-testid="block-header" onClick={() => appLogger.info('Button clicked')}>
         {(block as any)?.properties?.text ?? 'Click Me'}
       </Button>
     </div>

@@ -8,6 +8,7 @@ import {
   ProgressConfig,
   QuestionOption,
 } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para estilos customizados
 interface CustomStyles {
@@ -162,13 +163,13 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   };
 
   // LOG DE DEBUG - verificar se as opções estão chegando
-  console.log('🔍 QuizQuestion DEBUG:', {
-    question,
-    optionsLength: options?.length,
-    firstOption: options?.[0],
-    multipleSelection,
-    showNextButton,
-  });
+  appLogger.info('🔍 QuizQuestion DEBUG:', { data: [{
+        question,
+        optionsLength: options?.length,
+        firstOption: options?.[0],
+        multipleSelection,
+        showNextButton,
+      }] });
 
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelections);
   const [hasAnswered, setHasAnswered] = useState(false);

@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { useUnifiedEditorState } from '@/hooks/useUnifiedEditorState';
 import { useEditorPerformance } from '@/hooks/useUnifiedEditorState';
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SystemStatus {
   editor: 'healthy' | 'warning' | 'error';
@@ -76,7 +77,7 @@ export const SystemDiagnostics: React.FC = () => {
     setDiagnosticData(data);
     
     // Log diagnostic data
-    console.log('🔧 System Diagnostics:', data);
+    appLogger.info('🔧 System Diagnostics:', { data: [data] });
     addLog(`Diagnostics collected at ${new Date().toLocaleTimeString()}`);
   };
 
@@ -111,7 +112,7 @@ export const SystemDiagnostics: React.FC = () => {
 
       setSystemStatus(newStatus);
     } catch (error) {
-      console.error('Health check failed:', error);
+      appLogger.error('Health check failed:', { data: [error] });
       addLog(`Health check failed: ${error}`);
     }
   };

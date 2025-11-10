@@ -13,7 +13,7 @@ export const dragDropDebugger = {
  * - [ ] Separar responsabilidades (console cleanup vs drag debug vs performance)
  */
 
-import { appLogger } from './logger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos mínimos para migração
 interface DragEventData {
@@ -76,7 +76,7 @@ export const cleanupConsoleWarnings = (): void => {
       }
     };
 
-    console.log('�� Console warnings cleanup active');
+    appLogger.info('�� Console warnings cleanup active');
   }
 };
 
@@ -84,20 +84,20 @@ export const cleanupConsoleWarnings = (): void => {
 export const dragDropDebugger = {
   logDragStart: (data: any) => {
     console.group('🟢 Drag Start Event');
-    console.log('Active ID:', data.id);
-    console.log('Active Type:', data.type);
-    console.log('Block Type:', data.blockType);
-    console.log('Full Data:', data);
+    appLogger.info('Active ID:', { data: [data.id] });
+    appLogger.info('Active Type:', { data: [data.type] });
+    appLogger.info('Block Type:', { data: [data.blockType] });
+    appLogger.info('Full Data:', { data: [data] });
     console.groupEnd();
   },
 
   logDragEnd: (data: DragEventData) => {
     console.group('🔄 Drag End Event');
-    console.log('Active ID:', data.activeId);
-    console.log('Over ID:', data.overId);
-    console.log('Active Type:', data.activeType);
-    console.log('Over Type:', data.overType);
-    console.log('Success:', data.success);
+    appLogger.info('Active ID:', { data: [data.activeId] });
+    appLogger.info('Over ID:', { data: [data.overId] });
+    appLogger.info('Active Type:', { data: [data.activeType] });
+    appLogger.info('Over Type:', { data: [data.overType] });
+    appLogger.info('Success:', { data: [data.success] });
     console.groupEnd();
   },
 };

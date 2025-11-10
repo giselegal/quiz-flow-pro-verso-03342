@@ -8,6 +8,7 @@ import type {
   InsertFunnel,
   InsertFunnelPage,
 } from '@/types/unified-schema';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Additional interfaces for backward compatibility
 interface InsertFunnelVersion extends Omit<FunnelVersion, 'id'> { }
@@ -259,14 +260,14 @@ class FunnelService {
 
       return true;
     } catch (error) {
-      console.error('Error saving page config:', error);
+      appLogger.error('Error saving page config:', { data: [error] });
 
       // Fallback para localStorage
       try {
         localStorage.setItem(`page-config-${pageId}`, JSON.stringify(config));
         return true;
       } catch (localError) {
-        console.error('Failed to save to localStorage:', localError);
+        appLogger.error('Failed to save to localStorage:', { data: [localError] });
         return false;
       }
     }
@@ -291,14 +292,14 @@ class FunnelService {
       const result = await response.json();
       return result.data;
     } catch (error) {
-      console.error('Error fetching page config:', error);
+      appLogger.error('Error fetching page config:', { data: [error] });
 
       // Fallback para localStorage
       try {
         const localConfig = localStorage.getItem(`page-config-${pageId}`);
         return localConfig ? JSON.parse(localConfig) : null;
       } catch (localError) {
-        console.error('Failed to read from localStorage:', localError);
+        appLogger.error('Failed to read from localStorage:', { data: [localError] });
         return null;
       }
     }
@@ -337,7 +338,7 @@ class FunnelService {
       const results = await Promise.all(syncPromises);
       return results.every(result => result === true);
     } catch (error) {
-      console.error('Error syncing funnel to page configs:', error);
+      appLogger.error('Error syncing funnel to page configs:', { data: [error] });
       return false;
     }
   }
@@ -397,7 +398,7 @@ class FunnelService {
       const results = await Promise.all(syncPromises);
       return results.every(result => result === true);
     } catch (error) {
-      console.error('Error syncing quiz blocks:', error);
+      appLogger.error('Error syncing quiz blocks:', { data: [error] });
       return false;
     }
   }

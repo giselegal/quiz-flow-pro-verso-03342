@@ -5,6 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface ReusableComponent {
   id: string;
@@ -23,7 +24,7 @@ export const useEditorReusableComponentsSimple = () => {
 
   const loadComponents = useCallback(async () => {
     setIsLoading(true);
-    console.log('📥 Carregando componentes reutilizáveis...');
+    appLogger.info('📥 Carregando componentes reutilizáveis...');
     
     // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 200));
@@ -60,19 +61,19 @@ export const useEditorReusableComponentsSimple = () => {
     };
     
     setComponents(prev => [...prev, newComponent]);
-    console.log('➕ Componente adicionado:', newComponent);
+    appLogger.info('➕ Componente adicionado:', { data: [newComponent] });
   }, []);
 
   const updateComponent = useCallback((id: string, updates: Partial<ReusableComponent>) => {
     setComponents(prev => prev.map(comp => 
       comp.id === id ? { ...comp, ...updates } : comp,
     ));
-    console.log('🔄 Componente atualizado:', id, updates);
+    appLogger.info('🔄 Componente atualizado:', { data: [id, updates] });
   }, []);
 
   const deleteComponent = useCallback((id: string) => {
     setComponents(prev => prev.filter(comp => comp.id !== id));
-    console.log('🗑️ Componente removido:', id);
+    appLogger.info('🗑️ Componente removido:', { data: [id] });
   }, []);
 
   return {

@@ -14,6 +14,7 @@ import { quizDataPipeline } from './QuizDataPipeline';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { templateService } from '@/services/canonical/TemplateService';
 import { styleCalculationEngine } from '@/features/engines/StyleCalculationEngine';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface BootstrapConfig {
   funnelId?: string;
@@ -67,7 +68,7 @@ class QuizAutoBootstrap {
       ...config, 
     };
 
-    console.log('🚀 QuizAutoBootstrap: Iniciando bootstrap do sistema...', this.config);
+    appLogger.info('🚀 QuizAutoBootstrap: Iniciando bootstrap do sistema...', { data: [this.config] });
 
     try {
       this.updateStatus({
@@ -115,11 +116,11 @@ class QuizAutoBootstrap {
       // Iniciar monitoramento contínuo
       this.startHealthMonitoring();
 
-      console.log('✅ QuizAutoBootstrap: Bootstrap concluído com sucesso');
+      appLogger.info('✅ QuizAutoBootstrap: Bootstrap concluído com sucesso');
       return true;
 
     } catch (error) {
-      console.error('❌ QuizAutoBootstrap: Erro no bootstrap:', error);
+      appLogger.error('❌ QuizAutoBootstrap: Erro no bootstrap:', { data: [error] });
       
       this.updateStatus({
         phase: 'error',
@@ -137,7 +138,7 @@ class QuizAutoBootstrap {
    * 🔄 REINICIALIZAR SISTEMA
    */
   async restart(): Promise<boolean> {
-    console.log('🔄 QuizAutoBootstrap: Reiniciando sistema...');
+    appLogger.info('🔄 QuizAutoBootstrap: Reiniciando sistema...');
     
     // Parar monitoramento
     this.stopHealthMonitoring();
@@ -221,7 +222,7 @@ class QuizAutoBootstrap {
       }
 
     } catch (error) {
-      console.error('❌ QuizAutoBootstrap: Erro na verificação de saúde:', error);
+      appLogger.error('❌ QuizAutoBootstrap: Erro na verificação de saúde:', { data: [error] });
       health.overall = 'error';
     }
 
@@ -279,7 +280,7 @@ class QuizAutoBootstrap {
       throw new Error('Fetch API não disponível');
     }
 
-    console.log('✅ Pré-requisitos verificados');
+    appLogger.info('✅ Pré-requisitos verificados');
   }
 
   private async initializeStorage(): Promise<void> {
@@ -292,11 +293,11 @@ class QuizAutoBootstrap {
     try {
       // Carregar dados existentes ou inicializar
       const quizData = unifiedQuizStorage.loadData();
-      console.log('💾 Storage inicializado:', {
-        selections: Object.keys(quizData.selections).length,
-        formData: Object.keys(quizData.formData).length,
-        currentStep: quizData.metadata.currentStep,
-      });
+      appLogger.info('💾 Storage inicializado:', { data: [{
+                selections: Object.keys(quizData.selections).length,
+                formData: Object.keys(quizData.formData).length,
+                currentStep: quizData.metadata.currentStep,
+              }] });
     } catch (error) {
       throw new Error(`Falha na inicialização do storage: ${error}`);
     }
@@ -317,7 +318,7 @@ class QuizAutoBootstrap {
       }
       const steps = templateService.steps.list();
       const stepsCount = steps.success ? steps.data.length : 0;
-      console.log('📄 Templates preparados:', { templateId, stepsCount });
+      appLogger.info('📄 Templates preparados:', { data: [{ templateId, stepsCount }] });
     } catch (error) {
       throw new Error(`Falha no carregamento de templates: ${error}`);
     }
@@ -336,7 +337,7 @@ class QuizAutoBootstrap {
         this.config.userId,
       );
       
-      console.log('🔄 Pipeline inicializado');
+      appLogger.info('🔄 Pipeline inicializado');
     } catch (error) {
       throw new Error(`Falha na inicialização do pipeline: ${error}`);
     }
@@ -357,10 +358,10 @@ class QuizAutoBootstrap {
         throw new Error('Orchestrator não foi inicializado corretamente');
       }
       
-      console.log('🎯 Orchestrator inicializado:', {
-        currentStep: state.currentStep,
-        isValid: state.isStepValid,
-      });
+      appLogger.info('🎯 Orchestrator inicializado:', { data: [{
+                currentStep: state.currentStep,
+                isValid: state.isStepValid,
+              }] });
     } catch (error) {
       throw new Error(`Falha na inicialização do orchestrator: ${error}`);
     }
@@ -376,18 +377,18 @@ class QuizAutoBootstrap {
     // Inicializar engine de cálculo se necessário
     try {
       styleCalculationEngine.clearCache(); // Limpar cache para garantir dados frescos
-      console.log('🎨 Engine de cálculo configurado');
+      appLogger.info('🎨 Engine de cálculo configurado');
     } catch (error) {
-      console.warn('⚠️ Falha na configuração do engine de cálculo:', error);
+      appLogger.warn('⚠️ Falha na configuração do engine de cálculo:', { data: [error] });
     }
 
     // Configurar analytics se habilitado
     if (this.config.enableAnalytics) {
       try {
         this.setupAnalytics();
-        console.log('📊 Analytics configurado');
+        appLogger.info('📊 Analytics configurado');
       } catch (error) {
-        console.warn('⚠️ Falha na configuração de analytics:', error);
+        appLogger.warn('⚠️ Falha na configuração de analytics:', { data: [error] });
       }
     }
   }
@@ -406,14 +407,14 @@ class QuizAutoBootstrap {
     }
 
     if (health.overall === 'warning') {
-      console.warn('⚠️ Sistema apresenta avisos:', health);
+      appLogger.warn('⚠️ Sistema apresenta avisos:', { data: [health] });
     }
 
-    console.log('✅ Verificação de saúde concluída:', health);
+    appLogger.info('✅ Verificação de saúde concluída:', { data: [health] });
   }
 
   private async autoStart(): Promise<void> {
-    console.log('🚀 Auto-start habilitado, iniciando quiz...');
+    appLogger.info('🚀 Auto-start habilitado, iniciando quiz...');
     
     // Aqui poderia disparar eventos para componentes React
     // ou configurar estado inicial específico
@@ -433,7 +434,7 @@ class QuizAutoBootstrap {
     if (typeof window !== 'undefined') {
       const trackEvent = (eventName: string, properties: any) => {
         if (this.config.debugMode) {
-          console.log('📊 Analytics Event:', eventName, properties);
+          appLogger.info('📊 Analytics Event:', { data: [eventName, properties] });
         }
         
         // Aqui integraria com Google Analytics, Mixpanel, etc.
@@ -467,16 +468,16 @@ class QuizAutoBootstrap {
         const health = await this.checkSystemHealth();
         
         if (health.overall === 'error') {
-          console.error('🚨 Sistema apresenta erros críticos:', health);
+          appLogger.error('🚨 Sistema apresenta erros críticos:', { data: [health] });
           
           // Tentar recuperação automática
           if (this.config.autoStart) {
-            console.log('🔄 Tentando recuperação automática...');
+            appLogger.info('🔄 Tentando recuperação automática...');
             this.restart();
           }
         }
       } catch (error) {
-        console.error('❌ Erro no monitoramento de saúde:', error);
+        appLogger.error('❌ Erro no monitoramento de saúde:', { data: [error] });
       }
     }, 30000); // A cada 30 segundos
   }

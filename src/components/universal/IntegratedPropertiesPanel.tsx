@@ -62,6 +62,7 @@ import {
   useUnifiedProperties,
   PropertyType,
 } from '@/hooks/useUnifiedProperties';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===== COMPONENTES AUXILIARES AVANÇADOS =====
 
@@ -357,32 +358,32 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Hook de propriedades unificadas (fonte única de verdade)
-  console.log('🔥 IntegratedPanel - ANTES do hook:', {
-    selectedBlock,
-    type: selectedBlock?.type,
-    id: selectedBlock?.id,
-  });
+  appLogger.info('🔥 IntegratedPanel - ANTES do hook:', { data: [{
+        selectedBlock,
+        type: selectedBlock?.type,
+        id: selectedBlock?.id,
+      }] });
   const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
     useUnifiedProperties(selectedBlock?.type || '', selectedBlock?.id, selectedBlock, onUpdate);
-  console.log('🔥 IntegratedPanel - DEPOIS do hook:', {
-    properties: properties?.length,
-    onUpdate: !!onUpdate,
-  });
+  appLogger.info('🔥 IntegratedPanel - DEPOIS do hook:', { data: [{
+        properties: properties?.length,
+        onUpdate: !!onUpdate,
+      }] });
 
   // Logs de debug para desenvolvimento
   useEffect(() => {
     if (selectedBlock && process.env.NODE_ENV === 'development') {
-      console.log('🚀 IntegratedPropertiesPanel:', {
-        id: selectedBlock.id,
-        type: selectedBlock.type,
-        propertiesCount: properties?.length || 0,
-        categoriesWithData: categoryOrder
-          .map(cat => ({
-            category: cat,
-            count: getPropertiesByCategory(cat).length,
-          }))
-          .filter(c => c.count > 0),
-      });
+      appLogger.info('🚀 IntegratedPropertiesPanel:', { data: [{
+                id: selectedBlock.id,
+                type: selectedBlock.type,
+                propertiesCount: properties?.length || 0,
+                categoriesWithData: categoryOrder
+                  .map(cat => ({
+                    category: cat,
+                    count: getPropertiesByCategory(cat).length,
+                  }))
+                  .filter(c => c.count > 0),
+              }] });
     }
   }, [selectedBlock, properties, getPropertiesByCategory]);
 
@@ -449,14 +450,14 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
 
       const handleChange = async (newValue: any) => {
         setIsLoading(true);
-        console.log('🔥 IntegratedPanel handleChange CHAMADO:', {
-          key,
-          newValue,
-          label,
-          selectedBlockId: selectedBlock?.id,
-        });
-        console.log('🔥 updateProperty function exists?', !!updateProperty);
-        console.log('🔥 onUpdate function exists?', !!onUpdate);
+        appLogger.info('🔥 IntegratedPanel handleChange CHAMADO:', { data: [{
+                    key,
+                    newValue,
+                    label,
+                    selectedBlockId: selectedBlock?.id,
+                  }] });
+        appLogger.info('🔥 updateProperty function exists?', { data: [!!updateProperty] });
+        appLogger.info('🔥 onUpdate function exists?', { data: [!!onUpdate] });
 
         try {
           // Validação simples
@@ -472,7 +473,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
 
           updateProperty(key, newValue);
         } catch (error) {
-          console.error('Erro ao atualizar propriedade:', error);
+          appLogger.error('Erro ao atualizar propriedade:', { data: [error] });
           setErrors(prev => ({ ...prev, [key]: 'Erro ao atualizar propriedade' }));
         } finally {
           setTimeout(() => setIsLoading(false), 100); // Loading visual
@@ -625,7 +626,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
                 <Switch
                   checked={Boolean(value)}
                   onCheckedChange={checked => {
-                    console.log('🎯 IntegratedPanel SWITCH mudou:', { key, checked, label });
+                    appLogger.info('🎯 IntegratedPanel SWITCH mudou:', { data: [{ key, checked, label }] });
                     handleChange(checked);
                   }}
                   className="data-[state=checked]:bg-[#B89B7A]"

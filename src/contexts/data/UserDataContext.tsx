@@ -9,6 +9,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { supabase } from '../../services/integrations/supabase/client';
 import { QuizUser, QuizSession, InsertQuizUser, InsertQuizSession } from '../../types/unified-schema';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UserDataContextType {
   // User information (previously in localStorage as userName, userEmail)
@@ -92,7 +93,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
       }
     } catch (err) {
       setError('Erro ao inicializar dados do usuário');
-      console.error('Error initializing user data:', err);
+      appLogger.error('Error initializing user data:', { data: [err] });
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +118,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
       if (error) throw error;
       return data;
     } catch (err) {
-      console.error('Error creating user:', err);
+      appLogger.error('Error creating user:', { data: [err] });
       return null;
     }
   };
@@ -147,7 +148,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
       if (error) throw error;
       return data;
     } catch (err) {
-      console.error('Error creating session:', err);
+      appLogger.error('Error creating session:', { data: [err] });
       return null;
     }
   };
@@ -168,7 +169,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
       if (error) throw error;
       return true;
     } catch (err) {
-      console.error('Error updating session:', err);
+      appLogger.error('Error updating session:', { data: [err] });
       return false;
     }
   };

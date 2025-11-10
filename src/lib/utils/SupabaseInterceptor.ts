@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔧 INTERCEPTOR DE ERROS SUPABASE MELHORADO
  * 
@@ -33,27 +34,27 @@ class SupabaseErrorInterceptor {
     activate(): void {
         if (this.isActive) return;
 
-        console.log('🛡️ Ativando interceptor Supabase...');
+        appLogger.info('🛡️ Ativando interceptor Supabase...');
         
         window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
             const url = typeof input === 'string' ? input : input.toString();
             
             // Detectar URLs do Supabase que podem dar erro
             if (this.isSupabaseUrl(url)) {
-                console.log(`🔍 Interceptando requisição Supabase: ${this.extractEndpoint(url)}`);
+                appLogger.info(`🔍 Interceptando requisição Supabase: ${this.extractEndpoint(url)}`);
                 
                 try {
                     const response = await this.originalFetch(input, init);
                     
                     // Se 404 ou erro, usar fallback
                     if (response.status === 404 || !response.ok) {
-                        console.log(`📦 Fornecendo dados locais para: ${this.extractEndpoint(url)}`);
+                        appLogger.info(`📦 Fornecendo dados locais para: ${this.extractEndpoint(url)}`);
                         return this.createFallbackResponse(url);
                     }
                     
                     return response;
                 } catch (error) {
-                    console.warn('⚠️ Erro na requisição Supabase, usando fallback:', error);
+                    appLogger.warn('⚠️ Erro na requisição Supabase, usando fallback:', { data: [error] });
                     return this.createFallbackResponse(url);
                 }
             }
@@ -71,7 +72,7 @@ class SupabaseErrorInterceptor {
     deactivate(): void {
         if (!this.isActive) return;
 
-        console.log('🔄 Desativando interceptor Supabase...');
+        appLogger.info('🔄 Desativando interceptor Supabase...');
         window.fetch = this.originalFetch;
         this.isActive = false;
     }

@@ -5,6 +5,7 @@
  */
 
 import { createStorageError, createValidationError, errorManager } from './errorHandling';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // ADAPTADORES LEGACY
@@ -70,8 +71,8 @@ export const handleFunnelError = async (error: FunnelError, context?: any) => {
 
         errorManager.handleError(newError);
     } catch (handlingError) {
-        console.error('Failed to handle FunnelError:', handlingError);
+        appLogger.error('Failed to handle FunnelError:', { data: [handlingError] });
         // Fallback: log original error
-        console.error('Original FunnelError:', error.message, error.context);
+        appLogger.error('Original FunnelError:', { data: [error.message, error.context] });
     }
 };

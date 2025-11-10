@@ -15,6 +15,7 @@ import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelS
 import type { UnifiedFunnelData } from '@/services/canonical/FunnelService';
 import { appLogger } from '@/lib/utils/logger';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -110,14 +111,14 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
     useEffect(() => {
         const handleFunnelUpdated = (event: any) => {
             if (event.funnelId === funnelId) {
-                console.log('🔄 Funil atualizado externamente, recarregando...');
+                appLogger.info('🔄 Funil atualizado externamente, recarregando...');
                 if (funnelId) loadFunnel(funnelId);
             }
         };
 
         const handleFunnelDeleted = (event: any) => {
             if (event.funnelId === funnelId) {
-                console.log('🗑️ Funil deletado externamente');
+                appLogger.info('🗑️ Funil deletado externamente');
                 setFunnel(null);
                 setError('Funil foi deletado');
             }
@@ -147,7 +148,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('📖 UnifiedFunnelContext: Carregando funil (canônico)', id);
+            appLogger.info('📖 UnifiedFunnelContext: Carregando funil (canônico)', { data: [id] });
 
             // Usar serviço canônico (mapeado para tipo unificado)
             const canonical = await funnelService.getFunnel(id);
@@ -162,7 +163,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                     setPermissions(perms);
                 }
 
-                console.log('✅ Funil carregado:', loadedFunnel);
+                appLogger.info('✅ Funil carregado:', { data: [loadedFunnel] });
             } else {
                 setError('Funil não encontrado');
                 setFunnel(null);
@@ -170,7 +171,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
-            console.error('❌ Erro ao carregar funil:', errorMessage);
+            appLogger.error('❌ Erro ao carregar funil:', { data: [errorMessage] });
             setError(errorMessage);
             setFunnel(null);
         } finally {
@@ -187,7 +188,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('🎯 UnifiedFunnelContext: Criando funil (canônico)', name);
+            appLogger.info('🎯 UnifiedFunnelContext: Criando funil (canônico)', { data: [name] });
 
             const created = await funnelService.createFunnel({
                 name,
@@ -211,12 +212,12 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 isOwner: true,
             });
 
-            console.log('✅ Funil criado:', newFunnel);
+            appLogger.info('✅ Funil criado:', { data: [newFunnel] });
             return newFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao criar funil';
-            console.error('❌ Erro ao criar funil:', errorMessage);
+            appLogger.error('❌ Erro ao criar funil:', { data: [errorMessage] });
             setError(errorMessage);
             throw err;
         } finally {
@@ -233,7 +234,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('✏️ UnifiedFunnelContext: Atualizando funil (canônico)', funnelId);
+            appLogger.info('✏️ UnifiedFunnelContext: Atualizando funil (canônico)', { data: [funnelId] });
 
             const updated = await funnelService.updateFunnel(funnelId, {
                 name: updates?.name ?? funnel.name,
@@ -245,12 +246,12 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             }); const updatedFunnel = updated ? mapCanonicalToUnified(updated) : funnel;
             setFunnel(updatedFunnel);
 
-            console.log('✅ Funil atualizado:', updatedFunnel);
+            appLogger.info('✅ Funil atualizado:', { data: [updatedFunnel] });
             return updatedFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar funil';
-            console.error('❌ Erro ao atualizar funil:', errorMessage);
+            appLogger.error('❌ Erro ao atualizar funil:', { data: [errorMessage] });
             setError(errorMessage);
             throw err;
         } finally {
@@ -267,7 +268,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('🔄 UnifiedFunnelContext: Duplicando funil', funnelId);
+            appLogger.info('🔄 UnifiedFunnelContext: Duplicando funil', { data: [funnelId] });
 
             // funnelService pode não ter método duplicateFunnel, vamos criar manualmente
             const original = await funnelService.getFunnel(funnelId);
@@ -287,12 +288,12 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
             const duplicatedFunnel = mapCanonicalToUnified(duplicated);
 
-            console.log('✅ Funil duplicado:', duplicatedFunnel);
+            appLogger.info('✅ Funil duplicado:', { data: [duplicatedFunnel] });
             return duplicatedFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao duplicar funil';
-            console.error('❌ Erro ao duplicar funil:', errorMessage);
+            appLogger.error('❌ Erro ao duplicar funil:', { data: [errorMessage] });
             setError(errorMessage);
             throw err;
         } finally {
@@ -309,7 +310,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         setError(null);
 
         try {
-            console.log('🗑️ UnifiedFunnelContext: Deletando funil (canônico)', funnelId);
+            appLogger.info('🗑️ UnifiedFunnelContext: Deletando funil (canônico)', { data: [funnelId] });
 
             const success = await funnelService.deleteFunnel(funnelId);
 
@@ -321,14 +322,14 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                     canDelete: false,
                     isOwner: false,
                 });
-                console.log('✅ Funil deletado');
+                appLogger.info('✅ Funil deletado');
             }
 
             return success;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao deletar funil';
-            console.error('❌ Erro ao deletar funil:', errorMessage);
+            appLogger.error('❌ Erro ao deletar funil:', { data: [errorMessage] });
             setError(errorMessage);
             throw err;
         } finally {
@@ -363,7 +364,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 setPermissions(permissions);
             }
         } catch (err) {
-            console.error('❌ Erro na validação:', err);
+            appLogger.error('❌ Erro na validação:', { data: [err] });
         }
     };
 
@@ -411,7 +412,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
     };
 
     if (debugMode) {
-        console.log('🎯 UnifiedFunnelProvider state:', contextValue);
+        appLogger.info('🎯 UnifiedFunnelProvider state:', { data: [contextValue] });
     }
 
     return (

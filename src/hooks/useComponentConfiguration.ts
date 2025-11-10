@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { ConfigurationAPI } from '@/services/aliases';
 import type { ComponentDefinition } from '@/types/componentConfiguration';
 import { configurationCache } from '@/lib/utils/ConfigurationCache';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -97,7 +98,7 @@ export function useComponentConfiguration(
         const cacheKey = `${componentId}-${funnelId || 'default'}`;
         const cachedConfig = configurationCache.get<{properties: Record<string, any>, definition: ComponentDefinition}>(cacheKey);
         if (cachedConfig) {
-            console.log(`⚡ Cache hit para ${componentId}`);
+            appLogger.info(`⚡ Cache hit para ${componentId}`);
             setProperties(cachedConfig.properties || {});
             setComponentDefinition(cachedConfig.definition);
             setIsConnected(true);
@@ -109,7 +110,7 @@ export function useComponentConfiguration(
         // 🚀 MODO PREVIEW OFFLINE: Skip API calls em desenvolvimento para preview
         const isPreviewMode = editorMode || process.env.NODE_ENV === 'development';
         if (isPreviewMode) {
-            console.log(`🎯 Preview mode: usando configuração local para ${componentId}`);
+            appLogger.info(`🎯 Preview mode: usando configuração local para ${componentId}`);
             try {
                 const definition = await apiRef.current.getComponentDefinition(componentId);
                 setComponentDefinition(definition);
@@ -123,7 +124,7 @@ export function useComponentConfiguration(
                 configurationCache.set(cacheKey, { properties, definition }, 2 * 60 * 1000); // 2 min cache
                 return;
             } catch (err) {
-                console.warn(`⚠️ Fallback para ${componentId}:`, err);
+                appLogger.warn(`⚠️ Fallback para ${componentId}:`, { data: [err] });
                 setProperties({});
                 setIsLoading(false);
                 setConnectionStatus('disconnected');
@@ -134,7 +135,7 @@ export function useComponentConfiguration(
         // �🛡️ TIMEOUT DE SEGURANÇA: 3 segundos em dev, 15 em produção
         const timeoutMs = process.env.NODE_ENV === 'development' ? 3000 : 15000;
         const safetyTimeout = setTimeout(() => {
-            console.warn(`⚠️ Loading timeout for ${componentId} - usando valores padrão`);
+            appLogger.warn(`⚠️ Loading timeout for ${componentId} - usando valores padrão`);
             setIsLoading(false);
             setConnectionStatus('disconnected'); // Não é erro, apenas desconectado
             // NÃO definir erro - timeout não é erro fatal, apenas usa fallback
@@ -145,7 +146,7 @@ export function useComponentConfiguration(
             setConnectionStatus('connecting');
             setError(null);
 
-            console.log(`🔄 Loading configuration for ${componentId}${funnelId ? ` (${funnelId})` : ''}`);
+            appLogger.info(`🔄 Loading configuration for ${componentId}${funnelId ? ` (${funnelId})` : ''}`);
 
             // Carregar definição do componente (apenas uma vez para evitar loop)
             if (!definitionLoadedRef.current) {
@@ -163,7 +164,7 @@ export function useComponentConfiguration(
             setConnectionStatus('connected');
             setHasUnsavedChanges(false);
 
-            console.log(`✅ Configuration loaded for ${componentId}:`, config);
+            appLogger.info(`✅ Configuration loaded for ${componentId}:`, { data: [config] });
 
             // Limpar timeout de segurança se tudo correu bem
             clearTimeout(safetyTimeout);
@@ -178,9 +179,9 @@ export function useComponentConfiguration(
             
             if (!isNonFatalError) {
                 setError(errorMessage);
-                console.error(`❌ Error loading configuration for ${componentId}:`, err);
+                appLogger.error(`❌ Error loading configuration for ${componentId}:`, { data: [err] });
             } else {
-                console.warn(`⚠️ Non-fatal error for ${componentId}: ${errorMessage} - usando fallback`);
+                appLogger.warn(`⚠️ Non-fatal error for ${componentId}: ${errorMessage} - usando fallback`);
             }
             
             setIsConnected(false);
@@ -200,12 +201,12 @@ export function useComponentConfiguration(
 
     const updateProperty = useCallback(async (key: string, value: any) => {
         if (!componentId || !isConnected) {
-            console.warn(`Cannot update property ${key}: component not connected`);
+            appLogger.warn(`Cannot update property ${key}: component not connected`);
             return;
         }
 
         try {
-            console.log(`🔧 Updating property ${componentId}.${key} =`, value);
+            appLogger.info(`🔧 Updating property ${componentId}.${key} =`, { data: [value] });
 
             // Atualizar estado local imediatamente (optimistic update)
             setProperties(prev => ({ ...prev, [key]: value }));
@@ -244,7 +245,7 @@ export function useComponentConfiguration(
                 return reverted;
             });
 
-            console.error(`❌ Error updating property ${key}:`, err);
+            appLogger.error(`❌ Error updating property ${key}:`, { data: [err] });
         }
     }, [componentId, funnelId, isConnected, autoSave, autoSaveDelay]);
 
@@ -254,12 +255,12 @@ export function useComponentConfiguration(
 
     const updateProperties = useCallback(async (newProperties: Record<string, any>) => {
         if (!componentId || !isConnected) {
-            console.warn('Cannot update properties: component not connected');
+            appLogger.warn('Cannot update properties: component not connected');
             return;
         }
 
         try {
-            console.log(`🔧 Updating multiple properties for ${componentId}:`, newProperties);
+            appLogger.info(`🔧 Updating multiple properties for ${componentId}:`, { data: [newProperties] });
 
             // Atualizar estado local
             setProperties(prev => ({ ...prev, ...newProperties }));
@@ -272,12 +273,12 @@ export function useComponentConfiguration(
             setHasUnsavedChanges(false);
             unsavedChangesRef.current = {};
 
-            console.log(`✅ Multiple properties updated for ${componentId}`);
+            appLogger.info(`✅ Multiple properties updated for ${componentId}`);
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar propriedades';
             setError(errorMessage);
-            console.error('❌ Error updating properties:', err);
+            appLogger.error('❌ Error updating properties:', { data: [err] });
         }
     }, [componentId, funnelId, isConnected, properties]);
 
@@ -289,7 +290,7 @@ export function useComponentConfiguration(
         if (Object.keys(unsavedChangesRef.current).length === 0) return;
 
         try {
-            console.log(`💾 Auto-saving changes for ${componentId}:`, unsavedChangesRef.current);
+            appLogger.info(`💾 Auto-saving changes for ${componentId}:`, { data: [unsavedChangesRef.current] });
 
             const updatedProperties = { ...properties, ...unsavedChangesRef.current };
             await apiRef.current.updateConfiguration(componentId, updatedProperties, funnelId);
@@ -298,10 +299,10 @@ export function useComponentConfiguration(
             setHasUnsavedChanges(false);
             unsavedChangesRef.current = {};
 
-            console.log(`✅ Auto-save completed for ${componentId}`);
+            appLogger.info(`✅ Auto-save completed for ${componentId}`);
 
         } catch (err) {
-            console.error('❌ Error in auto-save:', err);
+            appLogger.error('❌ Error in auto-save:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro no auto-save');
         }
     }, [componentId, funnelId, properties]);
@@ -314,19 +315,19 @@ export function useComponentConfiguration(
         if (!componentId || !componentDefinition) return;
 
         try {
-            console.log(`🔄 Resetting ${componentId} to defaults`);
+            appLogger.info(`🔄 Resetting ${componentId} to defaults`);
 
             await apiRef.current.resetToDefaults(componentId, funnelId);
 
             // Recarregar configuração
             await loadConfiguration();
 
-            console.log(`✅ Reset to defaults completed for ${componentId}`);
+            appLogger.info(`✅ Reset to defaults completed for ${componentId}`);
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao resetar configuração';
             setError(errorMessage);
-            console.error('❌ Error resetting to defaults:', err);
+            appLogger.error('❌ Error resetting to defaults:', { data: [err] });
         }
     }, [componentId, funnelId, componentDefinition, loadConfiguration]);
 
@@ -335,7 +336,7 @@ export function useComponentConfiguration(
     // ============================================================================
 
     const refresh = useCallback(async () => {
-        console.log(`🔄 Refreshing configuration for ${componentId}`);
+        appLogger.info(`🔄 Refreshing configuration for ${componentId}`);
         await loadConfiguration();
     }, [loadConfiguration, componentId]);
 
@@ -375,7 +376,7 @@ export function useComponentConfiguration(
         if (!realTimeSync || !isConnected) return;
 
         // TODO: Implementar WebSocket ou Server-Sent Events
-        console.log(`🔗 Real-time sync enabled for ${componentId}`);
+        appLogger.info(`🔗 Real-time sync enabled for ${componentId}`);
 
         // Placeholder para conexão real-time
         // const ws = new WebSocket(`ws://localhost:3000/api/components/${componentId}/sync`);

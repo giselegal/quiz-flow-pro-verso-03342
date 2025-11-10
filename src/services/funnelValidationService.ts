@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔐 SERVIÇO DE VALIDAÇÃO E AUTORIZAÇÃO DE FUNIS
  * 
@@ -102,7 +103,7 @@ export class FunnelValidationService {
             return result;
 
         } catch (error) {
-            console.error('Erro ao validar acesso ao funil:', error);
+            appLogger.error('Erro ao validar acesso ao funil:', { data: [error] });
             return {
                 isValid: false,
                 exists: false,

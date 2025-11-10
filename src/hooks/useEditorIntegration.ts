@@ -3,6 +3,7 @@ import { useEditor } from '@/components/editor/EditorProviderCanonical';
 import { Block } from '@/types/editor';
 import { useInlineEditor } from './useInlineEditor';
 import { useStepValidation } from './useStepValidation';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EditorIntegrationState {
   isInteractiveMode: boolean;
@@ -86,7 +87,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
 
   const updateStepBlocks = useCallback((blocks: Block[]) => {
     // In a real implementation, this would update via EditorProvider actions
-    console.log('🔄 Updating step blocks:', blocks.length);
+    appLogger.info('🔄 Updating step blocks:', { data: [blocks.length] });
     setIntegrationState(prev => ({ 
       ...prev, 
       hasUnsavedChanges: true,
@@ -130,7 +131,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
       }, 2000);
     } catch (error) {
       setIntegrationState(prev => ({ ...prev, syncStatus: 'error' }));
-      console.error('Error saving changes:', error);
+      appLogger.error('Error saving changes:', { data: [error] });
     }
   }, []);
 
@@ -142,7 +143,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
       isDraftMode: false, 
     }));
     
-    console.log('🚀 Publishing changes to production...');
+    appLogger.info('🚀 Publishing changes to production...');
   }, [saveChanges]);
 
   const resetToLastSaved = useCallback(() => {
@@ -153,7 +154,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
       syncStatus: 'idle',
     }));
     
-    console.log('🔄 Resetting to last saved state...');
+    appLogger.info('🔄 Resetting to last saved state...');
   }, []);
 
   // Auto-save functionality

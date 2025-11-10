@@ -5,6 +5,7 @@
 
 import { useState, useCallback } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface RateLimitCheck {
   allowed: boolean;
@@ -43,7 +44,7 @@ export const useRateLimit = () => {
       });
 
       if (error) {
-        console.error('Rate limit check error:', error);
+        appLogger.error('Rate limit check error:', { data: [error] });
         // Fail open - permitir em caso de erro
         return { allowed: true, error: error.message };
       }
@@ -53,7 +54,7 @@ export const useRateLimit = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Rate limit check failed';
       setError(errorMessage);
-      console.error('Rate limit error:', err);
+      appLogger.error('Rate limit error:', { data: [err] });
       
       // Fail open para não quebrar funcionalidade
       return { allowed: true, error: errorMessage };
@@ -82,7 +83,7 @@ export const useRateLimit = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get rate limit status';
       setError(errorMessage);
-      console.error('Rate limit status error:', err);
+      appLogger.error('Rate limit status error:', { data: [err] });
       return [];
     } finally {
       setIsLoading(false);
@@ -104,7 +105,7 @@ export const useRateLimit = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to reset rate limit';
       setError(errorMessage);
-      console.error('Rate limit reset error:', err);
+      appLogger.error('Rate limit reset error:', { data: [err] });
       throw err;
     } finally {
       setIsLoading(false);
@@ -119,7 +120,7 @@ export const useRateLimit = () => {
       return data.rate_limits;
 
     } catch (err) {
-      console.error('Failed to get rate limit config:', err);
+      appLogger.error('Failed to get rate limit config:', { data: [err] });
       return {};
     }
   }, []);

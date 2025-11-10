@@ -1,5 +1,6 @@
 // 📈 QUIZ ANALYTICS SERVICE
-import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+import { v4 as uuidv4 } from 'uuid';
+import { appLogger } from '@/lib/utils/appLogger'; // 🆕 G36 FIX: Import UUID
 
 export class QuizAnalyticsService {
   /**
@@ -85,7 +86,7 @@ export class QuizAnalyticsService {
     }
 
     // Console para debug
-    console.log(`📈 Analytics: ${eventName}`, data);
+    appLogger.info(`📈 Analytics: ${eventName}`, { data: [data] });
 
     // TODO: Adicionar outros providers (Facebook Pixel, etc.)
   }

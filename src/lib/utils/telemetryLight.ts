@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 type EventPayload = Record<string, any> & { ts?: number };
 
 export function track(event: string, payload: EventPayload = {}) {
@@ -7,7 +8,7 @@ export function track(event: string, payload: EventPayload = {}) {
         (window as any).__EDITOR_TELEMETRY__.push(entry);
         if (process.env.NODE_ENV === 'development') {
             // eslint-disable-next-line no-console
-            console.log(`[telemetry] ${event}`, entry);
+            appLogger.info(`[telemetry] ${event}`, { data: [entry] });
         }
     } catch { /* no-op */ }
 }

@@ -13,6 +13,7 @@
 import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
 import type { EditorStep } from '@/contexts/store/editorStore';
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -97,7 +98,7 @@ class TemplateServiceRefactored {
 
       return template;
     } catch (error) {
-      console.error('Error loading template:', error);
+      appLogger.error('Error loading template:', { data: [error] });
       return null;
     }
   }
@@ -126,7 +127,7 @@ class TemplateServiceRefactored {
       this.cache.set(cacheKey, step);
       return step;
     } catch (error) {
-      console.error('Error loading step:', error);
+      appLogger.error('Error loading step:', { data: [error] });
       return null;
     }
   }
@@ -235,7 +236,7 @@ class TemplateServiceRefactored {
 
       return templates.filter((t): t is Template => t !== null);
     } catch (error) {
-      console.error('Error listing templates:', error);
+      appLogger.error('Error listing templates:', { data: [error] });
       return [];
     }
   }
@@ -266,7 +267,7 @@ class TemplateServiceRefactored {
     // Validar antes de retornar
     const validation = this.validateTemplate(template);
     if (!validation.isValid) {
-      console.warn('Custom template has validation errors:', validation.errors);
+      appLogger.warn('Custom template has validation errors:', { data: [validation.errors] });
     }
 
     return template;
@@ -312,7 +313,7 @@ class TemplateServiceRefactored {
 
       return baseTemplate;
     } catch (error) {
-      console.error('Error loading template from source:', error);
+      appLogger.error('Error loading template from source:', { data: [error] });
       return null;
     }
   }

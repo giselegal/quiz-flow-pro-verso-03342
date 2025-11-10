@@ -12,6 +12,7 @@ import ButtonBlock from './ButtonBlock';
 
 // Importar registry
 import { registerBlock } from '@/editor/registry/BlockRegistry';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // REGISTRO AUTOMÁTICO
@@ -46,4 +47,4 @@ export {
     ButtonBlock,
 };
 
-console.log('✅ Componentes modulares registrados no BlockRegistry');
+appLogger.info('✅ Componentes modulares registrados no BlockRegistry');

@@ -17,6 +17,7 @@ import {
     ValidationError,
     StepCondition,
 } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // FUNNEL CORE CLASS
@@ -382,14 +383,14 @@ export class FunnelCore {
      * Emite um evento do funil
      */
     emitEvent(event: FunnelEvent): void {
-        console.log(`[FunnelCore] Event: ${event.type}`, event);
+        appLogger.info(`[FunnelCore] Event: ${event.type}`, { data: [event] });
 
         const listeners = this.eventListeners.get(event.type) || [];
         listeners.forEach(listener => {
             try {
                 listener(event);
             } catch (error) {
-                console.error(`[FunnelCore] Error in event listener for ${event.type}:`, error);
+                appLogger.error(`[FunnelCore] Error in event listener for ${event.type}:`, { data: [error] });
             }
         });
     }

@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { AdvancedStorageManager } from '@/lib/utils/storage/AdvancedStorageSystem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface HistoryState<T> {
     past: T[];
@@ -64,7 +65,7 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
                 const manager = AdvancedStorageManager.getInstance();
                 setStorageManager(manager);
             } catch (error) {
-                console.error('Failed to initialize IndexedDB storage:', error);
+                appLogger.error('Failed to initialize IndexedDB storage:', { data: [error] });
                 // Fallback to localStorage behavior
             }
         }
@@ -84,7 +85,7 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
                     };
                 }
             } catch (error) {
-                console.warn('Failed to load history state from IndexedDB:', error);
+                appLogger.warn('Failed to load history state from IndexedDB:', { data: [error] });
             }
         }
         return {
@@ -127,21 +128,21 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
                     compress: compression,
                     tags: ['editorHistory'],
                 });
-                console.log('✅ History state saved to IndexedDB');
+                appLogger.info('✅ History state saved to IndexedDB');
             } catch (error: any) {
-                console.error('❌ Failed to save history state to IndexedDB:', error);
+                appLogger.error('❌ Failed to save history state to IndexedDB:', { data: [error] });
 
                 // Fallback to localStorage with size check
                 try {
                     const serialized = JSON.stringify(toPersist);
                     if (serialized.length < 100_000) { // Reduced threshold for localStorage fallback
                         localStorage.setItem(`${storageKey  }_fallback`, serialized);
-                        console.warn('⚠️ Used localStorage fallback for history state');
+                        appLogger.warn('⚠️ Used localStorage fallback for history state');
                     } else {
-                        console.warn('⚠️ History state too large for localStorage fallback, skipping persistence');
+                        appLogger.warn('⚠️ History state too large for localStorage fallback, skipping persistence');
                     }
                 } catch (fallbackError) {
-                    console.error('❌ localStorage fallback also failed:', fallbackError);
+                    appLogger.error('❌ localStorage fallback also failed:', { data: [fallbackError] });
                 }
             }
         };

@@ -1,5 +1,6 @@
 import { User } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ConnectedLeadFormProps {
   onSubmit?: (data: { name: string }) => void;
@@ -84,7 +85,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
     try {
       const formData = { name: name.trim() };
 
-      console.log('📋 ConnectedLeadForm: Submetendo formulário', formData);
+      appLogger.info('📋 ConnectedLeadForm: Submetendo formulário', { data: [formData] });
 
       // ✅ DISPARAR EVENTO PARA CONNECTEDTEMPLATEWRAPPER
       window.dispatchEvent(
@@ -103,14 +104,14 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
       }
 
       // Feedback visual
-      console.log('✅ Formulário enviado com sucesso');
+      appLogger.info('✅ Formulário enviado com sucesso');
       if (successMessage) {
-        console.log(successMessage);
+        appLogger.info(String(successMessage));
       }
     } catch (error) {
-      console.error('❌ Erro ao enviar formulário:', error);
+      appLogger.error('❌ Erro ao enviar formulário:', { data: [error] });
       if (errorMessage) {
-        console.log(errorMessage);
+        appLogger.info(String(errorMessage));
       }
     } finally {
       setIsSubmitting(false);

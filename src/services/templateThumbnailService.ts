@@ -6,6 +6,7 @@
 
 import { Block } from '@/types/editor';
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface TemplateThumbnail {
     id: string;
@@ -73,7 +74,7 @@ export const generateTemplateThumbnail = async (
 
             yOffset += 100;
         } catch (error) {
-            console.warn('Erro ao carregar logo:', error);
+            appLogger.warn('Erro ao carregar logo:', { data: [error] });
             // Desenhar placeholder da logo
             ctx.fillStyle = '#B89B7A';
             ctx.fillRect((THUMBNAIL_WIDTH - 80) / 2, yOffset, 80, 80);
@@ -183,7 +184,7 @@ export const getTemplateThumbnail = async (
         thumbnailCache.set(templateId, thumbnail);
         return thumbnail.dataUrl;
     } catch (error) {
-        console.error('Erro ao gerar thumbnail:', error);
+        appLogger.error('Erro ao gerar thumbnail:', { data: [error] });
 
         // Retornar imagem placeholder em caso de erro
         return generatePlaceholderThumbnail(templateId);

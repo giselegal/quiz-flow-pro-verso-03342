@@ -13,6 +13,7 @@ import { MODULAR_COMPONENTS } from '@/config/modularComponents';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { propertySchemas, getPropertySchema as getBlockPropertySchema } from '@/config/propertySchemas';
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface DiscoveredProperty {
   key: string;
@@ -235,18 +236,18 @@ async function discoverQuizStepProperties(stepKey: string): Promise<ComponentPro
   const stepBlocks = result?.data || [];
 
   if (!stepBlocks || stepBlocks.length === 0) {
-    console.log(`⚠️ PropertyDiscovery: Nenhum bloco encontrado para ${stepKey}`);
+    appLogger.info(`⚠️ PropertyDiscovery: Nenhum bloco encontrado para ${stepKey}`);
     return null;
   }
 
-  console.log(`🎯 PropertyDiscovery: Analisando ${stepKey} com ${stepBlocks.length} blocos`);
+  appLogger.info(`🎯 PropertyDiscovery: Analisando ${stepKey} com ${stepBlocks.length} blocos`);
 
   const allProperties: DiscoveredProperty[] = [];
   const categories = new Set<PropertyCategory>();
 
   // Extract properties from all blocks in the step
   stepBlocks.forEach((block: any, index: number) => {
-    console.log(`  📦 Bloco ${index + 1}: ${block.type} (ID: ${block.id})`);
+    appLogger.info(`  📦 Bloco ${index + 1}: ${block.type} (ID: ${block.id})`);
 
     const blockProperties = extractPropertiesFromBlock(block);
     blockProperties.forEach(prop => {
@@ -266,7 +267,7 @@ async function discoverQuizStepProperties(stepKey: string): Promise<ComponentPro
   // Generate user-friendly name for the step
   const componentName = generateQuizStepName(stepKey);
 
-  console.log(`✅ PropertyDiscovery: ${stepKey} descobriu ${allProperties.length} propriedades em ${categories.size} categorias`);
+  appLogger.info(`✅ PropertyDiscovery: ${stepKey} descobriu ${allProperties.length} propriedades em ${categories.size} categorias`);
 
   return {
     componentType: stepKey,
@@ -324,7 +325,7 @@ async function discoverAllQuizStepProperties(): Promise<Map<string, ComponentPro
     }
   }
 
-  console.log(`🎯 PropertyDiscovery: Descobriu ${discovered.size} etapas do quiz com propriedades`);
+  appLogger.info(`🎯 PropertyDiscovery: Descobriu ${discovered.size} etapas do quiz com propriedades`);
 
   return discovered;
 }
@@ -396,15 +397,15 @@ function mapGroupToCategory(group?: string): PropertyCategory {
 }
 
 export function getPropertiesForComponentType(blockType: string, currentBlock: BlockConfig): DiscoveredProperty[] {
-  console.log('🔧 getPropertiesForComponentType called with:', { blockType, currentBlock: !!currentBlock });
+  appLogger.info('🔧 getPropertiesForComponentType called with:', { data: [{ blockType, currentBlock: !!currentBlock }] });
 
   // PRIORIDADE 1: Se temos um bloco atual com dados reais, extrair deles
   if (currentBlock && (currentBlock.properties || currentBlock.content)) {
-    console.log('🎯 Using REAL data from current block:', currentBlock);
+    appLogger.info('🎯 Using REAL data from current block:', { data: [currentBlock] });
     const realProperties = extractPropertiesFromBlock(currentBlock as any);
 
     if (realProperties.length > 0) {
-      console.log('✅ Found REAL properties from current block:', realProperties.length);
+      appLogger.info('✅ Found REAL properties from current block:', { data: [realProperties.length] });
       return [...getUniversalPropertiesForBlock(currentBlock), ...realProperties];
     }
   }
@@ -412,7 +413,7 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
   // PRIORIDADE 2: Usar schemas completos (merged) quando disponíveis
   const mergedSchema = (propertySchemas as any)[blockType];
   if (mergedSchema) {
-    console.log('✅ Using completeBlockSchemas for:', blockType);
+    appLogger.info('✅ Using completeBlockSchemas for:', { data: [blockType] });
     const schema = mergedSchema;
     const schemaProperties = schema.fields.map((field: any) => createProperty(
       field.key,
@@ -434,7 +435,7 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
   }
 
   // PRIORIDADE 3: Gerar schema dinâmico de fallback e mapear
-  console.log('🧩 Generating fallback schema for:', blockType);
+  appLogger.info('🧩 Generating fallback schema for:', { data: [blockType] });
   const dynamicSchema = getBlockPropertySchema(blockType);
   if (dynamicSchema && dynamicSchema.fields?.length) {
     const fallbackProps = dynamicSchema.fields.map((field: any) => createProperty(
@@ -534,13 +535,13 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
   ];
 
   // Component-specific properties based on type
-  console.log('🎯 getPropertiesForComponentType: Checking switch case for:', blockType);
+  appLogger.info('🎯 getPropertiesForComponentType: Checking switch case for:', { data: [blockType] });
   switch (blockType) {
     case 'header':
     case 'quiz-intro-header':
     case 'quiz-result-header':
     case 'unified-header':
-      console.log('✅ getPropertiesForComponentType: Found header case for:', blockType);
+      appLogger.info('✅ getPropertiesForComponentType: Found header case for:', { data: [blockType] });
       return [
         ...getUniversalProperties(),
         // === CONTENT PROPERTIES ===
@@ -599,7 +600,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
       ];
 
     case 'text-inline':
-      console.log('✅ getPropertiesForComponentType: Found text-inline case for:', blockType);
+      appLogger.info('✅ getPropertiesForComponentType: Found text-inline case for:', { data: [blockType] });
       return [
         ...getUniversalProperties(),
         createProperty('content', currentBlock?.properties?.content ?? currentBlock?.content?.text ?? 'Digite seu texto aqui...', PropertyType.TEXTAREA, 'Conteúdo', PropertyCategory.CONTENT),
@@ -672,7 +673,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
 
     case 'button-inline':
       if (process.env.DEBUG) {
-        console.log('✅ getPropertiesForComponentType: Found button-inline case for:', blockType);
+        appLogger.info('✅ getPropertiesForComponentType: Found button-inline case for:', { data: [blockType] });
       }
       return [
         ...getUniversalProperties(),
@@ -730,12 +731,12 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
       ];
 
     case 'options-grid':
-      console.log('✅ getPropertiesForComponentType: Found options-grid case, using full schema');
+      appLogger.info('✅ getPropertiesForComponentType: Found options-grid case, using full schema');
       // Use the complete schema from blockPropertySchemas for options-grid
   const optionsGridSchema = (propertySchemas as any)['options-grid'];
-      console.log('📋 optionsGridSchema:', optionsGridSchema);
+      appLogger.info('📋 optionsGridSchema:', { data: [optionsGridSchema] });
       if (optionsGridSchema && optionsGridSchema.fields) {
-        console.log('🔢 Total fields in schema:', optionsGridSchema.fields.length);
+        appLogger.info('🔢 Total fields in schema:', { data: [optionsGridSchema.fields.length] });
   const propertiesFromSchema: DiscoveredProperty[] = optionsGridSchema.fields.map((field: any) => {
           // Map field types to PropertyType enum
           let propertyType: PropertyType;
@@ -810,10 +811,10 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
           );
         });
 
-        console.log('🎯 Options-grid properties loaded:', propertiesFromSchema.length, 'properties');
-        console.log('📊 Sample properties:', propertiesFromSchema.slice(0, 5).map(p => p.key));
+        appLogger.info('🎯 Options-grid properties loaded:', { data: [propertiesFromSchema.length, 'properties'] });
+        appLogger.info('📊 Sample properties:', { data: [propertiesFromSchema.slice(0, 5).map(p => p.key)] });
         const finalResult = [...getUniversalProperties(), ...propertiesFromSchema];
-        console.log('🏁 Final result total:', finalResult.length, 'properties');
+        appLogger.info('🏁 Final result total:', { data: [finalResult.length, 'properties'] });
         return finalResult;
       }
       // Fallback if schema not found
@@ -825,7 +826,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
       ];
 
     default:
-      console.log('⚠️ getPropertiesForComponentType: Using default case for:', blockType);
+      appLogger.info('⚠️ getPropertiesForComponentType: Using default case for:', { data: [blockType] });
       // For unknown component types, return universal properties
       return getUniversalProperties();
   }
@@ -836,11 +837,11 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
  * ✅ CORREÇÃO: Agora é async para suportar step discovery
  */
 export async function discoverComponentProperties(componentType: string): Promise<ComponentPropertySchema | null> {
-  console.log('🔍 PropertyDiscovery: buscando componente:', componentType);
+  appLogger.info('🔍 PropertyDiscovery: buscando componente:', { data: [componentType] });
 
   // Check if this is a quiz step (step-01, step-02, etc.)
   if (componentType.startsWith('step-')) {
-    console.log('🎯 PropertyDiscovery: Detectado como etapa do quiz:', componentType);
+    appLogger.info('🎯 PropertyDiscovery: Detectado como etapa do quiz:', { data: [componentType] });
     return await discoverQuizStepProperties(componentType);
   }
 
@@ -852,24 +853,24 @@ export async function discoverComponentProperties(componentType: string): Promis
     // Call our property generation function directly
     const unifiedPropsResult = getPropertiesForComponentType(componentType, mockBlock);
 
-    console.log('🧪 PropertyDiscovery: resultado direto do getPropertiesForComponentType:', {
-      componentType,
-      hasResult: !!unifiedPropsResult,
-      resultLength: unifiedPropsResult?.length || 0,
-      resultType: Array.isArray(unifiedPropsResult) ? 'array' : typeof unifiedPropsResult,
-    });
+    appLogger.info('🧪 PropertyDiscovery: resultado direto do getPropertiesForComponentType:', { data: [{
+            componentType,
+            hasResult: !!unifiedPropsResult,
+            resultLength: unifiedPropsResult?.length || 0,
+            resultType: Array.isArray(unifiedPropsResult) ? 'array' : typeof unifiedPropsResult,
+          }] });
 
     if (unifiedPropsResult && Array.isArray(unifiedPropsResult) && unifiedPropsResult.length > 0) {
-      console.log('🎯 PropertyDiscovery: propriedades encontradas via useUnifiedProperties:', {
-        componentType,
-        totalProperties: unifiedPropsResult.length,
-        firstFewProperties: unifiedPropsResult.slice(0, 3).map(p => ({
-          key: p.key,
-          type: p.type,
-          category: p.category,
-          label: p.label,
-        })),
-      });
+      appLogger.info('🎯 PropertyDiscovery: propriedades encontradas via useUnifiedProperties:', { data: [{
+                componentType,
+                totalProperties: unifiedPropsResult.length,
+                firstFewProperties: unifiedPropsResult.slice(0, 3).map(p => ({
+                  key: p.key,
+                  type: p.type,
+                  category: p.category,
+                  label: p.label,
+                })),
+              }] });
 
       const discoveredProperties: DiscoveredProperty[] = unifiedPropsResult.map(prop => ({
         key: prop.key,
@@ -890,12 +891,12 @@ export async function discoverComponentProperties(componentType: string): Promis
       // Generate a user-friendly component name
       const componentName = generateComponentName(componentType);
 
-      console.log('✅ PropertyDiscovery: returning schema:', {
-        componentType,
-        componentName,
-        propertiesCount: discoveredProperties.length,
-        categoriesCount: categories.size,
-      });
+      appLogger.info('✅ PropertyDiscovery: returning schema:', { data: [{
+                componentType,
+                componentName,
+                propertiesCount: discoveredProperties.length,
+                categoriesCount: categories.size,
+              }] });
 
       return {
         componentType,
@@ -904,32 +905,32 @@ export async function discoverComponentProperties(componentType: string): Promis
         categories,
       };
     } else {
-      console.log('⚠️ PropertyDiscovery: nenhuma propriedade retornada por getPropertiesForComponentType');
+      appLogger.info('⚠️ PropertyDiscovery: nenhuma propriedade retornada por getPropertiesForComponentType');
     }
   } catch (error) {
-    console.log('⚠️ PropertyDiscovery: erro ao usar useUnifiedProperties:', error);
-    console.error('Error details:', error);
+    appLogger.info('⚠️ PropertyDiscovery: erro ao usar useUnifiedProperties:', { data: [error] });
+    appLogger.error('Error details:', { data: [error] });
   }
 
   // Fallback to MODULAR_COMPONENTS (for backwards compatibility)
-  console.log('🔄 PropertyDiscovery: Tentando fallback para MODULAR_COMPONENTS...');
+  appLogger.info('🔄 PropertyDiscovery: Tentando fallback para MODULAR_COMPONENTS...');
 
   // 🔗 Aplicar mapeamento de tipos para compatibilidade
   const mappedType = mapComponentType(componentType);
-  console.log('🔗 Tipo mapeado:', componentType, '->', mappedType);
+  appLogger.info('🔗 Tipo mapeado:', { data: [componentType, '->', mappedType] });
 
   const component = MODULAR_COMPONENTS.find(c => c.type === mappedType);
 
-  console.log('🎯 PropertyDiscovery: resultado da busca no MODULAR_COMPONENTS:', {
-    componentType,
-    mappedType,
-    encontrado: !!component,
-    totalComponentes: MODULAR_COMPONENTS.length,
-    tiposDisponiveis: MODULAR_COMPONENTS.slice(0, 5).map(c => c.type),
-  });
+  appLogger.info('🎯 PropertyDiscovery: resultado da busca no MODULAR_COMPONENTS:', { data: [{
+        componentType,
+        mappedType,
+        encontrado: !!component,
+        totalComponentes: MODULAR_COMPONENTS.length,
+        tiposDisponiveis: MODULAR_COMPONENTS.slice(0, 5).map(c => c.type),
+      }] });
 
   if (!component || !component.properties) {
-    console.log('❌ PropertyDiscovery: componente não encontrado ou sem propriedades - retornando null');
+    appLogger.info('❌ PropertyDiscovery: componente não encontrado ou sem propriedades - retornando null');
     return null;
   }
 
@@ -1010,7 +1011,7 @@ export async function discoverAllComponentProperties(): Promise<Map<string, Comp
     }
   }
 
-  console.log(`🎯 PropertyDiscovery: Total discovered components: ${discovered.size} (${quizStepSchemas.size} quiz steps + ${MODULAR_COMPONENTS.length} modular components)`);
+  appLogger.info(`🎯 PropertyDiscovery: Total discovered components: ${discovered.size} (${quizStepSchemas.size} quiz steps + ${MODULAR_COMPONENTS.length} modular components)`);
 
   return discovered;
 }

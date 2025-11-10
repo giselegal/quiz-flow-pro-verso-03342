@@ -7,6 +7,7 @@
 
 import { StorageService } from './StorageService';
 import { unifiedQuizStorage } from './UnifiedQuizStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface CleanupStats {
   removedKeys: string[];
@@ -50,7 +51,7 @@ class StorageCleanupService {
   } = {}): Promise<CleanupStats> {
     const { forceMigration = false, removeAll = false, dryRun = false } = options;
     
-    console.log('🧹 Iniciando limpeza do armazenamento...', { dryRun });
+    appLogger.info('🧹 Iniciando limpeza do armazenamento...', { data: [{ dryRun }] });
 
     const stats: CleanupStats = {
       removedKeys: [],
@@ -67,7 +68,7 @@ class StorageCleanupService {
 
       // 2. Migrar dados legados se necessário
       if (forceMigration || this.needsMigration()) {
-        console.log('📦 Migrando dados legados...');
+        appLogger.info('📦 Migrando dados legados...');
         const migrationSuccess = await this.migrateLegacyData(dryRun);
         stats.migratedData = migrationSuccess;
       }
@@ -86,17 +87,17 @@ class StorageCleanupService {
       stats.sizeAfter = this.calculateStorageSize();
 
       const savedSpace = stats.sizeBefore - stats.sizeAfter;
-      console.log('✅ Limpeza concluída:', {
-        removedKeys: stats.removedKeys.length,
-        preservedKeys: stats.preservedKeys.length,
-        savedSpace: `${(savedSpace / 1024).toFixed(2)}KB`,
-        dryRun,
-      });
+      appLogger.info('✅ Limpeza concluída:', { data: [{
+                removedKeys: stats.removedKeys.length,
+                preservedKeys: stats.preservedKeys.length,
+                savedSpace: `${(savedSpace / 1024).toFixed(2)}KB`,
+                dryRun,
+              }] });
 
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
       stats.errors.push(errorMsg);
-      console.error('❌ Erro durante limpeza:', error);
+      appLogger.error('❌ Erro durante limpeza:', { data: [error] });
     }
 
     return stats;
@@ -118,16 +119,16 @@ class StorageCleanupService {
               StorageService.safeRemove(key);
             }
             stats.removedKeys.push(key);
-            console.log(`🗑️ Removido: ${key} (migrado)`);
+            appLogger.info(`🗑️ Removido: ${key} (migrado)`);
           } else {
             stats.preservedKeys.push(key);
-            console.log(`📌 Preservado: ${key} (não migrado)`);
+            appLogger.info(`📌 Preservado: ${key} (não migrado)`);
           }
         }
       } catch (error) {
         const errorMsg = `Erro ao processar ${key}: ${error}`;
         stats.errors.push(errorMsg);
-        console.warn(errorMsg);
+        appLogger.warn(String(errorMsg));
       }
     }
   }
@@ -136,7 +137,7 @@ class StorageCleanupService {
    * Remove todas as chaves legadas (modo força)
    */
   private async removeAllLegacyKeys(stats: CleanupStats, dryRun: boolean): Promise<void> {
-    console.warn('⚠️ Modo força: removendo todas as chaves legadas');
+    appLogger.warn('⚠️ Modo força: removendo todas as chaves legadas');
     
     for (const key of this.LEGACY_KEYS) {
       try {
@@ -146,12 +147,12 @@ class StorageCleanupService {
             StorageService.safeRemove(key);
           }
           stats.removedKeys.push(key);
-          console.log(`🗑️ Removido (força): ${key}`);
+          appLogger.info(`🗑️ Removido (força): ${key}`);
         }
       } catch (error) {
         const errorMsg = `Erro ao remover ${key}: ${error}`;
         stats.errors.push(errorMsg);
-        console.warn(errorMsg);
+        appLogger.warn(String(errorMsg));
       }
     }
   }
@@ -173,7 +174,7 @@ class StorageCleanupService {
             StorageService.safeRemove('quizResult');
           }
           stats.removedKeys.push('quizResult (duplicado)');
-          console.log('🗑️ Removido resultado duplicado em quizResult');
+          appLogger.info('🗑️ Removido resultado duplicado em quizResult');
         }
       }
     } catch (error) {
@@ -190,7 +191,7 @@ class StorageCleanupService {
       const quizAnswers = StorageService.safeGetJSON<Record<string, any>>('quizAnswers');
       
       if (!userSelections && !quizAnswers) {
-        console.log('ℹ️ Nenhum dado legado encontrado para migração');
+        appLogger.info('ℹ️ Nenhum dado legado encontrado para migração');
         return false;
       }
 
@@ -207,12 +208,12 @@ class StorageCleanupService {
         }
         
         unifiedQuizStorage.saveData(currentData);
-        console.log('✅ Dados migrados para sistema unificado');
+        appLogger.info('✅ Dados migrados para sistema unificado');
       }
       
       return true;
     } catch (error) {
-      console.error('❌ Erro na migração:', error);
+      appLogger.error('❌ Erro na migração:', { data: [error] });
       return false;
     }
   }
@@ -331,7 +332,7 @@ class StorageCleanupService {
       stats.keyDetails.sort((a, b) => b.size - a.size);
       
     } catch (error) {
-      console.error('Erro ao calcular estatísticas:', error);
+      appLogger.error('Erro ao calcular estatísticas:', { data: [error] });
     }
 
     return stats;

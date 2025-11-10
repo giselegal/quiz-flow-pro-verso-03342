@@ -10,18 +10,18 @@ export class ServiceWorkerManager {
    */
   async register(): Promise<ServiceWorkerRegistration | null> {
     if (!('serviceWorker' in navigator)) {
-      console.warn('[SW Manager] Service Workers não suportados neste navegador');
+      appLogger.warn('[SW Manager] Service Workers não suportados neste navegador');
       return null;
     }
 
     try {
-      console.log('[SW Manager] Registrando Service Worker...');
+      appLogger.info('[SW Manager] Registrando Service Worker...');
       
       this.registration = await navigator.serviceWorker.register('/sw.js', {
         scope: '/',
       });
 
-      console.log('[SW Manager] Service Worker registrado:', this.registration.scope);
+      appLogger.info('[SW Manager] Service Worker registrado:', { data: [this.registration.scope] });
 
       // Monitorar atualizações
       this.setupUpdateListener();
@@ -33,7 +33,7 @@ export class ServiceWorkerManager {
 
       return this.registration;
     } catch (error) {
-      console.error('[SW Manager] Erro ao registrar Service Worker:', error);
+      appLogger.error('[SW Manager] Erro ao registrar Service Worker:', { data: [error] });
       return null;
     }
   }
@@ -48,10 +48,10 @@ export class ServiceWorkerManager {
 
     try {
       const success = await this.registration.unregister();
-      console.log('[SW Manager] Service Worker desregistrado:', success);
+      appLogger.info('[SW Manager] Service Worker desregistrado:', { data: [success] });
       return success;
     } catch (error) {
-      console.error('[SW Manager] Erro ao desregistrar Service Worker:', error);
+      appLogger.error('[SW Manager] Erro ao desregistrar Service Worker:', { data: [error] });
       return false;
     }
   }
@@ -66,9 +66,9 @@ export class ServiceWorkerManager {
 
     try {
       await this.registration.update();
-      console.log('[SW Manager] Verificação de atualização concluída');
+      appLogger.info('[SW Manager] Verificação de atualização concluída');
     } catch (error) {
-      console.error('[SW Manager] Erro ao verificar atualizações:', error);
+      appLogger.error('[SW Manager] Erro ao verificar atualizações:', { data: [error] });
     }
   }
 
@@ -167,7 +167,7 @@ export class ServiceWorkerManager {
         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
           // Nova versão disponível
           this.updateAvailable = true;
-          console.log('[SW Manager] Nova versão disponível');
+          appLogger.info('[SW Manager] Nova versão disponível');
           
           // Disparar evento customizado
           window.dispatchEvent(new CustomEvent('sw-update-available', {
@@ -229,3 +229,4 @@ export function useServiceWorker() {
 
 // Adicionar import do React
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';

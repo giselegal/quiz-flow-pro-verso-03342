@@ -17,6 +17,7 @@
 import { UnifiedFunnel, UnifiedStage } from './UnifiedCRUDService';
 import { Block } from '@/types/editor';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TIPOS E INTERFACES
@@ -110,7 +111,7 @@ export class VersioningService {
    * 🚀 INICIALIZAÇÃO DO SERVIÇO
    */
   private async initializeService(): Promise<void> {
-    console.log('🚀 Inicializando VersioningService...');
+    appLogger.info('🚀 Inicializando VersioningService...');
     
     try {
       // Carregar snapshots persistidos
@@ -124,9 +125,9 @@ export class VersioningService {
       // Configurar limpeza automática
       this.scheduleCleanup();
       
-      console.log('✅ VersioningService inicializado com sucesso');
+      appLogger.info('✅ VersioningService inicializado com sucesso');
     } catch (error) {
-      console.error('❌ Erro ao inicializar VersioningService:', error);
+      appLogger.error('❌ Erro ao inicializar VersioningService:', { data: [error] });
     }
   }
 
@@ -141,7 +142,7 @@ export class VersioningService {
         Object.entries(parsed).forEach(([id, snapshotData]) => {
           this.snapshots.set(id, this.validateAndNormalizeSnapshot(snapshotData as any));
         });
-        console.log(`📥 ${this.snapshots.size} snapshots carregados`);
+        appLogger.info(`📥 ${this.snapshots.size} snapshots carregados`);
       }
 
       const savedChanges = StorageService.safeGetString('versioning:changes');
@@ -150,10 +151,10 @@ export class VersioningService {
         Object.entries(parsed).forEach(([snapshotId, changesData]) => {
           this.changes.set(snapshotId, changesData as VersionChange[]);
         });
-        console.log(`📥 ${this.changes.size} conjuntos de mudanças carregados`);
+        appLogger.info(`📥 ${this.changes.size} conjuntos de mudanças carregados`);
       }
     } catch (error) {
-      console.warn('⚠️ Erro ao carregar snapshots persistidos:', error);
+      appLogger.warn('⚠️ Erro ao carregar snapshots persistidos:', { data: [error] });
     }
   }
 
@@ -168,9 +169,9 @@ export class VersioningService {
       const changesData = Object.fromEntries(this.changes.entries());
       StorageService.safeSetJSON('versioning:changes', changesData);
       
-      console.log('💾 Snapshots persistidos com sucesso');
+      appLogger.info('💾 Snapshots persistidos com sucesso');
     } catch (error) {
-      console.error('❌ Erro ao persistir snapshots:', error);
+      appLogger.error('❌ Erro ao persistir snapshots:', { data: [error] });
     }
   }
 
@@ -251,10 +252,10 @@ export class VersioningService {
       // Persistir
       await this.persistSnapshots();
 
-      console.log(`📸 Snapshot criado: ${snapshotId} (${type})`);
+      appLogger.info(`📸 Snapshot criado: ${snapshotId} (${type})`);
       return snapshot;
     } catch (error) {
-      console.error('❌ Erro ao criar snapshot:', error);
+      appLogger.error('❌ Erro ao criar snapshot:', { data: [error] });
       throw error;
     }
   }
@@ -534,7 +535,7 @@ export class VersioningService {
       await this.createSnapshot(currentSnapshot.funnel, 'manual', 'Backup antes de restaurar');
     }
 
-    console.log(`🔙 Restaurando snapshot: ${snapshotId}`);
+    appLogger.info(`🔙 Restaurando snapshot: ${snapshotId}`);
     return snapshot.funnel;
   }
 
@@ -547,10 +548,10 @@ export class VersioningService {
       this.changes.delete(snapshotId);
       await this.persistSnapshots();
       
-      console.log(`🗑️ Snapshot excluído: ${snapshotId}`);
+      appLogger.info(`🗑️ Snapshot excluído: ${snapshotId}`);
       return true;
     } catch (error) {
-      console.error('❌ Erro ao excluir snapshot:', error);
+      appLogger.error('❌ Erro ao excluir snapshot:', { data: [error] });
       return false;
     }
   }
@@ -568,7 +569,7 @@ export class VersioningService {
     }
     
     await this.persistSnapshots();
-    console.log(`🧹 ${toDelete.length} snapshots antigos removidos`);
+    appLogger.info(`🧹 ${toDelete.length} snapshots antigos removidos`);
   }
 
   /**
@@ -576,7 +577,7 @@ export class VersioningService {
    */
   private startAutoSnapshotTimer(): void {
     this.autoSnapshotTimer = setInterval(() => {
-      console.log('⏰ Auto-snapshot timer triggered');
+      appLogger.info('⏰ Auto-snapshot timer triggered');
       // TODO: Integrar com sistema de mudanças para criar snapshots automáticos
     }, this.config.autoSnapshotInterval * 60 * 1000);
   }
@@ -634,7 +635,7 @@ export class VersioningService {
     this.changes.clear();
     StorageService.safeRemove('versioning:snapshots');
     StorageService.safeRemove('versioning:changes');
-    console.log('🧹 Todos os snapshots e mudanças foram limpos');
+    appLogger.info('🧹 Todos os snapshots e mudanças foram limpos');
   }
 }
 

@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { StorageService } from '@/services/core/StorageService';
 // Removido uso direto do template monolítico; usar QuizDataService para obter blocos por etapa
 import { QuizDataService } from '@/services/core/QuizDataService';
+import { appLogger } from '@/lib/utils/appLogger';
 // No imports needed for this context - legacy file
 
 // Adaptação temporária para compatibilidade
@@ -228,7 +229,7 @@ const getTemplateWithFallback = (templateId: string) => {
   const unifiedTemplate = null; // Simplified template registry
 
   if (unifiedTemplate) {
-    console.log(`✅ Template unificado encontrado: ${templateId} -> ${mappedId}`);
+    appLogger.info(`✅ Template unificado encontrado: ${templateId} -> ${mappedId}`);
     return {
       unified: unifiedTemplate,
       legacy: FUNNEL_TEMPLATES[templateId] || null,
@@ -238,14 +239,14 @@ const getTemplateWithFallback = (templateId: string) => {
   // Fallback para template legacy
   const legacyTemplate = FUNNEL_TEMPLATES[templateId];
   if (legacyTemplate) {
-    console.log(`⚠️ Usando template legacy: ${templateId}`);
+    appLogger.info(`⚠️ Usando template legacy: ${templateId}`);
     return {
       unified: null,
       legacy: legacyTemplate,
     };
   }
 
-  console.warn(`❌ Template não encontrado: ${templateId}`);
+  appLogger.warn(`❌ Template não encontrado: ${templateId}`);
   return { unified: null, legacy: null };
 };
 
@@ -581,7 +582,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
   const isTemplateEngineRoute = pathname.startsWith('/template-engine');
   if (isTemplateEngineRoute) {
-    if (debug) console.log('[FunnelsProvider] Bypass legacy para rota modular:', pathname);
+    if (debug) appLogger.info('[FunnelsProvider] Bypass legacy para rota modular:', { data: [pathname] });
     return <>{children}</>;
   }
   // ✅ CORRIGIDO: Obter funnelId dinamicamente da URL SEM fallback forçado
@@ -591,29 +592,29 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       const url = new URL(window.location.href);
       const funnelFromUrl = url.searchParams.get('funnel');
       if (funnelFromUrl) {
-        console.log('🔍 FunnelsContext: funnelId da URL:', funnelFromUrl);
+        appLogger.info('🔍 FunnelsContext: funnelId da URL:', { data: [funnelFromUrl] });
         return funnelFromUrl;
       }
 
       // Se for uma sessão ad-hoc aberta via ?template=, evitar setar um funnelId inválido aqui
       const templateFromUrl = url.searchParams.get('template');
       if (templateFromUrl) {
-        console.log('🔍 FunnelsContext: sessão ad-hoc via template:', templateFromUrl, '— mantendo currentFunnelId vazio para evitar conflito');
+        appLogger.info('🔍 FunnelsContext: sessão ad-hoc via template:', { data: [templateFromUrl, '— mantendo currentFunnelId vazio para evitar conflito'] });
         return '';
       }
 
       // Segundo, tentar obter do localStorage
       const funnelFromStorage = StorageService.safeGetString('editor:funnelId');
       if (funnelFromStorage) {
-        console.log('🔍 FunnelsContext: funnelId do localStorage:', funnelFromStorage);
+        appLogger.info('🔍 FunnelsContext: funnelId do localStorage:', { data: [funnelFromStorage] });
         return funnelFromStorage;
       }
 
       // ❌ REMOVIDO: Fallback automático para template de 21 etapas
-      console.log('🔍 FunnelsContext: sem funnelId inicial — aguardando seleção ou import. (estado inicial neutro)');
+      appLogger.info('🔍 FunnelsContext: sem funnelId inicial — aguardando seleção ou import. (estado inicial neutro)');
       return ''; // Mantém vazio para evitar fallback prematuro
     } catch (error) {
-      console.error('❌ Erro ao obter funnelId:', error);
+      appLogger.error('❌ Erro ao obter funnelId:', { data: [error] });
       return ''; // Vazio ao invés de forçar template específico
     }
   });
@@ -627,14 +628,14 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       defaultSteps: [],
     };
 
-    console.log('� FunnelsContext: Inicialização com template unificado');
-    console.log('📊 Template: Usando template padrão');
-    console.log('� Template legacy:', initialTemplate.name);
-    console.log('🎯 Steps carregadas:', initialTemplate.defaultSteps.length);
+    appLogger.info('� FunnelsContext: Inicialização com template unificado');
+    appLogger.info('📊 Template: Usando template padrão');
+    appLogger.info('� Template legacy:', { data: [initialTemplate.name] });
+    appLogger.info('🎯 Steps carregadas:', { data: [initialTemplate.defaultSteps.length] });
 
     // Marcar origem das steps carregadas
     const marked = (initialTemplate.defaultSteps || []).map((s: any) => ({ ...s, _source: 'ts' }));
-    console.log('🧭 FunnelsContext: origem das steps inicializadas = ts');
+    appLogger.info('🧭 FunnelsContext: origem das steps inicializadas = ts');
     return marked;
   });
   const [loading, setLoading] = useState(false);
@@ -643,14 +644,14 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   // 🔍 DEBUG CRÍTICO: Monitor de contexto
   React.useEffect(() => {
     if (debug) {
-      console.log('🔍 FUNNELS CONTEXT DEBUG:', {
-        currentFunnelId,
-        stepsLength: steps.length,
-        loading,
-        error,
-        stepsIds: steps.map(s => s.id),
-        stepsNames: steps.map(s => s.name),
-      });
+      appLogger.info('🔍 FUNNELS CONTEXT DEBUG:', { data: [{
+                currentFunnelId,
+                stepsLength: steps.length,
+                loading,
+                error,
+                stepsIds: steps.map(s => s.id),
+                stepsNames: steps.map(s => s.name),
+              }] });
     }
   }, [steps, currentFunnelId, loading, error, debug]);
 
@@ -672,7 +673,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     }
 
     // Fallback final
-    console.warn(`❌ Nenhum template encontrado para ${templateId}. Usando fallback.`);
+    appLogger.warn(`❌ Nenhum template encontrado para ${templateId}. Usando fallback.`);
     return FUNNEL_TEMPLATES['quiz-vazio'] || {
       name: 'Template Básico',
       description: 'Template básico de fallback',
@@ -695,25 +696,23 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       const originalBlocks = n ? QuizDataService.getStepData(n) : [];
       const clonedBlocks = buildDeterministicBlocks(originalBlocks, currentFunnelId, templateId, stepId);
       blocksCache.set(cacheKey, clonedBlocks);
-      console.log(`🔄 [${currentFunnelId}] Template quiz-estilo-completo: ${clonedBlocks.length} blocos únicos para ${stepId}`);
+      appLogger.info(`🔄 [${currentFunnelId}] Template quiz-estilo-completo: ${clonedBlocks.length} blocos únicos para ${stepId}`);
       return clonedBlocks;
     }
 
     // ✅ CORREÇÃO: Template funil-21-etapas também deve usar QUIZ_STYLE_21_STEPS_TEMPLATE
     if (templateId === 'funil-21-etapas' || templateId === 'template-optimized-21-steps-funnel') {
-      console.log(`🔄 [${currentFunnelId}] Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
+      appLogger.info(`🔄 [${currentFunnelId}] Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
       const n = parseInt(stepId.replace(/\D+/g, ''), 10) || 0;
       const originalBlocks = n ? QuizDataService.getStepData(n) : [];
       const clonedBlocks = buildDeterministicBlocks(originalBlocks, currentFunnelId, templateId, stepId);
       blocksCache.set(cacheKey, clonedBlocks);
-      console.log(`📦 [${currentFunnelId}] Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
+      appLogger.info(`📦 [${currentFunnelId}] Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
       return clonedBlocks;
     }
 
     // Para outros templates, retorna array vazio (implementação futura)
-    console.warn(
-      `⚠️ [${currentFunnelId}] Template não suportado: ${templateId}, retornando array vazio para etapa ${stepId}`,
-    );
+    appLogger.warn(`⚠️ [${currentFunnelId}] Template não suportado: ${templateId}, retornando array vazio para etapa ${stepId}`);
     return [];
   }, []);
 
@@ -725,7 +724,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     // 🛡️ GUARD: Se provider ainda não tem funnelId definido, apenas log leve e aborta
     if (!currentFunnelId) {
       if (debug) {
-        console.log(`⚠️ [${timestamp}] FunnelsContext: currentFunnelId vazio - aguardando seleção antes de resolver templates.`);
+        appLogger.info(`⚠️ [${timestamp}] FunnelsContext: currentFunnelId vazio - aguardando seleção antes de resolver templates.`);
       }
       return; // Evita acessar Object.keys em cenários de inicialização parcial
     }
@@ -733,10 +732,10 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     const safeFunnelTemplates = FUNNEL_TEMPLATES || ({} as typeof FUNNEL_TEMPLATES);
 
     if (debug) {
-      console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
-      console.log('📂 currentFunnelId:', currentFunnelId);
+      appLogger.info(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
+      appLogger.info('📂 currentFunnelId:', { data: [currentFunnelId] });
       if (verbose) {
-        try { console.log('📊 FUNNEL_TEMPLATES keys:', Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
+        try { appLogger.info('📊 FUNNEL_TEMPLATES keys:', { data: [Object.keys(safeFunnelTemplates)] }); } catch { appLogger.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
       }
     }
     // Resolver ID base quando for sessão ad-hoc (ex.: funnel-quiz21StepsComplete-<timestamp>)
@@ -752,51 +751,48 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
           'quiz-estilo-completo': 'quiz-estilo-completo',
         };
         const baseId = map[templateFromUrl] || 'funil-21-etapas';
-        if (debug) console.log('🧭 FunnelsContext: Resolvendo sessão ad-hoc', { currentFunnelId, templateFromUrl, resolvedBase: baseId });
+        if (debug) appLogger.info('🧭 FunnelsContext: Resolvendo sessão ad-hoc', { data: [{ currentFunnelId, templateFromUrl, resolvedBase: baseId }] });
         resolvedId = baseId;
       }
     } catch { /* ignore */ }
 
-    if (debug) console.log('🎯 Template existe?', !!safeFunnelTemplates[resolvedId]);
+    if (debug) appLogger.info('🎯 Template existe?', { data: [!!safeFunnelTemplates[resolvedId]] });
 
     if (safeFunnelTemplates[resolvedId]) {
       const template = safeFunnelTemplates[resolvedId];
       if (debug) {
-        console.log(`✅ [${timestamp}] Template encontrado:`, template.name);
-        console.log(`📊 [${timestamp}] Steps no template:`, template.defaultSteps.length);
+        appLogger.info(`✅ [${timestamp}] Template encontrado:`, { data: [template.name] });
+        appLogger.info(`📊 [${timestamp}] Steps no template:`, { data: [template.defaultSteps.length] });
       }
 
       // ✅ FASE 3: Fallback robusto - só atualiza se realmente necessário
       if (steps.length === 0 || steps[0]?.id !== template.defaultSteps[0]?.id) {
         setSteps(template.defaultSteps);
-        if (debug) console.log(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, resolvedId);
+        if (debug) appLogger.info(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, { data: [resolvedId] });
       } else {
-        if (debug) console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, resolvedId);
+        if (debug) appLogger.info(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, { data: [resolvedId] });
       }
 
       if (verbose) {
-        console.log(`📊 [${timestamp}] Steps disponíveis:`, template.defaultSteps.length);
-        console.log(
-          `🎯 [${timestamp}] Dados das steps:`,
-          template.defaultSteps.map(s => `${s.id}: ${s.name}`),
-        );
+        appLogger.info(`📊 [${timestamp}] Steps disponíveis:`, { data: [template.defaultSteps.length] });
+        appLogger.info(`🎯 [${timestamp}] Dados das steps:`, { data: [template.defaultSteps.map(s => `${s.id}: ${s.name}`)] });
       }
     } else if (currentFunnelId) {
       // Se currentFunnelId é ad-hoc e não foi resolvido, preferir não logar erro ruidoso
       if (!(currentFunnelId.startsWith('funnel-'))) {
-        console.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, currentFunnelId);
+        appLogger.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, { data: [currentFunnelId] });
       } else if (debug) {
-        console.warn(`⚠️ [${timestamp}] FunnelsContext: ID ad-hoc sem resolução direta, aplicando fallback silencioso.`);
+        appLogger.warn(`⚠️ [${timestamp}] FunnelsContext: ID ad-hoc sem resolução direta, aplicando fallback silencioso.`);
       }
-      try { console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(safeFunnelTemplates)); } catch { }
+      try { appLogger.info(`📁 [${timestamp}] Templates disponíveis:`, { data: [Object.keys(safeFunnelTemplates)] }); } catch { }
 
       // ✅ FASE 3: Fallback para template padrão
       const fallbackTemplate = safeFunnelTemplates['funil-21-etapas'];
       if (fallbackTemplate) {
         setSteps(fallbackTemplate.defaultSteps);
-        console.log(`🔄 [${timestamp}] Aplicando fallback para template padrão`);
+        appLogger.info(`🔄 [${timestamp}] Aplicando fallback para template padrão`);
       } else {
-        console.error(`❌ [${timestamp}] Template de fallback também não encontrado!`);
+        appLogger.error(`❌ [${timestamp}] Template de fallback também não encontrado!`);
       }
     }
   }, [currentFunnelId, debug]);
@@ -866,9 +862,9 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
           throw supabaseError;
         }
 
-        console.log('✅ Funil salvo com sucesso no contexto MY_FUNNELS:', data);
+        appLogger.info('✅ Funil salvo com sucesso no contexto MY_FUNNELS:', { data: [data] });
       } catch (error) {
-        console.error('❌ Erro ao salvar funil:', error);
+        appLogger.error('❌ Erro ao salvar funil:', { data: [error] });
         setError(error instanceof Error ? error.message : 'Erro desconhecido');
       } finally {
         setLoading(false);
@@ -882,7 +878,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     setSteps((prev) => {
       const next = typeof updater === 'function' ? (updater as any)(prev) : updater;
       const marked = (next || []).map((s: any) => ({ ...s, _source: s?._source || 'ts' }));
-      console.log('🧭 FunnelsContext: setSteps chamado. Origem marcada como ts para', marked.length, 'steps');
+      appLogger.info('🧭 FunnelsContext: setSteps chamado. Origem marcada como ts para', { data: [marked.length, 'steps'] });
       return marked;
     });
   };
@@ -906,13 +902,13 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
 export const useFunnels = (): FunnelsContextType => {
   const context = useContext(FunnelsContext);
-  console.log('🔍 useFunnels called:', {
-    contextExists: !!context,
-    contextType: typeof context,
-    contextKeys: context ? Object.keys(context) : 'null',
-  });
+  appLogger.info('🔍 useFunnels called:', { data: [{
+        contextExists: !!context,
+        contextType: typeof context,
+        contextKeys: context ? Object.keys(context) : 'null',
+      }] });
   if (context === undefined) {
-    console.error('🔴 useFunnels: Context is undefined!');
+    appLogger.error('🔴 useFunnels: Context is undefined!');
     throw new Error('useFunnels must be used within a FunnelsProvider');
   }
   return context;

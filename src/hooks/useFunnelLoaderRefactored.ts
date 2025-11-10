@@ -16,6 +16,7 @@ import { funnelService } from '@/services/canonical/FunnelService';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface FunnelLoadingState {
     // Estados de carregamento
@@ -117,7 +118,7 @@ export function useFunnelLoader(
 
     const loadFunnel = useCallback(async (id: string) => {
         if (currentFunnelIdRef.current === id && funnel) {
-            console.log('📄 Funil já carregado, usando cache');
+            appLogger.info('📄 Funil já carregado, usando cache');
             return;
         }
 
@@ -125,7 +126,7 @@ export function useFunnelLoader(
         clearError();
 
         try {
-            console.log('📖 useFunnelLoader: Carregando funil', id);
+            appLogger.info('📖 useFunnelLoader: Carregando funil', { data: [id] });
 
             // Usar serviço unificado (com cache automático)
             const loadedFunnelMeta = await funnelService.getFunnel(id);
@@ -140,7 +141,7 @@ export function useFunnelLoader(
                 const perms = await funnelService.checkPermissions(id);
                 setPermissions(perms);
 
-                console.log('✅ Funil carregado:', loadedFunnel);
+                appLogger.info('✅ Funil carregado:', { data: [loadedFunnel] });
             } else {
                 setErrorState(
                     'Funil não encontrado',
@@ -154,7 +155,7 @@ export function useFunnelLoader(
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
-            console.error('❌ Erro ao carregar funil:', errorMessage);
+            appLogger.error('❌ Erro ao carregar funil:', { data: [errorMessage] });
 
             setErrorState(
                 errorMessage,
@@ -178,7 +179,7 @@ export function useFunnelLoader(
         clearError();
 
         try {
-            console.log('🔍 useFunnelLoader: Validando funil', id);
+            appLogger.info('🔍 useFunnelLoader: Validando funil', { data: [id] });
 
             const perms = await funnelService.checkPermissions(id);
             setPermissions(perms);
@@ -193,7 +194,7 @@ export function useFunnelLoader(
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro na validação';
-            console.error('❌ Erro na validação:', errorMessage);
+            appLogger.error('❌ Erro na validação:', { data: [errorMessage] });
             setErrorState(errorMessage, 'VALIDATION_ERROR');
         } finally {
             setIsValidating(false);
@@ -209,7 +210,7 @@ export function useFunnelLoader(
         clearError();
 
         try {
-            console.log('🎯 useFunnelLoader: Criando funil', name);
+            appLogger.info('🎯 useFunnelLoader: Criando funil', { data: [name] });
 
             const newFunnelMeta = await funnelService.createFunnel({
                 name,
@@ -233,12 +234,12 @@ export function useFunnelLoader(
                 isOwner: true,
             });
 
-            console.log('✅ Funil criado:', newFunnel);
+            appLogger.info('✅ Funil criado:', { data: [newFunnel] });
             return newFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao criar funil';
-            console.error('❌ Erro ao criar funil:', errorMessage);
+            appLogger.error('❌ Erro ao criar funil:', { data: [errorMessage] });
             setErrorState(errorMessage, 'CREATE_ERROR');
             throw err;
         } finally {
@@ -255,18 +256,18 @@ export function useFunnelLoader(
         clearError();
 
         try {
-            console.log('✏️ useFunnelLoader: Atualizando funil', funnelId);
+            appLogger.info('✏️ useFunnelLoader: Atualizando funil', { data: [funnelId] });
 
             const updatedFunnelMeta = await funnelService.updateFunnel(funnelId, updates);
             const updatedFunnel = updatedFunnelMeta ? adaptMetadataToUnified(updatedFunnelMeta) : funnel!;
             setFunnel(updatedFunnel);
 
-            console.log('✅ Funil atualizado:', updatedFunnel);
+            appLogger.info('✅ Funil atualizado:', { data: [updatedFunnel] });
             return updatedFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar funil';
-            console.error('❌ Erro ao atualizar funil:', errorMessage);
+            appLogger.error('❌ Erro ao atualizar funil:', { data: [errorMessage] });
             setErrorState(errorMessage, 'UPDATE_ERROR');
             throw err;
         } finally {
@@ -283,17 +284,17 @@ export function useFunnelLoader(
         clearError();
 
         try {
-            console.log('🔄 useFunnelLoader: Duplicando funil', funnelId);
+            appLogger.info('🔄 useFunnelLoader: Duplicando funil', { data: [funnelId] });
 
             const duplicatedFunnelMeta = await funnelService.duplicateFunnel(funnelId, newName);
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
-            console.log('✅ Funil duplicado:', duplicatedFunnel);
+            appLogger.info('✅ Funil duplicado:', { data: [duplicatedFunnel] });
             return duplicatedFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao duplicar funil';
-            console.error('❌ Erro ao duplicar funil:', errorMessage);
+            appLogger.error('❌ Erro ao duplicar funil:', { data: [errorMessage] });
             setErrorState(errorMessage, 'DUPLICATE_ERROR');
             throw err;
         } finally {
@@ -310,7 +311,7 @@ export function useFunnelLoader(
         clearError();
 
         try {
-            console.log('🗑️ useFunnelLoader: Deletando funil', funnelId);
+            appLogger.info('🗑️ useFunnelLoader: Deletando funil', { data: [funnelId] });
 
             const success = await funnelService.deleteFunnel(funnelId);
 
@@ -324,14 +325,14 @@ export function useFunnelLoader(
                     canDelete: false,
                     isOwner: false,
                 });
-                console.log('✅ Funil deletado');
+                appLogger.info('✅ Funil deletado');
             }
 
             return success;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao deletar funil';
-            console.error('❌ Erro ao deletar funil:', errorMessage);
+            appLogger.error('❌ Erro ao deletar funil:', { data: [errorMessage] });
             setErrorState(errorMessage, 'DELETE_ERROR');
             throw err;
         } finally {
@@ -374,14 +375,14 @@ export function useFunnelLoader(
 
         const handleFunnelUpdated = (event: any) => {
             if (event.funnelId === funnelId) {
-                console.log('🔄 Funil atualizado externamente, recarregando...');
+                appLogger.info('🔄 Funil atualizado externamente, recarregando...');
                 if (funnelId) loadFunnel(funnelId);
             }
         };
 
         const handleFunnelDeleted = (event: any) => {
             if (event.funnelId === funnelId) {
-                console.log('🗑️ Funil deletado externamente');
+                appLogger.info('🗑️ Funil deletado externamente');
                 setFunnel(null);
                 setFunnelId(null);
                 currentFunnelIdRef.current = null;

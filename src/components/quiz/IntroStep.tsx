@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import type { QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface IntroStepProps {
     data: QuizStep;
@@ -12,9 +13,9 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
     const [nome, setNome] = useState('');
 
     // 🔍 DEBUG: Vamos ver exatamente o que está chegando
-    console.log('🔍 IntroStepSimple - data recebido:', JSON.stringify(data, null, 2));
-    console.log('🔍 IntroStepSimple - data existe?', !!data);
-    console.log('🔍 IntroStepSimple - data.title:', data?.title);
+    appLogger.info('🔍 IntroStepSimple - data recebido:', { data: [JSON.stringify(data, null, 2)] });
+    appLogger.info('🔍 IntroStepSimple - data existe?', { data: [!!data] });
+    appLogger.info('🔍 IntroStepSimple - data.title:', { data: [data?.title] });
 
     // 🚨 FALLBACK TOTAL se data não existir
     const safeData = data || {
@@ -34,11 +35,11 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
             try {
                 onNameSubmit(nome.trim());
             } catch (err) {
-                console.error('❌ [IntroStep] Erro ao executar onNameSubmit:', err);
+                appLogger.error('❌ [IntroStep] Erro ao executar onNameSubmit:', { data: [err] });
             }
         } else {
             // Evita quebra total do funil e ajuda a diagnosticar ambiente onde a prop veio incorreta
-            console.warn('⚠️ [IntroStep] onNameSubmit ausente ou não é função. Valor recebido:', onNameSubmit);
+            appLogger.warn('⚠️ [IntroStep] onNameSubmit ausente ou não é função. Valor recebido:', { data: [onNameSubmit] });
         }
     };
 

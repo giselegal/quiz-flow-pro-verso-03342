@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import type { BlockComponentProps } from '@/types/blocks';
 import React, { useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ButtonInlineFixedProps extends BlockComponentProps {
   disabled?: boolean;
@@ -59,12 +60,12 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
       if (detail.blockId === watchInputId) {
         const isValid = detail.valid && detail.value.trim().length > 0;
         setInputValid(isValid);
-        console.log('🔘 [ButtonInlineFixed] Input validado:', {
-          blockId: block?.id,
-          inputId: watchInputId,
-          inputValue: detail.value,
-          valid: isValid,
-        });
+        appLogger.info('🔘 [ButtonInlineFixed] Input validado:', { data: [{
+                    blockId: block?.id,
+                    inputId: watchInputId,
+                    inputValue: detail.value,
+                    valid: isValid,
+                  }] });
       }
     };
 
@@ -93,13 +94,13 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
 
       if (gridId === watchGridId) {
         setGridSelectionValid(!!valid);
-        console.log('🔘 [ButtonInlineFixed] Grid validado:', {
-          blockId: block?.id,
-          gridId: watchGridId,
-          selectedCount,
-          requiredCount: minRequired,
-          valid,
-        });
+        appLogger.info('🔘 [ButtonInlineFixed] Grid validado:', { data: [{
+                    blockId: block?.id,
+                    gridId: watchGridId,
+                    selectedCount,
+                    requiredCount: minRequired,
+                    valid,
+                  }] });
       }
     };
 
@@ -111,12 +112,12 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
   useEffect(() => {
     const overallValid = inputValid && gridSelectionValid;
     setIsButtonEnabled(overallValid);
-    console.log('🔘 [ButtonInlineFixed] Estado geral do botão:', {
-      blockId: block?.id,
-      inputValid,
-      gridSelectionValid,
-      overallValid,
-    });
+    appLogger.info('🔘 [ButtonInlineFixed] Estado geral do botão:', { data: [{
+            blockId: block?.id,
+            inputValid,
+            gridSelectionValid,
+            overallValid,
+          }] });
   }, [inputValid, gridSelectionValid, block?.id]);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -124,15 +125,15 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
 
     // Se desabilitado, não fazer nada
     if (!isButtonEnabled || disabled) {
-      console.log('🚫 [ButtonInlineFixed] Botão desabilitado, clique ignorado');
+      appLogger.info('🚫 [ButtonInlineFixed] Botão desabilitado, clique ignorado');
       return;
     }
 
-    console.log('✅ [ButtonInlineFixed] Botão clicado:', {
-      blockId: block?.id,
-      nextStepUrl,
-      nextStepId,
-    });
+    appLogger.info('✅ [ButtonInlineFixed] Botão clicado:', { data: [{
+            blockId: block?.id,
+            nextStepUrl,
+            nextStepId,
+          }] });
 
     // Executar ação de navegação se configurada
     if (nextStepUrl) {

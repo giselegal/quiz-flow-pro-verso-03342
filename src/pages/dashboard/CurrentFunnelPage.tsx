@@ -43,6 +43,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'wouter';
 import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // CONFIGURAÇÃO DO FUNIL ATUAL
@@ -108,7 +109,7 @@ const CurrentFunnelPage: React.FC = () => {
             setIsLoading(true);
             setError(null);
 
-            console.log('📊 Carregando métricas do funil atual...');
+            appLogger.info('📊 Carregando métricas do funil atual...');
 
             const realTimeMetrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
 
@@ -122,7 +123,7 @@ const CurrentFunnelPage: React.FC = () => {
                     });
                 }
             } catch (analyticsError) {
-                console.warn('⚠️ getAdvancedAnalytics não disponível, usando fallback');
+                appLogger.warn('⚠️ getAdvancedAnalytics não disponível, usando fallback');
             }
 
             setMetrics({
@@ -132,9 +133,9 @@ const CurrentFunnelPage: React.FC = () => {
                     completions: 0,
                     conversionRate: 0,
                 },
-            }); console.log('✅ Métricas carregadas:', { realTimeMetrics, analyticsData });
+            }); appLogger.info('✅ Métricas carregadas:', { data: [{ realTimeMetrics, analyticsData }] });
         } catch (err) {
-            console.error('❌ Erro ao carregar métricas:', err);
+            appLogger.error('❌ Erro ao carregar métricas:', { data: [err] });
             setError('Não foi possível carregar as métricas. Usando dados demo.');
 
             // Fallback com dados demo

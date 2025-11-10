@@ -4,6 +4,7 @@
  * Utilitário para debug e monitoramento do sistema de templates
  */
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TemplateDebugInfo {
   templateId: string;
@@ -49,10 +50,10 @@ class TemplateDebugger {
 
     // Log no console
     const status = error ? '❌' : (debugInfo.hasContent ? '✅' : '⚠️');
-    console.log(`${status} [TemplateDebugger] ${templateId} | ${source} | ${debugInfo.blockCount} blocks | ${loadTime.toFixed(2)}ms`);
+    appLogger.info(`${status} [TemplateDebugger] ${templateId} | ${source} | ${debugInfo.blockCount} blocks | ${loadTime.toFixed(2)}ms`);
 
     if (error) {
-      console.error(`❌ [TemplateDebugger] Error for ${templateId}:`, error);
+      appLogger.error(`❌ [TemplateDebugger] Error for ${templateId}:`, { data: [error] });
     }
   }
 
@@ -123,14 +124,14 @@ class TemplateDebugger {
         }
       }
 
-      console.log('🎯 [TemplateDebugger] Template principal verificado:', {
-        available: availableTemplates.length,
-        missing: missingTemplates.length,
-        empty: emptyTemplates.length,
-      });
+      appLogger.info('🎯 [TemplateDebugger] Template principal verificado:', { data: [{
+                available: availableTemplates.length,
+                missing: missingTemplates.length,
+                empty: emptyTemplates.length,
+              }] });
 
     } catch (error) {
-      console.error('❌ [TemplateDebugger] Erro ao verificar template principal:', error);
+      appLogger.error('❌ [TemplateDebugger] Erro ao verificar template principal:', { data: [error] });
       recommendations.push('Template principal (quiz21StepsComplete) não acessível');
     }
 
@@ -159,7 +160,7 @@ class TemplateDebugger {
    * 🧪 TESTE RÁPIDO DE TEMPLATES
    */
   static async quickTest(): Promise<void> {
-    console.log('🧪 [TemplateDebugger] Iniciando teste rápido...');
+    appLogger.info('🧪 [TemplateDebugger] Iniciando teste rápido...');
 
     const testSteps = ['step-1', 'step-12', 'step-20', 'step-21'];
   const { unifiedTemplateService } = await import('@/services/aliases');
@@ -178,7 +179,7 @@ class TemplateDebugger {
       }
     }
 
-    console.log('🧪 [TemplateDebugger] Teste rápido concluído');
+    appLogger.info('🧪 [TemplateDebugger] Teste rápido concluído');
     console.table(this.getDebugReport());
   }
 
@@ -187,7 +188,7 @@ class TemplateDebugger {
    */
   static clearLogs(): void {
     this.debugLog = [];
-    console.log('🗑️ [TemplateDebugger] Logs limpos');
+    appLogger.info('🗑️ [TemplateDebugger] Logs limpos');
   }
 
   /**

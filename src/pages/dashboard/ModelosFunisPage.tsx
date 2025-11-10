@@ -28,6 +28,7 @@ import {
 
 // Templates reais disponíveis
 import { AVAILABLE_TEMPLATES, TemplateService, type TemplateConfig } from '@/config/templates';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FunnelModel {
   id: string;
@@ -62,7 +63,7 @@ const ModelosFunisPage: React.FC = () => {
       try {
         setIsLoading(true);
 
-        console.log('📋 Carregando modelos de funis...');
+        appLogger.info('📋 Carregando modelos de funis...');
 
         // Carregar dados reais
         // const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
@@ -178,10 +179,10 @@ const ModelosFunisPage: React.FC = () => {
         setModels(allModels);
         setFilteredModels(allModels);
 
-        console.log('✅ Modelos carregados:', allModels.length);
+        appLogger.info('✅ Modelos carregados:', { data: [allModels.length] });
 
       } catch (error) {
-        console.error('❌ Erro ao carregar modelos:', error);
+        appLogger.error('❌ Erro ao carregar modelos:', { data: [error] });
       } finally {
         setIsLoading(false);
       }
@@ -217,7 +218,7 @@ const ModelosFunisPage: React.FC = () => {
   // ============================================================================
 
   const handleUseModel = (model: FunnelModel) => {
-    console.log('🚀 Usando modelo:', model.id);
+    appLogger.info('🚀 Usando modelo:', { data: [model.id] });
     const tpl = TemplateService.getTemplate(model.id);
     const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?template=${model.id}`;
     const newFunnelId = `funnel-${model.id}-${Date.now()}`;
@@ -226,7 +227,7 @@ const ModelosFunisPage: React.FC = () => {
   };
 
   const handlePreviewModel = (model: FunnelModel) => {
-    console.log('👁️ Preview do modelo:', model.id);
+    appLogger.info('👁️ Preview do modelo:', { data: [model.id] });
     const tpl = TemplateService.getTemplate(model.id);
     let previewId = tpl?.id;
     if (!previewId && model.editorUrl) {
@@ -240,7 +241,7 @@ const ModelosFunisPage: React.FC = () => {
   };
 
   const handleCloneModel = (model: FunnelModel) => {
-    console.log('📋 Clonando modelo:', model.id);
+    appLogger.info('📋 Clonando modelo:', { data: [model.id] });
     const tpl = TemplateService.getTemplate(model.id);
     const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?template=${model.id}`;
     const newFunnelId = `clone-${model.id}-${Date.now()}`;

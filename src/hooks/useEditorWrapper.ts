@@ -15,6 +15,7 @@
  */
 
 import { useEditor as useCanonicalEditor, useEditorOptional as useCanonicalEditorOptional } from '@/hooks/useEditor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // WRAPPER HOOKS WITH LOGGING
@@ -25,7 +26,7 @@ import { useEditor as useCanonicalEditor, useEditorOptional as useCanonicalEdito
  */
 export const useEditor = () => {
     if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️ [DEPRECATED] useEditorWrapper is deprecated. Use @/hooks/useEditor directly');
+        appLogger.warn('⚠️ [DEPRECATED] useEditorWrapper is deprecated. Use @/hooks/useEditor directly');
     }
 
     return useCanonicalEditor();
@@ -36,7 +37,7 @@ export const useEditor = () => {
  */
 export const useEditorOptional = () => {
     if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️ [DEPRECATED] useEditorWrapper is deprecated. Use @/hooks/useEditor directly');
+        appLogger.warn('⚠️ [DEPRECATED] useEditorWrapper is deprecated. Use @/hooks/useEditor directly');
     }
 
     return useCanonicalEditorOptional();

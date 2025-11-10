@@ -6,6 +6,7 @@
  */
 
 import { createContext, useContext } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface BuilderSystemContextValue {
   // AI Features
@@ -36,30 +37,30 @@ export const useBuilderSystem = () => {
     // Fallback para compatibilidade
     return {
       generateQuiz: async (prompt: string) => {
-        console.log('🤖 Builder System: Generate quiz (fallback):', prompt);
+        appLogger.info('🤖 Builder System: Generate quiz (fallback):', { data: [prompt] });
         return null;
       },
       optimizeFunnel: async () => {
-        console.log('⚡ Builder System: Optimize funnel (fallback)');
+        appLogger.info('⚡ Builder System: Optimize funnel (fallback)');
       },
       improveWithAI: async () => {
-        console.log('🚀 Builder System: Improve with AI (fallback)');
+        appLogger.info('🚀 Builder System: Improve with AI (fallback)');
         return null;
       },
       applyTemplate: async (templateId: string) => {
-        console.log('🎨 Builder System: Apply template (fallback):', templateId);
+        appLogger.info('🎨 Builder System: Apply template (fallback):', { data: [templateId] });
       },
       saveAsTemplate: async (name: string) => {
-        console.log('💾 Builder System: Save as template (fallback):', name);
+        appLogger.info('💾 Builder System: Save as template (fallback):', { data: [name] });
       },
       quickOptimize: () => {
-        console.log('⚡ Builder System: Quick optimize (fallback)');
+        appLogger.info('⚡ Builder System: Quick optimize (fallback)');
       },
       quickValidate: () => {
-        console.log('✅ Builder System: Quick validate (fallback)');
+        appLogger.info('✅ Builder System: Quick validate (fallback)');
       },
       quickPreview: () => {
-        console.log('👁️ Builder System: Quick preview (fallback)');
+        appLogger.info('👁️ Builder System: Quick preview (fallback)');
       },
       isGenerating: false,
       isOptimizing: false,

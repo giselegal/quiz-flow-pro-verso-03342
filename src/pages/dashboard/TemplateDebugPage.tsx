@@ -1,11 +1,12 @@
 import React from 'react';
 import { AVAILABLE_TEMPLATES, TemplateService } from '../../config/templates';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const TemplateDebugPage: React.FC = () => {
-    console.log('🔍 AVAILABLE_TEMPLATES:', AVAILABLE_TEMPLATES);
-    console.log('🔍 TemplateService:', TemplateService);
-    console.log('🔍 getActiveTemplates:', TemplateService.getActiveTemplates());
-    console.log('🔍 quiz21StepsComplete:', TemplateService.getTemplate('quiz21StepsComplete'));
+    appLogger.info('🔍 AVAILABLE_TEMPLATES:', { data: [AVAILABLE_TEMPLATES] });
+    appLogger.info('🔍 TemplateService:', { data: [TemplateService] });
+    appLogger.info('🔍 getActiveTemplates:', { data: [TemplateService.getActiveTemplates()] });
+    appLogger.info('🔍 quiz21StepsComplete:', { data: [TemplateService.getTemplate('quiz21StepsComplete')] });
 
     return (
         <div className="p-8">

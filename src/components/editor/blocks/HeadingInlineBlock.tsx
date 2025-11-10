@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/lib/utils/logger';
 import { Type, Settings } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
 

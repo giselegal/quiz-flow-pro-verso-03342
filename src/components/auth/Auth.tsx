@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Estilos CSS customizados para animações sofisticadas
 const authStyles = `
@@ -57,7 +58,7 @@ export const Auth: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Implementar lógica de autenticação
-    console.log('Auth:', { email, password, isLogin });
+    appLogger.info('Auth:', { data: [{ email, password, isLogin }] });
   };
 
   return (

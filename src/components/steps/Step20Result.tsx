@@ -6,6 +6,7 @@ import { cleanEditorLocalStorage } from '@/lib/utils/cleanStorage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Share2, ArrowRight, Trophy, Star, Check, Heart } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 COMPONENTE STEP 20 - RESULTADO FINAL DO QUIZ
@@ -38,7 +39,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
       const maxSize = 5 * 1024 * 1024; // 5MB
 
       if (usage > maxSize * 0.8) {
-        console.warn('🧹 [Step20Result] localStorage próximo do limite, limpando...');
+        appLogger.warn('🧹 [Step20Result] localStorage próximo do limite, limpando...');
         cleanEditorLocalStorage();
 
         // Remover dados obsoletos específicos
@@ -46,14 +47,14 @@ const Step20Result: React.FC<Step20ResultProps> = ({
           try {
             localStorage.removeItem(key);
           } catch (error) {
-            console.warn(`[Step20Result] Erro ao remover chave obsoleta ${key}:`, error);
+            appLogger.warn(`[Step20Result] Erro ao remover chave obsoleta ${key}:`, { data: [error] });
           }
         });
       }
 
       setIsStorageCleaned(true);
     } catch (error) {
-      console.error('❌ Erro na limpeza do storage:', error);
+      appLogger.error('❌ Erro na limpeza do storage:', { data: [error] });
       setIsStorageCleaned(true); // Continuar mesmo com erro
     }
   }, []);

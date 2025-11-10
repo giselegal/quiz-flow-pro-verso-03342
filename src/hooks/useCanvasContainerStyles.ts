@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface CanvasContainerStyles {
     // === ÁREA PRINCIPAL DO CANVAS ===
@@ -104,7 +105,7 @@ export const useCanvasContainerStyles = () => {
                 setStyles({ ...DEFAULT_CANVAS_STYLES, ...parsedStyles });
             }
         } catch (error) {
-            console.warn('Erro ao carregar estilos dos containers:', error);
+            appLogger.warn('Erro ao carregar estilos dos containers:', { data: [error] });
         } finally {
             setIsLoaded(true);
         }
@@ -117,7 +118,7 @@ export const useCanvasContainerStyles = () => {
             setStyles(updatedStyles);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStyles));
         } catch (error) {
-            console.warn('Erro ao salvar estilos dos containers:', error);
+            appLogger.warn('Erro ao salvar estilos dos containers:', { data: [error] });
         }
     }, [styles]);
 
@@ -134,7 +135,7 @@ export const useCanvasContainerStyles = () => {
         try {
             localStorage.removeItem(STORAGE_KEY);
         } catch (error) {
-            console.warn('Erro ao resetar estilos dos containers:', error);
+            appLogger.warn('Erro ao resetar estilos dos containers:', { data: [error] });
         }
     }, []);
 
@@ -330,9 +331,9 @@ export const useCanvasContainerStyles = () => {
             styleElement.textContent = css;
             document.head.appendChild(styleElement);
 
-            console.log('🎨 Estilos dos containers aplicados:', styles);
+            appLogger.info('🎨 Estilos dos containers aplicados:', { data: [styles] });
         } catch (error) {
-            console.error('Erro ao aplicar estilos dos containers:', error);
+            appLogger.error('Erro ao aplicar estilos dos containers:', { data: [error] });
         }
     }, [styles, isLoaded]);
 

@@ -2,6 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { getSupabaseClient } from '@/services/integrations/supabase/supabaseLazy';
 import { isSupabaseDisabled, isSupabaseEnabled } from '@/services/integrations/supabase/flags';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 const DISABLE = isSupabaseDisabled();
 const ENABLE = isSupabaseEnabled();
 const IS_TEST = (import.meta as any)?.env?.MODE === 'test';
@@ -64,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Log apenas uma vez no mount
   useEffect(() => {
     if (!initialized && import.meta.env.DEV) {
-      console.log('🔑 AuthProvider: INICIANDO');
+      appLogger.info('🔑 AuthProvider: INICIANDO');
       setInitialized(true);
     }
   }, [initialized]);
@@ -272,7 +273,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(null);
       setSession(null);
     } catch (error) {
-      console.error('Logout error:', error);
+      appLogger.error('Logout error:', { data: [error] });
       // Forçar limpeza local mesmo com erro
       setUser(null);
       setSession(null);

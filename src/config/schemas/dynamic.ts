@@ -6,6 +6,7 @@
  */
 
 import { BlockSchema, SchemaRegistry } from './base/types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Registry global de schemas com lazy loading
@@ -36,7 +37,7 @@ export async function getSchema(type: string): Promise<BlockSchema | null> {
   // Carrega sob demanda
   const loader = schemaRegistry.get(type);
   if (!loader) {
-    console.warn(`[SchemaRegistry] Schema não encontrado: ${type}`);
+    appLogger.warn(`[SchemaRegistry] Schema não encontrado: ${type}`);
     return null;
   }
 
@@ -45,7 +46,7 @@ export async function getSchema(type: string): Promise<BlockSchema | null> {
     schemaCache.set(type, schema);
     return schema;
   } catch (error) {
-    console.error(`[SchemaRegistry] Erro ao carregar schema ${type}:`, error);
+    appLogger.error(`[SchemaRegistry] Erro ao carregar schema ${type}:`, { data: [error] });
     return null;
   }
 }

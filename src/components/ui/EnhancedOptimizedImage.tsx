@@ -12,6 +12,7 @@
 
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { useResponsiveOptimization } from '../../utils/imageOptimizationManager';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EnhancedOptimizedImageProps {
     src: string;
@@ -148,7 +149,7 @@ const EnhancedOptimizedImage: React.FC<EnhancedOptimizedImageProps> = memo(({
 
         // Registra métricas de performance
         if (import.meta.env.DEV) {
-            console.log(`✅ Image loaded: ${src}`);
+            appLogger.info(`✅ Image loaded: ${src}`);
         }
     };
 
@@ -157,7 +158,7 @@ const EnhancedOptimizedImage: React.FC<EnhancedOptimizedImageProps> = memo(({
         setIsLoaded(true); // Para esconder o placeholder
         onError?.();
 
-        console.warn(`❌ Failed to load image: ${src}`);
+        appLogger.warn(`❌ Failed to load image: ${src}`);
     };
 
     /**

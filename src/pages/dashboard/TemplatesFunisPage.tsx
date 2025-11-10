@@ -7,6 +7,7 @@ import { Input } from '../../components/ui/input';
 
 // Importação dos templates reais
 import { AVAILABLE_TEMPLATES, TemplateService, TemplateConfig } from '../../config/templates';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const templatesFunis: TemplateConfig[] = AVAILABLE_TEMPLATES;
 
@@ -17,12 +18,12 @@ const TemplatesFunisPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     // DEBUG: Log dos templates para diagnóstico
-    console.log('🔍 DEBUG TEMPLATES:', {
-        AVAILABLE_TEMPLATES,
-        totalTemplates: AVAILABLE_TEMPLATES.length,
-        activeTemplates: TemplateService.getActiveTemplates(),
-        quiz21Template: TemplateService.getTemplate('quiz21StepsComplete'),
-    });
+    appLogger.info('🔍 DEBUG TEMPLATES:', { data: [{
+            AVAILABLE_TEMPLATES,
+            totalTemplates: AVAILABLE_TEMPLATES.length,
+            activeTemplates: TemplateService.getActiveTemplates(),
+            quiz21Template: TemplateService.getTemplate('quiz21StepsComplete'),
+        }] });
 
     const filteredTemplates = React.useMemo(() => {
         // Começar sempre com apenas templates ativos
@@ -54,22 +55,22 @@ const TemplatesFunisPage: React.FC = () => {
     }, [selectedSegment, selectedCategory, selectedDifficulty, searchTerm]);
 
     // DEBUG: Log dos templates filtrados
-    console.log('🔍 DEBUG FILTERED:', {
-        selectedSegment,
-        selectedCategory,
-        selectedDifficulty,
-        searchTerm,
-        filteredCount: filteredTemplates.length,
-        filteredTemplates: filteredTemplates.map(t => ({ id: t.id, name: t.name, isActive: t.isActive })),
-    });
+    appLogger.info('🔍 DEBUG FILTERED:', { data: [{
+            selectedSegment,
+            selectedCategory,
+            selectedDifficulty,
+            searchTerm,
+            filteredCount: filteredTemplates.length,
+            filteredTemplates: filteredTemplates.map(t => ({ id: t.id, name: t.name, isActive: t.isActive })),
+        }] });
 
     const handleUseTemplate = (templateId: string) => {
-        console.log('Usando template:', templateId);
+        appLogger.info('Usando template:', { data: [templateId] });
         window.open(`/editor?template=${templateId}`, '_blank');
     };
 
     const handlePreviewTemplate = (templateId: string) => {
-        console.log('Preview do template:', templateId);
+        appLogger.info('Preview do template:', { data: [templateId] });
         window.open(`/templates/preview/${templateId}`, '_blank');
     };
 

@@ -12,6 +12,7 @@
 import React, { useState, useEffect } from 'react';
 import { SectionsContainer } from '@/components/sections/SectionRenderer';
 import type { TemplateV3 } from '@/types/template-v3.types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const TestV3Page: React.FC = () => {
     const [template, setTemplate] = useState<TemplateV3 | null>(null);
@@ -53,7 +54,7 @@ export const TestV3Page: React.FC = () => {
                 setTemplate(data as TemplateV3);
                 setError(null);
             } catch (err) {
-                console.error('Erro ao carregar template:', err);
+                appLogger.error('Erro ao carregar template:', { data: [err] });
                 setError(err instanceof Error ? err.message : 'Erro desconhecido');
             } finally {
                 setLoading(false);
@@ -67,7 +68,7 @@ export const TestV3Page: React.FC = () => {
     const handleSectionView = (sectionId: string) => {
         if (!viewedSections.includes(sectionId)) {
             setViewedSections(prev => [...prev, sectionId]);
-            console.log(`📊 Section viewed: ${sectionId}`);
+            appLogger.info(`📊 Section viewed: ${sectionId}`);
         }
     };
 

@@ -6,6 +6,7 @@
  */
 
 import { StepComponent } from './StepTypes';
+import { appLogger } from '@/lib/utils/appLogger';
 
 class StepRegistry {
     private steps = new Map<string, StepComponent>();
@@ -34,13 +35,13 @@ class StepRegistry {
     register(step: StepComponent): void {
         const id = this.normalizeId(step.id);
         if (this.steps.has(id)) {
-            console.warn(`⚠️  Step '${step.id}' já está registrado. Sobrescrevendo...`);
+            appLogger.warn(`⚠️  Step '${step.id}' já está registrado. Sobrescrevendo...`);
         }
 
         this.steps.set(id, { ...step, id });
 
         if (process.env.NODE_ENV === 'development') {
-            console.log(`✅ Step registrado: ${step.id} - ${step.name}`);
+            appLogger.info(`✅ Step registrado: ${step.id} - ${step.name}`);
         }
     }
 
@@ -52,8 +53,8 @@ class StepRegistry {
         const step = this.steps.get(id);
 
         if (!step && process.env.NODE_ENV === 'development') {
-            console.warn(`⚠️  Step '${stepId}' não encontrado no registro`);
-            console.log('📋 Steps disponíveis:', Array.from(this.steps.keys()));
+            appLogger.warn(`⚠️  Step '${stepId}' não encontrado no registro`);
+            appLogger.info('📋 Steps disponíveis:', { data: [Array.from(this.steps.keys())] });
         }
 
         return step;
@@ -122,7 +123,7 @@ class StepRegistry {
      * Debug: Listar todos os steps registrados
      */
     debug(): void {
-        console.log('🔍 DEBUG: Steps Registrados:');
+        appLogger.info('🔍 DEBUG: Steps Registrados:');
         console.table(
             this.getAll().map(step => ({
                 ID: step.id,

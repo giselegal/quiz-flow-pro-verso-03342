@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para dados do quiz
 interface QuizData {
@@ -77,10 +78,10 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
         setIsCalculating(true);
 
         try {
-            console.log('🧮 Calculando resultados do quiz...', {
-                totalAnswers: Object.keys(quizData.answers).length,
-                method: props.calculationMethod,
-            });
+            appLogger.info('🧮 Calculando resultados do quiz...', { data: [{
+                            totalAnswers: Object.keys(quizData.answers).length,
+                            method: props.calculationMethod,
+                        }] });
 
             // Calcular pontuações por estilo
             const styleScores: Record<string, number> = {};
@@ -107,7 +108,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
                 }
             });
 
-            console.log('📊 Pontuações calculadas:', styleScores);
+            appLogger.info('📊 Pontuações calculadas:', { data: [styleScores] });
 
             // Calcular percentuais
             const totalPoints = Math.max(totalAnswers, 1); // Evitar divisão por zero
@@ -137,7 +138,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
                 },
             };
 
-            console.log('🎯 Resultado final calculado:', result);
+            appLogger.info('🎯 Resultado final calculado:', { data: [result] });
 
             setCalculated(result);
 
@@ -150,7 +151,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
             localStorage.setItem('quiz-calculated-result', JSON.stringify(result));
 
         } catch (error) {
-            console.error('❌ Erro no cálculo:', error);
+            appLogger.error('❌ Erro no cálculo:', { data: [error] });
         } finally {
             setIsCalculating(false);
         }
@@ -185,7 +186,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
             }
         }
 
-        console.warn(`⚠️ Não foi possível extrair estilo de: ${optionId}`);
+        appLogger.warn(`⚠️ Não foi possível extrair estilo de: ${optionId}`);
         return null;
     };
 

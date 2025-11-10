@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🧹 BROWSER WARNINGS CLEANUP
  * Script para limpar e suprimir warnings desnecessários do navegador
@@ -72,11 +73,11 @@ export const cleanUnrecognizedFeatures = (): void => {
 
       if (cleanContent !== content) {
         meta.setAttribute('content', cleanContent);
-        console.log('🧹 Cleaned unrecognized features from Permissions-Policy');
+        appLogger.info('🧹 Cleaned unrecognized features from Permissions-Policy');
       }
     });
   } catch (error) {
-    console.warn('Failed to clean unrecognized features:', error);
+    appLogger.warn('Failed to clean unrecognized features:', { data: [error] });
   }
 };
 
@@ -91,7 +92,7 @@ export const cleanIframeSandbox = (): void => {
 
       // Se tem tanto allow-scripts quanto allow-same-origin, é potencialmente inseguro
       if (sandbox.includes('allow-scripts') && sandbox.includes('allow-same-origin')) {
-        console.warn('🔒 Iframe with potentially unsafe sandbox detected:', iframe);
+        appLogger.warn('🔒 Iframe with potentially unsafe sandbox detected:', { data: [iframe] });
 
         // Opcional: remover allow-same-origin se não for crítico
         // const safeSandbox = sandbox.replace(/allow-same-origin\s*/g, '').trim();
@@ -99,7 +100,7 @@ export const cleanIframeSandbox = (): void => {
       }
     });
   } catch (error) {
-    console.warn('Failed to clean iframe sandbox:', error);
+    appLogger.warn('Failed to clean iframe sandbox:', { data: [error] });
   }
 };
 
@@ -113,17 +114,17 @@ export const cleanFacebookPixels = (): void => {
       const fbq = (window as any).fbq;
 
       // Log do status do pixel
-      console.log('📊 Facebook Pixel status:', {
-        loaded: fbq.loaded,
-        version: fbq.version,
-        queueLength: fbq.queue?.length || 0,
-      });
+      appLogger.info('📊 Facebook Pixel status:', { data: [{
+                loaded: fbq.loaded,
+                version: fbq.version,
+                queueLength: fbq.queue?.length || 0,
+              }] });
 
       // Não há muito que possamos fazer aqui além de logar
       // O warning geralmente vem de scripts externos carregando o pixel
     }
   } catch (error) {
-    console.warn('Failed to clean Facebook pixels:', error);
+    appLogger.warn('Failed to clean Facebook pixels:', { data: [error] });
   }
 };
 
@@ -147,7 +148,7 @@ export const optimizePreloadStrategy = (): void => {
             document.querySelector(`[style*="${href}"]`);
 
           if (!isUsed) {
-            console.log('📱 Preloaded resource not used quickly:', href);
+            appLogger.info('📱 Preloaded resource not used quickly:', { data: [href] });
             // Opcional: remover o preload se não for usado
             // link.remove();
           }
@@ -155,7 +156,7 @@ export const optimizePreloadStrategy = (): void => {
       }
     });
   } catch (error) {
-    console.warn('Failed to optimize preload strategy:', error);
+    appLogger.warn('Failed to optimize preload strategy:', { data: [error] });
   }
 };
 
@@ -185,7 +186,7 @@ export const suppressKnownWarnings = (): void => {
       } else {
         // Log suppressed warning in development
         if (process.env.NODE_ENV === 'development') {
-          console.log('🔕 Suppressed warning:', `${message.substring(0, 100)  }...`);
+          appLogger.info('🔕 Suppressed warning:', { data: [`${message.substring(0, 100)  }...`] });
         }
       }
     };
@@ -200,7 +201,7 @@ export const suppressKnownWarnings = (): void => {
       }
     };
   } catch (error) {
-    console.warn('Failed to suppress known warnings:', error);
+    appLogger.warn('Failed to suppress known warnings:', { data: [error] });
   }
 };
 
@@ -208,7 +209,7 @@ export const suppressKnownWarnings = (): void => {
  * Executa todas as limpezas de warning
  */
 export const cleanupBrowserWarnings = (): void => {
-  console.log('🧹 Starting browser warnings cleanup...');
+  appLogger.info('🧹 Starting browser warnings cleanup...');
 
   // Executa limpezas imediatamente
   cleanUnrecognizedFeatures();
@@ -227,7 +228,7 @@ export const cleanupBrowserWarnings = (): void => {
     optimizePreloadStrategy();
   }
 
-  console.log('✅ Browser warnings cleanup completed');
+  appLogger.info('✅ Browser warnings cleanup completed');
 };
 
 /**

@@ -18,6 +18,7 @@ import type { Block } from '@/types/editor';
 import { blockRegistry } from '@/core/registry/blockRegistry';
 import { BlockSkeleton } from './BlockSkeleton';
 import { useBlockLoading } from '@/hooks/useBlockLoading';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface LazyBlockRendererProps {
   block: Block;
@@ -65,13 +66,13 @@ class BlockErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('[LazyBlockRenderer] Erro ao renderizar bloco:', {
-      blockId: this.props.block.id,
-      blockType: this.props.block.type,
-      error: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-    });
+    appLogger.error('[LazyBlockRenderer] Erro ao renderizar bloco:', { data: [{
+            blockId: this.props.block.id,
+            blockType: this.props.block.type,
+            error: error.message,
+            stack: error.stack,
+            componentStack: errorInfo.componentStack,
+          }] });
   }
 
   componentDidUpdate(prevProps: { block: Block }) {
@@ -133,7 +134,7 @@ const LazyBlockRendererComponent: React.FC<LazyBlockRendererProps> = ({
     try {
       return blockRegistry.getComponent(block.type);
     } catch (error) {
-      console.warn(`[LazyBlockRenderer] Bloco não encontrado no registry: ${block.type}`, error);
+      appLogger.warn(`[LazyBlockRenderer] Bloco não encontrado no registry: ${block.type}`, { data: [error] });
       return null;
     }
   }, [block.type]);

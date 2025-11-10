@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ProgressiveImageProps {
   src: string;
@@ -47,7 +48,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
     // Log performance metrics for priority images only
     if (priority) {
-      console.log(`Priority image loaded: ${src.substring(0, 50)}...`);
+      appLogger.info(`Priority image loaded: ${src.substring(0, 50)}...`);
 
       // Report to performance observer if available
       if ('performance' in window && 'mark' in performance) {
@@ -57,7 +58,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           // If we have the PerformanceObserver API available, use it to track LCP
           if ('PerformanceObserver' in window) {
             // This is just for monitoring, no actual dependency
-            console.log('Image loaded that might affect LCP');
+            appLogger.info('Image loaded that might affect LCP');
           }
         } catch (e) {
           // Ignore errors with performance marking
@@ -72,7 +73,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
   const handleError = () => {
     setHasError(true);
-    console.error(`Failed to load image: ${src.substring(0, 50)}...`);
+    appLogger.error(`Failed to load image: ${src.substring(0, 50)}...`);
   };
 
   return (

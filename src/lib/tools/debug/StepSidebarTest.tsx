@@ -6,6 +6,7 @@
 import React, { useState, useMemo } from 'react';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { normalizeStepBlocks } from '@/config/quizStepsComplete';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // StepSidebar simplificado para debug
 const SimpleStepSidebar: React.FC<{
@@ -14,11 +15,11 @@ const SimpleStepSidebar: React.FC<{
     onSelectStep: (step: number) => void;
 }> = ({ currentStep, stepHasBlocks, onSelectStep }) => {
 
-    console.log('🔍 SimpleStepSidebar render:', {
-        currentStep,
-        stepHasBlocksKeys: Object.keys(stepHasBlocks),
-        stepsWithBlocks: Object.entries(stepHasBlocks).filter(([, has]) => has).map(([step]) => step),
-    });
+    appLogger.info('🔍 SimpleStepSidebar render:', { data: [{
+            currentStep,
+            stepHasBlocksKeys: Object.keys(stepHasBlocks),
+            stepsWithBlocks: Object.entries(stepHasBlocks).filter(([, has]) => has).map(([step]) => step),
+        }] });
 
     return (
         <div className="w-[13rem] bg-gray-900 text-white h-full flex flex-col">
@@ -69,11 +70,11 @@ const StepSidebarTest: React.FC = () => {
     // Simular o que o EditorProvider faz
     const stepBlocks = useMemo(() => {
         const normalized = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-        console.log('🔍 StepSidebarTest normalized blocks:', {
-            keyCount: Object.keys(normalized).length,
-            keys: Object.keys(normalized),
-            blockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length]),
-        });
+        appLogger.info('🔍 StepSidebarTest normalized blocks:', { data: [{
+                    keyCount: Object.keys(normalized).length,
+                    keys: Object.keys(normalized),
+                    blockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length]),
+                }] });
         return normalized;
     }, []);
 
@@ -86,12 +87,12 @@ const StepSidebarTest: React.FC = () => {
             map[step] = Array.isArray(blocks) && blocks.length > 0;
         }
         const stepsWithBlocks = Object.entries(map).filter(([, hasBlocks]) => hasBlocks).map(([step]) => step);
-        console.log(`🔍 StepSidebarTest: ${stepsWithBlocks.length} steps have blocks:`, stepsWithBlocks);
+        appLogger.info(`🔍 StepSidebarTest: ${stepsWithBlocks.length} steps have blocks:`, { data: [stepsWithBlocks] });
         return map;
     }, [stepBlocks]);
 
     const handleSelectStep = (step: number) => {
-        console.log('🎯 Step selected:', step);
+        appLogger.info('🎯 Step selected:', { data: [step] });
         setCurrentStep(step);
     };
 

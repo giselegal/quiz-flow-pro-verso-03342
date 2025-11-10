@@ -1,4 +1,5 @@
 import { toast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type NotifyLevel = 'info' | 'success' | 'warning' | 'error';
 
@@ -26,7 +27,7 @@ export function notify(message: string, level: NotifyLevel = 'info', title?: str
     // Fallback final: console
     try {
       const tag = level.toUpperCase();
-      console.warn(`[${tag}]`, message);
+      appLogger.warn(`[${tag}]`, { data: [message] });
     } catch {}
   }
 }

@@ -6,6 +6,7 @@
  */
 
 import { advancedStorage } from './AdvancedStorageSystem';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface MigrationConfig {
     batchSize?: number;
@@ -179,11 +180,11 @@ export class StorageMigrationManager {
             result.totalItems = analysis.totalItems;
 
             if (logProgress) {
-                console.log('🔍 Análise de migração:', analysis);
+                appLogger.info('🔍 Análise de migração:', { data: [analysis] });
             }
 
             if (dryRun) {
-                console.log('🧪 Modo DRY RUN - Nenhuma migração será executada');
+                appLogger.info('🧪 Modo DRY RUN - Nenhuma migração será executada');
                 result.duration = Date.now() - startTime;
                 return result;
             }
@@ -201,7 +202,7 @@ export class StorageMigrationManager {
                             result.migratedItems++;
 
                             if (logProgress && result.migratedItems % 20 === 0) {
-                                console.log(`📦 Migrados ${result.migratedItems}/${result.totalItems} itens`);
+                                appLogger.info(`📦 Migrados ${result.migratedItems}/${result.totalItems} itens`);
                             }
                         } catch (error) {
                             result.errors.push({
@@ -222,7 +223,7 @@ export class StorageMigrationManager {
             result.duration = Date.now() - startTime;
 
             if (logProgress) {
-                console.log('✅ Migração concluída:', result);
+                appLogger.info('✅ Migração concluída:', { data: [result] });
             }
 
         } catch (error) {
@@ -276,7 +277,7 @@ export class StorageMigrationManager {
             }
 
         } catch (error) {
-            console.warn(`Falha ao migrar ${key}:`, error);
+            appLogger.warn(`Falha ao migrar ${key}:`, { data: [error] });
             throw error;
         }
     }
@@ -419,7 +420,7 @@ export class StorageMigrationManager {
             }
         }
 
-        console.log(`🧹 Cleanup concluído: ${cleaned} itens removidos do localStorage`);
+        appLogger.info(`🧹 Cleanup concluído: ${cleaned} itens removidos do localStorage`);
         return cleaned;
     }
 }
@@ -462,11 +463,11 @@ export const safeMigrate = async (): Promise<{
     validation: any;
 }> => {
     // 1. Análise
-    console.log('📊 Analisando localStorage...');
+    appLogger.info('📊 Analisando localStorage...');
     const analysis = await migrationManager.analyzeLocalStorage();
 
     // 2. Dry run
-    console.log('🧪 Executando dry run...');
+    appLogger.info('🧪 Executando dry run...');
     const dryRun = await migrationManager.migrate({ dryRun: true });
 
     // 3. Migração real apenas se dry run foi bem-sucedido
@@ -474,11 +475,11 @@ export const safeMigrate = async (): Promise<{
     let validation = null;
 
     if (dryRun.success) {
-        console.log('✅ Dry run bem-sucedido, executando migração...');
+        appLogger.info('✅ Dry run bem-sucedido, executando migração...');
         migration = await migrationManager.migrate({ preserveOriginal: true });
 
         if (migration.success) {
-            console.log('🔍 Validando migração...');
+            appLogger.info('🔍 Validando migração...');
             validation = await migrationManager.validateMigration();
         }
     }

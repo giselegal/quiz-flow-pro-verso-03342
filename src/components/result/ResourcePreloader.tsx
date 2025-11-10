@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useGlobalStyles } from '@/hooks/useGlobalStyles';
 import { preloadImagesByUrls } from '@/lib/utils/imageManager';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Lista de CDNs de imagens usados no aplicativo
 const IMAGE_CDNS = ['https://res.cloudinary.com', 'https://images.unsplash.com'];
@@ -37,7 +38,7 @@ const ResourcePreloader: React.FC = () => {
       quality: 85,
       format: 'auto',
       onComplete: () => {
-        console.debug('[ResourcePreloader] Pré-carregamento de imagens críticas concluído');
+        appLogger.debug('[ResourcePreloader] Pré-carregamento de imagens críticas concluído');
       },
     });
 

@@ -6,6 +6,7 @@ import React, { memo, useCallback, useEffect } from 'react';
 import type { CSSProperties } from 'react';
 import { Block } from '@/types/editor';
 import { UniversalBlockRenderer } from '@/components/core/renderers';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface BlockRendererProps {
   block: Block;
@@ -29,10 +30,8 @@ const BlockRenderer: React.FC<BlockRendererProps> = memo(({
   style,
 }) => {
   useEffect(() => {
-    console.warn(
-      '⚠️ DEPRECATED: BlockRenderer será removido em 21/out/2025. ' +
-      'Use UniversalBlockRenderer a partir de @/components/core/renderers.',
-    );
+    appLogger.warn('⚠️ DEPRECATED: BlockRenderer será removido em 21/out/2025. ' +
+            'Use UniversalBlockRenderer a partir de @/components/core/renderers.');
   }, []);
 
   const handleUpdate = useCallback((blockId: string, updates: any) => {

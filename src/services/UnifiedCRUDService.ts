@@ -20,7 +20,8 @@ import { toast } from '@/hooks/use-toast';
 import { versioningService } from './versioningService';
 import { historyManager } from './HistoryManager';
 import { StorageService } from '@/services/core/StorageService';
-import { createLogger } from '@/lib/utils/logger'; // 🆕 G46 FIX: Structured logging
+import { createLogger } from '@/lib/utils/logger';
+import { appLogger } from '@/lib/utils/appLogger'; // 🆕 G46 FIX: Structured logging
 
 const logger = createLogger({ namespace: 'UnifiedCRUDService' });
 
@@ -133,7 +134,7 @@ export class UnifiedCRUDService {
    * 🚀 INICIALIZAÇÃO DO SERVIÇO
    */
   private async initializeService(): Promise<void> {
-    console.log('🚀 Inicializando UnifiedCRUDService...');
+    appLogger.info('🚀 Inicializando UnifiedCRUDService...');
 
     try {
       // Carregar dados persistidos se disponíveis
@@ -193,7 +194,7 @@ export class UnifiedCRUDService {
         .order('updated_at', { ascending: false, foreignTable: undefined });
 
       if (error) {
-        console.warn('⚠️ Erro ao carregar do Supabase:', error.message);
+        appLogger.warn('⚠️ Erro ao carregar do Supabase:', { data: [error.message] });
         return;
       }
 
@@ -202,11 +203,11 @@ export class UnifiedCRUDService {
           const normalizedFunnel = this.validateAndNormalizeFunnel(funnel);
           this.funnels.set(normalizedFunnel.id, normalizedFunnel);
         });
-        console.log(`📥 ${funnels.length} funis carregados do Supabase`);
+        appLogger.info(`📥 ${funnels.length} funis carregados do Supabase`);
       }
 
     } catch (error) {
-      console.warn('⚠️ Erro ao conectar com Supabase:', error);
+      appLogger.warn('⚠️ Erro ao conectar com Supabase:', { data: [error] });
     }
   }
 
@@ -222,7 +223,7 @@ export class UnifiedCRUDService {
       await this.syncToSupabase(data);
 
     } catch (error) {
-      console.error('❌ Erro ao persistir dados:', error);
+      appLogger.error('❌ Erro ao persistir dados:', { data: [error] });
     }
   }
 
@@ -239,10 +240,10 @@ export class UnifiedCRUDService {
         await this.syncFunnelToSupabase(supabase, funnelData as any);
       }
 
-      console.log('✅ Sincronização com Supabase concluída');
+      appLogger.info('✅ Sincronização com Supabase concluída');
 
     } catch (error) {
-      console.warn('⚠️ Erro ao sincronizar com Supabase:', error);
+      appLogger.warn('⚠️ Erro ao sincronizar com Supabase:', { data: [error] });
     }
   }
 
@@ -268,7 +269,7 @@ export class UnifiedCRUDService {
         });
 
       if (funnelError) {
-        console.warn(`⚠️ Erro ao salvar funnel ${funnel.id}:`, funnelError);
+        appLogger.warn(`⚠️ Erro ao salvar funnel ${funnel.id}:`, { data: [funnelError] });
         return;
       }
 
@@ -280,7 +281,7 @@ export class UnifiedCRUDService {
       }
 
     } catch (error) {
-      console.warn(`⚠️ Erro ao sincronizar funnel ${funnel.id}:`, error);
+      appLogger.warn(`⚠️ Erro ao sincronizar funnel ${funnel.id}:`, { data: [error] });
     }
   }
 
@@ -304,7 +305,7 @@ export class UnifiedCRUDService {
         });
 
       if (stageError) {
-        console.warn(`⚠️ Erro ao salvar stage ${stage.id}:`, stageError);
+        appLogger.warn(`⚠️ Erro ao salvar stage ${stage.id}:`, { data: [stageError] });
         return;
       }
 
@@ -316,7 +317,7 @@ export class UnifiedCRUDService {
       }
 
     } catch (error) {
-      console.warn(`⚠️ Erro ao sincronizar stage ${stage.id}:`, error);
+      appLogger.warn(`⚠️ Erro ao sincronizar stage ${stage.id}:`, { data: [error] });
     }
   }
 
@@ -339,11 +340,11 @@ export class UnifiedCRUDService {
         });
 
       if (blockError) {
-        console.warn(`⚠️ Erro ao salvar block ${block.id}:`, blockError);
+        appLogger.warn(`⚠️ Erro ao salvar block ${block.id}:`, { data: [blockError] });
       }
 
     } catch (error) {
-      console.warn(`⚠️ Erro ao sincronizar block ${block.id}:`, error);
+      appLogger.warn(`⚠️ Erro ao sincronizar block ${block.id}:`, { data: [error] });
     }
   }
 
@@ -546,7 +547,7 @@ export class UnifiedCRUDService {
             `Funnel "${validatedFunnel.name}" atualizado`,
           );
         } catch (versioningError) {
-          console.warn('⚠️ Erro ao criar snapshot automático:', versioningError);
+          appLogger.warn('⚠️ Erro ao criar snapshot automático:', { data: [versioningError] });
         }
       }
 
@@ -557,7 +558,7 @@ export class UnifiedCRUDService {
         variant: 'default',
       });
 
-      console.log(`✅ Funnel ${operationType}d: ${validatedFunnel.id}`);
+      appLogger.info(`✅ Funnel ${operationType}d: ${validatedFunnel.id}`);
 
       return {
         success: true,
@@ -629,7 +630,7 @@ export class UnifiedCRUDService {
         variant: 'default',
       });
 
-      console.log(`🗑️ Funnel deleted: ${id}`);
+      appLogger.info(`🗑️ Funnel deleted: ${id}`);
 
       return {
         success: true,
@@ -706,7 +707,7 @@ export class UnifiedCRUDService {
           variant: 'default',
         });
 
-        console.log(`📋 Funnel duplicated: ${id} -> ${newId}`);
+        appLogger.info(`📋 Funnel duplicated: ${id} -> ${newId}`);
       }
 
       return {
@@ -784,7 +785,7 @@ export class UnifiedCRUDService {
         data: { funnelId, stageId: newStage.id, name: newStage.name },
       });
 
-      console.log(`➕ Stage added: ${newStage.id} to ${funnelId}`);
+      appLogger.info(`➕ Stage added: ${newStage.id} to ${funnelId}`);
 
       return {
         success: true,
@@ -857,7 +858,7 @@ export class UnifiedCRUDService {
         data: { funnelId, stageId, updates },
       });
 
-      console.log(`✏️ Stage updated: ${stageId} in ${funnelId}`);
+      appLogger.info(`✏️ Stage updated: ${stageId} in ${funnelId}`);
 
       return {
         success: true,
@@ -930,7 +931,7 @@ export class UnifiedCRUDService {
         data: { funnelId, stageId, name: removedStage.name },
       });
 
-      console.log(`🗑️ Stage deleted: ${stageId} from ${funnelId}`);
+      appLogger.info(`🗑️ Stage deleted: ${stageId} from ${funnelId}`);
 
       return {
         success: true,
@@ -1000,7 +1001,7 @@ export class UnifiedCRUDService {
         data: { funnelId, startIndex, endIndex },
       });
 
-      console.log(`🔄 Stages reordered in ${funnelId}: ${startIndex} -> ${endIndex}`);
+      appLogger.info(`🔄 Stages reordered in ${funnelId}: ${startIndex} -> ${endIndex}`);
 
       return {
         success: true,
@@ -1072,7 +1073,7 @@ export class UnifiedCRUDService {
         data: { funnelId, stageId, blockId: newBlock.id, type: newBlock.type },
       });
 
-      console.log(`➕ Block added: ${newBlock.id} to ${stageId}`);
+      appLogger.info(`➕ Block added: ${newBlock.id} to ${stageId}`);
 
       return {
         success: true,
@@ -1141,7 +1142,7 @@ export class UnifiedCRUDService {
         data: { funnelId, stageId, blockId, updates },
       });
 
-      console.log(`✏️ Block updated: ${blockId} in ${stageId}`);
+      appLogger.info(`✏️ Block updated: ${blockId} in ${stageId}`);
 
       return {
         success: true,
@@ -1212,7 +1213,7 @@ export class UnifiedCRUDService {
         data: { funnelId, stageId, blockId, type: removedBlock.type },
       });
 
-      console.log(`🗑️ Block deleted: ${blockId} from ${stageId}`);
+      appLogger.info(`🗑️ Block deleted: ${blockId} from ${stageId}`);
 
       return {
         success: true,
@@ -1269,7 +1270,7 @@ export class UnifiedCRUDService {
       const result = await this.addBlock(funnelId, stageId, duplicatedBlock);
 
       if (result.success) {
-        console.log(`📋 Block duplicated: ${blockId} -> ${duplicatedBlock.id}`);
+        appLogger.info(`📋 Block duplicated: ${blockId} -> ${duplicatedBlock.id}`);
       }
 
       return {
@@ -1341,7 +1342,7 @@ export class UnifiedCRUDService {
         data: { funnelId, stageId, startIndex, endIndex },
       });
 
-      console.log(`🔄 Blocks reordered in ${stageId}: ${startIndex} -> ${endIndex}`);
+      appLogger.info(`🔄 Blocks reordered in ${stageId}: ${startIndex} -> ${endIndex}`);
 
       return {
         success: true,
@@ -1407,7 +1408,7 @@ export class UnifiedCRUDService {
         funnel.stages.every(stage => this.validateStage(stage))
       );
     } catch (error) {
-      console.warn('[UnifiedCRUDService] Erro ao validar funnel:', error);
+      appLogger.warn('[UnifiedCRUDService] Erro ao validar funnel:', { data: [error] });
       return false;
     }
   }
@@ -1424,7 +1425,7 @@ export class UnifiedCRUDService {
         typeof stage.order === 'number'
       );
     } catch (error) {
-      console.warn('[UnifiedCRUDService] Erro ao validar stage:', error);
+      appLogger.warn('[UnifiedCRUDService] Erro ao validar stage:', { data: [error] });
       return false;
     }
   }
@@ -1469,7 +1470,7 @@ export class UnifiedCRUDService {
     this.autoSaveTimeouts.forEach(timeout => clearTimeout(timeout));
     this.autoSaveTimeouts.clear();
     StorageService.safeRemove('unifiedEditor:funnels');
-    console.log('🧹 Cache do UnifiedCRUDService limpo');
+    appLogger.info('🧹 Cache do UnifiedCRUDService limpo');
   }
 
   /**

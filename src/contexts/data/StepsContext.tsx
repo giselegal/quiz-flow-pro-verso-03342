@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface simplificada para etapas
 export interface QuizStep {
@@ -249,7 +250,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const saved = StorageService.safeGetJSON<QuizStep[]>('quiz-steps');
       return Array.isArray(saved) && saved.length ? saved : initialQuiz21Steps;
     } catch (error) {
-      if (import.meta?.env?.DEV) console.error('Erro ao carregar etapas:', error);
+      if (import.meta?.env?.DEV) appLogger.error('Erro ao carregar etapas:', { data: [error] });
       return initialQuiz21Steps;
     }
   };
@@ -349,7 +350,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Popular etapa com blocos padrão (implementação simplificada)
   const populateStep = useCallback((stepId: string) => {
-    console.log(`Populando etapa ${stepId} com blocos padrão`);
+    appLogger.info(`Populando etapa ${stepId} com blocos padrão`);
 
     // Aqui você poderia ter uma lógica para pegar os blocos do template
     // e depois atualizaria a contagem de blocos da etapa

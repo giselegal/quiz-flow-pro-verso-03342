@@ -14,6 +14,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { Database } from '@/lib/supabase';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -57,7 +58,7 @@ class SupabaseApiClient {
     private getFromCache<T>(key: string): T | null {
         const cached = this.cache.get(key);
         if (cached && Date.now() - cached.timestamp < cached.ttl) {
-            console.log(`📊 Cache hit: ${key}`);
+            appLogger.info(`📊 Cache hit: ${key}`);
             return cached.data;
         }
         return null;
@@ -149,7 +150,7 @@ class SupabaseApiClient {
             const { data, error, count } = await query;
 
             if (error) {
-                console.error('❌ Supabase Query Error (sessions):', error);
+                appLogger.error('❌ Supabase Query Error (sessions):', { data: [error] });
                 return { data: null, error, status: 'error' };
             }
 
@@ -158,11 +159,11 @@ class SupabaseApiClient {
                 this.setCache(cacheKey, data, 300000); // 5 minutes
             }
 
-            console.log(`✅ Quiz sessions retrieved: ${data?.length || 0} records`);
+            appLogger.info(`✅ Quiz sessions retrieved: ${data?.length || 0} records`);
             return { data, error: null, count: count || undefined, status: 'success' };
 
         } catch (error) {
-            console.error('❌ Unexpected error getting quiz sessions:', error);
+            appLogger.error('❌ Unexpected error getting quiz sessions:', { data: [error] });
             return { data: null, error, status: 'error' };
         }
     }
@@ -206,7 +207,7 @@ class SupabaseApiClient {
             const { data, error, count } = await query;
 
             if (error) {
-                console.error('❌ Supabase Query Error (results):', error);
+                appLogger.error('❌ Supabase Query Error (results):', { data: [error] });
                 return { data: null, error, status: 'error' };
             }
 
@@ -215,11 +216,11 @@ class SupabaseApiClient {
                 this.setCache(cacheKey, data, 300000); // 5 minutes
             }
 
-            console.log(`✅ Quiz results retrieved: ${data?.length || 0} records`);
+            appLogger.info(`✅ Quiz results retrieved: ${data?.length || 0} records`);
             return { data, error: null, count: count || undefined, status: 'success' };
 
         } catch (error) {
-            console.error('❌ Unexpected error getting quiz results:', error);
+            appLogger.error('❌ Unexpected error getting quiz results:', { data: [error] });
             return { data: null, error, status: 'error' };
         }
     }
@@ -244,7 +245,7 @@ class SupabaseApiClient {
                 .order('step_number', { ascending: true });
 
             if (error) {
-                console.error('❌ Supabase Query Error (step responses):', error);
+                appLogger.error('❌ Supabase Query Error (step responses):', { data: [error] });
                 return { data: null, error, status: 'error' };
             }
 
@@ -253,11 +254,11 @@ class SupabaseApiClient {
                 this.setCache(cacheKey, data, 600000); // 10 minutes (more stable data)
             }
 
-            console.log(`✅ Step responses retrieved: ${data?.length || 0} records for session ${sessionId}`);
+            appLogger.info(`✅ Step responses retrieved: ${data?.length || 0} records for session ${sessionId}`);
             return { data, error: null, status: 'success' };
 
         } catch (error) {
-            console.error('❌ Unexpected error getting step responses:', error);
+            appLogger.error('❌ Unexpected error getting step responses:', { data: [error] });
             return { data: null, error, status: 'error' };
         }
     }
@@ -298,7 +299,7 @@ class SupabaseApiClient {
             const { data, error, count } = await query;
 
             if (error) {
-                console.error('❌ Supabase Query Error (funnels):', error);
+                appLogger.error('❌ Supabase Query Error (funnels):', { data: [error] });
                 return { data: null, error, status: 'error' };
             }
 
@@ -307,11 +308,11 @@ class SupabaseApiClient {
                 this.setCache(cacheKey, data, 600000); // 10 minutes
             }
 
-            console.log(`✅ Funnels retrieved: ${data?.length || 0} records`);
+            appLogger.info(`✅ Funnels retrieved: ${data?.length || 0} records`);
             return { data, error: null, count: count || undefined, status: 'success' };
 
         } catch (error) {
-            console.error('❌ Unexpected error getting funnels:', error);
+            appLogger.error('❌ Unexpected error getting funnels:', { data: [error] });
             return { data: null, error, status: 'error' };
         }
     }
@@ -336,7 +337,7 @@ class SupabaseApiClient {
                 .single();
 
             if (error) {
-                console.error('❌ Supabase Query Error (funnel by id):', error);
+                appLogger.error('❌ Supabase Query Error (funnel by id):', { data: [error] });
                 return { data: null, error, status: 'error' };
             }
 
@@ -345,11 +346,11 @@ class SupabaseApiClient {
                 this.setCache(cacheKey, data, 1800000); // 30 minutes (stable data)
             }
 
-            console.log(`✅ Funnel retrieved: ${id}`);
+            appLogger.info(`✅ Funnel retrieved: ${id}`);
             return { data, error: null, status: 'success' };
 
         } catch (error) {
-            console.error('❌ Unexpected error getting funnel by id:', error);
+            appLogger.error('❌ Unexpected error getting funnel by id:', { data: [error] });
             return { data: null, error, status: 'error' };
         }
     }
@@ -373,18 +374,18 @@ class SupabaseApiClient {
                 .single();
 
             if (error) {
-                console.error('❌ Supabase Insert Error (quiz session):', error);
+                appLogger.error('❌ Supabase Insert Error (quiz session):', { data: [error] });
                 return { data: null, error, status: 'error' };
             }
 
             // Clear related cache
             this.clearCache('quiz_sessions');
 
-            console.log('✅ Quiz session created:', data.id);
+            appLogger.info('✅ Quiz session created:', { data: [data.id] });
             return { data, error: null, status: 'success' };
 
         } catch (error) {
-            console.error('❌ Unexpected error creating quiz session:', error);
+            appLogger.error('❌ Unexpected error creating quiz session:', { data: [error] });
             return { data: null, error, status: 'error' };
         }
     }
@@ -401,18 +402,18 @@ class SupabaseApiClient {
                 .single();
 
             if (error) {
-                console.error('❌ Supabase Update Error (quiz session):', error);
+                appLogger.error('❌ Supabase Update Error (quiz session):', { data: [error] });
                 return { data: null, error, status: 'error' };
             }
 
             // Clear related cache
             this.clearCache('quiz_sessions');
 
-            console.log('✅ Quiz session updated:', id);
+            appLogger.info('✅ Quiz session updated:', { data: [id] });
             return { data, error: null, status: 'success' };
 
         } catch (error) {
-            console.error('❌ Unexpected error updating quiz session:', error);
+            appLogger.error('❌ Unexpected error updating quiz session:', { data: [error] });
             return { data: null, error, status: 'error' };
         }
     }
@@ -453,7 +454,7 @@ class SupabaseApiClient {
 
     clearAllCache(): void {
         this.cache.clear();
-        console.log('🗑️ All Supabase cache cleared');
+        appLogger.info('🗑️ All Supabase cache cleared');
     }
 
     // ============================================================================
@@ -461,7 +462,7 @@ class SupabaseApiClient {
     // ============================================================================
 
     getRawClient() {
-        console.warn('⚠️ Using raw Supabase client - prefer using SupabaseApiClient methods');
+        appLogger.warn('⚠️ Using raw Supabase client - prefer using SupabaseApiClient methods');
         return supabase;
     }
 }

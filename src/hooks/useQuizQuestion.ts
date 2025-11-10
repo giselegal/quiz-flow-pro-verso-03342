@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useQuiz21Steps } from '../components/quiz/Quiz21StepsProvider';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseQuizQuestionProps {
   questionId: string;
@@ -97,7 +98,7 @@ export const useQuizQuestion = ({
       // Salvar no sistema global
       saveAnswer(questionId, optionId, value);
 
-      console.log('🎯 useQuizQuestion: Seleção adicionada:', { questionId, optionId, value });
+      appLogger.info('🎯 useQuizQuestion: Seleção adicionada:', { data: [{ questionId, optionId, value }] });
     },
     [questionId, currentStep, effectiveMaxSelections, saveAnswer],
   );
@@ -116,7 +117,7 @@ export const useQuizQuestion = ({
       delete updatedGlobalSelections[optionId];
       updateStepSelections(updatedGlobalSelections);
 
-      console.log('🎯 useQuizQuestion: Seleção removida:', { questionId, optionId });
+      appLogger.info('🎯 useQuizQuestion: Seleção removida:', { data: [{ questionId, optionId }] });
     },
     [questionId, currentStepSelections, updateStepSelections],
   );
@@ -126,7 +127,7 @@ export const useQuizQuestion = ({
     setLocalSelections({});
     updateStepSelections({});
 
-    console.log('🎯 useQuizQuestion: Seleções limpas:', { questionId });
+    appLogger.info('🎯 useQuizQuestion: Seleções limpas:', { data: [{ questionId }] });
   }, [questionId, updateStepSelections]);
 
   // Gerar string de progresso

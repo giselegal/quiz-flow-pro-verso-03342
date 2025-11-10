@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 📊 USE PERFORMANCE TEST - HOOK DE PERFORMANCE
@@ -232,7 +233,7 @@ export function usePerformanceTest(
             checkThresholds(newMetrics);
 
         } catch (error) {
-            console.warn(`[PerformanceTest:${componentName}] Error collecting metrics:`, error);
+            appLogger.warn(`[PerformanceTest:${componentName}] Error collecting metrics:`, { data: [error] });
         }
     }, [enabled, isTestRunning, componentName, metrics.renderTime]);
 
@@ -261,7 +262,7 @@ export function usePerformanceTest(
         if (newAlerts.length > 0) {
             setAlerts(prev => [...prev, ...newAlerts]);
             newAlerts.forEach(alert => {
-                console.warn(`[PerformanceAlert:${componentName}]`, alert);
+                appLogger.warn(`[PerformanceAlert:${componentName}]`, { data: [alert] });
                 onAlert?.(alert);
             });
         }
@@ -287,7 +288,7 @@ export function usePerformanceTest(
             cleanup = setupNetworkTracking() as unknown as (() => void);
         }
 
-        console.log(`[PerformanceTest:${componentName}] Test started`);
+        appLogger.info(`[PerformanceTest:${componentName}] Test started`);
 
         // Garantir cleanup se apropriado
         if (cleanup) {
@@ -303,7 +304,7 @@ export function usePerformanceTest(
             clearInterval(intervalRef.current);
         }
 
-        console.log(`[PerformanceTest:${componentName}] Test stopped`);
+        appLogger.info(`[PerformanceTest:${componentName}] Test stopped`);
     }, [componentName]);
 
     // 🔄 Reset de métricas

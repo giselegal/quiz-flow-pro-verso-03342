@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔄 LEGACY COMPATIBILITY - DEPRECATED
  * 
@@ -22,8 +23,6 @@ export {
 
 // Legacy warning for developers
 if (process.env.NODE_ENV === 'development') {
-  console.warn(
-    '⚠️ DEPRECATION WARNING: src/types/blockComponentProps.ts is deprecated. ' +
-    'Please import from "@/types/core" instead.',
-  );
+  appLogger.warn('⚠️ DEPRECATION WARNING: src/types/blockComponentProps.ts is deprecated. ' +
+        'Please import from "@/types/core" instead.');
 }

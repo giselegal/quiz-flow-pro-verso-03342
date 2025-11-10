@@ -23,7 +23,6 @@
 
 // @ts-nocheck
 import React, { useEffect } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 
 interface ComponentRendererProps {
   component: any;

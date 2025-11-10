@@ -11,6 +11,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { useUnifiedQuizState } from './useUnifiedQuizState';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizBackendMetrics {
   sessionId?: string;
@@ -59,10 +60,10 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
       setSessionId(session.id);
       setIsBackendConnected(true);
 
-      console.log('🎯 Quiz Backend: Session created', session.id);
+      appLogger.info('🎯 Quiz Backend: Session created', { data: [session.id] });
       return session.id;
     } catch (error) {
-      console.error('❌ Quiz Backend: Session creation failed', error);
+      appLogger.error('❌ Quiz Backend: Session creation failed', { data: [error] });
       return null;
     }
   }, [funnelId, unifiedState.metadata.currentStep]);
@@ -87,9 +88,9 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
 
       if (error) throw error;
 
-      console.log('🔍 Quiz Monitoring: Active', data);
+      appLogger.info('🔍 Quiz Monitoring: Active', { data: [data] });
     } catch (error) {
-      console.error('❌ Quiz Monitoring: Failed', error);
+      appLogger.error('❌ Quiz Monitoring: Failed', { data: [error] });
       setIsMonitoring(false);
     }
   }, [sessionId, funnelId, unifiedState]);
@@ -125,9 +126,9 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
         })
         .eq('id', sessionId);
 
-      console.log('💾 Quiz Response: Saved', { stepNumber, questionId });
+      appLogger.info('💾 Quiz Response: Saved', { data: [{ stepNumber, questionId }] });
     } catch (error) {
-      console.error('❌ Quiz Response: Save failed', error);
+      appLogger.error('❌ Quiz Response: Save failed', { data: [error] });
     }
   }, [sessionId]);
 
@@ -152,9 +153,9 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
       if (error) throw error;
 
       setAISuggestions(data.suggestions || []);
-      console.log('🤖 AI Optimization: Suggestions received', data.suggestions?.length);
+      appLogger.info('🤖 AI Optimization: Suggestions received', { data: [data.suggestions?.length] });
     } catch (error) {
-      console.error('❌ AI Optimization: Failed', error);
+      appLogger.error('❌ AI Optimization: Failed', { data: [error] });
     }
   }, [sessionId, funnelId, unifiedState]);
 
@@ -178,9 +179,9 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
           user_id: undefined, // Public quiz
         });
 
-      console.log('📊 Quiz Analytics: Event tracked', eventType);
+      appLogger.info('📊 Quiz Analytics: Event tracked', { data: [eventType] });
     } catch (error) {
-      console.error('❌ Quiz Analytics: Failed', error);
+      appLogger.error('❌ Quiz Analytics: Failed', { data: [error] });
     }
   }, [sessionId, funnelId]);
 
@@ -218,7 +219,7 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
       });
 
     } catch (error) {
-      console.error('❌ Quiz Metrics: Calculation failed', error);
+      appLogger.error('❌ Quiz Metrics: Calculation failed', { data: [error] });
     }
   }, [sessionId, unifiedState]);
 
@@ -260,10 +261,10 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
       });
 
       await trackQuizEvent('quiz_completed', { result });
-      console.log('🏁 Quiz Backend: Finalized successfully');
+      appLogger.info('🏁 Quiz Backend: Finalized successfully');
 
     } catch (error) {
-      console.error('❌ Quiz Finalization: Failed', error);
+      appLogger.error('❌ Quiz Finalization: Failed', { data: [error] });
     }
   }, [sessionId, trackQuizEvent]);
 

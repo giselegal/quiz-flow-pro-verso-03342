@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getLowQualityPlaceholder } from '@/lib/utils/imageUtils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ProgressiveImageProps {
   src: string;
@@ -41,7 +42,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   const handleLoad = () => {
     // Log do tempo de carregamento para otimizações futuras
     const loadTime = Date.now() - loadStartTime;
-    console.debug(`[Image] Carregada em ${loadTime}ms: ${src}`);
+    appLogger.debug(`[Image] Carregada em ${loadTime}ms: ${src}`);
 
     setLoaded(true);
     if (onLoad) onLoad();
@@ -49,7 +50,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
   // Lidar com erro de carregamento
   const handleError = () => {
-    console.warn(`[Image] Erro ao carregar: ${src}`);
+    appLogger.warn(`[Image] Erro ao carregar: ${src}`);
     setError(true);
     // Garantir que o callback onLoad seja chamado mesmo em erro
     // para não travar a progressão do carregamento
@@ -62,7 +63,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
     // mesmo sem eventos de onload/onerror (fallback de segurança)
     const safetyTimer = setTimeout(() => {
       if (!loaded && !error) {
-        console.warn(`[Image] Timeout de carregamento: ${src}`);
+        appLogger.warn(`[Image] Timeout de carregamento: ${src}`);
         setLoaded(true);
         if (onLoad) onLoad();
       }

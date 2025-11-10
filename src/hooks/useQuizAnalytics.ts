@@ -14,6 +14,7 @@ import {
   UserAnswer,
   Result,
 } from '@/types/quizCore';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const useQuizAnalytics = (): QuizAnalyticsHook => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
@@ -28,7 +29,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
 
   // Track a generic analytics event
   const trackEvent = useCallback((event: AnalyticsEvent) => {
-    console.log('📊 Analytics Event:', event);
+    appLogger.info('📊 Analytics Event:', { data: [event] });
 
     // Add to internal analytics data
     setAnalyticsData(prev => ({
@@ -46,7 +47,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
           value: event.value,
         });
       } catch (error) {
-        console.warn('⚠️ Facebook Pixel tracking failed:', error);
+        appLogger.warn('⚠️ Facebook Pixel tracking failed:', { data: [error] });
       }
     }
 
@@ -62,7 +63,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
           },
         });
       } catch (error) {
-        console.warn('⚠️ Google Analytics tracking failed:', error);
+        appLogger.warn('⚠️ Google Analytics tracking failed:', { data: [error] });
       }
     }
   }, []);
@@ -183,7 +184,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
             currency: 'BRL',
           });
         } catch (error) {
-          console.warn('⚠️ Facebook Pixel conversion tracking failed:', error);
+          appLogger.warn('⚠️ Facebook Pixel conversion tracking failed:', { data: [error] });
         }
       }
 
@@ -197,7 +198,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
             transaction_id: result.id,
           });
         } catch (error) {
-          console.warn('⚠️ Google Analytics conversion tracking failed:', error);
+          appLogger.warn('⚠️ Google Analytics conversion tracking failed:', { data: [error] });
         }
       }
     },
@@ -232,7 +233,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
       if (document.hidden) {
         // Page became hidden - pause session tracking
         const visibleTime = Date.now() - visibilityStartTime;
-        console.log(`📊 Page visible for ${visibleTime}ms`);
+        appLogger.info(`📊 Page visible for ${visibleTime}ms`);
       } else {
         // Page became visible - resume session tracking
         visibilityStartTime = Date.now();

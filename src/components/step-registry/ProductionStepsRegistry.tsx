@@ -25,6 +25,7 @@ import OriginalStrategicQuestionStep from '@/components/quiz/StrategicQuestionSt
 import OriginalTransitionStep from '@/components/quiz/TransitionStep';
 import OriginalResultStep from '@/components/quiz/ResultStep';
 import OriginalOfferStep from '@/components/quiz/OfferStep';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🏠 INTRO STEP ADAPTER
@@ -63,10 +64,10 @@ const IntroStepAdapter: React.FC<BaseStepProps> = (props) => {
         onNameSubmit: (name: string) => {
             const trimmed = (name || '').trim();
             if (!trimmed) {
-                console.warn('[quiz:intro] Tentativa de avançar sem nome válido');
+                appLogger.warn('[quiz:intro] Tentativa de avançar sem nome válido');
                 return;
             }
-            console.log('[quiz:intro] userName capturado =', trimmed, '→ avançando');
+            appLogger.info('[quiz:intro] userName capturado =', { data: [trimmed, '→ avançando'] });
             onSave({ userName: trimmed });
             onNext();
         },
@@ -114,7 +115,7 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
 
                 if (mounted) setTemplateBlocks(blocks);
             } catch (error) {
-                console.error('❌ [QuestionStepAdapter] Erro ao carregar template:', error);
+                appLogger.error('❌ [QuestionStepAdapter] Erro ao carregar template:', { data: [error] });
             } finally {
                 if (mounted) setLoading(false);
             }
@@ -217,7 +218,7 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
 
                 if (mounted) setTemplateBlocks(blocks);
             } catch (error) {
-                console.error('❌ [StrategicQuestionStepAdapter] Erro ao carregar template:', error);
+                appLogger.error('❌ [StrategicQuestionStepAdapter] Erro ao carregar template:', { data: [error] });
             } finally {
                 if (mounted) setLoading(false);
             }
@@ -289,7 +290,7 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
  * ✨ Usa blocos atômicos dos templates JSON
  */
 const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
-    console.log('🔧 [TransitionStepAdapter] Called for', props.stepId);
+    appLogger.info('🔧 [TransitionStepAdapter] Called for', { data: [props.stepId] });
 
     const {
         stepId,
@@ -308,7 +309,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        console.log('📦 [TransitionStepAdapter] Loading template for', stepId);
+        appLogger.info('📦 [TransitionStepAdapter] Loading template for', { data: [stepId] });
         const loadTemplate = async () => {
             try {
                 // Carregar template do step
@@ -317,34 +318,34 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 // Preferir override de registry (result.step) quando disponível
                 const stepData = (result as any)?.step || (result as any)?.template?.[stepId];
 
-                console.log('📄 [TransitionStepAdapter] Raw template data:', {
-                    stepId,
-                    hasStepData: !!stepData,
-                    hasSections: !!stepData?.sections,
-                    hasBlocks: !!stepData?.blocks,
-                    type: typeof stepData,
-                });
+                appLogger.info('📄 [TransitionStepAdapter] Raw template data:', { data: [{
+                                    stepId,
+                                    hasStepData: !!stepData,
+                                    hasSections: !!stepData?.sections,
+                                    hasBlocks: !!stepData?.blocks,
+                                    type: typeof stepData,
+                                }] });
 
                 // ✅ CORREÇÃO: Verificar se tem sections (template TS) ou blocks (template JSON)
                 let blocks: any[] = [];
 
                 if (stepData?.blocks && Array.isArray(stepData.blocks)) {
                     // Template JSON moderno com blocks
-                    console.log('✅ [TransitionStepAdapter] Using blocks from JSON template');
+                    appLogger.info('✅ [TransitionStepAdapter] Using blocks from JSON template');
                     blocks = stepData.blocks;
                 } else if (stepData?.sections && Array.isArray(stepData.sections)) {
                     // Template TS legado com sections - converter para blocks
-                    console.log('🔄 [TransitionStepAdapter] Converting sections to blocks');
+                    appLogger.info('🔄 [TransitionStepAdapter] Converting sections to blocks');
                     const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
                     blocks = convertSectionsToBlocks(stepData.sections);
                 } else {
-                    console.warn('⚠️ [TransitionStepAdapter] No blocks or sections found');
+                    appLogger.warn('⚠️ [TransitionStepAdapter] No blocks or sections found');
                 }
 
-                console.log('✅ [TransitionStepAdapter] Template loaded:', { stepId, blocksCount: blocks.length });
+                appLogger.info('✅ [TransitionStepAdapter] Template loaded:', { data: [{ stepId, blocksCount: blocks.length }] });
                 setTemplate({ blocks });
             } catch (error) {
-                console.error('❌ [TransitionStepAdapter] Erro ao carregar template:', error);
+                appLogger.error('❌ [TransitionStepAdapter] Erro ao carregar template:', { data: [error] });
             } finally {
                 setLoading(false);
             }
@@ -355,7 +356,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
 
     // Se template tem blocos, usar blocos atômicos
     if (template?.blocks && template.blocks.length > 0) {
-        console.log('🎨 [TransitionStepAdapter] Rendering atomic blocks:', template.blocks.length);
+        appLogger.info('🎨 [TransitionStepAdapter] Rendering atomic blocks:', { data: [template.blocks.length] });
         const UniversalBlockRenderer = require('@/components/editor/blocks/UniversalBlockRenderer').default;
 
         return (
@@ -376,7 +377,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
     }
 
     // Fallback: usar componente legado (compatibilidade)
-    console.log('⚠️ [TransitionStepAdapter] Using legacy fallback (no blocks)');
+    appLogger.info('⚠️ [TransitionStepAdapter] Using legacy fallback (no blocks)');
     if (loading) {
         return <div className="flex items-center justify-center p-12">Carregando...</div>;
     }
@@ -418,7 +419,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
  * ✨ Usa ResultProvider + blocos atômicos dos templates JSON
  */
 const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
-    console.log('🏆 [ResultStepAdapter] Called for', props.stepId);
+    appLogger.info('🏆 [ResultStepAdapter] Called for', { data: [props.stepId] });
 
     const {
         stepId,
@@ -438,7 +439,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        console.log('📦 [ResultStepAdapter] Loading template for', stepId);
+        appLogger.info('📦 [ResultStepAdapter] Loading template for', { data: [stepId] });
         const loadTemplate = async () => {
             try {
                 // Carregar template do step 20
@@ -447,34 +448,34 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
                 // Preferir override de registry (result.step) quando disponível
                 const stepData = (result as any)?.step || (result as any)?.template?.[stepId];
 
-                console.log('📄 [ResultStepAdapter] Raw template data:', {
-                    stepId,
-                    hasStepData: !!stepData,
-                    hasSections: !!stepData?.sections,
-                    hasBlocks: !!stepData?.blocks,
-                    type: typeof stepData,
-                });
+                appLogger.info('📄 [ResultStepAdapter] Raw template data:', { data: [{
+                                    stepId,
+                                    hasStepData: !!stepData,
+                                    hasSections: !!stepData?.sections,
+                                    hasBlocks: !!stepData?.blocks,
+                                    type: typeof stepData,
+                                }] });
 
                 // ✅ CORREÇÃO: Verificar se tem sections (template TS) ou blocks (template JSON)
                 let blocks: any[] = [];
 
                 if (stepData?.blocks && Array.isArray(stepData.blocks)) {
                     // Template JSON moderno com blocks
-                    console.log('✅ [ResultStepAdapter] Using blocks from JSON template');
+                    appLogger.info('✅ [ResultStepAdapter] Using blocks from JSON template');
                     blocks = stepData.blocks;
                 } else if (stepData?.sections && Array.isArray(stepData.sections)) {
                     // Template TS legado com sections - converter para blocks
-                    console.log('🔄 [ResultStepAdapter] Converting sections to blocks');
+                    appLogger.info('🔄 [ResultStepAdapter] Converting sections to blocks');
                     const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
                     blocks = convertSectionsToBlocks(stepData.sections);
                 } else {
-                    console.warn('⚠️ [ResultStepAdapter] No blocks or sections found');
+                    appLogger.warn('⚠️ [ResultStepAdapter] No blocks or sections found');
                 }
 
-                console.log('✅ [ResultStepAdapter] Template loaded:', { stepId, blocksCount: blocks.length });
+                appLogger.info('✅ [ResultStepAdapter] Template loaded:', { data: [{ stepId, blocksCount: blocks.length }] });
                 setTemplate({ blocks });
             } catch (error) {
-                console.error('❌ [ResultStepAdapter] Erro ao carregar template:', error);
+                appLogger.error('❌ [ResultStepAdapter] Erro ao carregar template:', { data: [error] });
             } finally {
                 setLoading(false);
             }
@@ -669,20 +670,20 @@ let __PRODUCTION_STEPS_ALREADY_REGISTERED = false;
 export const registerProductionSteps = () => {
     if (__PRODUCTION_STEPS_ALREADY_REGISTERED) {
         if (process.env.NODE_ENV === 'development') {
-            console.log('ℹ️ registerProductionSteps() já executado — ignorando chamada duplicada');
+            appLogger.info('ℹ️ registerProductionSteps() já executado — ignorando chamada duplicada');
         }
         return;
     }
     __PRODUCTION_STEPS_ALREADY_REGISTERED = true;
 
-    console.log('🎯 Registrando steps de produção no StepRegistry...');
+    appLogger.info('🎯 Registrando steps de produção no StepRegistry...');
 
     PRODUCTION_STEPS.forEach(step => {
         // Apenas registra IDs canônicos (step-XX); aliases serão aceitos via normalização no StepRegistry
         stepRegistry.register(step);
     });
 
-    console.log(`✅ ${PRODUCTION_STEPS.length} steps de produção registrados com sucesso!`);
+    appLogger.info(`✅ ${PRODUCTION_STEPS.length} steps de produção registrados com sucesso!`);
 
     if (process.env.NODE_ENV === 'development') {
         // Tabela tradicional

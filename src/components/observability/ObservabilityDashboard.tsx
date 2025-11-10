@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 
 import { observabilityManager } from '@/core/observability/ObservabilityManager';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface DashboardData {
   systemHealth: any;
@@ -53,7 +54,7 @@ export const ObservabilityDashboard: React.FC = () => {
       const data = observabilityManager.getDashboardData();
       setDashboardData(data);
     } catch (error) {
-      console.error('Failed to refresh dashboard data:', error);
+      appLogger.error('Failed to refresh dashboard data:', { data: [error] });
     }
     setIsRefreshing(false);
   };

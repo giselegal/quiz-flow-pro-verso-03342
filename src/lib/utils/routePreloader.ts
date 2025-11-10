@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚀 ROUTE PRELOADER (P2 Performance Optimization)
  * 
@@ -47,9 +48,9 @@ class RoutePreloader {
     try {
       await config.component();
       this.preloadedRoutes.add(route);
-      console.log(`✅ Preloaded route: ${route}`);
+      appLogger.info(`✅ Preloaded route: ${route}`);
     } catch (error) {
-      console.warn(`⚠️ Failed to preload route ${route}:`, error);
+      appLogger.warn(`⚠️ Failed to preload route ${route}:`, { data: [error] });
     }
   }
 

@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { optimizedImageStorage } from '../services/OptimizedImageStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UseOptimizedImageOptions {
     quality?: number;
@@ -182,7 +183,7 @@ export const useImageCacheStats = () => {
                 newestEntry: cacheStats.newestImage ? new Date(cacheStats.newestImage) : null,
             });
         } catch (err) {
-            console.error('❌ Erro ao carregar estatísticas:', err);
+            appLogger.error('❌ Erro ao carregar estatísticas:', { data: [err] });
         } finally {
             setIsLoading(false);
         }
@@ -194,7 +195,7 @@ export const useImageCacheStats = () => {
             await loadStats(); // Recarregar estatísticas
             return true;
         } catch (err) {
-            console.error('❌ Erro ao limpar cache:', err);
+            appLogger.error('❌ Erro ao limpar cache:', { data: [err] });
             return false;
         }
     }, [loadStats]);
@@ -240,7 +241,7 @@ export const useImagePreloader = () => {
                 },
             );
         } catch (err) {
-            console.warn('⚠️ Erro no preload da imagem:', src, err);
+            appLogger.warn('⚠️ Erro no preload da imagem:', { data: [src, err] });
         } finally {
             setLoadingImages(prev => {
                 const newSet = new Set(prev);
@@ -352,7 +353,7 @@ export const useImagePerformanceMonitor = () => {
 
             return result;
         } catch (err) {
-            console.error('❌ Erro na medição de performance:', err);
+            appLogger.error('❌ Erro na medição de performance:', { data: [err] });
             throw err;
         }
     }, []);

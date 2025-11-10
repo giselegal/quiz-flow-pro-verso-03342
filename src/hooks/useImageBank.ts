@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAllImages } from '@/services/data/imageBank';
 import { preloadCriticalImages } from '@/lib/utils/imageManager';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const useImageBank = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -22,7 +23,7 @@ export const useImageBank = () => {
 
         setPreloadProgress(100);
       } catch (error) {
-        console.error('Error loading images:', error);
+        appLogger.error('Error loading images:', { data: [error] });
       } finally {
         setIsLoading(false);
       }
@@ -39,7 +40,7 @@ export const useImageBank = () => {
         format: 'webp',
       });
     } catch (error) {
-      console.error(`Error preloading images for category ${category}:`, error);
+      appLogger.error(`Error preloading images for category ${category}:`, { data: [error] });
     }
   };
 

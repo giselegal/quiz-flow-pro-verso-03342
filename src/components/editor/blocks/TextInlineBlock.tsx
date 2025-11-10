@@ -1,9 +1,9 @@
 import { cn } from '@/lib/utils';
-import { appLogger } from '@/lib/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { interpolate } from '@/lib/utils/interpolate';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -179,7 +179,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       const ctx = { userName, user: { name: userName } } as Record<string, any>;
       setPersonalizedContent(interpolate(base, ctx));
     } catch (error) {
-      console.warn('[TextInlineBlock] Erro ao interpolar conteúdo:', error);
+      appLogger.warn('[TextInlineBlock] Erro ao interpolar conteúdo:', { data: [error] });
       setPersonalizedContent(base);
     }
   }, [content, useUsername, usernamePattern, enableInterpolation]);
@@ -322,7 +322,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         }
       }
     } catch (error) {
-      console.warn('[TextInlineBlock] Erro ao logar detecção HTML:', error);
+      appLogger.warn('[TextInlineBlock] Erro ao logar detecção HTML:', { data: [error] });
     }
 
     return hasHtml || hasSpanTag || hasStrongTag;

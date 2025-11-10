@@ -6,6 +6,7 @@
  */
 
 import { getWhatsAppAgent } from '../../services/WhatsAppCartRecoveryAgent';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TIPOS
@@ -91,7 +92,7 @@ export async function handleWhatsAppWebhook(request: Request): Promise<Response>
     return new Response('Method not allowed', { status: 405 });
 
   } catch (error) {
-    console.error('❌ Erro no webhook WhatsApp:', error);
+    appLogger.error('❌ Erro no webhook WhatsApp:', { data: [error] });
     return new Response('Internal server error', { status: 500 });
   }
 }
@@ -108,10 +109,10 @@ function handleWebhookVerification(searchParams: URLSearchParams): Response {
   const expectedToken = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN || 'your_verify_token';
 
   if (mode === 'subscribe' && token === expectedToken) {
-    console.log('✅ Webhook WhatsApp verificado com sucesso');
+    appLogger.info('✅ Webhook WhatsApp verificado com sucesso');
     return new Response(challenge, { status: 200 });
   } else {
-    console.warn('❌ Falha na verificação do webhook WhatsApp');
+    appLogger.warn('❌ Falha na verificação do webhook WhatsApp');
     return new Response('Forbidden', { status: 403 });
   }
 }
@@ -124,10 +125,10 @@ async function handleIncomingMessage(request: Request): Promise<Response> {
     const payload: WhatsAppWebhookPayload = await request.json();
 
     // Log do webhook recebido
-    console.log('📱 Webhook WhatsApp recebido:', {
-      object: payload.object,
-      entries: payload.entry.length,
-    });
+    appLogger.info('📱 Webhook WhatsApp recebido:', { data: [{
+            object: payload.object,
+            entries: payload.entry.length,
+          }] });
 
     // Processar cada entrada
     for (const entry of payload.entry) {
@@ -141,7 +142,7 @@ async function handleIncomingMessage(request: Request): Promise<Response> {
     return new Response('OK', { status: 200 });
 
   } catch (error) {
-    console.error('❌ Erro ao processar mensagem WhatsApp:', error);
+    appLogger.error('❌ Erro ao processar mensagem WhatsApp:', { data: [error] });
     return new Response('Error processing message', { status: 500 });
   }
 }
@@ -178,12 +179,12 @@ async function handleUserMessage(
   const userPhone = message.from;
   const userName = contact?.profile?.name || 'Usuário';
 
-  console.log('👤 Mensagem recebida:', {
-    from: userPhone,
-    name: userName,
-    type: message.type,
-    timestamp: message.timestamp,
-  });
+  appLogger.info('👤 Mensagem recebida:', { data: [{
+        from: userPhone,
+        name: userName,
+        type: message.type,
+        timestamp: message.timestamp,
+      }] });
 
   // Processar diferentes tipos de mensagem
   switch (message.type) {
@@ -207,7 +208,7 @@ async function handleUserMessage(
       break;
 
     default:
-      console.log('📱 Tipo de mensagem não suportado:', message.type);
+      appLogger.info('📱 Tipo de mensagem não suportado:', { data: [message.type] });
   }
 }
 
@@ -243,7 +244,7 @@ async function handleTextMessage(userPhone: string, userName: string, messageTex
  * 🔘 PROCESSAR RESPOSTA DE BOTÃO
  */
 async function handleButtonResponse(userPhone: string, userName: string, payload: string): Promise<void> {
-  console.log('🔘 Botão clicado:', { userPhone, userName, payload });
+  appLogger.info('🔘 Botão clicado:', { data: [{ userPhone, userName, payload }] });
 
   switch (payload) {
     case 'complete_purchase':
@@ -269,7 +270,7 @@ async function handleInteractiveResponse(
   buttonId: string, 
   buttonTitle: string,
 ): Promise<void> {
-  console.log('🎯 Resposta interativa:', { userPhone, userName, buttonId, buttonTitle });
+  appLogger.info('🎯 Resposta interativa:', { data: [{ userPhone, userName, buttonId, buttonTitle }] });
 
   await handleButtonResponse(userPhone, userName, buttonId);
 }
@@ -280,12 +281,12 @@ async function handleInteractiveResponse(
 type WhatsAppStatus = NonNullable<WhatsAppWebhookEntry['changes'][0]['value']['statuses']>[0];
 
 async function handleMessageStatus(status: WhatsAppStatus): Promise<void> {
-  console.log('📈 Status da mensagem:', {
-    messageId: status.id,
-    status: status.status,
-    recipientId: status.recipient_id,
-    timestamp: status.timestamp,
-  });
+  appLogger.info('📈 Status da mensagem:', { data: [{
+        messageId: status.id,
+        status: status.status,
+        recipientId: status.recipient_id,
+        timestamp: status.timestamp,
+      }] });
 
   // Salvar métricas de entrega
   const metrics = {
@@ -301,7 +302,7 @@ async function handleMessageStatus(status: WhatsAppStatus): Promise<void> {
     savedMetrics.push(metrics);
     localStorage.setItem('whatsapp_message_metrics', JSON.stringify(savedMetrics));
   } catch (error) {
-    console.error('❌ Erro ao salvar métricas:', error);
+    appLogger.error('❌ Erro ao salvar métricas:', { data: [error] });
   }
 }
 
@@ -314,7 +315,7 @@ async function handleMessageStatus(status: WhatsAppStatus): Promise<void> {
  */
 async function sendPurchaseLink(userPhone: string, userName: string): Promise<void> {
   // Implementar envio de link personalizado
-  console.log(`🛒 Enviando link de compra para ${userName} (${userPhone})`);
+  appLogger.info(`🛒 Enviando link de compra para ${userName} (${userPhone})`);
 }
 
 /**
@@ -322,7 +323,7 @@ async function sendPurchaseLink(userPhone: string, userName: string): Promise<vo
  */
 async function sendDiscountOffer(userPhone: string, userName: string): Promise<void> {
   // Implementar envio de cupom de desconto
-  console.log(`🎁 Enviando desconto para ${userName} (${userPhone})`);
+  appLogger.info(`🎁 Enviando desconto para ${userName} (${userPhone})`);
 }
 
 /**
@@ -330,7 +331,7 @@ async function sendDiscountOffer(userPhone: string, userName: string): Promise<v
  */
 async function sendSupportMessage(userPhone: string, userName: string): Promise<void> {
   // Implementar redirecionamento para suporte
-  console.log(`🆘 Enviando suporte para ${userName} (${userPhone})`);
+  appLogger.info(`🆘 Enviando suporte para ${userName} (${userPhone})`);
 }
 
 /**
@@ -338,7 +339,7 @@ async function sendSupportMessage(userPhone: string, userName: string): Promise<
  */
 async function handleUnsubscribe(userPhone: string, userName: string): Promise<void> {
   // Implementar lógica de opt-out
-  console.log(`🚫 Descadastro solicitado por ${userName} (${userPhone})`);
+  appLogger.info(`🚫 Descadastro solicitado por ${userName} (${userPhone})`);
 }
 
 /**
@@ -346,5 +347,5 @@ async function handleUnsubscribe(userPhone: string, userName: string): Promise<v
  */
 async function sendGenericResponse(userPhone: string, userName: string): Promise<void> {
   // Implementar resposta automática
-  console.log(`💬 Resposta genérica para ${userName} (${userPhone})`);
+  appLogger.info(`💬 Resposta genérica para ${userName} (${userPhone})`);
 }

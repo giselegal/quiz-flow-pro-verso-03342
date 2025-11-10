@@ -1,5 +1,6 @@
 import type { Database } from '@/services/integrations/supabase/types';
 import { supabase } from '@/lib/supabase';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type QuizResult = Database['public']['Tables']['quiz_results']['Row'];
 
@@ -14,7 +15,7 @@ export async function getQuizResultById(resultId: string): Promise<QuizResult | 
     .single();
 
   if (error) {
-    console.error('Erro ao buscar resultado:', error);
+    appLogger.error('Erro ao buscar resultado:', { data: [error] });
     return null;
   }
 
@@ -32,7 +33,7 @@ export async function getUserBySessionId(sessionId: string) {
     .single();
 
   if (error) {
-    console.error('Erro ao buscar usuário:', error);
+    appLogger.error('Erro ao buscar usuário:', { data: [error] });
     return null;
   }
 
@@ -50,7 +51,7 @@ export async function getQuizSessionById(sessionId: string) {
     .single();
 
   if (error) {
-    console.error('Erro ao buscar sessão:', error);
+    appLogger.error('Erro ao buscar sessão:', { data: [error] });
     return null;
   }
 
@@ -68,7 +69,7 @@ export async function getStepResponses(sessionId: string) {
     .order('step_number', { ascending: true });
 
   if (error) {
-    console.error('Erro ao buscar respostas:', error);
+    appLogger.error('Erro ao buscar respostas:', { data: [error] });
     return [];
   }
 

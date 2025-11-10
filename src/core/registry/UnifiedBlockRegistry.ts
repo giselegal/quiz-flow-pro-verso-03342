@@ -19,9 +19,9 @@
  */
 
 import React, { lazy, type ComponentType, Suspense } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { isSimpleBlock, getTemplatePath } from '@/config/block-complexity-map';
 import JSONTemplateRenderer from '@/core/renderers/JSONTemplateRenderer';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -148,12 +148,12 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
     import('@/components/sections/questions'),
     import('@/core/adapters/PropNormalizer')
   ]).then(([{ QuestionHeroSection }, { normalizeQuestionHeroProps }]) => {
-    console.log('✅ [Registry] question-hero carregado com sucesso');
+    appLogger.info('✅ [Registry] question-hero carregado com sucesso');
     return {
       default: (props: any) => {
-        console.log('🔍 [question-hero] Props recebidas:', props);
+        appLogger.info('🔍 [question-hero] Props recebidas:', { data: [props] });
         const normalized = normalizeQuestionHeroProps(props?.block || props);
-        console.log('🔍 [question-hero] Props normalizadas:', normalized);
+        appLogger.info('🔍 [question-hero] Props normalizadas:', { data: [normalized] });
         return React.createElement(QuestionHeroSection, normalized);
       },
     };

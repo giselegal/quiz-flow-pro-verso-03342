@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * RudderStack Console Optimizer
  * Filtra spam de console do RudderStack e otimiza identificação de usuários
@@ -186,7 +187,7 @@ export const rudderstackOptimizer = new RudderStackOptimizer();
 // Função para inicializar otimizações
 export const initializeRudderStackOptimization = () => {
   // Aplicar otimizações imediatamente
-  console.log('🔧 RudderStack Optimizer: Filtros aplicados');
+  appLogger.info('🔧 RudderStack Optimizer: Filtros aplicados');
   
   // Configurar RudderStack se disponível
   if (typeof window !== 'undefined' && (window as any).rudderstack) {
@@ -197,7 +198,7 @@ export const initializeRudderStackOptimization = () => {
 // Função para limpar otimizações
 export const cleanupRudderStackOptimization = () => {
   rudderstackOptimizer.restoreConsole();
-  console.log('🔧 RudderStack Optimizer: Filtros removidos');
+  appLogger.info('🔧 RudderStack Optimizer: Filtros removidos');
 };
 
 // Auto-inicializar em desenvolvimento

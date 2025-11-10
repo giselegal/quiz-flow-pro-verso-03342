@@ -3,6 +3,7 @@ import { useToast } from '../../components/ui/use-toast';
 import { FunnelContext } from '../../core/contexts/FunnelContext';
 import { ContextualFunnelService } from '@/services/core/ContextualFunnelService';
 import type { ContextualFunnelData } from '@/types/funnel';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {
@@ -61,7 +62,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         });
         return { success: true };
       } catch (error) {
-        console.error('Error saving funnel:', error);
+        appLogger.error('Error saving funnel:', { data: [error] });
         toast({
           title: 'Erro',
           description: 'Erro inesperado ao salvar',
@@ -109,7 +110,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
 
         return funnelData;
       } catch (error) {
-        console.error('Error loading funnel:', error);
+        appLogger.error('Error loading funnel:', { data: [error] });
         toast({
           title: 'Erro',
           description: 'Erro ao carregar funil',
@@ -147,7 +148,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         updatedAt: funnel.lastModified?.toISOString(),
       }));
     } catch (error) {
-      console.error('Error listing funnels:', error);
+      appLogger.error('Error listing funnels:', { data: [error] });
       toast({
         title: 'Erro',
         description: 'Erro ao listar funis',
@@ -170,7 +171,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         });
         return { success: true };
       } catch (error) {
-        console.error('Error deleting funnel:', error);
+        appLogger.error('Error deleting funnel:', { data: [error] });
         toast({
           title: 'Erro',
           description: 'Erro inesperado ao deletar',
@@ -198,7 +199,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         });
         return { success: true };
       } catch (error) {
-        console.error('Error publishing funnel:', error);
+        appLogger.error('Error publishing funnel:', { data: [error] });
         toast({
           title: 'Erro',
           description: 'Erro inesperado ao publicar',

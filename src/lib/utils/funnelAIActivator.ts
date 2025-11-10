@@ -5,6 +5,7 @@
  */
 
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 Configurações otimizadas da IA do funil
@@ -24,12 +25,12 @@ const OPTIMAL_AI_CONFIG = {
  */
 export function activateFunnelAI() {
     try {
-        console.log('🚀 ATIVANDO IA DO FUNIL...');
-        console.log('=====================================');
+        appLogger.info('🚀 ATIVANDO IA DO FUNIL...');
+        appLogger.info('=====================================');
 
         // Ativar IA com configurações otimizadas
     // IA legacy removida: placeholder para futura integração canônica
-    console.log('ℹ️ IA legacy removida – usando placeholder');
+    appLogger.info('ℹ️ IA legacy removida – usando placeholder');
 
         // Definir contexto inicial inteligente
         const aiContext = {
@@ -52,39 +53,39 @@ export function activateFunnelAI() {
         (window as any).__funnelAIContext = aiContext;
 
         // Verificar status
-        console.log('✅ Placeholder de IA aplicado!');
-        console.log('📊 Status da IA (simulado):', {
-            'Habilitada': '✅',
-            'Serviço ativo': '❌ (legacy removido)',
-            'Personalização': '🔄 futura',
-            'Otimização': '🔄 futura',
-            'Geração de conteúdo': '🔄 futura',
-            'Fallback': '✅ básico',
-        });
+        appLogger.info('✅ Placeholder de IA aplicado!');
+        appLogger.info('📊 Status da IA (simulado):', { data: [{
+                    'Habilitada': '✅',
+                    'Serviço ativo': '❌ (legacy removido)',
+                    'Personalização': '🔄 futura',
+                    'Otimização': '🔄 futura',
+                    'Geração de conteúdo': '🔄 futura',
+                    'Fallback': '✅ básico',
+                }] });
 
-        console.log('🎯 FUNCIONALIDADES ATIVAS:');
-        console.log('• 🧠 Personalização inteligente de conteúdo');
-        console.log('• 🚀 Otimização automática de conversão');
-        console.log('• 📝 Geração dinâmica de textos');
-        console.log('• 🛡️ Fallback inteligente para erros');
-        console.log('• 🎨 Adaptação baseada em perfil do usuário');
+        appLogger.info('🎯 FUNCIONALIDADES ATIVAS:');
+        appLogger.info('• 🧠 Personalização inteligente de conteúdo');
+        appLogger.info('• 🚀 Otimização automática de conversão');
+        appLogger.info('• 📝 Geração dinâmica de textos');
+        appLogger.info('• 🛡️ Fallback inteligente para erros');
+        appLogger.info('• 🎨 Adaptação baseada em perfil do usuário');
 
         return true;
 
     } catch (error) {
-        console.error('❌ Erro ao ativar IA do funil:', error);
-        console.log('🔄 Tentando ativação em modo fallback...');
+        appLogger.error('❌ Erro ao ativar IA do funil:', { data: [error] });
+        appLogger.info('🔄 Tentando ativação em modo fallback...');
 
         // Tentar ativação simplificada
         try {
             // Modo simplificado: apenas marca contexto
             (window as any).__funnelAIContextFallback = { enabled: true };
 
-            console.log('⚠️ IA ativada em modo simplificado');
+            appLogger.info('⚠️ IA ativada em modo simplificado');
             return true;
 
         } catch (fallbackError) {
-            console.error('❌ Falha completa na ativação da IA:', fallbackError);
+            appLogger.error('❌ Falha completa na ativação da IA:', { data: [fallbackError] });
             return false;
         }
     }
@@ -95,9 +96,9 @@ export function activateFunnelAI() {
  */
 export function checkFunnelAIStatus() {
     const ctx = (window as any).__funnelAIContext || null;
-    console.log('📊 STATUS DA IA (placeholder):');
-    console.log('========================');
-    console.log('Contexto presente:', ctx ? '✅' : '❌');
+    appLogger.info('📊 STATUS DA IA (placeholder):');
+    appLogger.info('========================');
+    appLogger.info('Contexto presente:', { data: [ctx ? '✅' : '❌'] });
     return { enabled: !!ctx, context: ctx } as any;
 }
 
@@ -107,7 +108,7 @@ export function checkFunnelAIStatus() {
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     // Auto-ativar IA em desenvolvimento após um delay
     setTimeout(() => {
-        console.log('🔄 Auto-ativando IA do funil em modo desenvolvimento...');
+        appLogger.info('🔄 Auto-ativando IA do funil em modo desenvolvimento...');
         activateFunnelAI();
     }, 1000);
 }

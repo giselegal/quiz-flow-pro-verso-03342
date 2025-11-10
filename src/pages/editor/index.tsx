@@ -13,6 +13,7 @@ import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
 import { useEditorResource } from '@/hooks/useEditorResource';
 import { detectResourceType } from '@/types/editor-resource';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 ARQUITETURA UNIFICADA
@@ -34,7 +35,7 @@ function useResourceIdFromLocation(): string | undefined {
     // Prioridade 1: Novo parâmetro unificado
     const resourceId = params.get('resource');
     if (resourceId) {
-        console.log('🎯 Recurso carregado:', resourceId);
+        appLogger.info('🎯 Recurso carregado:', { data: [resourceId] });
         return resourceId;
     }
 
@@ -47,7 +48,7 @@ function useResourceIdFromLocation(): string | undefined {
 
     if (legacyId) {
         const type = detectResourceType(legacyId);
-        console.log(`🔄 Legacy param detectado: ${legacyId} (tipo: ${type})`);
+        appLogger.info(`🔄 Legacy param detectado: ${legacyId} (tipo: ${type})`);
 
         // Auto-redirect para formato novo (silencioso, sem reload)
         const newUrl = new URL(window.location.href);
@@ -58,7 +59,7 @@ function useResourceIdFromLocation(): string | undefined {
         newUrl.searchParams.set('resource', legacyId);
 
         window.history.replaceState({}, '', newUrl.toString());
-        console.log(`✅ URL atualizada para: ${newUrl.pathname}${newUrl.search}`);
+        appLogger.info(`✅ URL atualizada para: ${newUrl.pathname}${newUrl.search}`);
 
         return legacyId;
     }
@@ -98,23 +99,23 @@ const EditorRoutesInner: React.FC = () => {
     });
 
     if (supabaseDisabled) {
-        console.info('🛑 Supabase desativado por flag (VITE_DISABLE_SUPABASE). Editor operando 100% offline.');
+        appLogger.info('🛑 Supabase desativado por flag (VITE_DISABLE_SUPABASE). Editor operando 100% offline.');
     }
 
     // 🎯 CRITICAL FIX: Preparar template quando resourceId está presente
     useEffect(() => {
         if (resourceId) {
-            console.log(`🎯 Preparando template: ${resourceId}`);
+            appLogger.info(`🎯 Preparando template: ${resourceId}`);
             templateService.prepareTemplate(resourceId)
                 .then((result) => {
                     if (result.success) {
-                        console.log(`✅ Template ${resourceId} preparado com sucesso`);
+                        appLogger.info(`✅ Template ${resourceId} preparado com sucesso`);
                     } else {
-                        console.warn(`⚠️ Erro ao preparar template ${resourceId}:`, result.error);
+                        appLogger.warn(`⚠️ Erro ao preparar template ${resourceId}:`, { data: [result.error] });
                     }
                 })
                 .catch((error) => {
-                    console.error(`❌ Erro ao preparar template ${resourceId}:`, error);
+                    appLogger.error(`❌ Erro ao preparar template ${resourceId}:`, { data: [error] });
                 });
         }
     }, [resourceId]);
@@ -126,17 +127,17 @@ const EditorRoutesInner: React.FC = () => {
         // Verificar se usuário já escolheu não mostrar novamente
         const dontShowAgain = localStorage.getItem('editor:skipStartupModal') === 'true';
 
-        console.log('🔍 VERIFICANDO SE DEVE MOSTRAR MODAL:');
-        console.log('  - resourceId:', resourceId);
-        console.log('  - dontShowAgain:', dontShowAgain);
-        console.log('  - Vai mostrar?', !resourceId && !dontShowAgain);
+        appLogger.info('🔍 VERIFICANDO SE DEVE MOSTRAR MODAL:');
+        appLogger.info('  - resourceId:', { data: [resourceId] });
+        appLogger.info('  - dontShowAgain:', { data: [dontShowAgain] });
+        appLogger.info('  - Vai mostrar?', { data: [!resourceId && !dontShowAgain] });
 
         // Mostrar modal apenas se não tem resource na URL E usuário não escolheu pular
         if (!resourceId && !dontShowAgain) {
-            console.log('✅ ATIVANDO MODAL!');
+            appLogger.info('✅ ATIVANDO MODAL!');
             setShowStartupModal(true);
         } else {
-            console.log('❌ NÃO vai mostrar modal');
+            appLogger.info('❌ NÃO vai mostrar modal');
         }
     }, [resourceId]); const handleSelectMode = useCallback((mode: 'blank' | 'template') => {
         setShowStartupModal(false);
@@ -200,7 +201,7 @@ const SaveDebugButton: React.FC = () => {
         try {
             await unified.saveFunnel();
         } catch (error) {
-            console.error('Save failed:', error);
+            appLogger.error('Save failed:', { data: [error] });
         }
     };
 

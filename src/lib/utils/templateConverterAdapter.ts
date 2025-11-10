@@ -14,6 +14,7 @@
 import { BlockComponent } from '@/components/editor/quiz/types';
 import { Block, BlockType } from '@/types/editor';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * @deprecated Use templateService.getStep() diretamente (retorna Block[])
@@ -23,7 +24,7 @@ export async function safeGetTemplateBlocksAsync(
   _template?: any,
   _funnelId?: string,
 ): Promise<BlockComponent[]> {
-  console.warn('⚠️ safeGetTemplateBlocksAsync is deprecated. Use templateService.getStep() instead.');
+  appLogger.warn('⚠️ safeGetTemplateBlocksAsync is deprecated. Use templateService.getStep() instead.');
   
   // Usar novo registry
   const blocks = await templateService.getStep(stepId);
@@ -40,7 +41,7 @@ export function safeGetTemplateBlocks(
   _template?: any,
   _funnelId?: string,
 ): BlockComponent[] {
-  console.warn('⚠️ safeGetTemplateBlocks (sync) is deprecated. Use templateService.getStep() instead.');
+  appLogger.warn('⚠️ safeGetTemplateBlocks (sync) is deprecated. Use templateService.getStep() instead.');
   
   // Fallback: tentar L1 cache síncrono
   // Nota: Isso só funciona se o step já foi carregado anteriormente
@@ -51,9 +52,9 @@ export function safeGetTemplateBlocks(
   }
   
   // Sem cache: retornar vazio e triggerar carregamento assíncrono
-  console.warn(`⚠️ ${stepId} não está em L1 cache. Carregando...`);
+  appLogger.warn(`⚠️ ${stepId} não está em L1 cache. Carregando...`);
   templateService.getStep(stepId).then(blocks => {
-    console.log(`✅ ${stepId} carregado assíncrono`);
+    appLogger.info(`✅ ${stepId} carregado assíncrono`);
   });
   
   return [];
@@ -90,6 +91,6 @@ export function blocksToBlockComponents(blocks: Block[]): BlockComponent[] {
  * @deprecated Não é mais necessário - templates já em formato Block[]
  */
 export function convertTemplateToBlocks(_template: any): BlockComponent[] {
-  console.warn('⚠️ convertTemplateToBlocks is deprecated. Templates are already in Block[] format.');
+  appLogger.warn('⚠️ convertTemplateToBlocks is deprecated. Templates are already in Block[] format.');
   return [];
 }

@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import type { TemplateDraftShared } from '@/lib/shared/templateEngineTypes';
 import { useToast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface TemplateRecord {
   id: string;
@@ -62,7 +63,7 @@ export function useTemplateEngine(templateSlug?: string) {
         });
       }
     } catch (error: any) {
-      console.error('Erro ao carregar template:', error);
+      appLogger.error('Erro ao carregar template:', { data: [error] });
       toast({
         title: 'Erro ao carregar',
         description: error.message,
@@ -126,7 +127,7 @@ export function useTemplateEngine(templateSlug?: string) {
         description: 'Template atualizado no Supabase.',
       });
     } catch (error: any) {
-      console.error('Erro ao salvar template:', error);
+      appLogger.error('Erro ao salvar template:', { data: [error] });
       toast({
         title: 'Erro ao salvar',
         description: error.message,
@@ -164,7 +165,7 @@ export function useTemplateEngine(templateSlug?: string) {
       await saveTemplate(newDraft);
       return newDraft;
     } catch (error: any) {
-      console.error('Erro ao criar template:', error);
+      appLogger.error('Erro ao criar template:', { data: [error] });
       toast({
         title: 'Erro ao criar',
         description: error.message,

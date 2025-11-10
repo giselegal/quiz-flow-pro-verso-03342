@@ -26,6 +26,7 @@ import { NoCodeConfigPanel } from '@/pages/admin/NoCodeConfigPage';
 import GlobalConfigPanel from '@/components/editor/GlobalConfigPanel';
 import StepNoCodeConnections from '@/components/editor/StepNoCodeConnections';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FunnelTechnicalConfigPanelProps {
     funnelId?: string;
@@ -65,7 +66,7 @@ const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProps> = ({
             await new Promise(resolve => setTimeout(resolve, 1000));
 
         } catch (error) {
-            console.error('Erro ao salvar configurações:', error);
+            appLogger.error('Erro ao salvar configurações:', { data: [error] });
         } finally {
             setIsLoading(false);
         }

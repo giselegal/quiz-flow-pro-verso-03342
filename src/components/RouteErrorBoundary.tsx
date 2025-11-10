@@ -1,6 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from './ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
     children: ReactNode;
@@ -35,14 +36,14 @@ export class RouteErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error('RouteErrorBoundary capturou um erro:', {
-            error,
-            errorInfo,
-            route: this.props.routeName,
-            url: window.location.href,
-            userAgent: navigator.userAgent,
-            timestamp: new Date().toISOString(),
-        });
+        appLogger.error('RouteErrorBoundary capturou um erro:', { data: [{
+                    error,
+                    errorInfo,
+                    route: this.props.routeName,
+                    url: window.location.href,
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString(),
+                }] });
 
         // Atualizar state com informações do erro
         this.setState({

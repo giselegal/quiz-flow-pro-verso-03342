@@ -1,4 +1,5 @@
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Utilitários seguros para armazenamento com namespace por contexto.
@@ -14,7 +15,7 @@ export const safeSetItem = (key: string, value: string, context: FunnelContext =
     } catch (e) {
         try {
             if ((import.meta as any)?.env?.DEV) {
-                console.warn('localStorage.setItem falhou:', key, (e as any)?.message || e);
+                appLogger.warn('localStorage.setItem falhou:', { data: [key, (e as any)?.message || e] });
             }
         } catch { }
     }
@@ -28,7 +29,7 @@ export const safeGetItem = (key: string, context: FunnelContext = FunnelContext.
     } catch (e) {
         try {
             if ((import.meta as any)?.env?.DEV) {
-                console.warn('localStorage.getItem falhou:', key, (e as any)?.message || e);
+                appLogger.warn('localStorage.getItem falhou:', { data: [key, (e as any)?.message || e] });
             }
         } catch { }
     }

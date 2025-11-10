@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useEditor } from '@/hooks/useEditor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 HOOK UNIFICADO DE NAVEGAÇÃO - SINGLE SOURCE OF TRUTH
@@ -99,14 +100,14 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
             setCurrentStep(targetStep);
 
             if (process.env.NODE_ENV === 'development') {
-                console.log('🧭 useUnifiedStepNavigation: Navegando para step', {
-                    from: currentStep,
-                    to: targetStep,
-                    stepId: `step-${targetStep.toString().padStart(2, '0')}`,
-                    hasBlocks: (stepBlocks[`step-${targetStep.toString().padStart(2, '0')}`]?.length
-                        || stepBlocks[`step-${targetStep}`]?.length
-                        || 0),
-                });
+                appLogger.info('🧭 useUnifiedStepNavigation: Navegando para step', { data: [{
+                                    from: currentStep,
+                                    to: targetStep,
+                                    stepId: `step-${targetStep.toString().padStart(2, '0')}`,
+                                    hasBlocks: (stepBlocks[`step-${targetStep.toString().padStart(2, '0')}`]?.length
+                                        || stepBlocks[`step-${targetStep}`]?.length
+                                        || 0),
+                                }] });
             }
         }
     }, [currentStep, setCurrentStep, stepBlocks]);

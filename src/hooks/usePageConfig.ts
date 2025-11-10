@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';
 import { safeGetItem, safeSetItem } from '@/lib/utils/contextualStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PageConfig {
   title?: string;
@@ -28,7 +29,7 @@ export const usePageConfig = (pageType: string) => {
       try {
         setConfig(JSON.parse(savedConfig));
       } catch (error) {
-        console.error('Error loading page config:', error);
+        appLogger.error('Error loading page config:', { data: [error] });
       }
     }
     setLoading(false);

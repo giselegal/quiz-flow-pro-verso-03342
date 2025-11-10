@@ -16,6 +16,7 @@
 import { HotmartWebhookManager } from './HotmartWebhookManager';
 import { WhatsAppBusinessAPI } from './WhatsAppBusinessAPI';
 import { AnalyticsService } from './AnalyticsService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Mock interfaces for compatibility
 interface HotmartWebhookData {
@@ -77,7 +78,7 @@ export class WhatsAppCartRecoveryAgent {
    */
   private setupHotmartIntegration(): void {
     // Mock implementation for compatibility
-    console.log('Setting up Hotmart integration...');
+    appLogger.info('Setting up Hotmart integration...');
   }
 
   /**
@@ -105,11 +106,11 @@ export class WhatsAppCartRecoveryAgent {
         this.startRecoverySequence(abandonment.id);
       }, 15 * 60 * 1000); // 15 minutos
 
-      console.log('🛒 Carrinho abandonado detectado:', {
-        buyer: data.buyer?.name,
-        product: 'Quiz de Estilo Premium',
-        value: data.purchase?.price,
-      });
+      appLogger.info('🛒 Carrinho abandonado detectado:', { data: [{
+                buyer: data.buyer?.name,
+                product: 'Quiz de Estilo Premium',
+                value: data.purchase?.price,
+              }] });
 
       // Analytics
       this.analyticsService.trackEvent('cart_abandoned', {
@@ -119,7 +120,7 @@ export class WhatsAppCartRecoveryAgent {
       });
 
     } catch (error) {
-      console.error('❌ Erro ao processar abandono:', error);
+      appLogger.error('❌ Erro ao processar abandono:', { data: [error] });
     }
   }
 
@@ -136,12 +137,12 @@ export class WhatsAppCartRecoveryAgent {
           recovery.status = 'converted';
           recovery.convertedAt = new Date();
           
-          console.log('✅ Venda recuperada com sucesso!', {
-            recoveryId,
-            buyer: recovery.buyerName,
-            product: recovery.productName,
-            value: recovery.productPrice,
-          });
+          appLogger.info('✅ Venda recuperada com sucesso!', { data: [{
+                        recoveryId,
+                        buyer: recovery.buyerName,
+                        product: recovery.productName,
+                        value: recovery.productPrice,
+                      }] });
 
           // Analytics de conversão
           this.analyticsService.trackEvent('cart_recovered', {
@@ -154,7 +155,7 @@ export class WhatsAppCartRecoveryAgent {
         }
       }
     } catch (error) {
-      console.error('❌ Erro ao processar compra:', error);
+      appLogger.error('❌ Erro ao processar compra:', { data: [error] });
     }
   }
 
@@ -184,7 +185,7 @@ export class WhatsAppCartRecoveryAgent {
       }
 
     } catch (error) {
-      console.error('❌ Erro na sequência de recuperação:', error);
+      appLogger.error('❌ Erro na sequência de recuperação:', { data: [error] });
     }
   }
 
@@ -213,11 +214,11 @@ export class WhatsAppCartRecoveryAgent {
         personalizedMessage,
       );
 
-      console.log(`📤 Mensagem ${sequenceStep + 1} enviada para ${recovery.buyerName}:`, {
-        phone: recovery.buyerPhone,
-        template: message.name,
-        result,
-      });
+      appLogger.info(`📤 Mensagem ${sequenceStep + 1} enviada para ${recovery.buyerName}:`, { data: [{
+                phone: recovery.buyerPhone,
+                template: message.name,
+                result,
+              }] });
 
       // Analytics
       this.analyticsService.trackEvent('recovery_message_sent', {
@@ -228,7 +229,7 @@ export class WhatsAppCartRecoveryAgent {
       });
 
     } catch (error) {
-      console.error('❌ Erro ao enviar mensagem:', error);
+      appLogger.error('❌ Erro ao enviar mensagem:', { data: [error] });
     }
   }
 
@@ -270,7 +271,7 @@ export class WhatsAppCartRecoveryAgent {
       }
 
     } catch (error) {
-      console.error('❌ Erro ao processar resposta:', error);
+      appLogger.error('❌ Erro ao processar resposta:', { data: [error] });
     }
   }
 
@@ -327,7 +328,7 @@ export class WhatsAppCartRecoveryAgent {
       );
 
     } catch (error) {
-      console.error('❌ Erro ao enviar lembrete:', error);
+      appLogger.error('❌ Erro ao enviar lembrete:', { data: [error] });
     }
   }
 
@@ -355,7 +356,7 @@ export class WhatsAppCartRecoveryAgent {
    * ▶️ INICIAR AGENTE
    */
   start(): void {
-    console.log('🚀 WhatsApp Cart Recovery Agent iniciado');
+    appLogger.info('🚀 WhatsApp Cart Recovery Agent iniciado');
     this.setupHotmartIntegration();
   }
 
@@ -363,7 +364,7 @@ export class WhatsAppCartRecoveryAgent {
    * ⏹️ PARAR AGENTE
    */
   stop(): void {
-    console.log('⏹️ WhatsApp Cart Recovery Agent parado');
+    appLogger.info('⏹️ WhatsApp Cart Recovery Agent parado');
     this.activeRecoveries.clear();
   }
   async getRecoveryAnalytics(
@@ -387,7 +388,7 @@ export class WhatsAppCartRecoveryAgent {
       };
 
     } catch (error) {
-      console.error('❌ Erro ao obter analytics:', error);
+      appLogger.error('❌ Erro ao obter analytics:', { data: [error] });
       return {
         totalAbandoned: 0,
         messagesSent: 0,

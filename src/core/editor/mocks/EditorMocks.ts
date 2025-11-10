@@ -39,6 +39,7 @@ import {
     EditorFallbackMetrics,
     EditorUsageMetrics,
 } from '../interfaces/EditorInterfaces';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // MOCK DATA PROVIDER
@@ -468,43 +469,43 @@ export class MockEditorValidator implements EditorValidator {
 
 export class MockEditorEventHandler implements EditorEventHandler {
     onFunnelLoad = (data: EditorFunnelData) => {
-        console.log('Mock: Funnel loaded:', data.name);
+        appLogger.info('Mock: Funnel loaded:', { data: [data.name] });
     };
 
     onFunnelSave = (data: EditorFunnelData) => {
-        console.log('Mock: Funnel saved:', data.name);
+        appLogger.info('Mock: Funnel saved:', { data: [data.name] });
     };
 
     onFunnelChange = (data: EditorFunnelData) => {
-        console.log('Mock: Funnel changed:', data.name);
+        appLogger.info('Mock: Funnel changed:', { data: [data.name] });
     };
 
     onPageAdd = (page: EditorPageData) => {
-        console.log('Mock: Page added:', page.name);
+        appLogger.info('Mock: Page added:', { data: [page.name] });
     };
 
     onPageRemove = (pageId: string) => {
-        console.log('Mock: Page removed:', pageId);
+        appLogger.info('Mock: Page removed:', { data: [pageId] });
     };
 
     onPageReorder = (fromIndex: number, toIndex: number) => {
-        console.log('Mock: Page reordered:', fromIndex, '->', toIndex);
+        appLogger.info('Mock: Page reordered:', { data: [fromIndex, '->', toIndex] });
     };
 
     onBlockAdd = (pageId: string, block: EditorBlockData) => {
-        console.log('Mock: Block added to page:', pageId, block.type);
+        appLogger.info('Mock: Block added to page:', { data: [pageId, block.type] });
     };
 
     onBlockRemove = (pageId: string, blockId: string) => {
-        console.log('Mock: Block removed from page:', pageId, blockId);
+        appLogger.info('Mock: Block removed from page:', { data: [pageId, blockId] });
     };
 
     onBlockUpdate = (pageId: string, blockId: string, block: EditorBlockData) => {
-        console.log('Mock: Block updated on page:', pageId, blockId);
+        appLogger.info('Mock: Block updated on page:', { data: [pageId, blockId] });
     };
 
     onModeChange = (mode: string) => {
-        console.log('Mock: Mode changed to:', mode);
+        appLogger.info('Mock: Mode changed to:', { data: [mode] });
     };
 }
 
@@ -671,7 +672,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
     }
 
     recordMetric(metric: EditorMetricData): void {
-        console.log('Mock Metrics - recordMetric:', metric.type, metric.operation, metric.value);
+        appLogger.info('Mock Metrics - recordMetric:', { data: [metric.type, metric.operation, metric.value] });
         this.metrics.push({
             ...metric,
             sessionId: this.sessionId,
@@ -680,47 +681,43 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
 
         // Simular alertas para métricas críticas
         if (metric.type === 'error_count') {
-            console.warn('🚨 Mock Alert: Error detected', metric);
+            appLogger.warn('🚨 Mock Alert: Error detected', { data: [metric] });
         }
         if (metric.type === 'load_time' && metric.value > 2000) {
-            console.warn('🐌 Mock Alert: Slow loading detected', metric);
+            appLogger.warn('🐌 Mock Alert: Slow loading detected', { data: [metric] });
         }
     }
 
     recordPerformanceSnapshot(snapshot: EditorPerformanceSnapshot): void {
-        console.log('Mock Metrics - Performance Snapshot:', snapshot);
+        appLogger.info('Mock Metrics - Performance Snapshot:', { data: [snapshot] });
         this.performanceSnapshots.push(snapshot);
 
         // Simular detecção de problemas de performance
         if (snapshot.memoryUsage > 100000000) { // 100MB
-            console.warn('🧠 Mock Alert: High memory usage', snapshot);
+            appLogger.warn('🧠 Mock Alert: High memory usage', { data: [snapshot] });
         }
         if (snapshot.renderTime > 100) {
-            console.warn('🎨 Mock Alert: Slow rendering', snapshot);
+            appLogger.warn('🎨 Mock Alert: Slow rendering', { data: [snapshot] });
         }
     }
 
     recordValidationMetrics(metrics: EditorValidationMetrics): void {
-        console.log('Mock Metrics - Validation:', metrics.operation, `${metrics.validationTime  }ms`,
-            `${metrics.errorCount  } errors`);
+        appLogger.info('Mock Metrics - Validation:', { data: [metrics.operation, `${metrics.validationTime  }ms`, `${metrics.errorCount  } errors`] });
         this.validationMetrics.push(metrics);
     }
 
     recordLoadingMetrics(metrics: EditorLoadingMetrics): void {
-        console.log('Mock Metrics - Loading:', metrics.operation, `${metrics.duration  }ms`,
-            'Success:', metrics.success, 'Fallback:', metrics.fallbackUsed);
+        appLogger.info('Mock Metrics - Loading:', { data: [metrics.operation, `${metrics.duration  }ms`, 'Success:', metrics.success, 'Fallback:', metrics.fallbackUsed] });
         this.loadingMetrics.push(metrics);
     }
 
     recordFallbackMetrics(metrics: EditorFallbackMetrics): void {
-        console.warn('🔄 Mock Metrics - Fallback triggered:', metrics.fallbackType,
-            metrics.fallbackAction, metrics.originalError);
+        appLogger.warn('🔄 Mock Metrics - Fallback triggered:', { data: [metrics.fallbackType, metrics.fallbackAction, metrics.originalError] });
         this.fallbackMetrics.push(metrics);
     }
 
     recordUsageMetrics(metrics: EditorUsageMetrics): void {
-        console.log('Mock Metrics - Usage Session:', metrics.sessionId,
-            'Duration:', `${metrics.duration  }ms`, 'Operations:', metrics.operationCounts);
+        appLogger.info('Mock Metrics - Usage Session:', { data: [metrics.sessionId, 'Duration:', `${metrics.duration  }ms`, 'Operations:', metrics.operationCounts] });
         this.usageMetrics.push(metrics);
     }
 
@@ -751,7 +748,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             }
         }
 
-        console.log('Mock Metrics - getMetrics returning:', filtered.length, 'metrics');
+        appLogger.info('Mock Metrics - getMetrics returning:', { data: [filtered.length, 'metrics'] });
         return filtered;
     }
 
@@ -775,7 +772,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             recommendations: this.generateMockRecommendations(),
         };
 
-        console.log('Mock Metrics - Performance Report:', report);
+        appLogger.info('Mock Metrics - Performance Report:', { data: [report] });
         return report;
     }
 
@@ -792,12 +789,12 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
         };
 
         if (format === 'json') {
-            console.log('Mock Metrics - Exporting as JSON');
+            appLogger.info('Mock Metrics - Exporting as JSON');
             return JSON.stringify(allData, null, 2);
         }
 
         // CSV simplificado
-        console.log('Mock Metrics - Exporting as CSV');
+        appLogger.info('Mock Metrics - Exporting as CSV');
         const csvLines = ['Type,Operation,Value,Unit,Timestamp'];
         this.metrics.forEach(metric => {
             csvLines.push([
@@ -823,7 +820,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
         this.fallbackMetrics = this.fallbackMetrics.filter(f => f.timestamp > cutoff);
         this.usageMetrics = this.usageMetrics.filter(u => u.sessionStart > cutoff);
 
-        console.log('Mock Metrics - Cleared metrics:', before, '->', this.metrics.length);
+        appLogger.info('Mock Metrics - Cleared metrics:', { data: [before, '->', this.metrics.length] });
     }
 
     // Mock-specific methods
@@ -891,7 +888,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
 
     // Lifecycle
     dispose() {
-        console.log('Mock Metrics - Provider disposed');
+        appLogger.info('Mock Metrics - Provider disposed');
         this.metrics = [];
         this.performanceSnapshots = [];
         this.validationMetrics = [];

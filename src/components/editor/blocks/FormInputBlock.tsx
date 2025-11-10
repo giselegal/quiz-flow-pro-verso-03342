@@ -1,5 +1,4 @@
 import type { BlockComponentProps } from '@/types/blocks';
-import { appLogger } from '@/lib/utils/logger';
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '@/services/userResponseService';

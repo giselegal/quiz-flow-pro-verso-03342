@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useAI } from '@/hooks/useAI';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export function AITestComponent() {
     const [prompt, setPrompt] = useState('');
@@ -59,7 +60,7 @@ export function AITestComponent() {
                     break;
             }
         } catch (err) {
-            console.error('Erro ao gerar:', err);
+            appLogger.error('Erro ao gerar:', { data: [err] });
         }
     };
 

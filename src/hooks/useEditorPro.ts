@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🚀 useEditorPro - Hook para gerenciar funcionalidades avançadas do Editor IA Pro
@@ -48,7 +49,7 @@ export const useEditorPro = (): UseEditorPro => {
                 };
             }
         } catch (error) {
-            console.warn('⚠️ Erro ao carregar preferências do Editor Pro:', error);
+            appLogger.warn('⚠️ Erro ao carregar preferências do Editor Pro:', { data: [error] });
         }
 
         // Estado padrão
@@ -71,7 +72,7 @@ export const useEditorPro = (): UseEditorPro => {
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
         } catch (error) {
-            console.warn('⚠️ Erro ao salvar preferências do Editor Pro:', error);
+            appLogger.warn('⚠️ Erro ao salvar preferências do Editor Pro:', { data: [error] });
         }
     }, [state.isTemplatesIAOpen, state.isBrandKitOpen, state.isAnalyticsOpen]);
 

@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Global tracker para monitorar listeners ativos (DEV only)
 class EventListenerTracker {
@@ -19,7 +20,7 @@ class EventListenerTracker {
     this.listeners.set(eventName, count + 1);
     
     if (count > 10) {
-      console.warn(`⚠️ [EventListenerTracker] High listener count for "${eventName}": ${count + 1}`);
+      appLogger.warn(`⚠️ [EventListenerTracker] High listener count for "${eventName}": ${count + 1}`);
     }
   }
 
@@ -108,7 +109,7 @@ export function useSafeEventListener(
     eventListenerTracker.register(eventName);
 
     if (import.meta.env.DEV) {
-      console.debug(`👂 [useSafeEventListener] Registered "${eventName}"`);
+      appLogger.debug(`👂 [useSafeEventListener] Registered "${eventName}"`);
     }
 
     // Cleanup garantido
@@ -117,7 +118,7 @@ export function useSafeEventListener(
       eventListenerTracker.unregister(eventName);
       
       if (import.meta.env.DEV) {
-        console.debug(`🔇 [useSafeEventListener] Unregistered "${eventName}"`);
+        appLogger.debug(`🔇 [useSafeEventListener] Unregistered "${eventName}"`);
       }
     };
   }, [eventName, target, enabled]);

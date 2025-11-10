@@ -31,8 +31,8 @@ import {
   DataSourceOptions,
 } from './TemplateDataSource';
 import { supabase } from '@/lib/supabase';
-import { appLogger } from '@/lib/utils/logger';
 import { IndexedTemplateCache } from './IndexedTemplateCache';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🔒 Flags globais de comportamento (centralizar lógica para evitar drift)
@@ -159,7 +159,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
    */
   setActiveTemplate(templateId: string): void {
     this.activeTemplateId = templateId;
-    console.log(`🎯 [HierarchicalSource] Template ativo definido: ${templateId}`);
+    appLogger.info(`🎯 [HierarchicalSource] Template ativo definido: ${templateId}`);
   }
 
   /**
@@ -205,7 +205,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
     for (const { priority, fn } of sources) {
       try {
-        console.log(`🔍 [HierarchicalSource] Tentando fonte: ${DataSourcePriority[priority]} para ${stepId}`);
+        appLogger.info(`🔍 [HierarchicalSource] Tentando fonte: ${DataSourcePriority[priority]} para ${stepId}`);
         
         // Primeiro, tentar IndexedDB se habilitado e válido
         const idbKey = funnelId ? `${funnelId}:${stepId}` : stepId;
@@ -261,16 +261,16 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
           return result;
         } else {
-          console.log(`⚠️ [HierarchicalSource] Fonte ${DataSourcePriority[priority]} retornou vazio para ${stepId}`);
+          appLogger.info(`⚠️ [HierarchicalSource] Fonte ${DataSourcePriority[priority]} retornou vazio para ${stepId}`);
         }
       } catch (error) {
-        console.warn(`❌ [HierarchicalSource] Erro em ${DataSourcePriority[priority]} para ${stepId}:`, error);
+        appLogger.warn(`❌ [HierarchicalSource] Erro em ${DataSourcePriority[priority]} para ${stepId}:`, { data: [error] });
         // Continue para próxima fonte
       }
     }
 
     // Nenhuma fonte funcionou - log detalhado
-    console.error(`❌ [HierarchicalSource] NENHUMA FONTE disponível para ${stepId}`);
+    appLogger.error(`❌ [HierarchicalSource] NENHUMA FONTE disponível para ${stepId}`);
     console.table({
       'Step ID': stepId,
       'Funnel ID': funnelId || 'N/A',

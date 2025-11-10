@@ -45,6 +45,7 @@ import UnifiedAppProvider from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -103,7 +104,7 @@ const CanonicalAdoptionDashboard = lazy(() => import('./pages/admin/CanonicalAdo
 
 
 function AppCore() {
-    console.log('🚀 AppCore rendering...');
+    appLogger.info('🚀 AppCore rendering...');
 
     useEffect(() => {
         // PERF: marcar e medir tempo até o primeiro useEffect do App
@@ -113,11 +114,11 @@ function AppCore() {
                 performance.measure('time-to-app-useEffect', 'bootstrap:start', 'app:useEffect');
                 const entries = performance.getEntriesByName('time-to-app-useEffect');
                 const entry = entries[entries.length - 1];
-                if (entry) console.log(`[PERF] App useEffect ms: ${Math.round(entry.duration)}`);
+                if (entry) appLogger.info(`[PERF] App useEffect ms: ${Math.round(entry.duration)}`);
             }
         } catch { }
 
-        console.log('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
+        appLogger.info('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
 
         // 🚀 P2: Setup critical routes preload
         setupCriticalRoutes();
@@ -126,12 +127,12 @@ function AppCore() {
         try {
             const enabled = (import.meta as any)?.env?.ENABLE_JSON_TEMPLATE_OVERRIDES || (typeof process !== 'undefined' && (process.env as any).ENABLE_JSON_TEMPLATE_OVERRIDES);
             if (enabled) {
-                loadTemplateOverrides().catch(err => console.warn('⚠️ Overrides loader failed', err));
+                loadTemplateOverrides().catch(err => appLogger.warn('⚠️ Overrides loader failed', { data: [err] }));
             } else {
-                console.info('[TemplateOverrides] disabled by env');
+                appLogger.info('[TemplateOverrides] disabled by env');
             }
         } catch (err) {
-            console.warn('[TemplateOverrides] init error', err);
+            appLogger.warn('[TemplateOverrides] init error', { data: [err] });
         }
 
         // (lazy) Carregar schemas padrão + blocos somente após primeira interação ou idle
@@ -140,9 +141,9 @@ function AppCore() {
                 (window as any).requestIdleCallback(() => {
                     try {
                         loadDefaultSchemas();
-                        console.log('✅ (lazy) Default + editor block schemas loaded');
+                        appLogger.info('✅ (lazy) Default + editor block schemas loaded');
                     } catch (e) {
-                        console.warn('⚠️ Falha ao carregar schemas (lazy):', e);
+                        appLogger.warn('⚠️ Falha ao carregar schemas (lazy):', { data: [e] });
                     }
                 }, { timeout: 2000 });
             } else {
@@ -168,10 +169,10 @@ function AppCore() {
         const initializeServices = () => {
             try {
                 serviceManager.healthCheckAll().then(results => {
-                    console.log('🔧 Service Health Check (lazy):', results);
+                    appLogger.info('🔧 Service Health Check (lazy):', { data: [results] });
                 });
             } catch (error) {
-                console.warn('⚠️ Service initialization failed (lazy):', error);
+                appLogger.warn('⚠️ Service initialization failed (lazy):', { data: [error] });
             }
         };
         if ('requestIdleCallback' in window) {
@@ -206,7 +207,7 @@ function AppCore() {
                                     {/* 🏠 PÁGINA INICIAL */}
                                     <Route path="/">
                                         {() => {
-                                            console.log('🏠 Home route matched');
+                                            appLogger.info('🏠 Home route matched');
                                             return (
                                                 <div data-testid="index-page">
                                                     <Home />

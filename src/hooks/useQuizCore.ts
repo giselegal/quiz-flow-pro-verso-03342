@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 HOOK CONSOLIDADO DE QUIZ - SINGLE SOURCE OF TRUTH
@@ -288,7 +289,7 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
 
         trackEvent: useCallback((event: string, data?: any) => {
             if (process.env.NODE_ENV === 'development') {
-                console.log(`📊 Quiz Event: ${event}`, data);
+                appLogger.info(`📊 Quiz Event: ${event}`, { data: [data] });
             }
             // Em produção, enviar para serviço de analytics
         }, []),

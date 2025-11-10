@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // @ts-nocheck
 export const getPersonalizedText = (
   text: string,
@@ -11,12 +12,12 @@ export const getPersonalizedText = (
 
 export const trackComponentView = (componentId: string, componentType: string) => {
   // Analytics tracking implementation
-  console.log(`Component view: ${componentType} (${componentId})`);
+  appLogger.info(`Component view: ${componentType} (${componentId})`);
 };
 
 export const trackComponentClick = (componentId: string, componentType: string, action: string) => {
   // Analytics tracking implementation
-  console.log(`Component click: ${componentType} (${componentId}) - ${action}`);
+  appLogger.info(`Component click: ${componentType} (${componentId}) - ${action}`);
 };
 
 export const trackComponentConversion = (
@@ -25,7 +26,7 @@ export const trackComponentConversion = (
   value: number,
 ) => {
   // Conversion tracking implementation
-  console.log(`Component conversion: ${componentType} (${componentId}) - Value: ${value}`);
+  appLogger.info(`Component conversion: ${componentType} (${componentId}) - Value: ${value}`);
 };
 
 export const RESPONSIVE_PATTERNS = {

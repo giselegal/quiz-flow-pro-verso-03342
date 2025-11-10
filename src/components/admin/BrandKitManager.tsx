@@ -24,6 +24,7 @@ import {
     Eye,
     Copy,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface BrandColors {
     primary: string;
@@ -99,7 +100,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
             try {
                 setBrandKit(JSON.parse(saved));
             } catch (error) {
-                console.warn('Erro ao carregar brand kit:', error);
+                appLogger.warn('Erro ao carregar brand kit:', { data: [error] });
             }
         }
     }, []);
@@ -157,7 +158,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
             root.style.setProperty('--brand-muted', brandKit.colors.muted);
 
         } catch (error) {
-            console.error('Erro ao salvar brand kit:', error);
+            appLogger.error('Erro ao salvar brand kit:', { data: [error] });
         } finally {
             setIsLoading(false);
         }
@@ -193,7 +194,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
                 });
                 setHasChanges(true);
             } catch (error) {
-                console.error('Erro ao importar brand kit:', error);
+                appLogger.error('Erro ao importar brand kit:', { data: [error] });
                 alert('Erro ao importar arquivo. Verifique se é um JSON válido.');
             }
         };

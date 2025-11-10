@@ -29,6 +29,7 @@ import {
 import { toast } from '@/hooks/use-toast';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/Block';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -173,7 +174,7 @@ const QuizEditorDashboard: React.FC = () => {
             });
 
         } catch (error) {
-            console.error('Erro ao carregar quiz:', error);
+            appLogger.error('Erro ao carregar quiz:', { data: [error] });
             toast({
                 title: '❌ Erro ao carregar quiz',
                 description: 'Não foi possível carregar os dados do quiz',
@@ -203,7 +204,7 @@ const QuizEditorDashboard: React.FC = () => {
                 });
             }
         } catch (error) {
-            console.error('Erro ao carregar step:', error);
+            appLogger.error('Erro ao carregar step:', { data: [error] });
             toast({
                 title: '❌ Erro ao carregar etapa',
                 description: 'Não foi possível carregar a configuração da etapa',
@@ -224,7 +225,7 @@ const QuizEditorDashboard: React.FC = () => {
 
             // Nota: TemplateService não possui método de salvar overrides
             // Essa funcionalidade precisaria ser implementada no FunnelService
-            console.log('Salvamento de step não implementado no TemplateService');
+            appLogger.info('Salvamento de step não implementado no TemplateService');
 
             toast({
                 title: '⚠️ Funcionalidade não disponível',
@@ -259,7 +260,7 @@ const QuizEditorDashboard: React.FC = () => {
             });
 
         } catch (error) {
-            console.error('Erro ao salvar step:', error);
+            appLogger.error('Erro ao salvar step:', { data: [error] });
             toast({
                 title: '❌ Erro ao salvar',
                 description: 'Não foi possível salvar as alterações',

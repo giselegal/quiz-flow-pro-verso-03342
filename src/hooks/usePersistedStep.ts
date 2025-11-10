@@ -12,6 +12,7 @@
  */
 
 import { useEffect, useCallback } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const STORAGE_KEY = 'editor:currentStep';
 const STORAGE_TIMESTAMP_KEY = 'editor:currentStep:timestamp';
@@ -35,7 +36,7 @@ export function usePersistedStep(options: PersistedStepOptions) {
         try {
             // Validar step
             if (step < 1 || step > totalSteps) {
-                console.warn(`⚠️ [usePersistedStep] Step ${step} fora do range válido (1-${totalSteps})`);
+                appLogger.warn(`⚠️ [usePersistedStep] Step ${step} fora do range válido (1-${totalSteps})`);
                 return;
             }
 
@@ -49,10 +50,10 @@ export function usePersistedStep(options: PersistedStepOptions) {
             localStorage.setItem(STORAGE_TIMESTAMP_KEY, Date.now().toString());
 
             if (debugMode) {
-                console.log(`💾 [usePersistedStep] Step ${step} persistido`);
+                appLogger.info(`💾 [usePersistedStep] Step ${step} persistido`);
             }
         } catch (error) {
-            console.error('❌ [usePersistedStep] Erro ao persistir:', error);
+            appLogger.error('❌ [usePersistedStep] Erro ao persistir:', { data: [error] });
         }
     }, [totalSteps, debugMode]);
 
@@ -71,7 +72,7 @@ export function usePersistedStep(options: PersistedStepOptions) {
                 const stepNum = parseInt(urlStep, 10);
                 if (!isNaN(stepNum) && stepNum >= 1 && stepNum <= totalSteps) {
                     if (debugMode) {
-                        console.log(`🔄 [usePersistedStep] Step ${stepNum} restaurado da URL`);
+                        appLogger.info(`🔄 [usePersistedStep] Step ${stepNum} restaurado da URL`);
                     }
                     onRestore?.(stepNum, 'url');
                     return stepNum;
@@ -91,7 +92,7 @@ export function usePersistedStep(options: PersistedStepOptions) {
                 if (!isNaN(stepNum) && stepNum >= 1 && stepNum <= totalSteps && age < TTL_MS) {
                     if (debugMode) {
                         const ageMinutes = (age / 1000 / 60).toFixed(0);
-                        console.log(`🔄 [usePersistedStep] Step ${stepNum} restaurado do localStorage (${ageMinutes}min atrás)`);
+                        appLogger.info(`🔄 [usePersistedStep] Step ${stepNum} restaurado do localStorage (${ageMinutes}min atrás)`);
                     }
                     onRestore?.(stepNum, 'localStorage');
                     return stepNum;
@@ -100,17 +101,17 @@ export function usePersistedStep(options: PersistedStepOptions) {
                     localStorage.removeItem(STORAGE_KEY);
                     localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
                     if (debugMode) {
-                        console.log('🗑️ [usePersistedStep] Step expirado removido do localStorage');
+                        appLogger.info('🗑️ [usePersistedStep] Step expirado removido do localStorage');
                     }
                 }
             }
 
             if (debugMode) {
-                console.log('ℹ️ [usePersistedStep] Nenhum step salvo para restaurar');
+                appLogger.info('ℹ️ [usePersistedStep] Nenhum step salvo para restaurar');
             }
             return null;
         } catch (error) {
-            console.error('❌ [usePersistedStep] Erro ao restaurar:', error);
+            appLogger.error('❌ [usePersistedStep] Erro ao restaurar:', { data: [error] });
             return null;
         }
     }, [totalSteps, debugMode, onRestore]);
@@ -132,10 +133,10 @@ export function usePersistedStep(options: PersistedStepOptions) {
             window.history.replaceState({}, '', url.toString());
 
             if (debugMode) {
-                console.log('🗑️ [usePersistedStep] Persistência limpa');
+                appLogger.info('🗑️ [usePersistedStep] Persistência limpa');
             }
         } catch (error) {
-            console.error('❌ [usePersistedStep] Erro ao limpar:', error);
+            appLogger.error('❌ [usePersistedStep] Erro ao limpar:', { data: [error] });
         }
     }, [debugMode]);
 

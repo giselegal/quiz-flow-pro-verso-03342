@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { MetricCard } from '../MetricCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getCachedImport, loadRecharts } from '@/lib/utils/heavyImports';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface OverviewTabProps {
   analyticsData: any;
@@ -16,7 +17,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
     let mounted = true;
     getCachedImport('recharts-bundle', loadRecharts)
       .then((mod) => { if (mounted) setCharts(mod); })
-      .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+      .catch((err) => appLogger.warn('Falha ao carregar Recharts dinamicamente:', { data: [err] }));
     return () => { mounted = false; };
   }, []);
 

@@ -1,5 +1,6 @@
 import { Block } from '@/types/editor';
 import { useCallback, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Hook para gerenciar a lógica do painel de propriedades
@@ -29,7 +30,7 @@ export const usePropertiesPanel = (
 
   const handleValidation = useCallback((isValid: boolean) => {
     // TODO: Implementar lógica de validação global
-    console.log('Validação do painel:', isValid);
+    appLogger.info('Validação do painel:', { data: [isValid] });
   }, []);
 
   return {

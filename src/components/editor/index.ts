@@ -23,6 +23,7 @@ import {
     LazyModularResultEditor,
     LazyResponsivePreview,
 } from './modules';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ⚠️ DEPRECATED - Aliases de compatibilidade (serão removidos)
 /** @deprecated Use EditorProviderCanonical */
@@ -114,13 +115,13 @@ export const UNIVERSAL_STEP_EDITOR_CONFIG = {
  */
 export const initializeUniversalStepEditor = async () => {
     try {
-        console.log('🎯 Inicializando Universal Step Editor System...');
+        appLogger.info('🎯 Inicializando Universal Step Editor System...');
 
         // TODO: Implementar inicialização completa quando todos os módulos estiverem prontos
         return { success: true, totalSteps: 21 };
 
     } catch (error) {
-        console.error('❌ Erro ao inicializar Universal Step Editor:', error);
+        appLogger.error('❌ Erro ao inicializar Universal Step Editor:', { data: [error] });
         return {
             success: false,
             error: error instanceof Error ? error.message : String(error),

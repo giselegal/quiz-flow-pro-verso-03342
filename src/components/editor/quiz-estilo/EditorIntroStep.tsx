@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 // Tipo any para compatibilidade - dados vêm do QuizFunnelEditorWYSIWYG
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 

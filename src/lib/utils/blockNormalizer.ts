@@ -7,6 +7,7 @@
 
 import { Block } from '@/types/editor';
 import blockAliases from '@/config/block-aliases.json';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Normaliza tipo de um bloco aplicando aliases
@@ -20,7 +21,7 @@ export function normalizeBlockType(block: Block): Block {
   const normalizedType = aliases[block.type] || block.type;
   
   if (normalizedType !== block.type) {
-    console.log(`🔄 [Normalizer] ${block.type} → ${normalizedType}`);
+    appLogger.info(`🔄 [Normalizer] ${block.type} → ${normalizedType}`);
   }
   
   return {

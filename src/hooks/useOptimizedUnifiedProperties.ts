@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { PropertyType, PropertyCategory, UnifiedProperty, UnifiedBlock } from './useUnifiedProperties';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🚀 Hook otimizado para propriedades unificadas
@@ -53,7 +54,7 @@ const loadNoCodeConfiguration = () => {
             styles: styleConfigs,
         };
     } catch (error) {
-        console.warn('Erro ao carregar configurações NoCode:', error);
+        appLogger.warn('Erro ao carregar configurações NoCode:', { data: [error] });
         return { noCode: null, global: null, result: null, step20: null, styles: {} };
     }
 };
@@ -288,16 +289,16 @@ export const useOptimizedUnifiedProperties = ({
         const generated = generatePropertiesForBlockType(blockType);
 
         // 🔍 DEBUG CRÍTICO - Hook processamento
-        console.log('🚀 useOptimizedUnifiedProperties - processando:', {
-            blockType,
-            currentBlockExists: !!currentBlock,
-            currentBlockId: currentBlock?.id,
-            hasProperties: !!currentBlock?.properties,
-            hasContent: !!currentBlock?.content,
-            propertiesData: currentBlock?.properties,
-            contentData: currentBlock?.content,
-            basePropsCount: generated.length,
-        });
+        appLogger.info('🚀 useOptimizedUnifiedProperties - processando:', { data: [{
+                    blockType,
+                    currentBlockExists: !!currentBlock,
+                    currentBlockId: currentBlock?.id,
+                    hasProperties: !!currentBlock?.properties,
+                    hasContent: !!currentBlock?.content,
+                    propertiesData: currentBlock?.properties,
+                    contentData: currentBlock?.content,
+                    basePropsCount: generated.length,
+                }] });
 
         // Aplica valores atuais do bloco se existir
         if (currentBlock?.properties || currentBlock?.content) {
@@ -308,11 +309,11 @@ export const useOptimizedUnifiedProperties = ({
                     prop.value,
             }));
 
-            console.log('✅ useOptimizedUnifiedProperties - propriedades hidratadas:', result);
+            appLogger.info('✅ useOptimizedUnifiedProperties - propriedades hidratadas:', { data: [result] });
             return result;
         }
 
-        console.log('⚠️ useOptimizedUnifiedProperties - usando propriedades base (sem dados do currentBlock)');
+        appLogger.info('⚠️ useOptimizedUnifiedProperties - usando propriedades base (sem dados do currentBlock)');
         return generated;
     }, [blockType, currentBlock?.properties, currentBlock?.content]);
 
@@ -320,11 +321,11 @@ export const useOptimizedUnifiedProperties = ({
     const updateProperty = useCallback((key: string, value: any) => {
         if (!onUpdate || !blockId) return;
 
-        console.log('🚀 useOptimizedUnifiedProperties updateProperty:', {
-            blockId,
-            key,
-            value,
-        });
+        appLogger.info('🚀 useOptimizedUnifiedProperties updateProperty:', { data: [{
+                    blockId,
+                    key,
+                    value,
+                }] });
 
         onUpdate(blockId, { properties: { [key]: value } });
     }, [onUpdate, blockId]);

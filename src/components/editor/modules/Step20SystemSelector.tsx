@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';

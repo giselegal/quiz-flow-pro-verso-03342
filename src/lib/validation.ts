@@ -1,5 +1,6 @@
 import { ValidationProps } from '@/types/editor';
 import { z } from 'zod';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =====================================================
 // UNIVERSAL PROPERTIES (aplicáveis a todos os blocos)
@@ -363,7 +364,7 @@ export const blockSchemas: Record<string, z.ZodSchema> = {
 export function validateBlock({ type, properties }: ValidationProps) {
   const schema = blockSchemas[type];
   if (!schema) {
-    console.warn(`No validation schema found for block type: ${type}`);
+    appLogger.warn(`No validation schema found for block type: ${type}`);
     return { success: true };
   }
 

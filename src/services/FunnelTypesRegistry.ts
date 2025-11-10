@@ -7,6 +7,7 @@
 
 // Migrado: usar TemplateService canônico
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
@@ -226,7 +227,7 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
 
     // Para o quiz de estilo, usar TemplateService canônico
     if (typeId === 'quiz-estilo-21-steps' && funnelType.templateService) {
-        console.log('🎯 Carregando quiz usando TemplateService (canônico)...');
+        appLogger.info('🎯 Carregando quiz usando TemplateService (canônico)...');
 
         try {
             const svc = funnelType.templateService as typeof templateService;
@@ -247,7 +248,7 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                         placeholder: blocks.length === 0,
                     });
                 } catch (stepErr) {
-                    console.warn(`⚠️ Falha carregando step ${i}, usando placeholder:`, stepErr);
+                    appLogger.warn(`⚠️ Falha carregando step ${i}, usando placeholder:`, { data: [stepErr] });
                     steps.push({
                         stepNumber: i,
                         name: `Etapa ${i}`,
@@ -280,7 +281,7 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                 },
             };
         } catch (error) {
-            console.error('Erro ao carregar quiz:', error);
+            appLogger.error('Erro ao carregar quiz:', { data: [error] });
             throw error;
         }
     }
@@ -312,7 +313,7 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
 
     // Para o quiz de estilo, usar TemplateService canônico
     if (typeId === 'quiz-estilo-21-steps' && funnelType.templateService) {
-        console.log('💾 Salvando quiz usando TemplateService (canônico)...');
+        appLogger.info('💾 Salvando quiz usando TemplateService (canônico)...');
 
         try {
             // Salvar cada step modificado
@@ -337,13 +338,13 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
                 savedSteps: saved,
             };
         } catch (error) {
-            console.error('Erro ao salvar quiz:', error);
+            appLogger.error('Erro ao salvar quiz:', { data: [error] });
             throw error;
         }
     }
 
     // Para outros tipos, salvar configuração genérica
-    console.log(`💾 Salvando funil ${typeId}:`, config);
+    appLogger.info(`💾 Salvando funil ${typeId}:`, { data: [config] });
     return {
         success: true,
         message: `Funil ${funnelId} salvo com sucesso`,

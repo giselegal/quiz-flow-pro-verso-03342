@@ -9,7 +9,6 @@
  */
 
 import React, { Component, ReactNode } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { EditorConfig } from '@/types/editor';
 import { EditorTemplateActions } from '@/types/editorActions';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const useEditorTemplates = (
   config: EditorConfig,
@@ -14,7 +15,7 @@ export const useEditorTemplates = (
         templates[name] = config;
         StorageService.safeSetJSON('editor_templates', templates);
       } catch (error) {
-        console.error('Error saving template:', error);
+        appLogger.error('Error saving template:', { data: [error] });
       }
     },
     [config],
@@ -30,7 +31,7 @@ export const useEditorTemplates = (
         }
         return false;
       } catch (error) {
-        console.error('Error loading template:', error);
+        appLogger.error('Error loading template:', { data: [error] });
         return false;
       }
     },

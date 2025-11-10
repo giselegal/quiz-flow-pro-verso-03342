@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚀 PRODUCTION-SAFE LOGGER
  * 
@@ -157,21 +158,21 @@ class SmartLogger {
 
         switch (level) {
             case LogLevel.DEBUG:
-                console.debug(`🐛 ${timestamp} ${contextStr}`, message, cleanData);
+                appLogger.debug(`🐛 ${timestamp} ${contextStr}`, { data: [message, cleanData] });
                 break;
             case LogLevel.INFO:
-                console.info(`ℹ️ ${timestamp} ${contextStr}`, message, cleanData);
+                appLogger.info(`ℹ️ ${timestamp} ${contextStr}`, { data: [message, cleanData] });
                 break;
             case LogLevel.WARN:
-                console.warn(`⚠️ ${timestamp} ${contextStr}`, message, cleanData);
+                appLogger.warn(`⚠️ ${timestamp} ${contextStr}`, { data: [message, cleanData] });
                 break;
             case LogLevel.ERROR:
-                console.error(`❌ ${timestamp} ${contextStr}`, message, cleanData);
-                if (entry.stack) console.error(entry.stack);
+                appLogger.error(`❌ ${timestamp} ${contextStr}`, { data: [message, cleanData] });
+                if (entry.stack) appLogger.error(String(entry.stack));
                 break;
             case LogLevel.CRITICAL:
-                console.error(`🚨 CRITICAL ${timestamp} ${contextStr}`, message, cleanData);
-                if (entry.stack) console.error(entry.stack);
+                appLogger.error(`🚨 CRITICAL ${timestamp} ${contextStr}`, { data: [message, cleanData] });
+                if (entry.stack) appLogger.error(String(entry.stack));
                 break;
         }
     }
@@ -210,7 +211,7 @@ class SmartLogger {
         } catch (error) {
             // Fallback: restore entries to buffer
             this.buffer.unshift(...entries.slice(-10)); // Keep only last 10 entries
-            console.error('Failed to flush logs to remote endpoint:', error);
+            appLogger.error('Failed to flush logs to remote endpoint:', { data: [error] });
         }
     }
 
@@ -387,7 +388,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
             enableConsole: true,
             disabledContexts: [], // Enable all contexts
         });
-        console.info('🐛 Debug logs enabled! Add ?debug=true to URL for full verbosity');
+        appLogger.info('🐛 Debug logs enabled! Add ?debug=true to URL for full verbosity');
     };
     (window as any).__DISABLE_DEBUG_LOGS__ = () => {
         logger.updateConfig({ 
@@ -395,11 +396,11 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
             enableConsole: false,
             disabledContexts: ['cache', 'render'],
         });
-        console.info('🔇 Debug logs disabled');
+        appLogger.info('🔇 Debug logs disabled');
     };
     
     // Helper message for developers
-    console.info('💡 SmartLogger optimized! Use ?debug=true in URL for full logs or call __ENABLE_DEBUG_LOGS__()');
+    appLogger.info('💡 SmartLogger optimized! Use ?debug=true in URL for full logs or call __ENABLE_DEBUG_LOGS__()');
 }
 
 // ===== REACT INTEGRATION =====

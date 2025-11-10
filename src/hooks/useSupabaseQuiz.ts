@@ -4,6 +4,7 @@ import { quizSupabaseService } from '@/services/aliases';
 import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
 import { useCallback, useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para a sessão integrada com Quiz21StepsProvider
 interface Quiz21SupabaseSession {
@@ -128,7 +129,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           userId: user.id,
         };
       } catch (error) {
-        console.error('Erro ao iniciar o quiz:', error);
+        appLogger.error('Erro ao iniciar o quiz:', { data: [error] });
         setError('Não foi possível iniciar o quiz. Tente novamente.');
 
         toast({
@@ -200,7 +201,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
 
         return true;
       } catch (error) {
-        console.error('Erro ao salvar resposta:', error);
+        appLogger.error('Erro ao salvar resposta:', { data: [error] });
         setError('Erro ao salvar resposta. Tente novamente.');
 
         toast({
@@ -298,7 +299,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
             StorageService.safeSetString('userName', fullResults.userName.trim());
           }
         } catch (error) {
-          console.warn('[useSupabaseQuiz] Erro ao salvar resultado (modo online):', error);
+          appLogger.warn('[useSupabaseQuiz] Erro ao salvar resultado (modo online):', { data: [error] });
         }
 
         return { success: true, resultId, result: normalized };
@@ -315,12 +316,12 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
             StorageService.safeSetString('userName', fullResults.userName.trim());
           }
         } catch (error) {
-          console.warn('[useSupabaseQuiz] Erro ao salvar resultado (modo offline):', error);
+          appLogger.warn('[useSupabaseQuiz] Erro ao salvar resultado (modo offline):', { data: [error] });
         }
         return { success: true, result: normalized };
       }
     } catch (error) {
-      console.error('Erro ao completar o quiz:', error);
+      appLogger.error('Erro ao completar o quiz:', { data: [error] });
       setError('Erro ao calcular resultado. Tente novamente.');
 
       toast({
@@ -360,7 +361,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
 
         return true;
       } catch (error) {
-        console.error('Erro ao registrar conversão:', error);
+        appLogger.error('Erro ao registrar conversão:', { data: [error] });
         return false;
       }
     },
@@ -418,7 +419,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           }
   }
       } catch (error) {
-        console.error('Erro ao carregar resultado salvo:', error);
+        appLogger.error('Erro ao carregar resultado salvo:', { data: [error] });
       }
     };
 

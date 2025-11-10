@@ -14,6 +14,7 @@ import React, { useState, useEffect } from 'react';
 import { TemplateLoader } from '@/services/editor/TemplateLoader';
 import { Activity, Database, Zap, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const PerformanceMetrics: React.FC = () => {
     const [metrics, setMetrics] = useState<any>(null);
@@ -28,7 +29,7 @@ export const PerformanceMetrics: React.FC = () => {
                 const m = loader.getMetrics();
                 setMetrics(m);
             } catch (error) {
-                console.warn('[PerformanceMetrics] Erro ao obter métricas:', error);
+                appLogger.warn('[PerformanceMetrics] Erro ao obter métricas:', { data: [error] });
             }
         }, 1000);
 

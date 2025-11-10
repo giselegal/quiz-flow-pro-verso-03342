@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🗃️ INDEXEDDB SERVICE - SISTEMA DE STORAGE AVANÇADO
  * 
@@ -25,13 +26,13 @@ class IndexedDBService {
       const request = indexedDB.open(this.dbName, this.version);
 
       request.onerror = () => {
-        console.error('❌ Erro ao abrir IndexedDB:', request.error);
+        appLogger.error('❌ Erro ao abrir IndexedDB:', { data: [request.error] });
         reject(request.error);
       };
 
       request.onsuccess = () => {
         this.db = request.result;
-        console.log('✅ IndexedDB inicializado com sucesso');
+        appLogger.info('✅ IndexedDB inicializado com sucesso');
         resolve();
       };
 
@@ -59,7 +60,7 @@ class IndexedDBService {
           configStore.createIndex('userId', 'metadata.userId', { unique: false });
         }
 
-        console.log('✅ IndexedDB schema atualizado');
+        appLogger.info('✅ IndexedDB schema atualizado');
       };
     });
   }

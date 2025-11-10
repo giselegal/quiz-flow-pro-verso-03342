@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para configuração de template
 export interface TemplateConfig {
@@ -153,9 +154,9 @@ export const useTemplateConfig = (stepNumber: number) => {
 
       setConfig(templateConfig);
       setError(null);
-      console.log(`✅ useTemplateConfig: Carregado ${stepId} via HierarchicalTemplateSource (${blocks.length} blocos)`);
+      appLogger.info(`✅ useTemplateConfig: Carregado ${stepId} via HierarchicalTemplateSource (${blocks.length} blocos)`);
     } catch (err) {
-      console.warn(`⚠️ useTemplateConfig: Erro ao carregar step-${stepNumber}:`, err);
+      appLogger.warn(`⚠️ useTemplateConfig: Erro ao carregar step-${stepNumber}:`, { data: [err] });
       setError(`Falha ao carregar configuração do ${stepNumber}`);
       setConfig(null); // Sem fallback gerado para evitar drift
     } finally {

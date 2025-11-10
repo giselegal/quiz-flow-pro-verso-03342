@@ -4,6 +4,7 @@ import { useHeadlessEditor } from './HeadlessEditorProvider';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { FunnelStep } from '../../types/quiz-schema';
 import type { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type PanelTab = 'step' | 'global' | 'style' | 'publish';
 
@@ -35,12 +36,12 @@ export const DynamicPropertiesPanel: React.FC = () => {
 
   // 🎯 FUNÇÕES REAIS DE ATUALIZAÇÃO
   const updateStep = (stepId: string, updates: any) => {
-    console.log('🔄 Atualizando step:', stepId, updates);
+    appLogger.info('🔄 Atualizando step:', { data: [stepId, updates] });
     // Implementar lógica de atualização de step via builder actions
   };
 
   const updateGlobalSettings = (updates: any) => {
-    console.log('🌍 Atualizando configurações globais:', updates);
+    appLogger.info('🌍 Atualizando configurações globais:', { data: [updates] });
     // Implementar lógica de atualização global
   };
 
@@ -66,7 +67,7 @@ export const DynamicPropertiesPanel: React.FC = () => {
 
   // 🔧 DEFININDO handleStepUpdate que estava faltando
   const handleStepUpdate = (field: string, value: any) => {
-    console.log('🔄 Atualizando campo da etapa:', field, value);
+    appLogger.info('🔄 Atualizando campo da etapa:', { data: [field, value] });
     // Implementar lógica real de atualização conforme necessário
   };
 

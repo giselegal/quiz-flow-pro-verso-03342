@@ -145,12 +145,12 @@ export abstract class BaseCanonicalService implements ICanonicalService {
 
   protected log(...args: any[]): void {
     if (this.options.debug) {
-      console.log(`[${this.name}]`, ...args);
+      appLogger.info(`[${this.name}]`, { data: [...args] });
     }
   }
 
   protected error(...args: any[]): void {
-    console.error(`[${this.name}]`, ...args);
+    appLogger.error(`[${this.name}]`, { data: [...args] });
   }
 
   /**
@@ -188,6 +188,7 @@ export abstract class BaseCanonicalService implements ICanonicalService {
 import type { FunnelMetadata } from './FunnelService';
 import type { UnifiedStage } from '@/services/UnifiedCRUDService';
 import type { FunnelContext } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface UnifiedFunnelData {
   id: string;

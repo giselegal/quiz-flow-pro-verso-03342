@@ -1,5 +1,6 @@
 import React from 'react';
 import { AtomicBlockProps } from '@/types/blockProps';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export default function IntroImageBlock({
   block,
@@ -20,18 +21,18 @@ export default function IntroImageBlock({
 
   // Debug
   if (import.meta.env.DEV) {
-    console.log('🖼️ [IntroImageBlock] Debug:', {
-      blockId: block.id,
-      type: (block as any).type,
-      src,
-      hasSrc: !!src,
-      content: (block as any)?.content,
-      properties: block.properties,
-    });
+    appLogger.info('🖼️ [IntroImageBlock] Debug:', { data: [{
+            blockId: block.id,
+            type: (block as any).type,
+            src,
+            hasSrc: !!src,
+            content: (block as any)?.content,
+            properties: block.properties,
+          }] });
   }
 
   if (!src) {
-    console.warn('⚠️ [IntroImageBlock] Sem src:', { blockId: block.id, content: (block as any)?.content });
+    appLogger.warn('⚠️ [IntroImageBlock] Sem src:', { data: [{ blockId: block.id, content: (block as any)?.content }] });
     return null;
   }
 

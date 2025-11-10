@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * LocalStorage Migration Utility
  *
@@ -55,7 +56,7 @@ export class LocalStorageMigration {
       localStorage.removeItem(key);
     });
 
-    console.log('Critical localStorage data cleaned up');
+    appLogger.info('Critical localStorage data cleaned up');
   }
 
   /**
@@ -63,7 +64,7 @@ export class LocalStorageMigration {
    */
   static setTempData(key: string, value: any, maxSize: number = 1024 * 1024): boolean {
     if (!this.TEMPORARY_KEYS.includes(key)) {
-      console.warn(`Key "${key}" not in allowed temporary keys list`);
+      appLogger.warn(`Key "${key}" not in allowed temporary keys list`);
       return false;
     }
 
@@ -72,14 +73,14 @@ export class LocalStorageMigration {
 
       // Check size limit (1MB default)
       if (serialized.length > maxSize) {
-        console.warn(`Data too large for localStorage key "${key}": ${serialized.length} bytes`);
+        appLogger.warn(`Data too large for localStorage key "${key}": ${serialized.length} bytes`);
         return false;
       }
 
       localStorage.setItem(key, serialized);
       return true;
     } catch (error) {
-      console.error(`Error setting localStorage key "${key}":`, error);
+      appLogger.error(`Error setting localStorage key "${key}":`, { data: [error] });
       return false;
     }
   }
@@ -89,7 +90,7 @@ export class LocalStorageMigration {
    */
   static getTempData<T>(key: string, defaultValue?: T): T | null {
     if (!this.TEMPORARY_KEYS.includes(key)) {
-      console.warn(`Key "${key}" not in allowed temporary keys list`);
+      appLogger.warn(`Key "${key}" not in allowed temporary keys list`);
       return defaultValue || null;
     }
 
@@ -99,7 +100,7 @@ export class LocalStorageMigration {
 
       return JSON.parse(value);
     } catch (error) {
-      console.error(`Error parsing localStorage key "${key}":`, error);
+      appLogger.error(`Error parsing localStorage key "${key}":`, { data: [error] });
       return defaultValue || null;
     }
   }
@@ -114,7 +115,7 @@ export class LocalStorageMigration {
 
     allKeys.forEach(key => {
       if (!allowedKeys.includes(key)) {
-        console.log(`Removing unknown localStorage key: ${key}`);
+        appLogger.info(`Removing unknown localStorage key: ${key}`);
         localStorage.removeItem(key);
       }
     });

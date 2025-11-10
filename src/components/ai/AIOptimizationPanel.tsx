@@ -21,6 +21,7 @@ import {
   Play,
   Loader2,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface OptimizationRecommendation {
   type: 'performance' | 'ux' | 'engagement' | 'technical';
@@ -122,7 +123,7 @@ export const AIOptimizationPanel: React.FC = () => {
       });
 
     } catch (error) {
-      console.error('AI Analysis error:', error);
+      appLogger.error('AI Analysis error:', { data: [error] });
       toast({
         title: '❌ Erro na Análise IA',
         description: error instanceof Error ? error.message : 'Falha na análise',

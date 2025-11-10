@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔔 EDITOR EVENT BUS - Sprint 1 Dia 2
  * 
@@ -57,7 +58,7 @@ class EditorEventBus {
       try {
         callback(data);
       } catch (error) {
-        console.error(`[EventBus] Error in ${event} listener:`, error);
+        appLogger.error(`[EventBus] Error in ${event} listener:`, { data: [error] });
       }
     });
   }
@@ -80,13 +81,13 @@ class EditorEventBus {
    * Debug: lista eventos registrados
    */
   debug(): void {
-    console.log('[EventBus] Registered events:', {
-      events: Array.from(this.listeners.keys()),
-      listenerCounts: Array.from(this.listeners.entries()).map(([event, callbacks]) => ({
-        event,
-        count: callbacks.size,
-      })),
-    });
+    appLogger.info('[EventBus] Registered events:', { data: [{
+            events: Array.from(this.listeners.keys()),
+            listenerCounts: Array.from(this.listeners.entries()).map(([event, callbacks]) => ({
+              event,
+              count: callbacks.size,
+            })),
+          }] });
   }
 }
 

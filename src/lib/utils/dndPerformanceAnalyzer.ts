@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔍 ANÁLISE COMPLETA DE PERFORMANCE DO SISTEMA DnD
  * 
@@ -29,8 +30,8 @@ const DnDPerformanceAnalyzer = {
     // ANÁLISE DE HIERARQUIA
     // ========================================================================
     analyzeHierarchy() {
-        console.log('🏗️ ANÁLISE DE HIERARQUIA DND:');
-        console.log('=====================================');
+        appLogger.info('🏗️ ANÁLISE DE HIERARQUIA DND:');
+        appLogger.info('=====================================');
 
         const hierarchy = {
             level1: 'MainEditorUnified.tsx',
@@ -43,23 +44,23 @@ const DnDPerformanceAnalyzer = {
         };
 
         Object.entries(hierarchy).forEach(([level, component]) => {
-            console.log(`${level}: ${component}`);
+            appLogger.info(`${level}: ${component}`);
         });
 
         // Detectar contexts aninhados
         const dndContexts = document.querySelectorAll('[data-rbd-droppable-context-id], [data-dnd-context]');
         const dndProviders = document.querySelectorAll('[class*="dnd"], [class*="DndContext"]');
 
-        console.log(`\\n📊 CONTEXTS ENCONTRADOS: ${dndContexts.length}`);
-        console.log(`📊 PROVIDERS ENCONTRADOS: ${dndProviders.length}`);
+        appLogger.info(`\\n📊 CONTEXTS ENCONTRADOS: ${dndContexts.length}`);
+        appLogger.info(`📊 PROVIDERS ENCONTRADOS: ${dndProviders.length}`);
 
         if (dndContexts.length > 1) {
-            console.warn('⚠️ POSSÍVEL ANINHAMENTO DETECTADO!');
+            appLogger.warn('⚠️ POSSÍVEL ANINHAMENTO DETECTADO!');
             dndContexts.forEach((ctx, i) => {
-                console.log(`  Context ${i + 1}:`, ctx.className);
+                appLogger.info(`  Context ${i + 1}:`, { data: [ctx.className] });
             });
         } else {
-            console.log('✅ Hierarquia limpa - apenas 1 DndContext');
+            appLogger.info('✅ Hierarquia limpa - apenas 1 DndContext');
         }
 
         return {
@@ -74,8 +75,8 @@ const DnDPerformanceAnalyzer = {
     // ANÁLISE DE PERFORMANCE
     // ========================================================================
     measurePerformance() {
-        console.log('\\n⚡ ANÁLISE DE PERFORMANCE:');
-        console.log('=====================================');
+        appLogger.info('\\n⚡ ANÁLISE DE PERFORMANCE:');
+        appLogger.info('=====================================');
 
         const startTime = performance.now();
 
@@ -84,24 +85,24 @@ const DnDPerformanceAnalyzer = {
         const droppables = document.querySelectorAll('[data-dnd-kit-droppable]');
         const sortables = document.querySelectorAll('[data-dnd-kit-sortable]');
 
-        console.log(`🎯 Draggables: ${draggables.length}`);
-        console.log(`📥 Droppables: ${droppables.length}`);
-        console.log(`🔄 Sortables: ${sortables.length}`);
+        appLogger.info(`🎯 Draggables: ${draggables.length}`);
+        appLogger.info(`📥 Droppables: ${droppables.length}`);
+        appLogger.info(`🔄 Sortables: ${sortables.length}`);
 
         // Medir tempo de query
         const queryTime = performance.now() - startTime;
-        console.log(`⏱️ Query time: ${queryTime.toFixed(2)}ms`);
+        appLogger.info(`⏱️ Query time: ${queryTime.toFixed(2)}ms`);
 
         // Verificar re-renders desnecessários
         const rerenderIndicators = document.querySelectorAll('[data-render-count]');
-        console.log(`🔄 Components with render count: ${rerenderIndicators.length}`);
+        appLogger.info(`🔄 Components with render count: ${rerenderIndicators.length}`);
 
         // Análise de memória (se disponível)
         if ('memory' in performance) {
             const memory = (performance as any).memory;
-            console.log(`💾 Used JS Heap: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`);
-            console.log(`💾 Total JS Heap: ${(memory.totalJSHeapSize / 1024 / 1024).toFixed(2)}MB`);
-            console.log(`💾 Heap Limit: ${(memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2)}MB`);
+            appLogger.info(`💾 Used JS Heap: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`);
+            appLogger.info(`💾 Total JS Heap: ${(memory.totalJSHeapSize / 1024 / 1024).toFixed(2)}MB`);
+            appLogger.info(`💾 Heap Limit: ${(memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2)}MB`);
         }
 
         return {
@@ -117,13 +118,13 @@ const DnDPerformanceAnalyzer = {
     // TESTE DE DRAG SIMULATION
     // ========================================================================
     async simulateDragPerformance() {
-        console.log('\\n🎬 SIMULAÇÃO DE DRAG PERFORMANCE:');
-        console.log('=====================================');
+        appLogger.info('\\n🎬 SIMULAÇÃO DE DRAG PERFORMANCE:');
+        appLogger.info('=====================================');
 
         const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
 
         if (draggables.length === 0) {
-            console.warn('❌ Nenhum elemento draggable encontrado!');
+            appLogger.warn('❌ Nenhum elemento draggable encontrado!');
             return { success: false, reason: 'No draggables found' };
         }
 
@@ -176,14 +177,14 @@ const DnDPerformanceAnalyzer = {
         const maxTime = Math.max(...measurements);
         const minTime = Math.min(...measurements);
 
-        console.log(`📊 Drag simulations: ${measurements.length}`);
-        console.log(`⏱️ Average time: ${avgTime.toFixed(2)}ms`);
-        console.log(`⏱️ Max time: ${maxTime.toFixed(2)}ms`);
-        console.log(`⏱️ Min time: ${minTime.toFixed(2)}ms`);
+        appLogger.info(`📊 Drag simulations: ${measurements.length}`);
+        appLogger.info(`⏱️ Average time: ${avgTime.toFixed(2)}ms`);
+        appLogger.info(`⏱️ Max time: ${maxTime.toFixed(2)}ms`);
+        appLogger.info(`⏱️ Min time: ${minTime.toFixed(2)}ms`);
 
         // Análise de performance
         const isPerformant = avgTime < 16; // 60fps = 16.67ms per frame
-        console.log(`${isPerformant ? '✅' : '⚠️'} Performance: ${isPerformant ? 'GOOD' : 'NEEDS IMPROVEMENT'}`);
+        appLogger.info(`${isPerformant ? '✅' : '⚠️'} Performance: ${isPerformant ? 'GOOD' : 'NEEDS IMPROVEMENT'}`);
 
         return {
             success: true,
@@ -199,8 +200,8 @@ const DnDPerformanceAnalyzer = {
     // ANÁLISE DE LISTENERS
     // ========================================================================
     analyzeEventListeners() {
-        console.log('\\n🎧 ANÁLISE DE EVENT LISTENERS:');
-        console.log('=====================================');
+        appLogger.info('\\n🎧 ANÁLISE DE EVENT LISTENERS:');
+        appLogger.info('=====================================');
 
         const elementsWithListeners: ElementWithListeners[] = [];
 
@@ -234,7 +235,7 @@ const DnDPerformanceAnalyzer = {
             });
         });
 
-        console.log(`📋 Total elements with listeners: ${elementsWithListeners.length}`);
+        appLogger.info(`📋 Total elements with listeners: ${elementsWithListeners.length}`);
 
         // Verificar vazamentos de memory
         const globalListeners = ['mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend'];
@@ -243,9 +244,9 @@ const DnDPerformanceAnalyzer = {
             return document.addEventListener.toString().includes(event);
         });
 
-        console.log(`🌍 Potential global listeners: ${activeGlobalListeners.length}`);
+        appLogger.info(`🌍 Potential global listeners: ${activeGlobalListeners.length}`);
         if (activeGlobalListeners.length > 3) {
-            console.warn('⚠️ Muitos listeners globais podem impactar performance');
+            appLogger.warn('⚠️ Muitos listeners globais podem impactar performance');
         }
 
         return {
@@ -261,11 +262,11 @@ const DnDPerformanceAnalyzer = {
     // ========================================================================
     async generateCompleteReport() {
         console.clear();
-        console.log('🔍 RELATÓRIO COMPLETO - DnD PERFORMANCE ANALYSIS');
-        console.log('='.repeat(60));
-        console.log(`⏰ Timestamp: ${new Date().toISOString()}`);
-        console.log(`🌐 URL: ${window.location.href}`);
-        console.log(`📱 User Agent: ${navigator.userAgent.split(' ').pop()}`);
+        appLogger.info('🔍 RELATÓRIO COMPLETO - DnD PERFORMANCE ANALYSIS');
+        appLogger.info('='.repeat(60));
+        appLogger.info(`⏰ Timestamp: ${new Date().toISOString()}`);
+        appLogger.info(`🌐 URL: ${window.location.href}`);
+        appLogger.info(`📱 User Agent: ${navigator.userAgent.split(' ').pop()}`);
 
         const results = {
             hierarchy: this.analyzeHierarchy(),
@@ -283,34 +284,34 @@ const DnDPerformanceAnalyzer = {
         if (results.eventListeners.potentialGlobalListeners > 5) score -= 15;
         if (results.performance.queryTime > 10) score -= 10;
 
-        console.log('\\n🏆 SCORE FINAL:');
-        console.log('=====================================');
-        console.log(`📊 Score: ${Math.max(0, score)}/100`);
-        console.log(`${score >= 80 ? '✅' : score >= 60 ? '⚠️' : '❌'} Status: ${score >= 80 ? 'EXCELENTE' : score >= 60 ? 'BOM' : 'NECESSITA MELHORIA'
-            }`);
+        appLogger.info('\\n🏆 SCORE FINAL:');
+        appLogger.info('=====================================');
+        appLogger.info(`📊 Score: ${Math.max(0, score)}/100`);
+        appLogger.info(`${score >= 80 ? '✅' : score >= 60 ? '⚠️' : '❌'} Status: ${score >= 80 ? 'EXCELENTE' : score >= 60 ? 'BOM' : 'NECESSITA MELHORIA'
+                    }`);
 
         // Recomendações
-        console.log('\\n💡 RECOMENDAÇÕES:');
-        console.log('=====================================');
+        appLogger.info('\\n💡 RECOMENDAÇÕES:');
+        appLogger.info('=====================================');
 
         if (results.hierarchy.hasNesting) {
-            console.log('❌ Remover aninhamento de DndContext');
+            appLogger.info('❌ Remover aninhamento de DndContext');
         }
 
         if (!results.dragSimulation.isPerformant) {
-            console.log('❌ Otimizar performance de drag operations');
+            appLogger.info('❌ Otimizar performance de drag operations');
         }
 
         if (results.eventListeners.potentialGlobalListeners > 5) {
-            console.log('❌ Reduzir listeners globais');
+            appLogger.info('❌ Reduzir listeners globais');
         }
 
         if (results.performance.draggableCount > 50) {
-            console.log('⚠️ Considerar virtualização para muitos elements');
+            appLogger.info('⚠️ Considerar virtualização para muitos elements');
         }
 
         if (score >= 80) {
-            console.log('✅ Sistema DnD está bem otimizado!');
+            appLogger.info('✅ Sistema DnD está bem otimizado!');
         }
 
         return results;
@@ -319,8 +320,8 @@ const DnDPerformanceAnalyzer = {
 
 // Execução automática se estiver no browser
 if (typeof window !== 'undefined') {
-    console.log('🚀 DnD Performance Analyzer carregado!');
-    console.log('📝 Execute: DnDPerformanceAnalyzer.generateCompleteReport()');
+    appLogger.info('🚀 DnD Performance Analyzer carregado!');
+    appLogger.info('📝 Execute: DnDPerformanceAnalyzer.generateCompleteReport()');
 
     // Expor globalmente para debug
     (window as any).DnDPerformanceAnalyzer = DnDPerformanceAnalyzer;

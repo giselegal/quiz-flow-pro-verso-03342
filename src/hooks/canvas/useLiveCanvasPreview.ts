@@ -6,10 +6,11 @@
  */
 
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Mock implementation for useQuizRuntimeRegistry
 const useQuizRuntimeRegistry = () => ({
-    setSteps: (steps: any) => { console.log('Mock setSteps called with:', steps); },
+    setSteps: (steps: any) => { appLogger.info('Mock setSteps called with:', { data: [steps] }); },
     version: '1.0.0',
 });
 
@@ -228,7 +229,7 @@ export function useLiveCanvasPreview(
         setState(prev => ({ ...prev, isActive: true }));
         
         if (options.enableDebug) {
-            console.log('🎭 Live preview activated');
+            appLogger.info('🎭 Live preview activated');
         }
     }, [options.enableDebug]);
 
@@ -236,7 +237,7 @@ export function useLiveCanvasPreview(
         setState(prev => ({ ...prev, isActive: false, isUpdating: false }));
         
         if (options.enableDebug) {
-            console.log('🎭 Live preview deactivated');
+            appLogger.info('🎭 Live preview deactivated');
         }
     }, [options.enableDebug]);
 
@@ -245,7 +246,7 @@ export function useLiveCanvasPreview(
             const newActive = !prev.isActive;
             
             if (options.enableDebug) {
-                console.log(`🎭 Live preview ${newActive ? 'activated' : 'deactivated'}`);
+                appLogger.info(`🎭 Live preview ${newActive ? 'activated' : 'deactivated'}`);
             }
             
             return {
@@ -274,7 +275,7 @@ export function useLiveCanvasPreview(
             }));
 
             if (options.enableDebug) {
-                console.log('🎭 Manual preview update completed');
+                appLogger.info('🎭 Manual preview update completed');
             }
         } catch (error) {
             setState(prev => ({
@@ -285,7 +286,7 @@ export function useLiveCanvasPreview(
             }));
 
             if (options.enableDebug) {
-                console.error('🎭 Manual preview update failed:', error);
+                appLogger.error('🎭 Manual preview update failed:', { data: [error] });
             }
         }
     }, [state.isActive, steps, setRegistrySteps, options.enableDebug]);
@@ -305,7 +306,7 @@ export function useLiveCanvasPreview(
         // Check rate limit
         if (!canUpdate()) {
             if (options.enableDebug) {
-                console.warn('🎭 Preview update rate limited');
+                appLogger.warn('🎭 Preview update rate limited');
             }
             return;
         }
@@ -320,7 +321,7 @@ export function useLiveCanvasPreview(
             }));
             
             if (options.enableDebug) {
-                console.log('🎭 Preview update served from cache');
+                appLogger.info('🎭 Preview update served from cache');
             }
             return;
         }
@@ -370,7 +371,7 @@ export function useLiveCanvasPreview(
             }));
 
             if (options.enableDebug) {
-                console.log('🎭 Auto preview update completed in', `${updateTime  }ms`);
+                appLogger.info('🎭 Auto preview update completed in', { data: [`${updateTime  }ms`] });
             }
         } catch (error) {
             setState(prev => ({
@@ -381,7 +382,7 @@ export function useLiveCanvasPreview(
             }));
 
             if (options.enableDebug) {
-                console.error('🎭 Auto preview update failed:', error);
+                appLogger.error('🎭 Auto preview update failed:', { data: [error] });
             }
         }
     }, [

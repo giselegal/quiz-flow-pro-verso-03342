@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface ColumnWidths {
   stepSidebar: number;
@@ -44,7 +45,7 @@ export const useColumnWidths = () => {
         setWidths(validated);
       }
     } catch (error) {
-      console.warn('Failed to load column widths from localStorage:', error);
+      appLogger.warn('Failed to load column widths from localStorage:', { data: [error] });
     }
   }, []);
 
@@ -53,7 +54,7 @@ export const useColumnWidths = () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(widths));
     } catch (error) {
-      console.warn('Failed to save column widths to localStorage:', error);
+      appLogger.warn('Failed to save column widths to localStorage:', { data: [error] });
     }
   }, [widths]);
 

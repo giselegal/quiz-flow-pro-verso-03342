@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 📊 EDITOR METRICS - FASE 3.3
  * 
@@ -40,7 +41,7 @@ class EditorMetrics {
     });
 
     if (import.meta.env.DEV) {
-      console.log(`📊 [Metrics] Step ${stepId} loaded in ${durationMs.toFixed(0)}ms`, metadata);
+      appLogger.info(`📊 [Metrics] Step ${stepId} loaded in ${durationMs.toFixed(0)}ms`, { data: [metadata] });
     }
   }
 
@@ -80,7 +81,7 @@ class EditorMetrics {
       },
     });
 
-    console.error('❌ [Metrics] Error tracked:', error, context);
+    appLogger.error('❌ [Metrics] Error tracked:', { data: [error, context] });
   }
 
   /**
@@ -100,7 +101,7 @@ class EditorMetrics {
    */
   trackPropsChange(component: string, changedKeys: string[]) {
     if (import.meta.env.DEV) {
-      console.debug(`🔄 [EditorMetrics] Props changed in "${component}":`, changedKeys);
+      appLogger.debug(`🔄 [EditorMetrics] Props changed in "${component}":`, { data: [changedKeys] });
     }
   }
 
@@ -109,7 +110,7 @@ class EditorMetrics {
    */
   trackComponentUnmount(component: string, metadata?: Record<string, any>) {
     if (import.meta.env.DEV) {
-      console.debug(`👋 [EditorMetrics] Component unmounted: "${component}"`, metadata);
+      appLogger.debug(`👋 [EditorMetrics] Component unmounted: "${component}"`, { data: [metadata] });
     }
   }
 
@@ -128,7 +129,7 @@ class EditorMetrics {
     });
 
     if (import.meta.env.DEV) {
-      console.debug(`🎨 [EditorMetrics] Block ${action}:`, blockId, metadata);
+      appLogger.debug(`🎨 [EditorMetrics] Block ${action}:`, { data: [blockId, metadata] });
     }
   }
 
@@ -148,7 +149,7 @@ class EditorMetrics {
     });
 
     if (import.meta.env.DEV) {
-      console.debug(`🧭 [EditorMetrics] Navigation: ${fromStepId || 'none'} → ${toStepId}`, durationMs ? `(${durationMs.toFixed(0)}ms)` : '');
+      appLogger.debug(`🧭 [EditorMetrics] Navigation: ${fromStepId || 'none'} → ${toStepId}`, { data: [durationMs ? `(${durationMs.toFixed(0)}ms)` : ''] });
     }
   }
 
@@ -168,7 +169,7 @@ class EditorMetrics {
 
     if (import.meta.env.DEV) {
       const status = success ? '✅' : '❌';
-      console.debug(`${status} [EditorMetrics] Save ${success ? 'succeeded' : 'failed'} in ${durationMs.toFixed(0)}ms`, metadata);
+      appLogger.debug(`${status} [EditorMetrics] Save ${success ? 'succeeded' : 'failed'} in ${durationMs.toFixed(0)}ms`, { data: [metadata] });
     }
   }
 
@@ -186,7 +187,7 @@ class EditorMetrics {
     });
 
     if (import.meta.env.DEV) {
-      console.debug(`↩️ [EditorMetrics] ${action.toUpperCase()}`, metadata);
+      appLogger.debug(`↩️ [EditorMetrics] ${action.toUpperCase()}`, { data: [metadata] });
     }
   }
 

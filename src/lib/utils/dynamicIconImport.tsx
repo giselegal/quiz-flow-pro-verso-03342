@@ -4,6 +4,7 @@
 
 import { LucideIcon, LucideProps } from 'lucide-react';
 import { lazy, ComponentType } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Cache de ícones já carregados para evitar re-imports
 const iconCache = new Map<string, ComponentType<any>>();
@@ -52,7 +53,7 @@ export const dynamicIconImport = (iconName: string): React.ElementType => {
       // Fallback to Star
       return { default: icons.Star };
     } catch (error) {
-      console.warn(`Icon ${formattedName} not found, using Star as fallback`);
+      appLogger.warn(`Icon ${formattedName} not found, using Star as fallback`);
       const icons = await import('lucide-react');
       return { default: icons.Star };
     }
@@ -76,7 +77,7 @@ export const getAvailableIcons = async (): Promise<string[]> => {
         return key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
       });
   } catch (error) {
-    console.error('Error loading icons list:', error);
+    appLogger.error('Error loading icons list:', { data: [error] });
     return [];
   }
 };

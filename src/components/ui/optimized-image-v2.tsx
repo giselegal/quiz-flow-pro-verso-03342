@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getOptimizedImageUrl, getLowQualityPlaceholder } from '@/lib/utils/imageManager';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface OptimizedImageProps {
   src: string;
@@ -43,7 +44,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Report load error
   const handleImageError = () => {
-    console.error('Error loading image:', optimizedSrc);
+    appLogger.error('Error loading image:', { data: [optimizedSrc] });
     setError(true);
   };
 

@@ -1,6 +1,7 @@
 // src/utils/logging/transports/RemoteTransport.ts
 import type { LogTransport, LogEntry } from '../LoggerService';
 import type { LoggerConfig } from '../LoggerConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface RemoteLogPayload {
     logs: LogEntry[];
@@ -65,7 +66,7 @@ export class RemoteTransport implements LogTransport {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 
         } catch (error) {
-            console.warn('Failed to send logs to remote endpoint:', error);
+            appLogger.warn('Failed to send logs to remote endpoint:', { data: [error] });
 
             // Store failed entries back to buffer for retry
             this.buffer.unshift(...entries);
@@ -106,7 +107,7 @@ export class RemoteTransport implements LogTransport {
 
     private scheduleRetry(): void {
         if (this.retryCount >= this.maxRetries) {
-            console.warn('Max retry attempts reached, dropping logs');
+            appLogger.warn('Max retry attempts reached, dropping logs');
             this.buffer = []; // Clear buffer to prevent memory leak
             this.retryCount = 0;
             return;

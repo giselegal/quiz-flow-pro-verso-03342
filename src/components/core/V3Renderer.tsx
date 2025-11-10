@@ -15,6 +15,7 @@ import type {
     UserData,
 } from '@/types/template-v3.types';
 import { SectionsContainer } from '@/components/sections/SectionRenderer';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -123,8 +124,8 @@ class V3RendererErrorBoundary extends React.Component<
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        console.error(`[V3Renderer] Error in template ${this.props.templateId}:`, error);
-        console.error('[V3Renderer] Error info:', errorInfo);
+        appLogger.error(`[V3Renderer] Error in template ${this.props.templateId}:`, { data: [error] });
+        appLogger.error('[V3Renderer] Error info:', { data: [errorInfo] });
 
         // Enviar para serviço de tracking de erros (Sentry, etc)
         if (typeof window !== 'undefined' && (window as any).Sentry) {
@@ -406,7 +407,7 @@ export const V3Renderer: React.FC<V3RendererProps> = ({
 
     // Validação básica do template
     if (!template || !template.sections || template.sections.length === 0) {
-        console.error('[V3Renderer] Invalid template:', template);
+        appLogger.error('[V3Renderer] Invalid template:', { data: [template] });
 
         return (
             <div className="v3-renderer-error" style={{ padding: '2rem', textAlign: 'center' }}>

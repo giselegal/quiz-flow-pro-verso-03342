@@ -24,6 +24,7 @@ interface StepTemplate {
 import { ValidationResult } from '@/hooks/useStepValidation';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizOrchestratorState {
   // Estado atual
@@ -124,7 +125,7 @@ class QuizOrchestrator {
     try {
       this.updateState({ isLoading: true, error: null });
 
-      console.log('🎯 QuizOrchestrator: Iniciando sistema completo...', { funnelId });
+      appLogger.info('🎯 QuizOrchestrator: Iniciando sistema completo...', { data: [{ funnelId }] });
 
       // 1. Carregar dados persistidos
       const quizData = unifiedQuizStorage.loadData();
@@ -164,15 +165,15 @@ class QuizOrchestrator {
       // 6. Setup listeners para mudanças externas
       this.setupEventListeners();
 
-      console.log('✅ QuizOrchestrator: Sistema inicializado com sucesso', {
-        currentStep,
-        hasStepConfig: !!stepConfig,
-        blocksCount: currentBlocks.length,
-        isValid: validationResult.isValid,
-      });
+      appLogger.info('✅ QuizOrchestrator: Sistema inicializado com sucesso', { data: [{
+                currentStep,
+                hasStepConfig: !!stepConfig,
+                blocksCount: currentBlocks.length,
+                isValid: validationResult.isValid,
+              }] });
 
     } catch (error) {
-      console.error('❌ QuizOrchestrator: Erro na inicialização:', error);
+      appLogger.error('❌ QuizOrchestrator: Erro na inicialização:', { data: [error] });
       this.updateState({
         isLoading: false,
         error: error instanceof Error ? error.message : 'Erro desconhecido',
@@ -185,17 +186,17 @@ class QuizOrchestrator {
    */
   async goToStep(targetStep: number): Promise<void> {
     if (this.state.isLoading || this.state.isAutoAdvancing) {
-      console.log('⏸️ QuizOrchestrator: Navegação bloqueada (loading/auto-advancing)');
+      appLogger.info('⏸️ QuizOrchestrator: Navegação bloqueada (loading/auto-advancing)');
       return;
     }
 
     try {
       this.updateState({ isLoading: true });
 
-      console.log('🧭 QuizOrchestrator: Navegando para etapa', { 
-        from: this.state.currentStep, 
-        to: targetStep, 
-      });
+      appLogger.info('🧭 QuizOrchestrator: Navegando para etapa', { data: [{ 
+                from: this.state.currentStep, 
+                to: targetStep, 
+              }] });
 
       // 1. Validar se pode navegar
       if (!this.canNavigateToStep(targetStep)) {
@@ -241,7 +242,7 @@ class QuizOrchestrator {
       this.setupAutoAdvance(stepConfig, validationResult);
 
     } catch (error) {
-      console.error('❌ QuizOrchestrator: Erro na navegação:', error);
+      appLogger.error('❌ QuizOrchestrator: Erro na navegação:', { data: [error] });
       this.updateState({
         isLoading: false,
         error: error instanceof Error ? error.message : 'Erro de navegação',
@@ -306,7 +307,7 @@ class QuizOrchestrator {
       }
 
     } catch (error) {
-      console.error('❌ QuizOrchestrator: Erro ao atualizar dados:', error);
+      appLogger.error('❌ QuizOrchestrator: Erro ao atualizar dados:', { data: [error] });
       this.updateState({
         error: error instanceof Error ? error.message : 'Erro ao salvar dados',
       });
@@ -352,10 +353,10 @@ class QuizOrchestrator {
         throw new Error('Dados insuficientes para calcular resultado');
       }
 
-      console.log('🎨 QuizOrchestrator: Calculando resultado...', {
-        selections: Object.keys(quizData.selections).length,
-        formData: Object.keys(quizData.formData).length,
-      });
+      appLogger.info('🎨 QuizOrchestrator: Calculando resultado...', { data: [{
+                selections: Object.keys(quizData.selections).length,
+                formData: Object.keys(quizData.formData).length,
+              }] });
 
       // Calcular pontuações por categoria
       const scores = this.calculateCategoryScores(quizData.selections);
@@ -381,7 +382,7 @@ class QuizOrchestrator {
 
       return result;
     } catch (error) {
-      console.error('❌ QuizOrchestrator: Erro ao calcular resultado:', error);
+      appLogger.error('❌ QuizOrchestrator: Erro ao calcular resultado:', { data: [error] });
       throw error;
     }
   }

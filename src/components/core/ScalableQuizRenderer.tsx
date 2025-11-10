@@ -5,6 +5,7 @@ import { BlockPropertiesAPI } from '@/services/api/internal/BlockPropertiesAPI';
 import { masterTemplateService } from '@/services/templates/MasterTemplateService';
 import { QuizStepRouter } from '@/components/router/QuizStepRouter';
 import SpecializedStepAdapter from '@/components/adapters/SpecializedStepAdapter';
+import { appLogger } from '@/lib/utils/appLogger';
 // Removido import estático de funnelNormalizer para evitar inclusão no bundle por padrão.
 // O carregamento será dinâmico e condicionado por uma flag (gate) de debug/diagnóstico.
 
@@ -83,10 +84,10 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 }
 
                 if (!tpl || typeof tpl !== 'object') {
-                    console.warn('⚠️ Template info retornou estrutura inesperada, usando fallback mínimo');
+                    appLogger.warn('⚠️ Template info retornou estrutura inesperada, usando fallback mínimo');
                 }
 
-                console.log(`🔍 Template info carregado para ${funnelId}:`, tpl);
+                appLogger.info(`🔍 Template info carregado para ${funnelId}:`, { data: [tpl] });
 
                 // 2. Usar totalSteps do template (dinâmico)
                 const detectedSteps = (tpl && tpl.totalSteps) ? tpl.totalSteps : 1;
@@ -99,23 +100,23 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                         setRealQuizData(realData);
                     }
                 } catch (apiError) {
-                    console.warn('⚠️ BlockPropertiesAPI não disponível:', apiError);
+                    appLogger.warn('⚠️ BlockPropertiesAPI não disponível:', { data: [apiError] });
                 }
 
                 // ❌ REMOVIDO: Lógica hardcoded do quiz21StepsComplete
 
                 setTotalSteps(Math.max(detectedSteps, 1)); // Garante pelo menos 1 step
 
-                console.log(`✅ ScalableQuizRenderer: Funil ${funnelId} inicializado dinamicamente`, {
-                    baseId: tpl?.baseId,
-                    templateName: tpl?.templateName,
-                    totalSteps: detectedSteps,
-                    hasTemplate: !!tpl?.template,
-                    hasRealData: !!realQuizData,
-                });
+                appLogger.info(`✅ ScalableQuizRenderer: Funil ${funnelId} inicializado dinamicamente`, { data: [{
+                                    baseId: tpl?.baseId,
+                                    templateName: tpl?.templateName,
+                                    totalSteps: detectedSteps,
+                                    hasTemplate: !!tpl?.template,
+                                    hasRealData: !!realQuizData,
+                                }] });
 
             } catch (error) {
-                console.error('❌ Erro ao inicializar funil:', error);
+                appLogger.error('❌ Erro ao inicializar funil:', { data: [error] });
                 setError('Erro ao carregar o quiz. Tente novamente.');
             } finally {
                 setIsLoading(false);
@@ -142,7 +143,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
 
                 setStepData(combinedData);
             } catch (error) {
-                console.error(`❌ Erro ao carregar step ${currentStep}:`, error);
+                appLogger.error(`❌ Erro ao carregar step ${currentStep}:`, { data: [error] });
                 // Mantém dados anteriores em caso de erro
             }
         };
@@ -345,7 +346,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 const isSpecialized = stepType === 'specialized';
 
                 if (isSpecialized) {
-                    console.log(`🎯 ScalableQuizRenderer: Renderizando step ${currentStep} como ESPECIALIZADO`);
+                    appLogger.info(`🎯 ScalableQuizRenderer: Renderizando step ${currentStep} como ESPECIALIZADO`);
                     return (
                         <SpecializedStepAdapter
                             stepNumber={currentStep}
@@ -362,7 +363,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                         />
                     );
                 } else {
-                    console.log(`🎯 ScalableQuizRenderer: Renderizando step ${currentStep} como MODULAR`);
+                    appLogger.info(`🎯 ScalableQuizRenderer: Renderizando step ${currentStep} como MODULAR`);
                     return (
                         <UniversalQuizStep
                             funnelId={funnelId}

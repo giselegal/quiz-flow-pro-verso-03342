@@ -33,6 +33,7 @@ import { useNotification } from '@/components/ui/Notification';
 
 // Services
 import { QuizToEditorAdapter } from '@/lib/adapters/QuizToEditorAdapter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizEditorIntegratedPageProps {
   funnelId?: string;
@@ -76,7 +77,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
     try {
       setState(prev => ({ ...prev, hasError: false, errorMessage: '' }));
 
-      console.log('🎯 Carregando dados do quiz para edição...');
+      appLogger.info('🎯 Carregando dados do quiz para edição...');
 
       // Converter quiz para formato do editor
       const editorData = await QuizToEditorAdapter.convertQuizToEditor(funnelId);
@@ -94,14 +95,14 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 
       addNotification('✅ Quiz carregado com sucesso no editor', 'success');
 
-      console.log('✅ Quiz carregado:', {
-        totalSteps: editorData.totalSteps,
-        stepsConverted: Object.keys(editorData.stepBlocks).length,
-        metadata: editorData.quizMetadata,
-      });
+      appLogger.info('✅ Quiz carregado:', { data: [{
+                totalSteps: editorData.totalSteps,
+                stepsConverted: Object.keys(editorData.stepBlocks).length,
+                metadata: editorData.quizMetadata,
+              }] });
 
     } catch (error) {
-      console.error('❌ Erro ao carregar quiz:', error);
+      appLogger.error('❌ Erro ao carregar quiz:', { data: [error] });
 
       setState(prev => ({
         ...prev,
@@ -116,7 +117,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   // Handlers
   const handleSave = useCallback(async () => {
     try {
-      console.log('💾 Salvando alterações do quiz...');
+      appLogger.info('💾 Salvando alterações do quiz...');
 
       // Aqui será implementada a sincronização bidirecional na Fase 3
       // Por enquanto, simular o salvamento
@@ -124,13 +125,13 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 
       addNotification('💾 Quiz salvo com sucesso', 'success');
     } catch (error) {
-      console.error('❌ Erro ao salvar:', error);
+      appLogger.error('❌ Erro ao salvar:', { data: [error] });
       addNotification('❌ Erro ao salvar quiz', 'error');
     }
   }, [addNotification]);
 
   const handlePreview = useCallback(() => {
-    console.log('👁️ Abrindo preview do quiz...');
+    appLogger.info('👁️ Abrindo preview do quiz...');
 
     // Abrir em nova aba o quiz funcional
     const previewUrl = `/quiz-estilo${funnelId ? `?funnel=${funnelId}` : ''}`;

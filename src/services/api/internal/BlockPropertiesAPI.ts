@@ -14,6 +14,7 @@ import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateSer
 import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
 import { IndexedDBStorageService, StorageConfig } from '@/lib/utils/storage/IndexedDBStorageService';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ===== INTERFACES =====
 
@@ -186,9 +187,9 @@ export class BlockPropertiesAPI {
 
             this.storageService = IndexedDBStorageService.getInstance(config);
             await this.storageService.initialize();
-            console.log('🗄️ BlockPropertiesAPI storage initialized');
+            appLogger.info('🗄️ BlockPropertiesAPI storage initialized');
         } catch (error) {
-            console.warn('⚠️ IndexedDB initialization failed, using localStorage fallback:', error);
+            appLogger.warn('⚠️ IndexedDB initialization failed, using localStorage fallback:', { data: [error] });
             this.storageService = null;
         }
     }
@@ -196,7 +197,7 @@ export class BlockPropertiesAPI {
     // 🔗 CONECTAR AOS DADOS REAIS DO FUNIL
     connectToFunnelData(provider: FunnelDataProvider): void {
         this.funnelDataProvider = provider;
-        console.log('🔗 BlockPropertiesAPI conectada aos dados reais do funil!');
+        appLogger.info('🔗 BlockPropertiesAPI conectada aos dados reais do funil!');
 
         // 🌐 Detectar automaticamente a estrutura do funil
         this.analyzeFunnelStructure();
@@ -227,26 +228,26 @@ export class BlockPropertiesAPI {
             step++;
         }
 
-        console.log('🌐 Estrutura do funil detectada automaticamente:', {
-            funnelId,
-            totalSteps,
-            totalBlocks,
-            blockTypesFound: Array.from(blockTypes),
-            isGeneric: true,
-            supportsAnyStructure: true,
-        });
+        appLogger.info('🌐 Estrutura do funil detectada automaticamente:', { data: [{
+                    funnelId,
+                    totalSteps,
+                    totalBlocks,
+                    blockTypesFound: Array.from(blockTypes),
+                    isGeneric: true,
+                    supportsAnyStructure: true,
+                }] });
     }
 
     // 📊 GET REAL BLOCK PROPERTIES (from funnel, not just registry)
     async getRealBlockProperties(blockId: string): Promise<Record<string, any>> {
         if (!this.funnelDataProvider) {
-            console.warn('⚠️ FunnelDataProvider não conectado, usando propriedades vazias');
+            appLogger.warn('⚠️ FunnelDataProvider não conectado, usando propriedades vazias');
             return {};
         }
 
         const block = this.funnelDataProvider.getBlockById(blockId);
         if (!block) {
-            console.warn(`⚠️ Bloco ${blockId} não encontrado no funil`);
+            appLogger.warn(`⚠️ Bloco ${blockId} não encontrado no funil`);
             return {};
         }
 
@@ -267,7 +268,7 @@ export class BlockPropertiesAPI {
         return new Promise((resolve) => {
             setTimeout(() => {
                 const definition = this.cache.get(blockType);
-                console.log(`📋 BlockPropertiesAPI.getBlockDefinition(${blockType}):`, definition);
+                appLogger.info(`📋 BlockPropertiesAPI.getBlockDefinition(${blockType}):`, { data: [definition] });
                 resolve(definition);
             }, 0);
         });
@@ -313,18 +314,18 @@ export class BlockPropertiesAPI {
 
     // 🎯 GET REAL TEMPLATE DATA - BUSCA DADOS REAIS DO QUIZ21STEPSCOMPLETE
     async getRealTemplateData(templateId: string = 'quiz21StepsComplete'): Promise<Record<string, any[]>> {
-        console.log(`🔍 Buscando dados reais do template: ${templateId}`);
+        appLogger.info(`🔍 Buscando dados reais do template: ${templateId}`);
 
         // Buscar metadados do registry
         const templateMeta = UNIFIED_TEMPLATE_REGISTRY[templateId];
         if (!templateMeta) {
-            console.warn(`⚠️ Template ${templateId} não encontrado no UNIFIED_TEMPLATE_REGISTRY`);
+            appLogger.warn(`⚠️ Template ${templateId} não encontrado no UNIFIED_TEMPLATE_REGISTRY`);
             return {};
         }
 
         // Buscar dados REAIS do template (questões, opções, imagens)
         if (templateId === 'quiz21StepsComplete') {
-            console.log('✅ Carregando dados do consolidatedTemplateService (per-step JSON prioritário)');
+            appLogger.info('✅ Carregando dados do consolidatedTemplateService (per-step JSON prioritário)');
             try {
                 const full = await consolidatedTemplateService.getTemplate('quiz21StepsComplete');
                 if (full && Array.isArray(full.steps)) {
@@ -356,20 +357,20 @@ export class BlockPropertiesAPI {
                 }
                 return map;
             } catch (error) {
-                console.warn('⚠️ Falha ao carregar via consolidatedTemplateService, usando fallback legado:', error);
+                appLogger.warn('⚠️ Falha ao carregar via consolidatedTemplateService, usando fallback legado:', { data: [error] });
             }
 
             // Fallback final (legado): manter compatibilidade se existir o template TS
             try {
                 const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
-                console.log('✅ Fallback legado QUIZ_STYLE_21_STEPS_TEMPLATE carregado');
+                appLogger.info('✅ Fallback legado QUIZ_STYLE_21_STEPS_TEMPLATE carregado');
                 return QUIZ_STYLE_21_STEPS_TEMPLATE as unknown as Record<string, any[]>;
             } catch {
                 // Ignorar se não existir
             }
         }
 
-        console.warn(`⚠️ Dados reais não implementados para template: ${templateId}`);
+        appLogger.warn(`⚠️ Dados reais não implementados para template: ${templateId}`);
         return {};
     }
 
@@ -379,12 +380,12 @@ export class BlockPropertiesAPI {
         const stepKey = `step-${stepNumber}`;
         const stepData = templateData[stepKey] || [];
 
-        console.log(`🔍 Dados do step ${stepNumber}:`, {
-            stepKey,
-            blocksCount: stepData.length,
-            blockTypes: stepData.map(block => block.type),
-            hasRealContent: stepData.length > 0,
-        });
+        appLogger.info(`🔍 Dados do step ${stepNumber}:`, { data: [{
+                    stepKey,
+                    blocksCount: stepData.length,
+                    blockTypes: stepData.map(block => block.type),
+                    hasRealContent: stepData.length > 0,
+                }] });
 
         return stepData;
     }
@@ -403,18 +404,18 @@ export class BlockPropertiesAPI {
             const blocks = templateData[stepKey];
             const block = blocks.find(b => b.id === blockId);
             if (block) {
-                console.log(`✅ Bloco ${blockId} encontrado no ${stepKey} com conteúdo real:`, {
-                    type: block.type,
-                    hasContent: !!block.content,
-                    hasProperties: !!block.properties,
-                    contentKeys: Object.keys(block.content || {}),
-                    propertiesKeys: Object.keys(block.properties || {}),
-                });
+                appLogger.info(`✅ Bloco ${blockId} encontrado no ${stepKey} com conteúdo real:`, { data: [{
+                                    type: block.type,
+                                    hasContent: !!block.content,
+                                    hasProperties: !!block.properties,
+                                    contentKeys: Object.keys(block.content || {}),
+                                    propertiesKeys: Object.keys(block.properties || {}),
+                                }] });
                 return block;
             }
         }
 
-        console.warn(`⚠️ Bloco ${blockId} não encontrado no template`);
+        appLogger.warn(`⚠️ Bloco ${blockId} não encontrado no template`);
         return null;
     }
 
@@ -424,11 +425,11 @@ export class BlockPropertiesAPI {
         if (blockId) {
             const realBlock = await this.getBlockWithRealContent(blockId);
             if (realBlock) {
-                console.log(`✅ Usando dados REAIS para bloco ${blockId}:`, {
-                    type: realBlock.type,
-                    content: realBlock.content,
-                    properties: realBlock.properties,
-                });
+                appLogger.info(`✅ Usando dados REAIS para bloco ${blockId}:`, { data: [{
+                                    type: realBlock.type,
+                                    content: realBlock.content,
+                                    properties: realBlock.properties,
+                                }] });
                 return {
                     ...realBlock.properties || {},
                     ...realBlock.content || {},
@@ -442,7 +443,7 @@ export class BlockPropertiesAPI {
         // 🎯 PRIORIDADE 2: Definição do registry
         const definition = await this.getBlockDefinition(blockType);
         if (!definition) {
-            console.warn(`⚠️ Definição não encontrada para tipo '${blockType}' - usando propriedades genéricas`);
+            appLogger.warn(`⚠️ Definição não encontrada para tipo '${blockType}' - usando propriedades genéricas`);
             return this.getGenericBlockProperties(blockType);
         }
 
@@ -458,15 +459,15 @@ export class BlockPropertiesAPI {
         if (blockId && this.funnelDataProvider) {
             try {
                 const realProperties = await this.getRealBlockProperties(blockId);
-                console.log(`🔗 Mesclando propriedades reais do funil para ${blockType}:`, {
-                    registryDefaults,
-                    realProperties,
-                    merged: { ...registryDefaults, ...realProperties },
-                });
+                appLogger.info(`🔗 Mesclando propriedades reais do funil para ${blockType}:`, { data: [{
+                                    registryDefaults,
+                                    realProperties,
+                                    merged: { ...registryDefaults, ...realProperties },
+                                }] });
 
                 return { ...registryDefaults, ...realProperties };
             } catch (error) {
-                console.warn('⚠️ Erro ao buscar propriedades reais, usando defaults do registry:', error);
+                appLogger.warn('⚠️ Erro ao buscar propriedades reais, usando defaults do registry:', { data: [error] });
             }
         }
 
@@ -491,7 +492,7 @@ export class BlockPropertiesAPI {
             _createdAt: new Date().toISOString(),
         };
 
-        console.log(`🌐 Usando propriedades genéricas para tipo desconhecido '${blockType}':`, genericProperties);
+        appLogger.info(`🌐 Usando propriedades genéricas para tipo desconhecido '${blockType}':`, { data: [genericProperties] });
         return genericProperties;
     }
 
@@ -505,7 +506,7 @@ export class BlockPropertiesAPI {
         try {
             const currentFunnelId = this.getCurrentFunnelId();
             if (!currentFunnelId) {
-                console.warn('⚠️ No funnel ID available for property save');
+                appLogger.warn('⚠️ No funnel ID available for property save');
                 return false;
             }
 
@@ -532,11 +533,11 @@ export class BlockPropertiesAPI {
 
             // 4️⃣ ATUALIZAR CACHE E NOTIFICAR
             this.cache.invalidate(blockId);
-            console.log(`💾 Property saved: ${blockId}.${propertyKey} = `, value);
+            appLogger.info(`💾 Property saved: ${blockId}.${propertyKey} = `, { data: [value] });
             return true;
 
         } catch (error) {
-            console.error('❌ Error saving property:', error);
+            appLogger.error('❌ Error saving property:', { data: [error] });
 
             // 5️⃣ FALLBACK: localStorage
             try {
@@ -546,10 +547,10 @@ export class BlockPropertiesAPI {
                     timestamp: Date.now(),
                     funnelId: this.getCurrentFunnelId() || 'unknown',
                 }));
-                console.log('📦 Property saved to localStorage fallback');
+                appLogger.info('📦 Property saved to localStorage fallback');
                 return true;
             } catch (fallbackError) {
-                console.error('💥 Complete storage failure:', fallbackError);
+                appLogger.error('💥 Complete storage failure:', { data: [fallbackError] });
                 return false;
             }
         }
@@ -604,7 +605,7 @@ export class BlockPropertiesAPI {
         try {
             const currentFunnelId = funnelId || this.getCurrentFunnelId();
             if (!currentFunnelId) {
-                console.warn('⚠️ No funnel ID available for new component');
+                appLogger.warn('⚠️ No funnel ID available for new component');
                 return false;
             }
 
@@ -635,11 +636,11 @@ export class BlockPropertiesAPI {
                 order: position ?? 0,
             }]);
 
-            console.log(`🆕 New component saved to step ${stepId}:`, component);
+            appLogger.info(`🆕 New component saved to step ${stepId}:`, { data: [component] });
             return true;
 
         } catch (error) {
-            console.error('❌ Error saving new component:', error);
+            appLogger.error('❌ Error saving new component:', { data: [error] });
             return false;
         }
     }
@@ -670,7 +671,7 @@ export class BlockPropertiesAPI {
 
             return result;
         } catch (error) {
-            console.error('❌ Error retrieving properties from storage:', error);
+            appLogger.error('❌ Error retrieving properties from storage:', { data: [error] });
             return {};
         }
     }

@@ -1,12 +1,13 @@
 import { supabase } from './integrations/supabase/client';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Script para popular templates iniciais no Supabase
  * Versão simplificada que usa insert direto com any para contornar limitações de tipos
  */
 export async function populateInitialTemplates() {
-  console.log('🚀 Iniciando população de templates...');
+  appLogger.info('🚀 Iniciando população de templates...');
 
   try {
     // Template principal - Quiz 21 Etapas
@@ -30,15 +31,15 @@ export async function populateInitialTemplates() {
       usage_count: 0,
     };
 
-    console.log('📋 Inserindo Quiz 21 Etapas...');
+    appLogger.info('📋 Inserindo Quiz 21 Etapas...');
     const { error: error1 } = await (supabase as any)
       .from('quiz_templates')
       .insert([quiz21Template]);
 
     if (error1) {
-      console.error('❌ Erro ao inserir Quiz 21 Etapas:', error1);
+      appLogger.error('❌ Erro ao inserir Quiz 21 Etapas:', { data: [error1] });
     } else {
-      console.log('✅ Quiz 21 Etapas inserido com sucesso!');
+      appLogger.info('✅ Quiz 21 Etapas inserido com sucesso!');
     }
 
     // Template básico
@@ -61,15 +62,15 @@ export async function populateInitialTemplates() {
       usage_count: 0,
     };
 
-    console.log('📋 Inserindo Quiz Básico...');
+    appLogger.info('📋 Inserindo Quiz Básico...');
     const { error: error2 } = await (supabase as any)
       .from('quiz_templates')
       .insert([basicQuizTemplate]);
 
     if (error2) {
-      console.error('❌ Erro ao inserir Quiz Básico:', error2);
+      appLogger.error('❌ Erro ao inserir Quiz Básico:', { data: [error2] });
     } else {
-      console.log('✅ Quiz Básico inserido com sucesso!');
+      appLogger.info('✅ Quiz Básico inserido com sucesso!');
     }
 
     // Template de funil
@@ -92,15 +93,15 @@ export async function populateInitialTemplates() {
       usage_count: 0,
     };
 
-    console.log('📋 Inserindo Funil de Leads...');
+    appLogger.info('📋 Inserindo Funil de Leads...');
     const { error: error3 } = await (supabase as any)
       .from('quiz_templates')
       .insert([funnelTemplate]);
 
     if (error3) {
-      console.error('❌ Erro ao inserir Funil de Leads:', error3);
+      appLogger.error('❌ Erro ao inserir Funil de Leads:', { data: [error3] });
     } else {
-      console.log('✅ Funil de Leads inserido com sucesso!');
+      appLogger.info('✅ Funil de Leads inserido com sucesso!');
     }
 
     // Template de landing page
@@ -123,21 +124,21 @@ export async function populateInitialTemplates() {
       usage_count: 0,
     };
 
-    console.log('📋 Inserindo Landing Page...');
+    appLogger.info('📋 Inserindo Landing Page...');
     const { error: error4 } = await (supabase as any)
       .from('quiz_templates')
       .insert([landingTemplate]);
 
     if (error4) {
-      console.error('❌ Erro ao inserir Landing Page:', error4);
+      appLogger.error('❌ Erro ao inserir Landing Page:', { data: [error4] });
     } else {
-      console.log('✅ Landing Page inserida com sucesso!');
+      appLogger.info('✅ Landing Page inserida com sucesso!');
     }
 
-    console.log('🎉 Processo de população de templates concluído!');
+    appLogger.info('🎉 Processo de população de templates concluído!');
     return true;
   } catch (error) {
-    console.error('💥 Erro geral no processo:', error);
+    appLogger.error('💥 Erro geral no processo:', { data: [error] });
     return false;
   }
 }
@@ -152,15 +153,15 @@ export async function checkExistingTemplates() {
       .select('id', { count: 'exact' });
 
     if (error) {
-      console.error('Erro ao verificar templates:', error);
+      appLogger.error('Erro ao verificar templates:', { data: [error] });
       return false;
     }
 
     const count = data?.length || 0;
-    console.log(`📊 Templates existentes: ${count}`);
+    appLogger.info(`📊 Templates existentes: ${count}`);
     return count > 0;
   } catch (error) {
-    console.error('Erro na verificação:', error);
+    appLogger.error('Erro na verificação:', { data: [error] });
     return false;
   }
 }
@@ -169,15 +170,15 @@ export async function checkExistingTemplates() {
  * Função principal para inicializar templates
  */
 export async function initializeTemplates() {
-  console.log('🔧 Verificando estado dos templates...');
+  appLogger.info('🔧 Verificando estado dos templates...');
 
   const hasTemplates = await checkExistingTemplates();
 
   if (hasTemplates) {
-    console.log('✅ Templates já existem no banco de dados.');
+    appLogger.info('✅ Templates já existem no banco de dados.');
     return true;
   }
 
-  console.log('⚠️ Nenhum template encontrado. Iniciando população...');
+  appLogger.info('⚠️ Nenhum template encontrado. Iniciando população...');
   return await populateInitialTemplates();
 }

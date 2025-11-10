@@ -16,6 +16,7 @@ import {
     Smartphone,
     AlertCircle,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -158,7 +159,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 .select('*');
 
             if (sessionsError) {
-                console.error('Erro ao buscar sessões:', sessionsError);
+                appLogger.error('Erro ao buscar sessões:', { data: [sessionsError] });
                 return;
             }
 
@@ -168,7 +169,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 .select('*');
 
             if (resultsError) {
-                console.error('Erro ao buscar resultados:', resultsError);
+                appLogger.error('Erro ao buscar resultados:', { data: [resultsError] });
             }
 
             // Processar dados
@@ -176,7 +177,7 @@ export const AnalyticsDashboard: React.FC = () => {
             setAnalytics(processedData);
 
         } catch (error) {
-            console.error('Erro ao buscar analytics:', error);
+            appLogger.error('Erro ao buscar analytics:', { data: [error] });
         } finally {
             setLoading(false);
         }
@@ -306,7 +307,7 @@ export const AnalyticsDashboard: React.FC = () => {
         let mounted = true;
         getCachedImport('recharts-bundle', loadRecharts)
             .then((mod) => { if (mounted) setCharts(mod); })
-            .catch((err) => console.warn('Falha ao carregar Recharts dinamicamente:', err));
+            .catch((err) => appLogger.warn('Falha ao carregar Recharts dinamicamente:', { data: [err] }));
         return () => { mounted = false; };
     }, []);
 

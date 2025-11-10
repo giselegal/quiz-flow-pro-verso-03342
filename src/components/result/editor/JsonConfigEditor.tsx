@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Download, Upload, Save } from 'lucide-react';
 import { exportProjectAsJson } from '@/lib/utils/exportUtils';
 import { useToast } from '@/components/ui/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface JsonConfigEditorProps {
   config: any;
@@ -31,7 +32,7 @@ export const JsonConfigEditor: React.FC<JsonConfigEditorProps> = ({ config, onUp
         description: 'As alterações foram salvas com sucesso',
       });
     } catch (error) {
-      console.error('Error parsing JSON:', error);
+      appLogger.error('Error parsing JSON:', { data: [error] });
       toast({
         title: 'Erro ao salvar',
         description: 'JSON inválido. Verifique o formato e tente novamente.',
@@ -58,7 +59,7 @@ export const JsonConfigEditor: React.FC<JsonConfigEditorProps> = ({ config, onUp
             description: 'O arquivo foi importado com sucesso',
           });
         } catch (error) {
-          console.error('Error parsing imported JSON:', error);
+          appLogger.error('Error parsing imported JSON:', { data: [error] });
           toast({
             title: 'Erro ao importar',
             description: 'Arquivo JSON inválido',

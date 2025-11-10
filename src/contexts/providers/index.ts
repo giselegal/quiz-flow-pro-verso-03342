@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🏗️ PROVIDERS INDEX - FASE 3 LIMPEZA
  *
@@ -36,7 +37,7 @@ export const assertNoLegacyProvidersRuntime = () => {
     const legacyDetected = (globalThis as any).__LEGACY_PROVIDER_USED__;
     if (legacyDetected) {
       // eslint-disable-next-line no-console
-      console.error('❌ Legacy provider foi utilizado após fase de limpeza:', legacyDetected);
+      appLogger.error('❌ Legacy provider foi utilizado após fase de limpeza:', { data: [legacyDetected] });
     }
   }
 };

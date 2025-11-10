@@ -7,6 +7,7 @@
 
 import { useEditor } from '@/hooks/useEditor';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface LegacyEditorAPI {
     funnelContext: FunnelContext;
@@ -33,9 +34,7 @@ export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
     const editorContext = useEditor();
 
     if (enableWarnings) {
-        console.warn(
-            '⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditor diretamente.',
-        );
+        appLogger.warn('⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditor diretamente.');
     }
 
     return {

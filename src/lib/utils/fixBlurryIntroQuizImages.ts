@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // @ts-nocheck
 /**
  * Utilitário otimizado para corrigir imagens borradas na seção de introdução do quiz
@@ -70,7 +71,7 @@ export const fixBlurryIntroQuizImages = (): number => {
     process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
 
   if (isDevEnvironment) {
-    console.log('Iniciando correção de imagens...');
+    appLogger.info('Iniciando correção de imagens...');
   }
 
   // Usar seletores específicos e limitar escopo para melhor desempenho
@@ -123,7 +124,7 @@ export const fixBlurryIntroQuizImages = (): number => {
         processImageBatch(images, endIdx, batchSize);
       });
     } else if (isDevEnvironment) {
-      console.log(`Correção finalizada: ${count} imagens otimizadas`);
+      appLogger.info(`Correção finalizada: ${count} imagens otimizadas`);
     }
   };
 

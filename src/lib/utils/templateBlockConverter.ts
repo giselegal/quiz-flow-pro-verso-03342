@@ -1,4 +1,5 @@
 import { Block } from '@/types/editor';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Template Block Converter - Converte templates TSX para blocos JSON editáveis
@@ -13,7 +14,7 @@ export class TemplateBlockConverter {
    */
   static convertTsxTemplateToBlocks(templateBlocks: any[]): Block[] {
     if (!Array.isArray(templateBlocks)) {
-      console.warn('Template não é array:', templateBlocks);
+      appLogger.warn('Template não é array:', { data: [templateBlocks] });
       return [];
     }
 
@@ -83,7 +84,7 @@ export class TemplateBlockConverter {
     userData?: any,
   ): Promise<Block[]> {
     if (!templateFunction) {
-      console.warn(`Template function não encontrada para etapa ${stepNumber}`);
+      appLogger.warn(`Template function não encontrada para etapa ${stepNumber}`);
       return this.generateFallbackBlocks(stepNumber);
     }
 
@@ -91,13 +92,13 @@ export class TemplateBlockConverter {
       const templateResult = templateFunction(userData);
 
       if (!Array.isArray(templateResult)) {
-        console.warn(`Template da etapa ${stepNumber} não retornou array:`, templateResult);
+        appLogger.warn(`Template da etapa ${stepNumber} não retornou array:`, { data: [templateResult] });
         return this.generateFallbackBlocks(stepNumber);
       }
 
       return this.convertTsxTemplateToBlocks(templateResult);
     } catch (error) {
-      console.error(`Erro ao converter template da etapa ${stepNumber}:`, error);
+      appLogger.error(`Erro ao converter template da etapa ${stepNumber}:`, { data: [error] });
       return this.generateFallbackBlocks(stepNumber);
     }
   }

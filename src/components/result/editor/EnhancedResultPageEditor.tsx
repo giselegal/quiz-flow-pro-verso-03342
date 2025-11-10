@@ -5,6 +5,7 @@ import { Block, EditorBlock } from '@/types/editor';
 import { ResultPageVisualEditor } from './ResultPageVisualEditor';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Save, RefreshCw } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EnhancedResultPageEditorProps {
   selectedStyle?: StyleResult;
@@ -36,7 +37,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
   };
 
   const handleSave = () => {
-    console.log('Saving blocks:', blocks);
+    appLogger.info('Saving blocks:', { data: [blocks] });
     if (onSave && initialFunnel) {
       onSave(initialFunnel);
     }

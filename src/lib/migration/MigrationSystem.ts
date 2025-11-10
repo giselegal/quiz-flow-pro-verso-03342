@@ -11,6 +11,7 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // === TIPOS PARA MIGRAÇÃO ===
 
@@ -208,7 +209,7 @@ export class MigrationSystem {
      * Analisa projeto para identificar alvos de migração
      */
     async analyzeProject(sourceDir: string): Promise<MigrationTarget[]> {
-        console.log('🔍 Analyzing project for migration targets...');
+        appLogger.info('🔍 Analyzing project for migration targets...');
 
         const targets: MigrationTarget[] = [];
         const files = await this.scanDirectory(sourceDir);
@@ -228,7 +229,7 @@ export class MigrationSystem {
             return complexityOrder[a.estimatedComplexity] - complexityOrder[b.estimatedComplexity];
         });
 
-        console.log(`📊 Found ${targets.length} files that need migration`);
+        appLogger.info(`📊 Found ${targets.length} files that need migration`);
         return targets;
     }
 
@@ -243,7 +244,7 @@ export class MigrationSystem {
         this.dryRun = options.dryRun || false;
         const startTime = Date.now();
 
-        console.log(`🚀 Starting migration${this.dryRun ? ' (DRY RUN)' : ''}...`);
+        appLogger.info(`🚀 Starting migration${this.dryRun ? ' (DRY RUN)' : ''}...`);
 
         // Cria diretório de backup se necessário
         if (!options.skipBackup && !this.dryRun) {
@@ -268,7 +269,7 @@ export class MigrationSystem {
                 continue;
             }
 
-            console.log(`📝 Migrating: ${target.filePath}`);
+            appLogger.info(`📝 Migrating: ${target.filePath}`);
             const result = await this.migrateFile(target, !options.skipBackup);
             results.push(result);
 
@@ -276,7 +277,7 @@ export class MigrationSystem {
                 migratedCount++;
             } else {
                 failedCount++;
-                console.error(`❌ Failed to migrate ${target.filePath}:`, result.errors);
+                appLogger.error(`❌ Failed to migrate ${target.filePath}:`, { data: [result.errors] });
             }
         }
 
@@ -293,7 +294,7 @@ export class MigrationSystem {
             estimatedSavings,
         };
 
-        console.log('✅ Migration completed!');
+        appLogger.info('✅ Migration completed!');
         this.printMigrationSummary(report);
 
         return report;
@@ -336,12 +337,12 @@ export class MigrationSystem {
 
                     if (beforeTransform !== transformedContent) {
                         result.appliedRules.push(rule.id);
-                        console.log(`  ✓ Applied: ${rule.name}`);
+                        appLogger.info(`  ✓ Applied: ${rule.name}`);
                     }
                 } catch (error) {
                     const errorMsg = `Failed to apply rule ${rule.id}: ${error}`;
                     result.errors.push(errorMsg);
-                    console.warn(`  ⚠️ ${errorMsg}`);
+                    appLogger.warn(`  ⚠️ ${errorMsg}`);
                 }
             }
 
@@ -398,7 +399,7 @@ export class MigrationSystem {
             };
 
         } catch (error) {
-            console.warn(`Failed to analyze ${filePath}:`, error);
+            appLogger.warn(`Failed to analyze ${filePath}:`, { data: [error] });
             return null;
         }
     }
@@ -462,7 +463,7 @@ export class MigrationSystem {
 
         // Se removeu muitos imports (> 50%), pode ser um problema
         if (transformedImports < originalImports * 0.5) {
-            console.warn('Warning: Significant reduction in imports detected');
+            appLogger.warn('Warning: Significant reduction in imports detected');
         }
 
         return true;
@@ -563,15 +564,15 @@ To rollback a file, copy it back from here to its original location.
      */
     private printMigrationSummary(report: MigrationReport): void {
         console.group('📊 Migration Summary');
-        console.log(`✅ Successfully migrated: ${report.migratedFiles} files`);
-        console.log(`❌ Failed migrations: ${report.failedFiles} files`);
-        console.log(`⏭️  Skipped files: ${report.skippedFiles} files`);
-        console.log(`⏱️  Total time: ${(report.totalTime / 1000).toFixed(2)}s`);
+        appLogger.info(`✅ Successfully migrated: ${report.migratedFiles} files`);
+        appLogger.info(`❌ Failed migrations: ${report.failedFiles} files`);
+        appLogger.info(`⏭️  Skipped files: ${report.skippedFiles} files`);
+        appLogger.info(`⏱️  Total time: ${(report.totalTime / 1000).toFixed(2)}s`);
 
         console.group('💾 Estimated Savings');
-        console.log(`Lines of code: ${report.estimatedSavings.lines}`);
-        console.log(`File size: ${report.estimatedSavings.kb}KB`);
-        console.log(`Files consolidated: ${report.estimatedSavings.files}`);
+        appLogger.info(`Lines of code: ${report.estimatedSavings.lines}`);
+        appLogger.info(`File size: ${report.estimatedSavings.kb}KB`);
+        appLogger.info(`Files consolidated: ${report.estimatedSavings.files}`);
         console.groupEnd();
 
         if (report.failedFiles > 0) {
@@ -579,7 +580,7 @@ To rollback a file, copy it back from here to its original location.
             report.results
                 .filter(r => !r.success)
                 .forEach(r => {
-                    console.log(`${r.filePath}: ${r.errors.join(', ')}`);
+                    appLogger.info(`${r.filePath}: ${r.errors.join(', ')}`);
                 });
             console.groupEnd();
         }
@@ -598,10 +599,10 @@ To rollback a file, copy it back from here to its original location.
             const backupContent = await fs.readFile(backupPath, 'utf-8');
             await fs.writeFile(filePath, backupContent, 'utf-8');
 
-            console.log(`✅ Rolled back: ${filePath}`);
+            appLogger.info(`✅ Rolled back: ${filePath}`);
             return true;
         } catch (error) {
-            console.error(`❌ Rollback failed for ${filePath}:`, error);
+            appLogger.error(`❌ Rollback failed for ${filePath}:`, { data: [error] });
             return false;
         }
     }
@@ -621,8 +622,8 @@ export async function migrateProject(options: {
 } = {}) {
     const sourceDir = options.sourceDir || './src';
 
-    console.log('🎯 Starting Consolidated Architecture Migration');
-    console.log('This will migrate legacy code to the new consolidated architecture');
+    appLogger.info('🎯 Starting Consolidated Architecture Migration');
+    appLogger.info('This will migrate legacy code to the new consolidated architecture');
 
     const report = await migrationSystem.migrate(sourceDir, {
         dryRun: options.dryRun || false,
@@ -636,12 +637,12 @@ export async function migrateProject(options: {
  * Analisa projeto sem fazer migração
  */
 export async function analyzeForMigration(sourceDir: string = './src') {
-    console.log('🔍 Analyzing project for migration opportunities...');
+    appLogger.info('🔍 Analyzing project for migration opportunities...');
 
     const targets = await migrationSystem.analyzeProject(sourceDir);
 
     console.group('📊 Migration Analysis');
-    console.log(`Total files needing migration: ${targets.length}`);
+    appLogger.info(`Total files needing migration: ${targets.length}`);
 
     const byComplexity = {
         low: targets.filter(t => t.estimatedComplexity === 'low').length,
@@ -649,14 +650,14 @@ export async function analyzeForMigration(sourceDir: string = './src') {
         high: targets.filter(t => t.estimatedComplexity === 'high').length,
     };
 
-    console.log(`Complexity breakdown: Low: ${byComplexity.low}, Medium: ${byComplexity.medium}, High: ${byComplexity.high}`);
+    appLogger.info(`Complexity breakdown: Low: ${byComplexity.low}, Medium: ${byComplexity.medium}, High: ${byComplexity.high}`);
 
     const byType = targets.reduce((acc, target) => {
         acc[target.type] = (acc[target.type] || 0) + 1;
         return acc;
     }, {} as Record<string, number>);
 
-    console.log('By type:', byType);
+    appLogger.info('By type:', { data: [byType] });
     console.groupEnd();
 
     return targets;

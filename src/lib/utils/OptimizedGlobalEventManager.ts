@@ -103,7 +103,7 @@ class OptimizedGlobalEventManager {
                     try {
                         subscription.callback(eventData);
                     } catch (error) {
-                        console.warn(`[GlobalEventManager] Erro no callback para ${eventType}:`, error);
+                        appLogger.warn(`[GlobalEventManager] Erro no callback para ${eventType}:`, { data: [error] });
                     }
                 });
             });
@@ -234,6 +234,7 @@ export const GlobalEventManager = OptimizedGlobalEventManager.getInstance();
 
 // ✅ HOOK OTIMIZADO PARA REACT
 import { useEffect, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const useGlobalEventManager = (componentId?: string) => {
     const managerRef = useRef(

@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🚀 ROBUSTNESS OPTIMIZER - Sistema de Otimizações Implementadas
  * 
@@ -26,7 +27,7 @@ export class RobustnessOptimizer {
   }
 
   static logOptimizationSuccess(optimization: string): void {
-    console.log(`✅ Robustness Optimization Applied: ${optimization}`);
+    appLogger.info(`✅ Robustness Optimization Applied: ${optimization}`);
   }
 
   static generateReport(): string {

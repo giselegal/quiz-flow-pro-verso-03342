@@ -7,6 +7,7 @@ import {
   UpdateComponentInput,
 } from '@/services/funnelComponentsService';
 import { generateUniqueInstanceKey } from '@/lib/utils/funnelIdentity';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseFunnelComponentsProps {
   funnelId: string;
@@ -61,27 +62,27 @@ export const useFunnelComponents = ({
    */
   const loadComponents = useCallback(async () => {
     if (!isSupabaseEnabled) {
-      console.log('📋 Supabase desabilitado, usando estado local');
+      appLogger.info('📋 Supabase desabilitado, usando estado local');
       return;
     }
 
     if (!funnelId || !stepNumber) {
-      console.warn('⚠️ FunnelId ou stepNumber inválido:', { funnelId, stepNumber });
+      appLogger.warn('⚠️ FunnelId ou stepNumber inválido:', { data: [{ funnelId, stepNumber }] });
       return;
     }
 
-    console.log(`🔄 Carregando componentes: ${funnelId}/${stepNumber}`);
+    appLogger.info(`🔄 Carregando componentes: ${funnelId}/${stepNumber}`);
     setIsLoading(true);
     setError(null);
 
     try {
       const data = await funnelComponentsService.getComponents({ funnelId, stepNumber });
       setComponents(data);
-      console.log(`✅ Componentes carregados: ${data.length}`);
+      appLogger.info(`✅ Componentes carregados: ${data.length}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);
-      console.error('❌ Erro ao carregar componentes:', err);
+      appLogger.error('❌ Erro ao carregar componentes:', { data: [err] });
 
       toast({
         title: 'Erro ao carregar componentes',
@@ -98,9 +99,7 @@ export const useFunnelComponents = ({
    */
   const addComponent = useCallback(
     async (componentTypeKey: string, position?: number): Promise<ComponentInstance | null> => {
-      console.log(
-        `➕ Adicionando componente: ${componentTypeKey} na posição ${position || 'final'}`,
-      );
+      appLogger.info(`➕ Adicionando componente: ${componentTypeKey} na posição ${position || 'final'}`);
 
       if (!isSupabaseEnabled) {
         // Fallback local sem persistência
@@ -157,7 +156,7 @@ export const useFunnelComponents = ({
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erro ao adicionar componente';
         setError(errorMessage);
-        console.error('❌ Erro ao adicionar componente:', err);
+        appLogger.error('❌ Erro ao adicionar componente:', { data: [err] });
 
         toast({
           title: 'Erro ao adicionar componente',
@@ -179,7 +178,7 @@ export const useFunnelComponents = ({
       id: string,
       updates: Partial<UpdateComponentInput>,
     ): Promise<ComponentInstance | null> => {
-      console.log(`🔄 Atualizando componente: ${id}`);
+      appLogger.info(`🔄 Atualizando componente: ${id}`);
 
       if (!isSupabaseEnabled) {
         // Fallback local
@@ -198,7 +197,7 @@ export const useFunnelComponents = ({
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar componente';
         setError(errorMessage);
-        console.error('❌ Erro ao atualizar componente:', err);
+        appLogger.error('❌ Erro ao atualizar componente:', { data: [err] });
 
         toast({
           title: 'Erro ao atualizar componente',
@@ -217,7 +216,7 @@ export const useFunnelComponents = ({
    */
   const deleteComponent = useCallback(
     async (id: string): Promise<boolean> => {
-      console.log(`🗑️ Removendo componente: ${id}`);
+      appLogger.info(`🗑️ Removendo componente: ${id}`);
 
       if (!isSupabaseEnabled) {
         // Fallback local
@@ -240,7 +239,7 @@ export const useFunnelComponents = ({
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erro ao remover componente';
         setError(errorMessage);
-        console.error('❌ Erro ao remover componente:', err);
+        appLogger.error('❌ Erro ao remover componente:', { data: [err] });
 
         toast({
           title: 'Erro ao remover componente',
@@ -259,7 +258,7 @@ export const useFunnelComponents = ({
    */
   const reorderComponents = useCallback(
     async (newOrderIds: string[]): Promise<boolean> => {
-      console.log(`🔀 Reordenando componentes: ${newOrderIds.length} itens`);
+      appLogger.info(`🔀 Reordenando componentes: ${newOrderIds.length} itens`);
 
       // Validação local prévia
       const currentIds = components.map(c => c.id).sort();
@@ -311,7 +310,7 @@ export const useFunnelComponents = ({
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erro ao reordenar componentes';
         setError(errorMessage);
-        console.error('❌ Erro ao reordenar componentes:', err);
+        appLogger.error('❌ Erro ao reordenar componentes:', { data: [err] });
 
         toast({
           title: 'Erro na reordenação',

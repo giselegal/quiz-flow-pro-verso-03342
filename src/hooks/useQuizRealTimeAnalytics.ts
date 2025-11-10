@@ -6,6 +6,7 @@
 
 import { useEffect, useCallback, useState } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizAnalyticsMetrics {
   // Métricas de sessão
@@ -184,9 +185,9 @@ export const useQuizRealTimeAnalytics = (sessionId?: string, funnelId?: string) 
           } as any,
         });
       
-      console.log('📊 Real-time Analytics: Saved to backend');
+      appLogger.info('📊 Real-time Analytics: Saved to backend');
     } catch (error) {
-      console.error('❌ Real-time Analytics: Save failed', error);
+      appLogger.error('❌ Real-time Analytics: Save failed', { data: [error] });
     }
   }, [sessionId, funnelId, stepTimes]);
 
@@ -213,7 +214,7 @@ export const useQuizRealTimeAnalytics = (sessionId?: string, funnelId?: string) 
   useEffect(() => {
     if (sessionId && funnelId) {
       setIsTracking(true);
-      console.log('📊 Real-time Analytics: Started tracking');
+      appLogger.info('📊 Real-time Analytics: Started tracking');
     }
   }, [sessionId, funnelId]);
 

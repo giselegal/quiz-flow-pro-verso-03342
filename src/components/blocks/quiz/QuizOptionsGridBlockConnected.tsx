@@ -10,6 +10,7 @@ import type { QuizConfig, ProcessedOptionsConfig } from '@/types/quiz-config';
 import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
 import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import { QuizBlockProps } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizOptionsGridBlockConnectedProps extends Omit<QuizBlockProps, 'properties'> {
     // Props mínimas - tudo vem da API
@@ -119,7 +120,7 @@ export default function QuizOptionsGridBlockConnected({
             try {
                 (merged as any).options = JSON.parse((merged as any).options);
             } catch (e) {
-                console.warn('Invalid options JSON:', merged.options);
+                appLogger.warn('Invalid options JSON:', { data: [merged.options] });
                 (merged as any).options = [];
             }
         }
@@ -171,9 +172,9 @@ export default function QuizOptionsGridBlockConnected({
             try {
                 await updateProperty(key, value);
                 onConfigUpdate?.(key, value);
-                console.log(`✅ Property updated via API: ${key} =`, value);
+                appLogger.info(`✅ Property updated via API: ${key} =`, { data: [value] });
             } catch (error) {
-                console.error(`❌ Failed to update property ${key}:`, error);
+                appLogger.error(`❌ Failed to update property ${key}:`, { data: [error] });
             }
         }
     };

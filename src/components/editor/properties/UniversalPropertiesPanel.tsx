@@ -27,6 +27,7 @@ import { ChevronRight, Home, FileText, Box } from 'lucide-react';
 import { FunnelContext } from './contexts/FunnelContext';
 import { StepContext } from './contexts/StepContext';
 import { BlockContext } from './contexts/BlockContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -279,7 +280,7 @@ function ContextActions({ context, editor }: ContextActionsProps) {
                     className="flex-1"
                     onClick={() => {
                         // TODO: Implementar duplicação
-                        console.log('Duplicar bloco:', context.blockId);
+                        appLogger.info('Duplicar bloco:', { data: [context.blockId] });
                     }}
                 >
                     Duplicar

@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';
 import { safeGetItem as getCtx, safeSetItem as setCtx } from '@/lib/utils/contextualStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎨 useBrandKit - Hook para gerenciar identidade visual
@@ -73,7 +74,7 @@ export const useBrandKit = () => {
         const crud = useUnifiedCRUDOptional();
         if (crud?.funnelContext) activeContext = crud.funnelContext;
     } catch (error) {
-        console.warn('[useBrandKit] Erro ao obter contexto CRUD:', error);
+        appLogger.warn('[useBrandKit] Erro ao obter contexto CRUD:', { data: [error] });
     }
 
     const [brandKit, setBrandKit] = useState<BrandKitConfig>(() => {
@@ -87,7 +88,7 @@ export const useBrandKit = () => {
                 return { ...DEFAULT_BRAND_KIT, ...parsed };
             }
         } catch (error) {
-            console.warn('⚠️ Erro ao carregar Brand Kit:', error);
+            appLogger.warn('⚠️ Erro ao carregar Brand Kit:', { data: [error] });
         }
         return DEFAULT_BRAND_KIT;
     });
@@ -101,12 +102,12 @@ export const useBrandKit = () => {
             try { 
                 localStorage.removeItem(STORAGE_KEY); 
             } catch (error) {
-                console.warn('[useBrandKit] Erro ao remover storage legado:', error);
+                appLogger.warn('[useBrandKit] Erro ao remover storage legado:', { data: [error] });
             }
             // Aplicar CSS variables automaticamente
             applyBrandKitToDOM(brandKit);
         } catch (error) {
-            console.warn('⚠️ Erro ao salvar Brand Kit:', error);
+            appLogger.warn('⚠️ Erro ao salvar Brand Kit:', { data: [error] });
         }
     }, [brandKit, activeContext]);
 
@@ -162,7 +163,7 @@ export const useBrandKit = () => {
             applyBrandKit(imported);
             return true;
         } catch (error) {
-            console.error('❌ Erro ao importar Brand Kit:', error);
+            appLogger.error('❌ Erro ao importar Brand Kit:', { data: [error] });
             return false;
         }
     }, [applyBrandKit]);
@@ -195,5 +196,5 @@ const applyBrandKitToDOM = (brandKit: BrandKitConfig) => {
     root.style.setProperty('--brand-font-heading', brandKit.fonts.heading);
     root.style.setProperty('--brand-font-body', brandKit.fonts.body);
 
-    console.log('🎨 Brand Kit aplicado ao DOM:', brandKit.name);
+    appLogger.info('🎨 Brand Kit aplicado ao DOM:', { data: [brandKit.name] });
 };

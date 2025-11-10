@@ -12,6 +12,7 @@
 
 import { StorageService } from './StorageService';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export class ContextualStorageService {
   constructor(private readonly context: FunnelContext) {}
@@ -74,7 +75,7 @@ export class ContextualStorageService {
         }
       }
     } catch (e) {
-      console.warn('[ContextualStorage] Erro ao listar chaves:', e);
+      appLogger.warn('[ContextualStorage] Erro ao listar chaves:', { data: [e] });
     }
 
     return keys;
@@ -98,11 +99,11 @@ export class ContextualStorageService {
       }
 
       keysToRemove.forEach(key => StorageService.safeRemove(key));
-      console.log(`🗑️ [ContextualStorage] Limpos ${keysToRemove.length} itens do contexto ${this.context}`);
+      appLogger.info(`🗑️ [ContextualStorage] Limpos ${keysToRemove.length} itens do contexto ${this.context}`);
       
       return keysToRemove.length;
     } catch (e) {
-      console.warn('[ContextualStorage] Erro ao limpar contexto:', e);
+      appLogger.warn('[ContextualStorage] Erro ao limpar contexto:', { data: [e] });
       return 0;
     }
   }
@@ -120,13 +121,13 @@ export class ContextualStorageService {
         if (success) {
           // Remove chave legada após migração bem-sucedida
           StorageService.safeRemove(legacyKey);
-          console.log(`🔄 [ContextualStorage] Migrado: ${legacyKey} → ${this.context}-${targetKey}`);
+          appLogger.info(`🔄 [ContextualStorage] Migrado: ${legacyKey} → ${this.context}-${targetKey}`);
           return true;
         }
       }
       return false;
     } catch (e) {
-      console.warn('[ContextualStorage] Erro na migração:', e);
+      appLogger.warn('[ContextualStorage] Erro na migração:', { data: [e] });
       return false;
     }
   }

@@ -19,6 +19,7 @@ import {
   RefreshCw,
   TrendingUp,
 } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export const SecurityDashboard: React.FC = () => {
   const {
@@ -45,7 +46,7 @@ export const SecurityDashboard: React.FC = () => {
         getSystemStatus(),
       ]);
     } catch (err) {
-      console.error('Erro ao atualizar:', err);
+      appLogger.error('Erro ao atualizar:', { data: [err] });
     }
   };
 
@@ -55,7 +56,7 @@ export const SecurityDashboard: React.FC = () => {
       const data = await getMetrics(serviceName, 24);
       setMetricsData(data);
     } catch (err) {
-      console.error('Erro ao carregar métricas:', err);
+      appLogger.error('Erro ao carregar métricas:', { data: [err] });
     } finally {
       setLoadingMetrics(false);
     }

@@ -11,6 +11,7 @@ import { DefaultFormatter } from './formatters/DefaultFormatter';
 import { JSONFormatter } from './formatters/JSONFormatter';
 import { DevelopmentFormatter } from './formatters/DevelopmentFormatter';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface LogLevel {
     TRACE: 0;
@@ -180,7 +181,7 @@ class LoggerService {
                 return transport.log(entry);
             } catch (error) {
                 // Fallback to console if transport fails
-                console.error('Transport error:', error);
+                appLogger.error('Transport error:', { data: [error] });
                 return Promise.resolve();
             }
         });
@@ -189,7 +190,7 @@ class LoggerService {
             await Promise.allSettled(promises);
         } else {
             // Emergency fallback to console
-            console.log(`[${level}] ${context}: ${message}`, data);
+            appLogger.info(`[${level}] ${context}: ${message}`, { data: [data] });
         }
     }
 
@@ -198,7 +199,7 @@ class LoggerService {
             try {
                 return filter.shouldLog(entry);
             } catch (error) {
-                console.warn('Filter error:', error);
+                appLogger.warn('Filter error:', { data: [error] });
                 return true; // Fail open
             }
         });

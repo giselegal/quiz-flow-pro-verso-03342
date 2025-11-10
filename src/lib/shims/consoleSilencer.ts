@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // Silencia logs de debug/informação em produção, mantendo warn/error
 // Ative logs definindo VITE_DEBUG_LOGS=true
 
@@ -21,7 +22,7 @@ if (isProd && !debugEnabled && typeof window !== 'undefined') {
             /DevTools failed to load source map/i,
             /Download the React DevTools/i,
         ];
-        const originalWarn = original.warn?.bind(original) || console.warn.bind(console);
+        const originalWarn = original.warn?.bind(original) || appLogger.warn(String(console));
         console.warn = function (...args: any[]) {
             const msg = args?.[0];
             if (typeof msg === 'string' && noisyWarnings.some(r => r.test(msg))) return;

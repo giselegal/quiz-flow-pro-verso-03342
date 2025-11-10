@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface DeprecatedRouteWarningProps {
   routePath: string;
@@ -36,7 +37,7 @@ export const DeprecatedRouteWarning: React.FC<DeprecatedRouteWarningProps> = ({
     });
 
     // Console warning
-    console.warn(`
+    appLogger.warn(`
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║                        🚨 AVISO: ROTA OBSOLETA                             ║
 ╠════════════════════════════════════════════════════════════════════════════╣

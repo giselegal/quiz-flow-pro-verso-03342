@@ -10,6 +10,7 @@ import { toast } from '@/hooks/use-toast';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ContextualFunnelService } from '@/services/core/ContextualFunnelService';
 import type { ContextualFunnelData } from '@/types/funnel';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface FunnelData {
     id: string;
@@ -95,7 +96,7 @@ export const useContextualEditorPersistence = (
         async (data: FunnelData): Promise<{ success: boolean; error?: string }> => {
             setIsSaving(true);
             try {
-                console.log(`💾 Salvando funil no contexto ${context}:`, data.id);
+                appLogger.info(`💾 Salvando funil no contexto ${context}:`, { data: [data.id] });
 
                 const contextualData = convertToContextualData(data);
                 await service.saveFunnel(contextualData); // Now compatible with UnifiedFunnelData
@@ -107,7 +108,7 @@ export const useContextualEditorPersistence = (
 
                 return { success: true };
             } catch (error) {
-                console.error(`❌ Erro ao salvar funil no contexto ${context}:`, error);
+                appLogger.error(`❌ Erro ao salvar funil no contexto ${context}:`, { data: [error] });
                 toast({
                     title: 'Erro',
                     description: 'Erro inesperado ao salvar',
@@ -125,21 +126,21 @@ export const useContextualEditorPersistence = (
         async (id: string): Promise<FunnelData | null> => {
             setIsLoading(true);
             try {
-                console.log(`📂 Carregando funil do contexto ${context}:`, id);
+                appLogger.info(`📂 Carregando funil do contexto ${context}:`, { data: [id] });
 
                 const contextualData = await service.loadFunnel(id);
 
                 if (!contextualData) {
-                    console.log(`⚠️ Funil ${id} não encontrado no contexto ${context}`);
+                    appLogger.info(`⚠️ Funil ${id} não encontrado no contexto ${context}`);
                     return null;
                 }
 
                 const funnelData: any = convertFromContextualData(contextualData);
-                console.log(`✅ Funil carregado do contexto ${context}:`, funnelData.id);
+                appLogger.info(`✅ Funil carregado do contexto ${context}:`, { data: [funnelData.id] });
 
                 return funnelData;
             } catch (error) {
-                console.error(`❌ Erro ao carregar funil do contexto ${context}:`, error);
+                appLogger.error(`❌ Erro ao carregar funil do contexto ${context}:`, { data: [error] });
                 toast({
                     title: 'Erro',
                     description: 'Erro ao carregar funil',
@@ -156,15 +157,15 @@ export const useContextualEditorPersistence = (
     const listFunnels = useCallback(async (): Promise<any[]> => {
         setIsLoading(true);
         try {
-            console.log(`📋 Listando funis do contexto ${context}`);
+            appLogger.info(`📋 Listando funis do contexto ${context}`);
 
             const contextualFunnels = await service.listFunnels();
             const funnelsList = contextualFunnels.map(convertFromContextualData);
 
-            console.log(`✅ ${funnelsList.length} funis encontrados no contexto ${context}`);
+            appLogger.info(`✅ ${funnelsList.length} funis encontrados no contexto ${context}`);
             return funnelsList;
         } catch (error) {
-            console.error(`❌ Erro ao listar funis do contexto ${context}:`, error);
+            appLogger.error(`❌ Erro ao listar funis do contexto ${context}:`, { data: [error] });
             toast({
                 title: 'Erro',
                 description: 'Erro ao listar funis',
@@ -179,7 +180,7 @@ export const useContextualEditorPersistence = (
     const deleteFunnel = useCallback(
         async (id: string): Promise<{ success: boolean; error?: string }> => {
             try {
-                console.log(`🗑️ Deletando funil do contexto ${context}:`, id);
+                appLogger.info(`🗑️ Deletando funil do contexto ${context}:`, { data: [id] });
 
                 const success = await service.deleteFunnel(id);
 
@@ -193,7 +194,7 @@ export const useContextualEditorPersistence = (
                     throw new Error('Falha ao deletar funil');
                 }
             } catch (error) {
-                console.error(`❌ Erro ao deletar funil do contexto ${context}:`, error);
+                appLogger.error(`❌ Erro ao deletar funil do contexto ${context}:`, { data: [error] });
                 toast({
                     title: 'Erro',
                     description: 'Erro inesperado ao deletar',
@@ -208,7 +209,7 @@ export const useContextualEditorPersistence = (
     const publishFunnel = useCallback(
         async (id: string): Promise<{ success: boolean; error?: string }> => {
             try {
-                console.log(`🚀 Publicando funil do contexto ${context}:`, id);
+                appLogger.info(`🚀 Publicando funil do contexto ${context}:`, { data: [id] });
 
                 // Carregar funil
                 const funnel = await service.loadFunnel(id);
@@ -231,7 +232,7 @@ export const useContextualEditorPersistence = (
                 });
                 return { success: true };
             } catch (error) {
-                console.error(`❌ Erro ao publicar funil do contexto ${context}:`, error);
+                appLogger.error(`❌ Erro ao publicar funil do contexto ${context}:`, { data: [error] });
                 toast({
                     title: 'Erro',
                     description: 'Erro inesperado ao publicar',

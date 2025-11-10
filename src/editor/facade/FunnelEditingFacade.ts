@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // =============================================================
 // FunnelEditingFacade - Contrato principal (fase 1)
 // Objetivo: abstrair operações de edição de funis (inicialmente Quiz)
@@ -115,7 +116,7 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
     // -------------- helpers internos --------------
     private emit<E extends FunnelFacadeEvent>(event: E, payload: FunnelFacadeEventMap[E]) {
         this.listeners[event]?.forEach(h => {
-            try { h(payload); } catch (err) { console.error('[FunnelFacade listener error]', event, err); }
+            try { h(payload); } catch (err) { appLogger.error('[FunnelFacade listener error]', { data: [event, err] }); }
         });
     }
 

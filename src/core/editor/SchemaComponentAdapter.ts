@@ -7,6 +7,7 @@
 
 import { schemaInterpreter, BlockTypeSchema } from '@/core/schema/SchemaInterpreter';
 import { Box, Type, Image, Square, Brain, Target, Layout as LayoutIcon } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Mapeamento de categorias para ícones
 const CATEGORY_ICONS: Record<string, any> = {
@@ -88,7 +89,7 @@ export function loadComponentsFromRegistry(): ComponentLibraryItem[] {
     });
   });
 
-  console.log(`[SchemaAdapter] Carregados ${items.length} componentes do registry`);
+  appLogger.info(`[SchemaAdapter] Carregados ${items.length} componentes do registry`);
   return items;
 }
 

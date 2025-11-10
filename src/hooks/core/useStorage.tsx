@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizData {
   answers: any[];
@@ -53,7 +54,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
           }),
         );
       } catch (error) {
-        console.error('Erro ao salvar no localStorage:', error);
+        appLogger.error('Erro ao salvar no localStorage:', { data: [error] });
         setSaveError('Erro ao salvar localmente');
       }
     },
@@ -74,7 +75,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
           }),
         );
       } catch (error) {
-        console.error('Erro ao salvar no sessionStorage:', error);
+        appLogger.error('Erro ao salvar no sessionStorage:', { data: [error] });
         setSaveError('Erro ao salvar na sessão');
       }
     },
@@ -92,7 +93,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
         return data;
       }
     } catch (error) {
-      console.error('Erro ao carregar do localStorage:', error);
+      appLogger.error('Erro ao carregar do localStorage:', { data: [error] });
     }
     return null;
   }, [localKey, persistToLocal]);
@@ -108,7 +109,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
         return data;
       }
     } catch (error) {
-      console.error('Erro ao carregar do sessionStorage:', error);
+      appLogger.error('Erro ao carregar do sessionStorage:', { data: [error] });
     }
     return null;
   }, [sessionKey, persistToSession]);
@@ -126,7 +127,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
 
         setLastSaved(new Date());
       } catch (error) {
-        console.error('Erro ao salvar dados:', error);
+        appLogger.error('Erro ao salvar dados:', { data: [error] });
         setSaveError('Erro ao salvar dados');
       } finally {
         setIsSaving(false);
@@ -160,7 +161,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
       setLastSaved(null);
       setSaveError(null);
     } catch (error) {
-      console.error('Erro ao limpar dados:', error);
+      appLogger.error('Erro ao limpar dados:', { data: [error] });
       setSaveError('Erro ao limpar dados');
     }
   }, [localKey, sessionKey, persistToLocal, persistToSession]);
@@ -207,7 +208,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
   // Backup para servidor (placeholder)
   const backupToServer = useCallback(async (data: QuizData) => {
     // TODO: Implementar backup para servidor
-    console.log('Backup para servidor:', data);
+    appLogger.info('Backup para servidor:', { data: [data] });
     return Promise.resolve();
   }, []);
 

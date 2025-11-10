@@ -5,6 +5,7 @@
 
 import { useEffect, useCallback, useState } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ProductionMetrics {
   bundleSize: number;
@@ -71,7 +72,7 @@ export const useProductionOptimization = () => {
       }
 
     } catch (error) {
-      console.warn('⚠️ [OPTIMIZATION] Erro ao coletar métricas:', error);
+      appLogger.warn('⚠️ [OPTIMIZATION] Erro ao coletar métricas:', { data: [error] });
     }
   }, []);
 
@@ -84,7 +85,7 @@ export const useProductionOptimization = () => {
     try {
       // Code splitting automático baseado em rotas
       if (settings.enableCodeSplitting) {
-        console.log('📦 [OPTIMIZATION] Code splitting ativado');
+        appLogger.info('📦 [OPTIMIZATION] Code splitting ativado');
       }
 
       // Lazy loading para imagens e componentes
@@ -102,26 +103,26 @@ export const useProductionOptimization = () => {
         });
         
         images.forEach(img => imageObserver.observe(img));
-        console.log('🖼️ [OPTIMIZATION] Lazy loading ativado para', images.length, 'imagens');
+        appLogger.info('🖼️ [OPTIMIZATION] Lazy loading ativado para', { data: [images.length, 'imagens'] });
       }
 
       // Service Worker para caching
       if (settings.enableCaching && 'serviceWorker' in navigator) {
         try {
           await navigator.serviceWorker.register('/sw.js');
-          console.log('💾 [OPTIMIZATION] Service Worker registrado');
+          appLogger.info('💾 [OPTIMIZATION] Service Worker registrado');
         } catch (error) {
-          console.warn('⚠️ [OPTIMIZATION] Erro ao registrar Service Worker:', error);
+          appLogger.warn('⚠️ [OPTIMIZATION] Erro ao registrar Service Worker:', { data: [error] });
         }
       }
 
       // Compressão de recursos (via headers)
       if (settings.enableCompression) {
-        console.log('🗜️ [OPTIMIZATION] Compressão ativada');
+        appLogger.info('🗜️ [OPTIMIZATION] Compressão ativada');
       }
 
     } catch (error) {
-      console.error('❌ [OPTIMIZATION] Erro ao aplicar otimizações:', error);
+      appLogger.error('❌ [OPTIMIZATION] Erro ao aplicar otimizações:', { data: [error] });
     } finally {
       setIsOptimizing(false);
     }

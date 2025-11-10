@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { BarChart3, TrendingUp, Clock, Users } from 'lucide-react';
 import { StorageService } from '@/services/core/StorageService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizMetrics {
   calculationAttempts: number;
@@ -120,7 +121,7 @@ export const QuizResultMetrics: React.FC = () => {
       StorageService.safeSetJSON('quiz-metrics', updated);
 
       // Log para debugging
-      console.error('❌ [Metrics] Cálculo falhou:', error);
+      appLogger.error('❌ [Metrics] Cálculo falhou:', { data: [error] });
     };
 
     (window as any).__quizMetrics = {

@@ -26,6 +26,7 @@ import React, { useEffect } from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ComponentRendererProps {
   component: QuizComponentData;
@@ -40,10 +41,8 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
 }) => {
   // ⚠️ DEPRECATION WARNING
   useEffect(() => {
-    console.warn(
-      '⚠️ DEPRECATED: ComponentRenderer (quiz/builder) será removido em 21/out/2025. ' +
-      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md',
-    );
+    appLogger.warn('⚠️ DEPRECATED: ComponentRenderer (quiz/builder) será removido em 21/out/2025. ' +
+            'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md');
   }, []);
 
   const data = component.data || {};

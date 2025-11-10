@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🔥 SISTEMA PADRONIZADO DE ERROR HANDLING
  * 
@@ -302,7 +303,7 @@ class ErrorManager {
             try {
                 handler.onError(standardError);
             } catch (handlerError) {
-                console.error('Error in error handler:', handlerError);
+                appLogger.error('Error in error handler:', { data: [handlerError] });
             }
         });
 
@@ -340,7 +341,7 @@ class ErrorManager {
 
         try {
             // Aqui você implementaria as ações de recovery específicas
-            console.info(`Attempting recovery: ${action}`);
+            appLogger.info(`Attempting recovery: ${action}`);
 
             // Notificar handlers sobre a tentativa de recovery
             this.handlers.forEach(handler => {
@@ -349,7 +350,7 @@ class ErrorManager {
 
             return true;
         } catch (recoveryError) {
-            console.error(`Recovery action "${action}" failed:`, recoveryError);
+            appLogger.error(`Recovery action "${action}" failed:`, { data: [recoveryError] });
 
             // Tentar próxima ação de recovery
             return this.attemptRecovery(error, actionIndex + 1);

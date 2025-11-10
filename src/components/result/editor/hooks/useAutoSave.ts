@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseAutoSaveOptions {
   data: any;
@@ -16,7 +17,7 @@ export const useAutoSave = ({ data, onSave, delay = 3000, enabled = true }: UseA
       await onSave(data);
       lastDataRef.current = data;
     } catch (error) {
-      console.error('Auto-save error:', error);
+      appLogger.error('Auto-save error:', { data: [error] });
     }
   }, [data, onSave]);
 

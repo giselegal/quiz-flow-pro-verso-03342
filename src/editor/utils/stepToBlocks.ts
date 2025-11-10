@@ -13,6 +13,7 @@
 
 import { BlockData, StepData } from '@/types/blockTypes';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type EditableQuizStep = QuizStep & { id: string };
 
@@ -302,7 +303,7 @@ export function stepToBlocks(step: EditableQuizStep): BlockData[] {
             return decomposeOfferStep(step);
 
         default:
-            console.warn(`Tipo de step não suportado: ${step.type}`);
+            appLogger.warn(`Tipo de step não suportado: ${step.type}`);
             return [];
     }
 }

@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
 import InlineEditableText from './base/InlineEditableText';

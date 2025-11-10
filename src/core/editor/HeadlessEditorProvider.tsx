@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { QuizFunnelSchema } from '../../types/quiz-schema';
 import { editorDataService } from './services/EditorDataService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface HeadlessEditorContextType {
   schema: QuizFunnelSchema | null;
@@ -39,7 +40,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
       setError(null);
       setIsLoading(true);
 
-      console.log('🔄 Carregando schema para:', targetSchemaId);
+      appLogger.info('🔄 Carregando schema para:', { data: [targetSchemaId] });
 
       // Usar o EditorDataService para carregar os dados
       const steps = await editorDataService.loadSchemaFromTemplate(targetSchemaId);
@@ -48,7 +49,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
         throw new Error(`Template não encontrado: ${targetSchemaId}`);
       }
 
-      console.log('✅ Steps carregados:', steps.length, 'etapas');
+      appLogger.info('✅ Steps carregados:', { data: [steps.length, 'etapas'] });
 
       // Criar schema básico mas válido - usando configurações mínimas
       const loadedSchema: QuizFunnelSchema = {
@@ -274,11 +275,11 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
 
       setSchema(loadedSchema);
       setIsDirty(false);
-      console.log(`✅ Schema carregado com sucesso: ${targetSchemaId}`);
+      appLogger.info(`✅ Schema carregado com sucesso: ${targetSchemaId}`);
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar schema';
-      console.error(`❌ Erro ao carregar schema ${targetSchemaId}:`, error);
+      appLogger.error(`❌ Erro ao carregar schema ${targetSchemaId}:`, { data: [error] });
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -302,7 +303,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
       setIsDirty(true);
     },
     saveSchema: async () => {
-      console.log('Save not implemented');
+      appLogger.info('Save not implemented');
     },
     resetChanges: () => {
       if (schemaId) loadSchema(schemaId);

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { useUnifiedCRUD } from '@/contexts';
 import { editorEvents } from '@/lib/events/editorEvents';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Reusar tipo de modo localmente (evitar import circular se houver)
 export type EditorMode = 'visual' | 'builder' | 'funnel' | 'headless' | 'admin-integrated' | 'quiz';
@@ -161,7 +162,7 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
             setPhase('ready');
             try { performance.mark('editor_bootstrap_ready'); performance.measure('editor_TTI', 'editor_bootstrap_start', 'editor_bootstrap_ready'); } catch { }
             editorEvents.emit('EDITOR_BOOTSTRAP_READY', { funnelId: funnel.id });
-            console.log('🎨 Editor iniciado com canvas VAZIO (modo construção do zero)');
+            appLogger.info('🎨 Editor iniciado com canvas VAZIO (modo construção do zero)');
             return;
         }
 
@@ -174,12 +175,12 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
             setSeedApplied(true);
             // Salvar async sem bloquear
             if (funnel.id) {
-                crud.saveFunnel().catch(err => console.warn('[bootstrap] Falha ao salvar seed inicial', err));
+                crud.saveFunnel().catch(err => appLogger.warn('[bootstrap] Falha ao salvar seed inicial', { data: [err] }));
             }
             setPhase('ready');
             try { performance.mark('editor_bootstrap_ready'); performance.measure('editor_TTI', 'editor_bootstrap_start', 'editor_bootstrap_ready'); } catch { }
             editorEvents.emit('EDITOR_BOOTSTRAP_READY', { funnelId: funnel.id });
-            console.log('📄 Template carregado:', params.templateId);
+            appLogger.info('📄 Template carregado:', { data: [params.templateId] });
         } catch (e: any) {
             setError(e instanceof Error ? e : new Error(String(e)));
             setPhase('error');

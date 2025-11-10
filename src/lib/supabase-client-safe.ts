@@ -42,16 +42,17 @@ export const withSupabase = async <T,>(
   operation: (client: typeof supabaseSafe) => Promise<T>,
 ): Promise<T | null> => {
   if (typeof window === 'undefined') {
-    console.warn('Supabase operation skipped on server side');
+    appLogger.warn('Supabase operation skipped on server side');
     return null;
   }
 
   try {
     return await operation(supabaseSafe);
   } catch (error) {
-    console.error('Supabase operation failed:', error);
+    appLogger.error('Supabase operation failed:', { data: [error] });
     return null;
   }
 };
 
 import { useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';

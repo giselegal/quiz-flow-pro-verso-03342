@@ -1,4 +1,5 @@
 import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface FunnelTemplate {
   meta: {
@@ -166,10 +167,10 @@ export class FunnelAIAgent {
       index: Date.now(),
     });
 
-    console.log('🤖 AI Agent: Iniciando geração de funil...', {
-      funnelId,
-      template: template.meta.name,
-    });
+    appLogger.info('🤖 AI Agent: Iniciando geração de funil...', { data: [{
+            funnelId,
+            template: template.meta.name,
+          }] });
 
     const generatedFunnel: any = {
       id: generateSemanticId({
@@ -201,7 +202,7 @@ export class FunnelAIAgent {
         // Simula tempo de processamento realista
         await this.delay(500 + Math.random() * 1000);
       } catch (error) {
-        console.error(`❌ Erro na etapa ${step.id}:`, error);
+        appLogger.error(`❌ Erro na etapa ${step.id}:`, { data: [error] });
         this.onStepUpdate?.(step.id, 'error', 0);
         throw error;
       }
@@ -210,10 +211,10 @@ export class FunnelAIAgent {
     // Salva o funil gerado no localStorage para simulação
     this.saveFunnelToStorage(funnelId, generatedFunnel);
 
-    console.log('✅ AI Agent: Funil gerado com sucesso!', {
-      funnelId,
-      totalSteps: generatedFunnel.steps.length,
-    });
+    appLogger.info('✅ AI Agent: Funil gerado com sucesso!', { data: [{
+            funnelId,
+            totalSteps: generatedFunnel.steps.length,
+          }] });
 
     return funnelId;
   }
@@ -680,9 +681,9 @@ export class FunnelAIAgent {
     try {
       const key = `ai-generated-funnel-${funnelId}`;
       localStorage.setItem(key, JSON.stringify(funnelData));
-      console.log('💾 Funil salvo no localStorage:', key);
+      appLogger.info('💾 Funil salvo no localStorage:', { data: [key] });
     } catch (error) {
-      console.error('❌ Erro ao salvar funil:', error);
+      appLogger.error('❌ Erro ao salvar funil:', { data: [error] });
     }
   }
 
@@ -692,7 +693,7 @@ export class FunnelAIAgent {
       const data = localStorage.getItem(key);
       return data ? JSON.parse(data) : null;
     } catch (error) {
-      console.error('❌ Erro ao carregar funil:', error);
+      appLogger.error('❌ Erro ao carregar funil:', { data: [error] });
       return null;
     }
   }

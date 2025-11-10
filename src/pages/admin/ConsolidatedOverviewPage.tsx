@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'wouter';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface DashboardData {
     funnelSummary: {
@@ -95,9 +96,9 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     },
                 });
 
-                console.log('✅ Dashboard carregado com dados reais do Supabase');
+                appLogger.info('✅ Dashboard carregado com dados reais do Supabase');
             } catch (error) {
-                console.error('❌ Erro ao carregar dados do dashboard:', error);
+                appLogger.error('❌ Erro ao carregar dados do dashboard:', { data: [error] });
             } finally {
                 setLoading(false);
             }

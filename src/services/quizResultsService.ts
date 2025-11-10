@@ -2,6 +2,7 @@ import { styleConfig, type StyleConfig } from '@/config/styleConfig';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { StorageService } from '@/services/core/StorageService';
 import { STYLE_KEYWORDS_MAPPING, STYLE_TIEBREAK_ORDER } from '@/lib/utils/styleKeywordMap';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🎯 Serviço para cálculo e armazenamento de resultados do quiz
@@ -82,7 +83,7 @@ class QuizResultsService {
    * Calcula resultados completos baseado nas respostas
    */
   async calculateResults(session: QuizSession): Promise<QuizResults> {
-    console.log('🔍 Iniciando cálculo de resultados para sessão:', session.id);
+    appLogger.info('🔍 Iniciando cálculo de resultados para sessão:', { data: [session.id] });
 
     const startTime = Date.now();
     const responses = session.responses || {};
@@ -122,16 +123,16 @@ class QuizResultsService {
       // 5. Salvar resultados no banco
       await this.saveResults(results);
 
-      console.log('✅ Resultados calculados com sucesso:', {
-        sessionId: session.id,
-        primaryStyle: styleProfile.primaryStyle,
-        completionScore,
-        timeSpent: results.metadata.timeSpent,
-      });
+      appLogger.info('✅ Resultados calculados com sucesso:', { data: [{
+                sessionId: session.id,
+                primaryStyle: styleProfile.primaryStyle,
+                completionScore,
+                timeSpent: results.metadata.timeSpent,
+              }] });
 
       return results;
     } catch (error: any) {
-      console.error('❌ Erro no cálculo de resultados:', error);
+      appLogger.error('❌ Erro no cálculo de resultados:', { data: [error] });
       throw new Error(`Falha no cálculo de resultados: ${error.message}`);
     }
   }
@@ -150,7 +151,7 @@ class QuizResultsService {
         if (step1Response[field] && typeof step1Response[field] === 'string') {
           const name = step1Response[field].trim();
           if (name.length >= 2) {
-            console.log('👤 Nome extraído da etapa 1:', name);
+            appLogger.info('👤 Nome extraído da etapa 1:', { data: [name] });
             return name;
           }
         }
@@ -165,13 +166,13 @@ class QuizResultsService {
         if (formData.name && typeof formData.name === 'string') {
           const name = formData.name.trim();
           if (name.length >= 2) {
-            console.log('👤 Nome extraído do formulário:', name);
+            appLogger.info('👤 Nome extraído do formulário:', { data: [name] });
             // Persistir em StorageService para consumo universal (core)
             try {
               StorageService.safeSetString('userName', name);
               StorageService.safeSetString('quizUserName', name);
             } catch (error) {
-              console.warn('[quizResultsService] Erro ao salvar userName:', error);
+              appLogger.warn('[quizResultsService] Erro ao salvar userName:', { data: [error] });
             }
             return name;
           }
@@ -185,14 +186,14 @@ class QuizResultsService {
         StorageService.safeGetString('userName') ||
         StorageService.safeGetString('quizUserName');
       if (storedName && storedName.trim().length >= 2) {
-        console.log('👤 Nome recuperado do StorageService:', storedName);
+        appLogger.info('👤 Nome recuperado do StorageService:', { data: [storedName] });
         return storedName.trim();
       }
     } catch (error) {
-      console.warn('[quizResultsService] Erro ao recuperar userName do storage:', error);
+      appLogger.warn('[quizResultsService] Erro ao recuperar userName do storage:', { data: [error] });
     }
 
-    console.log('⚠️ Nome do usuário não encontrado nas respostas');
+    appLogger.info('⚠️ Nome do usuário não encontrado nas respostas');
     return '';
   }
 
@@ -247,7 +248,7 @@ class QuizResultsService {
    * Calcula perfil de estilo baseado no styleConfig.ts
    */
   private calculateStyleProfile(analysis: any, responses: Record<string, any>): StyleProfile {
-    console.log('📊 Calculando perfil de estilo...');
+    appLogger.info('📊 Calculando perfil de estilo...');
 
     // Inicializar scores para todos os estilos
     const styleScores: Record<string, number> = {};
@@ -278,7 +279,7 @@ class QuizResultsService {
     this.analyzeOccasionPreferences(analysis.occasions, styleScores);
     this.analyzePersonalityTraits(analysis.personality, styleScores);
 
-    console.log('📈 Scores calculados:', styleScores);
+    appLogger.info('📈 Scores calculados:', { data: [styleScores] });
 
     // Determinar estilo primário e secundário
     const sortedStyles = Object.entries(styleScores)
@@ -444,7 +445,7 @@ class QuizResultsService {
     profile: StyleProfile,
     analysis: any,
   ): PersonalizedRecommendations {
-    console.log('🎨 Gerando recomendações para:', profile.primaryStyle);
+    appLogger.info('🎨 Gerando recomendações para:', { data: [profile.primaryStyle] });
 
     const recommendations = {
       wardrobe: {
@@ -732,9 +733,9 @@ class QuizResultsService {
 
       if (error) throw error;
 
-      console.log('✅ Resultados salvos no Supabase');
+      appLogger.info('✅ Resultados salvos no Supabase');
     } catch (error: any) {
-      console.error('❌ Erro ao salvar resultados:', error);
+      appLogger.error('❌ Erro ao salvar resultados:', { data: [error] });
       throw error;
     }
   }
@@ -754,7 +755,7 @@ class QuizResultsService {
 
       return data ? this.transformDbResultsToQuizResults(data) : null;
     } catch (error: any) {
-      console.error('❌ Erro ao carregar resultados:', error);
+      appLogger.error('❌ Erro ao carregar resultados:', { data: [error] });
       return null;
     }
   }

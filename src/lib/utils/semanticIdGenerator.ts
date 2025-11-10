@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 SISTEMA DE IDs SEMÂNTICOS - IMPLEMENTAÇÃO COMPLETA
  *
@@ -169,7 +170,7 @@ export function generateNextSequenceId(baseId: string, existingIds: string[]): s
 export function convertTimestampToSemantic(timestampId: string, config: SemanticIdConfig): string {
   // Detectar padrões timestamp
   if (timestampId.includes('Date.now()') || /\d{13}/.test(timestampId)) {
-    console.warn(`🔄 Convertendo timestamp ID: ${timestampId}`);
+    appLogger.warn(`🔄 Convertendo timestamp ID: ${timestampId}`);
     return generateSemanticId(config);
   }
 

@@ -14,6 +14,7 @@
 
 import { BaseCanonicalService, ServiceResult } from './types';
 import { supabase } from '@/lib/supabase';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -204,7 +205,7 @@ export class AnalyticsService extends BaseCanonicalService {
       
       return !error;
     } catch (error) {
-      console.warn('[AnalyticsService] Health check falhou, usando localStorage:', error);
+      appLogger.warn('[AnalyticsService] Health check falhou, usando localStorage:', { data: [error] });
       // Fallback to localStorage mode
       return this.isBrowser();
     }

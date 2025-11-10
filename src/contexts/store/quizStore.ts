@@ -16,6 +16,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { calculateScore } from '@/lib/utils/scoreCalculator';
 import type { Answer as ScoreAnswer, ScoringRules } from '@/lib/utils/scoreCalculator';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES
@@ -334,7 +335,7 @@ export const useQuizStore = create<QuizStore>()(
               state.session.score = result.totalScore;
               state.session.maxScore = result.maxPossibleScore;
             } catch (error) {
-              console.error('Error calculating score:', error);
+              appLogger.error('Error calculating score:', { data: [error] });
               
               // Fallback simplificado
               const totalAnswered = answersArray.filter(a => a.selectedOptions.length > 0).length;

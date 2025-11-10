@@ -1,5 +1,4 @@
 import React, { memo, useMemo, Suspense, useEffect, useRef, CSSProperties } from 'react';
-import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { blockRendererDebug } from '@/components/editor/debug/BlockRendererDebug';

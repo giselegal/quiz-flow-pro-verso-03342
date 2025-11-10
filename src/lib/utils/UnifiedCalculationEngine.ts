@@ -4,6 +4,7 @@
 import { QuizAnswer, QuizResult, StyleResult, StyleType } from '@/types/quiz';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { QuizRulesConfig } from '@/hooks/useQuizRulesConfig';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * UnifiedCalculationEngine - Algoritmo consolidado que combina:
@@ -59,11 +60,11 @@ export class UnifiedCalculationEngine {
         this.debugMode = debug;
 
         if (this.debugMode) {
-            console.log('🧮 UnifiedCalculationEngine: Iniciando cálculo', {
-                totalAnswers: answers.length,
-                tieBreakStrategy,
-                hasConfig: !!this.config,
-            });
+            appLogger.info('🧮 UnifiedCalculationEngine: Iniciando cálculo', { data: [{
+                            totalAnswers: answers.length,
+                            tieBreakStrategy,
+                            hasConfig: !!this.config,
+                        }] });
         }
 
         // ========================================================================
@@ -74,14 +75,14 @@ export class UnifiedCalculationEngine {
             const isScorableFlag = isScorableQuestion(answer.questionId);
 
             if (this.debugMode && !isScorableFlag) {
-                console.log(`⏭️ Ignorando resposta não pontuada: ${answer.questionId}`);
+                appLogger.info(`⏭️ Ignorando resposta não pontuada: ${answer.questionId}`);
             }
 
             return isScorableFlag;
         });
 
         if (this.debugMode) {
-            console.log(`✅ Respostas que pontuam: ${scorableAnswers.length}/${answers.length}`);
+            appLogger.info(`✅ Respostas que pontuam: ${scorableAnswers.length}/${answers.length}`);
         }
 
         // ========================================================================
@@ -170,11 +171,9 @@ export class UnifiedCalculationEngine {
         }
 
         if (this.debugMode) {
-            console.log('📊 Pontuação final por estilo:',
-                Object.entries(styleScores)
-                    .map(([style, data]) => `${style}: ${data.points} pts (${data.percentage}%)`)
-                    .join(', '),
-            );
+            appLogger.info('📊 Pontuação final por estilo:', { data: [Object.entries(styleScores)
+                                .map(([style, data]) => `${style}: ${data.points} pts (${data.percentage}%)`)
+                                .join(', ')] });
         }
 
         // ========================================================================
@@ -192,7 +191,7 @@ export class UnifiedCalculationEngine {
         });
 
         if (this.debugMode && sortedStyles.length >= 2 && sortedStyles[0].points === sortedStyles[1].points) {
-            console.log(`🔄 Desempate aplicado: ${sortedStyles[0].style} vs ${sortedStyles[1].style}`);
+            appLogger.info(`🔄 Desempate aplicado: ${sortedStyles[0].style} vs ${sortedStyles[1].style}`);
         }
 
         // ========================================================================
@@ -269,12 +268,12 @@ export class UnifiedCalculationEngine {
         }
 
             if (this.debugMode) {
-            console.log('🎯 Resultado final:', {
-                primaryStyle: result.primaryStyle?.category,
-                percentage: result.primaryStyle?.percentage,
-                totalQuestions: result.totalQuestions,
-                hasUserData: !!result.userData,
-            });
+            appLogger.info('🎯 Resultado final:', { data: [{
+                                primaryStyle: result.primaryStyle?.category,
+                                percentage: result.primaryStyle?.percentage,
+                                totalQuestions: result.totalQuestions,
+                                hasUserData: !!result.userData,
+                            }] });
         }
 
         return result;

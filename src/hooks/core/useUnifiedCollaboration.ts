@@ -13,6 +13,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { collaborationService, CollaborationSession, CollaborationUser, CollaborationChange } from '../../services/CollaborationService';
 import { permissionService, UserPermission } from '../../services/PermissionService';
 import { notificationService, Notification, ChatMessage, Comment, PresenceUpdate } from '../../services/NotificationService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface CollaborationState {
   // Sessão
@@ -193,9 +194,9 @@ export function useUnifiedCollaboration(
       // Configurar listeners
       setupEventListeners();
 
-      console.log('✅ Colaboração inicializada para funnel:', funnelId);
+      appLogger.info('✅ Colaboração inicializada para funnel:', { data: [funnelId] });
     } catch (error) {
-      console.error('❌ Erro ao inicializar colaboração:', error);
+      appLogger.error('❌ Erro ao inicializar colaboração:', { data: [error] });
       setState(prev => ({
         ...prev,
         connectionError: error instanceof Error ? error.message : 'Erro desconhecido',
@@ -337,7 +338,7 @@ export function useUnifiedCollaboration(
 
       return success;
     } catch (error) {
-      console.error('❌ Erro ao entrar na sessão:', error);
+      appLogger.error('❌ Erro ao entrar na sessão:', { data: [error] });
       return false;
     }
   }, []);
@@ -364,7 +365,7 @@ export function useUnifiedCollaboration(
 
       return success;
     } catch (error) {
-      console.error('❌ Erro ao sair da sessão:', error);
+      appLogger.error('❌ Erro ao sair da sessão:', { data: [error] });
       return false;
     }
   }, [state.session, userId]);
@@ -427,7 +428,7 @@ export function useUnifiedCollaboration(
         lastSync: new Date(),
       }));
     } catch (error) {
-      console.error('❌ Erro ao rastrear mudança:', error);
+      appLogger.error('❌ Erro ao rastrear mudança:', { data: [error] });
       setState(prev => ({ ...prev, isSaving: false }));
     }
   }, [state.session, userId]);
@@ -565,7 +566,7 @@ export function useUnifiedCollaboration(
         lastSync: new Date(),
       }));
     } catch (error) {
-      console.error('❌ Erro na sincronização:', error);
+      appLogger.error('❌ Erro na sincronização:', { data: [error] });
       setState(prev => ({ ...prev, isSaving: false }));
     }
   }, [state.isConnected]);
@@ -575,7 +576,7 @@ export function useUnifiedCollaboration(
    */
   const resolveConflicts = useCallback(async (): Promise<void> => {
     // Implementar lógica de resolução de conflitos
-    console.log('🔧 Resolvendo conflitos...');
+    appLogger.info('🔧 Resolvendo conflitos...');
   }, []);
 
   /**

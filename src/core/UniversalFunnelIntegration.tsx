@@ -11,6 +11,7 @@ import { FunnelAdapterFactory } from './FunnelAdapters';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface UniversalFunnelIntegrationProps {
     funnelId: string;
@@ -68,7 +69,7 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
             setLoadingState({ isLoading: false, success: `Funil carregado (tipo: ${type})` });
 
         } catch (error) {
-            console.error('Erro ao carregar funil:', error);
+            appLogger.error('Erro ao carregar funil:', { data: [error] });
             setLoadingState({
                 isLoading: false,
                 error: `Erro ao carregar funil: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
@@ -97,7 +98,7 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
             });
 
         } catch (error) {
-            console.error('Erro ao salvar funil:', error);
+            appLogger.error('Erro ao salvar funil:', { data: [error] });
             setLoadingState({
                 isLoading: false,
                 error: `Erro ao salvar: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
@@ -240,7 +241,7 @@ async function loadFunnelData(funnelId: string): Promise<any> {
             return JSON.parse(localData);
         }
     } catch (error) {
-        console.warn('Erro ao carregar do localStorage:', error);
+        appLogger.warn('Erro ao carregar do localStorage:', { data: [error] });
     }
 
     try {
@@ -250,7 +251,7 @@ async function loadFunnelData(funnelId: string): Promise<any> {
             return indexedData;
         }
     } catch (error) {
-        console.warn('Erro ao carregar do IndexedDB:', error);
+        appLogger.warn('Erro ao carregar do IndexedDB:', { data: [error] });
     }
 
     try {
@@ -260,7 +261,7 @@ async function loadFunnelData(funnelId: string): Promise<any> {
             return supabaseData;
         }
     } catch (error) {
-        console.warn('Erro ao carregar do Supabase:', error);
+        appLogger.warn('Erro ao carregar do Supabase:', { data: [error] });
     }
 
     // 4. Funil de exemplo se nada for encontrado
@@ -301,7 +302,7 @@ async function loadFromSupabase(funnelId: string): Promise<any> {
             return await response.json();
         }
     } catch (error) {
-        console.warn('Supabase não disponível:', error);
+        appLogger.warn('Supabase não disponível:', { data: [error] });
     }
     return null;
 }
@@ -386,7 +387,7 @@ export const QuickEditButton: React.FC<QuickEditButtonProps> = ({
                 onCancel={() => setIsEditorOpen(false)}
                 onSave={async (data) => {
                     // Salvar dados aqui
-                    console.log('Salvando funil:', data);
+                    appLogger.info('Salvando funil:', { data: [data] });
                     setIsEditorOpen(false);
                 }}
             />

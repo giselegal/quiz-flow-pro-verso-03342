@@ -1,6 +1,7 @@
 import { styleConfig } from '@/config/styleConfig';
 import type { StyleResult } from '@/types/quiz';
 import { useEffect, useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StyleAnalysis {
   name: string;
@@ -66,7 +67,7 @@ export const usePredominantStyle = (primaryStyle: StyleResult | null) => {
       setError(null);
     } catch (err) {
       setError('Erro ao analisar estilo predominante');
-      console.error('Erro na análise de estilo:', err);
+      appLogger.error('Erro na análise de estilo:', { data: [err] });
     } finally {
       setIsLoading(false);
     }

@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import { styleConfig } from '@/config/styleConfig';
 import { templateService } from '@/services/canonical/TemplateService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ResultVariables {
     estilo: string;
@@ -84,7 +85,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
 
             setConfigurations(configs);
         } catch (error) {
-            console.error('Erro ao carregar configurações de resultado:', error);
+            appLogger.error('Erro ao carregar configurações de resultado:', { data: [error] });
             toast({
                 title: 'Erro',
                 description: 'Não foi possível carregar as configurações de resultado.',
@@ -148,7 +149,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                 description: `Resultado ${styleName} configurado com sucesso.`,
             });
         } catch (error) {
-            console.error('Erro ao salvar:', error);
+            appLogger.error('Erro ao salvar:', { data: [error] });
             toast({
                 title: 'Erro',
                 description: 'Não foi possível salvar a configuração.',
@@ -170,7 +171,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                 description: 'Todos os resultados foram configurados com sucesso.',
             });
         } catch (error) {
-            console.error('Erro ao salvar todas:', error);
+            appLogger.error('Erro ao salvar todas:', { data: [error] });
             toast({
                 title: 'Erro',
                 description: 'Erro ao salvar algumas configurações.',

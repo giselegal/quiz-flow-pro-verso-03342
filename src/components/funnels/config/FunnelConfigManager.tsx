@@ -22,6 +22,7 @@ import SEOConfigTab from './tabs/SEOConfigTab';
 import TrackingConfigTab from './tabs/TrackingConfigTab';
 import UTMConfigTab from './tabs/UTMConfigTab';
 import WebhooksConfigTab from './tabs/WebhooksConfigTab';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FunnelConfigManagerProps {
     funnelId: string;
@@ -51,18 +52,18 @@ export default function FunnelConfigManager({
         setLoading(true);
         setError(null);
         try {
-            console.log(`🔧 Carregando configuração para funil: ${funnelId}`);
+            appLogger.info(`🔧 Carregando configuração para funil: ${funnelId}`);
 
             const loadedData = await persistenceService.loadConfig(funnelId);
             if (loadedData?.config) {
                 setConfig(loadedData.config);
                 setOriginalConfig(loadedData.config);
-                console.log('✅ Configuração carregada:', loadedData.config);
+                appLogger.info('✅ Configuração carregada:', { data: [loadedData.config] });
             } else {
                 throw new Error('Configuração não encontrada');
             }
         } catch (error) {
-            console.error('❌ Erro ao carregar configuração:', error);
+            appLogger.error('❌ Erro ao carregar configuração:', { data: [error] });
             setError('Erro ao carregar configuração do funil. Tente recarregar a página.');
         } finally {
             setLoading(false);
@@ -120,7 +121,7 @@ export default function FunnelConfigManager({
 
         setSaving(true);
         try {
-            console.log('💾 Salvando configuração:', config);
+            appLogger.info('💾 Salvando configuração:', { data: [config] });
 
             const savedData = await persistenceService.saveConfig(
                 funnelId,
@@ -138,9 +139,9 @@ export default function FunnelConfigManager({
             setHasChanges(false);
             onConfigChange?.(config);
 
-            console.log('✅ Configuração salva com sucesso:', savedData);
+            appLogger.info('✅ Configuração salva com sucesso:', { data: [savedData] });
         } catch (error) {
-            console.error('❌ Erro ao salvar configuração:', error);
+            appLogger.error('❌ Erro ao salvar configuração:', { data: [error] });
             setError('Erro ao salvar configuração. Tente novamente.');
         } finally {
             setSaving(false);
@@ -152,9 +153,9 @@ export default function FunnelConfigManager({
         if (!config) return;
         try {
             await navigator.clipboard.writeText(JSON.stringify(config, null, 2));
-            console.log('📋 Configuração copiada para área de transferência');
+            appLogger.info('📋 Configuração copiada para área de transferência');
         } catch (err) {
-            console.error('❌ Erro ao copiar configuração:', err);
+            appLogger.error('❌ Erro ao copiar configuração:', { data: [err] });
         }
     };
 

@@ -5,7 +5,6 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { appLogger } from '@/lib/utils/logger';
 import { render, screen, waitFor } from '@testing-library/react';
 import { EditableBlock } from '../EditableBlock';
 import { PreviewBlock } from '../PreviewBlock';

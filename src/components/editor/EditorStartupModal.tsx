@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Sparkles, Plus, X } from 'lucide-react';
 import { useState } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface EditorStartupModalProps {
     open: boolean;
@@ -19,25 +20,25 @@ interface EditorStartupModalProps {
 export function EditorStartupModal({ open, onSelectMode }: EditorStartupModalProps) {
     const [dontShowAgain, setDontShowAgain] = useState(false);
 
-    console.log('🎯🎯🎯 EDITOR STARTUP MODAL RENDERIZADO!!! 🎯🎯🎯');
-    console.log('Modal open:', open);
-    console.log('Timestamp:', new Date().toISOString());
+    appLogger.info('🎯🎯🎯 EDITOR STARTUP MODAL RENDERIZADO!!! 🎯🎯🎯');
+    appLogger.info('Modal open:', { data: [open] });
+    appLogger.info('Timestamp:', { data: [new Date().toISOString()] });
 
     // Permitir fechar o modal escolhendo modo blank
     const handleClose = () => {
-        console.log('❌ Modal fechado via X ou backdrop');
+        appLogger.info('❌ Modal fechado via X ou backdrop');
         if (dontShowAgain) {
             localStorage.setItem('editor:skipStartupModal', 'true');
-            console.log('✅ Preferência salva: não mostrar modal novamente');
+            appLogger.info('✅ Preferência salva: não mostrar modal novamente');
         }
         onSelectMode('blank');
     };
 
     const handleSelectMode = (mode: 'blank' | 'template') => {
-        console.log(`🎨 Modo selecionado: ${mode}`);
+        appLogger.info(`🎨 Modo selecionado: ${mode}`);
         if (dontShowAgain) {
             localStorage.setItem('editor:skipStartupModal', 'true');
-            console.log('✅ Preferência salva: não mostrar modal novamente');
+            appLogger.info('✅ Preferência salva: não mostrar modal novamente');
         }
         onSelectMode(mode);
     };

@@ -18,6 +18,7 @@ do 100% no template quiz21StepsComplete.ts
 
 import React from 'react';
 import { BlockData } from '@/editor/hooks/useStepBlocks';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -571,11 +572,11 @@ export const BLOCK_REGISTRY: Record<string, React.FC<BlockComponentProps>> = {};
  */
 export function registerBlock(type: string, component: React.FC<BlockComponentProps>) {
     if (BLOCK_REGISTRY[type]) {
-        console.warn(`⚠️ Componente ${type} já está registrado. Sobrescrevendo...`);
+        appLogger.warn(`⚠️ Componente ${type} já está registrado. Sobrescrevendo...`);
     }
 
     BLOCK_REGISTRY[type] = component;
-    console.log(`✅ Componente ${type} registrado com sucesso`);
+    appLogger.info(`✅ Componente ${type} registrado com sucesso`);
 }
 
 /**
@@ -585,7 +586,7 @@ export function getBlockComponent(type: string): React.FC<BlockComponentProps> |
     const component = BLOCK_REGISTRY[type];
 
     if (!component) {
-        console.warn(`⚠️ Componente ${type} não encontrado no registry`);
+        appLogger.warn(`⚠️ Componente ${type} não encontrado no registry`);
         return null;
     }
 
@@ -599,7 +600,7 @@ export function getBlockDefinition(type: string): BlockDefinition | null {
     const definition = BLOCK_DEFINITIONS.find(def => def.type === type);
 
     if (!definition) {
-        console.warn(`⚠️ Definição para ${type} não encontrada`);
+        appLogger.warn(`⚠️ Definição para ${type} não encontrada`);
         return null;
     }
 

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useStepNavigationStore } from '@/contexts/store/useStepNavigationStore';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizFlowProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -269,7 +270,7 @@ export const useQuizFlow = ({
     try {
       await TemplateManager.preloadCommonTemplates();
     } catch (e) {
-      console.warn('Falha ao pré-carregar templates:', e);
+      appLogger.warn('Falha ao pré-carregar templates:', { data: [e] });
     }
   }, []);
 

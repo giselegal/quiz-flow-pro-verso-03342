@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 // @ts-nocheck
 /**
  * 🔧 CONSOLE MANAGER
@@ -70,19 +71,19 @@ class ConsoleManager {
     switch (level) {
       case 'debug':
         if (this.isDevelopment) {
-          console.debug(`🔍 ${prefix} ${message}`, data || '', timestamp);
+          appLogger.debug(`🔍 ${prefix} ${message}`, { data: [data || '', timestamp] });
         }
         break;
       case 'info':
         if (this.isDevelopment) {
-          console.log(`ℹ️ ${prefix} ${message}`, data || '', timestamp);
+          appLogger.info(`ℹ️ ${prefix} ${message}`, { data: [data || '', timestamp] });
         }
         break;
       case 'warn':
-        console.warn(`⚠️ ${prefix} ${message}`, data || '');
+        appLogger.warn(`⚠️ ${prefix} ${message}`, { data: [data || ''] });
         break;
       case 'error':
-        console.error(`🚨 ${prefix} ${message}`, data || '');
+        appLogger.error(`🚨 ${prefix} ${message}`, { data: [data || ''] });
         break;
     }
   }

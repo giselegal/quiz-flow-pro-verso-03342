@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🚀 OPTIMIZED QUIZ ENGINE - FASE 2
@@ -142,7 +143,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
 
       return result;
     } catch (error) {
-      console.error('Calculation failed:', error);
+      appLogger.error('Calculation failed:', { data: [error] });
       return null;
     }
   }, [

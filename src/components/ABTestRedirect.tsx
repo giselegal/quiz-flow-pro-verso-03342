@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { LANDING_PAGE_AB_TEST, getABTestRedirectUrl } from '../utils/abtest';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface ABTestRedirectProps {
   children?: React.ReactNode;
@@ -25,17 +26,15 @@ const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
     if (currentPath === '/' && !forceQuiz && !skipAbTest) {
       const redirectUrl = getABTestRedirectUrl(LANDING_PAGE_AB_TEST);
 
-      console.log(`🔄 A/B Test: Redirecionando de ${currentPath} para ${redirectUrl}`);
+      appLogger.info(`🔄 A/B Test: Redirecionando de ${currentPath} para ${redirectUrl}`);
 
       // Preserva query parameters na URL
       const searchParams = window.location.search;
       setLocation(redirectUrl + searchParams);
     } else if (forceQuiz || skipAbTest) {
-      console.log(
-        `🎯 Acesso direto ao quiz solicitado - parâmetro: ${
-          forceQuiz ? 'quiz=true' : 'skip-ab=true'
-        }`,
-      );
+      appLogger.info(`🎯 Acesso direto ao quiz solicitado - parâmetro: ${
+                  forceQuiz ? 'quiz=true' : 'skip-ab=true'
+                }`);
     }
   }, [location, setLocation]);
 

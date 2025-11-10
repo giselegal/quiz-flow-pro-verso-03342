@@ -8,6 +8,7 @@
  */
 
 import type { UnifiedStep } from '@/types/normalizedTemplate';
+import { appLogger } from '@/lib/utils/appLogger';
 
 const stepCache: Record<string, UnifiedStep | null> = {};
 
@@ -42,14 +43,14 @@ export async function loadNormalizedStep(stepId: string): Promise<UnifiedStep | 
         const data = await res.json();
         // Validação mínima
         if (!data?.id || !Array.isArray(data.blocks)) {
-            console.warn('[normalizedLoader] JSON inválido para', stepId);
+            appLogger.warn('[normalizedLoader] JSON inválido para', { data: [stepId] });
             stepCache[stepId] = null;
             return null;
         }
         stepCache[stepId] = data;
         return data;
     } catch (e) {
-        console.warn('[normalizedLoader] Falha ao carregar', stepId, e);
+        appLogger.warn('[normalizedLoader] Falha ao carregar', { data: [stepId, e] });
         stepCache[stepId] = null;
         return null;
     }

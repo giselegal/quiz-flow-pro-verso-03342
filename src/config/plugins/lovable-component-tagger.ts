@@ -1,5 +1,6 @@
 // Component Tagger Plugin para Lovable - Versão Segura e Otimizada
 import { Plugin } from 'vite';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export function componentTagger(): Plugin {
   return {
@@ -46,7 +47,7 @@ export function componentTagger(): Plugin {
         };
       } catch (error) {
         // Em caso de erro, retornar código original
-        console.warn(`Lovable Component Tagger: Error processing ${id}:`, error);
+        appLogger.warn(`Lovable Component Tagger: Error processing ${id}:`, { data: [error] });
         return null;
       }
     },

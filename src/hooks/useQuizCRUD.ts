@@ -5,6 +5,7 @@ import { QuizQuestion } from '@/types/quiz';
 import type { Json } from '@/services/integrations/supabase/types';
 import { useEffect, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizMetadata {
   title: string;
@@ -106,7 +107,7 @@ export const useQuizCRUD = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar quizzes';
       setError(errorMessage);
-      console.error('Erro ao carregar quizzes:', err);
+      appLogger.error('Erro ao carregar quizzes:', { data: [err] });
     } finally {
       setLoading(false);
     }
@@ -197,7 +198,7 @@ export const useQuizCRUD = () => {
 
       return funnelId;
     } catch (err) {
-      console.error('Erro ao salvar quiz:', err);
+      appLogger.error('Erro ao salvar quiz:', { data: [err] });
       setError('Erro ao salvar quiz');
       toast({
         title: 'Erro',
@@ -256,7 +257,7 @@ export const useQuizCRUD = () => {
 
       return formattedQuiz;
     } catch (err) {
-      console.error('Erro ao carregar quiz:', err);
+      appLogger.error('Erro ao carregar quiz:', { data: [err] });
       setError('Erro ao carregar quiz');
       return null;
     } finally {
@@ -286,7 +287,7 @@ export const useQuizCRUD = () => {
 
       return true;
     } catch (err) {
-      console.error('Erro ao deletar quiz:', err);
+      appLogger.error('Erro ao deletar quiz:', { data: [err] });
       setError('Erro ao deletar quiz');
       toast({
         title: 'Erro',

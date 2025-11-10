@@ -17,6 +17,7 @@ import {
   PaginationOptions,
   PaginatedResult,
 } from '@/core/domains';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface SupabaseFunnel {
   id: string;
@@ -76,7 +77,7 @@ export class SupabaseQuizRepository implements QuizRepository {
 
       return quiz;
     } catch (error) {
-      console.error('Error saving quiz:', error);
+      appLogger.error('Error saving quiz:', { data: [error] });
       throw new Error(`Failed to save quiz: ${error}`);
     }
   }
@@ -101,7 +102,7 @@ export class SupabaseQuizRepository implements QuizRepository {
 
       return this.mapToQuizEntity(funnelData, pagesData || []);
     } catch (error) {
-      console.error('Error finding quiz by id:', error);
+      appLogger.error('Error finding quiz by id:', { data: [error] });
       return null;
     }
   }
@@ -172,7 +173,7 @@ export class SupabaseQuizRepository implements QuizRepository {
         totalPages: Math.ceil((count || 0) / (pagination?.limit || 10)),
       };
     } catch (error) {
-      console.error('Error finding all quizzes:', error);
+      appLogger.error('Error finding all quizzes:', { data: [error] });
       throw new Error(`Failed to find quizzes: ${error}`);
     }
   }
@@ -219,7 +220,7 @@ export class SupabaseQuizRepository implements QuizRepository {
 
       return updatedQuiz;
     } catch (error) {
-      console.error('Error updating quiz:', error);
+      appLogger.error('Error updating quiz:', { data: [error] });
       throw new Error(`Failed to update quiz: ${error}`);
     }
   }
@@ -240,7 +241,7 @@ export class SupabaseQuizRepository implements QuizRepository {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error deleting quiz:', error);
+      appLogger.error('Error deleting quiz:', { data: [error] });
       return false;
     }
   }
@@ -509,7 +510,7 @@ export class SupabaseQuizRepository implements QuizRepository {
         resultDistribution,
       };
     } catch (error) {
-      console.error('Error getting quiz stats:', error);
+      appLogger.error('Error getting quiz stats:', { data: [error] });
       throw new Error(`Failed to get quiz stats: ${error}`);
     }
   }
@@ -540,7 +541,7 @@ export class SupabaseQuizRepository implements QuizRepository {
         }),
       );
     } catch (error) {
-      console.error('Error getting most popular quizzes:', error);
+      appLogger.error('Error getting most popular quizzes:', { data: [error] });
       return [];
     }
   }

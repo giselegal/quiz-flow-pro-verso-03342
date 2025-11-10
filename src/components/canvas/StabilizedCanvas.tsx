@@ -23,6 +23,7 @@ import { useStepSelection } from '@/hooks/useStepSelection';
 // Mantemos apenas tipos para não puxar o bundle pesado em contextos não-editor.
 import type { DragEndEvent } from '@dnd-kit/core';
 import ReactDndRuntimeBoundary from '@/components/editor/quiz/QuizModularEditor/components/SafeDndContext';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface StabilizedCanvasProps {
   blocks: Block[];
@@ -64,12 +65,12 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
 
   // 📊 DEBUG TRACKING
   renderCountRef.current++;
-  console.log(`🎨 StabilizedCanvas render #${renderCountRef.current}`, {
-    currentStep,
-    isPreviewMode,
-    blocksCount: blocks.length,
-    selectedBlockId: selectedBlock?.id,
-  });
+  appLogger.info(`🎨 StabilizedCanvas render #${renderCountRef.current}`, { data: [{
+        currentStep,
+        isPreviewMode,
+        blocksCount: blocks.length,
+        selectedBlockId: selectedBlock?.id,
+      }] });
   // Resolver funnelId de forma flexível: prop tem prioridade, depois query (?funnelId ou ?funnel)
   const effectiveFunnelId = useMemo(() => {
     if (funnelId) return funnelId;
@@ -116,7 +117,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   const stabilizedBlocks = useMemo(() => {
     // Garantir que blocks é sempre um array válido
     if (!Array.isArray(blocks)) {
-      console.warn('🚨 StabilizedCanvas: blocks não é um array válido', blocks);
+      appLogger.warn('🚨 StabilizedCanvas: blocks não é um array válido', { data: [blocks] });
       return [];
     }
 
@@ -137,12 +138,12 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
 
   // 🔄 STABLE CALLBACKS - Evitam re-renders em cascata
   const handleBlockSelection = useCallback((blockId: string) => {
-    console.log('🎯 StabilizedCanvas: Block selected:', blockId);
+    appLogger.info('🎯 StabilizedCanvas: Block selected:', { data: [blockId] });
     stepSelection.handleBlockSelection(blockId);
   }, [stepSelection.handleBlockSelection]);
 
   const handleStepChange = useCallback((step: number, data?: any) => {
-    console.log('📍 StabilizedCanvas: Step change:', step, data);
+    appLogger.info('📍 StabilizedCanvas: Step change:', { data: [step, data] });
     setPreviewStep(step);
     if (onStepChange && step !== currentStep) {
       onStepChange(step);
@@ -154,11 +155,11 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
     const { active, over } = event;
 
     if (!over || active.id === over.id) {
-      console.log('🔄 Drag cancelled or same position');
+      appLogger.info('🔄 Drag cancelled or same position');
       return;
     }
 
-    console.log('🎯 Drag ended:', { activeId: active.id, overId: over.id });
+    appLogger.info('🎯 Drag ended:', { data: [{ activeId: active.id, overId: over.id }] });
 
     // Extrair IDs dos blocos (removendo prefixos de step)
     const activeIdStr = String(active.id);
@@ -181,30 +182,30 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
     const oldIndex = stabilizedBlocks.findIndex(b => b.id === activeBlockId);
     const newIndex = stabilizedBlocks.findIndex(b => b.id === overBlockId);
 
-    console.log('🔍 Reorder indices:', {
-      activeBlockId,
-      overBlockId,
-      oldIndex,
-      newIndex,
-      totalBlocks: stabilizedBlocks.length,
-    });
+    appLogger.info('🔍 Reorder indices:', { data: [{
+            activeBlockId,
+            overBlockId,
+            oldIndex,
+            newIndex,
+            totalBlocks: stabilizedBlocks.length,
+          }] });
 
     if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
-      console.log(`✅ Reordering blocks: ${oldIndex} → ${newIndex}`);
+      appLogger.info(`✅ Reordering blocks: ${oldIndex} → ${newIndex}`);
 
       // Chamar callback de reordenação se fornecido
       if (onReorderBlocks) {
         onReorderBlocks(currentStep, oldIndex, newIndex);
       }
     } else {
-      console.warn('⚠️ Invalid reorder indices:', { oldIndex, newIndex });
+      appLogger.warn('⚠️ Invalid reorder indices:', { data: [{ oldIndex, newIndex }] });
     }
   }, [stabilizedBlocks, currentStep, onReorderBlocks]);
 
   // ⚡ EFFECT PARA DETECÇÃO DE MUDANÇAS DE STEP
   useEffect(() => {
     if (lastStepRef.current !== currentStep) {
-      console.log(`🔄 StabilizedCanvas: Step changed ${lastStepRef.current} → ${currentStep}`);
+      appLogger.info(`🔄 StabilizedCanvas: Step changed ${lastStepRef.current} → ${currentStep}`);
       lastStepRef.current = currentStep;
     }
   }, [currentStep]);

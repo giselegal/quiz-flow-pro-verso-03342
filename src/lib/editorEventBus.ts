@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 EDITOR EVENT BUS - FASE 1.4
  * 
@@ -89,7 +90,7 @@ class EditorEventBus {
       cancelable: false,
     });
     
-    console.log(`📡 [EventBus] ${eventName}`, detail);
+    appLogger.info(`📡 [EventBus] ${eventName}`, { data: [detail] });
     this.eventTarget.dispatchEvent(event);
   }
   
@@ -112,13 +113,13 @@ class EditorEventBus {
         handler(event as CustomEvent<EditorEvents[K]>);
       } catch (error) {
         this.stats.errors++;
-        console.error(`❌ [EventBus] Error handling ${eventName}:`, error);
+        appLogger.error(`❌ [EventBus] Error handling ${eventName}:`, { data: [error] });
       }
     };
     
     this.eventTarget.addEventListener(eventName, wrappedHandler);
     
-    console.log(`👂 [EventBus] Listener registrado: ${eventName}`);
+    appLogger.info(`👂 [EventBus] Listener registrado: ${eventName}`);
   }
   
   /**
@@ -138,7 +139,7 @@ class EditorEventBus {
     }
     
     this.eventTarget.removeEventListener(eventName, handler as EventListener);
-    console.log(`🔇 [EventBus] Listener removido: ${eventName}`);
+    appLogger.info(`🔇 [EventBus] Listener removido: ${eventName}`);
   }
   
   /**
@@ -162,10 +163,10 @@ class EditorEventBus {
   removeAllListeners(eventName?: keyof EditorEvents): void {
     if (eventName) {
       this.listeners.delete(eventName);
-      console.log(`🗑️ [EventBus] Todos os listeners de ${eventName} removidos`);
+      appLogger.info(`🗑️ [EventBus] Todos os listeners de ${eventName} removidos`);
     } else {
       this.listeners.clear();
-      console.log('🗑️ [EventBus] Todos os listeners removidos');
+      appLogger.info('🗑️ [EventBus] Todos os listeners removidos');
     }
   }
   
@@ -187,12 +188,12 @@ class EditorEventBus {
    */
   logStats(): void {
     console.group('📊 EditorEventBus Stats');
-    console.log('Eventos emitidos:', this.stats.emitted);
-    console.log('Eventos tratados:', this.stats.handled);
-    console.log('Erros:', this.stats.errors);
-    console.log('Listeners ativos:');
+    appLogger.info('Eventos emitidos:', { data: [this.stats.emitted] });
+    appLogger.info('Eventos tratados:', { data: [this.stats.handled] });
+    appLogger.info('Erros:', { data: [this.stats.errors] });
+    appLogger.info('Listeners ativos:');
     this.listeners.forEach((handlers, event) => {
-      console.log(`  ${event}: ${handlers.size} listener(s)`);
+      appLogger.info(`  ${event}: ${handlers.size} listener(s)`);
     });
     console.groupEnd();
   }
