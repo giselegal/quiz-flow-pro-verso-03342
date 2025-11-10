@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -12,13 +13,47 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    #root { min-height: 100vh; width: 100%; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    #root {
+      min-height: 100vh;
+      width: 100%;
+    }
   </style>
+  <!-- 🛡️ EARLY LOVABLE BLOCKER: Bloquear requisições Lovable ANTES de qualquer script -->
+  <script>
+    (function () {
+      if (typeof window === 'undefined') return;
+      const isInLovablePreview = window.self !== window.top;
+      if (isInLovablePreview) return; // Permitir no preview
+
+      const originalFetch = window.fetch;
+      window.fetch = function (url, options) {
+        const urlString = typeof url === 'string' ? url : url.toString();
+        if (urlString.includes('lovable.dev')) {
+          // Silenciosamente retornar mock 200
+          return Promise.resolve(new Response(JSON.stringify({
+            status: 'blocked',
+            message: 'Lovable disabled in development'
+          }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          }));
+        }
+        return originalFetch.call(window, url, options);
+      };
+    })();
+  </script>
 </head>
+
 <body>
   <div id="root"></div>
   <script src="/supabase-fallback-system.js" type="text/javascript"></script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
+
 </html>
