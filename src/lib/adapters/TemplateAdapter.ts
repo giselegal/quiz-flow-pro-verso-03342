@@ -41,8 +41,8 @@ export class TemplateAdapter {
         const version = template.templateVersion;
 
         if (version) {
-            // v3.0
-            if (version === '3.0' || version === '3') {
+            // v3.x (3.0, 3.1, 3.2)
+            if (['3.0', '3.1', '3.2'].includes(version) || version === '3') {
                 return '3.0';
             }
 
@@ -141,7 +141,7 @@ export class TemplateAdapter {
     static normalize(template: any): AnyTemplate {
         const version = this.detectVersion(template);
 
-        if (version === '3.0') {
+        if (['3.0', '3.1', '3.2'].includes(version)) {
             return this.validateV3(template);
         } else {
             return this.validateV2(template);
@@ -159,9 +159,9 @@ export class TemplateAdapter {
     private static validateV3(template: any): TemplateV3 {
         const errors: string[] = [];
 
-        // Validar campos obrigatórios
-        if (!template.templateVersion || template.templateVersion !== '3.0') {
-            errors.push('templateVersion deve ser "3.0"');
+        // Validar campos obrigatórios (aceita v3.0, v3.1, v3.2)
+        if (!template.templateVersion || !['3.0', '3.1', '3.2'].includes(template.templateVersion)) {
+            errors.push('templateVersion deve ser "3.0", "3.1" ou "3.2"');
         }
 
         if (!template.metadata || typeof template.metadata !== 'object') {

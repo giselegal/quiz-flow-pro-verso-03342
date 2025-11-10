@@ -47,8 +47,8 @@ export async function loadJsonTemplate(stepId: string): Promise<TemplateV3 | nul
 
       const json = await response.json();
 
-      // Validar versão do template
-      if (json.templateVersion !== '3.1' && json.templateVersion !== '3.0') {
+      // Validar versão do template (aceita v3.0, v3.1, v3.2)
+      if (!['3.0', '3.1', '3.2'].includes(json.templateVersion)) {
         appLogger.warn(`[loadJsonTemplate] Versão inválida para ${stepId}:`, { data: [json.templateVersion] });
         templateCache[stepId] = null;
         return null;
