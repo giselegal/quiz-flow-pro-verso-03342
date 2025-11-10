@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-20",
     "name": "Resultado (Blocos)",
@@ -14,7 +14,7 @@
     {
       "id": "res-head-20",
       "type": "result.headline",
-      "config": {
+      "properties": {
         "prefix": "Seu estilo é",
         "highlight": "{primaryStyle}",
         "showSecondary": true
@@ -23,10 +23,6 @@
     {
       "id": "res-sec-20",
       "type": "result.secondaryList",
-      "config": {
-        "title": "Além do {primaryStyle}, você também tem traços de:",
-        "max": 3
-      },
       "properties": {
         "title": "Além do {primaryStyle}, você também tem traços de:",
         "max": 3
@@ -35,25 +31,18 @@
     {
       "id": "offer-core-20",
       "type": "offer.core",
-      "config": {
-        "title": "5 Passos – Vista-se de Você",
-        "description": "Uma metodologia de autoconhecimento, imagem estratégica e transformação pessoal, criada para te guiar da confusão diante do espelho à clareza de uma imagem que comunica quem você realmente é.",
-        "ctaLabel": "Quero Dominar Meu Estilo em 5 Passos",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "accent": "#B89B7A"
-      },
       "properties": {
         "title": "5 Passos – Vista-se de Você",
         "description": "Uma metodologia de autoconhecimento, imagem estratégica e transformação pessoal, criada para te guiar da confusão diante do espelho à clareza de uma imagem que comunica quem você realmente é.",
         "ctaLabel": "Quero Dominar Meu Estilo em 5 Passos",
         "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "accent": "#B89B7A"
+        "accent": "{{theme.colors.primary}}"
       }
     },
     {
       "id": "offer-urg-20",
       "type": "offer.urgency",
-      "config": {
+      "properties": {
         "headline": "Oferta expira em:",
         "deadlineISO": "2099-01-01T00:00:00.000Z"
       }
@@ -61,7 +50,7 @@
     {
       "id": "offer-test-20",
       "type": "offer.testimonial",
-      "config": {
+      "properties": {
         "quote": "Transformador!",
         "author": "Aluna"
       }

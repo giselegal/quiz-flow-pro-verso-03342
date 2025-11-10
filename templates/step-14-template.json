@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-14",
     "name": "Pergunta (Blocos)",
@@ -14,29 +14,6 @@
     {
       "id": "q-14",
       "type": "question-block",
-      "config": {
-        "questionNumber": "2 de 6",
-        "questionText": "O que mais te desafia na hora de se vestir?",
-        "requiredSelections": 1,
-        "options": [
-          {
-            "id": "combinar-pecas",
-            "text": "Tenho peças, mas não sei como combiná-las"
-          },
-          {
-            "id": "comprar-impulso",
-            "text": "Compro por impulso e me arrependo depois"
-          },
-          {
-            "id": "imagem-nao-reflete",
-            "text": "Minha imagem não reflete quem eu sou"
-          },
-          {
-            "id": "perco-tempo",
-            "text": "Perco tempo e acabo usando sempre os mesmos looks"
-          }
-        ]
-      },
       "properties": {
         "questionNumber": "2 de 6",
         "questionText": "O que mais te desafia na hora de se vestir?",

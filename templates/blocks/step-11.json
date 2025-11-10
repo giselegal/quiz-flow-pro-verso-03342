@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-11",
     "name": "Pergunta (Blocos)",
@@ -14,45 +14,6 @@
     {
       "id": "q-11",
       "type": "question-block",
-      "config": {
-        "questionNumber": "10 de 10",
-        "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
-        "requiredSelections": 3,
-        "options": [
-          {
-            "id": "natural",
-            "text": "São fáceis de cuidar"
-          },
-          {
-            "id": "classico",
-            "text": "São de excelente qualidade"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "São fáceis de cuidar e modernos"
-          },
-          {
-            "id": "elegante",
-            "text": "São sofisticados"
-          },
-          {
-            "id": "romantico",
-            "text": "São delicados"
-          },
-          {
-            "id": "sexy",
-            "text": "São perfeitos ao meu corpo"
-          },
-          {
-            "id": "dramatico",
-            "text": "São diferentes, e trazem um efeito para minha roupa"
-          },
-          {
-            "id": "criativo",
-            "text": "São exclusivos, criam identidade no look"
-          }
-        ]
-      },
       "properties": {
         "questionNumber": "10 de 10",
         "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",

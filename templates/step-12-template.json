@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-12",
     "name": "Transição (Blocos)",
@@ -15,15 +15,6 @@
     {
       "id": "trans-12",
       "type": "transition.next",
-      "config": {
-        "title": "🕐 Enquanto calculamos o seu resultado...",
-        "message": "Estamos montando seu perfil de estilo personalizado",
-        "paragraphs": [
-          "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
-        ],
-        "buttonLabel": "Continuar",
-        "autoAdvanceMs": 3500
-      },
       "properties": {
         "title": "🕐 Enquanto calculamos o seu resultado...",
         "message": "Estamos montando seu perfil de estilo personalizado",

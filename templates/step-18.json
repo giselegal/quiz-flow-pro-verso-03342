@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-18",
     "name": "Pergunta (Blocos)",
@@ -14,26 +14,27 @@
     {
       "id": "q-18",
       "type": "question-block",
-      "config": {
-        "questionNumber": "Q16 - RESULTADO",
-        "questionText": "Qual desses resultados você mais gostaria de alcançar?",
-        "requiredSelections": 1,
-        "options": [
-          { "id": "montar-looks-facilidade", "text": "Montar looks com mais facilidade e confiança" },
-          { "id": "usar-que-tenho", "text": "Usar o que já tenho e me sentir estilosa" },
-          { "id": "comprar-consciencia", "text": "Comprar com mais consciência e sem culpa" },
-          { "id": "ser-admirada", "text": "Ser admirada pela imagem que transmito" }
-        ]
-      },
       "properties": {
         "questionNumber": "Q16 - RESULTADO",
         "questionText": "Qual desses resultados você mais gostaria de alcançar?",
         "requiredSelections": 1,
         "options": [
-          { "id": "montar-looks-facilidade", "text": "Montar looks com mais facilidade e confiança" },
-          { "id": "usar-que-tenho", "text": "Usar o que já tenho e me sentir estilosa" },
-          { "id": "comprar-consciencia", "text": "Comprar com mais consciência e sem culpa" },
-          { "id": "ser-admirada", "text": "Ser admirada pela imagem que transmito" }
+          {
+            "id": "montar-looks-facilidade",
+            "text": "Montar looks com mais facilidade e confiança"
+          },
+          {
+            "id": "usar-que-tenho",
+            "text": "Usar o que já tenho e me sentir estilosa"
+          },
+          {
+            "id": "comprar-consciencia",
+            "text": "Comprar com mais consciência e sem culpa"
+          },
+          {
+            "id": "ser-admirada",
+            "text": "Ser admirada pela imagem que transmito"
+          }
         ]
       }
     }

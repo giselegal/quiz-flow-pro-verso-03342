@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-01",
     "name": "Intro (Blocos)",
@@ -10,44 +10,22 @@
       "form"
     ]
   },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "secondary": "#432818",
-      "background": "#fffaf7",
-      "text": "#432818"
-    }
-  },
   "blocks": [
     {
       "id": "hero-1",
       "type": "hero-block",
-      "config": {
-        "titleHtml": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.",
-        "subtitleHtml": "Em poucos minutos, descubra seu <strong style=\"color:#B89B7A\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua <strong style=\"color:#432818\">essência</strong>, com praticidade e <strong style=\"color:#432818\">confiança</strong>.",
-        "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
-        "imageAlt": "Descubra seu estilo predominante",
-        "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
-        "logoAlt": "Logo Gisele Galvão"
-      },
       "properties": {
-        "titleHtml": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.",
-        "subtitleHtml": "Em poucos minutos, descubra seu <strong style=\"color:#B89B7A\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua <strong style=\"color:#432818\">essência</strong>, com praticidade e <strong style=\"color:#432818\">confiança</strong>.",
-        "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        "titleHtml": "<span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">nada combina com você</span>.",
+        "subtitleHtml": "Em poucos minutos, descubra seu <strong style=\"color:{{theme.colors.primary}}\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua <strong style=\"color:{{theme.colors.secondary}}\">essência</strong>, com praticidade e <strong style=\"color:{{theme.colors.secondary}}\">confiança</strong>.",
+        "imageUrl": "{{assets.hero-intro}}",
         "imageAlt": "Descubra seu estilo predominante",
-        "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        "logoUrl": "{{assets.logo-main}}",
         "logoAlt": "Logo Gisele Galvão"
       }
     },
     {
       "id": "welcome-form-1",
       "type": "welcome-form-block",
-      "config": {
-        "questionLabel": "Como posso te chamar?",
-        "placeholder": "Digite seu primeiro nome aqui...",
-        "buttonText": "Quero Descobrir meu Estilo Agora!",
-        "required": true
-      },
       "properties": {
         "questionLabel": "Como posso te chamar?",
         "placeholder": "Digite seu primeiro nome aqui...",

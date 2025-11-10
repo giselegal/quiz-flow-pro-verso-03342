@@ -5,7 +5,10 @@
     "name": "Intro (Blocos)",
     "description": "Etapa inicial com hero e formulário de nome",
     "category": "intro",
-    "tags": ["intro", "form"]
+    "tags": [
+      "intro",
+      "form"
+    ]
   },
   "blocks": [
     {
@@ -32,7 +35,10 @@
     }
   ],
   "analytics": {
-    "events": ["page_view", "form_submit"],
+    "events": [
+      "page_view",
+      "form_submit"
+    ],
     "trackingId": "step-01-blocks"
   }
 }

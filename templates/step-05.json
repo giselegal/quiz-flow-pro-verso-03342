@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-05",
     "name": "Pergunta (Blocos)",
@@ -14,45 +14,6 @@
     {
       "id": "q-05",
       "type": "question-block",
-      "config": {
-        "questionNumber": "4 de 10",
-        "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
-        "requiredSelections": 3,
-        "options": [
-          {
-            "id": "natural",
-            "text": "Poucos detalhes, básico e prático"
-          },
-          {
-            "id": "classico",
-            "text": "Bem discretos e sutis, clean e clássico"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "Básico, mas com um toque de estilo"
-          },
-          {
-            "id": "elegante",
-            "text": "Detalhes refinados, chic e que deem status"
-          },
-          {
-            "id": "romantico",
-            "text": "Detalhes delicados, laços, babados"
-          },
-          {
-            "id": "sexy",
-            "text": "Roupas que valorizem meu corpo: couro, zíper, fendas"
-          },
-          {
-            "id": "dramatico",
-            "text": "Detalhes marcantes, firmeza e peso"
-          },
-          {
-            "id": "criativo",
-            "text": "Detalhes diferentes do convencional, produções ousadas"
-          }
-        ]
-      },
       "properties": {
         "questionNumber": "4 de 10",
         "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
