@@ -1,4 +1,3 @@
-// @ts-nocheck
 // src/components/editor/quiz/QuizConfigurationPanel.tsx
 // Painel específico para configurar questões baseadas no JSON do Quiz de Estilo Pessoal
 

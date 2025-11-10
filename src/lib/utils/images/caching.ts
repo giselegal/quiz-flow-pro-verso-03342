@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { ImageCacheEntry } from './types';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';

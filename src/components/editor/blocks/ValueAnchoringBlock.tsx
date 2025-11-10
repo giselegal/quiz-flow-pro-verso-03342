@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import { getMarginClass } from '@/lib/utils/margins';
 

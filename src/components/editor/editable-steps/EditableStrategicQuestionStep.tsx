@@ -1,4 +1,3 @@
-// @ts-nocheck - Temporary suppression for QuizStep interface compatibility
 import React, { useMemo } from 'react';
 import { SelectableBlock } from '../SelectableBlock';
 

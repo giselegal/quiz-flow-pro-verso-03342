@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Card } from '@/components/ui/card';
 import { Gift, Star } from 'lucide-react';
 import { optimizeCloudinaryUrl } from '@/lib/utils/imageUtils';

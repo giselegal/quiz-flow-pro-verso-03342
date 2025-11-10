@@ -1,5 +1,4 @@
 import { appLogger } from '@/lib/utils/appLogger';
-// @ts-nocheck
 /**
  * Utility to clean localStorage from invalid quiz-question blocks
  * that shouldn't appear in Step 1 of the funnel

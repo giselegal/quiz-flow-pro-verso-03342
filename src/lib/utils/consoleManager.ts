@@ -1,5 +1,4 @@
 import { appLogger } from '@/lib/utils/appLogger';
-// @ts-nocheck
 /**
  * 🔧 CONSOLE MANAGER
  * Gerencia logs de forma otimizada e remove logs desnecessários em produção

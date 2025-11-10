@@ -1,5 +1,4 @@
 import { appLogger } from '@/lib/utils/appLogger';
-// @ts-nocheck
 /**
  * 🎯 CORE SERVICES INDEX - CONSOLIDAÇÃO ARQUITETURAL
  * 

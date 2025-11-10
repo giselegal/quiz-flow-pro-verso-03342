@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { StyleResult } from '@/types/quiz';
 import { EditorBlock } from '@/types/editor';
 

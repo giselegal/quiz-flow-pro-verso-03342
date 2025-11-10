@@ -1,4 +1,3 @@
-// @ts-nocheck 
 // ConnectedQuizResultsBlock suppressed for build compatibility
 // This component needs significant refactoring for new types
 

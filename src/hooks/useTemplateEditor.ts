@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 HOOK: useTemplateEditor (LEGACY)
  *

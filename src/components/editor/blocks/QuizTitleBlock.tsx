@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import { InlineEditText } from './InlineEditText';
 import type { BlockComponentProps } from '@/types/blocks';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 // QuestionEditor suppressed for build compatibility  
 // Complex question type handling needs refactoring
 

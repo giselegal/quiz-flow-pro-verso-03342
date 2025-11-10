@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { trackButtonClick } from './analytics';
 import { ABTestVariant, ABTestConfig } from '@/types/abtest';
 import { StorageService } from '@/services/core/StorageService';

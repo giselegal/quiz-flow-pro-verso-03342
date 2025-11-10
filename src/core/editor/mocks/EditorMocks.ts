@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🧪 IMPLEMENTAÇÕES MOCK PARA TESTE DO EDITOR DESACOPLADO
  * 

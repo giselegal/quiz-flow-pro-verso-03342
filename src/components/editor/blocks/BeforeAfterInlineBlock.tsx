@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import type { BlockData } from '@/types/blocks';
 import { ArrowRightLeft, Eye, EyeOff } from 'lucide-react';

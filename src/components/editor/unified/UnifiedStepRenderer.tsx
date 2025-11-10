@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { Suspense, useMemo, lazy, useEffect } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { stepRegistry } from '@/components/step-registry/StepRegistry';

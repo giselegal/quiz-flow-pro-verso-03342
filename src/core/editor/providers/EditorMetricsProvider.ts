@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 📊 PROVIDER DE MÉTRICAS DO EDITOR
  * 

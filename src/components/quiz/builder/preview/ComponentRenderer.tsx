@@ -21,7 +21,6 @@
  * ---
  */
 
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
 import { Card } from '@/components/ui/card';

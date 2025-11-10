@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FunnelStage } from '@/types/editor';
 import React from 'react';
 import { appLogger } from '@/lib/utils/appLogger';

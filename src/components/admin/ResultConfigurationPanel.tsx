@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎨 RESULT CONFIGURATION PANEL - CONFIGURAÇÃO NOCODE DE RESULTADOS
  * 

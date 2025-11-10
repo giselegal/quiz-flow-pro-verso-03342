@@ -1,4 +1,3 @@
-// @ts-nocheck
 import caktoquizQuestions from '@/services/data/caktoquizQuestions';
 import { calculateQuizScore } from '@/services/data/correctQuizQuestions';
 import { useMemo } from 'react';

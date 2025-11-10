@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 QUIZ SERVICE - Application Layer
  * 

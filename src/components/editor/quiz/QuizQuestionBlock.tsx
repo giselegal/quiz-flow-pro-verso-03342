@@ -1,4 +1,3 @@
-// @ts-nocheck
 // src/components/editor/quiz/QuizQuestionBlock.tsx
 // Bloco específico para renderizar questões baseadas na configuração JSON
 

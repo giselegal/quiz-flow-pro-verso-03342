@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🔄 CARREGADOR E ADAPTADOR PARA MI  static loadLegacyTemplate() {
     // Template básico temporário até implementar o sistema completo

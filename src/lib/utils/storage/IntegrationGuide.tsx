@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 INTEGRATION GUIDE - Guia de Integração dos Contextos Sincronizados
  * 

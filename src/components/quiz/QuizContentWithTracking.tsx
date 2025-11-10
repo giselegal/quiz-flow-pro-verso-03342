@@ -1,4 +1,3 @@
-// @ts-nocheck
 import QuizQuestion from '../QuizQuestion';
 import { UserResponse } from '@/types/quiz';
 import { QuizHeader } from './QuizHeader';

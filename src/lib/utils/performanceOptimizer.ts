@@ -1,5 +1,4 @@
 import { appLogger } from '@/lib/utils/appLogger';
-// @ts-nocheck
 /**
  * 🚀 PERFORMANCE OPTIMIZER
  * Utilitário para monitoramento e otimização de performance

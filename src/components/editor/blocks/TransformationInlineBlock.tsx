@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { InlineEditableText } from './InlineEditableText';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';

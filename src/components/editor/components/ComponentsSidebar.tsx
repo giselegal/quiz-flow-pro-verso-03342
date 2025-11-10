@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
 import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';

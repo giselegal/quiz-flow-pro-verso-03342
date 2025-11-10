@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 FUNNEL SERVICE - Application Layer
  * 

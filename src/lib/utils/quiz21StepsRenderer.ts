@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 RENDERIZADOR ESPECÍFICO PARA QUIZ 21 STEPS
  *

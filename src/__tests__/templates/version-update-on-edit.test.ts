@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @file version-update-on-edit.test.ts
  * @description Testa se a versão de publicação é atualizada quando blocos são reordenados e editados

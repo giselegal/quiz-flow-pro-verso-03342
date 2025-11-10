@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Comprehensive Brand Design System
 // Centralized design tokens for consistent styling across the application
 

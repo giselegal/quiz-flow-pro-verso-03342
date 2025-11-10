@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎨 EDITOR DE FUNIL DESACOPLADO
  * 

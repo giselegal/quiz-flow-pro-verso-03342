@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 📊 DASHBOARD DE MÉTRICAS DO EDITOR
  * 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { useSortable } from '@dnd-kit/sortable';

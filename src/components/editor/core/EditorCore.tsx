@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🏗️ CORE EDITOR INFRASTRUCTURE - FASE 2
  * 

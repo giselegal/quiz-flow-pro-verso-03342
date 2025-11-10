@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { StorageService } from '@/services/core/StorageService';

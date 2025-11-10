@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🧩 COMPONENTES AUXILIARES DO EDITOR
  * 

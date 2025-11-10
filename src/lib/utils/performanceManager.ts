@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 PERFORMANCE MANAGER CONSOLIDADO
  * Gerencia todos os aspectos de performance da aplicação

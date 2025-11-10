@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { ChevronDown, ChevronRight, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QuizCategory, QUIZ_CATEGORIES } from '@/types/quizEditor';

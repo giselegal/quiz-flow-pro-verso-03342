@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FixBlurryImagesOptions } from './images/types';
 import { appLogger } from '@/lib/utils/appLogger';
 

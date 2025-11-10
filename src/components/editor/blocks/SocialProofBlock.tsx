@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import { Star, Quote } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';

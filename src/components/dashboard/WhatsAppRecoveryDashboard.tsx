@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 📱 DASHBOARD DE RECUPERAÇÃO VIA WHATSAPP
  * 

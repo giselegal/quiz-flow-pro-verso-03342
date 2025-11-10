@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Testimonials from '@/components/quiz/result-pages/sales/Testimonials';
 
 /**

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 COLLABORATION PANEL - Interface de Colaboração em Tempo Real
  * 

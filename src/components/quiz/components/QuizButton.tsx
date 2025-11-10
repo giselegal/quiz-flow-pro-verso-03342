@@ -1,4 +1,3 @@
-// @ts-nocheck
 import quizStyles from '@/styles/quiz.module.css';
 
 interface QuizButtonProps {

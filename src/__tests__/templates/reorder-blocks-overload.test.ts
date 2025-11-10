@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @file reorder-blocks-overload.test.ts
  * @description Testa a sobrecarga do método reorderBlocks que aceita tanto array de IDs quanto índices

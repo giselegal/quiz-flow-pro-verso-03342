@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
 import { Card } from '@/components/ui/card';

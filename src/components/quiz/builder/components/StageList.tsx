@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { QuizStage } from '@/types/quizBuilder';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

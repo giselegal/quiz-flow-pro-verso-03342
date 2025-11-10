@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 QUIZ APP CONNECTED - Conectado ao Sistema de Configuração API
  * 

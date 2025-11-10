@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { OptimizedImage } from '@/components/ui/optimized-image';

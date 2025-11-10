@@ -1,5 +1,3 @@
-/* @ts-nocheck */
-// @ts-nocheck
 import { getOptimizedContainerClasses } from '@/config/containerConfig';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

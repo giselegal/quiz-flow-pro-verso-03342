@@ -22,7 +22,6 @@
  * ---
  */
 
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { Block, FAQItem } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';

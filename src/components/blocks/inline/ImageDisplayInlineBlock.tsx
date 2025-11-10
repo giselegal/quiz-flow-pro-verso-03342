@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import EnhancedOptimizedImage from '@/components/ui/EnhancedOptimizedImage';
 // Update the import path below to the correct location of BlockComponentProps

@@ -1,5 +1,4 @@
 import { appLogger } from '@/lib/utils/appLogger';
-// @ts-nocheck
 export const getPersonalizedText = (
   text: string,
   pattern: string,

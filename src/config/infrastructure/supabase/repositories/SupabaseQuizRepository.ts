@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 SUPABASE QUIZ REPOSITORY - Infrastructure Implementation
  * 

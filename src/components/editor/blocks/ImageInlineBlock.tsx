@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { Edit3, Image as ImageIcon } from 'lucide-react';

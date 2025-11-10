@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { Clock } from 'lucide-react';

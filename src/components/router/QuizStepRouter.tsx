@@ -5,7 +5,6 @@
  * ou o editor modular universal.
  */
 
-// @ts-nocheck
 import React from 'react';
 
 export interface QuizStepRouterProps {

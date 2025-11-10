@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { BlockDefinition } from '@/types/editor';
 import {
   AlignLeft,

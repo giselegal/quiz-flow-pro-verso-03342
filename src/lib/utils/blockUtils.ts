@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Utilitários para manipulação segura de blocos do editor
  */

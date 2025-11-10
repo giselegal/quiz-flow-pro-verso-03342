@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ✏️ PÁGINA DE EDIÇÃO DE QUIZ NO DASHBOARD
  * 

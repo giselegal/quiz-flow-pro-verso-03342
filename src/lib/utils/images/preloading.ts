@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { type BankImage, getAllImages, getImageById } from '@/services/data/imageBank';
 import { optimizeCloudinaryUrl } from './optimization';
 import { PreloadOptions, ImageCacheEntry } from './types';
