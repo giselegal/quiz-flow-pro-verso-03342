@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { VERSION } from '../utils/version';
+import { VERSION } from '@/utils/version';
 
 export const BuildInfo: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);

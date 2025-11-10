@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { LANDING_PAGE_AB_TEST, getABTestRedirectUrl } from '../utils/abtest';
+import { LANDING_PAGE_AB_TEST, getABTestRedirectUrl } from '@/utils/abtest';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface ABTestRedirectProps {

@@ -14,7 +14,7 @@ interface AdminRouteProps {
 }
 
 export const AdminRoute: React.FC<AdminRouteProps> = ({ children, requireEditor = false }) => {
-  appLogger.debug('AdminRoute accessed', { requireEditor });
+  console.log('AdminRoute accessed', { requireEditor });
 
   // Acesso livre ao painel administrativo - sem autenticação
   return <>{children}</>;
