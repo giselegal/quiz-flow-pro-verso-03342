@@ -38,8 +38,8 @@ const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLi
 const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
 const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 
-// Error boundary
-import { StepErrorBoundary } from '../StepErrorBoundary';
+// ✅ P2: Error boundaries granulares
+import { StepErrorBoundary, ColumnErrorBoundary } from '@/components/error';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // Dev-only metrics panel
