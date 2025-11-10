@@ -53,6 +53,21 @@
 <body>
   <div id="root"></div>
   <script src="/supabase-fallback-system.js" type="text/javascript"></script>
+  <!-- Guard para garantir que __assign exista como função antes do app -->
+  <script>
+    (function () {
+      try {
+        var isFn = typeof window.__assign === 'function';
+        if (!isFn) {
+          console.warn('[Guard] __assign ausente ou inválida. Reinjetando fallback seguro.');
+          window.__assign = Object.assign || function (target) {
+            for (var i = 1; i < arguments.length; i++) { var src = arguments[i]; for (var k in src) if (Object.prototype.hasOwnProperty.call(src, k)) target[k] = src[k]; }
+            return target;
+          };
+        }
+      } catch (e) { console.error('[Guard] Falha ao validar __assign', e); }
+    })();
+  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
