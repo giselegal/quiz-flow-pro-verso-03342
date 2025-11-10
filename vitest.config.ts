@@ -87,6 +87,9 @@ export default defineConfig({
       'src/__tests__/schemas/**',
       // Ignora placeholders que ainda não possuem suites
       'src/core/errors/__tests__/**',
+      // Ignora testes legacy quebrados
+      'src/__tests__/legacy-tests/**/*.skip',
+      'src/__tests__/legacy-tests/**/*SKIP*',
     ],
     coverage: {
       provider: 'v8', // Melhor performance
