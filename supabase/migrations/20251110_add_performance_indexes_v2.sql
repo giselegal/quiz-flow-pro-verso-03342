@@ -387,12 +387,12 @@ CREATE OR REPLACE VIEW table_size_stats AS
 SELECT
   schemaname,
   tablename,
-  pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS total_size,
-  pg_size_pretty(pg_relation_size(schemaname||'.'||tablename)) AS table_size,
-  pg_size_pretty(pg_indexes_size(schemaname||'.'||tablename)) AS indexes_size
+  pg_size_pretty(pg_total_relation_size((schemaname||'.'||tablename)::regclass)) AS total_size,
+  pg_size_pretty(pg_relation_size((schemaname||'.'||tablename)::regclass)) AS table_size,
+  pg_size_pretty(pg_indexes_size((schemaname||'.'||tablename)::regclass)) AS indexes_size
 FROM pg_tables
 WHERE schemaname = 'public'
-ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
+ORDER BY pg_total_relation_size((schemaname||'.'||tablename)::regclass) DESC;
 
 -- ============================================================================
 -- SECTION 8: STATISTICS UPDATE
