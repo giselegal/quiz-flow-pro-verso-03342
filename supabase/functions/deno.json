@@ -1,0 +1,32 @@
+{
+  "importMap": "./import_map.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["deno.window"],
+    "strict": true
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"],
+      "exclude": ["no-explicit-any"]
+    }
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve"
+  },
+  "tasks": {
+    "check": "deno check **/*.ts",
+    "test": "deno test --allow-all --unstable",
+    "serve:ai-quiz": "deno run --allow-all --watch ai-quiz-generator/index.ts",
+    "serve:security": "deno run --allow-all --watch security-monitor/index.ts",
+    "serve:rate-limiter": "deno run --allow-all --watch rate-limiter/index.ts",
+    "serve:csp": "deno run --allow-all --watch csp-headers/index.ts",
+    "serve:ai-opt": "deno run --allow-all --watch ai-optimization-engine/index.ts",
+    "serve:github-ai": "deno run --allow-all --watch github-models-ai/index.ts"
+  }
+}
