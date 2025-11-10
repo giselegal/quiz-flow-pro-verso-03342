@@ -372,8 +372,8 @@ $$;
 CREATE OR REPLACE VIEW index_usage_stats AS
 SELECT
   schemaname,
-  tablename,
-  indexname,
+  relname AS tablename,
+  indexrelname AS indexname,
   idx_scan,
   idx_tup_read,
   idx_tup_fetch,
