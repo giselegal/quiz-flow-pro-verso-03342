@@ -47,8 +47,15 @@ export async function loadStepFromJson(
 
   // ✅ MIGRAÇÃO v3.2: Usando arquivos individuais por template (compatibilidade mantendo leitura v3.1)
   // Path dinâmico baseado no templateId fornecido
+  // Em DEV, adicionar query param para bust de cache do navegador e proxies
+  let bust = '';
+  try {
+    // @ts-ignore
+    if ((import.meta as any)?.env?.DEV) bust = `?t=${Date.now()}`;
+  } catch { /* noop */ }
+
   const paths: string[] = [
-    `/templates/funnels/${templateId}/steps/${stepId}.json`,
+    `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`,
   ];
 
   appLogger.info(`🔍 [jsonStepLoader] Tentando carregar: ${paths[0]}`);

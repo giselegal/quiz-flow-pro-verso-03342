@@ -12,6 +12,7 @@
 
 import React, { useMemo, useRef, useCallback, useEffect } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { VIRTUALIZATION_THRESHOLD, OVERSCAN_DEFAULT, OVERSCAN_EDITING } from '@/components/editor/performance/constants';
 import type { Block } from '@/types/editor';
 import { OptimizedBlockRenderer } from '@/components/editor/OptimizedBlockRenderer';
 import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
@@ -45,6 +46,7 @@ interface UnifiedStepRendererProps {
     // Prefetch
     nextStepId?: string;
     currentStepNumber?: number;
+    isEditingMode?: boolean; // novo: influencia overscan
 }
 
 // ============================================================================
@@ -59,6 +61,7 @@ const VirtualizedStepRenderer: React.FC<{
     onBlockDelete?: (blockId: string) => void;
     onBlockSelect?: (blockId: string) => void;
     className?: string;
+    isEditingMode?: boolean;
 }> = ({
     blocks,
     isPreview,
@@ -67,14 +70,16 @@ const VirtualizedStepRenderer: React.FC<{
     onBlockDelete,
     onBlockSelect,
     className = '',
+    isEditingMode = false,
 }) => {
         const containerRef = useRef<HTMLDivElement>(null);
 
         const virtualizer = useVirtualizer({
             count: blocks.length,
             getScrollElement: () => containerRef.current,
-            estimateSize: useCallback(() => 100, []), // altura média de um bloco
-            overscan: 5, // renderizar 5 blocos extras fora da viewport
+            estimateSize: useCallback(() => 100, []), // altura média de um bloco (ajustado dinamicamente via medida)
+            getItemKey: useCallback((index: number) => blocks[index]?.id ?? `idx-${index}`, [blocks]),
+            overscan: isEditingMode ? OVERSCAN_EDITING : OVERSCAN_DEFAULT,
         });
 
         useEffect(() => {
@@ -193,11 +198,12 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = React.mem
         onBlockDelete,
         onBlockSelect,
         enableVirtualization = true,
-        virtualizationThreshold = 20,
+        virtualizationThreshold = VIRTUALIZATION_THRESHOLD,
         className = '',
         style,
         nextStepId,
         currentStepNumber,
+        isEditingMode = false,
     }) => {
         // Memoizar array de blocos para evitar re-renders
         const blocks = useMemo(() => {
@@ -259,6 +265,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = React.mem
                     onBlockDelete={onBlockDelete}
                     onBlockSelect={onBlockSelect}
                     className="step-content"
+                    isEditingMode={isEditingMode}
                 />
             </div>
         );

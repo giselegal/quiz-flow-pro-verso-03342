@@ -209,22 +209,32 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
         
         // Primeiro, tentar IndexedDB se habilitado e válido
         const idbKey = funnelId ? `${funnelId}:${stepId}` : stepId;
-        const idbRecord = await IndexedTemplateCache.get(idbKey);
-        if (idbRecord && Array.isArray(idbRecord.blocks)) {
-          const fresh = (Date.now() - idbRecord.savedAt) < (idbRecord.ttlMs || 5 * 60_000);
-          if (fresh) {
-            const loadTime = performance.now() - startTime;
-            const metadata: SourceMetadata = {
-              source: priority,
-              timestamp: Date.now(),
-              cacheHit: true,
-              loadTime,
-            };
-            const result: DataSourceResult<Block[]> = { data: idbRecord.blocks, metadata };
-            if (this.options.enableCache) this.setInCache(cacheKey, result);
-            this.log(stepId, 'IDB_HIT', priority, loadTime);
-            this.recordMetric(stepId, priority, loadTime);
-            return result;
+        // Em DEV + JSON_ONLY, evitamos retornar IDB para TEMPLATE_DEFAULT
+        let skipIdb = false;
+        try {
+          // @ts-ignore
+          const isDev = !!(import.meta as any)?.env?.DEV;
+          skipIdb = isDev && this.JSON_ONLY && priority === DataSourcePriority.TEMPLATE_DEFAULT;
+        } catch { /* noop */ }
+
+        if (!skipIdb) {
+          const idbRecord = await IndexedTemplateCache.get(idbKey);
+          if (idbRecord && Array.isArray(idbRecord.blocks)) {
+            const fresh = (Date.now() - idbRecord.savedAt) < (idbRecord.ttlMs || 5 * 60_000);
+            if (fresh) {
+              const loadTime = performance.now() - startTime;
+              const metadata: SourceMetadata = {
+                source: priority,
+                timestamp: Date.now(),
+                cacheHit: true,
+                loadTime,
+              };
+              const result: DataSourceResult<Block[]> = { data: idbRecord.blocks, metadata };
+              if (this.options.enableCache) this.setInCache(cacheKey, result);
+              this.log(stepId, 'IDB_HIT', priority, loadTime);
+              this.recordMetric(stepId, priority, loadTime);
+              return result;
+            }
           }
         }
 
@@ -236,6 +246,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
             timestamp: Date.now(),
             cacheHit: false,
             loadTime,
+            // Expor versão do template quando fonte for TEMPLATE_DEFAULT (JSON v3.2)
+            version: priority === DataSourcePriority.TEMPLATE_DEFAULT ? 'v3.2' : undefined,
           };
 
           const result: DataSourceResult<Block[]> = { data: blocks, metadata };
@@ -247,11 +259,20 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
           // Gravar no IndexedDB (opt-in) com TTL padrão 10min
           try {
+            // TTL dinâmico em DEV para TEMPLATE_DEFAULT → refletir edições mais rápido
+            let ttl = 10 * 60_000; // 10min padrão
+            try {
+              // @ts-ignore
+              const isDev = !!(import.meta as any)?.env?.DEV;
+              if (isDev && priority === DataSourcePriority.TEMPLATE_DEFAULT) {
+                ttl = 1500; // 1.5s em desenvolvimento para JSON local
+              }
+            } catch { /* noop */ }
             await IndexedTemplateCache.set(idbKey, {
               key: idbKey,
               blocks,
               savedAt: Date.now(),
-              ttlMs: 10 * 60_000,
+              ttlMs: ttl,
               version: 'v3.2',
             });
           } catch { /* ignore idb errors */ }

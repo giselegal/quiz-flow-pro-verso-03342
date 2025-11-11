@@ -11,9 +11,11 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as ReactWindow from 'react-window';
+import { VIRTUALIZATION_THRESHOLD } from '@/components/editor/performance/constants';
 const List: any = (ReactWindow as any).FixedSizeList || (ReactWindow as any).VariableSizeList;
 type RowRendererProps = { index: number; style: React.CSSProperties };
 import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 // Unificar renderização com o runtime: usar o UniversalBlockRenderer (registry híbrido)
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
 import { cn } from '@/lib/utils';
@@ -39,10 +41,12 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
     className,
 }) => {
     const { step, blocks, isLoading, error } = useStepBlocks(stepIndex);
+    const unified = useSuperUnified();
+    const isEditingMode = unified.state.editor.isEditing;
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
     // Virtualização condicional para listas grandes
-    const VIRTUAL_THRESHOLD = 60;
+    const VIRTUAL_THRESHOLD = VIRTUALIZATION_THRESHOLD;
     const ESTIMATED_ROW_HEIGHT = 180; // px (estimativa conservadora)
     const containerRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
@@ -152,7 +156,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                         width={listWidth}
                         itemCount={blocks.length}
                         itemSize={ESTIMATED_ROW_HEIGHT}
-                        overscanCount={4}
+                        overscanCount={isEditingMode ? 8 : 4}
                         className="rounded-md"
                     >
                         {(rowProps: RowRendererProps) => {
