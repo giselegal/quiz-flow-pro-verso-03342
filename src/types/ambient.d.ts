@@ -43,7 +43,7 @@ declare module '../services/phase5DataSimulator' {
 
 declare module '@/services/canonical/TemplateService' {
   // Declaração expandida para refletir API real usada no código
-  export type Block = any;
+  export type Block = import('@/types/editor').Block;
   export interface ServiceResult<T> { success: boolean; data: T; error?: Error }
   export class TemplateService {
     static getInstance(...args: any[]): TemplateService;
