@@ -166,7 +166,7 @@
     "sanity:runtime": "tsx scripts/sanity/runtime-load.ts",
     "export:html": "tsx scripts/export/html-from-blocks.ts",
     "diagnostic:blocks": "tsx scripts/diagnostic/blocks-audit.ts",
-    "edge:check": "cd supabase/functions && deno task check",
+    "edge:check": "cd supabase/functions && deno check *.ts */*.ts",
     "edge:lint": "cd supabase/functions && deno lint",
     "edge:fmt": "cd supabase/functions && deno fmt",
     "edge:test": "cd supabase/functions && deno test --allow-all",

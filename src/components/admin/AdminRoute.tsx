@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface AdminRouteProps {
   children: React.ReactNode;
@@ -14,7 +15,7 @@ interface AdminRouteProps {
 }
 
 export const AdminRoute: React.FC<AdminRouteProps> = ({ children, requireEditor = false }) => {
-  console.log('AdminRoute accessed', { requireEditor });
+  appLogger.info('AdminRoute accessed', { data: [{ requireEditor }] });
 
   // Acesso livre ao painel administrativo - sem autenticação
   return <>{children}</>;

@@ -1,6 +1,7 @@
 import { StorageService } from '@/services/core/StorageService';
 import { captureSentryError, captureSentryMessage, addSentryBreadcrumb } from '@/config/sentry.config';
 import type * as Sentry from '@sentry/react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * 🚀 Logger unificado com níveis e desativação automática em produção.
@@ -58,7 +59,7 @@ export function createLogger(options: LoggerOptions = {}) {
             if (!shouldLog('debug')) return;
             
             // Console log
-            console.log(format('debug', msg), ...rest);
+            appLogger.info(String(format('debug', msg)), { data: [...rest] });
             
             // Sentry breadcrumb (apenas se tiver meta)
             if (rest.length > 0 && typeof rest[0] === 'object') {
@@ -75,7 +76,7 @@ export function createLogger(options: LoggerOptions = {}) {
             if (!shouldLog('info')) return;
             
             // Console log
-            console.info(format('info', msg), ...rest);
+            appLogger.info(String(format('info', msg)), { data: [...rest] });
             
             // Sentry breadcrumb
             if (rest.length > 0 && typeof rest[0] === 'object') {
@@ -92,7 +93,7 @@ export function createLogger(options: LoggerOptions = {}) {
             if (!shouldLog('warn')) return;
             
             // Console log
-            console.warn(format('warn', msg), ...rest);
+            appLogger.warn(String(format('warn', msg)), { data: [...rest] });
             
             // Sentry breadcrumb + message (warnings são rastreados)
             const meta = rest.length > 0 && typeof rest[0] === 'object' ? rest[0] : {};
@@ -112,7 +113,7 @@ export function createLogger(options: LoggerOptions = {}) {
         
         error: (msg: any, ...rest: any[]) => {
             // Errors sempre são logados
-            console.error(format('error', msg), ...rest);
+            appLogger.error(String(format('error', msg)), { data: [...rest] });
             
             const meta = rest.length > 0 && typeof rest[0] === 'object' ? rest[0] : {};
             
