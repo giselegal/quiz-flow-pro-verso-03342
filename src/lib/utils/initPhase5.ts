@@ -7,7 +7,7 @@
  * Execute este script no console do navegador ou importe onde necessário.
  */
 
-import { initializePhase5Data, getPhase5Data } from '../services/phase5DataSimulator';
+import { initializePhase5Data, getPhase5Data } from '@/lib/services/phase5DataSimulator';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -20,13 +20,8 @@ export function initPhase5() {
         if (existingData) {
             appLogger.info('✅ Dados da Fase 5 já existem. Carregando...');
             const data = getPhase5Data();
-            appLogger.info('📊 Dados carregados:', { data: [{
-                            funnels: data.funnels?.length || 0,
-                            users: data.users?.length || 0,
-                            sessions: data.sessions?.length || 0,
-                            responses: data.responses?.length || 0,
-                            results: data.results?.length || 0,
-                        }] });
+            // Estrutura simulada minimal - campos podem não existir no stub
+            appLogger.info('📊 Dados carregados (simulado):', { data: [data] });
             return data;
         }
 
@@ -36,10 +31,15 @@ export function initPhase5() {
 
         appLogger.info('🎉 Fase 5 inicializada com sucesso!');
         appLogger.info('📈 Métricas disponíveis:');
-        appLogger.info(`   • ${(data as any).sessions?.filter((s: any) => s.status === 'completed').length || 0} sessões completas`);
-        appLogger.info(`   • ${(data as any).sessions?.filter((s: any) => s.status === 'active').length || 0} sessões ativas`);
-        appLogger.info(`   • ${Math.round((((data as any).sessions?.filter((s: any) => s.status === 'completed').length || 0) / ((data as any).sessions?.length || 1)) * 100)}% taxa de conclusão`);
-        appLogger.info(`   • ${(data as any).results?.length || 0} resultados de quiz`);
+    const sessions = (data as any).sessions || [];
+    const results = (data as any).results || [];
+    const completed = sessions.filter((s: any) => s?.status === 'completed').length;
+    const active = sessions.filter((s: any) => s?.status === 'active').length;
+    const completionRate = Math.round((completed / Math.max(sessions.length, 1)) * 100);
+    appLogger.info(`   • ${completed} sessões completas`);
+    appLogger.info(`   • ${active} sessões ativas`);
+    appLogger.info(`   • ${completionRate}% taxa de conclusão`);
+    appLogger.info(`   • ${results.length} resultados de quiz`);
 
         appLogger.info('✨ Dashboard agora tem dados reais para exibir!');
         return data;
