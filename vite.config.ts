@@ -63,8 +63,8 @@ export default defineConfig(({ mode }) => {
       port: preferredPort,
       open: false,
       cors: true,
-      // Se a porta preferida estiver ocupada, permitir fallback automático
-      strictPort: false,
+      // Forçar usar especificamente a porta 8080
+      strictPort: true,
       proxy: {
         '/api': {
           target: 'http://localhost:3001',
