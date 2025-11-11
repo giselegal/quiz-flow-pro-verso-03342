@@ -76,15 +76,25 @@ export default defineConfig(({ mode }) => {
         deny: ['**/supabase/functions/**'],
       },
       headers: {
+        // 🔧 OTIMIZADO PARA VS CODE SIMPLE BROWSER
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma',
+        'Access-Control-Allow-Credentials': 'true',
+        'X-Frame-Options': 'SAMEORIGIN',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
         'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+        // Garantir que o Simple Browser funcione
+        'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' ws: wss: http: https:",
       },
-      // Não fixar porta do HMR; deixar sincronizar com a porta efetiva do servidor
+      // HMR otimizado para ambientes containerizados
       hmr: {
-        overlay: true, // ✅ FASE 3: Mostrar overlay de erros
-        timeout: 5000, // ✅ FASE 3: Timeout maior para evitar "closed without opened"
+        overlay: true,
+        timeout: 10000,
+        // Garantir que funcione no VS Code
+        port: preferredPort + 1000, // Usar porta separada para HMR
+        host: 'localhost',
       },
     },
     preview: {
@@ -247,9 +257,50 @@ export default defineConfig(({ mode }) => {
       esbuildOptions: {
         target: 'es2020',
         keepNames: true,
-        // 🔧 FIX: Injetar polyfill para __assign
+        // 🔧 FIX: Injetar TypeScript helpers completos
         banner: {
-          js: `if (typeof globalThis.__assign !== 'function') { globalThis.__assign = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var src = arguments[i]; for (var k in src) if (Object.prototype.hasOwnProperty.call(src, k)) target[k] = src[k]; } return target; }; }`
+          js: `
+// TypeScript Runtime Helpers
+if (typeof globalThis.__assign !== 'function') {
+  globalThis.__assign = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+}
+
+if (typeof globalThis.__rest !== 'function') {
+  globalThis.__rest = function (source, excluded) {
+    var target = {};
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key) && excluded.indexOf(key) < 0) {
+        target[key] = source[key];
+      }
+    }
+    return target;
+  };
+}
+
+if (typeof globalThis.__spreadArray !== 'function') {
+  globalThis.__spreadArray = function (to, from, pack) {
+    if (pack || arguments.length === 2) {
+      for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+          if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+          ar[i] = from[i];
+        }
+      }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+  };
+}
+`
         }
       },
     },
@@ -259,8 +310,6 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
       'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
       'import.meta.env.VITE_SUPABASE_PROJECT_ID': JSON.stringify(env.VITE_SUPABASE_PROJECT_ID),
-      // 🔧 FIX: Garantir que __assign esteja disponível globalmente
-      '__assign': 'Object.assign',
     },
     esbuild: { target: 'es2020' },
     test: {

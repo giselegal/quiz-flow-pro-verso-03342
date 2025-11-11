@@ -1,33 +1,32 @@
 /**
- * 🎯 SCRIPT PARA FORÇAR ATIVAÇÃO DA JANELA LOVABLE
- *
- * Este script deve ser executado no console do navegador
- * para forçar a abertura da janela de preview do Lovable
+ * 🚀 SCRIPT PARA MODO STANDALONE LOCAL 
+ * 
+ * Transforma a aplicação em 100% independente do Lovable.dev
+ * Otimizado para funcionar no Simple Browser do VS Code
  */
 
-// 1. Configuração global forçada
-window.LOVABLE_FORCE_WINDOW = true;
-window.LOVABLE_CONFIG = {
-  projectId: '65efd17d-5178-405d-9721-909c97470c6d',
-  apiBaseUrl: 'https://api.lovable.dev',
-  previewMode: true,
-  enableLivePreview: true,
+// 1. Configuração LOCAL independente
+window.LOCAL_DEV_MODE = true;
+window.APP_CONFIG = {
+  mode: 'standalone-local',
+  apiBaseUrl: window.location.origin,
+  enableLocalPreview: true,
   autoRefresh: true,
-  windowMode: 'preview',
-  forceOpen: true,
+  windowMode: 'local-dev',
+  vscodeSimpleBrowser: true,
   timestamp: Date.now(),
 };
 
-// 2. Meta tags forçadas
-const forceMetaTags = [
-  { name: 'lovable-preview-enabled', content: 'true' },
-  { name: 'lovable-window-preview', content: 'active' },
-  { name: 'lovable-auto-open', content: 'true' },
-  { name: 'lovable-force-window', content: 'enabled' },
-  { name: 'lovable-project-id', content: '65efd17d-5178-405d-9721-909c97470c6d' },
+// 2. Meta tags para modo local
+const localMetaTags = [
+  { name: 'local-dev-mode', content: 'true' },
+  { name: 'standalone-app', content: 'active' },
+  { name: 'vscode-simple-browser', content: 'enabled' },
+  { name: 'independent-mode', content: 'true' },
+  { name: 'app-version', content: 'standalone-v1.0' },
 ];
 
-forceMetaTags.forEach(({ name, content }) => {
+localMetaTags.forEach(({ name, content }) => {
   let metaTag = document.querySelector(`meta[name="${name}"]`);
   if (!metaTag) {
     metaTag = document.createElement('meta');
@@ -37,16 +36,16 @@ forceMetaTags.forEach(({ name, content }) => {
   metaTag.setAttribute('content', content);
 });
 
-// 3. Atributos HTML forçados
-document.documentElement.setAttribute('data-lovable-preview', 'active');
-document.documentElement.setAttribute('data-lovable-window', 'open');
-document.documentElement.setAttribute('data-lovable-force', 'true');
-document.documentElement.setAttribute('data-project-id', '65efd17d-5178-405d-9721-909c97470c6d');
+// 3. Atributos HTML para modo local
+document.documentElement.setAttribute('data-standalone-mode', 'active');
+document.documentElement.setAttribute('data-local-dev', 'true');
+document.documentElement.setAttribute('data-vscode-browser', 'true');
+document.documentElement.setAttribute('data-app-mode', 'independent');
 
-// 4. Classes CSS para detecção
-document.body.classList.add('lovable-preview-active');
-document.body.classList.add('lovable-window-forced');
-document.body.classList.add('lovable-editor-mode');
+// 4. Classes CSS para modo standalone
+document.body.classList.add('standalone-mode-active');
+document.body.classList.add('local-dev-mode');
+document.body.classList.add('vscode-simple-browser');
 
 // 5. Eventos massivos para ativação
 const forceEvents = [
