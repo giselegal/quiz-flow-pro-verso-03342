@@ -73,8 +73,8 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
         try {
             const steps = facade.getSteps();
 
-            appLogger.info('🔍 useStepBlocks DEBUG - stepIndex:', { data: [stepIndex] });
-            appLogger.info('🔍 useStepBlocks DEBUG - Total steps:', { data: [steps.length] });
+            // Logs reduzidos: manter apenas metadados leves (evitar serialização profunda)
+            appLogger.debug('🔍 useStepBlocks meta', { data: [`idx:${stepIndex}`, `total:${steps.length}`] });
 
             if (stepIndex < 0 || stepIndex >= steps.length) {
                 appLogger.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de steps: ${steps.length}`);
@@ -82,11 +82,10 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             }
 
             const funnelStep = steps[stepIndex];
-            appLogger.info('🔍 useStepBlocks DEBUG - Funnel Step:', { data: [funnelStep] });
-            appLogger.info('🔍 useStepBlocks DEBUG - Blocks:', { data: [funnelStep.blocks?.length || 0] });
+            appLogger.debug('🔍 useStepBlocks stepCore', { data: [funnelStep.id, funnelStep.blocks?.length || 0] });
 
             // Normalizar blocos (garantir que todos têm propriedades necessárias)
-            const normalizedBlocks = (funnelStep.blocks || []).map((block, idx) => ({
+            const normalizedBlocks = (funnelStep.blocks || []).map((block: any, idx: number) => ({
                 id: block.id || `block-${idx}`,
                 type: block.type || 'text',
                 order: idx, // Usar índice como order
@@ -94,7 +93,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 properties: block.data || {},
             }));
 
-            appLogger.info('🔍 useStepBlocks DEBUG - Normalized blocks:', { data: [normalizedBlocks] });
+            appLogger.debug('🔍 useStepBlocks normalizedCount', { data: [normalizedBlocks.length] });
 
             return {
                 id: funnelStep.id || `step-${stepIndex + 1}`,
@@ -129,7 +128,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(true);
             setError(null);
 
-            appLogger.info(`🔄 Atualizando bloco ${blockId} no step ${step.id}:`, { data: [updates] });
+            appLogger.debug(`🔄 updateBlock ${blockId}`, { data: [Object.keys(updates)] });
 
             // Atualizar via Facade
             facade.updateBlock(step.id, blockId, updates);
@@ -137,7 +136,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            appLogger.info(`✅ Bloco ${blockId} atualizado com sucesso`);
+            appLogger.debug(`✅ updateBlock OK ${blockId}`);
         } catch (err) {
             appLogger.error('❌ Erro ao atualizar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao atualizar bloco');
@@ -172,14 +171,14 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 },
             };
 
-            appLogger.info(`➕ Adicionando bloco ao step ${step.id}:`, { data: [newBlock] });
+            appLogger.debug(`➕ addBlock ${newBlock.id}`, { data: [type] });
 
             facade.addBlock(step.id, newBlock);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            appLogger.info(`✅ Bloco ${newBlock.id} adicionado com sucesso`);
+            appLogger.debug(`✅ addBlock OK ${newBlock.id}`);
         } catch (err) {
             appLogger.error('❌ Erro ao adicionar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao adicionar bloco');
@@ -201,14 +200,14 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(true);
             setError(null);
 
-            appLogger.info(`🗑️ Deletando bloco ${blockId} do step ${step.id}`);
+            appLogger.debug(`🗑️ deleteBlock ${blockId}`);
 
             facade.removeBlock(step.id, blockId);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            appLogger.info(`✅ Bloco ${blockId} deletado com sucesso`);
+            appLogger.debug(`✅ deleteBlock OK ${blockId}`);
         } catch (err) {
             appLogger.error('❌ Erro ao deletar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao deletar bloco');
@@ -244,14 +243,14 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 },
             };
 
-            appLogger.info(`📋 Duplicando bloco ${blockId}:`, { data: [duplicate] });
+            appLogger.debug(`📋 duplicateBlock ${blockId} -> ${duplicate.id}`);
 
             facade.addBlock(step.id, duplicate);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            appLogger.info(`✅ Bloco ${blockId} duplicado com sucesso`);
+            appLogger.debug(`✅ duplicateBlock OK ${duplicate.id}`);
         } catch (err) {
             appLogger.error('❌ Erro ao duplicar bloco:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao duplicar bloco');
@@ -279,7 +278,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(true);
             setError(null);
 
-            appLogger.info(`🔄 Reordenando blocos: ${fromIndex} → ${toIndex}`);
+            appLogger.debug(`🔄 reorderBlocks ${fromIndex}->${toIndex}`);
 
             const reordered = [...step.blocks];
             const [moved] = reordered.splice(fromIndex, 1);
@@ -292,7 +291,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            appLogger.info('✅ Blocos reordenados com sucesso');
+            appLogger.debug('✅ reorderBlocks OK');
         } catch (err) {
             appLogger.error('❌ Erro ao reordenar blocos:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao reordenar blocos');
@@ -346,13 +345,13 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
 
         // Escutar mudanças nos blocos
         const unsubscribeBlocks = facade.on('blocks/changed', (payload: any) => {
-            appLogger.info('📡 Evento blocks/changed recebido:', { data: [payload] });
+            appLogger.debug('📡 evt blocks/changed', { data: [`len:${payload.blocks.length}`, `reason:${payload.reason}`] });
             setUpdateTrigger(prev => prev + 1);
         });
 
         // Escutar mudanças nos steps
         const unsubscribeSteps = facade.on('steps/changed', (payload: any) => {
-            appLogger.info('📡 Evento steps/changed recebido:', { data: [payload] });
+            appLogger.debug('📡 evt steps/changed', { data: [`len:${payload.steps.length}`, `reason:${payload.reason}`] });
             setUpdateTrigger(prev => prev + 1);
         });
 

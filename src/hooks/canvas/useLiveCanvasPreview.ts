@@ -64,7 +64,7 @@ const DEFAULT_OPTIONS: Required<LivePreviewOptions> = {
     enableCache: true,
     cacheTTL: 30000, // 30s
     enableDebug: false,
-    maxUpdatesPerSecond: 10,
+    maxUpdatesPerSecond: 5,
     isolatePreviewState: true,
 };
 
@@ -291,14 +291,27 @@ export function useLiveCanvasPreview(
         }
     }, [state.isActive, steps, setRegistrySteps, options.enableDebug]);
 
+    // ===== HELPERS =====
+    // Assinatura estável e leve para detectar mudanças sem JSON.stringify profundo
+    const computeSignature = useCallback((inSteps: any[], selId?: string | null) => {
+        try {
+            const core = inSteps.map((s: any, idx: number) => {
+                const id = s?.id ?? `step-${idx + 1}`;
+                const order = s?.order ?? (idx + 1);
+                const blocksLen = Array.isArray(s?.blocks) ? s.blocks.length : 0;
+                return `${id}:${order}:${blocksLen}`;
+            }).join('|');
+            return `${core}|sel:${selId ?? ''}`;
+        } catch {
+            return `len:${inSteps?.length || 0}|sel:${selId ?? ''}`;
+        }
+    }, []);
+
     // ===== AUTO UPDATE EFFECT =====
     useEffect(() => {
         if (!state.isActive) return;
 
-        const stepsHash = JSON.stringify({
-            steps: debouncedSteps,
-            selectedStepId: debouncedSelectedStepId,
-        });
+        const stepsHash = computeSignature(debouncedSteps, debouncedSelectedStepId);
 
         // Skip se não houve mudanças
         if (stepsHash === lastStepsHashRef.current) return;
@@ -371,7 +384,7 @@ export function useLiveCanvasPreview(
             }));
 
             if (options.enableDebug) {
-                appLogger.info('🎭 Auto preview update completed in', { data: [`${updateTime  }ms`] });
+                appLogger.info('🎭 Auto preview update completed', { data: [`${updateTime}ms`, `steps:${debouncedSteps.length}`] });
             }
         } catch (error) {
             setState(prev => ({
@@ -388,7 +401,8 @@ export function useLiveCanvasPreview(
     }, [
         state.isActive,
         debouncedSteps,
-        debouncedSelectedStepId,
+    debouncedSelectedStepId,
+    computeSignature,
         canUpdate,
         recordUpdate,
         getFromCache,

@@ -167,7 +167,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
 
     // ===== REFS =====
     const lastStepsHashRef = useRef<string>('');
-    const updateTimeoutRef = useRef<NodeJS.Timeout>();
+    // Removido timeout interno para evitar latência duplicada; confiar apenas no debounce
     const previewContainerRef = useRef<HTMLDivElement>(null);
 
     // ===== REGISTRY HOOK =====
@@ -212,71 +212,67 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
         onStepChange?.(stepId);
     }, [onStepChange]);
 
+    // ===== HELPERS =====
+    const computeSignature = useCallback((inSteps: any[], selId?: string | null) => {
+        try {
+            const core = inSteps.map((s: any, idx: number) => {
+                const id = s?.id ?? `step-${idx + 1}`;
+                const order = s?.order ?? (idx + 1);
+                const blocksLen = Array.isArray(s?.blocks) ? s.blocks.length : 0;
+                return `${id}:${order}:${blocksLen}`;
+            }).join('|');
+            return `${core}|sel:${selId ?? ''}`;
+        } catch {
+            return `len:${inSteps?.length || 0}|sel:${selId ?? ''}`;
+        }
+    }, []);
+
     // ===== SYNC EFFECT =====
     useEffect(() => {
         if (!previewState.isEnabled || !config.autoRefresh) return;
 
-        const stepsHash = JSON.stringify(debouncedSteps);
+        const stepsHash = computeSignature(debouncedSteps, debouncedSelectedStepId || undefined);
 
         // Skip se não houve mudanças reais
         if (stepsHash === lastStepsHashRef.current) return;
 
         setPreviewState(prev => ({ ...prev, status: 'syncing' }));
 
-        // Clear timeout anterior se existir
-        if (updateTimeoutRef.current) {
-            clearTimeout(updateTimeoutRef.current);
+        try {
+            // Converter steps para formato runtime
+            const runtimeMap = convertStepsToRuntimeMap(debouncedSteps);
+            setRegistrySteps(runtimeMap);
+
+            lastStepsHashRef.current = stepsHash;
+
+            setPreviewState(prev => ({
+                ...prev,
+                status: 'idle',
+                lastUpdate: Date.now(),
+                updateCount: prev.updateCount + 1,
+                errorMessage: undefined,
+            }));
+
+            if (config.showDebugInfo) {
+                appLogger.debug('🎭 LiveCanvasPreview synced:', {
+                    stepsCount: debouncedSteps.length,
+                    runtimeSteps: Object.keys(runtimeMap).length,
+                    timestamp: new Date().toISOString(),
+                });
+            }
+        } catch (error) {
+            setPreviewState(prev => ({
+                ...prev,
+                status: 'error',
+                errorMessage: error instanceof Error ? error.message : 'Erro desconhecido',
+            }));
+            appLogger.error('❌ LiveCanvasPreview sync error:', error);
         }
 
-        // Atualizar registry com delay
-        updateTimeoutRef.current = setTimeout(() => {
-            try {
-                // Converter steps para formato runtime
-                const runtimeMap = convertStepsToRuntimeMap(debouncedSteps);
-                setRegistrySteps(runtimeMap);
-
-                lastStepsHashRef.current = stepsHash;
-
-                setPreviewState(prev => ({
-                    ...prev,
-                    status: 'idle',
-                    lastUpdate: Date.now(),
-                    updateCount: prev.updateCount + 1,
-                    errorMessage: undefined,
-                }));
-
-                if (config.showDebugInfo) {
-                    appLogger.debug('🎭 LiveCanvasPreview synced:', {
-                        stepsCount: debouncedSteps.length,
-                        runtimeSteps: Object.keys(runtimeMap).length,
-                        timestamp: new Date().toISOString(),
-                    });
-                }
-            } catch (error) {
-                setPreviewState(prev => ({
-                    ...prev,
-                    status: 'error',
-                    errorMessage: error instanceof Error ? error.message : 'Erro desconhecido',
-                }));
-                appLogger.error('❌ LiveCanvasPreview sync error:', error);
-            }
-        }, 100);
-
-        return () => {
-            if (updateTimeoutRef.current) {
-                clearTimeout(updateTimeoutRef.current);
-            }
-        };
-    }, [debouncedSteps, previewState.isEnabled, config.autoRefresh, config.showDebugInfo, setRegistrySteps]);
+    }, [debouncedSteps, debouncedSelectedStepId, previewState.isEnabled, config.autoRefresh, config.showDebugInfo, setRegistrySteps, computeSignature]);
 
     // ===== CLEANUP =====
-    useEffect(() => {
-        return () => {
-            if (updateTimeoutRef.current) {
-                clearTimeout(updateTimeoutRef.current);
-            }
-        };
-    }, []);
+    // (sem necessidade após remoção do timeout interno)
 
     // ===== RENDER HELPERS =====
     const renderStatusIndicator = () => {
