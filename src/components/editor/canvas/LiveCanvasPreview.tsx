@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 import QuizAppConnected from '../../quiz/QuizAppConnected';
-import { useQuizRuntimeRegistry } from '../../../runtime/quiz/QuizRuntimeRegistry';
+import { useQuizRuntimeRegistry } from '@/core/runtime/quiz/QuizRuntimeRegistry';
 
 // ============================================================================
 // TYPES & INTERFACES

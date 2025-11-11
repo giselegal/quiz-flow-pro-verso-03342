@@ -1,10 +1,28 @@
 import { cn } from '@/lib/utils';
 import { getMarginClass } from '@/lib/utils/margins';
 
+interface ValueItem {
+  item: string;
+  value: number;
+}
+
 interface ValueAnchoringBlockProps {
   title?: string;
   showPricing?: boolean;
   className?: string;
+  block?: {
+    properties?: {
+      title?: string;
+      showPricing?: boolean;
+      marginTop?: number;
+      marginBottom?: number;
+      marginLeft?: number;
+      marginRight?: number;
+      currency?: string;
+      valueItems?: ValueItem[];
+      currentPrice?: number;
+    };
+  };
 }
 
 // Margens agora centralizadas em utils/margins
@@ -31,7 +49,7 @@ const ValueAnchoringBlock: React.FC<ValueAnchoringBlockProps> = ({
     { item: 'Bônus - Visagismo Facial', value: 29 },
   ];
 
-  const totalValue = valueItems.reduce((sum, item) => sum + item.value, 0);
+  const totalValue = valueItems.reduce((sum: number, item: ValueItem) => sum + item.value, 0);
   const currentPrice = properties.currentPrice ?? 39;
   const savings = totalValue - currentPrice;
 
@@ -59,7 +77,7 @@ const ValueAnchoringBlock: React.FC<ValueAnchoringBlockProps> = ({
           <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">{title}</h3>
 
           <div className="space-y-3 mb-6">
-            {valueItems.map((item, index) => (
+            {valueItems.map((item: ValueItem, index: number) => (
               <div
                 key={index}
                 className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10"
