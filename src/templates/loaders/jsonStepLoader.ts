@@ -2,16 +2,21 @@ import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
- * Carrega blocos de um step a partir de JSON dinâmico no diretório public.
+ * Carrega blocos de um step a partir de JSON dinâmico (versão de template v3.2) no diretório public.
  * 
+ * Versões suportadas:
+ *  - v3.1 (legado, ainda presente em alguns arquivos gerados)
+ *  - v3.2 (atual) → estrutura consolidada { blocks: Block[] } ou diretamente Array<Block>
+ *
  * @param stepId - ID do step (ex: "step-01")
  * @param templateId - ID do template/funnel (ex: "quiz21StepsComplete")
  * 
  * Tenta carregar de /templates/funnels/{templateId}/steps/{stepId}.json
- * Aceita dois formatos:
+ * Formatos aceitos:
  *  - Array<Block>
  *  - { blocks: Block[] }
- * Retorna null quando não encontrado (404) ou em erro.
+ *  - { steps: { [stepId]: { blocks: Block[] } } } (compatibilidade master agregador)
+ * Retorna null quando não encontrado (404) ou em erro silencioso.
  */
 export async function loadStepFromJson(
   stepId: string, 
@@ -40,7 +45,7 @@ export async function loadStepFromJson(
     }
   };
 
-  // ✅ APÓS MIGRAÇÃO v3.1: Usando formato v3.1 individual por template
+  // ✅ MIGRAÇÃO v3.2: Usando arquivos individuais por template (compatibilidade mantendo leitura v3.1)
   // Path dinâmico baseado no templateId fornecido
   const paths: string[] = [
     `/templates/funnels/${templateId}/steps/${stepId}.json`,

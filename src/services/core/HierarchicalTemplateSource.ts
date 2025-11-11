@@ -383,10 +383,10 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   }
 
   /**
-  * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico v3.1)
+  * 3️⃣ PRIORIDADE MÉDIA: Template Default (JSON dinâmico v3.2)
   * Carrega de /public/templates/funnels/{activeTemplateId}/steps/<stepId>.json
   * 
-  * ✅ APÓS MIGRAÇÃO v3.1: UnifiedTemplateRegistry REMOVIDO
+  * ✅ Após migração v3.2: UnifiedTemplateRegistry REMOVIDO
   * ✅ Path dinâmico baseado no template ativo
    */
   private async getFromTemplateDefault(stepId: string): Promise<Block[] | null> {

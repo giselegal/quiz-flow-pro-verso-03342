@@ -309,7 +309,7 @@ export class TemplateService extends BaseCanonicalService {
             id,
             name: stepInfo?.name || `Step ${stepNumber}`,
             description: stepInfo?.description || '',
-            version: '3.0',
+            version: '3.2', // Atualizado para refletir versão atual dos JSON steps
             blocks,
             metadata: {
               category: 'quiz-style',
@@ -651,7 +651,7 @@ export class TemplateService extends BaseCanonicalService {
           id: `step-${i.toString().padStart(2, '0')}`,
           name: stepInfo.name,
           description: stepInfo.description,
-          version: '3.0',
+          version: '3.2', // Versão visível na listagem
           blocks: [], // Não carregar blocos na listagem
           metadata: {
             category: 'quiz-style',
