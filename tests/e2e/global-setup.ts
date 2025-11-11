@@ -226,8 +226,9 @@ async function validateEnvironment() {
   }
   
   // Verificar variáveis de ambiente importantes
-  const requiredEnvVars = [
+  const requiredEnvVars: string[] = [
     // Adicionar variáveis necessárias conforme implementação
+    // 'SUPABASE_URL', 'SUPABASE_ANON_KEY', etc.
   ];
   
   for (const envVar of requiredEnvVars) {

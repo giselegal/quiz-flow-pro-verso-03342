@@ -60,8 +60,10 @@ export default defineConfig({
     locale: 'pt-BR',
     timezoneId: 'America/Sao_Paulo',
     
-    // Desabilitar animações para testes mais estáveis
-    reducedMotion: 'reduce',
+    // Configurações de contexto adicionais via launchOptions
+    launchOptions: {
+      args: ['--force-prefers-reduced-motion'],
+    },
   },
   
   // Configuração de projetos (browsers)
@@ -136,8 +138,12 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
         // Configurações específicas para testes visuais
-        reducedMotion: 'reduce',
-        forcedColors: 'none',
+        launchOptions: {
+          args: [
+            '--force-prefers-reduced-motion',
+            '--disable-animations',
+          ],
+        },
       },
       testMatch: ['visual-regression.spec.ts'],
     },
@@ -186,8 +192,8 @@ export default defineConfig({
   outputDir: 'test-results',
   
   // Setup e teardown globais
-  globalSetup: require.resolve('./tests/e2e/global-setup.ts'),
-  globalTeardown: require.resolve('./tests/e2e/global-teardown.ts'),
+  globalSetup: './tests/e2e/global-setup.ts',
+  globalTeardown: './tests/e2e/global-teardown.ts',
   
   // Configurações do servidor web (se necessário iniciar automaticamente)
   webServer: process.env.CI ? undefined : {
@@ -199,11 +205,8 @@ export default defineConfig({
     stderr: 'pipe',
   },
   
-  // Configurações experimentais
-  experimental: {
-    // Habilitar test parallelization por worker
-    testIdAttribute: 'data-testid',
-  },
+  // Configurações adicionais
+  // testIdAttribute configurado via use em cada projeto conforme necessário
   
   // Metadata para relatórios
   metadata: {

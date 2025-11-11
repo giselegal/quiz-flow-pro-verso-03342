@@ -14,9 +14,9 @@ import {
   validateBasicAccessibility,
   ROUTES,
   TIMEOUTS,
-  testResponsiveness,
-  VIEWPORT_FIXTURES
-} from '../helpers/test-helpers';
+  testResponsiveness
+} from './helpers/test-helpers';
+import { VIEWPORT_FIXTURES } from './fixtures/test-fixtures';
 
 test.describe('🔍 Acessibilidade e Qualidade', () => {
   
@@ -122,7 +122,7 @@ test.describe('🔍 Acessibilidade e Qualidade', () => {
     
     await navigateToRoute(page, ROUTES.HOME);
     
-    const responsiveResults = await testResponsiveness(page, async (viewport) => {
+    const responsiveResults = await testResponsiveness(page, async (viewport: { name: string; width: number; height: number }) => {
       // Verificar se elementos principais estão visíveis
       await expect(page.locator('body')).toBeVisible();
       
@@ -165,7 +165,7 @@ test.describe('🔍 Acessibilidade e Qualidade', () => {
     }, viewportsToTest);
     
     // Verificar se a maioria dos testes passou
-    const successCount = responsiveResults.filter(r => r.success).length;
+    const successCount = responsiveResults.filter((r: { success: boolean }) => r.success).length;
     const successRate = (successCount / responsiveResults.length) * 100;
     
     expect(successRate).toBeGreaterThan(80); // Pelo menos 80% dos viewports devem passar

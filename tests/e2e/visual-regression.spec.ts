@@ -11,9 +11,9 @@ import {
   waitForPageLoad, 
   waitForAnimations,
   ROUTES,
-  VIEWPORT_FIXTURES,
   testResponsiveness
-} from '../helpers/test-helpers';
+} from './helpers/test-helpers';
+import { VIEWPORT_FIXTURES } from './fixtures/test-fixtures';
 
 test.describe('📸 Testes Visuais de Regressão', () => {
   

@@ -11,7 +11,7 @@ import path from 'path';
 
 export interface CustomTestResult {
   testName: string;
-  status: 'passed' | 'failed' | 'skipped' | 'timedOut';
+  status: 'passed' | 'failed' | 'skipped' | 'timedOut' | 'interrupted';
   duration: number;
   retries: number;
   error?: string;
@@ -266,8 +266,8 @@ class CustomReporter {
     // Análise de performance
     const performanceTests = this.results.filter(r => r.performance);
     const performance = {
-      averageLoadTime: this.calculateAverage(performanceTests.map(r => r.performance?.loadTime).filter(Boolean)),
-      averageFirstContentfulPaint: this.calculateAverage(performanceTests.map(r => r.performance?.firstContentfulPaint).filter(Boolean)),
+      averageLoadTime: this.calculateAverage(performanceTests.map(r => r.performance?.loadTime).filter((val): val is number => val !== undefined)),
+      averageFirstContentfulPaint: this.calculateAverage(performanceTests.map(r => r.performance?.firstContentfulPaint).filter((val): val is number => val !== undefined)),
       slowestTests: this.results
         .sort((a, b) => b.duration - a.duration)
         .slice(0, 5)

@@ -244,9 +244,9 @@ export async function collectPerformanceMetrics(page: Page) {
     const paint = performance.getEntriesByType('paint');
     
     return {
-      // Navigation timing
-      domContentLoaded: Math.round(navigation.domContentLoadedEventEnd - navigation.navigationStart),
-      loadComplete: Math.round(navigation.loadEventEnd - navigation.navigationStart),
+      // Navigation timing (usando fetchStart como referência)
+      domContentLoaded: Math.round(navigation.domContentLoadedEventEnd - navigation.fetchStart),
+      loadComplete: Math.round(navigation.loadEventEnd - navigation.fetchStart),
       
       // Paint timing
       firstPaint: Math.round(paint.find(p => p.name === 'first-paint')?.startTime || 0),

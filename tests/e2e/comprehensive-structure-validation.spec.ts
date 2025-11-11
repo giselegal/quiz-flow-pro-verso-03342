@@ -408,8 +408,8 @@ test.describe('🏗️ Validação Abrangente da Estrutura Atual', () => {
         const metrics = await page.evaluate(() => {
           const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
           return {
-            domContentLoaded: Math.round(navigation.domContentLoadedEventEnd - navigation.navigationStart),
-            loadComplete: Math.round(navigation.loadEventEnd - navigation.navigationStart),
+        domContentLoaded: Math.round(navigation.domContentLoadedEventEnd - navigation.fetchStart),
+        loadComplete: Math.round(navigation.loadEventEnd - navigation.fetchStart),
             firstPaint: Math.round(performance.getEntriesByName('first-paint')[0]?.startTime || 0),
           };
         });
