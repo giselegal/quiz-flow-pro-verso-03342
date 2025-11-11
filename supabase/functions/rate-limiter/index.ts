@@ -3,13 +3,26 @@
  * Sistema de controle de taxa de requisições para prevenir abuso
  */
 
+// @ts-ignore: Deno imports  
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// @ts-ignore: JSR imports
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { 
+  createCorsResponse, 
+  createErrorResponse, 
+  handleCorsPreflightRequest,
+  extractClientIP,
+  corsHeaders,
+  type RateLimitConfig,
+  type RateLimitInfo
+} from '../_shared/types.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+// @ts-ignore: Deno global está disponível no runtime
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
+  };
+};
 
 interface RateLimit {
   identifier: string; // IP, user_id, ou API key
@@ -37,7 +50,7 @@ const rateLimits = {
   'template_optimizer': { limit: 100, window: 3600 }, // 100 req/hora
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });

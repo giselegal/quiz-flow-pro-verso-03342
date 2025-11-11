@@ -15,17 +15,8 @@ declare global {
   };
 }
 
-// Tipos para serve function
-declare module "https://deno.land/std@0.168.0/http/server.ts" {
-  export function serve(
-    handler: (request: Request) => Response | Promise<Response>,
-    options?: {
-      port?: number;
-      hostname?: string;
-      signal?: AbortSignal;
-    }
-  ): Promise<void>;
-}
+// Tipos para serve function (sem declaração de módulo para evitar erros)
+// A função serve será importada diretamente nas edge functions com @ts-ignore
 
 // Tipos para CORS headers comuns
 export interface CorsHeaders {
@@ -178,17 +169,19 @@ export interface CSPConfig {
   directives: CSPDirectives;
 }
 
+// Constante CORS headers padrão
+export const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+};
+
 // Utilitários para Edge Functions
 export const createCorsResponse = (
   data: unknown, 
   status = 200, 
   additionalHeaders: Record<string, string> = {}
 ): Response => {
-  const corsHeaders: CorsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  };
-
   return new Response(
     JSON.stringify(data),
     {
@@ -215,13 +208,7 @@ export const createErrorResponse = (
 };
 
 export const handleCorsPreflightRequest = (): Response => {
-  return new Response(null, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    },
-  });
+  return new Response(null, { headers: corsHeaders });
 };
 
 // Validadores comuns

@@ -1,17 +1,36 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "allowJs": true,
-    "lib": ["dom", "deno.ns", "deno.window"],
-    "types": ["@deno/types"],
+    "lib": ["DOM", "ES2022", "WebWorker"],
     "strict": false,
     "skipLibCheck": true,
+    "noEmit": true,
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false
   },
   "include": [
     "**/*.ts"
+  ],
+  "exclude": [
+    "../../src/pages/examples/**",
+    "../../examples/**", 
+    "../../backend-example/**",
+    "../../archived-legacy-editors/**",
+    "../../archived-examples/**",
+    "../../docs/**",
+    "../../src/config/__tests__/**",
+    "../../src/utils/EditorDiagnostics.ts",
+    "../../src/utils/editorDiagnosticsShim.ts",
+    "../../src/hooks/useAutosave.ts",
+    "../../src/components/editor/interactive/examples/**"
   ]
 }
