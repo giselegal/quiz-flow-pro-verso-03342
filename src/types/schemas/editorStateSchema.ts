@@ -139,6 +139,6 @@ export function getSafeInitialState(persistedState: unknown, fallbackState: any)
     return validation.data;
   }
   
-  appLogger.warn('⚠️ Estado persistido inválido, usando fallback:', { data: [validation.errors?.issues] });
+  appLogger.warn('⚠️ Estado persistido inválido, usando fallback:', { issues: validation.errors?.issues });
   return fallbackState;
 }

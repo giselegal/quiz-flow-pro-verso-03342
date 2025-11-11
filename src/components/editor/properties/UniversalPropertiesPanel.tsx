@@ -50,41 +50,44 @@ export function UniversalPropertiesPanel() {
             return { type: 'funnel', data: null };
         }
 
+        const currentStepKey = `step-${editor.state.currentStep}`;
+        const currentStepBlocks = editor.state.stepBlocks?.[currentStepKey] || [];
+
         // Prioridade 1: Bloco selecionado
         if (editor.state?.selectedBlockId) {
-            const block = editor.state.stepBlocks?.find(
+            const block = currentStepBlocks.find(
                 (b: any) => b.id === editor.state.selectedBlockId,
             );
 
             return {
                 type: 'block',
                 blockId: editor.state.selectedBlockId,
-                stepId: editor.state.currentStepKey || '',
+                stepId: currentStepKey,
                 data: block || null,
             };
         }
 
         // Prioridade 2: Etapa ativa (mas nenhum bloco selecionado)
-        if (editor.state?.currentStepKey) {
-            const stepData = editor.state.templateConfig?.steps?.[editor.state.currentStepKey];
-
+        if (editor.state?.currentStep !== undefined) {
             return {
                 type: 'step',
-                stepId: editor.state.currentStepKey,
-                data: stepData || null,
+                stepId: currentStepKey,
+                data: {
+                    stepNumber: editor.state.currentStep,
+                    blocks: currentStepBlocks,
+                },
             };
         }
 
         // Prioridade 3: Funil (default quando nada selecionado)
         return {
             type: 'funnel',
-            data: editor.state?.templateConfig || null,
+            data: editor.state?.stepBlocks || null,
         };
     }, [
         editor?.state?.selectedBlockId,
-        editor?.state?.currentStepKey,
+        editor?.state?.currentStep,
         editor?.state?.stepBlocks,
-        editor?.state?.templateConfig,
     ]);
 
     if (!editor) {

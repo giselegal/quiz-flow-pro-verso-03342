@@ -83,7 +83,7 @@ class QuizResultsService {
    * Calcula resultados completos baseado nas respostas
    */
   async calculateResults(session: QuizSession): Promise<QuizResults> {
-    appLogger.info('🔍 Iniciando cálculo de resultados para sessão:', { data: [session.id] });
+    appLogger.info('🔍 Iniciando cálculo de resultados para sessão:', { sessionId: session.id });
 
     const startTime = Date.now();
     const responses = session.responses || {};
@@ -123,16 +123,16 @@ class QuizResultsService {
       // 5. Salvar resultados no banco
       await this.saveResults(results);
 
-      appLogger.info('✅ Resultados calculados com sucesso:', { data: [{
+      appLogger.info('✅ Resultados calculados com sucesso:', {
                 sessionId: session.id,
                 primaryStyle: styleProfile.primaryStyle,
                 completionScore,
                 timeSpent: results.metadata.timeSpent,
-              }] });
+              });
 
       return results;
     } catch (error: any) {
-      appLogger.error('❌ Erro no cálculo de resultados:', { data: [error] });
+      appLogger.error('❌ Erro no cálculo de resultados:', error instanceof Error ? error : new Error(String(error)));
       throw new Error(`Falha no cálculo de resultados: ${error.message}`);
     }
   }
@@ -151,7 +151,7 @@ class QuizResultsService {
         if (step1Response[field] && typeof step1Response[field] === 'string') {
           const name = step1Response[field].trim();
           if (name.length >= 2) {
-            appLogger.info('👤 Nome extraído da etapa 1:', { data: [name] });
+            appLogger.info('👤 Nome extraído da etapa 1:', { name });
             return name;
           }
         }
@@ -166,13 +166,13 @@ class QuizResultsService {
         if (formData.name && typeof formData.name === 'string') {
           const name = formData.name.trim();
           if (name.length >= 2) {
-            appLogger.info('👤 Nome extraído do formulário:', { data: [name] });
+            appLogger.info('👤 Nome extraído do formulário:', { name });
             // Persistir em StorageService para consumo universal (core)
             try {
               StorageService.safeSetString('userName', name);
               StorageService.safeSetString('quizUserName', name);
             } catch (error) {
-              appLogger.warn('[quizResultsService] Erro ao salvar userName:', { data: [error] });
+              appLogger.warn('[quizResultsService] Erro ao salvar userName:', error instanceof Error ? { error: error.message } : { error: String(error) });
             }
             return name;
           }
@@ -186,11 +186,11 @@ class QuizResultsService {
         StorageService.safeGetString('userName') ||
         StorageService.safeGetString('quizUserName');
       if (storedName && storedName.trim().length >= 2) {
-        appLogger.info('👤 Nome recuperado do StorageService:', { data: [storedName] });
+        appLogger.info('👤 Nome recuperado do StorageService:', { storedName });
         return storedName.trim();
       }
     } catch (error) {
-      appLogger.warn('[quizResultsService] Erro ao recuperar userName do storage:', { data: [error] });
+      appLogger.warn('[quizResultsService] Erro ao recuperar userName do storage:', error instanceof Error ? { error: error.message } : { error: String(error) });
     }
 
     appLogger.info('⚠️ Nome do usuário não encontrado nas respostas');
@@ -279,7 +279,7 @@ class QuizResultsService {
     this.analyzeOccasionPreferences(analysis.occasions, styleScores);
     this.analyzePersonalityTraits(analysis.personality, styleScores);
 
-    appLogger.info('📈 Scores calculados:', { data: [styleScores] });
+    appLogger.info('📈 Scores calculados:', { styleScores });
 
     // Determinar estilo primário e secundário
     const sortedStyles = Object.entries(styleScores)
@@ -445,7 +445,7 @@ class QuizResultsService {
     profile: StyleProfile,
     analysis: any,
   ): PersonalizedRecommendations {
-    appLogger.info('🎨 Gerando recomendações para:', { data: [profile.primaryStyle] });
+    appLogger.info('🎨 Gerando recomendações para:', { primaryStyle: profile.primaryStyle });
 
     const recommendations = {
       wardrobe: {
@@ -735,7 +735,7 @@ class QuizResultsService {
 
       appLogger.info('✅ Resultados salvos no Supabase');
     } catch (error: any) {
-      appLogger.error('❌ Erro ao salvar resultados:', { data: [error] });
+      appLogger.error('❌ Erro ao salvar resultados:', error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   }
@@ -755,7 +755,7 @@ class QuizResultsService {
 
       return data ? this.transformDbResultsToQuizResults(data) : null;
     } catch (error: any) {
-      appLogger.error('❌ Erro ao carregar resultados:', { data: [error] });
+      appLogger.error('❌ Erro ao carregar resultados:', error instanceof Error ? error : new Error(String(error)));
       return null;
     }
   }

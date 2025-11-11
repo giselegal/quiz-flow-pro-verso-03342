@@ -33,8 +33,19 @@ export class UnifiedDataService {
     return [];
   }
 
+  static async getFunnel(funnelId: string): Promise<UnifiedFunnel | null> {
+    appLogger.warn('⚠️ UnifiedDataService.getFunnel() stub called', { funnelId });
+    // Return stub funnel matching the ID
+    return {
+      id: funnelId,
+      name: 'Stub Funnel',
+      status: 'draft',
+      settings: {},
+    };
+  }
+
   static async deleteFunnel(funnelId: string): Promise<boolean> {
-    appLogger.warn('⚠️ UnifiedDataService.deleteFunnel() stub called');
+    appLogger.warn('⚠️ UnifiedDataService.deleteFunnel() stub called', { funnelId });
     return true;
   }
 
