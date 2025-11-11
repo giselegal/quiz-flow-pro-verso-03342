@@ -34,12 +34,33 @@ declare module '../services/phase5DataSimulator' {
 }
 
 declare module '@/services/canonical/TemplateService' {
-  // Alinhar com o módulo real para evitar erros de export inexistente
+  // Declaração expandida para refletir API real usada no código
+  export interface Block { [key: string]: any }
+  export interface ServiceResult<T> { success: boolean; data: T; error?: Error }
   export class TemplateService {
     static getInstance(...args: any[]): TemplateService;
+    getStep(stepId: string, templateId?: string, options?: any): Promise<ServiceResult<Block[]>>;
+    getAllStepsSync(): Record<string, any>;
+    getStepOrder(): string[];
+    steps: {
+      list(): ServiceResult<any[]>;
+      get(stepNumber: number): Promise<ServiceResult<Block[]>>;
+    };
   }
-  export const templateService: any;
+  export const templateService: TemplateService;
   export const quizEditorBridge: any;
+  // Compat: alguns arquivos importam TemplateRegistry direto (não exportado publicamente)
+  export const TemplateRegistry: any;
+}
+
+// Modular quiz steps (placeholder para tipos completos)
+declare module '@/components/quiz-modular' {
+  import * as React from 'react';
+  export const ModularIntroStep: React.ComponentType<any>;
+  export const ModularQuestionStep: React.ComponentType<any>;
+  export const ModularStrategicQuestionStep: React.ComponentType<any>;
+  export const ModularTransitionStep: React.ComponentType<any>;
+  export const ModularResultStep: React.ComponentType<any>;
 }
 
 declare module '@/lib/utils/logger' {

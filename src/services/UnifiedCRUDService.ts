@@ -20,7 +20,7 @@ import { toast } from '@/hooks/use-toast';
 import { versioningService } from './versioningService';
 import { historyManager } from './HistoryManager';
 import { StorageService } from '@/services/core/StorageService';
-import { createLogger } from '@/lib/utils/logger';
+import { createLogger } from '@/lib/utils/appLogger';
 import { appLogger } from '@/lib/utils/appLogger'; // 🆕 G46 FIX: Structured logging
 
 const logger = createLogger({ namespace: 'UnifiedCRUDService' });

@@ -62,7 +62,7 @@ export const LazyStyleResultCard = lazy(() =>
   import(
     /* webpackChunkName: "style-result-card" */
     '@/components/editor/quiz/components/StyleResultCard'
-  ).then(m => ({ default: m.StyleResultCard })),
+  ).then(m => ({ default: (m as any).StyleResultCard || m.default })),
 );
 
 /**
@@ -73,7 +73,7 @@ export const LazyOfferMap = lazy(() =>
   import(
     /* webpackChunkName: "offer-map" */
     '@/components/editor/quiz/components/OfferMap'
-  ).then(m => ({ default: m.OfferMap })),
+  ).then(m => ({ default: (m as any).OfferMap || m.default })),
 );
 
 /**
@@ -131,13 +131,13 @@ export function preloadAllComponents(): void {
     requestIdleCallback(() => {
       // Prioridade 1: Preview (mais usado)
       preloadEditorComponents.isolatedPreview();
-      
+
       setTimeout(() => {
         // Prioridade 2: Theme e Analytics
         preloadEditorComponents.theme();
         preloadEditorComponents.analytics();
       }, 1000);
-      
+
       setTimeout(() => {
         // Prioridade 3: Preview de produção
         preloadEditorComponents.preview();

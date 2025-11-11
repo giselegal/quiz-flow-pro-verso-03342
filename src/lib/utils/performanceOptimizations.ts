@@ -126,3 +126,27 @@ export const optimizedSetTimeout = (callback: () => void, delay: number): NodeJS
 export const optimizedSetInterval = (callback: () => void, delay: number): NodeJS.Timeout => {
   return setInterval(callback, delay);
 };
+
+// requestAnimationFrame otimizado (wrapper para facilitar mocks/testes)
+export const optimizedRAF = (callback: FrameRequestCallback): number => {
+  return requestAnimationFrame(callback);
+};
+
+// Registro simples de timers para permitir cleanupAllTimers()
+const _activeTimers: Array<number | NodeJS.Timeout> = [];
+export function trackTimer(id: number | NodeJS.Timeout) {
+  _activeTimers.push(id);
+}
+
+// Limpa timers e animações registradas (usado por performanceManager)
+export function cleanupAllTimers() {
+  for (const t of _activeTimers) {
+    if (typeof t === 'number') {
+      cancelAnimationFrame(t);
+    } else {
+      clearTimeout(t as NodeJS.Timeout);
+      // setInterval também é Timeout em Node typings
+    }
+  }
+  _activeTimers.length = 0;
+}
