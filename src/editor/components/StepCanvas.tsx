@@ -10,7 +10,11 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { VariableSizeList as List } from 'react-window';
+// Importação dinâmica para evitar falhas de tipos quando declarações não incluem listas nomeadas.
+// Usaremos require implícito via any para contornar falta de typings específicos.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ReactWindow: any = require('react-window');
+const List: any = ReactWindow.FixedSizeList || ReactWindow.VariableSizeList;
 import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
 // Unificar renderização com o runtime: usar o UniversalBlockRenderer (registry híbrido)
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
@@ -146,11 +150,12 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                         height={listHeight}
                         width={'100%'}
                         itemCount={blocks.length}
-                        itemSize={() => ESTIMATED_ROW_HEIGHT}
+                        itemSize={ESTIMATED_ROW_HEIGHT}
                         overscanCount={4}
                         className="rounded-md"
                     >
-                        {({ index, style }) => {
+                        {(rowProps: any) => {
+                            const { index, style } = rowProps;
                             const block = blocks[index];
                             const isSelected = selectedBlockId === block.id;
                             const isDragOver = dragOverIndex === index;

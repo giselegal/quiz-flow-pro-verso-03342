@@ -105,14 +105,12 @@ export class SupabaseQuizRepository implements QuizRepository {
       if (pagesError) throw pagesError;
 
       // Normalizar funnelData garantindo campos esperados com defaults
-      return this.mapToQuizEntity(
-        {
-          ...funnelData,
-          is_published: funnelData.is_published ?? false,
-          version: funnelData.version ?? 1,
-        } as SupabaseFunnel,
-        pagesData || []
-      );
+      const normalizedFunnel = {
+        ...(funnelData as any),
+        is_published: (funnelData as any).is_published ?? false,
+        version: (funnelData as any).version ?? 1,
+      } as SupabaseFunnel;
+      return this.mapToQuizEntity(normalizedFunnel, pagesData || []);
     } catch (error) {
       appLogger.error('Error finding quiz by id:', { data: [error] });
       return null;
@@ -173,14 +171,12 @@ export class SupabaseQuizRepository implements QuizRepository {
             .eq('funnel_id', funnelData.id)
             .order('page_order');
 
-          return this.mapToQuizEntity(
-            {
-              ...funnelData,
-              is_published: funnelData.is_published ?? false,
-              version: funnelData.version ?? 1,
-            } as SupabaseFunnel,
-            pagesData || []
-          );
+          const normalizedFunnel = {
+            ...(funnelData as any),
+            is_published: (funnelData as any).is_published ?? false,
+            version: (funnelData as any).version ?? 1,
+          } as SupabaseFunnel;
+          return this.mapToQuizEntity(normalizedFunnel, pagesData || []);
         }),
       );
 
@@ -554,14 +550,12 @@ export class SupabaseQuizRepository implements QuizRepository {
             .eq('funnel_id', funnelData.id)
             .order('page_order');
 
-          return this.mapToQuizEntity(
-            {
-              ...funnelData,
-              is_published: funnelData.is_published ?? false,
-              version: funnelData.version ?? 1,
-            } as SupabaseFunnel,
-            pagesData || []
-          );
+          const normalizedFunnel = {
+            ...(funnelData as any),
+            is_published: (funnelData as any).is_published ?? false,
+            version: (funnelData as any).version ?? 1,
+          } as SupabaseFunnel;
+          return this.mapToQuizEntity(normalizedFunnel, pagesData || []);
         }),
       );
     } catch (error) {
@@ -635,12 +629,12 @@ export class SupabaseQuizRepository implements QuizRepository {
       funnelData.id,
       {
         title: funnelData.name,
-        description: funnelData.description,
+  description: funnelData.description ?? undefined,
         category: settings.category || 'general',
         tags: settings.tags || [],
         estimatedDuration: settings.estimatedDuration || 5,
         difficulty: settings.difficulty || 'medium',
-        isPublished: funnelData.is_published,
+  isPublished: !!funnelData.is_published,
         publishedAt: funnelData.is_published ? new Date(funnelData.updated_at) : undefined,
         createdAt: new Date(funnelData.created_at),
         updatedAt: new Date(funnelData.updated_at),
