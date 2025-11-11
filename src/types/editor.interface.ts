@@ -1,8 +1,13 @@
 import { LucideIcon } from 'lucide-react';
-import { SimpleComponent } from './quiz';
+// SimpleComponent não existe em '@/types/quiz' - usando fallback local minimal para evitar erro de import
+export interface SimpleComponent {
+  type: string;
+  name?: string;
+  props?: Record<string, any>;
+}
 
 export interface ComponentType {
-  type: SimpleComponent['type'];
+  type: string;
   name: string;
   icon: LucideIcon;
   description: string;

@@ -9,7 +9,15 @@ declare module '../templates/registry/index' {
 }
 
 declare module '../../hooks/usePerformanceTest' {
-  export const usePerformanceTest: any;
+  export const usePerformanceTest: (component: string, options?: {
+    enabled?: boolean;
+    onAlert?: (alert: { message: string; type?: string; timestamp: number }) => void;
+  }) => {
+    startTest: () => void;
+    stopTest: () => void;
+    metrics: { [key: string]: any } & { renderTime?: number; memoryUsage?: number; reRenderCount?: number; networkLatency?: number };
+    alerts: Array<{ message: string; type?: string; timestamp: number }>;
+  };
 }
 
 declare module '../types/editor' {
@@ -35,16 +43,28 @@ declare module '../services/phase5DataSimulator' {
 
 declare module '@/services/canonical/TemplateService' {
   // Declaração expandida para refletir API real usada no código
-  export interface Block { [key: string]: any }
+  export type Block = any;
   export interface ServiceResult<T> { success: boolean; data: T; error?: Error }
   export class TemplateService {
     static getInstance(...args: any[]): TemplateService;
     getStep(stepId: string, templateId?: string, options?: any): Promise<ServiceResult<Block[]>>;
     getAllStepsSync(): Record<string, any>;
     getStepOrder(): string[];
+    lazyLoadStep(stepId: string, preloadNeighbors?: boolean): Promise<any>;
+    prepareTemplate(templateId: string, options?: any): Promise<ServiceResult<void>>;
+    setActiveTemplate(templateId: string, totalSteps: number): void;
+    setActiveFunnel(funnelId: string | null): void;
+    invalidateStepCache(stepId: string): void;
+    clearCache(): void;
+    getTemplate(id: string): Promise<ServiceResult<any>>;
+    normalizeBlocks(blocks: any[]): Block[];
     steps: {
       list(): ServiceResult<any[]>;
       get(stepNumber: number): Promise<ServiceResult<Block[]>>;
+      add(stepInfo: any): Promise<ServiceResult<void>>;
+      remove(stepId: string): Promise<ServiceResult<void>>;
+      duplicate(stepId: string): Promise<ServiceResult<any>>;
+      reorder(stepIds: string[]): Promise<ServiceResult<void>>;
     };
   }
   export const templateService: TemplateService;

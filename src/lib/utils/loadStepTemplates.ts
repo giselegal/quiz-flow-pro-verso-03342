@@ -12,6 +12,7 @@ import { templateCache } from '@/lib/utils/TemplateCache';
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { templateKey } from '@/lib/utils/cacheKeys';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
+// Compat: TemplateRegistry pode não estar exposto publicamente – tipar como any via módulo canônico
 import { TemplateRegistry } from '@/services/canonical/TemplateService';
 
 // Alias para compatibilidade
@@ -105,9 +106,10 @@ export function loadStepTemplate(stepId: string): Block[] {
 
   // 2. Tentar obter do template canônico (TS)
   const canonicalTemplate = getQuiz21StepsTemplate();
-  if (canonicalTemplate && canonicalTemplate[stepId]) {
+    const ct: any = canonicalTemplate as any;
+    if (ct && ct[stepId]) {
     appLogger.info(`✅ [loadStepTemplate] Usando fonte canônica (TS) para ${stepId}`);
-    const blocks = Array.isArray(canonicalTemplate[stepId]) ? canonicalTemplate[stepId] : [];
+      const blocks = Array.isArray(ct[stepId]) ? ct[stepId] : [];
     
     // Salvar no cache
     templateCache.set(cacheKey, blocks);

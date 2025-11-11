@@ -1,7 +1,7 @@
 // Simplified Template File
 // Placeholder templates to avoid complex type issues
 
-import type { BlockData } from '../types/blocks';
+import type { BlockData } from '@/types/blocks';
 
 export function getEtapa1Template(): BlockData[] {
   return [

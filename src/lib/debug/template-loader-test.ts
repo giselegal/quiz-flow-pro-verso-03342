@@ -4,7 +4,7 @@
  * Script para diagnosticar problemas no carregamento de templates
  */
 
-import { loadFullTemplate } from '../templates/registry/index';
+import { loadFullTemplate } from '@/templates/registry';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export async function testTemplateLoading() {
@@ -24,10 +24,11 @@ export async function testTemplateLoading() {
       const loadTime = performance.now() - startTime;
       
       if (template) {
+        const t: any = template as any;
         appLogger.info(`✅ Template ${templateId} carregado com sucesso em ${loadTime.toFixed(2)}ms`);
-        appLogger.info(`   - Nome: ${template.name}`);
-        appLogger.info(`   - Etapas: ${template.steps.length}`);
-        appLogger.info(`   - Categoria: ${template.category}`);
+        appLogger.info(`   - Nome: ${t.name}`);
+        appLogger.info(`   - Etapas: ${t.steps.length}`);
+        appLogger.info(`   - Categoria: ${t.category}`);
       } else {
         appLogger.error(`❌ Template ${templateId} retornou null`);
       }

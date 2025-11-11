@@ -287,7 +287,8 @@ export class HotmartWebhookManager {
   // Recuperar parâmetros UTM armazenados
   private getStoredUTMParameters(): Record<string, string> {
     try {
-      return StorageService.safeGetJSON('utm_parameters');
+      const data = StorageService.safeGetJSON('utm_parameters');
+      return (data || {}) as Record<string, string>;
     } catch {
       return {};
     }

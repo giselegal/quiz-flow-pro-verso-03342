@@ -1,4 +1,4 @@
-import { StyleResult } from '../types/quiz';
+import type { StyleResult } from '@/types/quiz';
 
 /**
  * Representa a resposta de um usuário para uma pergunta

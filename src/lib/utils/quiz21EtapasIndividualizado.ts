@@ -1,4 +1,4 @@
-import type { BlockData } from '../types/blocks';
+import type { BlockData } from '@/types/blocks';
 
 /**
  * Template de 21 Etapas com Componentes INDIVIDUALIZADOS

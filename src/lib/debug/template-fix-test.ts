@@ -2,7 +2,7 @@
  * 🔧 TESTE DE CORREÇÃO DE TEMPLATES
  */
 
-import { loadFullTemplate } from '../templates/registry/index';
+import { loadFullTemplate } from '@/templates/registry';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export async function testTemplateFix() {
@@ -17,10 +17,11 @@ export async function testTemplateFix() {
       const template = await loadFullTemplate(templateId);
       
       if (template) {
+        const t: any = template as any;
         appLogger.info(`✅ ${templateId} carregado:`, { data: [{
-                    name: template.name,
-                    steps: template.steps?.length || 0,
-                    hasConfig: !!template.config,
+                    name: t.name,
+                    steps: t.steps?.length || 0,
+                    hasConfig: !!t.config,
                   }] });
       } else {
         appLogger.error(`❌ ${templateId} retornou null`);

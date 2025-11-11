@@ -46,6 +46,7 @@ import {
     ModularResultStep as ResultStep,
 } from '@/components/quiz-modular';
 import { appLogger } from '@/lib/utils/appLogger';
+import { useBlockRegistry } from '@/core/runtime/quiz/blocks/BlockRegistry';
 
 interface QuizAppConnectedProps {
     funnelId?: string;

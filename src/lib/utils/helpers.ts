@@ -7,7 +7,12 @@
  * - [ ] Separar dados default de estilos default (responsabilidades distintas)
  */
 
-import { SimpleComponent, QuizOption, BonusItem, FaqItem } from '@/types/quiz';
+// Removido import de tipos inexistentes em '@/types/quiz'
+// Definições mínimas locais para migração gradual
+export interface QuizOption { id: string; text: string; value?: string; image?: string }
+export interface BonusItem { id: string; title: string; value?: string; description?: string }
+export interface FaqItem { id: string; question: string; answer: string }
+export interface SimpleComponent { type: string; data: any; style?: any }
 import PlaceholderUtils from './placeholderUtils';
 import { appLogger } from './logger';
 

@@ -79,7 +79,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         const result = await templateService.getStep(stepId);
 
         if (!result.success) {
-          throw new Error(`Template ${stepId} não encontrado: ${result.error.message}`);
+          throw new Error(`Template ${stepId} não encontrado: ${result.error?.message || 'erro desconhecido'}`);
         }
 
         // 3. Adaptar blocos para QuizStep

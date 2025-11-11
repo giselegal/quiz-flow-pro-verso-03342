@@ -73,7 +73,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
     // Performance monitoring
     const performanceTest = usePerformanceTest(component, {
         enabled: includePerformance && isVisible,
-        onAlert: (alert) => {
+        onAlert: (alert: any) => {
             addLog('warn', `Performance Alert: ${alert.message}`, alert);
         },
     });
@@ -429,7 +429,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                 {performanceTest.alerts.length > 0 && (
                                     <div>
                                         <div style={{ fontSize: '10px', color: '#9ca3af', marginBottom: '4px' }}>Alerts</div>
-                                        {performanceTest.alerts.slice(-5).map(alert => (
+                                        {performanceTest.alerts.slice(-5).map((alert: any) => (
                                             <div
                                                 key={alert.timestamp}
                                                 style={{

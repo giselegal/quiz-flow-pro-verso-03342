@@ -198,7 +198,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
             } else {
                 toast({
                     title: 'Erro ao duplicar',
-                    description: 'error' in result ? result.error.message : 'Não foi possível duplicar a etapa',
+                    description: result.error?.message || 'Não foi possível duplicar a etapa',
                     variant: 'destructive',
                 });
             }

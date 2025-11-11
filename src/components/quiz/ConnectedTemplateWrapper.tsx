@@ -31,7 +31,8 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
   sessionId,
 }) => {
   const quizLogic = useQuizLogic();
-  const supabaseQuiz = useSupabaseQuiz(caktoquizQuestions);
+  // Cast para garantir compatibilidade de tipos (dados legacy ainda não migrados)
+  const supabaseQuiz = useSupabaseQuiz(caktoquizQuestions as any);
 
   // ✅ HANDLER: Captura de nome (Etapa 1)
   const handleNameCapture = useCallback(
@@ -75,10 +76,12 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
           : [];
 
       if (stepType === 'question' && stepNumber >= 2 && stepNumber <= 11 && isValid && opts.length) {
-        appLogger.info('📊 ConnectedTemplateWrapper: Processando respostas', { data: [{
-                    stepNumber,
-                    selectedOptions: opts,
-                  }] });
+        appLogger.info('📊 ConnectedTemplateWrapper: Processando respostas', {
+          data: [{
+            stepNumber,
+            selectedOptions: opts,
+          }]
+        });
 
         // Mapear step number para question ID
         const questionId = `q${stepNumber - 1}`; // Step 2 = q1, Step 3 = q2, etc.
@@ -114,10 +117,12 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
           : [];
 
       if (stepType === 'strategic' && stepNumber >= 12 && stepNumber <= 18 && isValid && opts.length) {
-        appLogger.info('🎯 ConnectedTemplateWrapper: Processando resposta estratégica', { data: [{
-                    stepNumber,
-                    selectedOptions: opts,
-                  }] });
+        appLogger.info('🎯 ConnectedTemplateWrapper: Processando resposta estratégica', {
+          data: [{
+            stepNumber,
+            selectedOptions: opts,
+          }]
+        });
 
         // Mapear step number para strategic question ID
         const questionId = `strategic-q${stepNumber - 11}`; // Step 12 = strategic-q1, etc.
@@ -183,16 +188,18 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
 
   // ✅ DEBUG: Log do estado atual
   useEffect(() => {
-    appLogger.info('🔗 ConnectedTemplateWrapper State:', { data: [{
-            stepNumber,
-            stepType,
-            sessionId,
-            currentAnswers: quizLogic.answers.length,
-            strategicAnswers: quizLogic.strategicAnswers.length,
-            userName: quizLogic.userName,
-            quizCompleted: quizLogic.quizCompleted,
-            quizResult: quizLogic.quizResult ? 'Available' : 'Not calculated',
-          }] });
+    appLogger.info('🔗 ConnectedTemplateWrapper State:', {
+      data: [{
+        stepNumber,
+        stepType,
+        sessionId,
+        currentAnswers: quizLogic.answers.length,
+        strategicAnswers: quizLogic.strategicAnswers.length,
+        userName: quizLogic.userName,
+        quizCompleted: quizLogic.quizCompleted,
+        quizResult: quizLogic.quizResult ? 'Available' : 'Not calculated',
+      }]
+    });
   }, [
     stepNumber,
     stepType,

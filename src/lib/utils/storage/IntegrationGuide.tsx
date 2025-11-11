@@ -5,6 +5,7 @@
  * nos componentes existentes do editor
  */
 
+// @ts-nocheck
 import React from 'react';
 import {
     useEditorSync,

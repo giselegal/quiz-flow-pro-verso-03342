@@ -1,4 +1,12 @@
-import { StyleResult } from '@/types/quiz';
+// Tipagem mínima local para evitar dependência de tipos completos de StyleResult
+export interface BasicStyleResult {
+  category: StyleCategory;
+  score: number;
+  percentage: number;
+  style: string;
+  points: number;
+  rank: number;
+}
 
 // Define StyleCategory to match existing types
 export type StyleCategory =
@@ -97,7 +105,7 @@ export const getFallbackStyle = (styleCategory: string): React.CSSProperties => 
 };
 
 // Add the getDefaultStyle function needed by EditorPage
-export const getDefaultStyle = (): StyleResult => {
+export const getDefaultStyle = (): BasicStyleResult => {
   return {
     category: 'Natural' as StyleCategory,
     score: 100,
@@ -108,7 +116,7 @@ export const getDefaultStyle = (): StyleResult => {
   };
 };
 
-export const createStyleResult = (category: string, score: number): StyleResult => {
+export const createStyleResult = (category: string, score: number): BasicStyleResult => {
   // Validate category is one of the allowed values
   const validCategories: StyleCategory[] = [
     'Natural',

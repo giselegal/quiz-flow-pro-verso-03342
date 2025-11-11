@@ -1,4 +1,4 @@
-import { EditorValidations } from '../hooks/useEditorFieldValidation';
+import { EditorValidations } from '../../hooks/useEditorFieldValidation';
 
 // Validações para cada tipo de bloco nos templates
 export const templateValidations: Record<string, EditorValidations> = {

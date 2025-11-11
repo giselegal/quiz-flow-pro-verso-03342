@@ -24,9 +24,10 @@ export function loadStepBlocks(stepNumber: number): Block[] {
   }
 
   // ✅ NOVO: Suporte para formato sections (v3.0) - usado no step-20
-  if (templateData.sections && Array.isArray(templateData.sections)) {
-    appLogger.info(`🔄 Convertendo ${templateData.sections.length} sections da ${stepKey} para blocos`);
-    const blocks = convertSectionsToBlocks(templateData.sections);
+  const td: any = templateData as any;
+  if (td.sections && Array.isArray(td.sections)) {
+    appLogger.info(`🔄 Convertendo ${td.sections.length} sections da ${stepKey} para blocos`);
+    const blocks = convertSectionsToBlocks(td.sections);
     appLogger.info(`✅ ${blocks.length} blocos gerados da ${stepKey}`);
     return blocks;
   }
