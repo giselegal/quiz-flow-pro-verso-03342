@@ -57,7 +57,7 @@
     },
     {
       "id": "welcome-form-1",
-      "type": "welcome-form-block",
+      "type": "intro-form",
       "content": {
         "questionLabel": "Como posso te chamar?",
         "placeholder": "Digite seu primeiro nome aqui...",

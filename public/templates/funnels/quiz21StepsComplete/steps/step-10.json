@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-10",
     "name": "Pergunta (Blocos)",
@@ -14,7 +14,7 @@
     {
       "id": "q-10",
       "type": "question-block",
-      "config": {
+      "properties": {
         "questionNumber": "9 de 10",
         "questionText": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
         "requiredSelections": 3,
@@ -61,7 +61,7 @@
           }
         ]
       },
-      "properties": {
+      "content": {
         "questionNumber": "9 de 10",
         "questionText": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
         "requiredSelections": 3,

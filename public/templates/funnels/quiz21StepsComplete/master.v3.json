@@ -1,8 +1,8 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "templateId": "quiz21StepsComplete",
   "name": "Quiz de Estilo Pessoal - 21 Etapas Completo",
-  "description": "Master JSON V3.1 com 21 steps em formato blocks[] para editor com blocos reordenáveis",
+  "description": "Master JSON V3.2 com 21 steps em formato blocks[] normalizado",
   "metadata": {
     "createdAt": "2025-11-04T20:00:00.000Z",
     "updatedAt": "2025-11-04T20:00:00.000Z",
@@ -11,27 +11,153 @@
     "_notes": "Este arquivo referencia 21 steps em formato V3.1 (blocks[]). Cada step é carregado de /steps/{step-id}.json"
   },
   "steps": [
-    { "id": "step-01", "name": "Introdução", "type": "intro", "order": 1, "file": "./steps/step-01.json" },
-    { "id": "step-02", "name": "Q1: Tipo de Roupa", "type": "question", "order": 2, "file": "./steps/step-02.json" },
-    { "id": "step-03", "name": "Q2: Personalidade", "type": "question", "order": 3, "file": "./steps/step-03.json" },
-    { "id": "step-04", "name": "Q3: Estampas", "type": "question", "order": 4, "file": "./steps/step-04.json" },
-    { "id": "step-05", "name": "Q4: Detalhes", "type": "question", "order": 5, "file": "./steps/step-05.json" },
-    { "id": "step-06", "name": "Q5: Casacos", "type": "question", "order": 6, "file": "./steps/step-06.json" },
-    { "id": "step-07", "name": "Q6: Roupas Favoritas", "type": "question", "order": 7, "file": "./steps/step-07.json" },
-    { "id": "step-08", "name": "Q7: Calças", "type": "question", "order": 8, "file": "./steps/step-08.json" },
-    { "id": "step-09", "name": "Q8: Sapatos", "type": "question", "order": 9, "file": "./steps/step-09.json" },
-    { "id": "step-10", "name": "Q9: Acessórios", "type": "question", "order": 10, "file": "./steps/step-10.json" },
-    { "id": "step-11", "name": "Q10: Tecidos", "type": "question", "order": 11, "file": "./steps/step-11.json" },
-    { "id": "step-12", "name": "Transição Principal", "type": "transition", "order": 12, "file": "./steps/step-12.json" },
-    { "id": "step-13", "name": "S1: Percepção de Imagem", "type": "question", "order": 13, "file": "./steps/step-13.json" },
-    { "id": "step-14", "name": "S2: Desafios ao se Vestir", "type": "question", "order": 14, "file": "./steps/step-14.json" },
-    { "id": "step-15", "name": "S3: Frequência do Dilema", "type": "question", "order": 15, "file": "./steps/step-15.json" },
-    { "id": "step-16", "name": "S4: Investimento", "type": "question", "order": 16, "file": "./steps/step-16.json" },
-    { "id": "step-17", "name": "S5: Valor do Investimento", "type": "question", "order": 17, "file": "./steps/step-17.json" },
-    { "id": "step-18", "name": "S6: Resultado Desejado", "type": "question", "order": 18, "file": "./steps/step-18.json" },
-    { "id": "step-19", "name": "Transição Final", "type": "transition", "order": 19, "file": "./steps/step-19.json" },
-    { "id": "step-20", "name": "Resultado", "type": "result", "order": 20, "file": "./steps/step-20.json" },
-    { "id": "step-21", "name": "Oferta", "type": "offer", "order": 21, "file": "./steps/step-21.json" }
+    {
+      "id": "step-01",
+      "name": "Introdução",
+      "type": "intro",
+      "order": 1,
+      "file": "./steps/step-01.json"
+    },
+    {
+      "id": "step-02",
+      "name": "Q1: Tipo de Roupa",
+      "type": "question",
+      "order": 2,
+      "file": "./steps/step-02.json"
+    },
+    {
+      "id": "step-03",
+      "name": "Q2: Personalidade",
+      "type": "question",
+      "order": 3,
+      "file": "./steps/step-03.json"
+    },
+    {
+      "id": "step-04",
+      "name": "Q3: Estampas",
+      "type": "question",
+      "order": 4,
+      "file": "./steps/step-04.json"
+    },
+    {
+      "id": "step-05",
+      "name": "Q4: Detalhes",
+      "type": "question",
+      "order": 5,
+      "file": "./steps/step-05.json"
+    },
+    {
+      "id": "step-06",
+      "name": "Q5: Casacos",
+      "type": "question",
+      "order": 6,
+      "file": "./steps/step-06.json"
+    },
+    {
+      "id": "step-07",
+      "name": "Q6: Roupas Favoritas",
+      "type": "question",
+      "order": 7,
+      "file": "./steps/step-07.json"
+    },
+    {
+      "id": "step-08",
+      "name": "Q7: Calças",
+      "type": "question",
+      "order": 8,
+      "file": "./steps/step-08.json"
+    },
+    {
+      "id": "step-09",
+      "name": "Q8: Sapatos",
+      "type": "question",
+      "order": 9,
+      "file": "./steps/step-09.json"
+    },
+    {
+      "id": "step-10",
+      "name": "Q9: Acessórios",
+      "type": "question",
+      "order": 10,
+      "file": "./steps/step-10.json"
+    },
+    {
+      "id": "step-11",
+      "name": "Q10: Tecidos",
+      "type": "question",
+      "order": 11,
+      "file": "./steps/step-11.json"
+    },
+    {
+      "id": "step-12",
+      "name": "Transição Principal",
+      "type": "transition",
+      "order": 12,
+      "file": "./steps/step-12.json"
+    },
+    {
+      "id": "step-13",
+      "name": "S1: Percepção de Imagem",
+      "type": "question",
+      "order": 13,
+      "file": "./steps/step-13.json"
+    },
+    {
+      "id": "step-14",
+      "name": "S2: Desafios ao se Vestir",
+      "type": "question",
+      "order": 14,
+      "file": "./steps/step-14.json"
+    },
+    {
+      "id": "step-15",
+      "name": "S3: Frequência do Dilema",
+      "type": "question",
+      "order": 15,
+      "file": "./steps/step-15.json"
+    },
+    {
+      "id": "step-16",
+      "name": "S4: Investimento",
+      "type": "question",
+      "order": 16,
+      "file": "./steps/step-16.json"
+    },
+    {
+      "id": "step-17",
+      "name": "S5: Valor do Investimento",
+      "type": "question",
+      "order": 17,
+      "file": "./steps/step-17.json"
+    },
+    {
+      "id": "step-18",
+      "name": "S6: Resultado Desejado",
+      "type": "question",
+      "order": 18,
+      "file": "./steps/step-18.json"
+    },
+    {
+      "id": "step-19",
+      "name": "Transição Final",
+      "type": "transition",
+      "order": 19,
+      "file": "./steps/step-19.json"
+    },
+    {
+      "id": "step-20",
+      "name": "Resultado",
+      "type": "result",
+      "order": 20,
+      "file": "./steps/step-20.json"
+    },
+    {
+      "id": "step-21",
+      "name": "Oferta",
+      "type": "offer",
+      "order": 21,
+      "file": "./steps/step-21.json"
+    }
   ],
   "theme": {
     "colors": {

@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-09",
     "name": "Pergunta (Blocos)",
@@ -14,7 +14,7 @@
     {
       "id": "q-09",
       "type": "question-block",
-      "config": {
+      "properties": {
         "questionNumber": "8 de 10",
         "questionText": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
         "requiredSelections": 3,
@@ -61,7 +61,7 @@
           }
         ]
       },
-      "properties": {
+      "content": {
         "questionNumber": "8 de 10",
         "questionText": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
         "requiredSelections": 3,

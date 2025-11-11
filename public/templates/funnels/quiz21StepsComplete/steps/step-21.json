@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-21",
     "name": "Oferta (Blocos)",
@@ -13,17 +13,16 @@
   "blocks": [
     {
       "id": "offer-core-21",
-      "type": "offer.core",
-      "config": {
+      "type": "cta-inline",
+      "properties": {
         "title": "5 Passos – Vista-se de Você",
         "description": "Método completo para alinhar sua imagem com sua essência e construir um guarda-roupa estratégico.",
         "ctaLabel": "Quero começar agora",
         "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
         "accent": "#B89B7A"
       },
-      "properties": {
+      "content": {
         "title": "5 Passos – Vista-se de Você",
-        "description": "Método completo para alinhar sua imagem com sua essência e construir um guarda-roupa estratégico.",
         "ctaLabel": "Quero começar agora",
         "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
         "accent": "#B89B7A"
@@ -31,16 +30,18 @@
     },
     {
       "id": "offer-urg-21",
-      "type": "offer.urgency",
-      "config": {
-        "headline": "Condições especiais por tempo limitado:",
+      "type": "urgency-timer-inline",
+      "content": {
         "deadlineISO": "2099-01-01T00:00:00.000Z"
+      },
+      "properties": {
+        "headline": "Condições especiais por tempo limitado:"
       }
     },
     {
       "id": "offer-test-21",
-      "type": "offer.testimonial",
-      "config": {
+      "type": "testimonials",
+      "content": {
         "quote": "Encontrei meu estilo e economizei tempo e dinheiro!",
         "author": "Aluna do programa"
       }

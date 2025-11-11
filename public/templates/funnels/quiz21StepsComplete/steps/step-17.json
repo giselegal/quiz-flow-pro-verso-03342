@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-17",
     "name": "Pergunta (Blocos)",
@@ -14,26 +14,50 @@
     {
       "id": "q-17",
       "type": "question-block",
-      "config": {
-        "questionNumber": "Q15 - TRANSFORMAÇÃO",
-        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
-        "requiredSelections": 1,
-        "options": [
-          { "id": "sim-vale-muito", "text": "Sim! Por esse resultado, vale muito" },
-          { "id": "sim-se-certeza", "text": "Sim, mas só se eu tiver certeza de que funciona pra mim" },
-          { "id": "talvez-depende", "text": "Talvez — depende do que está incluso" },
-          { "id": "nao-nao-pronta", "text": "Não, ainda não estou pronta para investir" }
-        ]
-      },
       "properties": {
         "questionNumber": "Q15 - TRANSFORMAÇÃO",
         "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
         "requiredSelections": 1,
         "options": [
-          { "id": "sim-vale-muito", "text": "Sim! Por esse resultado, vale muito" },
-          { "id": "sim-se-certeza", "text": "Sim, mas só se eu tiver certeza de que funciona pra mim" },
-          { "id": "talvez-depende", "text": "Talvez — depende do que está incluso" },
-          { "id": "nao-nao-pronta", "text": "Não, ainda não estou pronta para investir" }
+          {
+            "id": "sim-vale-muito",
+            "text": "Sim! Por esse resultado, vale muito"
+          },
+          {
+            "id": "sim-se-certeza",
+            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim"
+          },
+          {
+            "id": "talvez-depende",
+            "text": "Talvez — depende do que está incluso"
+          },
+          {
+            "id": "nao-nao-pronta",
+            "text": "Não, ainda não estou pronta para investir"
+          }
+        ]
+      },
+      "content": {
+        "questionNumber": "Q15 - TRANSFORMAÇÃO",
+        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "sim-vale-muito",
+            "text": "Sim! Por esse resultado, vale muito"
+          },
+          {
+            "id": "sim-se-certeza",
+            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim"
+          },
+          {
+            "id": "talvez-depende",
+            "text": "Talvez — depende do que está incluso"
+          },
+          {
+            "id": "nao-nao-pronta",
+            "text": "Não, ainda não estou pronta para investir"
+          }
         ]
       }
     }

@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-13",
     "name": "Pergunta (Blocos)",
@@ -14,7 +14,7 @@
     {
       "id": "q-13",
       "type": "question-block",
-      "config": {
+      "properties": {
         "questionNumber": "1 de 6",
         "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
         "requiredSelections": 1,
@@ -37,7 +37,7 @@
           }
         ]
       },
-      "properties": {
+      "content": {
         "questionNumber": "1 de 6",
         "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
         "requiredSelections": 1,

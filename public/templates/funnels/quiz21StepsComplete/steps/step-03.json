@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-03",
     "name": "Pergunta (Blocos)",
@@ -14,7 +14,7 @@
     {
       "id": "q-03",
       "type": "question-block",
-      "config": {
+      "properties": {
         "questionNumber": "2 de 10",
         "questionText": "RESUMA A SUA PERSONALIDADE:",
         "requiredSelections": 3,
@@ -53,7 +53,7 @@
           }
         ]
       },
-      "properties": {
+      "content": {
         "questionNumber": "2 de 10",
         "questionText": "RESUMA A SUA PERSONALIDADE:",
         "requiredSelections": 3,

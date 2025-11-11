@@ -1,5 +1,5 @@
 {
-  "templateVersion": "3.1",
+  "templateVersion": "3.2",
   "metadata": {
     "id": "step-14",
     "name": "Pergunta (Blocos)",
@@ -14,7 +14,7 @@
     {
       "id": "q-14",
       "type": "question-block",
-      "config": {
+      "properties": {
         "questionNumber": "2 de 6",
         "questionText": "O que mais te desafia na hora de se vestir?",
         "requiredSelections": 1,
@@ -37,7 +37,7 @@
           }
         ]
       },
-      "properties": {
+      "content": {
         "questionNumber": "2 de 6",
         "questionText": "O que mais te desafia na hora de se vestir?",
         "requiredSelections": 1,
