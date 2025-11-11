@@ -10,11 +10,9 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-// Importação dinâmica para evitar falhas de tipos quando declarações não incluem listas nomeadas.
-// Usaremos require implícito via any para contornar falta de typings específicos.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ReactWindow: any = require('react-window');
-const List: any = ReactWindow.FixedSizeList || ReactWindow.VariableSizeList;
+import * as ReactWindow from 'react-window';
+const List: any = (ReactWindow as any).FixedSizeList || (ReactWindow as any).VariableSizeList;
+type RowRendererProps = { index: number; style: React.CSSProperties };
 import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
 // Unificar renderização com o runtime: usar o UniversalBlockRenderer (registry híbrido)
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
@@ -49,6 +47,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     const [listHeight, setListHeight] = useState<number>(600);
+    const [listWidth, setListWidth] = useState<number>(800);
     const useVirtual = useMemo(() => blocks.length > VIRTUAL_THRESHOLD, [blocks.length]);
 
     useEffect(() => {
@@ -56,7 +55,9 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
         const compute = () => {
             const h = (containerRef.current?.clientHeight ?? window.innerHeight) -
                 (headerRef.current?.clientHeight ?? 0) - 16; // padding
+            const w = (containerRef.current?.clientWidth ?? window.innerWidth) - 16; // padding
             setListHeight(Math.max(300, h));
+            setListWidth(Math.max(320, w));
         };
         compute();
         const onResize = () => compute();
@@ -148,13 +149,13 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                 {useVirtual ? (
                     <List
                         height={listHeight}
-                        width={'100%'}
+                        width={listWidth}
                         itemCount={blocks.length}
                         itemSize={ESTIMATED_ROW_HEIGHT}
                         overscanCount={4}
                         className="rounded-md"
                     >
-                        {(rowProps: any) => {
+                        {(rowProps: RowRendererProps) => {
                             const { index, style } = rowProps;
                             const block = blocks[index];
                             const isSelected = selectedBlockId === block.id;
