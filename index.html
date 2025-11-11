@@ -38,18 +38,49 @@
       const BLOCK_PATTERNS = ['lovable.dev', 'api.lovable.dev', 'lovableproject.com', '/_sandbox/'];
       const shouldBlock = (urlString) => BLOCK_PATTERNS.some(p => urlString.includes(p));
 
+      // 🔧 FIX: Bloqueador mais robusto que intercepta TODOS os tipos de requisição
       const originalFetch = window.fetch;
       window.fetch = function (url, options) {
-        const urlString = typeof url === 'string' ? url : url.toString();
-        if (shouldBlock(urlString)) {
-          console.info('🛡️ (fetch) bloqueado:', urlString);
-          return Promise.resolve(new Response(
-            JSON.stringify({ status: 'blocked', message: 'Lovable disabled in local dev' }),
-            { status: 200, headers: { 'Content-Type': 'application/json' } }
-          ));
+        let urlString = '';
+        try {
+          urlString = typeof url === 'string' ? url : url instanceof URL ? url.toString() : String(url);
+          // 🔧 FIX: Detectar URLs mal formadas com project ID vazio (//collaborators)
+          const hasMalformedUrl = urlString.includes('projects//') || urlString.includes('api.lovable.dev/projects//');
+
+          if (shouldBlock(urlString) || hasMalformedUrl) {
+            if (hasMalformedUrl) {
+              console.warn('🛡️ Bloqueada requisição Lovable mal formada (project ID ausente):', urlString);
+            }
+            return Promise.resolve(new Response(
+              JSON.stringify({
+                status: 'blocked',
+                message: 'Lovable disabled in local dev',
+                originalUrl: urlString
+              }),
+              { status: 200, headers: { 'Content-Type': 'application/json' } }
+            ));
+          }
+        } catch (e) {
+          console.warn('Erro ao processar URL no bloqueador:', e);
         }
         return originalFetch.call(this, url, options);
       };
+
+      // 🔧 FIX: Interceptar XMLHttpRequest também (para libs que não usam fetch)
+      if (typeof XMLHttpRequest !== 'undefined') {
+        const originalOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function (method, url) {
+          const urlString = String(url);
+          const hasMalformedUrl = urlString.includes('projects//') || urlString.includes('api.lovable.dev/projects//');
+
+          if (shouldBlock(urlString) || hasMalformedUrl) {
+            console.warn('🛡️ Bloqueada XHR Lovable:', urlString);
+            // Não chama o open original - bloqueia completamente
+            return;
+          }
+          return originalOpen.apply(this, arguments);
+        };
+      }
     })();
   </script>
 </head>
