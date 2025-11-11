@@ -1205,7 +1205,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     </div>
                                 ) : canvasMode === 'edit' ? (
                                     <StepErrorBoundary
-                                        stepId={currentStepKey || 'unknown'}
+                                        stepKey={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
                                     >
                                         <div className={isLoadingStep ? 'pointer-events-none opacity-50' : ''}>
