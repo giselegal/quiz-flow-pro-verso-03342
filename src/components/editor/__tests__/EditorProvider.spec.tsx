@@ -57,19 +57,19 @@ describe('EditorProvider actions (unit)', () => {
 
     // Check current state (aguarda refletir no ConsumerBridge)
     await waitFor(() => {
-      const list = stateRef.current.stepBlocks[targetStep] || [];
+      const list = stateRef.current?.editor?.stepBlocks?.[targetStep] || [];
       expect(list.length).toBeGreaterThanOrEqual(2);
       expect(String(list[0].id)).toBe('temp-a');
       expect(String(list[1].id)).toBe('temp-b');
     });
 
     // Reorder: swap blocks by passing reordered array
-    const currentBlocks = stateRef.current.stepBlocks[targetStep] || [];
+    const currentBlocks = stateRef.current?.editor?.stepBlocks?.[targetStep] || [];
     const reordered = [currentBlocks[1], currentBlocks[0]];
     ctxRef.current.reorderBlocks(targetStep, reordered);
 
     await waitFor(() => {
-      const list2 = stateRef.current.stepBlocks[targetStep] || [];
+      const list2 = stateRef.current?.editor?.stepBlocks?.[targetStep] || [];
       expect(list2.length).toBeGreaterThanOrEqual(2);
       expect(String(list2[0].id)).toBe('temp-b');
       expect(String(list2[1].id)).toBe('temp-a');
