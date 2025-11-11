@@ -100,7 +100,7 @@ class AppLogger {
     return parts.join(' ');
   }
 
-  private log(level: LogLevel, message: string, errorOrContext?: Error | LogContext, context?: LogContext): void {
+  private log(level: LogLevel, message: string, errorOrContext?: unknown, context?: LogContext): void {
     if (!this.shouldLog(level)) return;
 
     const entry: LogEntry = {
@@ -114,8 +114,8 @@ class AppLogger {
       entry.error = errorOrContext;
       entry.stack = errorOrContext.stack;
       entry.context = context;
-    } else if (errorOrContext) {
-      entry.context = errorOrContext;
+    } else if (typeof errorOrContext === 'object' && errorOrContext !== null) {
+      entry.context = errorOrContext as LogContext;
     }
 
     // Buffer management
@@ -192,7 +192,7 @@ class AppLogger {
   /**
    * Log error message
    */
-  error(message: string, error?: Error | LogContext, context?: LogContext): void {
+  error(message: string, error?: unknown | LogContext, context?: LogContext): void {
     this.log('error', message, error, context);
   }
 

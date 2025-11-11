@@ -258,13 +258,14 @@ function validateBlock(
             // Validar propriedades obrigatórias do schema
             const requiredProps = schema.fields?.filter((f: any) => f.required) || [];
             for (const prop of requiredProps) {
-                const value = block.properties?.[prop.name] ?? block.content?.[prop.name];
-                if (value === undefined || value === null) {
+                const key = (prop as any).key;
+                const value = key ? (block.properties?.[key] ?? block.content?.[key]) : undefined;
+                if (key && (value === undefined || value === null)) {
                     warnings.push({
                         type: 'missing_property',
                         stepId,
                         blockId: block.id,
-                        message: `Propriedade obrigatória '${prop.name}' faltando em ${block.id}`,
+                        message: `Propriedade obrigatória '${key}' faltando em ${block.id}`,
                     });
                 }
             }

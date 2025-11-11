@@ -34,7 +34,12 @@ declare module '../services/phase5DataSimulator' {
 }
 
 declare module '@/services/canonical/TemplateService' {
-  export const TemplateRegistry: any;
+  // Alinhar com o módulo real para evitar erros de export inexistente
+  export class TemplateService {
+    static getInstance(...args: any[]): TemplateService;
+  }
+  export const templateService: any;
+  export const quizEditorBridge: any;
 }
 
 declare module '@/lib/utils/logger' {

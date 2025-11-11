@@ -18,16 +18,19 @@ import {
 } from '@/core/domains';
 import { appLogger } from '@/lib/utils/appLogger';
 
+// Relaxar tipo para permitir registros parciais vindos do Supabase sem quebrar mapToQuizEntity
 interface SupabaseFunnel {
   id: string;
   name: string;
-  description?: string;
+  description?: string | null;
   user_id: string;
-  is_published: boolean;
-  version: number;
-  settings?: any;
+  is_published?: boolean | null; // pode estar ausente em selects parciais
+  version?: number | null;       // idem
+  settings?: any;                // JSONB flexível
   created_at: string;
   updated_at: string;
+  // Campos extras ignorados com index signature para evitar TS2345 em objetos com mais propriedades
+  [key: string]: any;
 }
 
 interface SupabaseFunnelPage {
@@ -101,7 +104,15 @@ export class SupabaseQuizRepository implements QuizRepository {
 
       if (pagesError) throw pagesError;
 
-      return this.mapToQuizEntity(funnelData, pagesData || []);
+      // Normalizar funnelData garantindo campos esperados com defaults
+      return this.mapToQuizEntity(
+        {
+          ...funnelData,
+          is_published: funnelData.is_published ?? false,
+          version: funnelData.version ?? 1,
+        } as SupabaseFunnel,
+        pagesData || []
+      );
     } catch (error) {
       appLogger.error('Error finding quiz by id:', { data: [error] });
       return null;
@@ -162,7 +173,14 @@ export class SupabaseQuizRepository implements QuizRepository {
             .eq('funnel_id', funnelData.id)
             .order('page_order');
 
-          return this.mapToQuizEntity(funnelData, pagesData || []);
+          return this.mapToQuizEntity(
+            {
+              ...funnelData,
+              is_published: funnelData.is_published ?? false,
+              version: funnelData.version ?? 1,
+            } as SupabaseFunnel,
+            pagesData || []
+          );
         }),
       );
 
@@ -536,7 +554,14 @@ export class SupabaseQuizRepository implements QuizRepository {
             .eq('funnel_id', funnelData.id)
             .order('page_order');
 
-          return this.mapToQuizEntity(funnelData, pagesData || []);
+          return this.mapToQuizEntity(
+            {
+              ...funnelData,
+              is_published: funnelData.is_published ?? false,
+              version: funnelData.version ?? 1,
+            } as SupabaseFunnel,
+            pagesData || []
+          );
         }),
       );
     } catch (error) {
