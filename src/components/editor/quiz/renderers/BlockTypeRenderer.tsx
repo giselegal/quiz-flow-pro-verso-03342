@@ -385,7 +385,6 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 );
             case 'quiz-offer-cta-inline':
             case 'cta-inline':
-            case 'offer.core':
             case 'conversion':
                 return (
                     <SelectableBlock
@@ -429,7 +428,6 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                     </SelectableBlock>
                 );
             case 'urgency-timer-inline':
-            case 'offer.urgency':
                 return (
                     <SelectableBlock
                         blockId={block.id}
