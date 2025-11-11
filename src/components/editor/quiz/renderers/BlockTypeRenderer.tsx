@@ -141,36 +141,6 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
             case 'result.secondarylist':
                 return <ResultSecondaryStylesBlock block={block} {...rest} />;
 
-            case 'offer.core':
-                return (
-                    <SelectableBlock
-                        blockId={block.id}
-                        isSelected={!!rest.isSelected}
-                        isEditable={!!rest.isEditable}
-                        onSelect={() => rest.onSelect?.(block.id)}
-                        blockType="CTA da Oferta"
-                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
-                        isDraggable={true}
-                    >
-                        <CTAInlineBlock block={block as any} isSelected={rest.isSelected} />
-                    </SelectableBlock>
-                );
-
-            case 'offer.urgency':
-                return (
-                    <SelectableBlock
-                        blockId={block.id}
-                        isSelected={!!rest.isSelected}
-                        isEditable={!!rest.isEditable}
-                        onSelect={() => rest.onSelect?.(block.id)}
-                        blockType="Urgência"
-                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
-                        isDraggable={true}
-                    >
-                        <UrgencyTimerInlineBlock block={block as any} isSelected={rest.isSelected} />
-                    </SelectableBlock>
-                );
-
             case 'offer.testimonial':
                 return (
                     <SelectableBlock
@@ -385,6 +355,7 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 );
             case 'quiz-offer-cta-inline':
             case 'cta-inline':
+            case 'offer.core':
             case 'conversion':
                 return (
                     <SelectableBlock
@@ -428,6 +399,7 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                     </SelectableBlock>
                 );
             case 'urgency-timer-inline':
+            case 'offer.urgency':
                 return (
                     <SelectableBlock
                         blockId={block.id}
