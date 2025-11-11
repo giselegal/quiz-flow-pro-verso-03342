@@ -4,6 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "audit:templates:duplications": "tsx scripts/audit-step-json-duplications.ts",
+    "audit:templates:imports": "tsx scripts/audit-template-service-imports.ts",
     "audit:jsons": "node scripts/audit-jsons.mjs",
     "audit:jsons:ci": "node scripts/audit-jsons.mjs --ci",
     "supabase:gen:types": "node scripts/supabase/gen-types.mjs",
