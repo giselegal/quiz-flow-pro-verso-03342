@@ -1,5 +1,6 @@
 /**
  * Zod Schema for Template V3 Validation
+ * Canonical export: prefer importing from '@/templates/validation' index barrel.
  * 
  * Valida estrutura de templates importados via JSON, garantindo:
  * - Campos obrigatórios presentes
