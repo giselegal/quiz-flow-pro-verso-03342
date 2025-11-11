@@ -9,7 +9,7 @@
  */
 
 import { useMemo, useCallback, useEffect, useState } from 'react';
-import { useFunnelFacade } from '@/pages/editor/ModernUnifiedEditor';
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -60,7 +60,8 @@ export interface UseStepBlocksResult {
 // ============================================================================
 
 export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
-    const facade = useFunnelFacade();
+    // 🔁 LEGACY FACADE SUBSTITUÍDA: usamos SuperUnifiedProvider como fonte única
+    const unified = useSuperUnified();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [updateTrigger, setUpdateTrigger] = useState(0);
@@ -71,43 +72,51 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
 
     const step = useMemo<StepData | null>(() => {
         try {
-            const steps = facade.getSteps();
-
-            // Logs reduzidos: manter apenas metadados leves (evitar serialização profunda)
-            appLogger.debug('🔍 useStepBlocks meta', { data: [`idx:${stepIndex}`, `total:${steps.length}`] });
-
-            if (stepIndex < 0 || stepIndex >= steps.length) {
-                appLogger.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de steps: ${steps.length}`);
+            const rawStepBlocks = unified.state.editor.stepBlocks;
+            const totalSteps = unified.state.editor.totalSteps || Object.keys(rawStepBlocks).length;
+            const idx = stepIndex + 1;
+            if (idx < 1 || idx > totalSteps) {
+                appLogger.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de steps: ${totalSteps}`);
                 return null;
             }
 
-            const funnelStep = steps[stepIndex];
-            appLogger.debug('🔍 useStepBlocks stepCore', { data: [funnelStep.id, funnelStep.blocks?.length || 0] });
+            // Chave interna numeric → precisamos ordenar e mapear para string step-XX
+            const blockArray = rawStepBlocks[idx] || [];
+            appLogger.debug('🔍 useStepBlocks(SuperUnified) meta', { data: [`idx:${stepIndex}`, `len:${blockArray.length}`] });
 
-            // Normalizar blocos (garantir que todos têm propriedades necessárias)
-            const normalizedBlocks = (funnelStep.blocks || []).map((block: any, idx: number) => ({
-                id: block.id || `block-${idx}`,
+            const normalizedBlocks = blockArray.map((block: any, i: number) => ({
+                id: block.id || `block-${i}`,
                 type: block.type || 'text',
-                order: idx, // Usar índice como order
+                order: i,
                 content: block.data || {},
                 properties: block.data || {},
             }));
-
-            appLogger.debug('🔍 useStepBlocks normalizedCount', { data: [normalizedBlocks.length] });
+            // Inferir título de um bloco de heading/title se existir
+            const inferredTitle = (() => {
+                try {
+                    const candidate = blockArray.find((b: any) => {
+                        const t = (b?.type || '').toLowerCase();
+                        return t.includes('title') || t.includes('heading') || t === 'h1' || t === 'h2';
+                    });
+                    const text = candidate?.data?.text || candidate?.data?.content || candidate?.data?.label;
+                    if (typeof text === 'string' && text.trim().length > 0) return text.trim();
+                } catch { /* noop */ }
+                return `Etapa ${idx}`;
+            })();
 
             return {
-                id: funnelStep.id || `step-${stepIndex + 1}`,
-                type: 'step', // Tipo genérico
-                order: funnelStep.order || stepIndex + 1,
-                title: funnelStep.title || `Etapa ${stepIndex + 1}`,
+                id: `step-${idx.toString().padStart(2, '0')}`,
+                type: 'step',
+                order: idx,
+                title: inferredTitle,
                 blocks: normalizedBlocks,
             };
         } catch (err) {
-            appLogger.error('❌ Erro ao derivar step:', { data: [err] });
+            appLogger.error('❌ Erro ao derivar step (SuperUnified):', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro desconhecido');
             return null;
         }
-    }, [facade, stepIndex, updateTrigger]);
+    }, [unified.state.editor.stepBlocks, unified.state.editor.totalSteps, stepIndex, updateTrigger]);
 
     const blocks = useMemo(() => step?.blocks || [], [step]);
 
@@ -119,145 +128,64 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
      * Atualizar bloco específico
      */
     const updateBlock = useCallback((blockId: string, updates: Partial<BlockData>) => {
-        if (!step) {
-            appLogger.warn('⚠️ Step não encontrado para atualizar bloco');
-            return;
-        }
-
+        if (!step) return appLogger.warn('⚠️ Step não encontrado para atualizar bloco');
         try {
-            setIsLoading(true);
-            setError(null);
-
-            appLogger.debug(`🔄 updateBlock ${blockId}`, { data: [Object.keys(updates)] });
-
-            // Atualizar via Facade
-            facade.updateBlock(step.id, blockId, updates);
-
-            // Forçar re-render
-            setUpdateTrigger(prev => prev + 1);
-
-            appLogger.debug(`✅ updateBlock OK ${blockId}`);
+            setIsLoading(true); setError(null);
+            unified.updateBlock(step.order, blockId, updates);
+            setUpdateTrigger(p => p + 1);
         } catch (err) {
-            appLogger.error('❌ Erro ao atualizar bloco:', { data: [err] });
+            appLogger.error('❌ Erro updateBlock:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao atualizar bloco');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [facade, step]);
+        } finally { setIsLoading(false); }
+    }, [step, unified]);
 
     /**
      * Adicionar novo bloco
      */
-    const addBlock = useCallback((
-        type: string,
-        properties: Record<string, any> = {},
-        content: Record<string, any> = {},
-    ) => {
-        if (!step) {
-            appLogger.warn('⚠️ Step não encontrado para adicionar bloco');
-            return;
-        }
-
+    const addBlock = useCallback((type: string, properties: Record<string, any> = {}, content: Record<string, any> = {}) => {
+        if (!step) return appLogger.warn('⚠️ Step não encontrado para adicionar bloco');
         try {
-            setIsLoading(true);
-            setError(null);
-
-            const newBlock = {
-                id: `block-${type}-${Date.now()}`,
-                type,
-                data: {
-                    ...content,
-                    ...properties,
-                },
-            };
-
-            appLogger.debug(`➕ addBlock ${newBlock.id}`, { data: [type] });
-
-            facade.addBlock(step.id, newBlock);
-
-            // Forçar re-render
-            setUpdateTrigger(prev => prev + 1);
-
-            appLogger.debug(`✅ addBlock OK ${newBlock.id}`);
+            setIsLoading(true); setError(null);
+            const newBlock = { id: `block-${type}-${Date.now()}`, type, data: { ...content, ...properties } };
+            unified.addBlock(step.order, newBlock);
+            setUpdateTrigger(p => p + 1);
         } catch (err) {
-            appLogger.error('❌ Erro ao adicionar bloco:', { data: [err] });
+            appLogger.error('❌ Erro addBlock:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao adicionar bloco');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [facade, step]);
+        } finally { setIsLoading(false); }
+    }, [step, unified]);
 
     /**
      * Deletar bloco
      */
     const deleteBlock = useCallback((blockId: string) => {
-        if (!step) {
-            appLogger.warn('⚠️ Step não encontrado para deletar bloco');
-            return;
-        }
-
+        if (!step) return appLogger.warn('⚠️ Step não encontrado para deletar bloco');
         try {
-            setIsLoading(true);
-            setError(null);
-
-            appLogger.debug(`🗑️ deleteBlock ${blockId}`);
-
-            facade.removeBlock(step.id, blockId);
-
-            // Forçar re-render
-            setUpdateTrigger(prev => prev + 1);
-
-            appLogger.debug(`✅ deleteBlock OK ${blockId}`);
+            setIsLoading(true); setError(null);
+            unified.removeBlock(step.order, blockId);
+            setUpdateTrigger(p => p + 1);
         } catch (err) {
-            appLogger.error('❌ Erro ao deletar bloco:', { data: [err] });
+            appLogger.error('❌ Erro deleteBlock:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao deletar bloco');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [facade, step]);
+        } finally { setIsLoading(false); }
+    }, [step, unified]);
 
     /**
      * Duplicar bloco
      */
     const duplicateBlock = useCallback((blockId: string) => {
-        if (!step) {
-            appLogger.warn('⚠️ Step não encontrado para duplicar bloco');
-            return;
-        }
-
+        if (!step) return appLogger.warn('⚠️ Step não encontrado para duplicar bloco');
         try {
-            setIsLoading(true);
-            setError(null);
-
-            const original = step.blocks.find(b => b.id === blockId);
-            if (!original) {
-                throw new Error(`Bloco ${blockId} não encontrado`);
-            }
-
-            const duplicate = {
-                id: `block-${original.type}-${Date.now()}`,
-                type: original.type,
-                data: {
-                    ...original.content,
-                    ...original.properties,
-                },
-            };
-
-            appLogger.debug(`📋 duplicateBlock ${blockId} -> ${duplicate.id}`);
-
-            facade.addBlock(step.id, duplicate);
-
-            // Forçar re-render
-            setUpdateTrigger(prev => prev + 1);
-
-            appLogger.debug(`✅ duplicateBlock OK ${duplicate.id}`);
+            setIsLoading(true); setError(null);
+            const original = step.blocks.find(b => b.id === blockId); if (!original) throw new Error('Bloco não encontrado');
+            const duplicate = { id: `block-${original.type}-${Date.now()}`, type: original.type, data: { ...original.content, ...original.properties } };
+            unified.addBlock(step.order, duplicate);
+            setUpdateTrigger(p => p + 1);
         } catch (err) {
-            appLogger.error('❌ Erro ao duplicar bloco:', { data: [err] });
+            appLogger.error('❌ Erro duplicateBlock:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao duplicar bloco');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [facade, step]);
+        } finally { setIsLoading(false); }
+    }, [step, unified]);
 
     // ========================================================================
     // REORDENAÇÃO
@@ -267,38 +195,20 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
      * Reordenar blocos (drag and drop)
      */
     const reorderBlocks = useCallback((fromIndex: number, toIndex: number) => {
-        if (!step) {
-            appLogger.warn('⚠️ Step não encontrado para reordenar blocos');
-            return;
-        }
-
+        if (!step) return appLogger.warn('⚠️ Step não encontrado para reordenar blocos');
         if (fromIndex === toIndex) return;
-
         try {
-            setIsLoading(true);
-            setError(null);
-
-            appLogger.debug(`🔄 reorderBlocks ${fromIndex}->${toIndex}`);
-
-            const reordered = [...step.blocks];
-            const [moved] = reordered.splice(fromIndex, 1);
-            reordered.splice(toIndex, 0, moved);
-
-            // Usar API de reorderBlocks da facade (passa array de IDs na nova ordem)
-            const newOrder = reordered.map(b => b.id);
-            facade.reorderBlocks(step.id, newOrder);
-
-            // Forçar re-render
-            setUpdateTrigger(prev => prev + 1);
-
-            appLogger.debug('✅ reorderBlocks OK');
+            setIsLoading(true); setError(null);
+            const arr = [...step.blocks];
+            const [moved] = arr.splice(fromIndex, 1); arr.splice(toIndex, 0, moved);
+            const reordered = arr.map(b => ({ id: b.id, type: b.type, data: { ...b.content, ...b.properties } }));
+            unified.reorderBlocks(step.order, reordered as any[]);
+            setUpdateTrigger(p => p + 1);
         } catch (err) {
-            appLogger.error('❌ Erro ao reordenar blocos:', { data: [err] });
+            appLogger.error('❌ Erro reorderBlocks:', { data: [err] });
             setError(err instanceof Error ? err.message : 'Erro ao reordenar blocos');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [facade, step]);
+        } finally { setIsLoading(false); }
+    }, [step, unified]);
 
     /**
      * Mover bloco para cima
@@ -341,25 +251,10 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
     // ========================================================================
 
     useEffect(() => {
-        if (!facade) return;
-
-        // Escutar mudanças nos blocos
-        const unsubscribeBlocks = facade.on('blocks/changed', (payload: any) => {
-            appLogger.debug('📡 evt blocks/changed', { data: [`len:${payload.blocks.length}`, `reason:${payload.reason}`] });
-            setUpdateTrigger(prev => prev + 1);
-        });
-
-        // Escutar mudanças nos steps
-        const unsubscribeSteps = facade.on('steps/changed', (payload: any) => {
-            appLogger.debug('📡 evt steps/changed', { data: [`len:${payload.steps.length}`, `reason:${payload.reason}`] });
-            setUpdateTrigger(prev => prev + 1);
-        });
-
-        return () => {
-            unsubscribeBlocks();
-            unsubscribeSteps();
-        };
-    }, [facade]);
+        // Reagir às alterações no estado global do editor (SuperUnified)
+        // A cada mudança de stepBlocks provocamos updateTrigger para recalcular memo
+        setUpdateTrigger(p => p + 1);
+    }, [unified.state.editor.stepBlocks]);
 
     // ========================================================================
     // RETURN
