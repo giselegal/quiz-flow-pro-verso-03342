@@ -21,7 +21,8 @@ declare module '../../hooks/usePerformanceTest' {
 }
 
 declare module '../types/editor' {
-  export type Block = any;
+  // Usar o tipo real do módulo em vez de any para evitar perda de tipagem
+  export type Block = import('./editor').Block;
 }
 
 declare module '../types/blocks' {
