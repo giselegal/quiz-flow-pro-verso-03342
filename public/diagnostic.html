@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Quiz Flow Pro - Diagnóstico</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 30px;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        h1 {
+            color: #4F46E5;
+            text-align: center;
+        }
+
+        h2 {
+            color: #6366F1;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 5px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #4F46E5;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px 10px 10px 0;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .button:hover {
+            background: #4338CA;
+        }
+
+        .code {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Fira Code', Monaco, monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .tech-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .tech-info {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🚀 Quiz Flow Pro - Diagnóstico do Sistema</h1>
+
+        <div class="status success">
+            ✅ <strong>Servidor funcionando!</strong> Aplicação carregada com sucesso.
+        </div>
+
+        <div class="status info">
+            🌐 <strong>URL Principal:</strong> <a href="/" style="color: #0c5460;">http://localhost:8080</a>
+        </div>
+
+        <h2>🔗 Links Rápidos</h2>
+        <a href="/" class="button">🏠 Página Principal</a>
+        <a href="/quiz" class="button">🎯 Iniciar Quiz</a>
+        <a href="/admin" class="button">⚙️ Admin</a>
+        <a href="/dashboard" class="button">📊 Dashboard</a>
+
+        <h2>📋 Informações do Sistema</h2>
+        <div class="tech-info">
+            <div>
+                <h3>🖥️ Navegador</h3>
+                <div class="code" id="browser-info">Carregando...</div>
+            </div>
+            <div>
+                <h3>🌐 Rede</h3>
+                <div class="code" id="network-info">Carregando...</div>
+            </div>
+        </div>
+
+        <h2>⚠️ Problemas Conhecidos com Simple Browser</h2>
+        <div class="status warning">
+            🚨 <strong>Simple Browser do VS Code tem limitações:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>JavaScript complexo pode não funcionar</li>
+                <li>WebSockets podem falhar</li>
+                <li>Performance limitada com React</li>
+                <li>Algumas APIs modernas não suportadas</li>
+            </ul>
+        </div>
+
+        <h2>✨ Soluções Recomendadas</h2>
+
+        <div class="status success">
+            <div>
+                <strong>🔥 MELHOR OPÇÃO: Navegador Externo</strong>
+                <div class="code">
+                    # Execute no terminal do VS Code:
+                    ./scripts/open-browser.sh
+
+                    # OU copie e cole no navegador:
+                    http://localhost:8080
+                </div>
+            </div>
+        </div>
+
+        <div class="status info">
+            <div>
+                <strong>🔧 Port Forwarding (para acessar externamente)</strong>
+                <div class="code">
+                    1. Pressione F1 no VS Code
+                    2. Digite: "Ports: Focus on Ports View"
+                    3. Adicione porta 8080
+                    4. Configure como "Public" se necessário
+                </div>
+            </div>
+        </div>
+
+        <h2>🧪 Teste de Funcionalidades</h2>
+        <div id="tests">
+            <div class="status info">⏳ Executando testes automáticos...</div>
+        </div>
+
+        <h2>📞 Suporte</h2>
+        <div class="status info">
+            💡 <strong>Se ainda tiver problemas:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Verifique se não há bloqueadores de popup</li>
+                <li>Tente com navegador em modo incógnito</li>
+                <li>Desative extensões temporariamente</li>
+                <li>Use Ctrl+F5 para hard refresh</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Informações do navegador
+        document.getElementById('browser-info').innerHTML = `
+User Agent: ${navigator.userAgent}
+Plataforma: ${navigator.platform}
+Idioma: ${navigator.language}
+Cookies: ${navigator.cookieEnabled ? 'Habilitados' : 'Desabilitados'}
+JavaScript: ✅ Funcionando
+        `.trim();
+
+        // Informações de rede
+        document.getElementById('network-info').innerHTML = `
+URL: ${window.location.href}
+Protocol: ${window.location.protocol}
+Host: ${window.location.host}
+Port: ${window.location.port || 'Padrão'}
+Local Storage: ${typeof (Storage) !== "undefined" ? '✅ Disponível' : '❌ Indisponível'}
+        `.trim();
+
+        // Testes automáticos
+        const runTests = async () => {
+            const testsDiv = document.getElementById('tests');
+            const tests = [
+                { name: 'Fetch API', test: () => fetch('/').then(r => r.ok) },
+                { name: 'Local Storage', test: () => { localStorage.setItem('test', '1'); return localStorage.getItem('test') === '1'; } },
+                { name: 'Console', test: () => { console.log('Test'); return true; } },
+                { name: 'DOM Manipulation', test: () => document.createElement('div') !== null },
+                { name: 'JSON Parse', test: () => JSON.parse('{}') !== null },
+            ];
+
+            let results = '';
+            for (const test of tests) {
+                try {
+                    const result = await test.test();
+                    results += `<div class="status ${result ? 'success' : 'error'}">${result ? '✅' : '❌'} ${test.name}</div>`;
+                } catch (e) {
+                    results += `<div class="status error">❌ ${test.name}: ${e.message}</div>`;
+                }
+            }
+            testsDiv.innerHTML = results;
+        };
+
+        // Executar testes após carregamento
+        setTimeout(runTests, 1000);
+
+        // Log para debug
+        console.log('🔧 Diagnóstico carregado com sucesso!');
+        console.log('📊 Para mais informações, verifique a aba Network do DevTools');
+    </script>
+</body>
+
+</html>
