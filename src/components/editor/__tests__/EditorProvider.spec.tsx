@@ -4,33 +4,33 @@ import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it } from 'vitest';
 
-// Helper consumer to expose context actions/state to the test via refs
-const ConsumerBridge = ({ actionsRef, stateRef }: any) => {
+// Helper consumer to expose context to the test via refs
+const ConsumerBridge = ({ ctxRef, stateRef }: any) => {
   const ctx = useSuperUnified();
   // keep refs updated
   React.useEffect(() => {
     if (ctx) {
-      actionsRef.current = ctx.actions;
+      ctxRef.current = ctx;
       stateRef.current = ctx.state;
     }
-  }, [ctx, actionsRef, stateRef]);
+  }, [ctx, ctxRef, stateRef]);
   return null;
 };
 
 describe('EditorProvider actions (unit)', () => {
   it('addBlockAtIndex inserts block at the requested position and reorder works', async () => {
-    const actionsRef: any = { current: null };
+    const ctxRef: any = { current: null };
     const stateRef: any = { current: null };
 
     render(
-      <SuperUnifiedProvider enableSupabase={false}>
-        <ConsumerBridge actionsRef={actionsRef} stateRef={stateRef} />
+      <SuperUnifiedProvider autoLoad={false} debugMode={false}>
+        <ConsumerBridge ctxRef={ctxRef} stateRef={stateRef} />
       </SuperUnifiedProvider>,
     );
 
-    // Wait until actions are populated
+    // Wait until context is populated
     await waitFor(() => {
-      if (!actionsRef.current) throw new Error('actions not ready');
+      if (!ctxRef.current) throw new Error('context not ready');
     });
 
     const blockA: Block = {
@@ -49,11 +49,11 @@ describe('EditorProvider actions (unit)', () => {
     } as any;
 
     // Use um step sem blocos pré-carregados no template por padrão
-    const targetStep = 'step-99';
+    const targetStep = 99;
     // Add A at position 0
-    await actionsRef.current.addBlockAtIndex(targetStep, blockA, 0);
+    ctxRef.current.addBlock(targetStep, blockA);
     // Add B at position 1
-    await actionsRef.current.addBlockAtIndex(targetStep, blockB, 1);
+    ctxRef.current.addBlock(targetStep, blockB);
 
     // Check current state (aguarda refletir no ConsumerBridge)
     await waitFor(() => {
@@ -63,8 +63,10 @@ describe('EditorProvider actions (unit)', () => {
       expect(String(list[1].id)).toBe('temp-b');
     });
 
-    // Reorder: move index 0 to 1
-    await actionsRef.current.reorderBlocks(targetStep, 0, 1);
+    // Reorder: swap blocks by passing reordered array
+    const currentBlocks = stateRef.current.stepBlocks[targetStep] || [];
+    const reordered = [currentBlocks[1], currentBlocks[0]];
+    ctxRef.current.reorderBlocks(targetStep, reordered);
 
     await waitFor(() => {
       const list2 = stateRef.current.stepBlocks[targetStep] || [];

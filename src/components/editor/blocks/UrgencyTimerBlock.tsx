@@ -159,7 +159,7 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
               <InlineEditableText
                 value={expiredMessage}
                 onChange={(value: string) => handlePropertyChange('expiredMessage', value)}
-                style={{ color: '#6B4F43' }}
+                className="text-[#6B4F43]"
                 placeholder="Mensagem quando o timer expira"
               />
             </div>

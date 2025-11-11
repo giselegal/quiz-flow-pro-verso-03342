@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
 import { StorageService } from '@/services/core/StorageService';
+import { appLogger } from '@/lib/utils/appLogger';
+
+// Interface for quiz results
+interface StyleResult {
+  style?: string;
+  category?: string;
+  percentage?: number;
+}
+
+interface QuizResults {
+  primaryStyle: StyleResult;
+  secondaryStyles?: StyleResult[];
+}
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right') => {
@@ -75,23 +88,23 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = '#ffffff',
   } = block?.properties || {};
 
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<QuizResults | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Function to load results from storage
   const loadResults = () => {
     try {
-      const quizResult = StorageService.safeGetJSON('quizResult');
+      const quizResult = StorageService.safeGetJSON('quizResult') as QuizResults | null;
       if (quizResult && quizResult.primaryStyle) {
         setResults(quizResult);
         setIsLoading(false);
-        appLogger.debug('📊 Quiz results loaded from storage:', quizResult);
+        appLogger.debug('📊 Quiz results loaded from storage');
       } else {
         // If no results, keep loading state - calculation may still be in progress
         appLogger.debug('⏳ No quiz results found in storage yet');
       }
     } catch (error) {
-      appLogger.error('❌ Error loading quiz results:', error);
+      appLogger.error('❌ Error loading quiz results', error instanceof Error ? error : undefined);
       setIsLoading(false);
     }
   };
@@ -118,20 +131,21 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
   }, []);
 
   // Prepare display data
-  let primaryResult, secondaryResults;
+  let primaryResult: { style: string; percentage: number; color: string };
+  let secondaryResults: Array<{ style: string; percentage: number; color: string }>;
 
   if (results && results.primaryStyle) {
     // Use real calculated results
     primaryResult = {
-      style: results.primaryStyle.style || results.primaryStyle.category,
+      style: results.primaryStyle.style || results.primaryStyle.category || 'Natural',
       percentage: results.primaryStyle.percentage || 0,
-      color: styleColors[results.primaryStyle.style || results.primaryStyle.category] || styleColors['Natural'],
+      color: styleColors[(results.primaryStyle.style || results.primaryStyle.category) as keyof typeof styleColors] || styleColors['Natural'],
     };
 
-    secondaryResults = (results.secondaryStyles || []).map((style, index) => ({
-      style: style.style || style.category,
+    secondaryResults = (results.secondaryStyles || []).map((style: StyleResult, index: number) => ({
+      style: style.style || style.category || 'Natural',
       percentage: style.percentage || 0,
-      color: styleColors[style.style || style.category] || styleColors['Natural'],
+      color: styleColors[(style.style || style.category) as keyof typeof styleColors] || styleColors['Natural'],
     }));
   } else {
     // Fallback to mock data while loading or if no results
