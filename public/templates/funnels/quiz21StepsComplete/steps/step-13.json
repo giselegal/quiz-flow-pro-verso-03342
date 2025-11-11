@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-13",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "1 de 6",
         "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",

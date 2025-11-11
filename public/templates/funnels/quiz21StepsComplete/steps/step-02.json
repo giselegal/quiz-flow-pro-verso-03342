@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-2",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "1 de 10",
         "questionText": "QUAL O SEU TIPO DE ROUPA FAVORITA?",

@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-10",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "9 de 10",
         "questionText": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",

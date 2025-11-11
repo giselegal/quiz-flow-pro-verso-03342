@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-14",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "2 de 6",
         "questionText": "O que mais te desafia na hora de se vestir?",

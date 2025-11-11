@@ -45,7 +45,7 @@
     },
     {
       "id": "step5-options",
-      "type": "option-grid",
+      "type": "options-grid",
       "content": {
         "options": [
           {

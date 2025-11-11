@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-08",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "7 de 10",
         "questionText": "QUAL SUA CALÇA FAVORITA?",

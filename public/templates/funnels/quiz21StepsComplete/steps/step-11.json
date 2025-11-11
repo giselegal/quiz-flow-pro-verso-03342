@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-11",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "10 de 10",
         "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",

@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-15",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "3 de 6",
         "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",

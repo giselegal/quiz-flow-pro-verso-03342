@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-06",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "5 de 10",
         "questionText": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",

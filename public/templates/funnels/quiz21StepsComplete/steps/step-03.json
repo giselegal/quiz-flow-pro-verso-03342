@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-03",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "2 de 10",
         "questionText": "RESUMA A SUA PERSONALIDADE:",

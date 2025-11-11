@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-09",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "8 de 10",
         "questionText": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",

@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-18",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "Q16 - RESULTADO",
         "questionText": "Qual desses resultados você mais gostaria de alcançar?",

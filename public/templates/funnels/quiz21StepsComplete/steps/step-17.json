@@ -13,7 +13,7 @@
   "blocks": [
     {
       "id": "q-17",
-      "type": "question-block",
+      "type": "question-hero",
       "properties": {
         "questionNumber": "Q15 - TRANSFORMAÇÃO",
         "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
