@@ -303,7 +303,7 @@ export class SchemaMigration {
 
       return UnifiedPropertySchema.parse(unified);
     } catch (error) {
-      appLogger.error('Schema migration failed for legacy property:', { data: [legacy, error] });
+      appLogger.error('Schema migration failed for legacy property:', error instanceof Error ? error : new Error(String(error)), { legacy });
       // Fallback to minimal valid property
       return {
         key: 'migration_error',
@@ -364,7 +364,7 @@ export class ValidationService {
       } else {
         const error = `Validation failed in ${options.source}: ${result.error.message}`;
         if (options.logErrors) {
-          appLogger.error(String(error), { data: [{ data, errors: result.error.errors }] });
+          appLogger.error(String(error), { data, errors: result.error.errors });
         }
         return {
           success: false,
@@ -375,7 +375,7 @@ export class ValidationService {
     } catch (error) {
       const errorMessage = `Validation exception in ${options.source}: ${error instanceof Error ? error.message : 'Unknown error'}`;
       if (options.logErrors) {
-        appLogger.error(String(errorMessage), { data: [{ data, error }] });
+        appLogger.error(String(errorMessage), error instanceof Error ? error : new Error(String(error)), { data });
       }
       return {
         success: false,
