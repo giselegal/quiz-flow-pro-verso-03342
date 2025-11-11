@@ -28,8 +28,23 @@ export function usePerformanceTest(component: string, options: Options = {}) {
     networkLatency: 0,
   }), [reRenderCount]);
 
+  const perfFlag = (() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const ls = window.localStorage.getItem('VITE_ENABLE_PERF_HOOK');
+        if (ls != null) return ls === 'true';
+      }
+      // @ts-ignore
+      const viteFlag = (import.meta?.env?.VITE_ENABLE_PERF_HOOK);
+      if (typeof viteFlag === 'string') return viteFlag === 'true';
+      const nodeFlag = typeof process !== 'undefined' ? process.env?.VITE_ENABLE_PERF_HOOK : undefined;
+      if (typeof nodeFlag === 'string') return nodeFlag === 'true';
+    } catch { /* noop */ }
+    return false;
+  })();
+
   const startTest = () => {
-    if (!enabled) return;
+    if (!enabled || !perfFlag) return;
     if (typeof performance !== 'undefined') {
       startRef.current = performance.now();
     } else {
@@ -38,7 +53,7 @@ export function usePerformanceTest(component: string, options: Options = {}) {
   };
 
   const stopTest = () => {
-    if (!enabled) return;
+    if (!enabled || !perfFlag) return;
     // naive alert when render time seems high
     const renderTime = metrics.renderTime || 0;
     if (!isProd && renderTime > 200) {
@@ -49,7 +64,7 @@ export function usePerformanceTest(component: string, options: Options = {}) {
   };
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !perfFlag) return;
     setReRenderCount(c => c + 1);
   });
 
@@ -58,5 +73,6 @@ export function usePerformanceTest(component: string, options: Options = {}) {
     stopTest,
     metrics,
     alerts,
+    enabled: perfFlag && enabled,
   };
 }

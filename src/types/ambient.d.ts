@@ -55,6 +55,7 @@ declare module '@/services/canonical/TemplateService' {
     prepareTemplate(templateId: string, options?: any): Promise<ServiceResult<void>>;
     setActiveTemplate(templateId: string, totalSteps: number): void;
     setActiveFunnel(funnelId: string | null): void;
+    saveStep(stepId: string, blocks: Block[], options?: any): Promise<ServiceResult<void>>;
     invalidateStepCache(stepId: string): void;
     clearCache(): void;
     getTemplate(id: string): Promise<ServiceResult<any>>;
