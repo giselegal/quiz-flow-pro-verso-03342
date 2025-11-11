@@ -252,7 +252,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
               blocks,
               savedAt: Date.now(),
               ttlMs: 10 * 60_000,
-              version: 'v3.0',
+              version: 'v3.2',
             });
           } catch { /* ignore idb errors */ }
 
