@@ -1,4 +1,4 @@
-import { EditorProvider as MigrationEditorProvider, useEditor } from '@/components/editor/EditorProviderCanonical';
+import SuperUnifiedProvider, { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 import type { Block } from '@/types/editor';
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 // Helper consumer to expose context actions/state to the test via refs
 const ConsumerBridge = ({ actionsRef, stateRef }: any) => {
-  const ctx = useEditor({ optional: true });
+  const ctx = useSuperUnified();
   // keep refs updated
   React.useEffect(() => {
     if (ctx) {
@@ -23,9 +23,9 @@ describe('EditorProvider actions (unit)', () => {
     const stateRef: any = { current: null };
 
     render(
-      <EditorProviderCanonical enableSupabase={false}>
+      <SuperUnifiedProvider enableSupabase={false}>
         <ConsumerBridge actionsRef={actionsRef} stateRef={stateRef} />
-      </EditorProviderCanonical>,
+      </SuperUnifiedProvider>,
     );
 
     // Wait until actions are populated
