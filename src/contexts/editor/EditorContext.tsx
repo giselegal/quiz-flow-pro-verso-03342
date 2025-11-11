@@ -232,22 +232,24 @@ export const EditorProvider: React.FC<{
   // Block management functions
   const addBlock = useCallback(
     async (type: BlockType): Promise<string> => {
+      const order = state.blocks.length;
+      const stageId = activeStageId || 'step-1';
       const newBlock: Block = {
-        id: generateBlockId(type, generateStableId()),
+        id: generateBlockId(type, order, stageId),
         type,
         content: {},
         properties: {
           funnelId: currentFunnelId,
-          stageId: 'step-1', // Default stage
+          stageId,
         },
-        order: state.blocks.length,
+        order,
       };
 
       dispatch({ type: 'ADD_BLOCK', payload: newBlock });
       appLogger.info('🔗 Block created with funnelId:', { data: [currentFunnelId] });
       return newBlock.id;
     },
-    [state.blocks.length, currentFunnelId],
+    [state.blocks.length, currentFunnelId, activeStageId],
   );
 
   const updateBlock = useCallback(async (id: string, content: any): Promise<void> => {
@@ -268,11 +270,13 @@ export const EditorProvider: React.FC<{
 
   const reorderBlocks = useCallback(
     (startIndex: number, endIndex: number) => {
-      appLogger.info('🔄 EditorContext.reorderBlocks:', { data: [{
-                  startIndex,
-                  endIndex,
-                  blocksCount: state.blocks.length,
-                }] });
+      appLogger.info('🔄 EditorContext.reorderBlocks:', {
+        data: [{
+          startIndex,
+          endIndex,
+          blocksCount: state.blocks.length,
+        }]
+      });
 
       if (startIndex === endIndex) {
         appLogger.info('⚠️ Índices iguais, nenhuma alteração necessária');
@@ -285,11 +289,13 @@ export const EditorProvider: React.FC<{
         endIndex < 0 ||
         endIndex >= state.blocks.length
       ) {
-        appLogger.error('❌ Índices inválidos para reordenação:', { data: [{
-                    startIndex,
-                    endIndex,
-                    blocksCount: state.blocks.length,
-                  }] });
+        appLogger.error('❌ Índices inválidos para reordenação:', {
+          data: [{
+            startIndex,
+            endIndex,
+            blocksCount: state.blocks.length,
+          }]
+        });
         return;
       }
 

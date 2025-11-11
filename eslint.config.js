@@ -23,6 +23,9 @@ export default [
       'build',
       '*.config.js',
       '*.config.ts',
+      // Arquivos de patch auxiliares não são código válido para lint
+      '*.patch',
+      '**/*.patch',
       'public',
       // Documentação e conteúdos arquivados/scripts fora do app
       'docs/**',
