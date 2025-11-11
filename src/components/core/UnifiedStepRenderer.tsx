@@ -77,10 +77,38 @@ const VirtualizedStepRenderer: React.FC<{
         const virtualizer = useVirtualizer({
             count: blocks.length,
             getScrollElement: () => containerRef.current,
-            estimateSize: useCallback(() => 100, []), // altura média de um bloco (ajustado dinamicamente via medida)
+            estimateSize: useCallback(() => 100, []), // altura média fallback
             getItemKey: useCallback((index: number) => blocks[index]?.id ?? `idx-${index}`, [blocks]),
             overscan: isEditingMode ? OVERSCAN_EDITING : OVERSCAN_DEFAULT,
+            // Medição dinâmica: permite altura variável por bloco
+            measureElement: (el) => {
+                // Usa layout atual (evita forçar reflow extra)
+                return el.getBoundingClientRect().height;
+            },
         });
+
+        // Observa mudanças de conteúdo para medir novamente (altura dinâmica durante edição)
+        const resizeObserverRef = useRef<ResizeObserver | null>(null);
+        useEffect(() => {
+            if (!containerRef.current) return;
+            // Observa cada elemento virtual renderizado e agenda medição
+            resizeObserverRef.current?.disconnect();
+            resizeObserverRef.current = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    const el = entry.target as HTMLElement;
+                    // Marca para re-medição apenas se altura realmente mudou
+                    virtualizer.measureElement(el);
+                }
+            });
+            // Registrar observers nos itens atuais
+            virtualizer.getVirtualItems().forEach((item) => {
+                const el = containerRef.current?.querySelector(
+                    `[data-index="${item.index}"]`
+                ) as HTMLElement | null;
+                if (el) resizeObserverRef.current?.observe(el);
+            });
+            return () => resizeObserverRef.current?.disconnect();
+        }, [virtualizer, blocks]);
 
         useEffect(() => {
             appLogger.info('[VirtualizedStepRenderer] Enabled', {
@@ -119,6 +147,7 @@ const VirtualizedStepRenderer: React.FC<{
                                     width: '100%',
                                     transform: `translateY(${virtualItem.start}px)`,
                                 }}
+                                className="vr-item-root"
                             >
                                 <OptimizedBlockRenderer
                                     block={block}

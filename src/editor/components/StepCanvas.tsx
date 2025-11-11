@@ -44,6 +44,8 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
     const unified = useSuperUnified();
     const isEditingMode = unified.state.editor.isEditing;
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const autoScrollRef = useRef<number | null>(null);
 
     // Virtualização condicional para listas grandes
     const VIRTUAL_THRESHOLD = VIRTUALIZATION_THRESHOLD;
@@ -127,8 +129,59 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
     // RENDER BLOCKS
     // ========================================================================
 
+    // Auto-scroll durante drag nas bordas do container
+    useEffect(() => {
+        if (!isDragging) {
+            if (autoScrollRef.current) cancelAnimationFrame(autoScrollRef.current);
+            autoScrollRef.current = null;
+            return;
+        }
+        const el = containerRef.current;
+        if (!el) return;
+        const EDGE = 80; // px margem para iniciar scroll
+        const MAX_SPEED = 18; // px por frame (~ 300px/s)
+
+        const stepScroll = () => {
+            const rect = el.getBoundingClientRect();
+            // Usar último pointer position armazenado via listener
+            const y = lastPointerPosRef.current.y;
+            let dy = 0;
+            if (y < rect.top + EDGE) {
+                const intensity = 1 - (y - rect.top) / EDGE; // 0..1
+                dy = -Math.min(MAX_SPEED, MAX_SPEED * intensity);
+            } else if (y > rect.bottom - EDGE) {
+                const intensity = 1 - (rect.bottom - y) / EDGE;
+                dy = Math.min(MAX_SPEED, MAX_SPEED * intensity);
+            }
+            if (dy !== 0) {
+                el.scrollTop += dy;
+            }
+            autoScrollRef.current = requestAnimationFrame(stepScroll);
+        };
+        autoScrollRef.current = requestAnimationFrame(stepScroll);
+        return () => {
+            if (autoScrollRef.current) cancelAnimationFrame(autoScrollRef.current);
+            autoScrollRef.current = null;
+        };
+    }, [isDragging]);
+
+    const lastPointerPosRef = useRef({ x: 0, y: 0 });
+    useEffect(() => {
+        const move = (e: PointerEvent) => {
+            lastPointerPosRef.current = { x: e.clientX, y: e.clientY };
+        };
+        window.addEventListener('pointermove', move);
+        return () => window.removeEventListener('pointermove', move);
+    }, []);
+
     return (
-        <div ref={containerRef} className={cn('w-full h-full overflow-auto bg-gray-50', className)}>
+        <div
+            ref={containerRef}
+            className={cn('w-full h-full overflow-auto bg-gray-50', className)}
+            onDragEnter={() => setIsDragging(true)}
+            onDragEnd={() => setIsDragging(false)}
+            onDrop={() => setIsDragging(false)}
+        >
             {/* Header do Step */}
             <div ref={headerRef} className="sticky top-0 z-10 bg-white border-b px-4 py-3 shadow-sm">
                 <div className="flex items-center justify-between">
@@ -175,6 +228,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                         onDragStart={(e) => {
                                             e.dataTransfer.effectAllowed = 'move';
                                             e.dataTransfer.setData('blockIndex', String(index));
+                                            setIsDragging(true);
                                         }}
                                         onDragOver={(e) => {
                                             e.preventDefault();
@@ -188,6 +242,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                             const toIndex = index;
                                             appLogger.info(`Reordenar: ${fromIndex} → ${toIndex}`);
                                             setDragOverIndex(null);
+                                            setIsDragging(false);
                                         }}
                                     >
                                         {isEditable && (
@@ -237,6 +292,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                     onDragStart={(e) => {
                                         e.dataTransfer.effectAllowed = 'move';
                                         e.dataTransfer.setData('blockIndex', String(index));
+                                        setIsDragging(true);
                                     }}
                                     onDragOver={(e) => {
                                         e.preventDefault();
@@ -250,6 +306,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                         const toIndex = index;
                                         appLogger.info(`Reordenar: ${fromIndex} → ${toIndex}`);
                                         setDragOverIndex(null);
+                                        setIsDragging(false);
                                     }}
                                 >
                                     {isEditable && (

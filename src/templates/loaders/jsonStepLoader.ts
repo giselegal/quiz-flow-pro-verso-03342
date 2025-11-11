@@ -63,6 +63,21 @@ export async function loadStepFromJson(
   for (const url of paths) {
     const blocks = await tryUrl(url);
     if (blocks && blocks.length > 0) {
+      // 🔍 Validação simples DEV: garante shape mínimo dos blocos evitando crashes silenciosos
+      try {
+        // @ts-ignore
+        if ((import.meta as any)?.env?.DEV) {
+          const originalLen = blocks.length;
+          const filtered = blocks.filter((b: any) => b && typeof b.id === 'string' && typeof b.type === 'string');
+          if (filtered.length !== originalLen) {
+            appLogger.warn(`[jsonStepLoader] ${originalLen - filtered.length} blocos descartados por shape inválido (DEV) em ${stepId}`);
+          }
+          appLogger.info(`[jsonStepLoader] Validação DEV concluída para ${stepId}: ${filtered.length}/${originalLen} válidos`);
+          return filtered as Block[];
+        }
+      } catch (e) {
+        appLogger.warn(`[jsonStepLoader] Falha na validação DEV: ${(e as any)?.message}`);
+      }
       appLogger.info(`✅ [jsonStepLoader] Carregado ${blocks.length} blocos de ${url}`);
       return blocks;
     }
