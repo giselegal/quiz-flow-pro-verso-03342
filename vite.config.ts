@@ -247,6 +247,10 @@ export default defineConfig(({ mode }) => {
       esbuildOptions: {
         target: 'es2020',
         keepNames: true,
+        // 🔧 FIX: Injetar polyfill para __assign
+        banner: {
+          js: `if (typeof globalThis.__assign !== 'function') { globalThis.__assign = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var src = arguments[i]; for (var k in src) if (Object.prototype.hasOwnProperty.call(src, k)) target[k] = src[k]; } return target; }; }`
+        }
       },
     },
     define: {
@@ -255,6 +259,8 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
       'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
       'import.meta.env.VITE_SUPABASE_PROJECT_ID': JSON.stringify(env.VITE_SUPABASE_PROJECT_ID),
+      // 🔧 FIX: Garantir que __assign esteja disponível globalmente
+      '__assign': 'Object.assign',
     },
     esbuild: { target: 'es2020' },
     test: {
