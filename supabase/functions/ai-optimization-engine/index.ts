@@ -1,12 +1,23 @@
+// @ts-ignore: Deno imports
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
+// @ts-ignore: Deno imports  
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+// Declarações de tipo para ambiente Deno
+declare global {
+  const Deno: {
+    env: {
+      get(key: string): string | undefined;
+    };
+  };
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
