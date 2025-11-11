@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { QuizFunnel, SimplePage } from '@/types/quiz';
+import { QuizFunnel, SimplePage } from '@/types/quiz.interface';
 import styles from '@/styles/editor.module.css';
 import { ArrowDown, ArrowUp, Copy, FolderTree, MoreVertical, Plus, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
@@ -73,7 +73,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
   const handleDeletePage = (pageIndex: number) => {
     if (funnel.pages.length <= 1) return; // Não permitir deletar a última página
 
-    const updatedPages = funnel.pages.filter((_, index) => index !== pageIndex);
+    const updatedPages = funnel.pages.filter((_: SimplePage, index: number) => index !== pageIndex);
     const updatedFunnel = {
       ...funnel,
       pages: updatedPages,
@@ -220,7 +220,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={e => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           setShowPageSettings(showPageSettings === page.id ? null : page.id);
                         }}

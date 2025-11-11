@@ -204,7 +204,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
                                 <Button
                                   size="sm"
                                   variant="ghost"
-                                  onClick={(e) => {
+                                  onClick={(e: React.MouseEvent) => {
                                     e.stopPropagation();
                                     setSelectedBlockForStyling(block);
                                   }}

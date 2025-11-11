@@ -8,7 +8,7 @@ interface BenefitsBlockProps {
 }
 
 // Função universal de margens (consistente com outros blocks)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right') => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
   if (isNaN(numValue) || numValue === 0) return '';
   const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
