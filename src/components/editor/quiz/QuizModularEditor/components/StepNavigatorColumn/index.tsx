@@ -1,6 +1,6 @@
 // Coluna de navegação de steps — versão inicial usando TemplateService canônico
 import React, { useEffect, useMemo, useState } from 'react';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService, type StepInfo } from '@/services/canonical/TemplateService';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, MoreVertical, GripVertical } from 'lucide-react';
 import { AddStepDialog, type NewStepData } from '../AddStepDialog';
@@ -74,7 +74,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
             setLocalItems(steps);
         } else if (canonicalSteps.success) {
             setLocalItems(
-                canonicalSteps.data.map((s) => ({
+                canonicalSteps.data.map((s: StepInfo) => ({
                     key: s.id,
                     title: `${s.order.toString().padStart(2, '0')} - ${s.name}`,
                 }))

@@ -115,7 +115,11 @@ class AppLogger {
       entry.stack = errorOrContext.stack;
       entry.context = context;
     } else if (typeof errorOrContext === 'object' && errorOrContext !== null) {
+      // Se já veio um objeto, usar diretamente
       entry.context = errorOrContext as LogContext;
+    } else if (typeof errorOrContext !== 'undefined') {
+      // Para valores primitivos (string/number/etc) encapsular como data
+      entry.context = { data: [errorOrContext] } as LogContext;
     }
 
     // Buffer management
@@ -171,22 +175,25 @@ class AppLogger {
   /**
    * Log debug message (development only)
    */
-  debug(message: string, context?: LogContext): void {
-    this.log('debug', message, context);
+  debug(message: string, contextOrData?: unknown): void {
+    // Aceita qualquer payload adicional e trata objetos como contexto estruturado
+    this.log('debug', message, contextOrData);
   }
 
   /**
    * Log informational message
    */
-  info(message: string, context?: LogContext): void {
-    this.log('info', message, context);
+  info(message: string, contextOrData?: unknown): void {
+    // Compat: aceita unknown e converte objetos para contexto
+    this.log('info', message, contextOrData);
   }
 
   /**
    * Log warning message
    */
-  warn(message: string, context?: LogContext): void {
-    this.log('warn', message, context);
+  warn(message: string, contextOrData?: unknown): void {
+    // Compat: aceita unknown e converte objetos para contexto
+    this.log('warn', message, contextOrData);
   }
 
   /**
