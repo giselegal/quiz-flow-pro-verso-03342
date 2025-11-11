@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   const isStaging = mode === 'staging';
   const isProd = mode === 'production';
-  const preferredPort = Number(env.VITE_PORT || process.env.VITE_PORT || 8080);
+  const preferredPort = 8080; // Forçar porta 8080
 
   return {
     base: '/',
