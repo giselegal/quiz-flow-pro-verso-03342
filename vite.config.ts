@@ -155,6 +155,32 @@ export default defineConfig(({ mode }) => {
           // 🚀 FASE 2: Estratégia otimizada de code splitting
           // Separação inteligente de chunks para melhor performance e cache
           manualChunks(id) {
+            // 🔧 FIX: Resolução específica de warnings de chunks mistos
+            
+            // Supabase: forçar chunk único para evitar import misto
+            if (id.includes('node_modules/@supabase/supabase-js') ||
+                id.includes('/services/integrations/supabase/')) return 'supabase';
+            
+            // Templates: agrupar templates relacionados em chunk único
+            if (id.includes('/templates/quiz21StepsComplete.ts') || 
+                id.includes('/templates/registry.ts') ||
+                id.includes('/templates/quiz21StepsSimplified.ts')) return 'templates-core';
+            
+            // Block registry: agrupar componentes de bloco 
+            if (id.includes('/components/editor/blocks/TextInlineBlock.tsx') ||
+                id.includes('/components/editor/blocks/FormInputBlock.tsx') ||
+                id.includes('/core/registry/UnifiedBlockRegistry.ts')) return 'editor-blocks';
+            
+            // Services: agrupar services que se importam mutuamente
+            if (id.includes('/services/canonical/TemplateService.ts') ||
+                id.includes('/services/core/ConsolidatedTemplateService.ts') ||
+                id.includes('/services/core/HierarchicalTemplateSource.ts') ||
+                id.includes('/lib/utils/templateDiagnostic.ts')) return 'services-core';
+                
+            // Utils compartilhados
+            if (id.includes('/lib/utils/notify.ts') ||
+                id.includes('/contexts/data/StepsContext.tsx')) return 'utils-shared';
+
             // ===== VENDORS EXTERNOS =====
             // A11y (carregamento sob demanda)
             if (id.includes('node_modules/axe-core')) return 'a11y';
