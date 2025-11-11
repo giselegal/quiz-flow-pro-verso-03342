@@ -110,7 +110,7 @@ export const loadTemplate = async (templateId: string) => {
                   registry.registerOverride(stepId, json as any);
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
-                    appLogger.info(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
+                  appLogger.info(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
                   }
                   return true;
                 }
@@ -178,7 +178,8 @@ export const loadTemplate = async (templateId: string) => {
   const { step, source: stepSource } = getStepTemplate(stepId);
 
   if (process.env.NODE_ENV === 'development') {
-    appLogger.info(`📦 [loadTemplate] step=${stepId} • source=${stepSource}`);
+  // Ajuste de tipagem: fornecer objeto contexto explícito para evitar erros TS com sobrecarga
+  appLogger.info(`📦 [loadTemplate] step=${stepId} • source=${stepSource}`, { stepId, source: stepSource });
   }
 
   return {
@@ -206,7 +207,7 @@ try {
 
       // Verificar se já existe
       if (registry.has(normalizedKey)) {
-        appLogger.warn(`⚠️  Step '${normalizedKey}' já está registrado. Sobrescrevendo...`);
+  appLogger.warn(`⚠️  Step '${normalizedKey}' já está registrado. Sobrescrevendo...`, { stepId: normalizedKey });
       }
 
       // normaliza tipos (aliases → canônico 'options-grid')
@@ -219,10 +220,10 @@ try {
     }
   }
 
-  appLogger.info(`✅ TemplateRegistry registrado: ${registered} steps`);
-  appLogger.info('📋 Steps registrados:', { data: [registeredKeys.sort()] });
+  appLogger.info(`✅ TemplateRegistry registrado: ${registered} steps`, { count: registered });
+  appLogger.info('📋 Steps registrados:', { steps: registeredKeys.sort() });
 } catch (err) {
-  appLogger.error('❌ Erro ao registrar templates no TemplateRegistry:', { data: [err] });
+  appLogger.error('❌ Erro ao registrar templates no TemplateRegistry:', err instanceof Error ? err : undefined, { error: err });
 }
 
 // 🌐 Browser-only: pré-carregar overrides JSON v3 para steps conhecidos (1..21)
@@ -264,7 +265,7 @@ if (typeof window !== 'undefined') {
                       registry.registerOverride(id, json as any);
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
-                        appLogger.info(`🧩 [imports] Override JSON ${firstUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
+                        appLogger.info(`🧩 [imports] Override JSON ${firstUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`, { stepId: id });
                       }
                       return true;
                     }
@@ -275,13 +276,13 @@ if (typeof window !== 'undefined') {
                       registry.registerOverride(id, json as any);
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
-                        appLogger.info(`🧩 [imports] Override JSON ${secondUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
+                        appLogger.info(`🧩 [imports] Override JSON ${secondUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`, { stepId: id });
                       }
                       return true;
                     }
                     return false;
                   } catch (error) {
-                    appLogger.warn(`[imports] Erro ao pré-carregar JSON para ${id}:`, { data: [error] });
+                    appLogger.warn(`[imports] Erro ao pré-carregar JSON para ${id}:`, { stepId: id, error });
                     return false;
                   } finally {
                     w.__jsonV3Attempts.add(id);
@@ -292,13 +293,13 @@ if (typeof window !== 'undefined') {
             try { 
               await w.__jsonV3InFlight.get(id); 
             } catch (error) {
-              appLogger.warn(`[imports] Erro ao aguardar pré-carregamento para ${id}:`, { data: [error] });
+              appLogger.warn(`[imports] Erro ao aguardar pré-carregamento para ${id}:`, { stepId: id, error });
             }
             w.__jsonV3InFlight.delete(id);
           }),
         );
       } catch (error) {
-        appLogger.warn('[imports] Erro ao iniciar pré-carregamento JSON v3:', { data: [error] });
+  appLogger.warn('[imports] Erro ao iniciar pré-carregamento JSON v3:', { error });
       }
     }, 0);
   }

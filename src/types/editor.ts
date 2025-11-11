@@ -2,7 +2,12 @@
 import { LucideIcon } from 'lucide-react';
 
 // Import PropertyType and PropertySchema for internal use
-import { PropertySchema, PropertyType } from './propertySchema';
+import {
+  PropertySchema,
+  PropertyType,
+  LegacyPropertySchema as LegacyPropertySchemaUnified,
+  EnhancedPropertySchema as EnhancedPropertySchemaUnified,
+} from './propertySchema';
 
 // Re-export the unified PropertySchema as the primary interface
 export type {
@@ -45,6 +50,31 @@ export interface LegacyPropertySchema {
   rows?: number;
 }
 
+// Accept schemas from multiple eras to reduce friction while we migrate
+// 1) Unified PropertySchema (preferred)
+// 2) LegacyPropertySchema from this file (back-compat in editor code)
+// 3) EnhancedPropertySchema and LegacyPropertySchema from propertySchema.ts
+// 4) A very permissive SimpleProperty used by older blockDefinitions that only specify type/default/label
+export type SimpleProperty = {
+  // minimal set used in many blockDefinitions
+  type: string;
+  default?: any;
+  label?: string;
+  description?: string;
+  options?: Array<{ value: any; label: string }>;
+  min?: number;
+  max?: number;
+  step?: number;
+  rows?: number;
+};
+
+export type AnyPropertySchema =
+  | PropertySchema
+  | LegacyPropertySchema
+  | LegacyPropertySchemaUnified
+  | EnhancedPropertySchemaUnified
+  | SimpleProperty;
+
 export interface BlockDefinition {
   type: string;
 
@@ -58,7 +88,9 @@ export interface BlockDefinition {
 
   component: React.ComponentType<any>;
 
-  properties: Record<string, PropertySchema>;
+  // Temporarily accept a broader set of property schemas to unblock build while
+  // we migrate all definitions to the unified PropertySchema.
+  properties: Record<string, AnyPropertySchema>;
 
   label: string;
 

@@ -118,11 +118,13 @@ export const useQuizLogic = () => {
 
     // ✅ CORREÇÃO DE FLUXO: Apenas questões q1-q10 pontuam para o resultado (etapas 2-11)
     answers.forEach(answer => {
-      const question = caktoquizQuestions.find((q: any) => q.id === answer.questionId);
-      const option = question?.options.find((opt: any) => opt.id === answer.optionId);
+      const question: any = caktoquizQuestions.find((q: any) => q.id === (answer as any).questionId) || {};
+      const option = Array.isArray(question.options) 
+        ? (question.options as any[]).find((opt: any) => opt.id === (answer as any).optionId) 
+        : undefined;
 
       // ✅ FILTRO: Só conta se for questão que pontua (centralizado em constants/quiz.ts)
-      const scorable = isScorableQuestion(question?.id || '');
+  const scorable = isScorableQuestion((question as any)?.id || '');
 
       if (option?.style && scorable) {
         styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);

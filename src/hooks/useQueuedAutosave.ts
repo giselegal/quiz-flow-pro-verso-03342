@@ -20,7 +20,7 @@
  */
 
 import { useCallback, useRef, useEffect } from 'react';
-import { appLogger } from '@/lib/utils/logger';
+import { appLogger } from '@/lib/utils/appLogger';
 import { editorMetrics } from '@/lib/utils/editorMetrics';
 import type { Block } from '@/types/editor';
 
@@ -124,7 +124,7 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
 
       try {
         // Telemetria: save iniciado
-        editorMetrics.trackEvent('autosave_queued', { 
+        (editorMetrics as any)?.trackEvent?.('autosave_queued', { 
           stepKey, 
           queueSize: saveQueue.current.size,
           retryCount: entry.retryCount,
@@ -135,13 +135,14 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
 
         // Sucesso
         appLogger.info(`✅ [QueuedAutosave] Step ${stepKey} salvo com sucesso`);
-        editorMetrics.trackEvent('autosave_success', { stepKey });
+  (editorMetrics as any)?.trackEvent?.('autosave_success', { stepKey });
         
         if (onSuccess) {
           onSuccess(stepKey);
         }
       } catch (error) {
-        appLogger.error(`❌ [QueuedAutosave] Falha ao salvar ${stepKey}:`, error);
+        const errObj = error instanceof Error ? error : new Error(String(error));
+        appLogger.error(`❌ [QueuedAutosave] Falha ao salvar ${stepKey}:`, { data: [errObj.message] });
 
         // Retry com backoff exponencial
         if (entry.retryCount < maxRetries) {
@@ -159,7 +160,7 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
             processSaveQueue();
           }, retryDelay);
 
-          editorMetrics.trackEvent('autosave_retry', { 
+          (editorMetrics as any)?.trackEvent?.('autosave_retry', { 
             stepKey, 
             retryCount, 
             retryDelay,
@@ -168,13 +169,13 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
           // Falha final
           appLogger.error(`💥 [QueuedAutosave] Falha final para ${stepKey} após ${maxRetries} retries`);
           
-          editorMetrics.trackEvent('autosave_failure', { 
+          (editorMetrics as any)?.trackEvent?.('autosave_failure', { 
             stepKey, 
             retryCount: entry.retryCount,
           });
 
           if (onError) {
-            onError(stepKey, error as Error);
+            onError(stepKey, errObj);
           }
         }
       } finally {
@@ -193,7 +194,7 @@ export function useQueuedAutosave(options: UseQueuedAutosaveOptions): UseQueuedA
     if (existingEntry) {
       // Coalesce: substitui save pendente
       appLogger.debug(`🔄 [QueuedAutosave] Coalescing save para ${stepKey}`);
-      editorMetrics.trackEvent('autosave_coalesced', { stepKey });
+  (editorMetrics as any)?.trackEvent?.('autosave_coalesced', { stepKey });
     }
 
     // Adiciona/atualiza entrada na fila

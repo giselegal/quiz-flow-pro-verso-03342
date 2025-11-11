@@ -12,14 +12,26 @@
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
-import type { UnifiedFunnelData } from '@/services/canonical/FunnelService';
-import { appLogger } from '@/lib/utils/logger';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
 // INTERFACES
 // ============================================================================
+
+// Definição local para evitar dependência de tipos não exportados
+interface UnifiedFunnelData {
+    id: string;
+    name: string;
+    description: string;
+    stages: any[];
+    settings: any;
+    status: string;
+    version: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+}
 
 interface UnifiedFunnelContextType {
     // Estado do funil

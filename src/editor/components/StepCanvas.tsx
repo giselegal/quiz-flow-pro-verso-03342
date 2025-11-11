@@ -9,7 +9,8 @@
  * - Live preview: atualiza automaticamente quando JSON muda
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { VariableSizeList as List } from 'react-window';
 import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
 // Unificar renderização com o runtime: usar o UniversalBlockRenderer (registry híbrido)
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
@@ -37,6 +38,27 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
 }) => {
     const { step, blocks, isLoading, error } = useStepBlocks(stepIndex);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+    // Virtualização condicional para listas grandes
+    const VIRTUAL_THRESHOLD = 60;
+    const ESTIMATED_ROW_HEIGHT = 180; // px (estimativa conservadora)
+    const containerRef = useRef<HTMLDivElement>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
+    const [listHeight, setListHeight] = useState<number>(600);
+    const useVirtual = useMemo(() => blocks.length > VIRTUAL_THRESHOLD, [blocks.length]);
+
+    useEffect(() => {
+        if (!useVirtual) return;
+        const compute = () => {
+            const h = (containerRef.current?.clientHeight ?? window.innerHeight) -
+                (headerRef.current?.clientHeight ?? 0) - 16; // padding
+            setListHeight(Math.max(300, h));
+        };
+        compute();
+        const onResize = () => compute();
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [useVirtual]);
 
     // ========================================================================
     // LOADING & ERROR STATES
@@ -97,9 +119,9 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
     // ========================================================================
 
     return (
-        <div className={cn('w-full h-full overflow-auto bg-gray-50', className)}>
+        <div ref={containerRef} className={cn('w-full h-full overflow-auto bg-gray-50', className)}>
             {/* Header do Step */}
-            <div className="sticky top-0 z-10 bg-white border-b px-4 py-3 shadow-sm">
+            <div ref={headerRef} className="sticky top-0 z-10 bg-white border-b px-4 py-3 shadow-sm">
                 <div className="flex items-center justify-between">
                     <div>
                         <h3 className="text-sm font-semibold text-gray-900">
@@ -118,74 +140,139 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
             </div>
 
             {/* Blocks Container */}
-            <div className="p-4 space-y-2">
-                {blocks.map((block, index) => {
-                    const isSelected = selectedBlockId === block.id;
-                    const isDragOver = dragOverIndex === index;
+            <div className="p-4">
+                {useVirtual ? (
+                    <List
+                        height={listHeight}
+                        width={'100%'}
+                        itemCount={blocks.length}
+                        itemSize={() => ESTIMATED_ROW_HEIGHT}
+                        overscanCount={4}
+                        className="rounded-md"
+                    >
+                        {({ index, style }) => {
+                            const block = blocks[index];
+                            const isSelected = selectedBlockId === block.id;
+                            const isDragOver = dragOverIndex === index;
+                            return (
+                                <div style={style} key={block.id} className="pr-2">
+                                    <div
+                                        className={cn(
+                                            'relative transition-all duration-200 mb-2',
+                                            isDragOver && 'border-t-2 border-blue-500',
+                                        )}
+                                        draggable={isEditable}
+                                        onDragStart={(e) => {
+                                            e.dataTransfer.effectAllowed = 'move';
+                                            e.dataTransfer.setData('blockIndex', String(index));
+                                        }}
+                                        onDragOver={(e) => {
+                                            e.preventDefault();
+                                            e.dataTransfer.dropEffect = 'move';
+                                            setDragOverIndex(index);
+                                        }}
+                                        onDragLeave={() => setDragOverIndex(null)}
+                                        onDrop={(e) => {
+                                            e.preventDefault();
+                                            const fromIndex = Number(e.dataTransfer.getData('blockIndex'));
+                                            const toIndex = index;
+                                            appLogger.info(`Reordenar: ${fromIndex} → ${toIndex}`);
+                                            setDragOverIndex(null);
+                                        }}
+                                    >
+                                        {isEditable && (
+                                            <div className="absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity">
+                                                <div className="w-4 h-8 bg-gray-300 rounded cursor-move flex items-center justify-center">
+                                                    <div className="text-white text-xs">⋮⋮</div>
+                                                </div>
+                                            </div>
+                                        )}
 
-                    return (
-                        <div
-                            key={block.id}
-                            className={cn(
-                                'relative transition-all duration-200',
-                                isDragOver && 'border-t-2 border-blue-500',
-                            )}
-                            draggable={isEditable}
-                            onDragStart={(e) => {
-                                e.dataTransfer.effectAllowed = 'move';
-                                e.dataTransfer.setData('blockIndex', String(index));
-                            }}
-                            onDragOver={(e) => {
-                                e.preventDefault();
-                                e.dataTransfer.dropEffect = 'move';
-                                setDragOverIndex(index);
-                            }}
-                            onDragLeave={() => {
-                                setDragOverIndex(null);
-                            }}
-                            onDrop={(e) => {
-                                e.preventDefault();
-                                const fromIndex = Number(e.dataTransfer.getData('blockIndex'));
-                                const toIndex = index;
+                                        <UniversalBlockRenderer
+                                            block={{
+                                                id: block.id,
+                                                type: block.type,
+                                                properties: block.properties || {},
+                                                content: block.content || {},
+                                                order: block.order,
+                                            } as any}
+                                            isSelected={isSelected}
+                                            isPreviewing={true}
+                                            onSelect={onSelectBlock}
+                                        />
 
-                                // TODO: Implementar reordenação via hook
-                                appLogger.info(`Reordenar: ${fromIndex} → ${toIndex}`);
-
-                                setDragOverIndex(null);
-                            }}
-                        >
-                            {/* Drag Handle */}
-                            {isEditable && (
-                                <div className="absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity">
-                                    <div className="w-4 h-8 bg-gray-300 rounded cursor-move flex items-center justify-center">
-                                        <div className="text-white text-xs">⋮⋮</div>
+                                        {isSelected && (
+                                            <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
+                                                {index + 1}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                            )}
+                            );
+                        }}
+                    </List>
+                ) : (
+                    <div className="space-y-2">
+                        {blocks.map((block, index) => {
+                            const isSelected = selectedBlockId === block.id;
+                            const isDragOver = dragOverIndex === index;
+                            return (
+                                <div
+                                    key={block.id}
+                                    className={cn(
+                                        'relative transition-all duration-200',
+                                        isDragOver && 'border-t-2 border-blue-500',
+                                    )}
+                                    draggable={isEditable}
+                                    onDragStart={(e) => {
+                                        e.dataTransfer.effectAllowed = 'move';
+                                        e.dataTransfer.setData('blockIndex', String(index));
+                                    }}
+                                    onDragOver={(e) => {
+                                        e.preventDefault();
+                                        e.dataTransfer.dropEffect = 'move';
+                                        setDragOverIndex(index);
+                                    }}
+                                    onDragLeave={() => setDragOverIndex(null)}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        const fromIndex = Number(e.dataTransfer.getData('blockIndex'));
+                                        const toIndex = index;
+                                        appLogger.info(`Reordenar: ${fromIndex} → ${toIndex}`);
+                                        setDragOverIndex(null);
+                                    }}
+                                >
+                                    {isEditable && (
+                                        <div className="absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity">
+                                            <div className="w-4 h-8 bg-gray-300 rounded cursor-move flex items-center justify-center">
+                                                <div className="text-white text-xs">⋮⋮</div>
+                                            </div>
+                                        </div>
+                                    )}
 
-                            {/* Block Component (Unified Runtime) */}
-                            <UniversalBlockRenderer
-                                block={{
-                                    id: block.id,
-                                    type: block.type,
-                                    properties: block.properties || {},
-                                    content: block.content || {},
-                                    order: block.order,
-                                } as any}
-                                isSelected={isSelected}
-                                isPreviewing={true}
-                                onSelect={onSelectBlock}
-                            />
+                                    <UniversalBlockRenderer
+                                        block={{
+                                            id: block.id,
+                                            type: block.type,
+                                            properties: block.properties || {},
+                                            content: block.content || {},
+                                            order: block.order,
+                                        } as any}
+                                        isSelected={isSelected}
+                                        isPreviewing={true}
+                                        onSelect={onSelectBlock}
+                                    />
 
-                            {/* Order Indicator */}
-                            {isSelected && (
-                                <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
-                                    {index + 1}
+                                    {isSelected && (
+                                        <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
+                                            {index + 1}
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                    );
-                })}
+                            );
+                        })}
+                    </div>
+                )}
             </div>
 
             {/* Drop Zone para adicionar no final */}

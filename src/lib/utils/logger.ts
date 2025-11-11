@@ -1,7 +1,7 @@
 import { StorageService } from '@/services/core/StorageService';
 import { captureSentryError, captureSentryMessage, addSentryBreadcrumb } from '@/config/sentry.config';
 import type * as Sentry from '@sentry/react';
-import { appLogger } from '@/lib/utils/appLogger';
+// Evitar conflito: este módulo define seu próprio appLogger abaixo; remover import redundante
 
 /**
  * 🚀 Logger unificado com níveis e desativação automática em produção.

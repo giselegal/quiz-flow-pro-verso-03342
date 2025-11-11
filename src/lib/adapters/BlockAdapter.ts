@@ -334,4 +334,4 @@ export function isFunnelBlock(obj: any): obj is FunnelBlock {
 }
 
 // Export types
-export type { CanonicalBlock };
+// (removido re-export redundante de CanonicalBlock)

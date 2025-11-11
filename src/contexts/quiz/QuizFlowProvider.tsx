@@ -70,12 +70,7 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
       // notificar integração externa (router)
       onNavigate?.(clamped);
 
-      // evento global p/ consumidores legados
-          try {
-      sessionStorage.setItem('quiz-session-id', quizSession);
-    } catch (error) {
-      appLogger.warn('[QuizFlowProvider] Falha ao persistir sessão no sessionStorage:', error);
-    }
+      // evento global p/ consumidores legados (removido: persistência de sessão obsoleta)
     },
     [currentStep, onNavigate, safeClamp],
   );

@@ -53,7 +53,7 @@ export const blockDefinitions: BlockDefinition[] = [
     component: HeadingInlineBlock,
     properties: {
       content: {
-        type: 'string',
+        type: 'text',
         default: 'Título Principal',
         label: 'Conteúdo',
         description: 'Texto do título',

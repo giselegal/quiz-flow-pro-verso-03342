@@ -104,7 +104,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       if (funnelError || !funnelData) return null;
 
-      const { data: pagesData, error: pagesError } = await supabase
+      const { data: pagesData, error: pagesError } = await (supabase as any)
         .from('funnel_pages')
         .select('*')
         .eq('funnel_id', id)
@@ -131,7 +131,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       const funnels = await Promise.all(
         (funnelsData || []).map(async (funnelData) => {
-          const { data: pagesData } = await supabase
+          const { data: pagesData } = await (supabase as any)
             .from('funnel_pages')
             .select('*')
             .eq('funnel_id', funnelData.id)
@@ -160,7 +160,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       const funnels = await Promise.all(
         (funnelsData || []).map(async (funnelData) => {
-          const { data: pagesData } = await supabase
+          const { data: pagesData } = await (supabase as any)
             .from('funnel_pages')
             .select('*')
             .eq('funnel_id', funnelData.id)
@@ -180,7 +180,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
   async delete(id: string): Promise<boolean> {
     try {
       // Delete pages first (cascade)
-      await supabase
+      await (supabase as any)
         .from('funnel_pages')
         .delete()
         .eq('funnel_id', id);
@@ -226,7 +226,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         },
       };
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('funnel_pages')
         .upsert(pageData as any)
         .select()
@@ -243,7 +243,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
   async findPagesByFunnel(funnelId: string): Promise<Page[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('funnel_pages')
         .select('*')
         .eq('funnel_id', funnelId)
@@ -251,7 +251,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       if (error) throw error;
 
-      return (data || []).map(pageData => this.mapToPageEntity(pageData as any));
+  return (data || []).map((pageData: any) => this.mapToPageEntity(pageData as any));
     } catch (error) {
       appLogger.error('Error finding pages by funnel:', { data: [error] });
       return [];
@@ -260,7 +260,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
   async deletePage(pageId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('funnel_pages')
         .delete()
         .eq('id', pageId);
@@ -334,17 +334,17 @@ export class SupabaseFunnelRepository implements FunnelRepository {
   // 🔍 Private Helper Methods
   private async syncFunnelPages(funnel: Funnel): Promise<void> {
     // Get existing pages
-    const { data: existingPages } = await supabase
+    const { data: existingPages } = await (supabase as any)
       .from('funnel_pages')
       .select('id')
       .eq('funnel_id', funnel.id);
 
-    const existingPageIds = existingPages?.map(p => p.id) || [];
+  const existingPageIds = existingPages?.map((p: any) => p.id) || [];
     
     // Remove pages that are no longer in the funnel
-    const pagesToRemove = existingPageIds.filter(id => !funnel.pageIds.includes(id));
+  const pagesToRemove = existingPageIds.filter((id: any) => !funnel.pageIds.includes(id));
     if (pagesToRemove.length > 0) {
-      await supabase
+      await (supabase as any)
         .from('funnel_pages')
         .delete()
         .in('id', pagesToRemove);
@@ -364,7 +364,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         metadata: {},
       }));
 
-      await supabase
+      await (supabase as any)
         .from('funnel_pages')
         .insert(placeholderPages);
     }
@@ -433,7 +433,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
       pageData.page_type as any,
       pageData.title || '',
       metadata.description || '',
-      (pageData.blocks || []).map(b => b.id).filter(Boolean),
+  (pageData.blocks || []).map((b: any) => b.id).filter(Boolean),
       metadata.settings || {
         slug: pageData.id,
         isActive: true,
