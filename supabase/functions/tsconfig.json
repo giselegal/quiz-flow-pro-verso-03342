@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["dom", "deno.ns", "deno.window"],
+    "types": ["@deno/types"],
+    "strict": false,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}

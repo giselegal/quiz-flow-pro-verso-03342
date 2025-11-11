@@ -2,24 +2,26 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 // @ts-ignore: Deno imports  
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { 
+  createCorsResponse, 
+  createErrorResponse, 
+  handleCorsPreflightRequest,
+  type FunnelConfig,
+  type UserBehaviorData,
+  type OpenAIRequest,
+  type EdgeFunctionResponse
+} from '../_shared/types.ts';
 
-// Declarações de tipo para ambiente Deno
-declare global {
-  const Deno: {
-    env: {
-      get(key: string): string | undefined;
-    };
+// @ts-ignore: Deno global está disponível no runtime
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
   };
-}
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest();
   }
 
   try {
@@ -95,23 +97,16 @@ Identifique gargalos e oportunidades de melhoria.`;
     const data = await response.json();
     const suggestions = data.choices[0].message.content;
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        suggestions,
-        action, 
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-    );
+    return createCorsResponse({ 
+      success: true, 
+      suggestions,
+      action, 
+    });
 
   } catch (error) {
     console.error('Error in ai-optimization-engine:', error);
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error', 
-      }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    return createErrorResponse(
+      error instanceof Error ? error.message : 'Unknown error'
     );
   }
 });

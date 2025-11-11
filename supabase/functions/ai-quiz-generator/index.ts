@@ -1,14 +1,23 @@
+// @ts-ignore: Deno imports
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
+// @ts-ignore: Deno imports  
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { 
+  createCorsResponse, 
+  createErrorResponse, 
+  handleCorsPreflightRequest
+} from '../_shared/types.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+// @ts-ignore: Deno global está disponível no runtime
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
+  };
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest();
   }
 
   try {
@@ -85,22 +94,15 @@ Gere um quiz completo e otimizado.`;
 
     const quizData = JSON.parse(jsonMatch[0]);
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        quiz: quizData,
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-    );
+    return createCorsResponse({ 
+      success: true, 
+      quiz: quizData,
+    });
 
   } catch (error) {
     console.error('Error in ai-quiz-generator:', error);
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error', 
-      }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    return createErrorResponse(
+      error instanceof Error ? error.message : 'Unknown error'
     );
   }
 });
