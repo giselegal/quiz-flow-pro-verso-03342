@@ -9,6 +9,7 @@ import { generateBlockId, generateStableId } from '@/lib/utils/stableIdGenerator
 // Import dinâmico mantido onde necessário para evitar carga desnecessária do módulo em rotas que não usam
 // import { funnelPersistenceService } from '@/services/funnelPersistence';
 import { Block, BlockType, EditorConfig } from '@/types/editor';
+import { persistBlocks } from '@/services/editor/BlockEditingService';
 import { EditorAction, EditorState } from '@/types/editorTypes';
 import { ValidationService } from '@/types/validation';
 import React, {
@@ -247,6 +248,12 @@ export const EditorProvider: React.FC<{
 
       dispatch({ type: 'ADD_BLOCK', payload: newBlock });
       appLogger.info('🔗 Block created with funnelId:', { data: [currentFunnelId] });
+      // Persistência otimista: salvar conjunto completo após adicionar
+      try {
+        await persistBlocks(stageId, currentFunnelId, [...state.blocks, newBlock]);
+      } catch (error) {
+        appLogger.warn('[EditorContext] Falha ao persistir novo bloco (salvamento será tentado novamente no auto-save)', { data: [error] });
+      }
       return newBlock.id;
     },
     [state.blocks.length, currentFunnelId, activeStageId],
@@ -254,11 +261,25 @@ export const EditorProvider: React.FC<{
 
   const updateBlock = useCallback(async (id: string, content: any): Promise<void> => {
     dispatch({ type: 'UPDATE_BLOCK', payload: { id, updates: content } });
-  }, []);
+    const stageId = activeStageId || 'step-1';
+    try {
+      const nextBlocks = state.blocks.map(b => (b.id === id ? { ...b, ...content } : b));
+      await persistBlocks(stageId, currentFunnelId, nextBlocks);
+    } catch (error) {
+      appLogger.warn('[EditorContext] Falha ao persistir atualização de bloco', { data: [error] });
+    }
+  }, [state.blocks, activeStageId, currentFunnelId]);
 
   const deleteBlock = useCallback(async (id: string): Promise<void> => {
     dispatch({ type: 'DELETE_BLOCK', payload: id });
-  }, []);
+    const stageId = activeStageId || 'step-1';
+    try {
+      const nextBlocks = state.blocks.filter(b => b.id !== id);
+      await persistBlocks(stageId, currentFunnelId, nextBlocks);
+    } catch (error) {
+      appLogger.warn('[EditorContext] Falha ao persistir remoção de bloco', { data: [error] });
+    }
+  }, [state.blocks, activeStageId, currentFunnelId]);
 
   // Replace all blocks at once (useful when loading templates or switching steps)
   const replaceBlocks = useCallback((blocks: Block[]) => {
@@ -266,6 +287,10 @@ export const EditorProvider: React.FC<{
     const normalized = sorted.map((b, i) => ({ ...b, order: i }));
     appLogger.info('🧩 replaceBlocks ->', { data: [normalized.map(b => ({ id: b.id, type: b.type, order: b.order }))] });
     dispatch({ type: 'SET_BLOCKS', payload: normalized });
+    const stageId = activeStageId || 'step-1';
+    persistBlocks(stageId, currentFunnelId, normalized).catch(err => {
+      appLogger.warn('[EditorContext] Falha ao persistir replaceBlocks (auto-save fará retry)', { data: [err] });
+    });
   }, []);
 
   const reorderBlocks = useCallback(
@@ -318,8 +343,12 @@ export const EditorProvider: React.FC<{
       appLogger.info('✅ Blocos reordenados com sucesso:', { data: [reorderedBlocks.map(b => ({ id: b.id, order: b.order }))] });
 
       dispatch({ type: 'SET_BLOCKS', payload: reorderedBlocks });
+      const stageId = activeStageId || 'step-1';
+      persistBlocks(stageId, currentFunnelId, reorderedBlocks).catch(err => {
+        appLogger.warn('[EditorContext] Falha ao persistir reordenação (auto-save fará retry)', { data: [err] });
+      });
     },
-    [state.blocks],
+    [state.blocks, activeStageId, currentFunnelId],
   );
 
   const setSelectedBlockId = useCallback((id: string | null) => {
@@ -353,46 +382,15 @@ export const EditorProvider: React.FC<{
     appLogger.info('📊 Blocks to save:', { data: [state.blocks.length] });
 
     try {
-      // Preparar dados para salvamento
-      // const funnelData = {
-      //   id: currentFunnelId,
-      //   name: `Funnel ${currentFunnelId}`,
-      //   description: 'Funnel criado no editor',
-      //   userId: 'anonymous',
-      //   isPublished: false,
-      //   version: 1,
-      //   settings: {},
-      //   pages: [
-      //     {
-      //       id: `page-${currentFunnelId}-1`,
-      //       pageType: 'quiz-step',
-      //       pageOrder: 1,
-      //       title: 'Quiz Step',
-      //       blocks: state.blocks,
-      //       metadata: { stage: 'step-1', timestamp: new Date().toISOString() },
-      //     },
-      //   ],
-      // };
-
-      // Salvar usando o serviço de persistência
-      // const result = await funnelPersistenceService.saveFunnel(funnelData);
-      const result = { success: true, error: null };
-
-      if (result.success) {
-        appLogger.info('✅ Funnel salvo com sucesso!');
-        toast({
-          title: 'Sucesso!',
-          description: 'Funnel salvo com sucesso.',
-          variant: 'default',
-        });
-      } else {
-        appLogger.warn('⚠️ Salvamento parcial:', { data: [result.error] });
-        toast({
-          title: 'Aviso',
-          description: result.error || 'Salvamento parcial - dados salvos localmente.',
-          variant: 'default',
-        });
-      }
+      // Persistir a etapa ativa via TemplateService (canônico)
+      const stepId = activeStageId || 'step-1';
+      await persistBlocks(stepId, currentFunnelId, state.blocks);
+      appLogger.info('✅ Etapa salva com sucesso!');
+      toast({
+        title: 'Sucesso!',
+        description: 'Alterações salvas na etapa atual.',
+        variant: 'default',
+      });
     } catch (error) {
       appLogger.error('❌ Erro ao salvar funnel:', { data: [error] });
       toast({
@@ -401,7 +399,7 @@ export const EditorProvider: React.FC<{
         variant: 'destructive',
       });
     }
-  }, [currentFunnelId, state.blocks]);
+  }, [currentFunnelId, state.blocks, activeStageId]);
 
   // 🚀 AUTO-SAVE COM DEBOUNCE - Solução para problema de salvamento
   useAutoSaveWithDebounce({
