@@ -1,32 +1,32 @@
 // Coluna de navegação de steps — versão inicial usando TemplateService canônico
 import React, { useEffect, useMemo, useState } from 'react';
-import { templateService, type StepInfo } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, MoreVertical, GripVertical } from 'lucide-react';
 import { AddStepDialog, type NewStepData } from '../AddStepDialog';
 import { DeleteStepConfirmDialog } from '../DeleteStepConfirmDialog';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable,
+    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -74,7 +74,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
             setLocalItems(steps);
         } else if (canonicalSteps.success) {
             setLocalItems(
-                canonicalSteps.data.map((s: StepInfo) => ({
+                canonicalSteps.data.map((s: { id: string; order: number; name: string }) => ({
                     key: s.id,
                     title: `${s.order.toString().padStart(2, '0')} - ${s.name}`,
                 }))
@@ -89,7 +89,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
             // ✅ Gerar ID único usando timestamp + random para evitar colisões
             const randomId = Math.random().toString(36).substring(2, 9);
             const uniqueId = `step-custom-${Date.now()}-${randomId}`;
-            
+
             // Adicionar step via TemplateService
             const result = await templateService.steps.add({
                 id: uniqueId,
@@ -110,7 +110,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
 
                 // Forçar refresh da lista
                 setRefreshKey(prev => prev + 1);
-                
+
                 // Selecionar a nova etapa
                 onSelectStep(uniqueId);
             } else {
@@ -133,7 +133,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
     const handleDeleteStep = async (stepId: string) => {
         try {
             const result = await templateService.steps.remove(stepId);
-            
+
             if (result.success) {
                 toast({
                     title: 'Etapa removida',
@@ -183,7 +183,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
     const handleDuplicateStep = async (stepId: string) => {
         try {
             const result = await templateService.steps.duplicate(stepId);
-            
+
             if (result.success) {
                 toast({
                     title: 'Etapa duplicada',
@@ -192,7 +192,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
 
                 // Forçar refresh da lista
                 setRefreshKey(prev => prev + 1);
-                
+
                 // Selecionar a nova etapa
                 onSelectStep(result.data.id);
             } else {
@@ -276,9 +276,9 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
             <div className="p-2 space-y-1">
                 <div className="flex items-center justify-between mb-2">
                     <div className="text-sm font-medium">Navegação</div>
-                    <Button 
-                        size="sm" 
-                        variant="ghost" 
+                    <Button
+                        size="sm"
+                        variant="ghost"
                         onClick={() => setShowAddDialog(true)}
                         className="h-7 w-7 p-0"
                         title="Adicionar etapa"
@@ -286,7 +286,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                         <Plus className="h-4 w-4" />
                     </Button>
                 </div>
-                
+
                 {items.length === 0 ? (
                     <div className="p-4 text-center text-sm text-muted-foreground">
                         <p>Nenhuma etapa carregada</p>
@@ -308,7 +308,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                                 {items.map((s) => {
                                     // Verificar se é uma etapa customizada (deletável)
                                     const isCustomStep = !s.key.match(/^step-0[1-9]$|^step-1[0-9]$|^step-2[01]$/);
-                                    
+
                                     return (
                                         <SortableStepItem
                                             key={s.key}

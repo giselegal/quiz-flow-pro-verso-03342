@@ -1,4 +1,4 @@
-import { styleConfigGisele } from '../../data/styles';
+import { styleConfigGisele } from '@/services/data/styles';
 import { resolveStyleId } from '@/lib/utils/styleIds';
 import type { QuizStep } from '@/types/quiz';
 import { appLogger } from '@/lib/utils/appLogger';

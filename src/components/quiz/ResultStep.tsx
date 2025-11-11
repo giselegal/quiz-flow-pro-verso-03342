@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { styleConfigGisele } from '../../data/styles';
+import { styleConfigGisele } from '@/services/data/styles';
 import { resolveStyleId } from '@/lib/utils/styleIds';
 import type { QuizStep } from '@/types/quiz';
 import type { QuizScores } from '../../hooks/useQuizState';
@@ -110,21 +110,21 @@ export default function ResultStep({
     // ⚠️ DEPRECATION WARNING (Development Only)
     if (process.env.NODE_ENV === 'development') {
         appLogger.warn('⚠️ COMPONENTE LEGADO DETECTADO: ResultStep.tsx\n\n' +
-                    '📋 PROBLEMAS:\n' +
-                    '  • 469 linhas monolíticas (difícil manutenção)\n' +
-                    '  • UI hardcoded (não configurável via JSON)\n' +
-                    '  • Lógica de cálculo acoplada\n' +
-                    '  • Não modular (viola atomic blocks)\n\n' +
-                    '✅ MIGRAÇÃO:\n' +
-                    '  • Template: @/templates/step-20.json\n' +
-                    '  • Blocks: result-main, result-style, result-cta-primary, result-cta-secondary\n' +
-                    '  • Hook: useResultCalculations (@/hooks/useResultCalculations.ts)\n' +
-                    '  • Context: ResultContext (@/contexts/ResultContext.tsx)\n\n' +
-                    '📚 DOCS:\n' +
-                    '  • ANALISE_ACOPLAMENTO_STEPS_12_19_20.md\n' +
-                    '  • LOGICA_CALCULOS_RESULTADOS.md\n' +
-                    '  • PLANO_ACAO_DESACOPLAMENTO.md\n\n' +
-                    '🗑️ REMOÇÃO: Planejada para v2.0');
+            '📋 PROBLEMAS:\n' +
+            '  • 469 linhas monolíticas (difícil manutenção)\n' +
+            '  • UI hardcoded (não configurável via JSON)\n' +
+            '  • Lógica de cálculo acoplada\n' +
+            '  • Não modular (viola atomic blocks)\n\n' +
+            '✅ MIGRAÇÃO:\n' +
+            '  • Template: @/templates/step-20.json\n' +
+            '  • Blocks: result-main, result-style, result-cta-primary, result-cta-secondary\n' +
+            '  • Hook: useResultCalculations (@/hooks/useResultCalculations.ts)\n' +
+            '  • Context: ResultContext (@/contexts/ResultContext.tsx)\n\n' +
+            '📚 DOCS:\n' +
+            '  • ANALISE_ACOPLAMENTO_STEPS_12_19_20.md\n' +
+            '  • LOGICA_CALCULOS_RESULTADOS.md\n' +
+            '  • PLANO_ACAO_DESACOPLAMENTO.md\n\n' +
+            '🗑️ REMOÇÃO: Planejada para v2.0');
     }
 
     // Estados para interatividade

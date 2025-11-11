@@ -2,7 +2,8 @@
  * 🎨 STYLES DATABASE - Complete Style Definitions
  */
 
-import { StyleType } from '../types/quiz';
+// Import canônico do tipo de estilos
+import { StyleType } from '@/types/quiz';
 
 export interface Style {
   id: string;
@@ -24,8 +25,8 @@ export interface Style {
   points?: number;
   rank?: number;
   // Additional properties for components
-  image?: string;
-  guideImage?: string;
+  image?: string; // alias para imageUrl
+  guideImage?: string; // alias para guideImageUrl
   specialTips?: string[];
 }
 
