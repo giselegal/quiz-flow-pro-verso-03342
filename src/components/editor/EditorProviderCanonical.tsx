@@ -150,9 +150,25 @@ export const EditorProviderCanonical: React.FC<EditorProviderCanonicalProps> = (
 }) => {
     // ⚠️ AVISO DE DEPRECAÇÃO
     useEffect(() => {
-        appLogger.warn('⚠️ [DEPRECATED] EditorProviderCanonical não é usado na rota /editor.\n' +
-            'Use SuperUnifiedProvider diretamente.\n' +
-            'Veja: docs/EDITOR_ARCHITECTURE.md');
+        if (process.env.NODE_ENV === 'development') {
+            console.warn(
+                '\n' +
+                '🚨 ===============================================\n' +
+                '⚠️  DEPRECATED: EditorProviderCanonical\n' +
+                '===============================================\n' +
+                '\n' +
+                'Este provider será removido em 30 dias.\n' +
+                '\n' +
+                '✅ MIGRE PARA: SuperUnifiedProvider\n' +
+                '   import SuperUnifiedProvider from "@/contexts/providers/SuperUnifiedProvider"\n' +
+                '\n' +
+                '📚 Guia de migração: docs/PROVIDER_MIGRATION.md\n' +
+                '📖 Documentação: docs/EDITOR_ARCHITECTURE.md\n' +
+                '\n' +
+                '===============================================\n'
+            );
+        }
+        appLogger.warn('⚠️ [DEPRECATED] EditorProviderCanonical - Use SuperUnifiedProvider');
     }, []);
 
     // ============================================================================

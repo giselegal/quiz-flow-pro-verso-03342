@@ -81,8 +81,8 @@ describe('INTEGRAÇÃO: Fluxo Completo de Sincronização de Template', () => {
       expect(step1.success).toBe(true);
       expect(step2.success).toBe(true);
       // Dados devem ser diferentes (templates diferentes)
-      expect(step1.data).toBeDefined();
-      expect(step2.data).toBeDefined();
+      if (step1.success) expect(step1.data).toBeDefined();
+      if (step2.success) expect(step2.data).toBeDefined();
     });
   });
 
@@ -103,7 +103,12 @@ describe('INTEGRAÇÃO: Fluxo Completo de Sincronização de Template', () => {
 
       // Assert - todos devem carregar com sucesso
       steps.forEach(step => {
-        expect(step.success || step.data).toBeTruthy();
+        // Check for both ServiceResult and DataSourceResult
+        if ('success' in step) {
+          expect(step.success).toBeTruthy();
+        } else if ('data' in step) {
+          expect(step.data).toBeTruthy();
+        }
       });
     });
   });

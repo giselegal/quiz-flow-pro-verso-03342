@@ -1900,3 +1900,11 @@ export const templateService = TemplateService.getInstance({ debug: false });
 if (typeof window !== 'undefined') {
   (window as any).__canonicalTemplateService = templateService;
 }
+
+// ==================== COMPATIBILITY EXPORTS ====================
+
+/**
+ * Re-export quizEditorBridge for backward compatibility
+ * @deprecated Import from '@/services/deprecated/QuizEditorBridge' directly
+ */
+export { quizEditorBridge } from '@/services/deprecated/QuizEditorBridge';
