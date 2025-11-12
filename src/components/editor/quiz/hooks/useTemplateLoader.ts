@@ -18,7 +18,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { appLogger } from '@/lib/utils/logger';
+// usar appLogger unificado
 import { quizEditorBridge } from '@/services/canonical/TemplateService';
 import { UnifiedCacheService } from '@/services/UnifiedCacheService';
 import type { EditableQuizStep } from '../types';
