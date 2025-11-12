@@ -22,9 +22,10 @@ const LazyModernUnifiedEditor = lazy(() =>
     })),
 );
 
+// Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
 const LazyEditorProvider = lazy(() =>
-    import('@/components/editor/EditorProviderCanonical').then(module => ({
-        default: module.EditorProviderCanonical,
+    import('@/contexts/providers/SuperUnifiedProvider').then(module => ({
+        default: module.SuperUnifiedProvider,
     })),
 );
 

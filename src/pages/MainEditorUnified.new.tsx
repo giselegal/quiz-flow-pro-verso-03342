@@ -3,7 +3,8 @@ import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { EditorProviderCanonical as EditorProvider } from '../components/editor/EditorProviderCanonical';
+// Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
+import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
@@ -35,13 +36,15 @@ const MainEditorUnified: React.FC = () => {
     const funnelId = realFunnelId || undefined; // Só usar funnelId se for real
 
     // Log inicial para debug
-    appLogger.info('🎯 [MAIN] MainEditorUnified iniciado:', { data: [{
+    appLogger.info('🎯 [MAIN] MainEditorUnified iniciado:', {
+        data: [{
             location,
             templateId,
             funnelId,
             debugMode,
             timestamp: new Date().toISOString(),
-        }] });
+        }]
+    });
 
     // Validação de parâmetros
     const sanitizedParams = React.useMemo(() => {
@@ -109,12 +112,14 @@ const FunnelValidatedEditor: React.FC<{
     const funnelContext = useFunnelContext(funnelId);
 
     if (debugMode) {
-        appLogger.info('🔐 [VALIDATOR] Validação de funil:', { data: [{
-                    funnelId,
-                    isReady: funnelContext.isReady,
-                    isLoading: funnelContext.isLoading,
-                    isError: funnelContext.isError,
-                }] });
+        appLogger.info('🔐 [VALIDATOR] Validação de funil:', {
+            data: [{
+                funnelId,
+                isReady: funnelContext.isReady,
+                isLoading: funnelContext.isLoading,
+                isError: funnelContext.isError,
+            }]
+        });
     }
 
     // Loading state
