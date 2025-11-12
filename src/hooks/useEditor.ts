@@ -35,6 +35,8 @@ export interface EditorContextValueMigrated {
   setCurrentStep: (step: number) => void;
   isPreviewMode: boolean;
   togglePreview: (force?: boolean) => void;
+  /** Campos legados adicionais para compatibilidade */
+  activeStageId?: string; // Convertido de currentStep
   /** 🔄 Compatibilidade legada: espelha estrutura antiga */
   state: {
     stepBlocks: Record<string, Block[]>; // antigo formato 'step-01'
@@ -190,6 +192,24 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
         },
         deleteBlock: (id: string) => removeBlock(id),
         ensureStepLoaded: async () => { /* noop - carregamento já integrado no SuperUnifiedProvider */ },
+        // Métodos legados para undo/redo/export/import
+        undo: () => unified.undo(),
+        redo: () => unified.redo(),
+        canUndo: unified.canUndo,
+        canRedo: unified.canRedo,
+        exportJSON: () => JSON.stringify(unified.state.editor.stepBlocks),
+        importJSON: (json: string) => { 
+          try { 
+            const parsed = JSON.parse(json);
+            // Reconstruir stepBlocks a partir do JSON
+            if (parsed.stepBlocks) {
+              Object.entries(parsed.stepBlocks).forEach(([stepKey, blocks]) => {
+                const stepIndex = typeof stepKey === 'number' ? stepKey : stepKeyToIndex(stepKey);
+                unified.reorderBlocks(stepIndex, blocks as Block[]);
+              });
+            }
+          } catch(e) { /* noop */ } 
+        },
       },
       computed: {
         currentBlocks: (unified.state.editor.stepBlocks[unified.state.editor.currentStep] || []) as Block[],
