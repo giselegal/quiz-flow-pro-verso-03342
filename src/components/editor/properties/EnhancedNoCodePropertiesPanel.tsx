@@ -54,7 +54,7 @@ import {
     PinOff,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { discoverComponentProperties, DiscoveredProperty } from './core/PropertyDiscovery';
+import { discoverComponentProperties, DiscoveredProperty, ComponentPropertySchema } from './core/PropertyDiscovery';
 import { UniversalPropertyRenderer } from './core/UniversalPropertyRenderer';
 import { PropertyCategory } from '@/hooks/useUnifiedProperties';
 import EnhancedValidationSystem, { ValidationContext } from './EnhancedValidationSystem';
@@ -188,12 +188,41 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
     const quizResult = {};
 
     // ===== COMPUTED VALUES =====
-    const allProperties = useMemo(() => {
-        if (!selectedBlock) return [];
+    // ===== ASYNC SCHEMA LOADING (FIX PARA PROMISE) =====
+    const [schema, setSchema] = useState<ComponentPropertySchema | null>(null);
+    const [schemaLoading, setSchemaLoading] = useState(false);
+    const [schemaError, setSchemaError] = useState<string | null>(null);
 
-        const schema = discoverComponentProperties(selectedBlock.type);
-        return schema?.properties || [];
+    useEffect(() => {
+        let cancelled = false;
+        async function loadSchema() {
+            if (!selectedBlock) {
+                setSchema(null);
+                return;
+            }
+            setSchemaLoading(true);
+            setSchemaError(null);
+            try {
+                const result = await discoverComponentProperties(selectedBlock.type);
+                if (!cancelled) {
+                    setSchema(result || null);
+                }
+            } catch (err: any) {
+                if (!cancelled) {
+                    setSchemaError(err?.message || 'Falha ao carregar propriedades');
+                    setSchema(null);
+                }
+            } finally {
+                if (!cancelled) setSchemaLoading(false);
+            }
+        }
+        loadSchema();
+        return () => { cancelled = true; };
     }, [selectedBlock]);
+
+    const allProperties = useMemo(() => {
+        return schema?.properties || [];
+    }, [schema]);
 
     const propertyGroups = useMemo(() => {
         const groups: Record<PropertyCategory, PropertyGroup> = {} as any;
@@ -522,6 +551,34 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
                     <p className="text-muted-foreground text-sm">
                         Selecione um bloco no canvas para editar suas propriedades
                     </p>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    // Estado de erro do schema
+    if (schemaError) {
+        return (
+            <Card className={cn('w-full max-w-md mx-auto', className)}>
+                <CardContent className="flex flex-col items-center justify-center p-8 text-center">
+                    <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Erro ao carregar propriedades</h3>
+                    <p className="text-muted-foreground text-sm mb-4">{schemaError}</p>
+                    <Button size="sm" variant="outline" onClick={() => {
+                        // Forçar recarregamento
+                        if (selectedBlock) {
+                            setSchema(null);
+                            setSchemaError(null);
+                            setSchemaLoading(true);
+                            discoverComponentProperties(selectedBlock.type).then(r => {
+                                setSchema(r || null);
+                                setSchemaLoading(false);
+                            }).catch(err => {
+                                setSchemaError(err?.message || 'Falha ao recarregar');
+                                setSchemaLoading(false);
+                            });
+                        }
+                    }}>Tentar novamente</Button>
                 </CardContent>
             </Card>
         );
