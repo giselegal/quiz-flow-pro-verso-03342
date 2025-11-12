@@ -27,7 +27,9 @@ export interface FunnelPublicationSettings {
         customDomain?: string;
         subdomain?: string;
         slug: string;
-        seoFriendlyUrl: boolean;
+        // Tornado opcional para alinhar com DomainSettings do serviço canonical (seoFriendlyUrl?: boolean)
+        // Evita incompatibilidade de tipos ao passar `settings` do hook `useFunnelPublication`
+        seoFriendlyUrl?: boolean;
     };
 
     // Configurações de Resultados
