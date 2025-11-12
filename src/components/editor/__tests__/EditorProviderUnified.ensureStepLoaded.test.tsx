@@ -1,4 +1,8 @@
 /* @vitest-environment jsdom */
+/**
+ * @deprecated Este teste usa EditorProviderCanonical (deprecated).
+ * Migrar para SuperUnifiedProvider e useEditor de @/hooks/useEditor
+ */
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, waitFor } from '@testing-library/react';

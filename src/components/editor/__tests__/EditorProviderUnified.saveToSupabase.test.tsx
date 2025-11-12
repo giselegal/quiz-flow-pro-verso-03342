@@ -1,3 +1,7 @@
+/**
+ * @deprecated Este teste usa EditorProviderCanonical (deprecated).
+ * Migrar para SuperUnifiedProvider e useEditor de @/hooks/useEditor
+ */
 import React, { useEffect } from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, waitFor } from '@testing-library/react';

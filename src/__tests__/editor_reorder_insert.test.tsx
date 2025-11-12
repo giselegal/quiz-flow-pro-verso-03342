@@ -1,7 +1,9 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
-import { EditorProvider, useEditor } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar SuperUnifiedProvider e hook unificado
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditor } from '@/hooks/useEditor';
 import { createBlockFromComponent } from '@/lib/utils/editorUtils';
 
 // Harness para executar ações e expor a ordem dos tipos no DOM
@@ -52,9 +54,9 @@ const Harness: React.FC = () => {
 describe('EditorProvider actions: reorder and insert-at-index', () => {
     it('reorders blocks and inserts between existing ones', async () => {
         const { getByTestId } = render(
-            <EditorProvider funnelId="test-funnel">
+            <SuperUnifiedProvider funnelId="test-funnel">
                 <Harness />
-            </EditorProvider>,
+            </SuperUnifiedProvider>,
         );
 
         // Espera o fluxo completar

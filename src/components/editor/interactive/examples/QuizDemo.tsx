@@ -1,3 +1,7 @@
+/**
+ * @deprecated QuizDemo usa EditorProvider deprecated.
+ * Substituir por SuperUnifiedProvider de @/contexts/providers/SuperUnifiedProvider
+ */
 import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
 // import { Block } from '@/types/editor'; - removido pois não é usado
 import React, { useState } from 'react';
