@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 
 // Simple components for now to avoid complex type issues
 const SimpleEditorLayout: React.FC<{ isPreview: boolean }> = ({ isPreview }) => {
@@ -59,9 +59,9 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
 }) => {
   return (
     <ErrorBoundary>
-      <EditorProvider funnelId={funnelId}>
+      <SuperUnifiedProvider funnelId={funnelId} autoLoad debugMode={false}>
         <SimpleEditorLayout isPreview={isPreview} />
-      </EditorProvider>
+      </SuperUnifiedProvider>
     </ErrorBoundary>
   );
 };

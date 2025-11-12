@@ -4,8 +4,8 @@ import { QuizOptimizedRenderer } from '@/components/quiz/QuizOptimizedRenderer';
 import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
-import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
+import { useEditor } from '@/hooks/useEditor';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
@@ -174,9 +174,9 @@ const QuizPage: React.FC = () => {
         enableAnalytics: true,
       }}
     >
-      <EditorProvider enableSupabase={true} funnelId="quiz-21-steps-integrated">
+      <SuperUnifiedProvider funnelId="quiz-21-steps-integrated" autoLoad debugMode>
         <QuizIntegratedRenderer />
-      </EditorProvider>
+      </SuperUnifiedProvider>
     </UnifiedAppProvider>
   );
 };

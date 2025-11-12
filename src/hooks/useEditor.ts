@@ -23,6 +23,7 @@ import type { Block } from '@/types/editor';
 
 // Interface adaptada (subset do antigo EditorContextValue)
 export interface EditorContextValueMigrated {
+  /** Estado básico (API nova) */
   currentStep: number;
   selectedBlockId: string | null;
   stepBlocks: Record<number, Block[]>;
@@ -34,6 +35,27 @@ export interface EditorContextValueMigrated {
   setCurrentStep: (step: number) => void;
   isPreviewMode: boolean;
   togglePreview: (force?: boolean) => void;
+  /** 🔄 Compatibilidade legada: espelha estrutura antiga */
+  state: {
+    stepBlocks: Record<string, Block[]>; // antigo formato 'step-01'
+    selectedBlockId: string | null;
+    currentStep: number;
+    isLoading: boolean;
+    stepValidation: Record<number, boolean>;
+    isSupabaseEnabled: boolean;
+    databaseMode: 'local' | 'supabase';
+  };
+  actions: {
+    setCurrentStep: (step: number) => void;
+    setSelectedBlockId: (id: string | null) => void;
+    updateBlock: (id: string, updates: Partial<Block>) => void;
+    deleteBlock: (id: string) => void; // alias removeBlock
+    ensureStepLoaded: (stepKey: string) => Promise<void>;
+  };
+  computed: {
+    currentBlocks: Block[];
+  };
+  blockActions: EditorContextValueMigrated['actions'];
 }
 
 // ============================================================================
@@ -94,6 +116,14 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
       unified.state.editor.isPreviewMode = force !== undefined ? force : !unified.state.editor.isPreviewMode;
     };
 
+    // Compatibilidade legada: construir mapa string 'step-01'
+    const legacyStepBlocks: Record<string, Block[]> = {};
+    Object.entries(unified.state.editor.stepBlocks).forEach(([idx, blocks]) => {
+      const numeric = Number(idx);
+      const key = `step-${String(numeric).padStart(2, '0')}`;
+      legacyStepBlocks[key] = blocks as Block[];
+    });
+
     const migrated: EditorContextValueMigrated = {
       currentStep: unified.state.editor.currentStep,
       selectedBlockId: unified.state.editor.selectedBlockId,
@@ -106,6 +136,32 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
       setCurrentStep,
       isPreviewMode: unified.state.editor.isPreviewMode,
       togglePreview,
+      state: {
+        stepBlocks: legacyStepBlocks,
+        selectedBlockId: unified.state.editor.selectedBlockId,
+        currentStep: unified.state.editor.currentStep,
+        isLoading: false,
+        stepValidation: {},
+        isSupabaseEnabled: true,
+        databaseMode: 'supabase',
+      },
+      actions: {
+        setCurrentStep,
+        setSelectedBlockId,
+        updateBlock: (id: string, updates: Partial<Block>) => updateBlock(id, updates),
+        deleteBlock: (id: string) => removeBlock(id),
+        ensureStepLoaded: async () => { /* noop - carregamento já integrado no SuperUnifiedProvider */ },
+      },
+      computed: {
+        currentBlocks: (unified.state.editor.stepBlocks[unified.state.editor.currentStep] || []) as Block[],
+      },
+      blockActions: {
+        setCurrentStep,
+        setSelectedBlockId,
+        updateBlock: (id: string, updates: Partial<Block>) => updateBlock(id, updates),
+        deleteBlock: (id: string) => removeBlock(id),
+        ensureStepLoaded: async () => { /* noop */ },
+      },
     };
     return migrated;
   } catch (err) {

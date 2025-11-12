@@ -24,7 +24,7 @@
 import React, { ReactNode, useMemo } from 'react';
 import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 
 export interface EditorCompositeProviderProps {
     children: ReactNode;
@@ -75,13 +75,13 @@ export const EditorCompositeProvider: React.FC<EditorCompositeProviderProps> = (
                 enableAdvancedEditor: true,
             }}
         >
-            <EditorProvider
-                enableSupabase={providerConfig.enableSupabase}
+            <SuperUnifiedProvider
                 funnelId={providerConfig.funnelId}
-                storageKey={providerConfig.storageKey}
+                autoLoad
+                debugMode={providerConfig.debugMode}
             >
                 {children}
-            </EditorProvider>
+            </SuperUnifiedProvider>
         </UnifiedAppProvider>
     );
 };

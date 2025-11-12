@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 // Providers necessários
-import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
@@ -95,11 +95,13 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 
       addNotification('✅ Quiz carregado com sucesso no editor', 'success');
 
-      appLogger.info('✅ Quiz carregado:', { data: [{
-                totalSteps: editorData.totalSteps,
-                stepsConverted: Object.keys(editorData.stepBlocks).length,
-                metadata: editorData.quizMetadata,
-              }] });
+      appLogger.info('✅ Quiz carregado:', {
+        data: [{
+          totalSteps: editorData.totalSteps,
+          stepsConverted: Object.keys(editorData.stepBlocks).length,
+          metadata: editorData.quizMetadata,
+        }]
+      });
 
     } catch (error) {
       appLogger.error('❌ Erro ao carregar quiz:', { data: [error] });
@@ -283,7 +285,7 @@ const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props
         enableAdvancedEditor: true,
       }}
     >
-      <EditorProvider enableSupabase={true} funnelId={props.funnelId}>
+      <SuperUnifiedProvider funnelId={props.funnelId} autoLoad debugMode={false}>
         <Suspense fallback={
           <div className="flex items-center justify-center h-screen">
             <div className="text-center">
@@ -294,7 +296,7 @@ const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props
         }>
           <QuizEditorIntegratedPageCore {...props} />
         </Suspense>
-      </EditorProvider>
+      </SuperUnifiedProvider>
     </UnifiedAppProvider>
   );
 };

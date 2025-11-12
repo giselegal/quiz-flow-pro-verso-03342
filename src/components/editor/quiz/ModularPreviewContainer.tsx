@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
-import { EditorProviderCanonical } from '@/components/editor/EditorProviderCanonical';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { useEditorOptional } from '@/hooks/useEditor';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -283,9 +283,9 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     // Encapsular com provider se não houver provider OU se provider não expõe actions (parcial/legacy)
     if (!maybeEditor || !maybeEditor.actions) {
         return (
-            <EditorProviderCanonical>
+            <SuperUnifiedProvider funnelId={funnelId} autoLoad debugMode={false}>
                 {Content}
-            </EditorProviderCanonical>
+            </SuperUnifiedProvider>
         );
     }
 

@@ -1,45 +1,56 @@
 // TypeScript fixes for EditorProvider setState calls
 // This file contains the proper type annotations to fix all setState errors
 
-import { EditorState } from '@/components/editor/EditorProviderCanonical';
+import type { Block } from '@/types/editor';
 
-export const createTypedSetState = (setState: React.Dispatch<React.SetStateAction<EditorState>>) => {
+// Substitui EditorState legado por estrutura compatível migrada
+export interface EditorStateMigratedCompat {
+  stepBlocks: Record<string, Block[]>;
+  selectedBlockId: string | null;
+  currentStep: number;
+  isLoading: boolean;
+  stepValidation: Record<number, boolean>;
+  isSupabaseEnabled: boolean;
+  databaseMode: 'local' | 'supabase';
+}
+
+export const createTypedSetState = (setState: React.Dispatch<React.SetStateAction<EditorStateMigratedCompat>>) => {
   return {
     // Template for proper setState calls - all should follow this pattern:
     // setState((prev: EditorState) => ({ ...prev, ...updates }));
 
     setLoading: (isLoading: boolean) => {
-      setState((prev: EditorState) => ({ ...prev, isLoading }));
+      setState((prev: EditorStateMigratedCompat) => ({ ...prev, isLoading }));
     },
 
     setCurrentStep: (currentStep: number) => {
-      setState((prev: EditorState) => ({ ...prev, currentStep }));
+      setState((prev: EditorStateMigratedCompat) => ({ ...prev, currentStep }));
     },
 
     setSelectedBlockId: (selectedBlockId: string | null) => {
-      setState((prev: EditorState) => ({ ...prev, selectedBlockId }));
+      setState((prev: EditorStateMigratedCompat) => ({ ...prev, selectedBlockId }));
     },
 
     setStepValidation: (stepValidation: Record<number, boolean>) => {
-      setState((prev: EditorState) => ({ ...prev, stepValidation }));
+      setState((prev: EditorStateMigratedCompat) => ({ ...prev, stepValidation }));
     },
 
-    setStepBlocks: (stepBlocks: Record<string, any[]>) => {
-      setState((prev: EditorState) => ({ ...prev, stepBlocks }));
+    setStepBlocks: (stepBlocks: Record<string, Block[]>) => {
+      setState((prev: EditorStateMigratedCompat) => ({ ...prev, stepBlocks }));
     },
 
     setSupabaseMode: (isSupabaseEnabled: boolean, databaseMode: 'local' | 'supabase') => {
-      setState((prev: EditorState) => ({ ...prev, isSupabaseEnabled, databaseMode }));
+      setState((prev: EditorStateMigratedCompat) => ({ ...prev, isSupabaseEnabled, databaseMode }));
     },
   };
 };
 
 // Export type-safe updater functions
-export const createStateUpdater = <T extends keyof EditorState>(
-  setState: React.Dispatch<React.SetStateAction<EditorState>>,
+export const createStateUpdater = <T extends keyof EditorStateMigratedCompat>(
+  setState: React.Dispatch<React.SetStateAction<EditorStateMigratedCompat>>,
   key: T,
 ) => {
-  return (value: EditorState[T]) => {
-    setState((prev: EditorState) => ({ ...prev, [key]: value }));
+  return (value: EditorStateMigratedCompat[T]) => {
+    setState((prev: EditorStateMigratedCompat) => ({ ...prev, [key]: value }));
   };
 };

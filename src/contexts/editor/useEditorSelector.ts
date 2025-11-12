@@ -4,10 +4,17 @@
  * Hook simplificado para acesso ao state do editor
  */
 
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
-import type { EditorState } from '@/components/editor/EditorProviderCanonical';
+import { useEditor } from '@/hooks/useEditor';
+import type { Block } from '@/types/editor';
 
-type Selector<T> = (state: EditorState) => T;
+interface LightweightEditorStateCompat {
+    stepBlocks: Record<string, Block[]>;
+    selectedBlockId: string | null;
+    isLoading: boolean;
+    currentStep: number;
+}
+
+type Selector<T> = (state: LightweightEditorStateCompat) => T;
 
 /**
  * Hook para selecionar partes específicas do state do editor
@@ -15,17 +22,24 @@ type Selector<T> = (state: EditorState) => T;
 export function useEditorSelector<T>(selector: Selector<T>): T {
     const editor = useEditor();
     if (!editor) throw new Error('useEditorSelector must be used within EditorProvider');
-    return selector(editor.state);
+    // Adaptar estrutura migrada
+    const compat: LightweightEditorStateCompat = {
+        stepBlocks: editor.state.stepBlocks,
+        selectedBlockId: editor.state.selectedBlockId,
+        isLoading: editor.state.isLoading,
+        currentStep: editor.state.currentStep,
+    };
+    return selector(compat);
 }
 
 /**
  * Seletores pré-definidos para casos comuns
  */
 export const editorSelectors = {
-    stepBlocks: (state: EditorState) => state.stepBlocks,
-    selectedBlockId: (state: EditorState) => state.selectedBlockId,
-    isLoading: (state: EditorState) => state.isLoading,
-    currentStep: (state: EditorState) => state.currentStep,
+    stepBlocks: (state: LightweightEditorStateCompat) => state.stepBlocks,
+    selectedBlockId: (state: LightweightEditorStateCompat) => state.selectedBlockId,
+    isLoading: (state: LightweightEditorStateCompat) => state.isLoading,
+    currentStep: (state: LightweightEditorStateCompat) => state.currentStep,
 };
 
 /**
