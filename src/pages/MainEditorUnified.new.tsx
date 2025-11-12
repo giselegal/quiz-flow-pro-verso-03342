@@ -79,7 +79,6 @@ const MainEditorUnified: React.FC = () => {
             >
                 <EditorProvider
                     funnelId={funnelId}
-                    storageKey={`editor-unified-${funnelId || templateId || 'new'}`}
                 >
                     {sanitizedParams.funnelId ? (
                         <FunnelValidatedEditor

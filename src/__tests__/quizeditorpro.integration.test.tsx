@@ -34,7 +34,7 @@ const EditorStateProbe: React.FC<{ onUpdate: (state: any) => void }> = ({ onUpda
 
 describe('QuizEditorPro integration: reorder and insert between blocks', () => {
   let ctxRef: ReturnType<typeof useEditor> | null = null;
-  let lastState: EditorState | null = null;
+  let lastState: any | null = null;
 
   beforeEach(() => {
     ctxRef = null;
@@ -80,7 +80,7 @@ describe('QuizEditorPro integration: reorder and insert between blocks', () => {
     });
 
     await waitFor(() => {
-      expect(lastState?.stepBlocks[stepKey].map(b => b.id)).toEqual(['A', 'B']);
+      expect(lastState?.stepBlocks[stepKey].map((b: any) => b.id)).toEqual(['A', 'B']);
     });
 
     // 2) Inserir entre A e B (na posição 1)
@@ -97,7 +97,7 @@ describe('QuizEditorPro integration: reorder and insert between blocks', () => {
     });
 
     await waitFor(() => {
-      expect(lastState?.stepBlocks[stepKey].map(b => b.id)).toEqual(['A', 'C', 'B']);
+      expect(lastState?.stepBlocks[stepKey].map((b: any) => b.id)).toEqual(['A', 'C', 'B']);
     });
 
     // 3) Reordenar: mover C para o fim (índice 1 -> 2)
@@ -106,7 +106,7 @@ describe('QuizEditorPro integration: reorder and insert between blocks', () => {
     });
 
     await waitFor(() => {
-      expect(lastState?.stepBlocks[stepKey].map(b => b.id)).toEqual(['A', 'B', 'C']);
+      expect(lastState?.stepBlocks[stepKey].map((b: any) => b.id)).toEqual(['A', 'B', 'C']);
     });
   });
 });
