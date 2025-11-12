@@ -2,7 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar hook unificado em vez do provider canônico deprecated
+import { useEditor } from '@/hooks/useEditor';
 
 export const DatabaseControlPanel: React.FC = () => {
   const editorContext = useEditor({ optional: true });
