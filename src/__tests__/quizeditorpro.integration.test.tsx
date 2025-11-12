@@ -1,15 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import React from 'react';
 import { render, act, waitFor } from '@testing-library/react';
-import { EditorProvider, useEditor } from '@/components/editor/EditorProviderCanonical';
-import type { EditorState } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar SuperUnifiedProvider e hook unificado
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditor } from '@/hooks/useEditor';
 import type { Block } from '@/types/editor';
 
 // Helpers
 const ProviderHarness: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <EditorProvider funnelId="test-funnel">
+  <SuperUnifiedProvider funnelId="test-funnel">
     {children}
-  </EditorProvider>
+  </SuperUnifiedProvider>
 );
 
 const EditorActionsProbe: React.FC<{ onReady: (ctx: ReturnType<typeof useEditor>) => void }> = ({ onReady }) => {
@@ -21,7 +22,7 @@ const EditorActionsProbe: React.FC<{ onReady: (ctx: ReturnType<typeof useEditor>
   return <div data-testid="probe" />;
 };
 
-const EditorStateProbe: React.FC<{ onUpdate: (state: EditorState) => void }> = ({ onUpdate }) => {
+const EditorStateProbe: React.FC<{ onUpdate: (state: any) => void }> = ({ onUpdate }) => {
   const editorContext = useEditor({ optional: true });
   if (!editorContext) return null;
   const { state } = editorContext;
