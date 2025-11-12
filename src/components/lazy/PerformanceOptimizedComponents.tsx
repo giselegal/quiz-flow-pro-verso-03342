@@ -133,8 +133,8 @@ export const OptimizedMetricsPage = (props: any) => (
 export const preloadCriticalComponents = () => {
     // Preload dos componentes mais usados após 2s de idle
     const preloadTimer = setTimeout(() => {
-        import('@/pages/editor/ModernUnifiedEditor');
-        import('@/components/editor/EditorProviderCanonical');
+        // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
+        import('@/contexts/providers/SuperUnifiedProvider');
     }, 2000);
 
     return () => clearTimeout(preloadTimer);
