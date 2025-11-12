@@ -1,15 +1,16 @@
 import React from 'react';
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar hook unificado em vez do provider canônico deprecated
+import { useEditor } from '@/hooks/useEditor';
 
 export function ModularBlocksDebugPanel() {
   const editor = useEditor({ optional: true });
-  
+
   if (!editor) return null;
-  
+
   const { stepBlocks, currentStep } = editor.state;
   const currentStepKey = `step-${currentStep}`;
   const currentBlocks = stepBlocks[currentStepKey] || [];
-  
+
   return (
     <div className="fixed bottom-4 right-4 bg-black/90 text-white p-4 rounded-lg text-xs max-w-sm z-50">
       <div className="font-bold mb-2">🔧 Modular Blocks Debug</div>

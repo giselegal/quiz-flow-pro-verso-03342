@@ -17,7 +17,8 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar hook unificado em vez do provider canônico deprecated
+import { useEditor } from '@/hooks/useEditor';
 import { Settings, Grid, Eye, Palette } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
