@@ -20,7 +20,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar hook unificado em vez do provider canônico deprecated
+import { useEditor } from '@/hooks/useEditor';
 import { PropertyType } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
 import OptionsGridQuickPanel from './quick/OptionsGridQuickPanel';
@@ -402,7 +403,9 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 }) => {
   const editorContext = useEditor({ optional: true });
   if (!editorContext) return null;
-  const { actions } = editorContext;
+  const { actions, currentStep } = editorContext;
+  // Construir stepKey legado compatível (ex: step-01)
+  const currentStepKey = React.useMemo(() => `step-${String(currentStep).padStart(2, '0')}`, [currentStep]);
 
   // Descobrir propriedades usando sistema existente
   const discoveredProperties = React.useMemo(() => {
@@ -478,12 +481,10 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
     appLogger.debug('🔄 Final updates to EditorContext:', finalUpdates);
 
-    // Use onUpdate callback if provided, otherwise use EditorContext
+    // Usar callback externo se fornecido, caso contrário ações do editor
     if (onUpdate) {
       onUpdate(finalUpdates);
     } else {
-      // EditorProvider requires stepKey and blockId
-      const currentStepKey = 'step-1'; // TODO: Get from state
       actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
     }
   }, [selectedBlock, actions, onUpdate]);
@@ -523,8 +524,6 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (onUpdate) {
       onUpdate(finalUpdates);
     } else {
-      // EditorProvider requires stepKey and blockId
-      const currentStepKey = 'step-1'; // TODO: Get from state
       actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
     }
   }, [selectedBlock, onUpdate, actions]);
@@ -669,8 +668,6 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                   if (onDelete) {
                     onDelete();
                   } else {
-                    // EditorProvider requires stepKey and blockId
-                    const currentStepKey = 'step-1'; // TODO: Get from state
                     actions.removeBlock(currentStepKey, selectedBlock.id);
                   }
                 }
