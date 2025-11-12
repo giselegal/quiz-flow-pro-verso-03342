@@ -170,24 +170,3 @@ class SentryErrorBoundary extends Component<Props, State> {
 }
 
 export default SentryErrorBoundary;
-
-/**
- * HOC para adicionar Error Boundary a qualquer componente
- */
-export function withSentryErrorBoundary<P extends object>(
-    Component: React.ComponentType<P>,
-    options?: {
-        fallback?: ReactNode;
-        showDialog?: boolean;
-    }
-): React.ComponentType<P> {
-    const WrappedComponent: React.FC<P> = (props) => (
-        <SentryErrorBoundary {...options}>
-            <Component {...props} />
-        </SentryErrorBoundary>
-    );
-
-    WrappedComponent.displayName = `withSentryErrorBoundary(${Component.displayName || Component.name || 'Component'})`;
-
-    return WrappedComponent;
-}

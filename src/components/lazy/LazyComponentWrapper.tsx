@@ -2,14 +2,14 @@ import React, { Suspense, lazy, ComponentType } from 'react';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { appLogger } from '@/lib/utils/appLogger';
 
-interface LazyComponentWrapperProps {
+export interface LazyComponentWrapperProps {
   fallback?: React.ReactNode;
   error?: React.ReactNode;
   className?: string;
 }
 
 // Fallback genérico para componentes lazy
-const DefaultFallback: React.FC = () => (
+export const DefaultFallback: React.FC = () => (
   <div className="flex items-center justify-center p-8">
     <div className="text-center space-y-4">
       <LoadingSpinner size="lg" />
@@ -19,7 +19,7 @@ const DefaultFallback: React.FC = () => (
 );
 
 // Error Boundary para componentes lazy
-class LazyErrorBoundary extends React.Component<
+export class LazyErrorBoundary extends React.Component<
   { children: React.ReactNode; fallback?: React.ReactNode },
   { hasError: boolean }
 > {
@@ -51,47 +51,4 @@ class LazyErrorBoundary extends React.Component<
   }
 }
 
-// Factory para criar componentes lazy otimizados
-export const createLazyComponent = <T extends ComponentType<any>>(
-  importFn: () => Promise<{ default: T }>,
-  options: LazyComponentWrapperProps = {},
-) => {
-  const LazyComponent = lazy(importFn);
-
-  const LazyWrapper = (props: React.ComponentProps<T>) => (
-    <LazyErrorBoundary fallback={options.error}>
-      <Suspense fallback={options.fallback || <DefaultFallback />}>
-        <LazyComponent {...props} />
-      </Suspense>
-    </LazyErrorBoundary>
-  );
-
-  return LazyWrapper;
-};
-
-// Hook para lazy loading com intersection observer
-export const useLazyLoad = (threshold = 0.1) => {
-  const [isVisible, setIsVisible] = React.useState(false);
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries: IntersectionObserverEntry[]) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold },
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isVisible };
-};
+// Exporta apenas componentes; utilitários movidos para arquivos dedicados

@@ -600,14 +600,14 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                 </DndContext>
             ) : (
                 <>
-                    {blocks.map((block) => (
-                        <LazyBlockRenderer
-                            key={block.id}
-                            block={block}
-                            isSelected={false}
-                            isEditable={false}
-                        />
-                    ))}
+            {blocks.map((block) => (
+                <LazyBlockRenderer
+                    key={block.id}
+                    block={block}
+                    isSelected={String((sessionData as any)?.selectedBlockId || '') === String(block.id)}
+                    isEditable={false}
+                />
+            ))}
                 </>
             )}
 

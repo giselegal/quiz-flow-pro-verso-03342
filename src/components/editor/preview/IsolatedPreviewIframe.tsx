@@ -9,7 +9,14 @@ import { useEffect, useRef, useState, memo } from 'react';
 import { Loader2 } from 'lucide-react';
 
 export interface PreviewMessage {
-  type: 'INIT' | 'UPDATE' | 'NAVIGATE' | 'ERROR';
+  type:
+    | 'INIT'
+    | 'UPDATE'
+    | 'NAVIGATE'
+    | 'ERROR'
+    | 'READY'
+    | 'THEME'
+    | 'STEP_CHANGE';
   payload?: any;
 }
 
@@ -21,6 +28,7 @@ export interface IsolatedPreviewIframeProps {
   currentStepId?: string;
   onStepChange?: (stepId: string) => void;
   className?: string;
+  darkMode?: boolean;
 }
 
 /**
@@ -30,11 +38,12 @@ export interface IsolatedPreviewIframeProps {
  * - Editor → Preview: Envia conteúdo atualizado
  * - Preview → Editor: Notifica mudanças de step
  */
-export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
+export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({ 
   quizContent,
   currentStepId,
   onStepChange,
   className = '',
+  darkMode,
 }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,8 +79,8 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
 
       switch (type) {
         case 'READY':
+        case 'INIT':
           setIsLoading(false);
-          // Enviar conteúdo inicial
           sendMessage({
             type: 'INIT',
             payload: { quizContent, currentStepId },
@@ -120,8 +129,10 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
    * Handler para load do iframe
    */
   const handleIframeLoad = () => {
-    // Aguardar mensagem READY do iframe
-    // O isLoading será setado para false quando receber a mensagem
+    sendMessage({
+      type: 'INIT',
+      payload: { quizContent, currentStepId },
+    });
   };
 
   /**
@@ -131,6 +142,20 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
     setIsLoading(false);
     setError('Falha ao carregar preview');
   };
+
+  useEffect(() => {
+    if (typeof darkMode === 'boolean') {
+      sendMessage({ type: 'THEME', payload: { dark: darkMode } });
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    if (!isLoading) return;
+    const t = setTimeout(() => {
+      sendMessage({ type: 'INIT', payload: { quizContent, currentStepId } });
+    }, 800);
+    return () => clearTimeout(t);
+  }, [isLoading, quizContent, currentStepId]);
 
   return (
     <div className={`relative w-full h-full ${className}`}>

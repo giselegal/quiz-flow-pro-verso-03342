@@ -72,6 +72,8 @@ const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
 // 🎯 FASE 1: Preview Sandbox (isolado)
 const PreviewSandbox = lazy(() => import('./pages/PreviewSandbox'));
+// 📱 Live Preview por funnelId
+const LivePreviewPage = lazy(() => import('./pages/LivePreviewPage'));
 
 // 🏢 DASHBOARDS
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
@@ -310,6 +312,15 @@ function AppCore() {
                                                 })()}
                                             </QuizErrorBoundary>
                                         </div>
+                                    </Route>
+
+                                    {/* 📱 LIVE PREVIEW POR FUNIL */}
+                                    <Route path="/preview/:funnelId">
+                                        {(params) => (
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando preview..." />}>
+                                                <LivePreviewPage />
+                                            </Suspense>
+                                        )}
                                     </Route>
 
                                     {/* 🎯 CRIAR FUNIL EDITÁVEL */}

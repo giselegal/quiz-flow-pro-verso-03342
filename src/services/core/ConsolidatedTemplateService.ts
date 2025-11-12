@@ -12,6 +12,7 @@
 import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
 import { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
+import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import { processTemplate } from '@/services/TemplateProcessor';
 import type { DynamicTemplate } from '@/types/dynamic-template';
 
@@ -67,6 +68,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
 
   private loadedTemplates = new Map<string, FullTemplate>();
   private preloadingPromises = new Map<string, Promise<FullTemplate | null>>();
+  private processedCache = new Map<string, any>();
 
   constructor() {
     super(ConsolidatedTemplateService.CONFIG);
@@ -489,22 +491,27 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
     if (jsonData.templateVersion === '3.2' && jsonData.blocks) {
       appLogger.info(`🔄 Processando template dinâmico: ${templateId}`);
       
-      const result = processTemplate(jsonData as DynamicTemplate);
-      
-      if (result.success && result.template) {
-        processedData = result.template;
-        appLogger.info(`✅ Template processado: ${result.stats?.variablesReplaced} variáveis substituídas`);
-        
-        if (result.warnings && result.warnings.length > 0) {
-          appLogger.warn(`⚠️ Avisos ao processar ${templateId}:`, { warnings: result.warnings });
-        }
+      const cached = this.processedCache.get(templateId);
+      if (cached) {
+        processedData = cached;
       } else {
-        appLogger.error(`❌ Erro ao processar template dinâmico ${templateId}:`, new Error(result.error || 'Erro desconhecido'));
-        // Fallback: usa dados originais
+        const result = processTemplate(jsonData as DynamicTemplate);
+        
+        if (result.success && result.template) {
+          processedData = result.template;
+          this.processedCache.set(templateId, processedData);
+          appLogger.info(`✅ Template processado: ${result.stats?.variablesReplaced} variáveis substituídas`);
+          
+          if (result.warnings && result.warnings.length > 0) {
+            appLogger.warn(`⚠️ Avisos ao processar ${templateId}:`, { warnings: result.warnings });
+          }
+        } else {
+          appLogger.error(`❌ Erro ao processar template dinâmico ${templateId}:`, new Error(result.error || 'Erro desconhecido'));
+        }
       }
     }
     
-    return {
+    const full: FullTemplate = {
       id: templateId,
       name: processedData.name || templateId,
       description: processedData.description || '',
@@ -519,6 +526,23 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       steps: processedData.steps || [],
       globalConfig: processedData.globalConfig || {},
     };
+
+    try {
+      const types = new Set<string>();
+      for (const s of full.steps) {
+        for (const b of s.blocks || []) {
+          if (b && typeof (b as any).type === 'string') types.add(String((b as any).type));
+        }
+      }
+      const unknown = Array.from(types).filter(t => !blockRegistry.has(t));
+      if (unknown.length > 0) {
+        appLogger.warn('Tipos de bloco não registrados detectados', { data: [unknown] });
+      } else {
+        appLogger.info('Todos os tipos de bloco estão registrados', { data: [Array.from(types).slice(0, 20)] });
+      }
+    } catch {}
+
+    return full;
   }
 
   /**

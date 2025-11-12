@@ -178,7 +178,7 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
     return {
         environment: isDev ? 'development' : isProd ? 'production' : 'staging',
         debug: isDev,
-        apiUrl: (import.meta as any)?.env?.VITE_API_URL || process.env?.VITE_API_URL || 'http://localhost:3000',
+        apiUrl: (import.meta as any)?.env?.VITE_API_URL || process.env?.VITE_API_URL || 'http://localhost:3001',
         cdnUrl: (import.meta as any)?.env?.VITE_CDN_URL || process.env?.VITE_CDN_URL || '',
         enableDevTools: isDev,
         enablePerformanceMonitoring: !isDev,

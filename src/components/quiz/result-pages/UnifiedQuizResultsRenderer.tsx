@@ -594,7 +594,4 @@ export class UnifiedQuizResultsRenderer {
     }
 }
 
-// =============================================
-// SINGLETON EXPORT
-// =============================================
-export const unifiedQuizResultsRenderer = UnifiedQuizResultsRenderer.getInstance();
+// (singleton export removido para compatibilidade com Fast Refresh)

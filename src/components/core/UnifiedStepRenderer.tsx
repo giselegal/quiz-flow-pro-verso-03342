@@ -74,15 +74,15 @@ const VirtualizedStepRenderer: React.FC<{
 }) => {
         const containerRef = useRef<HTMLDivElement>(null);
 
+        const lastHeightsRef = useRef<WeakMap<HTMLElement, number>>(new WeakMap());
         const virtualizer = useVirtualizer({
             count: blocks.length,
             getScrollElement: () => containerRef.current,
-            estimateSize: useCallback(() => 100, []), // altura média fallback
+            estimateSize: useCallback(() => 140, []),
             getItemKey: useCallback((index: number) => blocks[index]?.id ?? `idx-${index}`, [blocks]),
             overscan: isEditingMode ? OVERSCAN_EDITING : OVERSCAN_DEFAULT,
             // Medição dinâmica: permite altura variável por bloco
             measureElement: (el) => {
-                // Usa layout atual (evita forçar reflow extra)
                 return el.getBoundingClientRect().height;
             },
         });
@@ -96,8 +96,12 @@ const VirtualizedStepRenderer: React.FC<{
             resizeObserverRef.current = new ResizeObserver((entries) => {
                 for (const entry of entries) {
                     const el = entry.target as HTMLElement;
-                    // Marca para re-medição apenas se altura realmente mudou
-                    virtualizer.measureElement(el);
+                    const h = entry.contentRect.height;
+                    const prev = lastHeightsRef.current.get(el) || 0;
+                    if (Math.abs(h - prev) > 0.5) {
+                        lastHeightsRef.current.set(el, h);
+                        virtualizer.measureElement(el);
+                    }
                 }
             });
             // Registrar observers nos itens atuais

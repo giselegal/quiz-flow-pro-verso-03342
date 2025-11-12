@@ -1,73 +1,148 @@
 {
+  "stepId": "step-17",
+  "stepNumber": 17,
+  "type": "strategic-question",
+  "nextStep": null,
   "templateVersion": "3.2",
-  "metadata": {
-    "id": "step-17",
-    "name": "Pergunta (Blocos)",
-    "description": "Pergunta de múltipla escolha com grid de opções",
-    "category": "question",
-    "tags": [
-      "question",
-      "options"
-    ]
-  },
   "blocks": [
     {
-      "id": "q-17",
-      "type": "question-hero",
+      "id": "progress-bar-step-17",
+      "type": "question-progress",
+      "order": 0,
+      "parentId": null,
       "properties": {
-        "questionNumber": "Q15 - TRANSFORMAÇÃO",
-        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
-        "requiredSelections": 1,
-        "options": [
-          {
-            "id": "sim-vale-muito",
-            "text": "Sim! Por esse resultado, vale muito"
-          },
-          {
-            "id": "sim-se-certeza",
-            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim"
-          },
-          {
-            "id": "talvez-depende",
-            "text": "Talvez — depende do que está incluso"
-          },
-          {
-            "id": "nao-nao-pronta",
-            "text": "Não, ainda não estou pronta para investir"
-          }
-        ]
+        "padding": 8
+      },
+      "content": {
+        "stepNumber": 17,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      }
+    },
+    {
+      "id": "step-17-question-title",
+      "type": "heading-inline",
+      "order": 1,
+      "parentId": null,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16,
+        "_originalType": "question-title"
+      },
+      "content": {
+        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+      }
+    },
+    {
+      "id": "question-hero-17",
+      "type": "quiz-question-header",
+      "order": 2,
+      "parentId": null,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16,
+        "_originalType": "question-hero"
       },
       "content": {
         "questionNumber": "Q15 - TRANSFORMAÇÃO",
         "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
-        "requiredSelections": 1,
+        "currentQuestion": 15,
+        "totalQuestions": 13,
+        "progressValue": 76,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      }
+    },
+    {
+      "id": "options-grid-17",
+      "type": "options-grid",
+      "order": 3,
+      "parentId": null,
+      "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
         "options": [
           {
             "id": "sim-vale-muito",
-            "text": "Sim! Por esse resultado, vale muito"
+            "text": "Sim! Por esse resultado, vale muito",
+            "value": "sim-vale-muito"
           },
           {
             "id": "sim-se-certeza",
-            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim"
+            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+            "value": "sim-se-certeza"
           },
           {
             "id": "talvez-depende",
-            "text": "Talvez — depende do que está incluso"
+            "text": "Talvez — depende do que está incluso",
+            "value": "talvez-depende"
           },
           {
             "id": "nao-nao-pronta",
-            "text": "Não, ainda não estou pronta para investir"
+            "text": "Não, ainda não estou pronta para investir",
+            "value": "nao-nao-pronta"
           }
-        ]
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      }
+    },
+    {
+      "id": "navigation-step-17",
+      "type": "question-navigation",
+      "order": 4,
+      "parentId": null,
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "option_selected",
-      "step_completed"
-    ],
-    "trackingId": "step-17-blocks"
+  "metadata": {
+    "id": "step-17-strategic-v3",
+    "name": "Q15 - Transformação (Estratégica)",
+    "description": "Questão estratégica 5 sobre objetivos e resultados",
+    "category": "strategic-question",
+    "questionNumber": 15,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:33:47.498Z",
+    "updatedAt": "2025-10-13T00:33:47.498Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0",
+    "scoring": {
+      "weight": 3,
+      "timeLimit": 45,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.456Z",
+    "generated": "2025-11-12T13:09:32.128Z",
+    "source": "quiz21-complete.json"
   }
 }

@@ -15,8 +15,7 @@ const cspDirectives = {
   'default-src': ["'self'"],
   'script-src': [
     "'self'",
-    "'unsafe-inline'", // Permitido para React/Vite
-    "'unsafe-eval'", // Permitido para desenvolvimento
+    "'unsafe-inline'",
     'https://cdn.jsdelivr.net',
     'https://unpkg.com',
     'https://cdnjs.cloudflare.com',

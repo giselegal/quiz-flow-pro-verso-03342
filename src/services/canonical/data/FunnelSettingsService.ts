@@ -1,28 +1,22 @@
 /**
- * 🎛️ FUNNEL SETTINGS SERVICE (Canonical)
+ * 🎛️ FUNNEL SETTINGS SERVICE - API INTEGRATION (Canonical)
  * 
- * Gerencia configurações JSON do funil armazenadas em funnels.settings:
- * - domain: Configurações de domínio e URL pública
- * - seo: Meta tags, OG image, robots
- * - tracking: Google Analytics, Facebook Pixel, UTMs
- * - results: Perfis de resultado e mapeamento de pontuação
- * - security: Webhooks, API tokens
+ * Gerencia configurações JSON do funil usando os novos endpoints da API:
+ * - Integração com /api/funnels/:id/settings
+ * - Validação com Zod schemas
+ * - Cache local para performance
+ * - Tratamento de erros padronizado
  * 
- * Segue arquitetura canonical:
- * - BaseCanonicalService
- * - Result pattern
- * - Telemetria com CanonicalServicesMonitor
- * - Cache invalidation
+ * Esta versão substitui a integração direta com Supabase por chamadas de API.
  */
 
 import { BaseCanonicalService, ServiceResult } from '@/services/canonical/types';
-import { supabase } from '@/services/integrations/supabase/customClient';
 import { CacheService } from '@/services/canonical/CacheService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
-import type { Json } from '@/services/integrations/supabase/types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
-// TYPES
+// TYPES (mantidos do arquivo original)
 // ============================================================================
 
 export interface DomainSettings {
@@ -132,7 +126,7 @@ export interface PublicationSettings {
 }
 
 // ============================================================================
-// DEFAULT SETTINGS
+// DEFAULT SETTINGS (mantidos do arquivo original)
 // ============================================================================
 
 const DEFAULT_SETTINGS: PublicationSettings = {
@@ -164,7 +158,7 @@ const DEFAULT_SETTINGS: PublicationSettings = {
 };
 
 // ============================================================================
-// SERVICE
+// SERVICE - API INTEGRATION
 // ============================================================================
 
 export class FunnelSettingsService extends BaseCanonicalService {
@@ -184,12 +178,40 @@ export class FunnelSettingsService extends BaseCanonicalService {
   }
 
   protected async onInitialize(): Promise<void> {
-    this.log('FunnelSettingsService initialized');
+    this.log('FunnelSettingsService (API Integration) initialized');
   }
 
   protected async onDispose(): Promise<void> {
-    // Não há necessidade de clear global - cache tem TTL
     this.log('FunnelSettingsService disposed');
+  }
+
+  // ============================================================================
+  // API CALLS
+  // ============================================================================
+
+  private async apiCall(endpoint: string, options: RequestInit = {}): Promise<any> {
+    const baseUrl = window.location.origin; // Usar a origem atual do frontend
+    const url = `${baseUrl}${endpoint}`;
+    
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(`API Error ${response.status}: ${errorData.error || errorData.message || 'Unknown error'}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      appLogger.error('API call failed', { endpoint, error });
+      throw error;
+    }
   }
 
   // ============================================================================
@@ -208,33 +230,31 @@ export class FunnelSettingsService extends BaseCanonicalService {
         return this.createResult(cachedResult.data);
       }
 
-      // Buscar do Supabase
-      const { data, error } = await supabase
-        .from('funnels')
-        .select('settings')
-        .eq('id', funnelId)
-        .single();
-
-      if (error) {
-        return this.createError(new Error(`Failed to fetch settings: ${error.message}`));
+      // Buscar da API
+      const response = await this.apiCall(`/api/funnels/${funnelId}/settings`);
+      
+      if (!response.success) {
+        return this.createError(new Error(`Failed to fetch settings: ${response.error}`));
       }
 
-      if (!data) {
+      if (!response.data) {
         return this.createError(new Error(`Funnel ${funnelId} not found`));
       }
 
       // Merge com defaults
       const settings: PublicationSettings = {
         ...DEFAULT_SETTINGS,
-        ...(typeof (data as any).config === 'object' && (data as any).config !== null ? (data as any).config : {}),
-      } as PublicationSettings;
+        ...response.data,
+      };
 
       // Cachear
       this.cacheService.set(cacheKey, settings, { ttl: 300000 }); // 5 min TTL
 
+      this.log('Settings fetched from API', { funnelId });
       return this.createResult(settings);
     } catch (error) {
-      return this.createError(error as Error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return this.createError(new Error(`Failed to fetch settings: ${errorMessage}`));
     }
   }
 
@@ -249,7 +269,7 @@ export class FunnelSettingsService extends BaseCanonicalService {
     CanonicalServicesMonitor.trackUsage(this.name, 'updateSettings');
 
     try {
-      // Buscar settings atuais
+      // Buscar settings atuais para merge
       const currentResult = await this.getSettings(funnelId);
       if (!currentResult.success || !currentResult.data) {
         return currentResult;
@@ -257,6 +277,7 @@ export class FunnelSettingsService extends BaseCanonicalService {
 
       // Merge deep
       const newSettings: PublicationSettings = {
+        ...currentResult.data,
         domain: { ...currentResult.data.domain, ...updates.domain },
         results: { ...currentResult.data.results, ...updates.results },
         seo: { ...currentResult.data.seo, ...updates.seo },
@@ -264,24 +285,24 @@ export class FunnelSettingsService extends BaseCanonicalService {
         security: { ...currentResult.data.security, ...updates.security },
       };
 
-      // Atualizar no Supabase
-      const { error } = await supabase
-        .from('funnels')
-        .update({ config: newSettings as unknown as Json })
-        .eq('id', funnelId);
+      // Enviar para API
+      const response = await this.apiCall(`/api/funnels/${funnelId}/settings`, {
+        method: 'PUT',
+        body: JSON.stringify(newSettings),
+      });
 
-      if (error) {
-        return this.failure('SUPABASE_ERROR', `Failed to update settings: ${error.message}`);
+      if (!response.success) {
+        return this.createError(new Error(`Failed to update settings: ${response.error}`));
       }
 
       // Invalidar cache
       this.cacheService.delete(`funnel-settings-${funnelId}`);
 
-      this.log('Settings updated', { funnelId, updates });
-
-      return this.success(newSettings);
+      this.log('Settings updated via API', { funnelId, updates: Object.keys(updates) });
+      return this.createResult(response.data);
     } catch (error) {
-      return this.failure('UNKNOWN_ERROR', `Unexpected error: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return this.createError(new Error(`Failed to update settings: ${errorMessage}`));
     }
   }
 
@@ -317,25 +338,17 @@ export class FunnelSettingsService extends BaseCanonicalService {
     CanonicalServicesMonitor.trackUsage(this.name, 'generatePreviewUrl');
 
     try {
-      const settingsResult = await this.getSettings(funnelId);
-      if (!settingsResult.success || !settingsResult.data) {
-        return this.failure('SETTINGS_NOT_FOUND', 'Cannot generate URL without settings');
+      const response = await this.apiCall(`/api/funnels/${funnelId}/settings/preview-url`);
+      
+      if (!response.success || !response.data?.url) {
+        return this.createError(new Error('Failed to generate preview URL'));
       }
 
-      const { domain } = settingsResult.data;
-      const subdomain = domain.subdomain || 'app';
-      const slug = domain.slug || 'quiz';
-
-      let url: string;
-      if (domain.customDomain) {
-        url = `https://${domain.customDomain}/${slug}`;
-      } else {
-        url = `https://${subdomain}.quizflowpro.com/${slug}`;
-      }
-
-      return this.success(url);
+      this.log('Preview URL generated via API', { funnelId, url: response.data.url });
+      return this.createResult(response.data.url);
     } catch (error) {
-      return this.failure('UNKNOWN_ERROR', `Failed to generate URL: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return this.createError(new Error(`Failed to generate preview URL: ${errorMessage}`));
     }
   }
 
@@ -346,40 +359,55 @@ export class FunnelSettingsService extends BaseCanonicalService {
   async validateSettings(settings: PublicationSettings): Promise<ServiceResult<{ isValid: boolean; errors: string[] }>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'validateSettings');
 
-    const errors: string[] = [];
+    try {
+      // Usar o endpoint de validação da API
+      const response = await this.apiCall('/api/funnels/validate/settings', {
+        method: 'POST',
+        body: JSON.stringify(settings),
+      });
 
-    // Validar domain
-    if (!settings.domain.slug) {
-      errors.push('Slug é obrigatório');
-    } else if (!/^[a-z0-9-]+$/.test(settings.domain.slug)) {
-      errors.push('Slug deve conter apenas letras minúsculas, números e hífens');
-    }
+      if (!response.success) {
+        return this.createError(new Error(`Validation failed: ${response.error}`));
+      }
 
-    // Validar SEO
-    if (settings.seo.title && settings.seo.title.length > 60) {
-      errors.push('Título SEO não deve exceder 60 caracteres');
-    }
-    if (settings.seo.description && settings.seo.description.length > 160) {
-      errors.push('Descrição SEO não deve exceder 160 caracteres');
-    }
+      return this.createResult(response.data);
+    } catch (error) {
+      // Fallback para validação local se a API falhar
+      const errors: string[] = [];
 
-    // Validar tracking
-    if (settings.tracking.googleAnalytics && !/^G-[A-Z0-9]+$/.test(settings.tracking.googleAnalytics)) {
-      errors.push('ID do Google Analytics inválido (formato: G-XXXXXXXXXX)');
-    }
-    if (settings.tracking.facebookPixel && !/^\d+$/.test(settings.tracking.facebookPixel)) {
-      errors.push('ID do Facebook Pixel deve conter apenas números');
-    }
+      // Validar domain
+      if (!settings.domain.slug) {
+        errors.push('Slug é obrigatório');
+      } else if (!/^[a-z0-9-]+$/.test(settings.domain.slug)) {
+        errors.push('Slug deve conter apenas letras minúsculas, números e hífens');
+      }
 
-    // Validar results
-    if (!settings.results.primary.title) {
-      errors.push('Perfil primário deve ter um título');
-    }
+      // Validar SEO
+      if (settings.seo.title && settings.seo.title.length > 60) {
+        errors.push('Título SEO não deve exceder 60 caracteres');
+      }
+      if (settings.seo.description && settings.seo.description.length > 160) {
+        errors.push('Descrição SEO não deve exceder 160 caracteres');
+      }
 
-    return this.success({
-      isValid: errors.length === 0,
-      errors,
-    });
+      // Validar tracking
+      if (settings.tracking.googleAnalytics && !/^G-[A-Z0-9]+$/.test(settings.tracking.googleAnalytics)) {
+        errors.push('ID do Google Analytics inválido (formato: G-XXXXXXXXXX)');
+      }
+      if (settings.tracking.facebookPixel && !/^\d+$/.test(settings.tracking.facebookPixel)) {
+        errors.push('ID do Facebook Pixel deve conter apenas números');
+      }
+
+      // Validar results
+      if (!settings.results.primary.title) {
+        errors.push('Perfil primário deve ter um título');
+      }
+
+      return this.createResult({
+        isValid: errors.length === 0,
+        errors,
+      });
+    }
   }
 }
 

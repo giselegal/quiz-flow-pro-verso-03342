@@ -220,15 +220,6 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePreview}
-            >
-              <Target className="w-4 h-4 mr-2" />
-              Ver Quiz Original
-            </Button>
-
-            <Button
               variant="default"
               size="sm"
               onClick={handleSave}

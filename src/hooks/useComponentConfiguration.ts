@@ -379,7 +379,7 @@ export function useComponentConfiguration(
         appLogger.info(`🔗 Real-time sync enabled for ${componentId}`);
 
         // Placeholder para conexão real-time
-        // const ws = new WebSocket(`ws://localhost:3000/api/components/${componentId}/sync`);
+        // const ws = new WebSocket(`ws://localhost:3001/api/components/${componentId}/sync`);
         // ws.onmessage = (event) => {
         //   const update = JSON.parse(event.data);
         //   if (update.type === 'configuration-update') {

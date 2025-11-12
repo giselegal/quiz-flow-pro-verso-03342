@@ -21,6 +21,7 @@ export interface PreviewPanelProps {
     onToggleVisibility?: () => void;
     className?: string;
     previewMode?: 'live' | 'production'; // 🔄 G42 FIX
+    onStepChange?: (stepId: string) => void;
 }
 
 export default function PreviewPanel({
@@ -30,6 +31,7 @@ export default function PreviewPanel({
     onToggleVisibility,
     className = '',
     previewMode = 'live', // 🔄 G42 FIX: Default to live
+    onStepChange,
 }: PreviewPanelProps) {
     // 🔄 G42 FIX: Live usa blocks do editor, Production força refetch do backend
     const shouldFetchFromBackend = previewMode === 'production';
@@ -41,30 +43,70 @@ export default function PreviewPanel({
         // Production força cache zero (stale imediato) para refletir mudanças publicadas
         staleTimeMs: shouldFetchFromBackend ? 0 : 15_000,
     });    // 🔄 G42 FIX: Live = blocks do editor, Production = refetch forçado
-    const blocksToUse: Block[] | null = shouldFetchFromBackend
-        ? (fetchedBlocks ?? blocks)
-        : (blocks ?? fetchedBlocks) ?? null;
+  const blocksToUse: Block[] | null = shouldFetchFromBackend
+    ? (fetchedBlocks ?? blocks)
+    : (blocks ?? fetchedBlocks) ?? null;
 
-    // Converter blocos do editor para formato de preview
-    const quizContent = useMemo(() => {
-        if (!currentStepKey || !blocksToUse) {
-            return null;
-        }
+  // Converter blocos do editor para formato de preview
+  const quizContent = useMemo(() => {
+    if (!currentStepKey) {
+      return null;
+    }
 
-        return {
-            steps: [
-                {
-                    id: currentStepKey,
-                    type: 'quiz-step',
-                    blocks: blocksToUse,
-                },
-            ],
-            metadata: {
-                currentStep: currentStepKey,
-                previewMode: true,
-            },
+    const normalizeType = (t: any): string => {
+      const s = String(t || '').toLowerCase();
+      if (s === 'heading') return 'headline';
+      if (s === 'btn' || s === 'cta') return 'button';
+      return s || 'unknown';
+    };
+
+    const normalizedBlocks = (blocksToUse || []).map((b: any, i: number) => {
+      const id = b?.id || `block-${i}`;
+      const type = normalizeType(b?.type);
+      const order = typeof b?.order === 'number' ? b.order : i;
+
+      const merged = {
+        ...(b?.properties || {}),
+        ...(b?.content || {}),
+        ...(b?.config || {}),
+      } as any;
+
+      let content: any = merged;
+      if (type === 'text' || type === 'headline') {
+        content = { text: merged.text ?? merged.title ?? merged.label ?? merged.value ?? '' };
+      } else if (type === 'image') {
+        content = {
+          url: merged.url ?? merged.src ?? '',
+          alt: merged.alt ?? merged.title ?? '',
         };
-    }, [currentStepKey, blocksToUse]);
+      } else if (type === 'button') {
+        content = { text: merged.text ?? merged.label ?? merged.title ?? 'Continuar' };
+      } else if (type === 'quiz-options') {
+        const raw = (merged.options ?? merged.choices ?? merged.items ?? []) as any[];
+        const options = raw.map((o: any, idx: number) => ({
+          id: o?.id ?? `opt-${idx}`,
+          text: o?.text ?? o?.label ?? String(o ?? ''),
+        }));
+        content = { options };
+      }
+
+      return { id, type, order, content };
+    });
+
+    return {
+      steps: [
+        {
+          id: currentStepKey,
+          type: 'quiz-step',
+          blocks: normalizedBlocks,
+        },
+      ],
+      metadata: {
+        currentStep: currentStepKey,
+        previewMode: true,
+      },
+    };
+  }, [currentStepKey, blocksToUse]);
 
     if (!isVisible) {
         return (
@@ -107,6 +149,11 @@ export default function PreviewPanel({
                     🚀 Modo Production (Dados Publicados)
                 </div>
             )}
+            {previewMode === 'live' && (
+                <div className="absolute top-2 left-2 z-20 px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded border border-blue-300 shadow-sm">
+                    🛠 Visualização do Editor (Dados em edição)
+                </div>
+            )}
 
             {/* Preview com controles responsivos */}
             {!quizContent ? (
@@ -123,6 +170,7 @@ export default function PreviewPanel({
                 <ResponsivePreviewFrame
                     quizContent={quizContent}
                     currentStepId={currentStepKey}
+                    onStepChange={onStepChange}
                 />
             )}
 

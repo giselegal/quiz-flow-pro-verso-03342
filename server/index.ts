@@ -9,6 +9,9 @@ import { seedTemplates } from './templates/seed';
 import { componentsRouter } from './templates/components.controller';
 import { quizStyleRouter } from './quiz-style/controller';
 import { fileURLToPath } from 'url';
+import { setupLogsEndpoint, setupUtmAnalyticsEndpoint } from './api-endpoints';
+import { setupFunnelSettingsEndpoints } from './funnel-settings';
+import { setupFunnelPublicationEndpoints } from './funnel-publication';
 
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -204,6 +207,14 @@ if (process.env.USE_QUIZ_STYLE_ADAPTER !== 'false') {
 
 // Seed inicial (executa apenas se não houver templates)
 seedTemplates();
+
+// Configurar endpoints de logs e analytics
+setupLogsEndpoint(app);
+setupUtmAnalyticsEndpoint(app);
+
+// Configurar endpoints de configurações e publicação de funis
+setupFunnelSettingsEndpoints(app);
+setupFunnelPublicationEndpoints(app);
 
 // Generic error handler
 app.use((err: any, req: any, res: any, next: any) => {

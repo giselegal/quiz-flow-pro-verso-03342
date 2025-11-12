@@ -2,17 +2,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Safe access to environment variables with fallback
-const getEnvVar = (key: string, fallback: string): string => {
-  try {
-    return (import.meta as any)?.env?.[key] || fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const SUPABASE_URL = getEnvVar('VITE_SUPABASE_URL', 'https://dgpbqhjktlnjiatcqheh.supabase.co');
-const SUPABASE_PUBLISHABLE_KEY = getEnvVar('VITE_SUPABASE_PUBLISHABLE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRncGJxaGprdGxuamlhdGNxaGVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDYwMDksImV4cCI6MjA3NjA4MjAwOX0.BADCIVGW0fUpHvC8VcXjSNhx2pSApVMu5fUHnnkj_ck');
+const SUPABASE_URL = (import.meta as any)?.env?.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY as string;
+const DISABLE_SUPABASE = ((import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true');
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
@@ -26,10 +18,71 @@ const getStorage = () => {
   }
 };
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: getStorage(),
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+function buildMock() {
+  const ok: any = { data: null, error: null };
+  const chain = () => ({
+    select: async () => ok,
+    upsert: async () => ok,
+    insert: async () => ok,
+    update: async () => ok,
+    delete: async () => ok,
+    eq: () => chain(),
+    order: () => chain(),
+    single: async () => ok,
+    maybeSingle: async () => ok,
+  });
+
+  const subscription = { unsubscribe: () => {} };
+
+  return {
+    from: () => chain(),
+    auth: {
+      onAuthStateChange: (_cb: any) => ({ data: { subscription } }),
+      getSession: async () => ({ data: { session: null }, error: null }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      signInWithPassword: async () => ok,
+      signOut: async () => ok,
+    },
+    storage: {
+      from: () => ({
+        upload: async () => ok,
+        getPublicUrl: (_path: string) => ({ data: { publicUrl: '' }, error: null }),
+        remove: async () => ok,
+        list: async () => ({ data: [], error: null }),
+      }),
+    },
+  } as any;
+}
+
+const readLs = (key: string): string => {
+  try {
+    return typeof localStorage !== 'undefined' ? (localStorage.getItem(key) || '') : '';
+  } catch { return ''; }
+};
+
+const LS_URL = readLs('supabase:url') || readLs('SB_URL');
+const LS_KEY = readLs('supabase:key') || readLs('SB_ANON');
+
+const EFFECTIVE_URL = SUPABASE_URL || LS_URL;
+const EFFECTIVE_KEY = SUPABASE_ANON_KEY || LS_KEY;
+
+const hasEnv = !!(EFFECTIVE_URL && EFFECTIVE_KEY);
+
+export const supabase = (hasEnv && !DISABLE_SUPABASE)
+  ? createClient<Database>(EFFECTIVE_URL, EFFECTIVE_KEY, {
+      auth: {
+        storage: getStorage(),
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    })
+  : (buildMock() as any);
+
+export function setSupabaseCredentials(url: string, anonKey: string) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('supabase:url', String(url || ''));
+      localStorage.setItem('supabase:key', String(anonKey || ''));
+    }
+  } catch {}
+}

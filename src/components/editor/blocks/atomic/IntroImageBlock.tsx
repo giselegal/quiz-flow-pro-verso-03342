@@ -32,8 +32,16 @@ export default function IntroImageBlock({
   }
 
   if (!src) {
-    appLogger.warn('⚠️ [IntroImageBlock] Sem src:', { data: [{ blockId: block.id, content: (block as any)?.content }] });
-    return null;
+    return (
+      <div
+        className={`flex justify-center my-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
+        onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      >
+        <div className="w-full max-w-lg h-48 bg-gray-100 text-gray-400 rounded-lg flex items-center justify-center text-xs">
+          Selecionar imagem
+        </div>
+      </div>
+    );
   }
 
   return (

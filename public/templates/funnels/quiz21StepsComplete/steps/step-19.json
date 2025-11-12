@@ -1,47 +1,81 @@
 {
+  "stepId": "step-19",
+  "stepNumber": 19,
+  "type": "transition-result",
+  "nextStep": null,
   "templateVersion": "3.2",
-  "metadata": {
-    "id": "step-19",
-    "name": "Transição (Blocos)",
-    "description": "Tela de transição para avançar ao resultado",
-    "category": "transition",
-    "tags": [
-      "transition",
-      "navigation"
-    ]
-  },
   "blocks": [
     {
-      "id": "trans-19",
+      "id": "transition-hero-19",
       "type": "transition-hero",
+      "order": 0,
+      "parentId": null,
       "properties": {
-        "title": "Você chegou até aqui — e isso já diz muito sobre você.",
-        "message": "",
-        "paragraphs": [
-          "Poucas mulheres se permitem parar e olhar para si com tanta intenção. E o que vem agora é mais do que um simples resultado — é o início de uma nova forma de se enxergar.",
-          "Seu Estilo Predominante vai revelar muito sobre como você comunica sua essência ao mundo. Mas o mais importante é o que você vai fazer com essa descoberta.",
-          "Em seguida, você vai conhecer um caminho completo para aplicar o seu estilo na prática — com leveza, estratégia e propósito. Um método criado para transformar não só o seu guarda-roupa, mas também a forma como você se apresenta e se sente todos os dias."
-        ],
-        "buttonLabel": "Ver meu resultado agora",
-        "autoAdvanceMs": 0
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32,
+        "type": "scale",
+        "duration": 500,
+        "delay": 0,
+        "easing": "ease-out"
       },
       "content": {
-        "title": "Você chegou até aqui — e isso já diz muito sobre você.",
-        "message": "",
-        "paragraphs": [
-          "Poucas mulheres se permitem parar e olhar para si com tanta intenção. E o que vem agora é mais do que um simples resultado — é o início de uma nova forma de se enxergar.",
-          "Seu Estilo Predominante vai revelar muito sobre como você comunica sua essência ao mundo. Mas o mais importante é o que você vai fazer com essa descoberta.",
-          "Em seguida, você vai conhecer um caminho completo para aplicar o seu estilo na prática — com leveza, estratégia e propósito. Um método criado para transformar não só o seu guarda-roupa, mas também a forma como você se apresenta e se sente todos os dias."
-        ],
-        "buttonLabel": "Ver meu resultado agora"
+        "title": "Obrigada por compartilhar.",
+        "subtitle": "Preparando seu resultado personalizado",
+        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+        "autoAdvanceDelay": 3000
+      }
+    },
+    {
+      "id": "step-19-transition-text",
+      "type": "transition-text",
+      "order": 1,
+      "parentId": null,
+      "properties": {
+        "type": "fade",
+        "duration": 300
+      },
+      "content": {}
+    },
+    {
+      "id": "step-19-transition-cta",
+      "type": "cta-inline",
+      "order": 2,
+      "parentId": null,
+      "properties": {
+        "_originalType": "CTAButton"
+      },
+      "content": {
+        "label": "...",
+        "variant": "outline",
+        "size": "small"
       }
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "step_completed"
+  "metadata": {
+    "id": "step-19-transition-v3",
+    "name": "Transição Pré-Resultado",
+    "description": "Página de transição antes da exibição do resultado final",
+    "category": "transition-result",
+    "tags": [
+      "quiz",
+      "transition",
+      "loading",
+      "result",
+      "pre-result"
     ],
-    "trackingId": "step-19-transition"
+    "createdAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0",
+    "scoring": {
+      "weight": 1,
+      "timeLimit": 30,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.456Z",
+    "generated": "2025-11-12T13:09:32.148Z",
+    "source": "quiz21-complete.json"
   }
 }

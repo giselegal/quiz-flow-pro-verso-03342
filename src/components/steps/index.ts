@@ -13,12 +13,7 @@ import './step-01';
 // import './step-03';
 // ...
 
-// Export do registry para uso externo
-export { stepRegistry } from '../step-registry/StepRegistry';
-export { StepRenderer } from '../step-registry/StepRenderer';
-
-// Export de utilitários
-export type { BaseStepProps, StepComponent } from '../step-registry/StepTypes';
+// (exports removidos para evitar mistura de componentes e utilitários neste módulo)
 
 // Importar stepRegistry localmente para usar no log
 import { stepRegistry } from '../step-registry/StepRegistry';

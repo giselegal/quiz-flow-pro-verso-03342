@@ -43,6 +43,60 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
         useJsonTemplates, // 🎯 FASE 2: Flag indicando uso de JSON
     } = useQuizState(funnelId, externalSteps);
 
+    const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        const handler = (ev: MessageEvent) => {
+            const data: any = ev.data;
+            if (!data || typeof data !== 'object') return;
+            try {
+                switch (data.type) {
+                    case 'selection': {
+                        const bid = typeof data.blockId === 'string' ? data.blockId : null;
+                        setSelectedBlockId(bid);
+                        break;
+                    }
+                    case 'step-change': {
+                        const sid = typeof data.stepId === 'string' ? data.stepId : undefined;
+                        if (sid) nextStep(sid);
+                        break;
+                    }
+                    case 'answers': {
+                        const sid = String(data.stepId || '').trim();
+                        const sels = Array.isArray(data.selections) ? data.selections.filter(Boolean) : [];
+                        if (sid && sels.length) addAnswer(sid, sels);
+                        break;
+                    }
+                    case 'strategic-answer': {
+                        const q = String(data.question || '').trim();
+                        const a = String(data.answer || '').trim();
+                        if (q && a) addStrategicAnswer(q, a);
+                        break;
+                    }
+                    case 'user-name': {
+                        const name = String(data.userName || '').trim();
+                        if (name) setUserName(name);
+                        break;
+                    }
+                    case 'navigate': {
+                        const dir = String(data.direction || '').toLowerCase();
+                        if (dir === 'next') nextStep();
+                        else if (dir === 'to' && typeof data.stepId === 'string') nextStep(data.stepId);
+                        break;
+                    }
+                    case 'force-recalc': {
+                        try { (window as any).dispatchEvent(new Event('quiz-force-recalc')); } catch { }
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            } catch { /* noop */ }
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, [nextStep, addAnswer, addStrategicAnswer, setUserName]);
+
     // 🎯 FASE 3: Mapear step atual para stepId do registry
     const getStepIdFromCurrentStep = (currentStep: string): string => {
         // Novo: suportar ambos formatos. Normalizar para formato com zero padding apenas se existir no registry
@@ -164,6 +218,7 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
                             sessionData={{
                                 userName: unifiedQuizState.userName,
                                 ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v])),
+                                selectedBlockId,
                             }}
                             onUpdateSessionData={(key, value) => {
                                 if (key === 'userName' && typeof value === 'string') setUserName(value);

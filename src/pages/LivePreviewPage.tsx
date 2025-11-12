@@ -16,8 +16,20 @@ export default function LivePreviewPage() {
         }
     }, [match, params]);
     const { liveSteps } = useFunnelLivePreview(funnelId);
+    const [localSteps, setLocalSteps] = React.useState<any | null>(null);
+    React.useEffect(() => {
+        const handler = (ev: MessageEvent) => {
+            const data: any = ev.data;
+            if (data && data.type === 'steps' && data.steps) {
+                setLocalSteps(data.steps);
+            }
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, []);
 
-    const isConnected = !!liveSteps;
+    const steps = liveSteps || localSteps || undefined;
+    const isConnected = !!steps;
     return (
         <div className="min-h-screen bg-white">
             <div className="fixed top-3 right-3 z-50 text-xs px-2 py-1 rounded shadow-sm border bg-white">
@@ -28,7 +40,7 @@ export default function LivePreviewPage() {
                 )}
                 {funnelId && <span className="ml-2 text-gray-500">{funnelId}</span>}
             </div>
-            <QuizApp funnelId={funnelId} externalSteps={liveSteps || undefined} />
+            <QuizApp funnelId={funnelId} externalSteps={steps} />
         </div>
     );
 }

@@ -75,12 +75,12 @@ const LazyBlockComponent: React.FC<{
 
     return (
         <BlockComponent
-            {...block}
+            block={block}
             isSelected={isSelected}
-            isPreview={isPreview}
+            isEditable={!isPreview}
+            onClick={onSelect}
             onUpdate={onUpdate}
             onDelete={onDelete}
-            onSelect={onSelect}
             className={className}
             style={style}
         />

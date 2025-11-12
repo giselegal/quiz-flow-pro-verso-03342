@@ -86,7 +86,7 @@ export default defineConfig(({ mode }) => {
         'Referrer-Policy': 'strict-origin-when-cross-origin',
         'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
         // Garantir que o Simple Browser funcione
-        'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' ws: wss: http: https:",
+        'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; img-src 'self' data: blob: https: http:; media-src 'self' data: blob: https: http:; font-src 'self' https: data:; connect-src 'self' ws: wss: http: https:",
       },
       // HMR otimizado para ambientes containerizados
       hmr: {
@@ -308,7 +308,7 @@ if (typeof globalThis.__spreadArray !== 'function') {
       global: 'globalThis',
       'process.env.NODE_ENV': JSON.stringify(mode),
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
-      'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
+      'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY),
       'import.meta.env.VITE_SUPABASE_PROJECT_ID': JSON.stringify(env.VITE_SUPABASE_PROJECT_ID),
     },
     esbuild: { target: 'es2020' },

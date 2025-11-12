@@ -801,7 +801,7 @@ export class ConfigService extends BaseCanonicalService {
       
       this.environmentConfig = {
         environment: env,
-        apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+        apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3001',
         cdnUrl: import.meta.env.VITE_CDN_URL || '',
         supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
         supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',

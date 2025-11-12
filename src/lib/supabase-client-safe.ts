@@ -1,11 +1,9 @@
 import type { Database } from '@/services/integrations/supabase/types';
 import { createClient } from '@supabase/supabase-js';
 
-// Configuração segura para SSR
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const supabaseKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+// Configuração segura para SSR - sem chaves hardcoded
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Cliente seguro para SSR
 export const supabaseSafe = createClient<Database>(supabaseUrl, supabaseKey, {
@@ -21,38 +19,3 @@ export const supabaseSafe = createClient<Database>(supabaseUrl, supabaseKey, {
     },
   },
 });
-
-// Hook para usar Supabase de forma segura
-export const useSupabaseSafe = () => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  return {
-    supabase: supabaseSafe,
-    isClient,
-    isReady: isClient,
-  };
-};
-
-// Função para operações seguras
-export const withSupabase = async <T,>(
-  operation: (client: typeof supabaseSafe) => Promise<T>,
-): Promise<T | null> => {
-  if (typeof window === 'undefined') {
-    appLogger.warn('Supabase operation skipped on server side');
-    return null;
-  }
-
-  try {
-    return await operation(supabaseSafe);
-  } catch (error) {
-    appLogger.error('Supabase operation failed:', { data: [error] });
-    return null;
-  }
-};
-
-import { useEffect, useState } from 'react';
-import { appLogger } from '@/lib/utils/appLogger';

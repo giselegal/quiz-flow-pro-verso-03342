@@ -191,7 +191,7 @@ function renderMediaBlock(
   props: Record<string, any>,
   content: any
 ): React.ReactNode {
-  const src = content?.src || props.src || '';
+  const src = content?.src || content?.imageUrl || props.src || props.imageUrl || '';
   const alt = props.alt || '';
 
   if (schema.type.includes('image')) {

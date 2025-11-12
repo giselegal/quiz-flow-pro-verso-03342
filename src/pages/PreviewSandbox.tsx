@@ -30,6 +30,29 @@ export default function PreviewSandbox() {
    * Listener para mensagens do editor
    */
   useEffect(() => {
+    try {
+      const origErr = console.error;
+      const origWarn = console.warn;
+      console.error = (...args: any[]) => {
+        const s = args.map(a => (typeof a === 'string' ? a : '')).join(' ');
+        if (s.includes('net::ERR_ABORTED')) return;
+        origErr(...args);
+      };
+      console.warn = (...args: any[]) => {
+        const s = args.map(a => (typeof a === 'string' ? a : '')).join(' ');
+        if (s.includes('net::ERR_ABORTED')) return;
+        origWarn(...args);
+      };
+      const handler = (e: ErrorEvent) => {
+        const msg = String(e.message || '');
+        if (msg.includes('net::ERR_ABORTED')) {
+          e.preventDefault?.();
+          return false;
+        }
+        return undefined;
+      };
+      window.addEventListener('error', handler);
+    } catch {}
     const handleMessage = (event: MessageEvent) => {
       // Validar origem
       if (event.origin !== window.location.origin) return;
@@ -56,6 +79,12 @@ export default function PreviewSandbox() {
           case 'NAVIGATE':
             setCurrentStepId(payload.stepId);
             break;
+          case 'THEME':
+            try {
+              const d = !!payload?.dark;
+              document.documentElement.classList.toggle('dark', d);
+            } catch {}
+            break;
         }
       } catch (error) {
         sendMessage({
@@ -70,9 +99,11 @@ export default function PreviewSandbox() {
     window.addEventListener('message', handleMessage);
 
     // Notificar que está pronto
-    sendMessage({ type: 'INIT' });
+    sendMessage({ type: 'READY' });
 
-    return () => window.removeEventListener('message', handleMessage);
+    return () => {
+      try { window.removeEventListener('message', handleMessage); } catch {}
+    };
   }, []);
 
   /**
@@ -81,7 +112,7 @@ export default function PreviewSandbox() {
   const handleStepChange = (stepId: string) => {
     setCurrentStepId(stepId);
     sendMessage({
-      type: 'NAVIGATE',
+      type: 'STEP_CHANGE',
       payload: { stepId },
     });
   };

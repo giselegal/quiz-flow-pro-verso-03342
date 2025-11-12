@@ -41,7 +41,7 @@ export const useUtmParameters = () => {
    */
   const saveUtmToServer = async (params: UtmParameters) => {
     try {
-      const response = await fetch('http://localhost:3001/api/utm-analytics', {
+      const response = await fetch('/api/utm-analytics', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

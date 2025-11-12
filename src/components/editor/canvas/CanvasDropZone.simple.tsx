@@ -466,12 +466,18 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   }, []); // Empty dependency array - only runs once on mount
 
   // 🚀 OTIMIZAÇÃO: Scroll handler com debounce para evitar re-renders excessivos
+  const lastScrollTsRef = React.useRef(0);
   const onScroll = React.useCallback(() => {
     const el = scrollRef.current;
     if (!el || !enableVirtualization) return;
 
     requestAnimationFrame(() => {
-      setScrollTop(el.scrollTop || 0);
+      const now = Date.now();
+      if (now - lastScrollTsRef.current >= 32) {
+        lastScrollTsRef.current = now;
+        const nextTop = el.scrollTop || 0;
+        setScrollTop(prev => (prev !== nextTop ? nextTop : prev));
+      }
     });
   }, [enableVirtualization]);
 

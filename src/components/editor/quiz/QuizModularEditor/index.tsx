@@ -11,6 +11,7 @@ import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Eye, Edit3, Play, Save, GripVertical, Download, Upload, Undo2, Redo2 } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult } from '@/lib/utils/templateValidation';
@@ -25,7 +26,8 @@ import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 // Autosave com lock e coalescing
 import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
 // Autosave feedback visual
-import { AutosaveIndicator, useAutosaveIndicator } from '../AutosaveIndicator';
+import { AutosaveIndicator } from '../AutosaveIndicator';
+import { useAutosaveIndicator } from '../AutosaveIndicator.hook';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
 import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 
@@ -168,6 +170,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         };
     }, [props.funnelId]);
 
+    useEffect(() => {
+        try {
+            const fid = unifiedState.currentFunnel?.id || null;
+            templateService.setActiveFunnel?.(fid);
+        } catch (error) {
+            appLogger.warn('[QuizModularEditor] Erro ao sincronizar funnel ativo do estado unificado:', { data: [error] });
+        }
+    }, [unifiedState.currentFunnel?.id]);
+
     // 🆕 G20 & G28 FIX: Prefetch inteligente de steps adjacentes
     useStepPrefetch({
         currentStepId: currentStepKey,
@@ -179,10 +190,55 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     });
 
     // Local UI state
-    const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>('edit');
-    const [previewMode, setPreviewMode] = useState<'live' | 'production'>('live');
+    const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>(() => {
+        try {
+            const v = localStorage.getItem('qm-editor:canvas-mode');
+            return v === 'preview' ? 'preview' : 'edit';
+        } catch { return 'edit'; }
+    });
+    const [previewMode, setPreviewMode] = useState<'live' | 'production'>(() => {
+        try {
+            const v = localStorage.getItem('qm-editor:preview-mode');
+            return v === 'production' ? 'production' : 'live';
+        } catch { return 'live'; }
+    });
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [templateLoadError, setTemplateLoadError] = useState(false);
+
+    useEffect(() => {
+        try { localStorage.setItem('qm-editor:canvas-mode', canvasMode); } catch {}
+    }, [canvasMode]);
+    useEffect(() => {
+        try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch {}
+    }, [previewMode]);
+
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if (!e.ctrlKey || !e.shiftKey) return;
+            const k = String(e.key || '').toLowerCase();
+            if (k === 'p') {
+                e.preventDefault();
+                if (canvasMode === 'edit') {
+                    setCanvasMode('preview');
+                    setPreviewMode('live');
+                } else {
+                    setCanvasMode('edit');
+                }
+            } else if (k === 'l') {
+                if (canvasMode === 'preview') {
+                    e.preventDefault();
+                    setPreviewMode('live');
+                }
+            } else if (k === 'o') {
+                if (canvasMode === 'preview') {
+                    e.preventDefault();
+                    setPreviewMode('production');
+                }
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [canvasMode]);
 
     // 🆕 G17 FIX: Memoizar callbacks para evitar re-renders em componentes filhos
     const handleSelectStep = useCallback(async (key: string) => {
@@ -745,6 +801,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Publish funnel
     const handlePublish = useCallback(async () => {
         try {
+            if (!unifiedState.currentFunnel) {
+                const created = await unified.createFunnel('Meu Quiz');
+                if (!created?.id) {
+                    showToast({ type: 'error', title: 'Erro', message: 'Falha ao criar funil para publicar' });
+                    return;
+                }
+            }
             // 🔍 G5 FIX: Validação de integridade antes de publicar
             if (loadedTemplate) {
                 appLogger.info('[G5] Executando validação de integridade antes da publicação');
@@ -1044,49 +1107,39 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                         <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
 
-                        <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
-                            <Button
+                        <div className="flex items-center gap-2">
+                            <ToggleGroup
+                                type="single"
+                                value={canvasMode === 'edit' ? 'edit' : (previewMode === 'production' ? 'preview:production' : 'preview:editor')}
+                                onValueChange={(val) => {
+                                    if (!val) return;
+                                    if (val === 'edit') {
+                                        setCanvasMode('edit');
+                                    } else if (val === 'preview:editor') {
+                                        setCanvasMode('preview');
+                                        setPreviewMode('live');
+                                    } else if (val === 'preview:production') {
+                                        setCanvasMode('preview');
+                                        setPreviewMode('production');
+                                    }
+                                }}
                                 size="sm"
-                                variant={canvasMode === 'edit' ? 'default' : 'ghost'}
-                                onClick={() => setCanvasMode('edit')}
-                                className="h-7 px-3"
+                                aria-label="Modo do canvas"
                             >
-                                <Edit3 className="w-3 h-3 mr-1" />
-                                Edição
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant={canvasMode === 'preview' ? 'default' : 'ghost'}
-                                onClick={() => setCanvasMode('preview')}
-                                className="h-7 px-3"
-                            >
-                                <Eye className="w-3 h-3 mr-1" />
-                                Preview
-                            </Button>
-                        </div>
-
-                        {canvasMode === 'preview' && (
-                            <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
-                                <Button
-                                    size="sm"
-                                    variant={previewMode === 'live' ? 'default' : 'ghost'}
-                                    onClick={() => setPreviewMode('live')}
-                                    className="h-7 px-3"
-                                >
-                                    <Play className="w-3 h-3 mr-1" />
-                                    Live
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant={previewMode === 'production' ? 'default' : 'ghost'}
-                                    onClick={() => setPreviewMode('production')}
-                                    className="h-7 px-3"
-                                >
+                                <ToggleGroupItem value="edit" title="Editar no Canvas">
+                                    <Edit3 className="w-3 h-3 mr-1" />
+                                    Editar
+                                </ToggleGroupItem>
+                                <ToggleGroupItem value="preview:editor" title="Visualizar dados do editor">
                                     <Eye className="w-3 h-3 mr-1" />
-                                    Produção
-                                </Button>
-                            </div>
-                        )}
+                                    Visualizar (Editor)
+                                </ToggleGroupItem>
+                                <ToggleGroupItem value="preview:production" title="Visualizar dados publicados">
+                                    <Play className="w-3 h-3 mr-1" />
+                                    Visualizar (Publicado)
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        </div>
 
                         {enableAutoSave && (
                             <AutosaveIndicator
@@ -1234,7 +1287,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         blocks={blocks}
                                         isVisible={true}
                                         className="h-full"
-                                        previewMode={previewMode} // 🔄 G42 FIX: Passar modo para controlar fonte de dados
+                                        previewMode={previewMode}
+                                        onStepChange={(sid) => {
+                                            const match = String(sid || '').match(/step-(\d{1,2})/i);
+                                            const num = match ? parseInt(match[1], 10) : safeCurrentStep;
+                                            if (Number.isFinite(num) && num !== safeCurrentStep) setCurrentStep(num);
+                                        }}
                                     />
                                 )}
                             </div>

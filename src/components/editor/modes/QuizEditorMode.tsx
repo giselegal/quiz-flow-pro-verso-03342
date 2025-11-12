@@ -11,15 +11,16 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-  Target, Brain, Eye, Settings, BarChart3,
-  Shuffle, Play, Pause, RotateCcw, Save,
-} from 'lucide-react';
+import { Target, Eye, Settings, BarChart3, Save } from 'lucide-react';
 
 // Hooks
 import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
 import { useQuizConfig } from '@/hooks/useQuizConfig';
 import { useTemplateLoader } from '@/hooks/useTemplateLoader';
+import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
+import { useEditorStore, useCurrentStepBlocks } from '@/contexts/store/editorStore';
+import { UnifiedStepRenderer } from '@/components/editor-bridge/unified';
+import { useEditor } from '@/hooks/useEditor';
 
 // Componentes especializados
 import QuizPropertiesPanel from '../panels/QuizPropertiesPanel';
@@ -56,6 +57,11 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const navigation = useUnifiedStepNavigation();
   const quizConfig = useQuizConfig();
   const templateLoader = useTemplateLoader();
+  const { sendSteps } = useFunnelLivePreview(funnelId);
+  const liveWinRef = React.useRef<Window | null>(null);
+  const selectedBlockId = useEditorStore(s => s.selectedBlockId);
+  const editor = useEditor({ optional: true } as any);
+  const liveBlocks = useCurrentStepBlocks();
 
   // Dados do quiz
   const {
@@ -104,6 +110,41 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
     onPreview?.();
   }, [onPreview]);
 
+  const handleOpenLivePreview = useCallback(() => {
+    const url = funnelId ? `/preview/${funnelId}` : '/preview?slug=quiz-estilo';
+    try {
+      const win = window.open(url, '_blank', 'noopener,noreferrer');
+      liveWinRef.current = win || null;
+      templateLoader.loadAllTemplates().then(map => {
+        try {
+          (sendSteps as any)(map);
+          win?.postMessage({ type: 'steps', steps: map }, '*');
+        } catch { /* noop */ }
+      }).catch(() => { /* noop */ });
+    } catch {}
+  }, [funnelId]);
+
+  useEffect(() => {
+    const stepId = `step-${String(currentStep).padStart(2, '0')}`;
+    try {
+      liveWinRef.current?.postMessage({ type: 'step-change', stepId }, '*');
+    } catch { /* noop */ }
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (!selectedBlockId) return;
+    try {
+      liveWinRef.current?.postMessage({ type: 'selection', blockId: selectedBlockId }, '*');
+    } catch { /* noop */ }
+  }, [selectedBlockId]);
+
+  const handleOpenProductionPreview = useCallback(() => {
+    const url = funnelId ? `/preview?slug=quiz-estilo&funnel=${encodeURIComponent(funnelId)}` : '/preview?slug=quiz-estilo';
+    try {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch {}
+  }, [funnelId]);
+
   const handleRealExperienceToggle = useCallback(() => {
     setState(prev => ({
       ...prev,
@@ -128,6 +169,27 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
     return 'Padrão';
   }, []);
 
+  const getStepTypeKey = useCallback((stepNum: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'result' | 'offer' => {
+    if (stepNum === 1) return 'intro';
+    if (stepNum >= 2 && stepNum <= 11) return 'question';
+    if (stepNum === 12 || stepNum === 19) return 'transition';
+    if (stepNum >= 13 && stepNum <= 18) return 'strategic-question';
+    if (stepNum === 20) return 'result';
+    if (stepNum === 21) return 'offer';
+    return 'question';
+  }, []);
+
+  const toBlockComponents = useCallback((blocks: any[]): any[] => {
+    return (blocks || []).map(b => ({
+      id: b?.id,
+      type: String(b?.type ?? ''),
+      order: typeof b?.order === 'number' ? b.order : 0,
+      parentId: b?.parentId ?? null,
+      properties: b?.properties ?? {},
+      content: b?.content ?? {},
+    }));
+  }, []);
+
   return (
     <div className={`quiz-editor-mode flex flex-col h-full ${className}`}>
       {/* Header especializado */}
@@ -147,21 +209,20 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
 
           <div className="flex items-center gap-2">
             <Button
-              variant={state.isRealExperience ? 'default' : 'outline'}
+              variant="outline"
               size="sm"
-              onClick={handleRealExperienceToggle}
-            >
-              <Play className="w-4 h-4 mr-2" />
-              {state.isRealExperience ? 'Real ✓' : 'Real'}
-            </Button>
-
-            <Button
-              variant={state.isPreviewMode ? 'default' : 'outline'}
-              size="sm"
-              onClick={handlePreviewToggle}
+              onClick={handleOpenProductionPreview}
             >
               <Eye className="w-4 h-4 mr-2" />
               Preview
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleOpenLivePreview}
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              Live
             </Button>
 
             <Separator orientation="vertical" className="h-4" />
@@ -342,22 +403,33 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
             </TabsContent>
 
             <TabsContent value="preview" className="h-full m-0 p-6">
-              <Card>
+              <Card className="h-full">
                 <CardHeader>
                   <CardTitle>Preview do Quiz</CardTitle>
                   <CardDescription>
-                    Visualização em tempo real do quiz funcional
+                    Visualização em tempo real alinhada ao modo edição
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Eye className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium">Preview Interativo</p>
-                    <p className="text-sm">
-                      Preview funcional será integrado na Fase 2
-                    </p>
-                  </div>
-                </CardContent>
+                    <CardContent className="h-[calc(100%-88px)]">
+                      <div className="h-full">
+                        {(() => {
+                          const stepId = `step-${String(currentStep).padStart(2, '0')}`;
+                          const rawBlocks = (liveBlocks as any) || (editor?.computed?.currentBlocks || []);
+                          const blocks = toBlockComponents(rawBlocks);
+                          const stepType = getStepTypeKey(currentStep);
+                          const step = { id: stepId, type: stepType, order: currentStep, blocks } as any;
+                          return (
+                            <UnifiedStepRenderer
+                              step={step}
+                              mode="preview"
+                              productionParityInEdit
+                              autoAdvanceInEdit
+                              sessionData={{ selectedBlockId }}
+                            />
+                          );
+                        })()}
+                      </div>
+                    </CardContent>
               </Card>
             </TabsContent>
           </div>

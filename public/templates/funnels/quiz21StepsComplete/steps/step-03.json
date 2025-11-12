@@ -1,105 +1,149 @@
 {
+  "stepId": "step-03",
+  "stepNumber": 3,
+  "type": "question",
+  "nextStep": null,
   "templateVersion": "3.2",
-  "metadata": {
-    "id": "step-03",
-    "name": "Pergunta (Blocos)",
-    "description": "Pergunta de múltipla escolha com grid de opções",
-    "category": "question",
-    "tags": [
-      "question",
-      "options"
-    ]
-  },
   "blocks": [
     {
-      "id": "q-03",
-      "type": "question-hero",
+      "id": "progress-bar-step-03",
+      "type": "question-progress",
+      "order": 0,
+      "parentId": null,
       "properties": {
-        "questionNumber": "2 de 10",
-        "questionText": "RESUMA A SUA PERSONALIDADE:",
-        "requiredSelections": 3,
-        "options": [
-          {
-            "id": "natural",
-            "text": "Informal, espontânea, alegre, essencialista"
-          },
-          {
-            "id": "classico",
-            "text": "Conservadora, séria, organizada"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "Informada, ativa, prática"
-          },
-          {
-            "id": "elegante",
-            "text": "Exigente, sofisticada, seletiva"
-          },
-          {
-            "id": "romantico",
-            "text": "Feminina, meiga, delicada, sensível"
-          },
-          {
-            "id": "sexy",
-            "text": "Glamorosa, vaidosa, sensual"
-          },
-          {
-            "id": "dramatico",
-            "text": "Cosmopolita, moderna e audaciosa"
-          },
-          {
-            "id": "criativo",
-            "text": "Exótica, aventureira, livre"
-          }
-        ]
+        "padding": 8
       },
       "content": {
-        "questionNumber": "2 de 10",
-        "questionText": "RESUMA A SUA PERSONALIDADE:",
-        "requiredSelections": 3,
+        "stepNumber": 3,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      }
+    },
+    {
+      "id": "step-03-title",
+      "type": "heading-inline",
+      "order": 1,
+      "parentId": null,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300,
+        "_originalType": "question-title"
+      },
+      "content": {
+        "text": "Pergunta 2 de 10"
+      }
+    },
+    {
+      "id": "options-grid-03",
+      "type": "options-grid",
+      "order": 2,
+      "parentId": null,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
         "options": [
           {
             "id": "natural",
-            "text": "Informal, espontânea, alegre, essencialista"
+            "text": "Informal, espontânea, alegre, essencialista",
+            "value": "natural"
           },
           {
             "id": "classico",
-            "text": "Conservadora, séria, organizada"
+            "text": "Conservadora, séria, organizada",
+            "value": "classico"
           },
           {
             "id": "contemporaneo",
-            "text": "Informada, ativa, prática"
+            "text": "Informada, ativa, prática",
+            "value": "contemporaneo"
           },
           {
             "id": "elegante",
-            "text": "Exigente, sofisticada, seletiva"
+            "text": "Exigente, sofisticada, seletiva",
+            "value": "elegante"
           },
           {
             "id": "romantico",
-            "text": "Feminina, meiga, delicada, sensível"
+            "text": "Feminina, meiga, delicada, sensível",
+            "value": "romantico"
           },
           {
             "id": "sexy",
-            "text": "Glamorosa, vaidosa, sensual"
+            "text": "Glamorosa, vaidosa, sensual",
+            "value": "sexy"
           },
           {
             "id": "dramatico",
-            "text": "Cosmopolita, moderna e audaciosa"
+            "text": "Cosmopolita, moderna e audaciosa",
+            "value": "dramatico"
           },
           {
             "id": "criativo",
-            "text": "Exótica, aventureira, livre"
+            "text": "Exótica, aventureira, livre",
+            "value": "criativo"
           }
-        ]
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      }
+    },
+    {
+      "id": "navigation-step-03",
+      "type": "question-navigation",
+      "order": 3,
+      "parentId": null,
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
       }
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "option_selected",
-      "step_completed"
-    ],
-    "trackingId": "step-03-blocks"
+  "metadata": {
+    "id": "step-03",
+    "name": "Etapa step-03 - Question",
+    "description": "Etapa step-03 do Quiz de Estilo (question) — Nome pessoal / entrada de texto",
+    "category": "question",
+    "createdAt": "2025-10-20T00:00:00Z",
+    "updatedAt": "2025-10-20T00:00:00Z",
+    "author": "Quiz Flow Builder",
+    "version": "3.0.1",
+    "scoring": {
+      "weight": 1,
+      "timeLimit": 30,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.452Z",
+    "generated": "2025-11-12T13:09:32.015Z",
+    "source": "quiz21-complete.json"
   }
 }

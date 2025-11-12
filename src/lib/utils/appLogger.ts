@@ -49,10 +49,10 @@ class AppLogger {
 
   constructor(options: LoggerOptions = {}) {
     this.options = {
-      minLevel: this.detectEnvironment() === 'production' ? 'info' : 'debug',
-      enableConsole: this.detectEnvironment() !== 'production',
-      enableRemote: this.detectEnvironment() === 'production',
-      remoteEndpoint: '/api/logs',
+      minLevel: ((import.meta as any)?.env?.PROD ? 'info' : 'debug'),
+      enableConsole: !!((import.meta as any)?.env?.DEV) || ((import.meta as any)?.env?.VITE_DEBUG_LOGS === 'true'),
+      enableRemote: !!((import.meta as any)?.env?.PROD) && ((import.meta as any)?.env?.VITE_DISABLE_TELEMETRY !== 'true'),
+      remoteEndpoint: ((import.meta as any)?.env?.VITE_LOG_REMOTE_ENDPOINT || '/api/logs'),
       environment: this.detectEnvironment(),
       ...options,
     };

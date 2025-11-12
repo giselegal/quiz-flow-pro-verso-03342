@@ -1,58 +1,76 @@
 {
+  "stepId": "step-21",
+  "stepNumber": 21,
+  "type": "offer",
+  "nextStep": null,
   "templateVersion": "3.2",
-  "metadata": {
-    "id": "step-21",
-    "name": "Oferta (Blocos)",
-    "description": "Página de oferta final",
-    "category": "offer",
-    "tags": [
-      "offer",
-      "checkout"
-    ]
-  },
   "blocks": [
     {
-      "id": "offer-core-21",
-      "type": "cta-inline",
+      "id": "offer-hero-21",
+      "type": "offer-hero",
+      "order": 0,
+      "parentId": null,
       "properties": {
-        "title": "5 Passos – Vista-se de Você",
-        "description": "Método completo para alinhar sua imagem com sua essência e construir um guarda-roupa estratégico.",
-        "ctaLabel": "Quero começar agora",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "accent": "#B89B7A"
+        "type": "scale",
+        "duration": 500
       },
       "content": {
-        "title": "5 Passos – Vista-se de Você",
-        "ctaLabel": "Quero começar agora",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "accent": "#B89B7A"
+        "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
+        "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
+        "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
+        "urgencyMessage": "Oferta por tempo limitado!"
       }
     },
     {
-      "id": "offer-urg-21",
-      "type": "urgency-timer-inline",
-      "content": {
-        "deadlineISO": "2099-01-01T00:00:00.000Z"
-      },
+      "id": "pricing-21",
+      "type": "pricing-inline",
+      "order": 1,
+      "parentId": null,
       "properties": {
-        "headline": "Condições especiais por tempo limitado:"
-      }
-    },
-    {
-      "id": "offer-test-21",
-      "type": "testimonials",
+        "type": "slideUp",
+        "duration": 500,
+        "_originalType": "pricing"
+      },
       "content": {
-        "quote": "Encontrei meu estilo e economizei tempo e dinheiro!",
-        "author": "Aluna do programa"
+        "pricing": {
+          "originalPrice": 447,
+          "salePrice": 97,
+          "currency": "R$",
+          "installments": {
+            "count": 8,
+            "value": 14.11
+          }
+        },
+        "title": "Investimento que Transforma",
+        "ctaText": "Quero Transformar Meu Estilo Agora!",
+        "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj"
       }
     }
   ],
-  "analytics": {
-    "events": [
-      "page_view",
-      "offer_viewed",
-      "cta_primary_click"
+  "metadata": {
+    "id": "step-21-offer-v3",
+    "name": "Oferta Final - 5 Passos Vista-se de Você",
+    "description": "Página de oferta final do produto após resultado do quiz",
+    "category": "offer",
+    "tags": [
+      "quiz",
+      "offer",
+      "conversion",
+      "product",
+      "cta"
     ],
-    "trackingId": "step-21-blocks"
+    "createdAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0",
+    "scoring": {
+      "weight": 0,
+      "timeLimit": 0,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": false
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.457Z",
+    "generated": "2025-11-12T13:09:32.165Z",
+    "source": "quiz21-complete.json"
   }
 }

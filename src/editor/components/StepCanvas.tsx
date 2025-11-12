@@ -138,8 +138,8 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
         }
         const el = containerRef.current;
         if (!el) return;
-        const EDGE = 80; // px margem para iniciar scroll
-        const MAX_SPEED = 18; // px por frame (~ 300px/s)
+        const EDGE = 80;
+        const MAX_SPEED = 12;
 
         const stepScroll = () => {
             const rect = el.getBoundingClientRect();

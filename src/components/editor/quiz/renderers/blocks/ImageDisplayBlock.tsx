@@ -31,7 +31,17 @@ const ImageDisplayBlock: React.FC<ImageDisplayBlockProps> = ({ block, isSelected
                         {src ? (
                             <img src={src} alt={alt} className="w-full h-full object-contain" />
                         ) : (
-                            <div className="w-full h-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs">Imagem</div>
+                            <div className="w-full h-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs">
+                                <div className="flex flex-col items-center gap-2">
+                                    <span>Imagem</span>
+                                    <button
+                                        onClick={() => onOpenProperties?.(block.id)}
+                                        className="px-2 py-1 text-[10px] bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    >
+                                        Escolher imagem
+                                    </button>
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>

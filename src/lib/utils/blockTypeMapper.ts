@@ -84,6 +84,7 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
   'question-hero': 'quiz-question-header',
   'question-title': 'heading-inline',
   'transition-content': 'text-inline',
+  'progress-bars': 'question-progress',
   
   // ====== LEGACY V2 SECTIONS → V3 ATOMIC ======
   'HeroSection': 'result-congrats',

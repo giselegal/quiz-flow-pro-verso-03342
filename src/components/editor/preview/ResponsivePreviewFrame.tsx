@@ -65,6 +65,7 @@ export function ResponsivePreviewFrame({
               quizContent={quizContent}
               currentStepId={currentStepId || undefined}
               onStepChange={onStepChange}
+              darkMode={isDarkMode}
               className="w-full h-full"
             />
           </div>

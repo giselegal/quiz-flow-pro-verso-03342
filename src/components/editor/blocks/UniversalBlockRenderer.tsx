@@ -235,8 +235,19 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   // 🎯 MODO DE OPERAÇÃO: Determinar baseado em isPreviewing (legacy)
   const isEditMode = !isPreviewing;
 
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (isSelected && rootRef.current) {
+      try {
+        rootRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch {}
+    }
+  }, [isSelected]);
+
   return (
     <div
+      ref={rootRef}
       className={cn(
         'universal-block-renderer relative group transition-all duration-200',
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',

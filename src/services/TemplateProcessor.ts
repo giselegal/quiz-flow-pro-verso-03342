@@ -80,20 +80,22 @@ export function processTemplate(
       `✅ Template ${template.metadata.id} processado: ${variablesReplaced} variáveis, ${blocksProcessed} blocos (${processingTime}ms)`
     );
     
-    // Calcular redução de tamanho (estimativa)
-    const originalSize = JSON.stringify(template).length;
-    const processedSize = JSON.stringify(processed).length;
-    const reduction = ((1 - processedSize / originalSize) * 100).toFixed(1);
-    
+    const isDev = Boolean((import.meta as any)?.env?.DEV);
+    const statsBase: any = {
+      variablesReplaced,
+      blocksProcessed,
+    };
+    if (isDev) {
+      const originalSize = JSON.stringify(template).length;
+      const processedSize = JSON.stringify(processed).length;
+      const reduction = ((1 - processedSize / originalSize) * 100).toFixed(1);
+      statsBase.sizeReduction = `${reduction}%`;
+    }
     return {
       success: true,
       template: processed,
       warnings: warnings.length > 0 ? warnings : undefined,
-      stats: {
-        variablesReplaced,
-        blocksProcessed,
-        sizeReduction: `${reduction}%`,
-      },
+      stats: statsBase,
     };
   } catch (error) {
     appLogger.error(`❌ Erro ao processar template ${template.metadata.id}:`, error);
