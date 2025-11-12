@@ -9,7 +9,8 @@
  */
 
 import { useCallback, useMemo, useEffect } from 'react';
-import { useEditorContext } from '@/components/editor/EditorProviderCanonical';
+// Migrado para SuperUnifiedProvider: removendo dependência do provider canônico
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 import { editorMetrics } from '@/lib/utils/editorMetrics';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -44,96 +45,70 @@ export interface UseEditorHistoryReturn extends EditorHistoryState {
  * ```
  */
 export function useEditorHistory(): UseEditorHistoryReturn {
-  const context = useEditorContext();
-  
-  if (!context) {
-    throw new Error('useEditorHistory deve ser usado dentro de EditorProviderCanonical');
-  }
+  const superUnified = useSuperUnified();
 
-  const { history, stepBlocks, updateStepBlocks } = context;
+  // Novo histórico unificado via SuperUnifiedProvider (usa undo/redo internos)
+  const { undo: providerUndo, redo: providerRedo, canUndo: providerCanUndo, canRedo: providerCanRedo } = superUnified;
+
+  // stepBlocks agora é indexado por número; adaptar caso futuro precise
+  const getAllStepBlocksSnapshot = useCallback(() => {
+    return superUnified.state.editor.stepBlocks;
+  }, [superUnified.state.editor.stepBlocks]);
+
+  // Placeholder para compat: tamanho do histórico não exposto diretamente
+  const historySize = 0; // Poderá ser integrado a useUnifiedHistory se necessário
 
   // Estado do histórico
   const historyState: EditorHistoryState = useMemo(() => ({
-    canUndo: history.canUndo,
-    canRedo: history.canRedo,
-    historySize: history.size,
-    currentIndex: -1, // HistoryService não expõe currentIndex publicamente
-  }), [history]);
+    canUndo: providerCanUndo,
+    canRedo: providerCanRedo,
+    historySize,
+    currentIndex: -1,
+  }), [providerCanUndo, providerCanRedo, historySize]);
 
   /**
    * Desfazer última ação
    */
   const undo = useCallback(() => {
-    if (!history.canUndo) {
+    if (!providerCanUndo) {
       appLogger.warn('[useEditorHistory] Não há ações para desfazer');
       return;
     }
-
     const startTime = performance.now();
-    const previousState = history.undo();
-    
-    if (previousState) {
-      // Atualizar estado do editor
-      updateStepBlocks(previousState.stepBlocks);
-      
-      // Track telemetria
-      const duration = performance.now() - startTime;
-      editorMetrics.trackUndoRedo('undo', {
-        historySize: history.size,
-        durationMs: duration,
-      });
-
-      if (import.meta.env.DEV) {
-        appLogger.info('↩️ [useEditorHistory] Undo executado', { data: [{
-                    duration: `${duration.toFixed(2)}ms`,
-                    historySize: history.size,
-                  }] });
-      }
+    providerUndo();
+    const duration = performance.now() - startTime;
+    editorMetrics.trackUndoRedo('undo', { historySize, durationMs: duration });
+    if (import.meta.env.DEV) {
+      appLogger.info('↩️ [useEditorHistory] Undo executado', { data: [{ duration: `${duration.toFixed(2)}ms`, historySize }] });
     }
-  }, [history, updateStepBlocks]);
+  }, [providerCanUndo, providerUndo, historySize]);
 
   /**
    * Refazer última ação desfeita
    */
   const redo = useCallback(() => {
-    if (!history.canRedo) {
+    if (!providerCanRedo) {
       appLogger.warn('[useEditorHistory] Não há ações para refazer');
       return;
     }
-
     const startTime = performance.now();
-    const nextState = history.redo();
-    
-    if (nextState) {
-      // Atualizar estado do editor
-      updateStepBlocks(nextState.stepBlocks);
-      
-      // Track telemetria
-      const duration = performance.now() - startTime;
-      editorMetrics.trackUndoRedo('redo', {
-        historySize: history.size,
-        durationMs: duration,
-      });
-
-      if (import.meta.env.DEV) {
-        appLogger.info('↪️ [useEditorHistory] Redo executado', { data: [{
-                    duration: `${duration.toFixed(2)}ms`,
-                    historySize: history.size,
-                  }] });
-      }
+    providerRedo();
+    const duration = performance.now() - startTime;
+    editorMetrics.trackUndoRedo('redo', { historySize, durationMs: duration });
+    if (import.meta.env.DEV) {
+      appLogger.info('↪️ [useEditorHistory] Redo executado', { data: [{ duration: `${duration.toFixed(2)}ms`, historySize }] });
     }
-  }, [history, updateStepBlocks]);
+  }, [providerCanRedo, providerRedo, historySize]);
 
   /**
    * Limpar todo o histórico
    */
   const clear = useCallback(() => {
-    history.clear();
-    
+    // Sem API nativa de clear no provider; placeholder para futura integração
     if (import.meta.env.DEV) {
-      appLogger.info('🗑️ [useEditorHistory] Histórico limpo');
+      appLogger.info('🗑️ [useEditorHistory] Clear não implementado em SuperUnifiedProvider');
     }
-  }, [history]);
+  }, []);
 
   /**
    * Keyboard shortcuts (Ctrl+Z, Ctrl+Y, Ctrl+Shift+Z)
