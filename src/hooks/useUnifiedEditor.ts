@@ -17,7 +17,8 @@
  */
 
 import { useContext } from 'react';
-import { EditorContextValue } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar tipos do hook unificado em vez do provider canônico deprecated
+import type { EditorContextValueMigrated as EditorContextValue } from '@/hooks/useEditor';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================

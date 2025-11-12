@@ -230,7 +230,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
               variant="secondary"
               size="sm"
               style={{ color: '#432818' }}
-              onClick={e => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 onDelete();
               }}
