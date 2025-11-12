@@ -32,8 +32,12 @@ import {
 } from '@/hooks/useQuizOptimizations';
 
 // Import lazy para evitar import estático de editor/* no runtime de produção
-// Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
-const EditorProviderLazy = React.lazy(() => import('@/contexts/providers/SuperUnifiedProvider').then(m => ({ default: m.SuperUnifiedProvider })));
+// ✅ Migrado: SuperUnifiedProvider (provider unificado atual)
+const EditorProviderLazy = React.lazy(() =>
+    import('@/contexts/providers/SuperUnifiedProvider').then(m => ({
+        default: m.SuperUnifiedProvider
+    }))
+);
 
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
