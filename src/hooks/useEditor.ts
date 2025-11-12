@@ -58,6 +58,13 @@ export interface EditorContextValueMigrated {
     updateBlock: (stepKey: string, blockId: string, updates: Partial<Block>) => Promise<void>;
     deleteBlock: (id: string) => void; // alias simples, sem stepKey
     ensureStepLoaded: (stepKey: string) => Promise<void>;
+    // Métodos legados para undo/redo/export/import
+    undo: () => void;
+    redo: () => void;
+    canUndo: boolean;
+    canRedo: boolean;
+    exportJSON: () => string;
+    importJSON: (json: string) => void;
   };
   computed: {
     currentBlocks: Block[];
@@ -141,6 +148,7 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
       currentStep: unified.state.editor.currentStep,
       selectedBlockId: unified.state.editor.selectedBlockId,
       stepBlocks: unified.state.editor.stepBlocks as Record<number, Block[]>,
+      activeStageId: `step-${String(unified.state.editor.currentStep).padStart(2, '0')}`, // Compat: activeStageId
       addBlock,
       updateBlock,
       removeBlock,
@@ -248,6 +256,23 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
         },
         deleteBlock: (id: string) => removeBlock(id),
         ensureStepLoaded: async () => { /* noop */ },
+        // Undo/redo e export/import também em blockActions para compatibilidade total
+        undo: () => unified.undo(),
+        redo: () => unified.redo(),
+        canUndo: unified.canUndo,
+        canRedo: unified.canRedo,
+        exportJSON: () => JSON.stringify(unified.state.editor.stepBlocks),
+        importJSON: (json: string) => { 
+          try { 
+            const parsed = JSON.parse(json);
+            if (parsed.stepBlocks) {
+              Object.entries(parsed.stepBlocks).forEach(([stepKey, blocks]) => {
+                const stepIndex = typeof stepKey === 'number' ? stepKey : stepKeyToIndex(stepKey);
+                unified.reorderBlocks(stepIndex, blocks as Block[]);
+              });
+            }
+          } catch(e) { /* noop */ } 
+        },
       },
     };
     return migrated;
