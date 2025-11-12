@@ -32,7 +32,8 @@ import {
 } from '@/hooks/useQuizOptimizations';
 
 // Import lazy para evitar import estático de editor/* no runtime de produção
-const EditorProviderCanonicalLazy = React.lazy(() => import('@/components/editor/EditorProviderCanonical').then(m => ({ default: m.EditorProviderCanonical })));
+// Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
+const EditorProviderLazy = React.lazy(() => import('@/contexts/providers/SuperUnifiedProvider').then(m => ({ default: m.SuperUnifiedProvider })));
 
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
@@ -1044,13 +1045,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         </div>
     );
 
-    // Permitir edição inline: envolver com EditorProviderCanonical quando editorMode=true (lazy, sem import estático)
+    // Permitir edição inline: envolver com provider quando editorMode=true (lazy, sem import estático)
     if (editorMode) {
         return (
             <Suspense fallback={AppContent}>
-                <EditorProviderCanonicalLazy>
+                <EditorProviderLazy funnelId={funnelId}>
                     {AppContent}
-                </EditorProviderCanonicalLazy>
+                </EditorProviderLazy>
             </Suspense>
         );
     }

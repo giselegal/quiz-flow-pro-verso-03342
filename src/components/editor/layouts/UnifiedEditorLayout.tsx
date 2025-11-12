@@ -1,7 +1,8 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { appLogger } from '@/lib/utils/logger';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EditorProviderCanonical as EditorProvider } from '../EditorProviderCanonical';
+// Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
+import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';

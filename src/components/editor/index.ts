@@ -2,15 +2,15 @@
  * Editor Components Index
  * Exportações centralizadas dos componentes do editor
  * 
- * 🎯 FASE 1.2 - CONSOLIDAÇÃO DE PROVIDERS CONCLUÍDA:
- * ✅ EditorProviderCanonical (OFFICIAL - único provider recomendado)
- * ⚠️ EditorProviderUnified (DEPRECATED - alias de compatibilidade)
+ * 🎯 FASE 2.0 - MIGRAÇÃO PARA SUPERUNIFIEDPROVIDER CONCLUÍDA:
+ * ✅ SuperUnifiedProvider (OFFICIAL - único provider recomendado)
+ * ❌ EditorProviderCanonical - REMOVIDO (migrado para SuperUnifiedProvider)
  * ❌ OptimizedEditorProvider - REMOVIDO
  * ❌ PureBuilderProvider - REMOVIDO
  */
 
 // ============================================================================
-// PROVIDER CANÔNICO OFICIAL
+// PROVIDER OFICIAL
 // ============================================================================
 
 // ✅ OFFICIAL - Provider único recomendado (use este!)
@@ -26,13 +26,13 @@ import {
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ⚠️ DEPRECATED - Aliases de compatibilidade (serão removidos)
-/** @deprecated Use EditorProviderCanonical */
-export { EditorProviderCanonical as EditorProviderUnified } from './EditorProviderCanonical';
+/** @deprecated Use SuperUnifiedProvider from @/contexts/providers/SuperUnifiedProvider */
+export { SuperUnifiedProvider as EditorProviderUnified } from '@/contexts/providers/SuperUnifiedProvider';
 
-/** @deprecated Use useEditor from EditorProviderCanonical */
-export { useEditor as useEditorOptional } from './EditorProviderCanonical';
+/** @deprecated Use useEditor from @/hooks/useEditor */
+export { useEditor as useEditorOptional } from '@/hooks/useEditor';
 
-// ❌ REMOVIDO: MigrationEditorProvider (use EditorProviderCanonical diretamente)
+// ❌ REMOVIDO: EditorProviderCanonical - Use SuperUnifiedProvider
 
 // 🆕 FASE 3: Compatibility hooks
 export { usePureBuilder, usePureBuilderCompat } from '@/hooks/usePureBuilderCompat';
