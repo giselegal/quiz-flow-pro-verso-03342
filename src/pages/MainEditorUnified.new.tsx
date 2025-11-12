@@ -78,9 +78,7 @@ const MainEditorUnified: React.FC = () => {
                 }}
             >
                 <EditorProvider
-                    enableSupabase={!!realFunnelId} // Ativar Supabase apenas para funis reais
                     funnelId={funnelId}
-                    quizId={funnelId || templateId || 'local-funnel'}
                     storageKey={`editor-unified-${funnelId || templateId || 'new'}`}
                 >
                     {sanitizedParams.funnelId ? (

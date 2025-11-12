@@ -16,11 +16,7 @@ import { Loader2 } from 'lucide-react';
 import { LazyAreaChart } from '@/components/charts/LazyCharts';
 import { appLogger } from '@/lib/utils/appLogger';
 
-const LazyModernUnifiedEditor = lazy(() =>
-    import('@/pages/editor/ModernUnifiedEditor').then(module => ({
-        default: module.default,
-    })),
-);
+// @deprecated ModernUnifiedEditor não existe. Componente removido.
 
 // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
 const LazyEditorProvider = lazy(() =>
@@ -97,10 +93,9 @@ export const OptimizedAreaChart = (props: any) => (
     </Suspense>
 );
 
-export const OptimizedModernUnifiedEditor = (props: any) => (
-    <Suspense fallback={<EditorSkeleton />}>
-        <LazyModernUnifiedEditor {...props} />
-    </Suspense>
+/** @deprecated OptimizedModernUnifiedEditor - componente removido */
+export const OptimizedModernUnifiedEditor = (_props: any) => (
+    <div>ModernUnifiedEditor removido</div>
 );
 
 export const OptimizedEditorProvider = ({ children, ...props }: any) => (
