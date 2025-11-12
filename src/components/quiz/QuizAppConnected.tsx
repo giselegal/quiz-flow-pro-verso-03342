@@ -52,6 +52,8 @@ import {
 } from '@/components/quiz-modular';
 import { appLogger } from '@/lib/utils/appLogger';
 import { useBlockRegistry } from '@/core/runtime/quiz/blocks/BlockRegistry';
+// ✅ FASE 4: Suporte a variáveis dinâmicas v3.2
+import { supportsDynamicVariables } from '@/lib/utils/versionHelpers';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
@@ -106,6 +108,27 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             });
         } else {
             appLogger.info('⚠️ Registry vazio ou ausente - usando fallback');
+        }
+    }
+
+    // ✅ FASE 4: Processar templates v3.2+ com variáveis dinâmicas
+    if (externalSteps && initialConfig?.templateVersion) {
+        const version = initialConfig.templateVersion;
+        if (supportsDynamicVariables(version)) {
+            appLogger.info(`✨ Template v${version} detectado - variáveis dinâmicas suportadas`, {
+                data: [{
+                    version,
+                    stepCount: Object.keys(externalSteps).length,
+                    hasThemeConfig: !!initialConfig.theme,
+                    hasAssets: !!initialConfig.assets,
+                }]
+            });
+
+            // TODO: Processar variáveis dinâmicas {{theme.*}} e {{assets.*}}
+            // quando processTemplate() estiver disponível
+            // externalSteps = await processTemplate(externalSteps, initialConfig);
+        } else {
+            appLogger.info(`📦 Template v${version} (sem variáveis dinâmicas)`);
         }
     }
 

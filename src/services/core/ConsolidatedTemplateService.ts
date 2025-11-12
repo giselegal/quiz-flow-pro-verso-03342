@@ -127,13 +127,17 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private async loadTemplateInternal(templateId: string): Promise<FullTemplate | null> {
     const loadMethods = [
-      // ✅ Priorizar JSON por etapa como fonte canônica
+      // ✅ PRIORIDADE 1: Templates individuais v3.2 com variáveis dinâmicas
+      () => this.loadFromJSONV32(templateId),
+      // ✅ PRIORIDADE 2: Master JSON v3.0 (fallback legado)
+      () => this.loadFromMasterJSON(templateId),
+      // PRIORIDADE 3: Templates v3.1 em /templates/blocks/
       () => this.loadFromJSON(templateId),
-      // Depois consultar o registry consolidado
+      // PRIORIDADE 4: Registry consolidado
       () => this.loadFromRegistry(templateId),
-      // Por fim, fallback para TypeScript legado se necessário
+      // PRIORIDADE 5: TypeScript legado
       () => this.loadFromTypeScript(templateId),
-      // Último recurso: gerar fallback sintético
+      // PRIORIDADE 6: Gerar fallback sintético (último recurso)
       () => this.generateFallback(templateId),
     ];
 
@@ -551,6 +555,94 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
   private extractStepNumber(templateId: string): number {
     const match = templateId.match(/step-?(\d+)/i);
     return match ? parseInt(match[1], 10) : 1;
+  }
+
+  /**
+   * 🔄 Normalizar ID de step (aceita 1, '1', 'step-1', 'step-01')
+   * Retorna formato padded: 'step-01', 'step-02', etc.
+   */
+  private normalizeStepId(templateId: string): string {
+    // Extrair número
+    const match = templateId.match(/(\d{1,2})/);
+    if (!match) return templateId;
+    
+    const num = parseInt(match[1], 10);
+    return `step-${String(num).padStart(2, '0')}`;
+  }
+
+  /**
+   * 📋 LOAD FROM JSON V3.2 - Prioridade 1: Templates individuais v3.2
+   * Busca: /templates/step-XX-v3.json (com suporte a variáveis dinâmicas)
+   */
+  private async loadFromJSONV32(templateId: string): Promise<FullTemplate | null> {
+    try {
+      const base: string = (import.meta as any)?.env?.BASE_URL || '/';
+      const baseTrimmed = base.replace(/\/$/, '');
+      const stepId = this.normalizeStepId(templateId);
+
+      // Tentar carregar JSON v3.2 individual com variáveis dinâmicas
+      const jsonPath = `${baseTrimmed}/templates/${stepId}-v3.json`;
+      const response = await fetch(jsonPath, { cache: 'no-store' });
+      
+      if (response.ok) {
+        const jsonData = await response.json();
+        
+        // Verificar se é v3.2+ e processar variáveis dinâmicas {{theme.*}}
+        if (jsonData.templateVersion && 
+            (jsonData.templateVersion === '3.2' || jsonData.templateVersion === '3.1')) {
+          appLogger.info(`✨ Template v${jsonData.templateVersion} carregado: ${stepId}`);
+          // TODO: Adicionar processamento de variáveis dinâmicas quando disponível
+          // jsonData = await processTemplate(jsonData);
+        }
+        
+        return this.convertJSONTemplate(jsonData, templateId);
+      }
+
+      return null;
+    } catch (error) {
+      appLogger.warn('JSON v3.2 load failed:', { data: [error] });
+      return null;
+    }
+  }
+
+  /**
+   * 📋 LOAD FROM MASTER JSON - Prioridade 2: Fallback para master JSON v3.0
+   * Busca: /templates/quiz21-complete.json (master file legado)
+   */
+  private async loadFromMasterJSON(templateId: string): Promise<FullTemplate | null> {
+    try {
+      const base: string = (import.meta as any)?.env?.BASE_URL || '/';
+      const baseTrimmed = base.replace(/\/$/, '');
+      const stepId = this.normalizeStepId(templateId);
+
+      // Tentar carregar do master JSON v3.0 (fallback)
+      const masterPath = `${baseTrimmed}/templates/quiz21-complete.json`;
+      const response = await fetch(masterPath, { cache: 'no-store' });
+      
+      if (response.ok) {
+        const masterData = await response.json();
+        
+        // Extrair step específico do master JSON
+        const stepData = masterData.steps?.[stepId];
+        if (stepData) {
+          appLogger.info(`📦 Template carregado do master JSON: ${stepId}`);
+          // Criar estrutura compatível com FullTemplate
+          const template = {
+            ...masterData,
+            steps: masterData.steps ? Object.entries(masterData.steps).map(([id, step]: [string, any]) => ({
+              ...step,
+              stepId: id,
+            })) : []
+          };
+          return this.convertJSONTemplate(template, templateId);
+        }
+      }
+
+      return null;
+    } catch (error) {
+      appLogger.warn('Master JSON load failed:', { data: [error] });
+      return null;
+    }
   }
 
   /**
