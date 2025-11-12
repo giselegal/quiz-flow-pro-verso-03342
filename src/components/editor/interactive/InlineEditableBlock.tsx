@@ -57,7 +57,7 @@ export const InlineEditableBlock: React.FC<InlineEditableBlockProps> = ({
     setTempText('');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSaveText();
@@ -69,13 +69,13 @@ export const InlineEditableBlock: React.FC<InlineEditableBlockProps> = ({
 
   const renderTextEditor = () => {
     const isLongText = tempText.length > 50;
-    
+
     if (isLongText) {
       return (
         <Textarea
           ref={textareaRef}
           value={tempText}
-          onChange={(e) => setTempText(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTempText(e.target.value)}
           onKeyDown={handleKeyDown}
           className="min-h-[80px] resize-none"
           placeholder="Digite o texto..."
@@ -87,7 +87,7 @@ export const InlineEditableBlock: React.FC<InlineEditableBlockProps> = ({
       <Input
         ref={inputRef}
         value={tempText}
-        onChange={(e) => setTempText(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTempText(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Digite o texto..."
         className="w-full"
@@ -139,7 +139,7 @@ export const InlineEditableBlock: React.FC<InlineEditableBlockProps> = ({
           <Button
             size="sm"
             variant="secondary"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               handleStartTextEdit();
             }}
@@ -151,7 +151,7 @@ export const InlineEditableBlock: React.FC<InlineEditableBlockProps> = ({
           <Button
             size="sm"
             variant="secondary"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               setEditMode('properties');
             }}
@@ -163,7 +163,7 @@ export const InlineEditableBlock: React.FC<InlineEditableBlockProps> = ({
           <Button
             size="sm"
             variant="secondary"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               // TODO: Implementar editor de estilo
             }}

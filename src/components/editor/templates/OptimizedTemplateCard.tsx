@@ -137,7 +137,7 @@ export const OptimizedTemplateCard: React.FC<OptimizedTemplateCardProps> = ({
                         <Button
                             size="sm"
                             variant="secondary"
-                            onClick={(e) => {
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
                                 onPreview(template);
                             }}
@@ -148,7 +148,7 @@ export const OptimizedTemplateCard: React.FC<OptimizedTemplateCardProps> = ({
                     )}
                     <Button
                         size="sm"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                             e.stopPropagation();
                             onApply(template);
                         }}
@@ -181,7 +181,7 @@ export const OptimizedTemplateCard: React.FC<OptimizedTemplateCardProps> = ({
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        onClick={(e) => {
+                                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                             e.stopPropagation();
                                             onToggleFavorite(template.id);
                                         }}

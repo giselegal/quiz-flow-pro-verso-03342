@@ -60,7 +60,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
       category: 'Categoria A',
       points: 1,
     };
-    
+
     onChange([...value, newOption]);
     setExpandedIndex(value.length); // Expandir a nova opção
   }, [value, onChange]);
@@ -68,7 +68,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
   const removeOption = useCallback((index: number) => {
     const newOptions = value.filter((_, i) => i !== index);
     onChange(newOptions);
-    
+
     // Ajustar expanded index se necessário
     if (expandedIndex === index) {
       setExpandedIndex(null);
@@ -109,11 +109,11 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
       <div className="space-y-3">
         {value.map((option, index) => {
           const isExpanded = expandedIndex === index;
-          
+
           return (
             <Card key={option.id} className="border-muted">
               {/* Header da opção */}
-              <CardHeader 
+              <CardHeader
                 className="pb-2 cursor-pointer hover:bg-muted/50 transition-colors"
                 onClick={() => toggleExpanded(index)}
               >
@@ -144,7 +144,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       removeOption(index);
                     }}
@@ -167,7 +167,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                       </Label>
                       <Input
                         value={option.text}
-                        onChange={(e) => updateOption(index, 'text', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateOption(index, 'text', e.target.value)}
                         placeholder="Digite o texto da opção..."
                         className="h-8 text-sm"
                       />
@@ -178,7 +178,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                       <Label className="text-xs mb-1">Descrição (opcional)</Label>
                       <Textarea
                         value={option.description || ''}
-                        onChange={(e) => updateOption(index, 'description', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateOption(index, 'description', e.target.value)}
                         placeholder="Descrição adicional..."
                         className="min-h-[60px] text-sm"
                       />
@@ -192,7 +192,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                       </Label>
                       <Input
                         value={option.imageUrl || ''}
-                        onChange={(e) => updateOption(index, 'imageUrl', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateOption(index, 'imageUrl', e.target.value)}
                         placeholder="https://exemplo.com/imagem.jpg"
                         className="h-8 text-sm"
                       />
@@ -202,7 +202,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                             src={option.imageUrl}
                             alt={option.text}
                             className="w-16 h-16 object-cover rounded border"
-                            onError={(e) => {
+                            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                               const target = e.target as HTMLImageElement;
                               target.style.display = 'none';
                             }}
@@ -216,7 +216,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                       <Label className="text-xs mb-1">Valor (ID único)</Label>
                       <Input
                         value={option.value || ''}
-                        onChange={(e) => updateOption(index, 'value', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateOption(index, 'value', e.target.value)}
                         placeholder="valor-unico"
                         className="h-8 text-sm"
                       />
@@ -230,7 +230,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                       </Label>
                       <Input
                         value={option.category || ''}
-                        onChange={(e) => updateOption(index, 'category', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateOption(index, 'category', e.target.value)}
                         placeholder="Categoria A"
                         className="h-8 text-sm"
                       />
@@ -245,7 +245,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
                       <Input
                         type="number"
                         value={option.points || 0}
-                        onChange={(e) => updateOption(index, 'points', parseInt(e.target.value) || 0)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateOption(index, 'points', parseInt(e.target.value) || 0)}
                         min="0"
                         max="100"
                         className="h-8 text-sm"
@@ -271,8 +271,8 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
       {/* Resumo */}
       {value.length > 0 && (
         <div className="text-xs text-muted-foreground border-t pt-2">
-          {value.length} opção{value.length !== 1 ? 'ões' : ''} • 
-          {value.filter(o => o.imageUrl).length} com imagem{value.filter(o => o.imageUrl).length !== 1 ? 's' : ''} • 
+          {value.length} opção{value.length !== 1 ? 'ões' : ''} •
+          {value.filter(o => o.imageUrl).length} com imagem{value.filter(o => o.imageUrl).length !== 1 ? 's' : ''} •
           {value.reduce((sum, o) => sum + (o.points || 0), 0)} pontos total
         </div>
       )}

@@ -474,14 +474,14 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                 type="text"
                 placeholder="Buscar etapas..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <select
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value as any)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value as any)}
               className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">Todos os tipos</option>
@@ -532,7 +532,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                           e.stopPropagation();
                           toggleStepExpanded(step.key);
                         }}

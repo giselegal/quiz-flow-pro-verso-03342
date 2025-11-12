@@ -279,7 +279,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
                       size="sm"
                       variant="ghost"
                       className="text-[#B89B7A] hover:bg-[#B89B7A]/10"
-                      onClick={e => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         handleAddBlock(component.type);
                       }}
