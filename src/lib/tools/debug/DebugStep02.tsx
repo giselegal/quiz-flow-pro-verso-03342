@@ -1,4 +1,4 @@
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+import { useEditor } from '@/hooks/useEditor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import React from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -8,7 +8,7 @@ const DebugStep02: React.FC = () => {
   if (!editorContext) return null;
   const { state, actions } = editorContext;
   const computed = { currentBlocks: [], selectedBlock: { id: 'mock-id' } };
-  const stageActions = { setActiveStage: () => {} };
+  const stageActions = { setActiveStage: () => { } };
   const blockActions = { addBlock: async (type: string) => 'new-id' };
   const activeStageId = 'step-1';
 

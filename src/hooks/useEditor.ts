@@ -48,8 +48,13 @@ export interface EditorContextValueMigrated {
   actions: {
     setCurrentStep: (step: number) => void;
     setSelectedBlockId: (id: string | null) => void;
-    updateBlock: (id: string, updates: Partial<Block>) => void;
-    deleteBlock: (id: string) => void; // alias removeBlock
+    // Assinaturas legadas compatíveis com componentes existentes
+    addBlock: (stepKey: string, block: Block) => Promise<void>;
+    addBlockAtIndex: (stepKey: string, block: Block, index: number) => Promise<void>;
+    removeBlock: (stepKey: string, blockId: string) => Promise<void>;
+    reorderBlocks: (stepKey: string, fromIndex: number, toIndex: number) => Promise<void>;
+    updateBlock: (stepKey: string, blockId: string, updates: Partial<Block>) => Promise<void>;
+    deleteBlock: (id: string) => void; // alias simples, sem stepKey
     ensureStepLoaded: (stepKey: string) => Promise<void>;
   };
   computed: {
@@ -124,6 +129,12 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
       legacyStepBlocks[key] = blocks as Block[];
     });
 
+    const stepKeyToIndex = (key: string): number => {
+      const m = key.match(/step[-_ ]?(\d+)/i);
+      const n = m ? parseInt(m[1], 10) : Number(key);
+      return Number.isFinite(n) && n > 0 ? n : unified.state.editor.currentStep;
+    };
+
     const migrated: EditorContextValueMigrated = {
       currentStep: unified.state.editor.currentStep,
       selectedBlockId: unified.state.editor.selectedBlockId,
@@ -148,7 +159,35 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
       actions: {
         setCurrentStep,
         setSelectedBlockId,
-        updateBlock: (id: string, updates: Partial<Block>) => updateBlock(id, updates),
+        addBlock: async (stepKey: string, block: Block) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          unified.addBlock(stepIndex, block);
+        },
+        addBlockAtIndex: async (stepKey: string, block: Block, index: number) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          const blocks = [...(unified.state.editor.stepBlocks[stepIndex] || [])];
+          const clamped = Math.max(0, Math.min(index, blocks.length));
+          blocks.splice(clamped, 0, block);
+          const normalized = blocks.map((b, i) => ({ ...b, order: i }));
+          unified.reorderBlocks(stepIndex, normalized);
+        },
+        removeBlock: async (stepKey: string, blockId: string) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          unified.removeBlock(stepIndex, blockId);
+        },
+        reorderBlocks: async (stepKey: string, fromIndex: number, toIndex: number) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          const blocks = [...(unified.state.editor.stepBlocks[stepIndex] || [])];
+          if (fromIndex < 0 || toIndex < 0 || fromIndex >= blocks.length || toIndex >= blocks.length) return;
+          const [moved] = blocks.splice(fromIndex, 1);
+          blocks.splice(toIndex, 0, moved);
+          const normalized = blocks.map((b, i) => ({ ...b, order: i }));
+          unified.reorderBlocks(stepIndex, normalized);
+        },
+        updateBlock: async (stepKey: string, blockId: string, updates: Partial<Block>) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          unified.updateBlock(stepIndex, blockId, updates);
+        },
         deleteBlock: (id: string) => removeBlock(id),
         ensureStepLoaded: async () => { /* noop - carregamento já integrado no SuperUnifiedProvider */ },
       },
@@ -158,7 +197,35 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
       blockActions: {
         setCurrentStep,
         setSelectedBlockId,
-        updateBlock: (id: string, updates: Partial<Block>) => updateBlock(id, updates),
+        addBlock: async (stepKey: string, block: Block) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          unified.addBlock(stepIndex, block);
+        },
+        addBlockAtIndex: async (stepKey: string, block: Block, index: number) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          const blocks = [...(unified.state.editor.stepBlocks[stepIndex] || [])];
+          const clamped = Math.max(0, Math.min(index, blocks.length));
+          blocks.splice(clamped, 0, block);
+          const normalized = blocks.map((b, i) => ({ ...b, order: i }));
+          unified.reorderBlocks(stepIndex, normalized);
+        },
+        removeBlock: async (stepKey: string, blockId: string) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          unified.removeBlock(stepIndex, blockId);
+        },
+        reorderBlocks: async (stepKey: string, fromIndex: number, toIndex: number) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          const blocks = [...(unified.state.editor.stepBlocks[stepIndex] || [])];
+          if (fromIndex < 0 || toIndex < 0 || fromIndex >= blocks.length || toIndex >= blocks.length) return;
+          const [moved] = blocks.splice(fromIndex, 1);
+          blocks.splice(toIndex, 0, moved);
+          const normalized = blocks.map((b, i) => ({ ...b, order: i }));
+          unified.reorderBlocks(stepIndex, normalized);
+        },
+        updateBlock: async (stepKey: string, blockId: string, updates: Partial<Block>) => {
+          const stepIndex = stepKeyToIndex(stepKey);
+          unified.updateBlock(stepIndex, blockId, updates);
+        },
         deleteBlock: (id: string) => removeBlock(id),
         ensureStepLoaded: async () => { /* noop */ },
       },

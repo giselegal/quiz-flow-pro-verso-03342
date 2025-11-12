@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+import { useEditor } from '@/hooks/useEditor';
 import { StyleResult } from '@/types/quiz';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { PreviewPanel } from './PreviewPanel';
@@ -62,7 +62,7 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
             onClose={() => setSelectedComponent(null)}
             onUpdate={content => {
               if (selectedComponent) {
-                actions.updateBlock(currentStepKey, selectedComponent, content);
+                actions.updateBlock(currentStepKey, selectedComponent, { content });
               }
             }}
             onDelete={() => {

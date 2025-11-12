@@ -1,4 +1,4 @@
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+import { useEditor } from '@/hooks/useEditor';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -130,7 +130,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
         } catch (error) {
           toast({
             title: 'Erro',
-            description: `Erro ao importar JSON: ${  (error as Error).message}`,
+            description: `Erro ao importar JSON: ${(error as Error).message}`,
             variant: 'destructive',
           });
         }
