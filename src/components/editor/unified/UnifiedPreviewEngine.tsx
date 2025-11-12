@@ -29,6 +29,8 @@ interface UnifiedPreviewEngineProps {
     blockInfo?: boolean;
     templateInfo?: boolean;
   };
+  // Novo callback opcional para tratar erros internos de rendering
+  onError?: (error: Error) => void;
 }
 
 export type { UnifiedPreviewEngineProps };
@@ -56,6 +58,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   enableProductionMode = false,
   realTimeUpdate = false,
   debugInfo = {},
+  onError,
 }) => {
   appLogger.debug('🎯 [DEBUG] UnifiedPreviewEngine recebeu props:', {
     mode,
@@ -82,7 +85,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 
   // ✅ CORREÇÃO: Import estático compatível com Vite/ESM
   const [InteractivePreviewEngine, setInteractivePreviewEngine] = React.useState<any>(null);
-  
+
   React.useEffect(() => {
     // Carregamento dinâmico do componente
     import('./InteractivePreviewEngine').then(module => {
@@ -112,22 +115,37 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
       {/* DEBUG PANEL REMOVIDO - Preview limpo sem informações de debug */}
 
       {/* 🎯 CORREÇÃO: Lazy loading removido - carregamento imediato */}
-      <InteractivePreviewEngine
-        blocks={blocks}
-        selectedBlockId={selectedBlockId || undefined}
-        isPreviewing={isPreviewing}
-        viewportSize={viewportSize}
-        onBlockSelect={onBlockSelect}
-        onBlockUpdate={onBlockUpdate}
-        onBlocksReordered={onBlocksReordered}
-        funnelId={funnelId}
-        currentStep={currentStep}
-        enableInteractions={enableInteractions}
-        mode={mode}
-        enableRealExperience={enableRealExperience}
-        className="w-full"
-        realTimeUpdate={realTimeUpdate}
-      />
+      {(() => {
+        try {
+          return (
+            <InteractivePreviewEngine
+              blocks={blocks}
+              selectedBlockId={selectedBlockId || undefined}
+              isPreviewing={isPreviewing}
+              viewportSize={viewportSize}
+              onBlockSelect={onBlockSelect}
+              onBlockUpdate={onBlockUpdate}
+              onBlocksReordered={onBlocksReordered}
+              funnelId={funnelId}
+              currentStep={currentStep}
+              enableInteractions={enableInteractions}
+              mode={mode}
+              enableRealExperience={enableRealExperience}
+              className="w-full"
+              realTimeUpdate={realTimeUpdate}
+            />
+          );
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error('Erro desconhecido no preview');
+          appLogger.error('❌ Erro interno na UnifiedPreviewEngine:', error);
+          onError?.(error);
+          return (
+            <div className="p-4 border border-red-300 bg-red-50 rounded text-sm text-red-700">
+              Erro ao renderizar preview. {error.message}
+            </div>
+          );
+        }
+      })()}
     </div>
   );
 };

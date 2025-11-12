@@ -12,7 +12,7 @@
  * ✅ Integração com RealStagesProvider
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
@@ -41,7 +41,7 @@ const PreviewSkeleton: React.FC<{ mode?: string }> = ({ mode = 'loading' }) => (
       <div className="h-6 bg-gray-200 rounded animate-pulse w-32"></div>
       <div className="h-8 bg-gray-200 rounded animate-pulse w-20"></div>
     </div>
-    
+
     {/* Simulação de blocos */}
     {Array.from({ length: 3 }).map((_, i) => (
       <Card key={i} className="animate-pulse">
@@ -57,7 +57,7 @@ const PreviewSkeleton: React.FC<{ mode?: string }> = ({ mode = 'loading' }) => (
         </CardContent>
       </Card>
     ))}
-    
+
     <div className="text-center text-gray-500 text-sm mt-4">
       {mode === 'loading' && 'Carregando preview...'}
       {mode === 'error' && 'Recuperando preview...'}
@@ -85,14 +85,14 @@ const ErrorFallback: React.FC<{
       <p className="text-red-600 mb-4">
         Não foi possível carregar o preview. Tente novamente.
       </p>
-      
+
       {showDebug && (
         <div className="bg-red-100 p-3 rounded text-sm text-red-800 mb-4 font-mono">
           {error}
         </div>
       )}
-      
-      <Button 
+
+      <Button
         onClick={onRetry}
         variant="outline"
         className="text-red-700 border-red-300 hover:bg-red-100"
@@ -120,7 +120,7 @@ const EmptyPreview: React.FC<{
       <p className="text-gray-500 text-center mb-6">
         Adicione blocos para ver o preview desta etapa.
       </p>
-      
+
       {onAddBlock && (
         <Button onClick={onAddBlock} variant="outline">
           Adicionar Primeiro Bloco
@@ -197,7 +197,7 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
 
       // Dar tempo para o sistema se estabilizar
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
     } catch (retryError) {
       appLogger.error('❌ Erro durante retry:', retryError);
       setError(retryError instanceof Error ? retryError.message : 'Erro desconhecido');
@@ -210,7 +210,7 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
   const handlePreviewError = useCallback((previewError: Error) => {
     appLogger.error('❌ Erro no preview:', previewError);
     setError(previewError.message);
-    
+
     if (enableErrorRecovery && retries < retryCount) {
       // Auto-retry após 2 segundos
       setTimeout(handleRetry, 2000);
@@ -233,7 +233,7 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
   // 🚨 ERROR STATE com recuperação
   if (error && enableErrorRecovery) {
     return (
-      <ErrorFallback 
+      <ErrorFallback
         error={error}
         onRetry={handleRetry}
         showDebug={showDebugInfo}
@@ -244,21 +244,20 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
   // 📭 EMPTY STATE
   if (effectiveBlocks.length === 0) {
     const currentStep = previewProps.currentStep || 1;
-    
+
     if (fallbackMode === 'empty') {
       return (
-        <EmptyPreview 
+        <EmptyPreview
           currentStep={currentStep}
           onAddBlock={() => {
-            // Callback para adicionar bloco se disponível
-            if (previewProps.onBlockUpdate) {
-              appLogger.debug('📝 Solicitação para adicionar primeiro bloco');
-            }
+            // Callback para adicionar bloco inicial
+            appLogger.debug('📝 Solicitação para adicionar primeiro bloco');
+            // Poderíamos disparar um evento ou inserir um bloco padrão aqui futuramente
           }}
         />
       );
     }
-    
+
     if (fallbackMode === 'skeleton') {
       return <PreviewSkeleton mode="empty" />;
     }
@@ -285,17 +284,27 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
             🔍 Debug: {effectiveBlocks.length} blocos | Retries: {retries} | Etapas carregadas: {realStages?.filter(s => s.hasData).length || 0}
           </div>
         )}
-        
+
         <UnifiedPreviewEngine
           {...previewProps}
           blocks={effectiveBlocks}
-          onError={handlePreviewError}
+          onError={error => {
+            // Encadeia qualquer handler externo e registra internamente
+            if (previewProps.onError) {
+              try {
+                previewProps.onError(error);
+              } catch (chainErr) {
+                appLogger.warn('⚠️ Erro ao executar callback externo onError:', chainErr);
+              }
+            }
+            handlePreviewError(error);
+          }}
         />
       </div>
     );
   } catch (renderError) {
     appLogger.error('❌ Erro ao renderizar preview:', renderError);
-    
+
     // Fallback final
     return (
       <Card className="border-yellow-200 bg-yellow-50">
@@ -307,9 +316,9 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
           <p className="text-yellow-700 text-sm mb-4">
             Ocorreu um erro inesperado. O preview será restaurado automaticamente.
           </p>
-          
+
           {enableErrorRecovery && (
-            <Button 
+            <Button
               onClick={handleRetry}
               variant="outline"
               size="sm"
