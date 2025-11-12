@@ -162,7 +162,7 @@ export type EditorAction =
 
 // 🎯 INITIAL STATE
 const createInitialState = (): EditorState => ({
-    elements: new Map(),
+    elements: new Map<string, EditorElement>(),
     elementOrder: [],
 
     viewport: {
@@ -663,7 +663,10 @@ export class EditorCore {
             const serializedState = await this.cache.get('editor-state');
 
             if (serializedState) {
-                const elements = new Map(serializedState.elements);
+                // Tipagem explícita dos elementos restaurados para evitar Map<unknown, unknown>
+                const elements = new Map<string, EditorElement>(
+                    (serializedState.elements as [string, EditorElement][]) || []
+                );
 
                 this.dispatch({
                     type: 'LOAD_STATE',
