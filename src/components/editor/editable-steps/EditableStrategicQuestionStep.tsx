@@ -47,7 +47,7 @@ const EditableStrategicQuestionStep: React.FC<EditableStrategicQuestionStepProps
                 blockId={step?.id || 'question-block'}
                 isSelected={selectedBlockId === step?.id}
                 isEditable={isEditable}
-                onSelect={onSelectBlock}
+                onSelect={onSelectBlock ?? (() => { })}
                 blockType="Strategic Question"
                 onOpenProperties={onOpenProperties}
             >

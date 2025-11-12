@@ -26,7 +26,7 @@ const EditableResultStep: React.FC<EditableResultStepProps> = ({
     userProfile,
     onOpenProperties,
 }) => {
-    
+
     const safeData = useMemo(() => ({
         ...data,
         type: 'result' as const,
@@ -41,7 +41,7 @@ const EditableResultStep: React.FC<EditableResultStepProps> = ({
                 blockId={step?.id || 'result-block'}
                 isSelected={selectedBlockId === step?.id}
                 isEditable={isEditable}
-                onSelect={onSelectBlock}
+                onSelect={onSelectBlock ?? (() => { })}
                 blockType="Result Step"
                 onOpenProperties={onOpenProperties}
             >
