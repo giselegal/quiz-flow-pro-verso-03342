@@ -1,4 +1,7 @@
 /**
+ * @deprecated Este arquivo legado será removido.
+ * Use @/hooks/useEditor diretamente.
+ * 
  * 🎯 UNIFIED EDITOR HOOK - FASE 4
  * 
  * Hook canônico que consolida TODAS as implementações de useEditor:
@@ -15,6 +18,7 @@
  * ❌ SuperUnifiedProvider.useEditor
  * ❌ Múltiplas implementações espalhadas
  */
+// @ts-nocheck - Arquivo legado deprecated
 
 import { useContext } from 'react';
 // Migrado: usar tipos do hook unificado em vez do provider canônico deprecated
