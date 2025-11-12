@@ -1,16 +1,17 @@
 import React from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
-import { useEditor } from '@/components/editor/EditorProviderCanonical';
+// Migrado: usar hook unificado em vez do provider canônico deprecated
+import { useEditor } from '@/hooks/useEditor';
 
 const FunnelStagesPanel: React.FC = () => {
   const editorContext = useEditor({ optional: true });
   if (!editorContext) return null;
   const { state, actions } = editorContext;
-  const stages = [{ 
-    id: 'step-1', 
-    name: 'Step 1', 
-    order: 1, 
+  const stages = [{
+    id: 'step-1',
+    name: 'Step 1',
+    order: 1,
     description: 'First step',
     metadata: { blocksCount: 0 },
   }]; // Mock stages

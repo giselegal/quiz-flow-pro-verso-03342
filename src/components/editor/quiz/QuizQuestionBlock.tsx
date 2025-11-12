@@ -215,9 +215,8 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
                 return (
                   <Card
                     key={option.id}
-                    className={`cursor-pointer transition-all duration-200 border-2 hover:shadow-sm ${
-                      isSelected ? 'border-2 shadow-sm' : 'border'
-                    } ${isEditing ? 'pointer-events-none' : ''}`}
+                    className={`cursor-pointer transition-all duration-200 border-2 hover:shadow-sm ${isSelected ? 'border-2 shadow-sm' : 'border'
+                      } ${isEditing ? 'pointer-events-none' : ''}`}
                     style={{
                       borderColor: isSelected ? '#B89B7A' : '#E5DDD5',
                       backgroundColor: isSelected ? '#FAF9F7' : '#FEFEFE',
