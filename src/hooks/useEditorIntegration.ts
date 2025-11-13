@@ -1,185 +1,48 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useEditor } from '@/hooks/useEditor';
-import { Block } from '@/types/editor';
-import { useInlineEditor } from './useInlineEditor';
-import { useStepValidation } from './useStepValidation';
-import { appLogger } from '@/lib/utils/appLogger';
+/**
+ * 🔄 COMPATIBILITY LAYER - useEditorIntegration
+ * 
+ * Re-export do useEditor consolidado.
+ * Hook legado - use useEditor() diretamente.
+ */
 
-interface EditorIntegrationState {
-  isInteractiveMode: boolean;
-  isDraftMode: boolean;
-  hasUnsavedChanges: boolean;
-  lastSaved: Date | null;
-  syncStatus: 'idle' | 'syncing' | 'error' | 'success';
-}
+import { useEditor } from './useEditor';
 
-interface UseEditorIntegrationReturn {
-  // Estado
-  integrationState: EditorIntegrationState;
+/**
+ * @deprecated Use useEditor() directly instead
+ */
+export const useEditorIntegration = () => {
+  const editor = useEditor();
   
-  // Hooks integrados
-  inlineEditor: ReturnType<typeof useInlineEditor>;
-  stepValidation: ReturnType<typeof useStepValidation>;
-  
-  // Ações
-  toggleInteractiveMode: () => void;
-  toggleDraftMode: () => void;
-  saveChanges: () => Promise<void>;
-  publishChanges: () => Promise<void>;
-  resetToLastSaved: () => void;
-  
-  // Editor Provider Integration
-  currentStepBlocks: Block[];
-  updateStepBlocks: (blocks: Block[]) => void;
-  addBlockToCurrentStep: (blockType: string, properties?: any) => void;
-  removeBlockFromCurrentStep: (blockId: string) => void;
-}
-
-export const useEditorIntegration = (): UseEditorIntegrationReturn => {
-  const editorContext = useEditor({ optional: true });
-  
-  if (!editorContext) {
-    throw new Error('useEditorIntegration must be used within EditorProvider');
-  }
-  
-  const { state } = editorContext;
-  const { currentStep, stepBlocks } = state;
-
-  const [integrationState, setIntegrationState] = useState<EditorIntegrationState>({
-    isInteractiveMode: false,
-    isDraftMode: true,
-    hasUnsavedChanges: false,
-    lastSaved: null,
-    syncStatus: 'idle',
-  });
-
-  const currentStepId = `step-${currentStep}`;
-  const currentStepBlocks = stepBlocks[currentStepId] || [];
-
-  // Initialize integrated hooks
-  const inlineEditor = useInlineEditor((blockId: string, changes: Partial<Block>) => {
-    updateStepBlocks(
-      currentStepBlocks.map((block: Block) => 
-        block.id === blockId ? { ...block, ...changes } : block,
-      ),
-    );
-    setIntegrationState(prev => ({ ...prev, hasUnsavedChanges: true }));
-  });
-
-  const stepValidation = useStepValidation({
-    stepNumber: currentStep,
-  });
-
-  // Actions
-  const toggleInteractiveMode = useCallback(() => {
-    setIntegrationState(prev => ({
-      ...prev,
-      isInteractiveMode: !prev.isInteractiveMode,
-    }));
-  }, []);
-
-  const toggleDraftMode = useCallback(() => {
-    setIntegrationState(prev => ({
-      ...prev,
-      isDraftMode: !prev.isDraftMode,
-    }));
-  }, []);
-
-  const updateStepBlocks = useCallback((blocks: Block[]) => {
-    // In a real implementation, this would update via EditorProvider actions
-    appLogger.info('🔄 Updating step blocks:', { data: [blocks.length] });
-    setIntegrationState(prev => ({ 
-      ...prev, 
-      hasUnsavedChanges: true,
-      syncStatus: 'idle',
-    }));
-  }, []);
-
-  const addBlockToCurrentStep = useCallback((blockType: string, properties?: any) => {
-    const newBlock: Block = {
-      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      type: blockType as any, // Type assertion for demo
-      order: currentStepBlocks.length + 1,
-      properties: properties || {},
-      content: {},
-    };
-
-    updateStepBlocks([...currentStepBlocks, newBlock]);
-  }, [currentStepBlocks, updateStepBlocks]);
-
-  const removeBlockFromCurrentStep = useCallback((blockId: string) => {
-    updateStepBlocks(currentStepBlocks.filter((block: Block) => block.id !== blockId));
-  }, [currentStepBlocks, updateStepBlocks]);
-
-  const saveChanges = useCallback(async () => {
-    setIntegrationState(prev => ({ ...prev, syncStatus: 'syncing' }));
-    
-    try {
-      // In a real app, this would sync with backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setIntegrationState(prev => ({ 
-        ...prev, 
-        hasUnsavedChanges: false,
-        lastSaved: new Date(),
-        syncStatus: 'success',
-      }));
-
-      // Reset sync status after 2 seconds
-      setTimeout(() => {
-        setIntegrationState(prev => ({ ...prev, syncStatus: 'idle' }));
-      }, 2000);
-    } catch (error) {
-      setIntegrationState(prev => ({ ...prev, syncStatus: 'error' }));
-      appLogger.error('Error saving changes:', { data: [error] });
-    }
-  }, []);
-
-  const publishChanges = useCallback(async () => {
-    await saveChanges();
-    
-    setIntegrationState(prev => ({ 
-      ...prev, 
-      isDraftMode: false, 
-    }));
-    
-    appLogger.info('🚀 Publishing changes to production...');
-  }, [saveChanges]);
-
-  const resetToLastSaved = useCallback(() => {
-    // In a real app, this would reload from backend
-    setIntegrationState(prev => ({ 
-      ...prev, 
-      hasUnsavedChanges: false,
-      syncStatus: 'idle',
-    }));
-    
-    appLogger.info('🔄 Resetting to last saved state...');
-  }, []);
-
-  // Auto-save functionality
-  useEffect(() => {
-    if (integrationState.hasUnsavedChanges && integrationState.isDraftMode) {
-      const autoSaveTimer = setTimeout(() => {
-        saveChanges();
-      }, 3000); // Auto-save after 3 seconds of inactivity
-
-      return () => clearTimeout(autoSaveTimer);
-    }
-  }, [integrationState.hasUnsavedChanges, integrationState.isDraftMode, saveChanges]);
-
   return {
-    integrationState,
-    inlineEditor,
-    stepValidation,
-    toggleInteractiveMode,
-    toggleDraftMode,
-    saveChanges,
-    publishChanges,
-    resetToLastSaved,
-    currentStepBlocks,
-    updateStepBlocks,
-    addBlockToCurrentStep,
-    removeBlockFromCurrentStep,
+    integrationState: {
+      isInteractiveMode: false,
+      isDraftMode: true,
+      hasUnsavedChanges: editor.state.isDirty,
+      lastSaved: editor.state.lastSaved ? new Date(editor.state.lastSaved) : null,
+      syncStatus: (editor.state.isLoading ? 'syncing' : 'idle') as 'idle' | 'syncing' | 'error' | 'success',
+    },
+    inlineEditor: {} as any,
+    stepValidation: {} as any,
+    toggleInteractiveMode: () => {},
+    toggleDraftMode: () => {},
+    saveChanges: async () => await editor.actions.saveFunnel(),
+    publishChanges: async () => await editor.actions.saveFunnel(),
+    resetToLastSaved: () => {},
+    currentStepBlocks: editor.blocks,
+    updateStepBlocks: (blocks: any[]) => editor.actions.setStepBlocks(editor.currentStep, blocks),
+    addBlockToCurrentStep: (blockType: string, properties?: any) => {
+      const block = {
+        id: `block-${Date.now()}`,
+        type: blockType,
+        properties: properties || {},
+        order: editor.blocks.length,
+      };
+      editor.actions.addBlock(editor.currentStep, block);
+    },
+    removeBlockFromCurrentStep: (blockId: string) => {
+      editor.actions.removeBlock(editor.currentStep, blockId);
+    },
   };
 };
+
+export default useEditorIntegration;
