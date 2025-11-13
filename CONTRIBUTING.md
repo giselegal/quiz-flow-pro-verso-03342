@@ -154,6 +154,47 @@ import { helper } from './utils';
 import type { User } from '@/types/user';
 ```
 
+### Path Aliases
+
+O projeto utiliza path aliases configurados para facilitar imports e refatoração. **Sempre prefira path aliases ao invés de imports relativos profundos.**
+
+#### Aliases Disponíveis
+
+| Alias | Resolve para | Uso |
+|-------|--------------|-----|
+| `@/*` | `src/*` | Acesso geral à pasta src |
+| `@components/*` | `src/components/*` | Componentes React |
+| `@services/*` | `src/services/*` | Serviços e lógica de negócio |
+| `@hooks/*` | `src/hooks/*` | React hooks customizados |
+| `@utils/*` | `src/utils/*` | Funções utilitárias |
+| `@lib/*` | `src/lib/*` | Bibliotecas e helpers |
+| `@types/*` | `src/types/*` | Definições de tipos TypeScript |
+| `@config/*` | `src/config/*` | Configurações da aplicação |
+| `@templates/*` | `src/templates/*` | Templates de quiz |
+
+#### Exemplos de Uso
+
+```typescript
+// ✅ BOM - Usando path aliases
+import { Button } from '@components/ui/button';
+import { useAuth } from '@hooks/useAuth';
+import { formatDate } from '@utils/date';
+import { templateService } from '@services/canonical/TemplateService';
+import type { User } from '@types/user';
+
+// ❌ EVITAR - Imports relativos profundos
+import { Button } from '../../../components/ui/button';
+import { useAuth } from '../../../../hooks/useAuth';
+import { formatDate } from '../../../utils/date';
+```
+
+#### Benefícios
+
+- ✅ **Legibilidade**: Imports claros e autodocumentados
+- ✅ **Refatoração**: Mover arquivos não quebra imports
+- ✅ **Autocomplete**: IDEs fornecem melhor sugestão
+- ✅ **Manutenção**: Mais fácil encontrar dependências
+
 ---
 
 ## 🔄 Processo de Desenvolvimento

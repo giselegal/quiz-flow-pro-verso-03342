@@ -194,7 +194,8 @@
     "diagnostic:v3": "tsx scripts/diagnostic/v3-sources-audit.ts",
     "diagnostic:cleanup:templates": "tsx scripts/diagnostic/cleanup-template-duplicates.ts",
     "templates:generate:v3": "tsx scripts/normalize-quiz21-complete.ts && node scripts/split-master-complete.mjs && npm run -s diagnostic:blocks:fix && npm run -s diagnostic:v3",
-    "diagnostic:renderer-choice": "tsx scripts/diagnostic/list-renderer-choice.ts"
+    "diagnostic:renderer-choice": "tsx scripts/diagnostic/list-renderer-choice.ts",
+    "analyze": "vite build && open .security/bundle-stats.html"
   },
   "lintCoverage": {
     "blocks": "node scripts/dev/check-block-coverage.mjs"
