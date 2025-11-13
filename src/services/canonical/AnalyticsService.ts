@@ -15,6 +15,7 @@
 import { BaseCanonicalService, ServiceResult } from './types';
 import { supabase } from '@/lib/supabase';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateEventId, generateMetricId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -226,7 +227,7 @@ export class AnalyticsService extends BaseCanonicalService {
   }): ServiceResult<AnalyticsEvent> {
     try {
       const event: AnalyticsEvent = {
-        id: `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateEventId(),
         type: params.type,
         userId: params.userId,
         funnelId: params.funnelId,
@@ -429,7 +430,7 @@ export class AnalyticsService extends BaseCanonicalService {
   }): ServiceResult<Metric> {
     try {
       const metric: Metric = {
-        id: `metric_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateMetricId(),
         name: params.name,
         value: params.value,
         unit: params.unit,

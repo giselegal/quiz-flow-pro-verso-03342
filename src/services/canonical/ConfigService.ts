@@ -35,6 +35,7 @@
  */
 
 import { BaseCanonicalService, ServiceResult } from './types';
+import { generateSessionId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -940,12 +941,12 @@ export class ConfigService extends BaseCanonicalService {
 
   private getSessionId(): string {
     if (typeof sessionStorage === 'undefined') {
-      return `anonymous-${Date.now()}`;
+      return `anonymous-${generateSessionId()}`;
     }
 
     let sessionId = sessionStorage.getItem('sessionId');
     if (!sessionId) {
-      sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      sessionId = generateSessionId();
       sessionStorage.setItem('sessionId', sessionId);
     }
 

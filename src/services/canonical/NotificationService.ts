@@ -14,6 +14,7 @@
 
 import { BaseCanonicalService, ServiceResult } from './types';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateNotificationId, generateChatId, generateCommentId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -185,7 +186,7 @@ export class NotificationService extends BaseCanonicalService {
   }): ServiceResult<Notification> {
     try {
       const notification: Notification = {
-        id: `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateNotificationId(),
         type: params.type,
         title: params.title,
         message: params.message,
@@ -373,7 +374,7 @@ export class NotificationService extends BaseCanonicalService {
   }): ServiceResult<ChatMessage> {
     try {
       const chatMessage: ChatMessage = {
-        id: `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateChatId(),
         funnelId: params.funnelId,
         userId: params.userId,
         userName: params.userName,
@@ -505,7 +506,7 @@ export class NotificationService extends BaseCanonicalService {
   }): ServiceResult<Comment> {
     try {
       const comment: Comment = {
-        id: `comment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateCommentId(),
         funnelId: params.funnelId,
         stageId: params.stageId,
         blockId: params.blockId,

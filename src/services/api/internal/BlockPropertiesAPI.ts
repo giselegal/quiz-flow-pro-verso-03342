@@ -23,6 +23,7 @@ class IndexedDBStorageService {
 }
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateBlockId, generateComponentId } from '@/lib/utils/idGenerator';
 
 // ===== INTERFACES =====
 
@@ -493,7 +494,7 @@ export class BlockPropertiesAPI {
             enabled: true,
             className: '',
             style: {},
-            id: `${blockType}-${Date.now()}`,
+            id: generateBlockId(),
             // Metadados genéricos
             _blockType: blockType,
             _isGeneric: true,
@@ -618,7 +619,7 @@ export class BlockPropertiesAPI {
             }
 
             const componentData = {
-                id: `${currentFunnelId}_${stepId}_${component.id || Date.now()}`,
+                id: `${currentFunnelId}_${stepId}_${component.id || generateComponentId()}`,
                 component,
                 stepId,
                 position: position ?? 0,
@@ -637,7 +638,7 @@ export class BlockPropertiesAPI {
 
             // Salvar draft usando o método correto
             DraftPersistence.saveStepDraft(currentFunnelId, `new_component_${stepId}`, [{
-                id: component.id || `comp_${Date.now()}`,
+                id: component.id || generateComponentId(),
                 type: component.type || 'text' as any,
                 properties: component,
                 content: component.content || { text: '' } as any,

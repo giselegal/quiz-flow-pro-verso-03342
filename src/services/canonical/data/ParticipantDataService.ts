@@ -2,6 +2,7 @@ import { BaseCanonicalService, ServiceResult } from '@/services/canonical/types'
 import { supabase } from '@/services/integrations/supabase/customClient';
 import type { QuizParticipant } from '@/services/canonical/DataService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
+import { generateSessionId } from '@/lib/utils/idGenerator';
 
 export class ParticipantDataService extends BaseCanonicalService {
   private static instance: ParticipantDataService;
@@ -37,7 +38,7 @@ export class ParticipantDataService extends BaseCanonicalService {
   }): Promise<ServiceResult<QuizParticipant>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'createParticipant');
     try {
-      const sessionId = data.sessionId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const sessionId = data.sessionId || generateSessionId();
       const insertData = {
         session_id: sessionId,
         email: data.email,

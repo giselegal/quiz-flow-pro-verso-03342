@@ -15,6 +15,7 @@
 import { BaseCanonicalService, ServiceResult } from './types';
 import { supabase } from '@/lib/supabase';
 import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
+import { generateFileName } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -473,8 +474,8 @@ export class AuthService extends BaseCanonicalService {
    */
   async uploadAvatar(userId: string, file: File): Promise<ServiceResult<string>> {
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${userId}-${Date.now()}.${fileExt}`;
+      const fileExt = file.name.split('.').pop() || 'png';
+      const fileName = generateFileName(userId, fileExt);
       const filePath = `avatars/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
