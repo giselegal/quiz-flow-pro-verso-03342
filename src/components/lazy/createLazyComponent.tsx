@@ -1,11 +1,11 @@
-import React, { Suspense, lazy, ComponentType } from 'react'
-import { DefaultFallback, LazyErrorBoundary, LazyComponentWrapperProps } from './LazyComponentWrapper'
+import React, { Suspense, lazy, ComponentType } from 'react';
+import { DefaultFallback, LazyErrorBoundary, LazyComponentWrapperProps } from './LazyComponentWrapper';
 
 export const createLazyComponent = <T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyComponentWrapperProps = {},
 ) => {
-  const LazyComponent = lazy(importFn)
+  const LazyComponent = lazy(importFn);
 
   const LazyWrapper = (props: React.ComponentProps<T>) => (
     <LazyErrorBoundary fallback={options.error}>
@@ -13,7 +13,7 @@ export const createLazyComponent = <T extends ComponentType<any>>(
         <LazyComponent {...props} />
       </Suspense>
     </LazyErrorBoundary>
-  )
+  );
 
-  return LazyWrapper
-}
+  return LazyWrapper;
+};

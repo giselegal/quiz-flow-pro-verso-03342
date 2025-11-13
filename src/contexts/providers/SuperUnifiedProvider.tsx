@@ -561,6 +561,10 @@ interface SuperUnifiedContextType {
     redo: () => void;
     canUndo: boolean;
     canRedo: boolean;
+    // 🆕 FASE 1: Export/Import JSON
+    exportJSON: () => string;
+    importJSON: (json: string) => void;
+    activeStageId: string;
     // Auth methods (aliases para compatibilidade)
     user: any | null;
     isLoading: boolean;
@@ -1371,6 +1375,75 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         };
     }, [undo, redo]);
 
+    // 🆕 FASE 1: Export JSON
+    const exportJSON = useCallback(() => {
+        return JSON.stringify({
+            currentStep: state.editor.currentStep,
+            stepBlocks: state.editor.stepBlocks,
+            funnelSettings: state.editor.funnelSettings,
+            totalSteps: state.editor.totalSteps,
+            version: '2.0',
+            exportedAt: new Date().toISOString(),
+        }, null, 2);
+    }, [state.editor]);
+
+    // 🆕 FASE 1: Import JSON
+    const importJSON = useCallback((json: string) => {
+        try {
+            const data = JSON.parse(json);
+            
+            // Validar estrutura básica
+            if (!data.stepBlocks || typeof data.stepBlocks !== 'object') {
+                throw new Error('JSON inválido: stepBlocks não encontrado');
+            }
+
+            // Importar stepBlocks
+            Object.entries(data.stepBlocks).forEach(([stepIndex, blocks]) => {
+                dispatch({ 
+                    type: 'SET_STEP_BLOCKS', 
+                    payload: { stepIndex: Number(stepIndex), blocks: blocks as any[] } 
+                });
+            });
+
+            // Importar currentStep se disponível
+            if (data.currentStep && typeof data.currentStep === 'number') {
+                dispatch({ 
+                    type: 'SET_EDITOR_STATE', 
+                    payload: { currentStep: data.currentStep } 
+                });
+            }
+
+            // Importar settings se disponíveis
+            if (data.funnelSettings) {
+                dispatch({ 
+                    type: 'SET_EDITOR_STATE', 
+                    payload: { funnelSettings: data.funnelSettings } 
+                });
+            }
+
+            showToast({ 
+                type: 'success', 
+                title: 'Sucesso', 
+                message: 'Editor importado com sucesso!' 
+            });
+
+            logger.info('[importJSON] Editor importado', { version: data.version, steps: Object.keys(data.stepBlocks).length });
+        } catch (error: any) {
+            const errorMsg = error.message || 'JSON inválido';
+            showToast({ 
+                type: 'error', 
+                title: 'Erro ao importar', 
+                message: errorMsg 
+            });
+            logger.error('[importJSON] Erro ao importar JSON', { error: errorMsg });
+        }
+    }, [showToast]);
+
+    // 🆕 FASE 1: Computed activeStageId
+    const activeStageId = useMemo(() => {
+        return `step-${String(state.editor.currentStep).padStart(2, '0')}`;
+    }, [state.editor.currentStep]);
+
     const value = useMemo<SuperUnifiedContextType>(() => ({
         state,
         loadFunnels,
@@ -1397,6 +1470,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         redo,
         canUndo: canUndoHistory,
         canRedo: canRedoHistory,
+        // 🆕 FASE 1: Export/Import
+        exportJSON,
+        importJSON,
+        activeStageId,
         // Auth aliases
         user: state.auth.user,
         isLoading: state.auth.isLoading,
@@ -1431,6 +1508,9 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         redo,
         canUndoHistory,
         canRedoHistory,
+        exportJSON,
+        importJSON,
+        activeStageId,
         login,
         signup,
         logout,

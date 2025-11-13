@@ -1,4 +1,4 @@
-import { useEditor } from '@/hooks/useEditor';
+import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -80,20 +80,18 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
   customTitle,
   onSave,
 }) => {
-  const editorContext = useEditor({ optional: true });
-  if (!editorContext) return null;
-  const { state, actions } = editorContext;
+  const unified = useSuperUnified();
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [virtDisabled, setVirtDisabled] = useState<boolean>(false);
 
-  const safeCurrentStep = state.currentStep || 1;
+  const safeCurrentStep = unified.state.editor.currentStep || 1;
   const stepAnalysis = getStepAnalysis(safeCurrentStep);
 
   const handleExportJSON = async () => {
     try {
-      const json = actions.exportJSON();
+      const json = unified.exportJSON();
       const success = await copyToClipboard(json);
       if (success) {
         toast({ title: 'Sucesso', description: 'JSON exportado para a área de transferência!' });
@@ -125,7 +123,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
             });
             return;
           }
-          actions.importJSON(json);
+          unified.importJSON(json);
           toast({ title: 'Sucesso', description: 'JSON importado com sucesso!' });
         } catch (error) {
           toast({
@@ -198,11 +196,11 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
             <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
               <button
                 type="button"
-                onClick={actions.undo}
-                disabled={!actions.canUndo}
+                onClick={unified.undo}
+                disabled={!unified.canUndo}
                 className={cn(
                   'px-3 py-2 text-sm rounded-md transition-all duration-200',
-                  actions.canUndo
+                  unified.canUndo
                     ? 'text-gray-700 hover:bg-white hover:shadow-sm'
                     : 'text-gray-400 cursor-not-allowed',
                 )}
@@ -212,11 +210,11 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
               </button>
               <button
                 type="button"
-                onClick={actions.redo}
-                disabled={!actions.canRedo}
+                onClick={unified.redo}
+                disabled={!unified.canRedo}
                 className={cn(
                   'px-3 py-2 text-sm rounded-md transition-all duration-200',
-                  actions.canRedo
+                  unified.canRedo
                     ? 'text-gray-700 hover:bg-white hover:shadow-sm'
                     : 'text-gray-400 cursor-not-allowed',
                 )}
@@ -332,9 +330,9 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
               interativos
             </div>
             <div className="text-blue-700">
-              {state.selectedBlockId
-                ? `Editando: ${state.selectedBlockId}`
-                : `${state.stepBlocks[`step-${safeCurrentStep}`]?.length || 0} blocos disponíveis - Clique para editar`}
+              {unified.state.editor.selectedBlockId
+                ? `Editando: ${unified.state.editor.selectedBlockId}`
+                : `${unified.state.editor.stepBlocks[safeCurrentStep]?.length || 0} blocos disponíveis - Clique para editar`}
             </div>
           </div>
         ) : (

@@ -13,5 +13,6 @@
     "rules": {
       "exclude": ["no-import-prefix", "no-explicit-any", "no-unused-vars"]
     }
-  }
+  },
+  "nodeModulesDir": "auto"
 }
