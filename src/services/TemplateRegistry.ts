@@ -41,6 +41,14 @@ export class TemplateRegistry {
   get() {
     throw new Error('TemplateRegistry has been archived. Use @/services/canonical/TemplateService instead.');
   }
+
+  has() {
+    throw new Error('TemplateRegistry has been archived. Use @/services/canonical/TemplateService instead.');
+  }
+
+  registerOverride(...args: any[]) {
+    throw new Error('TemplateRegistry has been archived. Use @/services/canonical/TemplateService instead.');
+  }
 }
 
 export default TemplateRegistry;
