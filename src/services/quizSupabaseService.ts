@@ -308,7 +308,7 @@ export const quizSupabaseService = {
 
       if (error) throw error;
 
-      return (data || []).map(response => ({
+      return (data || []).map((response: any) => ({
         id: response.id,
         sessionId: response.session_id,
         stepNumber: response.step_number,

@@ -421,7 +421,7 @@ export const userResponseService = {
 
       if (error) throw error;
 
-      return data.map(item => ({
+      return data.map((item: any) => ({
         id: item.id,
         userId,
         sessionId: (item as any).session_id,

@@ -54,7 +54,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       }
 
       setComponents(
-        (data || []).map(item => ({
+        (data || []).map((item: any) => ({
           // Campos vindos do banco
           id: item.id,
           component_type_key: (item as any).component_type_key || (item as any).component_type_id || 'unknown',

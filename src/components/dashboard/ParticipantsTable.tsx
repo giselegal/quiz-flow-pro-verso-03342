@@ -125,7 +125,7 @@ const ParticipantsTable: React.FC = () => {
             appLogger.info('📊 Primeira sessão de exemplo:', { data: [sessions?.[0]] });
 
             // Combinar dados
-            const participantsData: ParticipantResponse[] = (sessions || []).map(session => {
+            const participantsData: ParticipantResponse[] = (sessions || []).map((session: any) => {
                 const user = (session as any).participant as { name?: string | null; email?: string | null } | null;
                 const result = session.quiz_results?.[0]; // Pega o primeiro resultado
 
@@ -180,7 +180,7 @@ const ParticipantsTable: React.FC = () => {
                 .order('step_number', { ascending: true });
 
             if (responses) {
-                const detailsData: StepResponse[] = responses.map(response => ({
+                const detailsData: StepResponse[] = responses.map((response: any) => ({
                     step_number: response.step_number,
                     question_id: response.question_id,
                     option_id: response.answer_text || response.question_id,

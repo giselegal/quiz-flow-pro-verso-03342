@@ -237,6 +237,32 @@ export class TemplateToFunnelAdapter {
     });
   }
 
+  async *convertTemplateToFunnelStream(
+    options: TemplateConversionOptions
+  ): AsyncGenerator<{ stage: UnifiedStage; progress: number }, void, unknown> {
+    const { loadAllSteps = true, specificSteps } = options;
+    const steps = loadAllSteps ? this.generateAllStepIds() : (specificSteps || []);
+    const total = steps.length;
+    for (let i = 0; i < total; i++) {
+      const stepId = steps[i];
+      try {
+        const blocks = await this.loadStepBlocks(stepId);
+        const stage: UnifiedStage = {
+          id: stepId,
+          name: this.generateStepName(stepId),
+          description: `Etapa ${i + 1}`,
+          blocks,
+          order: i,
+          isRequired: true,
+          settings: { validation: { required: true, customRules: [] } },
+          metadata: { blocksCount: blocks.length, isValid: true },
+        };
+        const progress = (i + 1) / total;
+        yield { stage, progress };
+      } catch {}
+    }
+  }
+
   /**
    * Valida se um template pode ser convertido
    */

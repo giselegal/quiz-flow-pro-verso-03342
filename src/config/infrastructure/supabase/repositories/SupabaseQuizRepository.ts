@@ -164,7 +164,7 @@ export class SupabaseQuizRepository implements QuizRepository {
       if (error) throw error;
 
       const quizzes = await Promise.all(
-        (data || []).map(async (funnelData) => {
+        (data || []).map(async (funnelData: any) => {
           const { data: pagesData } = await (supabase as any)
             .from('funnel_pages')
             .select('*')
@@ -469,17 +469,17 @@ export class SupabaseQuizRepository implements QuizRepository {
       if (sessionsError) throw sessionsError;
 
       const totalParticipants = sessionsData?.length || 0;
-      const completedSessions = sessionsData?.filter(s => s.status === 'completed') || [];
+      const completedSessions = sessionsData?.filter((s: any) => s.status === 'completed') || [];
       const completionRate = totalParticipants > 0 ? completedSessions.length / totalParticipants : 0;
 
       const averageScore = completedSessions.length > 0 
-        ? completedSessions.reduce((sum, s) => sum + (s.score || 0), 0) / completedSessions.length 
+        ? completedSessions.reduce((sum: number, s: any) => sum + (s.score || 0), 0) / completedSessions.length 
         : 0;
 
       // Calculate average time spent
-      const sessionsWithTime = completedSessions.filter(s => s.started_at && s.completed_at);
+      const sessionsWithTime = completedSessions.filter((s: any) => s.started_at && s.completed_at);
       const averageTimeSpent = sessionsWithTime.length > 0
-        ? sessionsWithTime.reduce((sum, s) => {
+        ? sessionsWithTime.reduce((sum: number, s: any) => {
             const duration = new Date(s.completed_at!).getTime() - new Date(s.started_at).getTime();
             return sum + duration;
           }, 0) / sessionsWithTime.length / 1000 // Convert to seconds
@@ -489,10 +489,10 @@ export class SupabaseQuizRepository implements QuizRepository {
       const { data: responsesData } = await supabase
         .from('quiz_step_responses')
         .select('answer_value, answer_text')
-        .in('session_id', sessionsData?.map(s => s.id) || []);
+        .in('session_id', sessionsData?.map((s: any) => s.id) || []);
 
       const answerCounts: Record<string, number> = {};
-      responsesData?.forEach(response => {
+      responsesData?.forEach((response: any) => {
         const key = response.answer_text || response.answer_value || 'Unknown';
         answerCounts[key] = (answerCounts[key] || 0) + 1;
       });
@@ -506,10 +506,10 @@ export class SupabaseQuizRepository implements QuizRepository {
       const { data: resultsData } = await supabase
         .from('quiz_results')
         .select('result_type')
-        .in('session_id', completedSessions.map(s => s.id));
+        .in('session_id', completedSessions.map((s: any) => s.id));
 
       const resultDistribution: Record<string, number> = {};
-      resultsData?.forEach(result => {
+      resultsData?.forEach((result: any) => {
         const type = result.result_type || 'Unknown';
         resultDistribution[type] = (resultDistribution[type] || 0) + 1;
       });
@@ -543,7 +543,7 @@ export class SupabaseQuizRepository implements QuizRepository {
       if (error) throw error;
 
       return Promise.all(
-        (data || []).map(async (funnelData) => {
+        (data || []).map(async (funnelData: any) => {
           const { data: pagesData } = await (supabase as any)
             .from('funnel_pages')
             .select('*')

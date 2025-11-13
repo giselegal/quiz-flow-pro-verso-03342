@@ -103,14 +103,7 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
       if (type === 'template') {
         appLogger.info(`🔄 [useEditorResource] Convertendo template → funnel:`, resourceId);
 
-        // ✅ G4 FIX: Preparar template AQUI (único ponto de preparação)
-        try {
-          await templateService.prepareTemplate(resourceId);
-          appLogger.info(`✅ [useEditorResource] Template preparado: ${resourceId}`);
-        } catch (prepError) {
-          appLogger.warn(`⚠️ [useEditorResource] Erro ao preparar template ${resourceId}:`, prepError as Error);
-          // Continuar mesmo com erro de preparação - converter com fallback
-        }
+        // ✅ Removido preparo redundante para evitar carga duplicada
 
         // Verificar se é template completo (quiz21StepsComplete) ou step individual
         const isCompleteTemplate = resourceId.toLowerCase().includes('complete') || 

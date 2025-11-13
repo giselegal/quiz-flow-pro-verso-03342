@@ -14,6 +14,8 @@ export interface VersionSnapshot {
   metadata?: {
     tags?: string[];
   };
+  version?: string;
+  isPublished?: boolean;
 }
 
 export interface VersionComparison {

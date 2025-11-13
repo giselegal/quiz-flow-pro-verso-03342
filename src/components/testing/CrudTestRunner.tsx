@@ -122,7 +122,7 @@ export const CrudTestRunner: React.FC = () => {
 
       if (error) throw error;
       if (!data || data.length !== 2) throw new Error('Esperado 2 componentes');
-      data.forEach(item => testIds.push(item.id));
+      data.forEach((item: any) => testIds.push(item.id));
       updateTestResult('2. CREATE - Múltiplos componentes', {
         details: `Criados: ${data.length} componentes`
       });
@@ -140,8 +140,8 @@ export const CrudTestRunner: React.FC = () => {
       if (error) throw error;
       if (!data || data.length === 0) throw new Error('Nenhum componente encontrado');
       
-      const orderIndexes = data.map(c => c.order_index as number);
-      const isSorted = orderIndexes.every((val, i, arr) => !i || (arr[i - 1] ?? 0) <= val);
+      const orderIndexes = data.map((c: any) => c.order_index as number);
+      const isSorted = orderIndexes.every((val: number, i: number, arr: number[]) => !i || (arr[i - 1] ?? 0) <= val);
       if (!isSorted) throw new Error('Componentes não estão ordenados corretamente');
       
       updateTestResult('3. READ - Buscar componentes', {
@@ -214,7 +214,7 @@ export const CrudTestRunner: React.FC = () => {
         .eq('funnel_id', TEST_FUNNEL_ID)
         .eq('step_number', 3);
       
-      inserted?.forEach(item => testIds.push(item.id));
+      inserted?.forEach((item: any) => testIds.push(item.id));
       
       updateTestResult('6. RPC - batch_sync_components_for_step', {
         details: `Inseridos: ${(data as any)?.inserted_count}, Erros: ${(data as any)?.errors?.length || 0}`

@@ -17,7 +17,9 @@ type StorageStore = { name: string; keyPath: string; indexes: StorageIndex[] };
 type StorageConfig = { dbName: string; version: number; stores: StorageStore[] };
 class IndexedDBStorageService {
     static getInstance(_config: StorageConfig) { return new IndexedDBStorageService(); }
-    async initialize(): Promise<void> { /* noop */ }
+    async initialize(): Promise<void> { }
+    async set(_store: string, _key: string, _value: any): Promise<void> { }
+    async query(_store: string, _opts: { index: string; key: string }): Promise<any[]> { return []; }
 }
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { appLogger } from '@/lib/utils/appLogger';

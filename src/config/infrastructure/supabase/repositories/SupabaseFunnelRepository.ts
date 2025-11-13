@@ -130,7 +130,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
       if (error) throw error;
 
       const funnels = await Promise.all(
-        (funnelsData || []).map(async (funnelData) => {
+        (funnelsData || []).map(async (funnelData: any) => {
           const { data: pagesData } = await (supabase as any)
             .from('funnel_pages')
             .select('*')
@@ -159,7 +159,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
       if (error) throw error;
 
       const funnels = await Promise.all(
-        (funnelsData || []).map(async (funnelData) => {
+        (funnelsData || []).map(async (funnelData: any) => {
           const { data: pagesData } = await (supabase as any)
             .from('funnel_pages')
             .select('*')
@@ -324,7 +324,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
 
       if (error) throw error;
 
-      return (data || []).map(componentData => this.mapToBlockEntity(componentData));
+      return (data || []).map((componentData: any) => this.mapToBlockEntity(componentData));
     } catch (error) {
       appLogger.error('Error finding blocks by page:', { data: [error] });
       return [];

@@ -209,7 +209,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       const topPerformingFunnels = Array.from(funnelStats.entries())
         .map(([id, stats]) => ({
           id,
-          name: funnelsMap.get(id) || 'Unknown Funnel',
+          name: String(funnelsMap.get(id) || 'Unknown Funnel'),
           sessions: stats.sessions,
           rate: stats.sessions > 0 ? Math.round((stats.completions / stats.sessions) * 100) : 0,
         }))
@@ -306,7 +306,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       });
 
       const participants: ParticipantData[] = (sessions || []).map((session: any) => {
-        const result = resultsMap.get(session.id);
+        const result: any = resultsMap.get(session.id);
         const responseCount = responsesMap.get(session.id) || 0;
         
         let timeSpent = 0;
@@ -329,7 +329,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
           sessionId: session.id,
           userId: session.quiz_user_id || undefined,
           funnelId: session.funnel_id || '',
-          funnelName: funnelsMap.get(session.funnel_id || '') || 'Unknown Funnel',
+          funnelName: funnelsMap2.get(session.funnel_id || '') || 'Unknown Funnel',
           startedAt: new Date(session.started_at),
           completedAt: session.completed_at ? new Date(session.completed_at) : undefined,
           currentStep: session.current_step || 0,

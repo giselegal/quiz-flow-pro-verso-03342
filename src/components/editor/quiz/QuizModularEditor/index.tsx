@@ -1111,7 +1111,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <ToggleGroup
                                 type="single"
                                 value={canvasMode === 'edit' ? 'edit' : (previewMode === 'production' ? 'preview:production' : 'preview:editor')}
-                                onValueChange={(val) => {
+                                onValueChange={(val: string | null) => {
                                     if (!val) return;
                                     if (val === 'edit') {
                                         setCanvasMode('edit');

@@ -109,6 +109,7 @@
     "test:e2e:accessibility": "playwright test tests/e2e/accessibility-quality.spec.ts --config=playwright.enhanced.config.ts",
     "test:e2e:visual-regression": "playwright test tests/e2e/visual-regression.spec.ts --config=playwright.enhanced.config.ts",
     "test:e2e:quick-enhanced": "playwright test tests/e2e/quick-validation.spec.ts --config=playwright.enhanced.config.ts",
+    "test:e2e:streaming": "playwright test tests/e2e/editor-streaming-load.spec.ts --config=playwright.enhanced.config.ts",
     "test:e2e:all-enhanced": "npm run test:e2e:enhanced",
     "test:e2e:report-enhanced": "playwright show-report test-results/playwright-report",
     "test:e2e:custom-report": "open test-results/reports/test-report.html || xdg-open test-results/reports/test-report.html || start test-results/reports/test-report.html",

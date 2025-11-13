@@ -350,20 +350,10 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                 return;
             }
 
-            // Aplicar reordenação sequencialmente
-            const workingOrder = [...currentOrder];
-            for (let newIndex = 0; newIndex < desiredOrder.length; newIndex++) {
-                const targetId = desiredOrder[newIndex];
-                const currentIndex = workingOrder.indexOf(targetId);
-
-                if (currentIndex !== -1 && currentIndex !== newIndex) {
-                    await editor.actions.reorderBlocks(normalizedKey, currentIndex, newIndex);
-                    // Atualizar array local para próxima iteração
-                    const [movedItem] = workingOrder.splice(currentIndex, 1);
-                    workingOrder.splice(newIndex, 0, movedItem);
-                    appLogger.debug('✅ Bloco reordenado:', { targetId, from: currentIndex, to: newIndex });
-                }
-            }
+            const currentBlocks: any[] = (editor.state?.stepBlocks as any)?.[normalizedKey] || [];
+            const byId = new Map(currentBlocks.map((b: any) => [b.id, b]));
+            const reordered = desiredOrder.map(id => byId.get(id)).filter(Boolean) as any[];
+            await editor.actions.reorderBlocks(normalizedKey, reordered);
 
             appLogger.debug('✅ handleBlocksReorder concluído:', { stepId: normalizedKey, newOrder: desiredOrder });
         } catch (err) {

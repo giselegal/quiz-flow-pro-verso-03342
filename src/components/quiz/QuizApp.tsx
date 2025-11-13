@@ -5,7 +5,7 @@ import { useQuizState } from '../../hooks/useQuizState';
 // 🎯 FASE 3: Sistema Unificado de Renderização
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/core/unified';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**

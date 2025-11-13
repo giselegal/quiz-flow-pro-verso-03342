@@ -254,14 +254,14 @@ export class FacebookMetricsService {
             }
 
             // Buscar métricas para cada funil
-            const metricsPromises = (funnels || []).map(funnel =>
+            const metricsPromises = (funnels || []).map((funnel: any) =>
                 this.getFunnelMetrics(funnel.id, startDate, endDate),
             );
 
             const metrics = await Promise.all(metricsPromises);
 
             // Filtrar apenas funis com métricas
-            return metrics.filter(metric =>
+            return metrics.filter((metric: any) =>
                 metric !== null && metric.total_impressions > 0,
             ) as FunnelFacebookMetrics[];
 

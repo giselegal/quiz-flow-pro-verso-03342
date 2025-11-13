@@ -153,7 +153,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         .select('funnel_id, status, started_at, completed_at');
 
       const sessionsMap = new Map<string, any[]>();
-      (sessions || []).forEach(session => {
+      (sessions || []).forEach((session: any) => {
         const key = String(session.funnel_id || 'unknown');
         const funnelSessions = sessionsMap.get(key) || [];
         funnelSessions.push(session);
@@ -162,11 +162,11 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
       const metrics: FunnelMetrics[] = funnels.map(funnel => {
         const funnelSessions = sessionsMap.get(funnel.id) || [];
-        const completedSessions = funnelSessions.filter(s => s.status === 'completed');
+        const completedSessions = funnelSessions.filter((s: any) => s.status === 'completed');
         
         let averageTime = 0;
         if (completedSessions.length > 0) {
-          const totalTime = completedSessions.reduce((sum, session) => {
+          const totalTime = completedSessions.reduce((sum: number, session: any) => {
             if (session.completed_at && session.started_at) {
               const start = new Date(session.started_at).getTime();
               const end = new Date(session.completed_at).getTime();
@@ -361,15 +361,15 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         supabase.from('quiz_sessions').select('status, funnel_id'),
       ]);
 
-      const activeFunnels = funnels.filter(f => f.is_published).length;
-      const draftFunnels = funnels.filter(f => !f.is_published).length;
+      const activeFunnels = funnels.filter((f: any) => f.is_published).length;
+      const draftFunnels = funnels.filter((f: any) => !f.is_published).length;
       const totalSessions = sessions?.length || 0;
-      const totalCompletions = sessions?.filter(s => s.status === 'completed').length || 0;
+      const totalCompletions = sessions?.filter((s: any) => s.status === 'completed').length || 0;
       
       // Calculate average conversion rate across all funnels
       const metrics = await this.getFunnelMetrics();
       const averageConversionRate = metrics.length > 0 ? 
-        Math.round(metrics.reduce((sum, m) => sum + m.conversionRate, 0) / metrics.length) : 0;
+        Math.round(metrics.reduce((sum: number, m: any) => sum + m.conversionRate, 0) / metrics.length) : 0;
 
       const summary = {
         totalFunnels: funnels.length,

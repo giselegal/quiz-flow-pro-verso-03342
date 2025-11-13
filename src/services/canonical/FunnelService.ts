@@ -261,10 +261,10 @@ export class CanonicalFunnelService {
 
       // Filtro em memória baseado em status normalizado
       if (filters?.status) {
-        funnels = funnels.filter(f => f.status === filters.status);
+        funnels = funnels.filter((f: any) => f.status === filters.status);
       }
       if (typeof filters?.isActive !== 'undefined') {
-        funnels = funnels.filter(f => f.isActive === !!filters.isActive);
+        funnels = funnels.filter((f: any) => f.isActive === !!filters.isActive);
       }
 
       const elapsed = performance.now() - startTime;

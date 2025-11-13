@@ -82,14 +82,18 @@ const ModeRenderer: React.FC<{
   // ✅ Calcular totalSteps dinamicamente baseado nas stepBlocks disponíveis
   const totalSteps = useMemo(() => {
     const stepKeys = Object.keys(state.stepBlocks || {});
-    const stepNumbers = stepKeys
-      .map(key => {
-        const match = key.match(/step-(\d+)/);
-        return match ? parseInt(match[1]) : 0;
+    const numsFromNumericKeys = stepKeys
+      .map(k => parseInt(k, 10))
+      .filter(n => !isNaN(n) && n > 0);
+    const numsFromStringKeys = stepKeys
+      .map(k => {
+        const m = k.match(/step-(\d+)/);
+        return m ? parseInt(m[1], 10) : NaN;
       })
-      .filter(num => num > 0);
-
-    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+      .filter(n => !isNaN(n) && n > 0);
+    const allNums = Array.from(new Set([...(numsFromNumericKeys as number[]), ...(numsFromStringKeys as number[])]));
+    if (allNums.length > 0) return Math.max(...allNums);
+    return state.totalSteps || 21;
   }, [state.stepBlocks]);
 
   const renderModeContent = useCallback(() => {
@@ -111,7 +115,13 @@ const ModeRenderer: React.FC<{
                     currentStep={state.currentStep}
                     totalSteps={totalSteps}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0]),
+                      Array.from({ length: totalSteps }, (_, i) => {
+                        const idx = i + 1;
+                        const byNum = (state.stepBlocks as any)[idx] || [];
+                        const byStr = (state.stepBlocks as any)[`step-${String(idx).padStart(2, '0')}`] || (state.stepBlocks as any)[`step-${idx}`] || [];
+                        const count = Array.isArray(byNum) ? byNum.length : Array.isArray(byStr) ? byStr.length : 0;
+                        return [idx, count > 0];
+                      }),
                     )}
                     stepValidation={state.stepValidation}
                     onSelectStep={actions.setCurrentStep}
@@ -256,6 +266,35 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   className = 'h-full w-full',
 }) => {
   const { state, actions } = useEditor();
+  const [streamProgress, setStreamProgress] = React.useState(0);
+
+  React.useEffect(() => {
+    Promise.all([
+      import('@/components/editor/sidebars/StepSidebar'),
+      import('@/components/editor/panels/UnifiedComponentsPanel'),
+      import('@/components/editor/canvas/CanvasDropZone.simple'),
+      import('@/components/editor/properties/UltraUnifiedPropertiesPanel'),
+    ]).catch(() => {});
+  }, []);
+
+  React.useEffect(() => {
+    try {
+      const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const templateParam = sp?.get('template');
+      const resourceParam = sp?.get('resource');
+      const candidateTemplate = templateParam || resourceParam;
+      if (!candidateTemplate) return;
+
+      const adapter = new (require('@/editor/adapters/TemplateToFunnelAdapter').TemplateToFunnelAdapter)();
+      (async () => {
+        for await (const { stage, progress } of adapter.convertTemplateToFunnelStream({ templateId: candidateTemplate, loadAllSteps: true })) {
+          actions.setStepBlocks(stage.id, stage.blocks as any[]);
+          setStreamProgress(progress);
+        }
+        setStreamProgress(1);
+      })();
+    } catch {}
+  }, [actions]);
 
   // Extrair funções estáveis
   const { ensureStepLoaded, setCurrentStep } = actions;
@@ -277,6 +316,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     totalBlocks: Object.values(state.stepBlocks || {}).reduce((acc: number, blocks: any) => acc + (Array.isArray(blocks) ? blocks.length : 0), 0),
     selectedBlock: state.selectedBlockId,
     funnelId,
+    stepsCount: Object.keys(state.stepBlocks || {}).length,
   }), [mode, state, funnelId]);
 
   React.useEffect(() => {
@@ -291,6 +331,11 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
 
   return (
     <div className={`unified-editor-core ${className} bg-background`}>
+      {streamProgress > 0 && streamProgress < 1 && (
+        <div className="fixed top-0 left-0 w-full h-1 bg-border z-50">
+          <div className="h-1 bg-primary transition-all" style={{ width: `${Math.round(streamProgress * 100)}%` }} />
+        </div>
+      )}
       <LazyBoundary fallback={<EditorLoadingFallback />}>
         <ModeRenderer mode={mode} funnelId={funnelId} />
       </LazyBoundary>
