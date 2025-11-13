@@ -1,4 +1,4 @@
-import { useEditor } from '@/hooks/useUnifiedEditor';
+import { useEditor } from '@/hooks/useEditor';
 import { useFunnels } from '@/contexts';
 import { useEffect } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';

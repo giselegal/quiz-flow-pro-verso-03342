@@ -119,27 +119,27 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       ]);
 
       const sessionsData = sessions || [];
-      const funnelsMap = new Map((funnels || []).map(f => [f.id, f.name]));
+      const funnelsMap = new Map((funnels || []).map((f: any) => [f.id, f.name]));
 
       // Core metrics calculation
       const totalSessions = sessionsData.length;
-      const activeSessions = sessionsData.filter(s => s.status === 'active').length;
-      const completedSessions = sessionsData.filter(s => s.status === 'completed').length;
-      const abandonedSessions = sessionsData.filter(s => s.status === 'abandoned').length;
+      const activeSessions = sessionsData.filter((s: any) => s.status === 'active').length;
+      const completedSessions = sessionsData.filter((s: any) => s.status === 'completed').length;
+      const abandonedSessions = sessionsData.filter((s: any) => s.status === 'abandoned').length;
       const conversionRate = totalSessions > 0 ? 
         Math.round((completedSessions / totalSessions) * 100 * 10) / 10 : 0;
 
       // Performance metrics
-      const completedWithTime = sessionsData.filter(s => s.status === 'completed' && s.started_at && s.completed_at);
+      const completedWithTime = sessionsData.filter((s: any) => s.status === 'completed' && s.started_at && s.completed_at);
       const averageCompletionTime = completedWithTime.length > 0 ?
-        Math.round(completedWithTime.reduce((sum, session) => {
+        Math.round(completedWithTime.reduce((sum: number, session: any) => {
           const start = new Date(session.started_at).getTime();
           const end = new Date(session.completed_at!).getTime();
           return sum + (end - start);
         }, 0) / completedWithTime.length / 1000) : 0; // seconds
 
       const averageSessionDuration = sessionsData.length > 0 ?
-        Math.round(sessionsData.reduce((sum, session) => {
+        Math.round(sessionsData.reduce((sum: number, session: any) => {
           const start = new Date(session.started_at).getTime();
           const end = session.last_activity ? new Date(session.last_activity).getTime() : Date.now();
           return sum + (end - start);
@@ -150,7 +150,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       // Device statistics
       const deviceCounts = new Map<string, number>();
-      sessionsData.forEach(session => {
+      sessionsData.forEach((session: any) => {
         const metadata = session.metadata as any;
         const device = metadata?.device_info?.type || 'unknown';
         deviceCounts.set(device, (deviceCounts.get(device) || 0) + 1);
@@ -164,7 +164,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       // Hourly activity
       const hourlyMap = new Map<number, number>();
-      sessionsData.forEach(session => {
+      sessionsData.forEach((session: any) => {
         const hour = new Date(session.started_at).getHours();
         hourlyMap.set(hour, (hourlyMap.get(hour) || 0) + 1);
       });
@@ -182,7 +182,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
         return date.toISOString().split('T')[0];
       });
 
-      sessionsData.forEach(session => {
+      sessionsData.forEach((session: any) => {
         const date = session.started_at.split('T')[0];
         const current = dailyMap.get(date) || { sessions: 0, completions: 0 };
         current.sessions++;
@@ -190,7 +190,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
         dailyMap.set(date, current);
       });
 
-      const dailyTrends = last14Days.map(date => ({
+      const dailyTrends = last14Days.map((date: string) => ({
         date: date.split('-').slice(1).reverse().join('/'), // MM/DD format
         sessions: dailyMap.get(date)?.sessions || 0,
         completions: dailyMap.get(date)?.completions || 0,
@@ -198,7 +198,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       // Top performing funnels
       const funnelStats = new Map<string, { sessions: number; completions: number }>();
-      sessionsData.forEach(session => {
+      sessionsData.forEach((session: any) => {
         const fid = session.funnel_id || 'unknown';
         const current = funnelStats.get(fid) || { sessions: 0, completions: 0 };
         current.sessions++;
@@ -218,14 +218,14 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       // Real-time metrics
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-      const activeUsersNow = sessionsData.filter(s => 
+      const activeUsersNow = sessionsData.filter((s: any) => 
         s.last_activity && s.last_activity > fiveMinutesAgo,
       ).length;
 
       const recentActivity = (analytics || [])
-        .filter(a => ((a as any).recorded_at ?? '') > fiveMinutesAgo)
+        .filter((a: any) => ((a as any).recorded_at ?? '') > fiveMinutesAgo)
         .slice(0, 10)
-        .map(activity => ({
+        .map((activity: any) => ({
           sessionId: activity.session_id || 'unknown',
           funnelId: activity.funnel_id || 'unknown',
           timestamp: (activity as any).recorded_at || new Date().toISOString(),
@@ -288,24 +288,24 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
         .from('funnels')
         .select('id, name');
 
-      const funnelsMap = new Map((funnels || []).map(f => [f.id, f.name]));
+      const funnelsMap2 = new Map((funnels || []).map((f: any) => [f.id, f.name]));
 
       // Get results and responses for these sessions
-      const sessionIds = (sessions || []).map(s => s.id);
+      const sessionIds = (sessions || []).map((s: any) => s.id);
       
       const [{ data: results }, { data: responses }] = await Promise.all([
         supabase.from('quiz_results').select('*').in('session_id', sessionIds),
         supabase.from('quiz_step_responses').select('session_id').in('session_id', sessionIds),
       ]);
 
-      const resultsMap = new Map((results || []).map(r => [r.session_id, r]));
+      const resultsMap = new Map((results || []).map((r: any) => [r.session_id, r]));
       const responsesMap = new Map<string, number>();
       
-      (responses || []).forEach(r => {
+      (responses || []).forEach((r: any) => {
         responsesMap.set(r.session_id, (responsesMap.get(r.session_id) || 0) + 1);
       });
 
-      const participants: ParticipantData[] = (sessions || []).map(session => {
+      const participants: ParticipantData[] = (sessions || []).map((session: any) => {
         const result = resultsMap.get(session.id);
         const responseCount = responsesMap.get(session.id) || 0;
         

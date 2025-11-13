@@ -2,7 +2,7 @@
  * @deprecated QuizDemo usa EditorProvider deprecated.
  * Substituir por SuperUnifiedProvider de @/contexts/providers/SuperUnifiedProvider
  */
-import { EditorProvider } from '@/components/editor/EditorProviderCanonical';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 // import { Block } from '@/types/editor'; - removido pois não é usado
 import React, { useState } from 'react';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
@@ -210,9 +210,9 @@ export const QuizDemo: React.FC = () => {
       </div>
 
       {/* Quiz Canvas */}
-      <EditorProvider>
+      <SuperUnifiedProvider>
         <InteractiveQuizCanvas className="h-[calc(100vh-120px)]" />
-      </EditorProvider>
+      </SuperUnifiedProvider>
     </div>
   );
 };

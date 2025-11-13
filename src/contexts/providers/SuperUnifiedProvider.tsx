@@ -1529,7 +1529,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             } catch {}
         })();
-        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: listener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
             const user = session?.user ?? null;
             dispatch({ type: 'SET_AUTH_STATE', payload: { user, isAuthenticated: !!user } });
         });

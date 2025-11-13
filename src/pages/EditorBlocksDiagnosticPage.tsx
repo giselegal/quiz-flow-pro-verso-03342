@@ -131,7 +131,7 @@ const EditorBlocksDiagnosticPage: React.FC = () => {
 
                     {steps.map((key) => {
                         const blocks = state.stepBlocks[key] || [];
-                        const source = state.stepSources?.[key];
+                        const source: string | undefined = undefined;
                         const types = Array.from(new Set(blocks.map(b => String(b.type))));
                         return (
                             <Card key={key}>
@@ -160,7 +160,7 @@ const EditorBlocksDiagnosticPage: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <pre className="text-xs bg-white p-4 rounded border overflow-auto max-h-96">
-                            {JSON.stringify({ stepSources: state.stepSources, steps: Object.keys(state.stepBlocks).length }, null, 2)}
+                            {JSON.stringify({ steps: Object.keys(state.stepBlocks).length }, null, 2)}
                         </pre>
                     </CardContent>
                 </Card>

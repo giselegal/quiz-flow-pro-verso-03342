@@ -13,8 +13,6 @@ export interface VersionSnapshot {
   data: any;
   metadata?: {
     tags?: string[];
-    type?: string;
-    description?: string;
   };
 }
 
@@ -39,20 +37,20 @@ export class VersioningService {
     appLogger.info('Restoring version:', { data: [versionId] });
   }
 
-  async createSnapshot(data: any): Promise<VersionSnapshot> {
+  async createSnapshot(data: any, mode?: 'auto' | 'manual', description?: string): Promise<VersionSnapshot> {
     return {
       id: `snapshot-${Date.now()}`,
       timestamp: new Date(),
       data,
-      metadata: { 
-        tags: [],
-        type: 'default',
-        description: 'Snapshot created'
-      },
+      metadata: { tags: [mode || 'manual', description || ''] },
     };
   }
 
   async getVersions(): Promise<VersionSnapshot[]> {
+    return [];
+  }
+
+  async getSnapshots(): Promise<VersionSnapshot[]> {
     return [];
   }
 
@@ -66,23 +64,6 @@ export class VersioningService {
 
   async recordChange(type: VersionChange['type'], description: string): Promise<void> {
     appLogger.info('Recording change:', { data: [type, description] });
-  }
-
-  async getSnapshots(): Promise<VersionSnapshot[]> {
-    return this.getVersions();
-  }
-
-  async createSnapshot(data: any, type?: string, description?: string): Promise<VersionSnapshot> {
-    return {
-      id: `snapshot-${Date.now()}`,
-      timestamp: new Date(),
-      data,
-      metadata: { 
-        tags: [],
-        type,
-        description 
-      },
-    };
   }
 }
 

@@ -492,9 +492,9 @@ export const getQuizAnalytics = async (funnelId: string) => {
     if (error) throw error;
 
     const totalSessions = sessions?.length || 0;
-    const completedSessions = sessions?.filter(s => s.status === 'completed').length || 0;
+    const completedSessions = sessions?.filter((s: any) => s.status === 'completed').length || 0;
     const averageScore = sessions?.length
-      ? sessions.reduce((acc, s) => acc + (s.score || 0), 0) / sessions.length
+      ? sessions.reduce((acc: number, s: any) => acc + (s.score || 0), 0) / sessions.length
       : 0;
 
     return {

@@ -80,7 +80,9 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
 
     // Estado de validação
     const isCurrentStepValid = useMemo(() => {
-        return stepValidation[currentStep] !== false; // Default true se não definido
+        const entry = stepValidation?.[currentStep];
+        if (!entry) return true;
+        return entry.isValid !== false;
     }, [stepValidation, currentStep]);
 
     // Estados de navegação
@@ -150,7 +152,7 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
         // Dados do step atual
         currentStepBlocks,
         isCurrentStepValid,
-        isStepLoading: isLoading,
+        isStepLoading: !!isLoading,
     };
 };
 

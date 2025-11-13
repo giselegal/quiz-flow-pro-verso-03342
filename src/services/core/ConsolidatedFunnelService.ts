@@ -214,11 +214,11 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
       const { data: responses } = await supabase
         .from('quiz_step_responses')
         .select('session_id, step_number')
-        .in('session_id', (sessions || []).map(s => s.id));
+        .in('session_id', (sessions || []).map((s: any) => s.id));
 
       const sessionsData = sessions || [];
-      const completedSessions = sessionsData.filter(s => s.status === 'completed');
-      const abandonedSessions = sessionsData.filter(s => s.status === 'abandoned');
+      const completedSessions = sessionsData.filter((s: any) => s.status === 'completed');
+      const abandonedSessions = sessionsData.filter((s: any) => s.status === 'abandoned');
 
       // Calculate average steps
       const totalSteps = (responses || []).length;
@@ -227,7 +227,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
       // Device breakdown
       const deviceCounts = new Map<string, number>();
-      sessionsData.forEach(session => {
+      sessionsData.forEach((session: any) => {
         const metadata = session.metadata as any;
         const device = metadata?.device_info?.type || 'unknown';
         deviceCounts.set(device, (deviceCounts.get(device) || 0) + 1);
@@ -245,8 +245,8 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         return date.toISOString().split('T')[0];
       }).reverse();
 
-      const dailyActivity = last7Days.map(date => {
-        const daySessions = sessionsData.filter(s => 
+      const dailyActivity = last7Days.map((date: string) => {
+        const daySessions = sessionsData.filter((s: any) => 
           s.started_at.startsWith(date),
         );
         return {

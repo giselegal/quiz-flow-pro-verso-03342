@@ -754,7 +754,7 @@ export class AuthService extends BaseCanonicalService {
   // ============================================================================
 
   private setupAuthListener(): void {
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       if (this.options.debug) {
         this.log('Auth state changed:', event);
       }

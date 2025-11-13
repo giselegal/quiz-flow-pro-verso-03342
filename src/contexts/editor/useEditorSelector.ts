@@ -26,7 +26,7 @@ export function useEditorSelector<T>(selector: Selector<T>): T {
     const compat: LightweightEditorStateCompat = {
         stepBlocks: editor.state.stepBlocks,
         selectedBlockId: editor.state.selectedBlockId,
-        isLoading: editor.state.isLoading,
+        isLoading: !!editor.state.isLoading,
         currentStep: editor.state.currentStep,
     };
     return selector(compat);

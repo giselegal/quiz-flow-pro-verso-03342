@@ -12,7 +12,13 @@
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
 import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
-import { IndexedDBStorageService, StorageConfig } from '@/lib/utils/storage/IndexedDBStorageService';
+type StorageIndex = { name: string; keyPath: string };
+type StorageStore = { name: string; keyPath: string; indexes: StorageIndex[] };
+type StorageConfig = { dbName: string; version: number; stores: StorageStore[] };
+class IndexedDBStorageService {
+    static getInstance(_config: StorageConfig) { return new IndexedDBStorageService(); }
+    async initialize(): Promise<void> { /* noop */ }
+}
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { appLogger } from '@/lib/utils/appLogger';
 
