@@ -1905,6 +1905,8 @@ if (typeof window !== 'undefined') {
 
 /**
  * Re-export quizEditorBridge for backward compatibility
- * @deprecated Import from '@/services/deprecated/QuizEditorBridge' directly
+ * @deprecated This module has been archived. Migrate to canonical TemplateService.
+ * @see .archive/deprecated/services-legacy/QuizEditorBridge.ts
  */
-export { quizEditorBridge } from '@/services/deprecated/QuizEditorBridge';
+// Archived: QuizEditorBridge has been moved to .archive/deprecated/services-legacy/
+// export { quizEditorBridge } from '@/services/deprecated/QuizEditorBridge';
