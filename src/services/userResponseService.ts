@@ -3,6 +3,7 @@ import { supabase } from '@/services/integrations/supabase/customClient';
 import { sessionService } from '@/services/sessionService';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateResponseId } from '@/lib/utils/idGenerator';
 
 const OFFLINE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true' || process.env?.VITE_DISABLE_SUPABASE === 'true';
 const isBrowser = typeof window !== 'undefined';
@@ -143,7 +144,7 @@ export const userResponseService = {
   }): Promise<UserResponse> {
     if (OFFLINE) {
       const fallbackResponse: UserResponse = {
-        id: `response_${Date.now()}`,
+        id: generateResponseId(),
         userId: response.userId,
         sessionId: response.sessionId,
         step: response.step,
@@ -162,7 +163,7 @@ export const userResponseService = {
     if (!isValidUUID(response.sessionId)) {
       appLogger.warn('⚠️ Supabase disabled for this response: session_id is not a valid UUID, using local fallback.', { data: [response.sessionId] });
       const fallbackResponse: UserResponse = {
-        id: `response_${Date.now()}`,
+        id: generateResponseId(),
         userId: response.userId,
         sessionId: response.sessionId,
         step: response.step,
@@ -239,7 +240,7 @@ export const userResponseService = {
       appLogger.error('❌ Failed to save response:', { data: [error] });
       // Fallback to local storage if Supabase fails
       const fallbackResponse: UserResponse = {
-        id: `response_${Date.now()}`,
+        id: generateResponseId(),
         userId: response.userId,
         sessionId: response.sessionId,
         step: response.step,

@@ -4,6 +4,7 @@ import { generateSemanticId } from '../utils/semanticIdGenerator';
 
 import { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generatePageId, generateBlockId } from '@/lib/utils/idGenerator';
 
 interface Page {
   id: string;
@@ -86,7 +87,7 @@ export class PageStructureValidator {
   private static fixPageStructure(page: Page): Page {
     const fixedPage: Page = {
       ...page,
-      id: page.id || `page-${Date.now()}`,
+      id: page.id || generatePageId(),
       settings: (page as any).settings || {
         showProgress: true,
         progressValue: 0,
@@ -103,7 +104,7 @@ export class PageStructureValidator {
     } else {
       fixedPage.blocks = [
         {
-          id: `default-text-${Date.now()}`,
+          id: generateBlockId(),
           type: 'text',
           content: {
             text: `Conteúdo da página: ${page.title || page.name || 'Página sem título'}`,
@@ -200,14 +201,14 @@ export class PageStructureValidator {
 
     appLogger.warn(`⚠️ Recriando página "${page.title || page.name}" com estrutura schema-driven básica devido a falha na correção.`);
     return {
-      id: page.id || `rebuilt-${Date.now()}`,
+      id: page.id || generatePageId(),
       name: page.name || 'Página Reconstruída',
       title: page.title || page.name || 'Página Reconstruída',
       type: 'custom',
       order: page.order || 0,
       blocks: [
         {
-          id: `rebuilt-content-${Date.now()}`,
+          id: generateBlockId(),
           type: 'text',
           content: {
             text: `Esta página foi reconstruída: ${page.title || page.name || 'Página sem título'}`,

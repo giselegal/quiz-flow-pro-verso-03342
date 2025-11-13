@@ -6,6 +6,7 @@
  */
 
 import React, { createContext, useContext, useCallback, useRef, useEffect, useState } from 'react';
+import { generateTimerId } from '@/lib/utils/idGenerator';
 
 // 🎯 TIPOS
 interface PerformanceMetric {
@@ -53,7 +54,7 @@ export const PerformanceMonitorProvider: React.FC<{
   const startTimer = useCallback((name: string, context: 'clean' | 'legacy', metadata?: Record<string, any>) => {
     if (!isMonitoring) return '';
     
-    const timerId = `${name}-${Date.now()}-${Math.random()}`;
+    const timerId = generateTimerId(name);
     timersRef.current.set(timerId, {
       start: performance.now(),
       name,

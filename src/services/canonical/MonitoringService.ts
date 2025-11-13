@@ -20,6 +20,7 @@ import { CacheService } from './CacheService';
 import { TemplateService } from './TemplateService';
 import { DataService } from './DataService';
 import { ValidationService } from './ValidationService';
+import { generateErrorId, generateMetricId, generateAlertId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -178,7 +179,7 @@ export class MonitoringService extends BaseCanonicalService {
       const errorStack = error instanceof Error ? error.stack : undefined;
 
       const report: ErrorReport = {
-        id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateErrorId(),
         timestamp: new Date(),
         message: errorMessage,
         stack: errorStack,
@@ -291,7 +292,7 @@ export class MonitoringService extends BaseCanonicalService {
   ): ServiceResult<PerformanceMetric> {
     try {
       const metric: PerformanceMetric = {
-        id: `metric_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateMetricId(),
         name,
         value,
         unit,
@@ -563,7 +564,7 @@ export class MonitoringService extends BaseCanonicalService {
     message: string;
   }): Alert {
     const alert: Alert = {
-      id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: generateAlertId(),
       type: params.type,
       severity: params.severity,
       title: params.title,

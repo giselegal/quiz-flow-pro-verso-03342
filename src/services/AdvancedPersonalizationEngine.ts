@@ -1,4 +1,5 @@
 import { appLogger } from '@/lib/utils/appLogger';
+import { generatePersonaId } from '@/lib/utils/idGenerator';
 /**
  * 🎨 ADVANCED PERSONALIZATION ENGINE - AI-Powered
  * ROI Projetado: $10k-25k/mês
@@ -75,7 +76,7 @@ export class AdvancedPersonalizationEngine {
     const demographicProfile = this.estimateDemographics(engagement);
     
     const persona: UserPersona = {
-      id: `persona-${Date.now()}`,
+      id: generatePersonaId(),
       demographics: demographicProfile,
       psychographics: {
         personality: personalityTraits,

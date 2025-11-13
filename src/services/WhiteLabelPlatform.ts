@@ -1,4 +1,5 @@
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateBrandId, generateClientId, generateApiKey } from '@/lib/utils/idGenerator';
 /**
  * 🏷️ WHITE-LABEL PLATFORM - Enterprise Branding
  * ROI Projetado: $7k-20k/mês
@@ -79,8 +80,8 @@ export class WhiteLabelPlatform {
     contactEmail: string;
   }): Promise<WhiteLabelClient> {
     
-    const brandId = `brand-${Date.now()}`;
-    const clientId = `client-${Date.now()}`;
+    const brandId = generateBrandId();
+    const clientId = generateClientId();
 
     const brandConfig: BrandConfig = {
       id: brandId,
@@ -427,7 +428,7 @@ export class WhiteLabelPlatform {
     const client = this.clients.get(clientId);
     if (!client || !client.features.apiAccess) return null;
 
-    const apiKey = `wl_${client.id}_${Date.now()}`;
+    const apiKey = generateApiKey(client.id);
     
     appLogger.info('🔑 API key generated:', { data: [{
             client: client.name,

@@ -3,6 +3,7 @@ import { supabase } from '@/services/integrations/supabase/customClient';
 import { CacheService } from '@/services/canonical/CacheService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
 import { deepClone } from '@/lib/utils/cloneFunnel';
+import { generateFunnelId } from '@/lib/utils/idGenerator';
 import type { Funnel, FunnelFilters, FunnelPagination, CreateFunnelDTO, UpdateFunnelDTO } from '@/services/canonical/DataService';
 
 export class FunnelDataService extends BaseCanonicalService {
@@ -101,7 +102,7 @@ export class FunnelDataService extends BaseCanonicalService {
     CanonicalServicesMonitor.trackUsage(this.name, 'createFunnel');
     try {
       const userId = dto.userId || 'anonymous';
-      const funnelId = `funnel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const funnelId = generateFunnelId();
       const insertData = {
         id: funnelId,
         name: dto.name,

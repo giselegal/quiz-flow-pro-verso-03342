@@ -1,3 +1,5 @@
+import { generateHistoryId } from '@/lib/utils/idGenerator';
+
 export interface StepHistoryEntry<T = any> {
     id: string;
     stepId: string;
@@ -25,7 +27,7 @@ export class StepHistoryService<T = any> {
             this.entries = this.entries.slice(0, this.pointer + 1);
         }
         const entry: StepHistoryEntry<T> = {
-            id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            id: generateHistoryId(),
             stepId,
             prev: structuredClone(prev),
             next: structuredClone(next),
