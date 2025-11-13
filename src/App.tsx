@@ -46,6 +46,7 @@ import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { appLogger } from '@/lib/utils/appLogger';
+import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -121,6 +122,23 @@ function AppCore() {
         } catch { }
 
         appLogger.info('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
+
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const sbUrl = params.get('sbUrl') || params.get('supabaseUrl') || '';
+            const sbKey = params.get('sbKey') || params.get('supabaseKey') || '';
+            if (sbUrl && sbKey) {
+                const prevUrl = localStorage.getItem('supabase:url') || '';
+                const prevKey = localStorage.getItem('supabase:key') || '';
+                if (prevUrl !== sbUrl || prevKey !== sbKey) {
+                    setSupabaseCredentials(sbUrl, sbKey);
+                    appLogger.info('✅ Supabase credentials set via URL params');
+                    setTimeout(() => {
+                        try { window.location.replace(window.location.pathname); } catch { window.location.reload(); }
+                    }, 50);
+                }
+            }
+        } catch {}
 
         // 🚀 P2: Setup critical routes preload
         setupCriticalRoutes();

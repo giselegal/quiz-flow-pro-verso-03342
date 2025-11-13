@@ -168,3 +168,25 @@ templatesRouter.post('/:id/runtime/preview/answer', (req, res) => {
 });
 
 export default templatesRouter;
+// Runtime published by slug
+templatesRouter.get('/:slug/published-runtime', (req, res) => {
+    const snap = templateService.getPublishedBySlug(req.params.slug);
+    if (!snap) return res.status(404).json({ error: 'Not found' });
+    res.json(snap);
+});
+
+templatesRouter.post('/:slug/runtime/start', (req, res) => {
+    try {
+        const start = templateService.startRuntime(req.params.slug);
+        res.json(start);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});
+
+templatesRouter.post('/:slug/runtime/answer', (req, res) => {
+    try {
+        const { sessionId, stageId, optionIds } = req.body || {};
+        if (!sessionId || !stageId) return res.status(400).json({ error: 'sessionId and stageId required' });
+        const result = templateService.answerRuntime(req.params.slug, sessionId, stageId, optionIds || []);
+        res.json(result);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});

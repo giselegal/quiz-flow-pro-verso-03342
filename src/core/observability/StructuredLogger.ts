@@ -185,20 +185,31 @@ class StructuredLogger {
   }
 
   private async sendToRemote(entries: LogEntry[], immediate = false) {
-    const body = JSON.stringify({ entries, immediate });
-    
-    if (immediate && 'sendBeacon' in navigator) {
-      // Use sendBeacon for immediate sends (e.g., page unload)
-      navigator.sendBeacon('/api/logs', body);
-    } else {
-      // Use fetch for regular sends
-      await fetch('/api/logs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body,
+    const levelMap: Record<number, string> = {
+      0: 'debug',
+      1: 'info',
+      2: 'warn',
+      3: 'error',
+      4: 'error',
+    };
+    for (const entry of entries) {
+      const payload = JSON.stringify({
+        level: levelMap[entry.level] || 'info',
+        message: entry.message,
+        context: entry.context || {},
+        timestamp: new Date(entry.timestamp).toISOString(),
       });
+      if (immediate && typeof navigator !== 'undefined' && 'sendBeacon' in navigator) {
+        navigator.sendBeacon('/api/logs', payload);
+      } else {
+        await fetch('/api/logs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: payload,
+        });
+      }
     }
   }
 
@@ -215,6 +226,11 @@ class StructuredLogger {
       clearInterval(this.flushTimer);
     }
     this.flush(true);
+  }
+
+  setRemoteEnabled(enabled: boolean) {
+    // @ts-ignore
+    this.config.enableRemote = enabled;
   }
 }
 

@@ -1,770 +1,215 @@
-import { appLogger } from '@/lib/utils/appLogger';
 /**
- * 🗄️ INDEXED DB STORAGE SERVICE - Sistema de Armazenamento Escalável
+ * 🎯 QUIZ ENTITY - Core Business Object
  * 
- * Substitui localStorage por IndexedDB para:
- * - Capacidade ilimitada de armazenamento
- * - Operações assíncronas e transações ACID
- * - Versionamento de esquema robusto
- * - Índices complexos para busca rápida
- * - Compressão automática de dados grandes
- * - Sync server-side opcional
+ * Representa a entidade principal Quiz no domínio de negócio.
+ * Contém todas as regras de negócio relacionadas a um quiz.
  */
 
-// ============================================================================
-// TIPOS E INTERFACES
-// ============================================================================
-
-export interface StorageConfig {
-    dbName: string;
-    version: number;
-    stores: StoreConfig[];
+export interface QuizMetadata {
+  title: string;
+  description?: string;
+  category: string;
+  tags: string[];
+  estimatedDuration: number; // em minutos
+  difficulty: 'easy' | 'medium' | 'hard';
+  isPublished: boolean;
+  publishedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface StoreConfig {
-    name: string;
-    keyPath?: string;
-    autoIncrement?: boolean;
-    indexes?: IndexConfig[];
+export interface QuizSettings {
+  allowRestart: boolean;
+  showProgress: boolean;
+  shuffleQuestions: boolean;
+  timeLimit?: number; // em segundos
+  passingScore?: number; // percentual
+  maxAttempts?: number;
+  collectEmail: boolean;
+  collectPhone: boolean;
 }
 
-export interface IndexConfig {
-    name: string;
-    keyPath: string | string[];
-    options?: {
-        unique?: boolean;
-        multiEntry?: boolean;
+export interface QuizBranding {
+  primaryColor: string;
+  secondaryColor: string;
+  fontFamily: string;
+  logoUrl?: string;
+  backgroundImage?: string;
+  customCss?: string;
+}
+
+export class Quiz {
+  constructor(
+    public readonly id: string,
+    public metadata: QuizMetadata,
+    public settings: QuizSettings,
+    public branding: QuizBranding,
+    public questionIds: string[] = [],
+    public resultProfileIds: string[] = [],
+  ) {}
+
+  // 🔍 Business Rules - Quiz Validation
+  isValid(): boolean {
+    return (
+      this.metadata.title.trim().length > 0 &&
+      this.questionIds.length > 0 &&
+      this.resultProfileIds.length > 0
+    );
+  }
+
+  // 🔍 Business Rules - Publishing
+  canPublish(): boolean {
+    return (
+      this.isValid() &&
+      this.questionIds.length >= 2 && // Mínimo 2 perguntas
+      this.resultProfileIds.length >= 1 // Pelo menos 1 resultado
+    );
+  }
+
+  // 🔍 Business Rules - Quiz Duration
+  getEstimatedDuration(): number {
+    // Base: 30 segundos por pergunta + 1 minuto para resultado
+    const baseTime = (this.questionIds.length * 0.5) + 1;
+    return Math.max(baseTime, this.metadata.estimatedDuration);
+  }
+
+  // 🔍 Business Rules - Difficulty Calculation
+  calculateDifficulty(): 'easy' | 'medium' | 'hard' {
+    const questionCount = this.questionIds.length;
+    const hasTimeLimit = !!this.settings.timeLimit;
+    const hasPassingScore = !!this.settings.passingScore;
+
+    if (questionCount <= 5 && !hasTimeLimit && !hasPassingScore) {
+      return 'easy';
+    } else if (questionCount <= 10 && (!hasTimeLimit || !hasPassingScore)) {
+      return 'medium';
+    } else {
+      return 'hard';
+    }
+  }
+
+  // 🔍 Business Rules - Quiz State Management
+  publish(): Quiz {
+    if (!this.canPublish()) {
+      throw new Error('Quiz não pode ser publicado: validação falhou');
+    }
+
+    return new Quiz(
+      this.id,
+      {
+        ...this.metadata,
+        isPublished: true,
+        publishedAt: new Date(),
+      },
+      this.settings,
+      this.branding,
+      this.questionIds,
+      this.resultProfileIds,
+    );
+  }
+
+  unpublish(): Quiz {
+    return new Quiz(
+      this.id,
+      {
+        ...this.metadata,
+        isPublished: false,
+        publishedAt: undefined,
+      },
+      this.settings,
+      this.branding,
+      this.questionIds,
+      this.resultProfileIds,
+    );
+  }
+
+  // 🔍 Business Rules - Content Management
+  addQuestion(questionId: string): Quiz {
+    if (this.questionIds.includes(questionId)) {
+      throw new Error('Pergunta já existe no quiz');
+    }
+
+    return new Quiz(
+      this.id,
+      { ...this.metadata, updatedAt: new Date() },
+      this.settings,
+      this.branding,
+      [...this.questionIds, questionId],
+      this.resultProfileIds,
+    );
+  }
+
+  removeQuestion(questionId: string): Quiz {
+    const newQuestionIds = this.questionIds.filter(id => id !== questionId);
+    
+    if (newQuestionIds.length === this.questionIds.length) {
+      throw new Error('Pergunta não encontrada no quiz');
+    }
+
+    return new Quiz(
+      this.id,
+      { ...this.metadata, updatedAt: new Date() },
+      this.settings,
+      this.branding,
+      newQuestionIds,
+      this.resultProfileIds,
+    );
+  }
+
+  // 🔍 Business Rules - Result Management
+  addResultProfile(resultProfileId: string): Quiz {
+    if (this.resultProfileIds.includes(resultProfileId)) {
+      throw new Error('Perfil de resultado já existe no quiz');
+    }
+
+    return new Quiz(
+      this.id,
+      { ...this.metadata, updatedAt: new Date() },
+      this.settings,
+      this.branding,
+      this.questionIds,
+      [...this.resultProfileIds, resultProfileId],
+    );
+  }
+
+  // 🔍 Utility Methods
+  clone(newId?: string): Quiz {
+    return new Quiz(
+      newId || `${this.id}-copy`,
+      {
+        ...this.metadata,
+        title: `${this.metadata.title} (Cópia)`,
+        isPublished: false,
+        publishedAt: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { ...this.settings },
+      { ...this.branding },
+      [...this.questionIds],
+      [...this.resultProfileIds],
+    );
+  }
+
+  toJSON(): Record<string, any> {
+    return {
+      id: this.id,
+      metadata: this.metadata,
+      settings: this.settings,
+      branding: this.branding,
+      questionIds: this.questionIds,
+      resultProfileIds: this.resultProfileIds,
     };
-}
-
-export interface StorageItem<T = any> {
-    id: string;
-    data: T;
-    timestamp: number;
-    version: string;
-    ttl?: number;
-    metadata?: StorageMetadata;
-}
-
-export interface StorageMetadata {
-    namespace?: string;
-    tags?: string[];
-    compressed?: boolean;
-    originalSize?: number;
-    userId?: string;
-    context?: string;
-}
-
-export interface MigrationConfig {
-    fromVersion: number;
-    toVersion: number;
-    handler: (db: IDBDatabase, transaction: IDBTransaction) => Promise<void>;
-}
-
-export interface SyncConfig {
-    enabled: boolean;
-    endpoint?: string;
-    interval?: number;
-    batchSize?: number;
-    conflictResolution?: 'client-wins' | 'server-wins' | 'merge';
-}
-
-// ============================================================================
-// CONFIGURAÇÃO DO BANCO DE DADOS
-// ============================================================================
-
-export const DATABASE_CONFIG: StorageConfig = {
-    dbName: 'QuizQuestStorage',
-    version: 2,
-    stores: [
-        {
-            name: 'funnels',
-            keyPath: 'id',
-            indexes: [
-                { name: 'userId', keyPath: 'metadata.userId' },
-                { name: 'context', keyPath: 'metadata.context' },
-                { name: 'timestamp', keyPath: 'timestamp' },
-                { name: 'namespace', keyPath: 'metadata.namespace' },
-                { name: 'tags', keyPath: 'metadata.tags', options: { multiEntry: true } },
-            ],
-        },
-        {
-            name: 'settings',
-            keyPath: 'id',
-            indexes: [
-                { name: 'funnelId', keyPath: 'funnelId' },
-                { name: 'userId', keyPath: 'metadata.userId' },
-                { name: 'timestamp', keyPath: 'timestamp' },
-            ],
-        },
-        {
-            name: 'configurations',
-            keyPath: 'id',
-            indexes: [
-                { name: 'componentId', keyPath: 'data.componentId' },
-                { name: 'funnelId', keyPath: 'data.funnelId' },
-                { name: 'timestamp', keyPath: 'timestamp' },
-                { name: 'namespace', keyPath: 'metadata.namespace' },
-            ],
-        },
-        {
-            name: 'cache',
-            keyPath: 'id',
-            indexes: [
-                { name: 'namespace', keyPath: 'metadata.namespace' },
-                { name: 'ttl', keyPath: 'ttl' },
-                { name: 'timestamp', keyPath: 'timestamp' },
-            ],
-        },
-        {
-            name: 'sync_queue',
-            keyPath: 'id',
-            autoIncrement: true,
-            indexes: [
-                { name: 'status', keyPath: 'status' },
-                { name: 'priority', keyPath: 'priority' },
-                { name: 'timestamp', keyPath: 'timestamp' },
-            ],
-        },
-        {
-            name: 'metadata',
-            keyPath: 'key',
-            indexes: [
-                { name: 'category', keyPath: 'category' },
-                { name: 'timestamp', keyPath: 'timestamp' },
-            ],
-        },
-    ],
-};
-
-// ============================================================================
-// CLASSE PRINCIPAL
-// ============================================================================
-
-export class IndexedDBStorageService {
-    private static instance: IndexedDBStorageService;
-    private db: IDBDatabase | null = null;
-    private config: StorageConfig;
-    private migrations: MigrationConfig[] = [];
-    private syncConfig: SyncConfig = { enabled: false };
-
-    private constructor(config: StorageConfig = DATABASE_CONFIG) {
-        this.config = config;
-        this.setupMigrations();
-    }
-
-    static getInstance(config?: StorageConfig): IndexedDBStorageService {
-        if (!IndexedDBStorageService.instance) {
-            IndexedDBStorageService.instance = new IndexedDBStorageService(config);
-        }
-        return IndexedDBStorageService.instance;
-    }
-
-    // ============================================================================
-    // INICIALIZAÇÃO E CONFIGURAÇÃO
-    // ============================================================================
-
-    async initialize(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.config.dbName, this.config.version);
-
-            request.onerror = () => {
-                appLogger.error('❌ Erro ao abrir IndexedDB:', { data: [request.error] });
-                reject(request.error);
-            };
-
-            request.onsuccess = () => {
-                this.db = request.result;
-                appLogger.info('✅ IndexedDB inicializado com sucesso');
-                resolve();
-            };
-
-            request.onupgradeneeded = (event) => {
-                const db = (event.target as IDBOpenDBRequest).result;
-                this.handleUpgrade(db, event.oldVersion, event.newVersion || this.config.version);
-            };
-        });
-    }
-
-    private handleUpgrade(db: IDBDatabase, oldVersion: number, newVersion: number): void {
-        appLogger.info(`🔄 Atualizando IndexedDB: v${oldVersion} → v${newVersion}`);
-
-        // Criar object stores se não existirem
-        for (const storeConfig of this.config.stores) {
-            if (!db.objectStoreNames.contains(storeConfig.name)) {
-                const store = db.createObjectStore(storeConfig.name, {
-                    keyPath: storeConfig.keyPath,
-                    autoIncrement: storeConfig.autoIncrement,
-                });
-
-                // Criar índices
-                if (storeConfig.indexes) {
-                    for (const indexConfig of storeConfig.indexes) {
-                        store.createIndex(
-                            indexConfig.name,
-                            indexConfig.keyPath,
-                            indexConfig.options,
-                        );
-                    }
-                }
-                appLogger.info(`✅ Object store criado: ${storeConfig.name}`);
-            }
-        }
-
-        // Executar migrações personalizadas
-        this.executeMigrations(db, oldVersion, newVersion);
-    }
-
-    private setupMigrations(): void {
-        // Migração v1: Estrutura inicial - já tratada no handleUpgrade
-        this.migrations = [];
-    }
-
-    private executeMigrations(db: IDBDatabase, fromVersion: number, toVersion: number): void {
-        const applicableMigrations = this.migrations.filter(
-            m => m.fromVersion >= fromVersion && m.toVersion <= toVersion,
-        );
-
-        for (const migration of applicableMigrations) {
-            try {
-                const transaction = db.transaction(
-                    Array.from(db.objectStoreNames),
-                    'readwrite',
-                );
-                migration.handler(db, transaction);
-                appLogger.info(`✅ Migração executada: v${migration.fromVersion} → v${migration.toVersion}`);
-            } catch (error) {
-                appLogger.error(`❌ Erro na migração v${migration.fromVersion} → v${migration.toVersion}:`, { data: [error] });
-            }
-        }
-    }
-
-    // ============================================================================
-    // OPERAÇÕES CRUD BÁSICAS
-    // ============================================================================
-
-    async set<T>(
-        storeName: string,
-        key: string,
-        data: T,
-        metadata?: Partial<StorageMetadata>,
-    ): Promise<boolean> {
-        if (!this.db) {
-            throw new Error('IndexedDB não inicializado');
-        }
-
-        try {
-            const item: StorageItem<T> = {
-                id: key,
-                data,
-                timestamp: Date.now(),
-                version: this.config.version.toString(),
-                metadata: {
-                    namespace: 'default',
-                    ...metadata,
-                },
-            };
-
-            // Compressão automática para dados grandes
-            if (this.shouldCompress(data)) {
-                item.data = await this.compress(data);
-                item.metadata!.compressed = true;
-                item.metadata!.originalSize = JSON.stringify(data).length;
-            }
-
-            const transaction = this.db.transaction([storeName], 'readwrite');
-            const store = transaction.objectStore(storeName);
-
-            return new Promise((resolve, reject) => {
-                const request = store.put(item);
-
-                request.onsuccess = () => {
-                    appLogger.info(`✅ Dados salvos no IndexedDB: ${storeName}/${key}`);
-                    this.queueSync(storeName, key, 'PUT', item);
-                    resolve(true);
-                };
-
-                request.onerror = () => {
-                    appLogger.error('❌ Erro ao salvar no IndexedDB:', { data: [request.error] });
-                    reject(request.error);
-                };
-            });
-
-        } catch (error) {
-            appLogger.error('❌ Erro no método set:', { data: [error] });
-            return false;
-        }
-    }
-
-    async get<T>(storeName: string, key: string): Promise<T | null> {
-        if (!this.db) {
-            throw new Error('IndexedDB não inicializado');
-        }
-
-        try {
-            const transaction = this.db.transaction([storeName], 'readonly');
-            const store = transaction.objectStore(storeName);
-
-            return new Promise((resolve, reject) => {
-                const request = store.get(key);
-
-                request.onsuccess = async () => {
-                    const item = request.result as StorageItem<T> | undefined;
-
-                    if (!item) {
-                        resolve(null);
-                        return;
-                    }
-
-                    // Verificar TTL
-                    if (item.ttl && Date.now() > item.timestamp + (item.ttl * 1000)) {
-                        appLogger.info(`⏰ Item expirado removido: ${storeName}/${key}`);
-                        this.delete(storeName, key);
-                        resolve(null);
-                        return;
-                    }
-
-                    // Descompressão se necessário
-                    let data = item.data;
-                    if (item.metadata?.compressed) {
-                        data = await this.decompress(data);
-                    }
-
-                    appLogger.info(`✅ Dados carregados do IndexedDB: ${storeName}/${key}`);
-                    resolve(data);
-                };
-
-                request.onerror = () => {
-                    appLogger.error('❌ Erro ao carregar do IndexedDB:', { data: [request.error] });
-                    reject(request.error);
-                };
-            });
-
-        } catch (error) {
-            appLogger.error('❌ Erro no método get:', { data: [error] });
-            return null;
-        }
-    }
-
-    async delete(storeName: string, key: string): Promise<boolean> {
-        if (!this.db) {
-            throw new Error('IndexedDB não inicializado');
-        }
-
-        try {
-            const transaction = this.db.transaction([storeName], 'readwrite');
-            const store = transaction.objectStore(storeName);
-
-            return new Promise((resolve, reject) => {
-                const request = store.delete(key);
-
-                request.onsuccess = () => {
-                    appLogger.info(`✅ Item removido do IndexedDB: ${storeName}/${key}`);
-                    this.queueSync(storeName, key, 'DELETE');
-                    resolve(true);
-                };
-
-                request.onerror = () => {
-                    appLogger.error('❌ Erro ao remover do IndexedDB:', { data: [request.error] });
-                    reject(request.error);
-                };
-            });
-
-        } catch (error) {
-            appLogger.error('❌ Erro no método delete:', { data: [error] });
-            return false;
-        }
-    }
-
-    // ============================================================================
-    // OPERAÇÕES AVANÇADAS
-    // ============================================================================
-
-    async query<T>(
-        storeName: string,
-        filter?: {
-            index?: string;
-            key?: IDBValidKey | IDBKeyRange;
-            direction?: IDBCursorDirection;
-            limit?: number;
-        },
-    ): Promise<T[]> {
-        if (!this.db) {
-            throw new Error('IndexedDB não inicializado');
-        }
-
-        try {
-            const transaction = this.db.transaction([storeName], 'readonly');
-            const store = transaction.objectStore(storeName);
-            const source = filter?.index ? store.index(filter.index) : store;
-
-            return new Promise((resolve, reject) => {
-                const results: T[] = [];
-                const request = source.openCursor(filter?.key, filter?.direction);
-                let count = 0;
-
-                request.onsuccess = async (event) => {
-                    const cursor = (event.target as IDBRequest).result as IDBCursorWithValue;
-
-                    if (cursor && (!filter?.limit || count < filter.limit)) {
-                        const item = cursor.value as StorageItem<T>;
-
-                        // Verificar TTL
-                        if (!item.ttl || Date.now() <= item.timestamp + (item.ttl * 1000)) {
-                            let data = item.data;
-                            if (item.metadata?.compressed) {
-                                data = await this.decompress(data);
-                            }
-                            results.push(data);
-                            count++;
-                        }
-
-                        cursor.continue();
-                    } else {
-                        resolve(results);
-                    }
-                };
-
-                request.onerror = () => {
-                    appLogger.error('❌ Erro na consulta do IndexedDB:', { data: [request.error] });
-                    reject(request.error);
-                };
-            });
-
-        } catch (error) {
-            appLogger.error('❌ Erro no método query:', { data: [error] });
-            return [];
-        }
-    }
-
-    async clear(storeName: string, namespace?: string): Promise<boolean> {
-        if (!this.db) {
-            throw new Error('IndexedDB não inicializado');
-        }
-
-        try {
-            if (namespace) {
-                // Limpar apenas itens do namespace específico
-                const items = await this.query<any>(storeName, {
-                    index: 'namespace',
-                    key: namespace,
-                });
-
-                for (const item of items) {
-                    await this.delete(storeName, item.id);
-                }
-            } else {
-                // Limpar todo o store
-                const transaction = this.db.transaction([storeName], 'readwrite');
-                const store = transaction.objectStore(storeName);
-
-                return new Promise((resolve, reject) => {
-                    const request = store.clear();
-
-                    request.onsuccess = () => {
-                        appLogger.info(`✅ Store limpo: ${storeName}`);
-                        resolve(true);
-                    };
-
-                    request.onerror = () => {
-                        appLogger.error('❌ Erro ao limpar store:', { data: [request.error] });
-                        reject(request.error);
-                    };
-                });
-            }
-
-            return true;
-
-        } catch (error) {
-            appLogger.error('❌ Erro no método clear:', { data: [error] });
-            return false;
-        }
-    }
-
-    // ============================================================================
-    // COMPRESSÃO E OTIMIZAÇÃO
-    // ============================================================================
-
-    private shouldCompress(data: any): boolean {
-        const serialized = JSON.stringify(data);
-        return serialized.length > 10 * 1024; // Comprimir se > 10KB
-    }
-
-    private async compress<T>(data: T): Promise<any> {
-        try {
-            const serialized = JSON.stringify(data);
-            const compressed = await this.compressString(serialized);
-            return { __compressed: true, data: compressed };
-        } catch (error) {
-            appLogger.warn('⚠️ Falha na compressão, salvando dados originais:', { data: [error] });
-            return data;
-        }
-    }
-
-    private async decompress<T>(data: any): Promise<T> {
-        try {
-            if (data && data.__compressed) {
-                const decompressed = await this.decompressString(data.data);
-                return JSON.parse(decompressed);
-            }
-            return data;
-        } catch (error) {
-            appLogger.warn('⚠️ Falha na descompressão, retornando dados originais:', { data: [error] });
-            return data;
-        }
-    }
-
-    private async compressString(str: string): Promise<string> {
-        // Implementação simples de compressão usando LZ-string ou similar
-        // Por enquanto, retorna o string original
-        return str;
-    }
-
-    private async decompressString(str: string): Promise<string> {
-        // Implementação simples de descompressão
-        // Por enquanto, retorna o string original
-        return str;
-    }
-
-    // ============================================================================
-    // SINCRONIZAÇÃO SERVER-SIDE
-    // ============================================================================
-
-    setSyncConfig(config: Partial<SyncConfig>): void {
-        this.syncConfig = { ...this.syncConfig, ...config };
-
-        if (this.syncConfig.enabled && this.syncConfig.interval) {
-            this.startSyncInterval();
-        }
-    }
-
-    private queueSync(storeName: string, key: string, operation: 'PUT' | 'DELETE', data?: any): void {
-        if (!this.syncConfig.enabled) return;
-
-        const syncItem = {
-            storeName,
-            key,
-            operation,
-            data,
-            timestamp: Date.now(),
-            status: 'pending',
-            priority: 1,
-        };
-
-        // Adicionar à fila de sincronização
-        this.set('sync_queue', `${storeName}-${key}-${Date.now()}`, syncItem);
-    }
-
-    private startSyncInterval(): void {
-        if (this.syncConfig.interval) {
-            setInterval(() => {
-                this.processSyncQueue();
-            }, this.syncConfig.interval);
-        }
-    }
-
-    private async processSyncQueue(): Promise<void> {
-        if (!this.syncConfig.enabled || !this.syncConfig.endpoint) return;
-
-        try {
-            const pendingItems = await this.query<any>('sync_queue', {
-                index: 'status',
-                key: 'pending',
-                limit: this.syncConfig.batchSize || 10,
-            });
-
-            if (pendingItems.length === 0) return;
-
-            // Enviar para servidor
-            const response = await fetch(this.syncConfig.endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: pendingItems }),
-            });
-
-            if (response.ok) {
-                // Marcar como sincronizado
-                for (const item of pendingItems) {
-                    await this.set('sync_queue', item.id, { ...item, status: 'synced' });
-                }
-                appLogger.info(`✅ ${pendingItems.length} itens sincronizados com servidor`);
-            }
-
-        } catch (error) {
-            appLogger.error('❌ Erro na sincronização:', { data: [error] });
-        }
-    }
-
-    // ============================================================================
-    // OPERAÇÕES DE MANUTENÇÃO
-    // ============================================================================
-
-    async cleanup(): Promise<number> {
-        if (!this.db) return 0;
-
-        let removedCount = 0;
-
-        try {
-            for (const storeConfig of this.config.stores) {
-                const items = await this.query<StorageItem>(storeConfig.name);
-                const now = Date.now();
-
-                for (const item of items) {
-                    // Remover itens expirados
-                    if (item.ttl && now > item.timestamp + (item.ttl * 1000)) {
-                        await this.delete(storeConfig.name, item.id);
-                        removedCount++;
-                    }
-                }
-            }
-
-            appLogger.info(`🧹 ${removedCount} itens expirados removidos`);
-
-        } catch (error) {
-            appLogger.error('❌ Erro na limpeza:', { data: [error] });
-        }
-
-        return removedCount;
-    }
-
-    async getStats(): Promise<{
-        totalItems: number;
-        totalSize: number;
-        storeStats: Record<string, number>;
-    }> {
-        if (!this.db) {
-            return { totalItems: 0, totalSize: 0, storeStats: {} };
-        }
-
-        let totalItems = 0;
-        let totalSize = 0;
-        const storeStats: Record<string, number> = {};
-
-        try {
-            for (const storeConfig of this.config.stores) {
-                const items = await this.query<StorageItem>(storeConfig.name);
-                const storeItemCount = items.length;
-                const storeSize = items.reduce((acc, item) => {
-                    return acc + JSON.stringify(item).length;
-                }, 0);
-
-                storeStats[storeConfig.name] = storeItemCount;
-                totalItems += storeItemCount;
-                totalSize += storeSize;
-            }
-
-        } catch (error) {
-            appLogger.error('❌ Erro ao calcular estatísticas:', { data: [error] });
-        }
-
-        return { totalItems, totalSize, storeStats };
-    }
-
-    // ============================================================================
-    // RESET E VERSIONING
-    // ============================================================================
-
-    async resetDatabase(): Promise<boolean> {
-        try {
-            if (this.db) {
-                this.db.close();
-            }
-
-            // Deletar banco de dados
-            return new Promise((resolve, reject) => {
-                const deleteRequest = indexedDB.deleteDatabase(this.config.dbName);
-
-                deleteRequest.onsuccess = async () => {
-                    appLogger.info('✅ Database resetado com sucesso');
-                    // Reinicializar
-                    await this.initialize();
-                    resolve(true);
-                };
-
-                deleteRequest.onerror = () => {
-                    appLogger.error('❌ Erro ao resetar database:', { data: [deleteRequest.error] });
-                    reject(deleteRequest.error);
-                };
-            });
-
-        } catch (error) {
-            appLogger.error('❌ Erro no reset:', { data: [error] });
-            return false;
-        }
-    }
-
-    async backup(): Promise<string> {
-        if (!this.db) {
-            throw new Error('IndexedDB não inicializado');
-        }
-
-        try {
-            const backup: Record<string, any[]> = {};
-
-            for (const storeConfig of this.config.stores) {
-                backup[storeConfig.name] = await this.query<StorageItem>(storeConfig.name);
-            }
-
-            const backupData = {
-                version: this.config.version,
-                timestamp: Date.now(),
-                data: backup,
-            };
-
-            return JSON.stringify(backupData);
-
-        } catch (error) {
-            appLogger.error('❌ Erro no backup:', { data: [error] });
-            throw error;
-        }
-    }
-
-    async restore(backupString: string): Promise<boolean> {
-        try {
-            const backupData = JSON.parse(backupString);
-
-            // Verificar compatibilidade de versão
-            if (backupData.version > this.config.version) {
-                appLogger.warn('⚠️ Backup de versão superior, pode haver problemas de compatibilidade');
-            }
-
-            // Limpar dados existentes
-            for (const storeConfig of this.config.stores) {
-                await this.clear(storeConfig.name);
-            }
-
-            // Restaurar dados
-            for (const [storeName, items] of Object.entries(backupData.data)) {
-                if (Array.isArray(items)) {
-                    for (const item of items as StorageItem[]) {
-                        await this.set(storeName, item.id, item.data, item.metadata);
-                    }
-                }
-            }
-
-            appLogger.info('✅ Backup restaurado com sucesso');
-            return true;
-
-        } catch (error) {
-            appLogger.error('❌ Erro na restauração:', { data: [error] });
-            return false;
-        }
-    }
-}
-
-// ============================================================================
-// SINGLETON EXPORT
-// ============================================================================
-
-export const indexedDBStorage = IndexedDBStorageService.getInstance();
-
-// ============================================================================
-// INICIALIZAÇÃO AUTOMÁTICA
-// ============================================================================
-
-// Auto-inicializar quando o módulo for carregado
-if (typeof window !== 'undefined') {
-    indexedDBStorage.initialize().catch(error => {
-        appLogger.error('❌ Falha na inicialização automática do IndexedDB:', { data: [error] });
-    });
+  }
+
+  static fromJSON(data: Record<string, any>): Quiz {
+    return new Quiz(
+      data.id,
+      data.metadata,
+      data.settings,
+      data.branding,
+      data.questionIds || [],
+      data.resultProfileIds || [],
+    );
+  }
 }

@@ -56,7 +56,7 @@ app.use(express.static(path.join(__dirname, '../dist'), {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 // Alias via namespace /api para facilitar verificação pelo frontend (proxy já cobre /api)
 app.get('/api/health', (req, res) => {
@@ -190,7 +190,24 @@ app.get('/api/funnels/:id', (req, res) => {
     };
     funnelsStore.set(id, funnel);
   }
-  res.json(funnel);
+res.json(funnel);
+});
+
+const quizResults: any[] = [];
+const conversionEvents: any[] = [];
+const hotmartPurchases: any[] = [];
+const quizParticipants: any[] = [];
+app.get('/api/quiz-results', (_req, res) => {
+  res.json({ data: quizResults, count: quizResults.length, timestamp: new Date().toISOString() });
+});
+app.get('/api/conversion-events', (_req, res) => {
+  res.json({ data: conversionEvents, count: conversionEvents.length, timestamp: new Date().toISOString() });
+});
+app.get('/api/hotmart-purchases', (_req, res) => {
+  res.json({ data: hotmartPurchases, count: hotmartPurchases.length, timestamp: new Date().toISOString() });
+});
+app.get('/api/quiz-participants', (_req, res) => {
+  res.json({ data: quizParticipants, count: quizParticipants.length, timestamp: new Date().toISOString() });
 });
 
 // Templates (novo Template Engine)

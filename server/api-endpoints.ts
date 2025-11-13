@@ -122,6 +122,7 @@ class StructuredLogger {
 }
 
 const logger = new StructuredLogger();
+const utmStore: any[] = [];
 
 // ==================================================================================
 // Logs endpoint: recebe logs do frontend para monitoramento
@@ -222,6 +223,7 @@ export function setupUtmAnalyticsEndpoint(app: any) {
         ...validationResult.data,
         userAgent: req.headers['user-agent'],
         ip: req.ip || req.connection?.remoteAddress || req.socket?.remoteAddress,
+        createdAt: new Date().toISOString(),
       };
 
       // Log estruturado no servidor
@@ -231,8 +233,7 @@ export function setupUtmAnalyticsEndpoint(app: any) {
         endpoint: '/api/utm-analytics',
       });
 
-      // TODO: Implementar salvamento em banco de dados quando houver
-      // Por agora, apenas registramos e retornamos sucesso
+      utmStore.unshift(utmData);
       
       res.json({ 
         ok: true, 
@@ -249,6 +250,14 @@ export function setupUtmAnalyticsEndpoint(app: any) {
         error: 'Erro interno ao processar dados UTM',
         timestamp: new Date().toISOString(),
       });
+    }
+  });
+  app.get('/api/utm-analytics', suspiciousIpRateLimit, analyticsRateLimit, async (_req: Request, res: Response) => {
+    try {
+      res.json({ data: utmStore, count: utmStore.length, timestamp: new Date().toISOString() });
+    } catch (error) {
+      logger.error('Erro ao listar UTM analytics', error as Error, { endpoint: '/api/utm-analytics', method: 'GET' });
+      res.status(500).json({ error: 'Erro interno ao listar dados UTM', timestamp: new Date().toISOString() });
     }
   });
 }

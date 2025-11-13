@@ -1194,9 +1194,13 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         try {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) throw error;
-            dispatch({ type: 'SET_AUTH_STATE', payload: { user: data.user, isAuthenticated: true, isLoading: false } });
+            const user = data?.user ?? null;
+            if (!user) {
+                dispatch({ type: 'SET_AUTH_STATE', payload: { error: 'Supabase não configurado. Defina VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY.', isLoading: false } });
+                return;
+            }
+            dispatch({ type: 'SET_AUTH_STATE', payload: { user, isAuthenticated: true, isLoading: false } });
         } catch (error: any) {
-            // 💬 G48 FIX: Mensagem user-friendly
             const friendlyError = getUserFriendlyError(error, 'fazer login');
             logger.error('[login] Falha ao fazer login', { error: error.message });
             dispatch({ type: 'SET_AUTH_STATE', payload: { error: friendlyError.message, isLoading: false } });
@@ -1207,9 +1211,19 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     const signup = useCallback(async (email: string, password: string) => {
         dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
         try {
-            const { data, error } = await supabase.auth.signUp({ email, password });
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { emailRedirectTo: `${window.location.origin}/admin` },
+            });
             if (error) throw error;
-            dispatch({ type: 'SET_AUTH_STATE', payload: { user: data.user, isAuthenticated: true, isLoading: false } });
+            const user = data?.user ?? null;
+            if (!user) {
+                dispatch({ type: 'SET_AUTH_STATE', payload: { error: 'Supabase não configurado. Defina VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY.', isLoading: false } });
+                return;
+            }
+            try { await (supabase as any).auth.resend({ type: 'signup', email }); } catch {}
+            dispatch({ type: 'SET_AUTH_STATE', payload: { user, isAuthenticated: true, isLoading: false } });
         } catch (error: any) {
             dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message, isLoading: false } });
             throw error;
@@ -1423,6 +1437,29 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         resetPassword,
         signInWithGoogle,
     ]);
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                const { data } = await supabase.auth.getSession();
+                const user = data?.session?.user ?? null;
+                if (mounted) {
+                    dispatch({ type: 'SET_AUTH_STATE', payload: { user, isAuthenticated: !!user } });
+                }
+            } catch {}
+        })();
+        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+            const user = session?.user ?? null;
+            dispatch({ type: 'SET_AUTH_STATE', payload: { user, isAuthenticated: !!user } });
+        });
+        return () => {
+            mounted = false;
+            try {
+                (listener as any)?.subscription?.unsubscribe?.();
+            } catch {}
+        };
+    }, []);
 
     return (
         <SuperUnifiedContext.Provider value={value}>

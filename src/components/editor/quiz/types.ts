@@ -8,7 +8,9 @@ export interface BlockComponent {
     type: string;
     order: number;
     parentId?: string | null;
-    properties: Record<string, any>;
+    properties: Record<string, unknown>;
+
+
     content: Record<string, any>;
 }
 

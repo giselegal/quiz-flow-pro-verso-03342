@@ -47,11 +47,11 @@ export const useUtmParameters = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          utmSource: params.source,
-          utmMedium: params.medium,
-          utmCampaign: params.campaign,
-          utmContent: params.content,
-          utmTerm: params.term,
+          utm_source: params.source,
+          utm_medium: params.medium,
+          utm_campaign: params.campaign,
+          utm_content: params.content,
+          utm_term: params.term,
         }),
       });
 
@@ -60,7 +60,7 @@ export const useUtmParameters = () => {
       }
 
       const result = await response.json();
-      if (result.success) {
+      if (result.ok) {
         appLogger.info('UTM parameters saved successfully');
       } else {
         appLogger.error('Error saving UTM parameters:', { data: [result.error] });

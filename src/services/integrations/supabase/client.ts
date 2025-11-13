@@ -41,7 +41,11 @@ function buildMock() {
       getSession: async () => ({ data: { session: null }, error: null }),
       getUser: async () => ({ data: { user: null }, error: null }),
       signInWithPassword: async () => ok,
+      signUp: async () => ({ data: { user: null }, error: null }),
       signOut: async () => ok,
+      resetPasswordForEmail: async () => ok,
+      signInWithOAuth: async (_opts: any) => ({ data: { url: '' }, error: null }),
+      resend: async (_opts: any) => ok,
     },
     storage: {
       from: () => ({
@@ -74,6 +78,7 @@ export const supabase = (hasEnv && !DISABLE_SUPABASE)
         storage: getStorage(),
         persistSession: true,
         autoRefreshToken: true,
+        detectSessionInUrl: true,
       },
     })
   : (buildMock() as any);

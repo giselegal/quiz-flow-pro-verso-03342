@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -47,17 +47,17 @@ export const Home: React.FC = () => {
 
   // SEO otimizado
   useEffect(() => {
-    document.title = 'QuizFlow Pro – Create Engaging Quizzes That Convert Globally';
+    document.title = '🚀 Quiz Flow Pro Verso | Vista-se de Você! - Gisele Galvão';
     const metaDesc = document.querySelector('meta[name="description"]') || document.createElement('meta');
     metaDesc.setAttribute('name', 'description');
-    metaDesc.setAttribute('content', 'QuizFlow Pro: Create interactive quizzes with elegant design to capture leads and boost conversions worldwide. Trusted by 10,000+ businesses globally.');
+    metaDesc.setAttribute('content', 'Descubra seu estilo pessoal único com nosso quiz interativo.');
     if (!document.querySelector('meta[name="description"]')) {
       document.head.appendChild(metaDesc);
     }
   }, []);
 
   // Stats data
-  const stats = [
+  const stats = useMemo(() => [
     {
       number: '15K+',
       label: 'Quizzes Criados',
@@ -79,9 +79,9 @@ export const Home: React.FC = () => {
       color: 'text-purple-600',
       bg: 'bg-purple-50',
     },
-  ];
+  ], []);
 
-  const features = [
+  const features = useMemo(() => [
     {
       icon: Target,
       title: 'Editor Visual',
@@ -124,7 +124,7 @@ export const Home: React.FC = () => {
       color: 'text-teal-600',
       bg: 'bg-teal-50',
     },
-  ];
+  ], []);
 
   // Simple loading state
   if (isLoading) {
@@ -141,14 +141,14 @@ export const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Modern Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/90 border-b border-slate-200/50 shadow-sm">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0b1020]/90 border-b border-transparent shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-brand-brightBlue to-brand-lightBlue rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] bg-clip-text text-transparent">
                 QuizFlow
               </span>
               <Badge variant="secondary" className="ml-2 text-xs">Pro</Badge>
@@ -196,35 +196,28 @@ export const Home: React.FC = () => {
       <main>
         {/* Hero Section - Modern & International */}
         <section className="relative py-20 lg:py-32 overflow-hidden">
-          {/* Background Elements */}
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-background via-brand-light to-brand-lightBlue/10"></div>
-          <div className="absolute inset-0 bg-dot-pattern opacity-30"></div>
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(1200px 600px at 20% 20%, rgba(59,190,243,0.25) 0%, transparent 60%), radial-gradient(1000px 500px at 80% 80%, rgba(234,122,246,0.25) 0%, transparent 60%)' }}></div>
+          <div className="absolute inset-0 bg-[#0a0f1f]"></div>
 
           <div className="container mx-auto px-6 relative z-10">
             <div className="text-center max-w-5xl mx-auto">
-              <Badge className="mb-8 bg-brand-light text-brand-brightBlue border-brand-lightBlue/30 hover:bg-brand-lightBlue/20 transition-colors px-4 py-2">
+              <Badge className="mb-8 bg-[#132036] text-[#3bbef3] border-[#3bbef3]/30 hover:bg-[#132036]/80 transition-colors px-4 py-2">
                 <Sparkles className="h-4 w-4 mr-2" />
-                Plataforma de Quizzes Interativos
+                Vista-se de Você
               </Badge>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-slate-900 leading-tight tracking-tight">
-                Crie{' '}
-                <span className="bg-gradient-hero bg-clip-text text-transparent">
-                  Quizzes Interativos
-                </span>
-                <br />
-                Que Convertem
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-white leading-tight tracking-tight">
+                Vista-se de Você
               </h1>
 
-              <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-                Transforme visitantes em clientes com quizzes personalizados e interativos.
-                Design profissional, integração perfeita, resultados comprovados.
+              <p className="text-xl md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
+                Descubra seu estilo pessoal único com nosso quiz interativo.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue hover:from-brand-brightBlue/90 hover:to-brand-lightBlue/90 text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  className="bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] hover:from-[#38bdf8] hover:to-[#e879f9] text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
                   onClick={() => navigate(user ? '/dashboard' : '/auth')}
                 >
                   <Zap className="h-5 w-5 mr-2" />
@@ -233,7 +226,7 @@ export const Home: React.FC = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="text-lg px-10 py-4 border-2 border-slate-300 hover:bg-slate-50 rounded-xl transition-all"
+                  className="text-lg px-10 py-4 border-2 border-slate-600 text-white hover:bg-slate-800 rounded-xl transition-all"
                   onClick={() => navigate('/templates')}
                 >
                   <Target className="h-5 w-5 mr-2" />
@@ -261,26 +254,26 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Metrics - Modern & Clean */}
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-[#0a0f1f]">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-                Confiado por Líderes da Indústria
-              </h2>
-              <p className="text-slate-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
-                Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
-              </p>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                  Confiado por Líderes da Indústria
+                </h2>
+                <p className="text-slate-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
+                  Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
+                </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {stats.map((stat, index) => (
-                <Card key={index} className="text-center border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white">
+                <Card key={index} className="text-center border border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-[#101726]">
                   <CardContent className="p-10">
-                    <div className={`${stat.bg} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6`}>
-                      <stat.icon className={`h-8 w-8 ${stat.color}`} />
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
+                      <stat.icon className={`h-8 w-8 text-white`} />
                     </div>
-                    <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-3">{stat.number}</div>
-                    <div className="text-slate-600 font-medium text-lg">{stat.label}</div>
+                    <div className="text-4xl md:text-5xl font-bold text-white mb-3">{stat.number}</div>
+                    <div className="text-slate-300 font-medium text-lg">{stat.label}</div>
                   </CardContent>
                 </Card>
               ))}
@@ -289,26 +282,26 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Features */}
-        <section id="features" className="py-24 bg-slate-50">
+        <section id="features" className="py-24 bg-[#0a0f1f]">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
                 Tudo Que Você Precisa Para Ter Sucesso
               </h2>
-              <p className="text-slate-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
+              <p className="text-slate-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
                 Recursos poderosos projetados para ajudá-lo a criar, otimizar e escalar suas campanhas de quiz
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <Card key={index} className="p-8 hover:shadow-lg transition-all duration-300 border border-slate-200 bg-white hover:-translate-y-1">
+                <Card key={index} className="p-8 hover:shadow-lg transition-all duration-300 border border-slate-700 bg-[#101726] hover:-translate-y-1">
                   <CardContent className="p-0">
-                    <div className={`${feature.bg} w-14 h-14 rounded-xl flex items-center justify-center mb-6`}>
-                      <feature.icon className={`h-7 w-7 ${feature.color}`} />
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
+                      <feature.icon className={`h-7 w-7 text-white`} />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                    <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+                    <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                    <p className="text-slate-300 leading-relaxed">{feature.description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -316,21 +309,131 @@ export const Home: React.FC = () => {
           </div>
         </section>
 
+        {/* Testimonials */}
+        <section id="testimonials" className="py-24 bg-white">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">O que Nossos Clientes Dizem</h2>
+              <p className="text-slate-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">Empresas de todos os tamanhos usam QuizFlow para crescer mais rápido</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
+                <CardContent className="p-8">
+                  <div className="flex items-center mb-4 text-yellow-500">
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                  </div>
+                  <p className="text-slate-700 leading-relaxed mb-6">Triplicamos a taxa de conversão em 30 dias com quizzes personalizados. A configuração foi rápida e a análise é impecável.</p>
+                  <div className="text-slate-900 font-semibold">Mariana, Head de Marketing</div>
+                  <div className="text-slate-500 text-sm">E-commerce de Beleza</div>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
+                <CardContent className="p-8">
+                  <div className="flex items-center mb-4 text-yellow-500">
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                  </div>
+                  <p className="text-slate-700 leading-relaxed mb-6">Integração perfeita com nosso CRM. Em poucos minutos, lançamos campanhas que geram leads qualificados diariamente.</p>
+                  <div className="text-slate-900 font-semibold">Lucas, Growth Lead</div>
+                  <div className="text-slate-500 text-sm">Startup SaaS</div>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
+                <CardContent className="p-8">
+                  <div className="flex items-center mb-4 text-yellow-500">
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                    <Star className="h-5 w-5" />
+                  </div>
+                  <p className="text-slate-700 leading-relaxed mb-6">Ferramenta moderna, rápida e com templates incríveis. Ideal para equipes que prezam por performance e design.</p>
+                  <div className="text-slate-900 font-semibold">Aline, Diretora de Produto</div>
+                  <div className="text-slate-500 text-sm">EduTech</div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section id="pricing" className="py-24 bg-slate-50">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Planos Simples e Transparentes</h2>
+              <p className="text-slate-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">Escolha o plano ideal para seu estágio de crescimento</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <Card className="border border-slate-200 bg-white">
+                <CardContent className="p-8">
+                  <div className="text-slate-900 text-xl font-bold mb-2">Starter</div>
+                  <div className="text-4xl font-extrabold text-slate-900 mb-6">R$0<span className="text-lg font-medium text-slate-500">/mês</span></div>
+                  <ul className="space-y-3 text-slate-700 mb-8">
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />1 quiz ativo</li>
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates básicos</li>
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Coleta de leads</li>
+                  </ul>
+                  <Button onClick={() => navigate('/auth')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Começar Grátis</Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-brand-lightBlue bg-white shadow-lg relative">
+                <CardContent className="p-8">
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-light text-brand-brightBlue">Mais Popular</Badge>
+                  <div className="text-slate-900 text-xl font-bold mb-2">Pro</div>
+                  <div className="text-4xl font-extrabold text-slate-900 mb-6">R$99<span className="text-lg font-medium text-slate-500">/mês</span></div>
+                  <ul className="space-y-3 text-slate-700 mb-8">
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Quizzes ilimitados</li>
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates premium</li>
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Análises avançadas</li>
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Teste A/B</li>
+                  </ul>
+                  <Button onClick={() => navigate('/auth')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Assinar Pro</Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-slate-200 bg-white">
+                <CardContent className="p-8">
+                  <div className="text-slate-900 text-xl font-bold mb-2">Enterprise</div>
+                  <div className="text-4xl font-extrabold text-slate-900 mb-6">Custom</div>
+                  <ul className="space-y-3 text-slate-700 mb-8">
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />SLA e suporte dedicado</li>
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Integrações avançadas</li>
+                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Onboarding personalizado</li>
+                  </ul>
+                  <Button onClick={() => window.open('mailto:sales@quizflow.pro')} variant="outline" className="w-full">Falar com Vendas</Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
         {/* CTA Final */}
-        <section className="py-24 bg-gradient-to-r from-brand-brightBlue via-brand-lightBlue to-brand-brightPink">
+        <section className="py-24" style={{ background: 'linear-gradient(90deg, #3bbef3, #ea7af6)' }}>
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Pronto Para Transformar Seu Negócio?
             </h2>
-            <p className="text-xl text-brand-light mb-10 max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto">
               Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-brand-brightBlue hover:bg-brand-light px-8 py-4 text-lg font-semibold">
+              <Button size="lg" onClick={() => navigate(user ? '/dashboard' : '/auth')} className="bg-white text-[#0a0f1f] hover:bg-slate-100 px-8 py-4 text-lg font-semibold">
                 <Zap className="mr-2 h-5 w-5" />
                 Começar Teste Grátis
               </Button>
-              <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold">
+              <Button variant="outline" size="lg" onClick={() => window.open('mailto:sales@quizflow.pro')} className="border-2 border-white text-white hover:bg-white hover:text-[#0a0f1f] px-8 py-4 text-lg font-semibold">
                 <ArrowRight className="mr-2 h-5 w-5" />
                 Falar com Vendas
               </Button>

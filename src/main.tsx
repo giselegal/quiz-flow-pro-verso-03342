@@ -1,4 +1,5 @@
 //  G47 FIX: Inicializar Sentry ANTES de qualquer outra coisa
+import '@/lib/shims/processEnv';
 // SENTRY: adiar inicialização para após primeiro paint (evita bloquear bootstrap)
 import { initializeSentry } from '@/config/sentry.config';
 const defer = (fn: () => void) => {
