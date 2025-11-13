@@ -25,11 +25,29 @@
       "@/*": [
         "./src/*"
       ],
+      "@components/*": [
+        "./src/components/*"
+      ],
       "@services/*": [
         "./src/services/*"
       ],
       "@services-alias/*": [
         "./src/services/aliases/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@types/*": [
+        "./src/types/*"
+      ],
+      "@config/*": [
+        "./src/config/*"
       ],
       "@templates/*": [
         "./src/templates/*"

@@ -6,6 +6,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': '/src',
+      '@components': '/src/components',
+      '@services': '/src/services',
+      '@hooks': '/src/hooks',
+      '@utils': '/src/utils',
+      '@lib': '/src/lib',
+      '@types': '/src/types',
+      '@config': '/src/config',
+      '@templates': '/src/templates',
     },
   },
   server: {
