@@ -79,22 +79,9 @@ const ModeRenderer: React.FC<{
 }> = ({ mode, funnelId }) => {
   const { state, actions } = useEditor();
 
-  // ✅ Calcular totalSteps dinamicamente baseado nas stepBlocks disponíveis
   const totalSteps = useMemo(() => {
-    const stepKeys = Object.keys(state.stepBlocks || {});
-    const numsFromNumericKeys = stepKeys
-      .map(k => parseInt(k, 10))
-      .filter(n => !isNaN(n) && n > 0);
-    const numsFromStringKeys = stepKeys
-      .map(k => {
-        const m = k.match(/step-(\d+)/);
-        return m ? parseInt(m[1], 10) : NaN;
-      })
-      .filter(n => !isNaN(n) && n > 0);
-    const allNums = Array.from(new Set([...(numsFromNumericKeys as number[]), ...(numsFromStringKeys as number[])]));
-    if (allNums.length > 0) return Math.max(...allNums);
     return state.totalSteps || 21;
-  }, [state.stepBlocks]);
+  }, [state.totalSteps]);
 
   const renderModeContent = useCallback(() => {
     switch (mode) {
@@ -123,8 +110,17 @@ const ModeRenderer: React.FC<{
                         return [idx, count > 0];
                       }),
                     )}
-                    stepValidation={state.stepValidation}
-                    onSelectStep={actions.setCurrentStep}
+                    stepValidation={Object.fromEntries(
+                      Array.from({ length: totalSteps }, (_, i) => {
+                        const idx = i + 1;
+                        const valid = (state as any).stepValidation?.[idx]?.isValid;
+                        return [idx, typeof valid === 'boolean' ? valid : undefined];
+                      })
+                    ) as Record<number, boolean>}
+                    onSelectStep={(s) => {
+                      actions.setCurrentStep(s);
+                      actions.ensureStepLoaded(s);
+                    }}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
                       label: `Etapa ${step}`,
@@ -152,7 +148,12 @@ const ModeRenderer: React.FC<{
               <div className="flex-1 bg-background">
                 <LazyBoundary fallback={<ComponentLoadingFallback name="Canvas" />}>
                   <CanvasDropZone
-                    blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
+                    blocks={
+                      (state.stepBlocks as any)[state.currentStep] ||
+                      (state.stepBlocks as any)[`step-${state.currentStep}`] ||
+                      (state.stepBlocks as any)[`step-${String(state.currentStep).padStart(2, '0')}`] ||
+                      []
+                    }
                     selectedBlockId={state.selectedBlockId}
                     onSelectBlock={actions.setSelectedBlockId}
                     onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}
@@ -178,7 +179,12 @@ const ModeRenderer: React.FC<{
           <div className="h-full w-full p-4">
             <LazyBoundary fallback={<ComponentLoadingFallback name="Canvas Headless" />}>
               <CanvasDropZone
-                blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
+                blocks={
+                  (state.stepBlocks as any)[state.currentStep] ||
+                  (state.stepBlocks as any)[`step-${state.currentStep}`] ||
+                  (state.stepBlocks as any)[`step-${String(state.currentStep).padStart(2, '0')}`] ||
+                  []
+                }
                 selectedBlockId={state.selectedBlockId}
                 onSelectBlock={actions.setSelectedBlockId}
                 onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}
@@ -211,10 +217,25 @@ const ModeRenderer: React.FC<{
                     currentStep={state.currentStep}
                     totalSteps={totalSteps}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0]),
+                      Array.from({ length: totalSteps }, (_, i) => {
+                        const idx = i + 1;
+                        const byNum = (state.stepBlocks as any)[idx] || [];
+                        const byStr = (state.stepBlocks as any)[`step-${String(idx).padStart(2, '0')}`] || (state.stepBlocks as any)[`step-${idx}`] || [];
+                        const count = Array.isArray(byNum) ? byNum.length : Array.isArray(byStr) ? byStr.length : 0;
+                        return [idx, count > 0];
+                      }),
                     )}
-                    stepValidation={state.stepValidation}
-                    onSelectStep={actions.setCurrentStep}
+                    stepValidation={Object.fromEntries(
+                      Array.from({ length: totalSteps }, (_, i) => {
+                        const idx = i + 1;
+                        const valid = (state as any).stepValidation?.[idx]?.isValid;
+                        return [idx, typeof valid === 'boolean' ? valid : undefined];
+                      })
+                    ) as Record<number, boolean>}
+                    onSelectStep={(s) => {
+                      actions.setCurrentStep(s);
+                      actions.ensureStepLoaded(s);
+                    }}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
                       label: `Etapa ${step}`,
@@ -227,7 +248,12 @@ const ModeRenderer: React.FC<{
               <div className="flex-1">
                 <LazyBoundary fallback={<ComponentLoadingFallback name="Canvas" />}>
                   <CanvasDropZone
-                    blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
+                    blocks={
+                      (state.stepBlocks as any)[state.currentStep] ||
+                      (state.stepBlocks as any)[`step-${state.currentStep}`] ||
+                      (state.stepBlocks as any)[`step-${String(state.currentStep).padStart(2, '0')}`] ||
+                      []
+                    }
                     selectedBlockId={state.selectedBlockId}
                     onSelectBlock={actions.setSelectedBlockId}
                     onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}

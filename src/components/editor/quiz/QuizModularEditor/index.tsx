@@ -392,7 +392,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                 if (!signal.aborted) {
                     setLoadedTemplate({ name: `Template: ${tid} (JSON v3)`, steps: stepsMeta });
-                    setCurrentStep(1);
+                    try {
+                        const p = new URLSearchParams(window.location.search);
+                        const s = p.get('step');
+                        const n = s ? parseInt(s, 10) : NaN;
+                        const hasUrlStep = !isNaN(n) && n >= 1 && n <= 21;
+                        const curr = unifiedState.editor.currentStep;
+                        if (!hasUrlStep && (!curr || curr < 1)) {
+                            setCurrentStep(1);
+                        }
+                    } catch {
+                        setCurrentStep(1);
+                    }
                 }
 
                 // ✅ G4 FIX: prepareTemplate() e preloadTemplate() REMOVIDOS
@@ -891,7 +902,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 name: `Template: ${tid}`,
                 steps: templateStepsResult.data
             });
-            setCurrentStep(1);
+            try {
+                const p = new URLSearchParams(window.location.search);
+                const s = p.get('step');
+                const n = s ? parseInt(s, 10) : NaN;
+                const hasUrlStep = !isNaN(n) && n >= 1 && n <= 21;
+                const curr = unifiedState.editor.currentStep;
+                if (!hasUrlStep && (!curr || curr < 1)) {
+                    setCurrentStep(1);
+                }
+            } catch {
+                setCurrentStep(1);
+            }
             appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${templateStepsResult.data.length} steps`);
 
             const url = new URL(window.location.href);
