@@ -71,7 +71,7 @@ const generateRandomSession = (index: number) => {
         timeSpent = Math.floor(Math.random() * 600) + 120; // 2-12min
     }
 
-    const sessionId = `session_${Date.now()}_${index}_${Math.random().toString(36).substr(2, 9)}`;
+    const sessionId = `session_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}_${index}`;
 
     return {
         session: {

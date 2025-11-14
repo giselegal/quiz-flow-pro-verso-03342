@@ -53,7 +53,7 @@ export class Quiz21StepsDataExtractor {
         title: step.title || `Etapa ${index + 1}`,
         blocks: (step.blocks || []).map((block: any) => ({
           ...block,
-          id: block.id || `block-${Date.now()}-${Math.random()}`,
+          id: block.id || `block-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
         })),
       }));
 

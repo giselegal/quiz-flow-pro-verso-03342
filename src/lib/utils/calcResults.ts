@@ -167,7 +167,7 @@ export class CalculationEngine {
       // Step 7: Build final result
       const result: AggregateResult = {
         // Base result properties
-        id: `result-${Date.now()}`,
+        id: `result-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
         responses: {},
         primaryStyle: styleResults[0],
         secondaryStyles: styleResults.slice(1),
@@ -530,7 +530,7 @@ export class CalculationEngine {
         .map((result, index) => ({ ...result, rank: index + 1 }));
 
     return {
-      id: `fallback-${Date.now()}`,
+      id: `fallback-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
       responses: {},
       score: totalScore,
       maxScore: 100,

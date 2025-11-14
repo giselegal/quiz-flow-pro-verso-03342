@@ -25,9 +25,16 @@ export async function loadStepFromJson(
   if (!stepId) return null;
 
   // Helper: tenta carregar e extrair blocks de diferentes formatos
+  let cacheMode: RequestCache = 'default';
+  try {
+    // @ts-ignore
+    const env = (import.meta as any)?.env;
+    if (env?.VITE_TEMPLATE_LIVE_EDIT === 'true') cacheMode = 'no-store';
+  } catch {}
+
   const tryUrl = async (url: string): Promise<Block[] | null> => {
     try {
-      const res = await fetch(url, { cache: 'no-cache' });
+      const res = await fetch(url, { cache: cacheMode });
       if (!res.ok) return null;
       const data = await res.json();
       if (Array.isArray(data)) return data as Block[];
@@ -51,8 +58,11 @@ export async function loadStepFromJson(
   let bust = '';
   try {
     // @ts-ignore
-    if ((import.meta as any)?.env?.DEV) bust = `?t=${Date.now()}`;
-  } catch { /* noop */ }
+    const env = (import.meta as any)?.env;
+    const enableBust = env?.VITE_TEMPLATE_CACHE_BUST === 'true';
+    const live = env?.VITE_TEMPLATE_LIVE_EDIT === 'true';
+    if (live || enableBust) bust = `?t=${Date.now()}`;
+  } catch {}
 
   const paths: string[] = [
     `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`,

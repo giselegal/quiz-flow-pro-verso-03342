@@ -121,7 +121,7 @@ class OptimizedGlobalEventManager {
         } = {},
     ): EventCleanup {
 
-        const subscriptionId = `${eventType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const subscriptionId = `${eventType}-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`;
 
         if (!this.listeners.has(eventType)) {
             this.listeners.set(eventType, new Map());

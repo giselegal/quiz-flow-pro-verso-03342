@@ -1,5 +1,6 @@
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateErrorId, generateSessionId } from '@/lib/utils/idGenerator';
 /**
  * 🚨 ERROR TRACKING SERVICE - Phase 3 Implementation
  * Sentry-like error tracking with structured logging
@@ -320,7 +321,7 @@ class ErrorTrackingService {
    * Gerar ID único para erro
    */
   private generateErrorId(): string {
-    return `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return generateErrorId();
   }
 
   /**
@@ -336,7 +337,7 @@ class ErrorTrackingService {
    * Gerar ID da sessão
    */
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return generateSessionId();
   }
 
   /**

@@ -11,6 +11,7 @@
 
 import { FunnelTemplate } from '@/config/funnelTemplates';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateTimerId, generateBlockId, generatePageId, generateFunnelId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES E INTERFACES
@@ -50,8 +51,8 @@ export interface CloneResult<T> {
 // ID GENERATION
 // ============================================================================
 
-const generateId = () => `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-const generateUniqueId = (prefix = 'item') => `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+const generateId = (): string => generateTimerId('id');
+const generateUniqueId = (prefix = 'item'): string => generateTimerId(prefix);
 
 // ============================================================================
 // DEEP CLONE IMPLEMENTATION
@@ -252,8 +253,10 @@ function updateIdReferences(obj: any, idMapping: Map<string, string>): void {
  * Extrai prefixo de um ID para manter padrão
  */
 function getIdPrefix(id: string): string {
-    const parts = id.split('_');
-    return parts[0] || 'item';
+    const hyphenParts = id.split('-');
+    if (hyphenParts.length > 1) return hyphenParts[0] || 'item';
+    const underscoreParts = id.split('_');
+    return underscoreParts[0] || 'item';
 }
 
 /**
@@ -340,12 +343,12 @@ export function cloneFunnelTemplate(template: FunnelTemplate, customName?: strin
     const cloned = cloneResult.cloned;
 
     return {
-        id: `${template.id}-${generateId()}`,
+        id: generateFunnelId(),
         templateSourceId: template.id,
         name: customName || template.name,
         description: template.description,
         blocks: cloned.blocks?.map((b: any) => ({
-            id: generateId(),
+            id: generateBlockId(),
             type: b.type,
             properties: deepClone(b.properties || {}),
         })) || [],
@@ -378,14 +381,14 @@ export function cloneFunnelPages(pages: any[], funnelId?: string): any[] {
         const clonedPage = deepClone(page);
 
         // Regenerar IDs
-        clonedPage.id = generateUniqueId('page');
+        clonedPage.id = generatePageId();
         if (funnelId) clonedPage.funnel_id = funnelId;
 
         // Regenerar IDs dos blocos
         if (clonedPage.blocks) {
             clonedPage.blocks = clonedPage.blocks.map((block: any) => ({
                 ...deepClone(block),
-                id: generateUniqueId('block'),
+                id: generateBlockId(),
             }));
         }
 

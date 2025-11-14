@@ -33,6 +33,7 @@
  */
 
 import { BaseCanonicalService, ServiceResult } from './types';
+import { generateHistoryId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -894,7 +895,7 @@ export class HistoryService extends BaseCanonicalService {
   // ============================================================================
 
   private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return generateHistoryId();
   }
 
   private loadHistory(): void {
@@ -943,3 +944,4 @@ export class HistoryService extends BaseCanonicalService {
 // ============================================================================
 
 export default HistoryService;
+  

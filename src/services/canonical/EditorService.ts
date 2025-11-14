@@ -33,6 +33,7 @@
  */
 
 import { BaseCanonicalService, ServiceResult } from './types';
+import { generateBlockId as generateUuidBlockId } from '@/lib/utils/idGenerator';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -866,7 +867,7 @@ export class EditorService extends BaseCanonicalService {
   // ============================================================================
 
   private generateBlockId(): string {
-    return `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return generateUuidBlockId();
   }
 
   private scheduleAutoSave(): void {

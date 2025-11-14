@@ -551,7 +551,7 @@ export const trackHotmartConversion = (transactionId?: string, value: number = 9
     content_category: 'hotmart',
     content_name: 'style_guide_premium',
     event_category: 'purchase',
-    transaction_id: transactionId || `hotmart_${Date.now()}`,
+    transaction_id: transactionId || `hotmart_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
     value,
     currency: 'BRL',
   };

@@ -134,6 +134,23 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
     } catch { /* noop */ }
     return false;
   }
+  private get LIVE_EDIT(): boolean {
+    try {
+      if (typeof window !== 'undefined') {
+        const ls = window.localStorage?.getItem('VITE_TEMPLATE_LIVE_EDIT');
+        if (ls != null) return ls === 'true';
+      }
+      let rawVite: any;
+      try {
+        // @ts-ignore
+        rawVite = (import.meta as any)?.env?.VITE_TEMPLATE_LIVE_EDIT;
+      } catch { }
+      if (typeof rawVite === 'string') return rawVite === 'true';
+      const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_LIVE_EDIT : undefined);
+      if (typeof rawNode === 'string') return rawNode === 'true';
+    } catch { }
+    return false;
+  }
 
   constructor(options: DataSourceOptions = {}) {
     this.options = {
@@ -146,6 +163,9 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
     // Se JSON-only, desativar fallback para estático imediatamente
     if (this.JSON_ONLY) {
       this.options.fallbackToStatic = false;
+    }
+    if (this.LIVE_EDIT) {
+      this.options.enableCache = false;
     }
 
     // Log único para clarificar se Supabase está desligado (dev experience)
@@ -259,23 +279,26 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
 
           // Gravar no IndexedDB (opt-in) com TTL padrão 10min
           try {
-            // TTL dinâmico em DEV para TEMPLATE_DEFAULT → refletir edições mais rápido
-            let ttl = 10 * 60_000; // 10min padrão
-            try {
-              // @ts-ignore
-              const isDev = !!(import.meta as any)?.env?.DEV;
-              if (isDev && priority === DataSourcePriority.TEMPLATE_DEFAULT) {
-                ttl = 1500; // 1.5s em desenvolvimento para JSON local
-              }
-            } catch { /* noop */ }
-            await IndexedTemplateCache.set(idbKey, {
-              key: idbKey,
-              blocks,
-              savedAt: Date.now(),
-              ttlMs: ttl,
-              version: 'v3.2',
-            });
-          } catch { /* ignore idb errors */ }
+            if (!this.LIVE_EDIT) {
+              let ttl = 10 * 60_000;
+              try {
+                // @ts-ignore
+                const isDev = !!(import.meta as any)?.env?.DEV;
+                if (isDev && priority === DataSourcePriority.TEMPLATE_DEFAULT) {
+                  // @ts-ignore
+                  const envTtl = (import.meta as any)?.env?.VITE_TEMPLATE_JSON_DEV_TTL;
+                  ttl = Number(envTtl) > 0 ? Number(envTtl) : 60_000;
+                }
+              } catch { }
+              await IndexedTemplateCache.set(idbKey, {
+                key: idbKey,
+                blocks,
+                savedAt: Date.now(),
+                ttlMs: ttl,
+                version: 'v3.2',
+              });
+            }
+          } catch { }
 
           this.log(stepId, 'LOADED', priority, loadTime);
           this.recordMetric(stepId, priority, loadTime);

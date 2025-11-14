@@ -1,4 +1,5 @@
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateTimerId } from '@/lib/utils/idGenerator';
 /**
  * 🎨 Master Template Service - Simplified for Phase 4
  * 
@@ -93,7 +94,7 @@ export class MasterTemplateService {
     // Return a mock template for compatibility
     return {
       ...template,
-      id: `template_${Date.now()}`,
+      id: generateTimerId('template'),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -167,7 +167,7 @@ export class TemplateService extends BaseCanonicalService {
 
   // 🚀 FASE 3.1: Smart Lazy Loading
   private readonly CRITICAL_STEPS = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
-  private readonly PRELOAD_NEIGHBORS = 1; // Preload ±1 step
+  private readonly PRELOAD_NEIGHBORS = 0;
   private stepLoadPromises = new Map<string, Promise<any>>();
   private loadedSteps = new Set<string>();
 

@@ -11,6 +11,7 @@
 
 import { Block, BlockType } from '@/types/editor';
 import { MASTER_BLOCK_REGISTRY } from '@/config/masterSchema';
+import { generateBlockId } from '@/lib/utils/idGenerator';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipos simples para o serviço
@@ -69,7 +70,7 @@ class UnifiedEditorService {
             throw new Error(`Block type '${type}' not found in registry`);
         }
 
-        const blockId = `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const blockId = generateBlockId();
 
         const block: Block = {
             id: blockId,

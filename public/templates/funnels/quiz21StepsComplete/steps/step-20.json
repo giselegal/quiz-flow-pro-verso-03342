@@ -17,7 +17,7 @@
           "showCelebration": true,
           "celebrationEmoji": "🎉",
           "celebrationAnimation": "bounce",
-          "greetingFormat": "Olá, {userName}!",
+      "greetingFormat": "Olá, {userName}! — LIVE",
           "titleFormat": "Seu Estilo Predominante é:",
           "styleNameDisplay": "{styleName}",
           "colors": {
@@ -274,7 +274,7 @@
   ],
   "metadata": {
     "id": "step-20-atomic",
-    "name": "Resultado Personalizado - Atomic v3",
+    "name": "Resultado Personalizado - Atomic v3 (LIVE)",
     "description": "Step 20 com blocos atômicos reordenáveis",
     "category": "quiz-result",
     "tags": [

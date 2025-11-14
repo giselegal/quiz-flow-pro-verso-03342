@@ -544,7 +544,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     if (isEditMode && productionParityInEdit) {
         if (step.type === 'transition' || step.type === 'transition-result') {
             return (
-                <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+                <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={stepKey}>
                     <ModularTransitionStep
                         data={{ id: step.id }}
                         blocks={blocks as any}
@@ -557,7 +557,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
         if (step.type === 'result') {
             return (
-                <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+                <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={stepKey}>
                     <ModularResultStep
                         data={{ id: step.id }}
                         blocks={blocks as any}
@@ -572,7 +572,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
     // Caminho de blocos diretos (genérico)
     return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={step.id}>
+        <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" data-step-id={stepKey}>
             {isEditMode ? (
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>

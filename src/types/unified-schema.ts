@@ -20,6 +20,7 @@
 
 import { Database } from '@/services/integrations/supabase/types';
 import { z } from 'zod';
+import { generateHistoryId } from '@/lib/utils/idGenerator';
 
 // =============================================================================
 // SUPABASE DATABASE TYPES (Re-exported for convenience)
@@ -278,7 +279,7 @@ export interface UtmParameters {
 // =============================================================================
 
 export const generateId = (): string => {
-  return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return generateHistoryId();
 };
 
 // Enhanced validation functions with proper error handling

@@ -6,6 +6,7 @@
  */
 
 import { ComponentConfig } from './ComponentBuilder';
+import { generateTimerId } from '@/lib/utils/idGenerator';
 
 // ✨ TIPOS DO UI BUILDER
 export interface LayoutConfig {
@@ -350,7 +351,7 @@ export class UIBuilder {
     }
 
     private generateId(): string {
-        return `layout_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        return generateTimerId('layout');
     }
 
     // ✨ CONFIGURAÇÃO BÁSICA

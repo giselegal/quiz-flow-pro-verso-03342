@@ -1,6 +1,7 @@
 import { SupabaseComponent } from '@/hooks/useEditorSupabase';
 import { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateTimerId } from '@/lib/utils/idGenerator';
 
 /**
  * Mapeia um componente do Supabase para um Block da UI
@@ -104,7 +105,7 @@ export const extractStepNumberFromKey = (stepKey: string): number => {
  */
 export const createTempBlock = (blockData: Partial<Block>): Block => {
   return {
-    id: `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+  id: generateTimerId('temp'),
     type: blockData.type || 'text',
     order: blockData.order ?? 0,
     content: blockData.content ?? {},

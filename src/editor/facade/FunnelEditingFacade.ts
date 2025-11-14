@@ -237,7 +237,7 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
     addBlock(stepId: FunnelStepID, block: Omit<FunnelBlock, 'id'> & { id?: string }): FunnelBlock | undefined {
         const step = this.state.steps.find(s => s.id === stepId);
         if (!step) return undefined;
-        const newBlock: FunnelBlock = { id: block.id || `blk-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, type: block.type, data: block.data || {} };
+        const newBlock: FunnelBlock = { id: block.id || `blk-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 6)}`, type: block.type, data: block.data || {} };
         step.blocks.push(newBlock);
         this.setDirty(true);
         this.emit('blocks/changed', { stepId, blocks: step.blocks.slice(), reason: 'add' });

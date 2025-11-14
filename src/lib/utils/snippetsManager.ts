@@ -34,7 +34,7 @@ export const snippetsManager = {
     list(): BlockSnippet[] { return loadAll(); },
     create(name: string, blocks: any[]): BlockSnippet {
         const all = loadAll();
-        const snippet: BlockSnippet = { id: `snip-${Date.now()}`, name, createdAt: Date.now(), blocks: JSON.parse(JSON.stringify(blocks)) };
+        const snippet: BlockSnippet = { id: `snip-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`, name, createdAt: Date.now(), blocks: JSON.parse(JSON.stringify(blocks)) };
         all.push(snippet);
         saveAll(all);
         return snippet;

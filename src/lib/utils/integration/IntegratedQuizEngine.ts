@@ -11,7 +11,7 @@
     trackEvent: (_event: any) => {},
     initialize: (_config: any) => {},
     trackUserSession: (_userId: string, _data: any) => {},
-    trackStepInteraction: (_stepId: string, _action: string, _data?: any) => `event_${Date.now()}`,
+  trackStepInteraction: (_stepId: string, _action: string, _data?: any) => `event_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
     trackError: (_error: Error, _context?: any) => {},
     track: (_category: string, _action: string, _label: string, _data?: any) => {},
     generateReport: (_type: string, _timeRange: any, _options?: any) => ({ report: 'mock' }),
@@ -99,7 +99,7 @@ const mockLogger: Logger = {
 };
 
 const unifiedIDGenerator: UnifiedIDGenerator = {
-    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  generateID: (type: string, _context?: any) => `${type}_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
 };
 
 const personalizationEngine: PersonalizationEngine = {
@@ -115,7 +115,7 @@ const realAnalyticsEngine: RealAnalyticsEngine = {
     trackEvent: (_event: any) => { },
     initialize: (_config: any) => { },
     trackUserSession: (_userId: string, _data: any) => { },
-    trackStepInteraction: (_stepId: string, _action: string, _data?: any) => `event_${Date.now()}`,
+  trackStepInteraction: (_stepId: string, _action: string, _data?: any) => `event_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
     trackError: (_error: Error, _context?: any) => { },
     track: (_category: string, _action: string, _label: string, _data?: any) => { },
     generateReport: (_type: string, _timeRange: any, _options?: any) => ({ report: 'mock' }),

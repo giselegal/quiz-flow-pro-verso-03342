@@ -7,7 +7,7 @@
 
 // Import estático do template principal (JSON - fonte canônica)
 import QUIZ_STYLE_21_STEPS_TEMPLATE from './quiz21StepsComplete.json';
-import { TemplateRegistry } from '@/services/TemplateRegistry';
+// Deprecated TemplateRegistry removido; usar fallback TS
 import { normalizeTemplateBlocks } from '@/lib/utils/blockNormalization';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -28,12 +28,7 @@ export const getStepTemplate = (stepId: string) => {
     ? `step-${String(parseInt(stepId.replace('step-', ''), 10)).padStart(2, '0')}`
     : stepId;
 
-  const registry = TemplateRegistry.getInstance();
-
-  const fromRegistry = registry.get(stepKey);
-  if (fromRegistry) {
-    return { step: fromRegistry, source: 'registry' as const };
-  }
+  // Registry deprecated: retornar somente do template TS
 
   const template = getQuiz21StepsTemplate() as any;
   return { step: template?.[stepKey], source: 'ts' as const };
@@ -106,8 +101,7 @@ export const loadTemplate = async (templateId: string) => {
                 resp = await fetch(urlV3, { cache: 'no-store' });
                 if (resp.ok) {
                   const json = await resp.json();
-                  const registry = TemplateRegistry.getInstance();
-                  registry.registerOverride(stepId, json as any);
+                  // Registry removido — override ignorado em runtime
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
                   appLogger.info(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
@@ -118,8 +112,7 @@ export const loadTemplate = async (templateId: string) => {
                 resp = await fetch(urlBlocks, { cache: 'no-store' });
                 if (resp.ok) {
                   const json = await resp.json();
-                  const registry = TemplateRegistry.getInstance();
-                  registry.registerOverride(stepId, json as any);
+                  // Registry removido — override ignorado em runtime
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
                     appLogger.info(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
@@ -131,8 +124,7 @@ export const loadTemplate = async (templateId: string) => {
                 resp = await fetch(urlBlocks, { cache: 'no-store' });
                 if (resp.ok) {
                   const json = await resp.json();
-                  const registry = TemplateRegistry.getInstance();
-                  registry.registerOverride(stepId, json as any);
+                  // Registry removido — override ignorado em runtime
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
                     appLogger.info(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
@@ -143,8 +135,7 @@ export const loadTemplate = async (templateId: string) => {
                 resp = await fetch(urlV3, { cache: 'no-store' });
                 if (resp.ok) {
                   const json = await resp.json();
-                  const registry = TemplateRegistry.getInstance();
-                  registry.registerOverride(stepId, json as any);
+                  // Registry removido — override ignorado em runtime
                   w.__jsonV3Overrides.add(stepId);
                   if (process.env.NODE_ENV === 'development') {
                     appLogger.info(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
@@ -193,38 +184,7 @@ export const loadTemplate = async (templateId: string) => {
 export { QUIZ_STYLE_21_STEPS_TEMPLATE };
 
 // 🚀 Registrar todos os steps no TemplateRegistry em tempo de build/import
-try {
-  const registry = TemplateRegistry.getInstance();
-  const entries = Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE);
-  let registered = 0;
-  const registeredKeys: string[] = [];
-
-  for (const [key, template] of entries) {
-    if (key.startsWith('step-')) {
-      // normaliza id para step-XX
-      const match = key.match(/^step-(\d{1,2})$/);
-      const normalizedKey = match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : key;
-
-      // Verificar se já existe
-      if (registry.has(normalizedKey)) {
-  appLogger.warn(`⚠️  Step '${normalizedKey}' já está registrado. Sobrescrevendo...`, { stepId: normalizedKey });
-      }
-
-      // normaliza tipos (aliases → canônico 'options-grid')
-      // Template pode ser array de blocks ou Record<string, Block[]>
-      const blocksArray = Array.isArray(template) ? template : (template as any).blocks || [];
-      const normalizedTemplate = normalizeTemplateBlocks(blocksArray);
-      registry.register(normalizedKey, normalizedTemplate as any);
-      registeredKeys.push(normalizedKey);
-      registered++;
-    }
-  }
-
-  appLogger.info(`✅ TemplateRegistry registrado: ${registered} steps`, { count: registered });
-  appLogger.info('📋 Steps registrados:', { steps: registeredKeys.sort() });
-} catch (err) {
-  appLogger.error('❌ Erro ao registrar templates no TemplateRegistry:', err instanceof Error ? err : undefined, { error: err });
-}
+// Registro de TemplateRegistry removido — usar TemplateService/HierarchicalSource
 
 // 🌐 Browser-only: pré-carregar overrides JSON v3 para steps conhecidos (1..21)
 if (typeof window !== 'undefined') {
@@ -234,7 +194,7 @@ if (typeof window !== 'undefined') {
     // Disparar no próximo tick para não bloquear o bootstrap
     setTimeout(async () => {
       try {
-        const registry = TemplateRegistry.getInstance();
+        // Registry removido
         const ids = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
         const base: string = (import.meta as any)?.env?.BASE_URL || '/';
         const baseTrimmed = base.replace(/\/$/, '');
@@ -262,7 +222,7 @@ if (typeof window !== 'undefined') {
                     let resp = await fetch(firstUrl, { cache: 'no-store' });
                     if (resp.ok) {
                       const json = await resp.json();
-                      registry.registerOverride(id, json as any);
+                      // Ignorado
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
                         appLogger.info(`🧩 [imports] Override JSON ${firstUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`, { stepId: id });
@@ -273,7 +233,7 @@ if (typeof window !== 'undefined') {
                     resp = await fetch(secondUrl, { cache: 'no-store' });
                     if (resp.ok) {
                       const json = await resp.json();
-                      registry.registerOverride(id, json as any);
+                      // Ignorado
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
                         appLogger.info(`🧩 [imports] Override JSON ${secondUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`, { stepId: id });

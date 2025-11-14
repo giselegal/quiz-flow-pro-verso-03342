@@ -8,12 +8,17 @@ import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
 import PropertiesPanel from '../properties/PropertiesPanel';
 import ComponentsSidebar from '../components/ComponentsSidebar';
+import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
+import { useEditor } from '@/contexts/editor/EditorContext';
 
 interface UnifiedEditorLayoutProps {
   className?: string;
 }
 
 export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ className = '' }) => {
+  const { saveStatus, lastSaved, saveError } = (() => {
+    try { return useEditor(); } catch { return { saveStatus: 'idle', lastSaved: null, saveError: null } as any; }
+  })();
   const [activeTab, setActiveTab] = useState<'quiz' | 'result' | 'sales'>('result');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
@@ -96,6 +101,9 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
               <TabsTrigger value="quiz" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Quiz Editor</TabsTrigger>
               <TabsTrigger value="result" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Result Page</TabsTrigger>
               <TabsTrigger value="sales" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Sales Page</TabsTrigger>
+            </TabsList>
+            <div className="px-3 py-2 flex justify-end">
+              <AutosaveIndicator status={saveStatus as any} errorMessage={saveError?.message} compact />
             </TabsList>
           </div>
 

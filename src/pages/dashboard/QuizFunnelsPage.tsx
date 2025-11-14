@@ -32,7 +32,8 @@ import {
 } from 'lucide-react';
 import { QuizFunnelCard } from '@/components/dashboard/QuizFunnelCard';
 import { unifiedCRUDService } from '@/services/UnifiedCRUDService';
-import { versioningService } from '@/services/versioningService';
+import { historyManager } from '@/services/HistoryManager';
+import { generateFunnelId } from '@/lib/utils/idGenerator';
 import { analyticsService } from '@/services/AnalyticsService';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -124,9 +125,10 @@ const QuizFunnelsPage: React.FC = () => {
           const conversionRate = views > 0 ? (completions / views) * 100 : 0;
 
           // Carregar versões
-          const versions = await versioningService.getSnapshots();
+          const historyEntries = historyManager.getHistory({ types: ['snapshot'] });
+          const versions = (historyEntries || []).filter(e => e.entityId === funnel.id);
           const latestVersion = versions[0];
-          const publishedVersion = versions.find((v: any) => v.isPublished);
+          const publishedVersion = versions.find((v: any) => (v as any).isPublished);
 
           return {
             id: funnel.id,
@@ -134,8 +136,8 @@ const QuizFunnelsPage: React.FC = () => {
             description: funnel.description || 'Quiz de Estilo Pessoal',
             status: publishedVersion ? 'published' : 'draft',
             lastModified: new Date(funnel.updatedAt),
-            version: latestVersion?.version || '1.0.0',
-            publishedVersion: publishedVersion?.version,
+            version: versions.length ? `v${versions.length}` : 'n/a',
+            publishedVersion: publishedVersion ? 'published' : undefined,
             totalSteps: 21,
             completedSteps: funnel.stages?.length || 0,
             analytics: {
@@ -157,7 +159,7 @@ const QuizFunnelsPage: React.FC = () => {
 
   const handleCreateFunnel = () => {
     // Criar novo funil quiz
-    const newFunnelId = `quiz-estilo-${Date.now()}`;
+    const newFunnelId = generateFunnelId();
     window.open(`/editor?funnel=${newFunnelId}&type=quiz&template=quiz-estilo`, '_blank');
   };
 
@@ -181,7 +183,7 @@ const QuizFunnelsPage: React.FC = () => {
       if (funnelResult.success && funnelResult.data) {
         const funnel = funnelResult.data;
         // Criar snapshot de publicação
-        await versioningService.createSnapshot(funnel, 'manual', 'Publicação do funil');
+        await historyManager.addEntry('snapshot', 'funnel', funnel.id, 'Publicação do funil', []);
 
         // Atualizar status
         await unifiedCRUDService.saveFunnel({

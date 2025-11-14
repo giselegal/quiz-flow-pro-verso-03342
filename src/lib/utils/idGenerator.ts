@@ -10,6 +10,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { appLogger } from './logger';
+import { trackIdGeneration } from './monitoring/idCollisionDetector';
 
 /**
  * @deprecated Use generateBlockId(), generateFunnelId(), etc. for specific types
@@ -23,7 +24,9 @@ export const generateId = (): string => {
 
 /** Gera ID único para blocos: block-{uuid} */
 export function generateBlockId(): string {
-  return `block-${uuidv4()}`;
+  const id = `block-${uuidv4()}`;
+  try { trackIdGeneration(id, 'block'); } catch {}
+  return id;
 }
 
 /** Gera ID único para steps customizados: step-custom-{uuid} */

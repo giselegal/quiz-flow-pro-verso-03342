@@ -210,7 +210,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 throw new Error(`Template não encontrado: ${templateId}`);
             }
 
-            const funnelId = `funnel-${Date.now()}`; // ID temporário
+            const funnelId = `funnel-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`; // ID temporário
 
             if (funnelId) {
                 // Load the new funnel in the editor

@@ -7,6 +7,7 @@
 
 // @ts-nocheck
 import React from 'react';
+import { generateBlockId } from '@/lib/utils/idGenerator';
 import {
     useEditorSync,
     useFunnelSync,
@@ -55,7 +56,7 @@ export const EditorComponent: React.FC = () => {
 
     const handleAddTextBlock = async () => {
         const newBlock = {
-            id: `block-${Date.now()}`,
+            id: generateBlockId(),
             type: 'text' as const,
             properties: {
                 text: 'Novo bloco de texto',

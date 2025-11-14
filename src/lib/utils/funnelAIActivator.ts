@@ -34,7 +34,7 @@ export function activateFunnelAI() {
 
         // Definir contexto inicial inteligente
         const aiContext = {
-            userId: `user_${  Date.now()}`,
+            userId: `user_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
             userName: 'Usuário',
             previousAnswers: {},
             userSegment: 'quiz_estilo_pessoal',

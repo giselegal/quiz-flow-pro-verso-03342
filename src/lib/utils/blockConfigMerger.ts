@@ -38,7 +38,7 @@ export function normalizeOption(opt: any): { id: string; text: string; image?: s
   if (!opt) return { id: 'unknown', text: 'Opção' };
 
   return {
-    id: String(opt.id ?? opt.key ?? opt.value ?? `opt-${Date.now()}`),
+    id: String(opt.id ?? opt.key ?? opt.value ?? `opt-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`),
     text: String(opt.text ?? opt.label ?? 'Opção'),
     image: opt.image ?? opt.imageUrl ?? opt.src ?? undefined,
   };

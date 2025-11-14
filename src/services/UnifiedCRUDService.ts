@@ -15,9 +15,10 @@
  */
 
 import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+import { generateFunnelId } from '@/lib/utils/idGenerator';
 import { Block, BlockType } from '@/types/editor';
 import { toast } from '@/hooks/use-toast';
-import { versioningService } from './versioningService';
+// Removed deprecated versioningService
 import { historyManager } from './HistoryManager';
 import { StorageService } from '@/services/core/StorageService';
 import { createLogger } from '@/lib/utils/appLogger';
@@ -536,7 +537,13 @@ export class UnifiedCRUDService {
       // Criar snapshot automático se for uma atualização significativa
       if (isUpdate) {
         try {
-          await versioningService.createSnapshot(validatedFunnel, 'auto', 'Auto-snapshot após salvamento');
+          await historyManager.addEntry(
+            'snapshot',
+            'funnel',
+            validatedFunnel.id,
+            'Auto-snapshot após salvamento',
+            [],
+          );
 
           // Rastrear no histórico
           await historyManager.trackCRUDChange(
@@ -677,7 +684,7 @@ export class UnifiedCRUDService {
       }
 
       // Criar novo funnel baseado no original
-      const newId = `funnel-${Date.now()}-copy`;
+      const newId = generateFunnelId();
       const duplicatedFunnel: UnifiedFunnel = {
         ...originalFunnel,
         id: newId,

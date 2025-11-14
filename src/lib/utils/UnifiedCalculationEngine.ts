@@ -244,7 +244,7 @@ export class UnifiedCalculationEngine {
         });
 
         const result: QuizResult = {
-            id: `result-${Date.now()}`,
+            id: `result-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
             responses: {},
             score: primaryStyle.score,
             maxScore: 100,

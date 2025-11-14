@@ -1,4 +1,4 @@
-import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
+import { useSmartAutosave } from '@/hooks/useSmartAutosave';
 import { toast } from '@/hooks/use-toast';
 // Importação direta do TemplateManager para evitar problemas de dependência circular
 import { TemplateManager } from '@/lib/utils/TemplateManager';
@@ -152,6 +152,10 @@ interface EditorContextType {
 
   // Template validation
   validation: ValidationService;
+
+  saveStatus?: 'idle' | 'queued' | 'saving' | 'saved' | 'error';
+  lastSaved?: Date | null;
+  saveError?: Error | null;
 }
 
 export const EditorContext = createContext<EditorContextType | null>(null);
@@ -401,16 +405,24 @@ export const EditorProvider: React.FC<{
     }
   }, [currentFunnelId, state.blocks, activeStageId]);
 
-  // 🚀 AUTO-SAVE COM DEBOUNCE - Solução para problema de salvamento
-  useAutoSaveWithDebounce({
-    data: { blocks: state.blocks, activeStageId: 'step-1' }, // Fixed: using hardcoded value since activeStageId is not in state
-    onSave: async () => {
-      await save();
+  const autosave = useSmartAutosave(
+    async (payload: { blocks: typeof state.blocks; activeStageId: string }) => {
+      const stepId = payload.activeStageId || 'step-1';
+      await persistBlocks(stepId, currentFunnelId, payload.blocks);
     },
-    delay: 3000, // 3 segundos após parar de editar
-    enabled: true,
-    showToasts: false, // Não mostrar toast no auto-save, apenas no save manual
-  });
+    {
+      debounceMs: 2000,
+      maxRetries: 3,
+      retryDelayMs: 1000,
+      onError: (error) => {
+        appLogger.warn('[EditorContext] Autosave error', { data: [error] });
+      },
+    },
+  );
+
+  useEffect(() => {
+    autosave.enqueueSave({ blocks: state.blocks, activeStageId: activeStageId || 'step-1' });
+  }, [state.blocks, activeStageId]);
 
   // Construir metadados das 21 etapas
   const [realStages, setRealStages] = useState<QuizStage[]>([]);
@@ -741,6 +753,9 @@ export const EditorProvider: React.FC<{
 
     // Validation
     validation,
+    saveStatus: autosave.status,
+    lastSaved: autosave.lastSaved,
+    saveError: autosave.error,
   };
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;

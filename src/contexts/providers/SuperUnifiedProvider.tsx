@@ -686,7 +686,60 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } catch (error) {
             logger.error('[G19] Erro ao restaurar currentStep', { error });
         }
-    }, []); // Executar apenas no mount
+  }, []); // Executar apenas no mount
+
+    // Auto-load de blocos do step ativo quando faltar no estado (respeita URL ?step=)
+    useEffect(() => {
+        try {
+            const idx = state.editor.currentStep || 1;
+            const blocks = (state.editor.stepBlocks as any)[idx];
+            if (Array.isArray(blocks) && blocks.length > 0) return;
+
+            const stepId = `step-${String(idx).padStart(2, '0')}`;
+            const funnelId = state.currentFunnel?.id;
+            (async () => {
+                try {
+                    const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId || undefined);
+                    if (result?.data && Array.isArray(result.data)) {
+                        dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: idx, blocks: result.data } });
+                    }
+                } catch (error) {
+                    logger.warn('[SuperUnifiedProvider] Auto-load step falhou', { stepId, error });
+                }
+            })();
+        } catch {}
+    }, [state.editor.currentStep, state.currentFunnel?.id]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const handler = async () => {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const s = params.get('step');
+                const n = s ? parseInt(s, 10) : NaN;
+                if (!isNaN(n) && n >= 1 && n <= state.editor.totalSteps) {
+                    if (state.editor.currentStep !== n) {
+                        dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: n } });
+                    }
+                    const key = `step-${String(n).padStart(2, '0')}`;
+                    const existing = (state.editor.stepBlocks as any)[n];
+                    if (!Array.isArray(existing) || existing.length === 0) {
+                        const res = await hierarchicalTemplateSource.getPrimary(key, state.currentFunnel?.id || undefined);
+                        if (res?.data && Array.isArray(res.data)) {
+                            dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: n, blocks: res.data } });
+                        }
+                    }
+                }
+            } catch {}
+        };
+        window.addEventListener('popstate', handler);
+        const id = window.setInterval(handler, 500);
+        handler();
+        return () => {
+            window.removeEventListener('popstate', handler);
+            window.clearInterval(id);
+        };
+    }, [state.editor.totalSteps, state.currentFunnel?.id, state.editor.currentStep, state.editor.stepBlocks]);
 
     // 🆕 G4 FIX: Listener para sincronização entre tabs via BroadcastChannel
     useEffect(() => {

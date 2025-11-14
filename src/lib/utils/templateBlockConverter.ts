@@ -1,4 +1,5 @@
 import { Block } from '@/types/editor';
+import { generateBlockId } from '@/lib/utils/idGenerator';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
@@ -26,7 +27,7 @@ export class TemplateBlockConverter {
 
       // Converte objetos TSX para formato Block
       return {
-        id: String(block.id || `converted-${index}`),
+        id: String(block.id || generateBlockId()),
         type: String(block.type || 'text-inline') as any,
         content: {
           ...block.properties,
@@ -55,7 +56,7 @@ export class TemplateBlockConverter {
    */
   static normalizeBlockProperties(block: any): Block {
     const normalized: Block = {
-      id: String(block.id || `block-${Date.now()}`),
+      id: String(block.id || generateBlockId()),
       type: String(block.type || 'text-inline') as any,
       content: {},
       order: block.order || block.position || 0,

@@ -13,7 +13,13 @@
  * ✅ Integração com undo/redo
  */
 
-import { VersionChange, VersionSnapshot } from './versioningService';
+type VersionChange = {
+  field?: string;
+  from?: any;
+  to?: any;
+  description?: string;
+  timestamp?: Date;
+};
 import { UnifiedFunnel, UnifiedStage } from './UnifiedCRUDService';
 import { Block } from '@/types/editor';
 import { StorageService } from '@/services/core/StorageService';
@@ -133,7 +139,7 @@ export class HistoryManager {
    * 🆔 GERAR SESSION ID
    */
   private generateSessionId(): string {
-    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `session-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**
@@ -202,7 +208,7 @@ export class HistoryManager {
     metadata: Partial<HistoryEntry['metadata']> = {},
   ): Promise<HistoryEntry> {
     try {
-      const entryId = `entry-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const entryId = `entry-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`;
       
       const entry: HistoryEntry = {
         id: entryId,

@@ -66,7 +66,7 @@ export const MOCK_USER_DATA = {
   device: 'desktop',
   browser: 'Chrome',
   timestamp: new Date().toISOString(),
-  sessionId: `session_${  Date.now()}`,
+  sessionId: `session_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
   
   // Dados para oferta
   offerValue: 'R$ 497',
@@ -255,7 +255,7 @@ export function generateCustomMockData(seed: string): Record<string, any> {
     userName: names[seedNum % names.length],
     resultStyle: styles[seedNum % styles.length],
     userLocation: locations[seedNum % locations.length],
-    sessionId: `session_${seed}_${Date.now()}`,
+    sessionId: `session_${seed}_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
   };
 }
 

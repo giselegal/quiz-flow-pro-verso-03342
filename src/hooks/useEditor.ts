@@ -19,6 +19,7 @@
  */
 
 import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { useMemo, useCallback } from 'react';
 
 export interface EditorActions {
@@ -145,8 +146,18 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValueM
       setSelectedBlock: unified.setSelectedBlock,
       setSelectedBlockId: unified.setSelectedBlock, // Alias
       ensureStepLoaded: async (stepIndex: number | string) => {
-        // SuperUnified loads steps on demand, no explicit load needed
-        return Promise.resolve();
+        const idx = normalizeStepIndex(stepIndex);
+        const existing = unified.state.editor.stepBlocks[idx];
+        if (Array.isArray(existing) && existing.length > 0) return;
+
+        const stepId = `step-${String(idx).padStart(2, '0')}`;
+        const funnelId = unified.state.currentFunnel?.id;
+        try {
+          const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId || undefined);
+          if (result?.data && Array.isArray(result.data)) {
+            unified.setStepBlocks(idx, result.data);
+          }
+        } catch {}
       },
       
       // History

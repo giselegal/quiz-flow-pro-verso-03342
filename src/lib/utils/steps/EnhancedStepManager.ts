@@ -65,7 +65,7 @@ const mockCacheManager = {
 };
 
 const mockUnifiedIDGenerator: UnifiedIDGenerator = {
-    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  generateID: (type: string, _context?: any) => `${type}_${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`,
 };
 
 const mockPersonalizationEngine: PersonalizationEngine = {

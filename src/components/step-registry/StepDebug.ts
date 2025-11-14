@@ -182,17 +182,7 @@ export async function printDeepDebug() {
           const { convertSectionsToBlocks } = await import('@/lib/utils/sectionToBlockConverter');
           blocks = convertSectionsToBlocks(step.sections);
         }
-        // Enriquecer a identificação de fonte: se veio do registry mas aparenta ser JSON v3, marcar como registry(json-v3)
-        if (fonte === 'registry') {
-          const looksLikeV3 = !!(effectiveStep && (
-            ['3.0', '3.1', '3.2'].includes(effectiveStep.templateVersion) || 
-            Array.isArray((effectiveStep as any).sections)
-          ));
-          if (looksLikeV3) {
-            fonte = 'registry';
-            // adiciona um rótulo visível no console de grupo
-          }
-        }
+        // Registro legado removido; manter fonte como 'ts' ou 'json-v3' detectado
         blocksCount = Array.isArray(blocks) ? blocks.length : 0;
         const types = Array.from(new Set((blocks || []).map(b => String(b?.type || '').trim()).filter(Boolean)));
         componentsList = types.join(', ');

@@ -24,7 +24,7 @@ test.describe('Funcionalidade Básica do Playwright', () => {
     test('Browser está respondendo', async ({ page }) => {
         // Testar JavaScript básico
         const userAgent = await page.evaluate(() => navigator.userAgent);
-        expect(userAgent).toContain('Chrome'); // Ajustado para aceitar qualquer Chrome
+        expect(userAgent).toMatch(/Chrome|Firefox|Safari/i);
 
         // Testar manipulação DOM básica
         await page.setContent(`

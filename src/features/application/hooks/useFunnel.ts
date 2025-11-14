@@ -6,6 +6,8 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { funnelKeys } from '@/lib/queryKeys';
 import { Funnel, Page, Block } from '@/core/domains';
 import { FunnelService, FunnelSession, FunnelAnalytics } from '@/features/application/services/FunnelService';
 
@@ -103,34 +105,45 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
     }
   }, [setLoading, updateState, setError]);
 
-  const loadFunnel = useCallback(async (id: string) => {
-    try {
-      setLoading(true);
-      const funnel = await funnelService.getFunnel(id);
-      if (!funnel) {
-        setError('Funnel not found');
-        return;
-      }
-      updateState({ funnel, error: null });
-    } catch (error) {
-      setError(`Failed to load funnel: ${error}`);
+  const queryClient = useQueryClient();
+
+  const { data: queriedFunnel, isLoading: queryLoading, error: queryError } = useQuery({
+    queryKey: funnelKeys.detail(funnelId || ''),
+    queryFn: () => funnelId ? funnelService.getFunnel(funnelId) : Promise.resolve(null),
+    enabled: !!funnelId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  useEffect(() => {
+    if (queriedFunnel) {
+      updateState({ funnel: queriedFunnel, error: null });
+    } else if (queryError) {
+      setError('Funnel not found');
     }
-  }, [setLoading, updateState, setError]);
+    if (queryLoading) setLoading(true);
+  }, [queriedFunnel, queryError, queryLoading, updateState, setError, setLoading]);
+
+  const loadFunnel = useCallback(async (id: string) => {
+    await queryClient.invalidateQueries({ queryKey: funnelKeys.detail(id) });
+  }, [queryClient]);
+
+  const updateFunnelMutation = useMutation({
+    mutationFn: (updates: Partial<Funnel>) => {
+      if (!state.funnel) return Promise.reject(new Error('No funnel loaded'));
+      return funnelService.updateFunnel(state.funnel.id, updates);
+    },
+    onSuccess: (updated) => {
+      updateState({ funnel: updated, error: null });
+      if (updated?.id) queryClient.invalidateQueries({ queryKey: ['funnel', updated.id] });
+    },
+    onError: (e: any) => {
+      setError(`Failed to update funnel: ${e}`);
+    },
+  });
 
   const updateFunnel = useCallback(async (updates: Partial<Funnel>) => {
-    if (!state.funnel) {
-      setError('No funnel loaded');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const updatedFunnel = await funnelService.updateFunnel(state.funnel.id, updates);
-      updateState({ funnel: updatedFunnel, error: null });
-    } catch (error) {
-      setError(`Failed to update funnel: ${error}`);
-    }
-  }, [state.funnel, setLoading, updateState, setError]);
+    await updateFunnelMutation.mutateAsync(updates);
+  }, [updateFunnelMutation]);
 
   const deleteFunnel = useCallback(async () => {
     if (!state.funnel) {

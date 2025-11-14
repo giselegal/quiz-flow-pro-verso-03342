@@ -17,8 +17,8 @@ try {
     assert(existsSync(join(ROOT, unifiedPath)), `Missing file: ${unifiedPath}`);
 
     const unified = read(unifiedPath);
-    // Unified should render BlockTypeRenderer and wrap with local DnD
-    assert(/<BlockTypeRenderer/.test(unified), 'UnifiedStepContent does not render <BlockTypeRenderer>');
+    // Unified should render LazyBlockRenderer and wrap with local DnD
+    assert(/LazyBlockRenderer/.test(unified), 'UnifiedStepContent does not render LazyBlockRenderer');
     assert(/DndContext/.test(unified), 'UnifiedStepContent missing DnDContext');
     assert(/SortableContext/.test(unified), 'UnifiedStepContent missing SortableContext');
     assert(/handleBlocksReorder/.test(unified), 'UnifiedStepContent missing handleBlocksReorder wiring');

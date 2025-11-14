@@ -21,7 +21,6 @@ import { getEffectiveRequiredSelections, shouldAutoAdvance } from '@/lib/quiz/re
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/lib/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
-import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useFeatureFlags } from './useFeatureFlags';
 import { useTemplateLoader } from './useTemplateLoader';
 import { navigationService } from '@/services/canonical/NavigationService';
@@ -109,18 +108,21 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     isLoading: isLoadingTemplate,
     error: templateError,
     clearCache,
-  } = useTemplateLoader();  // 🎯 NOVO: Carregar steps do bridge se tiver funnelId
+  } = useTemplateLoader();
   useEffect(() => {
     if (funnelId && !externalSteps) {
       setIsLoading(true);
-      quizEditorBridge.loadForRuntime(funnelId)
-        .then(steps => {
-          appLogger.info('✅ Steps carregados do bridge:', { data: [Object.keys(steps).length] });
+      try {
+        templateService.setActiveFunnel(funnelId);
+      } catch { /* noop */ }
+      (templateService as any).getAllSteps()
+        .then((steps: Record<string, any>) => {
+          appLogger.info('✅ Steps carregados do TemplateService (funnel):', { data: [Object.keys(steps).length] });
           setLoadedSteps(steps);
         })
-        .catch(err => {
-          appLogger.error('❌ Erro ao carregar steps:', { data: [err] });
-          setLoadedSteps(QUIZ_STEPS_FALLBACK); // Fallback do TemplateService
+        .catch((err: unknown) => {
+          appLogger.error('❌ Erro ao carregar steps (TemplateService):', { data: [err] });
+          setLoadedSteps(QUIZ_STEPS_FALLBACK);
         })
         .finally(() => setIsLoading(false));
     }

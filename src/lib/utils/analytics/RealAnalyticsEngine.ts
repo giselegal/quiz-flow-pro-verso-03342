@@ -1,4 +1,5 @@
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateTimerId } from '@/lib/utils/idGenerator';
 /**
  * 📊 SISTEMA DE ANALYTICS REAL
  * 
@@ -36,7 +37,7 @@ const mockLogger: Logger = {
 };
 
 const unifiedIDGenerator: UnifiedIDGenerator = {
-    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    generateID: (type: string, _context?: any) => generateTimerId(type),
 };
 
 const mockCacheManager = {
