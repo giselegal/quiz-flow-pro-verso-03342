@@ -103,53 +103,49 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
       if (type === 'template') {
         appLogger.info(`🔄 [useEditorResource] Convertendo template → funnel:`, resourceId);
 
-        // ✅ Removido preparo redundante para evitar carga duplicada
-
-        // Verificar se é template completo (quiz21StepsComplete) ou step individual
         const isCompleteTemplate = resourceId.toLowerCase().includes('complete') || 
                                    resourceId.toLowerCase().includes('quiz21');
 
-        // ✅ G2 FIX: Lazy Load Progressivo - carregar apenas step inicial
-        // Reduz TTI de 2.5s → 0.6s (76% de melhoria)
-        const conversionResult = await templateToFunnelAdapter.convertTemplateToFunnel({
+        try {
+          await templateService.prepareTemplate(resourceId);
+        } catch {}
+        try { templateService.setActiveTemplate?.(resourceId, 21); } catch {}
+
+        const stream = templateToFunnelAdapter.convertTemplateToFunnelStream({
           templateId: resourceId,
           customName: `Funnel - ${resourceId}`,
-          loadAllSteps: false, // ✅ OTIMIZAÇÃO: Não carregar todos os 21 steps
-          specificSteps: isCompleteTemplate ? ['step-01'] : [resourceId], // ✅ Apenas step inicial
+          loadAllSteps: isCompleteTemplate,
+          specificSteps: isCompleteTemplate ? undefined : [resourceId],
         });
 
-        appLogger.info(`🚀 [G2] Lazy load aplicado - carregado apenas step inicial para melhor TTI`);
-
-        if (!conversionResult.success || !conversionResult.funnel) {
-          throw new Error(conversionResult.error || 'Falha na conversão do template');
+        for await (const { funnel, progress, isComplete } of stream) {
+          const loadedResource: EditorResource = {
+            id: funnel.id,
+            type: 'funnel',
+            name: funnel.name,
+            source: 'local',
+            isReadOnly: false,
+            canClone: true,
+            metadata: {
+              clonedFrom: resourceId,
+              originalTemplate: resourceId,
+              description: `Convertido de ${resourceId}`,
+              stepsLoaded: funnel.stages.length,
+              totalBlocks: funnel.metadata?.totalBlocks ?? 0,
+              conversionDuration: 0,
+              progress,
+            },
+            data: funnel,
+          };
+          setResource(loadedResource);
+          try {
+            const { editorMetrics } = await import('@/lib/utils/editorMetrics');
+            (editorMetrics as any).trackStreamingProgress?.(progress, { stepsLoaded: funnel.stages.length, totalSteps: isCompleteTemplate ? 21 : funnel.stages.length });
+          } catch {}
+          if (isComplete) {
+            break;
+          }
         }
-
-        // Criar EditorResource com dados do funnel
-        const loadedResource: EditorResource = {
-          id: conversionResult.funnel.id,
-          type: 'funnel', // ✅ Agora é funnel editável!
-          name: conversionResult.funnel.name,
-          source: 'local', // Temporário até salvar no Supabase
-          isReadOnly: false, // ✅ Editável!
-          canClone: true,
-          metadata: {
-            clonedFrom: resourceId,
-            originalTemplate: resourceId,
-            description: `Convertido de ${resourceId}`,
-            stepsLoaded: conversionResult.metadata.stepsLoaded,
-            totalBlocks: conversionResult.metadata.totalBlocks,
-            conversionDuration: conversionResult.metadata.duration,
-          },
-          data: conversionResult.funnel, // 🆕 Dados completos do funnel
-        };
-
-        setResource(loadedResource);
-        appLogger.info(`✅ [useEditorResource] Template convertido para funnel:`, {
-          originalTemplate: resourceId,
-          newFunnelId: loadedResource.id,
-          stages: conversionResult.funnel.stages.length,
-          blocks: conversionResult.metadata.totalBlocks,
-        });
         return;
       }
 

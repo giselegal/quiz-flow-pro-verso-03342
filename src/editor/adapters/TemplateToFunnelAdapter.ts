@@ -239,10 +239,25 @@ export class TemplateToFunnelAdapter {
 
   async *convertTemplateToFunnelStream(
     options: TemplateConversionOptions
-  ): AsyncGenerator<{ stage: UnifiedStage; progress: number }, void, unknown> {
-    const { loadAllSteps = true, specificSteps } = options;
+  ): AsyncGenerator<{ funnel: UnifiedFunnel; progress: number; isComplete: boolean }, void, unknown> {
+    const { templateId, customName, loadAllSteps = true, specificSteps } = options;
     const steps = loadAllSteps ? this.generateAllStepIds() : (specificSteps || []);
     const total = steps.length;
+    const funnel: UnifiedFunnel = {
+      id: generateFunnelId(),
+      name: customName || `Funnel baseado em ${templateId}`,
+      description: `Convertido do template ${templateId}`,
+      stages: [],
+      settings: {
+        theme: 'default',
+        branding: { colors: { primary: '#3b82f6', secondary: '#8b5cf6', accent: '#10b981' } },
+      },
+      status: 'draft',
+      version: '1.0.0',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      metadata: { totalBlocks: 0, completedStages: 0, isValid: false, tags: ['template-conversion', templateId] },
+    };
     for (let i = 0; i < total; i++) {
       const stepId = steps[i];
       try {
@@ -257,8 +272,13 @@ export class TemplateToFunnelAdapter {
           settings: { validation: { required: true, customRules: [] } },
           metadata: { blocksCount: blocks.length, isValid: true },
         };
+        funnel.stages.push(stage);
+        funnel.metadata.totalBlocks += blocks.length;
+        funnel.metadata.completedStages = funnel.stages.length;
+        funnel.metadata.isValid = funnel.stages.length > 0;
         const progress = (i + 1) / total;
-        yield { stage, progress };
+        const isComplete = i === total - 1;
+        yield { funnel, progress, isComplete };
       } catch {}
     }
   }

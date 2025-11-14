@@ -43,6 +43,7 @@ const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 // ✅ P2: Error boundaries granulares
 import { StepErrorBoundary, ColumnErrorBoundary } from '@/components/error';
 import { appLogger } from '@/lib/utils/appLogger';
+import { EditorLoadingProgress } from '@/components/editor/EditorLoadingProgress';
 
 // Dev-only metrics panel
 let MetricsPanel: React.LazyExoticComponent<React.ComponentType<any>> | null = null;
@@ -186,8 +187,35 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         totalSteps: 21,
         enabled: true,
         radius: 1, // Prefetch step anterior e próximo
-        debounceMs: 100, // Prefetch rápido após navegação
+        debounceMs: 16,
     });
+
+    useEffect(() => {
+        const prefetchColumns = async () => {
+            await import('./components/CanvasColumn');
+            setTimeout(() => {
+                Promise.all([
+                    import('./components/ComponentLibraryColumn'),
+                    import('./components/PropertiesColumn'),
+                ]);
+            }, 100);
+            setTimeout(() => {
+                import('./components/PreviewPanel');
+            }, 300);
+        };
+        prefetchColumns();
+    }, []);
+
+    useEffect(() => {
+        try {
+            const progress = Number((resourceMetadata as any)?.metadata?.progress ?? 1);
+            if (progress < 1) {
+                setTemplateLoading(true);
+            } else {
+                setTemplateLoading(false);
+            }
+        } catch {}
+    }, [resourceMetadata, setTemplateLoading]);
 
     // Local UI state
     const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>(() => {
@@ -510,6 +538,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // Blocks from unified
     const blocks: Block[] | null = getStepBlocks(safeCurrentStep);
+
+    useEffect(() => {
+        if (canvasMode === 'edit' && (!selectedBlockId || !blocks?.find(b => b.id === selectedBlockId))) {
+            const first = blocks && blocks[0];
+            if (first) setSelectedBlock(first.id);
+        }
+    }, [blocks, selectedBlockId, canvasMode, setSelectedBlock]);
 
     // Lazy load visible step + prefetch neighbors
     useEffect(() => {
@@ -1370,6 +1405,7 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     return (
         <EditorLoadingProvider>
             <div data-testid="modular-layout" className="h-full w-full">
+                <EditorLoadingProgress progress={Number((props.editorResource as any)?.metadata?.progress ?? 1)} />
                 <Suspense fallback={<div />}>
                     <MemoizedQuizModularEditorInner {...props} />
                 </Suspense>

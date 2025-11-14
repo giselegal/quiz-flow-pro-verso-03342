@@ -284,7 +284,7 @@ describe('Performance Tests - Consolidação', () => {
       // Simula carregamento + readiness em 100ms
       vi.advanceTimersByTime(100);
       const tti = performance.now() - start;
-      expect(tti).toBeLessThan(3000);
+      expect(tti).toBeLessThan(1000);
       vi.useRealTimers();
     });
   });

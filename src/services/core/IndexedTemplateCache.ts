@@ -22,16 +22,21 @@ interface StepCacheRecord {
 function isEnabled(): boolean {
   try {
     if (typeof window !== 'undefined') {
-      const ls = window.localStorage?.getItem('VITE_ENABLE_INDEXEDDB_CACHE');
-      if (ls != null) return ls === 'true';
+      const disable = window.localStorage?.getItem('VITE_DISABLE_INDEXEDDB_CACHE');
+      if (disable === 'true') return false;
     }
-    // @ts-ignore
-    const vite = (import.meta as any)?.env?.VITE_ENABLE_INDEXEDDB_CACHE;
-    if (typeof vite === 'string') return vite === 'true';
-    const node = (typeof process !== 'undefined') ? (process as any).env?.VITE_ENABLE_INDEXEDDB_CACHE : undefined;
-    if (typeof node === 'string') return node === 'true';
-  } catch {}
-  return false;
+    let viteDisable: any;
+    try {
+      // @ts-ignore
+      viteDisable = (import.meta as any)?.env?.VITE_DISABLE_INDEXEDDB_CACHE;
+    } catch {}
+    if (typeof viteDisable === 'string' && viteDisable === 'true') return false;
+    const nodeDisable = (typeof process !== 'undefined') ? (process as any).env?.VITE_DISABLE_INDEXEDDB_CACHE : undefined;
+    if (typeof nodeDisable === 'string' && nodeDisable === 'true') return false;
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function openDb(): Promise<IDBDatabase> {

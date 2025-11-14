@@ -17,7 +17,7 @@ const mockPrepareTemplate = vi.spyOn(templateService, 'prepareTemplate');
 // Mock do hierarchicalTemplateSource.setActiveTemplate
 const mockSetActiveTemplate = vi.spyOn(hierarchicalTemplateSource, 'setActiveTemplate');
 
-// Mock do templateToFunnelAdapter
+// Mock do templateToFunnelAdapter (compat com streaming)
 vi.mock('@/editor/adapters/TemplateToFunnelAdapter', () => ({
     templateToFunnelAdapter: {
         convertTemplateToFunnel: vi.fn(async (options) => ({
@@ -32,6 +32,7 @@ vi.mock('@/editor/adapters/TemplateToFunnelAdapter', () => ({
                         blocks: [{ id: 'block-1', type: 'heading', content: {}, order: 0 }],
                     },
                 ],
+                metadata: { totalBlocks: 1, completedStages: 1, isValid: true },
             },
             metadata: {
                 stepsLoaded: 1,
@@ -39,6 +40,32 @@ vi.mock('@/editor/adapters/TemplateToFunnelAdapter', () => ({
                 duration: 100,
             },
         })),
+        convertTemplateToFunnelStream: vi.fn(async function* (options: any) {
+            yield {
+                funnel: {
+                    id: 'converted-funnel-id',
+                    name: options?.customName || 'Converted Funnel',
+                    stages: [
+                        {
+                            id: 'step-01',
+                            name: 'Stage 1',
+                            blocks: [{ id: 'block-1', type: 'heading', content: {}, order: 0 }],
+                            order: 0,
+                            isRequired: true,
+                            metadata: { blocksCount: 1, isValid: true },
+                        },
+                    ],
+                    settings: { theme: 'default', branding: { colors: { primary: '#3b82f6' } } },
+                    status: 'draft',
+                    version: '1.0.0',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    metadata: { totalBlocks: 1, completedStages: 1, isValid: true, tags: ['template-conversion'] },
+                },
+                progress: 1,
+                isComplete: true,
+            };
+        }),
     },
 }));
 

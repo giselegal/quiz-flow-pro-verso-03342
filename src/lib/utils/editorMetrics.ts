@@ -206,6 +206,17 @@ class EditorMetrics {
     });
   }
 
+  trackStreamingProgress(progress: number, metadata?: Record<string, any>) {
+    this.addMetric({
+      timestamp: Date.now(),
+      type: 'render',
+      metadata: { progress, ...metadata },
+    });
+    if (import.meta.env.DEV) {
+      appLogger.debug(`📊 [Metrics] Streaming progress: ${(progress * 100).toFixed(0)}%`, { data: [metadata] });
+    }
+  }
+
   /**
    * Adicionar métrica
    */

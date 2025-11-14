@@ -66,6 +66,8 @@ export async function loadStepFromJson(
 
   const paths: string[] = [
     `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`,
+    `/templates/${templateId}/${stepId}.json${bust}`,
+    `/templates/${templateId}/master.v3.json${bust}`,
   ];
 
   appLogger.info(`🔍 [jsonStepLoader] Tentando carregar: ${paths[0]}`);

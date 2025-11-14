@@ -50,7 +50,7 @@ export function useStepPrefetch(options: UseStepPrefetchOptions = {}) {
     totalSteps = 21,
     enabled = true,
     radius = 1,
-    debounceMs = 100, // 🆕 G20: Reduzido de 500ms para 100ms (prefetch mais rápido)
+    debounceMs = 16,
   } = options;
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
