@@ -102,10 +102,10 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
               <TabsTrigger value="result" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Result Page</TabsTrigger>
               <TabsTrigger value="sales" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Sales Page</TabsTrigger>
             </TabsList>
-            <div className="px-3 py-2 flex justify-end">
-              <AutosaveIndicator status={saveStatus as any} errorMessage={saveError?.message} compact />
-            </TabsList>
+          <div className="px-3 py-2 flex justify-end">
+            <AutosaveIndicator status={saveStatus as any} errorMessage={saveError?.message} compact />
           </div>
+        </div>
 
           <TabsContent value="result" className="flex-1 mt-0">
             <ResizablePanelGroup direction="horizontal" className="h-full">
