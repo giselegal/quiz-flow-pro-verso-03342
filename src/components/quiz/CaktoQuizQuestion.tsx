@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QuizQuestion, QuizResponse, UserResponse } from '@/types/quiz';
 // Simple validation function
 const validateResponse = (response: UserResponse, question: QuizQuestion): boolean => {
-  return !!(response.selectedOptions && response.selectedOptions.length > 0);
+  return !!(response.answer && (Array.isArray(response.answer) ? response.answer.length > 0 : response.answer !== ''));
 };
 
 interface CaktoQuizQuestionProps {
@@ -17,8 +17,8 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
     // Create UserResponse for validation
     const userResponse: UserResponse = {
       questionId: question.id,
-      selectedOptions,
-      timestamp: new Date(),
+      answer: selectedOptions,
+      timestamp: new Date().toISOString(),
     };
 
     // Validate response (only needs 2 arguments now)

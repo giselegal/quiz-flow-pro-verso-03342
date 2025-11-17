@@ -16,6 +16,7 @@ import {
   getWhatsAppAgent,
 } from '@/services/WhatsAppCartRecoveryAgent';
 import { appLogger } from '@/lib/utils/appLogger';
+import { generateClientId, generateEventId } from '@/lib/utils/idGenerator';
 
 // Mock interfaces for compatibility
 interface WhatsAppRecoveryStats {
@@ -286,14 +287,14 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
       const interval = setInterval(() => {
         // Mock abandonment detection
         const mockAbandonment: CartAbandonmentData = {
-          buyerId: `buyer_${Date.now()}`,
+          buyerId: generateClientId(),
           productId: 'quiz-style-premium',
           value: 97.00,
         };
 
         // Add to recent activity
         const newActivity = {
-          id: `activity_${Date.now()}`,
+          id: generateEventId(),
           type: 'abandoned' as const,
           buyerName: `Cliente ${Math.floor(Math.random() * 1000)}`,
           productName: 'Quiz de Estilo Premium',

@@ -67,7 +67,7 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
   // Detectar tipo e modo
   const isNewMode = !resourceId;
   const resourceType = resourceId ? detectResourceType(resourceId) : null;
-  const resourceSource = resourceId ? detectResourceSource(resourceId, hasSupabaseAccess) : null;
+  const _resourceSource = resourceId ? detectResourceSource(resourceId, hasSupabaseAccess) : null;
 
   // Características do recurso
   const isReadOnly = resource?.isReadOnly ?? (resourceType === 'template');
@@ -101,14 +101,14 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
 
       // Templates: CONVERTER para funnel editável (GARGALO #1 FIX)
       if (type === 'template') {
-        appLogger.info(`🔄 [useEditorResource] Convertendo template → funnel:`, resourceId);
+        appLogger.info('🔄 [useEditorResource] Convertendo template → funnel:', resourceId);
 
         const isCompleteTemplate = resourceId.toLowerCase().includes('complete') || 
                                    resourceId.toLowerCase().includes('quiz21');
 
         try {
           await templateService.prepareTemplate(resourceId);
-        } catch {}
+        } catch { void 0; }
         try { templateService.setActiveTemplate?.(resourceId, 21); } catch {}
 
         const stream = templateToFunnelAdapter.convertTemplateToFunnelStream({
@@ -123,7 +123,7 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
             id: funnel.id,
             type: 'funnel',
             name: funnel.name,
-            source: 'template-conversion',
+            source: 'embedded',
             isReadOnly: false,
             canClone: true,
             metadata: {
@@ -141,7 +141,7 @@ export function useEditorResource(options: UseEditorResourceOptions): UseEditorR
           try {
             const { editorMetrics } = await import('@/lib/utils/editorMetrics');
             (editorMetrics as any).trackStreamingProgress?.(progress, { stepsLoaded: funnel.stages.length, totalSteps: isCompleteTemplate ? 21 : funnel.stages.length });
-          } catch {}
+          } catch { void 0; }
           if (isComplete) {
             break;
           }

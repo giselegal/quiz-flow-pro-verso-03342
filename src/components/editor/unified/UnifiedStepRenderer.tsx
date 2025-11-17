@@ -442,22 +442,13 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
                         </div>
                     }
                 >
-                    {stepComponentInfo.type === 'v3' ? (
-                        // 🆕 V3.0: Renderizar com V3Renderer
-                        <V3Renderer
-                            template={(stepComponentInfo as any).template}
-                            userData={getUserData}
-                            onAnalytics={handleAnalytics}
-                            mode="full"
-                            className="quiz-v3-content"
-                        />
-                    ) : stepComponentInfo.type === 'lazy' ? (
+                    {stepComponentInfo.type === 'lazy' ? (
                         // Componente lazy (produção)
                         React.createElement(stepComponentInfo.component as React.ComponentType<any>, unifiedProps)
-                    ) : (
+                    ) : stepComponentInfo.type === 'registry' ? (
                         // Componente do registry (editor/preview)
                         React.createElement(stepComponentInfo.component as React.ComponentType<any>, unifiedProps)
-                    )}
+                    ) : null}
                 </Suspense>
             </div>
         );

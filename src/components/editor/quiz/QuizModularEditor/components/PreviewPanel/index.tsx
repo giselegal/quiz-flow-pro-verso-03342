@@ -8,11 +8,12 @@
  * - Refresh e fullscreen
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { ResponsivePreviewFrame } from '@/components/editor/preview/ResponsivePreviewFrame';
 import { Eye, EyeOff } from 'lucide-react';
 import type { Block } from '@/types/editor';
 import { useStepBlocksQuery } from '@/services/api/steps/hooks';
+import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 
 export interface PreviewPanelProps {
     currentStepKey: string | null;
@@ -24,6 +25,7 @@ export interface PreviewPanelProps {
     className?: string;
     previewMode?: 'live' | 'production'; // 🔄 G42 FIX
     onStepChange?: (stepId: string) => void;
+    funnelId?: string | null;
 }
 
 export default function PreviewPanel({
@@ -36,20 +38,63 @@ export default function PreviewPanel({
     className = '',
     previewMode = 'live', // 🔄 G42 FIX: Default to live
     onStepChange,
+    funnelId,
 }: PreviewPanelProps) {
     // 🔄 G42 FIX: Live usa blocks do editor, Production força refetch do backend
     const shouldFetchFromBackend = previewMode === 'production';
 
-    // Sempre buscar via React Query quando em modo production
+    // Buscar via React Query sempre que houver stepKey
+    const localBlocks = blocks ?? null;
+    const isIncomplete = !!localBlocks && localBlocks.some((b: any) => !(b?.properties || b?.content || b?.config));
     const { data: fetchedBlocks, isLoading, error } = useStepBlocksQuery({
         stepId: currentStepKey,
-        enabled: !!currentStepKey && shouldFetchFromBackend,
-        // Production força cache zero (stale imediato) para refletir mudanças publicadas
-        staleTimeMs: shouldFetchFromBackend ? 0 : 15_000,
-    });    // 🔄 G42 FIX: Live = blocks do editor, Production = refetch forçado
-  const blocksToUse: Block[] | null = shouldFetchFromBackend
-    ? (fetchedBlocks ?? blocks)
-    : (blocks ?? fetchedBlocks) ?? null;
+        funnelId,
+        enabled: !!currentStepKey && (shouldFetchFromBackend || isIncomplete),
+        staleTimeMs: 0,
+    });
+    const mergeById = (primary: Block[] | null, secondary?: Block[]): Block[] | null => {
+      if (!primary && !secondary) return null;
+      if (!primary) return secondary ?? null;
+      if (!secondary || secondary.length === 0) return primary;
+      const byId = new Map<string, Block>();
+      for (const s of secondary) byId.set(s.id, s as Block);
+      return primary.map(p => byId.get((p as any).id) ?? p);
+    };
+    const blocksToUse: Block[] | null = previewMode === 'live'
+      ? mergeById(localBlocks, fetchedBlocks)
+      : ((fetchedBlocks ?? localBlocks) ?? null);
+
+  const [resolvedImageUrl, setResolvedImageUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    const tryResolve = async () => {
+      if (!currentStepKey || previewMode !== 'production') return;
+      const needsImage = (blocksToUse || []).some((b: any) => {
+        const t = String(b?.type || '').toLowerCase();
+        const isImg = t.includes('image') || t.includes('logo');
+        const url = (b?.content as any)?.url || (b?.content as any)?.src;
+        return isImg && !url;
+      });
+      if (!needsImage) return;
+      const base = (import.meta as any)?.env?.BASE_URL || '/';
+      const stepId = String(currentStepKey).toLowerCase();
+      const exts = ['webp', 'jpg', 'png'];
+      const dirs = ['images/quiz21-steps', 'assets/quiz21-steps', 'images/quiz', 'assets/quiz'];
+      const candidates: string[] = [];
+      for (const dir of dirs) for (const ext of exts) candidates.push(`${base}${dir}/${stepId}.${ext}`);
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { method: 'HEAD' });
+          if (res.ok) {
+            if (!cancelled) setResolvedImageUrl(url);
+            break;
+          }
+        } catch {}
+      }
+    };
+    tryResolve();
+    return () => { cancelled = true; };
+  }, [currentStepKey, previewMode, blocksToUse]);
 
   // Converter blocos do editor para formato de preview
   const quizContent = useMemo(() => {
@@ -61,7 +106,8 @@ export default function PreviewPanel({
       const s = String(t || '').toLowerCase();
       if (s === 'heading') return 'headline';
       if (s === 'btn' || s === 'cta') return 'button';
-      return s || 'unknown';
+      if (s.includes('image') || s.includes('logo')) return 'image';
+      return String(t || 'unknown');
     };
 
     const normalizedBlocks = (blocksToUse || []).map((b: any, i: number) => {
@@ -77,22 +123,34 @@ export default function PreviewPanel({
       } as any;
 
       let content: any = merged;
-      if (type === 'text' || type === 'headline') {
+      if (type === 'text' || type === 'headline' || type === 'quiz-question-header') {
         content = { text: merged.text ?? merged.title ?? merged.label ?? merged.value ?? '' };
-      } else if (type === 'image') {
+      } else if (type === 'image' || type === 'image-display-inline' || type === 'quiz-logo') {
+        const nestedUrl = (merged as any)?.image?.url || (merged as any)?.media?.url;
         content = {
-          url: merged.url ?? merged.src ?? '',
-          alt: merged.alt ?? merged.title ?? '',
+          url: merged.url ?? merged.src ?? merged.imageUrl ?? merged.assetUrl ?? merged.asset_url ?? merged.path ?? nestedUrl ?? merged.href ?? resolvedImageUrl ?? '',
+          alt: merged.alt ?? merged.title ?? merged.description ?? merged.name ?? '',
         };
-      } else if (type === 'button') {
+      } else if (type === 'button' || type === 'quiz-back-button') {
         content = { text: merged.text ?? merged.label ?? merged.title ?? 'Continuar' };
-      } else if (type === 'quiz-options') {
+      } else if (type === 'quiz-options' || type === 'options-grid') {
         const raw = (merged.options ?? merged.choices ?? merged.items ?? []) as any[];
         const options = raw.map((o: any, idx: number) => ({
           id: o?.id ?? `opt-${idx}`,
           text: o?.text ?? o?.label ?? String(o ?? ''),
+          imageUrl:
+            o?.imageUrl ?? o?.url ?? o?.src ?? (o?.image && o?.image.url) ?? (o?.media && o?.media.url) ?? null,
+          alt: o?.alt ?? o?.title ?? o?.description ?? o?.name ?? '',
         }));
         content = { options };
+      } else if (type === 'quiz-progress-bar' || type === 'progress-header') {
+        content = {
+          currentStep: merged.currentStep ?? 1,
+          totalSteps: merged.totalSteps ?? 21,
+          barColor: merged.barColor,
+          backgroundColor: merged.backgroundColor,
+          showPercentage: merged.showPercentage ?? true,
+        };
       }
 
       return { id, type, order, content, isSelected };
@@ -172,12 +230,31 @@ export default function PreviewPanel({
                     </div>
                 </div>
             ) : (
-                <ResponsivePreviewFrame
-                    quizContent={quizContent}
-                    currentStepId={currentStepKey}
-                    onStepChange={onStepChange}
-                    onBlockSelect={onBlockSelect}
-                />
+                previewMode === 'live' ? (
+                    <div className="p-4 overflow-auto">
+                        <div className="max-w-3xl mx-auto space-y-4">
+                            {(blocksToUse || []).sort((a,b) => (a.order ?? 0) - (b.order ?? 0)).map((b) => (
+                                <BlockTypeRenderer
+                                    key={b.id}
+                                    block={b}
+                                    isSelected={b.id === selectedBlockId}
+                                    isEditable={false}
+                                    onSelect={onBlockSelect}
+                                    contextData={{ canvasMode: 'preview', stepNumber: (b as any)?.properties?.stepNumber }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="overflow-y-auto">
+                        <ResponsivePreviewFrame
+                            quizContent={quizContent}
+                            currentStepId={currentStepKey}
+                            onStepChange={onStepChange}
+                            onBlockSelect={onBlockSelect}
+                        />
+                    </div>
+                )
             )}
 
             {/* Toggle visibility button (se fornecido) */}

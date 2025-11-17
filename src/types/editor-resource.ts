@@ -41,6 +41,7 @@ export interface EditorResource {
     stepsLoaded?: number; // Número de steps carregados
     totalBlocks?: number; // Total de blocos
     conversionDuration?: number; // Tempo de conversão (ms)
+    progress?: number;
   };
 
   /** Dados completos do recurso (opcional - para recursos convertidos) */

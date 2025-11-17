@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 const SystemStatusPage: React.FC = () => {
-  const { isSystemHealthy } = useSecurity();
+  const { isSecure } = useSecurity();
   const [activeTab, setActiveTab] = useState('overview');
 
   const getPhaseStatus = (phase: string) => {
@@ -57,8 +57,8 @@ const SystemStatusPage: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant={isSystemHealthy ? 'default' : 'destructive'}>
-            {isSystemHealthy ? 'Sistema Saudável' : 'Problemas Detectados'}
+          <Badge variant={isSecure ? 'default' : 'destructive'}>
+            {isSecure ? 'Sistema Saudável' : 'Problemas Detectados'}
           </Badge>
         </div>
       </div>

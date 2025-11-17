@@ -4,6 +4,7 @@ import { StyleResult, QuizQuestion, QuizResult, QuizAnswer } from '@/types/quiz'
 import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { generateResponseId, generateOfflineId } from '@/lib/utils/idGenerator';
 import { useQuizRulesConfig } from './useQuizRulesConfig';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -180,7 +181,7 @@ export const useQuizLogic = () => {
         const totalScore = engineResult.scores.reduce((sum: number, s: any) => sum + (s.points || 0), 0);
 
         const mappedResult: QuizResult = {
-          id: `result-${Date.now()}`,
+          id: generateResponseId(),
           responses: {},
           score: totalScore,
           maxScore: 100,
@@ -242,7 +243,7 @@ export const useQuizLogic = () => {
           .map(([category, score]) => createStyleResult(category, score, totalPoints));
 
         const result: QuizResult = {
-          id: `result-${Date.now()}`,
+          id: generateResponseId(),
           responses: {},
           score: Object.values(styleScores).reduce((sum, score) => sum + score, 0),
           maxScore: 100,
@@ -280,7 +281,7 @@ export const useQuizLogic = () => {
         const { quizResultsService: central } = await import('@/services/quizResultsService');
         // Montar responses a partir do storage incremental das seleções
         const incremental = (StorageService.safeGetJSON('quizResponses') as any) || {};
-        const sessionId = StorageService.safeGetString('quizSessionId') || `local-${Date.now()}`;
+        const sessionId = StorageService.safeGetString('quizSessionId') || generateOfflineId();
         const session = {
           id: sessionId,
           session_id: sessionId,

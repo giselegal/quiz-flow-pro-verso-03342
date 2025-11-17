@@ -1,5 +1,6 @@
 import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { useQuizFlow } from '@/contexts';
+import { generateOfflineId } from '@/lib/utils/idGenerator';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -23,7 +24,7 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
   const { currentStep, totalSteps, next, previous, goTo, canProceed } = useQuizFlow();
   const [state, setState] = useState<StepNavigationState>({
     currentStep: initialStep,
-    sessionId: `offline-${Date.now()}`,
+    sessionId: generateOfflineId(),
     isLoading: false,
     canGoNext: true,
     canGoPrevious: initialStep > 1,

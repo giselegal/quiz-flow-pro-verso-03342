@@ -140,6 +140,7 @@ const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
     switch (block.type) {
       case 'text':
       case 'headline':
+      case 'quiz-question-header':
         return (
           <Wrapper key={block.id}>
             <p className="text-lg">{block.content?.text || ''}</p>
@@ -147,17 +148,39 @@ const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
         );
 
       case 'image':
-        return (
-          <Wrapper key={block.id}>
-            <img
-              src={block.content?.url}
-              alt={block.content?.alt || ''}
-              className="w-full h-auto rounded-lg"
-            />
-          </Wrapper>
-        );
+      case 'image-display-inline':
+      case 'quiz-logo':
+        {
+          const base = (typeof import.meta !== 'undefined' && (import.meta as any).env?.BASE_URL) || '/';
+          const stepId = quizContent.steps[currentStepIndex]?.id || 'step-01';
+          const preferred = (block as any)?.content?.url || (block as any)?.content?.src;
+          const seq = ['webp', 'jpg', 'png'];
+          const initial = preferred || `${base}images/quiz21-steps/${String(stepId).toLowerCase()}.${seq[0]}`;
+          return (
+            <Wrapper key={block.id}>
+              <img
+                src={initial}
+                alt={block.content?.alt || ''}
+                data-i="0"
+                className="w-full h-auto rounded-lg"
+                onError={(e) => {
+                  try {
+                    const d = e.currentTarget.dataset;
+                    const i = Number(d.i || '0');
+                    if (i < seq.length - 1) {
+                      const next = i + 1;
+                      d.i = String(next);
+                      e.currentTarget.src = `${base}images/quiz21-steps/${String(stepId).toLowerCase()}.${seq[next]}`;
+                    }
+                  } catch {}
+                }}
+              />
+            </Wrapper>
+          );
+        }
 
       case 'button':
+      case 'quiz-back-button':
         return (
           <Wrapper key={block.id}>
             <button
@@ -170,21 +193,117 @@ const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
         );
 
       case 'quiz-options':
+      case 'options-grid':
+        {
+          const cfg = block?.content || {};
+          const multipleSelection = cfg?.multipleSelection !== false;
+          const minSelections = Number(cfg?.minSelections ?? cfg?.requiredSelections ?? 1);
+          const maxSelections = Number(cfg?.maxSelections ?? (block.content?.options?.length || 1));
+          const autoAdvance = cfg?.autoAdvance === true;
+          const autoAdvanceDelay = Number(cfg?.autoAdvanceDelay ?? 800);
+
+          const current = (answers[currentStep.id]?.[block.id] ?? []) as string[];
+          const toggleSelect = (optId: string) => {
+            let next: string[] = [];
+            if (!multipleSelection) {
+              next = [optId];
+            } else {
+              const exists = current.includes(optId);
+              if (exists) {
+                next = current.filter(id => id !== optId);
+              } else {
+                next = current.length < maxSelections ? [...current, optId] : current;
+              }
+            }
+            setAnswers(prev => ({
+              ...prev,
+              [currentStep.id]: {
+                ...prev[currentStep.id],
+                [block.id]: next,
+              },
+            }));
+            const canProceed = next.length >= minSelections;
+            if (autoAdvance && canProceed) {
+              setTimeout(() => handleNext(), autoAdvanceDelay);
+            }
+          };
+          const cols = (() => {
+            const c = (block.properties?.gridColumns ?? block.content?.columns ?? 2) as number;
+            if (c >= 4) return 4;
+            if (c === 3) return 3;
+            if (c === 1) return 1;
+            return 2;
+          })();
+          const colsClass = cols === 4 ? 'grid-cols-4' : cols === 3 ? 'grid-cols-3' : cols === 1 ? 'grid-cols-1' : 'grid-cols-2';
+          return (
+          <Wrapper key={block.id}>
+            {(!block.content?.options || block.content?.options?.length === 0) && (
+              <div className="text-xs text-gray-400 text-center py-4">Sem opções configuradas</div>
+            )}
+            <div className={`w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto grid ${colsClass} gap-2`}>
+              {block.content?.options?.map((option: any) => {
+                const base = (typeof import.meta !== 'undefined' && (import.meta as any).env?.BASE_URL) || '/';
+                const stepId = quizContent.steps[currentStepIndex]?.id || 'step-01';
+                const seq = ['webp', 'jpg', 'png'];
+                const initial = option?.imageUrl || option?.url || option?.src || `${base}images/quiz21-steps/${String(stepId).toLowerCase()}-${String(option.id || '').toLowerCase()}.${seq[0]}`;
+                return (
+                  <button
+                    key={option.id}
+                    onClick={() => toggleSelect(option.id)}
+                    className="border rounded-md p-2 text-sm transition hover:bg-accent"
+                  >
+                    {initial && (
+                      <img
+                        src={initial}
+                        alt={option?.alt || ''}
+                        data-i="0"
+                        className="w-full h-24 object-cover rounded mb-1"
+                        onError={(e) => {
+                          try {
+                            const d = e.currentTarget.dataset;
+                            const i = Number(d.i || '0');
+                            if (i < seq.length - 1) {
+                              const next = i + 1;
+                              d.i = String(next);
+                              e.currentTarget.src = `${base}images/quiz21-steps/${String(stepId).toLowerCase()}-${String(option.id || '').toLowerCase()}.${seq[next]}`;
+                            } else {
+                              e.currentTarget.style.display = 'none';
+                            }
+                          } catch {}
+                        }}
+                      />
+                    )}
+                    <span className="block mt-1">{option.text}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </Wrapper>
+          );
+        }
+
+      case 'quiz-progress-bar':
+      case 'progress-header':
         return (
           <Wrapper key={block.id}>
-            <div className="space-y-2">
-              {block.content?.options?.map((option: any) => (
-                <button
-                  key={option.id}
-                  onClick={() => {
-                    handleAnswer(block.id, option.id);
-                    handleNext();
-                  }}
-                  className="w-full p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
-                >
-                  {option.text}
-                </button>
-              ))}
+            <div className="mb-2 text-sm text-muted-foreground flex justify-between">
+              <span>
+                Etapa {block.content?.currentStep ?? currentStepIndex + 1} de {block.content?.totalSteps ?? quizContent.steps.length}
+              </span>
+              {block.content?.showPercentage && (
+                <span>
+                  {Math.round(((block.content?.currentStep ?? currentStepIndex + 1) / (block.content?.totalSteps ?? quizContent.steps.length)) * 100)}%
+                </span>
+              )}
+            </div>
+            <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: block.content?.backgroundColor || '#E5E7EB' }}>
+              <div
+                className="h-full transition-all duration-300"
+                style={{
+                  width: `${(((block.content?.currentStep ?? currentStepIndex + 1) / (block.content?.totalSteps ?? quizContent.steps.length)) * 100)}%`,
+                  backgroundColor: block.content?.barColor || 'var(--primary)',
+                }}
+              />
             </div>
           </Wrapper>
         );

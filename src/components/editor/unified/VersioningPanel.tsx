@@ -414,7 +414,7 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ entry, isSelected, onSelect }
         <span className={`importance importance-${entry.metadata.importance}`}>
           {entry.metadata.importance}
         </span>
-        {entry.metadata.tags.map(tag => (
+        {entry.metadata.tags?.map(tag => (
           <span key={tag} className="tag">
             {tag}
           </span>

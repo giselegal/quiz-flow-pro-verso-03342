@@ -51,7 +51,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
     // Carregar dados do step atual
     React.useEffect(() => {
-        const loadStepData = () => {
+        const loadStepData = async () => {
             try {
                 setIsLoading(true);
                 appLogger.debug('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
@@ -243,9 +243,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
     // 🔍 Função para validar se os dados seguem o FUNNEL_PERSISTENCE_SCHEMA
     const validateFunnelSchema = (data: any): boolean => {
-        const schema = FUNNEL_PERSISTENCE_SCHEMA;
         appLogger.debug('🔍 Validando dados contra FUNNEL_PERSISTENCE_SCHEMA:', {
-            schema: schema.persistence.dataStructure,
             data,
         });
 

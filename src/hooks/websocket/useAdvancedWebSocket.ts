@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { generateEventId } from '@/lib/utils/idGenerator';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -493,7 +494,7 @@ class AdvancedWebSocket {
     // ===== UTILITY METHODS =====
     
     private generateMessageId(): string {
-        return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        return generateEventId();
     }
     
     private log(...args: any[]): void {

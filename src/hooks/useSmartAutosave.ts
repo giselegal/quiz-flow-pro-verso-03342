@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
+import { generateHistoryId } from '@/lib/utils/idGenerator';
 
 export type SaveStatus = 'idle' | 'queued' | 'saving' | 'saved' | 'error';
 
@@ -92,7 +93,7 @@ export function useSmartAutosave<T>(
 
     debounceTimerRef.current = setTimeout(() => {
       queueRef.current.push({
-        id: Date.now().toString(),
+        id: generateHistoryId(),
         data,
         timestamp: Date.now(),
         retries: 0,
@@ -109,7 +110,7 @@ export function useSmartAutosave<T>(
     }
 
     queueRef.current.push({
-      id: Date.now().toString(),
+      id: generateHistoryId(),
       data,
       timestamp: Date.now(),
       retries: 0,

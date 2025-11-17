@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { generateComponentId } from '@/lib/utils/idGenerator';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { toast } from '@/hooks/use-toast';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -104,7 +105,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       try {
         const newComponent: any = {
           component_type_key: componentTypeKey,
-          instance_key: `${componentTypeKey}_${Date.now()}`,
+          instance_key: `${componentTypeKey}_${generateComponentId()}`,
           step_number: stepNumber,
           order_index: orderIndex ?? components.length,
           // Persistimos em config, mas mantemos properties na camada de app

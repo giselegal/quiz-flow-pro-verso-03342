@@ -62,8 +62,8 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
     toggleDraftMode,
   } = useEditorIntegration();
 
-  const handleBlockStyleUpdate = (blockId: string, styles: any) => {
-    const updatedBlocks = currentStepBlocks.map(block =>
+  const handleBlockStyleUpdate = (blockId: string, styles: Record<string, any>) => {
+    const updatedBlocks = currentStepBlocks.map((block: Block) =>
       block.id === blockId
         ? {
           ...block,
@@ -184,7 +184,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
                       </div>
 
                       <div className="space-y-4">
-                        {currentStepBlocks.map(block => (
+                        {currentStepBlocks.map((block: Block) => (
                           <Card
                             key={block.id}
                             className={cn(

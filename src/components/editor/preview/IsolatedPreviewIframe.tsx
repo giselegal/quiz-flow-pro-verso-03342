@@ -5,7 +5,8 @@
  * Previne state leakage entre Editor e Runtime
  */
 
-import { useEffect, useRef, useState, memo } from 'react';
+import { useEffect, useRef, useState, memo, useCallback } from 'react';
+import { useSafeEventListener } from '@/hooks/useSafeEventListener';
 import { Loader2 } from 'lucide-react';
 
 export interface PreviewMessage {
@@ -17,7 +18,8 @@ export interface PreviewMessage {
     | 'READY'
     | 'THEME'
     | 'STEP_CHANGE'
-    | 'BLOCK_SELECT';
+    | 'BLOCK_SELECT'
+    | 'HEIGHT';
   payload?: any;
 }
 
@@ -51,6 +53,7 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [frameHeight, setFrameHeight] = useState<number | undefined>(undefined);
 
   /**
    * Enviar mensagem para o iframe
@@ -70,8 +73,7 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
   /**
    * Listener para mensagens do iframe
    */
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
+  const handleMessage = useCallback((event: MessageEvent) => {
       // Validar origem
       if (event.origin !== window.location.origin) return;
 
@@ -103,12 +105,18 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
         case 'ERROR':
           setError(payload.message);
           break;
+        case 'HEIGHT':
+          try {
+            const h = Number(payload?.height) || 0;
+            if (h > 0) {
+              setFrameHeight(h);
+            }
+          } catch {}
+          break;
       }
-    };
+  }, [quizContent, currentStepId, onStepChange, onBlockSelect]);
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [quizContent, currentStepId, onStepChange]);
+  useSafeEventListener('message', handleMessage);
 
   /**
    * Atualizar conteúdo quando mudar
@@ -167,7 +175,7 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
   }, [isLoading, quizContent, currentStepId]);
 
   return (
-    <div className={`relative w-full h-full ${className}`}>
+    <div className={`relative w-full ${className}`} style={frameHeight ? { height: `${frameHeight}px` } : undefined}>
       {/* Loading overlay */}
       {isLoading && (
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex items-center justify-center">

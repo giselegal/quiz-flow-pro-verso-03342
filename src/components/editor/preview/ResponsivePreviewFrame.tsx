@@ -40,7 +40,7 @@ export function ResponsivePreviewFrame({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <PreviewControls
         viewport={viewport}
         onViewportChange={setViewport}
@@ -51,12 +51,14 @@ export function ResponsivePreviewFrame({
         onRefresh={handleRefresh}
       />
 
-      <div className="flex-1 overflow-auto bg-muted/20 p-8">
+      <div className="flex-1 overflow-hidden bg-muted/20 p-8">
         <div
           className="mx-auto transition-all duration-300 ease-out bg-background shadow-2xl rounded-lg overflow-hidden"
           style={{
-            width: dimensions.width,
-            height: dimensions.height,
+            width: viewport === 'desktop' ? '100%' : dimensions.width,
+            height: viewport === 'desktop' ? 'auto' : dimensions.height,
+            maxWidth: viewport === 'desktop' ? dimensions.width : undefined,
+            maxHeight: viewport === 'desktop' ? dimensions.height : undefined,
             transform: `scale(${zoom})`,
             transformOrigin: 'top center',
           }}

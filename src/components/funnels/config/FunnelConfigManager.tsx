@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Save, Loader2, Settings, Copy, RefreshCw } from 'lucide-react';
 
-import { FunnelConfigPersistenceService } from '@/services/canonical/FunnelService';
+import { funnelService } from '@/services/canonical/FunnelService';
 import {
     FunnelConfig,
     FunnelSEOOverrides,
@@ -45,7 +45,7 @@ export default function FunnelConfigManager({
     const [activeTab, setActiveTab] = useState('seo');
     const [error, setError] = useState<string | null>(null);
 
-    const persistenceService = FunnelConfigPersistenceService.getInstance();
+    const persistenceService = funnelService;
 
     // =================== Carregar configuração ===================
     const loadConfiguration = useCallback(async () => {
@@ -54,7 +54,8 @@ export default function FunnelConfigManager({
         try {
             appLogger.info(`🔧 Carregando configuração para funil: ${funnelId}`);
 
-            const loadedData = await persistenceService.loadConfig(funnelId);
+            const funnelData = await persistenceService.getFunnel(funnelId);
+            const loadedData = funnelData ? { config: funnelData.config || {} } : null;
             if (loadedData?.config) {
                 setConfig(loadedData.config);
                 setOriginalConfig(loadedData.config);
@@ -123,16 +124,12 @@ export default function FunnelConfigManager({
         try {
             appLogger.info('💾 Salvando configuração:', { data: [config] });
 
-            const savedData = await persistenceService.saveConfig(
+            const savedData = await persistenceService.updateFunnel(
                 funnelId,
-                config,
                 {
-                    validate: true,
-                    backup: true,
-                    updateCache: true,
-                    source: 'manual',
-                    userId: 'current-user', // TODO: Obter do contexto de auth
-                },
+                    config: config,
+                    settings: config, // Alias for compatibility
+                }
             );
 
             setOriginalConfig(config);

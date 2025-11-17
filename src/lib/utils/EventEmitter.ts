@@ -12,7 +12,7 @@ export interface EventEmitterListener {
 
 export class EventEmitter {
     private events: Map<string, EventEmitterListener[]> = new Map();
-    private maxListeners = 10;
+    private maxListeners = 50;
 
     // Adicionar listener
     on(eventName: string, listener: EventEmitterListener): this {

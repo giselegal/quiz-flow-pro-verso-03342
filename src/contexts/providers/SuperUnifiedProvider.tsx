@@ -30,15 +30,15 @@ import React, {
     useState,
     useRef,
 } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
+import { generateOfflineId, generateFunnelId, generateNotificationId } from '@/lib/utils/idGenerator';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { isSupabaseDisabled } from '@/services/integrations/supabase/flags';
-import { createLogger } from '@/lib/utils/appLogger';
-import { blockBaseSchema } from '@/types/schemas/editorStateSchema';
+import { createLogger, appLogger } from '@/lib/utils/appLogger';
+import { blockSchema } from '@/types/schemas/templateSchema';
 import { getUserFriendlyError } from '@/lib/utils/userFriendlyErrors';
 import { useUnifiedHistory } from '@/hooks/useUnifiedHistory';
-import { appLogger } from '@/lib/utils/appLogger';
+import { StorageService } from '@/services/core/StorageService';
 
 // Logger para o SuperUnifiedProvider
 const logger = createLogger({ namespace: 'SuperUnifiedProvider' });
@@ -290,7 +290,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 currentFunnel: action.payload,
             };
 
-        case 'UPDATE_FUNNEL':
+        case 'UPDATE_FUNNEL': {
             const updatedFunnels = state.funnels.map(funnel =>
                 funnel.id === action.payload.id
                     ? { ...funnel, ...action.payload.updates }
@@ -313,6 +313,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     },
                 },
             };
+        }
 
         case 'SET_AUTH_STATE':
             return {
@@ -453,44 +454,44 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 },
             };
 
-        case 'SET_STEP_BLOCKS': {
-            // 🛡️ G15 FIX: Validar blocos antes de armazenar
-            const validBlocks: any[] = [];
-            const invalidBlocks: any[] = [];
+         case 'SET_STEP_BLOCKS': {
+             const validBlocks: any[] = [];
+             const invalidBlocks: any[] = [];
 
-            for (const block of action.payload.blocks) {
-                const validation = blockBaseSchema.safeParse(block);
-                if (validation.success) {
-                    validBlocks.push(validation.data);
-                } else {
-                    invalidBlocks.push({ block, errors: validation.error.issues });
-                    logger.warn('[SET_STEP_BLOCKS] Bloco inválido detectado', {
-                        stepIndex: action.payload.stepIndex,
-                        blockId: block?.id,
-                        errors: validation.error.issues,
-                    });
-                }
-            }
+             for (const block of action.payload.blocks) {
+                 // Validar bloco completo e manter propriedades adicionais (passthrough)
+                 const validation = blockSchema.safeParse(block);
+                 if (validation.success) {
+                     validBlocks.push(validation.data);
+                 } else {
+                     invalidBlocks.push({ block, errors: validation.error.issues });
+                     logger.warn('[SET_STEP_BLOCKS] Bloco inválido detectado', {
+                         stepIndex: action.payload.stepIndex,
+                         blockId: block?.id,
+                         errors: validation.error.issues,
+                     });
+                 }
+             }
 
-            if (invalidBlocks.length > 0) {
-                logger.error('[SET_STEP_BLOCKS] Blocos inválidos ignorados', {
-                    stepIndex: action.payload.stepIndex,
-                    invalidCount: invalidBlocks.length,
-                    totalCount: action.payload.blocks.length,
-                });
-            }
+             if (invalidBlocks.length > 0) {
+                 logger.error('[SET_STEP_BLOCKS] Blocos inválidos ignorados', {
+                     stepIndex: action.payload.stepIndex,
+                     invalidCount: invalidBlocks.length,
+                     totalCount: action.payload.blocks.length,
+                 });
+             }
 
-            return {
-                ...state,
-                editor: {
-                    ...state.editor,
-                    stepBlocks: {
-                        ...state.editor.stepBlocks,
-                        [action.payload.stepIndex]: validBlocks,
-                    },
-                },
-            };
-        }
+             return {
+                 ...state,
+                 editor: {
+                     ...state.editor,
+                     stepBlocks: {
+                         ...state.editor.stepBlocks,
+                         [action.payload.stepIndex]: validBlocks,
+                     },
+                 },
+             };
+         }
 
         case 'VALIDATE_STEP':
             return {
@@ -661,13 +662,13 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             }
 
-            // 2. Tentar restaurar do localStorage (fallback)
-            const lsStep = localStorage.getItem('editor:currentStep');
-            const lsTimestamp = localStorage.getItem('editor:currentStep:timestamp');
+            // 2. Tentar restaurar do storage seguro (fallback)
+            const lsStep = StorageService.safeGetJSON<number>('editor:currentStep');
+            const lsTimestamp = StorageService.safeGetJSON<number>('editor:currentStep:timestamp');
 
             if (lsStep && lsTimestamp) {
-                const stepNum = parseInt(lsStep, 10);
-                const timestamp = parseInt(lsTimestamp, 10);
+                const stepNum = Number(lsStep);
+                const timestamp = Number(lsTimestamp);
                 const age = Date.now() - timestamp;
 
                 // Só restaurar se tiver menos de 24h (86400000ms)
@@ -686,7 +687,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } catch (error) {
             logger.error('[G19] Erro ao restaurar currentStep', { error });
         }
-  }, []); // Executar apenas no mount
+  }, [debugMode, state.editor.totalSteps]);
 
     // Auto-load de blocos do step ativo quando faltar no estado (respeita URL ?step=)
     useEffect(() => {
@@ -707,39 +708,60 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     logger.warn('[SuperUnifiedProvider] Auto-load step falhou', { stepId, error });
                 }
             })();
-        } catch {}
-    }, [state.editor.currentStep, state.currentFunnel?.id]);
+        } catch { void 0; }
+    }, [state.editor.currentStep, state.currentFunnel?.id, state.editor.stepBlocks]);
 
+    // ✅ FIX: Solução robusta para evitar loop infinito - usando refs e memoização
+    const processedStepRef = useRef<number | null>(null);
+    const loadingStepRef = useRef<number | null>(null);
+    
     useEffect(() => {
         if (typeof window === 'undefined') return;
+        
         const handler = async () => {
             try {
                 const params = new URLSearchParams(window.location.search);
                 const s = params.get('step');
                 const n = s ? parseInt(s, 10) : NaN;
+                
                 if (!isNaN(n) && n >= 1 && n <= state.editor.totalSteps) {
-                    if (state.editor.currentStep !== n) {
-                        dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: n } });
-                    }
+                    // ✅ FIX: Verificar se já processamos este step usando ref
+                    if (processedStepRef.current === n) return;
+                    processedStepRef.current = n;
+                    
+                    // Atualizar current step
+                    dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: n } });
+                    
                     const key = `step-${String(n).padStart(2, '0')}`;
                     const existing = (state.editor.stepBlocks as any)[n];
+                    
+                    // ✅ FIX: Carregar blocos apenas se necessário e não estiver carregando
                     if (!Array.isArray(existing) || existing.length === 0) {
-                        const res = await hierarchicalTemplateSource.getPrimary(key, state.currentFunnel?.id || undefined);
-                        if (res?.data && Array.isArray(res.data)) {
-                            dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: n, blocks: res.data } });
+                        if (loadingStepRef.current === n) return; // Já está carregando
+                        loadingStepRef.current = n;
+                        
+                        try {
+                            const res = await hierarchicalTemplateSource.getPrimary(key, state.currentFunnel?.id || undefined);
+                            if (res?.data && Array.isArray(res.data)) {
+                                dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: n, blocks: res.data } });
+                            }
+                        } catch { void 0; } finally {
+                            loadingStepRef.current = null;
                         }
                     }
                 }
-            } catch {}
+            } catch { void 0; }
         };
+        
         window.addEventListener('popstate', handler);
-        const id = window.setInterval(handler, 500);
+        
+        // ✅ FIX: Executar apenas quando necessário
         handler();
+        
         return () => {
             window.removeEventListener('popstate', handler);
-            window.clearInterval(id);
         };
-    }, [state.editor.totalSteps, state.currentFunnel?.id, state.editor.currentStep, state.editor.stepBlocks]);
+    }, [state.editor.totalSteps, state.currentFunnel?.id, state.editor.stepBlocks]);
 
     // 🆕 G4 FIX: Listener para sincronização entre tabs via BroadcastChannel
     useEffect(() => {
@@ -824,7 +846,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: false } });
         }
-    }, [debugMode]);
+    }, [debugMode, SUPABASE_DISABLED]);
 
     const loadFunnel = useCallback(async (id: string) => {
         if (state.cache.funnels[id] && state.features.enableCache) {
@@ -894,7 +916,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'funnel', loading: false } });
         }
-    }, [state.cache.funnels, state.cache.lastUpdated, state.features.enableCache, state.performance.cacheHitRate]);
+    }, [state.cache.funnels, state.cache.lastUpdated, state.features.enableCache, state.performance.cacheHitRate, SUPABASE_DISABLED, debugMode]);
 
     const saveFunnel = useCallback(async (funnel?: UnifiedFunnelData) => {
         const funnelToSave = funnel || state.currentFunnel;
@@ -938,7 +960,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: false } });
         }
-    }, [state.currentFunnel]);
+    }, [state.currentFunnel, SUPABASE_DISABLED, debugMode]);
 
     // publishFunnel será definido após ensureAllDirtyStepsSaved
 
@@ -948,7 +970,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         try {
             if (SUPABASE_DISABLED) {
                 const localFunnel: UnifiedFunnelData = {
-                    id: `offline_${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
+                    id: generateOfflineId(),
                     name,
                     user_id: null,
                     description: options.description || '',
@@ -970,7 +992,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             const { data, error } = await supabase
                 .from('funnels')
                 .insert({
-                    id: `f_${uuidv4()}`, // 🆕 G36 FIX: UUID ao invés de Date.now()
+                    id: generateFunnelId(),
                     name,
                     description: options.description || '',
                     config: options.settings || {},
@@ -994,7 +1016,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'create', loading: false } });
         }
-    }, [state.funnels]);
+    }, [state.funnels, SUPABASE_DISABLED]);
 
     const deleteFunnel = useCallback(async (id: string) => {
         try {
@@ -1025,7 +1047,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'SET_ERROR', payload: { section: 'delete', error: error.message } });
             return false;
         }
-    }, [state.funnels, state.currentFunnel]);
+    }, [state.funnels, state.currentFunnel, SUPABASE_DISABLED, debugMode]);
 
     const duplicateFunnel = useCallback(async (id: string, newName?: string) => {
         const originalFunnel = state.funnels.find(f => f.id === id);
@@ -1056,9 +1078,9 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 url.searchParams.set('step', step.toString());
                 window.history.replaceState({}, '', url.toString());
 
-                // Persistir em localStorage
-                localStorage.setItem('editor:currentStep', step.toString());
-                localStorage.setItem('editor:currentStep:timestamp', Date.now().toString());
+                // Persistir usando StorageService
+                StorageService.safeSetJSON('editor:currentStep', step);
+                StorageService.safeSetJSON('editor:currentStep:timestamp', Date.now());
 
                 if (debugMode) {
                     logger.info('[G19] Step persistido em URL e localStorage', { step });
@@ -1070,7 +1092,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [debugMode]);
 
     const setSelectedBlock = useCallback((blockId: string | null) => {
-        try { logger.debug('[setSelectedBlock] Atualizando seleção', { blockId }); } catch {}
+        try { logger.debug('[setSelectedBlock] Atualizando seleção', { blockId }); } catch { void 0; }
         dispatch({ type: 'SET_EDITOR_STATE', payload: { selectedBlockId: blockId } });
     }, []);
 
@@ -1116,7 +1138,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             // 2️⃣ G4: Invalidar cache L1 (Memory) + L2 (IndexedDB) via método unificado
             await hierarchicalTemplateSource.invalidate(stepId, funnel.id);
-            if (debugMode) logger.debug('[G4] Cache L1+L2 invalidado', { stepId })
+            if (debugMode) logger.debug('[G4] Cache L1+L2 invalidado', { stepId });
 
             // 4️⃣ G4: Broadcast para outras tabs (sincronização entre abas)
             try {
@@ -1124,7 +1146,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     const channel = new BroadcastChannel('quiz-editor-sync');
                     channel.postMessage({
                         type: 'STEP_UPDATED',
-                        payload: { funnelId: funnel.id, stepId, stepIndex, timestamp: Date.now() }
+                        payload: { funnelId: funnel.id, stepId, stepIndex, timestamp: Date.now() },
                     });
                     channel.close();
                     if (debugMode) logger.debug('[G4] Broadcast enviado', { stepId });
@@ -1139,23 +1161,27 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'SET_ERROR', payload: { section: 'step-save', error: error?.message || String(error) } });
             throw error;
         }
-    }, [state.currentFunnel, state.editor.stepBlocks]);
+    }, [state.currentFunnel, state.editor.stepBlocks, debugMode]);
 
     const ensureAllDirtyStepsSaved = useCallback(async () => {
         const funnel = state.currentFunnel;
         if (!funnel?.id) return;
         const entries = Object.entries(state.editor.dirtySteps || {}).filter(([, dirty]) => dirty);
+        const promises: Promise<number>[] = [];
         for (const [idxStr] of entries) {
             const idx = Number(idxStr);
             if (Number.isFinite(idx) && idx >= 1) {
-                await (async () => {
-                    const stepId = `step-${String(idx).padStart(2, '0')}`;
-                    const blocks = state.editor.stepBlocks[idx] || [];
-                    await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnel.id);
-                    dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex: idx, dirty: false } });
-                })();
+                const stepId = `step-${String(idx).padStart(2, '0')}`;
+                const blocks = state.editor.stepBlocks[idx] || [];
+                promises.push(
+                    hierarchicalTemplateSource.setPrimary(stepId, blocks, funnel.id).then(() => idx),
+                );
             }
         }
+        const savedIdx = await Promise.all(promises);
+        savedIdx.forEach((idx) => {
+            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex: idx, dirty: false } });
+        });
     }, [state.currentFunnel, state.editor.dirtySteps, state.editor.stepBlocks]);
 
     const publishFunnel = useCallback(async (opts: { ensureSaved?: boolean } = {}) => {
@@ -1233,10 +1259,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'publish', loading: false } });
         }
-    }, [state.currentFunnel, state.editor.isDirty, saveFunnel, ensureAllDirtyStepsSaved]);
+    }, [state.currentFunnel, state.editor.isDirty, saveFunnel, ensureAllDirtyStepsSaved, SUPABASE_DISABLED, debugMode]);
 
     const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
-        const id = uuidv4(); // 🆕 G36 FIX: UUID ao invés de Date.now()
+        const id = generateNotificationId();
         dispatch({ type: 'ADD_TOAST', payload: { ...toast, id } });
 
         if (toast.duration !== -1) {
@@ -1280,7 +1306,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 dispatch({ type: 'SET_AUTH_STATE', payload: { error: 'Supabase não configurado. Defina VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY.', isLoading: false } });
                 return;
             }
-            try { await (supabase as any).auth.resend({ type: 'signup', email }); } catch {}
+            try { await (supabase as any).auth.resend({ type: 'signup', email }); } catch { void 0; }
             dispatch({ type: 'SET_AUTH_STATE', payload: { user, isAuthenticated: true, isLoading: false } });
         } catch (error: any) {
             dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message, isLoading: false } });
@@ -1455,7 +1481,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             Object.entries(data.stepBlocks).forEach(([stepIndex, blocks]) => {
                 dispatch({ 
                     type: 'SET_STEP_BLOCKS', 
-                    payload: { stepIndex: Number(stepIndex), blocks: blocks as any[] } 
+                    payload: { stepIndex: Number(stepIndex), blocks: blocks as any[] }, 
                 });
             });
 

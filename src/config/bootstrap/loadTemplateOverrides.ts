@@ -6,7 +6,17 @@
  * Espera um arquivo /templates/index.json com { files: string[] } e arquivos sob /templates/*.json
  * Servidos a partir de public/ em Vite.
  */
-import { TemplateRegistry } from '@/services/TemplateRegistry';
+let TemplateRegistry: any = null;
+async function getTemplateRegistry(): Promise<any> {
+  if (TemplateRegistry) return TemplateRegistry;
+  try {
+    const mod: any = await import('@/services/TemplateRegistry');
+    TemplateRegistry = mod?.TemplateRegistry ?? null;
+  } catch {
+    TemplateRegistry = null;
+  }
+  return TemplateRegistry;
+}
 import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -39,7 +49,12 @@ export async function loadTemplateOverrides(): Promise<void> {
       return;
     }
 
-    const registry = TemplateRegistry.getInstance();
+    const regCls = await getTemplateRegistry();
+    if (!regCls || typeof regCls.getInstance !== 'function') {
+      appLogger.warn('[TemplateOverrides] TemplateRegistry indisponível — overrides ignorados');
+      return;
+    }
+    const registry = regCls.getInstance();
 
     for (const relativePath of index.files) {
       const url = `/templates/${relativePath}`;

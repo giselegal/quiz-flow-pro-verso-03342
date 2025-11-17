@@ -174,7 +174,7 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
           <Button
             type="button"
             onClick={onNext}
-            onKeyDown={e => {
+            onKeyDown={(e: React.KeyboardEvent) => {
               if (!canProceed) return;
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();

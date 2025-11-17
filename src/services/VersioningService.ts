@@ -16,6 +16,31 @@ export interface Version {
   changes: any[];
 }
 
+export interface VersionSnapshot {
+  id: string;
+  timestamp: string;
+  metadata: {
+    author?: string;
+    tags?: string[];
+    description?: string;
+  };
+  data: any;
+}
+
+export interface VersionComparison {
+  id: string;
+  timestamp: string;
+  changes: Array<{
+    id: string;
+    type: 'added' | 'modified' | 'removed';
+    path: string;
+    oldValue?: any;
+    newValue?: any;
+    entity: string;
+    description: string;
+  }>;
+}
+
 export class VersioningService {
   async getVersions(): Promise<Version[]> {
     appLogger.warn('[VersioningService] Stub - getVersions não implementado');

@@ -201,7 +201,8 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
 
         vi.mocked(validateTemplate).mockReturnValue({
             success: false,
-            error: new Error('Template inválido: falta campo id'),
+            errors: ['Template inválido: falta campo id'],
+            warnings: [],
         });
 
         render(

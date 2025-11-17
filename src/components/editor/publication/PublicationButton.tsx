@@ -147,11 +147,12 @@ export function PublicationSettingsButton({
                                 customPixels: (settings.tracking?.customPixels || []).map(p => ({
                                     ...p,
                                     name: p.name || '',
+                                    code: p.code || '',
                                 })),
                             },
                             domain: {
                                 ...settings.domain,
-                                custom: settings.domain?.custom || undefined,
+                                customDomain: settings.domain?.customDomain || undefined,
                             },
                         }}
                         onSettingsChange={updateSettings}
@@ -161,10 +162,10 @@ export function PublicationSettingsButton({
             </Dialog>
 
             {/* Quick Access Preview URL */}
-            {publicationStatus === 'published' && (
+            {publicationStatus === 'published' && generatePreviewUrl() && (
                 <div className="hidden lg:flex items-center ml-2">
                     <a
-                        href={generatePreviewUrl()}
+                        href={generatePreviewUrl()!}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-blue-600 hover:underline flex items-center gap-1"

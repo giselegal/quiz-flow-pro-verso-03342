@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useRoute } from 'wouter';
 import QuizApp from '@/components/quiz/QuizApp';
 import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
+import { useSafeEventListener } from '@/hooks/useSafeEventListener';
 
 export default function LivePreviewPage() {
     const [match, params] = useRoute('/preview/:funnelId');
@@ -17,16 +18,13 @@ export default function LivePreviewPage() {
     }, [match, params]);
     const { liveSteps } = useFunnelLivePreview(funnelId);
     const [localSteps, setLocalSteps] = React.useState<any | null>(null);
-    React.useEffect(() => {
-        const handler = (ev: MessageEvent) => {
-            const data: any = ev.data;
-            if (data && data.type === 'steps' && data.steps) {
-                setLocalSteps(data.steps);
-            }
-        };
-        window.addEventListener('message', handler);
-        return () => window.removeEventListener('message', handler);
+    const handler = useCallback((ev: MessageEvent) => {
+        const data: any = ev.data;
+        if (data && data.type === 'steps' && data.steps) {
+            setLocalSteps(data.steps);
+        }
     }, []);
+    useSafeEventListener('message', handler);
 
     const steps = liveSteps || localSteps || undefined;
     const isConnected = !!steps;
