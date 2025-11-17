@@ -45,7 +45,6 @@ export const QuizTransition: React.FC<QuizTransitionProps> = ({
   icon,
   showLoading = true,
   duration = 5000,
-  deviceView = 'desktop',
   onComplete,
   onContinue,
   showContinueButton = true,

@@ -47,7 +47,7 @@ export const EditorDiagnostics: React.FC = () => {
     }
   }
 
-  const supabaseStatus = editor.state.databaseMode === 'supabase' ? '✅ Ativo' : '❌ Local';
+  const supabaseStatus = editor.state.databaseMode === 'online' ? '✅ Ativo' : '❌ Local';
 
   return (
     <>
