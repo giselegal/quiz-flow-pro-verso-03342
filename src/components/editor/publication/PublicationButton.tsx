@@ -140,7 +140,20 @@ export function PublicationSettingsButton({
 
                     <FunnelPublicationPanel
                         funnelId={funnelId}
-                        settings={settings}
+                        settings={{
+                            ...settings,
+                            tracking: {
+                                ...settings.tracking,
+                                customPixels: (settings.tracking?.customPixels || []).map(p => ({
+                                    ...p,
+                                    name: p.name || '',
+                                })),
+                            },
+                            domain: {
+                                ...settings.domain,
+                                custom: settings.domain?.custom || undefined,
+                            },
+                        }}
                         onSettingsChange={updateSettings}
                         onPublish={handlePublish}
                     />
@@ -195,7 +208,7 @@ export function QuickPublicationStatus({
                 {config.icon} {config.label}
             </span>
 
-            {showUrl && status === 'published' && (
+            {showUrl && status === 'published' && url && (
                 <a
                     href={url}
                     target="_blank"
