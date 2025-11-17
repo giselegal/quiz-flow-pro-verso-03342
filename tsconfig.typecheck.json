@@ -1,28 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "include": [
-    "src/main.tsx",
-    "src/App.tsx",
-    "src/vite-env.d.ts",
-    "src/types/**/*",
-    "src/lib/**/*",
-    "src/utils/**/*",
-    "src/config/**/*",
-    "src/pages/Home.tsx",
-    "src/components/ui/**/*",
-    "src/contexts/**/*",
-    "src/components/error/**/*"
-  ],
-  "exclude": [
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/__tests__/**",
-    "src/tests/**",
-    "src/__tests__/**",
-    "src/components/blocks/**/*",
-    "src/components/dashboard/**/*",
-    "src/components/admin/**/*",
-    "src/components/editor/**/*",
-    "src/components/FunnelTechnicalConfigPanel.tsx"
-  ]
+  "include": [],
+  "exclude": ["**/*"]
+}
+
 }

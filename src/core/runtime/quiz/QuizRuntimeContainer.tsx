@@ -24,6 +24,7 @@ export interface QuizRuntimeContainerProps {
   initialStepId?: string;
   onStepChange?: (stepId: string) => void;
   onComplete?: (results: any) => void;
+  onBlockClick?: (blockId: string) => void;
   
   // 🚀 FASE 3: Lazy loading options
   enableLazyLoad?: boolean;
@@ -79,6 +80,7 @@ const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
   initialStepId,
   onStepChange,
   onComplete,
+  onBlockClick,
 }) => {
   if (!quizContent) {
     return (
@@ -129,62 +131,73 @@ const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
    */
   const renderBlock = (block: any) => {
     // Renderização simples baseada no tipo
+    const wrapperClass = block.isSelected
+      ? 'mb-4 ring-2 ring-blue-500 rounded-md cursor-pointer'
+      : 'mb-4 cursor-pointer';
+    const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+      <div className={wrapperClass} onClickCapture={() => onBlockClick?.(block.id)}>{children}</div>
+    );
     switch (block.type) {
       case 'text':
       case 'headline':
         return (
-          <div key={block.id} className="mb-4">
+          <Wrapper key={block.id}>
             <p className="text-lg">{block.content?.text || ''}</p>
-          </div>
+          </Wrapper>
         );
 
       case 'image':
         return (
-          <div key={block.id} className="mb-4">
+          <Wrapper key={block.id}>
             <img
               src={block.content?.url}
               alt={block.content?.alt || ''}
               className="w-full h-auto rounded-lg"
             />
-          </div>
+          </Wrapper>
         );
 
       case 'button':
         return (
-          <button
-            key={block.id}
-            onClick={handleNext}
-            className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            {block.content?.text || 'Continuar'}
-          </button>
+          <Wrapper key={block.id}>
+            <button
+              onClick={handleNext}
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              {block.content?.text || 'Continuar'}
+            </button>
+          </Wrapper>
         );
 
       case 'quiz-options':
         return (
-          <div key={block.id} className="mb-6 space-y-2">
-            {block.content?.options?.map((option: any) => (
-              <button
-                key={option.id}
-                onClick={() => {
-                  handleAnswer(block.id, option.id);
-                  handleNext();
-                }}
-                className="w-full p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
-              >
-                {option.text}
-              </button>
-            ))}
-          </div>
+          <Wrapper key={block.id}>
+            <div className="space-y-2">
+              {block.content?.options?.map((option: any) => (
+                <button
+                  key={option.id}
+                  onClick={() => {
+                    handleAnswer(block.id, option.id);
+                    handleNext();
+                  }}
+                  className="w-full p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
+                >
+                  {option.text}
+                </button>
+              ))}
+            </div>
+          </Wrapper>
         );
 
       default:
         return (
-          <div key={block.id} className="mb-4 p-4 border border-dashed border-border rounded-lg">
-            <p className="text-sm text-muted-foreground">
-              Bloco não suportado: {block.type}
-            </p>
-          </div>
+          <Wrapper key={block.id}>
+            <div className="p-4 border border-dashed border-border rounded-lg">
+              <p className="text-sm text-muted-foreground">
+                Bloco não suportado: {block.type}
+              </p>
+            </div>
+          </Wrapper>
         );
     }
   };

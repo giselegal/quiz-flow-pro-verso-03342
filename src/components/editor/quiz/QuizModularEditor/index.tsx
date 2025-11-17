@@ -386,6 +386,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // normalize order helper
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
+
     // ✅ G4 FIX: Template preparation agora é feito APENAS em useEditorResource.loadResource()
     // Mantemos aqui APENAS a validação e setup de steps metadata
     useEffect(() => {
@@ -538,6 +539,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // Blocks from unified
     const blocks: Block[] | null = getStepBlocks(safeCurrentStep);
+
+    useEffect(() => {
+        try {
+            appLogger.debug('🔍 [DEBUG] Selection State:', {
+                selectedBlockId,
+                blocksCount: blocks?.length,
+                selectedBlock: blocks?.find(b => b.id === selectedBlockId),
+                allBlockIds: blocks?.map(b => b.id),
+            });
+        } catch {}
+    }, [selectedBlockId, blocks]);
 
     useEffect(() => {
         if (canvasMode === 'edit' && (!selectedBlockId || !blocks?.find(b => b.id === selectedBlockId))) {
@@ -1342,6 +1354,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     <PreviewPanel
                                         currentStepKey={currentStepKey}
                                         blocks={blocks}
+                                        selectedBlockId={selectedBlockId}
+                                        onBlockSelect={setSelectedBlock}
                                         isVisible={true}
                                         className="h-full"
                                         previewMode={previewMode}
@@ -1365,7 +1379,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando propriedades…</div>}>
                             <div className="h-full border-l bg-white overflow-y-auto" data-testid="column-properties">
                                 <PropertiesColumn
-                                    selectedBlock={blocks?.find(b => b.id === selectedBlockId) ?? null}
+                                    selectedBlock={(() => {
+                                        const selected = blocks?.find(b => b.id === selectedBlockId);
+                                        if (selected) return selected;
+                                        if (blocks && blocks.length > 0 && !selectedBlockId) {
+                                            try { setSelectedBlock(blocks[0].id); } catch {}
+                                            return blocks[0];
+                                        }
+                                        return null;
+                                    })()}
                                     onBlockUpdate={(blockId: string, updates: Partial<Block>) => updateBlock(safeCurrentStep, blockId, updates)}
                                     onClearSelection={() => setSelectedBlock(null)}
                                 />

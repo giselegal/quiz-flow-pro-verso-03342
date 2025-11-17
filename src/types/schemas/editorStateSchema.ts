@@ -1,144 +1,250 @@
 /**
- * 🛡️ EDITOR STATE SCHEMA - Validação Zod para Estado do Editor
+ * 🎯 USE EDITOR RESOURCE - Hook Unificado
  * 
- * Resolve GARGALO G15 (ALTO): Estado inicial não validado
- * 
- * PROBLEMAS RESOLVIDOS:
- * - ❌ Crashes por estado corrompido no localStorage
- * - ❌ Falha silenciosa ao carregar template inválido
- * - ❌ Tipos TypeScript não garantem runtime safety
- * 
- * SOLUÇÃO:
- * - ✅ Validação runtime com Zod antes de renderizar
- * - ✅ Fallback para estado inicial seguro
- * - ✅ Mensagens de erro detalhadas
- * 
- * @version 1.0.0
- * @status PRODUCTION-READY
+ * Gerencia carregamento de templates, funnels e drafts de forma unificada
+ * Elimina a necessidade de lógica condicional baseada em query params
  */
 
-import { z } from 'zod';
-import { appLogger } from '@/lib/utils/appLogger';
+import { useState, useEffect, useCallback } from 'react';
+import { 
+  EditorResource, 
+  detectResourceType, 
+  detectResourceSource,
+  EditorResourceType 
+} from '@/types/editor-resource';
+import { templateService } from '@/services/canonical/TemplateService';
+import { templateToFunnelAdapter } from '@/editor/adapters/TemplateToFunnelAdapter';
+import { appLogger } from '@/lib/utils/logger';
+import { generateDraftId, generateCloneId } from '@/lib/utils/idGenerator';
 
-// Schema básico para Block (validação minimal)
-export const blockBaseSchema = z.object({
-  id: z.string(),
-  type: z.string(),
-  properties: z.record(z.any()),
-  styles: z.record(z.any()).optional(),
-  children: z.array(z.any()).optional(),
-});
+export interface UseEditorResourceOptions {
+  /** ID do recurso a carregar (opcional - se não informado, modo "novo") */
+  resourceId?: string;
 
-// Schema para EditorState
-export const editorStateSchema = z.object({
-  currentStep: z.number().int().min(1).max(21),
-  selectedBlockId: z.string().nullable(),
-  isPreviewMode: z.boolean(),
-  isEditing: z.boolean(),
-  dragEnabled: z.boolean(),
-  clipboardData: z.any().nullable(),
-  stepBlocks: z.record(z.string(), z.array(blockBaseSchema)),
-  dirtySteps: z.record(z.string(), z.boolean()),
-  totalSteps: z.number().int().min(1).max(50),
-  funnelSettings: z.any(),
-  validationErrors: z.array(z.any()),
-  isDirty: z.boolean(),
-  lastSaved: z.number().nullable(),
-});
+  /** Se deve carregar automaticamente ao montar */
+  autoLoad?: boolean;
 
-// Schema para Theme
-export const themeSchema = z.object({
-  theme: z.enum(['light', 'dark']),
-  primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid hex color'),
-  secondaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid hex color'),
-  fontFamily: z.string().min(1),
-  borderRadius: z.string(),
-});
-
-// Schema para Auth
-export const authStateSchema = z.object({
-  user: z.any().nullable(),
-  isAuthenticated: z.boolean(),
-  isLoading: z.boolean(),
-  error: z.string().nullable(),
-});
-
-// Schema para UI
-export const uiStateSchema = z.object({
-  showSidebar: z.boolean(),
-  showPropertiesPanel: z.boolean(),
-  activeModal: z.string().nullable(),
-  toasts: z.array(z.object({
-    id: z.string(),
-    type: z.enum(['success', 'error', 'warning', 'info']),
-    title: z.string(),
-    message: z.string(),
-    duration: z.number().optional(),
-  })),
-  isLoading: z.boolean(),
-  loadingMessage: z.string(),
-});
-
-// Schema completo do SuperUnifiedState (parcial - apenas campos críticos)
-export const superUnifiedStateSchema = z.object({
-  funnels: z.array(z.any()),
-  currentFunnel: z.any().nullable(),
-  auth: authStateSchema,
-  theme: themeSchema,
-  editor: editorStateSchema,
-  ui: uiStateSchema,
-  cache: z.any(), // Cache é validado por UnifiedCacheService
-  performance: z.any(), // Performance metrics são opcionais
-  features: z.any(), // Feature flags são opcionais
-});
-
-export type ValidatedEditorState = z.infer<typeof editorStateSchema>;
-export type ValidatedSuperUnifiedState = z.infer<typeof superUnifiedStateSchema>;
-
-/**
- * Valida e sanitiza estado do editor
- */
-export function validateEditorState(state: unknown): {
-  success: boolean;
-  data?: ValidatedEditorState;
-  errors?: z.ZodError;
-} {
-  const result = editorStateSchema.safeParse(state);
-  
-  if (result.success) {
-    return { success: true, data: result.data };
-  }
-  
-  return { success: false, errors: result.error };
+  /** Se tem acesso ao Supabase */
+  hasSupabaseAccess?: boolean;
 }
 
-/**
- * Valida estado completo do SuperUnified
- */
-export function validateSuperUnifiedState(state: unknown): {
-  success: boolean;
-  data?: ValidatedSuperUnifiedState;
-  errors?: z.ZodError;
-} {
-  const result = superUnifiedStateSchema.safeParse(state);
-  
-  if (result.success) {
-    return { success: true, data: result.data };
-  }
-  
-  return { success: false, errors: result.error };
+export interface UseEditorResourceReturn {
+  /** Recurso carregado (null se ainda carregando ou não encontrado) */
+  resource: EditorResource | null;
+
+  /** Se está carregando */
+  isLoading: boolean;
+
+  /** Erro durante carregamento */
+  error: Error | null;
+
+  /** Tipo detectado do recurso */
+  resourceType: EditorResourceType | null;
+
+  /** Se é modo "novo" (sem resourceId) */
+  isNewMode: boolean;
+
+  /** Se o recurso é read-only */
+  isReadOnly: boolean;
+
+  /** Se pode clonar o recurso */
+  canClone: boolean;
+
+  /** Recarregar o recurso */
+  reload: () => Promise<void>;
+
+  /** Clonar o recurso atual */
+  clone: (newName?: string) => Promise<EditorResource>;
 }
 
-/**
- * Valida e retorna estado inicial seguro com fallback
- */
-export function getSafeInitialState(persistedState: unknown, fallbackState: any): any {
-  const validation = validateSuperUnifiedState(persistedState);
-  
-  if (validation.success) {
-    return validation.data;
-  }
-  
-  appLogger.warn('⚠️ Estado persistido inválido, usando fallback:', { issues: validation.errors?.issues });
-  return fallbackState;
+export function useEditorResource(options: UseEditorResourceOptions): UseEditorResourceReturn {
+  const { resourceId, autoLoad = true, hasSupabaseAccess = false } = options;
+
+  const [resource, setResource] = useState<EditorResource | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  // Detectar tipo e modo
+  const isNewMode = !resourceId;
+  const resourceType = resourceId ? detectResourceType(resourceId) : null;
+  const resourceSource = resourceId ? detectResourceSource(resourceId, hasSupabaseAccess) : null;
+
+  // Características do recurso
+  const isReadOnly = resource?.isReadOnly ?? (resourceType === 'template');
+  const canClone = resource?.canClone ?? (resourceType === 'template' || resourceType === 'funnel');
+
+  /**
+   * Carrega o recurso baseado no ID
+   */
+  const loadResource = useCallback(async () => {
+    if (!resourceId) {
+      // Modo novo - criar recurso vazio
+      setResource({
+        id: generateDraftId(),
+        type: 'draft',
+        name: 'Novo Funnel',
+        source: 'local',
+        isReadOnly: false,
+        canClone: false,
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const type = detectResourceType(resourceId);
+      const source = detectResourceSource(resourceId, hasSupabaseAccess);
+
+      appLogger.info(`🔍 [useEditorResource] Carregando ${type}:`, resourceId);
+
+      // Templates: CONVERTER para funnel editável (GARGALO #1 FIX)
+      if (type === 'template') {
+        appLogger.info(`🔄 [useEditorResource] Convertendo template → funnel:`, resourceId);
+
+        const isCompleteTemplate = resourceId.toLowerCase().includes('complete') || 
+                                   resourceId.toLowerCase().includes('quiz21');
+
+        try {
+          await templateService.prepareTemplate(resourceId);
+        } catch {}
+        try { templateService.setActiveTemplate?.(resourceId, 21); } catch {}
+
+        const stream = templateToFunnelAdapter.convertTemplateToFunnelStream({
+          templateId: resourceId,
+          customName: `Funnel - ${resourceId}`,
+          loadAllSteps: isCompleteTemplate,
+          specificSteps: isCompleteTemplate ? undefined : [resourceId],
+        });
+
+        for await (const { funnel, progress, isComplete } of stream) {
+          const loadedResource: EditorResource = {
+            id: funnel.id,
+            type: 'funnel',
+            name: funnel.name,
+            source: 'template-conversion',
+            isReadOnly: false,
+            canClone: true,
+            metadata: {
+              clonedFrom: resourceId,
+              originalTemplate: resourceId,
+              description: `Convertido de ${resourceId}`,
+              stepsLoaded: funnel.stages.length,
+              totalBlocks: funnel.metadata?.totalBlocks ?? 0,
+              conversionDuration: 0,
+              progress,
+            },
+            data: funnel,
+          };
+          setResource(loadedResource);
+          try {
+            const { editorMetrics } = await import('@/lib/utils/editorMetrics');
+            (editorMetrics as any).trackStreamingProgress?.(progress, { stepsLoaded: funnel.stages.length, totalSteps: isCompleteTemplate ? 21 : funnel.stages.length });
+          } catch {}
+          if (isComplete) {
+            break;
+          }
+        }
+        return;
+      }
+
+      // Funnels do Supabase: carregar via SuperUnifiedProvider
+      if (type === 'funnel' && source === 'supabase') {
+        // O SuperUnifiedProvider já gerencia isso - apenas criar metadata
+        const loadedResource: EditorResource = {
+          id: resourceId,
+          type: 'funnel',
+          name: 'Funnel do Supabase',
+          source: 'supabase',
+          isReadOnly: false,
+          canClone: true,
+        };
+
+        setResource(loadedResource);
+        appLogger.info(`✅ [useEditorResource] Funnel carregado:`, loadedResource);
+        return;
+      }
+
+      // Drafts locais
+      if (type === 'draft') {
+        const loadedResource: EditorResource = {
+          id: resourceId,
+          type: 'draft',
+          name: 'Rascunho Local',
+          source: 'local',
+          isReadOnly: false,
+          canClone: false,
+        };
+
+        setResource(loadedResource);
+        appLogger.info(`✅ [useEditorResource] Draft carregado:`, loadedResource);
+        return;
+      }
+
+      throw new Error(`Tipo de recurso não suportado: ${type}`);
+
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      appLogger.error('[useEditorResource] Erro ao carregar recurso:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [resourceId, hasSupabaseAccess]);
+
+  /**
+   * Clona o recurso atual
+   */
+  const clone = useCallback(async (newName?: string): Promise<EditorResource> => {
+    if (!resource) {
+      throw new Error('Nenhum recurso carregado para clonar');
+    }
+
+    if (!canClone) {
+      throw new Error('Este recurso não pode ser clonado');
+    }
+
+    appLogger.info(`🔄 [useEditorResource] Clonando recurso:`, resource.id);
+
+    // Gerar ID único para o clone
+    const cloneId = generateCloneId();
+
+    const clonedResource: EditorResource = {
+      ...resource,
+      id: cloneId,
+      type: 'funnel', // Clones sempre viram funnels editáveis
+      name: newName || `${resource.name} (Cópia)`,
+      source: hasSupabaseAccess ? 'supabase' : 'local',
+      isReadOnly: false,
+      canClone: true,
+      metadata: {
+        ...resource.metadata,
+        createdAt: new Date().toISOString(),
+        clonedFrom: resource.id,
+      },
+    };
+
+    appLogger.info(`✅ [useEditorResource] Clone criado:`, clonedResource);
+    return clonedResource;
+  }, [resource, canClone, hasSupabaseAccess]);
+
+  // Auto-load ao montar
+  useEffect(() => {
+    if (autoLoad) {
+      loadResource();
+    }
+  }, [autoLoad, loadResource]);
+
+  return {
+    resource,
+    isLoading,
+    error,
+    resourceType,
+    isNewMode,
+    isReadOnly,
+    canClone,
+    reload: loadResource,
+    clone,
+  };
 }

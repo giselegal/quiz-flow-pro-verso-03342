@@ -117,6 +117,15 @@ export default function PreviewSandbox() {
     });
   };
 
+  const handleBlockClick = (blockId: string) => {
+    try {
+      sendMessage({
+        type: 'BLOCK_SELECT',
+        payload: { blockId },
+      });
+    } catch {}
+  };
+
   if (!quizContent) {
     return (
       <div className="flex items-center justify-center h-screen bg-background">
@@ -135,6 +144,7 @@ export default function PreviewSandbox() {
         quizContent={quizContent}
         initialStepId={currentStepId || undefined}
         onStepChange={handleStepChange}
+        onBlockClick={handleBlockClick}
       />
     </div>
   );

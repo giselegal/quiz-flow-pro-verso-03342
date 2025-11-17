@@ -1070,6 +1070,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [debugMode]);
 
     const setSelectedBlock = useCallback((blockId: string | null) => {
+        try { logger.debug('[setSelectedBlock] Atualizando seleção', { blockId }); } catch {}
         dispatch({ type: 'SET_EDITOR_STATE', payload: { selectedBlockId: blockId } });
     }, []);
 

@@ -12,6 +12,7 @@ export interface ResponsivePreviewFrameProps {
   quizContent: any;
   currentStepId: string | null;
   onStepChange?: (stepId: string) => void;
+  onBlockSelect?: (blockId: string) => void;
 }
 
 const VIEWPORT_DIMENSIONS = {
@@ -25,6 +26,7 @@ export function ResponsivePreviewFrame({
   quizContent,
   currentStepId,
   onStepChange,
+  onBlockSelect,
 }: ResponsivePreviewFrameProps) {
   const [viewport, setViewport] = useState<ViewportSize>('desktop');
   const [zoom, setZoom] = useState(1);
@@ -65,6 +67,7 @@ export function ResponsivePreviewFrame({
               quizContent={quizContent}
               currentStepId={currentStepId || undefined}
               onStepChange={onStepChange}
+              onBlockSelect={onBlockSelect}
               darkMode={isDarkMode}
               className="w-full h-full"
             />

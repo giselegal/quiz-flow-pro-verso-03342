@@ -16,7 +16,8 @@ export interface PreviewMessage {
     | 'ERROR'
     | 'READY'
     | 'THEME'
-    | 'STEP_CHANGE';
+    | 'STEP_CHANGE'
+    | 'BLOCK_SELECT';
   payload?: any;
 }
 
@@ -27,6 +28,7 @@ export interface IsolatedPreviewIframeProps {
   };
   currentStepId?: string;
   onStepChange?: (stepId: string) => void;
+  onBlockSelect?: (blockId: string) => void;
   className?: string;
   darkMode?: boolean;
 }
@@ -42,6 +44,7 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
   quizContent,
   currentStepId,
   onStepChange,
+  onBlockSelect,
   className = '',
   darkMode,
 }) => {
@@ -89,6 +92,12 @@ export const IsolatedPreviewIframe = memo<IsolatedPreviewIframeProps>(({
 
         case 'STEP_CHANGE':
           onStepChange?.(payload.stepId);
+          break;
+
+        case 'BLOCK_SELECT':
+          if (payload?.blockId) {
+            onBlockSelect?.(payload.blockId);
+          }
           break;
 
         case 'ERROR':

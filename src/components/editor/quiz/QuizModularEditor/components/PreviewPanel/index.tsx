@@ -17,6 +17,8 @@ import { useStepBlocksQuery } from '@/services/api/steps/hooks';
 export interface PreviewPanelProps {
     currentStepKey: string | null;
     blocks: Block[] | null;
+    selectedBlockId?: string | null;
+    onBlockSelect?: (blockId: string) => void;
     isVisible?: boolean;
     onToggleVisibility?: () => void;
     className?: string;
@@ -27,6 +29,8 @@ export interface PreviewPanelProps {
 export default function PreviewPanel({
     currentStepKey,
     blocks,
+    selectedBlockId,
+    onBlockSelect,
     isVisible = true,
     onToggleVisibility,
     className = '',
@@ -64,6 +68,7 @@ export default function PreviewPanel({
       const id = b?.id || `block-${i}`;
       const type = normalizeType(b?.type);
       const order = typeof b?.order === 'number' ? b.order : i;
+      const isSelected = id === selectedBlockId;
 
       const merged = {
         ...(b?.properties || {}),
@@ -90,7 +95,7 @@ export default function PreviewPanel({
         content = { options };
       }
 
-      return { id, type, order, content };
+      return { id, type, order, content, isSelected };
     });
 
     return {
@@ -171,6 +176,7 @@ export default function PreviewPanel({
                     quizContent={quizContent}
                     currentStepId={currentStepKey}
                     onStepChange={onStepChange}
+                    onBlockSelect={onBlockSelect}
                 />
             )}
 
