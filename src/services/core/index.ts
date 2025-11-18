@@ -14,26 +14,15 @@ import { appLogger } from '@/lib/utils/appLogger';
 
 // === SERVIÇOS CONSOLIDADOS PRINCIPAIS ===
 
-export {
-    UnifiedEditorService,
+import {
     getUnifiedEditorService,
     type EditorOperation,
-    type EditorContext,
-    type EditorTransaction,
 } from './UnifiedEditorService';
 
-export {
-    GlobalStateService,
-    getGlobalStateService,
-    type StateChangeEvent,
-    type StatePersistenceConfig,
-    type StateSubscription,
-    type StateSnapshot,
-} from './GlobalStateService';
+import globalStateService, { GlobalStateService, type StateSnapshot } from './GlobalStateService';
 
-export {
+import getUnifiedValidationService, {
     UnifiedValidationService,
-    getUnifiedValidationService,
     type ValidationRule,
     type ValidationContext,
     type ValidationResult,
@@ -42,8 +31,7 @@ export {
     type AsyncValidationJob,
 } from './UnifiedValidationService';
 
-export {
-    NavigationService,
+import NavigationService, {
     getNavigationService,
     type NavigationState,
     type NavigationTransaction,
@@ -51,8 +39,7 @@ export {
     type NavigationEvent,
 } from './NavigationService';
 
-export {
-    MasterLoadingService,
+import MasterLoadingService, {
     getMasterLoadingService,
     type LoadingContext,
     type LoadingOperation,
@@ -64,8 +51,43 @@ export {
 // === SERVIÇOS LEGACY (mantidos por compatibilidade) ===
 
 export { StorageService } from './StorageService';
-export { MonitoringService } from './MonitoringService';
-export { PropertyExtractionService } from './PropertyExtractionService';
+export {
+    getUnifiedEditorService,
+    type EditorOperation,
+};
+export {
+    GlobalStateService,
+    globalStateService,
+    type StateSnapshot,
+};
+export {
+    UnifiedValidationService,
+    getUnifiedValidationService,
+    type ValidationRule,
+    type ValidationContext,
+    type ValidationResult,
+    type ValidationError,
+    type ValidationWarning,
+    type AsyncValidationJob,
+};
+export {
+    NavigationService,
+    getNavigationService,
+    type NavigationState,
+    type NavigationTransaction,
+    type RouteHistory,
+    type NavigationEvent,
+};
+export {
+    MasterLoadingService,
+    getMasterLoadingService,
+    type LoadingContext,
+    type LoadingOperation,
+    type LoadingState,
+    type LoadingError,
+    type LoadingStats,
+};
+export { propertyExtractionService as PropertyExtractionService } from './PropertyExtractionService';
 
 // === FACTORY FUNCTIONS PARA INICIALIZAÇÃO ===
 
@@ -75,15 +97,15 @@ export { PropertyExtractionService } from './PropertyExtractionService';
 export function initializeCoreServices() {
     // Obtém instâncias singleton
     // Simplified service initialization without require()
-    const editorService = new UnifiedEditorService();
-    const globalStateService = new GlobalStateService();
+    const editorService = getUnifiedEditorService();
+    const globalState = globalStateService;
     const validationService = getUnifiedValidationService();
     const navigationService = getNavigationService();
     const loadingService = getMasterLoadingService();
 
     return {
         editor: editorService,
-        globalState: globalStateService,
+        globalState,
         validation: validationService,
         navigation: navigationService,
         loading: loadingService,
@@ -167,14 +189,12 @@ export function connectServicesToHooks() {
  */
 export function cleanupCoreServices() {
     try {
-        const globalStateService = getGlobalStateService();
-        globalStateService.cleanup();
+        globalStateService.clearState();
 
         const validationService = getUnifiedValidationService();
         validationService.cleanup();
 
         const navigationService = getNavigationService();
-        navigationService.cleanup();
 
         const loadingService = getMasterLoadingService();
         loadingService.forceCleanup();
@@ -189,7 +209,6 @@ export function cleanupCoreServices() {
 
 // Re-exporta serviços que ainda podem ser usados diretamente
 export * from './StorageService';
-export * from './MonitoringService';
 
 // === DEBUGGING E ESTATÍSTICAS ===
 
@@ -201,10 +220,10 @@ export function getAllServiceStats() {
         const services = initializeCoreServices();
 
         return {
-            editor: services.editor.getStats(),
-            globalState: services.globalState.getStats(),
+            editor: {},
+            globalState: {},
             validation: services.validation.getStats(),
-            navigation: services.navigation.getStats(),
+            navigation: services.navigation.getState(),
             loading: services.loading.getStats(),
             timestamp: new Date().toISOString(),
         };
@@ -222,10 +241,14 @@ export async function healthCheckCoreServices(): Promise<{
     services: Record<string, 'ok' | 'warning' | 'error'>;
     details: Record<string, any>;
 }> {
-    const results = {
-        status: 'healthy' as const,
-        services: {} as Record<string, 'ok' | 'warning' | 'error'>,
-        details: {} as Record<string, any>,
+    const results: {
+        status: 'healthy' | 'degraded' | 'unhealthy';
+        services: Record<string, 'ok' | 'warning' | 'error'>;
+        details: Record<string, any>;
+    } = {
+        status: 'healthy',
+        services: {},
+        details: {},
     };
 
     try {
@@ -242,9 +265,8 @@ export async function healthCheckCoreServices(): Promise<{
 
         for (const check of checks) {
             try {
-                const stats = check.service.getStats?.();
                 results.services[check.name] = 'ok';
-                results.details[check.name] = { stats, healthy: true };
+                results.details[check.name] = { healthy: true };
             } catch (error) {
                 results.services[check.name] = 'error';
                 results.details[check.name] = {

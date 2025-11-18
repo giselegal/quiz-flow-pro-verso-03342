@@ -95,6 +95,9 @@ export interface FunnelWithComponents {
   components: Record<string, Block[]>; // stepKey → blocks
 }
 
+// Alias de compatibilidade usado por serviços "contextual" e outros
+export type UnifiedFunnelData = FunnelWithComponents & { id: string; name: string };
+
 // ============================================================================
 // SERVICE
 // ============================================================================
