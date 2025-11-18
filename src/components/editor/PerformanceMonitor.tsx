@@ -13,6 +13,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cacheManager } from '@/lib/cache/CacheManager';
+import { networkMonitor } from '@/lib/monitoring/NetworkMonitor';
 import { Activity, Database, Network, Clock, AlertTriangle } from 'lucide-react';
 
 interface PerformanceMetrics {
@@ -85,13 +86,26 @@ export function PerformanceMonitor({
 
         setAlerts(newAlerts);
 
-        // Log crítico se TTI muito alto
-        if (updatedMetrics.tti > 2000) {
-            console.error('[PerformanceMonitor] CRITICAL: TTI muito alto!', {
-                tti: updatedMetrics.tti,
-                cacheHitRate: updatedMetrics.cacheHitRate,
-                errors404: updatedMetrics.errors404,
-            });
+        // FASE 3: Notificações críticas (apenas 1x por sessão para evitar spam)
+        if (typeof window !== 'undefined') {
+            // TTI crítico
+            if (updatedMetrics.tti > 2000 && !(window as any).__perfCriticalNotified) {
+                console.error('[PerformanceMonitor] CRITICAL: TTI muito alto!', {
+                    tti: updatedMetrics.tti,
+                    cacheHitRate: updatedMetrics.cacheHitRate,
+                    errors404: updatedMetrics.errors404,
+                });
+                (window as any).__perfCriticalNotified = true;
+            }
+
+            // 404s excessivos
+            if (updatedMetrics.errors404 > 20 && !(window as any).__perf404Notified) {
+                console.warn('[PerformanceMonitor] WARNING: Muitos 404s detectados!', {
+                    errors404: updatedMetrics.errors404,
+                    failedPaths: networkMonitor.getStats().failedPaths.slice(-5),
+                });
+                (window as any).__perf404Notified = true;
+            }
         }
     };
 
@@ -124,29 +138,16 @@ export function PerformanceMonitor({
             });
         };
 
-        // Coletar Network Stats (FASE 3: rastrear master file)
+        // Coletar Network Stats (FASE 3: usar NetworkMonitor real)
         const collectNetworkStats = () => {
-            if (typeof window === 'undefined' || !window.performance) return;
-
-            const resources = window.performance.getEntriesByType('resource') as PerformanceResourceTiming[];
-            const total = resources.length;
-
-            // FASE 1: Contar requests ao master file
-            const masterFileReqs = resources.filter(r =>
-                r.name.includes('quiz21-complete.json')
-            ).length;
-
-            const errors = resources.filter(r => {
-                // Tentar detectar 404s por padrões comuns
-                return r.name.includes('404') || r.duration === 0;
-            }).length;
+            const networkStats = networkMonitor.getStats();
 
             setMetrics(prev => {
                 const updated = {
                     ...prev,
-                    networkRequests: total,
-                    errors404: errors,
-                    masterFileRequests: masterFileReqs,
+                    networkRequests: networkStats.totalRequests,
+                    errors404: networkStats.errors404,
+                    masterFileRequests: networkStats.masterFileRequests,
                 };
                 checkPerformanceAlerts(updated);
                 return updated;
@@ -401,6 +402,20 @@ export function PerformanceMonitor({
                             <div className="flex justify-between">
                                 <span className="text-gray-600">Prefetch Count:</span>
                                 <span className="font-mono font-medium">{metrics.prefetchCount}</span>
+                            </div>
+                            <div className="mt-2 pt-2 border-t">
+                                <div className="text-[10px] font-semibold mb-1">📊 FASE 1 Score</div>
+                                <div className="text-xs">
+                                    {(() => {
+                                        const { score, verdict } = networkMonitor.getFase1Score();
+                                        return (
+                                            <>
+                                                <div className="font-bold text-blue-600">{score}/100</div>
+                                                <div className="text-[9px] mt-1">{verdict}</div>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
                             </div>
                         </div>
                     </div>
