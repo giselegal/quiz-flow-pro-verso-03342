@@ -498,7 +498,7 @@ export class MasterLoadingService extends EventEmitter {
         // Calcula progresso médio ponderado por prioridade
         const totalWeight = operations.reduce((sum, op) => sum + op.priority, 0);
         const weightedProgress = operations.reduce((sum, op) =>
-            sum + (op.progress * op.priority), 0,
+            sum + ((op.progress ?? 0) * op.priority), 0,
         ) / totalWeight;
 
         // Mensagem da operação de maior prioridade
@@ -576,7 +576,7 @@ export class MasterLoadingService extends EventEmitter {
 
         const totalWeight = operations.reduce((sum, op) => sum + op.priority, 0);
         const weightedProgress = operations.reduce((sum, op) =>
-            sum + (op.progress * op.priority), 0,
+            sum + ((op.progress ?? 0) * op.priority), 0,
         ) / totalWeight;
 
         const highestPriorityOp = operations.reduce((max, op) =>

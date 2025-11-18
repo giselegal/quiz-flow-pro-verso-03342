@@ -15,11 +15,12 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { templateService } from '@/services/canonical/TemplateService';
 import * as builtInTemplates from '@/services/templates/builtInTemplates';
 
-// Mock do builtInTemplates
+// Mock do builtInTemplates alinhado com a API real
 vi.mock('@/services/templates/builtInTemplates', () => ({
-  getBuiltInTemplate: vi.fn(),
+  getBuiltInTemplates: vi.fn(),
+  getBuiltInTemplateById: vi.fn(),
   hasBuiltInTemplate: vi.fn(),
-  getAllBuiltInTemplateIds: vi.fn(),
+  listBuiltInTemplateIds: vi.fn(),
 }));
 
 // Mock do fetch global
@@ -52,7 +53,7 @@ describe('TemplateService - Sistema de Priorização 3-Tier', () => {
       };
 
       vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-      vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+      vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
       const result = await templateService.getStep(
         'step-01-intro',
@@ -61,7 +62,7 @@ describe('TemplateService - Sistema de Priorização 3-Tier', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toEqual([{ id: 'block-1', type: 'IntroLogo' }]);
-      
+
       // Deve usar JSON, não chamar fetch
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -78,7 +79,7 @@ describe('TemplateService - Sistema de Priorização 3-Tier', () => {
       };
 
       vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-      vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+      vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
       const result = await templateService.getStep('step-01', 'quiz21');
 
@@ -99,7 +100,7 @@ describe('TemplateService - Sistema de Priorização 3-Tier', () => {
       };
 
       vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-      vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+      vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
       const result = await templateService.getStep('step-01', 'quiz21');
 
@@ -133,7 +134,7 @@ describe('TemplateService - Sistema de Priorização 3-Tier', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toEqual([{ id: 'api-block-1', type: 'APIBlock' }]);
-      
+
       // Deve ter chamado a API
       expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining('/api/templates/api-template/steps/step-02'),
@@ -185,7 +186,7 @@ describe('TemplateService - Sistema de Priorização 3-Tier', () => {
       const mockLegacyBlocks = [
         { id: 'legacy-1', type: 'LegacyBlock' },
       ];
-      
+
       vi.spyOn(templateService as any, 'getStepBlocksLegacy').mockResolvedValue({
         success: true,
         data: mockLegacyBlocks,
@@ -281,16 +282,16 @@ describe('TemplateService - prepareTemplate', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     const result = await templateService.prepareTemplate('quiz21', {
       preloadAll: false,
     });
 
     expect(result.success).toBe(true);
-    
+
     // Deve ter carregado apenas metadata
-    expect(builtInTemplates.getBuiltInTemplate).toHaveBeenCalledTimes(1);
+    expect(builtInTemplates.getBuiltInTemplateById).toHaveBeenCalledTimes(1);
   });
 
   it('deve preparar template com preloadAll=true', async () => {
@@ -306,21 +307,21 @@ describe('TemplateService - prepareTemplate', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     const result = await templateService.prepareTemplate('quiz21', {
       preloadAll: true,
     });
 
     expect(result.success).toBe(true);
-    
+
     // Deve ter carregado template completo
-    expect(builtInTemplates.getBuiltInTemplate).toHaveBeenCalled();
+    expect(builtInTemplates.getBuiltInTemplateById).toHaveBeenCalled();
   });
 
   it('deve tratar erro ao preparar template', async () => {
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockRejectedValue(
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockRejectedValue(
       new Error('Falha ao carregar')
     );
 
@@ -347,12 +348,12 @@ describe('TemplateService - preloadTemplate', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     const result = await templateService.preloadTemplate('quiz21');
 
     expect(result.success).toBe(true);
-    
+
     // Deve ter carregado o template
     expect(builtInTemplates.getBuiltInTemplate).toHaveBeenCalled();
   });
@@ -399,7 +400,7 @@ describe('TemplateService - Validação e Normalização', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(invalidTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(invalidTemplate as any);
 
     const result = await templateService.getStep('step-01', 'invalid');
 
@@ -419,7 +420,7 @@ describe('TemplateService - Validação e Normalização', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     const result = await templateService.getStep('step-01', 'quiz21');
 
@@ -450,7 +451,7 @@ describe('TemplateService - Validação e Normalização', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     const result = await templateService.getStep('step-01', 'quiz21');
 
@@ -476,7 +477,7 @@ describe('TemplateService - Tratamento de Erros', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     const result = await templateService.getStep(
       'step-inexistente',
@@ -571,7 +572,7 @@ describe('TemplateService - Performance e Cache', () => {
 
     // Deve ser rápido (< 500ms)
     expect(duration).toBeLessThan(500);
-    
+
     // Todos devem ter sucesso
     expect(results.every(r => r.success)).toBe(true);
   });
