@@ -27,7 +27,7 @@ export interface UniversalBlockProperties {
   height?: string | number;
   maxWidth?: string | number;
   minHeight?: string | number;
-  
+
   // 📏 SPACING (Sistema Universal)
   marginTop?: number;
   marginBottom?: number;
@@ -37,7 +37,7 @@ export interface UniversalBlockProperties {
   paddingBottom?: number;
   paddingLeft?: number;
   paddingRight?: number;
-  
+
   // 🎨 VISUAL
   backgroundColor?: string;
   borderColor?: string;
@@ -45,7 +45,7 @@ export interface UniversalBlockProperties {
   borderRadius?: number;
   boxShadow?: string;
   opacity?: number;
-  
+
   // 📝 TYPOGRAPHY (para blocos de texto)
   fontSize?: string | number;
   fontWeight?: string | number;
@@ -53,24 +53,24 @@ export interface UniversalBlockProperties {
   textAlign?: 'left' | 'center' | 'right' | 'justify';
   color?: string;
   lineHeight?: string;
-  
+
   // 🖼️ IMAGE (para blocos de imagem)
   src?: string;
   alt?: string;
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
-  
+
   // 🔄 BEHAVIOR
   onClick?: () => void;
   href?: string;
   target?: '_blank' | '_self' | '_parent' | '_top';
   disabled?: boolean;
-  
+
   // 📊 VALIDATION (para inputs)
   required?: boolean;
   minLength?: number;
   maxLength?: number;
   pattern?: string;
-  
+
   // 🎯 CUSTOM
   [key: string]: any; // Permite propriedades específicas por bloco
 }

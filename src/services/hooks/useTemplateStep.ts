@@ -83,10 +83,10 @@ export function useTemplateStep(
   } = options;
 
   return useQuery<Block[], Error>({
-    queryKey: templateId 
-      ? templateKeys.step(templateId, stepId || '') 
+    queryKey: templateId
+      ? templateKeys.step(templateId, stepId || '')
       : ['templates', 'default', 'step', stepId],
-    
+
     queryFn: async ({ signal }) => {
       if (!stepId) {
         throw new Error('stepId is required');
@@ -125,21 +125,14 @@ export function useTemplateSteps(
   stepIds: string[],
   options: Omit<UseTemplateStepOptions, 'onSuccess' | 'onError'> = {}
 ) {
-  const queries = stepIds.map(stepId => 
+  const queries = stepIds.map(stepId =>
     useTemplateStep(stepId, {
       ...options,
       enabled: options.enabled !== false && stepIds.length > 0,
     })
   );
 
-  return {
-    queries,
-    data: queries.map(q => q.data).filter((d): d is Block[] => d !== undefined),
-    isLoading: queries.some(q => q.isLoading),
-    isError: queries.some(q => q.isError),
-    errors: queries.map(q => q.error).filter((e): e is Error => e !== null),
-    isSuccess: queries.every(q => q.isSuccess),
-  };
+  return queries;
 }
 
 /**
@@ -159,7 +152,7 @@ export function useTemplateSteps(
 export function usePrefetchTemplateStep() {
   return (stepId: string, options: Pick<UseTemplateStepOptions, 'templateId'> = {}) => {
     const { templateId } = options;
-    
+
     // Usar queryClient para prefetch
     // Note: isso requer acesso ao queryClient via hook
     // Por enquanto, simplesmente chama useTemplateStep com enabled=true

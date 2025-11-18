@@ -4,8 +4,9 @@
  * Orchestrates funnel operations, encapsulating business logic.
  */
 
-import { Funnel, Page, Block } from '@/core/domains';
-import { infrastructureLayer } from '@/infrastructure';
+import { Funnel } from '@/core/domains/funnel/entities/Funnel';
+import { Page } from '@/core/domains/funnel/entities/Page';
+import { Block, BlockType, BlockSettings } from '@/core/domains/funnel/entities/Block';
 
 export interface FunnelAnalytics {
   totalViews: number;
@@ -33,10 +34,45 @@ export interface FunnelSession {
 export class FunnelService {
   private funnelRepository = infrastructureLayer.repositories.funnel;
   private storageAdapter = infrastructureLayer.storage;
-  private apiClient = infrastructureLayer.api;
 
   async createFunnel(name: string, description: string, options: any = {}): Promise<Funnel> {
-    return new Funnel('temp-id', {}, {}, {}, [], {});
+    const now = new Date();
+    return new Funnel('temp-id',
+      {
+        name,
+        description,
+        category: options.category ?? 'quiz',
+        tags: options.tags ?? [],
+        templateId: options.templateId,
+        language: options.language ?? 'pt-BR',
+        isTemplate: !!options.isTemplate,
+        isPublished: false,
+        createdAt: now,
+        updatedAt: now,
+        createdBy: options.createdBy ?? 'system',
+      },
+      {
+        allowAnonymous: true,
+        collectEmail: true,
+        collectPhone: false,
+        requireEmailVerification: false,
+        enableAnalytics: true,
+        enableABTesting: false,
+        customDomain: undefined,
+        seoTitle: undefined,
+        seoDescription: undefined,
+        seoKeywords: [],
+        pixelId: undefined,
+        conversionGoals: ['completion'],
+      },
+      {
+        primaryColor: '#3B82F6',
+        secondaryColor: '#1E40AF',
+        accentColor: '#F59E0B',
+        fontFamily: 'Inter, sans-serif',
+        theme: 'light',
+      },
+    );
   }
 
   async getFunnel(id: string): Promise<Funnel | null> {
@@ -70,11 +106,32 @@ export class FunnelService {
   }
 
   async addPage(funnelId: string, type: string, title: string, description?: string): Promise<Page> {
-    return new Page('temp-id', funnelId, type, title, description || '', [], {}, {}, {}, {}, {});
+    const now = new Date();
+    return new Page(
+      'temp-id',
+      funnelId,
+      type as any,
+      title,
+      description ?? '',
+      [],
+      {
+        slug: title.toLowerCase().replace(/\s+/g, '-'),
+        isActive: true,
+        requireAuth: false,
+        allowBack: true,
+        showProgress: true,
+      } as any,
+      {},
+      {},
+      {},
+      { createdAt: now, updatedAt: now } as any,
+    );
   }
 
-  async updatePage(pageId: string, updates: any): Promise<Page> {
-    return new Page('temp-id', 'funnel-id', 'landing', 'Page', '', [], {}, {}, {}, {}, {});
+  async updatePage(pageId: string, updates: Partial<Page>): Promise<Page> {
+    const page = await this.funnelRepository.findPageById(pageId);
+    if (!page) throw new Error('Page not found');
+    return { ...page, ...updates } as Page;
   }
 
   async deletePage(funnelId: string, pageId: string): Promise<boolean> {
@@ -85,12 +142,17 @@ export class FunnelService {
     return this.funnelRepository.findPagesByFunnel(funnelId);
   }
 
-  async addBlock(pageId: string, type: string, content: any, position?: number): Promise<Block> {
-    return new Block('temp-id', pageId, type, content, {}, {}, {}, {});
+  async addBlock(pageId: string, type: BlockType, content: any, position?: number): Promise<Block> {
+    const settings: BlockSettings = {
+      isVisible: true,
+    } as BlockSettings;
+    return new Block('temp-id', pageId, type, content, settings, {}, {}, {} as any);
   }
 
-  async updateBlock(blockId: string, updates: any): Promise<Block> {
-    return new Block('temp-id', 'page-id', 'text', {}, {}, {}, {}, {});
+  async updateBlock(blockId: string, updates: Partial<Block>): Promise<Block> {
+    const block = await this.funnelRepository.findBlockById(blockId);
+    if (!block) throw new Error('Block not found');
+    return { ...block, ...updates } as Block;
   }
 
   async deleteBlock(pageId: string, blockId: string): Promise<boolean> {

@@ -23,6 +23,7 @@ import {
     usePreloadTemplate,
     templateKeys,
 } from '@/services/hooks';
+import type { Block, BlockType } from '@/types/editor';
 import { templateService } from '@/services/canonical/TemplateService';
 
 // Mock do TemplateService
@@ -30,7 +31,6 @@ vi.mock('@/services/canonical/TemplateService', () => ({
     templateService: {
         getStep: vi.fn(),
         prepareTemplate: vi.fn(),
-        preloadTemplate: vi.fn(),
     },
 }));
 
@@ -65,9 +65,9 @@ describe('useTemplateStep - Carregamento Individual', () => {
     });
 
     it('deve carregar step com sucesso', async () => {
-        const mockBlocks = [
-            { id: 'block-1', type: 'IntroLogo', content: {}, order: 0 },
-            { id: 'block-2', type: 'IntroTitle', content: {}, order: 1 },
+        const mockBlocks: Block[] = [
+            { id: 'block-1', type: 'IntroLogo' as BlockType, content: {}, order: 0 } as Block,
+            { id: 'block-2', type: 'IntroTitle' as BlockType, content: {}, order: 1 } as Block,
         ];
 
         vi.mocked(templateService.getStep).mockResolvedValue({
@@ -144,7 +144,9 @@ describe('useTemplateStep - Carregamento Individual', () => {
 
     it('deve executar callbacks onSuccess', async () => {
         const onSuccess = vi.fn();
-        const mockBlocks = [{ id: 'b1', type: 'Block' }];
+        const mockBlocks: Block[] = [
+            { id: 'b1', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
 
         vi.mocked(templateService.getStep).mockResolvedValue({
             success: true,
@@ -169,6 +171,7 @@ describe('useTemplateStep - Carregamento Individual', () => {
 
         vi.mocked(templateService.getStep).mockResolvedValue({
             success: false,
+            data: [],
             error: mockError,
         });
 
@@ -185,7 +188,9 @@ describe('useTemplateStep - Carregamento Individual', () => {
     });
 
     it('deve usar staleTime e cacheTime customizados', async () => {
-        const mockBlocks = [{ id: 'b1', type: 'Block' }];
+        const mockBlocks: Block[] = [
+            { id: 'b1', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
 
         vi.mocked(templateService.getStep).mockResolvedValue({
             success: true,
@@ -218,9 +223,15 @@ describe('useTemplateSteps - Carregamento Múltiplo', () => {
     });
 
     it('deve carregar múltiplos steps em paralelo', async () => {
-        const mockBlocks1 = [{ id: 'b1', type: 'Block1' }];
-        const mockBlocks2 = [{ id: 'b2', type: 'Block2' }];
-        const mockBlocks3 = [{ id: 'b3', type: 'Block3' }];
+        const mockBlocks1: Block[] = [
+            { id: 'b1', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
+        const mockBlocks2: Block[] = [
+            { id: 'b2', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
+        const mockBlocks3: Block[] = [
+            { id: 'b3', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
 
         vi.mocked(templateService.getStep)
             .mockResolvedValueOnce({ success: true, data: mockBlocks1 })
@@ -235,23 +246,19 @@ describe('useTemplateSteps - Carregamento Múltiplo', () => {
         );
 
         await waitFor(() => {
-            const allSuccess = result.current.data.every(s => !s.isLoading);
-            expect(allSuccess).toBe(true);
+            expect(result.current.every(q => q.isSuccess)).toBe(true);
         });
 
         // Verificar dados de cada step
-        expect(result.current.data[0].blocks).toEqual(mockBlocks1);
-        expect(result.current.data[1].blocks).toEqual(mockBlocks2);
-        expect(result.current.data[2].blocks).toEqual(mockBlocks3);
-
-        // Verificar stepIds
-        expect(result.current.data[0].stepId).toBe('step-01');
-        expect(result.current.data[1].stepId).toBe('step-02');
-        expect(result.current.data[2].stepId).toBe('step-03');
+        expect(result.current[0].data).toEqual(mockBlocks1);
+        expect(result.current[1].data).toEqual(mockBlocks2);
+        expect(result.current[2].data).toEqual(mockBlocks3);
     });
 
     it('deve tratar erros individuais por step', async () => {
-        const mockBlocks1 = [{ id: 'b1', type: 'Block1' }];
+        const mockBlocks1: Block[] = [
+            { id: 'b1', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
         const mockError = new Error('Step 2 não encontrado');
 
         vi.mocked(templateService.getStep)
@@ -264,18 +271,17 @@ describe('useTemplateSteps - Carregamento Múltiplo', () => {
         );
 
         await waitFor(() => {
-            const allSettled = result.current.data.every(s => !s.isLoading);
-            expect(allSettled).toBe(true);
+            expect(result.current.every(q => !q.isLoading)).toBe(true);
         });
 
         // Step 1: sucesso
-        expect(result.current.data[0].isError).toBe(false);
-        expect(result.current.data[0].blocks).toEqual(mockBlocks1);
+        expect(result.current[0].isError).toBe(false);
+        expect(result.current[0].data).toEqual(mockBlocks1);
 
         // Step 2: erro
-        expect(result.current.data[1].isError).toBe(true);
-        expect(result.current.data[1].error).toBeDefined();
-        expect(result.current.data[1].blocks).toBeUndefined();
+        expect(result.current[1].isError).toBe(true);
+        expect(result.current[1].error).toBeDefined();
+        expect(result.current[1].data).toBeUndefined();
     });
 
     it('deve retornar array vazio para lista vazia', () => {
@@ -307,7 +313,9 @@ describe('usePrefetchTemplateStep - Prefetch', () => {
     });
 
     it('deve executar prefetch sem bloquear', async () => {
-        const mockBlocks = [{ id: 'b1', type: 'Block' }];
+        const mockBlocks: Block[] = [
+            { id: 'b1', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
 
         vi.mocked(templateService.getStep).mockResolvedValue({
             success: true,
@@ -447,6 +455,7 @@ describe('usePrepareTemplate - Preparação', () => {
 
         vi.mocked(templateService.prepareTemplate).mockResolvedValue({
             success: false,
+            data: undefined,
             error: mockError,
         });
 
@@ -475,7 +484,7 @@ describe('usePreloadTemplate - Preload', () => {
     });
 
     it('deve fazer preload de template com sucesso', async () => {
-        vi.mocked(templateService.preloadTemplate).mockResolvedValue({
+        vi.mocked(templateService.prepareTemplate).mockResolvedValue({
             success: true,
             data: undefined,
         });
@@ -493,17 +502,18 @@ describe('usePreloadTemplate - Preload', () => {
             expect(result.current.isSuccess).toBe(true);
         });
 
-        expect(templateService.preloadTemplate).toHaveBeenCalledWith(
+        expect(templateService.prepareTemplate).toHaveBeenCalledWith(
             'quiz21StepsComplete',
-            undefined
+            { preloadAll: true }
         );
     });
 
     it('deve tratar erro no preload', async () => {
         const mockError = new Error('Falha no preload');
 
-        vi.mocked(templateService.preloadTemplate).mockResolvedValue({
+        vi.mocked(templateService.prepareTemplate).mockResolvedValue({
             success: false,
+            data: undefined,
             error: mockError,
         });
 
@@ -563,8 +573,12 @@ describe('Integração - Fluxo Completo', () => {
     });
 
     it('deve executar fluxo completo: preparar → carregar step → prefetch próximo', async () => {
-        const mockBlocks1 = [{ id: 'b1', type: 'Block1' }];
-        const mockBlocks2 = [{ id: 'b2', type: 'Block2' }];
+        const mockBlocks1: Block[] = [
+            { id: 'b1', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
+        const mockBlocks2: Block[] = [
+            { id: 'b2', type: 'IntroTitle' as BlockType, content: {}, order: 0 } as Block,
+        ];
 
         vi.mocked(templateService.prepareTemplate).mockResolvedValue({
             success: true,

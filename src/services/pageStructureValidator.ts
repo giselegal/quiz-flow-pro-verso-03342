@@ -1,4 +1,4 @@
-import { generateSemanticId } from '../utils/semanticIdGenerator';
+import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
 // Simplified Page Structure Validator
 // Placeholder service to avoid complex type issues
 

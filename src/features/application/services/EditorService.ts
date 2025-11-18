@@ -5,8 +5,8 @@
  * Provides high-level operations for the visual editor interface.
  */
 
-import { EditorState, Block } from '@/core/domains';
-import { infrastructureLayer } from '@/infrastructure';
+import { EditorState } from '@/core/domains/editor/entities/EditorState';
+import type { Block } from '@/core/domains/funnel/entities/Block';
 
 export interface EditorHistory {
   states: EditorState[];
@@ -29,7 +29,7 @@ export interface EditorSession {
 export class EditorService {
   private storageAdapter = infrastructureLayer.storage;
   private apiClient = infrastructureLayer.api;
-  
+
   private readonly AUTO_SAVE_INTERVAL = 30000; // 30 seconds
   private readonly MAX_HISTORY_STATES = 50;
 
@@ -38,10 +38,32 @@ export class EditorService {
     entityType: 'quiz' | 'funnel',
     userId?: string,
   ): Promise<EditorSession> {
-    const initialState = new EditorState();
-    
+    const sessionId = crypto.randomUUID();
+    const now = new Date();
+    const initialState = new EditorState(
+      sessionId,
+      {},
+      1,
+      null,
+      [],
+      undefined,
+      undefined,
+      {
+        id: sessionId,
+        userId: userId ?? 'anonymous',
+        startedAt: now,
+        lastActiveAt: now,
+        actionsCount: 0,
+        device: {
+          type: 'desktop',
+          browser: 'unknown',
+          os: 'unknown',
+        },
+      },
+    );
+
     const session: EditorSession = {
-      id: crypto.randomUUID(),
+      id: sessionId,
       entityId,
       entityType,
       userId,
@@ -55,92 +77,92 @@ export class EditorService {
       isAutoSaving: false,
     };
 
-    await this.storageAdapter.set(`editor_session_${session.id}`, session);
+    await this.storageAdapter.set?.(`editor_session_${session.id}`, session);
     return session;
   }
 
   async getEditorSession(sessionId: string): Promise<EditorSession | null> {
-    return this.storageAdapter.get<EditorSession>(`editor_session_${sessionId}`);
+    return this.storageAdapter.get?.<EditorSession>(`editor_session_${sessionId}`) ?? null;
   }
 
   async updateEditorSession(sessionId: string, updates: Partial<EditorSession>): Promise<EditorSession> {
-    const session = await this.storageAdapter.get<EditorSession>(`editor_session_${sessionId}`);
+    const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
 
     const updatedSession = { ...session, ...updates };
-    await this.storageAdapter.set(`editor_session_${sessionId}`, updatedSession);
+    await this.storageAdapter.set?.(`editor_session_${sessionId}`, updatedSession);
 
     return updatedSession;
   }
 
   async closeEditorSession(sessionId: string): Promise<boolean> {
-    await this.storageAdapter.remove(`editor_session_${sessionId}`);
+    await this.storageAdapter.remove?.(`editor_session_${sessionId}`);
     return true;
   }
 
-  async addBlock(sessionId: string, blockType: string, content: any): Promise<EditorSession> {
+  async addBlock(sessionId: string, stepNumber: number, block: Block, position?: number): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
 
-    const newState = session.currentState.addBlock(blockType, content);
+    const newState = session.currentState.addBlock(stepNumber, block, position);
     return this.updateEditorSession(sessionId, { currentState: newState });
   }
 
-  async updateBlock(sessionId: string, blockId: string, updates: any): Promise<EditorSession> {
+  async updateBlock(sessionId: string, stepNumber: number, blockId: string, updatedBlock: Block): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
 
-    const newState = session.currentState.updateBlock(blockId, updates);
+    const newState = session.currentState.updateBlock(stepNumber, blockId, updatedBlock);
     return this.updateEditorSession(sessionId, { currentState: newState });
   }
 
-  async deleteBlock(sessionId: string, blockId: string): Promise<EditorSession> {
+  async deleteBlock(sessionId: string, stepNumber: number, blockId: string): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
 
-    const newState = session.currentState.removeBlock(blockId);
+    const newState = session.currentState.removeBlock(stepNumber, blockId);
     return this.updateEditorSession(sessionId, { currentState: newState });
   }
 
   async duplicateBlock(sessionId: string, blockId: string): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
-    
+
     return session;
   }
 
   async moveBlock(sessionId: string, blockId: string, newPosition: any): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
-    
+
     return session;
   }
 
   async selectBlocks(sessionId: string, blockIds: string[]): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
-    
+
     return session;
   }
 
   async copyBlocks(sessionId: string, blockIds: string[]): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
-    
+
     return session;
   }
 
   async cutBlocks(sessionId: string, blockIds: string[]): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
-    
+
     return session;
   }
 
   async pasteBlocks(sessionId: string, position?: any): Promise<EditorSession> {
     const session = await this.getEditorSession(sessionId);
     if (!session) throw new Error('Editor session not found');
-    
+
     return session;
   }
 

@@ -1,5 +1,5 @@
 import { QuizResult } from '@/hooks/useQuizResults';
-import { styleConfig } from './styleConfig';
+import { styleConfig } from '@/config/styleConfig';
 
 /**
  * Mapeia os estilos do styleConfig para o formato de resultados do quiz
