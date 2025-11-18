@@ -26,6 +26,11 @@ interface PerformanceMetrics {
     selectedBlockId: string | null;
     selectedBlockType: string | null;
     selectionChainValid: boolean;
+    // FASE 3: Métricas FASE 1/2
+    masterFileRequests: number; // Requests ao quiz21-complete.json
+    warmupCompleted: boolean; // Warmup de cache executado
+    prefetchCount: number; // Steps prefetchados
+    cacheMemorySize: number; // Items em L1 cache
 }
 
 interface PerformanceMonitorProps {
@@ -48,9 +53,47 @@ export function PerformanceMonitor({
         selectedBlockId: selectedBlockId || null,
         selectedBlockType: selectedBlockType || null,
         selectionChainValid: !!(selectedBlockId && selectedBlockType),
+        // FASE 3
+        masterFileRequests: 0,
+        warmupCompleted: false,
+        prefetchCount: 0,
+        cacheMemorySize: 0,
     });
 
     const [isExpanded, setIsExpanded] = useState(false);
+    const [alerts, setAlerts] = useState<string[]>([]);
+
+    // FASE 3: Detectar problemas de performance
+    const checkPerformanceAlerts = (updatedMetrics: PerformanceMetrics) => {
+        const newAlerts: string[] = [];
+
+        if (updatedMetrics.tti > 1000) {
+            newAlerts.push(`⚠️ TTI alto: ${updatedMetrics.tti}ms (target: <1000ms)`);
+        }
+
+        if (updatedMetrics.cacheHitRate < 80) {
+            newAlerts.push(`⚠️ Cache hit rate baixo: ${updatedMetrics.cacheHitRate.toFixed(1)}% (target: >80%)`);
+        }
+
+        if (updatedMetrics.errors404 > 5) {
+            newAlerts.push(`⚠️ Muitos 404s: ${updatedMetrics.errors404} (target: <5)`);
+        }
+
+        if (updatedMetrics.memoryUsage > 150) {
+            newAlerts.push(`⚠️ Memória alta: ${updatedMetrics.memoryUsage}MB (considere: <150MB)`);
+        }
+
+        setAlerts(newAlerts);
+
+        // Log crítico se TTI muito alto
+        if (updatedMetrics.tti > 2000) {
+            console.error('[PerformanceMonitor] CRITICAL: TTI muito alto!', {
+                tti: updatedMetrics.tti,
+                cacheHitRate: updatedMetrics.cacheHitRate,
+                errors404: updatedMetrics.errors404,
+            });
+        }
+    };
 
     useEffect(() => {
         // Coletar Web Vitals
@@ -67,31 +110,47 @@ export function PerformanceMonitor({
             }));
         };
 
-        // Coletar Cache Stats
+        // Coletar Cache Stats (FASE 3: incluir memorySize)
         const collectCacheStats = () => {
             const stats = cacheManager.getStats();
-            setMetrics(prev => ({
-                ...prev,
-                cacheHitRate: stats.hitRate,
-            }));
+            setMetrics(prev => {
+                const updated = {
+                    ...prev,
+                    cacheHitRate: stats.hitRate,
+                    cacheMemorySize: stats.memorySize,
+                };
+                checkPerformanceAlerts(updated);
+                return updated;
+            });
         };
 
-        // Coletar Network Stats
+        // Coletar Network Stats (FASE 3: rastrear master file)
         const collectNetworkStats = () => {
             if (typeof window === 'undefined' || !window.performance) return;
 
             const resources = window.performance.getEntriesByType('resource') as PerformanceResourceTiming[];
             const total = resources.length;
+
+            // FASE 1: Contar requests ao master file
+            const masterFileReqs = resources.filter(r =>
+                r.name.includes('quiz21-complete.json')
+            ).length;
+
             const errors = resources.filter(r => {
                 // Tentar detectar 404s por padrões comuns
                 return r.name.includes('404') || r.duration === 0;
             }).length;
 
-            setMetrics(prev => ({
-                ...prev,
-                networkRequests: total,
-                errors404: errors,
-            }));
+            setMetrics(prev => {
+                const updated = {
+                    ...prev,
+                    networkRequests: total,
+                    errors404: errors,
+                    masterFileRequests: masterFileReqs,
+                };
+                checkPerformanceAlerts(updated);
+                return updated;
+            });
         };
 
         // Coletar Memory Usage
@@ -326,6 +385,39 @@ export function PerformanceMonitor({
                             </div>
                         </div>
                     </div>
+
+                    {/* FASE 1/2 Metrics */}
+                    <div className="pt-3 border-t">
+                        <div className="text-[10px] font-semibold text-gray-500 mb-2">🚀 FASE 1/2 STATUS</div>
+                        <div className="space-y-1 text-[10px]">
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Master File Requests:</span>
+                                <span className="font-mono font-medium">{metrics.masterFileRequests}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Cache Memory (L1):</span>
+                                <span className="font-mono font-medium">{metrics.cacheMemorySize} items</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Prefetch Count:</span>
+                                <span className="font-mono font-medium">{metrics.prefetchCount}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Alerts */}
+                    {alerts.length > 0 && (
+                        <div className="pt-3 border-t">
+                            <div className="text-[10px] font-semibold text-red-600 mb-2">⚠️ ALERTAS</div>
+                            <div className="space-y-1">
+                                {alerts.map((alert, i) => (
+                                    <div key={i} className="text-[10px] text-red-600 bg-red-50 p-1 rounded">
+                                        {alert}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Targets */}
                     <div className="pt-3 border-t">
