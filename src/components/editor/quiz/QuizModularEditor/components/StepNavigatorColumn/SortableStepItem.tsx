@@ -11,11 +11,11 @@ import React, {
 import { useQueryClient } from '@tanstack/react-query';
 import { stepKeys } from '@/services/api/steps/hooks';
 import { v4 as uuidv4 } from 'uuid';
-import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
+import { SafeDndContext, useSafeDndSensors } from '../SafeDndContext';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
 import { useSuperUnified } from '@/hooks/useSuperUnified';
-import { useDndSystem } from './hooks/useDndSystem';
+import { useDndSystem } from '../../hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
@@ -48,29 +48,27 @@ import {
   formatValidationErrors,
 } from '@/templates/validation/normalize';
 // Import Template Dialog
-import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
+import { ImportTemplateDialog } from '@/components/editor/quiz/dialogs/ImportTemplateDialog';
 // Autosave com lock e coalescing
 import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
 // Autosave feedback visual
-import { AutosaveIndicator } from '../AutosaveIndicator';
-import { useAutosaveIndicator } from '../AutosaveIndicator.hook';
+import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
+import { useAutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator.hook';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
 import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 // ✅ WAVE 2: Performance Monitor
 import { PerformanceMonitor } from '@/components/editor/PerformanceMonitor';
 
 // Static import: navigation column
-import StepNavigatorColumn from './components/StepNavigatorColumn';
+import StepNavigatorColumn from '../StepNavigatorColumn';
 
 // Lazy columns
-const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
+const CanvasColumn = React.lazy(() => import('../CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(
-  () => import('./components/ComponentLibraryColumn')
+  () => import('../ComponentLibraryColumn')
 );
-const PropertiesColumn = React.lazy(
-  () => import('./components/PropertiesColumn')
-);
-const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
+const PropertiesColumn = React.lazy(() => import('../PropertiesColumn'));
+const PreviewPanel = React.lazy(() => import('../PreviewPanel'));
 
 // ✅ P2: Error boundaries granulares
 import { StepErrorBoundary, ColumnErrorBoundary } from '@/components/error';
@@ -83,7 +81,7 @@ let MetricsPanel: React.LazyExoticComponent<React.ComponentType<any>> | null =
 if (import.meta.env.DEV) {
   try {
     MetricsPanel = React.lazy(() =>
-      import('./components/MetricsPanel').catch(() => ({
+      import('../MetricsPanel').catch(() => ({
         default: () => null,
       }))
     );
@@ -244,17 +242,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
       try {
         const env = (import.meta as any)?.env || {};
         if (env.VITEST || env.MODE === 'test') return true;
-      } catch {}
+      } catch { }
       try {
         if (typeof (globalThis as any).vitest !== 'undefined') return true;
         if (typeof (globalThis as any).jest !== 'undefined') return true;
-      } catch {}
+      } catch { }
       return false;
     })();
     if (isTest) return;
     let idle1: any = null;
     let idle2: any = null;
-    import('./components/CanvasColumn');
+    import('../CanvasColumn');
     const schedule = (cb: () => void, timeout: number) => {
       try {
         if (
@@ -263,17 +261,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         ) {
           return (window as any).requestIdleCallback(cb, { timeout });
         }
-      } catch {}
+      } catch { }
       return setTimeout(cb, timeout);
     };
     idle1 = schedule(() => {
       Promise.all([
-        import('./components/ComponentLibraryColumn'),
-        import('./components/PropertiesColumn'),
+        import('../ComponentLibraryColumn'),
+        import('../PropertiesColumn'),
       ]);
     }, 150);
     idle2 = schedule(() => {
-      import('./components/PreviewPanel');
+      import('../PreviewPanel');
     }, 300);
     return () => {
       try {
@@ -286,7 +284,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } else if (idle1) {
           clearTimeout(idle1);
         }
-      } catch {}
+      } catch { }
       try {
         if (
           typeof window !== 'undefined' &&
@@ -297,7 +295,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } else if (idle2) {
           clearTimeout(idle2);
         }
-      } catch {}
+      } catch { }
     };
   }, []);
 
@@ -311,7 +309,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
       } else {
         setTemplateLoading(false);
       }
-    } catch {}
+    } catch { }
   }, [resourceMetadata, setTemplateLoading]);
 
   // Local UI state
@@ -340,12 +338,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
   useEffect(() => {
     try {
       localStorage.setItem('qm-editor:canvas-mode', canvasMode);
-    } catch {}
+    } catch { }
   }, [canvasMode]);
   useEffect(() => {
     try {
       localStorage.setItem('qm-editor:preview-mode', previewMode);
-    } catch {}
+    } catch { }
   }, [previewMode]);
 
   useEffect(() => {
@@ -689,9 +687,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             showToast({
               type: 'error',
               title: 'Template Inválido',
-              message: `${
-                result.errors.filter((e) => e.severity === 'critical').length
-              } erros críticos encontrados`,
+              message: `${result.errors.filter((e) => e.severity === 'critical').length
+                } erros críticos encontrados`,
               duration: 6000,
             });
           } else if (result.warnings.length > 0 || result.errors.length > 0) {
@@ -769,7 +766,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         selectedBlock: blocks?.find((b) => b.id === selectedBlockId),
         allBlockIds: blocks?.map((b) => b.id),
       });
-    } catch {}
+    } catch { }
   }, [selectedBlockId, blocks]);
 
   // ✅ G1 FIX: Auto-selecionar primeiro bloco se selectedBlockId for null ou inválido
@@ -1336,8 +1333,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     async (template: any, stepId?: string) => {
       try {
         appLogger.info(
-          `📥 [QuizModularEditor] Importando template JSON: ${
-            template?.metadata?.name || 'unknown'
+          `📥 [QuizModularEditor] Importando template JSON: ${template?.metadata?.name || 'unknown'
           }`
         );
 
@@ -1525,10 +1521,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             {((!loadedTemplate && !isLoadingTemplate && !props.templateId) ||
               templateLoadError) && (
-              <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
-                🎨 Modo Construção Livre
-              </span>
-            )}
+                <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
+                  🎨 Modo Construção Livre
+                </span>
+              )}
 
             {currentStepKey && (
               <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
@@ -1571,8 +1567,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                   canvasMode === 'edit'
                     ? 'edit'
                     : previewMode === 'production'
-                    ? 'preview:production'
-                    : 'preview:editor'
+                      ? 'preview:production'
+                      : 'preview:editor'
                 }
                 onValueChange={(val: string | null) => {
                   if (!val) return;
@@ -1774,10 +1770,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         currentStepKey={currentStepKey}
                         blocks={blocks}
                         selectedBlockId={selectedBlockId}
-                        onRemoveBlock={(id) =>
+                        onRemoveBlock={(id: string) =>
                           removeBlock(safeCurrentStep, id)
                         }
-                        onMoveBlock={(from, to) => {
+                        onMoveBlock={(from: number, to: number) => {
                           const list = blocks || [];
                           const reordered = [...list];
                           const [moved] = reordered.splice(from, 1);
@@ -1787,7 +1783,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             normalizeOrder(reordered)
                           );
                         }}
-                        onUpdateBlock={(id, patch) =>
+                        onUpdateBlock={(id: string, patch: Partial<Block>) =>
                           updateBlock(safeCurrentStep, id, patch)
                         }
                         onBlockSelect={handleBlockSelect}
@@ -1812,7 +1808,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                       className="h-full"
                       previewMode={previewMode}
                       funnelId={unifiedState.currentFunnel?.id || null}
-                      onStepChange={(sid) => {
+                      onStepChange={(sid: string | null) => {
                         const match = String(sid || '').match(
                           /step-(\d{1,2})/i
                         );
