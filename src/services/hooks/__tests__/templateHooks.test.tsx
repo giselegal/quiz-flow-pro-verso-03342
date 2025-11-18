@@ -66,8 +66,8 @@ describe('useTemplateStep - Carregamento Individual', () => {
 
     it('deve carregar step com sucesso', async () => {
         const mockBlocks = [
-            { id: 'block-1', type: 'IntroLogo' },
-            { id: 'block-2', type: 'IntroTitle' },
+            { id: 'block-1', type: 'IntroLogo', content: {}, order: 0 },
+            { id: 'block-2', type: 'IntroTitle', content: {}, order: 1 },
         ];
 
         vi.mocked(templateService.getStep).mockResolvedValue({
@@ -109,6 +109,7 @@ describe('useTemplateStep - Carregamento Individual', () => {
 
         vi.mocked(templateService.getStep).mockResolvedValue({
             success: false,
+            data: [],
             error: mockError,
         });
 
@@ -234,19 +235,19 @@ describe('useTemplateSteps - Carregamento Múltiplo', () => {
         );
 
         await waitFor(() => {
-            const allSuccess = result.current.every(s => !s.isLoading);
+            const allSuccess = result.current.data.every(s => !s.isLoading);
             expect(allSuccess).toBe(true);
         });
 
         // Verificar dados de cada step
-        expect(result.current[0].blocks).toEqual(mockBlocks1);
-        expect(result.current[1].blocks).toEqual(mockBlocks2);
-        expect(result.current[2].blocks).toEqual(mockBlocks3);
+        expect(result.current.data[0].blocks).toEqual(mockBlocks1);
+        expect(result.current.data[1].blocks).toEqual(mockBlocks2);
+        expect(result.current.data[2].blocks).toEqual(mockBlocks3);
 
         // Verificar stepIds
-        expect(result.current[0].stepId).toBe('step-01');
-        expect(result.current[1].stepId).toBe('step-02');
-        expect(result.current[2].stepId).toBe('step-03');
+        expect(result.current.data[0].stepId).toBe('step-01');
+        expect(result.current.data[1].stepId).toBe('step-02');
+        expect(result.current.data[2].stepId).toBe('step-03');
     });
 
     it('deve tratar erros individuais por step', async () => {
@@ -255,7 +256,7 @@ describe('useTemplateSteps - Carregamento Múltiplo', () => {
 
         vi.mocked(templateService.getStep)
             .mockResolvedValueOnce({ success: true, data: mockBlocks1 })
-            .mockResolvedValueOnce({ success: false, error: mockError });
+            .mockResolvedValueOnce({ success: false, data: [], error: mockError });
 
         const { result } = renderHook(
             () => useTemplateSteps(['step-01', 'step-02']),
@@ -263,18 +264,18 @@ describe('useTemplateSteps - Carregamento Múltiplo', () => {
         );
 
         await waitFor(() => {
-            const allSettled = result.current.every(s => !s.isLoading);
+            const allSettled = result.current.data.every(s => !s.isLoading);
             expect(allSettled).toBe(true);
         });
 
         // Step 1: sucesso
-        expect(result.current[0].isError).toBe(false);
-        expect(result.current[0].blocks).toEqual(mockBlocks1);
+        expect(result.current.data[0].isError).toBe(false);
+        expect(result.current.data[0].blocks).toEqual(mockBlocks1);
 
         // Step 2: erro
-        expect(result.current[1].isError).toBe(true);
-        expect(result.current[1].error).toBeDefined();
-        expect(result.current[1].blocks).toBeUndefined();
+        expect(result.current.data[1].isError).toBe(true);
+        expect(result.current.data[1].error).toBeDefined();
+        expect(result.current.data[1].blocks).toBeUndefined();
     });
 
     it('deve retornar array vazio para lista vazia', () => {
@@ -398,6 +399,7 @@ describe('usePrepareTemplate - Preparação', () => {
 
         vi.mocked(templateService.prepareTemplate).mockResolvedValue({
             success: false,
+            data: undefined,
             error: mockError,
         });
 

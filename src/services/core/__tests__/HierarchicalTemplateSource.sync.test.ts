@@ -17,7 +17,7 @@ vi.mock('@/templates/loaders/jsonStepLoader', () => ({
       return [
         {
           id: `${stepId}-block-1`,
-          type: 'heading',
+          type: 'IntroTitle' as any,
           content: { text: `Step ${stepId} - quiz21StepsComplete` },
           order: 0,
         },
@@ -27,7 +27,7 @@ vi.mock('@/templates/loaders/jsonStepLoader', () => ({
       return [
         {
           id: `${stepId}-block-custom`,
-          type: 'heading',
+          type: 'IntroTitle' as any,
           content: { text: `Step ${stepId} - custom-template` },
           order: 0,
         },

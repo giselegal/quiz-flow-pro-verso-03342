@@ -218,7 +218,7 @@ describe('TemplateService - Suporte a AbortSignal', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockImplementation(
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockImplementation(
       async () => {
         // Simular delay
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -350,12 +350,12 @@ describe('TemplateService - preloadTemplate', () => {
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
     vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
-    const result = await templateService.preloadTemplate('quiz21');
+    const result = await templateService.prepareTemplate('quiz21', { preloadAll: true });
 
     expect(result.success).toBe(true);
 
     // Deve ter carregado o template
-    expect(builtInTemplates.getBuiltInTemplate).toHaveBeenCalled();
+    expect(builtInTemplates.getBuiltInTemplateById).toHaveBeenCalled();
   });
 
   it('deve suportar AbortSignal no preload', async () => {
@@ -366,7 +366,7 @@ describe('TemplateService - preloadTemplate', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockImplementation(
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockImplementation(
       async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
         return mockTemplate;
@@ -375,8 +375,9 @@ describe('TemplateService - preloadTemplate', () => {
 
     setTimeout(() => controller.abort(), 50);
 
-    const result = await templateService.preloadTemplate('quiz21', {
+    const result = await templateService.prepareTemplate('quiz21', {
       signal: controller.signal,
+      preloadAll: true,
     });
 
     expect(result.success).toBe(false);
@@ -511,7 +512,7 @@ describe('TemplateService - Tratamento de Erros', () => {
       json: async () => {
         throw new Error('JSON inválido');
       },
-    } as Response);
+    } as unknown as Response);
 
     const result = await templateService.getStep('step-01', 'api-template');
 
@@ -535,7 +536,7 @@ describe('TemplateService - Performance e Cache', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     // Carregar múltiplos steps do mesmo template
     await templateService.getStep('step-01', 'quiz21');
@@ -543,7 +544,7 @@ describe('TemplateService - Performance e Cache', () => {
 
     // Template deve ser carregado apenas 1x (cache interno)
     // Nota: depende da implementação de cache no TemplateService
-    expect(builtInTemplates.getBuiltInTemplate).toHaveBeenCalled();
+    expect(builtInTemplates.getBuiltInTemplateById).toHaveBeenCalled();
   });
 
   it('deve executar carregamentos paralelos eficientemente', async () => {
@@ -557,7 +558,7 @@ describe('TemplateService - Performance e Cache', () => {
     };
 
     vi.mocked(builtInTemplates.hasBuiltInTemplate).mockReturnValue(true);
-    vi.mocked(builtInTemplates.getBuiltInTemplate).mockResolvedValue(mockTemplate);
+    vi.mocked(builtInTemplates.getBuiltInTemplateById).mockResolvedValue(mockTemplate as any);
 
     const startTime = Date.now();
 
