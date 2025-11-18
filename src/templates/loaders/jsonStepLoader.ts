@@ -1,6 +1,10 @@
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 
+// ✅ G4 FIX: Cache de paths falhos para evitar requisições repetidas
+const failedPathsCache = new Map<string, number>();
+const FAILED_PATH_TTL = 5 * 60 * 1000; // 5 minutos
+
 /**
  * Carrega blocos de um step a partir de JSON dinâmico (versão de template v3.2) no diretório public.
  * 
@@ -33,9 +37,21 @@ export async function loadStepFromJson(
   } catch {}
 
   const tryUrl = async (url: string): Promise<Block[] | null> => {
+    // ✅ G4 FIX: Verificar se path já falhou recentemente
+    const now = Date.now();
+    const failedAt = failedPathsCache.get(url);
+    if (failedAt && (now - failedAt) < FAILED_PATH_TTL) {
+      appLogger.debug(`[jsonStepLoader] Pulando path falho (cache): ${url}`);
+      return null;
+    }
+
     try {
       const res = await fetch(url, { cache: cacheMode });
-      if (!res.ok) return null;
+      if (!res.ok) {
+        // Registrar falha no cache
+        failedPathsCache.set(url, now);
+        return null;
+      }
       const data = await res.json();
       if (Array.isArray(data)) return data as Block[];
       if (data && Array.isArray((data as any).blocks)) return (data as any).blocks as Block[];
@@ -48,6 +64,8 @@ export async function loadStepFromJson(
       }
       return null;
     } catch {
+      // Registrar falha no cache
+      failedPathsCache.set(url, now);
       return null;
     }
   };
@@ -64,10 +82,12 @@ export async function loadStepFromJson(
     if (live || enableBust) bust = `?t=${Date.now()}`;
   } catch {}
 
+  // ✅ G4 FIX: Reordenar paths para testar caminho mais provável primeiro
+  // Baseado em análise de uso, master.v3.json é o mais comum, depois steps individuais
   const paths: string[] = [
-    `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`,
-    `/templates/${templateId}/${stepId}.json${bust}`,
-    `/templates/${templateId}/master.v3.json${bust}`,
+    `/templates/${templateId}/master.v3.json${bust}`, // Mais comum - agora primeiro
+    `/templates/${templateId}/${stepId}.json${bust}`, // Path direto do step
+    `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`, // Path menos comum - agora último
   ];
 
   appLogger.info(`🔍 [jsonStepLoader] Tentando carregar: ${paths[0]}`);

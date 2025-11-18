@@ -586,10 +586,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch {}
     }, [selectedBlockId, blocks]);
 
+    // ✅ G1 FIX: Auto-selecionar primeiro bloco se selectedBlockId for null ou inválido
     useEffect(() => {
         if (canvasMode === 'edit' && (!selectedBlockId || !blocks?.find(b => b.id === selectedBlockId))) {
             const first = blocks && blocks[0];
-            if (first) setSelectedBlock(first.id);
+            if (first) {
+                appLogger.debug(`[G1] Auto-selecionando primeiro bloco: ${first.id}`);
+                setSelectedBlock(first.id);
+            }
         }
     }, [blocks, selectedBlockId, canvasMode, setSelectedBlock]);
 
@@ -1420,9 +1424,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando propriedades…</div>}>
                             <div className="h-full border-l bg-white overflow-y-auto" data-testid="column-properties">
                                 <PropertiesColumn
-                                    selectedBlock={(blocks?.find(b => b.id === selectedBlockId)) || (blocks && blocks.length > 0 && !selectedBlockId ? blocks[0] : null)}
-                                    onBlockUpdate={(blockId: string, updates: Partial<Block>) => updateBlock(safeCurrentStep, blockId, updates)}
-                                    onClearSelection={() => setSelectedBlock(null)}
+                                    selectedBlock={(blocks?.find(b => b.id === selectedBlockId)) || undefined}
+                                    onUpdate={(updates: Record<string, any>) => {
+                                        const selectedBlock = blocks?.find(b => b.id === selectedBlockId);
+                                        if (selectedBlock) {
+                                            updateBlock(safeCurrentStep, selectedBlock.id, updates);
+                                        }
+                                    }}
+                                    onDelete={() => {
+                                        const selectedBlock = blocks?.find(b => b.id === selectedBlockId);
+                                        if (selectedBlock) {
+                                            removeBlock(safeCurrentStep, selectedBlock.id);
+                                            setSelectedBlock(null);
+                                        }
+                                    }}
+                                    onClose={() => setSelectedBlock(null)}
                                 />
                             </div>
                         </Suspense>

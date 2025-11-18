@@ -189,11 +189,17 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
     const startTime = performance.now();
     const cacheKey = this.getCacheKey(stepId, funnelId);
 
-    // Check cache primeiro
+    // ✅ G5 FIX: Aumentar cache hit rate com prefetch inteligente
     if (this.options.enableCache) {
       const cached = this.getFromCache(cacheKey);
       if (cached) {
         this.log(stepId, 'CACHE HIT', cached.metadata.source);
+        
+        // Prefetch steps adjacentes em background (não bloqueante)
+        this.prefetchAdjacentSteps(stepId, funnelId).catch(err => 
+          this.log(stepId, 'Prefetch adjacents failed', err)
+        );
+        
         return {
           data: cached.data,
           metadata: { ...cached.metadata, cacheHit: true },
@@ -673,6 +679,52 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
         expiresIn: Math.max(0, entry.expiresAt - Date.now()),
       })),
     };
+  }
+
+  /**
+   * ✅ G5 FIX: Prefetch steps adjacentes em background para melhorar cache hit rate
+   */
+  private async prefetchAdjacentSteps(currentStepId: string, funnelId?: string): Promise<void> {
+    if (!this.options.enableCache) return;
+
+    try {
+      const match = currentStepId.match(/step-(\d{2})/);
+      if (!match) return;
+
+      const currentStepNum = parseInt(match[1], 10);
+      const adjacentSteps = [
+        currentStepNum - 1, // Step anterior
+        currentStepNum + 1, // Step posterior
+      ].filter(num => num >= 1 && num <= 21); // Limitar ao range válido
+
+      // Prefetch em paralelo sem bloquear
+      const prefetchPromises = adjacentSteps.map(stepNum => {
+        const stepId = `step-${stepNum.toString().padStart(2, '0')}`;
+        const cacheKey = this.getCacheKey(stepId, funnelId);
+        
+        // Verificar se já está em cache antes de prefetch
+        if (this.cache.has(cacheKey)) {
+          return Promise.resolve(); // Já em cache, pular
+        }
+
+        return this.getPrimary(stepId, funnelId).catch(err => {
+          // Silenciosamente ignorar erros de prefetch
+          this.log(stepId, 'Prefetch failed (silenced)', undefined);
+        });
+      });
+
+      // Não esperar pelo resultado para não bloquear
+      Promise.allSettled(prefetchPromises).then(results => {
+        const successCount = results.filter(r => r.status === 'fulfilled').length;
+        if (successCount > 0) {
+          this.log(currentStepId, `Prefetched ${successCount} adjacent steps`);
+        }
+      });
+
+    } catch (error) {
+      // Silenciosamente ignorar erros de prefetch
+      this.log(currentStepId, 'Prefetch setup failed (silenced)');
+    }
   }
 }
 

@@ -14,6 +14,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import type { Block } from '@/types/editor';
 import { useStepBlocksQuery } from '@/services/api/steps/hooks';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+import { cn } from '@/lib/utils';
 
 export interface PreviewPanelProps {
     currentStepKey: string | null;
@@ -234,14 +235,30 @@ export default function PreviewPanel({
                     <div className="p-4 overflow-auto">
                         <div className="max-w-3xl mx-auto space-y-4">
                             {(blocksToUse || []).sort((a,b) => (a.order ?? 0) - (b.order ?? 0)).map((b) => (
-                                <BlockTypeRenderer
+                                <div
                                     key={b.id}
-                                    block={b}
-                                    isSelected={b.id === selectedBlockId}
-                                    isEditable={false}
-                                    onSelect={onBlockSelect}
-                                    contextData={{ canvasMode: 'preview', stepNumber: (b as any)?.properties?.stepNumber }}
-                                />
+                                    className={cn(
+                                        'relative transition-all duration-200',
+                                        b.id === selectedBlockId && 'ring-2 ring-blue-500 ring-offset-2 rounded-lg'
+                                    )}
+                                    ref={(el) => {
+                                        // ✅ G2 FIX: Auto-scroll para bloco selecionado
+                                        if (el && b.id === selectedBlockId) {
+                                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        }
+                                    }}
+                                >
+                                    {b.id === selectedBlockId && (
+                                        <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full animate-pulse z-10" />
+                                    )}
+                                    <BlockTypeRenderer
+                                        block={b}
+                                        isSelected={b.id === selectedBlockId}
+                                        isEditable={false}
+                                        onSelect={onBlockSelect}
+                                        contextData={{ canvasMode: 'preview', stepNumber: (b as any)?.properties?.stepNumber }}
+                                    />
+                                </div>
                             ))}
                         </div>
                     </div>
