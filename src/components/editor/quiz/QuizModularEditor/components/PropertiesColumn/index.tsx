@@ -17,9 +17,11 @@ import { normalizeBlockData, createSynchronizedBlockUpdate, normalizerLogger } f
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface PropertiesColumnProps {
-    selectedBlock: Block | null;
+    selectedBlock?: Block | undefined; // ✅ WAVE 1: Agora opcional para suportar fallback
     onBlockUpdate: (blockId: string, updates: Partial<Block>) => void;
     onClearSelection: () => void;
+    blocks?: Block[] | null; // ✅ WAVE 1: Lista de blocos para auto-select
+    onBlockSelect?: (blockId: string) => void; // ✅ WAVE 1: Callback para auto-select
 }
 
 interface BlockProperty {
@@ -31,14 +33,30 @@ interface BlockProperty {
 }
 
 const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
-    selectedBlock,
+    selectedBlock: selectedBlockProp,
     onBlockUpdate,
     onClearSelection,
+    blocks,
+    onBlockSelect,
 }) => {
     const [editedProperties, setEditedProperties] = React.useState<Record<string, any>>({});
     const [isDirty, setIsDirty] = React.useState(false);
     const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
     const prevSelectedIdRef = React.useRef<string | null>(null);
+
+    // ✅ WAVE 1 FIX: Auto-select primeiro bloco se nenhum selecionado
+    const selectedBlock = React.useMemo(() => {
+        if (selectedBlockProp) return selectedBlockProp;
+
+        // Fallback: auto-selecionar primeiro bloco
+        const firstBlock = blocks && blocks.length > 0 ? blocks[0] : null;
+        if (firstBlock && onBlockSelect && !prevSelectedIdRef.current) {
+            appLogger.info(`[WAVE1] Auto-selecionando primeiro bloco: ${firstBlock.id}`);
+            setTimeout(() => onBlockSelect(firstBlock.id), 0);
+        }
+
+        return firstBlock;
+    }, [selectedBlockProp, blocks, onBlockSelect]);
 
     // Auto-save suave ao trocar de seleção se houver alterações pendentes no bloco anterior
     React.useEffect(() => {
@@ -81,14 +99,16 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             setIsDirty(false);
 
             // ✅ CORREÇÃO 2: Debug logging detalhado
-            appLogger.info('🔍 [PropertiesColumn] selectedBlock changed:', { data: [{
-                            id: selectedBlock?.id,
-                            type: selectedBlock?.type,
-                            hasProperties: !!selectedBlock?.properties && Object.keys(selectedBlock.properties).length,
-                            hasContent: !!selectedBlock?.content && Object.keys(selectedBlock.content).length,
-                            editedProperties: Object.keys(merged),
-                            hasSchema: schema !== null
-                        }] });
+            appLogger.info('🔍 [PropertiesColumn] selectedBlock changed:', {
+                data: [{
+                    id: selectedBlock?.id,
+                    type: selectedBlock?.type,
+                    hasProperties: !!selectedBlock?.properties && Object.keys(selectedBlock.properties).length,
+                    hasContent: !!selectedBlock?.content && Object.keys(selectedBlock.content).length,
+                    editedProperties: Object.keys(merged),
+                    hasSchema: schema !== null
+                }]
+            });
         } else {
             setEditedProperties({});
             setIsDirty(false);
@@ -180,11 +200,20 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                         <Settings className="w-10 h-10 opacity-30" />
                     </div>
                     <p className="text-sm font-medium mb-2">
-                        Nenhum bloco selecionado
+                        Nenhum bloco disponível
                     </p>
                     <p className="text-xs text-muted-foreground/70">
-                        Clique em um bloco no canvas para<br />editar suas propriedades
+                        Adicione blocos ao canvas para<br />editar suas propriedades
                     </p>
+                    {/* ✅ WAVE 1: Dica visual aprimorada */}
+                    {blocks && blocks.length === 0 && (
+                        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-900">
+                            <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+                            <p className="text-xs text-blue-700 dark:text-blue-300">
+                                Arraste componentes da biblioteca<br />para começar a criar seu quiz
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         );

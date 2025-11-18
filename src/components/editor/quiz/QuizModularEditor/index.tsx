@@ -195,11 +195,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             try {
                 const env = (import.meta as any)?.env || {};
                 if (env.VITEST || env.MODE === 'test') return true;
-            } catch {}
+            } catch { }
             try {
                 if (typeof (globalThis as any).vitest !== 'undefined') return true;
                 if (typeof (globalThis as any).jest !== 'undefined') return true;
-            } catch {}
+            } catch { }
             return false;
         })();
         if (isTest) return;
@@ -211,7 +211,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
                     return (window as any).requestIdleCallback(cb, { timeout });
                 }
-            } catch {}
+            } catch { }
             return setTimeout(cb, timeout);
         };
         idle1 = schedule(() => {
@@ -230,14 +230,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 } else if (idle1) {
                     clearTimeout(idle1);
                 }
-            } catch {}
+            } catch { }
             try {
                 if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && idle2) {
                     (window as any).cancelIdleCallback(idle2);
                 } else if (idle2) {
                     clearTimeout(idle2);
                 }
-            } catch {}
+            } catch { }
         };
     }, []);
 
@@ -249,7 +249,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             } else {
                 setTemplateLoading(false);
             }
-        } catch {}
+        } catch { }
     }, [resourceMetadata, setTemplateLoading]);
 
     // Local UI state
@@ -269,10 +269,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [templateLoadError, setTemplateLoadError] = useState(false);
 
     useEffect(() => {
-        try { localStorage.setItem('qm-editor:canvas-mode', canvasMode); } catch {}
+        try { localStorage.setItem('qm-editor:canvas-mode', canvasMode); } catch { }
     }, [canvasMode]);
     useEffect(() => {
-        try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch {}
+        try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch { }
     }, [previewMode]);
 
     useEffect(() => {
@@ -302,6 +302,29 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
     }, [canvasMode]);
+
+    // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável
+    const handleBlockSelect = useCallback((blockId: string | null) => {
+        if (!blockId) {
+            setSelectedBlock(null);
+            return;
+        }
+
+        appLogger.info(`📍 [WAVE1] Selecionando bloco: ${blockId}`);
+        setSelectedBlock(blockId);
+
+        // Auto-scroll suave + highlight visual
+        setTimeout(() => {
+            const element = document.getElementById(`block-${blockId}`);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'nearest'
+                });
+            }
+        }, 100);
+    }, [setSelectedBlock]);
 
     // 🆕 G17 FIX: Memoizar callbacks para evitar re-renders em componentes filhos
     const handleSelectStep = useCallback(async (key: string) => {
@@ -583,7 +606,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 selectedBlock: blocks?.find(b => b.id === selectedBlockId),
                 allBlockIds: blocks?.map(b => b.id),
             });
-        } catch {}
+        } catch { }
     }, [selectedBlockId, blocks]);
 
     // ✅ G1 FIX: Auto-selecionar primeiro bloco se selectedBlockId for null ou inválido
@@ -1383,7 +1406,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     reorderBlocks(safeCurrentStep, normalizeOrder(reordered));
                                                 }}
                                                 onUpdateBlock={(id, patch) => updateBlock(safeCurrentStep, id, patch)}
-                                                onBlockSelect={setSelectedBlock}
+                                                onBlockSelect={handleBlockSelect}
                                                 hasTemplate={Boolean(loadedTemplate || props.templateId || resourceId)}
                                                 onLoadTemplate={handleLoadTemplate}
                                             />
@@ -1398,7 +1421,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             currentStepKey={currentStepKey}
                                             blocks={blocks}
                                             selectedBlockId={selectedBlockId}
-                                            onBlockSelect={setSelectedBlock}
+                                            onBlockSelect={handleBlockSelect}
                                             isVisible={true}
                                             className="h-full"
                                             previewMode={previewMode}
@@ -1425,20 +1448,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <div className="h-full border-l bg-white overflow-y-auto" data-testid="column-properties">
                                 <PropertiesColumn
                                     selectedBlock={(blocks?.find(b => b.id === selectedBlockId)) || undefined}
-                                    onUpdate={(updates: Record<string, any>) => {
-                                        const selectedBlock = blocks?.find(b => b.id === selectedBlockId);
-                                        if (selectedBlock) {
-                                            updateBlock(safeCurrentStep, selectedBlock.id, updates);
-                                        }
+                                    blocks={blocks}
+                                    onBlockSelect={handleBlockSelect}
+                                    onBlockUpdate={(id: string, updates: Partial<Block>) => {
+                                        updateBlock(safeCurrentStep, id, updates);
                                     }}
-                                    onDelete={() => {
-                                        const selectedBlock = blocks?.find(b => b.id === selectedBlockId);
-                                        if (selectedBlock) {
-                                            removeBlock(safeCurrentStep, selectedBlock.id);
-                                            setSelectedBlock(null);
-                                        }
-                                    }}
-                                    onClose={() => setSelectedBlock(null)}
+                                    onClearSelection={() => setSelectedBlock(null)}
                                 />
                             </div>
                         </Suspense>

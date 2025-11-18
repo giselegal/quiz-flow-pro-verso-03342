@@ -17,53 +17,53 @@ import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeR
 import { cn } from '@/lib/utils';
 
 export interface PreviewPanelProps {
-    currentStepKey: string | null;
-    blocks: Block[] | null;
-    selectedBlockId?: string | null;
-    onBlockSelect?: (blockId: string) => void;
-    isVisible?: boolean;
-    onToggleVisibility?: () => void;
-    className?: string;
-    previewMode?: 'live' | 'production'; // 🔄 G42 FIX
-    onStepChange?: (stepId: string) => void;
-    funnelId?: string | null;
+  currentStepKey: string | null;
+  blocks: Block[] | null;
+  selectedBlockId?: string | null;
+  onBlockSelect?: (blockId: string) => void;
+  isVisible?: boolean;
+  onToggleVisibility?: () => void;
+  className?: string;
+  previewMode?: 'live' | 'production'; // 🔄 G42 FIX
+  onStepChange?: (stepId: string) => void;
+  funnelId?: string | null;
 }
 
 export default function PreviewPanel({
-    currentStepKey,
-    blocks,
-    selectedBlockId,
-    onBlockSelect,
-    isVisible = true,
-    onToggleVisibility,
-    className = '',
-    previewMode = 'live', // 🔄 G42 FIX: Default to live
-    onStepChange,
-    funnelId,
+  currentStepKey,
+  blocks,
+  selectedBlockId,
+  onBlockSelect,
+  isVisible = true,
+  onToggleVisibility,
+  className = '',
+  previewMode = 'live', // 🔄 G42 FIX: Default to live
+  onStepChange,
+  funnelId,
 }: PreviewPanelProps) {
-    // 🔄 G42 FIX: Live usa blocks do editor, Production força refetch do backend
-    const shouldFetchFromBackend = previewMode === 'production';
+  // 🔄 G42 FIX: Live usa blocks do editor, Production força refetch do backend
+  const shouldFetchFromBackend = previewMode === 'production';
 
-    // Buscar via React Query sempre que houver stepKey
-    const localBlocks = blocks ?? null;
-    const isIncomplete = !!localBlocks && localBlocks.some((b: any) => !(b?.properties || b?.content || b?.config));
-    const { data: fetchedBlocks, isLoading, error } = useStepBlocksQuery({
-        stepId: currentStepKey,
-        funnelId,
-        enabled: !!currentStepKey && (shouldFetchFromBackend || isIncomplete),
-        staleTimeMs: 0,
-    });
-    const mergeById = (primary: Block[] | null, secondary?: Block[]): Block[] | null => {
-      if (!primary && !secondary) return null;
-      if (!primary) return secondary ?? null;
-      if (!secondary || secondary.length === 0) return primary;
-      const byId = new Map<string, Block>();
-      for (const s of secondary) byId.set(s.id, s as Block);
-      return primary.map(p => byId.get((p as any).id) ?? p);
-    };
-    const blocksToUse: Block[] | null = previewMode === 'live'
-      ? mergeById(localBlocks, fetchedBlocks)
-      : ((fetchedBlocks ?? localBlocks) ?? null);
+  // Buscar via React Query sempre que houver stepKey
+  const localBlocks = blocks ?? null;
+  const isIncomplete = !!localBlocks && localBlocks.some((b: any) => !(b?.properties || b?.content || b?.config));
+  const { data: fetchedBlocks, isLoading, error } = useStepBlocksQuery({
+    stepId: currentStepKey,
+    funnelId,
+    enabled: !!currentStepKey && (shouldFetchFromBackend || isIncomplete),
+    staleTimeMs: 0,
+  });
+  const mergeById = (primary: Block[] | null, secondary?: Block[]): Block[] | null => {
+    if (!primary && !secondary) return null;
+    if (!primary) return secondary ?? null;
+    if (!secondary || secondary.length === 0) return primary;
+    const byId = new Map<string, Block>();
+    for (const s of secondary) byId.set(s.id, s as Block);
+    return primary.map(p => byId.get((p as any).id) ?? p);
+  };
+  const blocksToUse: Block[] | null = previewMode === 'live'
+    ? mergeById(localBlocks, fetchedBlocks)
+    : ((fetchedBlocks ?? localBlocks) ?? null);
 
   const [resolvedImageUrl, setResolvedImageUrl] = useState<string | null>(null);
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function PreviewPanel({
             if (!cancelled) setResolvedImageUrl(url);
             break;
           }
-        } catch {}
+        } catch { }
       }
     };
     tryResolve();
@@ -172,118 +172,130 @@ export default function PreviewPanel({
     };
   }, [currentStepKey, blocksToUse]);
 
-    if (!isVisible) {
-        return (
-            <div className={`flex items-center justify-center p-4 border-t ${className}`}>
-                <button
-                    onClick={onToggleVisibility}
-                    className="flex items-center gap-2 px-3 py-2 text-sm border rounded-md hover:bg-gray-50"
-                >
-                    <Eye className="w-4 h-4" />
-                    Mostrar Preview
-                </button>
-            </div>
-        );
-    }
-
-    if (isLoading && !blocksToUse) {
-        return (
-            <div className={`flex items-center justify-center h-full text-gray-500 bg-muted/20 ${className}`}>
-                <div className="text-center">
-                    <div className="animate-pulse mb-2">Carregando preview…</div>
-                    <div className="text-xs text-gray-400">{currentStepKey}</div>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className={`flex items-center justify-center h-full text-red-500 bg-red-50 ${className}`}>
-                <div className="text-sm">Erro ao carregar blocos: {String(error.message || error)}</div>
-            </div>
-        );
-    }
-
+  if (!isVisible) {
     return (
-        <div className={`flex flex-col relative ${className}`}>
-            {/* 🔄 G42 FIX: Indicador visual do modo Production */}
-            {previewMode === 'production' && (
-                <div className="absolute top-2 left-2 z-20 px-2 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded border border-emerald-300 shadow-sm">
-                    🚀 Modo Production (Dados Publicados)
-                </div>
-            )}
-            {previewMode === 'live' && (
-                <div className="absolute top-2 left-2 z-20 px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded border border-blue-300 shadow-sm">
-                    🛠 Visualização do Editor (Dados em edição)
-                </div>
-            )}
-
-            {/* Preview com controles responsivos */}
-            {!quizContent ? (
-                <div className="flex items-center justify-center h-full text-gray-500 bg-muted/20">
-                    <div className="text-center">
-                        <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">Selecione uma etapa para visualizar</p>
-                        {previewMode === 'production' && (
-                            <p className="text-xs text-gray-400 mt-2">Modo Production: mostrando dados publicados</p>
-                        )}
-                    </div>
-                </div>
-            ) : (
-                previewMode === 'live' ? (
-                    <div className="p-4 overflow-auto">
-                        <div className="max-w-3xl mx-auto space-y-4">
-                            {(blocksToUse || []).sort((a,b) => (a.order ?? 0) - (b.order ?? 0)).map((b) => (
-                                <div
-                                    key={b.id}
-                                    className={cn(
-                                        'relative transition-all duration-200',
-                                        b.id === selectedBlockId && 'ring-2 ring-blue-500 ring-offset-2 rounded-lg'
-                                    )}
-                                    ref={(el) => {
-                                        // ✅ G2 FIX: Auto-scroll para bloco selecionado
-                                        if (el && b.id === selectedBlockId) {
-                                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                        }
-                                    }}
-                                >
-                                    {b.id === selectedBlockId && (
-                                        <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full animate-pulse z-10" />
-                                    )}
-                                    <BlockTypeRenderer
-                                        block={b}
-                                        isSelected={b.id === selectedBlockId}
-                                        isEditable={false}
-                                        onSelect={onBlockSelect}
-                                        contextData={{ canvasMode: 'preview', stepNumber: (b as any)?.properties?.stepNumber }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ) : (
-                    <div className="overflow-y-auto">
-                        <ResponsivePreviewFrame
-                            quizContent={quizContent}
-                            currentStepId={currentStepKey}
-                            onStepChange={onStepChange}
-                            onBlockSelect={onBlockSelect}
-                        />
-                    </div>
-                )
-            )}
-
-            {/* Toggle visibility button (se fornecido) */}
-            {onToggleVisibility && (
-                <button
-                    onClick={onToggleVisibility}
-                    className="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-white/80 backdrop-blur-sm shadow-sm z-10"
-                    title="Ocultar preview"
-                >
-                    <EyeOff className="w-4 h-4" />
-                </button>
-            )}
-        </div>
+      <div className={`flex items-center justify-center p-4 border-t ${className}`}>
+        <button
+          onClick={onToggleVisibility}
+          className="flex items-center gap-2 px-3 py-2 text-sm border rounded-md hover:bg-gray-50"
+        >
+          <Eye className="w-4 h-4" />
+          Mostrar Preview
+        </button>
+      </div>
     );
+  }
+
+  if (isLoading && !blocksToUse) {
+    return (
+      <div className={`flex items-center justify-center h-full text-gray-500 bg-muted/20 ${className}`}>
+        <div className="text-center">
+          <div className="animate-pulse mb-2">Carregando preview…</div>
+          <div className="text-xs text-gray-400">{currentStepKey}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`flex items-center justify-center h-full text-red-500 bg-red-50 ${className}`}>
+        <div className="text-sm">Erro ao carregar blocos: {String(error.message || error)}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`flex flex-col relative ${className}`}>
+      {/* 🔄 G42 FIX: Indicador visual do modo Production */}
+      {previewMode === 'production' && (
+        <div className="absolute top-2 left-2 z-20 px-2 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded border border-emerald-300 shadow-sm">
+          🚀 Modo Production (Dados Publicados)
+        </div>
+      )}
+      {previewMode === 'live' && (
+        <div className="absolute top-2 left-2 z-20 px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded border border-blue-300 shadow-sm">
+          🛠 Visualização do Editor (Dados em edição)
+        </div>
+      )}
+
+      {/* Preview com controles responsivos */}
+      {!quizContent ? (
+        <div className="flex items-center justify-center h-full text-gray-500 bg-muted/20">
+          <div className="text-center">
+            <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">Selecione uma etapa para visualizar</p>
+            {previewMode === 'production' && (
+              <p className="text-xs text-gray-400 mt-2">Modo Production: mostrando dados publicados</p>
+            )}
+          </div>
+        </div>
+      ) : (
+        previewMode === 'live' ? (
+          <div className="p-4 overflow-auto">
+            <div className="max-w-3xl mx-auto space-y-4">
+              {(blocksToUse || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((b) => (
+                <div
+                  key={b.id}
+                  id={`block-${b.id}`}
+                  className={cn(
+                    'relative transition-all duration-300 cursor-pointer',
+                    b.id === selectedBlockId
+                      ? 'ring-4 ring-blue-500 ring-offset-4 rounded-lg shadow-2xl scale-[1.02] bg-blue-50/50'
+                      : 'hover:ring-2 hover:ring-gray-300 hover:ring-offset-2 rounded-lg hover:shadow-lg'
+                  )}
+                  onClick={() => onBlockSelect?.(b.id)}
+                  ref={(el) => {
+                    // ✅ WAVE 1 FIX: Auto-scroll suave para bloco selecionado
+                    if (el && b.id === selectedBlockId) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                    }
+                  }}
+                >
+                  {/* ✅ WAVE 1 FIX: Indicador visual aprimorado */}
+                  {b.id === selectedBlockId && (
+                    <>
+                      <div className="absolute -top-3 -left-3 w-6 h-6 bg-blue-500 rounded-full animate-pulse z-10 flex items-center justify-center shadow-lg">
+                        <div className="w-3 h-3 bg-white rounded-full" />
+                      </div>
+                      <div className="absolute -top-1 -right-1 px-2 py-0.5 bg-blue-500 text-white text-[10px] font-bold rounded-full shadow-lg z-10">
+                        SELECIONADO
+                      </div>
+                    </>
+                  )}
+                  <BlockTypeRenderer
+                    block={b}
+                    isSelected={b.id === selectedBlockId}
+                    isEditable={false}
+                    onSelect={onBlockSelect}
+                    contextData={{ canvasMode: 'preview', stepNumber: (b as any)?.properties?.stepNumber }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-y-auto">
+            <ResponsivePreviewFrame
+              quizContent={quizContent}
+              currentStepId={currentStepKey}
+              onStepChange={onStepChange}
+              onBlockSelect={onBlockSelect}
+            />
+          </div>
+        )
+      )}
+
+      {/* Toggle visibility button (se fornecido) */}
+      {onToggleVisibility && (
+        <button
+          onClick={onToggleVisibility}
+          className="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-white/80 backdrop-blur-sm shadow-sm z-10"
+          title="Ocultar preview"
+        >
+          <EyeOff className="w-4 h-4" />
+        </button>
+      )}
+    </div>
+  );
 }
