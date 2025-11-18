@@ -40,6 +40,37 @@ import { getUserFriendlyError } from '@/lib/utils/userFriendlyErrors';
 import { useUnifiedHistory } from '@/hooks/useUnifiedHistory';
 import { StorageService } from '@/services/core/StorageService';
 
+// ✅ G6 FIX: Hook de debounce customizado
+function useDebounce<T extends (...args: any[]) => any>(
+    callback: T,
+    delay: number
+): T {
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const callbackRef = useRef(callback);
+
+    // Atualizar callback ref sempre que callback mudar
+    useEffect(() => {
+        callbackRef.current = callback;
+    }, [callback]);
+
+    return useCallback((...args: Parameters<T>) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            callbackRef.current(...args);
+        }, delay);
+
+        // Cleanup
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, [delay]) as T;
+}
+
 // Logger para o SuperUnifiedProvider
 const logger = createLogger({ namespace: 'SuperUnifiedProvider' });
 
@@ -99,6 +130,9 @@ interface EditorState {
     validationErrors: any[];
     isDirty: boolean;
     lastSaved: number | null;
+    // ✅ G6 FIX: Timestamps para sync automático
+    lastModified: number | null;
+    modifiedSteps: Record<string, number>; // stepId -> timestamp
 }
 
 interface UIState {
@@ -214,6 +248,9 @@ const initialState: SuperUnifiedState = {
         validationErrors: [],
         isDirty: false,
         lastSaved: null,
+        // ✅ G6 FIX: Timestamps iniciais
+        lastModified: null,
+        modifiedSteps: {},
     },
     ui: {
         showSidebar: true,
@@ -1104,20 +1141,41 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         dispatch({ type: 'ADD_BLOCK', payload: { stepIndex, block } });
     }, []);
 
-    const updateBlock = useCallback(async (stepIndex: number, blockId: string, updates: any) => {
+    // ✅ G6 FIX: Update com debounce de 16ms para sync automático
+    const updateBlock = useDebounce(async (stepIndex: number, blockId: string, updates: any) => {
+        const timestamp = Date.now();
         dispatch({ type: 'UPDATE_BLOCK', payload: { stepIndex, blockId, updates } });
-    }, []);
+        dispatch({ 
+            type: 'SET_EDITOR_STATE', 
+            payload: { 
+                lastModified: timestamp,
+                modifiedSteps: { ...state.editor.modifiedSteps, [`step-${stepIndex}`]: timestamp }
+            } 
+        });
+        logger.debug(`[G6] Block updated with debounce: step-${stepIndex}, block-${blockId}`, { timestamp });
+    }, 16);
 
     const removeBlock = useCallback(async (stepIndex: number, blockId: string) => {
         dispatch({ type: 'REMOVE_BLOCK', payload: { stepIndex, blockId } });
+        logger.debug(`[G6] Block removed: step-${stepIndex}, block-${blockId}`);
     }, []);
 
-    const reorderBlocks = useCallback((stepIndex: number, blocks: any[]) => {
+    const reorderBlocks = useDebounce((stepIndex: number, blocks: any[]) => {
+        const timestamp = Date.now();
         dispatch({ type: 'REORDER_BLOCKS', payload: { stepIndex, blocks } });
-    }, []);
+        dispatch({ 
+            type: 'SET_EDITOR_STATE', 
+            payload: { 
+                lastModified: timestamp,
+                modifiedSteps: { ...state.editor.modifiedSteps, [`step-${stepIndex}`]: timestamp }
+            } 
+        });
+        logger.debug(`[G6] Blocks reordered with debounce: step-${stepIndex}`, { timestamp });
+    }, 16);
 
     const setStepBlocks = useCallback((stepIndex: number, blocks: any[]) => {
         dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex, blocks } });
+        logger.debug(`[G6] Step blocks set: step-${stepIndex}`);
     }, []);
 
     const getStepBlocks = useCallback((stepIndex: number) => {
@@ -1391,6 +1449,31 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         enableKeyboardShortcuts: true,
         namespace: 'SuperUnifiedProvider',
     });
+
+    // ✅ G6 FIX: Auto-sync effect - monitora mudanças e sincroniza automaticamente
+    useEffect(() => {
+        if (!state.editor.lastModified) return;
+        
+        const syncTimeout = setTimeout(() => {
+            // Sincronizar steps modificados
+            const modifiedSteps = Object.entries(state.editor.modifiedSteps);
+            if (modifiedSteps.length > 0) {
+                modifiedSteps.forEach(([stepKey, timestamp]) => {
+                    const stepIndex = parseInt(stepKey.replace('step-', ''));
+                    if (!isNaN(stepIndex) && state.editor.stepBlocks[stepIndex]) {
+                        // Auto-save para steps modificados há mais de 1 segundo
+                        if (Date.now() - timestamp > 1000) {
+                            saveStepBlocks(stepIndex).catch(err => 
+                                logger.warn(`[G6] Auto-sync failed for step-${stepIndex}`, err)
+                            );
+                        }
+                    }
+                });
+            }
+        }, 500); // Delay de 500ms para batch de mudanças
+
+        return () => clearTimeout(syncTimeout);
+    }, [state.editor.lastModified, state.editor.modifiedSteps, saveStepBlocks]);
 
     // Sincronizar histórico quando stepBlocks mudar (exceto em undo/redo)
     const lastStepBlocksRef = useRef(state.editor.stepBlocks);
