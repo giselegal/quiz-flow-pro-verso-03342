@@ -449,6 +449,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ G4 FIX: Template preparation agora é feito APENAS em useEditorResource.loadResource()
     // Mantemos aqui APENAS a validação e setup de steps metadata
+    // ✅ FASE 2: Adicionar warmup automático de cache no mount
     useEffect(() => {
         if (!props.templateId && !resourceId) {
             appLogger.info('🎨 [QuizModularEditor] Modo canvas vazio - sem template');
@@ -465,6 +466,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 const svc: any = templateService;
                 const tid = props.templateId ?? resourceId!;
                 appLogger.info(`🔍 [QuizModularEditor] Carregando metadata do template: ${tid}`);
+
+                // 🔥 FASE 2: Warmup de cache - prefetch steps iniciais (1, 2, 3)
+                const { cacheManager } = await import('@/lib/cache/CacheManager');
+                const { loadStepFromJson } = await import('@/templates/loaders/jsonStepLoader');
+                cacheManager.warmup('step-01', tid, 21, loadStepFromJson).catch((err: Error) => {
+                    appLogger.debug('[QuizModularEditor] Warmup failed:', err);
+                });
 
                 // Buscar lista de steps
                 const templateStepsResult = await svc.steps?.list?.({ signal }) ?? { success: false };
@@ -653,13 +661,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
 
         ensureStepBlocks();
-        // Prefetch vizinhos no cache do React Query para navegação rápida
+        // ✅ FASE 2: Prefetch melhorado com warmup automático de cache
         try {
-            const neighborIds = [stepIndex - 1, stepIndex + 1]
+            // Prefetch vizinhos: N-1, N+1, N+2 (lookahead)
+            const neighborIds = [stepIndex - 1, stepIndex + 1, stepIndex + 2]
                 .filter((i) => i >= 1)
                 .map((i) => `step-${String(i).padStart(2, '0')}`);
             const templateOrResource = props.templateId ?? resourceId ?? null;
             const funnel = props.funnelId ?? null;
+
             neighborIds.forEach((nid) => {
                 queryClient.prefetchQuery({
                     queryKey: stepKeys.detail(nid, templateOrResource, funnel),
@@ -668,7 +678,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         if (res.success) return res.data;
                         throw res.error ?? new Error('Falha no prefetch');
                     },
-                    staleTime: 30_000,
+                    staleTime: 10 * 60 * 1000, // FASE 2: 10min (aumentado de 30s)
                 }).catch((err) => {
                     appLogger.warn('[QuizModularEditor] prefetch neighbor failed', err);
                 });

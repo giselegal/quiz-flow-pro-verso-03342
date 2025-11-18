@@ -35,7 +35,7 @@ class CacheManager {
   private dbVersion = 1;
   private db: IDBDatabase | null = null;
   private stats: CacheStats;
-  private maxMemorySize = 50; // Max 50 items em memória
+  private maxMemorySize = 100; // FASE 2: Max 100 items em memória (aumentado de 50)
 
   constructor() {
     this.memoryCache = new Map();
@@ -338,6 +338,59 @@ class CacheManager {
       } catch (error) {
         reject(error);
       }
+    });
+  }
+
+  /**
+   * 🔥 WARMUP - Prefetch inteligente de steps (FASE 2)
+   * Carrega steps adjacentes no cache para navegação instantânea
+   */
+  async warmup(
+    currentStepId: string,
+    templateId: string,
+    totalSteps: number = 21,
+    loader: (stepId: string, templateId: string) => Promise<any>
+  ): Promise<void> {
+    const stepNum = parseInt(currentStepId.replace(/\D/g, ''));
+    if (isNaN(stepNum)) return;
+
+    // Prefetch: step anterior (N-1), próximo (N+1) e próximo +1 (N+2)
+    const adjacentSteps = [
+      stepNum - 1, // anterior
+      stepNum + 1, // próximo
+      stepNum + 2, // próximo +1 (lookahead)
+    ]
+      .filter(n => n >= 1 && n <= totalSteps)
+      .map(n => `step-${String(n).padStart(2, '0')}`);
+
+    appLogger.info(`[CacheManager] 🔥 Warmup: prefetching ${adjacentSteps.length} steps adjacentes a ${currentStepId}`);
+
+    // Carregar em paralelo sem bloquear
+    const promises = adjacentSteps.map(async (stepId) => {
+      const cacheKey = `step:${templateId}:${stepId}`;
+      
+      // Pular se já existe no cache
+      const existing = await this.get(cacheKey, 'steps');
+      if (existing) {
+        appLogger.debug(`[CacheManager] 🎯 Warmup skip (already cached): ${stepId}`);
+        return;
+      }
+
+      try {
+        const data = await loader(stepId, templateId);
+        if (data) {
+          // TTL de 2 horas para steps pré-carregados
+          await this.set(cacheKey, data, 2 * 60 * 60 * 1000, 'steps');
+          appLogger.debug(`[CacheManager] ✅ Warmup cached: ${stepId}`);
+        }
+      } catch (error) {
+        appLogger.debug(`[CacheManager] ⚠️ Warmup failed for ${stepId}:`, error);
+      }
+    });
+
+    // Não bloquear - prefetch em background
+    Promise.all(promises).catch(err => {
+      appLogger.warn('[CacheManager] Warmup batch failed:', err);
     });
   }
 }

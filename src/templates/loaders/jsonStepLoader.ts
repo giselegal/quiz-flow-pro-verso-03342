@@ -4,10 +4,10 @@ import { cacheManager } from '@/lib/cache/CacheManager';
 
 // ✅ G4 FIX: Cache de paths falhos para evitar requisições repetidas
 const failedPathsCache = new Map<string, number>();
-const FAILED_PATH_TTL = 5 * 60 * 1000; // 5 minutos
+const FAILED_PATH_TTL = 30 * 60 * 1000; // 30 minutos (FASE 2: aumentado de 5min)
 
-// ✅ WAVE 2: TTL do cache (1 hora para steps, 30 min para dev mode)
-const STEP_CACHE_TTL = (import.meta as any)?.env?.DEV ? 30 * 60 * 1000 : 60 * 60 * 1000;
+// ✅ FASE 2: TTL do cache aumentado (2 horas para steps, 1 hora para dev mode)
+const STEP_CACHE_TTL = (import.meta as any)?.env?.DEV ? 60 * 60 * 1000 : 120 * 60 * 1000;
 
 /**
  * Carrega blocos de um step a partir de JSON dinâmico (versão de template v3.2) no diretório public.
