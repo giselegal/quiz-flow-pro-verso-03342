@@ -1469,9 +1469,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 )}
 
                 {/* ✅ WAVE 2: Performance Monitor em tempo real */}
+                {/* ✅ WAVE 3: Adicionado debug de seleção */}
                 {import.meta.env.DEV && (
                     <Suspense fallback={null}>
-                        <PerformanceMonitor />
+                        <PerformanceMonitor
+                            selectedBlockId={selectedBlockId}
+                            selectedBlockType={blocks?.find(b => b.id === selectedBlockId)?.type || null}
+                        />
                     </Suspense>
                 )}
 

@@ -23,9 +23,20 @@ interface PerformanceMetrics {
     networkRequests: number;
     errors404: number;
     memoryUsage: number;
+    selectedBlockId: string | null;
+    selectedBlockType: string | null;
+    selectionChainValid: boolean;
 }
 
-export function PerformanceMonitor() {
+interface PerformanceMonitorProps {
+    selectedBlockId?: string | null;
+    selectedBlockType?: string | null;
+}
+
+export function PerformanceMonitor({
+    selectedBlockId = null,
+    selectedBlockType = null
+}: PerformanceMonitorProps = {}) {
     const [metrics, setMetrics] = useState<PerformanceMetrics>({
         tti: 0,
         fcp: 0,
@@ -34,6 +45,9 @@ export function PerformanceMonitor() {
         networkRequests: 0,
         errors404: 0,
         memoryUsage: 0,
+        selectedBlockId: selectedBlockId || null,
+        selectedBlockType: selectedBlockType || null,
+        selectionChainValid: !!(selectedBlockId && selectedBlockType),
     });
 
     const [isExpanded, setIsExpanded] = useState(false);
@@ -93,11 +107,22 @@ export function PerformanceMonitor() {
             }));
         };
 
+        // Atualizar seleção (recebido via props)
+        const updateSelection = () => {
+            setMetrics(prev => ({
+                ...prev,
+                selectedBlockId,
+                selectedBlockType,
+                selectionChainValid: !!(selectedBlockId && selectedBlockType),
+            }));
+        };
+
         // Coletar métricas inicialmente
         collectWebVitals();
         collectCacheStats();
         collectNetworkStats();
         collectMemoryStats();
+        updateSelection();
 
         // Atualizar a cada 5 segundos
         const interval = setInterval(() => {
@@ -107,7 +132,7 @@ export function PerformanceMonitor() {
         }, 5000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [selectedBlockId, selectedBlockType]);
 
     const getStatusColor = (metric: string, value: number): string => {
         switch (metric) {
@@ -274,6 +299,33 @@ export function PerformanceMonitor() {
                             </div>
                         </div>
                     )}
+
+                    {/* Selection Debug (WAVE 3) */}
+                    <div className="pt-3 border-t">
+                        <div className="text-[10px] font-semibold text-gray-500 mb-2">🎯 SELEÇÃO ATIVA (DEBUG)</div>
+                        <div className="space-y-2">
+                            <div>
+                                <div className="text-[10px] text-gray-600 mb-1">Block ID:</div>
+                                <div className="text-xs font-mono bg-gray-50 p-1 rounded break-all">
+                                    {metrics.selectedBlockId || <span className="text-gray-400">nenhum</span>}
+                                </div>
+                            </div>
+                            <div>
+                                <div className="text-[10px] text-gray-600 mb-1">Block Type:</div>
+                                <div className="text-xs font-mono bg-gray-50 p-1 rounded">
+                                    {metrics.selectedBlockType || <span className="text-gray-400">nenhum</span>}
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-[10px] text-gray-600">Selection Chain:</span>
+                                {metrics.selectionChainValid ? (
+                                    <Badge variant="default" className="text-[9px]">✅ VÁLIDA</Badge>
+                                ) : (
+                                    <Badge variant="destructive" className="text-[9px]">❌ QUEBRADA</Badge>
+                                )}
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Targets */}
                     <div className="pt-3 border-t">
