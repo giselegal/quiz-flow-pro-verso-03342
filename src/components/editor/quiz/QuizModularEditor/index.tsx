@@ -5,14 +5,15 @@ import { useQueryClient } from '@tanstack/react-query';
 import { stepKeys } from '@/services/api/steps/hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Panel, PanelGroup } from 'react-resizable-panels';
+import { ResizableHandle } from '@/components/ui/resizable';
 import { useSuperUnified } from '@/hooks/useSuperUnified';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Eye, Edit3, Play, Save, GripVertical, Download, Upload, Undo2, Redo2 } from 'lucide-react';
+import { Eye, Edit3, Play, Save, Download, Upload, Undo2, Redo2 } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult } from '@/lib/utils/templateValidation';
 // Loading context (provider + hook)
@@ -51,7 +52,9 @@ import { EditorLoadingProgress } from '@/components/editor/EditorLoadingProgress
 let MetricsPanel: React.LazyExoticComponent<React.ComponentType<any>> | null = null;
 if (import.meta.env.DEV) {
     try {
-        MetricsPanel = React.lazy(() => import('./components/MetricsPanel').catch(() => ({ default: () => null })));
+        MetricsPanel = React.lazy(() =>
+            import('./components/MetricsPanel').catch(() => ({ default: () => null }))
+        );
     } catch (e) {
         appLogger.warn('MetricsPanel failed to load:', { data: [e] });
     }
@@ -129,8 +132,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 🔒 Autosave Queue com Lock (GARGALO R1 + G35)
     const { queueSave: queueAutosave, flush: flushAutosave } = useQueuedAutosave({
-        saveFn: async (blocks: Block[], stepKey: string) => {
-            await saveStepBlocks(parseInt(stepKey.replace(/\D/g, '')));
+        // Mantemos a assinatura de saveStepBlocks compatível (stepNumber é derivado do stepKey)
+        saveFn: async (_blocks: Block[], stepKey: string) => {
+            const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10) || 1;
+            await saveStepBlocks(stepNumber);
         },
         debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         maxRetries: 3,
@@ -152,7 +157,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         },
     });
 
-    // �🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
+    // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
     useEffect(() => {
         try {
             if (props.funnelId) {
@@ -329,22 +334,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [setSelectedBlock]);
 
     // 🆕 G17 FIX: Memoizar callbacks para evitar re-renders em componentes filhos
-    const handleSelectStep = useCallback(async (key: string) => {
+    const handleSelectStep = useCallback((key: string) => {
         if (key === currentStepKey) return;
 
-        // ✅ G2 FIX: Lazy load do step quando usuário navegar para ele
         const tid = props.templateId ?? resourceId;
         if (tid) {
-            try {
-                appLogger.info(`🔄 [G2] Lazy loading step: ${key}`);
-                const stepResult = await templateService.getStep(key, tid);
-                if (stepResult.success) {
-                    appLogger.info(`✅ [G2] Step ${key} carregado sob demanda`);
+            (async () => {
+                try {
+                    appLogger.info(`🔄 [G2] Lazy loading step: ${key}`);
+                    const stepResult = await templateService.getStep(key, tid);
+                    if (stepResult.success) {
+                        appLogger.info(`✅ [G2] Step ${key} carregado sob demanda`);
+                    }
+                } catch (error) {
+                    appLogger.warn(`⚠️ [G2] Erro ao carregar step ${key}:`, { data: [error] });
                 }
-            } catch (error) {
-                appLogger.warn(`⚠️ [G2] Erro ao carregar step ${key}:`, { data: [error] });
-                // Continuar mesmo com erro - usar fallback
-            }
+            })();
         }
 
         if (loadedTemplate?.steps?.length) {
@@ -369,6 +374,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             order: currentBlocks.length
         });
     }, [safeCurrentStep, addBlock, getStepBlocks]);
+
     const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
     // Persist layout
@@ -419,7 +425,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             key: `step-${String(i).padStart(2, '0')}`,
             title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
         }));
-    }, [loadedTemplate, stepsVersion]);
+    }, [loadedTemplate, stepsVersion, unifiedState.editor.stepBlocks]);
 
     // Ensure initial step in free mode
     useEffect(() => {
@@ -446,7 +452,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // normalize order helper
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
-
     // ✅ G4 FIX: Template preparation agora é feito APENAS em useEditorResource.loadResource()
     // Mantemos aqui APENAS a validação e setup de steps metadata
     // ✅ FASE 2: Adicionar warmup automático de cache no mount
@@ -460,22 +465,26 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         const { signal } = controller;
 
         async function loadTemplateOptimized() {
+            const tid = props.templateId ?? resourceId!;
             setTemplateLoading(true);
             setTemplateLoadError(false);
             try {
                 const svc: any = templateService;
-                const tid = props.templateId ?? resourceId!;
                 appLogger.info(`🔍 [QuizModularEditor] Carregando metadata do template: ${tid}`);
 
                 // 🔥 FASE 2: Warmup de cache - prefetch steps iniciais (1, 2, 3)
                 const { cacheManager } = await import('@/lib/cache/CacheManager');
                 const { loadStepFromJson } = await import('@/templates/loaders/jsonStepLoader');
-                cacheManager.warmup('step-01', tid, 21, loadStepFromJson).catch((err: Error) => {
-                    appLogger.debug('[QuizModularEditor] Warmup failed:', err);
-                });
+                cacheManager
+                    .warmup('step-01', tid, 21, loadStepFromJson)
+                    .catch((err: Error) => {
+                        appLogger.debug('[QuizModularEditor] Warmup failed:', err);
+                    });
 
-                // Buscar lista de steps
-                const templateStepsResult = await svc.steps?.list?.({ signal }) ?? { success: false };
+                // Buscar lista de steps (agora passando o templateId explicitamente)
+                const templateStepsResult =
+                    (await svc.steps?.list?.({ signal, templateId: tid })) ?? { success: false };
+
                 let stepsMeta: any[] = [];
                 if (templateStepsResult.success && Array.isArray(templateStepsResult.data)) {
                     stepsMeta = templateStepsResult.data;
@@ -502,9 +511,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         setCurrentStep(1);
                     }
                 }
-
-                // ✅ G4 FIX: prepareTemplate() e preloadTemplate() REMOVIDOS
-                // Já executados em useEditorResource.loadResource()
 
                 if (!signal.aborted) {
                     appLogger.info(`✅ [QuizModularEditor] Metadata carregada: ${stepsMeta.length} steps`);
@@ -569,7 +575,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         });
                     } else {
                         // Template perfeito
-                        appLogger.info(`[G5] Template válido: ${result.summary.validSteps}/${result.summary.totalSteps} steps, ${result.summary.totalBlocks} blocos`);
+                        appLogger.info(
+                            `[G5] Template válido: ${result.summary.validSteps}/${result.summary.totalSteps} steps, ${result.summary.totalBlocks} blocos`
+                        );
                     }
                 }
             } catch (error) {
@@ -584,23 +592,27 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             controller.abort();
             setTemplateLoading(false);
         };
-    }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep]);
+    }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, showToast, unifiedState.editor.currentStep]);
 
     // Prefetch de steps críticos na montagem para navegação mais fluida
     useEffect(() => {
         const critical = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
         const templateOrResource = props.templateId ?? resourceId ?? null;
         const funnel = props.funnelId ?? null;
+        if (!templateOrResource) return;
+
         critical.forEach((sid) => {
-            queryClient.prefetchQuery({
-                queryKey: stepKeys.detail(sid, templateOrResource, funnel),
-                queryFn: async () => {
-                    const res = await templateService.getStep(sid, templateOrResource ?? undefined);
-                    if (res.success) return res.data;
-                    throw res.error ?? new Error('Falha no prefetch crítico');
-                },
-                staleTime: 60_000,
-            }).catch(() => void 0);
+            queryClient
+                .prefetchQuery({
+                    queryKey: stepKeys.detail(sid, templateOrResource, funnel),
+                    queryFn: async () => {
+                        const res = await templateService.getStep(sid, templateOrResource);
+                        if (res.success) return res.data;
+                        throw res.error ?? new Error('Falha no prefetch crítico');
+                    },
+                    staleTime: 60_000,
+                })
+                .catch(() => void 0);
         });
         // sem cleanup necessário
     }, [queryClient, props.templateId, resourceId, props.funnelId]);
@@ -645,7 +657,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             try {
                 const svc: any = templateService;
-                const result = await svc.getStep(stepId, props.templateId ?? resourceId, { signal });
+                const templateOrResource = props.templateId ?? resourceId;
+                if (!templateOrResource) {
+                    appLogger.warn('[QuizModularEditor] ensureStepBlocks chamado sem templateOrResource');
+                    setStepLoading(false);
+                    return;
+                }
+
+                const result = await svc.getStep(stepId, templateOrResource, { signal });
                 if (!signal.aborted && result?.success && result.data) {
                     setStepBlocks(stepIndex, result.data);
                 }
@@ -670,19 +689,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             const templateOrResource = props.templateId ?? resourceId ?? null;
             const funnel = props.funnelId ?? null;
 
-            neighborIds.forEach((nid) => {
-                queryClient.prefetchQuery({
-                    queryKey: stepKeys.detail(nid, templateOrResource, funnel),
-                    queryFn: async ({ signal: querySignal }) => {
-                        const res = await templateService.getStep(nid, templateOrResource ?? undefined, { signal: querySignal });
-                        if (res.success) return res.data;
-                        throw res.error ?? new Error('Falha no prefetch');
-                    },
-                    staleTime: 10 * 60 * 1000, // FASE 2: 10min (aumentado de 30s)
-                }).catch((err) => {
-                    appLogger.warn('[QuizModularEditor] prefetch neighbor failed', err);
+            if (templateOrResource) {
+                neighborIds.forEach((nid) => {
+                    queryClient
+                        .prefetchQuery({
+                            queryKey: stepKeys.detail(nid, templateOrResource, funnel),
+                            queryFn: async ({ signal: querySignal }) => {
+                                const res = await templateService.getStep(nid, templateOrResource, { signal: querySignal });
+                                if (res.success) return res.data;
+                                throw res.error ?? new Error('Falha no prefetch');
+                            },
+                            staleTime: 10 * 60 * 1000, // FASE 2: 10min (aumentado de 30s)
+                        })
+                        .catch((err) => {
+                            appLogger.warn('[QuizModularEditor] prefetch neighbor failed', err);
+                        });
                 });
-            });
+            }
         } catch (err) {
             appLogger.warn('[QuizModularEditor] prefetch setup failed', err);
         }
@@ -693,102 +716,102 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [safeCurrentStep, props.templateId, resourceId, setStepLoading, setStepBlocks, queryClient, props.funnelId]);
 
     // DnD handler (uses desestructured methods)
-    const handleDragEnd = useCallback((event: any) => {
-        const result = dnd.handlers.onDragEnd(event);
-        if (!result) return;
+    const handleDragEnd = useCallback(
+        (event: any) => {
+            const result = dnd.handlers.onDragEnd(event);
+            if (!result) return;
 
-        const { draggedItem, overId, activeId } = result as { draggedItem: any; overId: any; activeId: any };
-        const stepIndex = safeCurrentStep;
-        const list = blocks || [];
+            const { draggedItem, overId, activeId } = result as { draggedItem: any; overId: any; activeId: any };
+            const stepIndex = safeCurrentStep;
+            const list = blocks || [];
 
-        if (draggedItem?.type === 'library-item') {
-            if (!draggedItem.libraryType) return;
+            if (draggedItem?.type === 'library-item') {
+                if (!draggedItem.libraryType) return;
 
-            const newBlock = {
-                id: `block-${uuidv4()}`,
-                type: draggedItem.libraryType,
-                properties: {},
-                content: {},
-                order: list.length,
-            };
+                const newBlock = {
+                    id: `block-${uuidv4()}`,
+                    type: draggedItem.libraryType,
+                    properties: {},
+                    content: {},
+                    order: list.length,
+                };
 
-            // 🔄 G31 FIX: Rollback em falha de adição de bloco via DnD
-            try {
-                addBlock(stepIndex, newBlock);
-                appLogger.debug('[DnD] Bloco adicionado da biblioteca', {
-                    blockType: draggedItem.libraryType,
-                    blockId: newBlock.id,
-                });
-            } catch (error) {
-                appLogger.error('[DnD] Falha ao adicionar bloco da biblioteca, executando rollback', {
-                    error,
-                    blockType: draggedItem.libraryType,
-                });
-
-                undo();
-
-                showToast({
-                    type: 'error',
-                    title: 'Erro ao adicionar bloco',
-                    message: 'O bloco não pôde ser adicionado. Tente novamente.',
-                    duration: 4000,
-                });
-            }
-            return;
-        }
-
-        if (draggedItem?.type === 'block' && activeId && overId && activeId !== overId) {
-            const fromIndex = list.findIndex(b => String(b.id) === String(activeId));
-            const toIndex = list.findIndex(b => String(b.id) === String(overId));
-            if (fromIndex >= 0 && toIndex >= 0) {
-                const reordered = [...list];
-                const [moved] = reordered.splice(fromIndex, 1);
-                reordered.splice(toIndex, 0, moved);
-
-                // 🔄 G31 FIX: Rollback em falha de DnD
+                // 🔄 G31 FIX: Rollback em falha de adição de bloco via DnD
                 try {
-                    reorderBlocks(stepIndex, reordered);
-
-                    // Se reorderBlocks é síncrono, precisamos validar após
-                    // Autosave assíncrono pode falhar depois, mas rollback fica para outra iteração
-                    appLogger.debug('[DnD] Reordenação aplicada com sucesso', {
-                        fromIndex,
-                        toIndex,
-                        blockId: activeId,
+                    addBlock(stepIndex, newBlock);
+                    appLogger.debug('[DnD] Bloco adicionado da biblioteca', {
+                        blockType: draggedItem.libraryType,
+                        blockId: newBlock.id,
                     });
                 } catch (error) {
-                    // Rollback: desfazer reordenação chamando undo()
-                    appLogger.error('[DnD] Falha ao reordenar blocos, executando rollback', {
+                    appLogger.error('[DnD] Falha ao adicionar bloco da biblioteca, executando rollback', {
                         error,
-                        fromIndex,
-                        toIndex,
-                        blockId: activeId,
+                        blockType: draggedItem.libraryType,
                     });
 
                     undo();
 
                     showToast({
                         type: 'error',
-                        title: 'Erro ao reordenar',
-                        message: 'A reordenação foi desfeita. Tente novamente.',
+                        title: 'Erro ao adicionar bloco',
+                        message: 'O bloco não pôde ser adicionado. Tente novamente.',
                         duration: 4000,
                     });
                 }
+                return;
             }
-        }
-    }, [dnd.handlers, blocks, safeCurrentStep, addBlock, reorderBlocks, undo, showToast]);
+
+            if (draggedItem?.type === 'block' && activeId && overId && activeId !== overId) {
+                const fromIndex = list.findIndex(b => String(b.id) === String(activeId));
+                const toIndex = list.findIndex(b => String(b.id) === String(overId));
+                if (fromIndex >= 0 && toIndex >= 0) {
+                    const reordered = [...list];
+                    const [moved] = reordered.splice(fromIndex, 1);
+                    reordered.splice(toIndex, 0, moved);
+
+                    // 🔄 G31 FIX: Rollback em falha de DnD
+                    try {
+                        reorderBlocks(stepIndex, reordered);
+
+                        appLogger.debug('[DnD] Reordenação aplicada com sucesso', {
+                            fromIndex,
+                            toIndex,
+                            blockId: activeId,
+                        });
+                    } catch (error) {
+                        appLogger.error('[DnD] Falha ao reordenar blocos, executando rollback', {
+                            error,
+                            fromIndex,
+                            toIndex,
+                            blockId: activeId,
+                        });
+
+                        undo();
+
+                        showToast({
+                            type: 'error',
+                            title: 'Erro ao reordenar',
+                            message: 'A reordenação foi desfeita. Tente novamente.',
+                            duration: 4000,
+                        });
+                    }
+                }
+            }
+        },
+        [dnd.handlers, blocks, safeCurrentStep, addBlock, reorderBlocks, undo, showToast]
+    );
 
     // Manual save
     const handleSave = useCallback(async () => {
         try {
             if (!props.templateId && !resourceId) {
                 const nowId = `custom-${uuidv4()}`;
-                const total = loadedTemplate?.steps?.length
-                    ?? Object.keys(unifiedState.editor.stepBlocks || {})
+                const total =
+                    loadedTemplate?.steps?.length ??
+                    Object.keys(unifiedState.editor.stepBlocks || {})
                         .map((k) => Number(k))
-                        .filter((n) => Number.isFinite(n) && n >= 1)
-                        .length
-                    ?? 1;
+                        .filter((n) => Number.isFinite(n) && n >= 1).length ??
+                    1;
                 try {
                     templateService.setActiveTemplate?.(nowId, total || 1);
                 } catch (err) {
@@ -798,11 +821,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             // Garantir persistência de todas as etapas sujas antes do snapshot global
             try {
-                // Flush autosave queue para garantir que mudanças pendentes sejam salvas
                 await flushAutosave();
                 await (unified as any).ensureAllDirtyStepsSaved?.();
             } catch (error) {
-                appLogger.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', { data: [error] });
+                appLogger.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', {
+                    data: [error],
+                });
             }
             await saveFunnel();
 
@@ -818,7 +842,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 message: 'Erro ao salvar funil',
             });
         }
-    }, [props.templateId, resourceId, loadedTemplate?.steps, unifiedState.editor.stepBlocks, saveFunnel, showToast, unified]);
+    }, [props.templateId, resourceId, loadedTemplate?.steps, unifiedState.editor.stepBlocks, saveFunnel, showToast, unified, flushAutosave]);
 
     // Reload current step (retry)
     const handleReloadStep = useCallback(async () => {
@@ -836,12 +860,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             try {
                 const templateOrResource = props.templateId ?? resourceId ?? null;
                 const funnel = props.funnelId ?? null;
-                await queryClient.invalidateQueries({ queryKey: stepKeys.detail(stepKey, templateOrResource, funnel) });
+                if (templateOrResource) {
+                    await queryClient.invalidateQueries({
+                        queryKey: stepKeys.detail(stepKey, templateOrResource, funnel),
+                    });
+                }
             } catch (error) {
-                appLogger.warn('[QuizModularEditor] Erro ao invalidar queries do React Query:', { data: [error] });
+                appLogger.warn('[QuizModularEditor] Erro ao invalidar queries do React Query:', {
+                    data: [error],
+                });
             }
 
-            const result = await svc.getStep(stepKey, props.templateId ?? resourceId);
+            const templateOrResource = props.templateId ?? resourceId;
+            if (!templateOrResource) return;
+
+            const result = await svc.getStep(stepKey, templateOrResource);
             if (result.success && result.data) {
                 setStepBlocks(stepIndex, result.data);
                 appLogger.info(`✅ [QuizModularEditor] Step recarregado: ${result.data.length} blocos`);
@@ -882,7 +915,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             const steps: Record<string, any> = {};
             for (const [indexStr, blocks] of stepsEntries) {
                 const indexNum = Number(indexStr);
-                const stepId = `step-${String(Number.isFinite(indexNum) ? indexNum : indexStr).padStart(2, '0')}`;
+                const safeIndex = Number.isFinite(indexNum) ? indexNum : indexStr;
+                const stepId = `step-${String(safeIndex).padStart(2, '0')}`;
 
                 const normalizedBlocks = (blocks || []).map((b: any, i: number) => ({
                     id: b?.id || `${b?.type || 'block'}-${i}`,
@@ -899,7 +933,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     templateVersion: '3.1',
                     metadata: {
                         id: `${stepId}-v3`,
-                        name: `Etapa ${String(indexNum || indexStr)}`,
+                        name: `Etapa ${String(safeIndex)}`,
                         description: '',
                         category: '',
                         tags: [],
@@ -936,7 +970,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             if (!unifiedState.currentFunnel) {
                 const created = await unified.createFunnel('Meu Quiz');
                 if (!created?.id) {
-                    showToast({ type: 'error', title: 'Erro', message: 'Falha ao criar funil para publicar' });
+                    showToast({
+                        type: 'error',
+                        title: 'Erro',
+                        message: 'Falha ao criar funil para publicar',
+                    });
                     return;
                 }
             }
@@ -956,7 +994,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     },
                     {
                         validateSchemas: true,
-                        validateDependencies: true
+                        validateDependencies: true,
                     }
                 );
 
@@ -969,7 +1007,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     showToast({
                         type: 'error',
                         title: 'Erros críticos detectados',
-                        message: `Impossível publicar: ${criticalErrors.length} erros críticos encontrados`
+                        message: `Impossível publicar: ${criticalErrors.length} erros críticos encontrados`,
                     });
                     return;
                 }
@@ -979,7 +1017,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     showToast({
                         type: 'warning',
                         title: 'Avisos detectados',
-                        message: `${integrityResult.errors.length} problemas encontrados (não críticos)`
+                        message: `${integrityResult.errors.length} problemas encontrados (não críticos)`,
                     });
                 }
             }
@@ -998,30 +1036,50 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 appLogger.warn('[G42] Erro ao invalidar cache após publicação', cacheError);
             }
 
-            showToast({ type: 'success', title: 'Publicado', message: 'Seu funil foi publicado com sucesso!' });
+            showToast({
+                type: 'success',
+                title: 'Publicado',
+                message: 'Seu funil foi publicado com sucesso!',
+            });
         } catch (e) {
-            showToast({ type: 'error', title: 'Erro ao publicar', message: 'Não foi possível publicar o funil. Tente novamente.' });
+            showToast({
+                type: 'error',
+                title: 'Erro ao publicar',
+                message: 'Não foi possível publicar o funil. Tente novamente.',
+            });
         }
-    }, [publishFunnel, showToast, queryClient, loadedTemplate, props.templateId, resourceId, getStepBlocks]);
+    }, [publishFunnel, showToast, queryClient, loadedTemplate, props.templateId, resourceId, getStepBlocks, unifiedState.currentFunnel, unified]);
 
     // Load template via button (use imported templateService)
     const handleLoadTemplate = useCallback(async () => {
+        const tid = props.templateId ?? resourceId;
+
+        if (!tid) {
+            appLogger.error('[QuizModularEditor] handleLoadTemplate chamado sem templateId/resourceId');
+            showToast({
+                type: 'error',
+                title: 'Nenhum template selecionado',
+                message: 'Abra o editor com um resourceId ou templateId válido para carregar um template.',
+            });
+            setTemplateLoadError(true);
+            return;
+        }
+
         setTemplateLoading(true);
         setTemplateLoadError(false);
         try {
             const svc: any = templateService;
-            const tid = props.templateId ?? resourceId ?? 'quiz21StepsComplete';
             appLogger.info(`🔍 [QuizModularEditor] Preparando template via botão (lazy): ${tid}`);
             await svc.prepareTemplate?.(tid);
 
-            const templateStepsResult = svc.steps.list();
+            const templateStepsResult = await svc.steps.list({ templateId: tid });
             if (!templateStepsResult.success) {
                 throw new Error('Falha ao carregar lista de steps do template');
             }
 
             setLoadedTemplate({
                 name: `Template: ${tid}`,
-                steps: templateStepsResult.data
+                steps: templateStepsResult.data,
             });
             try {
                 const p = new URLSearchParams(window.location.search);
@@ -1035,7 +1093,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             } catch {
                 setCurrentStep(1);
             }
-            appLogger.info(`✅ [QuizModularEditor] Template preparado (lazy): ${templateStepsResult.data.length} steps`);
+            appLogger.info(
+                `✅ [QuizModularEditor] Template preparado (lazy): ${templateStepsResult.data.length} steps`
+            );
 
             const url = new URL(window.location.href);
             url.searchParams.set('template', tid);
@@ -1046,144 +1106,153 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } finally {
             setTemplateLoading(false);
         }
-    }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep]);
+    }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, unifiedState.editor.currentStep, showToast]);
 
     // Import template from JSON
-    const handleImportTemplate = useCallback(async (template: any, stepId?: string) => {
-        try {
-            appLogger.info(`📥 [QuizModularEditor] Importando template JSON: ${template?.metadata?.name || 'unknown'}`);
+    const handleImportTemplate = useCallback(
+        async (template: any, stepId?: string) => {
+            try {
+                appLogger.info(
+                    `📥 [QuizModularEditor] Importando template JSON: ${
+                        template?.metadata?.name || 'unknown'
+                    }`
+                );
 
-            // VALIDAÇÃO + NORMALIZAÇÃO: Valida estrutura e substitui IDs legados por UUIDs
-            const validationResult = validateAndNormalizeTemplate(template);
+                // VALIDAÇÃO + NORMALIZAÇÃO: Valida estrutura e substitui IDs legados por UUIDs
+                const validationResult = validateAndNormalizeTemplate(template);
 
-            if (!validationResult.success) {
-                const errorMessage = formatValidationErrors(validationResult);
-                appLogger.error('[QuizModularEditor] Template inválido', {
-                    errors: validationResult.errors,
-                });
-                throw new Error(errorMessage);
-            }
-
-            // Template válido e normalizado
-            const normalizedTemplate = validationResult.data;
-
-            // VALIDAÇÃO COMPLETA DE INTEGRIDADE (G5)
-            // Valida schemas, dependências, IDs únicos, etc.
-            const integrityResult = await validateTemplateIntegrityFull(
-                'import-preview',
-                Object.keys(normalizedTemplate.steps).length,
-                async (stepId: string) => {
-                    const blocks = normalizedTemplate.steps[stepId];
-                    return Array.isArray(blocks) ? (blocks as Block[]) : null;
-                },
-                {
-                    validateSchemas: true,
-                    validateDependencies: true
+                if (!validationResult.success) {
+                    const errorMessage = formatValidationErrors(validationResult);
+                    appLogger.error('[QuizModularEditor] Template inválido', {
+                        errors: validationResult.errors,
+                    });
+                    throw new Error(errorMessage);
                 }
-            );
 
-            // Mostrar resultados da validação
-            const formattedResults = formatValidationResult(integrityResult);
-            appLogger.info('[QuizModularEditor] Validação de integridade do import:', formattedResults);
+                // Template válido e normalizado
+                const normalizedTemplate = validationResult.data;
 
-            // Bloquear importação se houver erros críticos
-            const criticalErrors = integrityResult.errors.filter(e => e.severity === 'critical');
-            if (criticalErrors.length > 0) {
-                showToast({
-                    type: 'error',
-                    title: 'Template com erros críticos',
-                    message: `Encontrados ${criticalErrors.length} erros críticos que impedem a importação`
-                });
-                throw new Error(`Template possui ${criticalErrors.length} erros críticos`);
-            }
+                // VALIDAÇÃO COMPLETA DE INTEGRIDADE (G5)
+                const integrityResult = await validateTemplateIntegrityFull(
+                    'import-preview',
+                    Object.keys(normalizedTemplate.steps).length,
+                    async (stepId: string) => {
+                        const blocks = normalizedTemplate.steps[stepId];
+                        return Array.isArray(blocks) ? (blocks as Block[]) : null;
+                    },
+                    {
+                        validateSchemas: true,
+                        validateDependencies: true,
+                    }
+                );
 
-            // Avisar sobre erros não-críticos mas continuar
-            if (integrityResult.errors.length > 0) {
-                showToast({
-                    type: 'warning',
-                    title: 'Template com avisos',
-                    message: `${integrityResult.errors.length} problemas detectados (não críticos)`
-                });
-            }
+                const formattedResults = formatValidationResult(integrityResult);
+                appLogger.info(
+                    '[QuizModularEditor] Validação de integridade do import:',
+                    formattedResults
+                );
 
-            // Exibir warnings se houver IDs legados substituídos
-            if (validationResult.warnings && validationResult.warnings.length > 0) {
-                appLogger.warn('[QuizModularEditor] IDs legados normalizados', {
-                    count: validationResult.warnings.length,
-                    warnings: validationResult.warnings,
-                });
+                const criticalErrors = integrityResult.errors.filter(
+                    e => e.severity === 'critical'
+                );
+                if (criticalErrors.length > 0) {
+                    showToast({
+                        type: 'error',
+                        title: 'Template com erros críticos',
+                        message: `Encontrados ${criticalErrors.length} erros críticos que impedem a importação`,
+                    });
+                    throw new Error(`Template possui ${criticalErrors.length} erros críticos`);
+                }
 
-                // Opcional: mostrar toast informativo ao usuário
-                showToast({
-                    type: 'info',
-                    title: 'Template normalizado',
-                    message: `${validationResult.warnings.length} IDs legados foram atualizados para UUID v4`
-                });
-            }
+                if (integrityResult.errors.length > 0) {
+                    showToast({
+                        type: 'warning',
+                        title: 'Template com avisos',
+                        message: `${integrityResult.errors.length} problemas detectados (não críticos)`,
+                    });
+                }
 
-            if (stepId) {
-                // Import single step
-                if (normalizedTemplate.steps[stepId]) {
-                    const blocks = normalizedTemplate.steps[stepId];
-                    const stepIndex = parseInt(stepId.replace('step-', ''), 10);
+                if (validationResult.warnings && validationResult.warnings.length > 0) {
+                    appLogger.warn('[QuizModularEditor] IDs legados normalizados', {
+                        count: validationResult.warnings.length,
+                        warnings: validationResult.warnings,
+                    });
 
-                    if (!isNaN(stepIndex)) {
-                        setStepBlocks(stepIndex, blocks);
-                        showToast({
-                            type: 'success',
-                            title: 'Step importado',
-                            message: `${blocks.length} blocos importados para ${stepId}`
-                        });
-                        appLogger.info(`✅ [QuizModularEditor] Step ${stepId} importado: ${blocks.length} blocos`);
+                    showToast({
+                        type: 'info',
+                        title: 'Template normalizado',
+                        message: `${validationResult.warnings.length} IDs legados foram atualizados para UUID v4`,
+                    });
+                }
+
+                if (stepId) {
+                    // Import single step
+                    if (normalizedTemplate.steps[stepId]) {
+                        const blocks = normalizedTemplate.steps[stepId];
+                        const stepIndex = parseInt(stepId.replace('step-', ''), 10);
+
+                        if (!isNaN(stepIndex)) {
+                            setStepBlocks(stepIndex, blocks);
+                            showToast({
+                                type: 'success',
+                                title: 'Step importado',
+                                message: `${blocks.length} blocos importados para ${stepId}`,
+                            });
+                            appLogger.info(
+                                `✅ [QuizModularEditor] Step ${stepId} importado: ${blocks.length} blocos`
+                            );
+                        }
+                    } else {
+                        throw new Error(`Step "${stepId}" não encontrado no template`);
                     }
                 } else {
-                    throw new Error(`Step "${stepId}" não encontrado no template`);
-                }
-            } else {
-                // Import full template
-                const stepEntries = Object.entries(normalizedTemplate.steps);
-                let totalBlocks = 0;
+                    // Import full template
+                    const stepEntries = Object.entries(normalizedTemplate.steps);
+                    let totalBlocks = 0;
 
-                for (const [key, blocks] of stepEntries) {
-                    const stepIndex = parseInt(key.replace('step-', ''), 10);
-                    if (!isNaN(stepIndex) && Array.isArray(blocks)) {
-                        setStepBlocks(stepIndex, blocks as Block[]);
-                        totalBlocks += blocks.length;
+                    for (const [key, blocks] of stepEntries) {
+                        const stepIndex = parseInt(key.replace('step-', ''), 10);
+                        if (!isNaN(stepIndex) && Array.isArray(blocks)) {
+                            setStepBlocks(stepIndex, blocks as Block[]);
+                            totalBlocks += blocks.length;
+                        }
                     }
+
+                    // Update loaded template metadata
+                    setLoadedTemplate({
+                        name: normalizedTemplate.metadata.name,
+                        steps: stepEntries.map(([key], index) => ({
+                            id: key,
+                            order: index + 1,
+                            name: `Etapa ${index + 1}`,
+                        })),
+                    });
+
+                    setCurrentStep(1);
+
+                    showToast({
+                        type: 'success',
+                        title: 'Template importado',
+                        message: `${stepEntries.length} steps importados com ${totalBlocks} blocos no total`,
+                    });
+                    appLogger.info(
+                        `✅ [QuizModularEditor] Template completo importado: ${stepEntries.length} steps, ${totalBlocks} blocos`
+                    );
                 }
 
-                // Update loaded template metadata
-                setLoadedTemplate({
-                    name: normalizedTemplate.metadata.name,
-                    steps: stepEntries.map(([key], index) => ({
-                        id: key,
-                        order: index + 1,
-                        name: `Etapa ${index + 1}`
-                    }))
-                });
-
-                // Navigate to first step
-                setCurrentStep(1);
-
+                queryClient.invalidateQueries({ queryKey: ['templates'] });
+            } catch (error) {
+                appLogger.error('[QuizModularEditor] Erro ao importar template:', error);
                 showToast({
-                    type: 'success',
-                    title: 'Template importado',
-                    message: `${stepEntries.length} steps importados com ${totalBlocks} blocos no total`
+                    type: 'error',
+                    title: 'Erro ao importar',
+                    message:
+                        error instanceof Error ? error.message : 'Erro desconhecido',
                 });
-                appLogger.info(`✅ [QuizModularEditor] Template completo importado: ${stepEntries.length} steps, ${totalBlocks} blocos`);
             }
-
-            // Invalidate cache
-            queryClient.invalidateQueries({ queryKey: ['templates'] });
-        } catch (error) {
-            appLogger.error('[QuizModularEditor] Erro ao importar template:', error);
-            showToast({
-                type: 'error',
-                title: 'Erro ao importar',
-                message: error instanceof Error ? error.message : 'Erro desconhecido'
-            });
-        }
-    }, [setStepBlocks, setLoadedTemplate, setCurrentStep, showToast, queryClient]);
+        },
+        [setStepBlocks, setLoadedTemplate, setCurrentStep, showToast, queryClient]
+    );
 
     return (
         <SafeDndContext
@@ -1210,7 +1279,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             </span>
                         )}
 
-                        {((!loadedTemplate && !isLoadingTemplate && !props.templateId) || templateLoadError) && (
+                        {((!loadedTemplate && !isLoadingTemplate && !props.templateId) ||
+                            templateLoadError) && (
                             <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
                                 🎨 Modo Construção Livre
                             </span>
@@ -1253,7 +1323,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <div className="flex items-center gap-2">
                             <ToggleGroup
                                 type="single"
-                                value={canvasMode === 'edit' ? 'edit' : (previewMode === 'production' ? 'preview:production' : 'preview:editor')}
+                                value={
+                                    canvasMode === 'edit'
+                                        ? 'edit'
+                                        : previewMode === 'production'
+                                        ? 'preview:production'
+                                        : 'preview:editor'
+                                }
                                 onValueChange={(val: string | null) => {
                                     if (!val) return;
                                     if (val === 'edit') {
@@ -1273,11 +1349,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     <Edit3 className="w-3 h-3 mr-1" />
                                     Editar
                                 </ToggleGroupItem>
-                                <ToggleGroupItem value="preview:editor" title="Visualizar dados do editor">
+                                <ToggleGroupItem
+                                    value="preview:editor"
+                                    title="Visualizar dados do editor"
+                                >
                                     <Eye className="w-3 h-3 mr-1" />
                                     Visualizar (Editor)
                                 </ToggleGroupItem>
-                                <ToggleGroupItem value="preview:production" title="Visualizar dados publicados">
+                                <ToggleGroupItem
+                                    value="preview:production"
+                                    title="Visualizar dados publicados"
+                                >
                                     <Play className="w-3 h-3 mr-1" />
                                     Visualizar (Publicado)
                                 </ToggleGroupItem>
@@ -1319,11 +1401,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <Play className="w-3 h-3 mr-1" />
                             Publicar
                         </Button>
-                        <Button size="sm" variant="outline" onClick={handleExportJSON} className="h-7">
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleExportJSON}
+                            className="h-7"
+                        >
                             <Download className="w-3 h-3 mr-1" />
                             Exportar JSON
                         </Button>
-                        <Button size="sm" variant="outline" onClick={handleExportV3} className="h-7">
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleExportV3}
+                            className="h-7"
+                        >
                             <Download className="w-3 h-3 mr-1" />
                             Exportar v3
                         </Button>
@@ -1350,12 +1442,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             localStorage.setItem(PANEL_LAYOUT_KEY, JSON.stringify(sizes));
                             setPanelLayout(sizes);
                         } catch (error) {
-                            appLogger.warn('[QuizModularEditor] Falha ao processar blocos:', error);
+                            appLogger.warn(
+                                '[QuizModularEditor] Falha ao salvar layout de painéis:',
+                                error
+                            );
                         }
                     }}
                 >
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
-                        <div className="h-full border-r bg-white overflow-y-auto" data-testid="column-steps">
+                        <div
+                            className="h-full border-r bg-white overflow-y-auto"
+                            data-testid="column-steps"
+                        >
                             <StepNavigatorColumn
                                 steps={navSteps}
                                 currentStepKey={currentStepKey}
@@ -1364,14 +1462,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         </div>
                     </Panel>
 
-                    <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group">
-                        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 group-hover:w-1.5 bg-gray-300 group-hover:bg-blue-500 transition-all" />
-                        <GripVertical className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </PanelResizeHandle>
+                    <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
                     <Panel defaultSize={20} minSize={15} maxSize={30}>
-                        <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando biblioteca…</div>}>
-                            <div className="h-full border-r bg-white overflow-y-auto" data-testid="column-library">
+                        <Suspense
+                            fallback={
+                                <div className="p-4 text-sm text-gray-500">
+                                    Carregando biblioteca…
+                                </div>
+                            }
+                        >
+                            <div
+                                className="h-full border-r bg-white overflow-y-auto"
+                                data-testid="column-library"
+                            >
                                 <ComponentLibraryColumn
                                     currentStepKey={currentStepKey}
                                     onAddBlock={handleAddBlock}
@@ -1380,23 +1484,35 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         </Suspense>
                     </Panel>
 
-                    <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group">
-                        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 group-hover:w-1.5 bg-gray-300 group-hover:bg-blue-500 transition-all" />
-                        <GripVertical className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </PanelResizeHandle>
+                    <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
                     <Panel defaultSize={40} minSize={30}>
-                        <Suspense fallback={<div className="flex items-center justify-center h-full text-gray-500">Carregando canvas…</div>}>
-                            <div className="h-full bg-gray-50 overflow-y-auto" data-testid="column-canvas">
+                        <Suspense
+                            fallback={
+                                <div className="flex items-center justify-center h-full text-gray-500">
+                                    Carregando canvas…
+                                </div>
+                            }
+                        >
+                            <div
+                                className="h-full bg-gray-50 overflow-y-auto"
+                                data-testid="column-canvas"
+                            >
                                 {isLoadingTemplate ? (
                                     <div className="h-full flex items-center justify-center">
-                                        <div className="text-sm text-gray-500 animate-pulse">Carregando etapas do template…</div>
+                                        <div className="text-sm text-gray-500 animate-pulse">
+                                            Carregando etapas do template…
+                                        </div>
                                     </div>
                                 ) : isLoadingStep ? (
                                     <div className="h-full flex items-center justify-center">
                                         <div className="text-center">
-                                            <div className="text-sm text-gray-500 animate-pulse mb-2">Carregando etapa…</div>
-                                            <div className="text-xs text-gray-400">{currentStepKey}</div>
+                                            <div className="text-sm text-gray-500 animate-pulse mb-2">
+                                                Carregando etapa…
+                                            </div>
+                                            <div className="text-xs text-gray-400">
+                                                {currentStepKey}
+                                            </div>
                                         </div>
                                     </div>
                                 ) : canvasMode === 'edit' ? (
@@ -1404,22 +1520,46 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         stepKey={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
                                     >
-                                        <div className={isLoadingStep ? 'pointer-events-none opacity-50' : ''}>
+                                        <div
+                                            className={
+                                                isLoadingStep
+                                                    ? 'pointer-events-none opacity-50'
+                                                    : ''
+                                            }
+                                        >
                                             <CanvasColumn
                                                 currentStepKey={currentStepKey}
                                                 blocks={blocks}
                                                 selectedBlockId={selectedBlockId}
-                                                onRemoveBlock={(id) => removeBlock(safeCurrentStep, id)}
+                                                onRemoveBlock={id =>
+                                                    removeBlock(safeCurrentStep, id)
+                                                }
                                                 onMoveBlock={(from, to) => {
                                                     const list = blocks || [];
                                                     const reordered = [...list];
-                                                    const [moved] = reordered.splice(from, 1);
+                                                    const [moved] = reordered.splice(
+                                                        from,
+                                                        1
+                                                    );
                                                     reordered.splice(to, 0, moved);
-                                                    reorderBlocks(safeCurrentStep, normalizeOrder(reordered));
+                                                    reorderBlocks(
+                                                        safeCurrentStep,
+                                                        normalizeOrder(reordered)
+                                                    );
                                                 }}
-                                                onUpdateBlock={(id, patch) => updateBlock(safeCurrentStep, id, patch)}
+                                                onUpdateBlock={(id, patch) =>
+                                                    updateBlock(
+                                                        safeCurrentStep,
+                                                        id,
+                                                        patch
+                                                    )
+                                                }
                                                 onBlockSelect={handleBlockSelect}
-                                                hasTemplate={Boolean(loadedTemplate || props.templateId || resourceId)}
+                                                hasTemplate={Boolean(
+                                                    loadedTemplate ||
+                                                        props.templateId ||
+                                                        resourceId
+                                                )}
                                                 onLoadTemplate={handleLoadTemplate}
                                             />
                                         </div>
@@ -1437,11 +1577,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             isVisible={true}
                                             className="h-full"
                                             previewMode={previewMode}
-                                            funnelId={unifiedState.currentFunnel?.id || null}
-                                            onStepChange={(sid) => {
-                                                const match = String(sid || '').match(/step-(\d{1,2})/i);
-                                                const num = match ? parseInt(match[1], 10) : safeCurrentStep;
-                                                if (Number.isFinite(num) && num !== safeCurrentStep) setCurrentStep(num);
+                                            funnelId={
+                                                unifiedState.currentFunnel?.id || null
+                                            }
+                                            onStepChange={sid => {
+                                                const match = String(sid || '').match(
+                                                    /step-(\d{1,2})/i
+                                                );
+                                                const num = match
+                                                    ? parseInt(match[1], 10)
+                                                    : safeCurrentStep;
+                                                if (
+                                                    Number.isFinite(num) &&
+                                                    num !== safeCurrentStep
+                                                )
+                                                    setCurrentStep(num);
                                             }}
                                         />
                                     </StepErrorBoundary>
@@ -1450,19 +1600,31 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         </Suspense>
                     </Panel>
 
-                    <PanelResizeHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group">
-                        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 group-hover:w-1.5 bg-gray-300 group-hover:bg-blue-500 transition-all" />
-                        <GripVertical className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </PanelResizeHandle>
+                    <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
                     <Panel defaultSize={25} minSize={20} maxSize={35}>
-                        <Suspense fallback={<div className="p-4 text-sm text-gray-500">Carregando propriedades…</div>}>
-                            <div className="h-full border-l bg-white overflow-y-auto" data-testid="column-properties">
+                        <Suspense
+                            fallback={
+                                <div className="p-4 text-sm text-gray-500">
+                                    Carregando propriedades…
+                                </div>
+                            }
+                        >
+                            <div
+                                className="h-full border-l bg-white overflow-y-auto"
+                                data-testid="column-properties"
+                            >
                                 <PropertiesColumn
-                                    selectedBlock={(blocks?.find(b => b.id === selectedBlockId)) || undefined}
+                                    selectedBlock={
+                                        blocks?.find(b => b.id === selectedBlockId) ||
+                                        undefined
+                                    }
                                     blocks={blocks}
                                     onBlockSelect={handleBlockSelect}
-                                    onBlockUpdate={(id: string, updates: Partial<Block>) => {
+                                    onBlockUpdate={(
+                                        id: string,
+                                        updates: Partial<Block>
+                                    ) => {
                                         updateBlock(safeCurrentStep, id, updates);
                                     }}
                                     onClearSelection={() => setSelectedBlock(null)}
@@ -1479,12 +1641,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 )}
 
                 {/* ✅ WAVE 2: Performance Monitor em tempo real */}
-                {/* ✅ WAVE 3: Adicionado debug de seleção */}
                 {import.meta.env.DEV && (
                     <Suspense fallback={null}>
                         <PerformanceMonitor
                             selectedBlockId={selectedBlockId}
-                            selectedBlockType={blocks?.find(b => b.id === selectedBlockId)?.type || null}
+                            selectedBlockType={
+                                blocks?.find(b => b.id === selectedBlockId)?.type ||
+                                null
+                            }
                         />
                     </Suspense>
                 )}
@@ -1511,7 +1675,8 @@ const MemoizedQuizModularEditorInner = React.memo(QuizModularEditorInner);
  * inside QuizModularEditorInner is always safe.
  */
 export default function QuizModularEditor(props: QuizModularEditorProps) {
-    const isTest = typeof import.meta !== 'undefined' && (import.meta as any).env?.VITEST === true;
+    const isTest =
+        typeof import.meta !== 'undefined' && (import.meta as any).env?.VITEST === true;
     if (isTest) {
         return (
             <EditorLoadingProvider>
@@ -1522,7 +1687,11 @@ export default function QuizModularEditor(props: QuizModularEditorProps) {
     return (
         <EditorLoadingProvider>
             <div data-testid="modular-layout" className="h-full w-full">
-                <EditorLoadingProgress progress={Number((props.editorResource as any)?.metadata?.progress ?? 1)} />
+                <EditorLoadingProgress
+                    progress={Number(
+                        (props.editorResource as any)?.metadata?.progress ?? 1
+                    )}
+                />
                 <Suspense fallback={<div />}>
                     <MemoizedQuizModularEditorInner {...props} />
                 </Suspense>
