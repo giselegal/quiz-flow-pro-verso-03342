@@ -30,6 +30,8 @@ import { AutosaveIndicator } from '../AutosaveIndicator';
 import { useAutosaveIndicator } from '../AutosaveIndicator.hook';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
 import { useStepPrefetch } from '@/hooks/useStepPrefetch';
+// ✅ WAVE 2: Performance Monitor
+import { PerformanceMonitor } from '@/components/editor/PerformanceMonitor';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -1463,6 +1465,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 {import.meta.env.DEV && MetricsPanel && (
                     <Suspense fallback={null}>
                         <MetricsPanel />
+                    </Suspense>
+                )}
+
+                {/* ✅ WAVE 2: Performance Monitor em tempo real */}
+                {import.meta.env.DEV && (
+                    <Suspense fallback={null}>
+                        <PerformanceMonitor />
                     </Suspense>
                 )}
 

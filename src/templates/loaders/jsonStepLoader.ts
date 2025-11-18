@@ -1,9 +1,13 @@
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
+import { cacheManager } from '@/lib/cache/CacheManager';
 
 // ✅ G4 FIX: Cache de paths falhos para evitar requisições repetidas
 const failedPathsCache = new Map<string, number>();
 const FAILED_PATH_TTL = 5 * 60 * 1000; // 5 minutos
+
+// ✅ WAVE 2: TTL do cache (1 hora para steps, 30 min para dev mode)
+const STEP_CACHE_TTL = (import.meta as any)?.env?.DEV ? 30 * 60 * 1000 : 60 * 60 * 1000;
 
 /**
  * Carrega blocos de um step a partir de JSON dinâmico (versão de template v3.2) no diretório public.
@@ -27,6 +31,14 @@ export async function loadStepFromJson(
   templateId: string = 'quiz21StepsComplete'
 ): Promise<Block[] | null> {
   if (!stepId) return null;
+
+  // ✅ WAVE 2: Verificar cache primeiro (L1 Memory + L2 IndexedDB)
+  const cacheKey = `step:${templateId}:${stepId}`;
+  const cached = await cacheManager.get<Block[]>(cacheKey, 'steps');
+  if (cached) {
+    appLogger.debug(`[jsonStepLoader] 🎯 Cache hit: ${cacheKey}`);
+    return cached;
+  }
 
   // Helper: tenta carregar e extrair blocks de diferentes formatos
   let cacheMode: RequestCache = 'default';
@@ -99,6 +111,7 @@ export async function loadStepFromJson(
     const blocks = await tryUrl(url);
     if (blocks && blocks.length > 0) {
       // 🔍 Validação simples DEV: garante shape mínimo dos blocos evitando crashes silenciosos
+      let validatedBlocks = blocks;
       try {
         // @ts-ignore
         if ((import.meta as any)?.env?.DEV) {
@@ -108,13 +121,17 @@ export async function loadStepFromJson(
             appLogger.warn(`[jsonStepLoader] ${originalLen - filtered.length} blocos descartados por shape inválido (DEV) em ${stepId}`);
           }
           appLogger.info(`[jsonStepLoader] Validação DEV concluída para ${stepId}: ${filtered.length}/${originalLen} válidos`);
-          return filtered as Block[];
+          validatedBlocks = filtered as Block[];
         }
       } catch (e) {
         appLogger.warn(`[jsonStepLoader] Falha na validação DEV: ${(e as any)?.message}`);
       }
-      appLogger.info(`✅ [jsonStepLoader] Carregado ${blocks.length} blocos de ${url}`);
-      return blocks;
+      
+      // ✅ WAVE 2: Armazenar no cache (L1 + L2)
+      await cacheManager.set(cacheKey, validatedBlocks, STEP_CACHE_TTL, 'steps');
+      
+      appLogger.info(`✅ [jsonStepLoader] Carregado ${validatedBlocks.length} blocos de ${url}`);
+      return validatedBlocks;
     }
   }
 
