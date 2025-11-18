@@ -191,24 +191,53 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     });
 
     useEffect(() => {
-        // Evitar prefetch com timers em ambiente de teste para não deixar tasks pendentes
-        const isTest = typeof import.meta !== 'undefined' && !!(import.meta as any).env?.VITEST;
+        const isTest = (() => {
+            try {
+                const env = (import.meta as any)?.env || {};
+                if (env.VITEST || env.MODE === 'test') return true;
+            } catch {}
+            try {
+                if (typeof (globalThis as any).vitest !== 'undefined') return true;
+                if (typeof (globalThis as any).jest !== 'undefined') return true;
+            } catch {}
+            return false;
+        })();
         if (isTest) return;
-        let t1: any = null;
-        let t2: any = null;
+        let idle1: any = null;
+        let idle2: any = null;
         import('./components/CanvasColumn');
-        t1 = setTimeout(() => {
+        const schedule = (cb: () => void, timeout: number) => {
+            try {
+                if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+                    return (window as any).requestIdleCallback(cb, { timeout });
+                }
+            } catch {}
+            return setTimeout(cb, timeout);
+        };
+        idle1 = schedule(() => {
             Promise.all([
                 import('./components/ComponentLibraryColumn'),
                 import('./components/PropertiesColumn'),
             ]);
-        }, 100);
-        t2 = setTimeout(() => {
+        }, 150);
+        idle2 = schedule(() => {
             import('./components/PreviewPanel');
         }, 300);
         return () => {
-            try { if (t1) clearTimeout(t1); } catch {}
-            try { if (t2) clearTimeout(t2); } catch {}
+            try {
+                if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && idle1) {
+                    (window as any).cancelIdleCallback(idle1);
+                } else if (idle1) {
+                    clearTimeout(idle1);
+                }
+            } catch {}
+            try {
+                if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && idle2) {
+                    (window as any).cancelIdleCallback(idle2);
+                } else if (idle2) {
+                    clearTimeout(idle2);
+                }
+            } catch {}
         };
     }, []);
 
