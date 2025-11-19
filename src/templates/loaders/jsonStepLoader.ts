@@ -6,8 +6,33 @@ import { cacheManager } from '@/lib/cache/CacheManager';
 const failedPathsCache = new Map<string, number>();
 const FAILED_PATH_TTL = 30 * 60 * 1000; // 30 minutos (FASE 2: aumentado de 5min)
 
-// ✅ FASE 2: TTL do cache aumentado (2 horas para steps, 1 hora para dev mode)
-const STEP_CACHE_TTL = (import.meta as any)?.env?.DEV ? 60 * 60 * 1000 : 120 * 60 * 1000;
+// ✅ WAVE 2.6: TTL diferenciado por tipo de step (otimização de cache inteligente)
+// Steps críticos (alta frequência de acesso): 2 horas
+// Steps regulares: 30 minutos
+// DEV mode: 1 hora para facilitar desenvolvimento
+const STEP_CACHE_TTL_MAP: Record<string, number> = {
+  // Critical steps (high usage - intro, key questions, results)
+  'step-01': 2 * 60 * 60 * 1000, // 2h - Introdução
+  'step-12': 2 * 60 * 60 * 1000, // 2h - Mid-point key question
+  'step-19': 2 * 60 * 60 * 1000, // 2h - Pre-result transition
+  'step-20': 2 * 60 * 60 * 1000, // 2h - Result display
+  'step-21': 2 * 60 * 60 * 1000, // 2h - Offer/CTA
+};
+
+// Default TTL para steps não especificados
+const DEFAULT_STEP_TTL = 30 * 60 * 1000; // 30min
+
+// Helper: obter TTL apropriado para o step
+const getStepCacheTTL = (stepId: string): number => {
+  try {
+    const env = (import.meta as any)?.env;
+    // DEV mode: TTL reduzido para facilitar testes
+    if (env?.DEV) return 60 * 60 * 1000; // 1h
+  } catch { }
+  
+  // Produção: usar TTL diferenciado
+  return STEP_CACHE_TTL_MAP[stepId] || DEFAULT_STEP_TTL;
+};
 
 /**
  * Carrega blocos de um step a partir de JSON dinâmico (versão de template v3.2) no diretório public.
@@ -130,8 +155,10 @@ export async function loadStepFromJson(
         appLogger.warn(`[jsonStepLoader] Falha na validação DEV: ${(e as any)?.message}`);
       }
 
-      // ✅ WAVE 2: Armazenar no cache (L1 + L2)
-      await cacheManager.set(cacheKey, validatedBlocks, STEP_CACHE_TTL, 'steps');
+      // ✅ WAVE 2.6: Armazenar no cache com TTL diferenciado (L1 + L2)
+      const ttl = getStepCacheTTL(stepId);
+      await cacheManager.set(cacheKey, validatedBlocks, ttl, 'steps');
+      appLogger.debug(`[jsonStepLoader] Cache TTL para ${stepId}: ${ttl / 1000 / 60}min`);
 
       appLogger.info(`✅ [jsonStepLoader] Carregado ${validatedBlocks.length} blocos de ${url}`);
       return validatedBlocks;
