@@ -156,24 +156,24 @@ const EditorRoutesInner: React.FC = () => {
             ? resourceId
             : undefined;
 
-    // 🆕 GARGALO #3 FIX: Converter stages → pages para SuperUnifiedProvider
+    // 🆕 GARGALO #3 FIX: Converter stages → pages (OTIMIZADO)
     const initialFunnelData = React.useMemo(() => {
-        if (!editorResource.resource?.data) return undefined;
+        const data = editorResource.resource?.data;
+        if (!data) return undefined;
 
-        const data = editorResource.resource.data;
-
-        // Se já tem pages, usar diretamente
+        // Se já tem pages, usar diretamente (sem clone)
         if (data.pages && Array.isArray(data.pages)) {
             return data;
         }
 
-        // Se tem stages (templates), converter para pages
+        // Se tem stages (templates), converter para pages (apenas se necessário)
         if (data.stages && Array.isArray(data.stages)) {
+            const funnelId = data.id || resourceId || 'local';
             return {
                 ...data,
                 pages: data.stages.map((stage: any, index: number) => ({
                     id: stage.id || `page-${index + 1}`,
-                    funnel_id: data.id || resourceId || 'local',
+                    funnel_id: funnelId,
                     page_type: 'quiz-step',
                     title: stage.title || stage.name || `Step ${index + 1}`,
                     page_order: index,
@@ -183,22 +183,22 @@ const EditorRoutesInner: React.FC = () => {
         }
 
         return data;
-    }, [editorResource.resource?.data, resourceId]);
-
-    // 🔍 AUDIT FIX: Debugging - verificar estado do recurso
+    }, [editorResource.resource, resourceId]);    // 🔍 AUDIT FIX: Debugging - verificar estado do recurso (apenas em DEV)
     React.useEffect(() => {
-        console.log('[EDITOR-PAGE] Estado do recurso:', {
-            hasResource: !!editorResource.resource,
-            resourceType: editorResource.resourceType,
-            resourceSource: editorResource.resource?.source,
-            hasData: !!editorResource.resource?.data,
-            hasStages: !!editorResource.resource?.data?.stages,
-            stagesCount: editorResource.resource?.data?.stages?.length,
-            isLoading: editorResource.isLoading,
-            hasError: !!editorResource.error,
-            initialFunnelDataDefined: !!initialFunnelData,
-        });
-    }, [editorResource, initialFunnelData]);
+        if (import.meta.env.DEV && import.meta.env.VITE_DEBUG_MODE === 'true') {
+            console.log('[EDITOR-PAGE] Estado do recurso:', {
+                hasResource: !!editorResource.resource,
+                resourceType: editorResource.resourceType,
+                resourceSource: editorResource.resource?.source,
+                hasData: !!editorResource.resource?.data,
+                hasStages: !!editorResource.resource?.data?.stages,
+                stagesCount: editorResource.resource?.data?.stages?.length,
+                isLoading: editorResource.isLoading,
+                hasError: !!editorResource.error,
+                initialFunnelDataDefined: !!initialFunnelData,
+            });
+        }
+    }, [editorResource.isLoading, editorResource.error]);
 
     // ✅ AUDIT FIX-001B: Mostrar loading enquanto template está sendo convertido
     if (editorResource.isLoading && resourceId) {

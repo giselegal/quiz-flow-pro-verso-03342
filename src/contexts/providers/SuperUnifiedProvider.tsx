@@ -662,70 +662,38 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         appLogger.info('🛑 [SuperUnifiedProvider] Supabase DESATIVADO - todas operações serão offline/in-memory');
     }
 
-    // ✅ AUDITORIA FIX-001 ENHANCED: Inicializar editor.stepBlocks a partir do initialData
+    // ✅ AUDITORIA FIX-001 ENHANCED: Inicializar editor.stepBlocks (OTIMIZADO)
     useEffect(() => {
-        console.log('[AUDIT-FIX-ENHANCED] Checking initialData:', {
-            hasInitialData: !!initialData,
-            hasPages: !!initialData?.pages,
-            isArray: Array.isArray(initialData?.pages),
-            pageCount: initialData?.pages?.length,
-            initialDataKeys: initialData ? Object.keys(initialData) : [],
-            currentStepBlocks: Object.keys(state.editor.stepBlocks || {}).length
-        });
-
-        // Validar que initialData existe e tem pages
-        if (!initialData || !initialData.pages || !Array.isArray(initialData.pages)) {
-            console.warn('[AUDIT-FIX-ENHANCED] initialData inválido:', {
-                hasData: !!initialData,
-                hasPages: !!initialData?.pages,
-                isArray: Array.isArray(initialData?.pages)
-            });
-            return;
-        }
-
-        // Validar que pages não está vazio
-        if (initialData.pages.length === 0) {
-            console.warn('[AUDIT-FIX-ENHANCED] initialData.pages está vazio');
+        // Validação rápida (sem logs excessivos)
+        if (!initialData?.pages || !Array.isArray(initialData.pages) || initialData.pages.length === 0) {
+            if (debugMode) {
+                console.warn('[SuperUnified] initialData inválido ou vazio');
+            }
             return;
         }
 
         // Evitar reinicialização se já temos steps carregados
         const currentStepCount = Object.keys(state.editor.stepBlocks || {}).length;
         if (currentStepCount === initialData.pages.length && currentStepCount > 0) {
-            console.log('[AUDIT-FIX-ENHANCED] Steps já inicializados, pulando:', {
-                current: currentStepCount,
-                target: initialData.pages.length
-            });
-            return;
+            return; // Já inicializado, pular silenciosamente
         }
 
-        logger.info('[AUDIT-FIX-ENHANCED] Inicializando steps do editor', {
-            pageCount: initialData.pages.length,
-            currentCount: currentStepCount
-        });
+        if (debugMode) {
+            logger.info('[SuperUnified] Inicializando steps', {
+                pageCount: initialData.pages.length,
+                currentCount: currentStepCount
+            });
+        }
 
         try {
-            // Extrair blocos de cada page e popular stepBlocks
+            // Extrair blocos de cada page (performance otimizada)
             const stepBlocks: Record<number, any[]> = {};
-            let totalBlocks = 0;
 
             initialData.pages.forEach((page: any, index: number) => {
-                const stepNumber = index + 1;
-
-                // Garantir que blocks é um array válido
-                const blocks = Array.isArray(page.blocks) ? page.blocks : [];
-                stepBlocks[stepNumber] = blocks;
-                totalBlocks += blocks.length;
-
-                console.log(`[AUDIT-FIX-ENHANCED] Step ${stepNumber}:`, {
-                    pageId: page.id,
-                    hasBlocks: blocks.length > 0,
-                    blockCount: blocks.length,
-                    blockIds: blocks.map((b: any) => b.id).slice(0, 3)
-                });
+                stepBlocks[index + 1] = Array.isArray(page.blocks) ? page.blocks : [];
             });
 
-            // Atualizar estado do editor
+            // Atualizar estado do editor (batch update)
             dispatch({
                 type: 'SET_EDITOR_STATE',
                 payload: {
@@ -736,15 +704,14 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             });
 
-            logger.info('[AUDIT-FIX-ENHANCED] ✅ Editor inicializado com sucesso', {
-                totalSteps: initialData.pages.length,
-                totalBlocks,
-                hasStepBlocks: Object.keys(stepBlocks).length > 0
-            });
+            if (debugMode) {
+                logger.info('[SuperUnified] ✅ Editor inicializado', {
+                    totalSteps: initialData.pages.length
+                });
+            }
 
         } catch (error: any) {
-            logger.error('[AUDIT-FIX-ENHANCED] ❌ Erro ao inicializar steps:', error);
-            console.error('[AUDIT-FIX-ENHANCED] Erro detalhado:', error);
+            logger.error('[SuperUnified] Erro ao inicializar steps:', error);
         }
     }, [initialData, debugMode]);
 
