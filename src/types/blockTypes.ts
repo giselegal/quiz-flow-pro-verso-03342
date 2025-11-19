@@ -67,8 +67,17 @@ export interface StepData {
 
 /**
  * Props padrão para componentes de bloco
+ * 
+ * ✅ WAVE 1 FIX: Migrated to unified BlockComponentProps from @/types/core/BlockInterfaces
+ * Re-export the unified interface to maintain backward compatibility
  */
-export interface BlockComponentProps {
+export type { BlockComponentProps } from '@/types/core/BlockInterfaces';
+
+/**
+ * Legacy BlockComponentProps interface - deprecated, use unified BlockComponentProps instead
+ * Kept for reference only
+ */
+export interface LegacyBlockComponentPropsOld {
     /** Dados do bloco */
     data: BlockData;
 
