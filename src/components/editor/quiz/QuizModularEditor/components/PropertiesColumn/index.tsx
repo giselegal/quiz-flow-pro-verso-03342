@@ -156,6 +156,13 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     }, [selectedBlock?.id]);
 
     const handlePropertyChange = (key: string, value: unknown) => {
+        console.group('🎛️ [PropertiesColumn] handlePropertyChange');
+        console.log('key:', key);
+        console.log('value (raw):', value);
+        console.log('value type:', typeof value);
+        console.log('editedProperties[key]:', editedProperties[key]);
+        console.log('expected type:', typeof editedProperties[key]);
+
         // Type validation based on key or expected type
         let validatedValue: string | number | boolean = value as string;
         if (typeof editedProperties[key] === 'number') {
@@ -165,17 +172,40 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         } else if (typeof editedProperties[key] === 'string') {
             validatedValue = typeof value === 'string' ? value : String(value);
         }
-        setEditedProperties(prev => ({
-            ...prev,
-            [key]: validatedValue
-        }));
+
+        console.log('validatedValue:', validatedValue);
+        console.log('isDirty antes:', isDirty);
+
+        setEditedProperties(prev => {
+            const next = {
+                ...prev,
+                [key]: validatedValue
+            };
+            console.log('editedProperties ANTES:', prev);
+            console.log('editedProperties DEPOIS:', next);
+            return next;
+        });
         setIsDirty(true);
+
+        console.log('✅ Propriedade atualizada, isDirty = true');
+        console.groupEnd();
     };
 
     const handleSave = () => {
+        console.group('💾 [PropertiesColumn] handleSave');
+        console.log('selectedBlock:', selectedBlock);
+        console.log('isDirty:', isDirty);
+        console.log('editedProperties:', editedProperties);
+
         if (selectedBlock && isDirty) {
             // ✅ SINCRONIZAÇÃO BIDIRECIONAL - Garante properties ↔ content sempre alinhados
             const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, editedProperties);
+
+            console.log('synchronizedUpdate criado:', synchronizedUpdate);
+            console.log('Chamando onBlockUpdate com:', {
+                blockId: selectedBlock.id,
+                updates: synchronizedUpdate
+            });
 
             onBlockUpdate(selectedBlock.id, synchronizedUpdate);
             setIsDirty(false);
@@ -185,7 +215,16 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 editedProperties,
                 synchronizedUpdate
             });
+
+            console.log('✅ onBlockUpdate chamado, isDirty = false');
+        } else {
+            console.warn('❌ Não salvou:', {
+                hasBlock: !!selectedBlock,
+                isDirty,
+                reason: !selectedBlock ? 'Sem bloco selecionado' : 'Não há mudanças (isDirty=false)'
+            });
         }
+        console.groupEnd();
     };
 
     const handleReset = () => {

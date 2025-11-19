@@ -34,12 +34,14 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
   const schema = schemaInterpreter.getBlockSchema(elementType);
 
   // ✅ CORREÇÃO 2: Debug logging detalhado
-  appLogger.info('🎛️ [DynamicPropertyControls] Renderizando:', { data: [{
-        elementType,
-        hasSchema: !!schema,
-        propertiesKeys: Object.keys(properties),
-        schemaPropertiesKeys: schema ? Object.keys(schema.properties) : []
-      }] });
+  appLogger.info('🎛️ [DynamicPropertyControls] Renderizando:', {
+    data: [{
+      elementType,
+      hasSchema: !!schema,
+      propertiesKeys: Object.keys(properties),
+      schemaPropertiesKeys: schema ? Object.keys(schema.properties) : []
+    }]
+  });
 
   if (!schema) {
     return (
@@ -79,13 +81,24 @@ const PropertyControl: React.FC<{
   // ✅ Normalizar control type (compatibilidade com blockPropertySchemas)
   const normalizedControl = normalizeControlType(schema.control);
 
+  // 🔍 DEBUG: Wrapper para logar todas as mudanças
+  const handleChange = (newValue: any) => {
+    console.log('🎛️ [PropertyControl] onChange:', {
+      propertyKey,
+      oldValue: value,
+      newValue,
+      control: normalizedControl
+    });
+    onChange(newValue);
+  };
+
   const renderControl = () => {
     switch (normalizedControl) {
       case 'text':
         return (
           <Input
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
             placeholder={schema.default || ''}
           />
         );
@@ -94,7 +107,7 @@ const PropertyControl: React.FC<{
         return (
           <Textarea
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
             placeholder={schema.default || ''}
             rows={4}
           />
@@ -105,7 +118,7 @@ const PropertyControl: React.FC<{
           <Input
             type="number"
             value={value || schema.default || 0}
-            onChange={(e) => onChange(Number(e.target.value))}
+            onChange={(e) => handleChange(Number(e.target.value))}
             min={schema.validation?.min}
             max={schema.validation?.max}
           />
@@ -117,7 +130,7 @@ const PropertyControl: React.FC<{
         const rangeMin = schema.validation?.min || 0;
         const rangeMax = schema.validation?.max || 100;
         const rangeStep = schema.validation?.step || 1;
-        
+
         return (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -133,7 +146,7 @@ const PropertyControl: React.FC<{
             </div>
             <Slider
               value={[rangeValue]}
-              onValueChange={([newValue]) => onChange(newValue)}
+              onValueChange={([newValue]) => handleChange(newValue)}
               min={rangeMin}
               max={rangeMax}
               step={rangeStep}
@@ -147,7 +160,7 @@ const PropertyControl: React.FC<{
           <div className="flex items-center space-x-2">
             <Switch
               checked={value || schema.default || false}
-              onCheckedChange={onChange}
+              onCheckedChange={handleChange}
             />
             <span className="text-sm text-muted-foreground">
               {value ? 'Ativado' : 'Desativado'}
@@ -161,13 +174,13 @@ const PropertyControl: React.FC<{
             <Input
               type="color"
               value={value || schema.default || '#000000'}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e) => handleChange(e.target.value)}
               className="w-16 h-10"
             />
             <Input
               type="text"
               value={value || schema.default || '#000000'}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e) => handleChange(e.target.value)}
               placeholder="#000000"
               className="flex-1"
             />
@@ -176,7 +189,7 @@ const PropertyControl: React.FC<{
 
       case 'dropdown':
         return (
-          <Select value={String(value || schema.default || '')} onValueChange={onChange}>
+          <Select value={String(value || schema.default || '')} onValueChange={handleChange}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
@@ -193,7 +206,7 @@ const PropertyControl: React.FC<{
       case 'options-list':
         // ✅ NOVO: Editor de lista de opções (usado em options-grid, quiz-transition, etc)
         const optionsList = Array.isArray(value) ? value : [];
-        
+
         return (
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {optionsList.map((option: any, index: number) => (
@@ -204,7 +217,7 @@ const PropertyControl: React.FC<{
                     onChange={(e) => {
                       const updated = [...optionsList];
                       updated[index] = { ...option, text: e.target.value };
-                      onChange(updated);
+                      handleChange(updated);
                     }}
                     placeholder="Texto da opção"
                     className="h-8 text-sm"
@@ -215,7 +228,7 @@ const PropertyControl: React.FC<{
                       onChange={(e) => {
                         const updated = [...optionsList];
                         updated[index] = { ...option, imageUrl: e.target.value };
-                        onChange(updated);
+                        handleChange(updated);
                       }}
                       placeholder="URL da imagem (opcional)"
                       className="h-7 text-xs"
@@ -228,7 +241,7 @@ const PropertyControl: React.FC<{
                   className="h-8 w-8 flex-shrink-0"
                   onClick={() => {
                     const updated = optionsList.filter((_, i) => i !== index);
-                    onChange(updated);
+                    handleChange(updated);
                   }}
                 >
                   <X className="h-3 w-3" />
@@ -240,12 +253,12 @@ const PropertyControl: React.FC<{
               size="sm"
               className="w-full"
               onClick={() => {
-                const newOption = { 
-                  id: `opt-${Date.now()}`, 
+                const newOption = {
+                  id: `opt-${Date.now()}`,
                   text: 'Nova opção',
                   value: `option-${optionsList.length + 1}`,
                 };
-                onChange([...optionsList, newOption]);
+                handleChange([...optionsList, newOption]);
               }}
             >
               <Plus className="h-3 w-3 mr-1" />
@@ -260,7 +273,7 @@ const PropertyControl: React.FC<{
             <Input
               type="url"
               value={value || ''}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e) => handleChange(e.target.value)}
               placeholder="URL da imagem ou upload..."
             />
             {value && (
@@ -280,9 +293,9 @@ const PropertyControl: React.FC<{
             onChange={(e) => {
               try {
                 const parsed = JSON.parse(e.target.value);
-                onChange(parsed);
+                handleChange(parsed);
               } catch {
-                onChange(e.target.value);
+                handleChange(e.target.value);
               }
             }}
             placeholder="{}"
@@ -295,7 +308,7 @@ const PropertyControl: React.FC<{
         return (
           <Input
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
           />
         );
     }
@@ -321,7 +334,7 @@ const PropertyControl: React.FC<{
  */
 function normalizeControlType(control: string | undefined): string {
   if (!control) return 'text';
-  
+
   const mapping: Record<string, string> = {
     // blockPropertySchemas.ts → DynamicPropertyControls
     'select': 'dropdown',
@@ -331,7 +344,7 @@ function normalizeControlType(control: string | undefined): string {
     'range': 'range',
     'options-list': 'options-list',
   };
-  
+
   return mapping[control] || control;
 }
 
