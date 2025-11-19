@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { UnifiedQuizStep } from '@/lib/adapters/UnifiedQuizStepAdapter';
+import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/lib/adapters/UnifiedQuizStepAdapter';
 import { templateService } from '@/services/canonical/TemplateService';
 
 export function useUnifiedQuiz(stepId?: string) {
@@ -23,13 +23,20 @@ export function useUnifiedQuiz(stepId?: string) {
         if (stepId) {
           const result = await templateService.getStep(stepId);
           if (result.success) {
-            setStep({ id: stepId, blocks: result.data } as UnifiedQuizStep);
+            const unified = UnifiedQuizStepAdapter.fromBlocks(result.data as any, stepId);
+            setStep(unified);
           } else {
             throw result.error;
           }
         } else {
-          const steps = await templateService.getAllSteps();
-          setFunnel(steps);
+          // Fallback simples: carrega apenas o step-01 como "funil" mínimo
+          const result = await templateService.getStep('step-01');
+          if (result.success) {
+            const unified = UnifiedQuizStepAdapter.fromBlocks(result.data as any, 'step-01');
+            setFunnel({ 'step-01': unified });
+          } else {
+            setFunnel(null);
+          }
         }
       } catch (err) {
         setError(err as Error);
@@ -70,9 +77,9 @@ export function useUnifiedQuizSteps(stepIds: string[]) {
         const loadedSteps: Record<string, UnifiedQuizStep> = {};
 
         for (const stepId of stepIds) {
-          const step = await unifiedQuizBridge.loadStep(stepId);
-          if (step) {
-            loadedSteps[stepId] = step;
+          const result = await templateService.getStep(stepId);
+          if (result.success) {
+            loadedSteps[stepId] = UnifiedQuizStepAdapter.fromBlocks(result.data as any, stepId);
           }
         }
 

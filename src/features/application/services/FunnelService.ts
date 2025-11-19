@@ -8,27 +8,17 @@ import {
   Funnel,
   type FunnelMetadata,
   type FunnelSettings,
-  type FunnelTheme,
+  type FunnelBranding,
+  type FunnelAnalytics,
 } from '@/core/domains/funnel/entities/Funnel';
-import { Page, type PageMetadata, type PageSettings, type PageLayout } from '@/core/domains/funnel/entities/Page';
+import { Page, type PageType, type PageSettings, type PageSEO } from '@/core/domains/funnel/entities/Page';
 import {
   Block,
   type BlockType,
-  type BlockSettings,
+  type BlockContent,
   type BlockStyles,
-  type BlockMetadata,
+  type BlockSettings,
 } from '@/core/domains/funnel/entities/Block';
-
-export interface FunnelAnalytics {
-  totalViews: number;
-  uniqueVisitors: number;
-  conversionRate: number;
-  averageTimeSpent: number;
-  exitRate: number;
-  topTrafficSources: Record<string, number>;
-  deviceBreakdown: Record<string, number>;
-  locationBreakdown: Record<string, number>;
-}
 
 export interface FunnelSession {
   id: string;
@@ -89,14 +79,24 @@ export class FunnelService {
           pixelId: undefined,
           conversionGoals: ['completion'],
         };
-        const theme: FunnelTheme = {
+        const theme: FunnelBranding = {
           primaryColor: '#3B82F6',
           secondaryColor: '#1E40AF',
           accentColor: '#F59E0B',
           fontFamily: 'Inter, sans-serif',
           theme: 'light',
         };
-        return new Funnel(id, metadata, settings, theme, [], { totalViews: 0, totalConversions: 0, conversionRate: 0 });
+        const analytics: FunnelAnalytics = {
+          totalViews: 0,
+          uniqueVisitors: 0,
+          conversionRate: 0,
+          averageTimeSpent: 0,
+          exitRate: 0,
+          topTrafficSources: {},
+          deviceBreakdown: {},
+          locationBreakdown: {},
+        };
+        return new Funnel(id, metadata, settings, theme, [], analytics);
       },
       findPageById: async () => null,
       deletePage: async () => true,
@@ -137,14 +137,24 @@ export class FunnelService {
       pixelId: undefined,
       conversionGoals: ['completion'],
     };
-    const theme: FunnelTheme = {
+    const theme: FunnelBranding = {
       primaryColor: '#3B82F6',
       secondaryColor: '#1E40AF',
       accentColor: '#F59E0B',
       fontFamily: 'Inter, sans-serif',
       theme: 'light',
     };
-    return new Funnel('temp-id', metadata, settings, theme, [], { totalViews: 0, totalConversions: 0, conversionRate: 0 });
+    const analytics: FunnelAnalytics = {
+      totalViews: 0,
+      uniqueVisitors: 0,
+      conversionRate: 0,
+      averageTimeSpent: 0,
+      exitRate: 0,
+      topTrafficSources: {},
+      deviceBreakdown: {},
+      locationBreakdown: {},
+    };
+    return new Funnel('temp-id', metadata, settings, theme, [], analytics);
   }
 
   async getFunnel(id: string): Promise<Funnel | null> {
@@ -179,26 +189,19 @@ export class FunnelService {
 
   async addPage(funnelId: string, type: string, title: string, description?: string): Promise<Page> {
     const now = new Date();
-    const metadata: PageMetadata = {
-      slug: title.toLowerCase().replace(/\s+/g, '-'),
-      title,
-      description: description ?? '',
-      isActive: true,
-      order: 0,
-      createdAt: now,
-      updatedAt: now,
-    };
     const settings: PageSettings = {
+      slug: title.toLowerCase().replace(/\s+/g, '-'),
+      isActive: true,
       requireAuth: false,
       allowBack: true,
       showProgress: true,
-      showFooter: true,
     };
-    const layout: PageLayout = {
-      variant: 'default',
-      backgroundColor: '#ffffff',
+    const seo: PageSEO = {
+      title,
+      description: description ?? '',
+      keywords: [],
     };
-    return new Page('temp-id', funnelId, type as any, [], metadata, settings, layout);
+    return new Page('temp-id', funnelId, type as PageType, title, description ?? '', [], settings, seo);
   }
 
   async updatePage(pageId: string, updates: Partial<Page>): Promise<Page> {
@@ -217,16 +220,22 @@ export class FunnelService {
 
   async addBlock(pageId: string, type: BlockType, content: any, position?: number): Promise<Block> {
     const now = new Date();
-    const settings: BlockSettings = {
-      isVisible: true,
-    };
+    const blockContent: BlockContent = content || {};
     const styles: BlockStyles = {};
-    const metadata: BlockMetadata = {
+    const settings: BlockSettings = { isVisible: true };
+    return new Block('temp-id', pageId, type, blockContent, styles, settings, {
+      impressions: 0,
+      clicks: 0,
+      interactions: 0,
+      conversionRate: 0,
+      averageViewTime: 0,
+    }, {
       order: position ?? 0,
+      version: 1,
+      isTemplate: false,
       createdAt: now,
       updatedAt: now,
-    };
-    return new Block('temp-id', pageId, type, content, settings, styles, metadata);
+    });
   }
 
   async updateBlock(blockId: string, updates: Partial<Block>): Promise<Block> {
@@ -340,14 +349,24 @@ export class FunnelService {
       pixelId: undefined,
       conversionGoals: ['completion'],
     };
-    const theme: FunnelTheme = {
+    const theme: FunnelBranding = {
       primaryColor: '#3B82F6',
       secondaryColor: '#1E40AF',
       accentColor: '#F59E0B',
       fontFamily: 'Inter, sans-serif',
       theme: 'light',
     };
-    return new Funnel('temp-id', metadata, settings, theme, [], { totalViews: 0, totalConversions: 0, conversionRate: 0 });
+    const analytics: FunnelAnalytics = {
+      totalViews: 0,
+      uniqueVisitors: 0,
+      conversionRate: 0,
+      averageTimeSpent: 0,
+      exitRate: 0,
+      topTrafficSources: {},
+      deviceBreakdown: {},
+      locationBreakdown: {},
+    };
+    return new Funnel('temp-id', metadata, settings, theme, [], analytics);
   }
 
   async validateFunnel(funnelId: string): Promise<{ isValid: boolean; errors: string[] }> {
