@@ -10,10 +10,8 @@ import { QuizRuntimeContainer } from '@/core/runtime/quiz/QuizRuntimeContainer';
 import type { PreviewMessage } from '@/components/editor/preview/IsolatedPreviewIframe';
 import { useSafeEventListener } from '@/hooks/useSafeEventListener';
 
-type QuizContent = { steps: unknown[]; metadata: Record<string, unknown> };
-
 export default function PreviewSandbox() {
-  const [quizContent, setQuizContent] = useState<QuizContent | null>(null);
+  const [quizContent, setQuizContent] = useState<any>(null);
   const [currentStepId, setCurrentStepId] = useState<string | null>(null);
 
   /**
@@ -34,21 +32,19 @@ export default function PreviewSandbox() {
    */
   useEffect(() => {
     try {
-      const isDev = typeof import.meta !== 'undefined' && !!(import.meta as any).env?.DEV;
-      if (!isDev) return;
       const origErr = console.error;
       const origWarn = console.warn;
-      console.error = (...args: unknown[]) => {
+      console.error = (...args: any[]) => {
         const s = args.map(a => (typeof a === 'string' ? a : '')).join(' ');
         if (s.includes('net::ERR_ABORTED')) return;
         origErr(...args);
       };
-      console.warn = (...args: unknown[]) => {
+      console.warn = (...args: any[]) => {
         const s = args.map(a => (typeof a === 'string' ? a : '')).join(' ');
         if (s.includes('net::ERR_ABORTED')) return;
         origWarn(...args);
       };
-    } catch { void 0; }
+    } catch {}
   }, []);
 
   const errorHandler = useCallback((e: ErrorEvent) => {
@@ -92,7 +88,7 @@ export default function PreviewSandbox() {
             try {
               const d = !!payload?.dark;
               document.documentElement.classList.toggle('dark', d);
-            } catch { void 0; }
+            } catch {}
             break;
         }
       } catch (error) {
@@ -111,13 +107,25 @@ export default function PreviewSandbox() {
     sendMessage({ type: 'READY' });
   }, []);
 
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.cssText;
+    const prevBody = body.style.cssText;
+    html.style.cssText = `${prevHtml};overflow:hidden;`;
+    body.style.cssText = `${prevBody};overflow:hidden;`;
+    return () => {
+      html.style.cssText = prevHtml;
+      body.style.cssText = prevBody;
+    };
+  }, []);
 
   const sendHeight = useCallback(() => {
     try {
       const root = document.getElementById('preview-root') || document.body;
       const h = Math.max(root.scrollHeight, root.clientHeight, document.documentElement.scrollHeight);
       sendMessage({ type: 'HEIGHT', payload: { height: h } });
-    } catch { void 0; }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -143,7 +151,7 @@ export default function PreviewSandbox() {
         type: 'BLOCK_SELECT',
         payload: { blockId },
       });
-    } catch { void 0; }
+    } catch {}
   };
 
   if (!quizContent) {
@@ -159,7 +167,7 @@ export default function PreviewSandbox() {
   }
 
   return (
-    <div id="preview-root" className="min-h-0">
+    <div id="preview-root" className="min-h-full overflow-hidden">
       <QuizRuntimeContainer
         quizContent={quizContent}
         initialStepId={currentStepId || undefined}
