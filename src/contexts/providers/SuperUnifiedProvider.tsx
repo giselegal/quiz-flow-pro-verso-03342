@@ -664,6 +664,14 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
     // ✅ AUDITORIA FIX-001: Inicializar editor.stepBlocks a partir do initialData
     useEffect(() => {
+        console.log('[AUDIT-FIX] Checking initialData:', {
+            hasInitialData: !!initialData,
+            hasStages: !!initialData?.stages,
+            isArray: Array.isArray(initialData?.stages),
+            stageCount: initialData?.stages?.length,
+            initialDataKeys: initialData ? Object.keys(initialData) : []
+        });
+
         if (initialData && initialData.stages && Array.isArray(initialData.stages)) {
             logger.info('[AUDIT-FIX] Inicializando steps do editor a partir do initialData', {
                 stageCount: initialData.stages.length
@@ -674,6 +682,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             initialData.stages.forEach((stage: any, index: number) => {
                 const stepNumber = index + 1;
                 stepBlocks[stepNumber] = stage.blocks || [];
+                
+                console.log(`[AUDIT-FIX] Step ${stepNumber}:`, {
+                    hasStage: !!stage,
+                    hasBlocks: !!stage.blocks,
+                    blockCount: stepBlocks[stepNumber].length
+                });
                 
                 if (debugMode) {
                     logger.debug(`[AUDIT-FIX] Step ${stepNumber} carregado`, {
@@ -697,6 +711,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 totalSteps: initialData.stages.length,
                 totalBlocks: Object.values(stepBlocks).reduce((sum, blocks) => sum + blocks.length, 0)
             });
+        } else {
+            console.warn('[AUDIT-FIX] initialData não tem stages ou não é válido');
         }
     }, [initialData, debugMode]);
 
