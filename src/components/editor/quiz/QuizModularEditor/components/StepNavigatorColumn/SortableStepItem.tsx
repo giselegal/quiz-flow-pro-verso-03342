@@ -76,8 +76,13 @@ export const SortableStepItem: React.FC<SortableStepItemProps> = ({
 
       {/* Step Title */}
       <button
-        onClick={handleClick}
+        onClick={(e) => {
+          console.log('🟢 [SortableStepItem] onClick chamado:', { id, title, hasHandler: !!handleClick });
+          e.stopPropagation();
+          handleClick?.();
+        }}
         className="flex-1 text-left text-sm font-medium truncate"
+        disabled={!handleClick}
       >
         {title}
       </button>

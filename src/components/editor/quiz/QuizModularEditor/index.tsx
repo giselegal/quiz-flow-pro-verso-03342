@@ -336,20 +336,31 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1: Navegação instantânea - UI update imediato, lazy load em background
     const handleSelectStep = useCallback((key: string) => {
-        if (key === currentStepKey) return;
+        console.log('🔵 [handleSelectStep] Iniciando navegação:', { key, currentStepKey });
+
+        if (key === currentStepKey) {
+            console.log('⚠️ [handleSelectStep] Step já está selecionado, ignorando');
+            return;
+        }
 
         // 🎯 WAVE 1 FIX: Atualizar UI IMEDIATAMENTE (não bloqueia)
         if (loadedTemplate?.steps?.length) {
             const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
             const newStep = index >= 0 ? index + 1 : 1;
+            console.log('🔵 [handleSelectStep] Calculado newStep:', { index, newStep, safeCurrentStep });
+
             if (newStep !== safeCurrentStep) {
+                console.log('✅ [handleSelectStep] Chamando setCurrentStep:', newStep);
                 setCurrentStep(newStep);
                 appLogger.info(`⚡ [WAVE1] Navegação instantânea: ${currentStepKey} → ${key}`);
+            } else {
+                console.log('⚠️ [handleSelectStep] newStep === safeCurrentStep, pulando');
             }
         } else {
             // Fallback: extrair número do step-XX
             const match = key.match(/step-(\d{1,2})/i);
             const num = match ? parseInt(match[1], 10) : 1;
+            console.log('🔵 [handleSelectStep] Fallback:', { match, num });
             setCurrentStep(num);
             appLogger.info(`⚡ [WAVE1] Navegação instantânea (fallback): step ${num}`);
         }
