@@ -1,13 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "include": [
-    "src/**/*",
-    "server/**/*",
-    "scripts/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage"
-  ]
+  "include": ["src/**/*", "server/**/*", "scripts/**/*"],
+  "exclude": ["node_modules", "dist", "build", "coverage", "**/*.test.*", "**/__tests__/**"]
 }
