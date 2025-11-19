@@ -1,3 +1,4 @@
+
 /**
  * 🎯 RESULT PROFILE ENTITY - Core Business Object
  * 

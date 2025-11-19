@@ -27,8 +27,15 @@ export interface EditorSession {
 }
 
 export class EditorService {
-  private storageAdapter = infrastructureLayer.storage;
-  private apiClient = infrastructureLayer.api;
+  private storageAdapter: {
+    get?: <T>(key: string) => Promise<T | null> | T | null;
+    set?: <T>(key: string, value: T) => Promise<void> | void;
+    remove?: (key: string) => Promise<void> | void;
+  };
+
+  constructor() {
+    this.storageAdapter = {};
+  }
 
   private readonly AUTO_SAVE_INTERVAL = 30000; // 30 seconds
   private readonly MAX_HISTORY_STATES = 50;

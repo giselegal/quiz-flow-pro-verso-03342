@@ -4,9 +4,20 @@
  * Orchestrates funnel operations, encapsulating business logic.
  */
 
-import { Funnel } from '@/core/domains/funnel/entities/Funnel';
-import { Page } from '@/core/domains/funnel/entities/Page';
-import { Block, BlockType, BlockSettings } from '@/core/domains/funnel/entities/Block';
+import {
+  Funnel,
+  type FunnelMetadata,
+  type FunnelSettings,
+  type FunnelTheme,
+} from '@/core/domains/funnel/entities/Funnel';
+import { Page, type PageMetadata, type PageSettings, type PageLayout } from '@/core/domains/funnel/entities/Page';
+import {
+  Block,
+  type BlockType,
+  type BlockSettings,
+  type BlockStyles,
+  type BlockMetadata,
+} from '@/core/domains/funnel/entities/Block';
 
 export interface FunnelAnalytics {
   totalViews: number;
@@ -32,47 +43,108 @@ export interface FunnelSession {
 }
 
 export class FunnelService {
-  private funnelRepository = infrastructureLayer.repositories.funnel;
-  private storageAdapter = infrastructureLayer.storage;
+  private funnelRepository: {
+    findById: (id: string) => Promise<Funnel | null>;
+    delete: (id: string) => Promise<boolean>;
+    clone: (id: string, newName?: string) => Promise<Funnel>;
+    findPageById: (pageId: string) => Promise<Page | null>;
+    deletePage: (pageId: string) => Promise<boolean>;
+    findPagesByFunnel: (funnelId: string) => Promise<Page[]>;
+    findBlockById: (blockId: string) => Promise<Block | null>;
+    findBlocksByPage: (pageId: string) => Promise<Block[]>;
+    findByUserId: (userId: string) => Promise<Funnel[]>;
+    findPublished: () => Promise<Funnel[]>;
+  };
+
+  constructor() {
+    this.funnelRepository = {
+      findById: async () => null,
+      delete: async () => true,
+      clone: async (id: string, newName?: string) => {
+        const now = new Date();
+        const metadata: FunnelMetadata = {
+          name: newName ?? 'Cloned Funnel',
+          description: '',
+          category: 'quiz',
+          tags: [],
+          templateId: undefined,
+          language: 'pt-BR',
+          isTemplate: false,
+          isPublished: false,
+          createdAt: now,
+          updatedAt: now,
+          createdBy: 'system',
+        };
+        const settings: FunnelSettings = {
+          allowAnonymous: true,
+          collectEmail: true,
+          collectPhone: false,
+          requireEmailVerification: false,
+          enableAnalytics: true,
+          enableABTesting: false,
+          customDomain: undefined,
+          seoTitle: undefined,
+          seoDescription: undefined,
+          seoKeywords: [],
+          pixelId: undefined,
+          conversionGoals: ['completion'],
+        };
+        const theme: FunnelTheme = {
+          primaryColor: '#3B82F6',
+          secondaryColor: '#1E40AF',
+          accentColor: '#F59E0B',
+          fontFamily: 'Inter, sans-serif',
+          theme: 'light',
+        };
+        return new Funnel(id, metadata, settings, theme, [], { totalViews: 0, totalConversions: 0, conversionRate: 0 });
+      },
+      findPageById: async () => null,
+      deletePage: async () => true,
+      findPagesByFunnel: async () => [],
+      findBlockById: async () => null,
+      findBlocksByPage: async () => [],
+      findByUserId: async () => [],
+      findPublished: async () => [],
+    };
+  }
 
   async createFunnel(name: string, description: string, options: any = {}): Promise<Funnel> {
     const now = new Date();
-    return new Funnel('temp-id',
-      {
-        name,
-        description,
-        category: options.category ?? 'quiz',
-        tags: options.tags ?? [],
-        templateId: options.templateId,
-        language: options.language ?? 'pt-BR',
-        isTemplate: !!options.isTemplate,
-        isPublished: false,
-        createdAt: now,
-        updatedAt: now,
-        createdBy: options.createdBy ?? 'system',
-      },
-      {
-        allowAnonymous: true,
-        collectEmail: true,
-        collectPhone: false,
-        requireEmailVerification: false,
-        enableAnalytics: true,
-        enableABTesting: false,
-        customDomain: undefined,
-        seoTitle: undefined,
-        seoDescription: undefined,
-        seoKeywords: [],
-        pixelId: undefined,
-        conversionGoals: ['completion'],
-      },
-      {
-        primaryColor: '#3B82F6',
-        secondaryColor: '#1E40AF',
-        accentColor: '#F59E0B',
-        fontFamily: 'Inter, sans-serif',
-        theme: 'light',
-      },
-    );
+    const metadata: FunnelMetadata = {
+      name,
+      description,
+      category: options.category ?? 'quiz',
+      tags: options.tags ?? [],
+      templateId: options.templateId,
+      language: options.language ?? 'pt-BR',
+      isTemplate: !!options.isTemplate,
+      isPublished: false,
+      createdAt: now,
+      updatedAt: now,
+      createdBy: options.createdBy ?? 'system',
+    };
+    const settings: FunnelSettings = {
+      allowAnonymous: true,
+      collectEmail: true,
+      collectPhone: false,
+      requireEmailVerification: false,
+      enableAnalytics: true,
+      enableABTesting: false,
+      customDomain: undefined,
+      seoTitle: undefined,
+      seoDescription: undefined,
+      seoKeywords: [],
+      pixelId: undefined,
+      conversionGoals: ['completion'],
+    };
+    const theme: FunnelTheme = {
+      primaryColor: '#3B82F6',
+      secondaryColor: '#1E40AF',
+      accentColor: '#F59E0B',
+      fontFamily: 'Inter, sans-serif',
+      theme: 'light',
+    };
+    return new Funnel('temp-id', metadata, settings, theme, [], { totalViews: 0, totalConversions: 0, conversionRate: 0 });
   }
 
   async getFunnel(id: string): Promise<Funnel | null> {
@@ -107,25 +179,26 @@ export class FunnelService {
 
   async addPage(funnelId: string, type: string, title: string, description?: string): Promise<Page> {
     const now = new Date();
-    return new Page(
-      'temp-id',
-      funnelId,
-      type as any,
+    const metadata: PageMetadata = {
+      slug: title.toLowerCase().replace(/\s+/g, '-'),
       title,
-      description ?? '',
-      [],
-      {
-        slug: title.toLowerCase().replace(/\s+/g, '-'),
-        isActive: true,
-        requireAuth: false,
-        allowBack: true,
-        showProgress: true,
-      } as any,
-      {},
-      {},
-      {},
-      { createdAt: now, updatedAt: now } as any,
-    );
+      description: description ?? '',
+      isActive: true,
+      order: 0,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const settings: PageSettings = {
+      requireAuth: false,
+      allowBack: true,
+      showProgress: true,
+      showFooter: true,
+    };
+    const layout: PageLayout = {
+      variant: 'default',
+      backgroundColor: '#ffffff',
+    };
+    return new Page('temp-id', funnelId, type as any, [], metadata, settings, layout);
   }
 
   async updatePage(pageId: string, updates: Partial<Page>): Promise<Page> {
@@ -143,10 +216,17 @@ export class FunnelService {
   }
 
   async addBlock(pageId: string, type: BlockType, content: any, position?: number): Promise<Block> {
+    const now = new Date();
     const settings: BlockSettings = {
       isVisible: true,
-    } as BlockSettings;
-    return new Block('temp-id', pageId, type, content, settings, {}, {}, {} as any);
+    };
+    const styles: BlockStyles = {};
+    const metadata: BlockMetadata = {
+      order: position ?? 0,
+      createdAt: now,
+      updatedAt: now,
+    };
+    return new Block('temp-id', pageId, type, content, settings, styles, metadata);
   }
 
   async updateBlock(blockId: string, updates: Partial<Block>): Promise<Block> {
@@ -232,7 +312,42 @@ export class FunnelService {
   }
 
   async createFromTemplate(templateId: string, newName: string): Promise<Funnel> {
-    return new Funnel('temp-id', {}, {}, {}, [], {});
+    const now = new Date();
+    const metadata: FunnelMetadata = {
+      name: newName,
+      description: '',
+      category: 'quiz',
+      tags: [],
+      templateId,
+      language: 'pt-BR',
+      isTemplate: false,
+      isPublished: false,
+      createdAt: now,
+      updatedAt: now,
+      createdBy: 'system',
+    };
+    const settings: FunnelSettings = {
+      allowAnonymous: true,
+      collectEmail: true,
+      collectPhone: false,
+      requireEmailVerification: false,
+      enableAnalytics: true,
+      enableABTesting: false,
+      customDomain: undefined,
+      seoTitle: undefined,
+      seoDescription: undefined,
+      seoKeywords: [],
+      pixelId: undefined,
+      conversionGoals: ['completion'],
+    };
+    const theme: FunnelTheme = {
+      primaryColor: '#3B82F6',
+      secondaryColor: '#1E40AF',
+      accentColor: '#F59E0B',
+      fontFamily: 'Inter, sans-serif',
+      theme: 'light',
+    };
+    return new Funnel('temp-id', metadata, settings, theme, [], { totalViews: 0, totalConversions: 0, conversionRate: 0 });
   }
 
   async validateFunnel(funnelId: string): Promise<{ isValid: boolean; errors: string[] }> {
