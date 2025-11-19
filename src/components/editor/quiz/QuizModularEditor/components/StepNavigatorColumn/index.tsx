@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Trash2, MoreVertical, GripVertical } from 'lucide-react';
 import { AddStepDialog, type NewStepData } from '../AddStepDialog';
 import { DeleteStepConfirmDialog } from '../DeleteStepConfirmDialog';
@@ -83,6 +84,7 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
     }, [canonicalSteps, steps, refreshKey]);
 
     const items = localItems;
+    const isLoading = !canonicalSteps.success && canonicalSteps.data.length === 0;
 
     const handleAddStep = async (stepData: NewStepData) => {
         try {

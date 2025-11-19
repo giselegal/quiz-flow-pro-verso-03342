@@ -662,38 +662,67 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         appLogger.info('🛑 [SuperUnifiedProvider] Supabase DESATIVADO - todas operações serão offline/in-memory');
     }
 
-    // ✅ AUDITORIA FIX-001: Inicializar editor.stepBlocks a partir do initialData
+    // ✅ AUDITORIA FIX-001 ENHANCED: Inicializar editor.stepBlocks a partir do initialData
     useEffect(() => {
-        console.log('[AUDIT-FIX] Checking initialData:', {
+        console.log('[AUDIT-FIX-ENHANCED] Checking initialData:', {
             hasInitialData: !!initialData,
             hasStages: !!initialData?.stages,
             isArray: Array.isArray(initialData?.stages),
             stageCount: initialData?.stages?.length,
-            initialDataKeys: initialData ? Object.keys(initialData) : []
+            initialDataKeys: initialData ? Object.keys(initialData) : [],
+            currentStepBlocks: Object.keys(state.editor.stepBlocks || {}).length
         });
 
-        if (initialData && initialData.stages && Array.isArray(initialData.stages)) {
-            logger.info('[AUDIT-FIX] Inicializando steps do editor a partir do initialData', {
-                stageCount: initialData.stages.length
+        // Validar que initialData existe e tem stages
+        if (!initialData || !initialData.stages || !Array.isArray(initialData.stages)) {
+            console.warn('[AUDIT-FIX-ENHANCED] initialData inválido:', {
+                hasData: !!initialData,
+                hasStages: !!initialData?.stages,
+                isArray: Array.isArray(initialData?.stages)
             });
+            return;
+        }
 
+        // Validar que stages não está vazio
+        if (initialData.stages.length === 0) {
+            console.warn('[AUDIT-FIX-ENHANCED] initialData.stages está vazio');
+            return;
+        }
+
+        // Evitar reinicialização se já temos steps carregados
+        const currentStepCount = Object.keys(state.editor.stepBlocks || {}).length;
+        if (currentStepCount === initialData.stages.length && currentStepCount > 0) {
+            console.log('[AUDIT-FIX-ENHANCED] Steps já inicializados, pulando:', {
+                current: currentStepCount,
+                target: initialData.stages.length
+            });
+            return;
+        }
+
+        logger.info('[AUDIT-FIX-ENHANCED] Inicializando steps do editor', {
+            stageCount: initialData.stages.length,
+            currentCount: currentStepCount
+        });
+
+        try {
             // Extrair blocos de cada stage e popular stepBlocks
             const stepBlocks: Record<number, any[]> = {};
+            let totalBlocks = 0;
+
             initialData.stages.forEach((stage: any, index: number) => {
                 const stepNumber = index + 1;
-                stepBlocks[stepNumber] = stage.blocks || [];
-                
-                console.log(`[AUDIT-FIX] Step ${stepNumber}:`, {
-                    hasStage: !!stage,
-                    hasBlocks: !!stage.blocks,
-                    blockCount: stepBlocks[stepNumber].length
+
+                // Garantir que blocks é um array válido
+                const blocks = Array.isArray(stage.blocks) ? stage.blocks : [];
+                stepBlocks[stepNumber] = blocks;
+                totalBlocks += blocks.length;
+
+                console.log(`[AUDIT-FIX-ENHANCED] Step ${stepNumber}:`, {
+                    stageId: stage.id,
+                    hasBlocks: blocks.length > 0,
+                    blockCount: blocks.length,
+                    blockIds: blocks.map((b: any) => b.id).slice(0, 3)
                 });
-                
-                if (debugMode) {
-                    logger.debug(`[AUDIT-FIX] Step ${stepNumber} carregado`, {
-                        blockCount: stepBlocks[stepNumber].length
-                    });
-                }
             });
 
             // Atualizar estado do editor
@@ -707,12 +736,15 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             });
 
-            logger.info('[AUDIT-FIX] Editor inicializado com sucesso', {
+            logger.info('[AUDIT-FIX-ENHANCED] ✅ Editor inicializado com sucesso', {
                 totalSteps: initialData.stages.length,
-                totalBlocks: Object.values(stepBlocks).reduce((sum, blocks) => sum + blocks.length, 0)
+                totalBlocks,
+                hasStepBlocks: Object.keys(stepBlocks).length > 0
             });
-        } else {
-            console.warn('[AUDIT-FIX] initialData não tem stages ou não é válido');
+
+        } catch (error: any) {
+            logger.error('[AUDIT-FIX-ENHANCED] ❌ Erro ao inicializar steps:', error);
+            console.error('[AUDIT-FIX-ENHANCED] Erro detalhado:', error);
         }
     }, [initialData, debugMode]);
 
@@ -1319,10 +1351,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     const channel = new BroadcastChannel('quiz-editor-sync');
                     channel.postMessage({
                         type: 'STEP_SYNCED',
-                        payload: { 
-                            funnelId: funnel.id, 
-                            stepId, 
-                            stepIndex, 
+                        payload: {
+                            funnelId: funnel.id,
+                            stepId,
+                            stepIndex,
                             timestamp: syncStartTime,
                             blockCount: blocksWithTimestamps.length,
                         },
