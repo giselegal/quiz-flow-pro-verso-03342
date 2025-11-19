@@ -32,6 +32,8 @@ export interface FunnelSession {
   conversionData?: any;
 }
 
+export type { FunnelAnalytics };
+
 export class FunnelService {
   private funnelRepository: {
     findById: (id: string) => Promise<Funnel | null>;
