@@ -4,6 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "test:access": "bash scripts/test-access-simple.sh 8080",
+    "test:buttons": "bash scripts/test-editor-buttons.sh 8080",
     "audit:templates:duplications": "tsx scripts/audit-step-json-duplications.ts",
     "audit:templates:imports": "tsx scripts/audit-template-service-imports.ts",
     "audit:jsons": "node scripts/audit-jsons.mjs",

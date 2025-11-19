@@ -1335,28 +1335,35 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             ? 'preview:production'
                                             : 'preview:editor'
                                 }
-                                onValueChange={(val: string | null) => {
+                                onValueChange={(val: string) => {
+                                    // ✅ FIX: Sempre manter um valor selecionado (não permitir desmarcação)
                                     if (!val) return;
+
+                                    // Aplicar mudança de modo
                                     if (val === 'edit') {
                                         setCanvasMode('edit');
+                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Edição');
                                     } else if (val === 'preview:editor') {
                                         setCanvasMode('preview');
                                         setPreviewMode('live');
+                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Visualização (Editor)');
                                     } else if (val === 'preview:production') {
                                         setCanvasMode('preview');
                                         setPreviewMode('production');
+                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Visualização (Publicado)');
                                     }
                                 }}
                                 size="sm"
                                 aria-label="Modo do canvas"
                             >
-                                <ToggleGroupItem value="edit" title="Editar no Canvas">
+                                <ToggleGroupItem value="edit" title="Editar no Canvas" aria-label="Modo de edição">
                                     <Edit3 className="w-3 h-3 mr-1" />
                                     Editar
                                 </ToggleGroupItem>
                                 <ToggleGroupItem
                                     value="preview:editor"
                                     title="Visualizar dados do editor"
+                                    aria-label="Visualizar dados do editor"
                                 >
                                     <Eye className="w-3 h-3 mr-1" />
                                     Visualizar (Editor)
@@ -1364,6 +1371,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 <ToggleGroupItem
                                     value="preview:production"
                                     title="Visualizar dados publicados"
+                                    aria-label="Visualizar dados publicados"
                                 >
                                     <Play className="w-3 h-3 mr-1" />
                                     Visualizar (Publicado)
