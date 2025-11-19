@@ -7,6 +7,7 @@
     "test:access": "bash scripts/test-access-simple.sh 8080",
     "test:buttons": "bash scripts/test-editor-buttons.sh 8080",
     "sync:supabase": "node -r dotenv/config scripts/sync-supabase-to-public.mjs",
+    "sync:supabase:all": "node -r dotenv/config scripts/sync-supabase-to-public.mjs --all",
     "sync:supabase:dry-run": "node -r dotenv/config scripts/sync-supabase-to-public.mjs --dry-run",
     "sync:supabase:force": "node -r dotenv/config scripts/sync-supabase-to-public.mjs --force",
     "export:templates": "echo '⚠️  Use: npm run sync:supabase (sincroniza Supabase → public/)'",
