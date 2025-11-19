@@ -662,6 +662,44 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         appLogger.info('🛑 [SuperUnifiedProvider] Supabase DESATIVADO - todas operações serão offline/in-memory');
     }
 
+    // ✅ AUDITORIA FIX-001: Inicializar editor.stepBlocks a partir do initialData
+    useEffect(() => {
+        if (initialData && initialData.stages && Array.isArray(initialData.stages)) {
+            logger.info('[AUDIT-FIX] Inicializando steps do editor a partir do initialData', {
+                stageCount: initialData.stages.length
+            });
+
+            // Extrair blocos de cada stage e popular stepBlocks
+            const stepBlocks: Record<number, any[]> = {};
+            initialData.stages.forEach((stage: any, index: number) => {
+                const stepNumber = index + 1;
+                stepBlocks[stepNumber] = stage.blocks || [];
+                
+                if (debugMode) {
+                    logger.debug(`[AUDIT-FIX] Step ${stepNumber} carregado`, {
+                        blockCount: stepBlocks[stepNumber].length
+                    });
+                }
+            });
+
+            // Atualizar estado do editor
+            dispatch({
+                type: 'SET_EDITOR_STATE',
+                payload: {
+                    stepBlocks,
+                    totalSteps: initialData.stages.length,
+                    currentStep: 1,
+                    isDirty: false,
+                }
+            });
+
+            logger.info('[AUDIT-FIX] Editor inicializado com sucesso', {
+                totalSteps: initialData.stages.length,
+                totalBlocks: Object.values(stepBlocks).reduce((sum, blocks) => sum + blocks.length, 0)
+            });
+        }
+    }, [initialData, debugMode]);
+
     // 📊 Performance tracking
     useEffect(() => {
         const endTime = performance.now();
