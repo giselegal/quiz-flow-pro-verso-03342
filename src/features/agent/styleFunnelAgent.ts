@@ -1,5 +1,7 @@
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { calculateAndSaveQuizResult } from '@/lib/utils/quizResultCalculator';
+import { CloudAgentService } from '@/services/cloud/CloudAgentService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export type AgentTargetStyle =
     | 'natural'
@@ -15,16 +17,51 @@ export interface RunAgentOptions {
     userName?: string;
     targetStyle?: AgentTargetStyle;
     multiPerQuestion?: number; // 1 a 3
+    forceLocal?: boolean; // Força execução local mesmo se cloud estiver disponível
 }
 
 /**
- * Executa um funil de teste totalmente automatizado (sem UI),
- * usando o pipeline existente de cálculo de resultados.
+ * Executa um funil de teste totalmente automatizado (sem UI).
+ * 
+ * Por padrão, delega a execução ao agente de nuvem (Supabase Edge Function)
+ * quando disponível, com fallback automático para execução local.
  *
  * Estratégia: gerar seleções com prefixos de estilo (ex.: "natural_q1_a"),
  * o que ativa o caminho prefix-based do ResultOrchestrator.
  */
 export async function runStyleFunnelAgent(opts: RunAgentOptions = {}) {
+    // 🌐 DELEGAÇÃO AO AGENTE DE NUVEM
+    // Tenta executar na nuvem primeiro, se disponível e não forçado local
+    if (!opts.forceLocal && CloudAgentService.isAvailable()) {
+        try {
+            appLogger.info('☁️ Delegando ao agente de nuvem...');
+            const cloudResult = await CloudAgentService.runStyleFunnelAgent({
+                userName: opts.userName,
+                targetStyle: opts.targetStyle,
+                multiPerQuestion: opts.multiPerQuestion,
+            });
+            
+            // Sincronizar resultado com o storage local para compatibilidade
+            if (cloudResult.result) {
+                unifiedQuizStorage.saveResult(cloudResult.result);
+            }
+            
+            appLogger.info('✅ Execução delegada ao agente de nuvem completada');
+            return {
+                userName: cloudResult.userName,
+                targetStyle: cloudResult.targetStyle,
+                stats: cloudResult.stats,
+                result: cloudResult.result,
+                executedOn: 'cloud' as const,
+            };
+        } catch (error) {
+            appLogger.warn('⚠️ Falha ao executar agente de nuvem, usando fallback local', { data: [error] });
+            // Continua para execução local
+        }
+    }
+    
+    // 💻 EXECUÇÃO LOCAL (fallback ou forçado)
+    appLogger.info('💻 Executando agente localmente...');
     const userName = (opts.userName || 'Agente de Teste').trim();
     const target: AgentTargetStyle = opts.targetStyle || 'natural';
     const picksPerQuestion = Math.min(Math.max(opts.multiPerQuestion ?? 1, 1), 3);
@@ -60,6 +97,7 @@ export async function runStyleFunnelAgent(opts: RunAgentOptions = {}) {
         targetStyle: target,
         stats: unifiedQuizStorage.getDataStats(),
         result: payload || snapshot.result || null,
+        executedOn: 'local' as const,
     } as const;
 }
 
