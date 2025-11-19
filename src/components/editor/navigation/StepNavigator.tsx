@@ -42,6 +42,7 @@ interface StepNavigatorProps {
   onStepChange: (step: number) => void;
   onPreviewMode?: (enabled: boolean) => void;
   isPreviewMode?: boolean;
+  isLoading?: boolean;
   className?: string;
 }
 
@@ -62,6 +63,7 @@ const StepNavigator: React.FC<StepNavigatorProps> = ({
   onStepChange,
   onPreviewMode,
   isPreviewMode = false,
+  isLoading = false,
   className = '',
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -190,67 +192,87 @@ const StepNavigator: React.FC<StepNavigatorProps> = ({
       {/* Lista de Etapas */}
       <ScrollArea className="flex-1">
         <div className="p-2">
-          {steps.map((step) => {
-            const typeConfig = STEP_TYPE_CONFIG[step.type];
-            const isCurrent = step.order === currentStep;
-            const IconComponent = typeConfig.icon;
+          {/* 🆕 FIX-002: Skeleton loading quando steps estão vazios */}
+          {isLoading || steps.length === 0 ? (
+            <div className="space-y-2">
+              {Array.from({ length: totalSteps }).map((_, idx) => (
+                <div
+                  key={`skeleton-${idx}`}
+                  className="w-full p-3 mb-2 rounded-lg border border-border animate-pulse"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-muted" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-muted rounded w-3/4" />
+                      <div className="h-3 bg-muted rounded w-1/2" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            steps.map((step) => {
+              const typeConfig = STEP_TYPE_CONFIG[step.type];
+              const isCurrent = step.order === currentStep;
+              const IconComponent = typeConfig.icon;
 
-            return (
-              <button
-                key={step.id}
-                data-testid="step-navigator-item"
-                data-step-order={step.order}
-                data-step-id={step.id}
-                onClick={() => handleStepClick(step.order)}
-                className={`w-full p-3 mb-2 rounded-lg border transition-all duration-200 text-left ${isCurrent
+              return (
+                <button
+                  key={step.id}
+                  data-testid="step-navigator-item"
+                  data-step-order={step.order}
+                  data-step-id={step.id}
+                  onClick={() => handleStepClick(step.order)}
+                  className={`w-full p-3 mb-2 rounded-lg border transition-all duration-200 text-left ${isCurrent
                     ? 'border-primary bg-primary/10 shadow-sm'
                     : 'border-border hover:border-primary/50 hover:bg-muted/50'
-                  }`}
-              >
-                <div className="flex items-center gap-3">
-                  {/* Ícone do Tipo */}
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${typeConfig.color}`}>
-                    <IconComponent className="w-4 h-4 text-white" />
+                    }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {/* Ícone do Tipo */}
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${typeConfig.color}`}>
+                      <IconComponent className="w-4 h-4 text-white" />
+                    </div>
+
+                    {/* Informações da Etapa */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm">
+                          Etapa {step.order}
+                        </span>
+                        <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+                          {typeConfig.label}
+                        </Badge>
+                      </div>
+
+                      <div className="text-xs text-muted-foreground truncate">
+                        {step.name}
+                      </div>
+
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-muted-foreground">
+                          {step.blocksCount} blocos
+                        </span>
+
+                        {step.isComplete && (
+                          <CheckCircle className="w-3 h-3 text-green-600" />
+                        )}
+
+                        {step.hasError && (
+                          <AlertCircle className="w-3 h-3 text-red-600" />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Indicador de Etapa Atual */}
+                    {isCurrent && (
+                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                    )}
                   </div>
-
-                  {/* Informações da Etapa */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-sm">
-                        Etapa {step.order}
-                      </span>
-                      <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-                        {typeConfig.label}
-                      </Badge>
-                    </div>
-
-                    <div className="text-xs text-muted-foreground truncate">
-                      {step.name}
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-muted-foreground">
-                        {step.blocksCount} blocos
-                      </span>
-
-                      {step.isComplete && (
-                        <CheckCircle className="w-3 h-3 text-green-600" />
-                      )}
-
-                      {step.hasError && (
-                        <AlertCircle className="w-3 h-3 text-red-600" />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Indicador de Etapa Atual */}
-                  {isCurrent && (
-                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                  )}
-                </div>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })
+          )}
         </div>
       </ScrollArea>
 

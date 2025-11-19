@@ -814,6 +814,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [debugMode, state.editor.totalSteps]);
 
     // Auto-load de blocos do step ativo quando faltar no estado (respeita URL ?step=)
+    // 🆕 FIX-003: Tratamento robusto de erros de rede com retry e fallback
     useEffect(() => {
         try {
             const idx = state.editor.currentStep || 1;
@@ -822,14 +823,51 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             const stepId = `step-${String(idx).padStart(2, '0')}`;
             const funnelId = state.currentFunnel?.id;
+
             (async () => {
-                try {
-                    const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId || undefined);
-                    if (result?.data && Array.isArray(result.data)) {
-                        dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: idx, blocks: result.data } });
+                let retries = 0;
+                const maxRetries = 3;
+
+                while (retries < maxRetries) {
+                    try {
+                        const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId || undefined);
+                        if (result?.data && Array.isArray(result.data)) {
+                            dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: idx, blocks: result.data } });
+                            return; // Sucesso
+                        }
+                        break; // Sem dados, não retenta
+                    } catch (error: any) {
+                        retries++;
+
+                        // Verificar se é erro de rede
+                        const isNetworkError =
+                            error?.message?.includes('fetch') ||
+                            error?.message?.includes('network') ||
+                            error?.code === 'ECONNREFUSED';
+
+                        if (isNetworkError && retries < maxRetries) {
+                            // Aguardar antes de retentar (exponential backoff)
+                            await new Promise(resolve => setTimeout(resolve, 1000 * retries));
+                            logger.warn(`[FIX-003] Retentando carregamento (${retries}/${maxRetries})`, { stepId, error });
+                        } else {
+                            logger.error('[FIX-003] Auto-load step falhou definitivamente', {
+                                stepId,
+                                error,
+                                retries,
+                                isNetworkError
+                            });
+
+                            // Fallback: carregar template padrão vazio
+                            dispatch({
+                                type: 'SET_STEP_BLOCKS',
+                                payload: {
+                                    stepIndex: idx,
+                                    blocks: []
+                                }
+                            });
+                            break;
+                        }
                     }
-                } catch (error) {
-                    logger.warn('[SuperUnifiedProvider] Auto-load step falhou', { stepId, error });
                 }
             })();
         } catch { void 0; }

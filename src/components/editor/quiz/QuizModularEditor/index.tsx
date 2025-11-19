@@ -41,6 +41,7 @@ import StepNavigatorColumn from './components/StepNavigatorColumn';
 const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
 const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
+const PropertiesColumnWithJson = React.lazy(() => import('./components/PropertiesColumn/PropertiesColumnWithJson'));
 const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 
 // ✅ P2: Error boundaries granulares
@@ -1118,8 +1119,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         async (template: any, stepId?: string) => {
             try {
                 appLogger.info(
-                    `📥 [QuizModularEditor] Importando template JSON: ${
-                        template?.metadata?.name || 'unknown'
+                    `📥 [QuizModularEditor] Importando template JSON: ${template?.metadata?.name || 'unknown'
                     }`
                 );
 
@@ -1286,10 +1286,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                         {((!loadedTemplate && !isLoadingTemplate && !props.templateId) ||
                             templateLoadError) && (
-                            <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
-                                🎨 Modo Construção Livre
-                            </span>
-                        )}
+                                <span className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-lg border border-blue-200">
+                                    🎨 Modo Construção Livre
+                                </span>
+                            )}
 
                         {currentStepKey && (
                             <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
@@ -1332,8 +1332,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     canvasMode === 'edit'
                                         ? 'edit'
                                         : previewMode === 'production'
-                                        ? 'preview:production'
-                                        : 'preview:editor'
+                                            ? 'preview:production'
+                                            : 'preview:editor'
                                 }
                                 onValueChange={(val: string | null) => {
                                     if (!val) return;
@@ -1562,8 +1562,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                 onBlockSelect={handleBlockSelect}
                                                 hasTemplate={Boolean(
                                                     loadedTemplate ||
-                                                        props.templateId ||
-                                                        resourceId
+                                                    props.templateId ||
+                                                    resourceId
                                                 )}
                                                 onLoadTemplate={handleLoadTemplate}
                                             />
@@ -1619,7 +1619,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 className="h-full border-l bg-white overflow-y-auto"
                                 data-testid="column-properties"
                             >
-                                <PropertiesColumn
+                                <PropertiesColumnWithJson
                                     selectedBlock={
                                         blocks?.find(b => b.id === selectedBlockId) ||
                                         undefined
@@ -1633,6 +1633,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         updateBlock(safeCurrentStep, id, updates);
                                     }}
                                     onClearSelection={() => setSelectedBlock(null)}
+                                    fullTemplate={{
+                                        step: currentStepKey,
+                                        blocks: blocks || []
+                                    }}
+                                    onTemplateChange={(template) => {
+                                        if (template?.blocks && Array.isArray(template.blocks)) {
+                                            setStepBlocks(safeCurrentStep, template.blocks);
+                                        }
+                                    }}
+                                    templateId={currentStepKey}
                                 />
                             </div>
                         </Suspense>
