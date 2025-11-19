@@ -11,7 +11,8 @@ export type { BlockType } from '@/types/editor';
 
 // Convenience helper preserved for code that used createDefaultBlock
 import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
-import type { Block as CanonBlock, BlockType as CanonBlockType } from '@/types/blocks';
+import type { BlockData as CanonBlock } from '@/types/core/BlockInterfaces';
+import type { BlockType as CanonBlockType } from '@/types/editor';
 
 export const createDefaultBlock = (type: CanonBlockType | string, stageId?: string | null): CanonBlock => ({
   id: generateSemanticId({ context: stageId ?? 'default', type: 'block', identifier: String(type), index: 1 }),
@@ -19,8 +20,9 @@ export const createDefaultBlock = (type: CanonBlockType | string, stageId?: stri
   properties: {},
   content: {},
   order: 1,
-  parentId: null,
-  stageId: stageId ?? null,
 });
 
-export default undefined as unknown as BlockData;
+// Preserve a default export for modules that import the default `Block`.
+// Provide a permissive placeholder — this file's purpose is type compatibility only.
+import type { BlockData } from '@/types/core/BlockInterfaces';
+export default (undefined as unknown) as BlockData;
