@@ -4,8 +4,22 @@
 
 // Prefer the canonical `Block` definition used by the editor to avoid incompatibilities
 export type { Block as Block } from '@/types/editor';
-export type { UnifiedBlockComponentProps as BlockComponentProps, BlockComponent, TypedBlockComponentProps } from '@/types/core/BlockInterfaces';
-export { asBlockComponent, createBlockComponent } from '@/types/core/BlockInterfaces';
+// Build a compatibility `BlockComponentProps` that uses the editor's `Block` and `BlockType`
+import type { Block as EditorBlock, BlockType as EditorBlockType } from '@/types/editor';
+import type { UnifiedBlockComponentProps } from '@/types/core/BlockInterfaces';
+import { asBlockComponent as _asBlockComponent, createBlockComponent as _createBlockComponent } from '@/types/core/BlockInterfaces';
+
+export interface CompatBlockComponentProps extends Omit<UnifiedBlockComponentProps, 'block' | 'type'> {
+  block?: EditorBlock | undefined;
+  type?: EditorBlockType | string | undefined;
+}
+
+export type BlockComponentProps = CompatBlockComponentProps;
+export type BlockComponent = React.ComponentType<BlockComponentProps>;
+export type TypedBlockComponentProps<T extends EditorBlock = EditorBlock> = CompatBlockComponentProps & { block: T };
+
+export const asBlockComponent = _asBlockComponent as (component: any) => BlockComponent;
+export const createBlockComponent = _createBlockComponent as <T extends BlockComponentProps = BlockComponentProps>(component: React.ComponentType<T>) => BlockComponent;
 
 // Re-export the canonical BlockType from the main editor types (large union)
 export type { BlockType } from '@/types/editor';
