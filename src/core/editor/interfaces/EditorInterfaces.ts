@@ -368,9 +368,9 @@ export interface EditorCanvasProps {
     onBlockAdd: (block: EditorBlockData) => void;
     onBlockRemove: (blockId: string) => void;
     onBlockReorder: (fromIndex: number, toIndex: number) => void;
-    canEdit: boolean;
-    showGridlines: boolean;
-    showRulers: boolean;
+    canEdit?: boolean;
+    showGridlines?: boolean;
+    showRulers?: boolean;
 }
 
 

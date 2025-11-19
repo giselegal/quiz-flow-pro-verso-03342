@@ -23,6 +23,8 @@ import {
     EditorMetricsProvider,
 } from '../interfaces/EditorInterfaces';
 
+import type { EditorAction } from '../interfaces/EditorInterfaces';
+
 // Importar provider de métricas
 import { EditorMetricsFactory } from '../providers/EditorMetricsProvider';
 
@@ -44,6 +46,11 @@ const initialState: EditorState = {
     selectedPageId: null,
     selectedBlockId: null,
     mode: 'edit',
+    isLoading: false,
+    isSaving: false,
+    hasUnsavedChanges: false,
+    validationErrors: [],
+    autoSaveStatus: 'idle',
     saveStatus: {
         saved: true,
         saving: false,
@@ -67,7 +74,7 @@ const initialState: EditorState = {
     error: null,
 };
 
-function editorReducer(state: EditorState, action: EditorAction): EditorState {
+function editorReducer(state: EditorState, action: any): EditorState {
     switch (action.type) {
         case 'LOAD_FUNNEL':
             return {
