@@ -666,59 +666,59 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     useEffect(() => {
         console.log('[AUDIT-FIX-ENHANCED] Checking initialData:', {
             hasInitialData: !!initialData,
-            hasStages: !!initialData?.stages,
-            isArray: Array.isArray(initialData?.stages),
-            stageCount: initialData?.stages?.length,
+            hasPages: !!initialData?.pages,
+            isArray: Array.isArray(initialData?.pages),
+            pageCount: initialData?.pages?.length,
             initialDataKeys: initialData ? Object.keys(initialData) : [],
             currentStepBlocks: Object.keys(state.editor.stepBlocks || {}).length
         });
 
-        // Validar que initialData existe e tem stages
-        if (!initialData || !initialData.stages || !Array.isArray(initialData.stages)) {
+        // Validar que initialData existe e tem pages
+        if (!initialData || !initialData.pages || !Array.isArray(initialData.pages)) {
             console.warn('[AUDIT-FIX-ENHANCED] initialData inválido:', {
                 hasData: !!initialData,
-                hasStages: !!initialData?.stages,
-                isArray: Array.isArray(initialData?.stages)
+                hasPages: !!initialData?.pages,
+                isArray: Array.isArray(initialData?.pages)
             });
             return;
         }
 
-        // Validar que stages não está vazio
-        if (initialData.stages.length === 0) {
-            console.warn('[AUDIT-FIX-ENHANCED] initialData.stages está vazio');
+        // Validar que pages não está vazio
+        if (initialData.pages.length === 0) {
+            console.warn('[AUDIT-FIX-ENHANCED] initialData.pages está vazio');
             return;
         }
 
         // Evitar reinicialização se já temos steps carregados
         const currentStepCount = Object.keys(state.editor.stepBlocks || {}).length;
-        if (currentStepCount === initialData.stages.length && currentStepCount > 0) {
+        if (currentStepCount === initialData.pages.length && currentStepCount > 0) {
             console.log('[AUDIT-FIX-ENHANCED] Steps já inicializados, pulando:', {
                 current: currentStepCount,
-                target: initialData.stages.length
+                target: initialData.pages.length
             });
             return;
         }
 
         logger.info('[AUDIT-FIX-ENHANCED] Inicializando steps do editor', {
-            stageCount: initialData.stages.length,
+            pageCount: initialData.pages.length,
             currentCount: currentStepCount
         });
 
         try {
-            // Extrair blocos de cada stage e popular stepBlocks
+            // Extrair blocos de cada page e popular stepBlocks
             const stepBlocks: Record<number, any[]> = {};
             let totalBlocks = 0;
 
-            initialData.stages.forEach((stage: any, index: number) => {
+            initialData.pages.forEach((page: any, index: number) => {
                 const stepNumber = index + 1;
 
                 // Garantir que blocks é um array válido
-                const blocks = Array.isArray(stage.blocks) ? stage.blocks : [];
+                const blocks = Array.isArray(page.blocks) ? page.blocks : [];
                 stepBlocks[stepNumber] = blocks;
                 totalBlocks += blocks.length;
 
                 console.log(`[AUDIT-FIX-ENHANCED] Step ${stepNumber}:`, {
-                    stageId: stage.id,
+                    pageId: page.id,
                     hasBlocks: blocks.length > 0,
                     blockCount: blocks.length,
                     blockIds: blocks.map((b: any) => b.id).slice(0, 3)
@@ -730,14 +730,14 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 type: 'SET_EDITOR_STATE',
                 payload: {
                     stepBlocks,
-                    totalSteps: initialData.stages.length,
+                    totalSteps: initialData.pages.length,
                     currentStep: 1,
                     isDirty: false,
                 }
             });
 
             logger.info('[AUDIT-FIX-ENHANCED] ✅ Editor inicializado com sucesso', {
-                totalSteps: initialData.stages.length,
+                totalSteps: initialData.pages.length,
                 totalBlocks,
                 hasStepBlocks: Object.keys(stepBlocks).length > 0
             });
