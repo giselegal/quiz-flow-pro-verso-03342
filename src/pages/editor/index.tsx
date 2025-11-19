@@ -159,6 +159,25 @@ const EditorRoutesInner: React.FC = () => {
     // 🆕 GARGALO #3 FIX: Converter stages → pages (OTIMIZADO)
     const initialFunnelData = React.useMemo(() => {
         const data = editorResource.resource?.data;
+
+        // ✅ CRITICAL FIX: Fallback para modo blank (sem resourceId)
+        // Garante que editor sempre tenha dados iniciais válidos
+        if (!data && !resourceId) {
+            return {
+                id: 'blank-funnel',
+                name: 'Novo Funil',
+                description: 'Funil criado do zero',
+                pages: Array.from({ length: 21 }, (_, i) => ({
+                    id: `page-${i + 1}`,
+                    funnel_id: 'blank-funnel',
+                    page_type: 'quiz-step',
+                    title: `Etapa ${i + 1}`,
+                    page_order: i,
+                    blocks: []
+                }))
+            };
+        }
+
         if (!data) return undefined;
 
         // Se já tem pages, usar diretamente (sem clone)
