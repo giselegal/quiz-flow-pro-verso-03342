@@ -44,15 +44,33 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
     const prevSelectedIdRef = React.useRef<string | null>(null);
 
+    // 🔍 DEBUG: Log props recebidas
+    React.useEffect(() => {
+        console.log('🔍 [PropertiesColumn] Props recebidas:', {
+            hasSelectedBlockProp: !!selectedBlockProp,
+            selectedBlockId: selectedBlockProp?.id,
+            selectedBlockType: selectedBlockProp?.type,
+            blocksCount: blocks?.length || 0,
+            blockIds: blocks?.map(b => b.id) || [],
+            hasOnBlockSelect: !!onBlockSelect
+        });
+    }, [selectedBlockProp, blocks, onBlockSelect]);
+
     // ✅ WAVE 1 FIX: Auto-select primeiro bloco se nenhum selecionado
     const selectedBlock = React.useMemo(() => {
-        if (selectedBlockProp) return selectedBlockProp;
+        if (selectedBlockProp) {
+            console.log('✅ [PropertiesColumn] Usando selectedBlockProp:', selectedBlockProp.id);
+            return selectedBlockProp;
+        }
 
         // Fallback: auto-selecionar primeiro bloco
         const firstBlock = blocks && blocks.length > 0 ? blocks[0] : null;
         if (firstBlock && onBlockSelect && !prevSelectedIdRef.current) {
+            console.log('⚠️ [PropertiesColumn] Auto-selecionando primeiro bloco:', firstBlock.id);
             appLogger.info(`[WAVE1] Auto-selecionando primeiro bloco: ${firstBlock.id}`);
             setTimeout(() => onBlockSelect(firstBlock.id), 0);
+        } else if (!firstBlock) {
+            console.log('❌ [PropertiesColumn] Nenhum bloco disponível');
         }
 
         return firstBlock;

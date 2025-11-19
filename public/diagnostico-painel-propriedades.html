@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Diagnóstico - Painel de Propriedades</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .diagnostic-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .diagnostic-item h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diagnostic-item code {
+            background: #e2e8f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .diagnostic-item ol,
+        .diagnostic-item ul {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .diagnostic-item li {
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status-ok {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .console-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .console-box pre {
+            margin: 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .command-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .command-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Diagnóstico - Painel de Propriedades</h1>
+            <p>Ferramenta de debug para identificar problemas no painel de propriedades</p>
+        </div>
+
+        <div class="content">
+            <div class="diagnostic-item">
+                <h3>
+                    🎯 Problema Relatado
+                    <span class="status-badge status-error">CRÍTICO</span>
+                </h3>
+                <p><strong>Descrição:</strong> O Painel de Propriedades não está funcionando no editor.</p>
+                <p style="margin-top: 0.5rem;"><strong>Localização:</strong>
+                    <code>/editor?resource=quiz21StepsComplete&step=1</code></p>
+            </div>
+
+            <div class="diagnostic-item">
+                <h3>
+                    ✅ Testes Automatizados
+                    <span class="status-badge status-ok">PASSANDO</span>
+                </h3>
+                <p>Todos os testes de integração passaram:</p>
+                <ul>
+                    <li>✅ Estado <code>showPropertiesPanel</code> existe</li>
+                    <li>✅ Estado <code>selectedBlockId</code> funciona</li>
+                    <li>✅ Função <code>setSelectedBlock()</code> disponível</li>
+                    <li>✅ Lógica de seleção de blocos funciona</li>
+                    <li>✅ PropertiesColumn recebe props corretamente</li>
+                </ul>
+            </div>
+
+            <div class="diagnostic-item">
+                <h3>
+                    🔍 Possíveis Causas
+                    <span class="status-badge status-warning">INVESTIGAR</span>
+                </h3>
+                <ol>
+                    <li><strong>selectedBlock é <code>undefined</code>:</strong> O bloco não está sendo passado
+                        corretamente do QuizModularEditor para o PropertiesColumn</li>
+                    <li><strong>blocks array vazio:</strong> O step atual não tem blocos carregados</li>
+                    <li><strong>selectedBlockId não sincronizado:</strong> O ID selecionado não corresponde a nenhum
+                        bloco no array</li>
+                    <li><strong>Auto-select desabilitado:</strong> O fallback para auto-selecionar o primeiro bloco não
+                        está funcionando</li>
+                    <li><strong>CSS/Layout:</strong> O painel está renderizado mas oculto por CSS</li>
+                </ol>
+            </div>
+
+            <div class="diagnostic-item">
+                <h3>
+                    🔧 Comandos de Debug
+                </h3>
+                <p>Execute estes comandos no Console do Browser (F12):</p>
+
+                <div class="commands">
+                    <div class="command-card" onclick="copyCommand('window.__REACT_DEVTOOLS_GLOBAL_HOOK__')">
+                        <h4>📦 React DevTools</h4>
+                        <p>Verificar componentes</p>
+                    </div>
+
+                    <div class="command-card" onclick="copyCommand('localStorage.getItem(\'editor:currentStep\')')">
+                        <h4>📍 Step Atual</h4>
+                        <p>Ver step selecionado</p>
+                    </div>
+
+                    <div class="command-card"
+                        onclick="copyCommand('JSON.parse(localStorage.getItem(\'unified-editor-state\') || \'{}\')')">
+                        <h4>💾 Estado Editor</h4>
+                        <p>Ver estado persistido</p>
+                    </div>
+                </div>
+
+                <div class="console-box">
+                    <pre>// 🔍 Debug completo no Console:
+console.log('=== DIAGNÓSTICO PAINEL PROPRIEDADES ===');
+
+// 1. Verificar estado global
+const state = window.__SUPER_UNIFIED_STATE__;
+console.log('📊 Estado Global:', state);
+console.log('🎯 selectedBlockId:', state?.editor?.selectedBlockId);
+console.log('📝 currentStep:', state?.editor?.currentStep);
+console.log('📦 stepBlocks:', state?.editor?.stepBlocks);
+
+// 2. Verificar blocos do step atual
+const currentStep = state?.editor?.currentStep || 1;
+const blocks = state?.editor?.stepBlocks?.[currentStep];
+console.log(`📋 Blocos do Step ${currentStep}:`, blocks);
+console.log(`🔢 Total de blocos: ${blocks?.length || 0}`);
+
+// 3. Verificar bloco selecionado
+const selectedId = state?.editor?.selectedBlockId;
+const selectedBlock = blocks?.find(b => b.id === selectedId);
+console.log('✨ Bloco Selecionado:', selectedBlock);
+
+// 4. Verificar visibilidade do painel
+const panel = document.querySelector('[data-testid="column-properties"]');
+console.log('👁️ Painel visível:', panel !== null);
+console.log('📐 Dimensões painel:', panel?.getBoundingClientRect());
+
+// 5. Verificar PropertiesColumn
+const propsColumn = document.querySelector('.w-80.border-l');
+console.log('🎨 PropertiesColumn encontrado:', propsColumn !== null);
+
+console.log('=== FIM DO DIAGNÓSTICO ===');
+</pre>
+                </div>
+            </div>
+
+            <div class="diagnostic-item">
+                <h3>
+                    🚀 Próximos Passos
+                </h3>
+                <ol>
+                    <li>Abra o editor: <code>http://localhost:8080/editor?resource=quiz21StepsComplete&step=1</code>
+                    </li>
+                    <li>Abra o DevTools (F12) → aba Console</li>
+                    <li>Cole e execute o script de debug acima</li>
+                    <li>Copie a saída do console e envie para análise</li>
+                    <li>Verifique se o painel está visível na tela</li>
+                    <li>Tente clicar em um bloco no canvas</li>
+                    <li>Observe se o <code>selectedBlockId</code> muda no console</li>
+                </ol>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn"
+                    onclick="window.open('http://localhost:8080/editor?resource=quiz21StepsComplete&step=1', '_blank')">
+                    🚀 Abrir Editor e Testar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyCommand(cmd) {
+            navigator.clipboard.writeText(cmd).then(() => {
+                alert('✅ Comando copiado! Cole no Console (F12)');
+            });
+        }
+    </script>
+</body>
+
+</html>
