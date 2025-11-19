@@ -42,7 +42,8 @@ interface ValidationError {
 }
 
 /**
- * Template padrão com sistema de cálculo flexível
+ * Template padrão compatível com a estrutura existente
+ * Usa a mesma lógica de computeResult e ResultEngine
  */
 const DEFAULT_TEMPLATE = {
   templateId: 'novo-template',
@@ -57,86 +58,83 @@ const DEFAULT_TEMPLATE = {
     allowDynamicStages: true
   },
   
-  // Sistema de cálculo de resultados variáveis
-  scoring: {
-    enabled: true,
-    method: 'weighted', // 'simple', 'weighted', 'custom'
-    
-    // Categorias de pontuação (personalizáveis)
-    categories: [
-      {
-        id: 'categoria-1',
-        name: 'Categoria 1',
-        weight: 1,
-        scoreField: 'score' // Campo do bloco que contém pontuação
-      }
-    ],
-    
-    // Regras de classificação de resultados
-    classifications: [
-      {
-        id: 'resultado-1',
-        name: 'Resultado 1',
-        condition: {
-          type: 'score_range', // 'score_range', 'percentage', 'custom_formula'
-          min: 0,
-          max: 33
-        },
-        description: 'Descrição do resultado 1',
-        metadata: {}
+  // Sistema de runtime compatível com o existente
+  runtime: {
+    // Scoring usando a estrutura atual
+    scoring: {
+      // Pesos por questão (compatível com metadata.scoring.weight)
+      weights: {
+        // Exemplo: 'classico': 1.5 dá mais peso ao estilo clássico
       },
-      {
-        id: 'resultado-2',
-        name: 'Resultado 2',
-        condition: {
-          type: 'score_range',
-          min: 34,
-          max: 66
-        },
-        description: 'Descrição do resultado 2',
-        metadata: {}
+      
+      // Pesos específicos por opção (override)
+      optionWeights: {
+        // Exemplo: 'step-02': { 'classico_elegante': 2 }
       },
-      {
-        id: 'resultado-3',
-        name: 'Resultado 3',
-        condition: {
-          type: 'score_range',
-          min: 67,
-          max: 100
-        },
-        description: 'Descrição do resultado 3',
-        metadata: {}
-      }
-    ],
-    
-    // Fórmulas customizadas (opcional)
-    customFormulas: {
-      // Exemplo: finalScore = (categoria1 * 0.6) + (categoria2 * 0.4)
-      finalScore: 'sum(categories) / count(categories)'
+      
+      // Peso geral de questões (compatível com ResultEngine)
+      weightQuestions: 1
     }
   },
   
   // Stages flexíveis (de 1 a 30)
+  // Estrutura compatível com QuizStepV3
   stages: [
     {
       id: 'step-01',
       name: 'Introdução',
       description: 'Primeira etapa do quiz',
+      type: 'intro', // 'intro', 'question', 'transition', 'result'
       order: 0,
-      isRequired: true,
       blocks: [
         {
           id: 'block-1',
           type: 'heading',
           content: {
-            text: 'Bem-vindo!',
+            text: 'Bem-vindo ao Quiz!',
             level: 1
           }
         }
       ],
-      settings: {
-        validation: {
-          required: true
+      metadata: {
+        // Peso desta etapa (usado por computeResult)
+        scoring: {
+          weight: 1
+        }
+      }
+    },
+    {
+      id: 'step-02',
+      name: 'Pergunta 1',
+      description: 'Primeira pergunta',
+      type: 'question',
+      order: 1,
+      blocks: [
+        {
+          id: 'block-2',
+          type: 'question-single',
+          content: {
+            question: 'Qual é seu estilo preferido?',
+            options: [
+              {
+                id: 'natural_confortavel',
+                text: 'Confortável e Natural'
+              },
+              {
+                id: 'classico_elegante',
+                text: 'Clássico e Elegante'
+              },
+              {
+                id: 'contemporaneo_moderno',
+                text: 'Contemporâneo e Moderno'
+              }
+            ]
+          }
+        }
+      ],
+      metadata: {
+        scoring: {
+          weight: 1 // Peso desta pergunta no cálculo final
         }
       }
     }
