@@ -149,7 +149,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                     saved: false,
                 },
                 history: {
-                    past: [...state.history.past.slice(-49), state.history.present],
+                    past: [...state.history.past.slice(-49), ...(state.history.present ? [state.history.present] : [])],
                     present: updatedFunnel,
                     future: [],
                     canUndo: true,
@@ -188,7 +188,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                 history: {
                     past: newPast,
                     present: previous,
-                    future: [state.history.present, ...state.history.future],
+                    future: [(state.history.present ? state.history.present : undefined) as any].filter(Boolean).concat(state.history.future),
                     canUndo: newPast.length > 0,
                     canRedo: true,
                 },
@@ -209,7 +209,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                 ...state,
                 funnel: next,
                 history: {
-                    past: [...state.history.past, state.history.present],
+                    past: [...state.history.past, ...(state.history.present ? [state.history.present] : [])],
                     present: next,
                     future: newFuture,
                     canUndo: true,

@@ -362,6 +362,7 @@ export interface EditorCanvasProps {
     page: EditorPageData | null;
     theme?: EditorTheme;
     selectedBlockId?: string;
+    mode?: EditorMode;
     onBlockSelect: (blockId: string | null) => void;
     onBlockUpdate: (blockId: string, updates: Partial<EditorBlockData>) => void;
     onBlockAdd: (block: EditorBlockData) => void;
