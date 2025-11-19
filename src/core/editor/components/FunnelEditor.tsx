@@ -496,7 +496,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                 endPerformanceTimer('validate_before_save');
 
                 if (!validationResult.isValid) {
-                    const errorMessage = `Validation failed: ${  validationResult.errors.join(', ')}`;
+                    const errorMessage = `Validation failed: ${validationResult.errors.join(', ')}`;
                     throw new Error(errorMessage);
                 }
             }
@@ -569,9 +569,9 @@ export const FunnelEditor: React.FC<EditorProps> = ({
         });
     }, [metrics, state.funnel?.id, startPerformanceTimer, endPerformanceTimer]);
 
-    const selectBlock = useCallback((blockId: string) => {
+    const selectBlock = useCallback((blockId: string | null) => {
         startPerformanceTimer('select_block');
-        dispatch({ type: 'SELECT_BLOCK', payload: { blockId } });
+        dispatch({ type: 'SELECT_BLOCK', payload: { blockId: blockId ?? '' } });
         endPerformanceTimer('select_block');
 
         metrics.recordMetric({
@@ -580,7 +580,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             value: 1,
             unit: 'count',
             timestamp: new Date(),
-            blockId,
+            blockId: blockId ?? undefined,
             funnelId: state.funnel?.id,
             sessionId: metrics.sessionId,
         });
@@ -786,9 +786,14 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                                 // Implementar update de bloco
                                 appLogger.info('Update block:', { data: [blockId, properties] });
                             }}
-                            onBlockAdd={(type, position) => {
-                                // Implementar adição de bloco
-                                appLogger.info('Add block:', { data: [type, position] });
+                            onBlockAdd={(block) => {
+                                // Implementar adição de bloco (recebe um EditorBlockData)
+                                try {
+                                    appLogger.info('Add block:', { data: [block] });
+                                    // Se precisar de criação por tipo, delegar a função utilitária
+                                } catch (err) {
+                                    appLogger.warn('Failed to handle onBlockAdd', { err });
+                                }
                             }}
                             onBlockRemove={(blockId) => {
                                 // Implementar remoção de bloco
