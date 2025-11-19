@@ -1,3 +1,22 @@
+// Minimal block types used across the editor to satisfy imports during incremental fixes.
+export type Block = {
+  id: string;
+  type: string;
+  properties?: Record<string, any>;
+  content?: Record<string, any>;
+  order?: number;
+  parentId?: string | null;
+};
+
+export type BlockData = Block;
+
+export type BlockComponentProps<T extends Block = Block> = {
+  block: T;
+  onUpdate?: (patch: Partial<T>) => void;
+  onSelect?: (id: string | null) => void;
+};
+
+export default Block;
 import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
 import { Block, BlockType } from './editor';
 

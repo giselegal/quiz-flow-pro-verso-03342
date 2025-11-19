@@ -94,29 +94,21 @@ export async function loadStepFromJson(
     if (live || enableBust) bust = `?t=${Date.now()}`;
   } catch { }
 
-  // ✅ WAVE 1 CRÍTICO: Path order corrigido para ELIMINAR 84 requests 404
-  // Análise: templateId="quiz21StepsComplete" → 21 steps × 4 paths errados = 84 404s
-  // SOLUÇÃO: Priorizar caminhos EXISTENTES confirmados primeiro
-  // GANHO: TTI reduz de 2500ms → ~600ms (-76%), Cache Hit Rate 32% → 85%+
+  // ✅ WAVE 1 CRÍTICO: Path order ajustado para reduzir 404s e usar master consolidado quando disponível
+  // Estratégia: tentar carregar o master consolidado primeiro (1 request para 21 steps),
+  // depois tentar o passo individual. Isso reduz tráfego e TTI quando o master está presente.
   const paths: string[] = [
-    // 🎯 PRIORIDADE #1: Steps individuais (PATH CORRETO confirmado em produção)
-    // Localização: public/templates/funnels/quiz21StepsComplete/steps/step-XX.json
-    // Este é o caminho que EXISTE e funciona - testar primeiro!
-    `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`,
-
-    // 🎯 PRIORIDADE #2: Master file raiz (1 request = 21 steps se disponível)
-    // Arquivo: public/templates/quiz21-complete.json (3957 linhas, estrutura: steps.step-XX.blocks[])
-    // Usado para warm-up de cache, mas não deve bloquear steps individuais
+    // 🎯 PRIORIDADE #1: Master consolidado na raiz public (carrega todas as etapas em 1 request)
     `/templates/quiz21-complete.json${bust}`,
 
-    // 🎯 PRIORIDADE #3: Master no diretório funnels (fallback se steps individuais falharem)
-    `/templates/funnels/${templateId}/master.v3.json${bust}`,
+    // 🎯 PRIORIDADE #2: Steps individuais (fallback se master não estiver presente)
+    `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`,
 
-    // Fallbacks legacy removidos para eliminar 404s desnecessários
-    // Podem ser reativados apenas se necessário para templates legados
+    // 🎯 PRIORIDADE #3: Master no diretório do template (fallback adicional)
+    `/templates/funnels/${templateId}/master.v3.json${bust}`,
   ];
 
-  appLogger.info(`🔍 [jsonStepLoader] Tentando carregar: ${paths[0]}`);
+  appLogger.info(`🔍 [jsonStepLoader] Tentando carregar (ordem): ${paths.join(' , ')}`);
 
   for (const url of paths) {
     const blocks = await tryUrl(url);
