@@ -5,6 +5,8 @@
 // Re-export canonical types from the unified modules so all imports resolve
 // to the exact same type identity (prevents prop-type / validator mismatches).
 export type { BlockData, BlockDefinition, UnifiedBlockComponentProps, BlockComponentProps, BlockComponent, TypedBlockComponentProps, EditableBlockComponentProps, QuizBlockComponentProps } from '@/types/core/BlockInterfaces';
+// Preserve the historical `Block` name (many files / propTypes expect `Block`)
+export type { Block } from '@/types/editor';
 export type { BlockType } from '@/types/editor';
 
 // Re-export helpers / factory functions from the canonical definitions

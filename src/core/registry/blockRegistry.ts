@@ -14,7 +14,9 @@ import { perfLogger } from '@/lib/utils/performanceLogger';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export interface BlockRendererProps {
-  block: Block;
+  // Durante a migração a identidade do tipo `Block` pode divergir entre módulos.
+  // Tornamos permissivo aqui para reduzir incompatibilidades transitórias.
+  block: any;
   isSelected?: boolean;
   isEditable?: boolean;
   onSelect?: (blockId: string) => void;
@@ -22,7 +24,7 @@ export interface BlockRendererProps {
   contextData?: Record<string, any>;
 }
 
-type BlockComponent = ComponentType<BlockRendererProps>;
+type BlockComponent = ComponentType<any>;
 type LazyBlockComponent = LazyExoticComponent<BlockComponent>;
 
 interface BlockRegistryEntry {
@@ -223,7 +225,7 @@ class BlockRegistry {
 
     // ===== SCORE BLOCK =====
     this.register('quiz-score-display', {
-      component: lazy(() => 
+      component: lazy(() =>
         import('@/components/quiz/blocks/QuizScoreDisplay').then(m => ({
           default: m.default as any // Type cast para compatibilidade
         }))
@@ -260,7 +262,7 @@ class BlockRegistry {
   async preload(type: string): Promise<void> {
     const normalizedType = type.toLowerCase().trim();
     const entry = this.registry.get(normalizedType);
-    
+
     if (!entry) {
       perfLogger.warn(`Block type "${type}" not found in registry`);
       return;
@@ -277,7 +279,7 @@ class BlockRegistry {
     }
 
     const startTime = performance.now();
-    
+
     const loadPromise = (async () => {
       try {
         // @ts-ignore - Acessar _ctor para preload
@@ -286,7 +288,7 @@ class BlockRegistry {
           await preloadFn();
         }
         entry.preloaded = true;
-        
+
         const duration = performance.now() - startTime;
         if (import.meta.env.DEV) {
           appLogger.debug(`⚡ [BlockRegistry] Preloaded "${normalizedType}" in ${duration.toFixed(0)}ms`);
@@ -298,7 +300,7 @@ class BlockRegistry {
     })();
 
     this.loadingPromises.set(key, loadPromise);
-    
+
     try {
       await loadPromise;
     } finally {
@@ -318,7 +320,7 @@ class BlockRegistry {
    */
   async preloadCategory(category: BlockRegistryEntry['category']): Promise<void> {
     const types: string[] = [];
-    
+
     for (const [type, entry] of this.registry.entries()) {
       if (entry.category === category && !entry.preloaded) {
         types.push(type);
