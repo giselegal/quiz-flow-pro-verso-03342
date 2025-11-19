@@ -124,7 +124,7 @@ const PropertyControl: React.FC<{
           />
         );
 
-      case 'range':
+      case 'range': {
         // ✅ NOVO: Controle de slider para propriedades numéricas com min/max
         const rangeValue = typeof value === 'number' ? value : (schema.default || 0);
         const rangeMin = schema.validation?.min || 0;
@@ -154,6 +154,7 @@ const PropertyControl: React.FC<{
             />
           </div>
         );
+      }
 
       case 'toggle':
         return (
@@ -203,7 +204,7 @@ const PropertyControl: React.FC<{
           </Select>
         );
 
-      case 'options-list':
+      case 'options-list': {
         // ✅ NOVO: Editor de lista de opções (usado em options-grid, quiz-transition, etc)
         const optionsList = Array.isArray(value) ? value : [];
 
@@ -266,6 +267,7 @@ const PropertyControl: React.FC<{
             </Button>
           </div>
         );
+      }
 
       case 'image-upload':
         return (

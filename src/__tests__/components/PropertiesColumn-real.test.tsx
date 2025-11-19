@@ -7,6 +7,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
+import type { Block } from '@/types/editor';
 
 // ⚠️ IMPORTANTE: Testar o componente REAL usado no editor
 import PropertiesColumn from '@/components/editor/quiz/QuizModularEditor/components/PropertiesColumn';
@@ -75,16 +76,18 @@ vi.mock('@/core/adapters/BlockDataNormalizer', () => ({
 }));
 
 describe('🔍 PropertiesColumn - Componente REAL usado no /editor', () => {
-    const mockBlocks = [
+    const mockBlocks: Block[] = [
         {
             id: 'block-1',
-            type: 'text',
+            type: 'text' as any,
+            order: 0,
             properties: { text: 'Hello World' },
             content: { text: 'Hello World' }
         },
         {
             id: 'block-2',
-            type: 'heading',
+            type: 'heading' as any,
+            order: 1,
             properties: { text: 'Title', level: 1 },
             content: { text: 'Title' }
         }

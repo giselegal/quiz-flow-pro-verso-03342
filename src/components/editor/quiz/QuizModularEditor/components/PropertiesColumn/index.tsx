@@ -453,8 +453,6 @@ export default React.memo(PropertiesColumn, (prevProps, nextProps) => {
     // Custom comparison: só re-renderizar se dados relevantes mudarem
     return (
         prevProps.selectedBlock?.id === nextProps.selectedBlock?.id &&
-        prevProps.selectedBlock?._version === nextProps.selectedBlock?._version &&
-        prevProps.selectedBlock?._lastModified === nextProps.selectedBlock?._lastModified &&
         prevProps.blocks?.length === nextProps.blocks?.length &&
         prevProps.onBlockUpdate === nextProps.onBlockUpdate &&
         prevProps.onClearSelection === nextProps.onClearSelection &&
