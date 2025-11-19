@@ -1689,8 +1689,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         blocks: blocks || []
                                     }}
                                     onTemplateChange={(template) => {
+                                        console.group('🔧 [QuizModularEditor] onTemplateChange chamado');
+                                        console.log('template recebido:', template);
+                                        console.log('safeCurrentStep:', safeCurrentStep);
+                                        console.log('template.blocks:', template?.blocks);
+                                        console.log('isArray:', Array.isArray(template?.blocks));
+                                        console.log('blocksCount:', template?.blocks?.length);
+                                        console.groupEnd();
+
                                         if (template?.blocks && Array.isArray(template.blocks)) {
+                                            console.log('✅ Chamando setStepBlocks com', template.blocks.length, 'blocos');
                                             setStepBlocks(safeCurrentStep, template.blocks);
+                                        } else {
+                                            console.warn('❌ template.blocks inválido ou não é array');
                                         }
                                     }}
                                     templateId={currentStepKey}

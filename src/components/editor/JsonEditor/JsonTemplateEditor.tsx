@@ -13,11 +13,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Download, 
-  Upload, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Download,
+  Upload,
+  CheckCircle,
+  XCircle,
   AlertCircle,
   FileJson,
   Save,
@@ -50,14 +50,14 @@ const DEFAULT_TEMPLATE = {
   name: 'Novo Template',
   description: 'Template criado via editor JSON',
   version: '1.0.0',
-  
+
   // Configuração flexível de etapas (1-30)
   settings: {
     minStages: 1,
     maxStages: 30,
     allowDynamicStages: true
   },
-  
+
   // Sistema de runtime compatível com o existente
   runtime: {
     // Scoring usando a estrutura atual
@@ -66,17 +66,17 @@ const DEFAULT_TEMPLATE = {
       weights: {
         // Exemplo: 'classico': 1.5 dá mais peso ao estilo clássico
       },
-      
+
       // Pesos específicos por opção (override)
       optionWeights: {
         // Exemplo: 'step-02': { 'classico_elegante': 2 }
       },
-      
+
       // Peso geral de questões (compatível com ResultEngine)
       weightQuestions: 1
     }
   },
-  
+
   // Stages flexíveis (de 1 a 30)
   // Estrutura compatível com QuizStepV3
   stages: [
@@ -148,13 +148,13 @@ export function JsonTemplateEditor({
   templateId
 }: JsonTemplateEditorProps) {
   const { toast } = useToast();
-  
+
   const [jsonText, setJsonText] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [isValid, setIsValid] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
   const [activeTab, setActiveTab] = useState('editor');
-  
+
   // Inicializar com template
   useEffect(() => {
     if (template) {
@@ -173,14 +173,14 @@ export function JsonTemplateEditor({
       setJsonText(JSON.stringify(newTemplate, null, 2));
     }
   }, [template, templateId]);
-  
+
   // Validação completa do JSON
   const validateJson = useCallback((text: string): boolean => {
     const errors: ValidationError[] = [];
-    
+
     try {
       const parsed = JSON.parse(text);
-      
+
       // Validar campos obrigatórios
       if (!parsed.templateId) {
         errors.push({
@@ -189,7 +189,7 @@ export function JsonTemplateEditor({
           severity: 'error'
         });
       }
-      
+
       if (!parsed.name) {
         errors.push({
           path: 'name',
@@ -197,7 +197,7 @@ export function JsonTemplateEditor({
           severity: 'error'
         });
       }
-      
+
       if (!Array.isArray(parsed.stages)) {
         errors.push({
           path: 'stages',
@@ -213,7 +213,7 @@ export function JsonTemplateEditor({
             severity: 'error'
           });
         }
-        
+
         if (parsed.stages.length > 30) {
           errors.push({
             path: 'stages',
@@ -221,7 +221,7 @@ export function JsonTemplateEditor({
             severity: 'error'
           });
         }
-        
+
         // Validar cada stage
         parsed.stages.forEach((stage: any, index: number) => {
           if (!stage.id) {
@@ -231,7 +231,7 @@ export function JsonTemplateEditor({
               severity: 'error'
             });
           }
-          
+
           if (typeof stage.order !== 'number') {
             errors.push({
               path: `stages[${index}].order`,
@@ -239,7 +239,7 @@ export function JsonTemplateEditor({
               severity: 'warning'
             });
           }
-          
+
           if (!Array.isArray(stage.blocks)) {
             errors.push({
               path: `stages[${index}].blocks`,
@@ -256,7 +256,7 @@ export function JsonTemplateEditor({
                   severity: 'error'
                 });
               }
-              
+
               if (!block.type) {
                 errors.push({
                   path: `stages[${index}].blocks[${blockIndex}].type`,
@@ -268,7 +268,7 @@ export function JsonTemplateEditor({
           }
         });
       }
-      
+
       // Validar sistema de pontuação (se habilitado)
       if (parsed.scoring?.enabled) {
         if (!parsed.scoring.method) {
@@ -278,7 +278,7 @@ export function JsonTemplateEditor({
             severity: 'error'
           });
         }
-        
+
         if (parsed.scoring.method === 'weighted' && !Array.isArray(parsed.scoring.categories)) {
           errors.push({
             path: 'scoring.categories',
@@ -286,7 +286,7 @@ export function JsonTemplateEditor({
             severity: 'error'
           });
         }
-        
+
         if (!Array.isArray(parsed.scoring.classifications) || parsed.scoring.classifications.length === 0) {
           errors.push({
             path: 'scoring.classifications',
@@ -295,7 +295,7 @@ export function JsonTemplateEditor({
           });
         }
       }
-      
+
       // Warnings para campos recomendados
       if (!parsed.description) {
         errors.push({
@@ -304,7 +304,7 @@ export function JsonTemplateEditor({
           severity: 'warning'
         });
       }
-      
+
       if (!parsed.version) {
         errors.push({
           path: 'version',
@@ -312,7 +312,7 @@ export function JsonTemplateEditor({
           severity: 'warning'
         });
       }
-      
+
     } catch (error: any) {
       errors.push({
         path: 'root',
@@ -320,23 +320,30 @@ export function JsonTemplateEditor({
         severity: 'error'
       });
     }
-    
+
     setValidationErrors(errors);
     const hasErrors = errors.some(e => e.severity === 'error');
     setIsValid(!hasErrors);
-    
+
     return !hasErrors;
   }, []);
-  
+
   const handleJsonChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
     setJsonText(newText);
     setHasChanges(true);
     validateJson(newText);
   }, [validateJson]);
-  
+
   const handleApply = useCallback(() => {
+    console.group('📝 [JsonTemplateEditor] handleApply chamado');
+    console.log('isValid:', isValid);
+    console.log('hasChanges:', hasChanges);
+    console.log('jsonText length:', jsonText.length);
+
     if (!isValid) {
+      console.warn('❌ JSON inválido, abortando');
+      console.groupEnd();
       toast({
         title: 'JSON inválido',
         description: 'Corrija os erros antes de aplicar',
@@ -344,25 +351,34 @@ export function JsonTemplateEditor({
       });
       return;
     }
-    
+
     try {
       const parsed = JSON.parse(jsonText);
+      console.log('✅ JSON parseado com sucesso:', parsed);
+      console.log('Chamando onTemplateChange:', typeof onTemplateChange);
+      console.log('parsed.stages:', parsed.stages?.length || 0);
+      console.log('parsed.blocks:', parsed.blocks?.length || 0);
+
       onTemplateChange?.(parsed);
+      console.log('✅ onTemplateChange chamado');
       setHasChanges(false);
-      
+
       toast({
         title: 'Template atualizado',
-        description: `${parsed.stages.length} stages configurados`,
+        description: `${parsed.stages?.length || parsed.blocks?.length || 0} itens configurados`,
       });
+      console.groupEnd();
     } catch (error: any) {
+      console.error('❌ Erro ao aplicar:', error);
+      console.groupEnd();
       toast({
         title: 'Erro ao aplicar',
         description: error.message,
         variant: 'destructive'
       });
     }
-  }, [jsonText, isValid, onTemplateChange, toast]);
-  
+  }, [jsonText, isValid, hasChanges, onTemplateChange, toast]);
+
   const handleExport = useCallback(() => {
     try {
       const parsed = JSON.parse(jsonText);
@@ -375,7 +391,7 @@ export function JsonTemplateEditor({
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       toast({
         title: 'Template exportado',
         description: 'Arquivo JSON salvo',
@@ -388,11 +404,11 @@ export function JsonTemplateEditor({
       });
     }
   }, [jsonText, toast]);
-  
+
   const handleImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
@@ -401,7 +417,7 @@ export function JsonTemplateEditor({
         setJsonText(JSON.stringify(parsed, null, 2));
         setHasChanges(true);
         validateJson(text);
-        
+
         toast({
           title: 'Template importado',
           description: `${parsed.stages?.length || 0} stages carregados`,
@@ -417,13 +433,13 @@ export function JsonTemplateEditor({
     reader.readAsText(file);
     e.target.value = '';
   }, [validateJson, toast]);
-  
+
   const handleFormat = useCallback(() => {
     try {
       const parsed = JSON.parse(jsonText);
       const formatted = JSON.stringify(parsed, null, 2);
       setJsonText(formatted);
-      
+
       toast({
         title: 'JSON formatado',
         description: 'Código formatado com sucesso',
@@ -436,7 +452,7 @@ export function JsonTemplateEditor({
       });
     }
   }, [jsonText, toast]);
-  
+
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(jsonText).then(() => {
       toast({
@@ -445,20 +461,20 @@ export function JsonTemplateEditor({
       });
     });
   }, [jsonText, toast]);
-  
+
   // Estatísticas do template
   const stats = useMemo(() => {
     try {
       const parsed = JSON.parse(jsonText);
       const stages = parsed.stages || [];
-      const totalBlocks = stages.reduce((sum: number, stage: any) => 
+      const totalBlocks = stages.reduce((sum: number, stage: any) =>
         sum + (stage.blocks?.length || 0), 0
       );
-      
+
       const scoringEnabled = parsed.scoring?.enabled || false;
       const numCategories = parsed.scoring?.categories?.length || 0;
       const numClassifications = parsed.scoring?.classifications?.length || 0;
-      
+
       return {
         stages: stages.length,
         blocks: totalBlocks,
@@ -470,9 +486,9 @@ export function JsonTemplateEditor({
         scoringMethod: parsed.scoring?.method || 'N/A'
       };
     } catch {
-      return { 
-        stages: 0, 
-        blocks: 0, 
+      return {
+        stages: 0,
+        blocks: 0,
         size: 0,
         scoringEnabled: false,
         numCategories: 0,
@@ -482,7 +498,7 @@ export function JsonTemplateEditor({
       };
     }
   }, [jsonText]);
-  
+
   return (
     <Card className="h-full">
       <CardHeader>
@@ -496,7 +512,7 @@ export function JsonTemplateEditor({
               Suporte para 1-30 etapas com cálculo de resultados variáveis
             </CardDescription>
           </div>
-          
+
           {isValid ? (
             <div className="flex items-center gap-1 text-green-600 text-sm">
               <CheckCircle className="h-4 w-4" />
@@ -510,7 +526,7 @@ export function JsonTemplateEditor({
           )}
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3">
@@ -518,7 +534,7 @@ export function JsonTemplateEditor({
             <TabsTrigger value="stats">Estatísticas</TabsTrigger>
             <TabsTrigger value="scoring">Pontuação</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="editor" className="space-y-4">
             {/* Grid de estatísticas rápidas */}
             <div className="grid grid-cols-4 gap-2 text-xs">
@@ -541,7 +557,7 @@ export function JsonTemplateEditor({
                 <div className="text-muted-foreground">Tamanho</div>
               </div>
             </div>
-            
+
             {/* Validação */}
             {validationErrors.length > 0 && (
               <Alert variant={validationErrors.some(e => e.severity === 'error') ? 'destructive' : 'default'}>
@@ -566,7 +582,7 @@ export function JsonTemplateEditor({
                 </AlertDescription>
               </Alert>
             )}
-            
+
             {/* Toolbar */}
             <div className="flex items-center gap-2 flex-wrap">
               <Button
@@ -577,22 +593,22 @@ export function JsonTemplateEditor({
                 <Save className="h-4 w-4 mr-2" />
                 Aplicar
               </Button>
-              
+
               <Button onClick={handleFormat} variant="outline" size="sm">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Formatar
               </Button>
-              
+
               <Button onClick={handleCopy} variant="outline" size="sm">
                 <Copy className="h-4 w-4 mr-2" />
                 Copiar
               </Button>
-              
+
               <Button onClick={handleExport} variant="outline" size="sm">
                 <Download className="h-4 w-4 mr-2" />
                 Exportar
               </Button>
-              
+
               <div className="relative">
                 <input
                   type="file"
@@ -607,7 +623,7 @@ export function JsonTemplateEditor({
                 </Button>
               </div>
             </div>
-            
+
             {/* Editor */}
             <div className="relative">
               <textarea
@@ -618,7 +634,7 @@ export function JsonTemplateEditor({
                 placeholder="Cole ou edite o JSON do template aqui..."
                 spellCheck={false}
               />
-              
+
               {hasChanges && !readOnly && (
                 <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
                   Não salvo
@@ -626,7 +642,7 @@ export function JsonTemplateEditor({
               )}
             </div>
           </TabsContent>
-          
+
           <TabsContent value="stats" className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Card>
@@ -648,7 +664,7 @@ export function JsonTemplateEditor({
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle className="text-sm">Sistema de Pontuação</CardTitle>
@@ -676,7 +692,7 @@ export function JsonTemplateEditor({
               </Card>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="scoring" className="space-y-4">
             <Alert>
               <Calculator className="h-4 w-4" />
@@ -689,11 +705,11 @@ export function JsonTemplateEditor({
                 </ul>
               </AlertDescription>
             </Alert>
-            
+
             <div className="text-sm space-y-2">
               <p className="font-semibold">Exemplo de Configuração:</p>
               <pre className="p-3 bg-muted rounded text-xs overflow-x-auto">
-{`"scoring": {
+                {`"scoring": {
   "enabled": true,
   "method": "weighted",
   "categories": [

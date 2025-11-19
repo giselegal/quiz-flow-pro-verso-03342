@@ -492,6 +492,10 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
             };
 
         case 'SET_STEP_BLOCKS': {
+            console.group('🔧 [Reducer] SET_STEP_BLOCKS');
+            console.log('stepIndex:', action.payload.stepIndex);
+            console.log('blocks recebidos:', action.payload.blocks.length);
+
             const validBlocks: any[] = [];
             const invalidBlocks: any[] = [];
 
@@ -500,8 +504,10 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 const validation = blockSchema.safeParse(block);
                 if (validation.success) {
                     validBlocks.push(validation.data);
+                    console.log('✅ Bloco válido:', block.id);
                 } else {
                     invalidBlocks.push({ block, errors: validation.error.issues });
+                    console.error('❌ Bloco INVÁLIDO:', block.id, validation.error.issues);
                     logger.warn('[SET_STEP_BLOCKS] Bloco inválido detectado', {
                         stepIndex: action.payload.stepIndex,
                         blockId: block?.id,
@@ -511,12 +517,23 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
             }
 
             if (invalidBlocks.length > 0) {
+                console.error(`❌ ${invalidBlocks.length} blocos inválidos ignorados!`);
+                console.table(invalidBlocks.map(ib => ({
+                    id: ib.block?.id,
+                    type: ib.block?.type,
+                    errors: ib.errors.map((e: any) => e.message).join(', ')
+                })));
                 logger.error('[SET_STEP_BLOCKS] Blocos inválidos ignorados', {
                     stepIndex: action.payload.stepIndex,
                     invalidCount: invalidBlocks.length,
                     totalCount: action.payload.blocks.length,
                 });
+            } else {
+                console.log(`✅ Todos os ${validBlocks.length} blocos são válidos`);
             }
+
+            console.log('Estado final: stepBlocks[' + action.payload.stepIndex + '] =', validBlocks.length, 'blocos');
+            console.groupEnd();
 
             return {
                 ...state,
@@ -1291,8 +1308,16 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, 16);
 
     const setStepBlocks = useCallback((stepIndex: number, blocks: any[]) => {
+        console.group('📝 [SuperUnified] setStepBlocks chamado');
+        console.log('stepIndex:', stepIndex);
+        console.log('blocks recebidos:', blocks);
+        console.log('blocksCount:', blocks?.length);
+        console.log('blockIds:', blocks?.map(b => b.id));
+
         dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex, blocks } });
-        logger.debug(`[G6] Step blocks set: step-${stepIndex}`);
+        logger.debug(`[G6] Step blocks set: step-${stepIndex}`, { blocksCount: blocks?.length });
+        console.log('✅ Dispatch enviado');
+        console.groupEnd();
     }, []);
 
     const getStepBlocks = useCallback((stepIndex: number) => {
