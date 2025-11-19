@@ -333,34 +333,39 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }, 100);
     }, [setSelectedBlock]);
 
-    // 🆕 G17 FIX: Memoizar callbacks para evitar re-renders em componentes filhos
+    // ✅ WAVE 1: Navegação instantânea - UI update imediato, lazy load em background
     const handleSelectStep = useCallback((key: string) => {
         if (key === currentStepKey) return;
 
-        const tid = props.templateId ?? resourceId;
-        if (tid) {
-            (async () => {
-                try {
-                    appLogger.info(`🔄 [G2] Lazy loading step: ${key}`);
-                    const stepResult = await templateService.getStep(key, tid);
-                    if (stepResult.success) {
-                        appLogger.info(`✅ [G2] Step ${key} carregado sob demanda`);
-                    }
-                } catch (error) {
-                    appLogger.warn(`⚠️ [G2] Erro ao carregar step ${key}:`, { data: [error] });
-                }
-            })();
-        }
-
+        // 🎯 WAVE 1 FIX: Atualizar UI IMEDIATAMENTE (não bloqueia)
         if (loadedTemplate?.steps?.length) {
             const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
             const newStep = index >= 0 ? index + 1 : 1;
-            if (newStep !== safeCurrentStep) setCurrentStep(newStep);
-            return;
+            if (newStep !== safeCurrentStep) {
+                setCurrentStep(newStep);
+                appLogger.info(`⚡ [WAVE1] Navegação instantânea: ${currentStepKey} → ${key}`);
+            }
+        } else {
+            // Fallback: extrair número do step-XX
+            const match = key.match(/step-(\d{1,2})/i);
+            const num = match ? parseInt(match[1], 10) : 1;
+            setCurrentStep(num);
+            appLogger.info(`⚡ [WAVE1] Navegação instantânea (fallback): step ${num}`);
         }
-        const match = key.match(/step-(\d{1,2})/i);
-        const num = match ? parseInt(match[1], 10) : 1;
-        if (num !== safeCurrentStep) setCurrentStep(num);
+
+        // 🔄 Lazy load em BACKGROUND (não bloqueia UI)
+        const tid = props.templateId ?? resourceId;
+        if (tid) {
+            templateService.getStep(key, tid)
+                .then(stepResult => {
+                    if (stepResult.success) {
+                        appLogger.info(`✅ [WAVE1] Step ${key} carregado em background`);
+                    }
+                })
+                .catch(error => {
+                    appLogger.warn(`⚠️ [WAVE1] Erro ao carregar step ${key}:`, { data: [error] });
+                });
+        }
     }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep, props.templateId, resourceId]);
 
     const handleAddBlock = useCallback((type: string) => {
