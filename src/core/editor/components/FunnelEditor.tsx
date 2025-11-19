@@ -282,7 +282,6 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                 unit: 'ms',
                 timestamp: new Date(),
                 funnelId: state.funnel?.id,
-                sessionId: metrics.sessionId,
                 metadata,
             });
 
@@ -298,7 +297,6 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             unit: 'count',
             timestamp: new Date(),
             funnelId: state.funnel?.id,
-            sessionId: metrics.sessionId,
             metadata: { error, ...metadata },
         });
     }, [metrics, state.funnel?.id]);
@@ -311,7 +309,6 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             unit: 'count',
             timestamp: new Date(),
             funnelId: state.funnel?.id,
-            sessionId: metrics.sessionId,
             metadata,
         });
     }, [metrics, state.funnel?.id]);
@@ -559,13 +556,12 @@ export const FunnelEditor: React.FC<EditorProps> = ({
 
         metrics.recordMetric({
             type: 'interaction_count',
-            operation: 'select_page',
+            operation: 'select_page' as any,
             value: 1,
             unit: 'count',
             timestamp: new Date(),
             pageId,
             funnelId: state.funnel?.id,
-            sessionId: metrics.sessionId,
         });
     }, [metrics, state.funnel?.id, startPerformanceTimer, endPerformanceTimer]);
 
@@ -576,13 +572,12 @@ export const FunnelEditor: React.FC<EditorProps> = ({
 
         metrics.recordMetric({
             type: 'interaction_count',
-            operation: 'select_block',
+            operation: 'select_block' as any,
             value: 1,
             unit: 'count',
             timestamp: new Date(),
             blockId: blockId ?? undefined,
             funnelId: state.funnel?.id,
-            sessionId: metrics.sessionId,
         });
     }, [metrics, state.funnel?.id, startPerformanceTimer, endPerformanceTimer]);
 
@@ -627,7 +622,11 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             id: `page_${Date.now()}`,
             title: `New ${type} Page`,
             type,
-            order: state.funnel.pages.length,
+            metadata: {
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                order: state.funnel.pages.length,
+            },
             blocks: [],
         };
 
@@ -675,7 +674,10 @@ export const FunnelEditor: React.FC<EditorProps> = ({
 
         // Atualizar ordem
         pages.forEach((page, index) => {
-            page.order = index;
+            if (!page.metadata) {
+                page.metadata = { createdAt: new Date(), updatedAt: new Date(), order: index } as any;
+            }
+            page.metadata.order = index;
         });
 
         updateFunnel({ pages });
@@ -691,7 +693,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
     // Cleanup - dispose metrics provider ao desmontar
     useEffect(() => {
         return () => {
-            if (metrics && typeof metrics.dispose === 'function') {
+            if (metrics && typeof (metrics as any).dispose === 'function') {
                 (metrics as any).dispose();
             }
         };
@@ -745,7 +747,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             <div className="w-64 bg-white border-r border-gray-200">
                 <EditorPagePanel
                     pages={state.funnel.pages}
-                    selectedPageId={state.selectedPageId}
+                    selectedPageId={state.selectedPageId ?? undefined}
                     onPageSelect={selectPage}
                     onPageAdd={addPage}
                     onPageRemove={removePage}
@@ -770,7 +772,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                     canRedo={state.history.canRedo}
                     onUndo={undo}
                     onRedo={redo}
-                    validation={state.validation}
+                    validation={{ isValid: state.validation.valid, errors: state.validation.errors, warnings: state.validation.warnings }}
                 />
 
                 {/* Canvas */}
@@ -780,7 +782,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                             page={selectedPage}
                             theme={state.funnel.settings.theme}
                             mode={state.mode}
-                            selectedBlockId={state.selectedBlockId}
+                            selectedBlockId={state.selectedBlockId ?? undefined}
                             onBlockSelect={selectBlock}
                             onBlockUpdate={(blockId, properties) => {
                                 // Implementar update de bloco

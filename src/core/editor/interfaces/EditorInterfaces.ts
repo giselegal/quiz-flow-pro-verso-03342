@@ -360,6 +360,7 @@ export interface EditorPropertiesPanelProps {
 
 export interface EditorCanvasProps {
     page: EditorPageData | null;
+    theme?: EditorTheme;
     selectedBlockId?: string;
     onBlockSelect: (blockId: string | null) => void;
     onBlockUpdate: (blockId: string, updates: Partial<EditorBlockData>) => void;
@@ -370,6 +371,7 @@ export interface EditorCanvasProps {
     showGridlines: boolean;
     showRulers: boolean;
 }
+
 
 export interface EditorToolbarProps {
     mode: EditorMode;
