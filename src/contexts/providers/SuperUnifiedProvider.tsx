@@ -680,7 +680,16 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             const stepBlocks: Record<number, any[]> = {};
 
             initialData.pages.forEach((page: any, index: number) => {
-                stepBlocks[index + 1] = Array.isArray(page.blocks) ? page.blocks : [];
+                const blocks = Array.isArray(page.blocks) ? page.blocks : [];
+                stepBlocks[index + 1] = blocks;
+
+                // 🔍 DEBUG: Log de cada step sendo inicializado
+                logger.debug('[SuperUnified] 📦 Inicializando step', {
+                    stepNumber: index + 1,
+                    stepId: page.id,
+                    blocksCount: blocks.length,
+                    blockIds: blocks.map((b: any) => b.id)
+                });
             });
 
             // Atualizar estado do editor (batch update)
@@ -692,6 +701,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     currentStep: 1,
                     isDirty: false,
                 }
+            });
+
+            logger.debug('[SuperUnified] ✅ Estado do editor inicializado', {
+                totalSteps: initialData.pages.length,
+                stepsWithBlocks: Object.entries(stepBlocks).filter(([_, blocks]) => blocks.length > 0).map(([step]) => step)
             });
         } catch (error: any) {
             // Log apenas erros críticos
@@ -774,14 +788,20 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             const idx = state.editor.currentStep || 1;
             const blocks = (state.editor.stepBlocks as any)[idx];
 
-            // Se já tem blocos, não precisa carregar
+            // Se já tem blocos carregados, não precisa recarregar
             if (Array.isArray(blocks) && blocks.length > 0) return;
 
             const stepId = `step-${String(idx).padStart(2, '0')}`;
             const funnelId = state.currentFunnel?.id;
             const loadKey = `${funnelId || 'default'}:${stepId}`;
 
-            // ✅ FIX: Prevenir múltiplas tentativas de load do mesmo step
+            // 🆕 FIX: Se blocks está vazio mas loadKey existe, remover loadKey e tentar novamente
+            if (Array.isArray(blocks) && blocks.length === 0 && loadedStepsRef.current.has(loadKey)) {
+                logger.debug('[SuperUnified] Step com array vazio detectado, forçando reload', { stepId, idx });
+                loadedStepsRef.current.delete(loadKey);
+            }
+
+            // ✅ FIX: Prevenir múltiplas tentativas de load do mesmo step (mas permite reload se vazio)
             if (loadedStepsRef.current.has(loadKey)) return;
             loadedStepsRef.current.add(loadKey);
 
@@ -789,13 +809,24 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 let retries = 0;
                 const maxRetries = 3;
 
+                logger.debug('[SuperUnified] 🔄 Iniciando carregamento de step', { stepId, idx, funnelId });
+
                 while (retries < maxRetries) {
                     try {
                         const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId || undefined);
+                        logger.debug('[SuperUnified] ✅ Resultado de getPrimary', {
+                            stepId,
+                            hasData: !!result?.data,
+                            isArray: Array.isArray(result?.data),
+                            blocksCount: result?.data?.length || 0
+                        });
+
                         if (result?.data && Array.isArray(result.data)) {
                             dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: idx, blocks: result.data } });
+                            logger.debug('[SuperUnified] ✅ Blocos carregados com sucesso', { stepId, blocksCount: result.data.length });
                             return; // Sucesso
                         }
+                        logger.warn('[SuperUnified] ⚠️ getPrimary retornou sem dados', { stepId, result });
                         break; // Sem dados, não retenta
                     } catch (error: any) {
                         retries++;

@@ -637,6 +637,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Blocks from unified
     const blocks: Block[] | null = getStepBlocks(safeCurrentStep);
 
+    // 🔍 DEBUG: Log what getStepBlocks returns
+    useEffect(() => {
+        console.group('🎯 [QuizModularEditor] getStepBlocks chamado');
+        console.log('safeCurrentStep:', safeCurrentStep);
+        console.log('blocks retornado:', blocks);
+        console.log('Análise:', {
+            isNull: blocks === null,
+            isArray: Array.isArray(blocks),
+            blocksCount: blocks?.length || 0,
+            blockIds: blocks?.map(b => b.id) || []
+        });
+        console.groupEnd();
+    }, [safeCurrentStep, blocks]);
+
     useEffect(() => {
         try {
             appLogger.debug('🔍 [DEBUG] Selection State:', {
