@@ -1,37 +1,21 @@
-// Clean minimal definitions to unblock type-check and imports.
-// Minimal, single-definition blocks types to unblock incremental work.
-// Minimal, single-definition blocks types to unblock incremental work.
-export type Block = {
-  id: string;
-  type: string;
-  properties?: Record<string, any>;
-  content?: Record<string, any>;
-  order?: number;
-  parentId?: string | null;
-  stageId?: string | null;
-};
+// Re-export canonical block interfaces from the consolidated core definitions.
+// This file acts as a compatibility shim so older imports (`@/types/blocks`) keep working
+// while the codebase migrates to the unified types in `src/types/core/BlockInterfaces.ts`
 
-export type BlockData = Block;
+export type { BlockData as Block } from '@/types/core/BlockInterfaces';
+export type { UnifiedBlockComponentProps as BlockComponentProps, BlockComponent, TypedBlockComponentProps } from '@/types/core/BlockInterfaces';
+export { asBlockComponent, createBlockComponent } from '@/types/core/BlockInterfaces';
 
-export type BlockComponentProps<T extends Block = Block> = {
-  block: T;
-  onUpdate?: (patch: Partial<T>) => void;
-  onSelect?: (id: string | null) => void;
-  // Common props used across editor components
-  isSelected?: boolean;
-  onClick?: () => void;
-  onPropertyChange?: (patch: Partial<T['properties']>) => void;
-  className?: string;
-  onValidate?: () => void;
-  children?: any;
-};
+// Re-export the canonical BlockType from the main editor types (large union)
+export type { BlockType } from '@/types/editor';
 
-// Relaxed BlockType alias to avoid tight union mismatches during incremental migration
-export type BlockType = string;
+// Convenience helper preserved for code that used createDefaultBlock
+import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
+import type { Block as CanonBlock, BlockType as CanonBlockType } from '@/types/blocks';
 
-export const createDefaultBlock = (type: string, stageId?: string | null): Block => ({
-  id: `${type}-${Date.now()}`,
-  type,
+export const createDefaultBlock = (type: CanonBlockType | string, stageId?: string | null): CanonBlock => ({
+  id: generateSemanticId({ context: stageId ?? 'default', type: 'block', identifier: String(type), index: 1 }),
+  type: String(type),
   properties: {},
   content: {},
   order: 1,
@@ -39,4 +23,4 @@ export const createDefaultBlock = (type: string, stageId?: string | null): Block
   stageId: stageId ?? null,
 });
 
-export default Block;
+export default undefined as unknown as BlockData;
