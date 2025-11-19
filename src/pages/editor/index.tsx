@@ -38,14 +38,14 @@ function useResourceIdFromLocation(): string | undefined {
         // ✅ G1 FIX: Limpar TODOS os params legados quando resource= está presente
         const legacyParams = ['template', 'funnelId', 'funnel', 'id'];
         const hasLegacyParams = legacyParams.some(key => params.has(key));
-        
+
         if (hasLegacyParams) {
             const newUrl = new URL(window.location.href);
             legacyParams.forEach(key => newUrl.searchParams.delete(key));
             window.history.replaceState({}, '', newUrl.toString());
             appLogger.info('🧹 [G1] Params legados limpos da URL');
         }
-        
+
         appLogger.info('🎯 Recurso carregado:', { data: [resourceId] });
         return resourceId;
     }
@@ -156,9 +156,9 @@ const EditorRoutesInner: React.FC = () => {
             ? resourceId
             : undefined;
 
-    // 🆕 GARGALO #3 FIX: Se for funnel local (convertido de template), passar dados diretamente
+    // 🆕 GARGALO #3 FIX: Passar dados do recurso quando disponíveis (local OU supabase)
     const initialFunnelData =
-        editorResource.resource?.source === 'local' && editorResource.resource?.data
+        editorResource.resource?.data
             ? editorResource.resource.data
             : undefined;
 
