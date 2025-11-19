@@ -1222,42 +1222,73 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, [state.currentFunnel, state.editor.stepBlocks, debugMode]);
 
-    // ✅ WAVE 2: syncStepBlocks - Sincronização explícita com timestamps
+    // ✅ WAVE 2.5: syncStepBlocks - Sincronização explícita com timestamps e invalidação
     const syncStepBlocks = useCallback(async (stepIndex: number, forceSync: boolean = false) => {
         const funnel = state.currentFunnel;
         if (!funnel?.id) {
-            if (debugMode) logger.warn('[syncStepBlocks] Sem funnel ativo, ignorando sync');
+            if (debugMode) logger.warn('[WAVE2.5] syncStepBlocks: Sem funnel ativo, ignorando sync');
             return;
         }
 
         const isDirty = state.editor.dirtySteps?.[stepIndex];
         if (!isDirty && !forceSync) {
-            if (debugMode) logger.debug(`[syncStepBlocks] Step ${stepIndex} não está dirty, pulando`);
+            if (debugMode) logger.debug(`[WAVE2.5] syncStepBlocks: Step ${stepIndex} não está dirty, pulando`);
             return;
         }
 
         const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
         const blocks = state.editor.stepBlocks[stepIndex] || [];
+        const syncStartTime = Date.now();
 
         try {
-            if (debugMode) logger.info(`[syncStepBlocks] Sincronizando ${stepId} (${blocks.length} blocos)`);
+            if (debugMode) logger.info(`[WAVE2.5] syncStepBlocks: Sincronizando ${stepId} (${blocks.length} blocos)`);
 
-            // Adicionar timestamps automáticos antes de salvar
+            // ✅ WAVE 2.5: Adicionar timestamps automáticos e metadata de sincronização
             const blocksWithTimestamps = blocks.map(block => ({
                 ...block,
-                _syncedAt: Date.now(),
+                _syncedAt: syncStartTime,
                 _version: (block._version || 0) + 1,
+                _lastModified: block._lastModified || syncStartTime,
+                _isDirty: false, // Marcar como limpo após sync
             }));
 
+            // 1️⃣ Salvar no Supabase (fonte primária USER_EDIT)
             await hierarchicalTemplateSource.setPrimary(stepId, blocksWithTimestamps, funnel.id);
 
-            // Marcar como não-dirty e atualizar lastSaved
-            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
-            dispatch({ type: 'SET_EDITOR_STATE', payload: { lastSaved: Date.now() } });
+            // 2️⃣ WAVE 2.5: Invalidar cache L1 (Memory) + L2 (IndexedDB)
+            await hierarchicalTemplateSource.invalidate(stepId, funnel.id);
+            if (debugMode) logger.debug('[WAVE2.5] Cache L1+L2 invalidado', { stepId });
 
-            if (debugMode) logger.info(`[syncStepBlocks] ✅ ${stepId} sincronizado com sucesso`);
+            // 3️⃣ WAVE 2.5: Broadcast para outras tabs (sincronização entre abas)
+            try {
+                if (typeof BroadcastChannel !== 'undefined') {
+                    const channel = new BroadcastChannel('quiz-editor-sync');
+                    channel.postMessage({
+                        type: 'STEP_SYNCED',
+                        payload: { 
+                            funnelId: funnel.id, 
+                            stepId, 
+                            stepIndex, 
+                            timestamp: syncStartTime,
+                            blockCount: blocksWithTimestamps.length,
+                        },
+                    });
+                    channel.close();
+                    if (debugMode) logger.debug('[WAVE2.5] Broadcast enviado', { stepId });
+                }
+            } catch (e) {
+                appLogger.warn('[WAVE2.5] Erro ao fazer broadcast:', { data: [e] });
+            }
+
+            // 4️⃣ WAVE 2.5: Marcar como não-dirty e atualizar lastSaved
+            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
+            dispatch({ type: 'SET_EDITOR_STATE', payload: { lastSaved: syncStartTime } });
+
+            const syncDuration = Date.now() - syncStartTime;
+            if (debugMode) logger.info(`[WAVE2.5] ✅ ${stepId} sincronizado com sucesso (${syncDuration}ms)`);
         } catch (error: any) {
-            logger.error(`[syncStepBlocks] Erro ao sincronizar ${stepId}:`, error);
+            logger.error(`[WAVE2.5] syncStepBlocks: Erro ao sincronizar ${stepId}:`, error);
+            dispatch({ type: 'SET_ERROR', payload: { section: 'step-sync', error: error?.message || String(error) } });
             throw error;
         }
     }, [state.currentFunnel, state.editor.dirtySteps, state.editor.stepBlocks, debugMode]);
@@ -1693,6 +1724,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         publishFunnel,
         saveStepBlocks,
         ensureAllDirtyStepsSaved,
+        syncStepBlocks, // ✅ WAVE 2.5: Added to dependencies
         createFunnel,
         deleteFunnel,
         duplicateFunnel,
