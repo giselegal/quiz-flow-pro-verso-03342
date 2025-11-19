@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Settings, X, Edit3, Save, RotateCcw, ChevronDown, Info, Sparkles } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Settings, X, Edit3, Save, RotateCcw, ChevronDown, Info, Sparkles, Code2, AlertTriangle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
@@ -42,6 +44,8 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     const [editedProperties, setEditedProperties] = React.useState<Record<string, any>>({});
     const [isDirty, setIsDirty] = React.useState(false);
     const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
+    const [showJsonEditor, setShowJsonEditor] = React.useState(false);
+    const [hasError, setHasError] = React.useState(false);
     const prevSelectedIdRef = React.useRef<string | null>(null);
 
     // 🔍 DEBUG CRÍTICO: Log TUDO que o painel recebe
@@ -155,7 +159,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         return unsubscribe;
     }, [selectedBlock?.id]);
 
-    const handlePropertyChange = (key: string, value: unknown) => {
+    const handlePropertyChange = React.useCallback((key: string, value: unknown) => {
         console.group('🎛️ [PropertiesColumn] handlePropertyChange');
         console.log('key:', key);
         console.log('value (raw):', value);
@@ -189,34 +193,40 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
         console.log('✅ Propriedade atualizada, isDirty = true');
         console.groupEnd();
-    };
+    }, [editedProperties, isDirty]);
 
-    const handleSave = () => {
+    const handleSave = React.useCallback(() => {
         console.group('💾 [PropertiesColumn] handleSave');
         console.log('selectedBlock:', selectedBlock);
         console.log('isDirty:', isDirty);
         console.log('editedProperties:', editedProperties);
 
         if (selectedBlock && isDirty) {
-            // ✅ SINCRONIZAÇÃO BIDIRECIONAL - Garante properties ↔ content sempre alinhados
-            const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, editedProperties);
+            try {
+                // ✅ SINCRONIZAÇÃO BIDIRECIONAL - Garante properties ↔ content sempre alinhados
+                const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, editedProperties);
 
-            console.log('synchronizedUpdate criado:', synchronizedUpdate);
-            console.log('Chamando onBlockUpdate com:', {
-                blockId: selectedBlock.id,
-                updates: synchronizedUpdate
-            });
+                console.log('synchronizedUpdate criado:', synchronizedUpdate);
+                console.log('Chamando onBlockUpdate com:', {
+                    blockId: selectedBlock.id,
+                    updates: synchronizedUpdate
+                });
 
-            onBlockUpdate(selectedBlock.id, synchronizedUpdate);
-            setIsDirty(false);
+                onBlockUpdate(selectedBlock.id, synchronizedUpdate);
+                setIsDirty(false);
+                setHasError(false);
 
-            normalizerLogger.debug('Block saved with synchronized data', {
-                blockId: selectedBlock.id,
-                editedProperties,
-                synchronizedUpdate
-            });
+                normalizerLogger.debug('Block saved with synchronized data', {
+                    blockId: selectedBlock.id,
+                    editedProperties,
+                    synchronizedUpdate
+                });
 
-            console.log('✅ onBlockUpdate chamado, isDirty = false');
+                console.log('✅ onBlockUpdate chamado, isDirty = false');
+            } catch (error) {
+                console.error('❌ Erro ao salvar propriedades:', error);
+                setHasError(true);
+            }
         } else {
             console.warn('❌ Não salvou:', {
                 hasBlock: !!selectedBlock,
@@ -225,14 +235,14 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             });
         }
         console.groupEnd();
-    };
+    }, [selectedBlock, isDirty, editedProperties, onBlockUpdate]);
 
-    const handleReset = () => {
+    const handleReset = React.useCallback(() => {
         if (selectedBlock) {
             setEditedProperties(selectedBlock.properties || {});
             setIsDirty(false);
         }
-    };
+    }, [selectedBlock]);
 
     // Verificar se o bloco tem schema disponível
     const hasSchema = selectedBlock ? schemaInterpreter.getBlockSchema(selectedBlock.type) !== null : false;
@@ -409,6 +419,17 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                     {hasSchema && (
                         <>
                             <Separator className="my-4" />
+
+                            {/* ⚠️ Error Alert */}
+                            {hasError && (
+                                <Alert variant="destructive" className="mb-4">
+                                    <AlertTriangle className="h-4 w-4" />
+                                    <AlertDescription>
+                                        Erro ao salvar propriedades. Verifique os valores e tente novamente.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+
                             <div className="flex gap-2 sticky bottom-0 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4">
                                 <Button
                                     onClick={handleSave}
@@ -439,6 +460,63 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
+
+                            {/* 🎨 EDITOR JSON AVANÇADO - Power Users */}
+                            <div className="mt-2 pt-2 border-t">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setShowJsonEditor(true)}
+                                    className="w-full gap-2 text-muted-foreground hover:text-foreground"
+                                >
+                                    <Code2 className="w-3.5 h-3.5" />
+                                    <span className="text-xs">Editar JSON (Avançado)</span>
+                                </Button>
+                            </div>
+
+                            {/* Modal JSON Editor */}
+                            <Dialog open={showJsonEditor} onOpenChange={setShowJsonEditor}>
+                                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle className="flex items-center gap-2">
+                                            <Code2 className="w-5 h-5" />
+                                            Editor JSON Avançado
+                                        </DialogTitle>
+                                        <DialogDescription>
+                                            Edite o JSON completo do bloco. Use com cuidado - erros de sintaxe podem quebrar o bloco.
+                                        </DialogDescription>
+                                    </DialogHeader>
+
+                                    <div className="space-y-4">
+                                        <Alert>
+                                            <Info className="h-4 w-4" />
+                                            <AlertDescription>
+                                                <strong>Para a maioria dos casos, use o editor visual acima.</strong><br />
+                                                Este editor JSON é para operações avançadas como importar/exportar blocos completos.
+                                            </AlertDescription>
+                                        </Alert>
+
+                                        <div className="font-mono text-xs">
+                                            <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
+                                                {JSON.stringify(selectedBlock, null, 2)}
+                                            </pre>
+                                        </div>
+
+                                        <div className="flex justify-end gap-2">
+                                            <Button variant="outline" onClick={() => setShowJsonEditor(false)}>
+                                                Fechar
+                                            </Button>
+                                            <Button onClick={() => {
+                                                // TODO: Implementar editor JSON funcional
+                                                navigator.clipboard.writeText(JSON.stringify(selectedBlock, null, 2));
+                                                setShowJsonEditor(false);
+                                            }}>
+                                                Copiar JSON
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                         </>
                     )}
                 </div>
