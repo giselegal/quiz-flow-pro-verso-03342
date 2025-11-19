@@ -1,33 +1,14 @@
-// Re-export canonical block interfaces from the consolidated core definitions.
-// This file acts as a compatibility shim so older imports (`@/types/blocks`) keep working
-// while the codebase migrates to the unified types in `src/types/core/BlockInterfaces.ts`
+// Compatibility shim: re-export canonical block types and helpers so older imports
+// (`@/types/blocks`) keep working while the codebase migrates to the unified
+// types defined in `src/types/core/BlockInterfaces.ts` and `src/types/editor.ts`.
 
-// Build a compatibility `Block` type that is based on the editor's canonical Block
-// but widens the `type` field to accept unknown string values during migration.
-import type React from 'react';
-import type { Block as EditorBlock, BlockType as EditorBlockType } from '@/types/editor';
-import type { UnifiedBlockComponentProps } from '@/types/core/BlockInterfaces';
-import { asBlockComponent as _asBlockComponent, createBlockComponent as _createBlockComponent } from '@/types/core/BlockInterfaces';
-
-// Export a compat `Block` that preserves the editor shape but allows `type` to be
-// either the strict union or a plain string. This reduces many "string not assignable
-// to BlockType" diagnostics during migration.
-export type Block = Omit<EditorBlock, 'type'> & { type: EditorBlockType | string };
-
-export interface CompatBlockComponentProps extends Omit<UnifiedBlockComponentProps, 'block' | 'type'> {
-  block?: Block | undefined;
-  type?: EditorBlockType | string | undefined;
-}
-
-export type BlockComponentProps = CompatBlockComponentProps;
-export type BlockComponent = React.ComponentType<BlockComponentProps>;
-export type TypedBlockComponentProps<T extends Block = Block> = CompatBlockComponentProps & { block: T };
-
-export const asBlockComponent = _asBlockComponent as (component: any) => BlockComponent;
-export const createBlockComponent = _createBlockComponent as <T extends BlockComponentProps = BlockComponentProps>(component: React.ComponentType<T>) => BlockComponent;
-
-// Re-export the canonical BlockType from the main editor types (large union)
+// Re-export canonical types from the unified modules so all imports resolve
+// to the exact same type identity (prevents prop-type / validator mismatches).
+export type { BlockData, BlockDefinition, UnifiedBlockComponentProps, BlockComponentProps, BlockComponent, TypedBlockComponentProps, EditableBlockComponentProps, QuizBlockComponentProps } from '@/types/core/BlockInterfaces';
 export type { BlockType } from '@/types/editor';
+
+// Re-export helpers / factory functions from the canonical definitions
+export { asBlockComponent, createBlockComponent } from '@/types/core/BlockInterfaces';
 
 // Convenience helper preserved for code that used createDefaultBlock
 import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
@@ -42,7 +23,6 @@ export const createDefaultBlock = (type: CanonBlockType | string, stageId?: stri
   order: 1,
 });
 
-// Preserve a default export for modules that import the default `Block`.
-// Provide a permissive placeholder — this file's purpose is type compatibility only.
+// Preserve a permissive default export for modules that previously relied on it.
 import type { BlockData } from '@/types/core/BlockInterfaces';
 export default (undefined as unknown) as BlockData;
