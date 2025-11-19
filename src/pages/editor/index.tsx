@@ -183,22 +183,7 @@ const EditorRoutesInner: React.FC = () => {
         }
 
         return data;
-    }, [editorResource.resource, resourceId]);    // 🔍 AUDIT FIX: Debugging - verificar estado do recurso (apenas em DEV)
-    React.useEffect(() => {
-        if (import.meta.env.DEV && import.meta.env.VITE_DEBUG_MODE === 'true') {
-            console.log('[EDITOR-PAGE] Estado do recurso:', {
-                hasResource: !!editorResource.resource,
-                resourceType: editorResource.resourceType,
-                resourceSource: editorResource.resource?.source,
-                hasData: !!editorResource.resource?.data,
-                hasStages: !!editorResource.resource?.data?.stages,
-                stagesCount: editorResource.resource?.data?.stages?.length,
-                isLoading: editorResource.isLoading,
-                hasError: !!editorResource.error,
-                initialFunnelDataDefined: !!initialFunnelData,
-            });
-        }
-    }, [editorResource.isLoading, editorResource.error]);
+    }, [editorResource.resource, resourceId]);
 
     // ✅ AUDIT FIX-001B: Mostrar loading enquanto template está sendo convertido
     if (editorResource.isLoading && resourceId) {

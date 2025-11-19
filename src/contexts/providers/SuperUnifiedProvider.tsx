@@ -662,27 +662,17 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         appLogger.info('🛑 [SuperUnifiedProvider] Supabase DESATIVADO - todas operações serão offline/in-memory');
     }
 
-    // ✅ AUDITORIA FIX-001 ENHANCED: Inicializar editor.stepBlocks (OTIMIZADO)
+    // ✅ AUDITORIA FIX-001 ENHANCED: Inicializar editor.stepBlocks (OTIMIZADO - SEM LOGS)
     useEffect(() => {
-        // Validação rápida (sem logs excessivos)
+        // Validação rápida silenciosa
         if (!initialData?.pages || !Array.isArray(initialData.pages) || initialData.pages.length === 0) {
-            if (debugMode) {
-                console.warn('[SuperUnified] initialData inválido ou vazio');
-            }
             return;
         }
 
         // Evitar reinicialização se já temos steps carregados
         const currentStepCount = Object.keys(state.editor.stepBlocks || {}).length;
         if (currentStepCount === initialData.pages.length && currentStepCount > 0) {
-            return; // Já inicializado, pular silenciosamente
-        }
-
-        if (debugMode) {
-            logger.info('[SuperUnified] Inicializando steps', {
-                pageCount: initialData.pages.length,
-                currentCount: currentStepCount
-            });
+            return;
         }
 
         try {
@@ -703,17 +693,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     isDirty: false,
                 }
             });
-
-            if (debugMode) {
-                logger.info('[SuperUnified] ✅ Editor inicializado', {
-                    totalSteps: initialData.pages.length
-                });
-            }
-
         } catch (error: any) {
-            logger.error('[SuperUnified] Erro ao inicializar steps:', error);
+            // Log apenas erros críticos
+            console.error('[SuperUnified] Erro crítico ao inicializar:', error.message);
         }
-    }, [initialData, debugMode]);
+    }, [initialData]);
 
     // 📊 Performance tracking
     useEffect(() => {
