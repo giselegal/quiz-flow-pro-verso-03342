@@ -162,6 +162,45 @@ const EditorRoutesInner: React.FC = () => {
             ? editorResource.resource.data
             : undefined;
 
+    // 🔍 AUDIT FIX: Debugging - verificar estado do recurso
+    React.useEffect(() => {
+        console.log('[EDITOR-PAGE] Estado do recurso:', {
+            hasResource: !!editorResource.resource,
+            resourceType: editorResource.resourceType,
+            resourceSource: editorResource.resource?.source,
+            hasData: !!editorResource.resource?.data,
+            hasStages: !!editorResource.resource?.data?.stages,
+            stagesCount: editorResource.resource?.data?.stages?.length,
+            isLoading: editorResource.isLoading,
+            hasError: !!editorResource.error,
+            initialFunnelDataDefined: !!initialFunnelData,
+        });
+    }, [editorResource, initialFunnelData]);
+
+    // ✅ AUDIT FIX-001B: Mostrar loading enquanto template está sendo convertido
+    if (editorResource.isLoading && resourceId) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-sm text-muted-foreground">Carregando template...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // ✅ AUDIT FIX-001C: Mostrar erro se houver problema no carregamento
+    if (editorResource.error) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center max-w-md">
+                    <p className="text-lg font-semibold text-destructive mb-2">Erro ao carregar template</p>
+                    <p className="text-sm text-muted-foreground">{editorResource.error.message}</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
             <EditorStartupModal
