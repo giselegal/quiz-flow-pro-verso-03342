@@ -31,9 +31,9 @@ export type PresenceUpdate = {
 };
 
 export const notificationService = {
-  subscribe: (_cb: (n: Notification) => void) => ({ unsubscribe: () => {} }),
-  on: (_event: string, _cb: (...args: any[]) => void) => ({ unsubscribe: () => {} }),
-  off: (_event: string, _cb: (...args: any[]) => void) => {},
+  subscribe: (_cb: (n: Notification) => void) => ({ unsubscribe: () => { } }),
+  on: (_event: string, _cb: (...args: any[]) => void) => ({ unsubscribe: () => { } }),
+  off: (_event: string, _cb: (...args: any[]) => void) => { },
 
   getUserNotifications: (userId: string, funnelId?: string): Notification[] => [],
   getChatMessages: (funnelId?: string): ChatMessage[] => [],

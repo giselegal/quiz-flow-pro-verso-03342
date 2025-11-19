@@ -17,7 +17,17 @@ export type BlockComponentProps<T extends Block = Block> = {
   block: T;
   onUpdate?: (patch: Partial<T>) => void;
   onSelect?: (id: string | null) => void;
+  // Common props used across editor components
+  isSelected?: boolean;
+  onClick?: () => void;
+  onPropertyChange?: (patch: Partial<T['properties']>) => void;
+  className?: string;
+  onValidate?: () => void;
+  children?: any;
 };
+
+// Relaxed BlockType alias to avoid tight union mismatches during incremental migration
+export type BlockType = string;
 
 export const createDefaultBlock = (type: string, stageId?: string | null): Block => ({
   id: `${type}-${Date.now()}`,
