@@ -156,11 +156,34 @@ const EditorRoutesInner: React.FC = () => {
             ? resourceId
             : undefined;
 
-    // 🆕 GARGALO #3 FIX: Passar dados do recurso quando disponíveis (local OU supabase)
-    const initialFunnelData =
-        editorResource.resource?.data
-            ? editorResource.resource.data
-            : undefined;
+    // 🆕 GARGALO #3 FIX: Converter stages → pages para SuperUnifiedProvider
+    const initialFunnelData = React.useMemo(() => {
+        if (!editorResource.resource?.data) return undefined;
+
+        const data = editorResource.resource.data;
+
+        // Se já tem pages, usar diretamente
+        if (data.pages && Array.isArray(data.pages)) {
+            return data;
+        }
+
+        // Se tem stages (templates), converter para pages
+        if (data.stages && Array.isArray(data.stages)) {
+            return {
+                ...data,
+                pages: data.stages.map((stage: any, index: number) => ({
+                    id: stage.id || `page-${index + 1}`,
+                    funnel_id: data.id || resourceId || 'local',
+                    page_type: 'quiz-step',
+                    title: stage.title || stage.name || `Step ${index + 1}`,
+                    page_order: index,
+                    blocks: stage.blocks || []
+                }))
+            };
+        }
+
+        return data;
+    }, [editorResource.resource?.data, resourceId]);
 
     // 🔍 AUDIT FIX: Debugging - verificar estado do recurso
     React.useEffect(() => {
