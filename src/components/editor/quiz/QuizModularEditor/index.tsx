@@ -1638,6 +1638,24 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 className="h-full border-l bg-white overflow-y-auto"
                                 data-testid="column-properties"
                             >
+                                {/* 🔍 DEBUG: Log do que está sendo passado */}
+                                {(() => {
+                                    const selectedBlock = blocks?.find(b => b.id === selectedBlockId);
+                                    console.group('🎯 [QuizModularEditor] Renderizando PropertiesColumn');
+                                    console.log('selectedBlockId:', selectedBlockId);
+                                    console.log('blocks:', blocks);
+                                    console.log('selectedBlock encontrado:', selectedBlock);
+                                    console.log('Análise:', {
+                                        hasBlocks: !!blocks,
+                                        blocksCount: blocks?.length || 0,
+                                        blockIds: blocks?.map(b => b.id) || [],
+                                        hasSelectedBlockId: !!selectedBlockId,
+                                        foundBlock: !!selectedBlock,
+                                        blockType: selectedBlock?.type
+                                    });
+                                    console.groupEnd();
+                                    return null;
+                                })()}
                                 <PropertiesColumnWithJson
                                     selectedBlock={
                                         blocks?.find(b => b.id === selectedBlockId) ||

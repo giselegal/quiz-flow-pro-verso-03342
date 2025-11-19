@@ -44,16 +44,22 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
     const prevSelectedIdRef = React.useRef<string | null>(null);
 
-    // 🔍 DEBUG: Log props recebidas
+    // 🔍 DEBUG CRÍTICO: Log TUDO que o painel recebe
     React.useEffect(() => {
-        console.log('🔍 [PropertiesColumn] Props recebidas:', {
+        console.group('🔍 [PropertiesColumn] Estado Completo');
+        console.log('selectedBlockProp:', selectedBlockProp);
+        console.log('blocks:', blocks);
+        console.log('Análise:', {
             hasSelectedBlockProp: !!selectedBlockProp,
             selectedBlockId: selectedBlockProp?.id,
             selectedBlockType: selectedBlockProp?.type,
             blocksCount: blocks?.length || 0,
             blockIds: blocks?.map(b => b.id) || [],
-            hasOnBlockSelect: !!onBlockSelect
+            hasOnBlockSelect: !!onBlockSelect,
+            willAutoSelect: !selectedBlockProp && blocks && blocks.length > 0,
+            firstBlockId: blocks?.[0]?.id
         });
+        console.groupEnd();
     }, [selectedBlockProp, blocks, onBlockSelect]);
 
     // ✅ WAVE 1 FIX: Auto-select primeiro bloco se nenhum selecionado
