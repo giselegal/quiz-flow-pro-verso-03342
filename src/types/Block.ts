@@ -1,1 +1,1 @@
-export type { Block, BlockType } from './types/editor';
+export type { Block, BlockType } from './editor';
