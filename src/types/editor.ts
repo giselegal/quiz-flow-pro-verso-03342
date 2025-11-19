@@ -105,6 +105,9 @@ export type BlockType =
   // Tipos gerais de blocos
   | 'headline'
   | 'text'
+  | 'text-paragraph'
+  | 'title-standalone'
+  | 'subtitle-standalone'
   | 'image'
   | 'button'
   | 'spacer'
