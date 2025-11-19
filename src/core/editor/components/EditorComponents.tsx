@@ -578,7 +578,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                     {isEditMode && page.blocks.length > 0 && (
                         <div className="text-center">
                             <button
-                                onClick={() => onBlockAdd('hero-section', page.blocks.length)}
+                                onClick={() => onBlockAdd(createMinimalBlock('hero-section', page.blocks.length))}
                                 className="border-2 border-dashed border-gray-300 rounded-lg px-4 py-8 text-gray-500 hover:border-blue-300 hover:text-blue-600 transition-colors"
                             >
                                 <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -669,7 +669,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
             {/* Right Side - Save & Validation */}
             <div className="flex items-center gap-4">
                 {/* Validation Status */}
-                {!validation.valid && (
+                {!validation.isValid && (
                     <div className="flex items-center gap-2 text-red-600">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
