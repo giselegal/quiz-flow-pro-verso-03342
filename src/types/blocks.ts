@@ -2,7 +2,8 @@
 // This file acts as a compatibility shim so older imports (`@/types/blocks`) keep working
 // while the codebase migrates to the unified types in `src/types/core/BlockInterfaces.ts`
 
-export type { BlockData as Block } from '@/types/core/BlockInterfaces';
+// Prefer the canonical `Block` definition used by the editor to avoid incompatibilities
+export type { Block as Block } from '@/types/editor';
 export type { UnifiedBlockComponentProps as BlockComponentProps, BlockComponent, TypedBlockComponentProps } from '@/types/core/BlockInterfaces';
 export { asBlockComponent, createBlockComponent } from '@/types/core/BlockInterfaces';
 
