@@ -1653,6 +1653,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         publishFunnel,
         saveStepBlocks,
         ensureAllDirtyStepsSaved,
+        syncStepBlocks,
         createFunnel,
         deleteFunnel,
         duplicateFunnel,
