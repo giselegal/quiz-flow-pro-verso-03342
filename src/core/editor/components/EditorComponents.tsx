@@ -13,6 +13,8 @@ import {
     EditorMode,
     EditorSaveStatus,
     EditorValidationResult,
+    EditorBlockData,
+    EditorPageData,
 } from '../interfaces/EditorInterfaces';
 
 // ============================================================================
@@ -63,7 +65,7 @@ export const EditorPagePanel: React.FC<EditorPagePanelProps> = ({
                                         {String(index + 1).padStart(2, '0')}
                                     </span>
                                     <span className="text-sm font-medium text-gray-900">
-                                        {page.title}
+                                        {page.name}
                                     </span>
                                 </div>
                                 <div className="text-xs text-gray-500 mt-1">
@@ -174,7 +176,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                     <div>
                         <h3 className="font-medium text-gray-900 mb-3">Block Properties</h3>
                         <div className="space-y-4">
-                            {Object.entries(selectedBlock.properties).map(([key, value]) => (
+                            {Object.entries(selectedBlock.content || {}).map(([key, value]) => (
                                 <div key={key}>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
                                         {key}
@@ -184,8 +186,10 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                             <textarea
                                                 value={value}
                                                 onChange={(e) => onBlockUpdate(selectedBlock.id, {
-                                                    ...selectedBlock.properties,
-                                                    [key]: e.target.value,
+                                                    content: {
+                                                        ...(selectedBlock.content || {}),
+                                                        [key]: e.target.value,
+                                                    }
                                                 })}
                                                 className="w-full p-2 border border-gray-300 rounded text-sm"
                                                 rows={3}
@@ -195,8 +199,10 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                                 type="text"
                                                 value={value}
                                                 onChange={(e) => onBlockUpdate(selectedBlock.id, {
-                                                    ...selectedBlock.properties,
-                                                    [key]: e.target.value,
+                                                    content: {
+                                                        ...(selectedBlock.content || {}),
+                                                        [key]: e.target.value,
+                                                    }
                                                 })}
                                                 className="w-full p-2 border border-gray-300 rounded text-sm"
                                             />
@@ -206,8 +212,10 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                             type="number"
                                             value={value}
                                             onChange={(e) => onBlockUpdate(selectedBlock.id, {
-                                                ...selectedBlock.properties,
-                                                [key]: Number(e.target.value),
+                                                content: {
+                                                    ...(selectedBlock.content || {}),
+                                                    [key]: Number(e.target.value),
+                                                }
                                             })}
                                             className="w-full p-2 border border-gray-300 rounded text-sm"
                                         />
@@ -217,8 +225,10 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                                 type="checkbox"
                                                 checked={value}
                                                 onChange={(e) => onBlockUpdate(selectedBlock.id, {
-                                                    ...selectedBlock.properties,
-                                                    [key]: e.target.checked,
+                                                    content: {
+                                                        ...(selectedBlock.content || {}),
+                                                        [key]: e.target.checked,
+                                                    }
                                                 })}
                                                 className="mr-2"
                                             />
@@ -231,8 +241,10 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                                 try {
                                                     const parsed = JSON.parse(e.target.value);
                                                     onBlockUpdate(selectedBlock.id, {
-                                                        ...selectedBlock.properties,
-                                                        [key]: parsed,
+                                                        content: {
+                                                            ...(selectedBlock.content || {}),
+                                                            [key]: parsed,
+                                                        }
                                                     });
                                                 } catch {
                                                     // Ignore invalid JSON
@@ -259,7 +271,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                 </label>
                                 <input
                                     type="text"
-                                    value={selectedPage.title}
+                                    value={selectedPage.settings?.title ?? selectedPage.name}
                                     onChange={(e) => onPageUpdate(selectedPage.id, {
                                         ...selectedPage.settings,
                                         title: e.target.value,
@@ -289,18 +301,18 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                 </select>
                             </div>
 
-                            {selectedPage.settings?.showTitle !== undefined && (
+                            {selectedPage.settings?.showProgressBar !== undefined && (
                                 <label className="flex items-center">
                                     <input
                                         type="checkbox"
-                                        checked={selectedPage.settings.showTitle}
+                                        checked={selectedPage.settings.showProgressBar}
                                         onChange={(e) => onPageUpdate(selectedPage.id, {
                                             ...selectedPage.settings,
-                                            showTitle: e.target.checked,
+                                            showProgressBar: e.target.checked,
                                         })}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm text-gray-700">Show Title</span>
+                                    <span className="text-sm text-gray-700">Show Progress Bar</span>
                                 </label>
                             )}
                         </div>
@@ -391,15 +403,38 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 }) => {
     const isEditMode = mode === 'edit';
 
+    // If no page provided, render a placeholder to avoid many null checks downstream
+    if (!page) {
+        return (
+            <div className="h-full flex items-center justify-center text-gray-500">
+                <div className="text-center">
+                    <p>No page selected</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Helper to create a minimal EditorBlockData when caller requests an "add by type".
+    const createMinimalBlock = (type: string, order: number): EditorBlockData => ({
+        id: `${type}-${Date.now()}`,
+        type,
+        content: {},
+        style: {},
+        position: { x: 0, y: 0 },
+        size: { width: 0, height: 0 },
+        order,
+        metadata: { createdAt: new Date(), updatedAt: new Date() },
+    });
+
     return (
         <div className="h-full bg-gray-100 overflow-y-auto">
             <div className="max-w-4xl mx-auto py-8">
                 {/* Page Header */}
                 <div className="mb-6 px-4">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">{page.title}</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">{page.settings?.title ?? page.name}</h1>
                     <div className="flex items-center gap-4 text-sm text-gray-500">
                         <span>Type: {page.type}</span>
-                        <span>Order: {page.order}</span>
+                        <span>Order: {page.metadata?.order}</span>
                         <span>Blocks: {page.blocks.length}</span>
                     </div>
                 </div>
@@ -414,7 +449,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                             <p className="text-gray-500 mb-4">No blocks in this page</p>
                             {isEditMode && (
                                 <button
-                                    onClick={() => onBlockAdd('hero-section', 0)}
+                                    onClick={() => onBlockAdd(createMinimalBlock('hero-section', 0))}
                                     className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                                 >
                                     Add First Block
@@ -430,10 +465,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                     : 'border-gray-200 hover:border-gray-300'
                                     }`}
                                 style={{
-                                    backgroundColor: theme.backgroundColor,
-                                    color: theme.textColor,
-                                    fontFamily: theme.fontFamily,
-                                    ...block.styles,
+                                    backgroundColor: theme?.backgroundColor,
+                                    color: theme?.textColor,
+                                    fontFamily: theme?.fontFamily,
+                                    ...block.style,
                                 }}
                                 onClick={() => isEditMode && onBlockSelect(block.id)}
                             >
@@ -447,14 +482,14 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                     {block.type === 'hero-section' && (
                                         <div>
                                             <h2 className="text-xl font-bold mb-2">
-                                                {block.properties.title || 'Hero Title'}
+                                                {(block.content && (block.content as any).title) || 'Hero Title'}
                                             </h2>
                                             <p className="text-gray-600 mb-4">
-                                                {block.properties.content || 'Hero content goes here...'}
+                                                {(block.content && (block.content as any).content) || 'Hero content goes here...'}
                                             </p>
-                                            {block.properties.buttonText && (
+                                            {(block.content && (block.content as any).buttonText) && (
                                                 <button className="bg-blue-600 text-white px-4 py-2 rounded">
-                                                    {block.properties.buttonText}
+                                                    {(block.content as any).buttonText}
                                                 </button>
                                             )}
                                         </div>
@@ -463,10 +498,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                     {block.type === 'simple-question' && (
                                         <div>
                                             <h3 className="text-lg font-semibold mb-3">
-                                                {block.properties.question || 'Question text here...'}
+                                                {(block.content && (block.content as any).question) || 'Question text here...'}
                                             </h3>
                                             <div className="space-y-2">
-                                                {(block.properties.options || ['Option 1', 'Option 2']).map((option: string, idx: number) => (
+                                                {(((block.content && (block.content as any).options) as string[]) || ['Option 1', 'Option 2']).map((option: string, idx: number) => (
                                                     <label key={idx} className="flex items-center">
                                                         <input type="radio" name={`question-${block.id}`} className="mr-2" />
                                                         <span>{option}</span>
@@ -479,11 +514,11 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                     {block.type === 'text-input' && (
                                         <div>
                                             <label className="block text-sm font-medium mb-2">
-                                                {block.properties.label || 'Input Label'}
+                                                {(block.content && (block.content as any).label) || 'Input Label'}
                                             </label>
                                             <input
                                                 type="text"
-                                                placeholder={block.properties.placeholder || 'Enter text...'}
+                                                placeholder={(block.content && (block.content as any).placeholder) || 'Enter text...'}
                                                 className="w-full p-2 border border-gray-300 rounded"
                                                 readOnly
                                             />
@@ -495,7 +530,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                         <div>
                                             <h3 className="font-semibold mb-2">{block.type} Block</h3>
                                             <pre className="text-xs text-gray-600 bg-gray-50 p-2 rounded overflow-x-auto">
-                                                {JSON.stringify(block.properties, null, 2)}
+                                                {JSON.stringify(block.content || {}, null, 2)}
                                             </pre>
                                         </div>
                                     )}
@@ -507,7 +542,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                onBlockAdd(block.type, index);
+                                                onBlockAdd(createMinimalBlock(block.type, index));
                                             }}
                                             className="p-1 bg-green-600 text-white rounded hover:bg-green-700"
                                             title="Add Block Above"
