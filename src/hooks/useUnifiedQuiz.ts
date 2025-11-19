@@ -6,11 +6,11 @@
 
 import { useEffect, useState } from 'react';
 import { UnifiedQuizStep } from '@/lib/adapters/UnifiedQuizStepAdapter';
-import { unifiedQuizBridge, UnifiedFunnelData } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 
 export function useUnifiedQuiz(stepId?: string) {
   const [step, setStep] = useState<UnifiedQuizStep | null>(null);
-  const [funnel, setFunnel] = useState<UnifiedFunnelData | null>(null);
+  const [funnel, setFunnel] = useState<Record<string, any> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -21,13 +21,15 @@ export function useUnifiedQuiz(stepId?: string) {
         setError(null);
 
         if (stepId) {
-          // Carregar step individual
-          const loadedStep = await unifiedQuizBridge.loadStep(stepId);
-          setStep(loadedStep);
+          const result = await templateService.getStep(stepId);
+          if (result.success) {
+            setStep({ id: stepId, blocks: result.data } as UnifiedQuizStep);
+          } else {
+            throw result.error;
+          }
         } else {
-          // Carregar funil completo
-          const loadedFunnel = await unifiedQuizBridge.loadProductionFunnel();
-          setFunnel(loadedFunnel);
+          const steps = await templateService.getAllSteps();
+          setFunnel(steps);
         }
       } catch (err) {
         setError(err as Error);
@@ -45,7 +47,7 @@ export function useUnifiedQuiz(stepId?: string) {
     isLoading,
     error,
     reload: () => {
-      unifiedQuizBridge.clearCache();
+      templateService.clearCache();
       setIsLoading(true);
     },
   };
