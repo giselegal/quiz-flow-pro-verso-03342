@@ -29,7 +29,7 @@ export interface PreviewPanelProps {
   funnelId?: string | null;
 }
 
-export default function PreviewPanel({
+function PreviewPanel({
   currentStepKey,
   blocks,
   selectedBlockId,
@@ -299,3 +299,18 @@ export default function PreviewPanel({
     </div>
   );
 }
+
+// ✅ WAVE 2.9: React.memo para evitar re-renders desnecessários
+// PreviewPanel só re-renderiza quando dados relevantes mudarem
+export default React.memo(PreviewPanel, (prevProps, nextProps) => {
+  return (
+    prevProps.currentStepKey === nextProps.currentStepKey &&
+    prevProps.selectedBlockId === nextProps.selectedBlockId &&
+    prevProps.previewMode === nextProps.previewMode &&
+    prevProps.isVisible === nextProps.isVisible &&
+    prevProps.funnelId === nextProps.funnelId &&
+    prevProps.blocks?.length === nextProps.blocks?.length &&
+    prevProps.onBlockSelect === nextProps.onBlockSelect &&
+    prevProps.onStepChange === nextProps.onStepChange
+  );
+});
