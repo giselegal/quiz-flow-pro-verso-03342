@@ -766,14 +766,24 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
     // Auto-load de blocos do step ativo quando faltar no estado (respeita URL ?step=)
     // 🆕 FIX-003: Tratamento robusto de erros de rede com retry e fallback
+    // ✅ FIX: Usar ref para evitar loop infinito
+    const loadedStepsRef = useRef<Set<string>>(new Set());
+
     useEffect(() => {
         try {
             const idx = state.editor.currentStep || 1;
             const blocks = (state.editor.stepBlocks as any)[idx];
+
+            // Se já tem blocos, não precisa carregar
             if (Array.isArray(blocks) && blocks.length > 0) return;
 
             const stepId = `step-${String(idx).padStart(2, '0')}`;
             const funnelId = state.currentFunnel?.id;
+            const loadKey = `${funnelId || 'default'}:${stepId}`;
+
+            // ✅ FIX: Prevenir múltiplas tentativas de load do mesmo step
+            if (loadedStepsRef.current.has(loadKey)) return;
+            loadedStepsRef.current.add(loadKey);
 
             (async () => {
                 let retries = 0;
@@ -822,7 +832,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             })();
         } catch { void 0; }
-    }, [state.editor.currentStep, state.currentFunnel?.id, state.editor.stepBlocks]);
+    }, [state.editor.currentStep, state.currentFunnel?.id]); // ✅ FIX: Remover state.editor.stepBlocks das dependências
 
     // ✅ FIX: Solução robusta para evitar loop infinito - usando refs e memoização
     const processedStepRef = useRef<number | null>(null);
@@ -874,7 +884,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         return () => {
             window.removeEventListener('popstate', handler);
         };
-    }, [state.editor.totalSteps, state.currentFunnel?.id, state.editor.stepBlocks]);
+    }, [state.editor.totalSteps, state.currentFunnel?.id]); // ✅ FIX: Remover state.editor.stepBlocks
 
     // 🆕 G4 FIX: Listener para sincronização entre tabs via BroadcastChannel
     useEffect(() => {
@@ -1620,21 +1630,31 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, [state.editor.lastModified, state.editor.modifiedSteps, saveStepBlocks]);
 
     // Sincronizar histórico quando stepBlocks mudar (exceto em undo/redo)
-    const lastStepBlocksRef = useRef(state.editor.stepBlocks);
-    useEffect(() => {
-        const current = state.editor.stepBlocks;
-        const previous = lastStepBlocksRef.current;
+    // ✅ FIX: Usar polling manual ao invés de deps reativas para evitar loop
+    const lastStepBlocksHashRef = useRef<string>('');
 
-        // Só adicionar ao histórico se houver mudança real
-        if (JSON.stringify(current) !== JSON.stringify(previous)) {
-            pushHistoryState({
-                stepBlocks: current,
-                selectedBlockId: state.editor.selectedBlockId,
-                currentStep: state.editor.currentStep,
-            });
-            lastStepBlocksRef.current = current;
-        }
-    }, [state.editor.stepBlocks, state.editor.selectedBlockId, state.editor.currentStep, pushHistoryState]);
+    useEffect(() => {
+        const checkForChanges = () => {
+            const current = state.editor.stepBlocks;
+            const currentHash = JSON.stringify(current);
+
+            // ✅ FIX: Só adicionar ao histórico se hash mudou
+            if (currentHash !== lastStepBlocksHashRef.current && currentHash !== '{}') {
+                lastStepBlocksHashRef.current = currentHash;
+
+                pushHistoryState({
+                    stepBlocks: current,
+                    selectedBlockId: state.editor.selectedBlockId,
+                    currentStep: state.editor.currentStep,
+                });
+            }
+        };
+
+        // Verificar mudanças a cada 100ms (polling leve)
+        const interval = setInterval(checkForChanges, 100);
+
+        return () => clearInterval(interval);
+    }, [state.editor.selectedBlockId, state.editor.currentStep, pushHistoryState]); // ✅ FIX: stepBlocks não está nas deps
 
     // Implementar undo com dispatch para UNDO_EDITOR
     const undo = useCallback(() => {
