@@ -491,44 +491,44 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 },
             };
 
-         case 'SET_STEP_BLOCKS': {
-             const validBlocks: any[] = [];
-             const invalidBlocks: any[] = [];
+        case 'SET_STEP_BLOCKS': {
+            const validBlocks: any[] = [];
+            const invalidBlocks: any[] = [];
 
-             for (const block of action.payload.blocks) {
-                 // Validar bloco completo e manter propriedades adicionais (passthrough)
-                 const validation = blockSchema.safeParse(block);
-                 if (validation.success) {
-                     validBlocks.push(validation.data);
-                 } else {
-                     invalidBlocks.push({ block, errors: validation.error.issues });
-                     logger.warn('[SET_STEP_BLOCKS] Bloco inválido detectado', {
-                         stepIndex: action.payload.stepIndex,
-                         blockId: block?.id,
-                         errors: validation.error.issues,
-                     });
-                 }
-             }
+            for (const block of action.payload.blocks) {
+                // Validar bloco completo e manter propriedades adicionais (passthrough)
+                const validation = blockSchema.safeParse(block);
+                if (validation.success) {
+                    validBlocks.push(validation.data);
+                } else {
+                    invalidBlocks.push({ block, errors: validation.error.issues });
+                    logger.warn('[SET_STEP_BLOCKS] Bloco inválido detectado', {
+                        stepIndex: action.payload.stepIndex,
+                        blockId: block?.id,
+                        errors: validation.error.issues,
+                    });
+                }
+            }
 
-             if (invalidBlocks.length > 0) {
-                 logger.error('[SET_STEP_BLOCKS] Blocos inválidos ignorados', {
-                     stepIndex: action.payload.stepIndex,
-                     invalidCount: invalidBlocks.length,
-                     totalCount: action.payload.blocks.length,
-                 });
-             }
+            if (invalidBlocks.length > 0) {
+                logger.error('[SET_STEP_BLOCKS] Blocos inválidos ignorados', {
+                    stepIndex: action.payload.stepIndex,
+                    invalidCount: invalidBlocks.length,
+                    totalCount: action.payload.blocks.length,
+                });
+            }
 
-             return {
-                 ...state,
-                 editor: {
-                     ...state.editor,
-                     stepBlocks: {
-                         ...state.editor.stepBlocks,
-                         [action.payload.stepIndex]: validBlocks,
-                     },
-                 },
-             };
-         }
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    stepBlocks: {
+                        ...state.editor.stepBlocks,
+                        [action.payload.stepIndex]: validBlocks,
+                    },
+                },
+            };
+        }
 
         case 'VALIDATE_STEP':
             return {
@@ -581,6 +581,7 @@ interface SuperUnifiedContextType {
     publishFunnel: (opts?: { ensureSaved?: boolean }) => Promise<void>;
     saveStepBlocks: (stepIndex: number) => Promise<void>;
     ensureAllDirtyStepsSaved: () => Promise<void>;
+    syncStepBlocks: (stepIndex: number, forceSync?: boolean) => Promise<void>;
     createFunnel: (name: string, options?: any) => Promise<UnifiedFunnelData>;
     deleteFunnel: (id: string) => Promise<boolean>;
     duplicateFunnel: (id: string, newName?: string) => Promise<UnifiedFunnelData>;
@@ -724,7 +725,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } catch (error) {
             logger.error('[G19] Erro ao restaurar currentStep', { error });
         }
-  }, [debugMode, state.editor.totalSteps]);
+    }, [debugMode, state.editor.totalSteps]);
 
     // Auto-load de blocos do step ativo quando faltar no estado (respeita URL ?step=)
     useEffect(() => {
@@ -751,32 +752,32 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     // ✅ FIX: Solução robusta para evitar loop infinito - usando refs e memoização
     const processedStepRef = useRef<number | null>(null);
     const loadingStepRef = useRef<number | null>(null);
-    
+
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        
+
         const handler = async () => {
             try {
                 const params = new URLSearchParams(window.location.search);
                 const s = params.get('step');
                 const n = s ? parseInt(s, 10) : NaN;
-                
+
                 if (!isNaN(n) && n >= 1 && n <= state.editor.totalSteps) {
                     // ✅ FIX: Verificar se já processamos este step usando ref
                     if (processedStepRef.current === n) return;
                     processedStepRef.current = n;
-                    
+
                     // Atualizar current step
                     dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: n } });
-                    
+
                     const key = `step-${String(n).padStart(2, '0')}`;
                     const existing = (state.editor.stepBlocks as any)[n];
-                    
+
                     // ✅ FIX: Carregar blocos apenas se necessário e não estiver carregando
                     if (!Array.isArray(existing) || existing.length === 0) {
                         if (loadingStepRef.current === n) return; // Já está carregando
                         loadingStepRef.current = n;
-                        
+
                         try {
                             const res = await hierarchicalTemplateSource.getPrimary(key, state.currentFunnel?.id || undefined);
                             if (res?.data && Array.isArray(res.data)) {
@@ -789,12 +790,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             } catch { void 0; }
         };
-        
+
         window.addEventListener('popstate', handler);
-        
+
         // ✅ FIX: Executar apenas quando necessário
         handler();
-        
+
         return () => {
             window.removeEventListener('popstate', handler);
         };
@@ -1145,12 +1146,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     const updateBlock = useDebounce(async (stepIndex: number, blockId: string, updates: any) => {
         const timestamp = Date.now();
         dispatch({ type: 'UPDATE_BLOCK', payload: { stepIndex, blockId, updates } });
-        dispatch({ 
-            type: 'SET_EDITOR_STATE', 
-            payload: { 
+        dispatch({
+            type: 'SET_EDITOR_STATE',
+            payload: {
                 lastModified: timestamp,
                 modifiedSteps: { ...state.editor.modifiedSteps, [`step-${stepIndex}`]: timestamp }
-            } 
+            }
         });
         logger.debug(`[G6] Block updated with debounce: step-${stepIndex}, block-${blockId}`, { timestamp });
     }, 16);
@@ -1163,12 +1164,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     const reorderBlocks = useDebounce((stepIndex: number, blocks: any[]) => {
         const timestamp = Date.now();
         dispatch({ type: 'REORDER_BLOCKS', payload: { stepIndex, blocks } });
-        dispatch({ 
-            type: 'SET_EDITOR_STATE', 
-            payload: { 
+        dispatch({
+            type: 'SET_EDITOR_STATE',
+            payload: {
                 lastModified: timestamp,
                 modifiedSteps: { ...state.editor.modifiedSteps, [`step-${stepIndex}`]: timestamp }
-            } 
+            }
         });
         logger.debug(`[G6] Blocks reordered with debounce: step-${stepIndex}`, { timestamp });
     }, 16);
@@ -1221,6 +1222,46 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         }
     }, [state.currentFunnel, state.editor.stepBlocks, debugMode]);
 
+    // ✅ WAVE 2: syncStepBlocks - Sincronização explícita com timestamps
+    const syncStepBlocks = useCallback(async (stepIndex: number, forceSync: boolean = false) => {
+        const funnel = state.currentFunnel;
+        if (!funnel?.id) {
+            if (debugMode) logger.warn('[syncStepBlocks] Sem funnel ativo, ignorando sync');
+            return;
+        }
+
+        const isDirty = state.editor.dirtySteps?.[stepIndex];
+        if (!isDirty && !forceSync) {
+            if (debugMode) logger.debug(`[syncStepBlocks] Step ${stepIndex} não está dirty, pulando`);
+            return;
+        }
+
+        const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
+        const blocks = state.editor.stepBlocks[stepIndex] || [];
+
+        try {
+            if (debugMode) logger.info(`[syncStepBlocks] Sincronizando ${stepId} (${blocks.length} blocos)`);
+
+            // Adicionar timestamps automáticos antes de salvar
+            const blocksWithTimestamps = blocks.map(block => ({
+                ...block,
+                _syncedAt: Date.now(),
+                _version: (block._version || 0) + 1,
+            }));
+
+            await hierarchicalTemplateSource.setPrimary(stepId, blocksWithTimestamps, funnel.id);
+
+            // Marcar como não-dirty e atualizar lastSaved
+            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex, dirty: false } });
+            dispatch({ type: 'SET_EDITOR_STATE', payload: { lastSaved: Date.now() } });
+
+            if (debugMode) logger.info(`[syncStepBlocks] ✅ ${stepId} sincronizado com sucesso`);
+        } catch (error: any) {
+            logger.error(`[syncStepBlocks] Erro ao sincronizar ${stepId}:`, error);
+            throw error;
+        }
+    }, [state.currentFunnel, state.editor.dirtySteps, state.editor.stepBlocks, debugMode]);
+
     const ensureAllDirtyStepsSaved = useCallback(async () => {
         const funnel = state.currentFunnel;
         if (!funnel?.id) return;
@@ -1229,18 +1270,15 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         for (const [idxStr] of entries) {
             const idx = Number(idxStr);
             if (Number.isFinite(idx) && idx >= 1) {
-                const stepId = `step-${String(idx).padStart(2, '0')}`;
-                const blocks = state.editor.stepBlocks[idx] || [];
+                // Usar syncStepBlocks para garantir timestamps consistentes
                 promises.push(
-                    hierarchicalTemplateSource.setPrimary(stepId, blocks, funnel.id).then(() => idx),
+                    syncStepBlocks(idx, true).then(() => idx),
                 );
             }
         }
         const savedIdx = await Promise.all(promises);
-        savedIdx.forEach((idx) => {
-            dispatch({ type: 'SET_STEP_DIRTY', payload: { stepIndex: idx, dirty: false } });
-        });
-    }, [state.currentFunnel, state.editor.dirtySteps, state.editor.stepBlocks]);
+        if (debugMode) logger.info(`[ensureAllDirtyStepsSaved] ✅ ${savedIdx.length} steps salvos`);
+    }, [state.currentFunnel, state.editor.dirtySteps, syncStepBlocks, debugMode]);
 
     const publishFunnel = useCallback(async (opts: { ensureSaved?: boolean } = {}) => {
         const { ensureSaved = true } = opts;
@@ -1453,7 +1491,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     // ✅ G6 FIX: Auto-sync effect - monitora mudanças e sincroniza automaticamente
     useEffect(() => {
         if (!state.editor.lastModified) return;
-        
+
         const syncTimeout = setTimeout(() => {
             // Sincronizar steps modificados
             const modifiedSteps = Object.entries(state.editor.modifiedSteps);
@@ -1463,7 +1501,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     if (!isNaN(stepIndex) && state.editor.stepBlocks[stepIndex]) {
                         // Auto-save para steps modificados há mais de 1 segundo
                         if (Date.now() - timestamp > 1000) {
-                            saveStepBlocks(stepIndex).catch(err => 
+                            saveStepBlocks(stepIndex).catch(err =>
                                 logger.warn(`[G6] Auto-sync failed for step-${stepIndex}`, err)
                             );
                         }
@@ -1554,7 +1592,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     const importJSON = useCallback((json: string) => {
         try {
             const data = JSON.parse(json);
-            
+
             // Validar estrutura básica
             if (!data.stepBlocks || typeof data.stepBlocks !== 'object') {
                 throw new Error('JSON inválido: stepBlocks não encontrado');
@@ -1562,41 +1600,41 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
             // Importar stepBlocks
             Object.entries(data.stepBlocks).forEach(([stepIndex, blocks]) => {
-                dispatch({ 
-                    type: 'SET_STEP_BLOCKS', 
-                    payload: { stepIndex: Number(stepIndex), blocks: blocks as any[] }, 
+                dispatch({
+                    type: 'SET_STEP_BLOCKS',
+                    payload: { stepIndex: Number(stepIndex), blocks: blocks as any[] },
                 });
             });
 
             // Importar currentStep se disponível
             if (data.currentStep && typeof data.currentStep === 'number') {
-                dispatch({ 
-                    type: 'SET_EDITOR_STATE', 
-                    payload: { currentStep: data.currentStep } 
+                dispatch({
+                    type: 'SET_EDITOR_STATE',
+                    payload: { currentStep: data.currentStep }
                 });
             }
 
             // Importar settings se disponíveis
             if (data.funnelSettings) {
-                dispatch({ 
-                    type: 'SET_EDITOR_STATE', 
-                    payload: { funnelSettings: data.funnelSettings } 
+                dispatch({
+                    type: 'SET_EDITOR_STATE',
+                    payload: { funnelSettings: data.funnelSettings }
                 });
             }
 
-            showToast({ 
-                type: 'success', 
-                title: 'Sucesso', 
-                message: 'Editor importado com sucesso!' 
+            showToast({
+                type: 'success',
+                title: 'Sucesso',
+                message: 'Editor importado com sucesso!'
             });
 
             logger.info('[importJSON] Editor importado', { version: data.version, steps: Object.keys(data.stepBlocks).length });
         } catch (error: any) {
             const errorMsg = error.message || 'JSON inválido';
-            showToast({ 
-                type: 'error', 
-                title: 'Erro ao importar', 
-                message: errorMsg 
+            showToast({
+                type: 'error',
+                title: 'Erro ao importar',
+                message: errorMsg
             });
             logger.error('[importJSON] Erro ao importar JSON', { error: errorMsg });
         }
@@ -1690,7 +1728,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 if (mounted) {
                     dispatch({ type: 'SET_AUTH_STATE', payload: { user, isAuthenticated: !!user } });
                 }
-            } catch {}
+            } catch { }
         })();
         const { data: listener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
             const user = session?.user ?? null;
@@ -1700,7 +1738,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             mounted = false;
             try {
                 (listener as any)?.subscription?.unsubscribe?.();
-            } catch {}
+            } catch { }
         };
     }, []);
 
