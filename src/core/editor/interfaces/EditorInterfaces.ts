@@ -10,7 +10,7 @@
 // ============================================================================
 
 export type EditorMode = 'edit' | 'preview' | 'readonly';
-export type EditorPageType = 'intro' | 'question' | 'result' | 'custom';
+export type EditorPageType = 'intro' | 'question' | 'form' | 'result' | 'transition' | 'custom';
 
 export interface EditorBlockContent {
     text?: string;

@@ -607,7 +607,7 @@ interface EditorToolbarProps {
     canRedo: boolean;
     onUndo: () => void;
     onRedo: () => void;
-    validation: EditorValidationResult;
+    validation?: EditorValidationResult;
 }
 
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({
@@ -621,6 +621,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
     onRedo,
     validation,
 }) => {
+    const v: EditorValidationResult = validation ?? { isValid: true, errors: [], warnings: [] };
     return (
         <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between canvas-toolbar">
             {/* Left Side - Mode & Actions */}
@@ -668,13 +669,12 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
             {/* Right Side - Save & Validation */}
             <div className="flex items-center gap-4">
-                {/* Validation Status */}
-                {!validation.isValid && (
+                {!v.isValid && (
                     <div className="flex items-center gap-2 text-red-600">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                         </svg>
-                        <span className="text-sm">{validation.errors.length} errors</span>
+                        <span className="text-sm">{v.errors.length} errors</span>
                     </div>
                 )}
 

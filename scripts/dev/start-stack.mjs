@@ -7,12 +7,36 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 function log(msg) { console.log(`[stack] ${msg}`); }
 
 async function ensurePortFree(port) {
+    const isWin = process.platform === 'win32';
+    if (isWin) {
+        let pids = [];
+        try {
+            const out = execSync(`powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort ${port} -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess"`).toString();
+            pids = out.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        } catch {}
+        if (pids.length === 0) {
+            try {
+                const out = execSync(`netstat -ano | findstr :${port}`).toString();
+                pids = Array.from(new Set(out.split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(line => {
+                    const parts = line.split(/\s+/);
+                    return parts[parts.length - 1];
+                }).filter(Boolean)));
+            } catch {}
+        }
+        for (const pid of pids) {
+            try {
+                execSync(`taskkill /PID ${pid} /F`);
+                log(`Matou PID ${pid} porta ${port}`);
+            } catch {}
+        }
+        return;
+    }
     try {
         const pids = execSync(`lsof -ti:${port} || true`).toString().trim().split(/\s+/).filter(Boolean);
         for (const pid of pids) {
-            try { process.kill(Number(pid), 'SIGKILL'); log(`Matou PID ${pid} porta ${port}`); } catch { }
+            try { process.kill(Number(pid), 'SIGKILL'); log(`Matou PID ${pid} porta ${port}`); } catch {}
         }
-    } catch { }
+    } catch {}
 }
 
 async function waitFor(url, timeoutMs = 15000, interval = 500) {
@@ -41,25 +65,26 @@ async function waitFor(url, timeoutMs = 15000, interval = 500) {
     }
 
     log('Iniciando backend ...');
-    const backend = spawn('npm', ['run', 'dev:server'], { stdio: 'inherit', env: process.env });
+    const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+    const backend = spawn(`${npmCmd} run dev:server`, { shell: true, stdio: 'inherit', env: process.env });
 
     const backendReady = await waitFor(`http://localhost:${BACK_PORT}/health`, 12000, 600);
     if (!backendReady) {
         log('Backend não respondeu /health no tempo esperado. Encerrando.');
-        backend.kill('SIGKILL');
+        backend.kill(process.platform === 'win32' ? 'SIGTERM' : 'SIGKILL');
         process.exit(1);
     }
     log('Backend OK. Iniciando frontend (Vite) ...');
     const env = { ...process.env };
     // Permite sobrescrever porta do Vite em runtime se necessário
     if (!env.VITE_PORT) env.VITE_PORT = String(VITE_PORT);
-    const frontend = spawn('npm', ['run', 'dev'], { stdio: 'inherit', env });
+    const frontend = spawn(`${npmCmd} run dev`, { shell: true, stdio: 'inherit', env });
 
     // Inicia redirecionador somente quando as portas diferem
     let redirector = null;
     if (FRONT_PORT !== VITE_PORT) {
         log(`Iniciando redirecionador ${FRONT_PORT} -> ${VITE_PORT} ...`);
-        redirector = spawn('npm', ['run', 'dev:redirect-8080'], { stdio: 'inherit', env: { ...env, LEGACY_PORT: String(FRONT_PORT), TARGET_PORT: String(VITE_PORT) } });
+        redirector = spawn(`${npmCmd} run dev:redirect-8080`, { shell: true, stdio: 'inherit', env: { ...env, LEGACY_PORT: String(FRONT_PORT), TARGET_PORT: String(VITE_PORT) } });
     } else {
         log(`Redirecionador não necessário: FRONT_PORT (${FRONT_PORT}) == VITE_PORT (${VITE_PORT}).`);
     }
@@ -67,9 +92,9 @@ async function waitFor(url, timeoutMs = 15000, interval = 500) {
     // Encerrar filhos ao sair
     const shutdown = () => {
         log('Encerrando stack...');
-        backend.kill('SIGKILL');
-        frontend.kill('SIGKILL');
-        if (redirector) redirector.kill('SIGKILL');
+        backend.kill(process.platform === 'win32' ? 'SIGTERM' : 'SIGKILL');
+        frontend.kill(process.platform === 'win32' ? 'SIGTERM' : 'SIGKILL');
+        if (redirector) redirector.kill(process.platform === 'win32' ? 'SIGTERM' : 'SIGKILL');
         process.exit(0);
     };
     process.on('SIGINT', shutdown);
