@@ -18,10 +18,11 @@ import {
     EditorOperationType,
 } from '../interfaces/EditorInterfaces';
 
-// Importar serviços de monitoramento existentes
-import { MonitoringService } from '@/services/core/MonitoringService';
+// Importar serviços de analytics canônicos
+import { analyticsService, AnalyticsService } from '@/services/AnalyticsService';
 import { PerformanceMonitor } from '@/lib/utils/performanceMonitoring';
-import { RealTimeAnalytics } from '@/services/realTimeAnalytics';
+// Reaproveitar a mesma instância para eventos em tempo real
+type RealTimeAnalytics = AnalyticsService;
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -37,7 +38,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
     private fallbackMetrics: EditorFallbackMetrics[] = [];
     private usageMetrics: EditorUsageMetrics[] = [];
 
-    private monitoringService: MonitoringService;
+    private monitoringService: AnalyticsService;
     private performanceMonitor: PerformanceMonitor;
     private realTimeAnalytics: RealTimeAnalytics;
 
@@ -50,11 +51,16 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.sessionId = this.generateSessionId();
 
         // Integrar com serviços existentes
-        this.monitoringService = new MonitoringService();
+        this.monitoringService = analyticsService;
         this.performanceMonitor = PerformanceMonitor.getInstance();
-        this.realTimeAnalytics = RealTimeAnalytics.getInstance();
+        this.realTimeAnalytics = analyticsService;
 
         this.initializeCollection();
+    }
+
+    // Expor configuração atual de forma segura
+    public getConfig(): EditorMetricsConfig {
+        return { ...this.config };
     }
 
     private getDefaultConfig(config: Partial<EditorMetricsConfig>): EditorMetricsConfig {
@@ -99,7 +105,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         }
 
         // Registrar no sistema de monitoramento
-        this.monitoringService.log('info', 'EditorMetrics', 'Metrics collection initialized', {
+        this.monitoringService.trackEvent('editor_metrics_initialized', {
             sessionId: this.sessionId,
             config: this.config,
         });
@@ -144,8 +150,9 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             `editor.${metric.operation}.${metric.type}`,
             metric.value,
             metric.unit,
+            'performance',
             {
-                funnelId: metric.funnelId,
+                funnelId: metric.funnelId || 'unknown',
                 operation: metric.operation,
                 sessionId: this.sessionId,
             },
@@ -448,7 +455,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.fallbackMetrics = this.fallbackMetrics.filter(f => f.timestamp > cutoff);
         this.usageMetrics = this.usageMetrics.filter(u => u.sessionStart > cutoff);
 
-        this.monitoringService.log('info', 'EditorMetrics', 'Metrics cleared', {
+        this.monitoringService.trackEvent('editor_metrics_cleared', {
             cutoff: cutoff.toISOString(),
             remainingCount: this.metrics.length,
         });
@@ -485,13 +492,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
     }
 
     private recordAlert(type: string, message: string, data: any): void {
-        this.monitoringService.log('warn', 'EditorMetrics', message, {
-            alertType: type,
-            sessionId: this.sessionId,
-            ...data,
-        });
-
-        // Integrar com analytics para alertas críticos
+        // Registrar alerta via analytics
         this.realTimeAnalytics.trackEvent('editor_alert', {
             type,
             message,
@@ -524,7 +525,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
 
     private flushToMonitoring(): void {
         // Flush dos dados para sistema de monitoramento
-        this.monitoringService.log('info', 'EditorMetrics', 'Periodic flush', {
+        this.monitoringService.trackEvent('editor_metrics_flush', {
             metricsCount: this.metrics.length,
             sessionId: this.sessionId,
         });
@@ -552,7 +553,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         // Flush final
         this.flushToMonitoring();
 
-        this.monitoringService.log('info', 'EditorMetrics', 'Metrics provider disposed', {
+        this.monitoringService.trackEvent('editor_metrics_disposed', {
             sessionId: this.sessionId,
         });
     }
@@ -572,7 +573,7 @@ export class EditorMetricsFactory {
     }
 
     static getDefaultConfig(): EditorMetricsConfig {
-        return new EditorMetricsProviderImpl().config;
+        return new EditorMetricsProviderImpl().getConfig();
     }
 }
 

@@ -81,7 +81,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
       setIsLoading(true);
       try {
         // 🎯 Usar o serviço contextual para isolamento completo
-        const contextualData = await contextualFunnelService.loadFunnel(id);
+        const contextualData = (await contextualFunnelService.loadFunnel(id)) as any;
 
         if (!contextualData) {
           return null;
@@ -92,9 +92,9 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
           id: contextualData.id,
           name: contextualData.name,
           description: contextualData.description,
-          isPublished: (contextualData as any).isPublished || false,
-          version: parseInt(String(contextualData.version || 1)),
-          settings: contextualData.settings || {},
+          isPublished: contextualData.isPublished || false,
+          version: parseInt(String((contextualData as any).version || 1)),
+          settings: (contextualData as any).settings || {},
           pages: ((contextualData as any).pages || []).map((page: any) => ({
             id: page.id,
             pageType: page.page_type || 'step',
@@ -104,8 +104,14 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
             metadata:
               typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
           })),
-          createdAt: typeof contextualData.createdAt === 'string' ? contextualData.createdAt : contextualData.createdAt?.toISOString(),
-          updatedAt: typeof contextualData.updatedAt === 'string' ? contextualData.updatedAt : contextualData.updatedAt?.toISOString(),
+          createdAt:
+            typeof (contextualData as any).createdAt === 'string'
+              ? (contextualData as any).createdAt
+              : (contextualData as any).createdAt?.toISOString(),
+          updatedAt:
+            typeof (contextualData as any).updatedAt === 'string'
+              ? (contextualData as any).updatedAt
+              : (contextualData as any).updatedAt?.toISOString(),
         };
 
         return funnelData;
