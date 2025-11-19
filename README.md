@@ -202,6 +202,13 @@ npm run export-templates:verbose
 
 ## 📚 Documentação
 
+### 🎯 Guias Essenciais (NOVO)
+- [🚀 Guia de Acesso](docs/ACCESS_GUIDE.md) - URLs corretas, porta 8080, testes automatizados
+- [🔄 Fluxo de Dados](docs/DATA_FLOW_GUIDE.md) - Como funciona: Desenvolvimento vs Público, Supabase
+- [📊 Diagramas](docs/DATA_FLOW_DIAGRAM.md) - Visualização completa do sistema
+- [🐛 Fix de Botões](docs/BUTTON_FIX_REPORT.md) - Correção dos botões Editar/Visualizar
+
+### 📂 Estrutura Completa
 - **Análises:** `docs/analysis/` - Análises técnicas detalhadas
 - **Exemplos:** `docs/examples/` - Snippets e exemplos práticos
 - **Scripts:** `scripts/` - Scripts de automação e análise
