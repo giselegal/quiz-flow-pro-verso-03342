@@ -40,6 +40,23 @@ interface CollaborationPanelProps {
   onClose: () => void;
 }
 
+// Tipos explícitos para usuários e mensagens de chat
+interface CollaborationUser {
+  id: string;
+  name?: string;
+  role: 'owner' | 'editor' | 'viewer';
+  avatar?: string;
+  isOnline?: boolean;
+}
+
+interface ChatMessage {
+  id: string;
+  userAvatar?: string;
+  userName: string;
+  timestamp: string;
+  message: string;
+}
+
 export function CollaborationPanel({
   funnelId,
   userId,
@@ -177,8 +194,8 @@ export function CollaborationPanel({
               key={id}
               onClick={() => setActiveTab(id as any)}
               className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
             >
               <Icon className="w-4 h-4" />
@@ -407,9 +424,9 @@ export function CollaborationPanel({
                       >
                         <div className="flex items-start space-x-3">
                           <div className={`w-2 h-2 rounded-full mt-2 ${notification.type === 'error' ? 'bg-red-500' :
-                              notification.type === 'warning' ? 'bg-yellow-500' :
-                                notification.type === 'success' ? 'bg-green-500' :
-                                  'bg-blue-500'
+                            notification.type === 'warning' ? 'bg-yellow-500' :
+                              notification.type === 'success' ? 'bg-green-500' :
+                                'bg-blue-500'
                             }`} />
                           <div className="flex-1">
                             <div className="flex items-center justify-between">

@@ -252,6 +252,7 @@ export type BlockType =
   | 'result-cta'
   | 'result-secondary-styles'
   | 'quiz-score-display'
+  | 'stats-metrics'
   | 'modular-result-header'
   // Legacy/deprecated types (kept for backward compatibility)
   | 'result-title'
@@ -278,6 +279,9 @@ export type BlockType =
   | 'question-multiple-step'
   | 'processing-step'
   | 'offer-page-step';
+
+// Funnel block components (capitalized legacy identifiers)
+export type ExtendedFunnelBlockTypeAdditions = 'FunnelHeroBlock' | 'FunnelPainBlock';
 
 export interface FAQItem {
   id: string;
