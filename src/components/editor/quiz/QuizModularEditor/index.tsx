@@ -695,9 +695,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     return;
                 }
 
+                appLogger.info(`🔍 [QuizModularEditor] Chamando getStep para ${stepId}, template: ${templateOrResource}`);
                 const result = await svc.getStep(stepId, templateOrResource, { signal });
+                appLogger.info(`📦 [QuizModularEditor] getStep retornou:`, {
+                    success: result?.success,
+                    blocksCount: result?.data?.length || 0,
+                    blockIds: result?.data?.map((b: any) => b.id).slice(0, 5) || []
+                });
                 if (!signal.aborted && result?.success && result.data) {
+                    appLogger.info(`✅ [QuizModularEditor] Chamando setStepBlocks com ${result.data.length} blocos`);
                     setStepBlocks(stepIndex, result.data);
+                } else {
+                    appLogger.warn(`⚠️ [QuizModularEditor] getStep não retornou dados válidos`, {
+                        aborted: signal.aborted,
+                        success: result?.success,
+                        hasData: !!result?.data
+                    });
                 }
             } catch (e) {
                 if (!signal.aborted) {

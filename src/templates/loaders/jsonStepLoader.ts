@@ -83,24 +83,43 @@ export async function loadStepFromJson(
     }
 
     try {
+      appLogger.info(`🔍 [jsonStepLoader] Tentando URL: ${url}`);
       const res = await fetch(url, { cache: cacheMode });
       if (!res.ok) {
+        appLogger.info(`❌ [jsonStepLoader] Resposta não OK (${res.status}): ${url}`);
         // Registrar falha no cache
         failedPathsCache.set(url, now);
         return null;
       }
       const data = await res.json();
-      if (Array.isArray(data)) return data as Block[];
-      if (data && Array.isArray((data as any).blocks)) return (data as any).blocks as Block[];
+      appLogger.info(`📥 [jsonStepLoader] JSON carregado de ${url}, verificando estrutura...`);
+      
+      if (Array.isArray(data)) {
+        appLogger.info(`✅ [jsonStepLoader] Estrutura Array direta: ${data.length} blocos`);
+        return data as Block[];
+      }
+      if (data && Array.isArray((data as any).blocks)) {
+        appLogger.info(`✅ [jsonStepLoader] Estrutura {blocks: []}: ${(data as any).blocks.length} blocos`);
+        return (data as any).blocks as Block[];
+      }
 
       // quiz21-complete.json possui estrutura { steps: { [stepId]: { blocks: [...] } } }
       if (data && (data as any).steps && (data as any).steps[stepId]) {
         const stepObj = (data as any).steps[stepId];
-        if (Array.isArray(stepObj)) return stepObj as Block[];
-        if (Array.isArray(stepObj?.blocks)) return stepObj.blocks as Block[];
+        appLogger.info(`✅ [jsonStepLoader] Estrutura {steps: {${stepId}: ...}} encontrada`);
+        if (Array.isArray(stepObj)) {
+          appLogger.info(`✅ [jsonStepLoader] Step como array: ${stepObj.length} blocos`);
+          return stepObj as Block[];
+        }
+        if (Array.isArray(stepObj?.blocks)) {
+          appLogger.info(`✅ [jsonStepLoader] Step com .blocks: ${stepObj.blocks.length} blocos`);
+          return stepObj.blocks as Block[];
+        }
       }
+      appLogger.warn(`⚠️ [jsonStepLoader] Estrutura não reconhecida em ${url}`);
       return null;
-    } catch {
+    } catch (error) {
+      appLogger.error(`❌ [jsonStepLoader] Erro ao carregar ${url}:`, error);
       // Registrar falha no cache
       failedPathsCache.set(url, now);
       return null;

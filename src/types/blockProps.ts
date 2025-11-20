@@ -151,4 +151,49 @@ export interface AtomicBlockProps {
    * }
    */
   contextData?: Record<string, any>;
+  
+  /**
+   * Classes CSS adicionais para customização
+   * @example className="my-custom-class"
+   */
+  className?: string;
+  
+  /**
+   * Callback para validar dados do bloco
+   * Usado em formulários e campos que precisam validação
+   * @returns true se válido, false caso contrário
+   */
+  onValidate?: () => boolean;
+  
+  /**
+   * Callback para mudança de propriedade específica
+   * Usado pelo Painel de Propriedades para edição inline
+   * @param key - Nome da propriedade
+   * @param value - Novo valor
+   * @example onPropertyChange('fontSize', '4xl')
+   */
+  onPropertyChange?: (key: string, value: any) => void;
 }
+
+/**
+ * 🎯 UNIFIED BLOCK PROPS - Interface estendida com todas as propriedades possíveis
+ * 
+ * Combina AtomicBlockProps com propriedades específicas de editores e renderizadores.
+ * Use esta interface para componentes que precisam de todas as propriedades.
+ */
+export interface UnifiedBlockProps extends AtomicBlockProps {
+  /**
+   * Alias para block (compatibilidade com BlockRegistry)
+   */
+  data?: Block;
+  
+  /**
+   * Callback para seleção (alias para onClick)
+   */
+  onSelect?: () => void;
+}
+
+/**
+ * Helper type: extrai as props de um componente de bloco
+ */
+export type ExtractBlockProps<T> = T extends React.ComponentType<infer P> ? P : never;

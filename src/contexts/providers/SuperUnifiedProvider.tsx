@@ -1321,7 +1321,16 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     }, []);
 
     const getStepBlocks = useCallback((stepIndex: number) => {
-        return state.editor.stepBlocks[stepIndex] || [];
+        const blocks = state.editor.stepBlocks[stepIndex] || [];
+        console.log(`🔍 [SuperUnified] getStepBlocks(${stepIndex}) retornando:`, {
+            blocksCount: blocks.length,
+            blockIds: blocks.map(b => b.id).slice(0, 5),
+            allSteps: Object.keys(state.editor.stepBlocks),
+            stepsWithBlocks: Object.entries(state.editor.stepBlocks)
+                .filter(([_, b]) => b && b.length > 0)
+                .map(([step, b]) => `${step}:${b.length}`)
+        });
+        return blocks;
     }, [state.editor.stepBlocks]);
 
     // 💾 Persistência por etapa (USER_EDIT → Supabase funnels.config.steps[stepId])

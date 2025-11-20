@@ -241,12 +241,16 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
           // @ts-ignore
           const isDev = !!(import.meta as any)?.env?.DEV;
           skipIdb = isDev && this.JSON_ONLY && priority === DataSourcePriority.TEMPLATE_DEFAULT;
+          if (skipIdb) {
+            appLogger.debug(`[HierarchicalSource] Pulando IDB para TEMPLATE_DEFAULT (DEV + JSON_ONLY)`);
+          }
         } catch { /* noop */ }
 
         if (!skipIdb) {
           const idbRecord = await IndexedTemplateCache.get(idbKey);
           if (idbRecord && Array.isArray(idbRecord.blocks)) {
             const fresh = (Date.now() - idbRecord.savedAt) < (idbRecord.ttlMs || 5 * 60_000);
+            appLogger.info(`📦 [HierarchicalSource] IDB cache ${fresh ? 'FRESH' : 'STALE'} para ${idbKey}: ${idbRecord.blocks.length} blocos`);
             if (fresh) {
               const loadTime = performance.now() - startTime;
               const metadata: SourceMetadata = {
@@ -265,8 +269,10 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
         }
 
         const blocks = await fn();
+        appLogger.info(`📊 [HierarchicalSource] Resultado de ${DataSourcePriority[priority]}: ${blocks ? blocks.length : 0} blocos`);
         if (blocks && blocks.length > 0) {
           const loadTime = performance.now() - startTime;
+          appLogger.info(`✅ [HierarchicalSource] Sucesso! Retornando ${blocks.length} blocos de ${DataSourcePriority[priority]}`);
           const metadata: SourceMetadata = {
             source: priority,
             timestamp: Date.now(),
@@ -333,7 +339,9 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       }]
     });
     
-    throw new Error(`No data source available for step: ${stepId}`);
+    // 🆘 FALLBACK EMERGENCIAL: Retornar blocos mínimos para não quebrar o editor
+    appLogger.warn(`🆘 [HierarchicalSource] Usando fallback emergencial - retornando blocos mínimos para ${stepId}`);
+    return this.createEmergencyFallbackBlocks(stepId);
   }
 
   /**
@@ -647,6 +655,56 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
     const priorityStr = priority !== undefined ? DataSourcePriority[priority] : '';
     const timeStr = time !== undefined ? `${time.toFixed(1)}ms` : '';
     appLogger.info(`[HierarchicalSource] ${action} ${stepId} ${priorityStr} ${timeStr}`.trim());
+  }
+
+  /**
+   * 🆘 FALLBACK EMERGENCIAL: Cria blocos mínimos quando todas as fontes falharem
+   * Previne que o editor quebre completamente
+   */
+  private createEmergencyFallbackBlocks(stepId: string): DataSourceResult<Block[]> {
+    const stepNumber = parseInt(stepId.replace('step-', ''), 10);
+    const fallbackBlocks: Block[] = [
+      {
+        id: `${stepId}-emergency-title`,
+        type: 'text',
+        properties: {
+          fontSize: '2xl',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          color: '#333333'
+        },
+        content: {
+          text: `⚠️ Conteúdo Temporário - Step ${stepNumber}`
+        },
+        order: 1
+      },
+      {
+        id: `${stepId}-emergency-description`,
+        type: 'text',
+        properties: {
+          fontSize: 'base',
+          textAlign: 'center',
+          color: '#666666'
+        },
+        content: {
+          text: 'Este conteúdo é um fallback emergencial. Configure o template corretamente.'
+        },
+        order: 2
+      }
+    ];
+
+    appLogger.info(`🆘 [HierarchicalSource] Criados ${fallbackBlocks.length} blocos de fallback para ${stepId}`);
+
+    return {
+      data: fallbackBlocks,
+      metadata: {
+        source: DataSourcePriority.FALLBACK,
+        timestamp: Date.now(),
+        cacheHit: false,
+        loadTime: 0,
+        version: 'emergency-fallback'
+      }
+    };
   }
 
   /**
