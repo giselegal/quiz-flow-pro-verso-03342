@@ -8,7 +8,7 @@ import type { InlineBlockProps } from '@/types/InlineBlockProps';
  * Imagem responsiva com aspectos configuráveis
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
+const ImageDisplayInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

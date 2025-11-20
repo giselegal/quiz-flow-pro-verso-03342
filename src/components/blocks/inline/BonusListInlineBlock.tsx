@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
 import { Gift } from 'lucide-react';
 
@@ -52,7 +52,7 @@ const getMarginClass = (value: number | string | undefined, type: string): strin
   return `${prefix}-32`; // Máximo suportado
 };
 
-const BonusListInlineBlock: React.FC<BlockComponentProps> = ({
+const BonusListInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

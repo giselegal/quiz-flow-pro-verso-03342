@@ -8,7 +8,7 @@ import { logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const OfferProblemSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

@@ -8,7 +8,7 @@ import { appLogger } from '@/lib/utils/appLogger';
  * Mostra depoimento de cliente de forma compacta
  */
 
-const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
+const TestimonialCardInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

@@ -1,13 +1,13 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getBestUserName } from '@/core/user/name';
 import { mapToFriendlyStyle } from '@/core/style/naming';
 import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
 
-export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
+export const ModularResultHeaderBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     onPropertyChange,

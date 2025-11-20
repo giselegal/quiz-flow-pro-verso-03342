@@ -9,7 +9,7 @@ import { appLogger } from '@/lib/utils/appLogger';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  * Utiliza funcionalidades modernas do ES7+: destructuring, optional chaining, nullish coalescing
  */
-const TextInlineBlock: React.FC<BlockComponentProps> = ({
+const TextInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,
@@ -513,7 +513,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 export default TextInlineBlock;
 
 // ES7+ Type exports para reutilização
-export type { BlockComponentProps };
+export type { InlineBlockProps };
 
 // ES7+ Const assertion para readonly arrays/objects
 export const TEXT_SIZES = ['xs', 'sm', 'medium', 'lg', 'xl', '2xl', '3xl'] as const;

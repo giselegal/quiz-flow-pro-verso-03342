@@ -1,4 +1,5 @@
-import { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
+import { InlineBlockProps } from '@/types/InlineBlockProps';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
@@ -45,7 +46,7 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const RichTextBlock: React.FC<BlockComponentProps> = ({ block, className = '' }) => {
+const RichTextBlock: React.FC<InlineBlockProps> = ({ block, className = '' }) => {
   return (
     <div
       data-testid="block-text"

@@ -9,7 +9,7 @@ import { Award, ArrowRight, Lock, Shield } from 'lucide-react';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const OfferHeroSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

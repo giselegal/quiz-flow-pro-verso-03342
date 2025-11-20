@@ -9,7 +9,7 @@ import { ShoppingCart } from 'lucide-react';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-const OfferProductShowcaseInlineBlock: React.FC<BlockComponentProps> = ({
+const OfferProductShowcaseInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

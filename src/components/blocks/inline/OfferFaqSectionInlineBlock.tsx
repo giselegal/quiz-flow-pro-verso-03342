@@ -9,7 +9,7 @@ import { ChevronRight } from 'lucide-react';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const OfferFaqSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,
