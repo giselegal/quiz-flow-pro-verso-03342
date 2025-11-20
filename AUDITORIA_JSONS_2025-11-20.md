@@ -2,9 +2,10 @@
 
 ## Resumo
 
-- Total de arquivos: 273
-- Válidos: 273
+- Total de arquivos: 289
+- Válidos: 289
 - Inválidos: 0
+- Erros de esquema: 3
 
 ### Maiores arquivos
 - package-lock.json (820 KB)
@@ -27,10 +28,10 @@
 - src/config/optimized21StepsFunnel.json: stepIds duplicados = step-12, step-13, step-19, step-20, step-21
 
 ## Chaves de topo mais comuns
-- metadata: presente em 190 arquivos; tipos: object
-- blocks: presente em 184 arquivos; tipos: array
-- templateVersion: presente em 179 arquivos; tipos: string
-- analytics: presente em 136 arquivos; tipos: object
+- metadata: presente em 206 arquivos; tipos: object
+- blocks: presente em 200 arquivos; tipos: array
+- templateVersion: presente em 195 arquivos; tipos: string
+- analytics: presente em 152 arquivos; tipos: object
 - type: presente em 84 arquivos; tipos: string
 - version: presente em 39 arquivos; tipos: string, number
 - description: presente em 39 arquivos; tipos: string

@@ -1,9 +1,40 @@
 {
-  "stepId": "step-15",
-  "stepNumber": 15,
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-15-strategic-v3",
+    "name": "Q13 - Prioridades (Estratégica)",
+    "description": "Questão estratégica 3 sobre objetivos e resultados",
+    "category": "strategic-question",
+    "questionNumber": 13,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:33:47.497Z",
+    "updatedAt": "2025-10-13T00:33:47.497Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0",
+    "scoring": {
+      "weight": 3,
+      "timeLimit": 45,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.455Z",
+    "generated": "2025-11-20T22:47:09.895Z",
+    "source": "quiz21-complete.json"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
   "type": "strategic-question",
-  "nextStep": null,
-  "templateVersion": "3.2",
   "blocks": [
     {
       "id": "progress-bar-step-15",
@@ -123,26 +154,5 @@
         "nextVariant": "default"
       }
     }
-  ],
-  "metadata": {
-    "id": "step-15-strategic-v3",
-    "name": "Q13 - Prioridades (Estratégica)",
-    "description": "Questão estratégica 3 sobre objetivos e resultados",
-    "category": "strategic-question",
-    "questionNumber": 13,
-    "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:33:47.497Z",
-    "updatedAt": "2025-10-13T00:33:47.497Z",
-    "author": "Quiz Flow Pro",
-    "version": "3.0.0",
-    "scoring": {
-      "weight": 3,
-      "timeLimit": 45,
-      "hasCorrectAnswer": false,
-      "speedBonusEnabled": true
-    },
-    "scoringAddedAt": "2025-11-05T21:52:52.455Z",
-    "generated": "2025-11-20T22:47:09.895Z",
-    "source": "quiz21-complete.json"
-  }
+  ]
 }

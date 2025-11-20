@@ -21,35 +21,30 @@
       "hasCorrectAnswer": false,
       "speedBonusEnabled": true
     },
-    "scoringAddedAt": "2025-11-05T21:52:52.455Z"
+    "scoringAddedAt": "2025-11-05T21:52:52.455Z",
+    "generated": "2025-11-20T22:47:09.894Z",
+    "source": "quiz21-complete.json"
   },
   "theme": {
     "colors": {
       "primary": "#B89B7A",
       "secondary": "#432818",
       "background": "#FAF9F7",
-      "text": "#1F2937"
+      "text": "#1F2937",
+      "border": "#E5E7EB"
     },
     "fonts": {
       "heading": "Playfair Display, serif",
       "body": "Inter, sans-serif"
     }
   },
-  "validation": {},
-  "behavior": {},
   "type": "transition",
-  "title": "Transição Mid-Quiz",
-  "redirectPath": "/quiz-estilo/step-12",
-  "navigation": {
-    "autoAdvance": true,
-    "autoAdvanceDelay": 3500,
-    "nextStep": "step-13"
-  },
   "blocks": [
     {
       "id": "transition-hero-12",
       "type": "transition-hero",
       "order": 0,
+      "parentId": null,
       "properties": {
         "backgroundColor": "#FAF9F7",
         "textColor": "#432818",
@@ -65,34 +60,35 @@
         "message": "Continue para descobrir ainda mais sobre seu estilo único!",
         "autoAdvanceDelay": 3500,
         "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-12-transition-text",
       "type": "transition-text",
       "order": 1,
+      "parentId": null,
       "properties": {
         "type": "fade",
         "duration": 300
       },
       "content": {
         "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-12-transition-cta",
-      "type": "CTAButton",
+      "type": "cta-inline",
       "order": 2,
-      "properties": {},
+      "parentId": null,
+      "properties": {
+        "_originalType": "CTAButton"
+      },
       "content": {
         "label": "Continuar",
         "href": "#next",
         "variant": "primary",
         "size": "medium"
-      },
-      "parentId": null
+      }
     }
   ]
 }

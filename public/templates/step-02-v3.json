@@ -15,7 +15,9 @@
       "hasCorrectAnswer": false,
       "speedBonusEnabled": true
     },
-    "scoringAddedAt": "2025-11-05T21:52:52.452Z"
+    "scoringAddedAt": "2025-11-05T21:52:52.452Z",
+    "generated": "2025-11-20T22:47:09.892Z",
+    "source": "quiz21-complete.json"
   },
   "theme": {
     "colors": {
@@ -30,31 +32,13 @@
       "body": "Inter, sans-serif"
     }
   },
-  "validation": {
-    "required": [
-      "selectedOptions"
-    ],
-    "rules": {
-      "selectedOptions": {
-        "minItems": 3,
-        "maxItems": 3,
-        "errorMessage": "Selecione exatamente 3 opções"
-      }
-    }
-  },
-  "behavior": {
-    "autoAdvance": true
-  },
   "type": "question",
-  "redirectPath": "/quiz-estilo/step-02",
-  "navigation": {
-    "nextStep": "step-03"
-  },
   "blocks": [
     {
       "id": "progress-bar-step-02",
       "type": "question-progress",
       "order": 0,
+      "parentId": null,
       "properties": {
         "padding": 8
       },
@@ -64,29 +48,30 @@
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-02-title",
-      "type": "question-title",
+      "type": "heading-inline",
       "order": 1,
+      "parentId": null,
       "properties": {
         "backgroundColor": "transparent",
         "padding": 16,
         "type": "fade",
-        "duration": 300
+        "duration": 300,
+        "_originalType": "question-title"
       },
       "content": {
         "text": "Pergunta 1 de 10",
         "subtitle": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-02-options",
       "type": "options-grid",
       "order": 2,
+      "parentId": null,
       "properties": {
         "backgroundColor": "transparent",
         "padding": 16,
@@ -145,13 +130,13 @@
         "minSelections": 3,
         "maxSelections": 3,
         "showImages": true
-      },
-      "parentId": null
+      }
     },
     {
       "id": "navigation-step-02",
       "type": "question-navigation",
       "order": 3,
+      "parentId": null,
       "properties": {
         "showBack": true,
         "showNext": true,
@@ -164,8 +149,7 @@
         "nextLabel": "Avançar",
         "backVariant": "outline",
         "nextVariant": "default"
-      },
-      "parentId": null
+      }
     }
   ]
 }

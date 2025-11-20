@@ -1,12 +1,43 @@
 {
-  "stepId": "step-08",
-  "stepNumber": 8,
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-05-question-v3",
+    "name": "Q4 - Ocasiões",
+    "description": "Questão 4 sobre preferências de estilo",
+    "category": "quiz-question",
+    "questionNumber": 4,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:32:31.721Z",
+    "updatedAt": "2025-10-13T00:32:31.721Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0",
+    "scoring": {
+      "weight": 1,
+      "timeLimit": 30,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.453Z",
+    "generated": "2025-11-20T22:47:09.893Z",
+    "source": "quiz21-complete.json"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
   "type": "question",
-  "nextStep": null,
-  "templateVersion": "3.2",
   "blocks": [
     {
-      "id": "progress-bar-step-08",
+      "id": "progress-bar-step-05",
       "type": "question-progress",
       "order": 0,
       "parentId": null,
@@ -14,7 +45,7 @@
         "padding": 8
       },
       "content": {
-        "stepNumber": 8,
+        "stepNumber": 5,
         "totalSteps": 21,
         "showPercentage": true,
         "barColor": "#B89B7A",
@@ -22,7 +53,7 @@
       }
     },
     {
-      "id": "step-08-question-title",
+      "id": "step-05-question-title",
       "type": "heading-inline",
       "order": 1,
       "parentId": null,
@@ -33,11 +64,11 @@
         "_originalType": "question-title"
       },
       "content": {
-        "text": "QUAL SUA CALÇA FAVORITA?"
+        "text": "QUAIS DETALHES VOCÊ GOSTA?"
       }
     },
     {
-      "id": "question-hero-08",
+      "id": "question-hero-05",
       "type": "quiz-question-header",
       "order": 2,
       "parentId": null,
@@ -48,18 +79,18 @@
         "_originalType": "question-hero"
       },
       "content": {
-        "questionNumber": "7 de 10",
-        "questionText": "QUAL SUA CALÇA FAVORITA?",
-        "currentQuestion": 7,
+        "questionNumber": "4 de 10",
+        "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
+        "currentQuestion": 4,
         "totalQuestions": 13,
-        "progressValue": 38,
+        "progressValue": 24,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
       }
     },
     {
-      "id": "options-grid-08",
+      "id": "options-grid-05",
       "type": "options-grid",
       "order": 3,
       "parentId": null,
@@ -75,50 +106,42 @@
         "options": [
           {
             "id": "natural",
-            "text": "Calça fluida acetinada bege",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
+            "text": "Poucos detalhes, básico e prático",
             "value": "natural"
           },
           {
             "id": "classico",
-            "text": "Calça de alfaiataria cinza",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
+            "text": "Bem discretos e sutis, clean e clássico",
             "value": "classico"
           },
           {
             "id": "contemporaneo",
-            "text": "Jeans reto e básico",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+            "text": "Básico, mas com um toque de estilo",
             "value": "contemporaneo"
           },
           {
             "id": "elegante",
-            "text": "Calça reta bege de tecido",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
+            "text": "Detalhes refinados, chic e que deem status",
             "value": "elegante"
           },
           {
             "id": "romantico",
-            "text": "Calça ampla rosa alfaiatada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
+            "text": "Detalhes delicados, laços, babados",
             "value": "romantico"
           },
           {
             "id": "sexy",
-            "text": "Legging preta de couro",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
+            "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
             "value": "sexy"
           },
           {
             "id": "dramatico",
-            "text": "Calça reta preta de couro",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
+            "text": "Detalhes marcantes, firmeza e peso",
             "value": "dramatico"
           },
           {
             "id": "criativo",
-            "text": "Calça estampada floral leve e ampla",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
+            "text": "Detalhes diferentes do convencional, produções ousadas",
             "value": "criativo"
           }
         ],
@@ -135,7 +158,7 @@
       }
     },
     {
-      "id": "navigation-step-08",
+      "id": "navigation-step-05",
       "type": "question-navigation",
       "order": 4,
       "parentId": null,
@@ -153,26 +176,5 @@
         "nextVariant": "default"
       }
     }
-  ],
-  "metadata": {
-    "id": "step-08-question-v3",
-    "name": "Q7 - Conforto",
-    "description": "Questão 7 sobre preferências de estilo",
-    "category": "quiz-question",
-    "questionNumber": 7,
-    "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:32:31.723Z",
-    "updatedAt": "2025-10-13T00:32:31.723Z",
-    "author": "Quiz Flow Pro",
-    "version": "3.0.0",
-    "scoring": {
-      "weight": 1,
-      "timeLimit": 30,
-      "hasCorrectAnswer": false,
-      "speedBonusEnabled": true
-    },
-    "scoringAddedAt": "2025-11-05T21:52:52.453Z",
-    "generated": "2025-11-20T22:47:09.894Z",
-    "source": "quiz21-complete.json"
-  }
+  ]
 }

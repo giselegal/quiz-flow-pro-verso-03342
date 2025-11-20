@@ -22,13 +22,13 @@
       "hasCorrectAnswer": false,
       "speedBonusEnabled": false
     },
-    "scoringAddedAt": "2025-11-05T21:52:52.452Z"
+    "scoringAddedAt": "2025-11-05T21:52:52.452Z",
+    "generated": "2025-11-20T22:47:09.891Z",
+    "source": "quiz21-complete.json"
   },
   "theme": {
     "colors": {
       "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
       "secondary": "#432818",
       "background": "#FAF9F7",
       "text": "#1F2937",
@@ -37,45 +37,15 @@
     "fonts": {
       "heading": "Playfair Display, serif",
       "body": "Inter, sans-serif"
-    },
-    "spacing": {
-      "sm": 8,
-      "md": 16,
-      "lg": 24,
-      "xl": 32
-    },
-    "borderRadius": {
-      "sm": 4,
-      "md": 8,
-      "lg": 12,
-      "xl": 16
     }
-  },
-  "validation": {
-    "required": [
-      "selectedOptions"
-    ],
-    "rules": {
-      "selectedOptions": {
-        "minItems": 3,
-        "maxItems": 3,
-        "errorMessage": "Selecione exatamente 3 opções"
-      }
-    }
-  },
-  "behavior": {
-    "autoAdvance": true
   },
   "type": "intro",
-  "redirectPath": "/quiz-estilo/step-01",
-  "navigation": {
-    "nextStep": "step-02"
-  },
   "blocks": [
     {
       "id": "quiz-intro-header",
       "type": "quiz-intro-header",
       "order": 0,
+      "parentId": null,
       "properties": {
         "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
         "logoAlt": "Logo Gisele Galvão",
@@ -104,12 +74,13 @@
         "animationType": "fade",
         "animationDuration": 300
       },
-      "parentId": null
+      "content": {}
     },
     {
       "id": "intro-title",
       "type": "intro-title",
       "order": 1,
+      "parentId": null,
       "properties": {
         "padding": 16,
         "type": "fade",
@@ -122,13 +93,13 @@
       },
       "content": {
         "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "intro-image",
       "type": "intro-image",
       "order": 2,
+      "parentId": null,
       "properties": {
         "objectFit": "contain",
         "maxWidth": 300,
@@ -140,13 +111,13 @@
         "width": 300,
         "height": 204,
         "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "intro-description",
       "type": "intro-description",
       "order": 3,
+      "parentId": null,
       "properties": {
         "padding": 16,
         "animationType": "fade",
@@ -155,13 +126,13 @@
       },
       "content": {
         "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "intro-form",
       "type": "intro-form",
       "order": 4,
+      "parentId": null,
       "properties": {
         "padding": 16,
         "type": "slideUp",
@@ -175,8 +146,7 @@
         "buttonText": "Quero Descobrir meu Estilo Agora!",
         "required": true,
         "helperText": "Seu nome é necessário para personalizar sua experiência."
-      },
-      "parentId": null
+      }
     }
   ]
 }

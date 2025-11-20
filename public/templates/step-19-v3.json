@@ -1,9 +1,45 @@
 {
-  "stepId": "step-19",
-  "stepNumber": 19,
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-19-transition-v3",
+    "name": "Transição Pré-Resultado",
+    "description": "Página de transição antes da exibição do resultado final",
+    "category": "transition-result",
+    "tags": [
+      "quiz",
+      "transition",
+      "loading",
+      "result",
+      "pre-result"
+    ],
+    "createdAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0",
+    "scoring": {
+      "weight": 1,
+      "timeLimit": 30,
+      "hasCorrectAnswer": false,
+      "speedBonusEnabled": true
+    },
+    "scoringAddedAt": "2025-11-05T21:52:52.456Z",
+    "generated": "2025-11-20T22:47:09.896Z",
+    "source": "quiz21-complete.json"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  },
   "type": "transition-result",
-  "nextStep": null,
-  "templateVersion": "3.2",
   "blocks": [
     {
       "id": "transition-hero-19",
@@ -51,31 +87,5 @@
         "size": "small"
       }
     }
-  ],
-  "metadata": {
-    "id": "step-19-transition-v3",
-    "name": "Transição Pré-Resultado",
-    "description": "Página de transição antes da exibição do resultado final",
-    "category": "transition-result",
-    "tags": [
-      "quiz",
-      "transition",
-      "loading",
-      "result",
-      "pre-result"
-    ],
-    "createdAt": "2025-01-13T00:00:00.000Z",
-    "updatedAt": "2025-01-13T00:00:00.000Z",
-    "author": "Quiz Flow Pro",
-    "version": "3.0.0",
-    "scoring": {
-      "weight": 1,
-      "timeLimit": 30,
-      "hasCorrectAnswer": false,
-      "speedBonusEnabled": true
-    },
-    "scoringAddedAt": "2025-11-05T21:52:52.456Z",
-    "generated": "2025-11-20T22:47:09.896Z",
-    "source": "quiz21-complete.json"
-  }
+  ]
 }
