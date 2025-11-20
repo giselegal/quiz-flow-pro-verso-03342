@@ -7,6 +7,8 @@
 export type { BlockData, BlockDefinition, UnifiedBlockComponentProps, BlockComponentProps, BlockComponent, TypedBlockComponentProps, EditableBlockComponentProps, QuizBlockComponentProps } from '@/types/core/BlockInterfaces';
 // Re-export from blockProps.ts for unified access
 export type { AtomicBlockProps, UnifiedBlockProps } from '@/types/blockProps';
+// Re-export InlineBlockProps - interface canônica para componentes inline
+export type { InlineBlockProps, InlineBlockComponentProps } from '@/types/InlineBlockProps';
 // Preserve the historical `Block` name (many files / propTypes expect `Block`)
 export type { Block } from '@/types/editor';
 export type { BlockType } from '@/types/editor';

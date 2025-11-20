@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -279,16 +279,18 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         if (!g.__TEXT_INLINE_LOGS.has(hash)) {
           g.__TEXT_INLINE_LOGS.add(hash);
           // eslint-disable-next-line no-console
-          appLogger.info('� TextInlineBlock DEBUG COMPLETO:', { data: [{
-                        blockId: block?.id,
-                        rawContent: personalizedContent,
-                        contentLength: personalizedContent?.length,
-                        hasHtml,
-                        hasSpanTag,
-                        hasStrongTag,
-                        willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-                        contentPreview: `${personalizedContent?.substring(0, 200)  }...`,
-                      }] });
+          appLogger.info('� TextInlineBlock DEBUG COMPLETO:', {
+            data: [{
+              blockId: block?.id,
+              rawContent: personalizedContent,
+              contentLength: personalizedContent?.length,
+              hasHtml,
+              hasSpanTag,
+              hasStrongTag,
+              willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
+              contentPreview: `${personalizedContent?.substring(0, 200)}...`,
+            }]
+          });
         }
       }
     } catch {
@@ -361,7 +363,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   const autoResizeTextarea = useCallback(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight  }px`;
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, []);
 

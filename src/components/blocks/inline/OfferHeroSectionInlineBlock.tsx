@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
 import { Award, ArrowRight, Lock, Shield } from 'lucide-react';
 

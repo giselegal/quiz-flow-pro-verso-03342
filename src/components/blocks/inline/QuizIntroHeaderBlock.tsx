@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
 import { useImageWithFallback } from '@/hooks/useImageWithFallback';
@@ -7,7 +7,7 @@ import { useImageWithFallback } from '@/hooks/useImageWithFallback';
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
 import { appLogger } from '@/lib/utils/appLogger';
 
-interface QuizIntroHeaderBlockProps extends BlockComponentProps {
+interface QuizIntroHeaderBlockProps extends InlineBlockProps {
   disabled?: boolean;
   properties?: HeaderProperties;
 }
@@ -45,15 +45,17 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   React.useEffect(() => {
     if (isDev && verbose) {
       // eslint-disable-next-line no-console
-      appLogger.info('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', { data: [{
-                blockId: block.id,
-                logoUrl: block.properties.logoUrl,
-                logoWidth: block.properties.logoWidth,
-                logoHeight: block.properties.logoHeight,
-                progressValue: block.properties.progressValue,
-                showProgress: block.properties.showProgress,
-                showBackButton: block.properties.showBackButton,
-              }] });
+      appLogger.info('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
+        data: [{
+          blockId: block.id,
+          logoUrl: block.properties.logoUrl,
+          logoWidth: block.properties.logoWidth,
+          logoHeight: block.properties.logoHeight,
+          progressValue: block.properties.progressValue,
+          showProgress: block.properties.showProgress,
+          showBackButton: block.properties.showBackButton,
+        }]
+      });
     }
     // Dependências por valor para evitar disparos por identidade do objeto
   }, [

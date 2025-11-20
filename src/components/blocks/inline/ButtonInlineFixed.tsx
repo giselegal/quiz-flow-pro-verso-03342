@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React, { useEffect, useState } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
 
-interface ButtonInlineFixedProps extends BlockComponentProps {
+interface ButtonInlineFixedProps extends InlineBlockProps {
   disabled?: boolean;
 }
 
@@ -60,12 +60,14 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
       if (detail.blockId === watchInputId) {
         const isValid = detail.valid && detail.value.trim().length > 0;
         setInputValid(isValid);
-        appLogger.info('🔘 [ButtonInlineFixed] Input validado:', { data: [{
-                    blockId: block?.id,
-                    inputId: watchInputId,
-                    inputValue: detail.value,
-                    valid: isValid,
-                  }] });
+        appLogger.info('🔘 [ButtonInlineFixed] Input validado:', {
+          data: [{
+            blockId: block?.id,
+            inputId: watchInputId,
+            inputValue: detail.value,
+            valid: isValid,
+          }]
+        });
       }
     };
 
@@ -94,13 +96,15 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
 
       if (gridId === watchGridId) {
         setGridSelectionValid(!!valid);
-        appLogger.info('🔘 [ButtonInlineFixed] Grid validado:', { data: [{
-                    blockId: block?.id,
-                    gridId: watchGridId,
-                    selectedCount,
-                    requiredCount: minRequired,
-                    valid,
-                  }] });
+        appLogger.info('🔘 [ButtonInlineFixed] Grid validado:', {
+          data: [{
+            blockId: block?.id,
+            gridId: watchGridId,
+            selectedCount,
+            requiredCount: minRequired,
+            valid,
+          }]
+        });
       }
     };
 
@@ -112,12 +116,14 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
   useEffect(() => {
     const overallValid = inputValid && gridSelectionValid;
     setIsButtonEnabled(overallValid);
-    appLogger.info('🔘 [ButtonInlineFixed] Estado geral do botão:', { data: [{
-            blockId: block?.id,
-            inputValid,
-            gridSelectionValid,
-            overallValid,
-          }] });
+    appLogger.info('🔘 [ButtonInlineFixed] Estado geral do botão:', {
+      data: [{
+        blockId: block?.id,
+        inputValid,
+        gridSelectionValid,
+        overallValid,
+      }]
+    });
   }, [inputValid, gridSelectionValid, block?.id]);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -129,11 +135,13 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
       return;
     }
 
-    appLogger.info('✅ [ButtonInlineFixed] Botão clicado:', { data: [{
-            blockId: block?.id,
-            nextStepUrl,
-            nextStepId,
-          }] });
+    appLogger.info('✅ [ButtonInlineFixed] Botão clicado:', {
+      data: [{
+        blockId: block?.id,
+        nextStepUrl,
+        nextStepId,
+      }]
+    });
 
     // Executar ação de navegação se configurada
     if (nextStepUrl) {
@@ -182,10 +190,9 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
         className={`
           transition-all duration-200 font-semibold
           ${fullWidth ? 'w-full' : ''}
-          ${
-            isButtonEnabled
-              ? 'hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]'
-              : 'cursor-not-allowed'
+          ${isButtonEnabled
+            ? 'hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]'
+            : 'cursor-not-allowed'
           }
         `}
       >

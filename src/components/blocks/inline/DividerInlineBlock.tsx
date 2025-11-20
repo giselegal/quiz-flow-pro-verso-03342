@@ -1,9 +1,9 @@
 // @ts-nocheck
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { cn } from '@/lib/utils';
 import { getMarginClass, MarginProps, defaultMargins } from '@/lib/utils/marginUtils';
 
-interface Props extends BlockComponentProps, MarginProps {
+interface Props extends InlineBlockProps, MarginProps {
   style?: 'solid' | 'dashed' | 'dotted';
   thickness?: number;
   color?: string;

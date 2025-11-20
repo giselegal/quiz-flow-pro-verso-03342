@@ -1,5 +1,5 @@
 import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * AccessibilitySkipLinkBlock

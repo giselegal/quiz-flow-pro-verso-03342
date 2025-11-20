@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Check } from 'lucide-react';
 
-interface Props extends BlockComponentProps {
+interface Props extends InlineBlockProps {
   title?: string;
   benefits?: string[];
   iconColor?: string;

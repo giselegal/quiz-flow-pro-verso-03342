@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
 
 /**
@@ -61,7 +61,7 @@ const OfferHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         className={cn(
           spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.small,
           containerClasses[containerWidth as keyof typeof containerClasses] ||
-            containerClasses.container,
+          containerClasses.container,
           'flex justify-center',
         )}
       >

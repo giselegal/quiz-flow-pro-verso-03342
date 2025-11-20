@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import EnhancedOptimizedImage from '@/components/ui/EnhancedOptimizedImage';
 // Update the import path below to the correct location of BlockComponentProps
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * ImageDisplayInlineBlock - Componente modular inline horizontal

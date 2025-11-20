@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Quote } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**

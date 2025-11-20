@@ -138,7 +138,7 @@ function AppCore() {
                     }, 50);
                 }
             }
-        } catch {}
+        } catch { }
 
         // 🚀 P2: Setup critical routes preload
         setupCriticalRoutes();
@@ -229,9 +229,11 @@ function AppCore() {
                                         {() => {
                                             appLogger.info('🏠 Home route matched');
                                             return (
-                                                <div data-testid="index-page">
-                                                    <Home />
-                                                </div>
+                                                <SuperUnifiedProvider>
+                                                    <div data-testid="index-page">
+                                                        <Home />
+                                                    </div>
+                                                </SuperUnifiedProvider>
                                             );
                                         }}
                                     </Route>

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { safeGetBlockProperties } from '@/lib/utils/blockUtils';
 import { ArrowRight, Check, Crown, Sparkles, Star, Zap } from 'lucide-react';
 import React, { useState } from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface Props {
@@ -160,13 +160,15 @@ const PricingCardInlineBlock: React.FC<Props> = ({
   const variantStyles = getVariantStyles();
   const IconComponent = variantStyles.icon;
 
-  appLogger.info('🛒 PricingCardInlineBlock render:', { data: [{
-        blockId: block.id,
-        hasProperties: !!properties,
-        title,
-        currentPrice,
-        variant,
-      }] });
+  appLogger.info('🛒 PricingCardInlineBlock render:', {
+    data: [{
+      blockId: block.id,
+      hasProperties: !!properties,
+      title,
+      currentPrice,
+      variant,
+    }]
+  });
 
   return (
     <div className="relative group">

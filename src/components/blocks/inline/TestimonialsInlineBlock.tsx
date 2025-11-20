@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { safeGetBlockProperties, logBlockDebug } from '@/lib/utils/blockUtils';
 
 /**

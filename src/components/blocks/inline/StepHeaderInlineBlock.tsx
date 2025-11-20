@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * StepHeaderInlineBlock - Componente modular inline horizontal
