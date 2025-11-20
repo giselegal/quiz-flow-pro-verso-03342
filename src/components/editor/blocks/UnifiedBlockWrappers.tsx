@@ -2,16 +2,6 @@ import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
 import FunnelPainSection from '@/components/funnel/base/FunnelPainSection';
 
 // Interface que todos os blocos do editor devem implementar
-interface BlockComponentProps {
-  block: {
-    id: string;
-    type: string;
-    properties: Record<string, any>;
-  };
-  isSelected: boolean;
-  onSaveInline: (blockId: string, updates: Partial<any>) => void;
-  onBlockSelect: (blockId: string) => void;
-}
 
 /**
  * UnifiedFunnelHeroBlock - Wrapper que adapta FunnelHeroSection para o editor

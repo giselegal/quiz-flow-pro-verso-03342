@@ -1,16 +1,6 @@
 import React from 'react';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface BlockComponentProps {
-    block: {
-        type: string;
-        content: any;
-        properties: any;
-    };
-    isSelected: boolean;
-    editMode: boolean;
-    previewMode?: boolean;
-    onSelect: () => void;
-}
 
 /**
  * 📊 SIMPLE SECONDARY STYLES BLOCK

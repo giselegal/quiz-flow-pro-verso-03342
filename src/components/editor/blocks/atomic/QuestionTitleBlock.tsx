@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import type { BlockComponentProps } from '@/types/blockTypes';
 
 export interface QuestionTitleBlockProps extends InlineBlockProps {
