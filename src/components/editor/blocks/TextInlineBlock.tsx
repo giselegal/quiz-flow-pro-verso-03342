@@ -317,7 +317,7 @@ const TextInlineBlock: React.FC<InlineBlockProps> = ({
             hasSpanTag,
             hasStrongTag,
             willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-            contentPreview: `${personalizedContent?.substring(0, 200)  }...`,
+            contentPreview: `${personalizedContent?.substring(0, 200)}...`,
           });
         }
       }
@@ -541,7 +541,7 @@ const TextInlineBlock: React.FC<InlineBlockProps> = ({
 // Component ends here - export will be at the end with React.memo
 
 // ES7+ Type exports para reutilização
-export type { BlockComponentProps };
+export type { InlineBlockProps };
 
 // ES7+ Const assertion para readonly arrays/objects
 export const TEXT_SIZES = ['xs', 'sm', 'medium', 'lg', 'xl', '2xl', '3xl'] as const;
@@ -569,7 +569,7 @@ export const createTextBlock = (
 });
 
 // ✅ OTIMIZAÇÃO: Adicionar memoização para melhor performance
-const areEqual = (prevProps: BlockComponentProps, nextProps: BlockComponentProps) => {
+const areEqual = (prevProps: InlineBlockProps, nextProps: InlineBlockProps) => {
   // Comparar ID do bloco
   if (prevProps.block?.id !== nextProps.block?.id) return false;
   if (prevProps.isSelected !== nextProps.isSelected) return false;

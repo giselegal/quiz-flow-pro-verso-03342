@@ -7,7 +7,7 @@ import { ProgressSection } from './ProgressSection';
 import { MainImageSection } from './MainImageSection';
 import type { BaseModuleProps } from './types';
 import { themeColors } from './types';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getBestUserName } from '@/core/user/name';
 import { mapToFriendlyStyle } from '@/core/style/naming';
@@ -72,7 +72,7 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
                 paddingClasses[padding],
                 borderRadiusClasses[borderRadius],
                 // Layout responsivo
-                `block md:${  containerLayoutClasses[containerLayout].replace('grid ', '').replace('flex ', '')}`,
+                `block md:${containerLayoutClasses[containerLayout].replace('grid ', '').replace('flex ', '')}`,
                 // Mobile layout
                 mobileLayoutClasses[mobileLayout],
             )}
@@ -168,7 +168,7 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
 };
 
 // Componente integrado com dados do quiz (compatibilidade)
-export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
+export const ModularResultHeaderBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     onPropertyChange,

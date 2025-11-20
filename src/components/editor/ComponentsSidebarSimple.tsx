@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { blockDefinitions } from '@/config/blockDefinitionsOptimized';
 import { MODULAR_COMPONENTS, type ModularComponent } from '@/config/modularComponents';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-// BlockDefinition removido - usar Block diretamente
 import {
   ChevronDown,
   ChevronRight,
@@ -18,7 +17,7 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 
-interface ComponentsSidebarSimpleProps {}
+interface ComponentsSidebarSimpleProps { }
 
 const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
   const { scrollRef } = useSyncedScroll({ source: 'components' });
@@ -34,7 +33,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
   });
 
   // 🎯 COMPONENTES MODULARES INTEGRADOS
-  const modularBlocks: BlockDefinition[] = MODULAR_COMPONENTS.map(
+  const modularBlocks: any[] = MODULAR_COMPONENTS.map(
     (modularComp: ModularComponent) => ({
       type: modularComp.type,
       name: `📦 ${modularComp.name}`,
