@@ -25,7 +25,7 @@ export interface QuizRuntimeContainerProps {
   onStepChange?: (stepId: string) => void;
   onComplete?: (results: any) => void;
   onBlockClick?: (blockId: string) => void;
-  
+
   // 🚀 FASE 3: Lazy loading options
   enableLazyLoad?: boolean;
   funnelId?: string;
@@ -52,7 +52,7 @@ export const QuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = (props)
     totalSteps,
     lazyLoadConfig,
   } = props;
-  
+
   // 🚀 FASE 3: Se lazy loading habilitado e sem quizContent pré-carregado, usar LazyQuizRuntimeContainer
   if (enableLazyLoad && !quizContent) {
     return (
@@ -67,7 +67,7 @@ export const QuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = (props)
       />
     );
   }
-  
+
   // Fallback: Renderização tradicional com quizContent completo
   return <TraditionalQuizRuntimeContainer {...props} />;
 };
@@ -172,7 +172,7 @@ const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
                       d.i = String(next);
                       e.currentTarget.src = `${base}images/quiz21-steps/${String(stepId).toLowerCase()}.${seq[next]}`;
                     }
-                  } catch {}
+                  } catch { }
                 }}
               />
             </Wrapper>
@@ -236,49 +236,49 @@ const TraditionalQuizRuntimeContainer: React.FC<QuizRuntimeContainerProps> = ({
           })();
           const colsClass = cols === 4 ? 'grid-cols-4' : cols === 3 ? 'grid-cols-3' : cols === 1 ? 'grid-cols-1' : 'grid-cols-2';
           return (
-          <Wrapper key={block.id}>
-            {(!block.content?.options || block.content?.options?.length === 0) && (
-              <div className="text-xs text-gray-400 text-center py-4">Sem opções configuradas</div>
-            )}
-            <div className={`w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto grid ${colsClass} gap-2`}>
-              {block.content?.options?.map((option: any) => {
-                const base = (typeof import.meta !== 'undefined' && (import.meta as any).env?.BASE_URL) || '/';
-                const stepId = quizContent.steps[currentStepIndex]?.id || 'step-01';
-                const seq = ['webp', 'jpg', 'png'];
-                const initial = option?.imageUrl || option?.url || option?.src || `${base}images/quiz21-steps/${String(stepId).toLowerCase()}-${String(option.id || '').toLowerCase()}.${seq[0]}`;
-                return (
-                  <button
-                    key={option.id}
-                    onClick={() => toggleSelect(option.id)}
-                    className="border rounded-md p-2 text-sm transition hover:bg-accent"
-                  >
-                    {initial && (
-                      <img
-                        src={initial}
-                        alt={option?.alt || ''}
-                        data-i="0"
-                        className="w-full h-24 object-cover rounded mb-1"
-                        onError={(e) => {
-                          try {
-                            const d = e.currentTarget.dataset;
-                            const i = Number(d.i || '0');
-                            if (i < seq.length - 1) {
-                              const next = i + 1;
-                              d.i = String(next);
-                              e.currentTarget.src = `${base}images/quiz21-steps/${String(stepId).toLowerCase()}-${String(option.id || '').toLowerCase()}.${seq[next]}`;
-                            } else {
-                              e.currentTarget.style.display = 'none';
-                            }
-                          } catch {}
-                        }}
-                      />
-                    )}
-                    <span className="block mt-1">{option.text}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </Wrapper>
+            <Wrapper key={block.id}>
+              {(!block.content?.options || block.content?.options?.length === 0) && (
+                <div className="text-xs text-gray-400 text-center py-4">Sem opções configuradas</div>
+              )}
+              <div className={`w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto grid ${colsClass} gap-2`}>
+                {block.content?.options?.map((option: any) => {
+                  const base = (typeof import.meta !== 'undefined' && (import.meta as any).env?.BASE_URL) || '/';
+                  const stepId = quizContent.steps[currentStepIndex]?.id || 'step-01';
+                  const seq = ['webp', 'jpg', 'png', 'svg'];
+                  const initial = option?.imageUrl || option?.url || option?.src || `${base}images/quiz21-steps/${String(stepId).toLowerCase()}-${String(option.id || '').toLowerCase()}.${seq[0]}`;
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => toggleSelect(option.id)}
+                      className="border rounded-md p-2 text-sm transition hover:bg-accent"
+                    >
+                      {initial && (
+                        <img
+                          src={initial}
+                          alt={option?.alt || ''}
+                          data-i="0"
+                          className="w-full h-24 object-cover rounded mb-1"
+                          onError={(e) => {
+                            try {
+                              const d = e.currentTarget.dataset;
+                              const i = Number(d.i || '0');
+                              if (i < seq.length - 1) {
+                                const next = i + 1;
+                                d.i = String(next);
+                                e.currentTarget.src = `${base}images/quiz21-steps/${String(stepId).toLowerCase()}-${String(option.id || '').toLowerCase()}.${seq[next]}`;
+                              } else {
+                                e.currentTarget.style.display = 'none';
+                              }
+                            } catch { }
+                          }}
+                        />
+                      )}
+                      <span className="block mt-1">{option.text}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </Wrapper>
           );
         }
 
