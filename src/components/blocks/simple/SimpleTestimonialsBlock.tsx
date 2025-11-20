@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Seção de depoimentos e resultados reais
  * Mostra credibilidade através de casos de sucesso
  */
-const SimpleTestimonialsBlock: React.FC<BlockComponentProps> = ({
+const SimpleTestimonialsBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

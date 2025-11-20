@@ -6,7 +6,7 @@ import { safeGetBlockProperties, logBlockDebug } from '@/lib/utils/blockUtils';
  * TestimonialsInlineBlock - Seção de depoimentos
  */
 
-const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
+const TestimonialsInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

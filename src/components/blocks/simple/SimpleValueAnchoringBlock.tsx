@@ -12,7 +12,7 @@ interface BlockComponentProps {
     onSelect: () => void;
 }
 
-const SimpleValueAnchoringBlock: React.FC<BlockComponentProps> = ({
+const SimpleValueAnchoringBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

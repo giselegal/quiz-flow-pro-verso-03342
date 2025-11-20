@@ -6,9 +6,9 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface QuizTransitionLoaderBlockProps extends BlockComponentProps {
+interface QuizTransitionLoaderBlockProps extends InlineBlockProps {
   properties?: {
     text?: string;
     subtext?: string;

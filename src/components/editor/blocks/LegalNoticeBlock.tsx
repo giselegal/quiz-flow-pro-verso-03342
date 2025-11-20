@@ -1,10 +1,10 @@
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React from 'react';
 
 /**
  * ⚖️ LegalNoticeBlock - Aviso legal/copyright
  */
-const LegalNoticeBlock: React.FC<BlockComponentProps> = ({
+const LegalNoticeBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     onClick,

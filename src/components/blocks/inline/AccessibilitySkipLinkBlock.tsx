@@ -5,7 +5,7 @@ import type { InlineBlockProps } from '@/types/InlineBlockProps';
  * AccessibilitySkipLinkBlock
  * Link de pulo para acessibilidade que permite ir direto ao conteúdo.
  */
-const AccessibilitySkipLinkBlock: React.FC<BlockComponentProps> = ({ block }) => {
+const AccessibilitySkipLinkBlock: React.FC<InlineBlockProps> = ({ block }) => {
   const props = (block?.properties || {}) as {
     target?: string;
     text?: string;

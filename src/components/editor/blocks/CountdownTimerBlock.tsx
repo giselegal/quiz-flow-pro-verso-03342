@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { InlineEditableText } from './InlineEditableText';
 
-interface CountdownTimerBlockProps extends BlockComponentProps {
+interface CountdownTimerBlockProps extends InlineBlockProps {
   block: CountdownTimerBlock;
 }
 

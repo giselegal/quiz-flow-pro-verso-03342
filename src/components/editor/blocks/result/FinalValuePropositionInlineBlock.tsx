@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, CheckCircle, Lock } from 'lucide-react';
 
@@ -9,7 +9,7 @@ import { ShoppingCart, CheckCircle, Lock } from 'lucide-react';
  * Complete final section with pricing, benefits, and strong CTA
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
+const FinalValuePropositionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

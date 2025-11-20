@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Button } from '@/components/ui/button';
 import React from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -51,7 +51,7 @@ const getMarginClass = (value: MarginValue, type: MarginType): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ButtonBlock: React.FC<BlockComponentProps> = ({ block, className = '' }) => {
+const ButtonBlock: React.FC<InlineBlockProps> = ({ block, className = '' }) => {
   return (
     <div data-testid="block-button" className={`button-block ${className}`}>
       <Button data-testid="block-header" onClick={() => appLogger.info('Button clicked')}>

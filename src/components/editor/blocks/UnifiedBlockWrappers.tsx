@@ -20,7 +20,7 @@ interface BlockComponentProps {
  * esperada pelo sistema de blocos do editor, mantendo 100% de fidelidade visual.
  */
 
-export const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
+export const UnifiedFunnelHeroBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected,
   onBlockSelect,
@@ -57,7 +57,7 @@ export const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
  * Este wrapper conecta nosso componente base reutilizável com a interface
  * esperada pelo sistema de blocos do editor, mantendo 100% de fidelidade visual.
  */
-export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
+export const UnifiedFunnelPainBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected,
   onBlockSelect,

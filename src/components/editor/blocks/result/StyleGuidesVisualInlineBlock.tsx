@@ -1,7 +1,7 @@
 import React from 'react';
 import { safeStylePlaceholder } from '@/lib/utils/placeholder';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Progress } from '@/components/ui/progress';
 
 /**
@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
  * Shows primary style guide image with secondary thumbnails and progress
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
+const StyleGuidesVisualInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

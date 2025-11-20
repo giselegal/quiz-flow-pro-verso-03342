@@ -1,9 +1,9 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { InlineEditableText } from '@/components/editor/blocks/InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-const SalesHeroBlock: React.FC<BlockComponentProps> = ({
+const SalesHeroBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     onPropertyChange,

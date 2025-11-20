@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 import { Star, Quote } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface SocialProofBlockProps extends BlockComponentProps {
+interface SocialProofBlockProps extends InlineBlockProps {
   disabled?: boolean;
 }
 

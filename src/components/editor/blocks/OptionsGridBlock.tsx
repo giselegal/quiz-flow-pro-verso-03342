@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
@@ -21,7 +21,7 @@ interface Option {
   points?: number;
 }
 
-interface OptionsGridBlockProps extends BlockComponentProps {
+interface OptionsGridBlockProps extends InlineBlockProps {
   // Preview mode props
   isPreviewMode?: boolean;
   onNext?: () => void;

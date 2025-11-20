@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import QuizOptionsGridBlock from './QuizOptionsGridBlock';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -11,7 +11,7 @@ import { appLogger } from '@/lib/utils/appLogger';
  *
  * Este componente faz a adaptação necessária.
  */
-export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
+export const EditorOptionsGridBlock: React.FC<InlineBlockProps> = ({
   block,
   onPropertyChange,
   isSelected,

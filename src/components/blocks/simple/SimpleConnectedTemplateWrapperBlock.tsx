@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Componente wrapper para templates conectados
  * Usado quando há referências externas ou templates aninhados
  */
-const SimpleConnectedTemplateWrapperBlock: React.FC<BlockComponentProps> = ({
+const SimpleConnectedTemplateWrapperBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

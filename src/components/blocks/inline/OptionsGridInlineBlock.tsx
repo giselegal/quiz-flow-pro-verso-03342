@@ -22,7 +22,7 @@ interface OptionItem {
  *
  * INLINE | EDITÁVEL | RESPONSIVO | COMPATÍVEL COM EDITOR
  */
-const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
+const OptionsGridInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

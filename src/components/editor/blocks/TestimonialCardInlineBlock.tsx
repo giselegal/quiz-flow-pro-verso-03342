@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Edit3, Star, Quote, CheckCircle } from 'lucide-react';
 import React, { useMemo } from 'react';
 
@@ -53,7 +53,7 @@ const getMarginClass = (value: number | string, type: 'top' | 'bottom' | 'left' 
     return `${prefix}-12`;
 };
 
-const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
+const TestimonialCardInlineBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     isPreviewing = false,

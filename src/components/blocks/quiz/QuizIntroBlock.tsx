@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useQuizTracking } from '@/hooks/useQuizTracking';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * QuizIntroBlock - Schema-driven compatible version
@@ -29,7 +29,7 @@ import type { BlockComponentProps } from '@/types/blocks';
  */
 
 // Interface compatível com schema-driven system
-export interface QuizIntroBlockProps extends BlockComponentProps {
+export interface QuizIntroBlockProps extends InlineBlockProps {
   // Props específicas do quiz intro (opcional - fallback para compatibilidade)
   onStart?: (nome: string) => void;
 }

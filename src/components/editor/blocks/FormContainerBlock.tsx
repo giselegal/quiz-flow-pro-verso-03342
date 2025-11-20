@@ -7,7 +7,7 @@ import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
  * FormContainerBlock
  * Renderiza um container de formulário e seus filhos definidos via JSON (properties.children).
  */
-const FormContainerBlock: FC<BlockComponentProps> = ({ block }) => {
+const FormContainerBlock: FC<InlineBlockProps> = ({ block }) => {
   const { properties = {} } = block || {};
   const { elementId, className, marginTop, marginBottom } = (properties as any) || {};
   const { addEventListener } = useGlobalEventManager();

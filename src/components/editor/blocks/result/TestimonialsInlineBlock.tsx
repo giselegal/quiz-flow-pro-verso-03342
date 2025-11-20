@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Star, Quote } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { Star, Quote } from 'lucide-react';
  * Shows client testimonials and social proof
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
+const TestimonialsInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

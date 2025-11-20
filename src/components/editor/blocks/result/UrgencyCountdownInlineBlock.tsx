@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Clock, Zap } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { Clock, Zap } from 'lucide-react';
  * Creates urgency with countdown timer and messaging
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const UrgencyCountdownInlineBlock: React.FC<BlockComponentProps> = ({
+const UrgencyCountdownInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

@@ -6,10 +6,10 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Button } from '@/components/ui/button';
 
-interface QuizBackButtonBlockProps extends BlockComponentProps {
+interface QuizBackButtonBlockProps extends InlineBlockProps {
   properties?: {
     text?: string;
     showIcon?: boolean;

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Type, Settings } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * HeadingInlineBlock - Componente modular inline horizontal
@@ -70,7 +70,7 @@ function normalizeHeadingLevel(lv: unknown): 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 
   return 'h2';
 }
 
-const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
+const HeadingInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

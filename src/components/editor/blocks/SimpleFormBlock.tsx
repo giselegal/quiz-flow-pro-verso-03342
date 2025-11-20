@@ -1,10 +1,10 @@
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React from 'react';
 
 /**
  * 📝 SimpleFormBlock - Versão simples para o ModularV1Editor
  */
-const SimpleFormBlock: React.FC<BlockComponentProps> = ({
+const SimpleFormBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     onClick,

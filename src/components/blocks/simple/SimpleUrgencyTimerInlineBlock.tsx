@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Timer de urgência com countdown
  * Usado para criar senso de urgência nas ofertas
  */
-const SimpleUrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
+const SimpleUrgencyTimerInlineBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

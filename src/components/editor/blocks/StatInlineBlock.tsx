@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
 import InlineEditableText from './base/InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import {
   getPersonalizedText,
   trackComponentView,
@@ -56,7 +56,7 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const StatInlineBlock: React.FC<BlockComponentProps> = ({
+const StatInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onPropertyChange,

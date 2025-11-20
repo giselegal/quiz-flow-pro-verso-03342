@@ -9,7 +9,7 @@ import { appLogger } from '@/lib/utils/appLogger';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  * Utiliza funcionalidades modernas do ES7+: destructuring, optional chaining, nullish coalescing
  */
-const TextInlineBlock: React.FC<BlockComponentProps> = ({
+const TextInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

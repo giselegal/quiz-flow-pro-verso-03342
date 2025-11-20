@@ -6,7 +6,7 @@ import { logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
  * QuizOfferPricingInlineBlock - Preço da oferta do quiz
  */
 
-const QuizOfferPricingInlineBlock: React.FC<BlockComponentProps> = ({
+const QuizOfferPricingInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

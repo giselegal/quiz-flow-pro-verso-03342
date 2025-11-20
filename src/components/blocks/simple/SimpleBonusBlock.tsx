@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Seção de bônus inclusos na oferta
  * Destaca benefícios adicionais
  */
-const SimpleBonusBlock: React.FC<BlockComponentProps> = ({
+const SimpleBonusBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

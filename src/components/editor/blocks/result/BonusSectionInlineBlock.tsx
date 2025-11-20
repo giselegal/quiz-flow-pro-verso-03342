@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Gift, Star, Sparkles } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { Gift, Star, Sparkles } from 'lucide-react';
  * Shows bonus content and additional value propositions
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const BonusSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

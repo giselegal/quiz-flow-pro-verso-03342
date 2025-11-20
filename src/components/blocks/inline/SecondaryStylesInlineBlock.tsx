@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { InlineBlockProps } from '@/types/InlineBlockProps';
 
-const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
+const SecondaryStylesInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected,
   onClick,

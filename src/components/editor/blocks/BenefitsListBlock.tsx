@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 interface BenefitItem {
   text: string;

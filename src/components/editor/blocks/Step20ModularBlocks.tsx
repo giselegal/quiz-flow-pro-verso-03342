@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { 
   QuizDataProvider,
   ResultHeaderModule,
@@ -17,7 +17,7 @@ import {
  */
 
 // Result Header Block
-export const Step20ResultHeaderBlock: React.FC<BlockComponentProps> = ({ 
+export const Step20ResultHeaderBlock: React.FC<InlineBlockProps> = ({ 
   block, 
   isSelected = false, 
   onPropertyChange,
@@ -37,7 +37,7 @@ export const Step20ResultHeaderBlock: React.FC<BlockComponentProps> = ({
 };
 
 // Style Reveal Block
-export const Step20StyleRevealBlock: React.FC<BlockComponentProps> = ({ 
+export const Step20StyleRevealBlock: React.FC<InlineBlockProps> = ({ 
   block, 
   isSelected = false, 
   onPropertyChange,
@@ -57,7 +57,7 @@ export const Step20StyleRevealBlock: React.FC<BlockComponentProps> = ({
 };
 
 // User Greeting Block
-export const Step20UserGreetingBlock: React.FC<BlockComponentProps> = ({ 
+export const Step20UserGreetingBlock: React.FC<InlineBlockProps> = ({ 
   block, 
   isSelected = false, 
   onPropertyChange,
@@ -77,7 +77,7 @@ export const Step20UserGreetingBlock: React.FC<BlockComponentProps> = ({
 };
 
 // Compatibility Block
-export const Step20CompatibilityBlock: React.FC<BlockComponentProps> = ({ 
+export const Step20CompatibilityBlock: React.FC<InlineBlockProps> = ({ 
   block, 
   isSelected = false, 
   onPropertyChange,
@@ -97,7 +97,7 @@ export const Step20CompatibilityBlock: React.FC<BlockComponentProps> = ({
 };
 
 // Secondary Styles Block
-export const Step20SecondaryStylesBlock: React.FC<BlockComponentProps> = ({ 
+export const Step20SecondaryStylesBlock: React.FC<InlineBlockProps> = ({ 
   block, 
   isSelected = false, 
   onPropertyChange,
@@ -117,7 +117,7 @@ export const Step20SecondaryStylesBlock: React.FC<BlockComponentProps> = ({
 };
 
 // Personalized Offer Block
-export const Step20PersonalizedOfferBlock: React.FC<BlockComponentProps> = ({ 
+export const Step20PersonalizedOfferBlock: React.FC<InlineBlockProps> = ({ 
   block, 
   isSelected = false, 
   onPropertyChange,
@@ -137,7 +137,7 @@ export const Step20PersonalizedOfferBlock: React.FC<BlockComponentProps> = ({
 };
 
 // Complete Step 20 Template Block
-export const Step20CompleteTemplateBlock: React.FC<BlockComponentProps> = ({ 
+export const Step20CompleteTemplateBlock: React.FC<InlineBlockProps> = ({ 
   block, 
   isSelected = false, 
   onPropertyChange,

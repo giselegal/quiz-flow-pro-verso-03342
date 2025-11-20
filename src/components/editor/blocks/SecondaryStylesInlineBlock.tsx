@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { mapToFriendlyStyle } from '@/core/style/naming';
 import { useQuizResult } from '@/hooks/useQuizResult';
 
 /**
  * SecondaryStylesInlineBlock - mostra os dois estilos secundários calculados
  */
-const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({ block }) => {
+const SecondaryStylesInlineBlock: React.FC<InlineBlockProps> = ({ block }) => {
   const { secondaryStyles } = useQuizResult();
 
   const props = block?.properties || {};

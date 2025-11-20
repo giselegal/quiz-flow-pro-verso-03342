@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { interpolate } from '@/lib/utils/interpolate';
 import { StorageService } from '@/services/core/StorageService';
@@ -11,7 +11,7 @@ import { appLogger } from '@/lib/utils/appLogger';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  * Utiliza funcionalidades modernas do ES7+: destructuring, optional chaining, nullish coalescing
  */
-const TextInlineBlock: React.FC<BlockComponentProps> = ({
+const TextInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

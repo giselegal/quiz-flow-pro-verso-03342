@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Cabeçalho de resultado com título, subtítulo, descrição e imagens
  * Usado para mostrar o resultado do quiz com estilo personalizado
  */
-const SimpleResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
+const SimpleResultHeaderInlineBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

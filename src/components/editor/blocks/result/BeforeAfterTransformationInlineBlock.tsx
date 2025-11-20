@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ArrowRight, Star } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { ArrowRight, Star } from 'lucide-react';
  * Shows transformation examples with before/after images
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
+const BeforeAfterTransformationInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

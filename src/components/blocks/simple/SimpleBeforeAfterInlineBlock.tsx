@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Comparação antes/depois da transformação
  * Mostra o impacto visual de aplicar o estilo
  */
-const SimpleBeforeAfterInlineBlock: React.FC<BlockComponentProps> = ({
+const SimpleBeforeAfterInlineBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 import { InlineEditText } from './InlineEditText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface QuizTitleBlockProps extends BlockComponentProps {
+interface QuizTitleBlockProps extends InlineBlockProps {
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
   className?: string;

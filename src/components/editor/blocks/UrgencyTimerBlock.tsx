@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { Clock } from 'lucide-react';
 import { InlineEditableText } from './InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right') => {
@@ -49,7 +49,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   return `${prefix}-32`; // Máximo suportado
 };
 
-const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
+const UrgencyTimerBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   isEditing = false,

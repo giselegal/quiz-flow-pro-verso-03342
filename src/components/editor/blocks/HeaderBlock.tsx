@@ -1,5 +1,5 @@
 import { InlineEditableText } from './InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React from 'react';
 
 type MarginType = 'top' | 'bottom' | 'left' | 'right';
@@ -50,7 +50,7 @@ const getMarginClass = (value: MarginValue, type: MarginType): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const HeaderBlock: React.FC<BlockComponentProps> = ({
+const HeaderBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   isEditing = false,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
 import { ShoppingBag, Clock } from 'lucide-react';
 
@@ -9,7 +9,7 @@ import { ShoppingBag, Clock } from 'lucide-react';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const OfferSolutionSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -73,7 +73,7 @@ const styleColors = {
   'Neutro': '#999999',
 };
 
-const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
+const QuizResultCalculatedBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   isEditing = false,

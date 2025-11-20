@@ -1,6 +1,6 @@
 import { InlineEditableText } from './InlineEditableText';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right') => {
@@ -47,7 +47,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   return `${prefix}-32`; // Máximo suportado
 };
 
-const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
+const TransformationInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onPropertyChange,

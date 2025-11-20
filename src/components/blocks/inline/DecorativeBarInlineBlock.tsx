@@ -15,7 +15,7 @@ import type { InlineBlockProps } from '@/types/InlineBlockProps';
  * 
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | DECORATIVO
  */
-const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
+const DecorativeBarInlineBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     onClick,

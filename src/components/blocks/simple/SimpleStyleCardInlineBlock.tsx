@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Card com características do estilo personalizado
  * Mostra detalhes específicos do resultado do quiz
  */
-const SimpleStyleCardInlineBlock: React.FC<BlockComponentProps> = ({
+const SimpleStyleCardInlineBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

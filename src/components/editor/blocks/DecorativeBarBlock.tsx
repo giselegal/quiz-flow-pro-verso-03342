@@ -1,10 +1,10 @@
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React from 'react';
 
 /**
  * 🎨 DecorativeBarBlock - Barra decorativa
  */
-const DecorativeBarBlock: React.FC<BlockComponentProps> = ({
+const DecorativeBarBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     onClick,

@@ -39,7 +39,7 @@ interface Stat {
   isAnimated?: boolean;
 }
 
-interface StatsBlockProps extends BlockComponentProps {
+interface StatsBlockProps extends InlineBlockProps {
   block: BlockData & {
     type: 'stats-metrics';
     properties: {

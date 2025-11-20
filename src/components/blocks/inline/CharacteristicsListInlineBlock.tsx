@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { logBlockDebug, safeGetBlockProperties } from '@/lib/utils/blockUtils';
 
 /**
@@ -51,7 +51,7 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const CharacteristicsListInlineBlock: React.FC<BlockComponentProps> = ({
+const CharacteristicsListInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

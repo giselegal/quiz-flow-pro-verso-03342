@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '@/services/userResponseService';
@@ -6,7 +6,7 @@ import { StorageService } from '@/services/core/StorageService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { getFunnelSessionKey, getFunnelStepKey } from '@/lib/utils/funnelStorageKeys';
 
-interface FormInputBlockProps extends BlockComponentProps {
+interface FormInputBlockProps extends InlineBlockProps {
   funnelId?: string;
   onValueChange?: (value: string) => void;
 }

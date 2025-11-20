@@ -7,7 +7,7 @@ import React from 'react';
  * Container minimalista e confiável que apenas aplica estilos e renderiza filhos.
  * Sem efeitos colaterais, sem listeners globais.
  */
-const BasicContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
+const BasicContainerBlock: React.FC<InlineBlockProps> = ({ block }) => {
     if (!block) return null;
 
     const properties: any = (block as any)?.properties || {};

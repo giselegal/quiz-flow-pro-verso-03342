@@ -12,7 +12,7 @@ interface BlockComponentProps {
     onSelect: () => void;
 }
 
-const SimpleGuaranteeBlock: React.FC<BlockComponentProps> = ({
+const SimpleGuaranteeBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

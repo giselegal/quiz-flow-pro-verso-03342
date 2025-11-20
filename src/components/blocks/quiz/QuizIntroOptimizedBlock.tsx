@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useGarbageCollector, useComponentCleanup } from '@/hooks/useGarbageCollector';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * 🎯 QUIZ INTRO OPTIMIZED BLOCK - Componente consolidado e otimizado
@@ -27,7 +27,7 @@ import type { BlockComponentProps } from '@/types/blocks';
  * ✅ A/B testing support
  */
 
-interface QuizIntroOptimizedBlockProps extends BlockComponentProps {
+interface QuizIntroOptimizedBlockProps extends InlineBlockProps {
   // Content properties
   logoUrl?: string;
   logoAlt?: string;

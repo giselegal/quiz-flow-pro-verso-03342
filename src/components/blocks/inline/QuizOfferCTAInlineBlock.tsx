@@ -8,7 +8,7 @@ import { getMarginClass } from '@/lib/utils/margins';
  * QuizOfferCTAInlineBlock - CTA da oferta do quiz
  */
 
-const QuizOfferCTAInlineBlock: React.FC<BlockComponentProps> = ({
+const QuizOfferCTAInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

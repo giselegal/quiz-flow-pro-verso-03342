@@ -3,7 +3,7 @@ import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
 import { SpecialTipsCard } from '@/components/ui/SpecialTipsCard';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { cn } from '@/lib/utils';
 import { getStyleConfig } from '@/config/styleConfig';
@@ -294,7 +294,7 @@ const CTACard = ({ styleLabel, variant }: CTACardProps) => {
 };
 
 // Componente principal corrigido
-interface ResultHeaderInlineBlockProps extends BlockComponentProps {
+interface ResultHeaderInlineBlockProps extends InlineBlockProps {
   className?: string;
   isSelected?: boolean;
 }

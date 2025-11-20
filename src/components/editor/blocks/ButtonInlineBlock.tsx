@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState, useMemo } from 'react';
 import { sessionService } from '@/services/sessionService';
@@ -70,7 +70,7 @@ const getMarginClass = (
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
+const ButtonInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

@@ -1,6 +1,6 @@
 import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
 import FunnelPainSection from '@/components/funnel/base/FunnelPainSection';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * UnifiedFunnelBlock - Wrapper que usa componentes base do funil real
@@ -14,7 +14,7 @@ import type { BlockComponentProps } from '@/types/blocks';
  * - Selecionável e movível no canvas
  * - Renderização idêntica ao funil real
  */
-interface UnifiedFunnelBlockProps extends BlockComponentProps {
+interface UnifiedFunnelBlockProps extends InlineBlockProps {
   // Props adicionais podem ser adicionadas aqui se necessário
 }
 

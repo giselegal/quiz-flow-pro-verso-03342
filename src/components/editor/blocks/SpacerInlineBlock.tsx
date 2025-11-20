@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { RESPONSIVE_PATTERNS, INLINE_ANIMATIONS } from '@/lib/utils/inlineComponentUtils';
 import {
   ArrowUpDown,
@@ -73,7 +73,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   return `${prefix}-32`; // Máximo suportado
 };
 
-const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
+const SpacerInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onPropertyChange,

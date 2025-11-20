@@ -10,7 +10,7 @@
 import React from 'react';
 import type { BlockComponentProps } from '@/types/blockTypes';
 
-export interface QuestionTitleBlockProps extends BlockComponentProps {
+export interface QuestionTitleBlockProps extends InlineBlockProps {
     // Props específicas podem ser adicionadas aqui
 }
 

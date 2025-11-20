@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 
@@ -9,7 +9,7 @@ import { ShoppingCart } from 'lucide-react';
  * Shows personalized message based on style category with CTA
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
+const PersonalizedHookInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

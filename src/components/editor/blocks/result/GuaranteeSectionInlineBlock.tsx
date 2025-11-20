@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Shield, CheckCircle, RefreshCw, Lock } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { Shield, CheckCircle, RefreshCw, Lock } from 'lucide-react';
  * Shows money-back guarantee and trust badges
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const GuaranteeSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

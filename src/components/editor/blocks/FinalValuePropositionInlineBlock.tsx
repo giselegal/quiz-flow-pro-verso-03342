@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, ShoppingCart, Lock } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right') => {
@@ -49,7 +49,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   return `${prefix}-32`; // Máximo suportado
 };
 
-const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
+const FinalValuePropositionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onPropertyChange,

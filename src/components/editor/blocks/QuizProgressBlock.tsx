@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface QuizProgressBlockProps extends BlockComponentProps {
+interface QuizProgressBlockProps extends InlineBlockProps {
   properties?: {
     showProgress?: boolean;
     progressValue?: number;

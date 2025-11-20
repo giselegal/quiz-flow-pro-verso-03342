@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Edit3, Eye, Move, Copy, Trash2, MoreHorizontal } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface InlineBaseWrapperProps extends BlockComponentProps {
+interface InlineBaseWrapperProps extends InlineBlockProps {
   children: React.ReactNode;
 
   // 1. REUTILIZÁVEL: Props bem definidas e flexíveis

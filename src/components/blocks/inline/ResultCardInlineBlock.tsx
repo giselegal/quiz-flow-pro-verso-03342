@@ -21,7 +21,7 @@ const interpolate = (text: string, vars: Record<string, any>) => {
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
+const ResultCardInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

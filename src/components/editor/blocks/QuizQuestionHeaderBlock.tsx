@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface QuizQuestionHeaderBlockProps extends BlockComponentProps {
+interface QuizQuestionHeaderBlockProps extends InlineBlockProps {
   properties?: {
     questionNumber?: number;
     totalQuestions?: number;

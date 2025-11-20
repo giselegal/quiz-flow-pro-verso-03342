@@ -12,7 +12,7 @@ interface BlockComponentProps {
     onSelect: () => void;
 }
 
-const SimpleMentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const SimpleMentorSectionInlineBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

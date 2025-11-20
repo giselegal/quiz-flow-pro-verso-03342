@@ -8,7 +8,7 @@ import type { InlineBlockProps } from '@/types/InlineBlockProps';
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
+const StepHeaderInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

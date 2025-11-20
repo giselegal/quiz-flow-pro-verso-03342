@@ -1,7 +1,7 @@
 import { InlineEditableText } from './InlineEditableText';
 import { Button as UIButton } from '@/components/ui/button';
 import { MousePointer } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React from 'react';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -52,7 +52,7 @@ const getMarginClass = (value: MarginValue, type: MarginType): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ButtonBlock: React.FC<BlockComponentProps> = ({
+const ButtonBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   isEditing = false,

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Edit3, Image as ImageIcon } from 'lucide-react';
 import React, { useState, useCallback, useMemo } from 'react';
 
@@ -54,7 +54,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ImageInlineBlock: React.FC<BlockComponentProps> = ({
+const ImageInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

@@ -12,7 +12,7 @@ interface BlockComponentProps {
     onSelect: () => void;
 }
 
-const SimpleSecurePurchaseBlock: React.FC<BlockComponentProps> = ({
+const SimpleSecurePurchaseBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

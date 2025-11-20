@@ -18,7 +18,7 @@ interface BlockComponentProps {
  * Mostra estilos complementares com percentuais
  * Exibe os estilos secundários identificados no resultado
  */
-const SimpleSecondaryStylesBlock: React.FC<BlockComponentProps> = ({
+const SimpleSecondaryStylesBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected,
     editMode,

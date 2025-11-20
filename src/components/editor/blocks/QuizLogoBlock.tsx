@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface QuizLogoBlockProps extends BlockComponentProps {
+interface QuizLogoBlockProps extends InlineBlockProps {
   properties?: {
     logoUrl?: string;
     logoAlt?: string;

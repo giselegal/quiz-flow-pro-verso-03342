@@ -1,5 +1,5 @@
 import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { AlertTriangle, Clock } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
@@ -53,7 +53,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   return `${prefix}-32`; // Máximo suportado
 };
 
-const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
+const UrgencyTimerInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

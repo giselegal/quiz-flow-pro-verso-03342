@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Award, Users, BookOpen, Star } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { Award, Users, BookOpen, Star } from 'lucide-react';
  * Shows mentor credentials and expertise
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const MentorSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

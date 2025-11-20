@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { InlineEditText } from './InlineEditText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
-interface StrategicQuestionBlockProps extends BlockComponentProps {
+interface StrategicQuestionBlockProps extends InlineBlockProps {
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
   className?: string;

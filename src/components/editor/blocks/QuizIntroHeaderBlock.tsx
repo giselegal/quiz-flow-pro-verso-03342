@@ -1,12 +1,12 @@
 import React, { useEffect, CSSProperties, memo, FC } from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ArrowLeft } from 'lucide-react';
 import { useImageWithFallback } from '@/hooks/useImageWithFallback';
 
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
 
-interface QuizIntroHeaderBlockProps extends BlockComponentProps {
+interface QuizIntroHeaderBlockProps extends InlineBlockProps {
   disabled?: boolean;
   properties?: HeaderProperties;
 }

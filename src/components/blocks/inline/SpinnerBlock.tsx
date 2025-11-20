@@ -14,7 +14,7 @@ import type { InlineBlockProps } from '@/types/InlineBlockProps';
  * 
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | LEVE
  */
-const SpinnerBlock: React.FC<BlockComponentProps> = ({
+const SpinnerBlock: React.FC<InlineBlockProps> = ({
     block,
     isSelected = false,
     onClick,

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 /**
  * DecorativeBarInlineBlock - Barra decorativa dourada
@@ -55,7 +55,7 @@ const getMarginClass = (
   return `${prefix}-32`; // Máximo suportado
 };
 
-const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
+const DecorativeBarInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,

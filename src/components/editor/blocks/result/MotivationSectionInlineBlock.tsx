@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Sparkles, Target, Zap } from 'lucide-react';
 
 /**
@@ -8,7 +8,7 @@ import { Sparkles, Target, Zap } from 'lucide-react';
  * Inspirational content with benefits and motivation
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
-const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
+const MotivationSectionInlineBlock: React.FC<InlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,
