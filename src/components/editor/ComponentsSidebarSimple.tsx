@@ -159,7 +159,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
 
                 {expandedCategories[category] && (
                   <div className="pl-4 space-y-1">
-                    {groupedBlocks[category].map(block => (
+                    {groupedBlocks[category].map((block: any) => (
                       <DraggableComponentItem
                         key={block.type}
                         blockType={block.type}

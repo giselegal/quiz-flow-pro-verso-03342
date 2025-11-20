@@ -25,12 +25,14 @@
       "type": "step-21-offer",
       "id": "offer-page-21",
       "properties": {
-        "logoUrl": "https://placehold.co/200x60",
-        "logoAlt": "Logo da Empresa",
-        "logoWidth": 200,
-        "logoHeight": 60,
-        "isSticky": true,
-        "backgroundColor": "#ffffff",
+        "header": {
+          "logoUrl": "https://placehold.co/200x60",
+          "logoAlt": "Logo da Empresa",
+          "logoWidth": 200,
+          "logoHeight": 60,
+          "isSticky": true,
+          "backgroundColor": "#ffffff"
+        },
         "hero": {
           "title": "Transforme seu Guarda-Roupa Agora!",
           "subtitle": "Oferta especial baseada no seu estilo pessoal",
