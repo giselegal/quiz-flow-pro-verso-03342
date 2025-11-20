@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 interface Stat {
   id: string;

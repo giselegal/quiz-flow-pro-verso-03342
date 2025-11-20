@@ -27,7 +27,7 @@ export const OptionsPropertyEditor: React.FC<PropertyEditorProps> = ({
       const isValid =
         propertyName === 'items'
           ? Array.isArray(value) && value.length > 0
-          : (Array.isArray(block.properties?.items) && block.properties.items.length > 0) ||
+          : (Array.isArray(block.properties?.items) && block.properties?.items.length > 0) ||
             propertyName !== 'items';
       onValidate?.(isValid);
     },

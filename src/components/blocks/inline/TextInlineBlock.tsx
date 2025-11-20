@@ -513,7 +513,7 @@ const TextInlineBlock: React.FC<InlineBlockProps> = ({
 export default TextInlineBlock;
 
 // ES7+ Type exports para reutilização
-export type { BlockComponentProps };
+export type { InlineBlockProps };
 
 // ES7+ Const assertion para readonly arrays/objects
 export const TEXT_SIZES = ['xs', 'sm', 'medium', 'lg', 'xl', '2xl', '3xl'] as const;

@@ -249,7 +249,7 @@ export class FlexibleResultCalculator {
     if (answer?.score !== undefined) return Number(answer.score);
     if (answer?.value !== undefined && typeof answer.value === 'number') return answer.value;
     if (block.score !== undefined) return Number(block.score);
-    if (block.properties?.score !== undefined) return Number(block.properties.score);
+    if (block.properties?.score !== undefined) return Number(block.properties?.score);
     if (block.metadata?.score !== undefined) return Number(block.metadata.score);
     
     return 0;
@@ -260,7 +260,7 @@ export class FlexibleResultCalculator {
    */
   private extractMaxScore(block: any): number {
     if (block.maxScore !== undefined) return Number(block.maxScore);
-    if (block.properties?.maxScore !== undefined) return Number(block.properties.maxScore);
+    if (block.properties?.maxScore !== undefined) return Number(block.properties?.maxScore);
     if (block.metadata?.maxScore !== undefined) return Number(block.metadata.maxScore);
     
     // Default: se tem opções, max é o número de opções

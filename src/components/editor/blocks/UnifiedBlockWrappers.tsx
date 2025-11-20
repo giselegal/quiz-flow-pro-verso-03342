@@ -41,9 +41,9 @@ export const UnifiedFunnelHeroBlock: React.FC<InlineBlockProps> = ({
   // Usar o componente base exatamente como no funil real
   return (
     <FunnelHeroSection
-      title={block.properties.title || 'Título do Hero'}
-      description={block.properties.description || 'Descrição do hero section'}
-      ctaText={block.properties.ctaText || 'Call to Action'}
+      title={block.properties?.title || 'Título do Hero'}
+      description={block.properties?.description || 'Descrição do hero section'}
+      ctaText={block.properties?.ctaText || 'Call to Action'}
       {...block.properties}
       isSelected={isSelected}
       onClick={handleClick}
@@ -76,12 +76,12 @@ export const UnifiedFunnelPainBlock: React.FC<InlineBlockProps> = ({
   };
 
   // Garantir que painPoints seja um array válido
-  const painPoints = Array.isArray(block.properties.painPoints) ? block.properties.painPoints : [];
+  const painPoints = Array.isArray(block.properties?.painPoints) ? block.properties?.painPoints : [];
 
   // Usar o componente base exatamente como no funil real
   return (
     <FunnelPainSection
-      title={block.properties.title || 'Seção de Problemas'}
+      title={block.properties?.title || 'Seção de Problemas'}
       painPoints={painPoints}
       {...block.properties}
       isSelected={isSelected}

@@ -475,12 +475,12 @@ export function convertBlocksToStep(
             case 'quiz-options':
             case 'options-grid':
                 step.options = block.content.options;
-                step.requiredSelections = block.properties.requiredSelections || block.properties.maxSelections;
+                step.requiredSelections = block.properties?.requiredSelections || block.properties?.maxSelections;
                 break;
 
             case 'form-input':
-                step.placeholder = block.properties.placeholder;
-                step.buttonText = block.content.text || block.properties.buttonText;
+                step.placeholder = block.properties?.placeholder;
+                step.buttonText = block.content.text || block.properties?.buttonText;
                 break;
 
             case 'button':
@@ -500,8 +500,8 @@ export function convertBlocksToStep(
                 break;
 
             case 'transition-config':
-                step.duration = block.properties.duration;
-                step.showContinueButton = block.properties.showContinueButton;
+                step.duration = block.properties?.duration;
+                step.showContinueButton = block.properties?.showContinueButton;
                 if (step.showContinueButton) {
                     // Encontrar bloco de botão de continuar
                     const continueButton = blocks.find(b => b.id.includes('continue-button'));

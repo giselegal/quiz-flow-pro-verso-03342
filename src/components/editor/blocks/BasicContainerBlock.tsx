@@ -1,5 +1,6 @@
 import { blockRegistry } from '@/core/registry/UnifiedBlockRegistry';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React from 'react';
 
 /**

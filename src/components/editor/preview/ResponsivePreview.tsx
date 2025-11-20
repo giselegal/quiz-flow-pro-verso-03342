@@ -129,10 +129,10 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           {/* Simulação do conteúdo do bloco */}
           <div className="space-y-2">
             {block.properties?.content && (
-              <p style={{ color: '#432818' }}>{block.properties.content}</p>
+              <p style={{ color: '#432818' }}>{block.properties?.content}</p>
             )}
             {block.properties?.title && (
-              <h3 style={{ color: '#432818' }}>{block.properties.title}</h3>
+              <h3 style={{ color: '#432818' }}>{block.properties?.title}</h3>
             )}
             {block.properties?.imageUrl && (
               <div style={{ borderColor: '#E5DDD5' }}>

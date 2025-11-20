@@ -379,7 +379,7 @@ const ResultHeaderInlineBlock = ({
   const styleInfo = getStyleConfig(styleLabel) || {};
   const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || safeStylePlaceholder(styleLabel, 238, 320);
   const effectiveGuideImageUrl = guideImageUrl || (styleInfo as any)?.guideImage || safePlaceholder(540, 300, 'Guia de Estilo');
-  const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
+  const effectiveDescription = (block?.properties?.description && String(block.properties?.description).trim().length > 0)
     ? description
     : ((styleInfo as any)?.description || description || 'Descrição não disponível');
 

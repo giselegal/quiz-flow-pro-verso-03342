@@ -29,7 +29,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
       const isValid =
         propertyName === 'options'
           ? Array.isArray(value) && value.length > 0
-          : (Array.isArray(block.properties?.options) && block.properties.options.length > 0) ||
+          : (Array.isArray(block.properties?.options) && block.properties?.options.length > 0) ||
           propertyName !== 'options';
       onValidate?.(isValid);
     },

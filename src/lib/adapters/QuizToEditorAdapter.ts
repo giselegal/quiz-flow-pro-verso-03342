@@ -210,7 +210,7 @@ export class QuizToEditorAdapter {
         content: block.content,
         order: block.order,
         // Preservar dados específicos do quiz
-        ...(block.properties?.quizData && { quizData: block.properties.quizData }),
+        ...(block.properties?.quizData && { quizData: block.properties?.quizData }),
       }));
     });
     

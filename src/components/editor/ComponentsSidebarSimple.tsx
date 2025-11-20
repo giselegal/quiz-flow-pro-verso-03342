@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { blockDefinitions } from '@/config/blockDefinitionsOptimized';
 import { MODULAR_COMPONENTS, type ModularComponent } from '@/config/modularComponents';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { type BlockDefinition } from '@/types/blocks';
+// BlockDefinition removido - usar Block diretamente
 import {
   ChevronDown,
   ChevronRight,

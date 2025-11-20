@@ -223,17 +223,17 @@ const generateBlockPreview = (block: Block): string => {
   }
 
   if (block.properties?.text) {
-    const text = String(block.properties.text);
+    const text = String(block.properties?.text);
     return text.length > 50 ? `${text.substring(0, 50)}...` : text;
   }
 
   if (block.properties?.title) {
-    const text = String(block.properties.title);
+    const text = String(block.properties?.title);
     return text.length > 50 ? `${text.substring(0, 50)}...` : text;
   }
 
   if (block.properties?.content) {
-    const text = String(block.properties.content);
+    const text = String(block.properties?.content);
     return text.length > 50 ? `${text.substring(0, 50)}...` : text;
   }
 

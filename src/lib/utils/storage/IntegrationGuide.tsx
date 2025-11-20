@@ -148,7 +148,7 @@ const BlockComponent: React.FC<BlockComponentProps> = ({
         >
             {isEditing ? (
                 <input
-                    value={block.properties.text}
+                    value={block.properties?.text}
                     onChange={(e) => handleTextChange(e.target.value)}
                     onBlur={() => setIsEditing(false)}
                     onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
@@ -156,7 +156,7 @@ const BlockComponent: React.FC<BlockComponentProps> = ({
                 />
             ) : (
                 <div onDoubleClick={() => setIsEditing(true)}>
-                    {block.properties.text}
+                    {block.properties?.text}
                 </div>
             )}
 

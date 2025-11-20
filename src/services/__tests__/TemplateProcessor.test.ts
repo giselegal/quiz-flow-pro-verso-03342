@@ -42,8 +42,8 @@ describe('TemplateProcessor', () => {
       expect(result.template).toBeDefined();
 
       const block = result.template!.blocks[0];
-      expect(block.properties.titleHtml).toContain('#B89B7A'); // Primary color
-      expect(block.properties.titleHtml).not.toContain('{{theme');
+      expect(block.properties?.titleHtml).toContain('#B89B7A'); // Primary color
+      expect(block.properties?.titleHtml).not.toContain('{{theme');
     });
 
     it('deve substituir variáveis de assets', () => {
@@ -52,9 +52,9 @@ describe('TemplateProcessor', () => {
       expect(result.success).toBe(true);
 
       const block = result.template!.blocks[0];
-      expect(block.properties.imageUrl).toContain('cloudinary.com');
-      expect(block.properties.logoUrl).toContain('cloudinary.com');
-      expect(block.properties.imageUrl).not.toContain('{{assets');
+      expect(block.properties?.imageUrl).toContain('cloudinary.com');
+      expect(block.properties?.logoUrl).toContain('cloudinary.com');
+      expect(block.properties?.imageUrl).not.toContain('{{assets');
     });
 
     it('deve contar variáveis substituídas', () => {

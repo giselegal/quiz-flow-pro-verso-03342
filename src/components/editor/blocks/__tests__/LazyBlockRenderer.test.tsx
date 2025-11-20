@@ -333,7 +333,7 @@ describe('LazyBlockRenderer', () => {
         renderCount++;
         return (
           <div data-testid="counting">
-            Render #{renderCount} - Color: {block.properties.color}
+            Render #{renderCount} - Color: {block.properties?.color}
           </div>
         );
       };

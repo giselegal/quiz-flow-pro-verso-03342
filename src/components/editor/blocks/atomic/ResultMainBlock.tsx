@@ -138,7 +138,7 @@ export default function ResultMainBlock({
             {/* Intro Text */}
             {block.properties?.props?.showIntroText && block.properties?.props?.introText && (
               <p className="text-base text-gray-600 leading-relaxed text-center md:text-left">
-                {block.properties.props.introText}
+                {block.properties?.props.introText}
               </p>
             )}
           </div>

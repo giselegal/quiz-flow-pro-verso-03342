@@ -250,7 +250,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
                 block.properties?.paddingBottom ||
                 block.properties?.paddingLeft ||
                 block.properties?.paddingRight
-                ? `${block.properties.paddingTop || 0}px ${block.properties.paddingRight || 0}px ${block.properties.paddingBottom || 0}px ${block.properties.paddingLeft || 0}px`
+                ? `${block.properties?.paddingTop || 0}px ${block.properties?.paddingRight || 0}px ${block.properties?.paddingBottom || 0}px ${block.properties?.paddingLeft || 0}px`
                 : undefined,
             margin:
               marginTop || marginBottom || marginLeft || marginRight
@@ -258,13 +258,13 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
                 : undefined,
             backgroundColor:
               block.properties?.backgroundColor &&
-                block.properties.backgroundColor !== 'transparent'
-                ? block.properties.backgroundColor
+                block.properties?.backgroundColor !== 'transparent'
+                ? block.properties?.backgroundColor
                 : undefined,
             color: block.properties?.textColor || undefined,
             transform:
-              block.properties?.containerScale && block.properties.containerScale !== 100
-                ? `scale(${block.properties.containerScale / 100})`
+              block.properties?.containerScale && block.properties?.containerScale !== 100
+                ? `scale(${block.properties?.containerScale / 100})`
                 : undefined,
             transformOrigin: 'center',
           }}

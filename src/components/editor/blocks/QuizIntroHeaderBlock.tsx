@@ -49,12 +49,12 @@ const QuizIntroHeaderBlock: FC<QuizIntroHeaderBlockProps> = ({
        
       appLogger.debug('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
         blockId: block.id,
-        logoUrl: block.properties.logoUrl,
-        logoWidth: block.properties.logoWidth,
-        logoHeight: block.properties.logoHeight,
-        progressValue: block.properties.progressValue,
-        showProgress: block.properties.showProgress,
-        showBackButton: block.properties.showBackButton,
+        logoUrl: block.properties?.logoUrl,
+        logoWidth: block.properties?.logoWidth,
+        logoHeight: block.properties?.logoHeight,
+        progressValue: block.properties?.progressValue,
+        showProgress: block.properties?.showProgress,
+        showBackButton: block.properties?.showBackButton,
       });
     }
     // Dependências por valor para evitar disparos por identidade do objeto

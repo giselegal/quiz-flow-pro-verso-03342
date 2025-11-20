@@ -71,10 +71,10 @@ export const convertLegacyHeader = (block: Block): HeaderProperties => {
   if (!block.properties) return defaultHeaderProperties;
 
   // Converter cabeçalho aninhado
-  if (block.properties.header) {
+  if (block.properties?.header) {
     return {
       ...defaultHeaderProperties,
-      ...block.properties.header,
+      ...block.properties?.header,
     };
   }
 

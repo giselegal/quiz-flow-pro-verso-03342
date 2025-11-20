@@ -48,12 +48,12 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       appLogger.info('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
         data: [{
           blockId: block.id,
-          logoUrl: block.properties.logoUrl,
-          logoWidth: block.properties.logoWidth,
-          logoHeight: block.properties.logoHeight,
-          progressValue: block.properties.progressValue,
-          showProgress: block.properties.showProgress,
-          showBackButton: block.properties.showBackButton,
+          logoUrl: block.properties?.logoUrl,
+          logoWidth: block.properties?.logoWidth,
+          logoHeight: block.properties?.logoHeight,
+          progressValue: block.properties?.progressValue,
+          showProgress: block.properties?.showProgress,
+          showBackButton: block.properties?.showBackButton,
         }]
       });
     }

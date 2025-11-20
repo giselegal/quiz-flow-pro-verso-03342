@@ -41,9 +41,9 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
     case 'FunnelHeroBlock':
       return (
         <FunnelHeroSection
-          title={block.properties.title || 'Título do Hero'}
-          description={block.properties.description || 'Descrição do hero section'}
-          ctaText={block.properties.ctaText || 'Call to Action'}
+          title={block.properties?.title || 'Título do Hero'}
+          description={block.properties?.description || 'Descrição do hero section'}
+          ctaText={block.properties?.ctaText || 'Call to Action'}
           {...block.properties}
           isSelected={isSelected}
           onClick={onClick}
@@ -54,8 +54,8 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
     case 'FunnelPainBlock':
       return (
         <FunnelPainSection
-          title={block.properties.title || 'Problemas que Resolvemos'}
-          painPoints={block.properties.painPoints || []}
+          title={block.properties?.title || 'Problemas que Resolvemos'}
+          painPoints={block.properties?.painPoints || []}
           {...block.properties}
           isSelected={isSelected}
           onClick={onClick}
