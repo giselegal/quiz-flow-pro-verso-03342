@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Button } from '@/components/ui/button';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { Card } from '@/components/ui/card';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { useQuizResult } from '@/hooks/useQuizResult';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { getBestUserName } from '@/core/user/name';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { mapToFriendlyStyle } from '@/core/style/naming';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { cn } from '@/lib/utils';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 interface Step20SystemSelectorProps {
     className?: string;

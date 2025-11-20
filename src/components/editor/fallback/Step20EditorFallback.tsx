@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { useQuizResult } from '@/hooks/useQuizResult';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import Step20FallbackTemplate from '@/components/quiz/Step20FallbackTemplate';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { getBestUserName } from '@/core/user/name';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { mapToFriendlyStyle } from '@/core/style/naming';
-import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 interface Step20EditorFallbackProps {
   blocks: any[];
