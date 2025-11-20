@@ -634,22 +634,27 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         // sem cleanup necessário
     }, [queryClient, props.templateId, resourceId, props.funnelId]);
 
-    // Blocks from unified
-    const blocks: Block[] | null = getStepBlocks(safeCurrentStep);
+    // Blocks from unified - SEMPRE como array para evitar null checks e loops
+    const rawBlocks = getStepBlocks(safeCurrentStep);
+    const blocks: Block[] = Array.isArray(rawBlocks) ? rawBlocks : [];
 
     // 🔍 DEBUG: Log what getStepBlocks returns
     useEffect(() => {
         console.group('🎯 [QuizModularEditor] getStepBlocks chamado');
         console.log('safeCurrentStep:', safeCurrentStep);
-        console.log('blocks retornado:', blocks);
+        console.log('rawBlocks:', rawBlocks);
+        console.log('blocks (normalized):', blocks);
+        console.log('selectedBlockId:', selectedBlockId);
         console.log('Análise:', {
-            isNull: blocks === null,
-            isArray: Array.isArray(blocks),
-            blocksCount: blocks?.length || 0,
-            blockIds: blocks?.map(b => b.id) || []
+            rawBlocksIsNull: rawBlocks === null,
+            blocksIsArray: Array.isArray(blocks),
+            blocksCount: blocks.length,
+            blockIds: blocks.map(b => b.id),
+            hasSelectedBlockId: !!selectedBlockId,
+            selectedBlockExists: blocks.some(b => b.id === selectedBlockId)
         });
         console.groupEnd();
-    }, [safeCurrentStep, blocks]);
+    }, [safeCurrentStep, rawBlocks, blocks, selectedBlockId]);
 
     useEffect(() => {
         try {
@@ -1685,7 +1690,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 })()}
                                 <PropertiesColumnWithJson
                                     selectedBlock={
-                                        blocks?.find(b => b.id === selectedBlockId) ||
+                                        blocks.find(b => b.id === selectedBlockId) ||
                                         undefined
                                     }
                                     blocks={blocks}
@@ -1697,11 +1702,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         updateBlock(safeCurrentStep, id, updates);
                                     }}
                                     onClearSelection={() => setSelectedBlock(null)}
-                                    fullTemplate={{
+                                    fullTemplate={React.useMemo(() => ({
                                         step: currentStepKey,
-                                        blocks: blocks || []
-                                    }}
-                                    onTemplateChange={(template) => {
+                                        blocks
+                                    }), [currentStepKey, blocks])}
+                                    onTemplateChange={React.useCallback((template) => {
                                         console.group('🔧 [QuizModularEditor] onTemplateChange chamado');
                                         console.log('template recebido:', template);
                                         console.log('safeCurrentStep:', safeCurrentStep);
@@ -1716,7 +1721,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         } else {
                                             console.warn('❌ template.blocks inválido ou não é array');
                                         }
-                                    }}
+                                    }, [safeCurrentStep, setStepBlocks])}
                                     templateId={currentStepKey}
                                 />
                             </div>
