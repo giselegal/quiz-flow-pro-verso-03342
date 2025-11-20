@@ -42,6 +42,7 @@ const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
 const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
 const PropertiesColumnWithJson = React.lazy(() => import('./components/PropertiesColumn/PropertiesColumnWithJson'));
+const PropertiesColumnSimple = React.lazy(() => import('./components/PropertiesColumnSimple'));
 const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 
 // ✅ P2: Error boundaries granulares
@@ -288,6 +289,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             return v === 'production' ? 'production' : 'live';
         } catch { return 'live'; }
     });
+
+    // 🐛 DEBUG: Flag para usar painel de propriedades simples (stateless)
+    const [useSimplePropertiesPanel, setUseSimplePropertiesPanel] = useState<boolean>(() => {
+        try {
+            const v = localStorage.getItem('qm-editor:use-simple-properties');
+            return v === 'true';
+        } catch { return false; }
+    });
+
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [templateLoadError, setTemplateLoadError] = useState(false);
 
@@ -715,6 +725,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             });
         } catch { }
     }, [selectedBlockId, blocks]);
+
+    // 🐛 DEBUG CRÍTICO: Log detalhado do estado de seleção
+    useEffect(() => {
+        console.group('🧩 PROPRIEDADES DEBUG');
+        console.log('safeCurrentStep:', safeCurrentStep);
+        console.log('selectedBlockId:', selectedBlockId);
+        console.log('blocksCount:', blocks?.length);
+        console.log('selectedBlock:', blocks?.find(b => b.id === selectedBlockId));
+        console.log('Análise:', {
+            temBlocks: !!blocks,
+            temSelecao: !!selectedBlockId,
+            selecaoValida: !!(selectedBlockId && blocks?.find(b => b.id === selectedBlockId)),
+            blockIds: blocks?.map(b => b.id) || [],
+        });
+        console.groupEnd();
+    }, [safeCurrentStep, selectedBlockId, blocks]);
 
     // ✅ G1 FIX: Auto-selecionar primeiro bloco se selectedBlockId for null ou inválido
     useEffect(() => {
@@ -1471,6 +1497,26 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             </ToggleGroup>
                         </div>
 
+                        <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
+
+                        {/* 🐛 DEBUG: Toggle para painel simples */}
+                        <Button
+                            size="sm"
+                            variant={useSimplePropertiesPanel ? "default" : "outline"}
+                            onClick={() => {
+                                const newValue = !useSimplePropertiesPanel;
+                                setUseSimplePropertiesPanel(newValue);
+                                try {
+                                    localStorage.setItem('qm-editor:use-simple-properties', String(newValue));
+                                } catch { }
+                                appLogger.info(`[QuizModularEditor] Painel de propriedades: ${newValue ? 'SIMPLES' : 'COMPLETO'}`);
+                            }}
+                            className="h-7"
+                            title="Alternar entre painel simples (debug) e completo"
+                        >
+                            {useSimplePropertiesPanel ? '🐛 Debug' : '⚙️ Full'}
+                        </Button>
+
                         {enableAutoSave && (
                             <AutosaveIndicator
                                 status={autosaveIndicator.status}
@@ -1737,24 +1783,44 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     console.groupEnd();
                                     return null;
                                 })()}
-                                <PropertiesColumnWithJson
-                                    selectedBlock={
-                                        blocks.find(b => b.id === selectedBlockId) ||
-                                        undefined
-                                    }
-                                    blocks={blocks}
-                                    onBlockSelect={handleBlockSelect}
-                                    onBlockUpdate={(
-                                        id: string,
-                                        updates: Partial<Block>
-                                    ) => {
-                                        updateBlock(safeCurrentStep, id, updates);
-                                    }}
-                                    onClearSelection={() => setSelectedBlock(null)}
-                                    fullTemplate={fullTemplate}
-                                    onTemplateChange={handleTemplateChange}
-                                    templateId={currentStepKey}
-                                />
+
+                                {/* 🐛 DEBUG: Alternar entre painel simples e completo */}
+                                {useSimplePropertiesPanel ? (
+                                    <PropertiesColumnSimple
+                                        selectedBlock={
+                                            blocks.find(b => b.id === selectedBlockId) ||
+                                            undefined
+                                        }
+                                        blocks={blocks}
+                                        onBlockSelect={handleBlockSelect}
+                                        onBlockUpdate={(
+                                            id: string,
+                                            updates: Partial<Block>
+                                        ) => {
+                                            updateBlock(safeCurrentStep, id, updates);
+                                        }}
+                                        onClearSelection={() => setSelectedBlock(null)}
+                                    />
+                                ) : (
+                                    <PropertiesColumnWithJson
+                                        selectedBlock={
+                                            blocks.find(b => b.id === selectedBlockId) ||
+                                            undefined
+                                        }
+                                        blocks={blocks}
+                                        onBlockSelect={handleBlockSelect}
+                                        onBlockUpdate={(
+                                            id: string,
+                                            updates: Partial<Block>
+                                        ) => {
+                                            updateBlock(safeCurrentStep, id, updates);
+                                        }}
+                                        onClearSelection={() => setSelectedBlock(null)}
+                                        fullTemplate={fullTemplate}
+                                        onTemplateChange={handleTemplateChange}
+                                        templateId={currentStepKey}
+                                    />
+                                )}
                             </div>
                         </Suspense>
                     </Panel>
