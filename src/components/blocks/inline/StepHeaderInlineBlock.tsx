@@ -14,6 +14,7 @@ const StepHeaderInlineBlock: React.FC<InlineBlockProps> = ({
   onClick,
   className = '',
 }) => {
+  const props = block.properties || {};
   const {
     logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
     logoWidth = 96,
@@ -27,7 +28,7 @@ const StepHeaderInlineBlock: React.FC<InlineBlockProps> = ({
     containerWidth = 'full', // full, sm, md, lg, xl
     alignment = 'center', // left, center, right
     spacing = 4, // gap between elements
-  } = block.properties;
+  } = props;
 
   // Classes de largura do container
   const widthClasses = {
