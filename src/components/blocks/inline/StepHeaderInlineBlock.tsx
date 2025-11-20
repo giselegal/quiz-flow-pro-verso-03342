@@ -27,7 +27,7 @@ const StepHeaderInlineBlock: React.FC<InlineBlockProps> = ({
     containerWidth = 'full', // full, sm, md, lg, xl
     alignment = 'center', // left, center, right
     spacing = 4, // gap between elements
-  } = block.properties;
+  } = block.properties || {};
 
   // Classes de largura do container
   const widthClasses = {
