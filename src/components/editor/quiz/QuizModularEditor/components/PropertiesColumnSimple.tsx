@@ -41,7 +41,8 @@ export const PropertiesColumnSimple: React.FC<PropertiesColumnSimpleProps> = ({
 
     const handleChangeType = (e: ChangeEvent<HTMLInputElement>) => {
         if (!selectedBlock) return;
-        onBlockUpdate(selectedBlock.id, { type: e.target.value });
+        // Type assertion necessária pois estamos editando manualmente o tipo
+        onBlockUpdate(selectedBlock.id, { type: e.target.value as any });
     };
 
     const handleSelectFromList = (id: string) => {

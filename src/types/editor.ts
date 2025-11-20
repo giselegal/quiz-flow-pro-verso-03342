@@ -252,6 +252,7 @@ export type BlockType =
   | 'result-cta'
   | 'result-secondary-styles'
   | 'quiz-score-display'
+  | 'modular-result-header'
   // Legacy/deprecated types (kept for backward compatibility)
   | 'result-title'
   | 'result-style-name'
