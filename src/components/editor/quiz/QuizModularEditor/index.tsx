@@ -122,6 +122,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const isReadOnly = props.isReadOnly ?? false;
     const resourceMetadata = props.editorResource ?? null;
 
+    // 🐛 DEBUG: Verificar se resourceId está chegando e se vai carregar JSON
+    console.log('🔍 [QuizModularEditor] Props recebidas:', {
+        resourceId: props.resourceId,
+        templateId: props.templateId,
+        funnelId: props.funnelId,
+        resourceIdFinal: resourceId
+    });
+
+    console.log('🚨 [QuizModularEditor] DIAGNÓSTICO CRÍTICO:', {
+        temResourceId: !!resourceId,
+        vaiCarregarJSON: !!(props.templateId || resourceId),
+        razao: !resourceId ? '❌ resourceId está undefined - JSON NÃO SERÁ CARREGADO!' : '✅ resourceId OK - JSON será carregado',
+        urlAtual: typeof window !== 'undefined' ? window.location.href : 'SSR'
+    });
+
     // Safe current step
     const safeCurrentStep = Math.max(1, unifiedState.editor.currentStep || 1);
     const currentStepKey = `step-${String(safeCurrentStep).padStart(2, '0')}`;
@@ -637,6 +652,40 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Blocks from unified - SEMPRE como array para evitar null checks e loops
     const rawBlocks = getStepBlocks(safeCurrentStep);
     const blocks: Block[] = Array.isArray(rawBlocks) ? rawBlocks : [];
+
+    // 🔧 CRITICAL FIX: Memo para o template completo usado no painel (hooks FORA do JSX)
+    const fullTemplate = React.useMemo(
+        () => ({
+            step: currentStepKey,
+            blocks,
+        }),
+        [currentStepKey, blocks]
+    );
+
+    // 🔧 CRITICAL FIX: Callback estável para quando o JSON do template for editado no painel
+    const handleTemplateChange = React.useCallback(
+        (template: { step?: string; blocks?: Block[] }) => {
+            console.group('🔧 [QuizModularEditor] onTemplateChange chamado');
+            console.log('template recebido:', template);
+            console.log('safeCurrentStep:', safeCurrentStep);
+            console.log('template.blocks:', template?.blocks);
+            console.log('isArray:', Array.isArray(template?.blocks));
+            console.log('blocksCount:', template?.blocks?.length);
+            console.groupEnd();
+
+            if (template?.blocks && Array.isArray(template.blocks)) {
+                console.log(
+                    '✅ Chamando setStepBlocks com',
+                    template.blocks.length,
+                    'blocos'
+                );
+                setStepBlocks(safeCurrentStep, template.blocks);
+            } else {
+                console.warn('❌ template.blocks inválido ou não é array');
+            }
+        },
+        [safeCurrentStep, setStepBlocks]
+    );
 
     // 🔍 DEBUG: Log what getStepBlocks returns
     useEffect(() => {
@@ -1702,26 +1751,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         updateBlock(safeCurrentStep, id, updates);
                                     }}
                                     onClearSelection={() => setSelectedBlock(null)}
-                                    fullTemplate={React.useMemo(() => ({
-                                        step: currentStepKey,
-                                        blocks
-                                    }), [currentStepKey, blocks])}
-                                    onTemplateChange={React.useCallback((template) => {
-                                        console.group('🔧 [QuizModularEditor] onTemplateChange chamado');
-                                        console.log('template recebido:', template);
-                                        console.log('safeCurrentStep:', safeCurrentStep);
-                                        console.log('template.blocks:', template?.blocks);
-                                        console.log('isArray:', Array.isArray(template?.blocks));
-                                        console.log('blocksCount:', template?.blocks?.length);
-                                        console.groupEnd();
-
-                                        if (template?.blocks && Array.isArray(template.blocks)) {
-                                            console.log('✅ Chamando setStepBlocks com', template.blocks.length, 'blocos');
-                                            setStepBlocks(safeCurrentStep, template.blocks);
-                                        } else {
-                                            console.warn('❌ template.blocks inválido ou não é array');
-                                        }
-                                    }, [safeCurrentStep, setStepBlocks])}
+                                    fullTemplate={fullTemplate}
+                                    onTemplateChange={handleTemplateChange}
                                     templateId={currentStepKey}
                                 />
                             </div>
