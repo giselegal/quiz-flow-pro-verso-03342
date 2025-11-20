@@ -8,7 +8,7 @@ import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { InlineEditableText } from './InlineEditableText';
 
 interface CountdownTimerBlockProps extends InlineBlockProps {
-  block: CountdownTimerBlock;
+  block: { id: string; type: string; properties?: Record<string, any> };
 }
 
 interface TimeUnit {

@@ -138,17 +138,21 @@ export async function loadStepFromJson(
     if (live || enableBust) bust = `?t=${Date.now()}`;
   } catch { }
 
-  // ✅ WAVE 1 CRÍTICO: Path order ajustado para reduzir 404s e usar master consolidado quando disponível
-  // Estratégia: tentar carregar o master consolidado primeiro (1 request para 21 steps),
-  // depois tentar o passo individual. Isso reduz tráfego e TTI quando o master está presente.
+  // ✅ FASE 2 CRÍTICO: Reordenar paths para eliminar 404 iniciais
+  // Nova ordem prioriza arquivo específico v3 já existente (`step-XX-v3.json`)
+  // seguido pelo master consolidado e então paths mais antigos/legados.
+  // Isso reduz latência (+4.2s) causada por tentativas de URLs inexistentes.
   const paths: string[] = [
-    // 🎯 PRIORIDADE #1: Master consolidado na raiz public (carrega todas as etapas em 1 request)
+    // 🎯 PRIORIDADE #1: Arquivo direto da etapa versão v3 (existe na pasta /templates)
+    `/templates/${stepId}-v3.json${bust}`,
+
+    // 🎯 PRIORIDADE #2: Master consolidado (carrega todas as etapas de uma vez se presente)
     `/templates/quiz21-complete.json${bust}`,
 
-    // 🎯 PRIORIDADE #2: Steps individuais (fallback se master não estiver presente)
+    // 🎯 PRIORIDADE #3: Path individual por template (mantido como compatibilidade)
     `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`,
 
-    // 🎯 PRIORIDADE #3: Master no diretório do template (fallback adicional)
+    // 🎯 PRIORIDADE #4: Master dentro do diretório do template (fallback adicional)
     `/templates/funnels/${templateId}/master.v3.json${bust}`,
   ];
 

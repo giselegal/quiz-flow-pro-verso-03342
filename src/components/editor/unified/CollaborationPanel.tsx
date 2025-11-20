@@ -230,7 +230,7 @@ export function CollaborationPanel({
               </div>
 
               <div className="flex-1 overflow-y-auto p-4">
-                {activeUsers.map((user) => (
+                {activeUsers.map((user: CollaborationUser) => (
                   <div
                     key={user.id}
                     className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg"
@@ -280,7 +280,7 @@ export function CollaborationPanel({
           {activeTab === 'chat' && (
             <div className="h-full flex flex-col">
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {chatMessages.map((message) => (
+                {chatMessages.map((message: ChatMessage) => (
                   <div key={message.id} className="flex space-x-3">
                     <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                       {message.userAvatar ? (
