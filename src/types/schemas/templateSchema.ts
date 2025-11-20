@@ -20,7 +20,8 @@ export const blockBaseSchema = z.object({
   id: z.string().min(1, 'Block ID é obrigatório'),
   type: z.string().min(1, 'Block type é obrigatório'),
   order: z.number().int().nonnegative().optional(),
-  parentId: z.string().optional(),
+  // Accepts string | null | undefined to suport hierarchical blocks sem parent
+  parentId: z.string().nullable().optional(),
 });
 
 /**
