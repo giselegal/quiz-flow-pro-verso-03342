@@ -23,7 +23,7 @@ export default function TextInlineBlock({ block, isSelected, onClick }: AtomicBl
         <p
             className={`${sizeMap[size] || 'text-base'} ${isSelected ? 'ring-2 ring-primary' : ''}`}
             style={{ textAlign: align as any, color }}
-            onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+            onClick={(e) => { onClick?.(); }}
         >
             {text}
         </p>

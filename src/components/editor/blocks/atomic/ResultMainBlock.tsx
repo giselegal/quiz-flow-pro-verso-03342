@@ -71,7 +71,7 @@ export default function ResultMainBlock({
       <div
         className={`p-8 rounded-xl mb-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
         style={{ backgroundColor }}
-        onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+        onClick={(e) => { onClick?.(); }}
       >
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Coluna de Imagens */}
@@ -185,7 +185,7 @@ export default function ResultMainBlock({
     <div
       className={`p-8 rounded-xl mb-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={{ backgroundColor }}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={(e) => { onClick?.(); }}
     >
       {/* Celebração */}
       {showCelebration && (

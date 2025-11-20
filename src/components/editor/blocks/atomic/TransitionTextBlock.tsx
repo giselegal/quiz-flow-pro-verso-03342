@@ -25,7 +25,7 @@ export default function TransitionTextBlock({
     <p
       className={`${fontSizeClasses[fontSize] || 'text-lg'} mb-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={{ color, textAlign: textAlign as any }}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={(e) => { onClick?.(); }}
     >
       {text}
     </p>

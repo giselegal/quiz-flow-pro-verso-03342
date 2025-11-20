@@ -16,7 +16,7 @@ export default function ImageInlineBlock({ block, isSelected, onClick }: AtomicB
             width={width}
             height={height}
             className={`object-contain mx-auto ${isSelected ? 'ring-2 ring-primary' : ''}`}
-            onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+            onClick={(e) => { onClick?.(); }}
             style={{ maxWidth: '100%', height: 'auto' }}
         />
     );

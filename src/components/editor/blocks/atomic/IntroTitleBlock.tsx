@@ -80,7 +80,7 @@ export default function IntroTitleBlock({
       className={`${fontSize} ${fontWeight} ${textAlign} mb-4 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={color ? { color } : undefined}
       onClick={(e) => {
-        e.stopPropagation();
+        // NÃO usar stopPropagation() - deixar evento subir para o CanvasColumn
         onClick?.();
       }}
     >

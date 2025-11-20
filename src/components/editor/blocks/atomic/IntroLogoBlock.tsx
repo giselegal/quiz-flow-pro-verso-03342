@@ -21,7 +21,7 @@ export default function IntroLogoBlock({
   return (
     <div
       className={`flex justify-center mb-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={(e) => { onClick?.(); }}
     >
       <img
         src={logoUrl}

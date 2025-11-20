@@ -17,7 +17,7 @@ export default function ResultImageBlock({
       <div
         className={`w-full bg-muted rounded-xl flex items-center justify-center mb-6 ${isSelected ? 'ring-2 ring-primary' : ''}`}
         style={{ height: maxHeight, borderRadius }}
-        onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+        onClick={(e) => { onClick?.(); }}
       >
         <span className="text-muted-foreground">Sem imagem</span>
       </div>
@@ -27,7 +27,7 @@ export default function ResultImageBlock({
   return (
     <div 
       className={`mb-6 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={(e) => { onClick?.(); }}
     >
       <img
         src={imageUrl}

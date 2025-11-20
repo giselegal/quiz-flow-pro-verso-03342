@@ -43,7 +43,7 @@ export default function TransitionLoaderBlock({
   return (
     <div
       className={`flex gap-2 justify-center items-center py-8 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={(e) => { onClick?.(); }}
     >
       {[0, 1, 2].map((i) => (
         <div

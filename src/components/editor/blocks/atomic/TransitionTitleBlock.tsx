@@ -22,7 +22,7 @@ export default function TransitionTitleBlock({
     <h2
       className={`${fontSizeClasses[fontSize] || 'text-3xl'} font-bold mb-4 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={{ color, textAlign: textAlign as any }}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={(e) => { onClick?.(); }}
     >
       {title}
     </h2>

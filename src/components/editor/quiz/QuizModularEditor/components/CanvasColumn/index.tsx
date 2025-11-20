@@ -86,7 +86,21 @@ function SortableBlockItem({
                 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}
             `}
             onClick={e => {
-                if ((e.target as HTMLElement).tagName.toLowerCase() === 'button') return;
+                const target = e.target as HTMLElement;
+                console.log('🖱️ [CanvasColumn] Click no bloco:', {
+                    blockId: block.id,
+                    blockType: block.type,
+                    targetTag: target.tagName,
+                    isButton: target.tagName.toLowerCase() === 'button',
+                    onSelectExists: !!onSelect
+                });
+
+                if (target.tagName.toLowerCase() === 'button') {
+                    console.log('⏭️ Click em button, ignorando seleção');
+                    return;
+                }
+
+                console.log('✅ Chamando onSelect para:', block.id);
                 onSelect?.(block.id);
             }}
             data-block-id={block.id}

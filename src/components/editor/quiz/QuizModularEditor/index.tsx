@@ -338,11 +338,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável
     const handleBlockSelect = useCallback((blockId: string | null) => {
+        console.log('🎯 [handleBlockSelect] CHAMADO com:', {
+            blockId,
+            isNull: blockId === null,
+            selectedBlockIdAtual: selectedBlockId
+        });
+
         if (!blockId) {
+            console.log('❌ blockId null, limpando seleção');
             setSelectedBlock(null);
             return;
         }
 
+        console.log('✅ [handleBlockSelect] Definindo selectedBlock:', blockId);
         appLogger.info(`📍 [WAVE1] Selecionando bloco: ${blockId}`);
         setSelectedBlock(blockId);
 
@@ -357,7 +365,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 });
             }
         }, 100);
-    }, [setSelectedBlock]);
+    }, [setSelectedBlock, selectedBlockId]);
 
     // ✅ WAVE 1: Navegação instantânea - UI update imediato, lazy load em background
     const handleSelectStep = useCallback((key: string) => {

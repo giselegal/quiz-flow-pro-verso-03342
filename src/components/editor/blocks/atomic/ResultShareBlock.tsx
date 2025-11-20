@@ -72,7 +72,7 @@ export default function ResultShareBlock({
     return (
         <div
             className={`mt-8 p-6 border rounded-lg ${isSelected ? 'ring-2 ring-primary' : ''}`}
-            onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+            onClick={(e) => { onClick?.(); }}
         >
             <div className="flex items-center gap-2 mb-4">
                 <Share2 className="w-5 h-5 text-gray-600" />

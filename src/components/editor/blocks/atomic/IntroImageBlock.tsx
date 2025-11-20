@@ -35,7 +35,7 @@ export default function IntroImageBlock({
     return (
       <div
         className={`flex justify-center my-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
-        onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+        onClick={(e) => { onClick?.(); }}
       >
         <div className="w-full max-w-lg h-48 bg-gray-100 text-gray-400 rounded-lg flex items-center justify-center text-xs">
           Selecionar imagem
@@ -47,7 +47,7 @@ export default function IntroImageBlock({
   return (
     <div
       className={`flex justify-center my-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={(e) => { onClick?.(); }}
     >
       <img
         src={src}
