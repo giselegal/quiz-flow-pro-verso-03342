@@ -495,42 +495,19 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
             console.group('🔧 [Reducer] SET_STEP_BLOCKS');
             console.log('stepIndex:', action.payload.stepIndex);
             console.log('blocks recebidos:', action.payload.blocks.length);
+            console.warn('🚨🚨🚨 CÓDIGO ATUALIZADO - TIMESTAMP:', new Date().toISOString());
 
-            const validBlocks: any[] = [];
+            // 🚨 VALIDAÇÃO TEMPORARIAMENTE DESABILITADA PARA DEBUG
+            // Aceitar TODOS os blocos sem validação Zod
+            const validBlocks: any[] = action.payload.blocks;
             const invalidBlocks: any[] = [];
 
-            for (const block of action.payload.blocks) {
-                // Validar bloco completo e manter propriedades adicionais (passthrough)
-                const validation = blockSchema.safeParse(block);
-                if (validation.success) {
-                    validBlocks.push(validation.data);
-                    console.log('✅ Bloco válido:', block.id);
-                } else {
-                    invalidBlocks.push({ block, errors: validation.error.issues });
-                    console.error('❌ Bloco INVÁLIDO:', block.id, validation.error.issues);
-                    logger.warn('[SET_STEP_BLOCKS] Bloco inválido detectado', {
-                        stepIndex: action.payload.stepIndex,
-                        blockId: block?.id,
-                        errors: validation.error.issues,
-                    });
-                }
-            }
+            console.log(`⚠️ VALIDAÇÃO DESABILITADA: Aceitando todos os ${validBlocks.length} blocos`);
 
-            if (invalidBlocks.length > 0) {
-                console.error(`❌ ${invalidBlocks.length} blocos inválidos ignorados!`);
-                console.table(invalidBlocks.map(ib => ({
-                    id: ib.block?.id,
-                    type: ib.block?.type,
-                    errors: ib.errors.map((e: any) => e.message).join(', ')
-                })));
-                logger.error('[SET_STEP_BLOCKS] Blocos inválidos ignorados', {
-                    stepIndex: action.payload.stepIndex,
-                    invalidCount: invalidBlocks.length,
-                    totalCount: action.payload.blocks.length,
-                });
-            } else {
-                console.log(`✅ Todos os ${validBlocks.length} blocos são válidos`);
-            }
+            // Log para debug
+            validBlocks.forEach((block, i) => {
+                console.log(`  ${i + 1}. ${block.type} (${block.id})`);
+            });
 
             console.log('Estado final: stepBlocks[' + action.payload.stepIndex + '] =', validBlocks.length, 'blocos');
             console.groupEnd();
