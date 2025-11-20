@@ -66,6 +66,8 @@ export interface UnifiedBlockComponentProps {
     onClick?: () => void;
     onPropertyChange?: (key: string, value: any) => void;
     onValidate?: (isValid: boolean) => void;
+    onUpdate?: (updates: Partial<BlockData>) => void;
+    onDelete?: () => void;
 
     // ===== QUIZ NAVIGATION PROPS =====
     isPreviewMode?: boolean;

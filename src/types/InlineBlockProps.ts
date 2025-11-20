@@ -47,6 +47,11 @@ export interface InlineBlockProps extends UnifiedBlockComponentProps {
   block: Block;
   
   /**
+   * Propriedades do bloco (atalho para block.properties)
+   */
+  properties?: Record<string, any>;
+  
+  /**
    * Se o bloco está selecionado no editor
    * Usado para aplicar estilos de seleção (ring, border, etc)
    * @default false
