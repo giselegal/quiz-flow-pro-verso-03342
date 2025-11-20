@@ -1,5 +1,6 @@
 import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
 import FunnelPainSection from '@/components/funnel/base/FunnelPainSection';
+import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 // Interface que todos os blocos do editor devem implementar
 
