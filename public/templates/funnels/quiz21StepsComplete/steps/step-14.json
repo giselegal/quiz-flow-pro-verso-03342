@@ -134,7 +134,7 @@
     "createdAt": "2025-10-13T00:33:47.497Z",
     "updatedAt": "2025-10-13T00:33:47.497Z",
     "author": "Quiz Flow Pro",
-    "version": "3.0.0",
+    "version": "3.2.0",
     "scoring": {
       "weight": 3,
       "timeLimit": 45,
@@ -143,6 +143,7 @@
     },
     "scoringAddedAt": "2025-11-05T21:52:52.455Z",
     "generated": "2025-11-12T13:09:32.105Z",
-    "source": "quiz21-complete.json"
+    "source": "quiz21-complete.json",
+    "templateId": "quiz21StepsComplete"
   }
 }

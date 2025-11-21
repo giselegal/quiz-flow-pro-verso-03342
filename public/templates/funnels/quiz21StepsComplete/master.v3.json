@@ -7,8 +7,9 @@
     "createdAt": "2025-11-04T20:00:00.000Z",
     "updatedAt": "2025-11-04T20:00:00.000Z",
     "author": "Editor System",
-    "version": "3.1.0",
-    "_notes": "Este arquivo referencia 21 steps em formato V3.1 (blocks[]). Cada step é carregado de /steps/{step-id}.json"
+    "version": "3.2.0",
+    "_notes": "Este arquivo referencia 21 steps em formato V3.1 (blocks[]). Cada step é carregado de /steps/{step-id}.json",
+    "totalSteps": 21
   },
   "steps": [
     {

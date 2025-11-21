@@ -6,6 +6,7 @@
 
 import { EditorPropertiesPanel } from '@/components/editor/unified/EditorPropertiesPanel';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { appLogger } from '@/lib/utils/appLogger';
 import React from 'react';
 
 export interface QuizPropertiesPanelModularProps {
