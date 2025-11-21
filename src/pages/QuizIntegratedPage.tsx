@@ -174,7 +174,7 @@ const QuizPage: React.FC = () => {
         enableAnalytics: true,
       }}
     >
-      <SuperUnifiedProvider funnelId="quiz-21-steps-integrated" autoLoad debugMode>
+      <SuperUnifiedProvider>
         <QuizIntegratedRenderer />
       </SuperUnifiedProvider>
     </UnifiedAppProvider>

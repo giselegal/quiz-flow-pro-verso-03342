@@ -24,7 +24,7 @@ describe('EditorProvider actions (unit)', () => {
     const stateRef: any = { current: null };
 
     render(
-      <SuperUnifiedProvider autoLoad={false} debugMode={false}>
+      <SuperUnifiedProvider>
         <ConsumerBridge ctxRef={ctxRef} stateRef={stateRef} />
       </SuperUnifiedProvider>,
     );

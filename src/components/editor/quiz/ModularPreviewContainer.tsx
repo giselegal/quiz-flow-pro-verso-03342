@@ -283,7 +283,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     // Encapsular com provider se não houver provider OU se provider não expõe actions (parcial/legacy)
     if (!maybeEditor || !maybeEditor.actions) {
         return (
-            <SuperUnifiedProvider funnelId={funnelId} autoLoad debugMode={false}>
+            <SuperUnifiedProvider>
                 {Content}
             </SuperUnifiedProvider>
         );

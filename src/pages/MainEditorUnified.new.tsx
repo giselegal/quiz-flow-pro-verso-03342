@@ -77,9 +77,7 @@ const MainEditorUnified: React.FC = () => {
                     enableAdvancedEditor: true,
                 }}
             >
-                <EditorProvider
-                    funnelId={funnelId}
-                >
+                <EditorProvider>
                     {sanitizedParams.funnelId ? (
                         <FunnelValidatedEditor
                             templateId={sanitizedParams.templateId}

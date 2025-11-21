@@ -276,7 +276,7 @@ const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props
         enableAdvancedEditor: true,
       }}
     >
-      <SuperUnifiedProvider funnelId={props.funnelId} autoLoad debugMode={false}>
+      <SuperUnifiedProvider>
         <Suspense fallback={
           <div className="flex items-center justify-center h-screen">
             <div className="text-center">
