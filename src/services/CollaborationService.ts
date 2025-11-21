@@ -1,6 +1,8 @@
 export type CollaborationUser = {
   id?: string;
   name?: string;
+  /** Papel do usuário na sessão para controle de permissões. */
+  role?: 'owner' | 'editor' | 'viewer';
   avatar?: string | null;
   isOnline?: boolean;
   lastSeen?: string | null;
@@ -22,7 +24,11 @@ export type CollaborationSession = {
 export const collaborationService = {
   subscribe: (cb: (s: CollaborationSession) => void) => ({ unsubscribe: () => { } }),
   createSession: async (funnelId: string, userId?: string) => ({ id: `session-${funnelId}`, users: [] } as CollaborationSession),
-  addUserToSession: async (sessionId: string, user: CollaborationUser, role?: string) => true,
+  addUserToSession: async (sessionId: string, user: CollaborationUser, role?: string) => {
+    // Garantir que role esteja preenchida se enviada separadamente
+    if (role && !user.role) user.role = role as any;
+    return true;
+  },
   getSession: (sessionId: string) => ({ id: sessionId, users: [] } as CollaborationSession),
   removeUserFromSession: async (sessionId: string, userId: string) => true,
   trackChange: async (_type: string, _entityType: string, _entityId: string, _changes: Record<string, any>) => { },

@@ -10,7 +10,17 @@ export type Notification = {
 export type ChatMessage = {
   id?: string;
   userId?: string;
+  /** Nome canônico para exibição (Compatibilidade com CollaborationPanel). */
+  userName?: string;
+  /** Avatar do usuário (Compatibilidade). */
+  userAvatar?: string;
+  /** Texto da mensagem (forma antiga). */
   text?: string;
+  /** Alias usado em alguns componentes. */
+  message?: string;
+  /** Timestamp ISO (Compatibilidade). */
+  timestamp?: string;
+  /** Campo legado */
   createdAt?: string;
 };
 
