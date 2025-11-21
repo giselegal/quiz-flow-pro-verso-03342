@@ -7,7 +7,7 @@
  * 
  * ANTES (V1):
  * ```typescript
- * import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+ * import { useSuperUnified } from 'LEGACY_SUPER_UNIFIED_PROVIDER_PATH';
  * const { auth, theme, editor } = useSuperUnified();
  * ```
  * 

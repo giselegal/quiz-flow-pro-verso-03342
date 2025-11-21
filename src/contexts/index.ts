@@ -49,8 +49,9 @@ export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifie
  * Ver: CHECKLIST_RESOLUCAO_DUPLICACOES.md
  * 
  * @deprecated Use SuperUnifiedProvider (V2) com hooks individuais
+ * Compat exports agora apontam para '@/hooks/useSuperUnified'
  */
-export { useUnifiedAuth, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+export { useUnifiedAuth, useSuperUnified } from '@/hooks/useSuperUnified';
 
 // 🆕 FASE 3: PureBuilder compatibility
 export { usePureBuilder } from '@/hooks/usePureBuilderCompat';

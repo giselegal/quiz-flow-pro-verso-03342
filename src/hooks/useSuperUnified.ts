@@ -13,4 +13,7 @@ export const useSuperUnified = () => {
   return useLegacySuperUnified();
 };
 
+// Compat alias mantido para chamadas antigas (ex: useUnifiedAuth())
+export const useUnifiedAuth = useSuperUnified;
+
 export default useSuperUnified;
