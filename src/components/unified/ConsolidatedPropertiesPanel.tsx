@@ -15,9 +15,10 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Settings, Edit3, Layers } from 'lucide-react';
+import { Trash2, Settings, Edit3, Layers, Loader2 } from 'lucide-react';
 
 import { Block } from '@/types/editor';
+import { usePropertiesPanelEnhancements } from '@/hooks/usePropertiesPanelEnhancements';
 
 interface ConsolidatedPropertiesPanelProps {
   selectedBlock: Block | null;
@@ -41,6 +42,20 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
   onDelete,
   onClose,
 }) => {
+  // Hook de melhorias: debounce, autosave, feedback visual
+  const { isSaving, debouncedSave } = usePropertiesPanelEnhancements(
+    async (blockId: string, updates: any) => {
+      if (onUpdate) {
+        await onUpdate(blockId, updates);
+      }
+    },
+    () => { }, // onSelectBlock não usado aqui (gerenciado externamente)
+    {
+      debounceMs: 400,
+      enableFeedback: true,
+    }
+  );
+
   // Propriedades mockadas para demonstração (substituir pelo hook real quando funcional)
   const propertyDefinitions = useMemo(() => {
     const blockType = selectedBlock?.type || '';
@@ -113,16 +128,17 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
     return selectedBlock?.properties || {};
   }, [selectedBlock?.properties]);
 
-  // Handler unificado para mudanças
+  // Handler unificado para mudanças com debounce
   const handlePropertyChange = (key: string, value: string | number | boolean) => {
-    if (!selectedBlock || !onUpdate) return;
+    if (!selectedBlock) return;
 
     const updatedProperties = {
       ...blockProperties,
       [key]: value,
     };
 
-    onUpdate(selectedBlock.id, { properties: updatedProperties });
+    // Usar debouncedSave para melhor UX
+    debouncedSave(selectedBlock.id, { properties: updatedProperties });
   };
 
   // Renderizar controle baseado no tipo
