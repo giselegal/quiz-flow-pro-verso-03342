@@ -2,7 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { appLogger } from '@/lib/utils/logger';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
-import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
@@ -102,10 +102,10 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
               <TabsTrigger value="result" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Result Page</TabsTrigger>
               <TabsTrigger value="sales" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Sales Page</TabsTrigger>
             </TabsList>
-          <div className="px-3 py-2 flex justify-end">
-            <AutosaveIndicator status={saveStatus as any} errorMessage={saveError?.message} compact />
+            <div className="px-3 py-2 flex justify-end">
+              <AutosaveIndicator status={saveStatus as any} errorMessage={saveError?.message} compact />
+            </div>
           </div>
-        </div>
 
           <TabsContent value="result" className="flex-1 mt-0">
             <ResizablePanelGroup direction="horizontal" className="h-full">

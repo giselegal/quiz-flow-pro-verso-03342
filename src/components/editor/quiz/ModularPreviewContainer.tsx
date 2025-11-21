@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { useEditorOptional } from '@/hooks/useEditor';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
 import { appLogger } from '@/lib/utils/appLogger';

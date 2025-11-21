@@ -4,7 +4,7 @@ import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
-import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';

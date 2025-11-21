@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 // Providers necessários
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
