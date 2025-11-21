@@ -42,7 +42,7 @@ export { QuizProvider, useQuiz, useQuizContext } from './quiz/QuizContext';
 export { QuizFlowProvider, useQuizFlow } from './quiz/QuizFlowProvider';
 
 // 🎭 UI
-export { ThemeProvider, useThemeContext } from './ui/ThemeContext';
+export { ThemeProvider as ThemeProviderLegacy, useThemeContext } from './ui/ThemeContext';
 export { PreviewProvider, usePreview } from './ui/PreviewContext';
 export { ScrollSyncProvider, useScrollSync } from './ui/ScrollSyncContext';
 
