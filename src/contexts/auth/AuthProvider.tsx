@@ -32,6 +32,9 @@ export interface User {
     role?: 'owner' | 'editor' | 'viewer';
     created_at?: string;
     metadata?: Record<string, any>;
+    // Aliases para compatibilidade com código legado
+    user_metadata?: Record<string, any>;
+    app_metadata?: Record<string, any>;
 }
 
 export interface AuthState {
@@ -122,6 +125,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     role: data.user.user_metadata?.role || 'viewer',
                     created_at: data.user.created_at,
                     metadata: data.user.user_metadata,
+                    user_metadata: data.user.user_metadata,
+                    app_metadata: (data.user as any).app_metadata,
                 });
 
                 appLogger.info('✅ Login realizado com sucesso', { userId: data.user.id });
@@ -183,6 +188,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     role: metadata?.role || 'viewer',
                     created_at: data.user.created_at,
                     metadata,
+                    user_metadata: data.user.user_metadata,
+                    app_metadata: (data.user as any).app_metadata,
                 });
 
                 appLogger.info('✅ Cadastro realizado com sucesso', { userId: data.user.id });
@@ -212,13 +219,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (error) throw error;
 
             if (data.user) {
+                const updatedMetadata = {
+                    ...state.user.metadata,
+                    ...updates,
+                };
                 setUser({
                     ...state.user,
                     ...updates,
-                    metadata: {
-                        ...state.user.metadata,
-                        ...updates,
-                    },
+                    metadata: updatedMetadata,
+                    user_metadata: updatedMetadata,
+                    app_metadata: state.user.app_metadata,
                 });
 
                 appLogger.info('✅ Usuário atualizado com sucesso');
@@ -248,6 +258,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     role: data.user.user_metadata?.role || 'viewer',
                     created_at: data.user.created_at,
                     metadata: data.user.user_metadata,
+                    user_metadata: data.user.user_metadata,
+                    app_metadata: (data.user as any).app_metadata,
                 });
             }
         } catch (error: any) {
@@ -279,6 +291,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                         role: session.user.user_metadata?.role || 'viewer',
                         created_at: session.user.created_at,
                         metadata: session.user.user_metadata,
+                        user_metadata: session.user.user_metadata,
+                        app_metadata: (session.user as any).app_metadata,
                     });
                 } else {
                     setUser(null);
@@ -309,6 +323,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                         role: session.user.user_metadata?.role || 'viewer',
                         created_at: session.user.created_at,
                         metadata: session.user.user_metadata,
+                        user_metadata: session.user.user_metadata,
+                        app_metadata: (session.user as any).app_metadata,
                     });
                 } else {
                     setUser(null);
