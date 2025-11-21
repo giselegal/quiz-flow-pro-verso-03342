@@ -73,6 +73,8 @@ import {
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { appLogger } from '@/lib/utils/appLogger';
 
+const LazyEditorPropertiesPanel = React.lazy(() => import('./components/EditorPropertiesPanel'));
+
 // ===============================
 // 🎯 EDITOR TYPES & INTERFACES
 // ===============================
@@ -1063,8 +1065,9 @@ export const UniversalVisualEditor: React.FC = () => {
         setElements(prev => prev.map(el =>
             el.id === updatedElement.id ? updatedElement : el,
         ));
+        updateEditorState({ selectedElement: updatedElement });
         analytics.trackEvent('element_updated', { elementId: updatedElement.id });
-    }, [analytics]);
+    }, [analytics, updateEditorState]);
 
     const handleElementDrop = useCallback((item: any, position: { x: number; y: number }) => {
         // 🎯 FASE 2: Usar createElementFromSchema para criar elementos dinamicamente
@@ -1203,12 +1206,21 @@ export const UniversalVisualEditor: React.FC = () => {
 
                 {/* Right Panel - Properties */}
                 {editorState.rightPanelVisible && (
-                    <div className="w-80 border-l border-gray-200 bg-gray-50 p-6">
-                        <div className="text-center text-gray-500">
-                            <Settings className="w-12 h-12 mx-auto mb-4" />
-                            <p className="font-medium">Painel de propriedades</p>
-                        </div>
-                    </div>
+                    <React.Suspense
+                        fallback={
+                            <div className="w-80 border-l border-gray-200 bg-gray-50 p-6">
+                                <div className="text-center text-gray-500">
+                                    <Settings className="w-12 h-12 mx-auto mb-4" />
+                                    <p className="font-medium">Carregando painel de propriedades…</p>
+                                </div>
+                            </div>
+                        }
+                    >
+                        <LazyEditorPropertiesPanel
+                            selectedElement={editorState.selectedElement}
+                            onElementUpdate={handleElementUpdate}
+                        />
+                    </React.Suspense>
                 )}
             </div>
 
