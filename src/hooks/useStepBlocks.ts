@@ -14,7 +14,7 @@
 
 import { useMemo } from 'react';
 import { useUnifiedCRUD } from '@/contexts/data/UnifiedCRUDProvider';
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/logger';
 
@@ -44,7 +44,7 @@ export interface UseStepBlocksReturn {
  */
 export function useStepBlocks(): UseStepBlocksReturn {
   const crud = useUnifiedCRUD();
-  const superUnified = useSuperUnified();
+  const superUnified = useEditorState();
 
   const result = useMemo(() => {
     // PRIORIDADE 1: SuperUnified.state.editor.stepBlocks (nova arquitetura)

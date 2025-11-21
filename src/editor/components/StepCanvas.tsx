@@ -15,7 +15,7 @@ import { VIRTUALIZATION_THRESHOLD } from '@/components/editor/performance/consta
 const List: any = (ReactWindow as any).FixedSizeList || (ReactWindow as any).VariableSizeList;
 type RowRendererProps = { index: number; style: React.CSSProperties };
 import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 // Unificar renderização com o runtime: usar o UniversalBlockRenderer (registry híbrido)
 import { UniversalBlockRenderer } from '@/components/core/renderers/UniversalBlockRenderer';
 import { cn } from '@/lib/utils';
@@ -41,7 +41,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
     className,
 }) => {
     const { step, blocks, isLoading, error } = useStepBlocks(stepIndex);
-    const unified = useSuperUnified();
+    const unified = useEditorState();
     const isEditingMode = unified.state.editor.isEditing;
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
     const [isDragging, setIsDragging] = useState(false);

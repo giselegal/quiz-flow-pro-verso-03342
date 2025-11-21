@@ -8,7 +8,7 @@
  * para SuperUnifiedProvider sem quebrar funcionalidades.
  */
 
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export const usePureBuilderCompat = () => {
@@ -17,7 +17,7 @@ export const usePureBuilderCompat = () => {
         setCurrentStep,
         setSelectedBlock,
         saveFunnel,
-    } = useSuperUnified();
+    } = useEditorState();
 
     // Adaptar estado do SuperUnified para interface do PureBuilder
     return {

@@ -9,7 +9,7 @@
  */
 
 import { useMemo, useCallback, useEffect, useState } from 'react';
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -61,7 +61,7 @@ export interface UseStepBlocksResult {
 
 export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
     // 🔁 LEGACY FACADE SUBSTITUÍDA: usamos SuperUnifiedProvider como fonte única
-    const unified = useSuperUnified();
+    const unified = useEditorState();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [updateTrigger, setUpdateTrigger] = useState(0);

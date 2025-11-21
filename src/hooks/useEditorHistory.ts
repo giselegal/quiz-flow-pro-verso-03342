@@ -10,7 +10,7 @@
 
 import { useCallback, useMemo, useEffect } from 'react';
 // Migrado para SuperUnifiedProvider: removendo dependência do provider canônico
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 import { editorMetrics } from '@/lib/utils/editorMetrics';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -45,7 +45,7 @@ export interface UseEditorHistoryReturn extends EditorHistoryState {
  * ```
  */
 export function useEditorHistory(): UseEditorHistoryReturn {
-  const superUnified = useSuperUnified();
+  const superUnified = useEditorState();
 
   // Novo histórico unificado via SuperUnifiedProvider (usa undo/redo internos)
   const { undo: providerUndo, redo: providerRedo, canUndo: providerCanUndo, canRedo: providerCanRedo } = superUnified;
