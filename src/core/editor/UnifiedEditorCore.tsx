@@ -59,7 +59,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
 }) => {
   return (
     <ErrorBoundary>
-      <SuperUnifiedProvider funnelId={funnelId} autoLoad debugMode={false}>
+      <SuperUnifiedProvider>
         <SimpleEditorLayout isPreview={isPreview} />
       </SuperUnifiedProvider>
     </ErrorBoundary>

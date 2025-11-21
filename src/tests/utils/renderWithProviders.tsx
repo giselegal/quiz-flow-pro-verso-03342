@@ -19,8 +19,8 @@ export function renderWithProviders(ui: ReactElement, { path = '/' }: Options = 
     return render(
         <HelmetProvider>
             <QueryClientProvider client={qc}>
-                <SuperUnifiedProvider autoLoad={false} debugMode={false}>
-                    <CustomThemeProvider defaultTheme="light">
+                <SuperUnifiedProvider>
+                    <CustomThemeProvider defaultTheme={{ mode: 'light' }}>
                         <AuthProvider>
                             <MonitoringProvider enableAlerts={false} enableAnalytics={false}>
                                 <UnifiedAppProvider debugMode={false} autoLoad>
