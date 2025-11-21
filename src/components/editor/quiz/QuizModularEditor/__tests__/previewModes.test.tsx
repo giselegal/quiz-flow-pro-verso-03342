@@ -329,7 +329,7 @@ describe('PreviewPanel Visualization Modes', () => {
   describe('Block Type Normalization', () => {
     it('should normalize different block types correctly', () => {
       const mixedBlocks = [
-        { id: 'block-1', type: 'heading' as const, properties: { text: 'Heading' }, content: {}, order: 0 },
+        { id: 'block-1', type: 'headline' as const, properties: { text: 'Heading' }, content: {}, order: 0 },
         { id: 'block-2', type: 'button' as const, properties: { text: 'Button' }, content: {}, order: 1 },
         { id: 'block-3', type: 'cta' as const, properties: { text: 'CTA' }, content: {}, order: 2 },
         { id: 'block-4', type: 'multiple-choice' as const, properties: { options: [{ text: 'Option 1' }] }, content: {}, order: 3 },
@@ -347,11 +347,11 @@ describe('PreviewPanel Visualization Modes', () => {
       )
 
       // Check that blocks are rendered with their normalized types
-      expect(screen.getByTestId('block-block-1')).toHaveTextContent('heading')
-      expect(screen.getByTestId('block-block-2')).toHaveTextContent('btn')
+      expect(screen.getByTestId('block-block-1')).toHaveTextContent('headline')
+      expect(screen.getByTestId('block-block-2')).toHaveTextContent('button')
       expect(screen.getByTestId('block-block-3')).toHaveTextContent('cta')
-      expect(screen.getByTestId('block-block-4')).toHaveTextContent('quiz-options')
-      expect(screen.getByTestId('block-block-5')).toHaveTextContent('progress-header')
+      expect(screen.getByTestId('block-block-4')).toHaveTextContent('multiple-choice')
+      expect(screen.getByTestId('block-block-5')).toHaveTextContent('quiz-header')
     })
   })
 })
