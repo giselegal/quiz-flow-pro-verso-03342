@@ -49,12 +49,13 @@ export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifie
  * Ver: CHECKLIST_RESOLUCAO_DUPLICACOES.md
  * 
  * @deprecated Use SuperUnifiedProvider (V2) com hooks individuais
- * Compat exports agora apontam para '@/hooks/useSuperUnified'
+ * Compat hook disponível via import direto: import { useSuperUnified } from '@/hooks/useSuperUnified'
+ * 
+ * NOTA: Não re-exportamos aqui para evitar dependências circulares
  */
-export { useUnifiedAuth, useSuperUnified } from '@/hooks/useSuperUnified';
 
 // 🆕 FASE 3: PureBuilder compatibility
-export { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+// NOTA: Import direto recomendado: import { usePureBuilder } from '@/hooks/usePureBuilderCompat'
 
 // ✏️ EDITOR
 export { EditorProvider, useEditor } from './editor/EditorContext';
