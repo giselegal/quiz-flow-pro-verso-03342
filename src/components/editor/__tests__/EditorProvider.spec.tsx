@@ -1,4 +1,5 @@
-import SuperUnifiedProvider, { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { useSuperUnified } from '@/hooks/useSuperUnified';
 import type { Block } from '@/types/editor';
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';

@@ -20,7 +20,8 @@ export {
 } from './UnifiedAppProvider';
 
 // 🔧 INTERNO: Usado internamente por UnifiedAppProvider (exposto apenas para testes e extensão avançada)
-export { default as SuperUnifiedProvider, useSuperUnified } from './SuperUnifiedProvider';
+export { SuperUnifiedProvider } from './SuperUnifiedProviderV2';
+export { useSuperUnified, useUnifiedAuth } from '@/hooks/useSuperUnified';
 
 // 🎥 FEATURE: Live preview via WebSocket (usado em editor avançado)
 export { default as LivePreviewProvider, useLivePreview } from './LivePreviewProvider';

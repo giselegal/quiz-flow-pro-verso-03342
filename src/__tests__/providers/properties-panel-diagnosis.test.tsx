@@ -6,7 +6,8 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { SuperUnifiedProvider, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { useSuperUnified } from '@/hooks/useSuperUnified';
 import React from 'react';
 
 describe('🔍 Diagnóstico do Painel de Propriedades', () => {

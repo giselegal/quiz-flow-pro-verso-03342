@@ -1,4 +1,5 @@
 /**
- * Re-export SuperUnifiedProvider
+ * Re-export SuperUnifiedProvider (V2) e hooks legados
  */
-export { default, default as SuperUnifiedProvider, useSuperUnified } from '../contexts/providers/SuperUnifiedProvider';
+export { SuperUnifiedProvider, SuperUnifiedProvider as default } from '../contexts/providers/SuperUnifiedProviderV2';
+export { useSuperUnified, useUnifiedAuth } from '@/hooks/useSuperUnified';

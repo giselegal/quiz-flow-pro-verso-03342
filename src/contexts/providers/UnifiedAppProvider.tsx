@@ -22,7 +22,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import SuperUnifiedProvider from './SuperUnifiedProvider';
+import { SuperUnifiedProvider } from './SuperUnifiedProviderV2';
 import { UnifiedCRUDProvider } from '@/contexts/data/UnifiedCRUDProvider';
 import { ThemeProvider } from 'next-themes';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
