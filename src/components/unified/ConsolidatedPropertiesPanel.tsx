@@ -114,7 +114,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
   }, [selectedBlock?.properties]);
 
   // Handler unificado para mudanças
-  const handlePropertyChange = (key: string, value: any) => {
+  const handlePropertyChange = (key: string, value: string | number | boolean) => {
     if (!selectedBlock || !onUpdate) return;
 
     const updatedProperties = {
@@ -126,7 +126,18 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
   };
 
   // Renderizar controle baseado no tipo
-  const renderPropertyControl = (property: any) => {
+  interface PropertySchemaItem {
+    key: string;
+    type: 'text' | 'number' | 'boolean' | 'select' | 'color';
+    label: string;
+    defaultValue?: string | number | boolean;
+    min?: number;
+    max?: number;
+    step?: number;
+    options?: Array<{ value: string; label: string }>;
+  }
+
+  const renderPropertyControl = (property: PropertySchemaItem) => {
     const { key, type, label, defaultValue, min, max, step } = property;
     const currentValue = blockProperties[key] ?? defaultValue;
 
@@ -139,8 +150,8 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             </Label>
             <Input
               id={key}
-              value={currentValue || ''}
-              onChange={e => handlePropertyChange(key, e.target.value)}
+              value={(currentValue as string) || ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePropertyChange(key, e.target.value)}
               placeholder={`Insira ${label.toLowerCase()}`}
               className="w-full"
             />
@@ -160,8 +171,8 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             </div>
             <Slider
               id={key}
-              value={[currentValue || defaultValue]}
-              onValueChange={value => handlePropertyChange(key, value[0])}
+              value={[Number(currentValue ?? defaultValue)]}
+              onValueChange={(value: number[]) => handlePropertyChange(key, value[0])}
               min={min || 0}
               max={max || 100}
               step={step || 1}
@@ -179,7 +190,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             <Switch
               id={key}
               checked={!!currentValue}
-              onCheckedChange={checked => handlePropertyChange(key, checked)}
+              onCheckedChange={(checked: boolean) => handlePropertyChange(key, checked)}
             />
           </div>
         );
@@ -189,14 +200,14 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
           <div key={key} className="space-y-2">
             <Label className="text-sm font-medium">{label}</Label>
             <Select
-              value={currentValue || defaultValue}
-              onValueChange={value => handlePropertyChange(key, value)}
+              value={(currentValue as string) || (defaultValue as string)}
+              onValueChange={(value: string) => handlePropertyChange(key, value)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {property.options?.filter((option: any) => option.value && option.value !== '').map((option: any) => (
+                {property.options?.filter(option => option.value && option.value !== '').map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -216,13 +227,13 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
               <Input
                 id={key}
                 type="color"
-                value={currentValue || defaultValue || '#000000'}
-                onChange={e => handlePropertyChange(key, e.target.value)}
+                value={(currentValue as string) || (defaultValue as string) || '#000000'}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePropertyChange(key, e.target.value)}
                 className="w-16 h-10"
               />
               <Input
-                value={currentValue || defaultValue || '#000000'}
-                onChange={e => handlePropertyChange(key, e.target.value)}
+                value={(currentValue as string) || (defaultValue as string) || '#000000'}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePropertyChange(key, e.target.value)}
                 className="flex-1"
                 placeholder="#000000"
               />
@@ -235,8 +246,8 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
           <div key={key} className="space-y-2">
             <Label className="text-sm font-medium">{label}</Label>
             <Input
-              value={currentValue || ''}
-              onChange={e => handlePropertyChange(key, e.target.value)}
+              value={(currentValue as string) || ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePropertyChange(key, e.target.value)}
               className="w-full"
             />
           </div>
