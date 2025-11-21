@@ -581,6 +581,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       const stepId = this.normalizeStepId(templateId);
 
       // Tentar carregar JSON v3.2 individual com variáveis dinâmicas
+      // Nota: Arquivos em /public/ são servidos na raiz pelo Vite
       const jsonPath = `${baseTrimmed}/templates/${stepId}-v3.json`;
       const response = await fetch(jsonPath, { cache: 'no-store' });
       
