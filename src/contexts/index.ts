@@ -10,11 +10,24 @@
 export { AdminAuthProvider, useAdminAuth } from './auth/AdminAuthContext';
 export { AuthProvider as AuthProviderLegacy, useAuth as useAuthLegacy } from './auth/AuthContext';
 
-// 🚀 SUPER UNIFIED V2 (REFATORADO - FASE 2.1)
+// 🚀 SUPER UNIFIED V2 (REFATORADO - FASE 2.1 COMPLETA)
+// Core Providers
 export { AuthProvider, useAuth } from './auth/AuthProvider';
 export { ThemeProvider, useTheme } from './theme/ThemeProvider';
 export { EditorStateProvider, useEditorState } from './editor/EditorStateProvider';
 export { FunnelDataProvider, useFunnelData } from './funnel/FunnelDataProvider';
+
+// Extended Providers (Fase 2.1 - Wave 2)
+export { NavigationProvider, useNavigation } from './navigation/NavigationProvider';
+export { QuizStateProvider, useQuizState } from './quiz/QuizStateProvider';
+export { ResultProvider, useResult } from './result/ResultProvider';
+export { StorageProvider, useStorage } from './storage/StorageProvider';
+export { SyncProvider, useSync } from './sync/SyncProvider';
+export { ValidationProvider, useValidation, validators } from './validation/ValidationProvider';
+export { CollaborationProvider, useCollaboration } from './collaboration/CollaborationProvider';
+export { VersioningProvider, useVersioning } from './versioning/VersioningProvider';
+
+// Composed Provider
 export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifiedProviderV2';
 
 // 🚀 SUPER UNIFIED V1 (LEGACY - Será deprecado)
@@ -51,8 +64,8 @@ export { default as UnifiedCRUDProvider, useUnifiedCRUD, useUnifiedCRUDOptional 
 export { UserDataProvider, useUserData } from './data/UserDataContext';
 export { StepsProvider, useSteps } from './data/StepsContext';
 
-// ✅ VALIDATION
-export { ValidationProvider, useValidationContext } from './validation/ValidationContext';
+// ✅ VALIDATION (LEGACY)
+export { ValidationProvider as ValidationProviderLegacy, useValidationContext } from './validation/ValidationContext';
 
 // ⚙️ CONFIG
 export { UnifiedConfigProvider, useUnifiedConfig } from './config/UnifiedConfigContext';
