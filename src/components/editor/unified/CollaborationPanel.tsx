@@ -87,8 +87,8 @@ const UsersList: React.FC<{ users: CollaborationUser[]; canManage: boolean; curr
                   {user.role === 'owner' ? 'Proprietário' : user.role === 'editor' ? 'Editor' : 'Visualizador'}
                 </div>
               </div>
-              {canManage && user.id !== currentUserId && onSelect && (
-                <button onClick={() => onSelect(user.id)} className="p-1 hover:bg-gray-200 rounded">
+              {canManage && user.id && user.id !== currentUserId && onSelect && (
+                <button onClick={() => onSelect(user.id!)} className="p-1 hover:bg-gray-200 rounded">
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
               )}
