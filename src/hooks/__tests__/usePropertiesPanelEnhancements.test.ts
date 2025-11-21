@@ -1,10 +1,27 @@
 /**
  * 🧪 TESTES: usePropertiesPanelEnhancements
  * Validação do hook de melhorias do painel de propriedades
+ * 
+ * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
+
+// Mock das dependências externas
+vi.mock('@/hooks/use-toast', () => ({
+    toast: vi.fn(),
+}));
+
+vi.mock('@/lib/utils/appLogger', () => ({
+    appLogger: {
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+        debug: vi.fn(),
+    },
+}));
+
 import { usePropertiesPanelEnhancements } from '../usePropertiesPanelEnhancements';
 
 describe('usePropertiesPanelEnhancements', () => {
