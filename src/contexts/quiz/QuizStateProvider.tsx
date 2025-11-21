@@ -157,7 +157,8 @@ export function QuizStateProvider({
             [questionId]: answer,
         }));
 
-        appLogger.info('Answer recorded', 'QuizStateProvider', {
+        appLogger.info('Answer recorded', {
+            component: 'QuizStateProvider',
             questionId,
             isCorrect,
             points
@@ -174,19 +175,19 @@ export function QuizStateProvider({
             delete newAnswers[questionId];
             return newAnswers;
         });
-        appLogger.info('Answer cleared', 'QuizStateProvider', { questionId });
+        appLogger.info('Answer cleared', { component: 'QuizStateProvider', questionId });
     }, []);
 
     const clearAllAnswers = useCallback(() => {
         setAnswers({});
-        appLogger.info('All answers cleared', 'QuizStateProvider');
+        appLogger.info('All answers cleared', { component: 'QuizStateProvider' });
     }, []);
 
     // Quiz control
     const startQuiz = useCallback(() => {
         setIsStarted(true);
         setStartedAt(Date.now());
-        appLogger.info('Quiz started', 'QuizStateProvider');
+        appLogger.info('Quiz started', { component: 'QuizStateProvider' });
     }, []);
 
     const completeQuiz = useCallback(() => {
@@ -209,7 +210,8 @@ export function QuizStateProvider({
             onQuizComplete(finalState);
         }
 
-        appLogger.info('Quiz completed', 'QuizStateProvider', {
+        appLogger.info('Quiz completed', {
+            component: 'QuizStateProvider',
             score: progress.currentScore,
             answeredQuestions: progress.answeredQuestions,
             timeSpent: finalState.timeSpent,
@@ -222,7 +224,7 @@ export function QuizStateProvider({
         setIsCompleted(false);
         setStartedAt(null);
         setCompletedAt(null);
-        appLogger.info('Quiz reset', 'QuizStateProvider');
+        appLogger.info('Quiz reset', { component: 'QuizStateProvider' });
     }, []);
 
     // Progress queries

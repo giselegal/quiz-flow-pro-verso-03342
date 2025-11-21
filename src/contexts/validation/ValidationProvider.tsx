@@ -92,20 +92,20 @@ const BUILT_IN_VALIDATORS: Record<string, ValidatorFunction> = {
         return emailRegex.test(value) || 'Email inválido';
     },
 
-    minLength: (min: number) => (value: string) => {
+    minLength: ((min: number) => (value: string) => {
         if (!value) return true;
         return value.length >= min || `Mínimo de ${min} caracteres`;
-    },
+    }) as any,
 
-    maxLength: (max: number) => (value: string) => {
+    maxLength: ((max: number) => (value: string) => {
         if (!value) return true;
         return value.length <= max || `Máximo de ${max} caracteres`;
-    },
+    }) as any,
 
-    pattern: (regex: RegExp, message = 'Formato inválido') => (value: string) => {
+    pattern: ((regex: RegExp, message = 'Formato inválido') => (value: string) => {
         if (!value) return true;
         return regex.test(value) || message;
-    },
+    }) as any,
 
     numeric: (value: any) => {
         if (value === '' || value === null || value === undefined) return true;
@@ -191,7 +191,8 @@ export function ValidationProvider({ children }: ValidationProviderProps) {
                 [fieldId]: validation,
             }));
 
-            appLogger.debug('Field validated', 'ValidationProvider', {
+            appLogger.debug('Field validated', {
+                component: 'ValidationProvider',
                 fieldId,
                 isValid: validation.isValid,
                 errorCount: errors.length,
@@ -213,7 +214,7 @@ export function ValidationProvider({ children }: ValidationProviderProps) {
                 [fieldId]: validation,
             }));
 
-            appLogger.error('Field validation failed', 'ValidationProvider', { error, fieldId });
+            appLogger.error('Field validation failed', { component: 'ValidationProvider', error, fieldId });
             return validation;
         }
     }, []);
@@ -242,7 +243,7 @@ export function ValidationProvider({ children }: ValidationProviderProps) {
             delete newFields[fieldId];
             return newFields;
         });
-        appLogger.debug('Field validation cleared', 'ValidationProvider', { fieldId });
+        appLogger.debug('Field validation cleared', { component: 'ValidationProvider', fieldId });
     }, []);
 
     // Form validation
@@ -260,7 +261,8 @@ export function ValidationProvider({ children }: ValidationProviderProps) {
 
             const allValid = validations.every(v => v.isValid);
 
-            appLogger.info('Form validated', 'ValidationProvider', {
+            appLogger.info('Form validated', {
+                component: 'ValidationProvider',
                 fields: Object.keys(formFields).length,
                 isValid: allValid,
             });
@@ -310,7 +312,7 @@ export function ValidationProvider({ children }: ValidationProviderProps) {
             ...prev,
             [name]: validator,
         }));
-        appLogger.info('Custom validator registered', 'ValidationProvider', { name });
+        appLogger.info('Custom validator registered', { component: 'ValidationProvider', name });
     }, []);
 
     const getValidator = useCallback((name: string): ValidatorFunction | undefined => {

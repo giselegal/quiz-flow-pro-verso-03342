@@ -127,13 +127,14 @@ export function StorageProvider({
 
             const serialized = safeJSONStringify(item);
             if (!serialized) {
-                appLogger.error('Failed to serialize value', 'StorageProvider', { key });
+                appLogger.error('Failed to serialize value', { component: 'StorageProvider', key });
                 return false;
             }
 
             storage.setItem(fullKey, serialized);
 
-            appLogger.debug('Item stored', 'StorageProvider', {
+            appLogger.debug('Item stored', {
+                component: 'StorageProvider',
                 key: fullKey,
                 type,
                 hasTTL: !!ttl
@@ -141,7 +142,7 @@ export function StorageProvider({
 
             return true;
         } catch (error) {
-            appLogger.error('Storage set failed', 'StorageProvider', { error, key });
+            appLogger.error('Storage set failed', { component: 'StorageProvider', error, key });
             return false;
         }
     }, [defaultType, defaultNamespace]);
@@ -168,13 +169,13 @@ export function StorageProvider({
             // Check expiration
             if (item.expiresAt && Date.now() > item.expiresAt) {
                 storage.removeItem(fullKey);
-                appLogger.debug('Expired item removed', 'StorageProvider', { key: fullKey });
+                appLogger.debug('Expired item removed', { component: 'StorageProvider', key: fullKey });
                 return null;
             }
 
             return item.value;
         } catch (error) {
-            appLogger.error('Storage get failed', 'StorageProvider', { error, key });
+            appLogger.error('Storage get failed', { component: 'StorageProvider', error, key });
             return null;
         }
     }, [defaultType, defaultNamespace]);
@@ -193,10 +194,10 @@ export function StorageProvider({
             const fullKey = buildKey(key, namespace);
             storage.removeItem(fullKey);
 
-            appLogger.debug('Item removed', 'StorageProvider', { key: fullKey });
+            appLogger.debug('Item removed', { component: 'StorageProvider', key: fullKey });
             return true;
         } catch (error) {
-            appLogger.error('Storage remove failed', 'StorageProvider', { error, key });
+            appLogger.error('Storage remove failed', { component: 'StorageProvider', error, key });
             return false;
         }
     }, [defaultType, defaultNamespace]);
@@ -212,7 +213,7 @@ export function StorageProvider({
 
             if (!namespace) {
                 storage.clear();
-                appLogger.info('Storage cleared', 'StorageProvider', { type });
+                appLogger.info('Storage cleared', { component: 'StorageProvider', type });
                 return true;
             }
 
@@ -229,7 +230,8 @@ export function StorageProvider({
 
             keysToRemove.forEach(key => storage.removeItem(key));
 
-            appLogger.info('Namespaced storage cleared', 'StorageProvider', {
+            appLogger.info('Namespaced storage cleared', {
+                component: 'StorageProvider',
                 type,
                 namespace,
                 removed: keysToRemove.length
@@ -237,7 +239,7 @@ export function StorageProvider({
 
             return true;
         } catch (error) {
-            appLogger.error('Storage clear failed', 'StorageProvider', { error });
+            appLogger.error('Storage clear failed', { component: 'StorageProvider', error });
             return false;
         }
     }, [defaultType, defaultNamespace]);
@@ -370,7 +372,8 @@ export function StorageProvider({
 
             keysToRemove.forEach(key => storage.removeItem(key));
 
-            appLogger.info('Storage cleanup completed', 'StorageProvider', {
+            appLogger.info('Storage cleanup completed', {
+                component: 'StorageProvider',
                 type,
                 namespace,
                 removed: keysToRemove.length,
@@ -378,7 +381,7 @@ export function StorageProvider({
 
             return keysToRemove.length;
         } catch (error) {
-            appLogger.error('Storage cleanup failed', 'StorageProvider', { error });
+            appLogger.error('Storage cleanup failed', { component: 'StorageProvider', error });
             return 0;
         }
     }, [defaultType, defaultNamespace]);

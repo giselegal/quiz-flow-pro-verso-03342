@@ -173,7 +173,8 @@ export function VersioningProvider({
 
         setCurrentVersionId(version.id);
 
-        appLogger.info('Version created', 'VersioningProvider', {
+        appLogger.info('Version created', {
+            component: 'VersioningProvider',
             id: version.id,
             label,
             tags,
@@ -196,20 +197,21 @@ export function VersioningProvider({
             setCurrentVersionId(versions[0]?.id || null);
         }
 
-        appLogger.info('Version deleted', 'VersioningProvider', { versionId });
+        appLogger.info('Version deleted', { component: 'VersioningProvider', versionId });
         return true;
     }, [versions, currentVersionId]);
 
     const restoreVersion = useCallback((versionId: string): any | null => {
         const version = getVersion(versionId);
         if (!version) {
-            appLogger.warn('Version not found', 'VersioningProvider', { versionId });
+            appLogger.warn('Version not found', { component: 'VersioningProvider', versionId });
             return null;
         }
 
         setCurrentVersionId(versionId);
 
-        appLogger.info('Version restored', 'VersioningProvider', {
+        appLogger.info('Version restored', {
+            component: 'VersioningProvider',
             versionId,
             label: version.label,
         });
@@ -243,7 +245,8 @@ export function VersioningProvider({
         const v2 = getVersion(versionId2);
 
         if (!v1 || !v2) {
-            appLogger.warn('Versions not found for comparison', 'VersioningProvider', {
+            appLogger.warn('Versions not found for comparison', {
+                component: 'VersioningProvider',
                 versionId1,
                 versionId2,
             });
@@ -273,12 +276,12 @@ export function VersioningProvider({
             return prev.slice(0, max);
         });
 
-        appLogger.info('Max versions limit updated', 'VersioningProvider', { max });
+        appLogger.info('Max versions limit updated', { component: 'VersioningProvider', max });
     }, []);
 
     const setAutoSave = useCallback((enabled: boolean) => {
         setAutoSaveEnabled(enabled);
-        appLogger.info('Auto-save toggled', 'VersioningProvider', { enabled });
+        appLogger.info('Auto-save toggled', { component: 'VersioningProvider', enabled });
     }, []);
 
     const clearVersions = useCallback(() => {
@@ -319,7 +322,8 @@ export function VersioningProvider({
 
             setVersions(prev => [importedVersion, ...prev]);
 
-            appLogger.info('Version imported', 'VersioningProvider', {
+            appLogger.info('Version imported', {
+                component: 'VersioningProvider',
                 originalId: version.id,
                 newId: importedVersion.id,
             });
