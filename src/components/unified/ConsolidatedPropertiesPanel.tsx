@@ -294,9 +294,15 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
     <Card className="h-full flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="space-y-1">
-          <CardTitle className="text-base font-medium">
-            <Edit3 className="h-4 w-4 inline mr-2" />
+          <CardTitle className="text-base font-medium flex items-center">
+            <Edit3 className="h-4 w-4 mr-2" />
             Propriedades
+            {isSaving && (
+              <span className="ml-2 flex items-center text-xs text-muted-foreground">
+                <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                Salvando...
+              </span>
+            )}
           </CardTitle>
           <div className="flex items-center space-x-2">
             <Badge variant="outline" className="text-xs">
