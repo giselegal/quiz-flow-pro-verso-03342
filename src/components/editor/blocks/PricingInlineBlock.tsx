@@ -82,6 +82,10 @@ const PricingInlineBlock: React.FC<InlineBlockProps> = ({
     showDiscount = true,
     showOriginalPrice = true,
     conversionValue = 39.9,
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   const [isHovered, setIsHovered] = useState(false);
