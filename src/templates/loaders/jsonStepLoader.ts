@@ -121,16 +121,38 @@ export async function loadStepFromJson(
       }
 
       // quiz21-complete.json possui estrutura { steps: { [stepId]: { blocks: [...] } } }
-      if (data && (data as any).steps && (data as any).steps[stepId]) {
-        const stepObj = (data as any).steps[stepId];
-        appLogger.info(`✅ [jsonStepLoader] Estrutura {steps: {${stepId}: ...}} encontrada`);
-        if (Array.isArray(stepObj)) {
-          appLogger.info(`✅ [jsonStepLoader] Step como array: ${stepObj.length} blocos`);
-          return stepObj as Block[];
+      if (data && (data as any).steps) {
+        // 🚀 FASE 2: Cachear todo o master template para acesso futuro instantâneo
+        const masterSteps: Record<string, Block[]> = {};
+        let totalSteps = 0;
+
+        for (const [key, value] of Object.entries((data as any).steps)) {
+          if (Array.isArray(value)) {
+            masterSteps[key] = value as Block[];
+            totalSteps++;
+          } else if (value && Array.isArray((value as any).blocks)) {
+            masterSteps[key] = (value as any).blocks as Block[];
+            totalSteps++;
+          }
         }
-        if (Array.isArray(stepObj?.blocks)) {
-          appLogger.info(`✅ [jsonStepLoader] Step com .blocks: ${stepObj.blocks.length} blocos`);
-          return stepObj.blocks as Block[];
+
+        if (totalSteps > 0) {
+          templateCache.setMaster(templateId, masterSteps);
+          appLogger.info(`💾 [jsonStepLoader] Master template cacheado: ${totalSteps} steps disponíveis`);
+        }
+
+        // Retornar step específico solicitado
+        const stepObj = (data as any).steps[stepId];
+        if (stepObj) {
+          appLogger.info(`✅ [jsonStepLoader] Estrutura {steps: {${stepId}: ...}} encontrada`);
+          if (Array.isArray(stepObj)) {
+            appLogger.info(`✅ [jsonStepLoader] Step como array: ${stepObj.length} blocos`);
+            return stepObj as Block[];
+          }
+          if (Array.isArray(stepObj?.blocks)) {
+            appLogger.info(`✅ [jsonStepLoader] Step com .blocks: ${stepObj.blocks.length} blocos`);
+            return stepObj.blocks as Block[];
+          }
         }
       }
       appLogger.warn(`⚠️ [jsonStepLoader] Estrutura não reconhecida em ${url}`);
