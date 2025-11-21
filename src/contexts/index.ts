@@ -8,10 +8,17 @@
 
 // 🔐 AUTH
 export { AdminAuthProvider, useAdminAuth } from './auth/AdminAuthContext';
-export { AuthProvider, useAuth as useAuthLegacy } from './auth/AuthContext';
+export { AuthProvider as AuthProviderLegacy, useAuth as useAuthLegacy } from './auth/AuthContext';
 
-// 🚀 SUPER UNIFIED (Auth consolidado)
-export { useAuth, useUnifiedAuth, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+// 🚀 SUPER UNIFIED V2 (REFATORADO - FASE 2.1)
+export { AuthProvider, useAuth } from './auth/AuthProvider';
+export { ThemeProvider, useTheme } from './theme/ThemeProvider';
+export { EditorStateProvider, useEditorState } from './editor/EditorStateProvider';
+export { FunnelDataProvider, useFunnelData } from './funnel/FunnelDataProvider';
+export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifiedProviderV2';
+
+// 🚀 SUPER UNIFIED V1 (LEGACY - Será deprecado)
+export { useUnifiedAuth, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 
 // 🆕 FASE 3: PureBuilder compatibility
 export { usePureBuilder } from '@/hooks/usePureBuilderCompat';
