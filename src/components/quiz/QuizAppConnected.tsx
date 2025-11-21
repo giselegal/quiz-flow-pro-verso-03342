@@ -1076,7 +1076,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     if (editorMode) {
         return (
             <Suspense fallback={AppContent}>
-                <EditorProviderLazy funnelId={funnelId}>
+                <EditorProviderLazy>
                     {AppContent}
                 </EditorProviderLazy>
             </Suspense>

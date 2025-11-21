@@ -4,187 +4,140 @@
  * Detecta por que o painel de propriedades não está funcionando
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { UIProvider, useUI } from '@/contexts/providers/UIProvider';
 import { useSuperUnified } from '@/hooks/useSuperUnified';
+import type { Block } from '@/types/editor';
 import React from 'react';
+
+const baseBlocks: Block[] = [
+    {
+        id: 'block-test-123',
+        type: 'text',
+        order: 0,
+        properties: { text: 'Hello World' },
+        content: { text: 'Hello World' },
+    },
+    {
+        id: 'block-abc',
+        type: 'headline',
+        order: 1,
+        properties: { text: 'Title', level: 1 },
+        content: { text: 'Title' },
+    },
+    {
+        id: 'block-def',
+        type: 'text',
+        order: 2,
+        properties: { text: 'Content' },
+        content: { text: 'Content' },
+    },
+];
+
+const Providers = ({ children }: { children: React.ReactNode }) => (
+    <SuperUnifiedProvider>
+        <UIProvider>{children}</UIProvider>
+    </SuperUnifiedProvider>
+);
+
+const renderUnifiedHook = () => renderHook(() => useSuperUnified(), { wrapper: Providers });
+const renderUIHook = () => renderHook(() => useUI(), { wrapper: Providers });
+
+const seedStepBlocks = (editor: ReturnType<typeof useSuperUnified>['editor'], blocks: Block[] = baseBlocks) => {
+    act(() => {
+        editor.setStepBlocks(1, blocks);
+    });
+};
 
 describe('🔍 Diagnóstico do Painel de Propriedades', () => {
     it('✅ DEVE ter estado showPropertiesPanel', () => {
-        const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider debugMode={true}>
-                {children}
-            </SuperUnifiedProvider>
-        );
+        const { result } = renderUIHook();
 
-        const { result } = renderHook(() => useSuperUnified(), { wrapper });
-
-        // ✅ ASSERT: Estado UI deve existir
-        expect(result.current.state.ui).toBeDefined();
-        expect(result.current.state.ui.showPropertiesPanel).toBeDefined();
+        expect(result.current.state).toBeDefined();
+        expect(result.current.state.showPropertiesPanel).toBeDefined();
 
         console.log('📊 Estado UI:', {
-            showPropertiesPanel: result.current.state.ui.showPropertiesPanel,
-            showSidebar: result.current.state.ui.showSidebar,
-            activeModal: result.current.state.ui.activeModal
+            showPropertiesPanel: result.current.state.showPropertiesPanel,
+            showSidebar: result.current.state.showSidebar,
+            activeModal: result.current.state.activeModal
         });
     });
 
     it('✅ DEVE ter selectedBlockId no estado do editor', () => {
-        const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider
-                debugMode={true}
-                initialData={{
-                    id: 'test-funnel',
-                    name: 'Test',
-                    user_id: null,
-                    pages: [{
-                        id: 'page-1',
-                        funnel_id: 'test-funnel',
-                        page_type: 'quiz-step',
-                        page_order: 1,
-                        blocks: [{
-                            id: 'block-1',
-                            type: 'text',
-                            properties: { text: 'Hello' }
-                        }]
-                    }]
-                }}
-            >
-                {children}
-            </SuperUnifiedProvider>
-        );
+        const { result } = renderUnifiedHook();
+        const { editor } = result.current;
 
-        const { result } = renderHook(() => useSuperUnified(), { wrapper });
-
-        // ✅ ASSERT: Estado do editor deve ter selectedBlockId
-        expect(result.current.state.editor).toBeDefined();
-        expect(result.current.state.editor.selectedBlockId).toBeDefined();
+        expect(editor).toBeDefined();
+        expect(editor.selectedBlockId).toBeDefined();
 
         console.log('📊 Estado Editor:', {
-            selectedBlockId: result.current.state.editor.selectedBlockId,
-            currentStep: result.current.state.editor.currentStep,
-            stepBlocks: Object.keys(result.current.state.editor.stepBlocks)
+            selectedBlockId: editor.selectedBlockId,
+            currentStep: editor.currentStep,
+            stepBlocks: Object.keys(editor.stepBlocks)
         });
     });
 
     it('✅ DEVE permitir selecionar um bloco', () => {
-        const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider
-                debugMode={true}
-                initialData={{
-                    id: 'test-funnel',
-                    name: 'Test',
-                    user_id: null,
-                    pages: [{
-                        id: 'page-1',
-                        funnel_id: 'test-funnel',
-                        page_type: 'quiz-step',
-                        page_order: 1,
-                        blocks: [{
-                            id: 'block-test-123',
-                            type: 'text',
-                            properties: { text: 'Hello World' }
-                        }]
-                    }]
-                }}
-            >
-                {children}
-            </SuperUnifiedProvider>
-        );
+        const { result } = renderUnifiedHook();
+        const { editor } = result.current;
 
-        const { result } = renderHook(() => useSuperUnified(), { wrapper });
+        seedStepBlocks(editor, baseBlocks);
 
-        // Selecionar bloco
         act(() => {
-            result.current.setSelectedBlock('block-test-123');
+            editor.selectBlock('block-test-123');
         });
 
-        // ✅ ASSERT: selectedBlockId deve ser atualizado
-        expect(result.current.state.editor.selectedBlockId).toBe('block-test-123');
+        expect(editor.selectedBlockId).toBe('block-test-123');
 
         console.log('✅ Bloco selecionado:', {
-            selectedBlockId: result.current.state.editor.selectedBlockId,
-            blocks: result.current.state.editor.stepBlocks[1]
+            selectedBlockId: editor.selectedBlockId,
+            blocks: editor.stepBlocks[1]
         });
     });
 
     it('⚠️ DEVE identificar se setSelectedBlock está disponível no contexto', () => {
-        const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider debugMode={true}>
-                {children}
-            </SuperUnifiedProvider>
-        );
+        const { result } = renderUnifiedHook();
+        const { editor } = result.current;
 
-        const { result } = renderHook(() => useSuperUnified(), { wrapper });
-
-        // ✅ ASSERT: setSelectedBlock deve existir
-        expect(result.current.setSelectedBlock).toBeDefined();
-        expect(typeof result.current.setSelectedBlock).toBe('function');
+        expect(editor.selectBlock).toBeDefined();
+        expect(typeof editor.selectBlock).toBe('function');
 
         console.log('✅ Funções disponíveis no contexto:', {
-            hasSetSelectedBlock: !!result.current.setSelectedBlock,
-            hasAddBlock: !!result.current.addBlock,
-            hasUpdateBlock: !!result.current.updateBlock,
-            hasRemoveBlock: !!result.current.removeBlock,
-            hasGetStepBlocks: !!result.current.getStepBlocks
+            hasSelectBlock: !!editor.selectBlock,
+            hasAddBlock: !!editor.addBlock,
+            hasUpdateBlock: !!editor.updateBlock,
+            hasRemoveBlock: !!editor.removeBlock,
+            hasGetStepBlocks: !!editor.getStepBlocks
         });
     });
 
     it('❌ DEVE detectar se o PropertiesColumn está recebendo selectedBlock', async () => {
-        // Este teste simula o comportamento do QuizModularEditor
-        const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider
-                debugMode={true}
-                initialData={{
-                    id: 'test-funnel',
-                    name: 'Test',
-                    user_id: null,
-                    pages: [{
-                        id: 'page-1',
-                        funnel_id: 'test-funnel',
-                        page_type: 'quiz-step',
-                        page_order: 1,
-                        blocks: [{
-                            id: 'block-abc',
-                            type: 'heading',
-                            properties: { text: 'Title', level: 1 }
-                        }, {
-                            id: 'block-def',
-                            type: 'text',
-                            properties: { text: 'Content' }
-                        }]
-                    }]
-                }}
-            >
-                {children}
-            </SuperUnifiedProvider>
-        );
+        const { result } = renderUnifiedHook();
+        const { editor } = result.current;
 
-        const { result } = renderHook(() => useSuperUnified(), { wrapper });
+        seedStepBlocks(editor, baseBlocks);
 
-        // Simular seleção de bloco
         act(() => {
-            result.current.setSelectedBlock('block-abc');
+            editor.selectBlock('block-abc');
         });
 
-        // Obter blocos do step atual
-        const blocks = result.current.getStepBlocks(1);
-        const selectedBlockId = result.current.state.editor.selectedBlockId;
-        const selectedBlock = blocks.find(b => b.id === selectedBlockId);
+        const blocks = editor.getStepBlocks(1);
+        const selectedBlockId = editor.selectedBlockId;
+        const selectedBlock = blocks.find(block => block.id === selectedBlockId);
 
         console.log('🔍 DIAGNÓSTICO - Estado após seleção:', {
             selectedBlockId,
             hasSelectedBlock: !!selectedBlock,
             selectedBlockType: selectedBlock?.type,
             totalBlocks: blocks.length,
-            blockIds: blocks.map(b => b.id)
+            blockIds: blocks.map(block => block.id)
         });
 
         // ✅ ASSERT: selectedBlock deve estar disponível
         expect(selectedBlock).toBeDefined();
         expect(selectedBlock?.id).toBe('block-abc');
-        expect(selectedBlock?.type).toBe('heading');
+        expect(selectedBlock?.type).toBe('headline');
     });
 });
