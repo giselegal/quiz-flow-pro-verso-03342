@@ -278,9 +278,13 @@ export type BlockType =
   | 'name-collect-step'
   | 'question-multiple-step'
   | 'processing-step'
-  | 'offer-page-step';
+  | 'offer-page-step'
+  
+  // Funnel block components (capitalized legacy identifiers)
+  | 'FunnelHeroBlock'
+  | 'FunnelPainBlock';
 
-// Funnel block components (capitalized legacy identifiers)
+// Funnel block components (capitalized legacy identifiers) - DEPRECATED: Now part of BlockType
 export type ExtendedFunnelBlockTypeAdditions = 'FunnelHeroBlock' | 'FunnelPainBlock';
 
 export interface FAQItem {

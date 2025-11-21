@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
+import type { Block } from '@/types/editor';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Clock, Flame, Timer } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -8,7 +9,7 @@ import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { InlineEditableText } from './InlineEditableText';
 
 interface CountdownTimerBlockProps extends InlineBlockProps {
-  block: { id: string; type: string; properties?: Record<string, any> };
+  block: Block;
 }
 
 interface TimeUnit {
