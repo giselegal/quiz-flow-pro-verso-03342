@@ -20,6 +20,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+compare_lt() {
+  awk -v left="$1" -v right="$2" 'BEGIN {exit !(left < right)}'
+}
+
 # 1. Contar imports de V1
 echo "🔍 Analisando imports de SuperUnifiedProvider V1..."
 V1_COUNT=$(grep -r "from.*@/contexts/providers/SuperUnifiedProvider['\"]" src --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v ".test." | grep -v ".spec." | wc -l || echo "0")
@@ -45,16 +49,16 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # 4. Status visual
-if (( $(echo "$PROGRESS < 10" | bc -l) )); then
+if compare_lt "$PROGRESS" 10; then
   echo -e "${RED}█${NC}░░░░░░░░░░ $PROGRESS%"
   STATUS="${RED}🔴 MIGRAÇÃO NÃO INICIADA${NC}"
-elif (( $(echo "$PROGRESS < 30" | bc -l) )); then
+elif compare_lt "$PROGRESS" 30; then
   echo -e "${RED}███${NC}░░░░░░░ $PROGRESS%"
   STATUS="${RED}🔴 INÍCIO DA MIGRAÇÃO${NC}"
-elif (( $(echo "$PROGRESS < 70" | bc -l) )); then
+elif compare_lt "$PROGRESS" 70; then
   echo -e "${YELLOW}█████${NC}░░░░░ $PROGRESS%"
   STATUS="${YELLOW}🟡 MIGRAÇÃO EM ANDAMENTO${NC}"
-elif (( $(echo "$PROGRESS < 100" | bc -l) )); then
+elif compare_lt "$PROGRESS" 100; then
   echo -e "${YELLOW}████████${NC}░░ $PROGRESS%"
   STATUS="${YELLOW}🟡 QUASE COMPLETO${NC}"
 else
@@ -151,7 +155,7 @@ elif [ "$V2_COUNT" -eq 0 ]; then
   echo "   1. Ler: CHECKLIST_RESOLUCAO_DUPLICACOES.md"
   echo "   2. Decidir: Completar ou Reverter FASE 2.1"
   echo "   3. Iniciar migração de App.tsx (se completar)"
-elif (( $(echo "$PROGRESS < 50" | bc -l) )); then
+elif compare_lt "$PROGRESS" 50; then
   echo -e "${YELLOW}⚠️  Migração em Andamento (Baixo)${NC}"
   echo "   Continue migrando:"
   echo "   1. Próximo: hooks principais (useEditor, useAuth, etc)"
