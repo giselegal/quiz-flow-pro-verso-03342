@@ -198,7 +198,7 @@ describe('SecurityProvider', () => {
             expect(history.length).toBe(3);
         });
 
-        it('deve resetar rate limit após 1 minuto', (done) => {
+        it('deve resetar rate limit após 1 minuto', async () => {
             const wrapper = ({ children }: { children: React.ReactNode }) => (
                 <SecurityProvider>{children}</SecurityProvider>
             );
@@ -214,10 +214,8 @@ describe('SecurityProvider', () => {
             expect(result.current.validateAccess('test', 'user')).toBe(false);
 
             // Após 1 minuto, deve permitir novamente
-            setTimeout(() => {
-                expect(result.current.validateAccess('test', 'user')).toBe(true);
-                done();
-            }, 60100); // 60s + margem
+            await new Promise(resolve => setTimeout(resolve, 60100));
+            expect(result.current.validateAccess('test', 'user')).toBe(true);
         }, 65000); // Timeout de 65s para o teste
     });
 });
