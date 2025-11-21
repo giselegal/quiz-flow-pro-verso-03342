@@ -210,3 +210,41 @@ export type BlockType = string | {
 
 // Export ComputedResult for backward compatibility
 export interface ComputedResult extends QuizResult {}
+
+/**
+ * Interface unificada de resposta de quiz.
+ * Combina campos usados historicamente em Answer, UserResponse, QuizResponse e QuizAnswer
+ * para eliminar incompatibilidades de tipo entre componentes de conteúdo e cálculo.
+ */
+export interface Answer {
+  questionId: string;
+  /** Resposta principal (single ou múltipla). Quando múltipla usar array. */
+  answer: string | string[];
+  /** IDs das opções selecionadas (compatibilidade com componentes legados). */
+  selectedOptions?: string[];
+  /** Resposta textual livre (quando aplicável). */
+  textResponse?: string;
+  /** Timestamp ISO da captura da resposta. */
+  timestamp: string;
+  /** Tempo gasto na questão em segundos (opcional). */
+  timeSpent?: number;
+  /** Indicador de correção quando há gabarito. */
+  isCorrect?: boolean;
+  /** Nível de confiança informado pelo usuário (0-100). */
+  confidence?: number;
+  /** Peso aplicado à questão (scoring). */
+  weight?: number;
+}
+
+// Alias para compatibilidade (permite refatoração incremental sem quebrar imports existentes)
+export type UserAnswer = Answer;
+
+/**
+ * Export canônico mínimo para atender componentes que importam ComponentProps de quiz.
+ * Como o projeto é heterogêneo, manter shape flexível.
+ */
+export interface ComponentProps {
+  id?: string;
+  type?: string;
+  [key: string]: any;
+}

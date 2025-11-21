@@ -1,4 +1,5 @@
 import { useQuestionScroll } from '@/hooks/useQuestionScroll';
+import type { Answer } from '@/types/quiz';
 
 interface QuestionOption {
   id: string;
@@ -12,10 +13,6 @@ interface Question {
   options?: QuestionOption[];
 }
 
-interface Answer {
-  questionId: string;
-  selectedOption: string;
-}
 
 interface QuizQuestionProps {
   question: Question;
@@ -56,7 +53,12 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
               ? 'bg-[#B89B7A]/20 border-[#B89B7A]'
               : 'hover:bg-gray-50'
               }`}
-            onClick={() => onAnswer({ questionId: question.id, selectedOption: option.id })}
+            onClick={() => onAnswer({
+              questionId: question.id,
+              answer: option.id,
+              selectedOptions: [option.id],
+              timestamp: new Date().toISOString()
+            })}
           >
             <span>{option.text}</span>
           </div>
