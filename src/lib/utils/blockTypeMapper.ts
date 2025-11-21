@@ -49,6 +49,8 @@ const VALID_BLOCK_TYPES = new Set([
   'result-secondary-styles',
   'result-share',
   'result-cta',
+  'result-progress-bars',
+  'quiz-score-display',
   
   // Offer
   'offer-hero',
