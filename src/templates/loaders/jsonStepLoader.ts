@@ -194,12 +194,24 @@ export async function loadStepFromJson(
         appLogger.warn(`[jsonStepLoader] Falha na validação DEV: ${(e as any)?.message}`);
       }
 
-      // ✅ WAVE 2.6: Armazenar no cache com TTL diferenciado (L1 + L2)
+      // 🚀 FASE 2: Armazenar no novo TemplateCache inteligente
+      templateCache.set(stepId, validatedBlocks, templateId);
+
+      // ✅ WAVE 2.6: Também manter no cache legado (compatibilidade)
       const ttl = getStepCacheTTL(stepId);
       await cacheManager.set(cacheKey, validatedBlocks, ttl, 'steps');
       appLogger.debug(`[jsonStepLoader] Cache TTL para ${stepId}: ${ttl / 1000 / 60}min`);
 
       appLogger.info(`✅ [jsonStepLoader] Carregado ${validatedBlocks.length} blocos de ${url}`);
+      
+      // 🔄 FASE 2: Pré-carregar steps adjacentes em background (melhora navegação)
+      const stepNumber = parseInt(stepId.replace('step-', ''), 10);
+      if (!isNaN(stepNumber)) {
+        templateCache.preloadAdjacent(stepNumber, templateId).catch(() => {
+          // Ignorar erros de pré-carregamento
+        });
+      }
+
       return validatedBlocks;
     }
   }
