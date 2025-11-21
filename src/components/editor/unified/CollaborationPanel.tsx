@@ -9,7 +9,7 @@
  * - Controle de permissões
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Users,
   MessageCircle,
@@ -56,6 +56,195 @@ interface ChatMessage {
   timestamp: string;
   message: string;
 }
+
+// Subcomponentes memoizados para reduzir re-render do painel principal
+const UsersList: React.FC<{ users: CollaborationUser[]; canManage: boolean; currentUserId: string; onSelect: (id: string) => void; canInvite: boolean; onInvite: () => void; activeCount: number }>
+  = React.memo(({ users, canManage, currentUserId, onSelect, canInvite, onInvite, activeCount }) => {
+    return (
+      <div className="h-full flex flex-col">
+        <div className="p-4 border-b">
+          <div className="flex items-center justify-between">
+            <h3 className="font-medium">Usuários Online ({activeCount})</h3>
+            {canInvite && (
+              <button
+                onClick={onInvite}
+                className="flex items-center space-x-1 px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Convidar</span>
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          {users.map(user => (
+            <div key={user.id} className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg">
+              <div className="relative">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
+                  ) : (
+                    <span className="text-gray-600 font-medium">{user.name?.charAt(0).toUpperCase()}</span>
+                  )}
+                </div>
+                <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${user.isOnline ? 'bg-green-500' : 'bg-gray-400'}`} />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">{user.name}</span>
+                  {user.role === 'owner' && <Crown className="w-4 h-4 text-yellow-500" />}
+                  {user.role === 'editor' && <Edit className="w-4 h-4 text-blue-500" />}
+                  {user.role === 'viewer' && <Eye className="w-4 h-4 text-gray-500" />}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {user.role === 'owner' ? 'Proprietário' : user.role === 'editor' ? 'Editor' : 'Visualizador'}
+                </div>
+              </div>
+              {canManage && user.id !== currentUserId && (
+                <button onClick={() => onSelect(user.id)} className="p-1 hover:bg-gray-200 rounded">
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  });
+
+const ChatMessages: React.FC<{ messages: ChatMessage[] }> = React.memo(({ messages }) => (
+  <div className="flex-1 overflow-y-auto p-4 space-y-3">
+    {messages.map(message => (
+      <div key={message.id} className="flex space-x-3">
+        <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+          {message.userAvatar ? (
+            <img src={message.userAvatar} alt={message.userName} className="w-8 h-8 rounded-full" />
+          ) : (
+            <span className="text-gray-600 text-sm">{message.userName.charAt(0).toUpperCase()}</span>
+          )}
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-sm">{message.userName}</span>
+            <span className="text-xs text-gray-500">{new Date(message.timestamp).toLocaleTimeString()}</span>
+          </div>
+          <div className="text-sm text-gray-700 mt-1">{message.message}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+));
+
+const CommentsList: React.FC<{ comments: any[]; canEdit: boolean; onResolve: (id: string) => void }> = React.memo(({ comments, canEdit, onResolve }) => (
+  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    {comments.map(comment => (
+      <div key={comment.id} className="border rounded-lg p-3">
+        <div className="flex items-center space-x-2 mb-2">
+          <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
+            {comment.userAvatar ? (
+              <img src={comment.userAvatar} alt={comment.userName} className="w-6 h-6 rounded-full" />
+            ) : (
+              <span className="text-gray-600 text-xs">{comment.userName.charAt(0).toUpperCase()}</span>
+            )}
+          </div>
+          <span className="font-medium text-sm">{comment.userName}</span>
+          <span className="text-xs text-gray-500">{new Date(comment.timestamp).toLocaleString()}</span>
+          {comment.resolved && (
+            <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Resolvido</span>
+          )}
+        </div>
+        <div className="text-sm text-gray-700 mb-2">{comment.content}</div>
+        {!comment.resolved && canEdit && (
+          <button onClick={() => onResolve(comment.id)} className="text-xs text-blue-600 hover:text-blue-800">
+            Marcar como resolvido
+          </button>
+        )}
+      </div>
+    ))}
+  </div>
+));
+
+const NotificationsList: React.FC<{ notifications: any[]; unreadCount: number; onMarkAll: () => void; onMarkOne: (id: string) => void }> = React.memo(({ notifications, unreadCount, onMarkAll, onMarkOne }) => (
+  <div className="h-full flex flex-col">
+    <div className="p-4 border-b">
+      <div className="flex items-center justify-between">
+        <h3 className="font-medium">Notificações</h3>
+        {unreadCount > 0 && (
+          <button onClick={onMarkAll} className="text-sm text-blue-600 hover:text-blue-800">Marcar todas como lidas</button>
+        )}
+      </div>
+    </div>
+    <div className="flex-1 overflow-y-auto">
+      {notifications.length === 0 ? (
+        <div className="p-8 text-center text-gray-500">
+          <Bell className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <p>Nenhuma notificação</p>
+        </div>
+      ) : (
+        <div className="p-4 space-y-3">
+          {notifications.map(notification => (
+            <div key={notification.id} className={`p-3 rounded-lg border ${notification.read ? 'bg-gray-50' : 'bg-blue-50 border-blue-200'}`}>
+              <div className="flex items-start space-x-3">
+                <div className={`w-2 h-2 rounded-full mt-2 ${notification.type === 'error' ? 'bg-red-500' : notification.type === 'warning' ? 'bg-yellow-500' : notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'}`} />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-sm">{notification.title}</h4>
+                    <span className="text-xs text-gray-500">{new Date(notification.createdAt).toLocaleString()}</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                  {notification.action && (
+                    <button className="text-xs text-blue-600 hover:text-blue-800 mt-1">{notification.action.label}</button>
+                  )}
+                </div>
+                {!notification.read && (
+                  <button onClick={() => onMarkOne(notification.id)} className="p-1 hover:bg-gray-200 rounded">
+                    <Check className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+));
+
+const SettingsPanel: React.FC<{ isConnected: boolean; lastSync: Date | null; conflictCount: number; canEdit: boolean; canDelete: boolean; canInvite: boolean; canManage: boolean; isSaving: boolean; sync: () => Promise<void>; resolveConflicts: () => Promise<void>; leaveSession: () => Promise<void>; }> = React.memo((props) => {
+  const { isConnected, lastSync, conflictCount, canEdit, canDelete, canInvite, canManage, isSaving, sync, resolveConflicts, leaveSession } = props;
+  return (
+    <div className="h-full flex flex-col">
+      <div className="p-4 border-b"><h3 className="font-medium">Configurações de Colaboração</h3></div>
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        <div>
+          <h4 className="font-medium mb-3">Status da Sessão</h4>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between"><span className="text-sm">Conectado</span><span className={`text-sm ${isConnected ? 'text-green-600' : 'text-red-600'}`}>{isConnected ? 'Sim' : 'Não'}</span></div>
+            <div className="flex items-center justify-between"><span className="text-sm">Última sincronização</span><span className="text-sm text-gray-500">{lastSync ? lastSync.toLocaleString() : 'Nunca'}</span></div>
+            <div className="flex items-center justify-between"><span className="text-sm">Conflitos pendentes</span><span className={`text-sm ${conflictCount > 0 ? 'text-red-600' : 'text-green-600'}`}>{conflictCount}</span></div>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-medium mb-3">Suas Permissões</h4>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between"><span className="text-sm">Editar</span><span className={`text-sm ${canEdit ? 'text-green-600' : 'text-red-600'}`}>{canEdit ? 'Sim' : 'Não'}</span></div>
+            <div className="flex items-center justify-between"><span className="text-sm">Excluir</span><span className={`text-sm ${canDelete ? 'text-green-600' : 'text-red-600'}`}>{canDelete ? 'Sim' : 'Não'}</span></div>
+            <div className="flex items-center justify-between"><span className="text-sm">Convidar</span><span className={`text-sm ${canInvite ? 'text-green-600' : 'text-red-600'}`}>{canInvite ? 'Sim' : 'Não'}</span></div>
+            <div className="flex items-center justify-between"><span className="text-sm">Gerenciar</span><span className={`text-sm ${canManage ? 'text-green-600' : 'text-red-600'}`}>{canManage ? 'Sim' : 'Não'}</span></div>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-medium mb-3">Ações</h4>
+          <div className="space-y-2">
+            <button onClick={sync} disabled={isSaving} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{isSaving ? 'Sincronizando...' : 'Sincronizar Agora'}</button>
+            {conflictCount > 0 && <button onClick={resolveConflicts} className="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">Resolver Conflitos ({conflictCount})</button>}
+            <button onClick={leaveSession} className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Sair da Sessão</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
 
 export function CollaborationPanel({
   funnelId,
@@ -127,34 +316,37 @@ export function CollaborationPanel({
   }, [isConnected, isLoading, createSession, funnelId]);
 
   // Handlers
-  const handleSendMessage = async () => {
-    if (chatMessage.trim()) {
-      await sendMessage(chatMessage);
-      setChatMessage('');
-    }
-  };
+  const handleSendMessage = useCallback(async () => {
+    if (!chatMessage.trim()) return;
+    await sendMessage(chatMessage);
+    setChatMessage('');
+  }, [chatMessage, sendMessage]);
 
-  const handleAddComment = async () => {
-    if (commentContent.trim()) {
-      await addComment('current-stage', undefined, commentContent);
-      setCommentContent('');
-    }
-  };
+  const handleAddComment = useCallback(async () => {
+    if (!commentContent.trim()) return;
+    await addComment('current-stage', undefined, commentContent);
+    setCommentContent('');
+  }, [commentContent, addComment]);
 
-  const handleInviteUser = async () => {
-    if (inviteEmail.trim()) {
-      await createInvitation(inviteEmail, inviteRole);
-      setShowInviteModal(false);
-      setInviteEmail('');
-    }
-  };
+  const handleInviteUser = useCallback(async () => {
+    if (!inviteEmail.trim()) return;
+    await createInvitation(inviteEmail, inviteRole);
+    setShowInviteModal(false);
+    setInviteEmail('');
+  }, [inviteEmail, inviteRole, createInvitation]);
 
-  const handleKeyPress = (e: React.KeyboardEvent, action: () => void) => {
+  const handleKeyPress = useCallback((e: React.KeyboardEvent, action: () => void) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       action();
     }
-  };
+  }, []);
+
+  // Memoizar coleções para evitar recomputação em cada render
+  const memoActiveUsers = useMemo(() => activeUsers, [activeUsers]);
+  const memoChatMessages = useMemo(() => chatMessages, [chatMessages]);
+  const memoComments = useMemo(() => comments, [comments]);
+  const memoNotifications = useMemo(() => notifications, [notifications]);
 
   if (!isOpen) return null;
 
@@ -213,97 +405,21 @@ export function CollaborationPanel({
         <div className="flex-1 overflow-hidden">
           {/* Usuários */}
           {activeTab === 'users' && (
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium">Usuários Online ({activeUsers.length})</h3>
-                  {canInvite && (
-                    <button
-                      onClick={() => setShowInviteModal(true)}
-                      className="flex items-center space-x-1 px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
-                    >
-                      <UserPlus className="w-4 h-4" />
-                      <span>Convidar</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4">
-                {activeUsers.map((user: CollaborationUser) => (
-                  <div
-                    key={user.id}
-                    className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg"
-                  >
-                    <div className="relative">
-                      <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                        {user.avatar ? (
-                          <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
-                        ) : (
-                          <span className="text-gray-600 font-medium">
-                            {user.name.charAt(0).toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                      <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${user.isOnline ? 'bg-green-500' : 'bg-gray-400'
-                        }`} />
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-medium">{user.name}</span>
-                        {user.role === 'owner' && <Crown className="w-4 h-4 text-yellow-500" />}
-                        {user.role === 'editor' && <Edit className="w-4 h-4 text-blue-500" />}
-                        {user.role === 'viewer' && <Eye className="w-4 h-4 text-gray-500" />}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {user.role === 'owner' ? 'Proprietário' :
-                          user.role === 'editor' ? 'Editor' : 'Visualizador'}
-                      </div>
-                    </div>
-
-                    {canManage && user.id !== userId && (
-                      <button
-                        onClick={() => setSelectedUser(user.id)}
-                        className="p-1 hover:bg-gray-200 rounded"
-                      >
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+            <UsersList
+              users={memoActiveUsers as CollaborationUser[]}
+              canManage={canManage}
+              currentUserId={userId}
+              onSelect={setSelectedUser}
+              canInvite={canInvite}
+              onInvite={() => setShowInviteModal(true)}
+              activeCount={memoActiveUsers.length}
+            />
           )}
 
           {/* Chat */}
           {activeTab === 'chat' && (
             <div className="h-full flex flex-col">
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {chatMessages.map((message: ChatMessage) => (
-                  <div key={message.id} className="flex space-x-3">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      {message.userAvatar ? (
-                        <img src={message.userAvatar} alt={message.userName} className="w-8 h-8 rounded-full" />
-                      ) : (
-                        <span className="text-gray-600 text-sm">
-                          {message.userName.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-medium text-sm">{message.userName}</span>
-                        <span className="text-xs text-gray-500">
-                          {new Date(message.timestamp).toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <div className="text-sm text-gray-700 mt-1">{message.message}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
+              <ChatMessages messages={memoChatMessages as ChatMessage[]} />
               <div className="border-t p-4">
                 <div className="flex space-x-2">
                   <input
@@ -329,46 +445,8 @@ export function CollaborationPanel({
           {/* Comentários */}
           {activeTab === 'comments' && (
             <div className="h-full flex flex-col">
-              <div className="p-4 border-b">
-                <h3 className="font-medium">Comentários</h3>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {comments.map((comment) => (
-                  <div key={comment.id} className="border rounded-lg p-3">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-                        {comment.userAvatar ? (
-                          <img src={comment.userAvatar} alt={comment.userName} className="w-6 h-6 rounded-full" />
-                        ) : (
-                          <span className="text-gray-600 text-xs">
-                            {comment.userName.charAt(0).toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                      <span className="font-medium text-sm">{comment.userName}</span>
-                      <span className="text-xs text-gray-500">
-                        {new Date(comment.timestamp).toLocaleString()}
-                      </span>
-                      {comment.resolved && (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
-                          Resolvido
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-sm text-gray-700 mb-2">{comment.content}</div>
-                    {!comment.resolved && canEdit && (
-                      <button
-                        onClick={() => resolveComment(comment.id)}
-                        className="text-xs text-blue-600 hover:text-blue-800"
-                      >
-                        Marcar como resolvido
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-
+              <div className="p-4 border-b"><h3 className="font-medium">Comentários</h3></div>
+              <CommentsList comments={memoComments} canEdit={canEdit} onResolve={resolveComment} />
               <div className="border-t p-4">
                 <div className="flex space-x-2">
                   <input
@@ -393,165 +471,29 @@ export function CollaborationPanel({
 
           {/* Notificações */}
           {activeTab === 'notifications' && (
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium">Notificações</h3>
-                  {unreadCount > 0 && (
-                    <button
-                      onClick={markAllNotificationsAsRead}
-                      className="text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      Marcar todas como lidas
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto">
-                {notifications.length === 0 ? (
-                  <div className="p-8 text-center text-gray-500">
-                    <Bell className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                    <p>Nenhuma notificação</p>
-                  </div>
-                ) : (
-                  <div className="p-4 space-y-3">
-                    {notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className={`p-3 rounded-lg border ${notification.read ? 'bg-gray-50' : 'bg-blue-50 border-blue-200'
-                          }`}
-                      >
-                        <div className="flex items-start space-x-3">
-                          <div className={`w-2 h-2 rounded-full mt-2 ${notification.type === 'error' ? 'bg-red-500' :
-                            notification.type === 'warning' ? 'bg-yellow-500' :
-                              notification.type === 'success' ? 'bg-green-500' :
-                                'bg-blue-500'
-                            }`} />
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <h4 className="font-medium text-sm">{notification.title}</h4>
-                              <span className="text-xs text-gray-500">
-                                {new Date(notification.createdAt).toLocaleString()}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-                            {notification.action && (
-                              <button className="text-xs text-blue-600 hover:text-blue-800 mt-1">
-                                {notification.action.label}
-                              </button>
-                            )}
-                          </div>
-                          {!notification.read && (
-                            <button
-                              onClick={() => markNotificationAsRead(notification.id)}
-                              className="p-1 hover:bg-gray-200 rounded"
-                            >
-                              <Check className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+            <NotificationsList
+              notifications={memoNotifications}
+              unreadCount={unreadCount}
+              onMarkAll={markAllNotificationsAsRead}
+              onMarkOne={markNotificationAsRead}
+            />
           )}
 
           {/* Configurações */}
           {activeTab === 'settings' && (
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b">
-                <h3 className="font-medium">Configurações de Colaboração</h3>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 space-y-6">
-                {/* Status da Sessão */}
-                <div>
-                  <h4 className="font-medium mb-3">Status da Sessão</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Conectado</span>
-                      <span className={`text-sm ${isConnected ? 'text-green-600' : 'text-red-600'}`}>
-                        {isConnected ? 'Sim' : 'Não'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Última sincronização</span>
-                      <span className="text-sm text-gray-500">
-                        {lastSync ? lastSync.toLocaleString() : 'Nunca'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Conflitos pendentes</span>
-                      <span className={`text-sm ${conflictCount > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                        {conflictCount}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Permissões */}
-                <div>
-                  <h4 className="font-medium mb-3">Suas Permissões</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Editar</span>
-                      <span className={`text-sm ${canEdit ? 'text-green-600' : 'text-red-600'}`}>
-                        {canEdit ? 'Sim' : 'Não'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Excluir</span>
-                      <span className={`text-sm ${canDelete ? 'text-green-600' : 'text-red-600'}`}>
-                        {canDelete ? 'Sim' : 'Não'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Convidar</span>
-                      <span className={`text-sm ${canInvite ? 'text-green-600' : 'text-red-600'}`}>
-                        {canInvite ? 'Sim' : 'Não'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Gerenciar</span>
-                      <span className={`text-sm ${canManage ? 'text-green-600' : 'text-red-600'}`}>
-                        {canManage ? 'Sim' : 'Não'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Ações */}
-                <div>
-                  <h4 className="font-medium mb-3">Ações</h4>
-                  <div className="space-y-2">
-                    <button
-                      onClick={sync}
-                      disabled={isSaving}
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                    >
-                      {isSaving ? 'Sincronizando...' : 'Sincronizar Agora'}
-                    </button>
-                    {conflictCount > 0 && (
-                      <button
-                        onClick={resolveConflicts}
-                        className="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
-                      >
-                        Resolver Conflitos ({conflictCount})
-                      </button>
-                    )}
-                    <button
-                      onClick={leaveSession}
-                      className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                    >
-                      Sair da Sessão
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SettingsPanel
+              isConnected={isConnected}
+              lastSync={lastSync}
+              conflictCount={conflictCount}
+              canEdit={canEdit}
+              canDelete={canDelete}
+              canInvite={canInvite}
+              canManage={canManage}
+              isSaving={isSaving}
+              sync={sync}
+              resolveConflicts={resolveConflicts}
+              leaveSession={leaveSession}
+            />
           )}
         </div>
       </div>

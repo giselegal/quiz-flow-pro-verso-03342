@@ -1,5 +1,5 @@
 // ⚙️ PROPERTIES COLUMN - FASE 8 UI Avançado
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -67,7 +67,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     }, [selectedBlockProp, blocks, onBlockSelect]);
 
     // ✅ WAVE 1 FIX: Auto-select primeiro bloco se nenhum selecionado
-    const selectedBlock = React.useMemo(() => {
+    const selectedBlock = useMemo(() => {
         if (selectedBlockProp) {
             console.log('✅ [PropertiesColumn] Usando selectedBlockProp:', selectedBlockProp.id);
             return selectedBlockProp;
@@ -159,7 +159,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         return unsubscribe;
     }, [selectedBlock?.id]);
 
-    const handlePropertyChange = React.useCallback((key: string, value: unknown) => {
+    const handlePropertyChange = useCallback((key: string, value: unknown) => {
         console.group('🎛️ [PropertiesColumn] handlePropertyChange');
         console.log('key:', key);
         console.log('value (raw):', value);
@@ -195,7 +195,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         console.groupEnd();
     }, [editedProperties, isDirty]);
 
-    const handleSave = React.useCallback(() => {
+    const handleSave = useCallback(() => {
         console.group('💾 [PropertiesColumn] handleSave');
         console.log('selectedBlock:', selectedBlock);
         console.log('isDirty:', isDirty);
@@ -237,7 +237,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         console.groupEnd();
     }, [selectedBlock, isDirty, editedProperties, onBlockUpdate]);
 
-    const handleReset = React.useCallback(() => {
+    const handleReset = useCallback(() => {
         if (selectedBlock) {
             setEditedProperties(selectedBlock.properties || {});
             setIsDirty(false);
@@ -245,19 +245,15 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     }, [selectedBlock]);
 
     // Verificar se o bloco tem schema disponível
-    const hasSchema = selectedBlock ? schemaInterpreter.getBlockSchema(selectedBlock.type) !== null : false;
+    const hasSchema = useMemo(() => selectedBlock ? schemaInterpreter.getBlockSchema(selectedBlock.type) !== null : false, [selectedBlock]);
 
-    const toggleSection = (section: string) => {
+    const toggleSection = useCallback((section: string) => {
         setExpandedSections(prev => {
             const next = new Set(prev);
-            if (next.has(section)) {
-                next.delete(section);
-            } else {
-                next.add(section);
-            }
+            if (next.has(section)) next.delete(section); else next.add(section);
             return next;
         });
-    };
+    }, []);
 
     if (!selectedBlock) {
         return (

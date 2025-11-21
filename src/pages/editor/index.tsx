@@ -9,6 +9,8 @@
 import React, { Suspense, useMemo, useState, useCallback, useEffect } from 'react';
 const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
 import { SuperUnifiedProvider, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { UIProvider, useUI } from '@/contexts/providers/UIProvider';
+import { PerformanceProvider } from '@/contexts/providers/PerformanceProvider';
 import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
 import { useEditorResource } from '@/hooks/useEditorResource';
 import { detectResourceType } from '@/types/editor-resource';
@@ -235,27 +237,32 @@ const EditorRoutesInner: React.FC = () => {
                 onSelectMode={handleSelectMode}
             />
 
-            <SuperUnifiedProvider
-                funnelId={funnelIdForProvider}
-                autoLoad={Boolean(funnelIdForProvider && !initialFunnelData)}
-                debugMode={import.meta.env.DEV}
-                initialData={initialFunnelData} // 🆕 Passar dados pré-carregados
-            >
-                {import.meta.env.DEV ? <SaveDebugButton /> : null}
-                <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
-                    {/* ✅ Props unificadas - resourceId substitui templateId/funnelId */}
-                    <QuizModularEditor
-                        resourceId={resourceId}
-                        editorResource={editorResource.resource}
-                        isReadOnly={editorResource.isReadOnly}
-                    />
-                </Suspense>
-            </SuperUnifiedProvider>
+            <UIProvider>
+                <PerformanceProvider>
+                    <SuperUnifiedProvider
+                        funnelId={funnelIdForProvider}
+                        autoLoad={Boolean(funnelIdForProvider && !initialFunnelData)}
+                        debugMode={import.meta.env.DEV}
+                        initialData={initialFunnelData} // 🆕 Passar dados pré-carregados
+                    >
+                        {import.meta.env.DEV ? <SaveDebugButton /> : null}
+                        <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
+                            {/* ✅ Props unificadas - resourceId substitui templateId/funnelId */}
+                            <QuizModularEditor
+                                resourceId={resourceId}
+                                editorResource={editorResource.resource}
+                                isReadOnly={editorResource.isReadOnly}
+                            />
+                        </Suspense>
+                    </SuperUnifiedProvider>
+                </PerformanceProvider>
+            </UIProvider>
         </>
     );
 };// ✅ FASE 2: Botão de debug usando SuperUnified
 const SaveDebugButton: React.FC = () => {
     const unified = useSuperUnified();
+    const { state: uiState } = useUI();
     const canSave = Boolean(unified.state.currentFunnel);
     if (!canSave) return null;
 
@@ -271,12 +278,12 @@ const SaveDebugButton: React.FC = () => {
         <button
             type="button"
             onClick={onClick}
-            disabled={unified.state.ui.isLoading}
+            disabled={uiState.isLoading}
             style={{ position: 'fixed', top: 12, right: 12, zIndex: 50 }}
             className="rounded bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white shadow hover:bg-emerald-700 disabled:opacity-60"
             title="Salvar no Supabase (debug)"
         >
-            {unified.state.ui.isLoading ? 'Salvando…' : 'Salvar (debug)'}
+            {uiState.isLoading ? 'Salvando…' : 'Salvar (debug)'}
         </button>
     );
 };
