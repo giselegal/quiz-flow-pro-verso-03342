@@ -56,7 +56,10 @@ export interface VersioningStats {
     storageUsed: number;
 }
 
-// Placeholder para o serviço (será implementado futuramente)
+// =============================================================================
+// SERVICE PLACEHOLDER
+// =============================================================================
+
 export const versioningService = {
     createSnapshot: async (): Promise<VersionSnapshot> => {
         throw new Error('VersioningService not implemented yet');
