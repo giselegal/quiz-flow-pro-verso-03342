@@ -5,10 +5,12 @@
 
 export interface Answer {
     questionId: string;
+    answer: string | string[];   // Compatibilidade com UserResponse
     selectedOptions: string[];
-    timeSpent: number;        // segundos
-    isCorrect?: boolean;      // para quizzes com resposta certa
-    confidence?: number;      // 0-100 (se usuário indicar)
+    timestamp: string;           // Compatibilidade com UserResponse
+    timeSpent: number;           // segundos
+    isCorrect?: boolean;         // para quizzes com resposta certa
+    confidence?: number;         // 0-100 (se usuário indicar)
 }
 
 export interface ScoringRules {

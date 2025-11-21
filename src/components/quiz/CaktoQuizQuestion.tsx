@@ -28,7 +28,7 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
         questionId: question.id,
         selectedOptions,
 
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       };
 
       onAnswer(quizResponse);

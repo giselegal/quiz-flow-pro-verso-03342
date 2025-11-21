@@ -6,7 +6,10 @@ import { Award, CheckCircle, Crown, Gift, ShoppingBag, Star, Users } from 'lucid
 import React, { useEffect, useState } from 'react';
 
 interface ModernResultPageComponentProps extends BlockComponentProps {
-  // Props específicas do componente
+  isSelected?: boolean;
+  isEditing?: boolean;
+  onClick?: () => void;
+  className?: string;
 }
 
 const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({

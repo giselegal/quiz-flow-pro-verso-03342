@@ -36,6 +36,14 @@ export interface VersionSnapshot {
 export interface VersionComparison {
   id: string;
   timestamp: string;
+  versionA: VersionSnapshot;
+  versionB: VersionSnapshot;
+  summary: {
+    blocksAdded: number;
+    blocksRemoved: number;
+    blocksModified: number;
+    stepsChanged: number;
+  };
   changes: Array<{
     id: string;
     type: 'added' | 'modified' | 'removed';
