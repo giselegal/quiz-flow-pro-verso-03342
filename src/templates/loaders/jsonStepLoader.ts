@@ -1,6 +1,7 @@
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 import { cacheManager } from '@/lib/cache/CacheManager';
+import { templateCache } from '@/services/TemplateCache';
 
 // ✅ G4 FIX: Cache de paths falhos para evitar requisições repetidas
 const failedPathsCache = new Map<string, number>();
@@ -57,11 +58,27 @@ export async function loadStepFromJson(
 ): Promise<Block[] | null> {
   if (!stepId) return null;
 
-  // ✅ WAVE 2: Verificar cache primeiro (L1 Memory + L2 IndexedDB)
+  // 🚀 FASE 2: Verificar TemplateCache inteligente PRIMEIRO (mais rápido)
+  const cachedStep = templateCache.get(stepId, templateId);
+  if (cachedStep) {
+    appLogger.debug(`✅ [jsonStepLoader] TemplateCache hit: ${stepId}`);
+    return cachedStep;
+  }
+
+  // Tentar obter do master cache (quiz21-complete.json já carregado)
+  const stepFromMaster = templateCache.getStepFromMaster(stepId, templateId);
+  if (stepFromMaster) {
+    appLogger.debug(`✅ [jsonStepLoader] Step obtido do master cache: ${stepId}`);
+    return stepFromMaster;
+  }
+
+  // ✅ WAVE 2: Verificar cache legado (L1 Memory + L2 IndexedDB) - compatibilidade
   const cacheKey = `step:${templateId}:${stepId}`;
   const cached = await cacheManager.get<Block[]>(cacheKey, 'steps');
   if (cached) {
-    appLogger.debug(`[jsonStepLoader] 🎯 Cache hit: ${cacheKey}`);
+    appLogger.debug(`[jsonStepLoader] 🎯 CacheManager hit: ${cacheKey}`);
+    // Migrar para novo cache
+    templateCache.set(stepId, cached, templateId);
     return cached;
   }
 
