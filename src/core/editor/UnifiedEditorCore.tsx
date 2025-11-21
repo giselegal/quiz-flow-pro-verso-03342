@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts';
 
 // Simple components for now to avoid complex type issues
 const SimpleEditorLayout: React.FC<{ isPreview: boolean }> = ({ isPreview }) => {

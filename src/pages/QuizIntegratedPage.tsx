@@ -5,7 +5,7 @@ import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useEditor } from '@/hooks/useEditor';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
