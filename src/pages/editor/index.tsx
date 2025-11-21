@@ -8,7 +8,9 @@
 
 import React, { Suspense, useMemo, useState, useCallback, useEffect } from 'react';
 const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
-import { SuperUnifiedProvider, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
+import { useFunnelData } from '@/contexts/funnel/FunnelDataProvider';
 import { UIProvider, useUI } from '@/contexts/providers/UIProvider';
 import { PerformanceProvider } from '@/contexts/providers/PerformanceProvider';
 import { EditorStartupModal } from '@/components/editor/EditorStartupModal';
@@ -239,12 +241,7 @@ const EditorRoutesInner: React.FC = () => {
 
             <UIProvider>
                 <PerformanceProvider>
-                    <SuperUnifiedProvider
-                        funnelId={funnelIdForProvider}
-                        autoLoad={Boolean(funnelIdForProvider && !initialFunnelData)}
-                        debugMode={import.meta.env.DEV}
-                        initialData={initialFunnelData} // 🆕 Passar dados pré-carregados
-                    >
+                    <SuperUnifiedProvider>
                         {import.meta.env.DEV ? <SaveDebugButton /> : null}
                         <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
                             {/* ✅ Props unificadas - resourceId substitui templateId/funnelId */}
@@ -259,19 +256,15 @@ const EditorRoutesInner: React.FC = () => {
             </UIProvider>
         </>
     );
-};// ✅ FASE 2: Botão de debug usando SuperUnified
+};// ✅ FASE 2: Botão de debug usando V2
 const SaveDebugButton: React.FC = () => {
-    const unified = useSuperUnified();
+    const { currentFunnel } = useFunnelData();
     const { state: uiState } = useUI();
-    const canSave = Boolean(unified.state.currentFunnel);
+    const canSave = Boolean(currentFunnel);
     if (!canSave) return null;
 
-    const onClick = async () => {
-        try {
-            await unified.saveFunnel();
-        } catch (error) {
-            appLogger.error('Save failed:', { data: [error] });
-        }
+    const onClick = () => {
+        appLogger.info('Debug: Current funnel', { data: [currentFunnel] });
     };
 
     return (
