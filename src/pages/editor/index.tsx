@@ -8,7 +8,7 @@
 
 import React, { Suspense, useMemo, useState, useCallback, useEffect } from 'react';
 const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 import { useFunnelData } from '@/contexts/funnel/FunnelDataProvider';
 import { UIProvider, useUI } from '@/contexts/providers/UIProvider';

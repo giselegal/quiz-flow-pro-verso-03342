@@ -44,7 +44,7 @@ import { PWANotifications } from './components/PWANotifications';
 import UnifiedAppProvider from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
 
