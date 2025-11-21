@@ -24,7 +24,7 @@ describe('usePropertiesPanelEnhancements - Teste de Estrutura', () => {
         }));
 
         const module = await import('../usePropertiesPanelEnhancements');
-        
+
         expect(module.usePropertiesPanelEnhancements).toBeDefined();
         expect(typeof module.usePropertiesPanelEnhancements).toBe('function');
     });
@@ -44,7 +44,7 @@ describe('usePropertiesPanelEnhancements - Teste de Estrutura', () => {
         }));
 
         const module = await import('../usePropertiesPanelEnhancements');
-        
+
         // Verifica que o tipo está disponível através da exportação
         expect(module).toHaveProperty('usePropertiesPanelEnhancements');
     });
@@ -64,7 +64,7 @@ describe('usePropertiesPanelEnhancements - Teste de Estrutura', () => {
         }));
 
         const { usePropertiesPanelEnhancements } = await import('../usePropertiesPanelEnhancements');
-        
+
         // Verifica que a função tem length 3 (onSave, onSelectBlock, config)
         // Nota: config é opcional, mas conta como parâmetro
         expect(usePropertiesPanelEnhancements.length).toBe(3);
