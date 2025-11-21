@@ -25,6 +25,7 @@ if (import.meta.env.PROD && initializeSentry) {
 
 // Importar React normalmente
 import React, { lazy, Suspense } from 'react';
+import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { createRoot } from 'react-dom/client';
 const LazyApp = lazy(() => import('./App'));
 import ClientLayout from './components/ClientLayout';
@@ -464,7 +465,7 @@ try {
 }
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
-    <Suspense fallback={<div data-testid="boot-splash" />}>
+    <Suspense fallback={<PageLoadingFallback message="Carregando aplicação..." />}> 
       <LazyApp />
     </Suspense>
   </ClientLayout>,

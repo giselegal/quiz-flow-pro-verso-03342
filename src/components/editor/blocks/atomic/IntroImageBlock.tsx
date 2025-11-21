@@ -1,6 +1,7 @@
 import React from 'react';
 import { AtomicBlockProps } from '@/types/blockProps';
 import { appLogger } from '@/lib/utils/appLogger';
+import { SmartImage } from '@/hooks/useImageWithFallback';
 
 export default function IntroImageBlock({
   block,
@@ -49,11 +50,14 @@ export default function IntroImageBlock({
       className={`flex justify-center my-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       onClick={(e) => { onClick?.(); }}
     >
-      <img
+      <SmartImage
         src={src}
         alt={alt}
         className={`w-full object-contain ${rounded ? 'rounded-lg' : ''}`}
         style={{ maxWidth }}
+        loading="lazy"
+        decoding="async"
+        enableCache
       />
     </div>
   );
