@@ -274,6 +274,12 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
         else setError(null);
     }, [queryError]);
 
+    // ✅ CRITICAL FIX: Normalizar blocos ANTES de qualquer return (evita hook condicional no JSX)
+    const normalizedBlocks = useMemo(() => {
+        if (!blocks || blocks.length === 0) return [];
+        return normalizeBlocksData(blocks);
+    }, [blocks]);
+
     // ✅ CRITICAL FIX: Returns condicionais agora vêm DEPOIS de todos os hooks
 
     if (!currentStepKey) {
@@ -356,7 +362,7 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
             )}
             <SafeSortableContext items={blocks.map(b => b.id)}>
                 <ul className="space-y-1">
-                    {useMemo(() => normalizeBlocksData(blocks), [blocks]).map((b, idx) => {
+                    {normalizedBlocks.map((b, idx) => {
                         normalizerLogger.debug(`Rendering normalized block ${b.type}`, {
                             original: blocks[idx],
                             normalized: b
