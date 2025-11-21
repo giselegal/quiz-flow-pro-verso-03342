@@ -47,6 +47,8 @@ export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifie
  * 
  * Roadmap: Será deprecado após migração completa para V2
  * Ver: CHECKLIST_RESOLUCAO_DUPLICACOES.md
+ * 
+ * @deprecated Use SuperUnifiedProvider (V2) com hooks individuais
  */
 export { useUnifiedAuth, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 
