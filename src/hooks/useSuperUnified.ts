@@ -7,23 +7,10 @@
  * @version 1.0.0
  */
 
-import { useContext } from 'react';
-import { SuperUnifiedContext } from '@/contexts/providers/SuperUnifiedProvider';
+import { useLegacySuperUnified } from '@/hooks/useLegacySuperUnified';
 
 export const useSuperUnified = () => {
-  const context = useContext(SuperUnifiedContext);
-  
-  if (!context) {
-    throw new Error(
-      '🚨 useSuperUnified must be used within SuperUnifiedProvider\n\n' +
-      'Wrap your component with:\n' +
-      '<SuperUnifiedProvider>\n' +
-      '  <YourComponent />\n' +
-      '</SuperUnifiedProvider>'
-    );
-  }
-  
-  return context;
+  return useLegacySuperUnified();
 };
 
 export default useSuperUnified;
