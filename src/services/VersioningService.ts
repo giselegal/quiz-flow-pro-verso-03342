@@ -18,11 +18,17 @@ export interface Version {
 
 export interface VersionSnapshot {
   id: string;
-  timestamp: string;
+  version: string;
+  type: 'auto' | 'manual' | 'milestone';
+  timestamp: Date | string;
+  description?: string;
   metadata: {
     author?: string;
     tags?: string[];
     description?: string;
+    stagesCount?: number;
+    blocksCount?: number;
+    changesCount?: number;
   };
   data: any;
 }

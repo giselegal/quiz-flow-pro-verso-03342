@@ -21,7 +21,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { BlockComponentProps, BlockData } from '@/types/blocks';
+import type { Block } from '@/types/editor';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
 
 interface Stat {
@@ -41,7 +41,7 @@ interface Stat {
 }
 
 interface StatsBlockProps extends InlineBlockProps {
-  block: BlockData & {
+  block: Block & {
     type: 'stats-metrics';
     properties: {
       title?: string;
@@ -227,9 +227,9 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
     }
 
     if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)  }M`;
+      return `${(num / 1000000).toFixed(1)}M`;
     } else if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)  }K`;
+      return `${(num / 1000).toFixed(1)}K`;
     }
     return Math.floor(num).toLocaleString('pt-BR');
   };
@@ -262,9 +262,8 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
               )}
               {showTrends && stat.change && stat.trend !== 'neutral' && (
                 <div
-                  className={`flex items-center gap-1 text-sm font-medium ${
-                    stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
-                  }`}
+                  className={`flex items-center gap-1 text-sm font-medium ${stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                    }`}
                 >
                   {stat.trend === 'up' ? (
                     <ArrowUp className="w-4 h-4" />
@@ -387,13 +386,12 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
         {/* Stats Grid */}
         <div
           className={`
-          ${
-            layout === 'horizontal'
+          ${layout === 'horizontal'
               ? 'flex flex-wrap justify-center gap-6'
               : layout === 'vertical'
                 ? 'space-y-6 max-w-md mx-auto'
                 : 'flex flex-wrap gap-6 justify-center max-w-4xl mx-auto'
-          }
+            }
         `}
         >
           {stats.map((stat, index) => renderStat(stat, index))}

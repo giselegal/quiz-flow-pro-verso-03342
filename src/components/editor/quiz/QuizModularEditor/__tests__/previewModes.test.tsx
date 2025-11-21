@@ -11,7 +11,7 @@ vi.mock('@/services/api/steps/hooks', () => ({
 // Mock BlockTypeRenderer
 vi.mock('@/components/editor/quiz/renderers/BlockTypeRenderer', () => ({
   BlockTypeRenderer: ({ block, isSelected, isEditable, onSelect }: any) => (
-    <div 
+    <div
       data-testid={`block-${block.id}`}
       data-selected={isSelected}
       data-editable={isEditable}
@@ -35,21 +35,21 @@ describe('PreviewPanel Visualization Modes', () => {
   const mockBlocks = [
     {
       id: 'block-1',
-      type: 'headline',
+      type: 'headline' as const,
       properties: { text: 'Test Headline' },
       content: { text: 'Test Headline' },
       order: 0
     },
     {
       id: 'block-2',
-      type: 'text',
+      type: 'text' as const,
       properties: { text: 'Test paragraph content' },
       content: { text: 'Test paragraph content' },
       order: 1
     },
     {
       id: 'block-3',
-      type: 'button',
+      type: 'button' as const,
       properties: { text: 'Continue' },
       content: { text: 'Continue' },
       order: 2
@@ -78,7 +78,7 @@ describe('PreviewPanel Visualization Modes', () => {
           previewMode={'live'}
         />
       )
-      
+
       expect(screen.getByText('Mostrar Preview')).toBeInTheDocument()
     })
   })
@@ -94,7 +94,7 @@ describe('PreviewPanel Visualization Modes', () => {
           previewMode={'live'}
         />
       )
-      
+
       expect(screen.getByText(/🛠 Visualização do Editor \(Dados em edição\)/i)).toBeInTheDocument()
     })
 
@@ -113,7 +113,7 @@ describe('PreviewPanel Visualization Modes', () => {
       expect(screen.getByTestId('block-block-1')).toBeInTheDocument()
       expect(screen.getByTestId('block-block-2')).toBeInTheDocument()
       expect(screen.getByTestId('block-block-3')).toBeInTheDocument()
-      
+
       // Verify content
       expect(screen.getByText('headline: Test Headline')).toBeInTheDocument()
       expect(screen.getByText('text: Test paragraph content')).toBeInTheDocument()
@@ -122,7 +122,7 @@ describe('PreviewPanel Visualization Modes', () => {
 
     it('should handle block selection in editor preview mode', () => {
       const mockOnBlockSelect = vi.fn()
-      
+
       render(
         <PreviewPanel
           currentStepKey={'step-01'}
@@ -136,7 +136,7 @@ describe('PreviewPanel Visualization Modes', () => {
 
       const blockElement = screen.getByTestId('block-block-1')
       expect(blockElement).toHaveAttribute('data-selected', 'true')
-      
+
       fireEvent.click(blockElement)
       expect(mockOnBlockSelect).toHaveBeenCalledWith('block-1')
     })
@@ -210,7 +210,7 @@ describe('PreviewPanel Visualization Modes', () => {
           previewMode={'production'}
         />
       )
-      
+
       expect(screen.getByText(/🚀 Modo Production \(Dados Publicados\)/i)).toBeInTheDocument()
     })
 
@@ -267,7 +267,7 @@ describe('PreviewPanel Visualization Modes', () => {
 
     it('should handle step change in production mode', () => {
       const mockOnStepChange = vi.fn()
-      
+
       render(
         <PreviewPanel
           currentStepKey={'step-01'}
@@ -288,7 +288,7 @@ describe('PreviewPanel Visualization Modes', () => {
   describe('Visibility Toggle', () => {
     it('should show toggle button when visibility can be changed', () => {
       const mockOnToggleVisibility = vi.fn()
-      
+
       render(
         <PreviewPanel
           currentStepKey={'step-01'}
@@ -302,14 +302,14 @@ describe('PreviewPanel Visualization Modes', () => {
 
       const toggleButton = screen.getByTitle('Ocultar preview')
       expect(toggleButton).toBeInTheDocument()
-      
+
       fireEvent.click(toggleButton)
       expect(mockOnToggleVisibility).toHaveBeenCalledTimes(1)
     })
 
     it('should show minimized state when not visible', () => {
       const mockOnToggleVisibility = vi.fn()
-      
+
       render(
         <PreviewPanel
           currentStepKey={'step-01'}
