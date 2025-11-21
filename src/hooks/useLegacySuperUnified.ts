@@ -199,7 +199,11 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
     // Funil / persistência
     saveFunnel: unifiedEditor.saveFunnel,
     publishFunnel,
-    createFunnel: unifiedEditor.createFunnel,
+    createFunnel: async (name: string) => {
+      const id = await unifiedEditor.createFunnel(name);
+      // Compatibilidade: retornar objeto com id para consumidores que esperam .id
+      return { id } as any; // any para manter flexibilidade durante migração
+    },
     saveStepBlocks,
     ensureAllDirtyStepsSaved,
 
