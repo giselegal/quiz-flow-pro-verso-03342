@@ -1808,6 +1808,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             id: string,
                                             updates: Partial<Block>
                                         ) => {
+                                            console.group('🔄 [QuizModularEditor] onBlockUpdate chamado');
+                                            console.log('blockId:', id);
+                                            console.log('updates:', updates);
+                                            console.log('currentStep:', safeCurrentStep);
+                                            console.groupEnd();
+                                            appLogger.info('🔄 [QuizModularEditor] onBlockUpdate', { blockId: id, updates, step: safeCurrentStep });
                                             updateBlock(safeCurrentStep, id, updates);
                                         }}
                                         onClearSelection={() => setSelectedBlock(null)}
@@ -1824,6 +1830,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             id: string,
                                             updates: Partial<Block>
                                         ) => {
+                                            console.group('🔄 [QuizModularEditor] onBlockUpdate chamado');
+                                            console.log('blockId:', id);
+                                            console.log('updates:', updates);
+                                            console.log('currentStep:', safeCurrentStep);
+                                            console.groupEnd();
+                                            appLogger.info('🔄 [QuizModularEditor] onBlockUpdate', { blockId: id, updates, step: safeCurrentStep });
                                             updateBlock(safeCurrentStep, id, updates);
                                         }}
                                         onClearSelection={() => setSelectedBlock(null)}
