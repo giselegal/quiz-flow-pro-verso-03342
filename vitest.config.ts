@@ -6,16 +6,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'happy-dom', // Otimizado para React
-    // Usa ambiente node para pastas sem necessidade de DOM, reduzindo memória
-    environmentMatchGlobs: [
-      ['src/utils/**', 'node'],
-      ['src/services/**', 'node'],
-      ['src/core/**', 'node'],
-      ['src/consolidated/**', 'node'],
-      ['src/optimization/**', 'node'],
-      ['src/migration/**', 'node'],
-    ],
+    environment: 'happy-dom', // Default para componentes React
     setupFiles: [
       './src/__tests__/test-setup.ts',
       './src/__tests__/setup/indexeddb.mock.ts',
@@ -54,6 +45,39 @@ export default defineConfig({
     sequence: {
       concurrent: false,
     },
+    // Configuração de projetos para diferentes ambientes (substitui environmentMatchGlobs)
+    projects: [
+      {
+        // Projeto para testes Node (sem DOM) - mais rápido e com menos memória
+        test: {
+          name: 'node',
+          environment: 'node',
+          include: [
+            'src/utils/**/*.{test,spec}.{ts,tsx}',
+            'src/services/**/*.{test,spec}.{ts,tsx}',
+            'src/core/**/*.{test,spec}.{ts,tsx}',
+            'src/consolidated/**/*.{test,spec}.{ts,tsx}',
+            'src/optimization/**/*.{test,spec}.{ts,tsx}',
+            'src/migration/**/*.{test,spec}.{ts,tsx}',
+            'src/hooks/**/*.{test,spec}.ts', // Hooks sem JSX
+          ],
+        },
+      },
+      {
+        // Projeto para testes de componentes React (precisa DOM)
+        test: {
+          name: 'react',
+          environment: 'happy-dom',
+          include: [
+            'src/components/**/*.{test,spec}.{ts,tsx}',
+            'src/pages/**/*.{test,spec}.{ts,tsx}',
+            'src/contexts/**/*.{test,spec}.{ts,tsx}',
+            'src/hooks/**/*.{test,spec}.tsx', // Hooks com JSX
+            'src/testing/**/*.test.ts',
+          ],
+        },
+      },
+    ],
     include: [
       'src/**/*.{test,spec}.{js,ts,jsx,tsx}',
       // Somente arquivos com sufixo .test/.spec dentro de __tests__
