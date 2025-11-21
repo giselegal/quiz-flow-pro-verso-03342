@@ -26,8 +26,8 @@ import {
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ⚠️ DEPRECATED - Aliases de compatibilidade (serão removidos)
-/** @deprecated Use SuperUnifiedProvider from @/contexts/providers/SuperUnifiedProvider */
-export { SuperUnifiedProvider as EditorProviderUnified } from '@/contexts/providers/SuperUnifiedProvider';
+/** @deprecated Use SuperUnifiedProvider from @/contexts/providers/SuperUnifiedProviderV2 */
+export { SuperUnifiedProvider as EditorProviderUnified } from '@/contexts/providers/SuperUnifiedProviderV2';
 
 /** @deprecated Use useEditor from @/hooks/useEditor */
 export { useEditor as useEditorOptional } from '@/hooks/useEditor';
