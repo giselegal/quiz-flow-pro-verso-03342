@@ -17,8 +17,8 @@ import React, { useState, useMemo } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { useUnifiedVersioning } from '@/hooks/core/useUnifiedVersioning';
 import { UnifiedFunnel } from '@/services/UnifiedCRUDService';
-import type { VersionSnapshot, VersionComparison } from '@/services/versioningService';
-import type { HistoryEntry } from '@/services/HistoryManager';
+import { VersionSnapshot, VersionComparison } from '@/services/versioningService';
+import { HistoryEntry } from '@/services/HistoryManager';
 
 // =============================================================================
 // TIPOS E INTERFACES

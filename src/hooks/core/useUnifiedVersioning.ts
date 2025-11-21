@@ -14,17 +14,17 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { 
-  versioningService, 
-  VersionSnapshot, 
+import {
+  versioningService,
+  VersionSnapshot,
   VersionComparison,
-  VersioningStats, 
+  VersioningStats,
 } from '@/services/versioningService';
-import { 
-  historyManager, 
-  HistoryEntry, 
+import {
+  historyManager,
+  HistoryEntry,
   HistoryFilter,
-  HistoryStats, 
+  HistoryStats,
 } from '@/services/HistoryManager';
 import { UnifiedFunnel } from '@/services/UnifiedCRUDService';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -38,20 +38,20 @@ export interface VersioningState {
   currentSnapshot: VersionSnapshot | null;
   snapshots: VersionSnapshot[];
   history: HistoryEntry[];
-  
+
   // Estados de operação
   isLoading: boolean;
   isCreatingSnapshot: boolean;
   isRestoring: boolean;
-  
+
   // Filtros e busca
   historyFilter: HistoryFilter;
   searchQuery: string;
-  
+
   // Estatísticas
   versioningStats: VersioningStats | null;
   historyStats: HistoryStats | null;
-  
+
   // Erro
   error: string | null;
 }
@@ -62,26 +62,26 @@ export interface VersioningActions {
   getSnapshot: (id: string) => VersionSnapshot | null;
   getLatestSnapshot: () => VersionSnapshot | null;
   deleteSnapshot: (id: string) => Promise<boolean>;
-  
+
   // === HISTÓRICO ===
   getHistory: (filter?: HistoryFilter) => HistoryEntry[];
   searchHistory: (query: string) => HistoryEntry[];
   clearHistory: () => void;
-  
+
   // === COMPARAÇÃO ===
   compareVersions: (idA: string, idB: string) => VersionComparison | null;
-  
+
   // === RESTORE ===
   restoreSnapshot: (id: string) => Promise<UnifiedFunnel | null>;
-  
+
   // === FILTROS ===
   setHistoryFilter: (filter: HistoryFilter) => void;
   setSearchQuery: (query: string) => void;
   clearFilters: () => void;
-  
+
   // === ESTATÍSTICAS ===
   refreshStats: () => void;
-  
+
   // === CONTROLE ===
   setError: (error: string | null) => void;
   clearError: () => void;
@@ -91,7 +91,7 @@ export interface VersioningReturn extends VersioningState, VersioningActions {
   // Estado derivado
   filteredHistory: HistoryEntry[];
   searchResults: HistoryEntry[];
-  
+
   // Métricas
   totalSnapshots: number;
   totalHistoryEntries: number;
@@ -111,7 +111,7 @@ export const useUnifiedVersioning = (
     enableHistoryTracking?: boolean;
   } = {},
 ): VersioningReturn => {
-  
+
   const {
     enableAutoSnapshots = true,
     autoSnapshotInterval = 15, // 15 minutos
@@ -148,12 +148,12 @@ export const useUnifiedVersioning = (
   const refreshData = useCallback(async () => {
     try {
       updateState({ isLoading: true });
-      
+
       const snapshots = versioningService.getSnapshots();
       const history = historyManager.getHistory();
       const versioningStats = versioningService.getStats();
       const historyStats = historyManager.getStats();
-      
+
       updateState({
         snapshots,
         history,
@@ -186,7 +186,7 @@ export const useUnifiedVersioning = (
 
     try {
       const snapshot = await versioningService.createSnapshot(funnel, type, description);
-      
+
       // Rastrear no histórico
       if (enableHistoryTracking) {
         await historyManager.trackCRUDChange(
@@ -200,8 +200,8 @@ export const useUnifiedVersioning = (
 
       // Atualizar dados
       await refreshData();
-      
-      updateState({ 
+
+      updateState({
         isCreatingSnapshot: false,
         currentSnapshot: snapshot,
       });
@@ -229,7 +229,7 @@ export const useUnifiedVersioning = (
   const deleteSnapshot = useCallback(async (id: string): Promise<boolean> => {
     try {
       const success = await versioningService.deleteSnapshot(id);
-      
+
       if (success) {
         // Rastrear no histórico
         if (enableHistoryTracking) {
@@ -244,10 +244,10 @@ export const useUnifiedVersioning = (
 
         // Atualizar dados
         await refreshData();
-        
+
         appLogger.info(`🗑️ Snapshot excluído: ${id}`);
       }
-      
+
       return success;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao excluir snapshot';
@@ -291,7 +291,7 @@ export const useUnifiedVersioning = (
 
     try {
       const restoredFunnel = await versioningService.restoreSnapshot(id);
-      
+
       if (restoredFunnel) {
         // Rastrear no histórico
         if (enableHistoryTracking) {
@@ -306,10 +306,10 @@ export const useUnifiedVersioning = (
 
         // Atualizar dados
         await refreshData();
-        
+
         appLogger.info(`🔙 Funnel restaurado do snapshot: ${id}`);
       }
-      
+
       updateState({ isRestoring: false });
       return restoredFunnel;
     } catch (error) {
@@ -335,7 +335,7 @@ export const useUnifiedVersioning = (
   }, [updateState]);
 
   const clearFilters = useCallback(() => {
-    updateState({ 
+    updateState({
       historyFilter: {},
       searchQuery: '',
     });
@@ -348,7 +348,7 @@ export const useUnifiedVersioning = (
   const refreshStats = useCallback(() => {
     const versioningStats = versioningService.getStats();
     const historyStats = historyManager.getStats();
-    
+
     updateState({
       versioningStats,
       historyStats,

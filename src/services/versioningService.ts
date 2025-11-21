@@ -5,6 +5,10 @@
 
 import type { UnifiedFunnel } from './UnifiedCRUDService';
 
+// =============================================================================
+// TYPE DEFINITIONS
+// =============================================================================
+
 export interface VersionSnapshot {
     id: string;
     version: string;
