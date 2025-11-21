@@ -42,24 +42,29 @@ export const blockSchema = blockBaseSchema.extend({
 /**
  * Step metadata schema
  */
-export const stepMetadataSchema = z.object({
-  id: z.string().min(1, 'Step metadata.id é obrigatório'),
-  name: z.string().min(1, 'Step metadata.name é obrigatório'),
-  description: z.string().optional(),
-  category: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  order: z.number().int().positive().optional(),
-});
+export const stepMetadataSchema = z
+  .object({
+    id: z.string().min(1, 'Step metadata.id é obrigatório'),
+    name: z.string().min(1, 'Step metadata.name é obrigatório'),
+    description: z.string().optional(),
+    category: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    order: z.number().int().positive().optional(),
+  })
+  // Mantém campos adicionais como scoring, version e flags específicas
+  .passthrough();
 
 /**
  * Step schema (v3.1+ format with blocks array)
  * Suporta v3.0, v3.1, v3.2
  */
-export const stepV31Schema = z.object({
-  templateVersion: z.enum(['3.0', '3.1', '3.2']).optional(),
-  metadata: stepMetadataSchema,
-  blocks: z.array(blockSchema).min(1, 'Step deve conter pelo menos um bloco'),
-});
+export const stepV31Schema = z
+  .object({
+    templateVersion: z.enum(['3.0', '3.1', '3.2']).optional(),
+    metadata: stepMetadataSchema,
+    blocks: z.array(blockSchema).min(1, 'Step deve conter pelo menos um bloco'),
+  })
+  .passthrough();
 
 /**
  * Step schema (simple format with blocks array directly)
@@ -99,6 +104,65 @@ export const templateSchema = z.object({
 });
 
 /**
+ * Step file schema for public/templates/funnels/{template}/steps/step-XX.json
+ */
+export const stepFileSchema = stepV31Schema
+  .extend({
+    stepId: z.string().regex(/^step-\d{2}$/, 'stepId deve seguir padrão step-XX'),
+    stepNumber: z.number().int().positive(),
+    type: z.string().min(1, 'type é obrigatório'),
+    nextStep: z.string().nullable().optional(),
+    templateVersion: z.enum(['3.1', '3.2']),
+    metadata: stepMetadataSchema.extend({
+      templateId: z.string().optional(),
+      version: z.string().min(1, 'metadata.version é obrigatório'),
+    }),
+  })
+  .superRefine((value, ctx) => {
+    const hasVersionMismatch = value.metadata?.version && !value.metadata.version.startsWith(value.templateVersion);
+    if (hasVersionMismatch) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `metadata.version (${value.metadata?.version}) deve começar com templateVersion (${value.templateVersion})`,
+        path: ['metadata', 'version'],
+      });
+    }
+  });
+
+/**
+ * Manifest schema for master.v3.json entries
+ */
+export const templateManifestStepSchema = z
+  .object({
+    id: z.string().regex(/^step-\d{2}$/, 'id deve seguir padrão step-XX'),
+    name: z.string().min(1, 'name é obrigatório'),
+    type: z.string().min(1, 'type é obrigatório'),
+    order: z.number().int().positive(),
+    file: z.string().regex(/\.\/steps\/step-\d{2}\.json$/, 'file deve apontar para ./steps/step-XX.json'),
+  })
+  .passthrough();
+
+export const templateManifestSchema = z
+  .object({
+    templateVersion: z.enum(['3.1', '3.2']),
+    templateId: z.string().min(1, 'templateId é obrigatório'),
+    name: z.string().min(1, 'name é obrigatório'),
+    description: z.string().optional(),
+    metadata: z
+      .object({
+        createdAt: z.string().datetime(),
+        updatedAt: z.string().datetime(),
+        author: z.string().optional(),
+        version: z.string().min(1, 'metadata.version é obrigatório'),
+        totalSteps: z.number().int().positive().optional(),
+        _notes: z.string().optional(),
+      })
+      .passthrough(),
+    steps: z.array(templateManifestStepSchema).min(1, 'Manifesto deve listar ao menos um step'),
+  })
+  .passthrough();
+
+/**
  * Type inference from schemas
  */
 export type BlockBase = z.infer<typeof blockBaseSchema>;
@@ -107,8 +171,10 @@ export type StepMetadata = z.infer<typeof stepMetadataSchema>;
 export type StepV31 = z.infer<typeof stepV31Schema>;
 export type StepSimple = z.infer<typeof stepSimpleSchema>;
 export type Step = z.infer<typeof stepSchema>;
+export type StepFile = z.infer<typeof stepFileSchema>;
 export type TemplateMetadata = z.infer<typeof templateMetadataSchema>;
 export type Template = z.infer<typeof templateSchema>;
+export type TemplateManifest = z.infer<typeof templateManifestSchema>;
 
 /**
  * Validation result with detailed errors
@@ -184,6 +250,71 @@ export function validateTemplate(data: unknown): ValidationResult<Template> {
       success: false,
       errors: [`Erro de validação: ${error instanceof Error ? error.message : 'Erro desconhecido'}`],
     };
+  }
+}
+
+/**
+ * Validate a v3.1/v3.2 step file (public/templates/funnels/.../steps)
+ */
+export function validateStepFile(data: unknown): ValidationResult<StepFile> {
+  try {
+    const parsed = stepFileSchema.parse(data);
+
+    const warnings: string[] = [];
+
+    if (parsed.templateVersion && parsed.metadata?.version) {
+      const versionMismatch = !parsed.metadata.version.startsWith(parsed.templateVersion);
+      if (versionMismatch) {
+        warnings.push(
+          `templateVersion (${parsed.templateVersion}) difere do metadata.version (${parsed.metadata.version})`
+        );
+      }
+    }
+
+    return { success: true, data: parsed, warnings: warnings.length ? warnings : undefined };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const validationError = fromError(error);
+      const errors = error.errors.map((err) => {
+        const path = err.path.join('.');
+        return `${path}: ${err.message}`;
+      });
+
+      return { success: false, errors: [validationError.message, ...errors] };
+    }
+
+    return { success: false, errors: [`Erro de validação: ${error instanceof Error ? error.message : 'Erro desconhecido'}`] };
+  }
+}
+
+/**
+ * Validate the master manifest JSON (master.v3.json)
+ */
+export function validateTemplateManifest(data: unknown): ValidationResult<TemplateManifest> {
+  try {
+    const parsed = templateManifestSchema.parse(data);
+
+    const warnings: string[] = [];
+
+    if (parsed.metadata.totalSteps && parsed.metadata.totalSteps !== parsed.steps.length) {
+      warnings.push(
+        `metadata.totalSteps (${parsed.metadata.totalSteps}) não corresponde ao número de steps (${parsed.steps.length})`
+      );
+    }
+
+    return { success: true, data: parsed, warnings: warnings.length ? warnings : undefined };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const validationError = fromError(error);
+      const errors = error.errors.map((err) => {
+        const path = err.path.join('.');
+        return `${path}: ${err.message}`;
+      });
+
+      return { success: false, errors: [validationError.message, ...errors] };
+    }
+
+    return { success: false, errors: [`Erro de validação: ${error instanceof Error ? error.message : 'Erro desconhecido'}`] };
   }
 }
 
@@ -299,9 +430,13 @@ export function normalizeTemplate(template: Template): Template {
 export default {
   blockSchema,
   stepSchema,
+  stepFileSchema,
+  templateManifestSchema,
   templateSchema,
   validateTemplate,
   validateStep,
+  validateStepFile,
+  validateTemplateManifest,
   validateBlock,
   safeParseTemplate,
   isValidTemplate,

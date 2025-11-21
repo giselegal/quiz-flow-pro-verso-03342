@@ -17,7 +17,7 @@
           "showCelebration": true,
           "celebrationEmoji": "🎉",
           "celebrationAnimation": "bounce",
-      "greetingFormat": "Olá, {userName}! — LIVE",
+          "greetingFormat": "Olá, {userName}! — LIVE",
           "titleFormat": "Seu Estilo Predominante é:",
           "styleNameDisplay": "{styleName}",
           "colors": {
@@ -37,7 +37,7 @@
     {
       "id": "quiz-score-celebration",
       "type": "text-inline",
-      "order": 0.5,
+      "order": 1,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -76,7 +76,7 @@
     {
       "id": "result-main",
       "type": "result-main",
-      "order": 1,
+      "order": 2,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -103,7 +103,7 @@
     {
       "id": "result-progress-bars",
       "type": "text-inline",
-      "order": 2,
+      "order": 3,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -127,7 +127,7 @@
     {
       "id": "result-secondary-styles",
       "type": "result-secondary-styles",
-      "order": 3,
+      "order": 4,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -144,7 +144,7 @@
     {
       "id": "result-image",
       "type": "result-image",
-      "order": 4,
+      "order": 5,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -162,7 +162,7 @@
     {
       "id": "result-description",
       "type": "result-description",
-      "order": 5,
+      "order": 6,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -182,7 +182,7 @@
     {
       "id": "button-cta-primary",
       "type": "result-cta",
-      "order": 6,
+      "order": 7,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -202,7 +202,7 @@
     {
       "id": "result-share",
       "type": "result-share",
-      "order": 7,
+      "order": 8,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -222,7 +222,7 @@
     {
       "id": "transformation-benefits",
       "type": "text-inline",
-      "order": 8,
+      "order": 9,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -238,7 +238,7 @@
     {
       "id": "method-steps",
       "type": "text-inline",
-      "order": 9,
+      "order": 10,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -254,7 +254,7 @@
     {
       "id": "button-cta-final",
       "type": "result-cta",
-      "order": 10,
+      "order": 11,
       "parentId": null,
       "properties": {
         "enabled": true,
@@ -294,6 +294,8 @@
     },
     "scoringAddedAt": "2025-11-05T21:52:52.456Z",
     "generated": "2025-11-12T13:09:32.159Z",
-    "source": "quiz21-complete.json"
+    "source": "quiz21-complete.json",
+    "version": "3.2.0",
+    "templateId": "quiz21StepsComplete"
   }
 }
