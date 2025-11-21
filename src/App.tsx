@@ -229,11 +229,11 @@ function AppCore() {
                                         {() => {
                                             appLogger.info('🏠 Home route matched');
                                             return (
-                                                <SuperUnifiedProviderV2>
+                                                <SuperUnifiedProvider>
                                                     <div data-testid="index-page">
                                                         <Home />
                                                     </div>
-                                                </SuperUnifiedProviderV2>
+                                                </SuperUnifiedProvider>
                                             );
                                         }}
                                     </Route>
@@ -363,10 +363,10 @@ function AppCore() {
 
                                     <Route path="/debug/editor-blocks">
                                         <div data-testid="editor-blocks-diagnostic-page">
-                                            {/* ✅ FASE 2: Migrado para SuperUnifiedProviderV2 */}
-                                            <SuperUnifiedProviderV2>
+                                            {/* ✅ FASE 2: Migrado para SuperUnifiedProvider (V2 module) */}
+                                            <SuperUnifiedProvider>
                                                 <EditorBlocksDiagnosticPage />
-                                            </SuperUnifiedProviderV2>
+                                            </SuperUnifiedProvider>
                                         </div>
                                     </Route>
 
