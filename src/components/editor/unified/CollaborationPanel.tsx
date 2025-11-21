@@ -87,7 +87,7 @@ const UsersList: React.FC<{ users: CollaborationUser[]; canManage: boolean; curr
                   {user.role === 'owner' ? 'Proprietário' : user.role === 'editor' ? 'Editor' : 'Visualizador'}
                 </div>
               </div>
-              {canManage && user.id !== currentUserId && (
+              {canManage && user.id !== currentUserId && onSelect && (
                 <button onClick={() => onSelect(user.id)} className="p-1 hover:bg-gray-200 rounded">
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
@@ -105,15 +105,15 @@ const ChatMessages: React.FC<{ messages: ChatMessage[] }> = React.memo(({ messag
       <div key={message.id} className="flex space-x-3">
         <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
           {message.userAvatar ? (
-            <img src={message.userAvatar} alt={message.userName} className="w-8 h-8 rounded-full" />
+            <img src={message.userAvatar} alt={message.userName || 'Usuário'} className="w-8 h-8 rounded-full" />
           ) : (
-            <span className="text-gray-600 text-sm">{message.userName.charAt(0).toUpperCase()}</span>
+            <span className="text-gray-600 text-sm">{(message.userName || 'U').charAt(0).toUpperCase()}</span>
           )}
         </div>
         <div className="flex-1">
           <div className="flex items-center space-x-2">
-            <span className="font-medium text-sm">{message.userName}</span>
-            <span className="text-xs text-gray-500">{new Date(message.timestamp).toLocaleTimeString()}</span>
+            <span className="font-medium text-sm">{message.userName || 'Anônimo'}</span>
+            <span className="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp).toLocaleTimeString() : '--:--'}</span>
           </div>
           <div className="text-sm text-gray-700 mt-1">{message.message}</div>
         </div>
@@ -197,7 +197,7 @@ const NotificationsList: React.FC<{ notifications: any[]; unreadCount: number; o
   </div>
 ));
 
-const SettingsPanel: React.FC<{ isConnected: boolean; lastSync: Date | null; conflictCount: number; canEdit: boolean; canDelete: boolean; canInvite: boolean; canManage: boolean; isSaving: boolean; sync: () => Promise<void>; resolveConflicts: () => Promise<void>; leaveSession: () => Promise<void>; }> = React.memo((props) => {
+const SettingsPanel: React.FC<{ isConnected: boolean; lastSync: Date | null; conflictCount: number; canEdit: boolean; canDelete: boolean; canInvite: boolean; canManage: boolean; isSaving: boolean; sync: () => Promise<void>; resolveConflicts: () => Promise<void>; leaveSession: () => Promise<boolean>; }> = React.memo((props) => {
   const { isConnected, lastSync, conflictCount, canEdit, canDelete, canInvite, canManage, isSaving, sync, resolveConflicts, leaveSession } = props;
   return (
     <div className="h-full flex flex-col">

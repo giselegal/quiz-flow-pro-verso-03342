@@ -17,7 +17,7 @@ import React, { useState, useMemo } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { useUnifiedVersioning } from '@/hooks/core/useUnifiedVersioning';
 import { UnifiedFunnel } from '@/services/UnifiedCRUDService';
-import { VersionSnapshot, VersionComparison } from '@/services/VersioningService';
+import type { VersionSnapshot, VersionComparison } from '@/services/versioningService';
 import { HistoryEntry } from '@/services/HistoryManager';
 
 // =============================================================================
@@ -77,10 +77,10 @@ export const VersioningPanel: React.FC<VersioningPanelProps> = ({
 
   const handleCreateSnapshot = async (type: 'manual' | 'milestone' = 'manual') => {
     try {
-      const description = type === 'milestone' 
+      const description = type === 'milestone'
         ? `Milestone: ${funnel?.name || 'Funnel'}`
         : undefined;
-      
+
       const snapshot = await versioning.createSnapshot(type, description);
       onSnapshotCreated?.(snapshot);
     } catch (error) {
@@ -254,32 +254,32 @@ const SnapshotsView: React.FC<{
   onCompare,
   canCompare,
 }) => {
-  return (
-    <div className="snapshots-view">
-      <div className="snapshots-header">
-        <h3>Snapshots Disponíveis</h3>
-        {selectedSnapshots.length === 2 && (
-          <button onClick={onCompare} className="btn-compare">
-            🔍 Comparar Versões
-          </button>
-        )}
-      </div>
+    return (
+      <div className="snapshots-view">
+        <div className="snapshots-header">
+          <h3>Snapshots Disponíveis</h3>
+          {selectedSnapshots.length === 2 && (
+            <button onClick={onCompare} className="btn-compare">
+              🔍 Comparar Versões
+            </button>
+          )}
+        </div>
 
-      <div className="snapshots-list">
-        {snapshots.map(snapshot => (
-          <SnapshotItem
-            key={snapshot.id}
-            snapshot={snapshot}
-            isSelected={selectedSnapshots.includes(snapshot.id)}
-            onSelect={() => onSelectSnapshot(snapshot.id)}
-            onDelete={() => onDeleteSnapshot(snapshot.id)}
-            onRestore={() => onRestoreSnapshot(snapshot.id)}
-          />
-        ))}
+        <div className="snapshots-list">
+          {snapshots.map(snapshot => (
+            <SnapshotItem
+              key={snapshot.id}
+              snapshot={snapshot}
+              isSelected={selectedSnapshots.includes(snapshot.id)}
+              onSelect={() => onSelectSnapshot(snapshot.id)}
+              onDelete={() => onDeleteSnapshot(snapshot.id)}
+              onRestore={() => onRestoreSnapshot(snapshot.id)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 const SnapshotItem: React.FC<SnapshotItemProps> = ({
   snapshot,
@@ -353,7 +353,7 @@ const HistoryView: React.FC<{
             key={entry.id}
             entry={entry}
             isSelected={false}
-            onSelect={() => {}}
+            onSelect={() => { }}
           />
         ))}
       </div>
@@ -448,26 +448,26 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ comparison, onClose }) 
       <div className="comparison-summary">
         <div className="summary-stat">
           <span className="label">Adicionados:</span>
-          <span className="value added">{comparison.summary.added}</span>
+          <span className="value added">{comparison.summary.blocksAdded}</span>
         </div>
         <div className="summary-stat">
           <span className="label">Modificados:</span>
-          <span className="value modified">{comparison.summary.modified}</span>
+          <span className="value modified">{comparison.summary.blocksModified}</span>
         </div>
         <div className="summary-stat">
           <span className="label">Excluídos:</span>
-          <span className="value deleted">{comparison.summary.deleted}</span>
+          <span className="value deleted">{comparison.summary.blocksRemoved}</span>
         </div>
         <div className="summary-stat">
-          <span className="label">Movidos:</span>
-          <span className="value moved">{comparison.summary.moved}</span>
+          <span className="label">Steps alterados:</span>
+          <span className="value moved">{comparison.summary.stepsChanged}</span>
         </div>
       </div>
 
       <div className="comparison-changes">
         <h4>Mudanças Detalhadas</h4>
         <div className="changes-list">
-          {comparison.changes.map(change => (
+          {comparison.changes.map((change: VersionComparison['changes'][number]) => (
             <div key={change.id} className="change-item">
               <div className="change-type">{change.type}</div>
               <div className="change-entity">{change.entity}</div>
