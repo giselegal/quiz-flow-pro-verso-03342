@@ -14,7 +14,7 @@ import {
   Star,
   ArrowRight,
 } from 'lucide-react';
-import { useAuth } from '@/contexts';
+import { useAuth } from '@/contexts/providers/SuperUnifiedProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export const Home: React.FC = () => {
@@ -257,12 +257,12 @@ export const Home: React.FC = () => {
         <section className="py-24 bg-[#0a0f1f]">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  Confiado por Líderes da Indústria
-                </h2>
-                <p className="text-slate-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
-                  Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
-                </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Confiado por Líderes da Indústria
+              </h2>
+              <p className="text-slate-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
+                Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
