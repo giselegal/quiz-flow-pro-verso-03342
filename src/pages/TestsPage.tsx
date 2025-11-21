@@ -19,8 +19,8 @@ export const TestsPage: React.FC = () => {
           <button
             onClick={() => setActiveTab('providers')}
             className={`px-4 py-2 font-semibold rounded-t-lg transition-colors ${activeTab === 'providers'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
           >
             🎉 Fase 2.1 - Providers Test
@@ -28,8 +28,8 @@ export const TestsPage: React.FC = () => {
           <button
             onClick={() => setActiveTab('crud')}
             className={`px-4 py-2 font-semibold rounded-t-lg transition-colors ${activeTab === 'crud'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
           >
             🔧 CRUD Tests
