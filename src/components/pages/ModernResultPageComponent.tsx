@@ -2,6 +2,24 @@ import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import type { BlockComponentProps } from '@/types/blocks';
+
+// Tipagem explícita das propriedades suportadas pelo bloco de página de resultado moderna.
+// Isso elimina uso implícito de any em block.properties e facilita validação no painel.
+interface ResultPageBlockProperties {
+  logoUrl?: string;
+  logoAlt?: string;
+  logoHeight?: string;
+  userName?: string;
+  primaryStyle?: 'elegante' | 'natural' | 'contemporaneo' | string; // string extra para tolerância a dados futuros
+  showStyleImage?: boolean;
+  showCharacteristics?: boolean;
+  showSecondaryStyles?: boolean;
+  ctaText?: string;
+  ctaUrl?: string;
+  backgroundColor?: string;
+  accentColor?: string;
+  textColor?: string;
+}
 import { Award, CheckCircle, Crown, Gift, ShoppingBag, Star, Users } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
@@ -33,7 +51,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
     backgroundColor = '#FFFBF7',
     accentColor = '#B89B7A',
     textColor = '#432818',
-  } = block.properties;
+  } = block.properties as ResultPageBlockProperties;
 
   const [isLoaded, setIsLoaded] = useState(false);
 

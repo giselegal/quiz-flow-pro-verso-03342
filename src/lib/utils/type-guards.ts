@@ -4,6 +4,9 @@
 
 import { StyleResult, QuizResult, QuizOption } from '@/types/quiz';
 
+// Guard para arrays não vazios
+export const isNonEmptyArray = <T>(value: any): value is T[] => Array.isArray(value) && value.length > 0;
+
 export const isStyleResult = (obj: any): obj is StyleResult => {
   return obj && typeof obj === 'object' && 'id' in obj && 'name' in obj;
 };
@@ -25,7 +28,11 @@ export const hasSecondaryStyles = (result: QuizResult | any): result is QuizResu
 };
 
 export const hasOptions = (question: any): question is { options: QuizOption[] } => {
-  return question?.options && Array.isArray(question.options);
+  return Array.isArray(question?.options) && question.options.length > 0;
+};
+
+export const hasMultiSelect = (question: any): question is { multiSelect: number } => {
+  return typeof question?.multiSelect === 'number' && question.multiSelect > 0;
 };
 
 export const safeGet = <T>(obj: any, path: string, defaultValue?: T): T | undefined => {
