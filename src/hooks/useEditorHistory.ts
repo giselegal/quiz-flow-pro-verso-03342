@@ -10,7 +10,7 @@
 
 import { useCallback, useMemo, useEffect } from 'react';
 // Migrado para SuperUnifiedProvider: removendo dependência do provider canônico
-import { useEditorState } from '@/contexts/editor/EditorStateProvider';
+import { useLegacySuperUnified } from '@/hooks/useLegacySuperUnified';
 import { editorMetrics } from '@/lib/utils/editorMetrics';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -45,14 +45,15 @@ export interface UseEditorHistoryReturn extends EditorHistoryState {
  * ```
  */
 export function useEditorHistory(): UseEditorHistoryReturn {
-  const superUnified = useEditorState();
+  // Usar hook legado agregador que expõe undo/redo e estado
+  const superUnified = useLegacySuperUnified();
 
-  // Novo histórico unificado via SuperUnifiedProvider (usa undo/redo internos)
   const { undo: providerUndo, redo: providerRedo, canUndo: providerCanUndo, canRedo: providerCanRedo } = superUnified;
 
-  // stepBlocks agora é indexado por número; adaptar caso futuro precise
+  // Snapshot de todos os blocos (caso futuro para métricas)
   const getAllStepBlocksSnapshot = useCallback(() => {
-    return superUnified.state.editor.stepBlocks;
+    // state.editor.stepBlocks indexado por número
+    return superUnified.state.editor.stepBlocks as Record<number, any[]>;
   }, [superUnified.state.editor.stepBlocks]);
 
   // Placeholder para compat: tamanho do histórico não exposto diretamente

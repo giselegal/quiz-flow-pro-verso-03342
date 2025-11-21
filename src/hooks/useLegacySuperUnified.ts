@@ -88,7 +88,7 @@ export interface LegacySuperUnifiedContext {
   // Persistência e operações de funil
   saveFunnel: () => Promise<{ success: boolean; error?: string }>;
   publishFunnel: (options?: any) => Promise<{ success: boolean; error?: string }>;
-  createFunnel: (name: string) => Promise<string>;
+  createFunnel: (name: string) => Promise<{ id: string }>;
   saveStepBlocks: (stepIndex: number) => Promise<{ success: boolean; error?: string }>;
   ensureAllDirtyStepsSaved?: () => Promise<void>;
 
@@ -201,8 +201,7 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
     publishFunnel,
     createFunnel: async (name: string) => {
       const id = await unifiedEditor.createFunnel(name);
-      // Compatibilidade: retornar objeto com id para consumidores que esperam .id
-      return { id } as any; // any para manter flexibilidade durante migração
+      return { id };
     },
     saveStepBlocks,
     ensureAllDirtyStepsSaved,
