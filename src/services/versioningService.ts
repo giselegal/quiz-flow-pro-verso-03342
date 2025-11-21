@@ -61,14 +61,28 @@ export interface VersioningStats {
 // =============================================================================
 
 export const versioningService = {
-    createSnapshot: async (): Promise<VersionSnapshot> => {
+    createSnapshot: async (
+        funnel: UnifiedFunnel,
+        type: 'auto' | 'manual' | 'milestone' = 'manual',
+        description?: string
+    ): Promise<VersionSnapshot> => {
         throw new Error('VersioningService not implemented yet');
     },
-    getSnapshot: (): VersionSnapshot | null => null,
-    deleteSnapshot: async (): Promise<boolean> => false,
+
+    getSnapshot: (id: string): VersionSnapshot | null => null,
+
+    getSnapshots: (): VersionSnapshot[] => [],
+
     getAllSnapshots: (): VersionSnapshot[] => [],
-    compareVersions: (): VersionComparison | null => null,
-    restoreSnapshot: async (): Promise<UnifiedFunnel | null> => null,
+
+    getLatestSnapshot: (): VersionSnapshot | null => null,
+
+    deleteSnapshot: async (id: string): Promise<boolean> => false,
+
+    compareVersions: (idA: string, idB: string): VersionComparison | null => null,
+
+    restoreSnapshot: async (id: string): Promise<UnifiedFunnel | null> => null,
+
     getStats: (): VersioningStats => ({
         totalSnapshots: 0,
         autoSnapshots: 0,

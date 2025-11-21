@@ -4,11 +4,7 @@
 declare module '*';
 
 // Helpful narrow shims for commonly missing internal modules (optional overrides)
-declare module '@/services/versioningService' {
-    const versioningService: any;
-    export { versioningService };
-    export default versioningService;
-}
+// REMOVED: versioningService module declaration - now has proper TypeScript implementation
 
 declare module './LegacyLoadingAdapters' {
     export function checkLegacyLoadingUsage(...args: any[]): any;
