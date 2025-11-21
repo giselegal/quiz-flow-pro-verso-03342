@@ -14,7 +14,7 @@
 
 import { useCallback } from 'react';
 import { useUnifiedCRUD } from '@/contexts/data/UnifiedCRUDProvider';
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/logger';
 import { generateBlockId } from '@/lib/utils/idGenerator';
@@ -58,7 +58,7 @@ export function useBlockMutations(
 ): UseBlockMutationsReturn {
   const { stepKey, onSuccess, onError } = options;
   const crud = useUnifiedCRUD();
-  const superUnified = useSuperUnified();
+  const superUnified = useEditorState();
 
   /**
    * Atualizar bloco em todas as estruturas

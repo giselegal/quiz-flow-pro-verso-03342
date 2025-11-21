@@ -18,7 +18,7 @@
  * @version 2.0.0 - Consolidação Fase 2
  */
 
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useEditorState } from '@/contexts/editor/EditorStateProvider';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
 import { useMemo, useCallback } from 'react';
 
@@ -96,7 +96,7 @@ export function useEditor(): EditorContextValueMigrated;
 export function useEditor(options: { optional: true }): EditorContextValueMigrated | undefined;
 export function useEditor(options?: { optional?: boolean }): EditorContextValueMigrated | undefined {
   try {
-    const unified = useSuperUnified();
+    const unified = useEditorState();
     
     // Helper: normalize step index
     const normalizeStepIndex = useCallback((stepIndex: number | string): number => {

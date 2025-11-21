@@ -14,7 +14,7 @@ import {
   Star,
   ArrowRight,
 } from 'lucide-react';
-import { useAuth } from '@/contexts/providers/SuperUnifiedProvider';
+import { useAuth } from '@/contexts/auth/AuthProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export const Home: React.FC = () => {

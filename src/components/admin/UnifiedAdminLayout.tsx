@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useAuth } from '@/contexts/auth/AuthProvider';
+import { useNavigation } from '@/contexts/navigation/NavigationProvider';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useUserName } from '@/hooks/useUserName';
 
@@ -60,20 +61,24 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 }) => {
     const [activeView, setActiveView] = useState(currentView);
     const [syncStats, setSyncStats] = useState(EditorDashboardSyncService.getSyncStats());
-    const { state } = useSuperUnified();
+    const { user } = useAuth();
+    const navigation = useNavigation();
     const displayName = useUserName();
 
-    // Map SuperUnifiedProvider theme to expected format
-    const theme = React.useMemo(() => ({
-        colors: {
-            background: state.theme.theme === 'dark' ? '#1a1a1a' : '#ffffff',
-            text: state.theme.theme === 'dark' ? '#F3F4F6' : '#1F2937',
-            detailsMinor: state.theme.secondaryColor,
-            buttons: state.theme.primaryColor,
-            glowEffect: state.theme.primaryColor,
-            accent: state.theme.secondaryColor,
-        },
-    }), [state.theme]);
+    // Map theme providers to expected format
+    const theme = React.useMemo(() => {
+        const isDark = document.documentElement.classList.contains('dark');
+        return {
+            colors: {
+                background: isDark ? '#1a1a1a' : '#ffffff',
+                text: isDark ? '#F3F4F6' : '#1F2937',
+                detailsMinor: 'var(--secondary)',
+                buttons: 'var(--primary)',
+                glowEffect: 'var(--primary)',
+                accent: 'var(--secondary)',
+            },
+        };
+    }, []);
 
     // Computa iniciais para avatar simples
     const initials = React.useMemo(() => {

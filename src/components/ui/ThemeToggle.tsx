@@ -8,7 +8,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
-import { useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
+import { useTheme } from '@/contexts/theme/ThemeProvider';
 
 interface ThemeToggleProps {
     className?: string;
@@ -19,19 +19,19 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     className = '',
     size = 'md',
 }) => {
-    const { state, setTheme } = useSuperUnified();
-    const isLight = state.theme.theme === 'light';
-    
+    const { theme, setTheme, primaryColor, secondaryColor } = useTheme();
+    const isLight = theme === 'light';
+
     const toggleTheme = () => {
         setTheme(isLight ? 'dark' : 'light');
     };
-    
+
     // Theme colors for styling
     const themeColors = {
-        buttons: state.theme.primaryColor,
-        detailsMinor: state.theme.secondaryColor,
+        buttons: primaryColor,
+        detailsMinor: secondaryColor,
         text: isLight ? '#1F2937' : '#F3F4F6',
-        glowEffect: state.theme.primaryColor,
+        glowEffect: primaryColor,
     };
 
     const sizeClasses = {

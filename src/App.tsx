@@ -44,7 +44,7 @@ import { PWANotifications } from './components/PWANotifications';
 import UnifiedAppProvider from '@/contexts/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
+import { SuperUnifiedProviderV2 } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { appLogger } from '@/lib/utils/appLogger';
 import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
 
@@ -229,11 +229,11 @@ function AppCore() {
                                         {() => {
                                             appLogger.info('🏠 Home route matched');
                                             return (
-                                                <SuperUnifiedProvider>
+                                                <SuperUnifiedProviderV2>
                                                     <div data-testid="index-page">
                                                         <Home />
                                                     </div>
-                                                </SuperUnifiedProvider>
+                                                </SuperUnifiedProviderV2>
                                             );
                                         }}
                                     </Route>
@@ -363,10 +363,10 @@ function AppCore() {
 
                                     <Route path="/debug/editor-blocks">
                                         <div data-testid="editor-blocks-diagnostic-page">
-                                            {/* ✅ FASE 2: Migrado para SuperUnifiedProvider */}
-                                            <SuperUnifiedProvider autoLoad={false} debugMode={true}>
+                                            {/* ✅ FASE 2: Migrado para SuperUnifiedProviderV2 */}
+                                            <SuperUnifiedProviderV2>
                                                 <EditorBlocksDiagnosticPage />
-                                            </SuperUnifiedProvider>
+                                            </SuperUnifiedProviderV2>
                                         </div>
                                     </Route>
 
