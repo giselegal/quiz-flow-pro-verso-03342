@@ -859,6 +859,29 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         } catch { void 0; }
     }, [state.editor.currentStep, state.currentFunnel?.id]); // ✅ FIX: Remover state.editor.stepBlocks das dependências
 
+    // 🆕 LAZY PREFETCH ADJACENT STEPS (WAVE 2): Carrega em background passos vizinhos ainda não vistos
+    useEffect(() => {
+        const current = state.editor.currentStep;
+        if (!current) return;
+        const funnelId = state.currentFunnel?.id;
+        const adjacent = [current - 1, current + 1].filter(n => n >= 1 && n <= state.editor.totalSteps);
+
+        adjacent.forEach(stepIdx => {
+            // Só prefetch se ainda não temos key no mapa (evita sobrescrever vazio explícito)
+            const hasLoadedKey = Object.prototype.hasOwnProperty.call(state.editor.stepBlocks, stepIdx);
+            if (hasLoadedKey) return;
+            const stepId = `step-${String(stepIdx).padStart(2, '0')}`;
+            hierarchicalTemplateSource.getPrimary(stepId, funnelId).then(res => {
+                if (res?.data && Array.isArray(res.data)) {
+                    dispatch({ type: 'SET_STEP_BLOCKS', payload: { stepIndex: stepIdx, blocks: res.data } });
+                    if (debugMode) logger.debug('[LazyPrefetch] Adjacent step pré-carregado', { stepIdx, count: res.data.length });
+                }
+            }).catch(err => {
+                if (debugMode) logger.debug('[LazyPrefetch] Falha prefetch silencioso', { stepIdx, error: err?.message });
+            });
+        });
+    }, [state.editor.currentStep, state.editor.totalSteps, state.currentFunnel?.id, state.editor.stepBlocks, debugMode]);
+
     // ✅ FIX: Solução robusta para evitar loop infinito - usando refs e memoização
     const processedStepRef = useRef<number | null>(null);
     const loadingStepRef = useRef<number | null>(null);
