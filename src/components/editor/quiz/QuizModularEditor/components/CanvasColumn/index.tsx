@@ -1,7 +1,7 @@
 // 🎨 CANVAS COLUMN - Integração com Universal Block Renderer
 // ✅ FASE 4.2: Skeleton loading states adicionado
 // ✅ SPRINT 1: Event listener leak fix + auto metrics
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import {
     useSafeDroppable,
     SafeSortableContext,
@@ -32,7 +32,7 @@ export type CanvasColumnProps = {
     onLoadTemplate?: () => void;
 };
 
-function SortableBlockItem({
+const SortableBlockItem = React.memo(function SortableBlockItem({
     block,
     index,
     isSelected,
@@ -197,9 +197,17 @@ function SortableBlockItem({
             )}
         </li>
     );
-}
+}, (prev, next) => (
+    prev.block === next.block &&
+    prev.index === next.index &&
+    prev.isSelected === next.isSelected &&
+    prev.onSelect === next.onSelect &&
+    prev.onMoveBlock === next.onMoveBlock &&
+    prev.onRemoveBlock === next.onRemoveBlock &&
+    prev.onUpdateBlock === next.onUpdateBlock
+));
 
-export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect, hasTemplate, onLoadTemplate }: CanvasColumnProps) {
+function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect, hasTemplate, onLoadTemplate }: CanvasColumnProps) {
     const [error, setError] = useState<string | null>(null);
     const [tick, setTick] = useState(0); // força re-render quando necessário
 
@@ -209,8 +217,10 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         enabled: !!currentStepKey,
     });
 
+    // Selecionar blocos com memoização: se arrays são estritamente iguais ou conteúdo id/length igual, reusa referência
     const blocks: Block[] | null = useMemo(() => {
-        return (fetchedBlocks ?? blocksFromProps ?? null) as Block[] | null;
+        const source = (fetchedBlocks ?? blocksFromProps ?? null) as Block[] | null;
+        return source ? [...source] : source; // shallow copy para evitar mutações externas
     }, [fetchedBlocks, blocksFromProps, tick]);
 
     // ✅ SPRINT 1: Auto metrics tracking
@@ -345,7 +355,7 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
             )}
             <SafeSortableContext items={blocks.map(b => b.id)}>
                 <ul className="space-y-1">
-                    {normalizeBlocksData(blocks).map((b, idx) => {
+                    {useMemo(() => normalizeBlocksData(blocks), [blocks]).map((b, idx) => {
                         normalizerLogger.debug(`Rendering normalized block ${b.type}`, {
                             original: blocks[idx],
                             normalized: b
@@ -381,3 +391,15 @@ export default function CanvasColumn({ currentStepKey, blocks: blocksFromProps, 
         </div>
     );
 }
+
+// Export memoizado para reduzir re-renders do canvas em updates externos que não afetam props relevantes
+export default React.memo(CanvasColumnInner, (prev, next) => (
+    prev.currentStepKey === next.currentStepKey &&
+    prev.selectedBlockId === next.selectedBlockId &&
+    prev.blocks === next.blocks &&
+    prev.onRemoveBlock === next.onRemoveBlock &&
+    prev.onMoveBlock === next.onMoveBlock &&
+    prev.onUpdateBlock === next.onUpdateBlock &&
+    prev.onBlockSelect === next.onBlockSelect &&
+    prev.hasTemplate === next.hasTemplate
+));
