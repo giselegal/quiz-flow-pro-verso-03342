@@ -79,9 +79,11 @@ export const TestsPage: React.FC = () => {
                 automaticamente limpos após a execução. Nenhum dado de produção é afetado.
               </p>
             </div>
-          </div>
+          </>
+        )}
       </div>
-      );
+    </div>
+  );
 };
 
-      export default TestsPage;
+export default TestsPage;
