@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Settings, X, Edit3, Save, RotateCcw, ChevronDown, Info, Sparkles, Code2, AlertTriangle } from 'lucide-react';
+import { Settings, X, Edit3, Save, RotateCcw, ChevronDown, Info, Sparkles, Code2, AlertTriangle, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
@@ -17,6 +17,7 @@ import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
 import { onBlockUpdate as subscribeToBlockUpdates } from '@/lib/utils/editorEventBus';
 import { normalizeBlockData, createSynchronizedBlockUpdate, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
 import { appLogger } from '@/lib/utils/appLogger';
+import { toast } from '@/components/ui/use-toast';
 
 interface PropertiesColumnProps {
     selectedBlock?: Block | undefined; // ✅ WAVE 1: Agora opcional para suportar fallback
@@ -46,6 +47,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['basic']));
     const [showJsonEditor, setShowJsonEditor] = React.useState(false);
     const [hasError, setHasError] = React.useState(false);
+    const [isSaving, setIsSaving] = React.useState(false); // 🎯 FASE 1: Estado de salvamento
     const prevSelectedIdRef = React.useRef<string | null>(null);
 
     // 🔍 DEBUG CRÍTICO: Log TUDO que o painel recebe
@@ -195,13 +197,16 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         console.groupEnd();
     }, [editedProperties, isDirty]);
 
-    const handleSave = useCallback(() => {
+    const handleSave = useCallback(async () => {
         console.group('💾 [PropertiesColumn] handleSave');
         console.log('selectedBlock:', selectedBlock);
         console.log('isDirty:', isDirty);
         console.log('editedProperties:', editedProperties);
 
         if (selectedBlock && isDirty) {
+            // 🎯 FASE 1: Feedback visual - INÍCIO
+            setIsSaving(true);
+
             try {
                 // ✅ SINCRONIZAÇÃO BIDIRECIONAL - Garante properties ↔ content sempre alinhados
                 const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, editedProperties);
@@ -213,8 +218,19 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 });
 
                 onBlockUpdate(selectedBlock.id, synchronizedUpdate);
+
+                // Simular delay mínimo para feedback visual (50ms)
+                await new Promise(resolve => setTimeout(resolve, 50));
+
                 setIsDirty(false);
                 setHasError(false);
+
+                // 🎯 FASE 1: Toast de sucesso
+                toast({
+                    title: "✅ Propriedades salvas",
+                    description: `Bloco ${selectedBlock.type} atualizado com sucesso`,
+                    duration: 2000,
+                });
 
                 normalizerLogger.debug('Block saved with synchronized data', {
                     blockId: selectedBlock.id,
@@ -223,9 +239,25 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 });
 
                 console.log('✅ onBlockUpdate chamado, isDirty = false');
+                appLogger.info('🎯 [FASE1] Propriedades salvas com sucesso:', {
+                    data: [{ blockId: selectedBlock.id, type: selectedBlock.type }]
+                });
             } catch (error) {
                 console.error('❌ Erro ao salvar propriedades:', error);
                 setHasError(true);
+
+                // 🎯 FASE 1: Toast de erro
+                toast({
+                    title: "❌ Erro ao salvar",
+                    description: error instanceof Error ? error.message : "Erro desconhecido ao salvar propriedades",
+                    variant: "destructive",
+                    duration: 4000,
+                });
+
+                appLogger.error('❌ [FASE1] Erro ao salvar propriedades:', error instanceof Error ? error : new Error(String(error)));
+            } finally {
+                // 🎯 FASE 1: Feedback visual - FIM
+                setIsSaving(false);
             }
         } else {
             console.warn('❌ Não salvou:', {
@@ -429,15 +461,24 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                             <div className="flex gap-2 sticky bottom-0 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4">
                                 <Button
                                     onClick={handleSave}
-                                    disabled={!isDirty}
+                                    disabled={!isDirty || isSaving}
                                     className={cn(
                                         "flex-1 gap-2",
-                                        isDirty && "animate-pulse"
+                                        isDirty && !isSaving && "animate-pulse"
                                     )}
                                     size="sm"
                                 >
-                                    <Save className="w-4 h-4" />
-                                    {isDirty ? 'Salvar Alterações' : 'Salvo'}
+                                    {isSaving ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Salvando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Save className="w-4 h-4" />
+                                            {isDirty ? 'Salvar Alterações' : 'Salvo'}
+                                        </>
+                                    )}
                                 </Button>
                                 <Tooltip>
                                     <TooltipTrigger asChild>

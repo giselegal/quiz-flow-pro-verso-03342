@@ -379,6 +379,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             return;
         }
 
+        // 🎯 FASE 1 CRÍTICO: Limpar selectedBlockId ao mudar de step (evita bloco órfão)
+        console.log('🧹 [handleSelectStep] Limpando selectedBlockId ao navegar para:', key);
+        setSelectedBlock(null);
+        appLogger.info(`🧹 [FASE1] selectedBlockId resetado ao navegar: ${currentStepKey} → ${key}`);
+
         // 🎯 WAVE 1 FIX: Atualizar UI IMEDIATAMENTE (não bloqueia)
         if (loadedTemplate?.steps?.length) {
             const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
@@ -414,7 +419,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     appLogger.warn(`⚠️ [WAVE1] Erro ao carregar step ${key}:`, { data: [error] });
                 });
         }
-    }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep, props.templateId, resourceId]);
+    }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep, setSelectedBlock, props.templateId, resourceId]);
 
     const handleAddBlock = useCallback((type: string) => {
         const stepIndex = safeCurrentStep;
