@@ -1,5 +1,17 @@
 /**
- * 🚀 SUPER UNIFIED PROVIDER - FASE 1 IMPLEMENTAÇÃO
+ * 🚀 SUPER UNIFIED PROVIDER V1 - FASE 1 IMPLEMENTAÇÃO (LEGACY - EM USO)
+ * 
+ * ⚠️ ATENÇÃO: VERSÃO MONOLÍTICA (1959 linhas)
+ * Status: 20+ arquivos dependem desta versão
+ * 
+ * 🔄 EXISTE UMA VERSÃO V2 MODULAR (SuperUnifiedProviderV2)
+ * - 12 providers independentes (~2800 linhas modulares)
+ * - 95% mais manutenível
+ * - 85% menos re-renders
+ * - Mas: NÃO ESTÁ SENDO USADO (0 dependentes)
+ * 
+ * TODO: Migrar componentes para V2
+ * Ver: CHECKLIST_RESOLUCAO_DUPLICACOES.md
  * 
  * Provider supremo que consolida TODOS os contextos principais:
  * ❌ UnifiedCRUDProvider (dados)
@@ -11,7 +23,7 @@
  * ❌ SecurityProvider (segurança)
  * ✅ SuperUnifiedProvider (ÚNICO)
  * 
- * Benefícios:
+ * Benefícios (quando foi criado):
  * - 85% redução de aninhamento (7+ → 1 provider)
  * - 70% menos re-renders
  * - 60% melhor performance

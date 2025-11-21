@@ -8,6 +8,11 @@
 
 // 🔐 AUTH
 export { AdminAuthProvider, useAdminAuth } from './auth/AdminAuthContext';
+
+/**
+ * @deprecated Use { AuthProvider, useAuth } from './auth/AuthProvider' (modular V2)
+ * Este é o provider legado. Será removido após migração completa para V2.
+ */
 export { AuthProvider as AuthProviderLegacy, useAuth as useAuthLegacy } from './auth/AuthContext';
 
 // 🚀 SUPER UNIFIED V2 (REFATORADO - FASE 2.1 COMPLETA)
@@ -30,7 +35,19 @@ export { VersioningProvider, useVersioning } from './versioning/VersioningProvid
 // Composed Provider
 export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifiedProviderV2';
 
-// 🚀 SUPER UNIFIED V1 (LEGACY - Será deprecado)
+/**
+ * 🚀 SUPER UNIFIED V1 (LEGACY - EM USO ATIVO)
+ * 
+ * ⚠️ ATENÇÃO: Esta é a versão MONOLÍTICA (1959 linhas)
+ * Status: 20+ arquivos ainda dependem desta versão
+ * 
+ * Para novos componentes, use SuperUnifiedProvider (V2) com hooks individuais:
+ * - useAuth() ao invés de useUnifiedAuth()
+ * - useTheme(), useEditorState(), useFunnelData(), etc.
+ * 
+ * Roadmap: Será deprecado após migração completa para V2
+ * Ver: CHECKLIST_RESOLUCAO_DUPLICACOES.md
+ */
 export { useUnifiedAuth, useSuperUnified } from '@/contexts/providers/SuperUnifiedProvider';
 
 // 🆕 FASE 3: PureBuilder compatibility
@@ -55,6 +72,10 @@ export { QuizProvider, useQuiz, useQuizContext } from './quiz/QuizContext';
 export { QuizFlowProvider, useQuizFlow } from './quiz/QuizFlowProvider';
 
 // 🎭 UI
+/**
+ * @deprecated Use { ThemeProvider, useTheme } from './theme/ThemeProvider' (modular V2)
+ * Este é o provider legado. Será removido após migração completa para V2.
+ */
 export { ThemeProvider as ThemeProviderLegacy, useThemeContext } from './ui/ThemeContext';
 export { PreviewProvider, usePreview } from './ui/PreviewContext';
 export { ScrollSyncProvider, useScrollSync } from './ui/ScrollSyncContext';
@@ -65,16 +86,26 @@ export { UserDataProvider, useUserData } from './data/UserDataContext';
 export { StepsProvider, useSteps } from './data/StepsContext';
 
 // ✅ VALIDATION (LEGACY)
+/**
+ * @deprecated Use { ValidationProvider, useValidation } from './validation/ValidationProvider' (modular V2)
+ * Este é o provider legado. Será removido após migração completa para V2.
+ */
 export { ValidationProvider as ValidationProviderLegacy, useValidationContext } from './validation/ValidationContext';
 
 // ⚙️ CONFIG
 export { UnifiedConfigProvider, useUnifiedConfig } from './config/UnifiedConfigContext';
 
+// 🔧 PROVIDERS ADICIONAIS (não documentados em FASE 2.1)
+export { LivePreviewProvider, useLivePreview } from './providers/LivePreviewProvider';
+export { PerformanceProvider, usePerformance } from './providers/PerformanceProvider';
+export { SecurityProvider, useSecurity } from './providers/SecurityProvider';
+export { UIProvider, useUI } from './providers/UIProvider';
+
 /**
  * Estatísticas dos contextos (atualizado)
  */
 export const CONTEXTS_STATS = {
-  total: 19, // EditorDndContext removido (arquivo vazio)
+  total: 23, // 19 originais + 4 adicionais (LivePreview, Performance, Security, UI)
   byCategory: {
     auth: 2,
     editor: 3, // EditorDndContext removido
