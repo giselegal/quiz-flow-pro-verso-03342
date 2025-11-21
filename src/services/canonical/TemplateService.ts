@@ -745,11 +745,11 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   /**
-   * 🔍 Detectar número de steps do template lendo master.v3.json
+   * 🔍 Detectar número de steps do template lendo arquivo consolidado
    */
   private async detectTemplateSteps(templateId: string): Promise<number> {
     try {
-      const masterPath = `/templates/funnels/${templateId}/master.v3.json`;
+      const masterPath = `/templates/quiz21-complete.json`;
       const response = await fetch(masterPath);
 
       if (!response.ok) {

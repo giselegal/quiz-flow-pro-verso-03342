@@ -109,10 +109,10 @@ export const useTemplateConfig = (stepNumber: number) => {
       const primary = await hierarchicalTemplateSource.getPrimary(stepId);
       const blocks = primary.data || [];
 
-      // 2. Carregar master.v3.json para metadata/design (único fetch)
+      // 2. Usar quiz21-complete.json consolidado (master.v3.json não existe mais)
       let master: any = null;
       try {
-        const masterResp = await fetch('/templates/funnels/quiz21StepsComplete/master.v3.json', { cache: 'no-cache' });
+        const masterResp = await fetch('/templates/quiz21-complete.json', { cache: 'no-cache' });
         if (masterResp.ok) {
           master = await masterResp.json();
         }
