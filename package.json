@@ -62,6 +62,8 @@
     "migrate:logs": "node scripts/migrate-logs.mjs 'src/components/editor/**/*.tsx'",
     "guard:schemas": "node scripts/lint/forbid-expanded-schemas-import.mjs",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "check:architecture": "bash scripts/check-architecture.sh",
+    "check:duplications": "echo '📚 Ver: ANALISE_ESTRUTURAS_DUPLICADAS.md' && npm run check:architecture",
     "type-check": "tsc --noEmit -p tsconfig.typecheck.json",
     "format:editor": "prettier --write \"src/components/editor/**/*.{ts,tsx}\"",
     "format:context": "prettier --write \"src/context/**/*.{ts,tsx}\"",
