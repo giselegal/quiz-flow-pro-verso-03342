@@ -1,4 +1,5 @@
-import { UnifiedVisualEditor, EditorTab } from '@/components/editor/unified-alt/UnifiedVisualEditor';
+// Removido import de EditorTab (namespace incorreto). Usar string union diretamente.
+import { UnifiedVisualEditor } from '@/components/editor/unified-alt/UnifiedVisualEditor';
 import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 
 export default {
@@ -49,7 +50,7 @@ export default {
       <div className="h-screen w-full">
         <UnifiedVisualEditor
           primaryStyle={primaryStyle}
-          initialActiveTab={props.initialTab as EditorTab}
+          initialActiveTab={props.initialTab as 'quiz' | 'result' | 'sales'}
         />
       </div>
     );

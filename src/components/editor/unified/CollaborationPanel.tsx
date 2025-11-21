@@ -29,6 +29,8 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { useUnifiedCollaboration } from '@/hooks/core/useUnifiedCollaboration';
+import type { CollaborationUser } from '@/services/CollaborationService';
+import type { ChatMessage } from '@/services/NotificationService';
 
 interface CollaborationPanelProps {
   funnelId: string;
@@ -40,22 +42,7 @@ interface CollaborationPanelProps {
   onClose: () => void;
 }
 
-// Tipos explícitos para usuários e mensagens de chat
-interface CollaborationUser {
-  id: string;
-  name?: string;
-  role: 'owner' | 'editor' | 'viewer';
-  avatar?: string;
-  isOnline?: boolean;
-}
-
-interface ChatMessage {
-  id: string;
-  userAvatar?: string;
-  userName: string;
-  timestamp: string;
-  message: string;
-}
+// Tipos agora importados de serviços centrais (unificação de modelo de colaboração)
 
 // Subcomponentes memoizados para reduzir re-render do painel principal
 const UsersList: React.FC<{ users: CollaborationUser[]; canManage: boolean; currentUserId: string; onSelect: (id: string) => void; canInvite: boolean; onInvite: () => void; activeCount: number }>
