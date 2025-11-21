@@ -34,7 +34,7 @@ import {
 // Import lazy para evitar import estático de editor/* no runtime de produção
 // ✅ Migrado: SuperUnifiedProvider (provider unificado atual)
 const EditorProviderLazy = React.lazy(() =>
-    import('@/contexts/providers/SuperUnifiedProvider').then(m => ({
+    import('@/contexts/providers/SuperUnifiedProviderV2').then(m => ({
         default: m.SuperUnifiedProvider
     }))
 );

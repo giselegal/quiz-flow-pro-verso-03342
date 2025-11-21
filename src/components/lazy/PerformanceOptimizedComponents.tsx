@@ -20,7 +20,7 @@ import { appLogger } from '@/lib/utils/appLogger';
 
 // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
 const LazyEditorProvider = lazy(() =>
-    import('@/contexts/providers/SuperUnifiedProvider').then(module => ({
+    import('@/contexts/providers/SuperUnifiedProviderV2').then(module => ({
         default: module.SuperUnifiedProvider,
     })),
 );
@@ -129,7 +129,7 @@ export const preloadCriticalComponents = () => {
     // Preload dos componentes mais usados após 2s de idle
     const preloadTimer = setTimeout(() => {
         // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
-        import('@/contexts/providers/SuperUnifiedProvider');
+        import('@/contexts/providers/SuperUnifiedProviderV2');
     }, 2000);
 
     return () => clearTimeout(preloadTimer);
