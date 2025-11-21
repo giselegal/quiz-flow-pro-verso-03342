@@ -329,11 +329,11 @@ describe('PreviewPanel Visualization Modes', () => {
   describe('Block Type Normalization', () => {
     it('should normalize different block types correctly', () => {
       const mixedBlocks = [
-        { id: 'block-1', type: 'heading', properties: { text: 'Heading' }, order: 0 },
-        { id: 'block-2', type: 'btn', properties: { text: 'Button' }, order: 1 },
-        { id: 'block-3', type: 'cta', properties: { text: 'CTA' }, order: 2 },
-        { id: 'block-4', type: 'quiz-options', properties: { options: [{ text: 'Option 1' }] }, order: 3 },
-        { id: 'block-5', type: 'progress-header', properties: { currentStep: 1, totalSteps: 21 }, order: 4 }
+        { id: 'block-1', type: 'heading' as const, properties: { text: 'Heading' }, content: {}, order: 0 },
+        { id: 'block-2', type: 'button' as const, properties: { text: 'Button' }, content: {}, order: 1 },
+        { id: 'block-3', type: 'cta' as const, properties: { text: 'CTA' }, content: {}, order: 2 },
+        { id: 'block-4', type: 'multiple-choice' as const, properties: { options: [{ text: 'Option 1' }] }, content: {}, order: 3 },
+        { id: 'block-5', type: 'quiz-header' as const, properties: { currentStep: 1, totalSteps: 21 }, content: {}, order: 4 }
       ]
 
       render(
