@@ -208,6 +208,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
 ));
 
 function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect, hasTemplate, onLoadTemplate }: CanvasColumnProps) {
+    // ✅ CRITICAL FIX: Todos os hooks devem vir ANTES de qualquer return condicional
     const [error, setError] = useState<string | null>(null);
     const [tick, setTick] = useState(0); // força re-render quando necessário
 
@@ -273,7 +274,7 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
         else setError(null);
     }, [queryError]);
 
-
+    // ✅ CRITICAL FIX: Returns condicionais agora vêm DEPOIS de todos os hooks
 
     if (!currentStepKey) {
         return (
