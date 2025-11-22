@@ -322,7 +322,7 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                         onOpenProperties={() => rest.onOpenProperties?.(block.id)}
                         isDraggable={true}
                     >
-                        <QuizOfferHeroBlock properties={(block as any).properties || {}} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />
+                        <QuizOfferHeroBlock block={block} properties={(block as any).properties || {}} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />
                     </SelectableBlock>
                 );
             case 'offer-hero':

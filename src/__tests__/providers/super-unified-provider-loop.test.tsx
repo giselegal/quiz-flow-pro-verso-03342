@@ -59,21 +59,7 @@ describe('🧪 SuperUnifiedProvider - Teste de Loop Infinito', () => {
 
     it('✅ NÃO deve causar loop infinito ao carregar steps', async () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider
-                debugMode={false}
-                initialData={{
-                    id: 'test-funnel',
-                    name: 'Test Funnel',
-                    user_id: null,
-                    pages: Array.from({ length: 21 }, (_, i) => ({
-                        id: `page-${i + 1}`,
-                        funnel_id: 'test-funnel',
-                        page_type: 'quiz-step',
-                        page_order: i + 1,
-                        blocks: []
-                    }))
-                }}
-            >
+            <SuperUnifiedProvider>
                 {children}
             </SuperUnifiedProvider>
         );
@@ -105,21 +91,7 @@ describe('🧪 SuperUnifiedProvider - Teste de Loop Infinito', () => {
 
     it('✅ NÃO deve causar loop ao mudar de step', async () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider
-                debugMode={false}
-                initialData={{
-                    id: 'test-funnel',
-                    name: 'Test Funnel',
-                    user_id: null,
-                    pages: Array.from({ length: 21 }, (_, i) => ({
-                        id: `page-${i + 1}`,
-                        funnel_id: 'test-funnel',
-                        page_type: 'quiz-step',
-                        page_order: i + 1,
-                        blocks: []
-                    }))
-                }}
-            >
+            <SuperUnifiedProvider>
                 {children}
             </SuperUnifiedProvider>
         );
@@ -161,21 +133,7 @@ describe('🧪 SuperUnifiedProvider - Teste de Loop Infinito', () => {
 
     it('✅ NÃO deve causar loop ao adicionar bloco', async () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider
-                debugMode={false}
-                initialData={{
-                    id: 'test-funnel',
-                    name: 'Test Funnel',
-                    user_id: null,
-                    pages: Array.from({ length: 21 }, (_, i) => ({
-                        id: `page-${i + 1}`,
-                        funnel_id: 'test-funnel',
-                        page_type: 'quiz-step',
-                        page_order: i + 1,
-                        blocks: []
-                    }))
-                }}
-            >
+            <SuperUnifiedProvider>
                 {children}
             </SuperUnifiedProvider>
         );
@@ -226,21 +184,7 @@ describe('🧪 SuperUnifiedProvider - Performance', () => {
         const startTime = performance.now();
 
         const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SuperUnifiedProvider
-                debugMode={false}
-                initialData={{
-                    id: 'test-funnel',
-                    name: 'Test Funnel',
-                    user_id: null,
-                    pages: Array.from({ length: 21 }, (_, i) => ({
-                        id: `page-${i + 1}`,
-                        funnel_id: 'test-funnel',
-                        page_type: 'quiz-step',
-                        page_order: i + 1,
-                        blocks: []
-                    }))
-                }}
-            >
+            <SuperUnifiedProvider>
                 {children}
             </SuperUnifiedProvider>
         );
