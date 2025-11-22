@@ -1,5 +1,6 @@
 /**
  * �� TEMPLATE SERVICE - MIGRATED TO IMPROVED SYSTEM
+ * @legacy DEPRECATED - Use @/services/TemplateService (oficial) ao invés deste
  * 
  * IMPORTANTE: Este arquivo foi migrado para usar o novo improvedFunnelSystem
  * com validação completa, gerenciamento de erros padronizado e performance otimizada.

@@ -1,0 +1,168 @@
+{
+  "metadata": {
+    "id": "example-quiz-fashion",
+    "name": "Quiz de Estilo Fashion",
+    "description": "Descubra seu estilo pessoal através de perguntas sobre preferências e personalidade",
+    "category": "quiz",
+    "tags": ["fashion", "style", "personality", "quiz"],
+    "version": "1.0.0",
+    "createdAt": "2025-11-22T00:00:00.000Z",
+    "updatedAt": "2025-11-22T00:00:00.000Z",
+    "author": "CaktoQuiz Team",
+    "thumbnailUrl": "https://example.com/thumbnails/fashion-quiz.jpg",
+    "isOfficial": true
+  },
+  "settings": {
+    "theme": "fashion-modern",
+    "navigation": {
+      "allowBack": true,
+      "showProgress": true,
+      "autoAdvance": false
+    },
+    "scoring": {
+      "method": "weighted",
+      "resultsMapping": {
+        "natural": { "weight": 1.0, "label": "Natural" },
+        "classico": { "weight": 1.0, "label": "Clássico" },
+        "contemporaneo": { "weight": 1.0, "label": "Contemporâneo" },
+        "elegante": { "weight": 1.0, "label": "Elegante" },
+        "romantico": { "weight": 1.0, "label": "Romântico" },
+        "sexy": { "weight": 1.0, "label": "Sexy" },
+        "dramatico": { "weight": 1.0, "label": "Dramático" }
+      }
+    },
+    "integrations": {
+      "analytics": true,
+      "crm": "supabase",
+      "email": "sendgrid"
+    }
+  },
+  "steps": [
+    {
+      "id": "step-01-intro",
+      "type": "intro",
+      "order": 1,
+      "title": "Bem-vindo ao Quiz de Estilo",
+      "description": "Introdução e captura de dados iniciais",
+      "blocks": [
+        "intro-logo-header-01",
+        "intro-form-01",
+        "intro-description-01"
+      ],
+      "settings": {
+        "required": true
+      },
+      "metadata": {
+        "tags": ["intro", "lead-capture"]
+      }
+    },
+    {
+      "id": "step-02-question",
+      "type": "question",
+      "order": 2,
+      "title": "Pergunta 1: Preferências Pessoais",
+      "description": "Primeira pergunta do quiz",
+      "blocks": [
+        "question-progress-02",
+        "question-number-02",
+        "question-text-02",
+        "question-options-02"
+      ],
+      "settings": {
+        "required": true,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "validation": {
+          "required": true
+        }
+      },
+      "metadata": {
+        "weight": 1.0,
+        "dimension": "personality",
+        "tags": ["question", "personality"]
+      }
+    },
+    {
+      "id": "step-03-question",
+      "type": "question",
+      "order": 3,
+      "title": "Pergunta 2: Resumo da Personalidade",
+      "description": "Segunda pergunta - múltipla escolha",
+      "blocks": [
+        "question-progress-03",
+        "question-number-03",
+        "question-text-03",
+        "question-options-03"
+      ],
+      "settings": {
+        "required": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "validation": {
+          "required": true
+        }
+      },
+      "metadata": {
+        "weight": 1.5,
+        "dimension": "personality-multi",
+        "tags": ["question", "personality", "multiple"]
+      }
+    },
+    {
+      "id": "step-20-result",
+      "type": "result",
+      "order": 20,
+      "title": "Seu Resultado",
+      "description": "Página de resultado final com score",
+      "blocks": [
+        "result-header-20",
+        "result-score-20",
+        "result-description-20"
+      ],
+      "settings": {
+        "required": false
+      },
+      "metadata": {
+        "tags": ["result", "final"]
+      }
+    },
+    {
+      "id": "step-21-offer",
+      "type": "offer",
+      "order": 21,
+      "title": "Oferta Especial",
+      "description": "Página de oferta pós-resultado",
+      "blocks": [
+        "offer-header-21",
+        "offer-description-21",
+        "offer-cta-21"
+      ],
+      "settings": {
+        "required": false
+      },
+      "metadata": {
+        "tags": ["offer", "conversion"]
+      }
+    }
+  ],
+  "blocksUsed": [
+    "intro-logo-header-01",
+    "intro-form-01",
+    "intro-description-01",
+    "question-progress-02",
+    "question-number-02",
+    "question-text-02",
+    "question-options-02",
+    "question-progress-03",
+    "question-number-03",
+    "question-text-03",
+    "question-options-03",
+    "result-header-20",
+    "result-score-20",
+    "result-description-20",
+    "offer-header-21",
+    "offer-description-21",
+    "offer-cta-21"
+  ],
+  "validationSchema": "funnel-schema-v1.0.0"
+}

@@ -1,5 +1,6 @@
 /**
  * 🎯 REGISTRY DE TIPOS DE FUNIS
+ * @legacy DEPRECATED - Migrar para o sistema oficial em src/core/quiz/
  * 
  * Sistema centralizado para identificar e configurar diferentes tipos de funis
  * que podem ser editados no ModernUnifiedEditor

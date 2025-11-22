@@ -1,5 +1,6 @@
 /**
  * 🔄 TEMPLATE PROCESSOR
+ * @legacy DEPRECATED - Migrar para o sistema oficial em src/core/quiz/
  * Processa templates dinâmicos substituindo {{variáveis}} por valores reais
  * Remove duplicação config/properties e injeta theme/assets
  */
