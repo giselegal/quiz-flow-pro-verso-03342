@@ -2826,4 +2826,92 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       },
     ],
   },
+
+  // ✅ NOVOS SCHEMAS - Correção Crítica para Painel de Propriedades
+  'CTAButton': {
+    label: 'Botão CTA',
+    fields: [
+      { key: 'text', label: 'Texto do Botão', type: 'text', required: true, defaultValue: 'Clique Aqui' },
+      { key: 'url', label: 'URL de Destino', type: 'text', group: 'action' },
+      { key: 'variant', label: 'Variante', type: 'select', group: 'style', options: [
+        { label: 'Primário', value: 'primary' },
+        { label: 'Secundário', value: 'secondary' },
+        { label: 'Outline', value: 'outline' },
+      ], defaultValue: 'primary' },
+      { key: 'size', label: 'Tamanho', type: 'select', options: [
+        { label: 'Pequeno', value: 'sm' },
+        { label: 'Médio', value: 'md' },
+        { label: 'Grande', value: 'lg' },
+      ], defaultValue: 'md' },
+      { key: 'fullWidth', label: 'Largura Total', type: 'boolean', defaultValue: false },
+      { key: 'icon', label: 'Ícone (nome Lucide)', type: 'text', group: 'appearance' },
+      { key: 'loading', label: 'Mostrar Loading', type: 'boolean', defaultValue: false },
+      { key: 'disabled', label: 'Desabilitado', type: 'boolean', defaultValue: false },
+      { key: 'marginTop', label: 'Margem Superior', type: 'number', group: 'spacing' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'number', group: 'spacing' },
+    ],
+  },
+
+  'quiz-score-display': {
+    label: 'Exibição de Pontuação',
+    fields: [
+      { key: 'score', label: 'Pontuação', type: 'number', required: true, defaultValue: 0 },
+      { key: 'maxScore', label: 'Pontuação Máxima', type: 'number', defaultValue: 100 },
+      { key: 'label', label: 'Rótulo', type: 'text', defaultValue: 'Sua Pontuação' },
+      { key: 'showPercentage', label: 'Mostrar Percentual', type: 'boolean', defaultValue: true },
+      { key: 'animateCounter', label: 'Animar Contador', type: 'boolean', defaultValue: true },
+      { key: 'size', label: 'Tamanho', type: 'select', options: [
+        { label: 'Pequeno', value: 'sm' },
+        { label: 'Médio', value: 'md' },
+        { label: 'Grande', value: 'lg' },
+        { label: 'Extra Grande', value: 'xl' },
+      ], defaultValue: 'lg' },
+      { key: 'color', label: 'Cor', type: 'color', defaultValue: '#B89B7A' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', defaultValue: '#FAF9F7' },
+      { key: 'borderRadius', label: 'Arredondamento', type: 'number', defaultValue: 8 },
+    ],
+  },
+
+  'result-congrats': {
+    label: 'Parabéns (Resultado)',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', required: true, defaultValue: 'Parabéns!' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'textarea', defaultValue: 'Você completou o quiz!' },
+      { key: 'emoji', label: 'Emoji', type: 'text', defaultValue: '🎉' },
+      { key: 'showConfetti', label: 'Mostrar Confetti', type: 'boolean', defaultValue: true },
+      { key: 'animationType', label: 'Animação', type: 'select', options: [
+        { label: 'Fade In', value: 'fade' },
+        { label: 'Slide Up', value: 'slideUp' },
+        { label: 'Bounce', value: 'bounce' },
+        { label: 'Scale', value: 'scale' },
+      ], defaultValue: 'slideUp' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', options: [
+        { label: 'Esquerda', value: 'left' },
+        { label: 'Centro', value: 'center' },
+        { label: 'Direita', value: 'right' },
+      ], defaultValue: 'center' },
+      { key: 'marginTop', label: 'Margem Superior', type: 'number', group: 'spacing' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'number', group: 'spacing' },
+    ],
+  },
+
+  'result-progress-bars': {
+    label: 'Barras de Progresso (Resultado)',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', defaultValue: 'Seu Perfil' },
+      { key: 'bars', label: 'Barras (JSON)', type: 'json', required: true, 
+        defaultValue: [
+          { label: 'Clássico', value: 75, color: '#B89B7A' },
+          { label: 'Moderno', value: 60, color: '#432818' },
+          { label: 'Romântico', value: 85, color: '#F3E8D3' }
+        ],
+        description: 'Array de objetos: [{ label, value, color }]'
+      },
+      { key: 'showPercentage', label: 'Mostrar Porcentagens', type: 'boolean', defaultValue: true },
+      { key: 'animate', label: 'Animar Barras', type: 'boolean', defaultValue: true },
+      { key: 'barHeight', label: 'Altura das Barras', type: 'number', defaultValue: 24 },
+      { key: 'spacing', label: 'Espaçamento', type: 'number', defaultValue: 12 },
+      { key: 'borderRadius', label: 'Arredondamento', type: 'number', defaultValue: 12 },
+    ],
+  },
 };

@@ -591,3 +591,77 @@ export function validateBlocks(blocks: unknown[]): {
     invalidBlocks,
   };
 }
+
+// ============================================================================
+// ✅ ADDITIONAL BLOCK SCHEMAS - Correção Crítica para Properties Panel
+// ============================================================================
+
+/**
+ * quiz-score-display: Display quiz score with animation
+ */
+export const QuizScoreDisplayBlockSchema = BaseBlockSchema.extend({
+  type: z.literal('quiz-score-display'),
+  properties: BasePropertiesSchema.extend({
+    score: z.number().min(0).default(0),
+    maxScore: z.number().min(1).default(100),
+    label: z.string().default('Sua Pontuação'),
+    showPercentage: z.boolean().default(true),
+    animateCounter: z.boolean().default(true),
+    size: z.enum(['sm', 'md', 'lg', 'xl']).default('lg'),
+    color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).default('#B89B7A'),
+    backgroundColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).default('#FAF9F7'),
+    borderRadius: z.number().min(0).default(8),
+  }),
+});
+
+/**
+ * strategic-question: Strategic question block
+ */
+export const StrategicQuestionBlockSchema = BaseBlockSchema.extend({
+  type: z.literal('strategic-question'),
+  properties: BasePropertiesSchema.extend({
+    question: z.string().min(1, 'Pergunta é obrigatória'),
+    description: z.string().optional(),
+    questionType: z.enum(['single', 'multiple', 'scale', 'text']).default('single'),
+    options: z.array(z.object({
+      label: z.string(),
+      value: z.string(),
+      score: z.number().optional()
+    })).optional(),
+    required: z.boolean().default(true),
+    showProgress: z.boolean().default(true),
+    minSelections: z.number().min(0).default(1),
+    maxSelections: z.number().min(1).default(1),
+  }),
+});
+
+/**
+ * transition: General transition block
+ */
+export const TransitionBlockSchema = BaseBlockSchema.extend({
+  type: z.literal('transition'),
+  properties: BasePropertiesSchema.extend({
+    message: z.string().default('Carregando...'),
+    duration: z.number().min(100).max(10000).default(2000),
+    showSpinner: z.boolean().default(true),
+    spinnerType: z.enum(['circular', 'bars', 'dots', 'pulse']).default('circular'),
+    backgroundColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).default('#FAF9F7'),
+    textColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).default('#1F2937'),
+    autoAdvance: z.boolean().default(true),
+  }),
+});
+
+/**
+ * transition-result: Transition to result page
+ */
+export const TransitionResultBlockSchema = BaseBlockSchema.extend({
+  type: z.literal('transition-result'),
+  properties: BasePropertiesSchema.extend({
+    message: z.string().default('Calculando seu resultado...'),
+    steps: z.array(z.string()).min(1),
+    stepDuration: z.number().min(100).max(5000).default(800),
+    showIcon: z.boolean().default(true),
+    icon: z.string().default('Sparkles'),
+    animateIcon: z.boolean().default(true),
+  }),
+});
