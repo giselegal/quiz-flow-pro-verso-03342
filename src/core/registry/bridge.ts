@@ -8,8 +8,8 @@
  * @status MIGRATION - Temporário durante transição
  */
 
-import { BlockRegistry } from '@/core/quiz/blocks/registry';
-import type { BlockDefinition } from '@/core/quiz/blocks/types';
+import { BlockRegistry } from '../quiz/blocks/registry';
+import type { BlockDefinition } from '../quiz/blocks/types';
 
 /**
  * Sincronizar blocos do core/quiz para o sistema legado
