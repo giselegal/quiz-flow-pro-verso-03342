@@ -35,7 +35,7 @@ import { serviceManager } from './services/core/UnifiedServiceManager';
 import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
 import { loadTemplateOverrides } from '@/config/bootstrap/loadTemplateOverrides';
 // ✅ CORREÇÃO 1: Carregar schemas na raiz da aplicação
-import { loadDefaultSchemas } from '@/core/schema/loadDefaultSchemas';
+import { loadDefaultSchemas, isSchemasLoaded } from '@/core/schema/loadDefaultSchemas';
 // 🚀 FASE 3.5: PWA Notifications
 import { PWANotifications } from './components/PWANotifications';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
@@ -175,8 +175,16 @@ function AppCore() {
         ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(evt => {
             window.addEventListener(evt, firstInteraction, { once: true });
         });
-        // Fallback: se usuário não interagir em 3s, carrega em segundo plano
-        setTimeout(() => scheduleSchemaLoad(), 3000);
+        // Fallback: se usuário não interagir em 3s, verificar se schemas estão carregados
+        setTimeout(() => {
+            // Verificar se schemas foram realmente carregados
+            if (isSchemasLoaded()) {
+                appLogger.debug('✅ Schemas confirmed loaded via immediate load');
+            } else {
+                appLogger.warn('⚠️ Schemas not loaded after 3s - attempting load now');
+                loadDefaultSchemas();
+            }
+        }, 3000);
 
         // Initialize services with idle callback (defer health checks)
         const initializeServices = () => {
