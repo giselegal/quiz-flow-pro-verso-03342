@@ -49,8 +49,13 @@ const RESTRICTED_RESOURCES = [
 // Rate limiting: máximo de tentativas por minuto
 const MAX_ATTEMPTS_PER_MINUTE = 60;
 
-// Helper: Check if running in production (defined outside component to avoid recreation)
-const isProduction = (): boolean => {
+// Health computation thresholds
+const CRITICAL_DENIAL_THRESHOLD = 0.5; // 50% or more denied = critical
+const WARNING_DENIAL_THRESHOLD = 0.2;  // 20-50% denied = warning
+const RECENT_ATTEMPTS_WINDOW_SIZE = 20; // Last 20 attempts to analyze
+
+// Helper: Check if running in production (memoized at module level since env doesn't change)
+const isProduction = (() => {
   try {
     if (typeof import.meta !== 'undefined') {
       const env = (import.meta as { env?: { PROD?: boolean } }).env;
@@ -64,7 +69,7 @@ const isProduction = (): boolean => {
   } catch {
     return false;
   }
-};
+})();
 
 export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const accessHistoryRef = useRef<AccessAttempt[]>([]);
@@ -75,7 +80,7 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     appLogger.info('[SecurityProvider] Initialized with basic validation');
     appLogger.warn('[SecurityProvider] ⚠️ Using basic implementation - expand for production');
     
-    if (isProduction()) {
+    if (isProduction) {
       appLogger.info('[SecurityProvider] Using basic health computation - consider enhancing for production');
     }
   }, []);
@@ -148,12 +153,12 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Basic health computation based on access history
   // Memoized to avoid recalculating on every render, updates when history changes
   const healthMetrics = useMemo(() => {
-    const recentAttempts = accessHistoryRef.current.slice(-20); // Last 20 attempts
+    const recentAttempts = accessHistoryRef.current.slice(-RECENT_ATTEMPTS_WINDOW_SIZE);
     const deniedCount = recentAttempts.filter(a => !a.granted).length;
     const deniedRatio = recentAttempts.length > 0 ? deniedCount / recentAttempts.length : 0;
     
-    const hasCriticalIssues = deniedRatio > 0.5; // More than 50% denied
-    const hasWarnings = deniedRatio > 0.2 && !hasCriticalIssues; // 20-50% denied
+    const hasCriticalIssues = deniedRatio > CRITICAL_DENIAL_THRESHOLD;
+    const hasWarnings = deniedRatio > WARNING_DENIAL_THRESHOLD && !hasCriticalIssues;
     const isSystemHealthy = !hasCriticalIssues && !hasWarnings;
     const systemStatus: 'healthy' | 'degraded' | 'critical' = 
       hasCriticalIssues ? 'critical' : hasWarnings ? 'degraded' : 'healthy';
