@@ -55,7 +55,7 @@ class TemplateServiceClass {
 
   /**
    * Obter template por ID
-   * TODO Wave 2: Integrar com Supabase/API
+   * ✅ Wave 2: Integrado com TemplateLoader
    */
   async getTemplate(templateId: string): Promise<FunnelTemplate | null> {
     appLogger.info(`[TemplateService] Buscando template: ${templateId}`);
@@ -69,32 +69,34 @@ class TemplateServiceClass {
       }
     }
 
-    // TODO Wave 2: Implementar carregamento de diferentes fontes
-    let template: FunnelTemplate | null = null;
+    // ✅ Wave 2: Usar TemplateLoader
+    const { TemplateLoader } = await import('@/core/quiz/templates/loader');
+    const result = await TemplateLoader.loadTemplate(templateId, {
+      source: this.config.dataSource,
+      validate: true,
+      strict: false,
+    });
 
-    switch (this.config.dataSource) {
-      case 'supabase':
-        // TODO Wave 2: Implementar integração com Supabase
-        appLogger.warn('[TemplateService] Supabase source não implementado, usando fallback');
-        template = await this.getFallbackTemplate(templateId);
-        break;
-      case 'api':
-        // TODO Wave 2: Implementar integração com API
-        appLogger.warn('[TemplateService] API source não implementado, usando fallback');
-        template = await this.getFallbackTemplate(templateId);
-        break;
-      case 'local':
-      default:
-        template = await this.getFallbackTemplate(templateId);
-        break;
+    if (!result.success || !result.template) {
+      appLogger.error('[TemplateService] Failed to load template:', { 
+        data: [result.errors] 
+      });
+      return this.config.enableFallback ? await this.getFallbackTemplate(templateId) : null;
+    }
+
+    // Log warnings se houver
+    if (result.warnings && result.warnings.length > 0) {
+      appLogger.warn('[TemplateService] Template loaded with warnings:', { 
+        data: [result.warnings] 
+      });
     }
 
     // Adicionar ao cache
-    if (template && this.config.enableCache) {
-      this.setCache(templateId, template);
+    if (this.config.enableCache) {
+      this.setCache(templateId, result.template);
     }
 
-    return template;
+    return result.template;
   }
 
   /**
@@ -115,47 +117,32 @@ class TemplateServiceClass {
 
   /**
    * Validar template
-   * TODO Wave 2: Implementar validação com Zod
+   * ✅ Wave 2: Implementado com Zod
    */
-  validateTemplate(template: FunnelTemplate): TemplateValidationResult {
-    const errors: TemplateValidationResult['errors'] = [];
-    const warnings: TemplateValidationResult['warnings'] = [];
+  async validateTemplate(template: FunnelTemplate): Promise<TemplateValidationResult> {
+    const { validateFunnelTemplate, validateTemplateIntegrity } = await import(
+      '@/core/quiz/templates/schemas'
+    );
 
-    // Validações básicas
-    if (!template.metadata?.id) {
-      errors.push({
-        path: 'metadata.id',
-        message: 'ID do template é obrigatório',
-        code: 'REQUIRED_FIELD',
-      });
+    // Validação de schema
+    const schemaValidation = validateFunnelTemplate(template);
+    if (!schemaValidation.success) {
+      const errors = schemaValidation.error.errors.map((err) => ({
+        path: err.path.join('.'),
+        message: err.message,
+        code: err.code,
+      }));
+
+      return {
+        valid: false,
+        errors,
+      };
     }
 
-    if (!template.steps || template.steps.length === 0) {
-      errors.push({
-        path: 'steps',
-        message: 'Template deve ter pelo menos um step',
-        code: 'MIN_STEPS',
-      });
-    }
+    // Validação de integridade
+    const integrityResult = validateTemplateIntegrity(template);
 
-    // Validar blocos referenciados
-    const blocksUsed = new Set(template.blocksUsed || []);
-    template.steps.forEach((step, idx) => {
-      step.blocks.forEach((blockId) => {
-        if (!blocksUsed.has(blockId)) {
-          warnings!.push({
-            path: `steps[${idx}].blocks`,
-            message: `Bloco '${blockId}' não está na lista blocksUsed`,
-          });
-        }
-      });
-    });
-
-    return {
-      valid: errors.length === 0,
-      errors,
-      warnings,
-    };
+    return integrityResult;
   }
 
   /**
