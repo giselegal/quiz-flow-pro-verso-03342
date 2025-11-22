@@ -1,23 +1,35 @@
 /**
  * 🎯 FUNNEL DATA PROVIDER - Gerenciamento de Dados de Funil
  * 
+ * ✅ FASE 2.2 - IMPLEMENTAÇÃO REAL COMPLETA
+ * 
  * Provider independente para gerenciamento de funis.
  * Extraído do SuperUnifiedProvider para isolamento de responsabilidades.
  * 
  * RESPONSABILIDADES:
- * - CRUD de funis
+ * - CRUD de funis conectado ao Supabase
  * - Funil atual
  * - Templates
  * - Cache de dados
+ * - Error handling robusto
  * 
  * BENEFÍCIOS:
  * - Re-render apenas quando funnel data muda
  * - Isolamento de lógica de negócio
  * - Fácil de testar
+ * - Operações reais de banco de dados
+ * 
+ * FASE 2.2 MUDANÇAS:
+ * - ✅ Conexão real com Supabase
+ * - ✅ Error handling completo
+ * - ✅ Toast notifications
+ * - ✅ Testes implementados
  */
 
-import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode, useEffect } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
+import { supabase } from '@/lib/supabase';
+import { toast } from '@/components/ui/use-toast';
 
 // ============================================================================
 // TYPES
@@ -77,13 +89,30 @@ export const FunnelDataProvider: React.FC<FunnelProviderProps> = ({ children }) 
         setIsLoading(true);
         setError(null);
         try {
-            // Implementação será conectada ao service real
-            appLogger.info('📂 Carregando funis...');
-            // const data = await funnelService.list();
-            // setFunnels(data);
+            appLogger.info('📂 [FASE 2.2] Carregando funis do Supabase...');
+            
+            const { data, error: supabaseError } = await supabase
+                .from('funnels')
+                .select('*')
+                .order('updated_at', { ascending: false });
+            
+            if (supabaseError) {
+                throw new Error(`Erro ao carregar funis: ${supabaseError.message}`);
+            }
+            
+            setFunnels(data || []);
+            appLogger.info(`✅ [FASE 2.2] ${data?.length || 0} funis carregados com sucesso`);
+            
         } catch (err: any) {
-            setError(err.message);
-            appLogger.error('❌ Erro ao carregar funis:', err);
+            const errorMsg = err.message || 'Erro desconhecido ao carregar funis';
+            setError(errorMsg);
+            appLogger.error('❌ [FASE 2.2] Erro ao carregar funis:', err);
+            
+            toast({
+                title: 'Erro ao carregar funis',
+                description: errorMsg,
+                variant: 'destructive',
+            });
         } finally {
             setIsLoading(false);
         }
@@ -93,12 +122,35 @@ export const FunnelDataProvider: React.FC<FunnelProviderProps> = ({ children }) 
         setIsLoading(true);
         setError(null);
         try {
-            appLogger.info(`📂 Carregando funil: ${id}`);
-            // const data = await funnelService.get(id);
-            // setCurrentFunnel(data);
+            appLogger.info(`📂 [FASE 2.2] Carregando funil: ${id}`);
+            
+            const { data, error: supabaseError } = await supabase
+                .from('funnels')
+                .select('*')
+                .eq('id', id)
+                .single();
+            
+            if (supabaseError) {
+                throw new Error(`Erro ao carregar funil: ${supabaseError.message}`);
+            }
+            
+            if (!data) {
+                throw new Error(`Funil ${id} não encontrado`);
+            }
+            
+            setCurrentFunnel(data);
+            appLogger.info(`✅ [FASE 2.2] Funil ${id} carregado com sucesso`);
+            
         } catch (err: any) {
-            setError(err.message);
-            appLogger.error('❌ Erro ao carregar funil:', err);
+            const errorMsg = err.message || 'Erro desconhecido ao carregar funil';
+            setError(errorMsg);
+            appLogger.error('❌ [FASE 2.2] Erro ao carregar funil:', err);
+            
+            toast({
+                title: 'Erro ao carregar funil',
+                description: errorMsg,
+                variant: 'destructive',
+            });
         } finally {
             setIsLoading(false);
         }
@@ -108,15 +160,58 @@ export const FunnelDataProvider: React.FC<FunnelProviderProps> = ({ children }) 
         setIsLoading(true);
         setError(null);
         try {
-            appLogger.info('✨ Criando funil...');
-            // const newFunnel = await funnelService.create(data);
-            // setFunnels(prev => [newFunnel, ...prev]);
-            // setCurrentFunnel(newFunnel);
-            // return newFunnel;
-            return {} as FunnelData; // Placeholder
+            appLogger.info('✨ [FASE 2.2] Criando funil...', { data: [data] });
+            
+            // Validar dados mínimos necessários
+            if (!data.name) {
+                throw new Error('Nome do funil é obrigatório');
+            }
+            
+            const { data: newFunnel, error: supabaseError } = await supabase
+                .from('funnels')
+                .insert([{
+                    name: data.name,
+                    description: data.description || null,
+                    status: data.status || 'draft',
+                    config: data.config || {},
+                    settings: data.settings || {},
+                    is_published: data.is_published || false,
+                }])
+                .select()
+                .single();
+            
+            if (supabaseError) {
+                throw new Error(`Erro ao criar funil: ${supabaseError.message}`);
+            }
+            
+            if (!newFunnel) {
+                throw new Error('Erro ao criar funil: resposta vazia do banco');
+            }
+            
+            // Atualizar estado local
+            setFunnels(prev => [newFunnel, ...prev]);
+            setCurrentFunnel(newFunnel);
+            
+            appLogger.info(`✅ [FASE 2.2] Funil criado com sucesso: ${newFunnel.id}`);
+            
+            toast({
+                title: 'Funil criado',
+                description: `${newFunnel.name} foi criado com sucesso`,
+            });
+            
+            return newFunnel;
+            
         } catch (err: any) {
-            setError(err.message);
-            appLogger.error('❌ Erro ao criar funil:', err);
+            const errorMsg = err.message || 'Erro desconhecido ao criar funil';
+            setError(errorMsg);
+            appLogger.error('❌ [FASE 2.2] Erro ao criar funil:', err);
+            
+            toast({
+                title: 'Erro ao criar funil',
+                description: errorMsg,
+                variant: 'destructive',
+            });
+            
             throw err;
         } finally {
             setIsLoading(false);
@@ -127,15 +222,51 @@ export const FunnelDataProvider: React.FC<FunnelProviderProps> = ({ children }) 
         setIsLoading(true);
         setError(null);
         try {
-            appLogger.info(`💾 Atualizando funil: ${id}`);
-            // await funnelService.update(id, updates);
-            setFunnels(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
-            if (currentFunnel?.id === id) {
-                setCurrentFunnel(prev => prev ? { ...prev, ...updates } : null);
+            appLogger.info(`💾 [FASE 2.2] Atualizando funil: ${id}`, { data: [updates] });
+            
+            const { data: updatedFunnel, error: supabaseError } = await supabase
+                .from('funnels')
+                .update({
+                    ...updates,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', id)
+                .select()
+                .single();
+            
+            if (supabaseError) {
+                throw new Error(`Erro ao atualizar funil: ${supabaseError.message}`);
             }
+            
+            if (!updatedFunnel) {
+                throw new Error('Erro ao atualizar funil: resposta vazia do banco');
+            }
+            
+            // Atualizar estado local
+            setFunnels(prev => prev.map(f => f.id === id ? updatedFunnel : f));
+            
+            if (currentFunnel?.id === id) {
+                setCurrentFunnel(updatedFunnel);
+            }
+            
+            appLogger.info(`✅ [FASE 2.2] Funil ${id} atualizado com sucesso`);
+            
+            toast({
+                title: 'Funil atualizado',
+                description: 'As alterações foram salvas com sucesso',
+            });
+            
         } catch (err: any) {
-            setError(err.message);
-            appLogger.error('❌ Erro ao atualizar funil:', err);
+            const errorMsg = err.message || 'Erro desconhecido ao atualizar funil';
+            setError(errorMsg);
+            appLogger.error('❌ [FASE 2.2] Erro ao atualizar funil:', err);
+            
+            toast({
+                title: 'Erro ao atualizar funil',
+                description: errorMsg,
+                variant: 'destructive',
+            });
+            
             throw err;
         } finally {
             setIsLoading(false);
@@ -146,15 +277,42 @@ export const FunnelDataProvider: React.FC<FunnelProviderProps> = ({ children }) 
         setIsLoading(true);
         setError(null);
         try {
-            appLogger.info(`🗑️ Deletando funil: ${id}`);
-            // await funnelService.delete(id);
+            appLogger.info(`🗑️ [FASE 2.2] Deletando funil: ${id}`);
+            
+            const { error: supabaseError } = await supabase
+                .from('funnels')
+                .delete()
+                .eq('id', id);
+            
+            if (supabaseError) {
+                throw new Error(`Erro ao deletar funil: ${supabaseError.message}`);
+            }
+            
+            // Atualizar estado local
             setFunnels(prev => prev.filter(f => f.id !== id));
+            
             if (currentFunnel?.id === id) {
                 setCurrentFunnel(null);
             }
+            
+            appLogger.info(`✅ [FASE 2.2] Funil ${id} deletado com sucesso`);
+            
+            toast({
+                title: 'Funil deletado',
+                description: 'O funil foi removido com sucesso',
+            });
+            
         } catch (err: any) {
-            setError(err.message);
-            appLogger.error('❌ Erro ao deletar funil:', err);
+            const errorMsg = err.message || 'Erro desconhecido ao deletar funil';
+            setError(errorMsg);
+            appLogger.error('❌ [FASE 2.2] Erro ao deletar funil:', err);
+            
+            toast({
+                title: 'Erro ao deletar funil',
+                description: errorMsg,
+                variant: 'destructive',
+            });
+            
             throw err;
         } finally {
             setIsLoading(false);
