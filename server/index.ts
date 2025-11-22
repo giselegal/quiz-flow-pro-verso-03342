@@ -3,6 +3,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import compression from 'compression';
+import { logger, requestIdMiddleware, loggingMiddleware } from './utils/logger';
 // imports auxiliares removidos; usaremos dynamic import para 'archiver' dentro do handler
 import path, { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
@@ -22,6 +23,10 @@ const app = express();
 const server = createServer(app);
 
 app.use(cors());
+
+// Request ID and logging
+app.use(requestIdMiddleware);
+app.use(loggingMiddleware);
 
 // HTTP Compression (gzip/deflate)
 app.use(compression({
