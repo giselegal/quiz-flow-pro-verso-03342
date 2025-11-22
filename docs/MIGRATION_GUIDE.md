@@ -1,25 +1,48 @@
 # 🔄 GUIA DE MIGRAÇÃO - Editor Consolidado
 
+**Última atualização:** 2025-01-17
+
 ## Visão Geral
 
 Este guia documenta as mudanças na arquitetura do editor e como migrar seu código.
 
+## ✅ CONSOLIDAÇÃO COMPLETA (2025-01-17)
+
+**Status**: Todos os serviços duplicados foram **REMOVIDOS**. Use apenas o serviço canônico.
+
 ## Mudanças Principais
 
-### 1. TemplateService Unificado
+### 1. TemplateService Consolidado (✅ COMPLETO)
 
-**ANTES:**
+**ANTES (REMOVIDO):**
 ```typescript
-// ❌ Múltiplas implementações
-import { TemplateService } from '@/core/funnel/services/TemplateService';
-import { templateService } from '@/services/templateService';
+// ❌ Múltiplas implementações (TODAS REMOVIDAS)
+import { TemplateService } from '@/core/funnel/services/TemplateService'; // REMOVIDO
+import { templateService } from '@/services/TemplateService'; // REMOVIDO
+import { UnifiedTemplateService } from '@/services/UnifiedTemplateService'; // REMOVIDO
 ```
 
-**DEPOIS:**
+**AGORA (ÚNICO SERVIÇO):**
 ```typescript
-// ✅ Fonte única canônica
-import { TemplateService, templateService } from '@/services/canonical/TemplateService';
+// ✅ Fonte única canônica (PRODUCTION-READY)
+import { templateService } from '@/services/canonical/TemplateService';
+
+// Uso:
+const result = await templateService.getTemplate('quiz21-complete');
+if (result.success) {
+  const template = result.data;
+}
 ```
+
+**Serviços Removidos**:
+- ✅ `src/services/TemplateService.ts` (Official - nunca usado)
+- ✅ `src/core/funnel/services/TemplateService.ts` (@deprecated)
+- ✅ `src/services/UnifiedTemplateService.ts`
+- ✅ `src/services/core/ConsolidatedTemplateService.ts`
+- ✅ `src/services/templateService.refactored.ts`
+
+**Serviço Mantido**:
+- ✅ `src/services/canonical/TemplateService.ts` (1913 linhas, consolida 20+ services)
 
 ### 2. Hook useEditor Simplificado
 

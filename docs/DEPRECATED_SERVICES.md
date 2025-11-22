@@ -1,25 +1,79 @@
 # 📦 Services Deprecados - Guia de Migração
 
-**Última atualização:** 2025-11-03
+**Última atualização:** 2025-01-17
 
-Este documento lista os services que foram deprecados e movidos para `src/services/deprecated/`.
+Este documento lista os services que foram deprecados e **REMOVIDOS** da base de código.
 
 ---
 
-## ⚠️ LIMPEZA FASE 3 - DOMÍNIO 1: TEMPLATE SERVICES (2025-11-03)
+## ✅ CONSOLIDAÇÃO COMPLETA - TEMPLATE SERVICES (2025-01-17)
 
-### HybridTemplateService.ts
-**Data:** 2025-11-03  
-**Status:** ✅ Movido para `/deprecated`  
-**Motivo:** Adapter legado que apenas delega para templateService canônico  
+### ⚠️ TODOS OS SERVIÇOS DUPLICADOS FORAM REMOVIDOS
+
+**Serviços Consolidados em**: `@/services/canonical/TemplateService`
+
+#### Removidos (5 arquivos):
+1. ✅ `src/services/TemplateService.ts` (Official - 244 linhas) → REMOVIDO
+2. ✅ `src/core/funnel/services/TemplateService.ts` (Deprecated - 474 linhas) → REMOVIDO
+3. ✅ `src/services/UnifiedTemplateService.ts` → REMOVIDO
+4. ✅ `src/services/core/ConsolidatedTemplateService.ts` → REMOVIDO
+5. ✅ `src/services/templateService.refactored.ts` → REMOVIDO
+
+#### Mantido (1 arquivo):
+✅ `src/services/canonical/TemplateService.ts` (1913 linhas) - **PRODUCTION-READY**
+
+---
+
+## 🎯 Como Usar o Serviço Canônico
+
+### HybridTemplateService.ts (REMOVIDO)
+**Data:** 2025-01-17  
+**Status:** ✅ REMOVIDO (consolidado)  
 **Alternativa:** `import { templateService } from '@/services/canonical/TemplateService'`
 
 ```typescript
-// ❌ ANTES
+// ❌ ANTES (REMOVIDO)
 import HybridTemplateService from '@/services/HybridTemplateService';
 const template = await HybridTemplateService.getTemplate('step-01');
 
-// ✅ DEPOIS
+// ✅ AGORA (CANONICAL)
+import { templateService } from '@/services/canonical/TemplateService';
+const result = await templateService.getStep('step-01');
+if (result.success) {
+  const template = result.data;
+}
+```
+
+### TemplateService (Official) (REMOVIDO)
+**Data:** 2025-01-17  
+**Status:** ✅ REMOVIDO (nunca foi usado em produção)  
+**Alternativa:** `import { templateService } from '@/services/canonical/TemplateService'`
+
+```typescript
+// ❌ ANTES (REMOVIDO)
+import { TemplateService } from '@/services/TemplateService';
+const template = await TemplateService.getTemplate('quiz21-complete');
+
+// ✅ AGORA (CANONICAL)
+import { templateService } from '@/services/canonical/TemplateService';
+const result = await templateService.getTemplate('quiz21-complete');
+if (result.success) {
+  const template = result.data;
+}
+```
+
+### TemplateService (Funnel Core) (REMOVIDO)
+**Data:** 2025-01-17  
+**Status:** ✅ REMOVIDO (@deprecated, sem uso ativo)  
+**Alternativa:** `import { templateService } from '@/services/canonical/TemplateService'`
+
+```typescript
+// ❌ ANTES (REMOVIDO)
+import { TemplateService } from '@/core/funnel/services/TemplateService';
+const instance = TemplateService.getInstance();
+const template = await instance.loadTemplate('step-01');
+
+// ✅ AGORA (CANONICAL)
 import { templateService } from '@/services/canonical/TemplateService';
 const result = await templateService.getStep('step-01');
 if (result.success) {
