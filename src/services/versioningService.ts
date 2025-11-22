@@ -102,8 +102,24 @@ function calculateChanges(oldFunnel: UnifiedFunnel | null, newFunnel: UnifiedFun
   return changes;
 }
 
+// In-memory fallback storage for environments without localStorage (e.g., Node.js tests)
+let memoryStorage: VersionSnapshot[] = [];
+
+function isLocalStorageAvailable(): boolean {
+  try {
+    return typeof localStorage !== 'undefined' && localStorage !== null;
+  } catch {
+    return false;
+  }
+}
+
 function loadSnapshots(): VersionSnapshot[] {
   try {
+    if (!isLocalStorageAvailable()) {
+      // Use in-memory storage for Node.js/test environments
+      return memoryStorage;
+    }
+    
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) return [];
     const snapshots = JSON.parse(data);
@@ -120,10 +136,20 @@ function loadSnapshots(): VersionSnapshot[] {
 
 function saveSnapshots(snapshots: VersionSnapshot[]): void {
   try {
+    if (!isLocalStorageAvailable()) {
+      // Use in-memory storage for Node.js/test environments
+      memoryStorage = snapshots;
+      return;
+    }
+    
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshots));
   } catch (error) {
     console.error('Failed to save snapshots:', error);
-    throw new Error('Failed to save snapshot to storage');
+    // Don't throw in non-browser environments, use memory fallback
+    if (isLocalStorageAvailable()) {
+      throw new Error('Failed to save snapshot to storage');
+    }
+    memoryStorage = snapshots;
   }
 }
 
@@ -310,8 +336,21 @@ export const versioningService = {
     const averageChangesPerSnapshot = totalChanges / snapshots.length;
     
     // Estimate storage used
-    const storageString = localStorage.getItem(STORAGE_KEY) || '';
-    const storageUsed = new Blob([storageString]).size;
+    let storageUsed = 0;
+    try {
+      if (isLocalStorageAvailable()) {
+        const storageString = localStorage.getItem(STORAGE_KEY) || '';
+        storageUsed = new Blob([storageString]).size;
+      } else {
+        // For non-browser environments, estimate from memory storage
+        const memoryString = JSON.stringify(snapshots);
+        storageUsed = new Blob([memoryString]).size;
+      }
+    } catch (error) {
+      // Fallback: rough estimate based on JSON length
+      const jsonString = JSON.stringify(snapshots);
+      storageUsed = jsonString.length;
+    }
     
     return {
       totalSnapshots: snapshots.length,
