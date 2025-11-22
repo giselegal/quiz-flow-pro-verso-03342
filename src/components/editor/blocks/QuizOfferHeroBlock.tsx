@@ -30,6 +30,7 @@ interface QuizOfferHeroBlockProps extends InlineBlockProps {
 }
 
 export const QuizOfferHeroBlock: React.FC<QuizOfferHeroBlockProps> = ({
+  block, // Required by InlineBlockProps interface
   properties = {},
   isSelected,
   onClick,

@@ -77,7 +77,7 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={e => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   onStageDelete(stage.id);
                 }}
