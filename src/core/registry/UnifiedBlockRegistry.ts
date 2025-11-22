@@ -1,5 +1,5 @@
 /**
- * 🎯 UNIFIED BLOCK REGISTRY - FASE 1.1 CONSOLIDADA
+ * 🎯 UNIFIED BLOCK REGISTRY - FASE 1.1 CONSOLIDADA + CORE/QUIZ INTEGRATION
  * 
  * Registry único que consolida TODOS os sistemas fragmentados:
  * - EnhancedBlockRegistry (principal canônico)
@@ -7,6 +7,11 @@
  * - BlockRegistry (runtime)
  * - HybridBlockRegistry (adapter)
  * - blockDefinitions (propriedades)
+ * 
+ * ✨ NOVO: Integrado com core/quiz/blocks/registry (PR #58)
+ * - Usa BlockRegistry oficial para definições
+ * - Sincroniza aliases automaticamente
+ * - Validação Zod em runtime
  * 
  * FEATURES:
  * ✅ Lazy loading com code splitting
@@ -16,12 +21,17 @@
  * ✅ Type-safe com TypeScript
  * ✅ Performance monitoring
  * ✅ Backwards compatible
+ * ✅ Integrado com core/quiz (PR #58)
+ * 
+ * @deprecated Considere migrar para @/core/quiz/blocks/registry diretamente
  */
 
 import React, { lazy, type ComponentType, Suspense } from 'react';
 import { isSimpleBlock, getTemplatePath } from '@/config/block-complexity-map';
 import JSONTemplateRenderer from '@/core/renderers/JSONTemplateRenderer';
 import { appLogger } from '@/lib/utils/appLogger';
+import { BlockRegistry as CoreBlockRegistry } from '@/core/quiz/blocks/registry';
+import { getBlockDefinitionWithFallback } from './bridge';
 
 // ============================================================================
 // TYPE DEFINITIONS
