@@ -541,4 +541,6 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
     );
 };
 
-export default DebugPanel;
+const Noop: React.FC = () => null;
+
+export default import.meta.env.DEV ? DebugPanel : Noop;

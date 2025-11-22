@@ -70,23 +70,26 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
                 <QuizApp funnelId={effectiveFunnelId} />
             </main>
 
-            {/* Scripts de analytics (exemplo) */}
-            <script
-                dangerouslySetInnerHTML={{
-                    __html: `
-                        // Google Analytics ou outras ferramentas
-                        console.log('Quiz Gisele Galvão - Página carregada');
-                        
-                        // Tracking de início do quiz
-                        if (typeof gtag !== 'undefined') {
-                            gtag('event', 'quiz_started', {
-                                event_category: 'engagement',
-                                event_label: 'quiz_estilo_pessoal'
-                            });
-                        }
-                    `,
-                }}
-            />
+            {/* Scripts de analytics (exemplo) - incluídos apenas em DEV */}
+            {import.meta.env.DEV && (
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            // Dev: Tracking de início do quiz (apenas DEV)
+                            try {
+                                if (typeof gtag !== 'undefined') {
+                                    gtag('event', 'quiz_started', {
+                                        event_category: 'engagement',
+                                        event_label: 'quiz_estilo_pessoal'
+                                    });
+                                }
+                            } catch(e) {
+                                // ignore errors in dev tracking
+                            }
+                        `,
+                    }}
+                />
+            )}
         </div>
     );
 }
