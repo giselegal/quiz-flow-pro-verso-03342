@@ -31,5 +31,20 @@ export {
   blockTypeExists,
 } from './UnifiedBlockRegistryAdapter';
 
+// Bridge para core/quiz (PR #58 Integration)
+export {
+  syncBlockRegistries,
+  getBlockDefinitionWithFallback,
+  getBridgeStats,
+  initializeRegistryBridge,
+} from './bridge';
+
+// Hooks unificados (wrappers para core/quiz)
+export {
+  useBlockDefinition,
+  useBlockValidation,
+  useBlockRegistryStats,
+} from './unifiedHooks';
+
 // Default export
 export { blockRegistry as default } from './UnifiedBlockRegistry';
