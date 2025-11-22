@@ -1,5 +1,6 @@
 /**
  * 🎯 TEMPLATE LOADER - Sistema de Templates Externos JSON
+ * @legacy DEPRECATED - Migrar para o sistema oficial em src/core/quiz/
  * 
  * Carrega funils completos de arquivos JSON externos
  * Permite criar múltiplos funils sem duplicar código TSX
