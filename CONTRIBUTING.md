@@ -62,15 +62,65 @@ npm test
 
 ```
 src/
-├── components/       # Componentes React reutilizáveis
-├── pages/           # Páginas da aplicação
-├── services/        # Lógica de negócio e APIs
-├── hooks/           # Custom React hooks
-├── contexts/        # Context API providers
-├── lib/             # Utilitários e helpers
-├── types/           # Definições TypeScript
-├── config/          # Arquivos de configuração
-└── templates/       # Templates de funis
+├── components/              # Componentes React reutilizáveis
+├── pages/                   # Páginas da aplicação
+├── services/                # Lógica de negócio e APIs
+│   └── canonical/          # ⭐ Serviços consolidados (ÚNICO A USAR)
+│       └── TemplateService.ts  # ⚠️ ÚNICO TemplateService oficial
+├── core/                    # Core do sistema
+│   └── quiz/
+│       └── blocks/
+│           ├── registry.ts      # BlockRegistry principal
+│           └── extensions.ts    # 20 blocos adicionais registrados
+├── utils/                   # Utilitários
+│   └── security/           # 🛡️ Sanitização XSS (DOMPurify)
+│       ├── sanitize.ts     # 6 funções de sanitização
+│       └── __tests__/      # 31 testes de segurança
+├── hooks/                   # Custom React hooks
+├── contexts/                # Context API providers
+├── lib/                     # Helpers
+├── types/                   # Definições TypeScript
+├── config/                  # Configurações
+└── templates/               # Templates de funis
+
+tests/
+└── integration/             # Testes de integração
+    └── templateService.consolidated.test.ts  # 28 testes
+
+archive/                     # Arquivos organizados (não em uso)
+├── notebooks/              # Jupyter notebooks
+├── reports/                # Relatórios históricos
+├── configs/                # Configs alternativas
+└── ARCHIVE_MAP.md          # Mapa de arquivos movidos
+```
+
+### ⚠️ IMPORTANTE: Serviços Consolidados
+
+**SEMPRE use os serviços em `/src/services/canonical/`**
+
+```typescript
+// ✅ CORRETO - Use apenas o serviço canonical
+import { TemplateService } from '@/services/canonical/TemplateService';
+
+// ❌ ERRADO - NÃO use outros TemplateService
+// import { TemplateService } from '@/services/TemplateService';
+```
+
+**Motivo**: 5 implementações duplicadas foram removidas. Apenas o Canonical TemplateService é mantido.
+
+### 🛡️ Segurança: Use Sanitização
+
+**SEMPRE sanitize inputs de usuário**
+
+```typescript
+// ✅ CORRETO - Sanitize HTML de usuário
+import { sanitizeHTML, sanitizeUserInput } from '@/utils/security/sanitize';
+
+const safeHTML = sanitizeHTML(userInput);
+const safeText = sanitizeUserInput(userInput);
+
+// ❌ ERRADO - Nunca use HTML não sanitizado
+dangerouslySetInnerHTML={{ __html: userInput }}
 ```
 
 ### Componentes
@@ -305,12 +355,53 @@ ser migrados com o script migrate-templates.sh
 ### Estrutura de Testes
 
 ```
+tests/
+└── integration/                 # Testes de integração (28 testes)
+    └── templateService.consolidated.test.ts
+
 src/
-├── __tests__/
-│   ├── unit/           # Testes unitários
-│   ├── integration/    # Testes de integração
-│   └── e2e/           # Testes end-to-end
+├── services/__tests__/         # Testes de serviços
+├── components/__tests__/       # Testes de componentes
+└── utils/
+    └── security/__tests__/     # 31 testes de segurança XSS
+        └── sanitize.test.ts
 ```
+
+### Executar Testes
+
+```bash
+# Todos os testes
+npm test
+
+# Modo watch
+npm test -- --watch
+
+# Teste específico
+npm test -- sanitize.test.ts
+
+# Com coverage
+npm run test:coverage
+
+# Testes de integração do TemplateService
+npm test -- templateService.consolidated.test.ts
+```
+
+### ⚠️ IMPORTANTE: Testes de Segurança
+
+**SEMPRE execute os testes de segurança após mudanças**
+
+```bash
+# 31 testes de XSS prevention
+npm test -- sanitize.test.ts --run
+
+# Deve retornar: 31 passed (31)
+```
+
+### Status Atual
+- ✅ **115 testes passando**
+- ✅ **31 testes de segurança** (100% OWASP)
+- ✅ **28 testes de integração** TemplateService
+- ✅ **Cobertura**: Services críticos cobertos
 
 ### Testes Unitários
 

@@ -121,6 +121,9 @@ scripts/archive/
 # Template backups (archived)
 .archive/
 
+# Archive directory (Etapa 7 - organized files)
+archive/
+
 # Supabase local auth token (não versionar)
 .supabase/
 supabase/access.token
