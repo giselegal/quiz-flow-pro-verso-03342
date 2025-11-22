@@ -52,6 +52,7 @@ const MAX_ATTEMPTS_PER_MINUTE = 60;
 export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const accessHistoryRef = useRef<AccessAttempt[]>([]);
   const attemptCountRef = useRef<Map<string, number>>(new Map());
+  const [historyLength, setHistoryLength] = React.useState(0); // Track length for useMemo dependency
 
   useEffect(() => {
     appLogger.info('[SecurityProvider] Initialized with basic validation');
@@ -106,6 +107,9 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       accessHistoryRef.current = accessHistoryRef.current.slice(-100);
     }
 
+    // Update state to trigger useMemo recalculation
+    setHistoryLength(accessHistoryRef.current.length);
+
     if (granted) {
       appLogger.debug(`[SecurityProvider] Access granted: ${resource}`);
     } else {
@@ -134,12 +138,18 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       hasCriticalIssues ? 'critical' : hasWarnings ? 'degraded' : 'healthy';
     
     return { hasCriticalIssues, hasWarnings, isSystemHealthy, systemStatus };
-  }, [accessHistoryRef.current.length]); // Recompute when history changes
+  }, [historyLength]); // Recompute when history length changes
   
   // Log warning if using basic health computation in production
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-      appLogger.info('[SecurityProvider] Using basic health computation - consider enhancing for production');
+    try {
+      const isProduction = (import.meta as any)?.env?.PROD === true || 
+                          (typeof process !== 'undefined' && (process as any).env?.NODE_ENV === 'production');
+      if (isProduction) {
+        appLogger.info('[SecurityProvider] Using basic health computation - consider enhancing for production');
+      }
+    } catch {
+      // Ignore errors accessing env vars
     }
   }, []);
 
