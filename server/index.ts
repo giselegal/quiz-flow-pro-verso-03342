@@ -172,25 +172,102 @@ app.get('/api/quizzes/:id', (req, res) => {
   res.json({ id: req.params.id, title: 'Mock Quiz' });
 });
 
-// Minimal Funnels endpoints for FE compatibility
-const funnelsStore = new Map<string, any>();
-app.get('/api/funnels', (_req, res) => {
-  res.json(Array.from(funnelsStore.values()));
-});
-app.get('/api/funnels/:id', (req, res) => {
-  const id = req.params.id;
-  let funnel = funnelsStore.get(id);
-  if (!funnel) {
-    funnel = {
-      id,
-      name: `Funnel ${id}`,
-      steps: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    funnelsStore.set(id, funnel);
+// Funnels endpoints with repository pattern
+import { funnelRepository } from './repositories/funnel.repository';
+import { NotFoundError, ConflictError, ValidationError } from './utils/errors';
+import { errorHandler } from './api/middlewares/error-handler';
+
+app.get('/api/funnels', async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const userId = req.query.userId as string | undefined;
+    
+    const { funnels, total } = await funnelRepository.findAll({
+      userId,
+      page,
+      limit,
+    });
+
+    res.json({
+      data: funnels,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+        hasNext: page * limit < total,
+        hasPrev: page > 1,
+      },
+    });
+  } catch (error) {
+    next(error);
   }
-res.json(funnel);
+});
+
+app.get('/api/funnels/:id', async (req, res, next) => {
+  try {
+    const funnel = await funnelRepository.findById(req.params.id);
+    
+    if (!funnel) {
+      throw new NotFoundError('Funnel', req.params.id);
+    }
+
+    res.json(funnel);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/api/funnels', async (req, res, next) => {
+  try {
+    const { name, slug, description, steps, settings, user_id } = req.body;
+
+    if (!name || name.length < 3) {
+      throw new ValidationError('Nome é obrigatório e deve ter pelo menos 3 caracteres');
+    }
+
+    const funnel = await funnelRepository.create({
+      name,
+      slug,
+      description,
+      user_id,
+      steps: steps || [],
+      settings: settings || {},
+    });
+
+    res.status(201).json(funnel);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/funnels/:id', async (req, res, next) => {
+  try {
+    const { version, ...updates } = req.body;
+
+    const funnel = await funnelRepository.update(
+      req.params.id,
+      updates,
+      version
+    );
+
+    res.json(funnel);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('CONFLICT')) {
+      return next(new ConflictError('Funnel foi modificado por outro usuário'));
+    }
+    next(error);
+  }
+});
+
+app.delete('/api/funnels/:id', async (req, res, next) => {
+  try {
+    await funnelRepository.delete(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 });
 
 const quizResults: any[] = [];
@@ -233,11 +310,28 @@ setupUtmAnalyticsEndpoint(app);
 setupFunnelSettingsEndpoints(app);
 setupFunnelPublicationEndpoints(app);
 
-// Generic error handler
-app.use((err: any, req: any, res: any, next: any) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+// Migration endpoints
+import { MigrationController } from './api/controllers/migration.controller';
+const migrationController = new MigrationController();
+
+app.post('/api/admin/migrate', async (req, res, next) => {
+  try {
+    await migrationController.migrate(req, res);
+  } catch (error) {
+    next(error);
+  }
 });
+
+app.get('/api/admin/migrate/:migrationId/status', async (req, res, next) => {
+  try {
+    await migrationController.getStatus(req, res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Use centralized error handler
+app.use(errorHandler);
 
 // ==================================================================================
 // Packaging endpoint: gera um .zip com manifest.json e snapshot HTML básico

@@ -18,10 +18,37 @@ templatesRouter.post('/', (req, res) => {
     res.status(201).json({ id: agg.draft.id, slug: agg.draft.meta.slug });
 });
 
+// Get draft metadata only (optimized endpoint)
+templatesRouter.get('/:id/meta', (req, res) => {
+    const draft = templateService.getDraft(req.params.id);
+    if (!draft) return res.status(404).json({ 
+        error: 'Template não encontrado', 
+        code: 'TEMPLATE_NOT_FOUND' 
+    });
+    
+    // Return only metadata (without heavy stages/components data)
+    const meta = {
+        id: draft.id,
+        slug: draft.meta.slug,
+        name: draft.meta.name,
+        description: draft.meta.description,
+        thumbnail: draft.meta.thumbnail,
+        category: draft.meta.category,
+        tags: draft.meta.tags,
+        stagesCount: draft.stages?.length || 0,
+        updatedAt: draft.updatedAt,
+        draftVersion: draft.draftVersion,
+    };
+    res.json(meta);
+});
+
 // Get draft full
 templatesRouter.get('/:id', (req, res) => {
     const draft = templateService.getDraft(req.params.id);
-    if (!draft) return res.status(404).json({ error: 'Not found' });
+    if (!draft) return res.status(404).json({ 
+        error: 'Template não encontrado', 
+        code: 'TEMPLATE_NOT_FOUND' 
+    });
     res.json(draft);
 });
 
