@@ -7,7 +7,18 @@
  * @wave 3
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+// Mock appLogger antes de importar adapters
+vi.mock('@/lib/utils/appLogger', () => ({
+  appLogger: {
+    warn: vi.fn(),
+    error: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }
+}));
+
 import {
   adaptLegacyBlock,
   adaptLegacyBlocks,

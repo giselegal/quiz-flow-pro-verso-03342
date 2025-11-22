@@ -163,6 +163,8 @@ export default defineConfig({
       '@migration': path.resolve(__dirname, './src/migration'),
       '@testing': path.resolve(__dirname, './src/testing')
     },
+    // Garante resolução correta de extensões TypeScript
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.mjs'],
     // Garante uma única instância de React durante os testes
     dedupe: ['react', 'react-dom'],
   },
