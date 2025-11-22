@@ -11,6 +11,7 @@
 
 import { BlockRegistry } from './registry';
 import { BlockCategoryEnum, PropertyTypeEnum } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * FASE 1: Blocos Críticos (Questions + Results)
@@ -444,5 +445,5 @@ BlockRegistry.register({
  * Cobertura: 24/24 blocos do template (100%) ✅
  */
 
-console.log('[BlockRegistry] ✅ Registered 20 additional blocks for quiz21-complete.json');
-console.log('[BlockRegistry] 📊 Total coverage: 100% (24/24 blocks from template)');
+appLogger.info('[BlockRegistry] ✅ Registered 20 additional blocks for quiz21-complete.json');
+appLogger.info('[BlockRegistry] 📊 Total coverage: 100% (24/24 blocks from template)');

@@ -110,12 +110,12 @@ const PropertyControl: React.FC<{
 
   // 🔍 DEBUG: Wrapper para logar todas as mudanças
   const handleChange = (newValue: any) => {
-    console.log('🎛️ [PropertyControl] onChange:', {
-      propertyKey,
-      oldValue: value,
-      newValue,
-      control: normalizedControl
-    });
+    appLogger.info('🎛️ [PropertyControl] onChange:', { data: [{
+            propertyKey,
+            oldValue: value,
+            newValue,
+            control: normalizedControl
+          }] });
     onChange(newValue);
   };
 

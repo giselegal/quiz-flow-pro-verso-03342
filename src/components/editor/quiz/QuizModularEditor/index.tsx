@@ -127,19 +127,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const resourceMetadata = props.editorResource ?? null;
 
     // 🐛 DEBUG: Verificar se resourceId está chegando e se vai carregar JSON
-    console.log('🔍 [QuizModularEditor] Props recebidas:', {
-        resourceId: props.resourceId,
-        templateId: props.templateId,
-        funnelId: props.funnelId,
-        resourceIdFinal: resourceId
-    });
+    appLogger.info('🔍 [QuizModularEditor] Props recebidas:', { data: [{
+            resourceId: props.resourceId,
+            templateId: props.templateId,
+            funnelId: props.funnelId,
+            resourceIdFinal: resourceId
+        }] });
 
-    console.log('🚨 [QuizModularEditor] DIAGNÓSTICO CRÍTICO:', {
-        temResourceId: !!resourceId,
-        vaiCarregarJSON: !!(props.templateId || resourceId),
-        razao: !resourceId ? '❌ resourceId está undefined - JSON NÃO SERÁ CARREGADO!' : '✅ resourceId OK - JSON será carregado',
-        urlAtual: typeof window !== 'undefined' ? window.location.href : 'SSR'
-    });
+    appLogger.info('🚨 [QuizModularEditor] DIAGNÓSTICO CRÍTICO:', { data: [{
+            temResourceId: !!resourceId,
+            vaiCarregarJSON: !!(props.templateId || resourceId),
+            razao: !resourceId ? '❌ resourceId está undefined - JSON NÃO SERÁ CARREGADO!' : '✅ resourceId OK - JSON será carregado',
+            urlAtual: typeof window !== 'undefined' ? window.location.href : 'SSR'
+        }] });
 
     // Safe current step
     const safeCurrentStep = Math.max(1, unifiedState.editor.currentStep || 1);
@@ -341,19 +341,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável
     const handleBlockSelect = useCallback((blockId: string | null) => {
-        console.log('🎯 [handleBlockSelect] CHAMADO com:', {
-            blockId,
-            isNull: blockId === null,
-            selectedBlockIdAtual: selectedBlockId
-        });
+        appLogger.info('🎯 [handleBlockSelect] CHAMADO com:', { data: [{
+                    blockId,
+                    isNull: blockId === null,
+                    selectedBlockIdAtual: selectedBlockId
+                }] });
 
         if (!blockId) {
-            console.log('❌ blockId null, limpando seleção');
+            appLogger.info('❌ blockId null, limpando seleção');
             setSelectedBlock(null);
             return;
         }
 
-        console.log('✅ [handleBlockSelect] Definindo selectedBlock:', blockId);
+        appLogger.info('✅ [handleBlockSelect] Definindo selectedBlock:', { data: [blockId] });
         appLogger.info(`📍 [WAVE1] Selecionando bloco: ${blockId}`);
         setSelectedBlock(blockId);
 
@@ -372,15 +372,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1: Navegação instantânea - UI update imediato, lazy load em background
     const handleSelectStep = useCallback((key: string) => {
-        console.log('🔵 [handleSelectStep] Iniciando navegação:', { key, currentStepKey });
+        appLogger.info('🔵 [handleSelectStep] Iniciando navegação:', { data: [{ key, currentStepKey }] });
 
         if (key === currentStepKey) {
-            console.log('⚠️ [handleSelectStep] Step já está selecionado, ignorando');
+            appLogger.info('⚠️ [handleSelectStep] Step já está selecionado, ignorando');
             return;
         }
 
         // 🎯 FASE 1 CRÍTICO: Limpar selectedBlockId ao mudar de step (evita bloco órfão)
-        console.log('🧹 [handleSelectStep] Limpando selectedBlockId ao navegar para:', key);
+        appLogger.info('🧹 [handleSelectStep] Limpando selectedBlockId ao navegar para:', { data: [key] });
         setSelectedBlock(null);
         appLogger.info(`🧹 [FASE1] selectedBlockId resetado ao navegar: ${currentStepKey} → ${key}`);
 
@@ -388,20 +388,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         if (loadedTemplate?.steps?.length) {
             const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
             const newStep = index >= 0 ? index + 1 : 1;
-            console.log('🔵 [handleSelectStep] Calculado newStep:', { index, newStep, safeCurrentStep });
+            appLogger.info('🔵 [handleSelectStep] Calculado newStep:', { data: [{ index, newStep, safeCurrentStep }] });
 
             if (newStep !== safeCurrentStep) {
-                console.log('✅ [handleSelectStep] Chamando setCurrentStep:', newStep);
+                appLogger.info('✅ [handleSelectStep] Chamando setCurrentStep:', { data: [newStep] });
                 setCurrentStep(newStep);
                 appLogger.info(`⚡ [WAVE1] Navegação instantânea: ${currentStepKey} → ${key}`);
             } else {
-                console.log('⚠️ [handleSelectStep] newStep === safeCurrentStep, pulando');
+                appLogger.info('⚠️ [handleSelectStep] newStep === safeCurrentStep, pulando');
             }
         } else {
             // Fallback: extrair número do step-XX
             const match = key.match(/step-(\d{1,2})/i);
             const num = match ? parseInt(match[1], 10) : 1;
-            console.log('🔵 [handleSelectStep] Fallback:', { match, num });
+            appLogger.info('🔵 [handleSelectStep] Fallback:', { data: [{ match, num }] });
             setCurrentStep(num);
             appLogger.info(`⚡ [WAVE1] Navegação instantânea (fallback): step ${num}`);
         }
@@ -692,22 +692,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const handleTemplateChange = React.useCallback(
         (template: { step?: string; blocks?: Block[] }) => {
             console.group('🔧 [QuizModularEditor] onTemplateChange chamado');
-            console.log('template recebido:', template);
-            console.log('safeCurrentStep:', safeCurrentStep);
-            console.log('template.blocks:', template?.blocks);
-            console.log('isArray:', Array.isArray(template?.blocks));
-            console.log('blocksCount:', template?.blocks?.length);
+            appLogger.info('template recebido:', { data: [template] });
+            appLogger.info('safeCurrentStep:', { data: [safeCurrentStep] });
+            appLogger.info('template.blocks:', { data: [template?.blocks] });
+            appLogger.info('isArray:', { data: [Array.isArray(template?.blocks)] });
+            appLogger.info('blocksCount:', { data: [template?.blocks?.length] });
             console.groupEnd();
 
             if (template?.blocks && Array.isArray(template.blocks)) {
-                console.log(
-                    '✅ Chamando setStepBlocks com',
-                    template.blocks.length,
-                    'blocos'
-                );
+                appLogger.info('✅ Chamando setStepBlocks com', { data: [template.blocks.length, 'blocos'] });
                 setStepBlocks(safeCurrentStep, template.blocks);
             } else {
-                console.warn('❌ template.blocks inválido ou não é array');
+                appLogger.warn('❌ template.blocks inválido ou não é array');
             }
         },
         [safeCurrentStep, setStepBlocks]
@@ -716,18 +712,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // 🔍 DEBUG: Log what getStepBlocks returns
     useEffect(() => {
         console.group('🎯 [QuizModularEditor] getStepBlocks chamado');
-        console.log('safeCurrentStep:', safeCurrentStep);
-        console.log('rawBlocks:', rawBlocks);
-        console.log('blocks (normalized):', blocks);
-        console.log('selectedBlockId:', selectedBlockId);
-        console.log('Análise:', {
-            rawBlocksIsNull: rawBlocks === null,
-            blocksIsArray: Array.isArray(blocks),
-            blocksCount: blocks.length,
-            blockIds: blocks.map(b => b.id),
-            hasSelectedBlockId: !!selectedBlockId,
-            selectedBlockExists: blocks.some(b => b.id === selectedBlockId)
-        });
+        appLogger.info('safeCurrentStep:', { data: [safeCurrentStep] });
+        appLogger.info('rawBlocks:', { data: [rawBlocks] });
+        appLogger.info('blocks (normalized):', { data: [blocks] });
+        appLogger.info('selectedBlockId:', { data: [selectedBlockId] });
+        appLogger.info('Análise:', { data: [{
+                    rawBlocksIsNull: rawBlocks === null,
+                    blocksIsArray: Array.isArray(blocks),
+                    blocksCount: blocks.length,
+                    blockIds: blocks.map(b => b.id),
+                    hasSelectedBlockId: !!selectedBlockId,
+                    selectedBlockExists: blocks.some(b => b.id === selectedBlockId)
+                }] });
         console.groupEnd();
     }, [safeCurrentStep, rawBlocks, blocks, selectedBlockId]);
 
@@ -745,16 +741,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // 🐛 DEBUG CRÍTICO: Log detalhado do estado de seleção
     useEffect(() => {
         console.group('🧩 PROPRIEDADES DEBUG');
-        console.log('safeCurrentStep:', safeCurrentStep);
-        console.log('selectedBlockId:', selectedBlockId);
-        console.log('blocksCount:', blocks?.length);
-        console.log('selectedBlock:', blocks?.find(b => b.id === selectedBlockId));
-        console.log('Análise:', {
-            temBlocks: !!blocks,
-            temSelecao: !!selectedBlockId,
-            selecaoValida: !!(selectedBlockId && blocks?.find(b => b.id === selectedBlockId)),
-            blockIds: blocks?.map(b => b.id) || [],
-        });
+        appLogger.info('safeCurrentStep:', { data: [safeCurrentStep] });
+        appLogger.info('selectedBlockId:', { data: [selectedBlockId] });
+        appLogger.info('blocksCount:', { data: [blocks?.length] });
+        appLogger.info('selectedBlock:', { data: [blocks?.find(b => b.id === selectedBlockId)] });
+        appLogger.info('Análise:', { data: [{
+                    temBlocks: !!blocks,
+                    temSelecao: !!selectedBlockId,
+                    selecaoValida: !!(selectedBlockId && blocks?.find(b => b.id === selectedBlockId)),
+                    blockIds: blocks?.map(b => b.id) || [],
+                }] });
         console.groupEnd();
     }, [safeCurrentStep, selectedBlockId, blocks]);
 
@@ -1785,17 +1781,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 {(() => {
                                     const selectedBlock = blocks?.find(b => b.id === selectedBlockId);
                                     console.group('🎯 [QuizModularEditor] Renderizando PropertiesColumn');
-                                    console.log('selectedBlockId:', selectedBlockId);
-                                    console.log('blocks:', blocks);
-                                    console.log('selectedBlock encontrado:', selectedBlock);
-                                    console.log('Análise:', {
-                                        hasBlocks: !!blocks,
-                                        blocksCount: blocks?.length || 0,
-                                        blockIds: blocks?.map(b => b.id) || [],
-                                        hasSelectedBlockId: !!selectedBlockId,
-                                        foundBlock: !!selectedBlock,
-                                        blockType: selectedBlock?.type
-                                    });
+                                    appLogger.info('selectedBlockId:', { data: [selectedBlockId] });
+                                    appLogger.info('blocks:', { data: [blocks] });
+                                    appLogger.info('selectedBlock encontrado:', { data: [selectedBlock] });
+                                    appLogger.info('Análise:', { data: [{
+                                                                            hasBlocks: !!blocks,
+                                                                            blocksCount: blocks?.length || 0,
+                                                                            blockIds: blocks?.map(b => b.id) || [],
+                                                                            hasSelectedBlockId: !!selectedBlockId,
+                                                                            foundBlock: !!selectedBlock,
+                                                                            blockType: selectedBlock?.type
+                                                                        }] });
                                     console.groupEnd();
                                     return null;
                                 })()}
@@ -1814,9 +1810,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             updates: Partial<Block>
                                         ) => {
                                             console.group('🔄 [QuizModularEditor] onBlockUpdate chamado');
-                                            console.log('blockId:', id);
-                                            console.log('updates:', updates);
-                                            console.log('currentStep:', safeCurrentStep);
+                                            appLogger.info('blockId:', { data: [id] });
+                                            appLogger.info('updates:', { data: [updates] });
+                                            appLogger.info('currentStep:', { data: [safeCurrentStep] });
                                             console.groupEnd();
                                             appLogger.info('🔄 [QuizModularEditor] onBlockUpdate', { blockId: id, updates, step: safeCurrentStep });
                                             updateBlock(safeCurrentStep, id, updates);
@@ -1836,9 +1832,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             updates: Partial<Block>
                                         ) => {
                                             console.group('🔄 [QuizModularEditor] onBlockUpdate chamado');
-                                            console.log('blockId:', id);
-                                            console.log('updates:', updates);
-                                            console.log('currentStep:', safeCurrentStep);
+                                            appLogger.info('blockId:', { data: [id] });
+                                            appLogger.info('updates:', { data: [updates] });
+                                            appLogger.info('currentStep:', { data: [safeCurrentStep] });
                                             console.groupEnd();
                                             appLogger.info('🔄 [QuizModularEditor] onBlockUpdate', { blockId: id, updates, step: safeCurrentStep });
                                             updateBlock(safeCurrentStep, id, updates);

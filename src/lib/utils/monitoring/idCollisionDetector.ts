@@ -1,9 +1,10 @@
+import { appLogger } from '@/lib/utils/appLogger';
 let generatedIds = new Set<string>();
 
 export function trackIdGeneration(id: string, type: string) {
   if (generatedIds.has(id)) {
     const payload = { id, type };
-    console.error('ID collision detected!', payload);
+    appLogger.error('ID collision detected!', { data: [payload] });
     if (typeof window !== 'undefined' && (window as any).Sentry) {
       (window as any).Sentry.captureException(new Error('ID collision'), {
         extra: { ...payload, timestamp: Date.now() },

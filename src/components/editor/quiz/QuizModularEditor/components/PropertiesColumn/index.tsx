@@ -53,36 +53,36 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     // 🔍 DEBUG CRÍTICO: Log TUDO que o painel recebe
     React.useEffect(() => {
         console.group('🔍 [PropertiesColumn] Estado Completo');
-        console.log('selectedBlockProp:', selectedBlockProp);
-        console.log('blocks:', blocks);
-        console.log('Análise:', {
-            hasSelectedBlockProp: !!selectedBlockProp,
-            selectedBlockId: selectedBlockProp?.id,
-            selectedBlockType: selectedBlockProp?.type,
-            blocksCount: blocks?.length || 0,
-            blockIds: blocks?.map(b => b.id) || [],
-            hasOnBlockSelect: !!onBlockSelect,
-            willAutoSelect: !selectedBlockProp && blocks && blocks.length > 0,
-            firstBlockId: blocks?.[0]?.id
-        });
+        appLogger.info('selectedBlockProp:', { data: [selectedBlockProp] });
+        appLogger.info('blocks:', { data: [blocks] });
+        appLogger.info('Análise:', { data: [{
+                    hasSelectedBlockProp: !!selectedBlockProp,
+                    selectedBlockId: selectedBlockProp?.id,
+                    selectedBlockType: selectedBlockProp?.type,
+                    blocksCount: blocks?.length || 0,
+                    blockIds: blocks?.map(b => b.id) || [],
+                    hasOnBlockSelect: !!onBlockSelect,
+                    willAutoSelect: !selectedBlockProp && blocks && blocks.length > 0,
+                    firstBlockId: blocks?.[0]?.id
+                }] });
         console.groupEnd();
     }, [selectedBlockProp, blocks, onBlockSelect]);
 
     // ✅ WAVE 1 FIX: Auto-select primeiro bloco se nenhum selecionado
     const selectedBlock = useMemo(() => {
         if (selectedBlockProp) {
-            console.log('✅ [PropertiesColumn] Usando selectedBlockProp:', selectedBlockProp.id);
+            appLogger.info('✅ [PropertiesColumn] Usando selectedBlockProp:', { data: [selectedBlockProp.id] });
             return selectedBlockProp;
         }
 
         // Fallback: auto-selecionar primeiro bloco
         const firstBlock = blocks && blocks.length > 0 ? blocks[0] : null;
         if (firstBlock && onBlockSelect && !prevSelectedIdRef.current) {
-            console.log('⚠️ [PropertiesColumn] Auto-selecionando primeiro bloco:', firstBlock.id);
+            appLogger.info('⚠️ [PropertiesColumn] Auto-selecionando primeiro bloco:', { data: [firstBlock.id] });
             appLogger.info(`[WAVE1] Auto-selecionando primeiro bloco: ${firstBlock.id}`);
             setTimeout(() => onBlockSelect(firstBlock.id), 0);
         } else if (!firstBlock) {
-            console.log('❌ [PropertiesColumn] Nenhum bloco disponível');
+            appLogger.info('❌ [PropertiesColumn] Nenhum bloco disponível');
         }
 
         return firstBlock;
@@ -163,11 +163,11 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
     const handlePropertyChange = useCallback((key: string, value: unknown) => {
         console.group('🎛️ [PropertiesColumn] handlePropertyChange');
-        console.log('key:', key);
-        console.log('value (raw):', value);
-        console.log('value type:', typeof value);
-        console.log('editedProperties[key]:', editedProperties[key]);
-        console.log('expected type:', typeof editedProperties[key]);
+        appLogger.info('key:', { data: [key] });
+        appLogger.info('value (raw):', { data: [value] });
+        appLogger.info('value type:', { data: [typeof value] });
+        appLogger.info('editedProperties[key]:', { data: [editedProperties[key]] });
+        appLogger.info('expected type:', { data: [typeof editedProperties[key]] });
 
         // Type validation based on key or expected type
         let validatedValue: string | number | boolean = value as string;
@@ -179,29 +179,29 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             validatedValue = typeof value === 'string' ? value : String(value);
         }
 
-        console.log('validatedValue:', validatedValue);
-        console.log('isDirty antes:', isDirty);
+        appLogger.info('validatedValue:', { data: [validatedValue] });
+        appLogger.info('isDirty antes:', { data: [isDirty] });
 
         setEditedProperties(prev => {
             const next = {
                 ...prev,
                 [key]: validatedValue
             };
-            console.log('editedProperties ANTES:', prev);
-            console.log('editedProperties DEPOIS:', next);
+            appLogger.info('editedProperties ANTES:', { data: [prev] });
+            appLogger.info('editedProperties DEPOIS:', { data: [next] });
             return next;
         });
         setIsDirty(true);
 
-        console.log('✅ Propriedade atualizada, isDirty = true');
+        appLogger.info('✅ Propriedade atualizada, isDirty = true');
         console.groupEnd();
     }, [editedProperties, isDirty]);
 
     const handleSave = useCallback(async () => {
         console.group('💾 [PropertiesColumn] handleSave');
-        console.log('selectedBlock:', selectedBlock);
-        console.log('isDirty:', isDirty);
-        console.log('editedProperties:', editedProperties);
+        appLogger.info('selectedBlock:', { data: [selectedBlock] });
+        appLogger.info('isDirty:', { data: [isDirty] });
+        appLogger.info('editedProperties:', { data: [editedProperties] });
 
         if (selectedBlock && isDirty) {
             // 🎯 FASE 1: Feedback visual - INÍCIO
@@ -211,11 +211,11 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 // ✅ SINCRONIZAÇÃO BIDIRECIONAL - Garante properties ↔ content sempre alinhados
                 const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, editedProperties);
 
-                console.log('synchronizedUpdate criado:', synchronizedUpdate);
-                console.log('Chamando onBlockUpdate com:', {
-                    blockId: selectedBlock.id,
-                    updates: synchronizedUpdate
-                });
+                appLogger.info('synchronizedUpdate criado:', { data: [synchronizedUpdate] });
+                appLogger.info('Chamando onBlockUpdate com:', { data: [{
+                                    blockId: selectedBlock.id,
+                                    updates: synchronizedUpdate
+                                }] });
 
                 onBlockUpdate(selectedBlock.id, synchronizedUpdate);
 
@@ -238,12 +238,12 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                     synchronizedUpdate
                 });
 
-                console.log('✅ onBlockUpdate chamado, isDirty = false');
+                appLogger.info('✅ onBlockUpdate chamado, isDirty = false');
                 appLogger.info('🎯 [FASE1] Propriedades salvas com sucesso:', {
                     data: [{ blockId: selectedBlock.id, type: selectedBlock.type }]
                 });
             } catch (error) {
-                console.error('❌ Erro ao salvar propriedades:', error);
+                appLogger.error('❌ Erro ao salvar propriedades:', { data: [error] });
                 setHasError(true);
 
                 // 🎯 FASE 1: Toast de erro
@@ -260,11 +260,11 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 setIsSaving(false);
             }
         } else {
-            console.warn('❌ Não salvou:', {
-                hasBlock: !!selectedBlock,
-                isDirty,
-                reason: !selectedBlock ? 'Sem bloco selecionado' : 'Não há mudanças (isDirty=false)'
-            });
+            appLogger.warn('❌ Não salvou:', { data: [{
+                            hasBlock: !!selectedBlock,
+                            isDirty,
+                            reason: !selectedBlock ? 'Sem bloco selecionado' : 'Não há mudanças (isDirty=false)'
+                        }] });
         }
         console.groupEnd();
     }, [selectedBlock, isDirty, editedProperties, onBlockUpdate]);

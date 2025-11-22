@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { cacheManager } from '@/lib/cache/CacheManager';
 import { networkMonitor } from '@/lib/monitoring/NetworkMonitor';
 import { Activity, Database, Network, Clock, AlertTriangle } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PerformanceMetrics {
     tti: number;
@@ -90,20 +91,20 @@ export function PerformanceMonitor({
         if (typeof window !== 'undefined') {
             // TTI crítico
             if (updatedMetrics.tti > 2000 && !(window as any).__perfCriticalNotified) {
-                console.error('[PerformanceMonitor] CRITICAL: TTI muito alto!', {
-                    tti: updatedMetrics.tti,
-                    cacheHitRate: updatedMetrics.cacheHitRate,
-                    errors404: updatedMetrics.errors404,
-                });
+                appLogger.error('[PerformanceMonitor] CRITICAL: TTI muito alto!', { data: [{
+                                    tti: updatedMetrics.tti,
+                                    cacheHitRate: updatedMetrics.cacheHitRate,
+                                    errors404: updatedMetrics.errors404,
+                                }] });
                 (window as any).__perfCriticalNotified = true;
             }
 
             // 404s excessivos
             if (updatedMetrics.errors404 > 20 && !(window as any).__perf404Notified) {
-                console.warn('[PerformanceMonitor] WARNING: Muitos 404s detectados!', {
-                    errors404: updatedMetrics.errors404,
-                    failedPaths: networkMonitor.getStats().failedPaths.slice(-5),
-                });
+                appLogger.warn('[PerformanceMonitor] WARNING: Muitos 404s detectados!', { data: [{
+                                    errors404: updatedMetrics.errors404,
+                                    failedPaths: networkMonitor.getStats().failedPaths.slice(-5),
+                                }] });
                 (window as any).__perf404Notified = true;
             }
         }

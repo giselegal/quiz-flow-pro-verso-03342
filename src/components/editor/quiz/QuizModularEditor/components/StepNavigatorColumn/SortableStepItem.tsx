@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export interface SortableStepItemProps {
   id: string;
@@ -77,7 +78,7 @@ export const SortableStepItem: React.FC<SortableStepItemProps> = ({
       {/* Step Title */}
       <button
         onClick={(e) => {
-          console.log('🟢 [SortableStepItem] onClick chamado:', { id, title, hasHandler: !!handleClick });
+          appLogger.info('🟢 [SortableStepItem] onClick chamado:', { data: [{ id, title, hasHandler: !!handleClick }] });
           e.stopPropagation();
           handleClick?.();
         }}

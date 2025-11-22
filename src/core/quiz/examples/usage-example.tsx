@@ -27,6 +27,7 @@ import {
   useBlockDefinition,
   useBlockValidation,
 } from '@/core/quiz';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * ============================================================================
@@ -138,8 +139,8 @@ export function Example4_AdaptLegacyBlock() {
   // Adaptar para formato oficial
   const officialBlock = adaptLegacyBlock(legacyBlockData);
   
-  console.log('Tipo oficial:', officialBlock.type); // 'intro-logo-header'
-  console.log('Propriedades adaptadas:', officialBlock.properties);
+  appLogger.info('Tipo oficial:', { data: [officialBlock.type] }); // 'intro-logo-header'
+  appLogger.info('Propriedades adaptadas:', { data: [officialBlock.properties] });
 
   // Normalizar (aplicar defaults)
   const normalized = normalizeBlockInstance(officialBlock);

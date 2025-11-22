@@ -27,6 +27,7 @@ import {
   Layers
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface JsonTemplateEditorProps {
   template?: any;
@@ -163,7 +164,7 @@ export function JsonTemplateEditor({
         setJsonText(formatted);
         setHasChanges(false);
       } catch (error) {
-        console.error('Erro ao formatar template:', error);
+        appLogger.error('Erro ao formatar template:', { data: [error] });
       }
     } else {
       const newTemplate = { ...DEFAULT_TEMPLATE };
@@ -337,12 +338,12 @@ export function JsonTemplateEditor({
 
   const handleApply = useCallback(() => {
     console.group('📝 [JsonTemplateEditor] handleApply chamado');
-    console.log('isValid:', isValid);
-    console.log('hasChanges:', hasChanges);
-    console.log('jsonText length:', jsonText.length);
+    appLogger.info('isValid:', { data: [isValid] });
+    appLogger.info('hasChanges:', { data: [hasChanges] });
+    appLogger.info('jsonText length:', { data: [jsonText.length] });
 
     if (!isValid) {
-      console.warn('❌ JSON inválido, abortando');
+      appLogger.warn('❌ JSON inválido, abortando');
       console.groupEnd();
       toast({
         title: 'JSON inválido',
@@ -354,13 +355,13 @@ export function JsonTemplateEditor({
 
     try {
       const parsed = JSON.parse(jsonText);
-      console.log('✅ JSON parseado com sucesso:', parsed);
-      console.log('Chamando onTemplateChange:', typeof onTemplateChange);
-      console.log('parsed.stages:', parsed.stages?.length || 0);
-      console.log('parsed.blocks:', parsed.blocks?.length || 0);
+      appLogger.info('✅ JSON parseado com sucesso:', { data: [parsed] });
+      appLogger.info('Chamando onTemplateChange:', { data: [typeof onTemplateChange] });
+      appLogger.info('parsed.stages:', { data: [parsed.stages?.length || 0] });
+      appLogger.info('parsed.blocks:', { data: [parsed.blocks?.length || 0] });
 
       onTemplateChange?.(parsed);
-      console.log('✅ onTemplateChange chamado');
+      appLogger.info('✅ onTemplateChange chamado');
       setHasChanges(false);
 
       toast({
@@ -369,7 +370,7 @@ export function JsonTemplateEditor({
       });
       console.groupEnd();
     } catch (error: any) {
-      console.error('❌ Erro ao aplicar:', error);
+      appLogger.error('❌ Erro ao aplicar:', { data: [error] });
       console.groupEnd();
       toast({
         title: 'Erro ao aplicar',

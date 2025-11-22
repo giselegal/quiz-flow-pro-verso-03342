@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 FASE 3.2 - Avisos de Deprecação para Template Services
  * 
@@ -16,12 +17,10 @@ function emitDeprecationWarning(
   migrationGuide?: string
 ) {
   if (process.env.NODE_ENV === 'development') {
-    console.warn(
-      `⚠️ [DEPRECATED] ${serviceName} is deprecated.\n` +
-      `   Use ${replacement} instead.\n` +
-      (migrationGuide ? `   Migration Guide: ${migrationGuide}\n` : '') +
-      `   Documentation: TEMPLATE_SERVICES_CONSOLIDATION.md`
-    );
+    appLogger.warn(`⚠️ [DEPRECATED] ${serviceName} is deprecated.\n` +
+            `   Use ${replacement} instead.\n` +
+            (migrationGuide ? `   Migration Guide: ${migrationGuide}\n` : '') +
+            `   Documentation: TEMPLATE_SERVICES_CONSOLIDATION.md`);
   }
 }
 

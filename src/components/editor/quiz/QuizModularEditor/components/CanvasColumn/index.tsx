@@ -87,20 +87,20 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
             `}
             onClick={e => {
                 const target = e.target as HTMLElement;
-                console.log('🖱️ [CanvasColumn] Click no bloco:', {
-                    blockId: block.id,
-                    blockType: block.type,
-                    targetTag: target.tagName,
-                    isButton: target.tagName.toLowerCase() === 'button',
-                    onSelectExists: !!onSelect
-                });
+                appLogger.info('🖱️ [CanvasColumn] Click no bloco:', { data: [{
+                                    blockId: block.id,
+                                    blockType: block.type,
+                                    targetTag: target.tagName,
+                                    isButton: target.tagName.toLowerCase() === 'button',
+                                    onSelectExists: !!onSelect
+                                }] });
 
                 if (target.tagName.toLowerCase() === 'button') {
-                    console.log('⏭️ Click em button, ignorando seleção');
+                    appLogger.info('⏭️ Click em button, ignorando seleção');
                     return;
                 }
 
-                console.log('✅ Chamando onSelect para:', block.id);
+                appLogger.info('✅ Chamando onSelect para:', { data: [block.id] });
                 onSelect?.(block.id);
             }}
             data-block-id={block.id}

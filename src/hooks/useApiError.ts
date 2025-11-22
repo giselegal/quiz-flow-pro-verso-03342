@@ -5,6 +5,7 @@
 
 import { toast } from 'sonner';
 import { APIError } from '@/lib/api-client';
+import { appLogger } from '@/lib/utils/appLogger';
 
 export function useApiError() {
   const handleError = (error: unknown) => {
@@ -45,13 +46,13 @@ export function useApiError() {
       }
 
       // Log for debugging
-      console.error('[API Error]', {
-        code: error.code,
-        message: error.message,
-        statusCode: error.statusCode,
-        details: error.details,
-        requestId: error.requestId,
-      });
+      appLogger.error('[API Error]', { data: [{
+                code: error.code,
+                message: error.message,
+                statusCode: error.statusCode,
+                details: error.details,
+                requestId: error.requestId,
+              }] });
     } else {
       // Generic error
       toast.error('Erro inesperado', {
@@ -59,7 +60,7 @@ export function useApiError() {
         duration: 5000,
       });
 
-      console.error('[Unexpected Error]', error);
+      appLogger.error('[Unexpected Error]', { data: [error] });
     }
   };
 

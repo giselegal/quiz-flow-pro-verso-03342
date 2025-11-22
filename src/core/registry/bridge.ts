@@ -10,6 +10,7 @@
 
 import { BlockRegistry } from '../quiz/blocks/registry';
 import type { BlockDefinition } from '../quiz/blocks/types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Sincronizar blocos do core/quiz para o sistema legado
@@ -18,7 +19,7 @@ export function syncBlockRegistries() {
   try {
     const allTypes = BlockRegistry.getAllTypes();
     
-    console.log(`[RegistryBridge] Sincronizando ${allTypes.length} blocos do core/quiz`);
+    appLogger.info(`[RegistryBridge] Sincronizando ${allTypes.length} blocos do core/quiz`);
     
     let syncCount = 0;
     
@@ -31,7 +32,7 @@ export function syncBlockRegistries() {
       }
     }
     
-    console.log(`[RegistryBridge] ✅ ${syncCount} blocos sincronizados com sucesso`);
+    appLogger.info(`[RegistryBridge] ✅ ${syncCount} blocos sincronizados com sucesso`);
     
     return {
       success: true,
@@ -39,7 +40,7 @@ export function syncBlockRegistries() {
       totalTypes: allTypes.length
     };
   } catch (error) {
-    console.error('[RegistryBridge] ❌ Erro ao sincronizar registries:', error);
+    appLogger.error('[RegistryBridge] ❌ Erro ao sincronizar registries:', { data: [error] });
     return {
       success: false,
       syncedCount: 0,
@@ -57,7 +58,7 @@ export function getBlockDefinitionWithFallback(type: string): BlockDefinition | 
   const coreDefinition = BlockRegistry.getDefinition(type);
   
   if (coreDefinition) {
-    console.log(`[RegistryBridge] ✅ Bloco '${type}' encontrado no core/quiz`);
+    appLogger.info(`[RegistryBridge] ✅ Bloco '${type}' encontrado no core/quiz`);
     return coreDefinition;
   }
   
@@ -66,13 +67,13 @@ export function getBlockDefinitionWithFallback(type: string): BlockDefinition | 
   if (resolvedType !== type) {
     const aliasDefinition = BlockRegistry.getDefinition(resolvedType);
     if (aliasDefinition) {
-      console.log(`[RegistryBridge] ✅ Bloco '${type}' resolvido via alias para '${resolvedType}'`);
+      appLogger.info(`[RegistryBridge] ✅ Bloco '${type}' resolvido via alias para '${resolvedType}'`);
       return aliasDefinition;
     }
   }
   
   // 3. Fallback: sistema legado (se necessário)
-  console.warn(`[RegistryBridge] ⚠️ Bloco '${type}' não encontrado no core/quiz, usando fallback legado`);
+  appLogger.warn(`[RegistryBridge] ⚠️ Bloco '${type}' não encontrado no core/quiz, usando fallback legado`);
   return null;
 }
 
@@ -120,17 +121,17 @@ export function getBridgeStats() {
  * Inicializar bridge na aplicação
  */
 export function initializeRegistryBridge() {
-  console.log('[RegistryBridge] 🚀 Inicializando ponte entre registries...');
+  appLogger.info('[RegistryBridge] 🚀 Inicializando ponte entre registries...');
   
   const stats = getBridgeStats();
-  console.log('[RegistryBridge] 📊 Estatísticas:', stats);
+  appLogger.info('[RegistryBridge] 📊 Estatísticas:', { data: [stats] });
   
   const syncResult = syncBlockRegistries();
   
   if (syncResult.success) {
-    console.log('[RegistryBridge] ✅ Bridge inicializado com sucesso');
+    appLogger.info('[RegistryBridge] ✅ Bridge inicializado com sucesso');
   } else {
-    console.error('[RegistryBridge] ❌ Falha ao inicializar bridge:', syncResult.error);
+    appLogger.error('[RegistryBridge] ❌ Falha ao inicializar bridge:', { data: [syncResult.error] });
   }
   
   return syncResult;

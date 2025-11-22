@@ -33,7 +33,7 @@ class BlockRegistryClass {
    */
   register(definition: BlockDefinition): void {
     if (this.definitions.has(definition.type)) {
-      console.warn(`[BlockRegistry] Tipo '${definition.type}' já registrado - sobrescrevendo`);
+      appLogger.warn(`[BlockRegistry] Tipo '${definition.type}' já registrado - sobrescrevendo`);
     }
     this.definitions.set(definition.type, definition);
   }
@@ -508,3 +508,4 @@ export type { BlockDefinition } from './types';
  * @see ./extensions.ts
  */
 import './extensions';
+import { appLogger } from '@/lib/utils/appLogger';

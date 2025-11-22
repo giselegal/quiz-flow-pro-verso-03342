@@ -4,6 +4,7 @@
  */
 
 import type { UnifiedFunnel } from './UnifiedCRUDService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TYPE DEFINITIONS
@@ -129,7 +130,7 @@ function loadSnapshots(): VersionSnapshot[] {
       timestamp: new Date(s.timestamp),
     }));
   } catch (error) {
-    console.error('Failed to load snapshots:', error);
+    appLogger.error('Failed to load snapshots:', { data: [error] });
     return [];
   }
 }
@@ -144,7 +145,7 @@ function saveSnapshots(snapshots: VersionSnapshot[]): void {
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshots));
   } catch (error) {
-    console.error('Failed to save snapshots:', error);
+    appLogger.error('Failed to save snapshots:', { data: [error] });
     // Only throw in browser environments where localStorage should work
     if (!isLocalStorageAvailable()) {
       // Fallback to memory storage in non-browser environments

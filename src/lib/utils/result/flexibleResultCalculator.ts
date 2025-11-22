@@ -1,3 +1,4 @@
+import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🧮 FLEXIBLE RESULT CALCULATOR
  * 
@@ -232,7 +233,7 @@ export class FlexibleResultCalculator {
           }
         };
       } catch (error) {
-        console.error('Erro ao avaliar fórmula customizada:', error);
+        appLogger.error('Erro ao avaliar fórmula customizada:', { data: [error] });
         return baseResult;
       }
     }
@@ -360,7 +361,7 @@ export class FlexibleResultCalculator {
       // Avaliar expressão matemática simples
       return eval(processedFormula);
     } catch (error) {
-      console.error('Erro ao avaliar fórmula:', error);
+      appLogger.error('Erro ao avaliar fórmula:', { data: [error] });
       return 0;
     }
   }
