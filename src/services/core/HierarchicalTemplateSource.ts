@@ -68,105 +68,107 @@ interface CacheEntry {
   expiresAt: number;
 }
 
+/**
+ * ✅ FASE 2.2: Modo de operação unificado
+ * Substitui 4 flags globais por um único sistema de modos
+ */
+enum OperationMode {
+  EDITOR = 'editor',      // Editor mode: JSON-only, cache enabled
+  PRODUCTION = 'production', // Production: USER_EDIT → JSON, cache enabled
+  LIVE_EDIT = 'live-edit'    // Live edit: No cache, USER_EDIT priority
+}
+
 export class HierarchicalTemplateSource implements TemplateDataSource {
   private cache = new Map<string, CacheEntry>();
   private options: Required<DataSourceOptions>;
-  private activeTemplateId: string = 'quiz21StepsComplete'; // 🆕 Template ativo (padrão)
+  private activeTemplateId: string = 'quiz21StepsComplete';
+  private mode: OperationMode;
   
-  // 🔧 Controla se fontes online (Supabase) estão desabilitadas
-  private get ONLINE_DISABLED(): boolean {
+  /**
+   * ✅ FASE 2.2: Modo unificado - substitui ONLINE_DISABLED, JSON_ONLY, LIVE_EDIT, isFallbackDisabled
+   * Determina o modo de operação baseado em env vars e localStorage
+   */
+  private determineMode(): OperationMode {
     try {
-      // Prioridade 1: localStorage explícito (mais alta prioridade)
-      if (typeof window !== 'undefined') {
-        const disable = window.localStorage?.getItem('VITE_DISABLE_SUPABASE');
-        if (disable !== null) return disable === 'true';
-        
-        // Legacy flag
-        const legacyDisable = window.localStorage?.getItem('supabase:disableNetwork');
-        if (legacyDisable !== null) return legacyDisable === 'true';
+      // Check LIVE_EDIT first (highest priority)
+      if (this.getEnvFlag('VITE_TEMPLATE_LIVE_EDIT')) {
+        return OperationMode.LIVE_EDIT;
       }
 
-      // Prioridade 2: Vite env variable
+      // Check if in editor mode (JSON-only or Supabase disabled)
+      const jsonOnly = this.getEnvFlag('VITE_TEMPLATE_JSON_ONLY');
+      const supabaseDisabled = this.getEnvFlag('VITE_DISABLE_SUPABASE') || 
+                               this.getEnvFlag('supabase:disableNetwork', true);
+      
+      // Default to EDITOR mode in development
+      let isDev = false;
       try {
-        const viteDisable = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE;
-        if (viteDisable !== undefined) return viteDisable === 'true';
+        isDev = !!(import.meta as any)?.env?.DEV;
       } catch { /* noop */ }
 
-      // Prioridade 3: Process env (Node.js/SSR)
+      if (jsonOnly || supabaseDisabled || isDev) {
+        return OperationMode.EDITOR;
+      }
+
+      return OperationMode.PRODUCTION;
+    } catch {
+      return OperationMode.EDITOR; // Safe default
+    }
+  }
+
+  /**
+   * Helper to get environment flag from multiple sources
+   */
+  private getEnvFlag(key: string, legacyKey: boolean = false): boolean {
+    try {
+      // 1. localStorage (highest priority)
+      if (typeof window !== 'undefined') {
+        const ls = window.localStorage?.getItem(key);
+        if (ls !== null) return ls === 'true';
+      }
+
+      // 2. Vite env
+      try {
+        const viteValue = (import.meta as any)?.env?.[key];
+        if (viteValue !== undefined) return viteValue === 'true';
+      } catch { /* noop */ }
+
+      // 3. Process env
       if (typeof process !== 'undefined') {
-        const procDisable = (process as any).env?.VITE_DISABLE_SUPABASE;
-        if (procDisable !== undefined) return procDisable === 'true';
+        const processValue = (process as any).env?.[key];
+        if (processValue !== undefined) return processValue === 'true';
       }
-
-      // ✅ MUDANÇA CRÍTICA: Não desabilitar automaticamente em DEV
-      // Permite testar Supabase em desenvolvimento
-      // Use localStorage.setItem('VITE_DISABLE_SUPABASE', 'true') para desabilitar manualmente
     } catch { /* noop */ }
-    
-    return false; // ✅ Padrão: Supabase HABILITADO
+    return false;
   }
-  // 🔧 Modo JSON-only: força uso de JSON dinâmico e desativa fallback TS/registry
+
+  /**
+   * ✅ FASE 2.2: Propriedades derivadas do modo (backward compatibility)
+   */
+  private get ONLINE_DISABLED(): boolean {
+    return this.mode === OperationMode.EDITOR;
+  }
+
   private get JSON_ONLY(): boolean {
-    try {
-      // 1) localStorage override (mais alta prioridade em ambiente browser)
-      if (typeof window !== 'undefined') {
-        const ls = window.localStorage?.getItem('VITE_TEMPLATE_JSON_ONLY');
-        if (ls != null) return ls === 'true';
-      }
-      // 2) Vite env
-      let rawVite: any;
-      try {
-        // @ts-ignore
-        rawVite = (import.meta as any)?.env?.VITE_TEMPLATE_JSON_ONLY;
-      } catch { /* noop */ }
-      if (typeof rawVite === 'string') return rawVite === 'true';
-
-      // 3) Node/process fallback (scripts/tests)
-      const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_JSON_ONLY : undefined);
-      if (typeof rawNode === 'string') return rawNode === 'true';
-
-      // 4) Padrão em DEV: preferir JSON V3 automaticamente
-      try {
-        // @ts-ignore
-        const isDev = !!(import.meta as any)?.env?.DEV;
-        if (isDev) return true;
-      } catch { /* noop */ }
-    } catch { /* noop */ }
-    return false;
+    return this.mode === OperationMode.EDITOR;
   }
+
   private get LIVE_EDIT(): boolean {
-    try {
-      if (typeof window !== 'undefined') {
-        const ls = window.localStorage?.getItem('VITE_TEMPLATE_LIVE_EDIT');
-        if (ls != null) return ls === 'true';
-      }
-      let rawVite: any;
-      try {
-        // @ts-ignore
-        rawVite = (import.meta as any)?.env?.VITE_TEMPLATE_LIVE_EDIT;
-      } catch { }
-      if (typeof rawVite === 'string') return rawVite === 'true';
-      const rawNode = (typeof process !== 'undefined' ? (process as any).env?.VITE_TEMPLATE_LIVE_EDIT : undefined);
-      if (typeof rawNode === 'string') return rawNode === 'true';
-    } catch { }
-    return false;
+    return this.mode === OperationMode.LIVE_EDIT;
   }
 
   constructor(options: DataSourceOptions = {}) {
+    // Determine mode first
+    this.mode = this.determineMode();
+
     this.options = {
-      enableCache: options.enableCache ?? true,
-      cacheTTL: options.cacheTTL ?? 5 * 60 * 1000, // 5 min padrão
+      enableCache: options.enableCache ?? (this.mode !== OperationMode.LIVE_EDIT),
+      cacheTTL: options.cacheTTL ?? 5 * 60 * 1000,
       enableMetrics: options.enableMetrics ?? true,
-      fallbackToStatic: options.fallbackToStatic ?? true,
+      fallbackToStatic: options.fallbackToStatic ?? false, // Disabled by default in Phase 2
     };
 
-    // Se JSON-only, desativar fallback para estático imediatamente
-    if (this.JSON_ONLY) {
-      this.options.fallbackToStatic = false;
-    }
-    if (this.LIVE_EDIT) {
-      this.options.enableCache = false;
-    }
+    appLogger.info(`[HierarchicalSource] Mode: ${this.mode}, Cache: ${this.options.enableCache}`);
 
     // Log único para clarificar se Supabase está desligado (dev experience)
     if (this.ONLINE_DISABLED) {
