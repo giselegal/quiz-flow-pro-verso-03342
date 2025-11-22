@@ -142,14 +142,26 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   
   // Log warning if using basic health computation in production
   useEffect(() => {
-    try {
-      const isProduction = (import.meta as any)?.env?.PROD === true || 
-                          (typeof process !== 'undefined' && (process as any).env?.NODE_ENV === 'production');
-      if (isProduction) {
-        appLogger.info('[SecurityProvider] Using basic health computation - consider enhancing for production');
+    const isProduction = (() => {
+      try {
+        // Check Vite environment
+        if (typeof import.meta !== 'undefined') {
+          const env = (import.meta as { env?: { PROD?: boolean } }).env;
+          if (env?.PROD === true) return true;
+        }
+        // Check Node.js environment
+        if (typeof process !== 'undefined') {
+          const nodeEnv = (process as { env?: { NODE_ENV?: string } }).env;
+          if (nodeEnv?.NODE_ENV === 'production') return true;
+        }
+        return false;
+      } catch {
+        return false;
       }
-    } catch {
-      // Ignore errors accessing env vars
+    })();
+    
+    if (isProduction) {
+      appLogger.info('[SecurityProvider] Using basic health computation - consider enhancing for production');
     }
   }, []);
 

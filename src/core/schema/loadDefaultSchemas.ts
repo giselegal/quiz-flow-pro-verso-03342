@@ -33,11 +33,9 @@ export function loadDefaultSchemas(): void {
     appLogger.error('❌ CRÍTICO: quiz-intro-header schema NÃO foi registrado!');
   } else {
     appLogger.info('✅ quiz-intro-header schema REGISTRADO com sucesso', {
-      data: [{ 
-        type: quizHeaderSchema.type,
-        propertyCount: Object.keys(quizHeaderSchema.properties || {}).length,
-        properties: Object.keys(quizHeaderSchema.properties || {})
-      }],
+      type: quizHeaderSchema.type,
+      propertyCount: Object.keys(quizHeaderSchema.properties || {}).length,
+      properties: Object.keys(quizHeaderSchema.properties || {})
     });
   }
 }
