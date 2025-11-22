@@ -169,6 +169,7 @@ describe('TemplateService - Consolidação', () => {
   describe('🔍 BlockRegistry Integration', () => {
     it('deve ter blocos registrados do extensions.ts', async () => {
       // Importar BlockRegistry para verificar
+      // @ts-expect-error - Path mapping issue in test environment
       const { BlockRegistry } = await import('@/core/quiz/blocks/registry');
       
       const types = BlockRegistry.getAllTypes();
@@ -183,6 +184,7 @@ describe('TemplateService - Consolidação', () => {
     });
 
     it('deve ter definições completas para blocos do quiz21', async () => {
+      // @ts-expect-error - Path mapping issue in test environment
       const { BlockRegistry } = await import('@/core/quiz/blocks/registry');
       
       const definition = BlockRegistry.getDefinition('question-hero');
@@ -194,6 +196,7 @@ describe('TemplateService - Consolidação', () => {
     });
 
     it('deve ter pelo menos 33 tipos registrados', async () => {
+      // @ts-expect-error - Path mapping issue in test environment
       const { BlockRegistry } = await import('@/core/quiz/blocks/registry');
       
       const types = BlockRegistry.getAllTypes();
