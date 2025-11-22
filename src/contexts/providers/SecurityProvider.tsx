@@ -14,7 +14,7 @@
  * TODO: Adicionar auditoria de segurança
  */
 
-import React, { createContext, useContext, useCallback, useRef, useEffect } from 'react';
+import React, { createContext, useContext, useCallback, useRef, useEffect, useMemo } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface AccessAttempt {
@@ -120,21 +120,38 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return [...accessHistoryRef.current];
   }, []);
 
-  // Compute system health status based on access history
-  const systemStatus: 'healthy' | 'degraded' | 'critical' = 'healthy';
-  const hasCriticalIssues = false;
-  const hasWarnings = false;
-  const isSystemHealthy = true;
+  // Basic health computation based on access history
+  // Memoized to avoid recalculating on every render
+  const healthMetrics = useMemo(() => {
+    const recentAttempts = accessHistoryRef.current.slice(-20); // Last 20 attempts
+    const deniedCount = recentAttempts.filter(a => !a.granted).length;
+    const deniedRatio = recentAttempts.length > 0 ? deniedCount / recentAttempts.length : 0;
+    
+    const hasCriticalIssues = deniedRatio > 0.5; // More than 50% denied
+    const hasWarnings = deniedRatio > 0.2 && !hasCriticalIssues; // 20-50% denied
+    const isSystemHealthy = !hasCriticalIssues && !hasWarnings;
+    const systemStatus: 'healthy' | 'degraded' | 'critical' = 
+      hasCriticalIssues ? 'critical' : hasWarnings ? 'degraded' : 'healthy';
+    
+    return { hasCriticalIssues, hasWarnings, isSystemHealthy, systemStatus };
+  }, [accessHistoryRef.current.length]); // Recompute when history changes
+  
+  // Log warning if using basic health computation in production
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+      appLogger.info('[SecurityProvider] Using basic health computation - consider enhancing for production');
+    }
+  }, []);
 
   const value: SecurityContextType = {
     isSecure: true,
     validateAccess,
     logSecurityEvent,
     getAccessHistory,
-    systemStatus,
-    hasCriticalIssues,
-    hasWarnings,
-    isSystemHealthy,
+    systemStatus: healthMetrics.systemStatus,
+    hasCriticalIssues: healthMetrics.hasCriticalIssues,
+    hasWarnings: healthMetrics.hasWarnings,
+    isSystemHealthy: healthMetrics.isSystemHealthy,
   };
 
   return (
