@@ -2,6 +2,8 @@ import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
+import compression from 'compression';
+import { logger, requestIdMiddleware, loggingMiddleware } from './utils/logger';
 // imports auxiliares removidos; usaremos dynamic import para 'archiver' dentro do handler
 import path, { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
@@ -21,6 +23,26 @@ const app = express();
 const server = createServer(app);
 
 app.use(cors());
+
+// Request ID and logging
+app.use(requestIdMiddleware);
+app.use(loggingMiddleware);
+
+// HTTP Compression (gzip/deflate)
+app.use(compression({
+  level: 6, // Compression level (0-9)
+  threshold: 1024, // Only compress responses > 1KB
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+}));
+
+// Enable strong ETags
+app.set('etag', 'strong');
+
 // Aumentar limite para payloads de funis maiores
 app.use(express.json({ limit: '4mb' }));
 
@@ -172,25 +194,102 @@ app.get('/api/quizzes/:id', (req, res) => {
   res.json({ id: req.params.id, title: 'Mock Quiz' });
 });
 
-// Minimal Funnels endpoints for FE compatibility
-const funnelsStore = new Map<string, any>();
-app.get('/api/funnels', (_req, res) => {
-  res.json(Array.from(funnelsStore.values()));
-});
-app.get('/api/funnels/:id', (req, res) => {
-  const id = req.params.id;
-  let funnel = funnelsStore.get(id);
-  if (!funnel) {
-    funnel = {
-      id,
-      name: `Funnel ${id}`,
-      steps: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    funnelsStore.set(id, funnel);
+// Funnels endpoints with repository pattern
+import { funnelRepository } from './repositories/funnel.repository';
+import { NotFoundError, ConflictError, ValidationError } from './utils/errors';
+import { errorHandler } from './api/middlewares/error-handler';
+
+app.get('/api/funnels', async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const userId = req.query.userId as string | undefined;
+    
+    const { funnels, total } = await funnelRepository.findAll({
+      userId,
+      page,
+      limit,
+    });
+
+    res.json({
+      data: funnels,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+        hasNext: page * limit < total,
+        hasPrev: page > 1,
+      },
+    });
+  } catch (error) {
+    next(error);
   }
-res.json(funnel);
+});
+
+app.get('/api/funnels/:id', async (req, res, next) => {
+  try {
+    const funnel = await funnelRepository.findById(req.params.id);
+    
+    if (!funnel) {
+      throw new NotFoundError('Funnel', req.params.id);
+    }
+
+    res.json(funnel);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/api/funnels', async (req, res, next) => {
+  try {
+    const { name, slug, description, steps, settings, user_id } = req.body;
+
+    if (!name || name.length < 3) {
+      throw new ValidationError('Nome é obrigatório e deve ter pelo menos 3 caracteres');
+    }
+
+    const funnel = await funnelRepository.create({
+      name,
+      slug,
+      description,
+      user_id,
+      steps: steps || [],
+      settings: settings || {},
+    });
+
+    res.status(201).json(funnel);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/funnels/:id', async (req, res, next) => {
+  try {
+    const { version, ...updates } = req.body;
+
+    const funnel = await funnelRepository.update(
+      req.params.id,
+      updates,
+      version
+    );
+
+    res.json(funnel);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('CONFLICT')) {
+      return next(new ConflictError('Funnel foi modificado por outro usuário'));
+    }
+    next(error);
+  }
+});
+
+app.delete('/api/funnels/:id', async (req, res, next) => {
+  try {
+    await funnelRepository.delete(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 });
 
 const quizResults: any[] = [];
@@ -210,10 +309,12 @@ app.get('/api/quiz-participants', (_req, res) => {
   res.json({ data: quizParticipants, count: quizParticipants.length, timestamp: new Date().toISOString() });
 });
 
-// Templates (novo Template Engine)
-app.use('/api/templates', templatesRouter);
-// Components CRUD (in-memory por enquanto)
-app.use('/api/components', componentsRouter);
+// Templates (novo Template Engine) with cache
+import { cacheStrategies } from './api/middlewares/cache';
+
+app.use('/api/templates', cacheStrategies.medium(), templatesRouter);
+// Components CRUD (in-memory por enquanto) with cache
+app.use('/api/components', cacheStrategies.long(), componentsRouter);
 // Legacy quiz-style adapter (read-only draft view) controlado por flag USE_QUIZ_STYLE_ADAPTER (default: on)
 if (process.env.USE_QUIZ_STYLE_ADAPTER !== 'false') {
   app.use('/api/quiz-style', quizStyleRouter);
@@ -233,11 +334,28 @@ setupUtmAnalyticsEndpoint(app);
 setupFunnelSettingsEndpoints(app);
 setupFunnelPublicationEndpoints(app);
 
-// Generic error handler
-app.use((err: any, req: any, res: any, next: any) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+// Migration endpoints
+import { MigrationController } from './api/controllers/migration.controller';
+const migrationController = new MigrationController();
+
+app.post('/api/admin/migrate', async (req, res, next) => {
+  try {
+    await migrationController.migrate(req, res);
+  } catch (error) {
+    next(error);
+  }
 });
+
+app.get('/api/admin/migrate/:migrationId/status', async (req, res, next) => {
+  try {
+    await migrationController.getStatus(req, res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Use centralized error handler
+app.use(errorHandler);
 
 // ==================================================================================
 // Packaging endpoint: gera um .zip com manifest.json e snapshot HTML básico
