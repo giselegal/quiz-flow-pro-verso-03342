@@ -43,6 +43,9 @@ export {
 export { SuperUnifiedProvider } from './SuperUnifiedProviderV2';
 export { useSuperUnified, useUnifiedAuth } from '@/hooks/useSuperUnified';
 
+// ✅ FASE 3.1: Provider otimizado com memoização (RECOMENDADO)
+export { SuperUnifiedProviderV3, default as SuperUnifiedProviderV3Default } from './SuperUnifiedProviderV3';
+
 // 🎥 FEATURE: Live preview via WebSocket (usado em editor avançado)
 export { default as LivePreviewProvider, useLivePreview } from './LivePreviewProvider';
 
