@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
+import compression from 'compression';
 // imports auxiliares removidos; usaremos dynamic import para 'archiver' dentro do handler
 import path, { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
@@ -21,6 +22,22 @@ const app = express();
 const server = createServer(app);
 
 app.use(cors());
+
+// HTTP Compression (gzip/deflate)
+app.use(compression({
+  level: 6, // Compression level (0-9)
+  threshold: 1024, // Only compress responses > 1KB
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+}));
+
+// Enable strong ETags
+app.set('etag', 'strong');
+
 // Aumentar limite para payloads de funis maiores
 app.use(express.json({ limit: '4mb' }));
 
@@ -287,10 +304,12 @@ app.get('/api/quiz-participants', (_req, res) => {
   res.json({ data: quizParticipants, count: quizParticipants.length, timestamp: new Date().toISOString() });
 });
 
-// Templates (novo Template Engine)
-app.use('/api/templates', templatesRouter);
-// Components CRUD (in-memory por enquanto)
-app.use('/api/components', componentsRouter);
+// Templates (novo Template Engine) with cache
+import { cacheStrategies } from './api/middlewares/cache';
+
+app.use('/api/templates', cacheStrategies.medium(), templatesRouter);
+// Components CRUD (in-memory por enquanto) with cache
+app.use('/api/components', cacheStrategies.long(), componentsRouter);
 // Legacy quiz-style adapter (read-only draft view) controlado por flag USE_QUIZ_STYLE_ADAPTER (default: on)
 if (process.env.USE_QUIZ_STYLE_ADAPTER !== 'false') {
   app.use('/api/quiz-style', quizStyleRouter);
