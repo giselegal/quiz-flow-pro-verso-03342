@@ -13,7 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, AlertTriangle } from 'lucide-react';
 import { schemaInterpreter, PropertySchema } from '@/core/schema/SchemaInterpreter';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -44,9 +44,36 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
   });
 
   if (!schema) {
+    // ✅ FASE 1.2 FIX: Better fallback UI with actionable information
     return (
-      <div className="text-sm text-muted-foreground">
-        Schema não encontrado para tipo: <code>{elementType}</code>
+      <div className="space-y-3 p-4 border border-amber-200 dark:border-amber-800 rounded-lg bg-amber-50 dark:bg-amber-950/20">
+        <div className="flex items-start gap-2">
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-amber-900 dark:text-amber-100 mb-1">
+              Schema não encontrado
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-300 mb-2">
+              O tipo de bloco <code className="bg-amber-100 dark:bg-amber-900 px-1 py-0.5 rounded">{elementType}</code> não possui schema registrado.
+            </p>
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              <strong>Possíveis causas:</strong>
+            </p>
+            <ul className="text-xs text-amber-600 dark:text-amber-400 list-disc list-inside mt-1 space-y-0.5">
+              <li>Schemas não foram carregados no App.tsx</li>
+              <li>Tipo de bloco não existe em blockPropertySchemas.ts</li>
+              <li>Schema JSON não foi importado em loadEditorBlockSchemas.ts</li>
+            </ul>
+          </div>
+        </div>
+        <div className="pt-2 border-t border-amber-200 dark:border-amber-800">
+          <p className="text-xs text-amber-700 dark:text-amber-300 mb-2">
+            <strong>Propriedades atuais do bloco:</strong>
+          </p>
+          <pre className="text-xs bg-amber-100 dark:bg-amber-900 p-2 rounded overflow-auto max-h-32">
+            {JSON.stringify(properties, null, 2)}
+          </pre>
+        </div>
       </div>
     );
   }

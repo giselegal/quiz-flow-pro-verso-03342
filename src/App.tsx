@@ -155,26 +155,19 @@ function AppCore() {
             appLogger.warn('[TemplateOverrides] init error', { data: [err] });
         }
 
-        // (lazy) Carregar schemas padrão + blocos somente após primeira interação ou idle
-        const scheduleSchemaLoad = () => {
-            if ('requestIdleCallback' in window) {
-                (window as any).requestIdleCallback(() => {
-                    try {
-                        loadDefaultSchemas();
-                        appLogger.info('✅ (lazy) Default + editor block schemas loaded');
-                    } catch (e) {
-                        appLogger.warn('⚠️ Falha ao carregar schemas (lazy):', { data: [e] });
-                    }
-                }, { timeout: 2000 });
-            } else {
-                setTimeout(() => {
-                    try { loadDefaultSchemas(); } catch {/* noop */ }
-                }, 500);
-            }
-        };
-        // Primeira interação acelera carregamento
+        // ✅ FASE 1.2 FIX: Carregar schemas IMEDIATAMENTE para evitar NULL no Properties Panel
+        // Schemas são críticos para o editor funcionar, não podem ser carregados lazily
+        try {
+            loadDefaultSchemas();
+            appLogger.info('✅ Default + editor block schemas loaded (IMMEDIATE)');
+        } catch (e) {
+            appLogger.error('❌ CRÍTICO: Falha ao carregar schemas:', { data: [e] });
+        }
+
+        // Removido: lazy loading não funciona para Properties Panel
+        // O painel precisa dos schemas no primeiro render
         const firstInteraction = () => {
-            scheduleSchemaLoad();
+            // Schemas já carregados acima
             ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(evt => {
                 try { window.removeEventListener(evt, firstInteraction); } catch {/* noop */ }
             });
