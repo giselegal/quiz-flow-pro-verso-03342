@@ -40,6 +40,51 @@ export const normalizeOverId = (id: string | null | undefined): string | null =>
 };
 
 /**
+ * Normaliza IDs de blocos para comparação
+ * Remove prefixos de DnD wrappers e extrai o ID real do bloco
+ * 
+ * Formatos suportados:
+ * - `block-{uuid}` → `block-{uuid}` (já normalizado)
+ * - `dnd-block-{step}-block-{uuid}` → `block-{uuid}` (remove wrapper DnD)
+ * - `{step}-block-{uuid}` → `block-{uuid}` (remove step prefix)
+ * 
+ * @param id - ID potencialmente prefixado
+ * @returns ID normalizado do bloco ou null se inválido
+ */
+export const normalizeBlockId = (id: string | null | undefined): string | null => {
+  if (!id) return null;
+  
+  // Já é um ID de bloco válido (sem prefixos)
+  if (id.startsWith('block-') && !id.includes('dnd-block-')) {
+    return id;
+  }
+  
+  // Remove wrapper DnD: dnd-block-{step}-{blockId} → {step}-{blockId}
+  let normalized = id;
+  if (normalized.startsWith('dnd-block-')) {
+    normalized = normalized.replace(/^dnd-block-/, '');
+  }
+  
+  // Extrai blockId: {step}-block-{uuid} → block-{uuid}
+  // Procura pelo padrão block- seguido de UUID (formato: 8-4-4-4-12 caracteres hex)
+  // ou qualquer sequência hex longa o suficiente para ser um UUID
+  const blockIdMatch = normalized.match(/(block-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+  if (blockIdMatch) {
+    return blockIdMatch[1];
+  }
+  
+  // Fallback: Se não encontrou UUID completo, tenta padrão mais simples
+  // Isso captura IDs legados ou formatos diferentes
+  const simpleMatch = normalized.match(/(block-[a-z0-9-]+)/i);
+  if (simpleMatch) {
+    return simpleMatch[1];
+  }
+  
+  // Se não encontrou padrão block-, retorna como está (pode ser outro formato válido)
+  return normalized;
+};
+
+/**
  * Valida se um drop é válido
  */
 export const validateDrop = (
