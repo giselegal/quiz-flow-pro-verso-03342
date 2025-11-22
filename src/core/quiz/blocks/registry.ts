@@ -498,3 +498,13 @@ BlockRegistry.registerAlias({
 
 export { BlockRegistry as default };
 export type { BlockDefinition } from './types';
+
+/**
+ * =================================================================
+ * EXTENSÕES - Quiz21 Complete
+ * =================================================================
+ * 
+ * Importa registros adicionais de blocos para quiz21-complete.json
+ * @see ./extensions.ts
+ */
+import './extensions';
