@@ -68,7 +68,7 @@ const MAX_SNAPSHOTS = 50; // Maximum number of snapshots to keep
 // =============================================================================
 
 function generateId(): string {
-  return `snapshot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `snapshot_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }
 
 function generateVersion(type: 'auto' | 'manual' | 'milestone'): string {
@@ -145,11 +145,13 @@ function saveSnapshots(snapshots: VersionSnapshot[]): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshots));
   } catch (error) {
     console.error('Failed to save snapshots:', error);
-    // Don't throw in non-browser environments, use memory fallback
-    if (isLocalStorageAvailable()) {
+    // Only throw in browser environments where localStorage should work
+    if (!isLocalStorageAvailable()) {
+      // Fallback to memory storage in non-browser environments
+      memoryStorage = snapshots;
+    } else {
       throw new Error('Failed to save snapshot to storage');
     }
-    memoryStorage = snapshots;
   }
 }
 
