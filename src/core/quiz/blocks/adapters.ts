@@ -166,7 +166,7 @@ export function adaptLegacyStep(legacyStep: any): {
  * Verificar se um objeto é um BlockInstance válido
  */
 export function isValidBlockInstance(obj: any): obj is BlockInstance {
-  return (
+  return Boolean(
     obj &&
     typeof obj === 'object' &&
     typeof obj.id === 'string' &&
