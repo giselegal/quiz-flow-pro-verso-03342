@@ -83,7 +83,7 @@ const StageList: React.FC<StageListProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleResultPreview(stage);
                   }}
@@ -95,7 +95,7 @@ const StageList: React.FC<StageListProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     onStageDelete(stage.id);
                   }}

@@ -35,7 +35,7 @@ const StageSection: React.FC<StageSectionProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={e => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               onEdit(stage.id);
             }}
@@ -47,7 +47,7 @@ const StageSection: React.FC<StageSectionProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={e => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               onDelete(stage.id);
             }}

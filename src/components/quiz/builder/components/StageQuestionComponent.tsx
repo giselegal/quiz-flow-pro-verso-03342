@@ -118,7 +118,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={e => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleRemoveOption(index);
                     }}
@@ -150,7 +150,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
             />
             <Button
               size="sm"
-              onClick={e => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleAddOption();
               }}
