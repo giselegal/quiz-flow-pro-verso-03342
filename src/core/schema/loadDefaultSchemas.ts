@@ -26,6 +26,20 @@ export function loadDefaultSchemas(): void {
   isLoaded = true;
 
   appLogger.info(`[SchemaInterpreter] ✅ ${Object.keys(defaultSchemas.blockTypes).length} tipos de blocos base + blocos do editor carregados`);
+  
+  // Verificar se quiz-intro-header foi registrado (crítico para Properties Panel)
+  const quizHeaderSchema = schemaInterpreter.getBlockSchema('quiz-intro-header');
+  if (!quizHeaderSchema) {
+    appLogger.error('❌ CRÍTICO: quiz-intro-header schema NÃO foi registrado!');
+  } else {
+    appLogger.info('✅ quiz-intro-header schema REGISTRADO com sucesso', {
+      data: [{ 
+        type: quizHeaderSchema.type,
+        propertyCount: Object.keys(quizHeaderSchema.properties || {}).length,
+        properties: Object.keys(quizHeaderSchema.properties || {})
+      }],
+    });
+  }
 }
 
 /**

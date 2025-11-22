@@ -97,6 +97,8 @@ export function loadEditorBlockSchemas(): void {
 
   // FASE 2: Adicionar schemas de blockPropertySchemas ao registry
   Object.entries(blockPropertySchemas).forEach(([type, schema]) => {
+    appLogger.debug(`[EditorBlockSchemas] Processing blockPropertySchema: ${type}`);
+    
     // Converter BlockSchema para BlockTypeSchema
     const properties: Record<string, any> = {};
     
@@ -128,6 +130,9 @@ export function loadEditorBlockSchemas(): void {
         category: 'content', // default category
         properties,
       };
+      appLogger.info(`[EditorBlockSchemas] ✅ Registered ${type} from blockPropertySchemas (${schema.fields.length} properties)`);
+    } else {
+      appLogger.debug(`[EditorBlockSchemas] Skipped ${type} - already exists in JSON schemas`);
     }
   });
 

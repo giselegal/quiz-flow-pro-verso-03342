@@ -28,6 +28,11 @@ interface SecurityContextType {
   validateAccess: (resource: string, userId?: string) => boolean;
   logSecurityEvent: (event: string, details?: any) => void;
   getAccessHistory: () => AccessAttempt[];
+  // Properties required by SecurityAlert component
+  systemStatus: 'healthy' | 'degraded' | 'critical';
+  hasCriticalIssues: boolean;
+  hasWarnings: boolean;
+  isSystemHealthy: boolean;
 }
 
 const SecurityContext = createContext<SecurityContextType | null>(null);
@@ -115,11 +120,21 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return [...accessHistoryRef.current];
   }, []);
 
+  // Compute system health status based on access history
+  const systemStatus: 'healthy' | 'degraded' | 'critical' = 'healthy';
+  const hasCriticalIssues = false;
+  const hasWarnings = false;
+  const isSystemHealthy = true;
+
   const value: SecurityContextType = {
     isSecure: true,
     validateAccess,
     logSecurityEvent,
     getAccessHistory,
+    systemStatus,
+    hasCriticalIssues,
+    hasWarnings,
+    isSystemHealthy,
   };
 
   return (

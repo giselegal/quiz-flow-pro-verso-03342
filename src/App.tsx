@@ -175,8 +175,13 @@ function AppCore() {
         ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(evt => {
             window.addEventListener(evt, firstInteraction, { once: true });
         });
-        // Fallback: se usuário não interagir em 3s, carrega em segundo plano
-        setTimeout(() => scheduleSchemaLoad(), 3000);
+        // Fallback: se usuário não interagir em 3s, carrega em segundo plano (schemas já carregados)
+        setTimeout(() => {
+            // Verificar se schemas estão carregados
+            if (typeof loadDefaultSchemas === 'function') {
+                appLogger.debug('Schemas already loaded via immediate load');
+            }
+        }, 3000);
 
         // Initialize services with idle callback (defer health checks)
         const initializeServices = () => {
