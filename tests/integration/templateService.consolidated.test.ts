@@ -10,6 +10,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+// @ts-expect-error - Path mapping issue in test environment
 import { templateService } from '@/services/canonical/TemplateService';
 
 describe('TemplateService - Consolidação', () => {
@@ -75,7 +76,7 @@ describe('TemplateService - Consolidação', () => {
       
       if (result.success && result.data) {
         expect(result.data.length).toBeGreaterThan(0);
-        expect(result.data.every(s => s.type === 'question')).toBe(true);
+        expect(result.data.every((s: any) => s.type === 'question')).toBe(true);
       }
     });
 
@@ -160,7 +161,7 @@ describe('TemplateService - Consolidação', () => {
       
       const results = await Promise.all(promises);
       
-      expect(results.every(r => r.success)).toBe(true);
+      expect(results.every((r: any) => r.success)).toBe(true);
       expect(results[0].data).toEqual(results[1].data);
     });
   });
@@ -168,7 +169,7 @@ describe('TemplateService - Consolidação', () => {
   describe('🔍 BlockRegistry Integration', () => {
     it('deve ter blocos registrados do extensions.ts', async () => {
       // Importar BlockRegistry para verificar
-      const { default: BlockRegistry } = await import('@/core/quiz/blocks/registry');
+      const { BlockRegistry } = await import('@/core/quiz/blocks/registry');
       
       const types = BlockRegistry.getAllTypes();
       
@@ -182,7 +183,7 @@ describe('TemplateService - Consolidação', () => {
     });
 
     it('deve ter definições completas para blocos do quiz21', async () => {
-      const { default: BlockRegistry } = await import('@/core/quiz/blocks/registry');
+      const { BlockRegistry } = await import('@/core/quiz/blocks/registry');
       
       const definition = BlockRegistry.getDefinition('question-hero');
       
@@ -193,7 +194,7 @@ describe('TemplateService - Consolidação', () => {
     });
 
     it('deve ter pelo menos 33 tipos registrados', async () => {
-      const { default: BlockRegistry } = await import('@/core/quiz/blocks/registry');
+      const { BlockRegistry } = await import('@/core/quiz/blocks/registry');
       
       const types = BlockRegistry.getAllTypes();
       
@@ -240,6 +241,7 @@ describe('TemplateService - Consolidação', () => {
       let deprecatedExists = false;
       
       try {
+        // @ts-expect-error - Testando se arquivo foi removido
         await import('@/services/TemplateService');
         officialExists = true;
       } catch (e) {
@@ -247,6 +249,7 @@ describe('TemplateService - Consolidação', () => {
       }
       
       try {
+        // @ts-expect-error - Testando se arquivo foi removido
         await import('@/core/funnel/services/TemplateService');
         deprecatedExists = true;
       } catch (e) {
@@ -300,7 +303,7 @@ describe('TemplateService - Consolidação', () => {
       const results = await Promise.all(promises);
       const duration = Date.now() - start;
       
-      expect(results.every(r => r.success)).toBe(true);
+      expect(results.every((r: any) => r.success)).toBe(true);
       expect(duration).toBeLessThan(2000); // 10 requisições em menos de 2s
     });
   });

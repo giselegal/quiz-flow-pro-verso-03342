@@ -10,7 +10,7 @@
  */
 
 import { BlockRegistry } from './registry';
-import type { BlockCategoryEnum } from './types';
+import { BlockCategoryEnum, PropertyTypeEnum } from './types';
 
 /**
  * FASE 1: Blocos Críticos (Questions + Results)
@@ -23,14 +23,14 @@ import type { BlockCategoryEnum } from './types';
 
 BlockRegistry.register({
   type: 'question-hero',
-  label: 'Question Hero',
-  category: 'question' as BlockCategoryEnum,
+  name: 'Question Hero',
+  category: BlockCategoryEnum.QUESTION,
   icon: 'hero',
   description: 'Hero visual para pergunta com imagem de destaque',
   properties: [
-    { name: 'title', type: 'text', label: 'Título', required: true },
-    { name: 'image', type: 'image', label: 'Imagem' },
-    { name: 'subtitle', type: 'text', label: 'Subtítulo' },
+    { key: 'title', type: PropertyTypeEnum.TEXT, label: 'Título', required: true },
+    { key: 'image', type: PropertyTypeEnum.URL, label: 'Imagem' },
+    { key: 'subtitle', type: PropertyTypeEnum.TEXT, label: 'Subtítulo' },
   ],
   defaultProperties: { 
     title: 'Pergunta',
@@ -41,15 +41,15 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'question-navigation',
-  label: 'Question Navigation',
-  category: 'question' as BlockCategoryEnum,
+  name: 'Question Navigation',
+  category: BlockCategoryEnum.QUESTION,
   icon: 'navigation',
   description: 'Botões de navegação entre perguntas',
   properties: [
-    { name: 'showPrevious', type: 'boolean', label: 'Mostrar Anterior', defaultValue: true },
-    { name: 'showNext', type: 'boolean', label: 'Mostrar Próximo', defaultValue: true },
-    { name: 'previousLabel', type: 'text', label: 'Label Anterior', defaultValue: 'Anterior' },
-    { name: 'nextLabel', type: 'text', label: 'Label Próximo', defaultValue: 'Próximo' },
+    { key: 'showPrevious', type: PropertyTypeEnum.BOOLEAN, label: 'Mostrar Anterior', defaultValue: true },
+    { key: 'showNext', type: PropertyTypeEnum.BOOLEAN, label: 'Mostrar Próximo', defaultValue: true },
+    { key: 'previousLabel', type: PropertyTypeEnum.TEXT, label: 'Label Anterior', defaultValue: 'Anterior' },
+    { key: 'nextLabel', type: PropertyTypeEnum.TEXT, label: 'Label Próximo', defaultValue: 'Próximo' },
   ],
   defaultProperties: { 
     showPrevious: true, 
@@ -61,14 +61,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'question-title',
-  label: 'Question Title',
-  category: 'question' as BlockCategoryEnum,
+  name: 'Question Title',
+  category: BlockCategoryEnum.QUESTION,
   icon: 'heading',
   description: 'Título da pergunta',
   properties: [
-    { name: 'text', type: 'text', label: 'Texto', required: true },
-    { name: 'level', type: 'number', label: 'Nível (H1-H6)', defaultValue: 2 },
-    { name: 'align', type: 'select', label: 'Alinhamento', options: ['left', 'center', 'right'] },
+    { key: 'text', type: PropertyTypeEnum.TEXT, label: 'Texto', required: true },
+    { key: 'level', type: PropertyTypeEnum.NUMBER, label: 'Nível (H1-H6)', defaultValue: 2 },
+    { key: 'align', type: PropertyTypeEnum.SELECT, label: 'Alinhamento', validation: { options: [{ value: 'left', label: 'left' }, { value: 'center', label: 'center' }, { value: 'right', label: 'right' }] } },
   ],
   defaultProperties: { 
     text: 'Qual é a sua pergunta?', 
@@ -79,15 +79,15 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'options-grid',
-  label: 'Options Grid',
-  category: 'question' as BlockCategoryEnum,
+  name: 'Options Grid',
+  category: BlockCategoryEnum.QUESTION,
   icon: 'grid',
   description: 'Grid de opções para múltipla escolha',
   properties: [
-    { name: 'options', type: 'array', label: 'Opções', required: true },
-    { name: 'columns', type: 'number', label: 'Colunas', defaultValue: 2 },
-    { name: 'multiSelect', type: 'boolean', label: 'Seleção Múltipla', defaultValue: false },
-    { name: 'layout', type: 'select', label: 'Layout', options: ['grid', 'list'] },
+    { key: 'options', type: PropertyTypeEnum.ARRAY, label: 'Opções', required: true },
+    { key: 'columns', type: PropertyTypeEnum.NUMBER, label: 'Colunas', defaultValue: 2 },
+    { key: 'multiSelect', type: PropertyTypeEnum.BOOLEAN, label: 'Seleção Múltipla', defaultValue: false },
+    { key: 'layout', type: PropertyTypeEnum.SELECT, label: 'Layout', validation: { options: [{ value: 'grid', label: 'grid' }, { value: 'list', label: 'list' }] } },
   ],
   defaultProperties: { 
     options: [], 
@@ -103,14 +103,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-main',
-  label: 'Result Main',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result Main',
+  category: BlockCategoryEnum.RESULT,
   icon: 'document',
   description: 'Conteúdo principal do resultado',
   properties: [
-    { name: 'title', type: 'text', label: 'Título', required: true },
-    { name: 'description', type: 'textarea', label: 'Descrição' },
-    { name: 'layout', type: 'select', label: 'Layout', options: ['default', 'card', 'hero'] },
+    { key: 'title', type: PropertyTypeEnum.TEXT, label: 'Título', required: true },
+    { key: 'description', type: PropertyTypeEnum.TEXTAREA, label: 'Descrição' },
+    { key: 'layout', type: PropertyTypeEnum.SELECT, label: 'Layout', validation: { options: [{ value: 'default', label: 'default' }, { value: 'card', label: 'card' }, { value: 'hero', label: 'hero' }] } },
   ],
   defaultProperties: { 
     title: 'Seu Resultado',
@@ -121,14 +121,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-congrats',
-  label: 'Result Congrats',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result Congrats',
+  category: BlockCategoryEnum.RESULT,
   icon: 'star',
   description: 'Mensagem de parabéns com animações',
   properties: [
-    { name: 'message', type: 'text', label: 'Mensagem', required: true },
-    { name: 'animation', type: 'select', label: 'Animação', options: ['none', 'confetti', 'bounce', 'fade'] },
-    { name: 'icon', type: 'select', label: 'Ícone', options: ['star', 'trophy', 'medal', 'checkmark'] },
+    { key: 'message', type: PropertyTypeEnum.TEXT, label: 'Mensagem', required: true },
+    { key: 'animation', type: PropertyTypeEnum.SELECT, label: 'Animação', validation: { options: [{ value: 'none', label: 'none' }, { value: 'confetti', label: 'confetti' }, { value: 'bounce', label: 'bounce' }, { value: 'fade', label: 'fade' }] } },
+    { key: 'icon', type: PropertyTypeEnum.SELECT, label: 'Ícone', validation: { options: [{ value: 'star', label: 'star' }, { value: 'trophy', label: 'trophy' }, { value: 'medal', label: 'medal' }, { value: 'checkmark', label: 'checkmark' }] } },
   ],
   defaultProperties: { 
     message: 'Parabéns!', 
@@ -139,13 +139,13 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-description',
-  label: 'Result Description',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result Description',
+  category: BlockCategoryEnum.RESULT,
   icon: 'text',
   description: 'Descrição detalhada do resultado',
   properties: [
-    { name: 'text', type: 'textarea', label: 'Texto', required: true },
-    { name: 'format', type: 'select', label: 'Formato', options: ['plain', 'markdown', 'html'] },
+    { key: 'text', type: PropertyTypeEnum.TEXTAREA, label: 'Texto', required: true },
+    { key: 'format', type: PropertyTypeEnum.SELECT, label: 'Formato', validation: { options: [{ value: 'plain', label: 'plain' }, { value: 'markdown', label: 'markdown' }, { value: 'html', label: 'html' }] } },
   ],
   defaultProperties: { 
     text: 'Descrição do resultado...',
@@ -155,14 +155,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-image',
-  label: 'Result Image',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result Image',
+  category: BlockCategoryEnum.RESULT,
   icon: 'image',
   description: 'Imagem do resultado',
   properties: [
-    { name: 'src', type: 'image', label: 'Imagem', required: true },
-    { name: 'alt', type: 'text', label: 'Texto Alternativo' },
-    { name: 'aspectRatio', type: 'select', label: 'Proporção', options: ['16:9', '4:3', '1:1', 'auto'] },
+    { key: 'src', type: PropertyTypeEnum.URL, label: 'Imagem', required: true },
+    { key: 'alt', type: PropertyTypeEnum.TEXT, label: 'Texto Alternativo' },
+    { key: 'aspectRatio', type: PropertyTypeEnum.SELECT, label: 'Proporção', validation: { options: [{ value: '16:9', label: '16:9' }, { value: '4:3', label: '4:3' }, { value: '1:1', label: '1:1' }, { value: 'auto', label: 'auto' }] } },
   ],
   defaultProperties: { 
     src: '', 
@@ -173,15 +173,15 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-cta',
-  label: 'Result CTA',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result CTA',
+  category: BlockCategoryEnum.RESULT,
   icon: 'button',
   description: 'Call-to-action do resultado',
   properties: [
-    { name: 'text', type: 'text', label: 'Texto', required: true },
-    { name: 'url', type: 'text', label: 'URL', required: true },
-    { name: 'style', type: 'select', label: 'Estilo', options: ['primary', 'secondary', 'outline', 'ghost'] },
-    { name: 'size', type: 'select', label: 'Tamanho', options: ['sm', 'md', 'lg'] },
+    { key: 'text', type: PropertyTypeEnum.TEXT, label: 'Texto', required: true },
+    { key: 'url', type: PropertyTypeEnum.TEXT, label: 'URL', required: true },
+    { key: 'style', type: PropertyTypeEnum.SELECT, label: 'Estilo', validation: { options: [{ value: 'primary', label: 'primary' }, { value: 'secondary', label: 'secondary' }, { value: 'outline', label: 'outline' }, { value: 'ghost', label: 'ghost' }] } },
+    { key: 'size', type: PropertyTypeEnum.SELECT, label: 'Tamanho', validation: { options: [{ value: 'sm', label: 'sm' }, { value: 'md', label: 'md' }, { value: 'lg', label: 'lg' }] } },
   ],
   defaultProperties: { 
     text: 'Ver Oferta', 
@@ -193,13 +193,13 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-share',
-  label: 'Result Share',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result Share',
+  category: BlockCategoryEnum.RESULT,
   icon: 'share',
   description: 'Botões de compartilhamento social',
   properties: [
-    { name: 'networks', type: 'array', label: 'Redes Sociais', defaultValue: ['facebook', 'twitter', 'linkedin'] },
-    { name: 'message', type: 'text', label: 'Mensagem de Compartilhamento' },
+    { key: 'networks', type: PropertyTypeEnum.ARRAY, label: 'Redes Sociais', defaultValue: ['facebook', 'twitter', 'linkedin'] },
+    { key: 'message', type: PropertyTypeEnum.TEXT, label: 'Mensagem de Compartilhamento' },
   ],
   defaultProperties: { 
     networks: ['facebook', 'twitter', 'linkedin'],
@@ -218,14 +218,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'quiz-intro-header',
-  label: 'Quiz Intro Header',
-  category: 'intro' as BlockCategoryEnum,
+  name: 'Quiz Intro Header',
+  category: BlockCategoryEnum.INTRO,
   icon: 'header',
   description: 'Header customizado do quiz',
   properties: [
-    { name: 'logo', type: 'image', label: 'Logo' },
-    { name: 'title', type: 'text', label: 'Título' },
-    { name: 'subtitle', type: 'text', label: 'Subtítulo' },
+    { key: 'logo', type: PropertyTypeEnum.URL, label: 'Logo' },
+    { key: 'title', type: PropertyTypeEnum.TEXT, label: 'Título' },
+    { key: 'subtitle', type: PropertyTypeEnum.TEXT, label: 'Subtítulo' },
   ],
   defaultProperties: { 
     logo: '',
@@ -240,14 +240,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'transition-hero',
-  label: 'Transition Hero',
-  category: 'transition' as BlockCategoryEnum,
+  name: 'Transition Hero',
+  category: BlockCategoryEnum.TRANSITION,
   icon: 'hero',
   description: 'Hero de transição entre seções',
   properties: [
-    { name: 'title', type: 'text', label: 'Título' },
-    { name: 'image', type: 'image', label: 'Imagem' },
-    { name: 'duration', type: 'number', label: 'Duração (ms)', defaultValue: 2000 },
+    { key: 'title', type: PropertyTypeEnum.TEXT, label: 'Título' },
+    { key: 'image', type: PropertyTypeEnum.URL, label: 'Imagem' },
+    { key: 'duration', type: PropertyTypeEnum.NUMBER, label: 'Duração (ms)', defaultValue: 2000 },
   ],
   defaultProperties: { 
     title: 'Carregando...',
@@ -258,13 +258,13 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'transition-text',
-  label: 'Transition Text',
-  category: 'transition' as BlockCategoryEnum,
+  name: 'Transition Text',
+  category: BlockCategoryEnum.TRANSITION,
   icon: 'text',
   description: 'Texto de transição',
   properties: [
-    { name: 'text', type: 'text', label: 'Texto' },
-    { name: 'animation', type: 'select', label: 'Animação', options: ['fade', 'slide', 'none'] },
+    { key: 'text', type: PropertyTypeEnum.TEXT, label: 'Texto' },
+    { key: 'animation', type: PropertyTypeEnum.SELECT, label: 'Animação', validation: { options: [{ value: 'fade', label: 'fade' }, { value: 'slide', label: 'slide' }, { value: 'none', label: 'none' }] } },
   ],
   defaultProperties: { 
     text: 'Aguarde...',
@@ -278,15 +278,15 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'offer-hero',
-  label: 'Offer Hero',
-  category: 'offer' as BlockCategoryEnum,
+  name: 'Offer Hero',
+  category: BlockCategoryEnum.OFFER,
   icon: 'hero',
   description: 'Hero da página de oferta',
   properties: [
-    { name: 'title', type: 'text', label: 'Título' },
-    { name: 'subtitle', type: 'text', label: 'Subtítulo' },
-    { name: 'image', type: 'image', label: 'Imagem' },
-    { name: 'ctaText', type: 'text', label: 'Texto CTA' },
+    { key: 'title', type: PropertyTypeEnum.TEXT, label: 'Título' },
+    { key: 'subtitle', type: PropertyTypeEnum.TEXT, label: 'Subtítulo' },
+    { key: 'image', type: PropertyTypeEnum.URL, label: 'Imagem' },
+    { key: 'ctaText', type: PropertyTypeEnum.TEXT, label: 'Texto CTA' },
   ],
   defaultProperties: { 
     title: 'Oferta Especial',
@@ -298,14 +298,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'pricing',
-  label: 'Pricing',
-  category: 'offer' as BlockCategoryEnum,
+  name: 'Pricing',
+  category: BlockCategoryEnum.OFFER,
   icon: 'currency',
   description: 'Tabela de preços',
   properties: [
-    { name: 'plans', type: 'array', label: 'Planos', required: true },
-    { name: 'highlightedPlan', type: 'number', label: 'Plano em Destaque' },
-    { name: 'currency', type: 'text', label: 'Moeda', defaultValue: 'R$' },
+    { key: 'plans', type: PropertyTypeEnum.ARRAY, label: 'Planos', required: true },
+    { key: 'highlightedPlan', type: PropertyTypeEnum.NUMBER, label: 'Plano em Destaque' },
+    { key: 'currency', type: PropertyTypeEnum.TEXT, label: 'Moeda', defaultValue: 'R$' },
   ],
   defaultProperties: { 
     plans: [],
@@ -325,15 +325,15 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'CTAButton',
-  label: 'CTA Button',
-  category: 'ui' as BlockCategoryEnum,
+  name: 'CTA Button',
+  category: BlockCategoryEnum.CUSTOM,
   icon: 'button',
   description: 'Botão genérico de call-to-action',
   properties: [
-    { name: 'text', type: 'text', label: 'Texto', required: true },
-    { name: 'url', type: 'text', label: 'URL' },
-    { name: 'variant', type: 'select', label: 'Variante', options: ['primary', 'secondary', 'outline', 'ghost'] },
-    { name: 'size', type: 'select', label: 'Tamanho', options: ['sm', 'md', 'lg', 'xl'] },
+    { key: 'text', type: PropertyTypeEnum.TEXT, label: 'Texto', required: true },
+    { key: 'url', type: PropertyTypeEnum.TEXT, label: 'URL' },
+    { key: 'variant', type: PropertyTypeEnum.SELECT, label: 'Variante', validation: { options: [{ value: 'primary', label: 'primary' }, { value: 'secondary', label: 'secondary' }, { value: 'outline', label: 'outline' }, { value: 'ghost', label: 'ghost' }] } },
+    { key: 'size', type: PropertyTypeEnum.SELECT, label: 'Tamanho', validation: { options: [{ value: 'sm', label: 'sm' }, { value: 'md', label: 'md' }, { value: 'lg', label: 'lg' }, { value: 'xl', label: 'xl' }] } },
   ],
   defaultProperties: { 
     text: 'Clique Aqui', 
@@ -344,14 +344,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'text-inline',
-  label: 'Text Inline',
-  category: 'ui' as BlockCategoryEnum,
+  name: 'Text Inline',
+  category: BlockCategoryEnum.CUSTOM,
   icon: 'text',
   description: 'Texto inline genérico',
   properties: [
-    { name: 'content', type: 'text', label: 'Conteúdo', required: true },
-    { name: 'weight', type: 'select', label: 'Peso', options: ['normal', 'bold', 'light'] },
-    { name: 'color', type: 'color', label: 'Cor' },
+    { key: 'content', type: PropertyTypeEnum.TEXT, label: 'Conteúdo', required: true },
+    { key: 'weight', type: PropertyTypeEnum.SELECT, label: 'Peso', validation: { options: [{ value: 'normal', label: 'normal' }, { value: 'bold', label: 'bold' }, { value: 'light', label: 'light' }] } },
+    { key: 'color', type: PropertyTypeEnum.COLOR, label: 'Cor' },
   ],
   defaultProperties: { 
     content: 'Texto',
@@ -362,15 +362,15 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'quiz-score-display',
-  label: 'Quiz Score Display',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Quiz Score Display',
+  category: BlockCategoryEnum.RESULT,
   icon: 'badge',
   description: 'Display de pontuação do quiz',
   properties: [
-    { name: 'score', type: 'number', label: 'Pontuação', required: true },
-    { name: 'maxScore', type: 'number', label: 'Pontuação Máxima', required: true },
-    { name: 'showPercentage', type: 'boolean', label: 'Mostrar %', defaultValue: true },
-    { name: 'format', type: 'select', label: 'Formato', options: ['number', 'percentage', 'both'] },
+    { key: 'score', type: PropertyTypeEnum.NUMBER, label: 'Pontuação', required: true },
+    { key: 'maxScore', type: PropertyTypeEnum.NUMBER, label: 'Pontuação Máxima', required: true },
+    { key: 'showPercentage', type: PropertyTypeEnum.BOOLEAN, label: 'Mostrar %', defaultValue: true },
+    { key: 'format', type: PropertyTypeEnum.SELECT, label: 'Formato', validation: { options: [{ value: 'number', label: 'number' }, { value: 'percentage', label: 'percentage' }, { value: 'both', label: 'both' }] } },
   ],
   defaultProperties: { 
     score: 0, 
@@ -382,14 +382,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-progress-bars',
-  label: 'Result Progress Bars',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result Progress Bars',
+  category: BlockCategoryEnum.RESULT,
   icon: 'chart-bar',
   description: 'Barras de progresso no resultado',
   properties: [
-    { name: 'bars', type: 'array', label: 'Barras', required: true },
-    { name: 'animated', type: 'boolean', label: 'Animado', defaultValue: true },
-    { name: 'showLabels', type: 'boolean', label: 'Mostrar Labels', defaultValue: true },
+    { key: 'bars', type: PropertyTypeEnum.ARRAY, label: 'Barras', required: true },
+    { key: 'animated', type: PropertyTypeEnum.BOOLEAN, label: 'Animado', defaultValue: true },
+    { key: 'showLabels', type: PropertyTypeEnum.BOOLEAN, label: 'Mostrar Labels', defaultValue: true },
   ],
   defaultProperties: { 
     bars: [],
@@ -400,14 +400,14 @@ BlockRegistry.register({
 
 BlockRegistry.register({
   type: 'result-secondary-styles',
-  label: 'Result Secondary Styles',
-  category: 'result' as BlockCategoryEnum,
+  name: 'Result Secondary Styles',
+  category: BlockCategoryEnum.RESULT,
   icon: 'paint',
   description: 'Estilos secundários do resultado',
   properties: [
-    { name: 'backgroundColor', type: 'color', label: 'Cor de Fundo' },
-    { name: 'textColor', type: 'color', label: 'Cor do Texto' },
-    { name: 'borderRadius', type: 'number', label: 'Border Radius' },
+    { key: 'backgroundColor', type: PropertyTypeEnum.COLOR, label: 'Cor de Fundo' },
+    { key: 'textColor', type: PropertyTypeEnum.COLOR, label: 'Cor do Texto' },
+    { key: 'borderRadius', type: PropertyTypeEnum.NUMBER, label: 'Border Radius' },
   ],
   defaultProperties: { 
     backgroundColor: '#f5f5f5', 

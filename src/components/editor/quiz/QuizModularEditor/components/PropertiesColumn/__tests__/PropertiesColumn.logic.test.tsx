@@ -11,7 +11,7 @@ describe('PropertiesColumn - Lógica de Auto-seleção', () => {
     it('deve selecionar primeiro bloco quando selectedBlockId é null e há blocos disponíveis', () => {
         const blocks: Block[] = [
             { id: 'block-1', type: 'text', content: { text: 'Test' }, order: 1 },
-            { id: 'block-2', type: 'input', content: { question: 'Q?' }, order: 2 }
+            { id: 'block-2', type: 'text-input', content: { question: 'Q?' }, order: 2 }
         ];
 
         const selectedBlockId = null;
@@ -23,7 +23,7 @@ describe('PropertiesColumn - Lógica de Auto-seleção', () => {
     it('deve manter selectedBlockId quando já está definido', () => {
         const blocks: Block[] = [
             { id: 'block-1', type: 'text', content: { text: 'Test' }, order: 1 },
-            { id: 'block-2', type: 'input', content: { question: 'Q?' }, order: 2 }
+            { id: 'block-2', type: 'text-input', content: { question: 'Q?' }, order: 2 }
         ];
 
         const selectedBlockId = 'block-2';
@@ -55,16 +55,16 @@ describe('PropertiesColumn - Validação de Schema', () => {
         expect(hasTextField).toBe(true);
     });
 
-    it('deve detectar schema para tipo "input"', () => {
+    it('deve detectar schema para tipo "text-input"', () => {
         const block: Block = {
             id: 'block-2',
-            type: 'input',
+            type: 'text-input',
             content: { question: 'Q?', placeholder: 'Answer' },
             order: 2
         };
 
         // Schema deve incluir campos "question" e "placeholder"
-        const hasQuestionField = block.type === 'input';
+        const hasQuestionField = block.type === 'text-input';
         expect(hasQuestionField).toBe(true);
     });
 });
@@ -159,7 +159,7 @@ describe('PropertiesColumn - Busca de Bloco por ID', () => {
     it('deve encontrar bloco pelo ID', () => {
         const blocks: Block[] = [
             { id: 'block-1', type: 'text', content: { text: 'First' }, order: 1 },
-            { id: 'block-2', type: 'input', content: { question: 'Q?' }, order: 2 },
+            { id: 'block-2', type: 'text-input', content: { question: 'Q?' }, order: 2 },
             { id: 'block-3', type: 'text', content: { text: 'Third' }, order: 3 }
         ];
 

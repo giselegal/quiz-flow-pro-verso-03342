@@ -79,7 +79,7 @@ export interface BlockPropertyDefinition {
     min?: number;
     max?: number;
     pattern?: string;
-    options?: Array<{ value: any; label: string }>;
+    options?: Array<{ value: any; label: string }> | string[];
   };
   /** Categoria de agrupamento no editor */
   category?: 'content' | 'style' | 'behavior' | 'advanced';
