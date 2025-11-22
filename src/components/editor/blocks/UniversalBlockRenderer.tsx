@@ -6,7 +6,7 @@ import { cacheManager } from '@/lib/utils/cache/LRUCache';
 import { useLogger } from '@/lib/utils/logger/SmartLogger';
 
 // 🎯 UNIFIED BLOCK REGISTRY - Lazy loading com code splitting
-import { UnifiedBlockRegistry } from '@/core/registry/UnifiedBlockRegistry';
+import { blockRegistry } from '@/core/registry';
 
 // 🔄 REMOVIDOS 90+ imports estáticos - Agora usa UnifiedBlockRegistry
 // Todos os componentes são carregados via lazy loading ou cache do registry
@@ -52,17 +52,17 @@ const useBlockComponent = (blockType: string): React.ComponentType<any> | null =
   const logger = useLogger('BlockComponent');
 
   return useMemo(() => {
-    logger.debug(`Resolvendo componente via UnifiedBlockRegistry: ${blockType}`);
+    logger.debug(`Resolvendo componente via blockRegistry: ${blockType}`);
 
     // Tentar pegar componente lazy primeiro (performance)
-    const lazyComponent = UnifiedBlockRegistry.getInstance().getLazyComponent(blockType);
+    const lazyComponent = blockRegistry.getLazyComponent(blockType);
     if (lazyComponent) {
       logger.debug(`Componente lazy encontrado: ${blockType}`);
       return lazyComponent;
     }
 
     // Fallback para componente síncrono (críticos)
-    const syncComponent = UnifiedBlockRegistry.getInstance().getComponent(blockType);
+    const syncComponent = blockRegistry.getComponent(blockType);
     if (syncComponent) {
       logger.debug(`Componente síncrono encontrado: ${blockType}`);
       return syncComponent;
@@ -183,12 +183,11 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
   if (!BlockComponent) {
     // Log detalhado para debug
-    const registry = UnifiedBlockRegistry.getInstance();
     logger.error('Componente não encontrado', {
       blockType: block.type,
       blockId: safeBlockId,
-      availableTypes: registry.getAllTypes().slice(0, 20), // Primeiros 20 para não poluir log
-      isCritical: registry.isCritical(block.type),
+      availableTypes: blockRegistry.getAllTypes().slice(0, 20), // Primeiros 20 para não poluir log
+      isCritical: blockRegistry.isCritical(block.type),
     });
 
     return (
@@ -219,8 +218,8 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
                 blockId: block.id,
                 blockContent: block.content,
                 blockProperties: block.properties,
-                availableTypes: registry.getAllTypes(),
-                criticalTypes: registry.getCriticalTypes(),
+                availableTypes: blockRegistry.getAllTypes(),
+                criticalTypes: blockRegistry.getCriticalTypes(),
               });
             }}
             className="mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
@@ -241,7 +240,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
     if (isSelected && rootRef.current) {
       try {
         rootRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } catch {}
+      } catch { }
     }
   }, [isSelected]);
 
