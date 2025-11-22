@@ -66,10 +66,18 @@ export const normalizeBlockId = (id: string | null | undefined): string | null =
   }
   
   // Extrai blockId: {step}-block-{uuid} → block-{uuid}
-  // Procura pelo padrão block-{uuid} na string
-  const blockIdMatch = normalized.match(/(block-[0-9a-f-]+)/);
+  // Procura pelo padrão block- seguido de UUID (formato: 8-4-4-4-12 caracteres hex)
+  // ou qualquer sequência hex longa o suficiente para ser um UUID
+  const blockIdMatch = normalized.match(/(block-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
   if (blockIdMatch) {
     return blockIdMatch[1];
+  }
+  
+  // Fallback: Se não encontrou UUID completo, tenta padrão mais simples
+  // Isso captura IDs legados ou formatos diferentes
+  const simpleMatch = normalized.match(/(block-[a-z0-9-]+)/i);
+  if (simpleMatch) {
+    return simpleMatch[1];
   }
   
   // Se não encontrou padrão block-, retorna como está (pode ser outro formato válido)

@@ -29,6 +29,12 @@ describe('normalizeBlockId', () => {
     expect(normalizeBlockId(wrappedId)).toBe(expected);
   });
 
+  it('should handle uppercase UUIDs', () => {
+    const wrappedId = 'dnd-block-12-block-A1B2C3D4-E5F6-47A8-B9C0-D1E2F3A4B5C6';
+    const expected = 'block-A1B2C3D4-E5F6-47A8-B9C0-D1E2F3A4B5C6';
+    expect(normalizeBlockId(wrappedId)).toBe(expected);
+  });
+
   it('should return null for null input', () => {
     expect(normalizeBlockId(null)).toBe(null);
   });
@@ -49,6 +55,7 @@ describe('normalizeBlockId', () => {
 
   it('should extract first block- occurrence when multiple exist', () => {
     const multipleBlockId = 'dnd-block-1-block-abc123-block-def456';
+    // The fallback regex matches the longest block- pattern
     const expected = 'block-abc123-block-def456';
     expect(normalizeBlockId(multipleBlockId)).toBe(expected);
   });
