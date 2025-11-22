@@ -6,10 +6,10 @@
 
 import React, { useState } from 'react';
 import { CrudTestRunner } from '@/components/testing/CrudTestRunner';
-import { ProvidersTest } from '@/components/test/ProvidersTest';
+// import { ProvidersTest } from '@/components/test/ProvidersTest'; // File not found, commented out
 
 export const TestsPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'crud' | 'providers'>('providers');
+  const [activeTab, setActiveTab] = useState<'crud' | 'providers'>('crud'); // Changed default to 'crud'
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -36,7 +36,11 @@ export const TestsPage: React.FC = () => {
           </button>
         </div>
 
-        {activeTab === 'providers' && <ProvidersTest />}
+        {activeTab === 'providers' && (
+          <div className="p-4 bg-muted rounded-lg">
+            <p className="text-muted-foreground">ProvidersTest component not found</p>
+          </div>
+        )}
 
         {activeTab === 'crud' && (
           <>
