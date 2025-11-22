@@ -1,19 +1,39 @@
 import { appLogger } from '@/lib/utils/appLogger';
 /**
- * 🏗️ PROVIDERS INDEX - FASE 3 LIMPEZA
+ * 🏗️ PROVIDERS INDEX - FASE 2.1 + FASE 3 LIMPEZA
  *
  * Exportações centralizadas dos providers APÓS remoção dos legados.
  *
- * ✅ CANÔNICO ÚNICO: UnifiedAppProvider (use este!)
- * 🔧 INTERNOS: SuperUnifiedProvider (camadas base)
+ * ✅ NOVO (FASE 2.1): ComposedProviders - Arquitetura flat para reduzir re-renders
+ * ✅ CANÔNICO: UnifiedAppProvider (use este para apps existentes!)
+ * 🔧 INTERNOS: SuperUnifiedProvider (camadas base - 12 nested providers)
  * ❌ REMOVIDOS: ConsolidatedProvider, FunnelMasterProvider, OptimizedProviderStack
  *
  * MIGRAÇÃO:
- * - Substitua qualquer import antigo por: import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
- * - Hooks antigos (useFunnels, useQuiz21Steps, etc) agora vivem em contextos unificados (useUnifiedCRUD / selectors específicos)
+ * - NOVO: Use ComposedProviders para novos componentes (melhor performance)
+ * - LEGADO: UnifiedAppProvider mantido para compatibilidade
+ * - Hooks antigos (useFunnels, useQuiz21Steps, etc) agora vivem em contextos unificados
  */
 
-// ✅ PROVIDER CANÔNICO - ÚNICO QUE DEVE SER USADO EXTERNAMENTE
+// 🎯 FASE 2.1 - NOVA ARQUITETURA FLAT (RECOMENDADO PARA NOVOS COMPONENTES)
+export {
+  ComposedProviders,
+  FEATURE_GROUPS,
+  useComposedContext,
+  useComposedAuth,
+  useComposedTheme,
+  useComposedEditor,
+  useComposedFunnel,
+  useComposedNavigation,
+  useComposedQuiz,
+  useComposedResult,
+  useComposedSync,
+  useComposedValidation,
+  useComposedCollaboration,
+  useComposedVersioning,
+} from './ComposedProviders';
+
+// ✅ PROVIDER CANÔNICO - MANTIDO PARA COMPATIBILIDADE
 export {
   UnifiedAppProvider,
   default as UnifiedAppProviderDefault,
