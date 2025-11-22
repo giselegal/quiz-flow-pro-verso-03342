@@ -606,7 +606,8 @@ export class UnifiedBlockRegistry {
   getAllTypes(): string[] {
     const critical = Array.from(this.registry.keys());
     const lazy = Array.from(this.lazyRegistry.keys());
-    return [...new Set([...critical, ...lazy])].sort();
+    const coreTypes = CoreBlockRegistry.getAllTypes(); // ✨ Incluir tipos do core/quiz
+    return [...new Set([...critical, ...lazy, ...coreTypes])].sort();
   }
 
   /**
@@ -614,6 +615,92 @@ export class UnifiedBlockRegistry {
    */
   getCriticalTypes(): string[] {
     return Array.from(this.criticalComponents);
+  }
+
+  // ==========================================================================
+  // ✨ CORE/QUIZ INTEGRATION (PR #58)
+  // ==========================================================================
+
+  /**
+   * Verificar se tipo existe (incluindo core/quiz e aliases)
+   */
+  hasWithCoreQuiz(type: BlockType): boolean {
+    // 1. Verificar no sistema atual
+    if (this.has(type)) {
+      return true;
+    }
+    
+    // 2. Verificar no core/quiz
+    if (CoreBlockRegistry.hasType(type)) {
+      return true;
+    }
+    
+    // 3. Verificar aliases no core/quiz
+    const resolved = CoreBlockRegistry.resolveType(type);
+    return resolved !== type && CoreBlockRegistry.hasType(resolved);
+  }
+
+  /**
+   * Obter definição do core/quiz
+   */
+  getCoreQuizDefinition(type: BlockType) {
+    return getBlockDefinitionWithFallback(type);
+  }
+
+  /**
+   * Sincronizar tipos do core/quiz
+   */
+  syncWithCoreQuiz(): { synced: number; total: number } {
+    const coreTypes = CoreBlockRegistry.getAllTypes();
+    let synced = 0;
+    
+    for (const type of coreTypes) {
+      // Apenas registrar se não existe componente React para ele
+      if (!this.registry.has(type) && !this.lazyRegistry.has(type)) {
+        // Criar um placeholder que mostra aviso
+        const PlaceholderComponent = (props: any) => (
+          React.createElement('div', {
+            className: 'p-4 border-2 border-dashed border-yellow-500 bg-yellow-50 rounded',
+            'data-block-type': type
+          }, [
+            React.createElement('p', { className: 'text-sm font-semibold text-yellow-800' }, 
+              `⚠️ Bloco definido no core/quiz mas sem componente React`
+            ),
+            React.createElement('p', { className: 'text-xs text-yellow-600 mt-1' }, 
+              `Tipo: ${type}`
+            ),
+            React.createElement('pre', { className: 'text-xs text-yellow-600 mt-2 overflow-auto' },
+              JSON.stringify(CoreBlockRegistry.getDefinition(type), null, 2)
+            )
+          ])
+        );
+        
+        this.registerLazy(type, async () => ({ default: PlaceholderComponent }));
+        synced++;
+      }
+    }
+    
+    appLogger.info(`[UnifiedBlockRegistry] ✅ Sincronizados ${synced}/${coreTypes.length} tipos do core/quiz`);
+    return { synced, total: coreTypes.length };
+  }
+
+  /**
+   * Obter estatísticas incluindo core/quiz
+   */
+  getStatsWithCoreQuiz() {
+    const localTypes = this.getAllTypes().length;
+    const coreTypes = CoreBlockRegistry.getAllTypes().length;
+    const categories = CoreBlockRegistry.getByCategory('intro').length +
+                      CoreBlockRegistry.getByCategory('question').length +
+                      CoreBlockRegistry.getByCategory('result').length +
+                      CoreBlockRegistry.getByCategory('offer').length;
+    
+    return {
+      local: localTypes,
+      coreQuiz: coreTypes,
+      categorized: categories,
+      total: new Set([...this.getAllTypes(), ...CoreBlockRegistry.getAllTypes()]).size
+    };
   }
 
   // ==========================================================================
