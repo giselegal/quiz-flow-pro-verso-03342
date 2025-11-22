@@ -39,7 +39,7 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
   return (
     <div>
       <h3>{question.question}</h3>
-      {question.options.map(option => (
+      {question.options?.map(option => (
         <div key={option.id}>
           <label>
             <input

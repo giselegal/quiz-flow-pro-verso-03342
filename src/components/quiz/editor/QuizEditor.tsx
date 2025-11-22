@@ -111,7 +111,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
                     Pergunta {index + 1}: {question.title || question.question}
                   </h3>
                   <p className="text-sm text-[#8F7A6A] mb-2">
-                    {question.options.length} opções • {question.multiSelect || 3} seleções
+                    {question.options?.length || 0} opções • {question.multiSelect || 3} seleções
                     permitidas
                   </p>
                 </div>

@@ -58,10 +58,10 @@ export const QuizPreview: React.FC<QuizPreviewProps> = ({
       const newAnswers = userAnswers.map(answer => {
         if (answer.questionId === currentQuestion.id) {
           const selectedOptions =
-            currentQuestion.multiSelect > 1
+            (currentQuestion.multiSelect ?? 0) > 1
               ? answer.selectedOptions.includes(optionId)
                 ? answer.selectedOptions.filter(id => id !== optionId)
-                : [...answer.selectedOptions, optionId].slice(0, currentQuestion.multiSelect)
+                : [...answer.selectedOptions, optionId].slice(0, currentQuestion.multiSelect ?? 1)
               : [optionId];
 
           return { ...answer, selectedOptions, timeSpent };
@@ -299,7 +299,7 @@ export const QuizPreview: React.FC<QuizPreviewProps> = ({
               {currentQuestion.title || currentQuestion.question}
             </h3>
 
-            {currentQuestion.multiSelect > 1 && (
+            {(currentQuestion.multiSelect ?? 0) > 1 && (
               <Badge variant="outline" className="mb-4">
                 Selecione até {currentQuestion.multiSelect} opções
               </Badge>

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QuizCategory, QUIZ_CATEGORIES } from '@/types/quizEditor';
@@ -27,9 +28,9 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
   questions,
   onEditQuestion,
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isActive) {
       setIsOpen(true);
     }
@@ -66,7 +67,7 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={e => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       onEditQuestion(question.id);
                     }}

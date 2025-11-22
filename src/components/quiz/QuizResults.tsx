@@ -12,7 +12,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ primaryStyle, secondar
         <h2 className="text-2xl font-bold text-[#432818] mb-4">Seu Resultado</h2>
         <div className="bg-white rounded-lg p-6 border border-[#B89B7A]/20">
           <h3 className="text-xl font-semibold text-[#432818] mb-2">{primaryStyle.category}</h3>
-          <p className="text-[#8F7A6A]">{primaryStyle.percentage.toFixed(1)}% de compatibilidade</p>
+          <p className="text-[#8F7A6A]">{(primaryStyle.percentage ?? 0).toFixed(1)}% de compatibilidade</p>
         </div>
       </div>
 
@@ -24,7 +24,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ primaryStyle, secondar
               <div key={index} className="bg-white rounded-lg p-4 border border-[#B89B7A]/20">
                 <div className="flex justify-between items-center">
                   <span className="font-medium text-[#432818]">{style.category}</span>
-                  <span className="text-[#8F7A6A]">{style.percentage.toFixed(1)}%</span>
+                  <span className="text-[#8F7A6A]">{(style.percentage ?? 0).toFixed(1)}%</span>
                 </div>
               </div>
             ))}
