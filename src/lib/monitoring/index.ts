@@ -47,6 +47,7 @@ export { networkMonitor } from './NetworkMonitor';
 
 import { performanceMonitor } from './PerformanceMonitor';
 import { errorTracker } from './ErrorTracker';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Inicializar todo o sistema de monitoramento
@@ -58,7 +59,7 @@ export function initializeMonitoring(options?: {
   performanceMonitor.initialize();
   errorTracker.initialize(options);
   
-  console.log('✅ Sistema de monitoramento inicializado');
+  appLogger.info('Sistema de monitoramento inicializado');
 }
 
 /**
@@ -79,7 +80,7 @@ export function clearMonitoringData() {
   performanceMonitor.clear();
   errorTracker.clear();
   
-  console.log('🧹 Dados de monitoramento limpos');
+  appLogger.info('Dados de monitoramento limpos');
 }
 
 /**
@@ -96,8 +97,8 @@ export function exportMonitoringReport(periodMs: number = 60000): string {
 
 if (typeof window !== 'undefined') {
   // Auto-initialize em desenvolvimento
-  if (process.env.NODE_ENV === 'development') {
+  if ((import.meta as any).env?.DEV) {
     initializeMonitoring();
-    console.log('🎯 Monitoramento auto-inicializado (DEV mode)');
+    appLogger.info('Monitoramento auto-inicializado (DEV mode)');
   }
 }
