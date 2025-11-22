@@ -60,6 +60,8 @@ import installLayerDiagnostics from './lib/utils/layerDiagnostics';
 // 🏗️ SCHEMA SYSTEM: Inicializa o sistema modular de schemas com lazy loading
 import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 import { appLogger } from '@/lib/utils/appLogger';
+// 🔗 REGISTRY BRIDGE: Integração PR #58 (core/quiz ↔️ core/registry)
+import { initializeRegistryBridge } from '@/core/registry/bridge';
 // 🤖 AI: IA do funil auto-ativada via utils
 // import { activateFunnelAI } from './utils/funnelAIActivator'; // Removido - não utilizado
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
@@ -72,6 +74,16 @@ defer(() => {
     appLogger.info('✅ Schema system initialized (deferred)');
   } catch (e) {
     appLogger.warn('⚠️ Falha ao inicializar schema registry (deferred):', { data: [e] });
+  }
+});
+
+// 🔗 Inicializar bridge core/quiz ↔️ core/registry (PR #58)
+defer(() => {
+  try {
+    initializeRegistryBridge();
+    appLogger.info('✅ Registry bridge initialized (core/quiz integrated)');
+  } catch (e) {
+    appLogger.warn('⚠️ Falha ao inicializar registry bridge:', { data: [e] });
   }
 });
 
@@ -465,7 +477,7 @@ try {
 }
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
-    <Suspense fallback={<PageLoadingFallback message="Carregando aplicação..." />}> 
+    <Suspense fallback={<PageLoadingFallback message="Carregando aplicação..." />}>
       <LazyApp />
     </Suspense>
   </ClientLayout>,
