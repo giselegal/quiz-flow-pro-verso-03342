@@ -14,7 +14,7 @@
  * TODO: Adicionar auditoria de segurança
  */
 
-import React, { createContext, useContext, useCallback, useRef, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useCallback, useRef, useEffect, useMemo, useState } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface AccessAttempt {
@@ -49,7 +49,7 @@ const RESTRICTED_RESOURCES = [
 // Rate limiting: máximo de tentativas por minuto
 const MAX_ATTEMPTS_PER_MINUTE = 60;
 
-// Helper: Check if running in production
+// Helper: Check if running in production (defined outside component to avoid recreation)
 const isProduction = (): boolean => {
   try {
     if (typeof import.meta !== 'undefined') {
@@ -69,6 +69,7 @@ const isProduction = (): boolean => {
 export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const accessHistoryRef = useRef<AccessAttempt[]>([]);
   const attemptCountRef = useRef<Map<string, number>>(new Map());
+  const [historyVersion, setHistoryVersion] = useState(0); // Trigger for useMemo
 
   useEffect(() => {
     appLogger.info('[SecurityProvider] Initialized with basic validation');
@@ -127,6 +128,9 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       accessHistoryRef.current = accessHistoryRef.current.slice(-100);
     }
 
+    // Trigger useMemo recalculation
+    setHistoryVersion(v => v + 1);
+
     if (granted) {
       appLogger.debug(`[SecurityProvider] Access granted: ${resource}`);
     } else {
@@ -142,8 +146,8 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   // Basic health computation based on access history
-  // Using useCallback to compute on-demand instead of caching with useMemo
-  const getHealthMetrics = useCallback(() => {
+  // Memoized to avoid recalculating on every render, updates when history changes
+  const healthMetrics = useMemo(() => {
     const recentAttempts = accessHistoryRef.current.slice(-20); // Last 20 attempts
     const deniedCount = recentAttempts.filter(a => !a.granted).length;
     const deniedRatio = recentAttempts.length > 0 ? deniedCount / recentAttempts.length : 0;
@@ -155,10 +159,7 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       hasCriticalIssues ? 'critical' : hasWarnings ? 'degraded' : 'healthy';
     
     return { hasCriticalIssues, hasWarnings, isSystemHealthy, systemStatus };
-  }, []);
-  
-  // Compute current health metrics
-  const healthMetrics = getHealthMetrics();
+  }, [historyVersion]); // Recalculate when history changes
 
   const value: SecurityContextType = {
     isSecure: true,
