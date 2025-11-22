@@ -15,7 +15,7 @@
 import React, { memo, Suspense, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
-import { blockRegistry } from '@/core/registry/blockRegistry';
+import { blockRegistry } from '@/core/registry';
 import { BlockSkeleton } from './BlockSkeleton';
 import { useBlockLoading } from '@/hooks/useBlockLoading';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -66,13 +66,15 @@ class BlockErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    appLogger.error('[LazyBlockRenderer] Erro ao renderizar bloco:', { data: [{
-            blockId: this.props.block.id,
-            blockType: this.props.block.type,
-            error: error.message,
-            stack: error.stack,
-            componentStack: errorInfo.componentStack,
-          }] });
+    appLogger.error('[LazyBlockRenderer] Erro ao renderizar bloco:', {
+      data: [{
+        blockId: this.props.block.id,
+        blockType: this.props.block.type,
+        error: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack,
+      }]
+    });
   }
 
   componentDidUpdate(prevProps: { block: Block }) {
@@ -142,7 +144,7 @@ const LazyBlockRendererComponent: React.FC<LazyBlockRendererProps> = ({
   // 📊 Tracking de loading do bloco
   useEffect(() => {
     setBlockLoading(block.id, true);
-    
+
     // Simular delay mínimo para tracking (remover em produção se desnecessário)
     const timer = setTimeout(() => {
       setBlockLoading(block.id, false);

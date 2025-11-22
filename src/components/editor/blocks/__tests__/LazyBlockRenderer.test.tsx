@@ -9,7 +9,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LazyBlockRenderer } from '../LazyBlockRenderer';
 import { EditorLoadingProvider } from '@/contexts/EditorLoadingContext';
-import { blockRegistry } from '@/core/registry/blockRegistry';
+import { blockRegistry } from '@/core/registry';
 import type { Block } from '@/types/editor';
 
 // Mock do blockRegistry
@@ -69,7 +69,7 @@ describe('LazyBlockRenderer', () => {
 
     it('deve mostrar skeleton durante carregamento', () => {
       (blockRegistry.getComponent as jest.Mock).mockReturnValue(
-        React.lazy(() => new Promise(() => {})), // Never resolves
+        React.lazy(() => new Promise(() => { })), // Never resolves
       );
 
       render(
