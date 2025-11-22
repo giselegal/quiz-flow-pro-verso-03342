@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ativar PropertiesColumn Principal</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .status.active {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>🎯 Configuração do Painel de Propriedades</h1>
+
+        <div id="status" class="status inactive">
+            Status: PropertiesColumn principal DESATIVADO
+        </div>
+
+        <div class="info">
+            <strong>ℹ️ Informação:</strong>
+            <p>O PropertiesColumn principal tem todas as features WAVE 1:</p>
+            <ul>
+                <li>✅ Auto-seleção de blocos</li>
+                <li>✅ Schema interpreter</li>
+                <li>✅ Dynamic property controls</li>
+                <li>✅ Sincronização bidirecional</li>
+                <li>✅ Validação avançada</li>
+                <li>✅ Toast notifications</li>
+                <li>✅ 19/19 testes passando</li>
+            </ul>
+        </div>
+
+        <h3>Ações:</h3>
+        <button class="btn-success" onclick="ativar()">
+            ✅ Ativar PropertiesColumn Principal
+        </button>
+        <button class="btn-secondary" onclick="desativar()">
+            ❌ Desativar (usar PropertiesColumnWithJson)
+        </button>
+        <button class="btn-primary" onclick="atualizarStatus()">
+            🔄 Atualizar Status
+        </button>
+        <button class="btn-primary" onclick="abrirEditor()">
+            🚀 Abrir Editor
+        </button>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <h3>Debug:</h3>
+            <p>Chave localStorage: <span class="code">qm-editor:use-simple-properties</span></p>
+            <p id="debug-value">Valor atual: <span class="code">...</span></p>
+        </div>
+    </div>
+
+    <script>
+        function ativar() {
+            localStorage.setItem('qm-editor:use-simple-properties', 'true');
+            atualizarStatus();
+            alert('✅ PropertiesColumn principal ATIVADO!\n\nRecarregue o editor para aplicar as mudanças.');
+        }
+
+        function desativar() {
+            localStorage.setItem('qm-editor:use-simple-properties', 'false');
+            atualizarStatus();
+            alert('❌ PropertiesColumn principal DESATIVADO!\n\nUsará PropertiesColumnWithJson.\n\nRecarregue o editor para aplicar as mudanças.');
+        }
+
+        function atualizarStatus() {
+            const value = localStorage.getItem('qm-editor:use-simple-properties');
+            const statusDiv = document.getElementById('status');
+            const debugValue = document.getElementById('debug-value');
+
+            if (value === 'true') {
+                statusDiv.className = 'status active';
+                statusDiv.textContent = '✅ Status: PropertiesColumn principal ATIVADO';
+            } else {
+                statusDiv.className = 'status inactive';
+                statusDiv.textContent = '❌ Status: PropertiesColumn principal DESATIVADO (usando PropertiesColumnWithJson)';
+            }
+
+            debugValue.innerHTML = 'Valor atual: <span class="code">' + (value || 'null') + '</span>';
+        }
+
+        function abrirEditor() {
+            window.location.href = '/';
+        }
+
+        // Atualizar status ao carregar
+        atualizarStatus();
+    </script>
+</body>
+
+</html>

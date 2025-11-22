@@ -1800,9 +1800,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     return null;
                                 })()}
 
-                                {/* 🐛 DEBUG: Alternar entre painel simples e completo */}
+                                {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
                                 {useSimplePropertiesPanel ? (
-                                    <PropertiesColumnSimple
+                                    <PropertiesColumn
                                         selectedBlock={
                                             blocks.find(b => b.id === selectedBlockId) ||
                                             undefined
