@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Target, Brain, Settings, Crown,
   CheckCircle, AlertTriangle, Info,
+  Clock, Save, RotateCcw, RotateCw,
 } from 'lucide-react';
 
 // Providers necessários
@@ -69,7 +70,10 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   const navigation = useUnifiedStepNavigation();
   const templateLoader = useTemplateLoader();
   const { addNotification } = useNotification();
-  const { stepBlocks } = useSuperUnified();
+  const { getStepBlocks } = useSuperUnified();
+
+  // Obter blocos do step atual
+  const currentStepBlocks = getStepBlocks(state.currentStep);
 
   // 🆕 HOOK DE PERSISTÊNCIA AUTOMÁTICA
   const {
@@ -77,29 +81,27 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
     lastSaved,
     error: persistenceError,
     saveNow,
-    canUndo,
-    canRedo,
-    undo,
-    redo,
+    canUndo: canUndoPersistence,
+    canRedo: canRedoPersistence,
+    undo: undoPersistence,
+    redo: redoPersistence,
     clearError
   } = useEditorPersistence(
     funnelId || 'quiz-estilo-21-steps',
     state.currentStep,
-    stepBlocks[`step-${state.currentStep}`] || [],
+    currentStepBlocks,
     {
       autoSave: true,
       debounceMs: 1000,
       enableHistory: true,
       onSaveSuccess: () => {
-        addNotification('✅ Alterações salvas automaticamente', 'success');
+        appLogger.info('💾 Auto-save concluído');
       },
       onSaveError: (err) => {
-        addNotification(`❌ Erro ao salvar: ${err.message}`, 'error');
+        appLogger.error('❌ Erro no auto-save:', { data: [err] });
       }
     }
-  );
-
-  // Carregar dados do quiz na inicialização
+  );  // Carregar dados do quiz na inicialização
   useEffect(() => {
     loadQuizData();
   }, []);
@@ -150,18 +152,17 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   // Handlers
   const handleSave = useCallback(async () => {
     try {
-      appLogger.info('💾 Salvando alterações do quiz...');
+      appLogger.info('💾 Salvando alterações do quiz manualmente...');
 
-      // Aqui será implementada a sincronização bidirecional na Fase 3
-      // Por enquanto, simular o salvamento
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // 🆕 Usar persistência do hook (sem debounce)
+      await saveNow();
 
       addNotification('💾 Quiz salvo com sucesso', 'success');
     } catch (error) {
       appLogger.error('❌ Erro ao salvar:', { data: [error] });
       addNotification('❌ Erro ao salvar quiz', 'error');
     }
-  }, [addNotification]);
+  }, [saveNow, addNotification]);
 
   const handlePreview = useCallback(() => {
     appLogger.info('👁️ Abrindo preview do quiz...');
