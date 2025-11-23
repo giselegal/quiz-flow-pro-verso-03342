@@ -1,10 +1,10 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import AnalyticsPage from '@/pages/dashboard/AnalyticsPage';
+import AnalyticsPage from '../dashboard/AnalyticsPage';
 
-// Mock do hook useFunnelAnalytics
-vi.mock('@/hooks/useFunnelAnalytics', () => ({
+// Mock do hook useFunnelAnalytics usando caminho relativo (evita alias @)
+vi.mock('../../hooks/useFunnelAnalytics', () => ({
     useFunnelAnalytics: vi.fn()
 }));
 
@@ -32,7 +32,7 @@ interface MockStepMetric {
 }
 
 // Utilitário para acessar o mock
-const getHookMock = () => (require('@/hooks/useFunnelAnalytics') as any).useFunnelAnalytics as ReturnType<typeof vi.fn>;
+const getHookMock = () => (require('../../hooks/useFunnelAnalytics') as any).useFunnelAnalytics as ReturnType<typeof vi.fn>;
 
 describe('AnalyticsPage (integração)', () => {
     beforeEach(() => {

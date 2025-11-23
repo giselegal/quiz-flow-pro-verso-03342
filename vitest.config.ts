@@ -157,6 +157,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // 🔁 Alinhado com aliases do Vite (vite.config.ts) para permitir importar páginas completas
+      '@components': path.resolve(__dirname, './src/components'),
+      '@services': path.resolve(__dirname, './src/services'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@types': path.resolve(__dirname, './src/types'),
+      '@config': path.resolve(__dirname, './src/config'),
       '@templates': path.resolve(__dirname, './src/templates'),
       '@consolidated': path.resolve(__dirname, './src/consolidated'),
       '@optimization': path.resolve(__dirname, './src/optimization'),
