@@ -20,6 +20,7 @@ import type {
   PropertyTypeEnum,
   BlockTypeAlias,
 } from './types';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * Registry principal de blocos
