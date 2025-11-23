@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useNavigationSafe } from '@/hooks/useNavigationSafe';
+import { useDashboardMetrics } from '@/hooks/useDashboardMetrics';
 import { serviceManager } from '@/services/core/UnifiedServiceManager';
 import { consolidatedFunnelService } from '@/services/core/ConsolidatedFunnelService';
 import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
@@ -17,6 +18,7 @@ import {
     LineChart,
     PlayCircle,
     Plus,
+    RefreshCw,
     Settings,
     Star,
     Target,
@@ -49,6 +51,20 @@ interface DashboardData {
 
 const ConsolidatedOverviewPage: React.FC = () => {
     const { navigateToEditor } = useNavigationSafe();
+
+    // 🆕 HOOK DE MÉTRICAS REAIS DO SUPABASE
+    const {
+        metrics: realTimeMetrics,
+        loading: metricsLoading,
+        error: metricsError,
+        refresh: refreshMetrics,
+        isStale
+    } = useDashboardMetrics({
+        autoRefresh: true,
+        refreshInterval: 30000, // 30 segundos
+        period: 'last-7-days'
+    });
+
     const [dashboardData, setDashboardData] = useState<DashboardData>({
         funnelSummary: {
             totalFunnels: 0,
@@ -69,6 +85,24 @@ const ConsolidatedOverviewPage: React.FC = () => {
         },
     });
     const [loading, setLoading] = useState(true);
+
+    // 🆕 SINCRONIZAR MÉTRICAS DO HOOK COM O STATE LOCAL
+    useEffect(() => {
+        if (realTimeMetrics && !metricsLoading) {
+            setDashboardData(prev => ({
+                ...prev,
+                realMetrics: {
+                    totalSessions: realTimeMetrics.totalSessions,
+                    completedSessions: realTimeMetrics.totalSessions - Math.floor(realTimeMetrics.totalSessions * (realTimeMetrics.dropoffRate / 100)),
+                    conversionRate: realTimeMetrics.conversionRate,
+                    averageCompletionTime: realTimeMetrics.averageCompletionTime,
+                    activeUsersNow: realTimeMetrics.activeSessions,
+                    leadGeneration: realTimeMetrics.leadsGenerated,
+                    topPerformingFunnels: prev.realMetrics.topPerformingFunnels,
+                },
+            }));
+        }
+    }, [realTimeMetrics, metricsLoading]);
 
     useEffect(() => {
         const loadDashboardData = async () => {
@@ -145,6 +179,18 @@ const ConsolidatedOverviewPage: React.FC = () => {
                                     <Activity className="h-3 w-3 mr-1" />
                                     {realMetrics.activeUsersNow} usuários online
                                 </Badge>
+                                {/* 🆕 Indicador de atualização em tempo real */}
+                                {isStale && (
+                                    <Badge variant="outline" className="border-yellow-400/40 text-yellow-600 bg-yellow-50">
+                                        <Clock className="h-3 w-3 mr-1" />
+                                        Dados desatualizados
+                                    </Badge>
+                                )}
+                                {metricsLoading && (
+                                    <Badge variant="outline" className="border-blue-400/40 text-blue-600 bg-blue-50 animate-pulse">
+                                        <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                                        Atualizando...
+                                    </Badge>
                             </div>
                         </div>
                     </div>
@@ -154,6 +200,16 @@ const ConsolidatedOverviewPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
+                    {/* 🆕 Botão de refresh manual */}
+                    <Button
+                        variant="outline"
+                        onClick={() => refreshMetrics()}
+                        disabled={metricsLoading}
+                        className="border-[#B89B7A]/40 text-[#432818] hover:bg-[#B89B7A]/10"
+                    >
+                        <RefreshCw className={`h-4 w-4 mr-2 ${metricsLoading ? 'animate-spin' : ''}`} />
+                        Atualizar
+                    </Button>
                     <Link href="/admin/analytics/real-time">
                         <Button
                             variant="outline"
@@ -327,7 +383,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
                         <div className="flex items-center text-sm mb-3">
                             <ArrowUpRight className="h-4 w-4 text-[#B89B7A] mr-1" />
                             <span className="text-[#B89B7A] font-semibold">
-                                {realMetrics.completedSessions > 0 ? `+${  Math.round((realMetrics.leadGeneration / realMetrics.completedSessions) * 100)}` : 0}%
+                                {realMetrics.completedSessions > 0 ? `+${Math.round((realMetrics.leadGeneration / realMetrics.completedSessions) * 100)}` : 0}%
                             </span>
                             <span className="ml-1 text-[#6B4F43]">dos completados</span>
                         </div>
