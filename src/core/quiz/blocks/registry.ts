@@ -25,7 +25,7 @@ import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Registry principal de blocos
  */
-class BlockRegistryClass {
+export class BlockRegistryClass {
   private definitions = new Map<string, BlockDefinition>();
   private aliases = new Map<string, BlockTypeAlias>();
 
@@ -499,14 +499,17 @@ BlockRegistry.registerAlias({
 
 export { BlockRegistry as default };
 export type { BlockDefinition } from './types';
+export type { BlockRegistryClass };
 
 /**
  * =================================================================
  * EXTENSÕES - Quiz21 Complete
  * =================================================================
  * 
- * Importa registros adicionais de blocos para quiz21-complete.json
- * @see ./extensions.ts
+ * Registra blocos adicionais após a inicialização
  */
-import './extensions';
+import { registerQuiz21Extensions } from './extensions';
+
+// Registrar extensões após BlockRegistry estar pronto
+registerQuiz21Extensions(BlockRegistry);
 import { appLogger } from '@/lib/utils/appLogger';
