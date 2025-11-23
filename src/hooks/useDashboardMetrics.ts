@@ -135,10 +135,10 @@ export function useDashboardMetrics(
       if (sessionsError) throw sessionsError;
 
       const totalSessions = sessions?.length || 0;
-      const activeSessions = sessions?.filter(s => 
+      const activeSessions = sessions?.filter((s: any) => 
         s.status === 'started' || s.status === 'in_progress'
       ).length || 0;
-      const completedSessions = sessions?.filter(s => 
+      const completedSessions = sessions?.filter((s: any) => 
         s.status === 'completed'
       ).length || 0;
 
@@ -152,7 +152,7 @@ export function useDashboardMetrics(
       if (usersError) throw usersError;
 
       const totalUsers = users?.length || 0;
-      const newUsersToday = users?.filter(u => {
+      const newUsersToday = users?.filter((u: any) => {
         const userDate = new Date(u.created_at);
         const today = new Date();
         return userDate.toDateString() === today.toDateString();
@@ -168,7 +168,7 @@ export function useDashboardMetrics(
       if (resultsError) throw resultsError;
 
       const totalConversions = results?.length || 0;
-      const conversionsToday = results?.filter(r => {
+      const conversionsToday = results?.filter((r: any) => {
         const resultDate = new Date(r.created_at);
         const today = new Date();
         return resultDate.toDateString() === today.toDateString();
@@ -186,7 +186,7 @@ export function useDashboardMetrics(
       if (funnelsError) throw funnelsError;
 
       const totalFunnels = funnels?.length || 0;
-      const activeFunnels = funnels?.filter(f => f.status === 'published').length || 0;
+      const activeFunnels = funnels?.filter((f: any) => f.status === 'published').length || 0;
 
       // 5️⃣ PERFORMANCE DO QUIZ
       const completionRate = totalSessions > 0
@@ -199,7 +199,7 @@ export function useDashboardMetrics(
       let totalCompletionTime = 0;
       let completedCount = 0;
 
-      sessions?.forEach(session => {
+      sessions?.forEach((session: any) => {
         if (session.completed_at && session.started_at) {
           const start = new Date(session.started_at).getTime();
           const end = new Date(session.completed_at).getTime();
