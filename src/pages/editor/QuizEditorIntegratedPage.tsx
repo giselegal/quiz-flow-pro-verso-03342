@@ -229,6 +229,24 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   // Main editor interface
   return (
     <div className={`quiz-editor-integrated-page h-full flex flex-col ${className}`}>
+      {/* 🆕 Alerta de erro de persistência */}
+      {persistenceError && (
+        <Alert className="m-4 border-destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            <span>Erro ao salvar alterações: {persistenceError.message}</span>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={handleSave}>
+                Tentar Novamente
+              </Button>
+              <Button size="sm" variant="ghost" onClick={clearError}>
+                Ignorar
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Header informativo */}
       <div className="bg-primary/10 border-b border-border p-4">
         <div className="flex items-center justify-between">
@@ -251,13 +269,58 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            {/* 🆕 Status de salvamento */}
+            {isSaving && (
+              <Badge variant="outline" className="animate-pulse">
+                <Save className="w-3 h-3 mr-1 animate-spin" />
+                Salvando...
+              </Badge>
+            )}
+
+            {lastSaved && !isSaving && (
+              <Badge variant="outline" className="text-green-600 border-green-600/40">
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Salvo {new Date(lastSaved).toLocaleTimeString()}
+              </Badge>
+            )}
+
+            {persistenceError && (
+              <Badge variant="outline" className="text-red-600 border-red-600/40">
+                <AlertTriangle className="w-3 h-3 mr-1" />
+                Erro ao salvar
+              </Badge>
+            )}
+
+            {/* Undo/Redo */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={undoPersistence}
+              disabled={!canUndoPersistence}
+              title="Desfazer"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={redoPersistence}
+              disabled={!canRedoPersistence}
+              title="Refazer"
+            >
+              <RotateCw className="w-4 h-4" />
+            </Button>
+
+            {/* Salvar manualmente */}
             <Button
               variant="default"
               size="sm"
               onClick={handleSave}
+              disabled={isSaving}
             >
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Salvar Alterações
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
             </Button>
           </div>
         </div>
@@ -279,6 +342,12 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
           <div className="flex items-center gap-2">
             <Settings className="w-4 h-4" />
             <span>Adaptador Quiz→Editor ativo</span>
+          </div>
+
+          {/* 🆕 Indicador de auto-save */}
+          <div className="flex items-center gap-2 text-xs">
+            <div className={`w-2 h-2 rounded-full ${isSaving ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'}`}></div>
+            <span>Auto-save: {isSaving ? 'Salvando...' : 'Ativo'}</span>
           </div>
         </div>
       </div>
