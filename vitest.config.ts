@@ -157,6 +157,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@/': path.resolve(__dirname, './src'), // Suporte explícito para padrão '@/algum/caminho'
       // 🔁 Alinhado com aliases do Vite (vite.config.ts) para permitir importar páginas completas
       '@components': path.resolve(__dirname, './src/components'),
       '@services': path.resolve(__dirname, './src/services'),
