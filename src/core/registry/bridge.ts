@@ -8,8 +8,8 @@
  * @status MIGRATION - Temporário durante transição
  */
 
-import { BlockRegistry } from '../quiz/blocks/registry';
-import type { BlockDefinition } from '../quiz/blocks/types';
+import { blocksRegistry } from '../blocks/registry';
+import type { BlockDefinition } from '../blocks/registry';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
@@ -17,14 +17,14 @@ import { appLogger } from '@/lib/utils/appLogger';
  */
 export function syncBlockRegistries() {
   try {
-    const allTypes = BlockRegistry.getAllTypes();
+    const allTypes = Object.keys(blocksRegistry);
     
     appLogger.info(`[RegistryBridge] Sincronizando ${allTypes.length} blocos do core/quiz`);
     
     let syncCount = 0;
     
     for (const type of allTypes) {
-      const definition = BlockRegistry.getDefinition(type);
+      const definition = blocksRegistry[type];
       
       if (definition) {
         // Aqui vamos adicionar a lógica de sincronização com UnifiedBlockRegistry
@@ -54,8 +54,8 @@ export function syncBlockRegistries() {
  * Obter definição de bloco usando prioridade: core/quiz > legado
  */
 export function getBlockDefinitionWithFallback(type: string): BlockDefinition | null {
-  // 1. Tentar no core/quiz (novo sistema)
-  const coreDefinition = BlockRegistry.getDefinition(type);
+  // 1. Tentar no core (novo sistema)
+  const coreDefinition = blocksRegistry[type];
   
   if (coreDefinition) {
     appLogger.info(`[RegistryBridge] ✅ Bloco '${type}' encontrado no core/quiz`);
@@ -63,14 +63,7 @@ export function getBlockDefinitionWithFallback(type: string): BlockDefinition | 
   }
   
   // 2. Se não encontrar, tentar resolver alias
-  const resolvedType = BlockRegistry.resolveType(type);
-  if (resolvedType !== type) {
-    const aliasDefinition = BlockRegistry.getDefinition(resolvedType);
-    if (aliasDefinition) {
-      appLogger.info(`[RegistryBridge] ✅ Bloco '${type}' resolvido via alias para '${resolvedType}'`);
-      return aliasDefinition;
-    }
-  }
+  const resolvedType = type;
   
   // 3. Fallback: sistema legado (se necessário)
   appLogger.warn(`[RegistryBridge] ⚠️ Bloco '${type}' não encontrado no core/quiz, usando fallback legado`);
@@ -81,32 +74,32 @@ export function getBlockDefinitionWithFallback(type: string): BlockDefinition | 
  * Verificar se um tipo de bloco existe
  */
 export function hasBlockType(type: string): boolean {
-  return BlockRegistry.hasType(type);
+  return Boolean(blocksRegistry[type]);
 }
 
 /**
  * Listar todos os blocos por categoria
  */
 export function getBlocksByCategory(category: string) {
-  return BlockRegistry.getByCategory(category as any);
+  return Object.values(blocksRegistry).filter((block) => block.category === category);
 }
 
 /**
  * Obter aliases de um tipo
  */
 export function getBlockAliases(officialType: string): string[] {
-  return BlockRegistry.getAliases(officialType);
+  return [];
 }
 
 /**
  * Estatísticas do bridge
  */
 export function getBridgeStats() {
-  const allTypes = BlockRegistry.getAllTypes();
+  const allTypes = Object.keys(blocksRegistry);
   const categories = ['intro', 'question', 'result', 'offer', 'common'];
   
   const statsByCategory = categories.reduce((acc, cat) => {
-    acc[cat] = BlockRegistry.getByCategory(cat as any).length;
+    acc[cat] = Object.values(blocksRegistry).filter((block) => block.category === cat).length;
     return acc;
   }, {} as Record<string, number>);
   
