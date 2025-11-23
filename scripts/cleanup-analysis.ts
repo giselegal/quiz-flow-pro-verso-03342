@@ -5,8 +5,8 @@
  * Remove services deprecated e documenta consolidação
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const SERVICES_DIR = path.join(process.cwd(), 'src/services');
 const DEPRECATED_PATTERNS = [
