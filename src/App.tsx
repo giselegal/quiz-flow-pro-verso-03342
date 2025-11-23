@@ -50,12 +50,10 @@ import { setSupabaseCredentials } from '@/services/integrations/supabase/client'
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
-const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 // 🔍 PÁGINAS DE DIAGNÓSTICO
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
-const EditorBlocksDiagnosticPage = lazy(() => import('./pages/EditorBlocksDiagnosticPage'));
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
@@ -362,14 +360,7 @@ function AppCore() {
                                         </div>
                                     </Route>
 
-                                    <Route path="/debug/editor-blocks">
-                                        <div data-testid="editor-blocks-diagnostic-page">
-                                            {/* ✅ FASE 2: Migrado para SuperUnifiedProvider (V2 module) */}
-                                            <SuperUnifiedProvider>
-                                                <EditorBlocksDiagnosticPage />
-                                            </SuperUnifiedProvider>
-                                        </div>
-                                    </Route>
+                                    {/* /debug/editor-blocks route removed - EditorBlocksDiagnosticPage deleted */}
 
                                     <Route path="/debug/accessibility">
                                         <div data-testid="accessibility-page" className="min-h-screen bg-background p-8">
@@ -437,12 +428,7 @@ function AppCore() {
                                         </QuizErrorBoundary>
                                     </Route>
 
-                                    {/* 🔐 AUTENTICAÇÃO */}
-                                    <Route path="/auth">
-                                        <ProviderGuard>
-                                            <AuthPage />
-                                        </ProviderGuard>
-                                    </Route>
+                                    {/* 🔐 AUTENTICAÇÃO - Removed (AuthPage deleted) */}
 
                                     {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
                                     <Route path="/admin/dashboard">
