@@ -60,7 +60,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={e => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   onDuplicate();
                 }}
@@ -72,7 +72,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
             <Button
               size="sm"
               variant="ghost"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 onDelete();
               }}

@@ -386,7 +386,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       {/* Control buttons */}
       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
         <Button
-          onClick={e => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             setIsEditing(true);
           }}
@@ -398,7 +398,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
         </Button>
         {onDelete && (
           <Button
-            onClick={e => {
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               onDelete();
             }}
