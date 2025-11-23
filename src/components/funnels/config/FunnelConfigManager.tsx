@@ -57,8 +57,8 @@ export default function FunnelConfigManager({
             const funnelData = await persistenceService.getFunnel(funnelId);
             const loadedData = funnelData ? { config: funnelData.config || {} } : null;
             if (loadedData?.config) {
-                setConfig(loadedData.config);
-                setOriginalConfig(loadedData.config);
+                setConfig(loadedData.config as FunnelConfig);
+                setOriginalConfig(loadedData.config as FunnelConfig);
                 appLogger.info('✅ Configuração carregada:', { data: [loadedData.config] });
             } else {
                 throw new Error('Configuração não encontrada');

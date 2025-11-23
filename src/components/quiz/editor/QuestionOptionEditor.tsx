@@ -120,14 +120,14 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
 
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <Label htmlFor={`option-points-${option.id}`} className="mb-0">
-                  Pontos:
+                <Label htmlFor={`option-weight-${option.id}`} className="mb-0">
+                  Peso:
                 </Label>
                 <Select
-                  value={String(option.points)}
-                  onValueChange={value => handleChange('points', parseInt(value))}
+                  value={String(option.weight ?? 0)}
+                  onValueChange={value => handleChange('weight', parseInt(value))}
                 >
-                  <SelectTrigger id={`option-points-${option.id}`} className="w-16">
+                  <SelectTrigger id={`option-weight-${option.id}`} className="w-16">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

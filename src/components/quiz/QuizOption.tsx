@@ -157,7 +157,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
         {type !== 'text' && option.imageUrl && (
           <QuizOptionImage
             imageUrl={option.imageUrl}
-            altText={option.text}
+            altText={option.text || ''}
             styleCategory={option.styleCategory || ''}
             isSelected={isSelected}
             is3DQuestion={is3DQuestion || false}
@@ -181,7 +181,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
                 ),
           )}
         >
-          {highlightStrategicWords(option.text)}
+          {highlightStrategicWords(option.text || '')}
         </p>
 
         {/* Indicador de seleção - check com círculo para questões estratégicas */}
