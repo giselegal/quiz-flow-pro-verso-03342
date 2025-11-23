@@ -60,6 +60,9 @@ const AccessibilityAuditorPage = lazy(() => import('./components/a11y/Accessibil
 // 🧪 EDITOR MODULAR - FASE 1, 2, 3 (Registry Universal)
 const EditorModular = lazy(() => import('./pages/EditorModular'));
 
+// 🎯 FASE 4: Editor V4 com Zod validation
+const EditorV4 = lazy(() => import('./pages/EditorV4').then(m => ({ default: m.EditorV4 })));
+
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
@@ -242,7 +245,14 @@ function AppCore() {
                                         {(params) => <RedirectRoute to={`/editor/${params.funnelId}`} />}
                                     </Route>
 
-                                    {/* Rotas de editor consolidadas - usar /editor-new */}}
+                                    {/* 🎯 FASE 4: Editor V4 com Zod validation e Logic Engine */}
+                                    <Route path="/editor-v4">
+                                        <Suspense fallback={<PageLoadingFallback message="Carregando Editor v4..." />}>
+                                            <EditorV4 />
+                                        </Suspense>
+                                    </Route>
+
+                                    {/* Rotas de editor consolidadas - usar /editor-new */}
 
                                     {/* 🎯 FASE 1: Preview Sandbox Isolado (iframe) */}
                                     <Route path="/preview-sandbox">
