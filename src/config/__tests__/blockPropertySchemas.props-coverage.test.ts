@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { blockPropertySchemas, type BlockSchema } from '@/config/blockPropertySchemas';
 import { propertySchemas } from '@/config/propertySchemas';
 import { BLOCK_DEFINITIONS } from '@/editor/registry/BlockRegistry';
-import type { BlockDefinition } from '@/editor/registry/BlockRegistry';
+import type { BlockDefinition } from '../../types/blocks';
 
 /**
  * 🧪 TESTES DE COBERTURA - DefaultProps vs Schemas
