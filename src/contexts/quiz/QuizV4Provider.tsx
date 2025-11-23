@@ -225,9 +225,12 @@ export function QuizV4Provider({
         if (conditions.length > 0) {
             // Convert NavigationCondition to Condition format
             const engineConditions: Condition[] = conditions.map(c => ({
-                operator: c.if.operator,
-                field: c.if.field,
-                value: c.if.value,
+                id: c.id,
+                if: {
+                    operator: c.if.operator,
+                    field: c.if.field,
+                    value: c.if.value
+                },
                 then: {
                     action: c.then.action,
                     target: c.then.target
@@ -391,9 +394,12 @@ export function QuizV4Provider({
 
         // Convert to engine format
         const engineConditions: Condition[] = conditions.map(c => ({
-            operator: c.if.operator,
-            field: c.if.field,
-            value: c.if.value,
+            id: c.id,
+            if: {
+                operator: c.if.operator,
+                field: c.if.field,
+                value: c.if.value
+            },
             then: {
                 action: c.then.action,
                 target: c.then.target

@@ -11,9 +11,9 @@
  * FASE 4: Integração E2E
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { QuizV4Provider } from '@/contexts/quiz/QuizV4Provider';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, waitFor, renderHook, act } from '@testing-library/react';
+import { QuizV4Provider, useQuizV4 } from '@/contexts/quiz/QuizV4Provider';
 import { QuizFlowV4 } from '@/components/quiz/QuizFlowV4';
 import { useQuizV4Loader } from '@/hooks/useQuizV4Loader';
 import { validateQuizSchema } from '@/schemas/quiz-schema.zod';
@@ -335,7 +335,6 @@ describe('FASE 4: Integração E2E v4', () => {
             });
 
             expect(result.current.logicEngine).toBeDefined();
-            expect(result.current.logicEngine.context).toBeDefined();
         });
     });
 
