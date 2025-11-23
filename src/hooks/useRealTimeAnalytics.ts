@@ -186,11 +186,11 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
       if (allError) throw allError;
 
       const totalSessions = allSessions?.length || 0;
-      const completedSessions = allSessions?.filter(s => s.completed_at)?.length || 0;
+      const completedSessions = allSessions?.filter((s: any) => s.completed_at)?.length || 0;
       const conversionRate = totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0;
 
       // Usuários únicos
-      const uniqueUsers = new Set(activeSessions?.map(s => s.user_id)).size;
+      const uniqueUsers = new Set(activeSessions?.map((s: any) => s.user_id)).size;
 
       setLiveActivity({
         activeSessions: activeSessions?.length || 0,
@@ -231,7 +231,7 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
       // Agrupar por step
       const stepMap = new Map<number, { sessions: Set<string>; times: number[] }>();
 
-      responses?.forEach(response => {
+      responses?.forEach((response: any) => {
         if (!stepMap.has(response.step_number)) {
           stepMap.set(response.step_number, { sessions: new Set(), times: [] });
         }
@@ -363,7 +363,7 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
             table: 'quiz_sessions',
             filter: `funnel_id=eq.${funnelId}`,
           },
-          (payload) => {
+          (payload: any) => {
             if (!mounted) return;
 
             const session = payload.new as any;
@@ -385,7 +385,7 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
         );
 
         // Subscribe ao canal
-        channel.subscribe((status) => {
+        channel.subscribe((status: any) => {
           if (status === 'SUBSCRIBED' && mounted) {
             setIsConnected(true);
             appLogger.info('Realtime connection established', { funnelId });
