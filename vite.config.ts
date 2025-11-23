@@ -6,7 +6,7 @@ import { fileURLToPath, URL } from 'node:url'
 const resolvePath = (dir: string) => fileURLToPath(new URL(dir, import.meta.url))
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/quizflowpro/' : '/',
+  base: '/',
   plugins: [
     react(),
     visualizer({
