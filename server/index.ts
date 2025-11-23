@@ -22,7 +22,18 @@ const __dirname = dirname(__filename);
 const app = express();
 const server = createServer(app);
 
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,https://seu-projeto.vercel.app')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    callback(null, allowedOrigins.includes(origin));
+  },
+  credentials: true,
+}));
 
 // Request ID and logging
 app.use(requestIdMiddleware);

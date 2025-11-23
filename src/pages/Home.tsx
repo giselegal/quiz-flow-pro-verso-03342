@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth/AuthProvider';
 import { appLogger } from '@/lib/utils/appLogger';
+import { Helmet } from 'react-helmet-async';
 
 export const Home: React.FC = () => {
   appLogger.info('🏠 Home component rendering...');
@@ -45,16 +46,7 @@ export const Home: React.FC = () => {
     // Auto-rotate could be implemented here if needed
   }, []);
 
-  // SEO otimizado
-  useEffect(() => {
-    document.title = '🚀 Quiz Flow Pro Verso | Vista-se de Você! - Gisele Galvão';
-    const metaDesc = document.querySelector('meta[name="description"]') || document.createElement('meta');
-    metaDesc.setAttribute('name', 'description');
-    metaDesc.setAttribute('content', 'Descubra seu estilo pessoal único com nosso quiz interativo.');
-    if (!document.querySelector('meta[name="description"]')) {
-      document.head.appendChild(metaDesc);
-    }
-  }, []);
+  
 
   // Stats data
   const stats = useMemo(() => [
@@ -140,6 +132,10 @@ export const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>Quiz Flow Pro Verso | Vista-se de Você! - Gisele Galvão</title>
+        <meta name="description" content="Descubra seu estilo pessoal único com nosso quiz interativo." />
+      </Helmet>
       {/* Modern Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0b1020]/90 border-b border-transparent shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -170,21 +166,21 @@ export const Home: React.FC = () => {
                   <Button onClick={() => navigate('/dashboard')} className="bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue hover:from-brand-brightBlue/90 hover:to-brand-lightBlue/90">
                     Dashboard
                   </Button>
-                  <Button onClick={() => navigate('/editor')} variant="outline">
+                  <Button onClick={() => navigate('/criar-funil')} variant="outline">
                     <Target className="h-4 w-4 mr-2" />
-                    Create Quiz
+                    Criar Quiz
                   </Button>
                   <Button onClick={logout} variant="ghost" size="sm">
-                    Sign Out
+                    Sair
                   </Button>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
-                  <Button onClick={() => navigate('/auth')} variant="ghost">
-                    Sign In
+                  <Button onClick={() => navigate('/admin')} variant="ghost">
+                    Entrar
                   </Button>
-                  <Button onClick={() => navigate('/auth')} className="bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue hover:from-brand-brightBlue/90 hover:to-brand-lightBlue/90">
-                    Start Free Trial
+                  <Button onClick={() => navigate('/criar-funil')} className="bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue hover:from-brand-brightBlue/90 hover:to-brand-lightBlue/90">
+                    Começar Teste Grátis
                   </Button>
                 </div>
               )}
@@ -194,10 +190,9 @@ export const Home: React.FC = () => {
       </header>
 
       <main>
-        {/* Hero Section - Modern & International */}
-        <section className="relative py-20 lg:py-32 overflow-hidden">
-          <div className="absolute inset-0" style={{ background: 'radial-gradient(1200px 600px at 20% 20%, rgba(59,190,243,0.25) 0%, transparent 60%), radial-gradient(1000px 500px at 80% 80%, rgba(234,122,246,0.25) 0%, transparent 60%)' }}></div>
-          <div className="absolute inset-0 bg-[#0a0f1f]"></div>
+        {/* Hero Section */}
+        <section className="relative py-24 lg:py-32 overflow-hidden bg-[#0a0f1f]">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#3bbef3]/25 via-transparent to-[#ea7af6]/25"></div>
 
           <div className="container mx-auto px-6 relative z-10">
             <div className="text-center max-w-5xl mx-auto">
@@ -218,7 +213,7 @@ export const Home: React.FC = () => {
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] hover:from-[#38bdf8] hover:to-[#e879f9] text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
-                  onClick={() => navigate(user ? '/dashboard' : '/auth')}
+                  onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
                 >
                   <Zap className="h-5 w-5 mr-2" />
                   {user ? 'Ir para Dashboard' : 'Começar Teste Grátis'}
@@ -384,7 +379,7 @@ export const Home: React.FC = () => {
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates básicos</li>
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Coleta de leads</li>
                   </ul>
-                  <Button onClick={() => navigate('/auth')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Começar Grátis</Button>
+                  <Button onClick={() => navigate('/criar-funil')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Começar Grátis</Button>
                 </CardContent>
               </Card>
 
@@ -399,7 +394,7 @@ export const Home: React.FC = () => {
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Análises avançadas</li>
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Teste A/B</li>
                   </ul>
-                  <Button onClick={() => navigate('/auth')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Assinar Pro</Button>
+                  <Button onClick={() => navigate('/admin')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Assinar Pro</Button>
                 </CardContent>
               </Card>
 
@@ -429,7 +424,7 @@ export const Home: React.FC = () => {
               Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={() => navigate(user ? '/dashboard' : '/auth')} className="bg-white text-[#0a0f1f] hover:bg-slate-100 px-8 py-4 text-lg font-semibold">
+              <Button size="lg" onClick={() => navigate(user ? '/dashboard' : '/criar-funil')} className="bg-white text-[#0a0f1f] hover:bg-slate-100 px-8 py-4 text-lg font-semibold">
                 <Zap className="mr-2 h-5 w-5" />
                 Começar Teste Grátis
               </Button>
