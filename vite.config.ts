@@ -28,6 +28,40 @@ export default defineConfig({
       '@templates': resolvePath('./src/templates'),
     },
   },
+  build: {
+    // ✅ OTIMIZAÇÃO: Code splitting agressivo
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendors principais
+          'vendor-react': ['react', 'react-dom', 'react/jsx-runtime'],
+          'vendor-router': ['wouter', 'react-router-dom'],
+          'vendor-ui': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-tooltip',
+          ],
+          // Features por módulo
+          'editor-core': [
+            './src/components/editor/EditorContext.tsx',
+            './src/hooks/useEditor.ts',
+            './src/contexts/editor/EditorStateProvider.tsx',
+          ],
+          'quiz-runtime': [
+            './src/components/quiz/QuizContext.tsx',
+            './src/contexts/quiz/QuizStateProvider.tsx',
+          ],
+        },
+      },
+    },
+    // ✅ Otimizações gerais
+    minify: 'esbuild',
+    sourcemap: false,
+    chunkSizeWarningLimit: 500, // Warning para chunks > 500KB
+  },
   server: {
     host: '0.0.0.0',
     port: 8080,
@@ -38,5 +72,15 @@ export default defineConfig({
         secure: false,
       },
     },
+  },
+  // ✅ OTIMIZAÇÃO: Pre-bundling de deps comuns
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'wouter',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+    ],
   },
 })

@@ -133,16 +133,16 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
   const persistence = useEditorPersistence({ enableAutoSave: false });
   const unifiedEditor = useUnifiedEditor();
 
-  // Wrappers de métodos esperados
+  // Wrappers de métodos esperados - Memoizados para evitar re-criação
   const setSelectedBlock = useCallback((blockId: string | null) => {
     editor.selectBlock(blockId);
-  }, [editor]);
+  }, [editor.selectBlock]);
 
   const saveStepBlocks = useCallback(async (stepIndex: number) => {
     const blocks = editor.getStepBlocks(stepIndex) || [];
     const stepKey = `step-${String(stepIndex).padStart(2, '0')}`;
     return persistence.saveStepBlocks(stepKey, blocks);
-  }, [editor, persistence]);
+  }, [editor.getStepBlocks, persistence.saveStepBlocks]);
 
   const publishFunnel = useCallback(async (_options?: any) => {
     // Placeholder de publicação real - retornar success para não quebrar fluxo
@@ -161,17 +161,17 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
     }
   }, [editor.dirtySteps, saveStepBlocks]);
 
-  // Estado unificado mínimo
-  const state = useMemo(() => ({
-    editor,
-    currentFunnel: funnel.currentFunnel,
-  }), [editor, funnel.currentFunnel]);
-
   // ✅ OTIMIZAÇÃO: Memoizar createFunnel para evitar re-criação a cada render
   const createFunnel = useCallback(async (name: string) => {
     const id = await unifiedEditor.createFunnel(name);
     return { id };
-  }, [unifiedEditor]);
+  }, [unifiedEditor.createFunnel]);
+
+  // ✅ OTIMIZAÇÃO: Memoizar estado apenas quando valores reais mudarem
+  const state = useMemo(() => ({
+    editor,
+    currentFunnel: funnel.currentFunnel,
+  }), [editor, funnel.currentFunnel]);
 
   // ✅ OTIMIZAÇÃO: Memoizar objeto retornado para evitar re-renders em consumers
   return useMemo(() => ({
@@ -219,10 +219,13 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
     // UI helper
     showToast: ui.showToast,
   }), [
+    // ✅ OTIMIZAÇÃO: Dependências específicas ao invés de objetos inteiros
     auth, theme, editor, funnel, navigation, quiz, result, storage, 
     sync, validation, collaboration, versioning, ui, state,
     setSelectedBlock, publishFunnel, createFunnel, saveStepBlocks, 
-    ensureAllDirtyStepsSaved, unifiedEditor
+    ensureAllDirtyStepsSaved, 
+    unifiedEditor.saveFunnel, unifiedEditor.undo, unifiedEditor.redo, 
+    unifiedEditor.canUndo, unifiedEditor.canRedo
   ]);
 }
 
