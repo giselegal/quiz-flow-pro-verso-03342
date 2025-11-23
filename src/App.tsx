@@ -57,10 +57,6 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
-// 🚀 EDITOR ROUTES (Sprint 1 - Consolidated + Lazy Loading)
-// ✅ Delega para src/pages/editor/index.tsx (usa SuperUnifiedProvider)
-const EditorRoutes = lazy(() => import('./pages/editor'));
-
 // 🧪 EDITOR MODULAR - FASE 1, 2, 3 (Registry Universal)
 const EditorModular = lazy(() => import('./pages/EditorModular'));
 
@@ -258,30 +254,8 @@ function AppCore() {
                                         </div>
                                     </Route>
 
-                                    {/* ✅ ROTAS DO EDITOR - Delegadas para src/pages/editor/index.tsx */}
-                                    <Route path="/editor/:funnelId">
-                                        {(params) => (
-                                            <EditorErrorBoundary>
-                                                <div data-testid="editor-page-with-funnel">
-                                                    <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
-                                                        <EditorRoutes />
-                                                    </Suspense>
-                                                </div>
-                                            </EditorErrorBoundary>
-                                        )}
-                                    </Route>
-
-                                    <Route path="/editor">
-                                        {() => (
-                                            <EditorErrorBoundary>
-                                                <div data-testid="editor-page">
-                                                    <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
-                                                        <EditorRoutes />
-                                                    </Suspense>
-                                                </div>
-                                            </EditorErrorBoundary>
-                                        )}
-                                    </Route>
+                                    {/* 🎯 EDITOR ROUTES - Removed (src/pages/editor/index.tsx deleted) */}
+                                    {/* Editor functionality available through EditorModular */}
 
                                     {/* 🎯 FASE 1: Preview Sandbox Isolado (iframe) */}
                                     <Route path="/preview-sandbox">
