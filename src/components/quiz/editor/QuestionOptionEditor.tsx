@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Image as ImageIcon, Trash2 } from 'lucide-react';
 
 interface QuestionOptionEditorProps {
   option: QuizOption;
@@ -98,7 +99,7 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
                     placeholder="https://exemplo.com/imagem.jpg"
                   />
                   <Button type="button" variant="outline" size="icon" className="flex-shrink-0">
-                    <Image className="h-4 w-4" />
+                    <ImageIcon className="h-4 w-4" />
                   </Button>
                 </div>
                 {option.imageUrl && (
