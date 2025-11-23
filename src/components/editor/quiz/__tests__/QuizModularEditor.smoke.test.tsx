@@ -17,29 +17,51 @@ vi.mock('../../hooks/useSuperUnified', () => ({
         saveFunnel: async () => ({ success: true }),
         publishFunnel: async () => ({ success: true }),
         saveStepBlocks: async () => ({ success: true }),
-        undo: () => { },
-        redo: () => { },
-        canUndo: false,
-        canRedo: false,
-        showToast: () => { },
-    }),
-}));
+        import React from 'react';
+        import { describe, it, expect, vi } from 'vitest';
+        import { render } from '@testing-library/react';
 
-// Other lightweight mocks
-vi.mock('../../hooks/useFeatureFlags', () => ({ useFeatureFlags: () => ({ enableAutoSave: false }) }));
-vi.mock('../../hooks/useStepPrefetch', () => ({ useStepPrefetch: () => { } }));
-vi.mock('../../services/canonical/TemplateService', () => ({ templateService: { setActiveFunnel: () => { } } }));
-vi.mock('@tanstack/react-query', () => ({ useQueryClient: () => ({}) }));
-vi.mock('../../contexts/providers/UIProvider', () => ({ useUI: () => ({ state: {} }) }));
-vi.mock('../../components/editor/EditorLoadingProgress', () => ({ EditorLoadingProgress: () => <div data-testid="editor-loading" /> }));
+        // Mock do logger para evitar resolução de alias durante os testes
+        vi.mock('@/lib/utils/appLogger', () => ({ appLogger: { info: () => { }, warn: () => { }, error: () => { } } }));
 
-// Import component under test after mocks (caminho relativo)
-import QuizModularEditor from '../QuizModularEditor';
+        // Mocks essenciais para evitar tree of providers complexos
+        vi.mock('../../hooks/useSuperUnified', () => ({
+            useSuperUnified: () => ({
+                state: { editor: { currentStep: 1, selectedBlockId: null, isDirty: false }, currentFunnel: null },
+                setCurrentStep: () => { },
+                addBlock: () => { },
+                removeBlock: () => { },
+                reorderBlocks: () => { },
+                updateBlock: () => { },
+                getStepBlocks: () => [],
+                setStepBlocks: () => { },
+                setSelectedBlock: () => { },
+                saveFunnel: async () => ({ success: true }),
+                publishFunnel: async () => ({ success: true }),
+                saveStepBlocks: async () => ({ success: true }),
+                undo: () => { },
+                redo: () => { },
+                canUndo: false,
+                canRedo: false,
+                showToast: () => { },
+            }),
+        }));
 
-describe('QuizModularEditor (smoke)', () => {
-    it('renders without crashing (DEV/test mode)', () => {
-        render(<QuizModularEditor />);
-        // If render completes without error, we consider smoke successful
-        expect(true).toBe(true);
-    });
-});
+        // Other lightweight mocks
+        vi.mock('../../hooks/useFeatureFlags', () => ({ useFeatureFlags: () => ({ enableAutoSave: false }) }));
+        vi.mock('../../hooks/useStepPrefetch', () => ({ useStepPrefetch: () => { } }));
+        vi.mock('../../services/canonical/TemplateService', () => ({ templateService: { setActiveFunnel: () => { } } }));
+        vi.mock('@tanstack/react-query', () => ({ useQueryClient: () => ({}) }));
+        vi.mock('../../contexts/providers/UIProvider', () => ({ useUI: () => ({ state: {} }) }));
+        vi.mock('../../components/editor/EditorLoadingProgress', () => ({ EditorLoadingProgress: () => <div data-testid="editor-loading" /> }));
+
+        // Import component under test after mocks (caminho relativo)
+        import QuizModularEditor from '../../QuizModularEditor';
+
+        describe('QuizModularEditor (smoke)', () => {
+            it('renders without crashing (DEV/test mode)', () => {
+                render(<QuizModularEditor />);
+// If render completes without error, we consider smoke successful
+expect(true).toBe(true);
+            });
+        });
