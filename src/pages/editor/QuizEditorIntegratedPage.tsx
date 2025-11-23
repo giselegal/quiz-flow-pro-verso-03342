@@ -30,6 +30,8 @@ import QuizEditorMode from '@/components/editor/modes/QuizEditorMode';
 import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
 import { useTemplateLoader } from '@/hooks/useTemplateLoader';
 import { useNotification } from '@/components/ui/Notification';
+import { useEditorPersistence } from '@/hooks/useEditorPersistence';
+import { useSuperUnified } from '@/hooks/useSuperUnified';
 
 // Services
 import { QuizToEditorAdapter } from '@/lib/adapters/QuizToEditorAdapter';
@@ -67,6 +69,35 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   const navigation = useUnifiedStepNavigation();
   const templateLoader = useTemplateLoader();
   const { addNotification } = useNotification();
+  const { stepBlocks } = useSuperUnified();
+
+  // 🆕 HOOK DE PERSISTÊNCIA AUTOMÁTICA
+  const {
+    isSaving,
+    lastSaved,
+    error: persistenceError,
+    saveNow,
+    canUndo,
+    canRedo,
+    undo,
+    redo,
+    clearError
+  } = useEditorPersistence(
+    funnelId || 'quiz-estilo-21-steps',
+    state.currentStep,
+    stepBlocks[`step-${state.currentStep}`] || [],
+    {
+      autoSave: true,
+      debounceMs: 1000,
+      enableHistory: true,
+      onSaveSuccess: () => {
+        addNotification('✅ Alterações salvas automaticamente', 'success');
+      },
+      onSaveError: (err) => {
+        addNotification(`❌ Erro ao salvar: ${err.message}`, 'error');
+      }
+    }
+  );
 
   // Carregar dados do quiz na inicialização
   useEffect(() => {
