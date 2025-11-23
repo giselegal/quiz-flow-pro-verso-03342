@@ -389,7 +389,17 @@ function AppCore() {
                                         </QuizErrorBoundary>
                                     </Route>
 
-                                    {/* 🔐 AUTENTICAÇÃO - Removed (AuthPage deleted) */}
+                                    {/* 🔐 AUTENTICAÇÃO */}
+                                    <Route path="/auth">
+                                        {() => {
+                                            const AuthPage = lazy(() => import('./pages/AuthPage'));
+                                            return (
+                                                <Suspense fallback={<PageLoadingFallback message="Carregando autenticação..." />}>
+                                                    <AuthPage />
+                                                </Suspense>
+                                            );
+                                        }}
+                                    </Route>
 
                                     {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
                                     <Route path="/admin/dashboard">
