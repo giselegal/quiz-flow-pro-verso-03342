@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
+import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
 import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
@@ -67,16 +67,7 @@ const MainEditorUnified: React.FC = () => {
 
     return (
         <ErrorBoundary>
-            <UnifiedAppProvider
-                context={FunnelContext.EDITOR}
-                autoLoad={true}
-                debugMode={debugMode}
-                initialFeatures={{
-                    enableCache: true,
-                    enableAnalytics: true,
-                    enableAdvancedEditor: true,
-                }}
-            >
+            <SuperUnifiedProviderV3>
                 <EditorProvider>
                     {sanitizedParams.funnelId ? (
                         <FunnelValidatedEditor
@@ -91,7 +82,7 @@ const MainEditorUnified: React.FC = () => {
                         />
                     )}
                 </EditorProvider>
-            </UnifiedAppProvider>
+            </SuperUnifiedProviderV3>
         </ErrorBoundary>
     );
 };

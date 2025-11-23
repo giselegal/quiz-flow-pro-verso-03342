@@ -29,9 +29,6 @@ export { default as LivePreviewProvider, useLivePreview } from './LivePreviewPro
 // 🔧 INTERNOS: Runtime providers para editor (mantidos)
 export { EditorRuntimeProviders } from '@/contexts';
 
-// ✅ REEXPORT CANÔNICO DE HOOK PRINCIPAL
-export { useUnifiedApp, useUnifiedAppSelector } from './UnifiedAppProvider';
-
 // 🚨 FAIL-SAFE: Throw helper para detectar uso indevido de legados em runtime (opcional futuramente)
 export const assertNoLegacyProvidersRuntime = () => {
   if (process.env.NODE_ENV !== 'production') {
