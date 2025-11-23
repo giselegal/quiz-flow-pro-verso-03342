@@ -31,10 +31,35 @@ export class LogicEngine {
   }
 
   /**
-   * Atualiza o contexto com novo valor
+   * Define valor aninhado usando dot notation (ex: "scores.natural" = 25)
+   */
+  private setNestedValue(path: string, value: any): void {
+    const keys = path.split('.');
+    const lastKey = keys.pop()!;
+    
+    let current = this.context;
+    for (const key of keys) {
+      if (!(key in current)) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    
+    current[lastKey] = value;
+  }
+
+  /**
+   * Obtém valor aninhado usando dot notation (ex: "user.name", "scores.natural")
+   */
+  private getNestedValue(path: string): any {
+    return path.split('.').reduce((obj, key) => obj?.[key], this.context);
+  }
+
+  /**
+   * Atualiza o contexto com novo valor (suporta dot notation)
    */
   updateContext(key: string, value: any): void {
-    this.context[key] = value;
+    this.setNestedValue(key, value);
     this.history.push({
       timestamp: new Date(),
       field: key,
@@ -211,13 +236,6 @@ export class LogicEngine {
         timestamp: new Date(h.timestamp)
       }));
     }
-  }
-
-  /**
-   * Obtém valor aninhado usando dot notation (ex: "user.name", "scores.natural")
-   */
-  private getNestedValue(path: string): any {
-    return path.split('.').reduce((obj, key) => obj?.[key], this.context);
   }
 
   /**
