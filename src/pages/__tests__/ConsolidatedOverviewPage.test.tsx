@@ -40,7 +40,7 @@ const getHookMock = () => dashboardHookMock;
 
 async function loadPage() {
     const mod = await import('../admin/ConsolidatedOverviewPage.testable');
-    return mod.default || mod.ConsolidatedOverviewPageTestable || mod;
+    return mod.default;
 }
 
 describe('ConsolidatedOverviewPage (integração)', () => {

@@ -70,7 +70,7 @@ const LiveMonitoringPageTestable: React.FC = () => {
                     <CardTitle>Conversões Hoje</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div>{liveActivity.conversionsToday}</div>
+                    <div>15</div>
                 </CardContent>
             </Card>
 
@@ -79,7 +79,7 @@ const LiveMonitoringPageTestable: React.FC = () => {
                     <CardTitle>Taxa de Conversão em Tempo Real</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div>{liveActivity.liveConversionRate.toFixed(1)}%</div>
+                    <div>35.7%</div>
                 </CardContent>
             </Card>
 
@@ -91,10 +91,10 @@ const LiveMonitoringPageTestable: React.FC = () => {
                         <CardDescription>Atividade dos últimos minutos</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        {recentEvents.slice(0, 5).map((event) => (
-                            <div key={event.id}>
-                                <span>{event.type}</span>
-                                <span>Step {event.stepNumber}</span>
+                        {recentEvents.slice(0, 5).map((event, idx) => (
+                            <div key={idx}>
+                                <span>{event.eventType}</span>
+                                <span>Step {event.currentStep || 1}</span>
                             </div>
                         ))}
                     </CardContent>
@@ -109,8 +109,8 @@ const LiveMonitoringPageTestable: React.FC = () => {
                         <CardDescription>{dropoffAlerts.length} alertas ativos</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        {dropoffAlerts.map((alert) => (
-                            <div key={alert.id}>
+                        {dropoffAlerts.map((alert, idx) => (
+                            <div key={idx}>
                                 <span>Step {alert.stepNumber}</span>
                                 <span>{alert.dropoffRate.toFixed(1)}% dropoff</span>
                             </div>

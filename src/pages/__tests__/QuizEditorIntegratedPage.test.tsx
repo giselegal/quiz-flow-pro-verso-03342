@@ -42,7 +42,7 @@ const getSuperUnifiedHook = () => superUnifiedHookMock;
 
 async function loadPage() {
     const mod = await import('../editor/QuizEditorIntegratedPage.testable');
-    return mod.default || mod.QuizEditorIntegratedPageTestable || mod;
+    return mod.default;
 }
 
 describe('QuizEditorIntegratedPage (integração)', () => {
