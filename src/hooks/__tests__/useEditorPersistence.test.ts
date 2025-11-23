@@ -71,17 +71,17 @@ describe('useEditorPersistence', () => {
       { id: 'existing1', type: 'heading', content: 'Existing' },
     ];
 
-    (funnelComponentsService.getStepComponents as any).mockResolvedValue(
+    (funnelComponentsService.getComponents as any).mockResolvedValue(
       mockExistingBlocks
     );
 
     renderHook(() => useEditorPersistence(mockFunnelId, mockStep, []));
 
     await waitFor(() => {
-      expect(funnelComponentsService.getStepComponents).toHaveBeenCalledWith(
-        mockFunnelId,
-        mockStep
-      );
+      expect(funnelComponentsService.getComponents).toHaveBeenCalledWith({
+        funnelId: mockFunnelId,
+        stepNumber: mockStep
+      });
     });
   });
 
@@ -93,8 +93,8 @@ describe('useEditorPersistence', () => {
     (funnelComponentsService.syncStepComponents as any).mockResolvedValue(undefined);
 
     const { rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
-      { initialProps: { blocks: [] } }
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      { initialProps: { blocks: [] as any[] } }
     );
 
     // Atualiza blocks
@@ -127,8 +127,8 @@ describe('useEditorPersistence', () => {
     (funnelComponentsService.syncStepComponents as any).mockReturnValue(syncPromise);
 
     const { result, rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
-      { initialProps: { blocks: [] } }
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      { initialProps: { blocks: [] as any[] } }
     );
 
     // Atualiza blocks
@@ -165,8 +165,8 @@ describe('useEditorPersistence', () => {
     (funnelComponentsService.syncStepComponents as any).mockRejectedValue(mockError);
 
     const { result, rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
-      { initialProps: { blocks: [] } }
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      { initialProps: { blocks: [] as any[] } }
     );
 
     // Atualiza blocks
@@ -212,8 +212,8 @@ describe('useEditorPersistence', () => {
 
   it('deve armazenar histórico para undo', async () => {
     const { result, rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
-      { initialProps: { blocks: [] } }
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      { initialProps: { blocks: [] as any[] } }
     );
 
     // Primeira mudança
@@ -278,10 +278,10 @@ describe('useEditorPersistence', () => {
   it('deve refazer alterações com redo', async () => {
     (funnelComponentsService.syncStepComponents as any).mockResolvedValue(undefined);
 
-    const initialBlocks = [{ id: 'initial', type: 'heading', content: 'Initial' }];
+    const initialBlocks: any[] = [{ id: 'initial', type: 'heading', content: 'Initial' }];
     
     const { result, rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
       { initialProps: { blocks: initialBlocks } }
     );
 
@@ -327,14 +327,14 @@ describe('useEditorPersistence', () => {
     (funnelComponentsService.syncStepComponents as any).mockResolvedValue(undefined);
 
     const { result, rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
-      { initialProps: { blocks: [] } }
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      { initialProps: { blocks: [] as any[] } }
     );
 
     // Cria 55 mudanças
     for (let i = 0; i < 55; i++) {
-      const newBlocks = [{ id: `block${i}`, type: 'heading', content: `Test ${i}` }];
-      rerender({ blocks: newBlocks });
+      const newBlocks: any[] = [{ id: `block${i}`, type: 'heading', content: `Test ${i}` }];
+      rerender({ blocks: newBlocks as any[] });
       
       act(() => {
         vi.advanceTimersByTime(1000);
@@ -365,12 +365,12 @@ describe('useEditorPersistence', () => {
     (funnelComponentsService.syncStepComponents as any).mockResolvedValue(undefined);
 
     const { rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
-      { initialProps: { blocks: [] } }
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      { initialProps: { blocks: [] as any[] } }
     );
 
     // Primeira mudança
-    rerender({ blocks: [{ id: '1', type: 'heading', content: 'First' }] });
+    rerender({ blocks: [{ id: '1', type: 'heading', content: 'First' }] as any[] });
     
     // Avança 500ms (metade do debounce)
     act(() => {
@@ -378,7 +378,7 @@ describe('useEditorPersistence', () => {
     });
 
     // Segunda mudança (cancela debounce anterior)
-    rerender({ blocks: mockBlocks });
+    rerender({ blocks: mockBlocks as any[] });
 
     // Avança mais 500ms (total 1s desde segunda mudança)
     act(() => {
@@ -404,12 +404,12 @@ describe('useEditorPersistence', () => {
     (funnelComponentsService.syncStepComponents as any).mockResolvedValue(undefined);
 
     const { unmount, rerender } = renderHook(
-      ({ blocks }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
-      { initialProps: { blocks: [] } }
+      ({ blocks }: { blocks: any[] }) => useEditorPersistence(mockFunnelId, mockStep, blocks),
+      { initialProps: { blocks: [] as any[] } }
     );
 
     // Atualiza blocks
-    rerender({ blocks: mockBlocks });
+    rerender({ blocks: mockBlocks as any[] });
 
     // Unmount antes do debounce completar
     unmount();
