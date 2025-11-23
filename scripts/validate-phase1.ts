@@ -273,8 +273,8 @@ async function generateReport() {
   console.log('='.repeat(60) + '\n');
 
   // Salvar JSON
-  const fs = require('fs');
-  fs.writeFileSync(
+  // fs já importado no topo
+  writeFileSync(
     'validation-results.json',
     JSON.stringify({ timestamp: new Date().toISOString(), results }, null, 2)
   );
