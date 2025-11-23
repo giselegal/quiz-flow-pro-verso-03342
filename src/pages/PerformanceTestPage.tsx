@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { EditorCompositeProvider } from '@/contexts/editor/EditorCompositeProvider';
+import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
 import { RenderProfiler, RenderMetricsDashboard, useRenderCounter } from '@/lib/utils/RenderProfiler';
 
 // Componente filho que usa o editor context
@@ -119,8 +119,8 @@ const PerformanceTestPage: React.FC = () => {
             <div style={{ marginTop: '30px' }}>
                 <h2>🧪 Componentes de Teste</h2>
 
-                <RenderProfiler id="EditorCompositeProvider-Test" logToConsole showOverlay>
-                    <EditorCompositeProvider funnelId="test-funnel" debugMode>
+                <RenderProfiler id="SuperUnifiedProviderV3-Test" logToConsole showOverlay>
+                    <SuperUnifiedProviderV3>
                         <RenderProfiler id="EditorConsumer-1" logToConsole>
                             <EditorConsumer />
                         </RenderProfiler>
@@ -133,7 +133,7 @@ const PerformanceTestPage: React.FC = () => {
                             <h3>ℹ️ Métricas Esperadas (Meta Fase 2)</h3>
                             <ul>
                                 <li>
-                                    <strong>EditorCompositeProvider:</strong> Máximo 3-5 renders iniciais
+                                    <strong>SuperUnifiedProviderV3:</strong> Máximo 3-5 renders iniciais
                                     (mount + hydration)
                                 </li>
                                 <li>
@@ -158,7 +158,7 @@ const PerformanceTestPage: React.FC = () => {
                                 com arquitetura anterior (5 níveis de providers)
                             </div>
                         </div>
-                    </EditorCompositeProvider>
+                    </SuperUnifiedProviderV3>
                 </RenderProfiler>
             </div>
 
