@@ -1,6 +1,7 @@
 import React from 'react';
+import '@testing-library/jest-dom/vitest';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 
 // ---------------------------------------------------------------------------
 // Estratégia de isolamento:
@@ -63,8 +64,8 @@ const getHookMock = () => funnelHookMock;
 
 // Import dinâmico isolado (executado após mocks)
 async function loadPage() {
-    const mod = await import('../dashboard/AnalyticsPage');
-    return mod.default || mod.AnalyticsPage || mod;
+    const mod = await import('../dashboard/AnalyticsPage.testable');
+    return mod.default || mod.AnalyticsPageTestable || mod;
 }
 
 describe('AnalyticsPage (integração)', () => {
@@ -73,6 +74,8 @@ describe('AnalyticsPage (integração)', () => {
     });
 
     afterEach(() => {
+        // Garantir isolamento entre testes limpando o DOM para evitar múltiplas instâncias acumuladas
+        cleanup();
         vi.useRealTimers();
     });
 
@@ -152,7 +155,8 @@ describe('AnalyticsPage (integração)', () => {
         // Cards principais
         expect(screen.getByText(/Total de Sessões/i)).toBeInTheDocument();
         expect(screen.getByText(String(baseMetrics.totalSessions))).toBeInTheDocument();
-        expect(screen.getByText(/Taxa de Conversão/i)).toBeInTheDocument();
+        // Evita colisão com texto "Taxa de Conversão Geral" usando role heading
+        expect(screen.getByRole('heading', { name: /Taxa de Conversão/i })).toBeInTheDocument();
         expect(screen.getByText(new RegExp(`${baseMetrics.conversionRate}%`))).toBeInTheDocument();
         expect(screen.getByText(/Tempo Médio/i)).toBeInTheDocument();
         expect(screen.getByText(/Score Médio/i)).toBeInTheDocument();
