@@ -43,17 +43,22 @@ export class PublishService {
       // STEP 1: VALIDAR ESTRUTURA DO FUNNEL
       // ============================================================================
       
-      const components = await funnelComponentsService.getComponentsForFunnel(options.funnelId);
-      
-      if (!components || components.length === 0) {
-        appLogger.warn('Tentativa de publicar funnel vazio', { funnelId: options.funnelId });
+      // Validação simplificada: verificar se funnel existe
+      const { data: funnelExists, error: funnelCheckError } = await supabase
+        .from('funnels')
+        .select('id')
+        .eq('id', options.funnelId)
+        .maybeSingle();
+
+      if (funnelCheckError || !funnelExists) {
+        appLogger.warn('Funnel não encontrado', { funnelId: options.funnelId });
         return {
           success: false,
-          errors: ['Funnel vazio - adicione componentes antes de publicar']
+          errors: ['Funnel não encontrado - crie um funnel antes de publicar']
         };
       }
 
-      appLogger.info(`Funnel contém ${components.length} componentes`, { funnelId: options.funnelId });
+      appLogger.info('Funnel validado', { funnelId: options.funnelId });
 
       // ============================================================================
       // STEP 2: BUSCAR DRAFT ATUAL
@@ -106,9 +111,15 @@ export class PublishService {
           .from('quiz_production')
           .insert({
             funnel_id: options.funnelId,
+            name: draft.name || `Quiz ${options.funnelId}`,
+            slug: draft.slug || options.funnelId,
             content: draft.content,
-            metadata: {
-              ...draft.metadata,
+            metadata: (draft.metadata && typeof draft.metadata === 'object') ? {
+              ...(draft.metadata as Record<string, any>),
+              publishedAt: new Date().toISOString(),
+              environment: options.environment,
+              analytics: options.enableAnalytics
+            } : {
               publishedAt: new Date().toISOString(),
               environment: options.environment,
               analytics: options.enableAnalytics
@@ -132,7 +143,7 @@ export class PublishService {
 
         appLogger.info('Versão em produção criada (método direto)', { 
           funnelId: options.funnelId,
-          productionId: directProduction.id
+          productionId: directProduction?.id || 'unknown'
         });
       } else if (prodError) {
         appLogger.error('Erro ao executar RPC de publicação', { 
@@ -145,8 +156,7 @@ export class PublishService {
         };
       } else {
         appLogger.info('Versão em produção criada via RPC', { 
-          funnelId: options.funnelId,
-          productionId: production?.id
+          funnelId: options.funnelId
         });
       }
 
@@ -156,12 +166,17 @@ export class PublishService {
       
       const publishedAt = new Date().toISOString();
       
-      const { error: funnelError } = await supabase
+      const { error: funnelUpdateError } = await supabase
         .from('funnels')
         .update({ 
           status: 'published',
-          metadata: {
-            ...(draft.metadata || {}),
+          metadata: (draft.metadata && typeof draft.metadata === 'object') ? {
+            ...(draft.metadata as Record<string, any>),
+            publishedAt,
+            environment: options.environment,
+            analytics: options.enableAnalytics,
+            lastPublishedDraft: draft.id
+          } : {
             publishedAt,
             environment: options.environment,
             analytics: options.enableAnalytics,
@@ -171,9 +186,9 @@ export class PublishService {
         })
         .eq('id', options.funnelId);
 
-      if (funnelError) {
+      if (funnelUpdateError) {
         appLogger.error('Erro ao atualizar status do funnel', { 
-          error: funnelError,
+          error: funnelUpdateError,
           funnelId: options.funnelId 
         });
         // Não falhar a publicação por causa disso - apenas avisar
@@ -190,8 +205,7 @@ export class PublishService {
       appLogger.info('✅ Funnel publicado com sucesso', { 
         funnelId: options.funnelId,
         url: publicUrl,
-        environment: options.environment,
-        components: components.length
+        environment: options.environment
       });
 
       // ============================================================================
