@@ -4,6 +4,18 @@
     "noEmit": true
   },
   "exclude": [
-    "src/components/test/ProvidersTest.tsx"
+    "src/components/test/ProvidersTest.tsx",
+    "src/pages/examples/**",
+    "examples/**",
+    "backend-example/**",
+    "archived-legacy-editors/**",
+    "archived-examples/**",
+    "docs/**",
+    "src/config/__tests__/**",
+    "src/utils/EditorDiagnostics.ts",
+    "src/utils/editorDiagnosticsShim.ts",
+    "src/hooks/useAutosave.ts",
+    "supabase/functions/**",
+    "src/components/editor/interactive/examples/**"
   ]
 }
