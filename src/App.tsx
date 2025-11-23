@@ -40,11 +40,11 @@ import { loadDefaultSchemas, isSchemasLoaded } from '@/core/schema/loadDefaultSc
 import { PWANotifications } from './components/PWANotifications';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
-// 🚀 FASE 2: Unified Provider (arquitetura consolidada)
-import UnifiedAppProvider from '@/contexts/providers/UnifiedAppProvider';
+// 🚀 FASE 3: SuperUnifiedProvider V3 (optimized architecture)
+import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
+import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
 
@@ -119,7 +119,7 @@ function AppCore() {
             }
         } catch { }
 
-        appLogger.info('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
+        appLogger.info('🚀 App initialized with SuperUnifiedProviderV3 (optimized)');
 
         try {
             const params = new URLSearchParams(window.location.search);
@@ -205,18 +205,8 @@ function AppCore() {
         <HelmetProvider>
             <SentryErrorBoundary showDialog={true}>
                 <GlobalErrorBoundary showResetButton={true}>
-                    {/* 🚀 UNIFIED APP PROVIDER - Arquitetura simplificada */}
-                    <UnifiedAppProvider
-                        context={FunnelContext.EDITOR}
-                        autoLoad={true}
-                        debugMode={process.env.NODE_ENV === 'development'}
-                        initialFeatures={{
-                            enableCache: true,
-                            enableAnalytics: true,
-                            enableCollaboration: false,
-                            enableAdvancedEditor: true,
-                        }}
-                    >
+                    {/* 🚀 SUPER UNIFIED PROVIDER V3 - Optimized architecture */}
+                    <SuperUnifiedProviderV3>
 
                         <Router>
                             <Suspense fallback={
@@ -543,7 +533,7 @@ function AppCore() {
                         {/* 🚀 FASE 3.5: PWA Notifications (offline/update) */}
                         <PWANotifications />
 
-                    </UnifiedAppProvider>
+                    </SuperUnifiedProviderV3>
                 </GlobalErrorBoundary>
             </SentryErrorBoundary>
         </HelmetProvider>
