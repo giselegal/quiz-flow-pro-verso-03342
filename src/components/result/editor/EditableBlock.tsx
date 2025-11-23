@@ -84,7 +84,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     onMove('up');
                   }}
@@ -95,7 +95,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     onMove('down');
                   }}
@@ -108,7 +108,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
             <Button
               size="sm"
               variant="ghost"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 onDelete();
               }}

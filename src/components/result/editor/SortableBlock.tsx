@@ -99,7 +99,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-7 w-7 p-0"
-                onClick={e => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   onDuplicate();
                 }}
@@ -113,7 +113,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-7 w-7 p-0"
-                onClick={e => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   onDelete();
                 }}

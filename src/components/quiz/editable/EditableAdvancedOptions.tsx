@@ -126,28 +126,28 @@ export default function EditableAdvancedOptions({
                                                 autoFocus
                                             />
                                             <div className="flex gap-1">
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        toggleBold(option.id);
-                                                    }}
-                                                    className="h-6 px-2"
-                                                >
-                                                    <Bold className="w-3 h-3" />
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setEditingId(null);
-                                                    }}
-                                                    className="h-6 px-2"
-                                                >
-                                                    ✓
-                                                </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                                    e.stopPropagation();
+                                                    toggleBold(option.id);
+                                                }}
+                                                className="h-6 px-2"
+                                            >
+                                                <Bold className="w-3 h-3" />
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                                    e.stopPropagation();
+                                                    setEditingId(null);
+                                                }}
+                                                className="h-6 px-2"
+                                            >
+                                                ✓
+                                            </Button>
                                             </div>
                                         </div>
                                     ) : (
