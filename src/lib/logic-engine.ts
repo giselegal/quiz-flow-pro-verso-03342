@@ -1,8 +1,5 @@
 /**
  * 🎯 LOGIC ENGINE - Sistema de Jump Logic JSON-based
- * 
- * Motor de lógica condicional para navegação dinâmica entre steps
- * Baseado em análise de projetos similares (Formbricks, OpnForm)
  */
 
 export interface Condition {
@@ -30,9 +27,6 @@ export class LogicEngine {
     this.context = { ...initialContext };
   }
 
-  /**
-   * Define valor aninhado usando dot notation (ex: "scores.natural" = 25)
-   */
   private setNestedValue(path: string, value: any): void {
     const keys = path.split('.');
     const lastKey = keys.pop()!;
@@ -48,16 +42,10 @@ export class LogicEngine {
     current[lastKey] = value;
   }
 
-  /**
-   * Obtém valor aninhado usando dot notation (ex: "user.name", "scores.natural")
-   */
   private getNestedValue(path: string): any {
     return path.split('.').reduce((obj, key) => obj?.[key], this.context);
   }
 
-  /**
-   * Atualiza o contexto com novo valor (suporta dot notation)
-   */
   updateContext(key: string, value: any): void {
     this.setNestedValue(key, value);
     this.history.push({
@@ -67,40 +55,25 @@ export class LogicEngine {
     });
   }
 
-  /**
-   * Atualiza múltiplos valores no contexto
-   */
   updateMultiple(updates: Record<string, any>): void {
     Object.entries(updates).forEach(([key, value]) => {
       this.updateContext(key, value);
     });
   }
 
-  /**
-   * Obtém valor do contexto (suporta dot notation)
-   */
   getValue(field: string): any {
     return this.getNestedValue(field);
   }
 
-  /**
-   * Obtém todo o contexto
-   */
   getContext(): LogicContext {
     return { ...this.context };
   }
 
-  /**
-   * Limpa o contexto
-   */
   clearContext(): void {
     this.context = {};
     this.history = [];
   }
 
-  /**
-   * Avalia uma única condição
-   */
   evaluateCondition(condition: Condition): boolean {
     const { operator, field, value } = condition.if;
     const fieldValue = this.getNestedValue(field);
@@ -108,16 +81,12 @@ export class LogicEngine {
     switch (operator) {
       case 'equals':
         return fieldValue === value;
-      
       case 'notEquals':
         return fieldValue !== value;
-      
       case 'greaterThan':
         return Number(fieldValue) > Number(value);
-      
       case 'lessThan':
         return Number(fieldValue) < Number(value);
-      
       case 'contains':
         if (Array.isArray(fieldValue)) {
           return fieldValue.includes(value);
@@ -126,23 +95,18 @@ export class LogicEngine {
           return fieldValue.includes(String(value));
         }
         return false;
-      
       case 'in':
         if (!Array.isArray(value)) {
           console.warn(`Operator 'in' expects array value, got ${typeof value}`);
           return false;
         }
         return value.includes(fieldValue);
-      
       default:
         console.warn(`Unknown operator: ${operator}`);
         return false;
     }
   }
 
-  /**
-   * Avalia múltiplas condições e retorna a primeira que passar
-   */
   evaluateConditions(conditions: Condition[]): Condition | null {
     for (const condition of conditions) {
       try {
@@ -156,9 +120,6 @@ export class LogicEngine {
     return null;
   }
 
-  /**
-   * Determina o próximo step baseado em condições
-   */
   getNextStep(
     currentStep: string,
     conditions: Condition[],
@@ -172,19 +133,12 @@ export class LogicEngine {
       switch (action) {
         case 'goto':
           return target;
-        
         case 'skip':
-          // Pular o step atual e ir para o próximo
           return defaultNext;
-        
         case 'showResult':
-          // Ir para step de resultado
           return target;
-        
         case 'end':
-          // Finalizar quiz
           return null;
-        
         default:
           console.warn(`Unknown action: ${action}`);
           return defaultNext;
@@ -194,9 +148,6 @@ export class LogicEngine {
     return defaultNext;
   }
 
-  /**
-   * Verifica se deve mostrar um resultado específico
-   */
   shouldShowResult(conditions: Condition[], resultId: string): boolean {
     const matchedCondition = this.evaluateConditions(conditions);
     
@@ -208,16 +159,10 @@ export class LogicEngine {
     );
   }
 
-  /**
-   * Obtém histórico de mudanças no contexto
-   */
   getHistory(): Array<{ timestamp: Date; field: string; value: any }> {
     return [...this.history];
   }
 
-  /**
-   * Exporta estado para persistência
-   */
   export(): { context: LogicContext; history: any[] } {
     return {
       context: this.getContext(),
@@ -225,9 +170,6 @@ export class LogicEngine {
     };
   }
 
-  /**
-   * Importa estado de persistência
-   */
   import(state: { context: LogicContext; history?: any[] }): void {
     this.context = { ...state.context };
     if (state.history) {
@@ -238,9 +180,6 @@ export class LogicEngine {
     }
   }
 
-  /**
-   * Debug: imprime estado atual
-   */
   debug(): void {
     console.log('🔍 Logic Engine Debug:');
     console.log('Context:', this.context);
@@ -248,20 +187,11 @@ export class LogicEngine {
   }
 }
 
-/**
- * Hook para usar LogicEngine em componentes React
- */
 export function createLogicEngine(initialContext?: LogicContext): LogicEngine {
   return new LogicEngine(initialContext);
 }
 
-/**
- * Helpers para criar condições comuns
- */
 export const LogicHelpers = {
-  /**
-   * Condição: campo igual a valor
-   */
   equals(id: string, field: string, value: any, target: string): Condition {
     return {
       id,
@@ -270,9 +200,6 @@ export const LogicHelpers = {
     };
   },
 
-  /**
-   * Condição: score maior que threshold
-   */
   scoreGreaterThan(
     id: string,
     category: string,
@@ -286,9 +213,6 @@ export const LogicHelpers = {
     };
   },
 
-  /**
-   * Condição: opção selecionada está na lista
-   */
   optionIn(id: string, field: string, options: string[], target: string): Condition {
     return {
       id,
@@ -297,9 +221,6 @@ export const LogicHelpers = {
     };
   },
 
-  /**
-   * Condição: skip step se condição for verdadeira
-   */
   skipIf(id: string, field: string, value: any): Condition {
     return {
       id,
@@ -308,9 +229,6 @@ export const LogicHelpers = {
     };
   },
 
-  /**
-   * Condição: finalizar quiz
-   */
   endIf(id: string, field: string, value: any): Condition {
     return {
       id,
@@ -319,33 +237,3 @@ export const LogicHelpers = {
     };
   }
 };
-
-/**
- * Exemplo de uso:
- * 
- * ```typescript
- * const engine = new LogicEngine();
- * 
- * // Atualizar contexto
- * engine.updateContext('selectedStyle', 'natural');
- * engine.updateContext('scores.natural', 25);
- * 
- * // Definir condições
- * const conditions: Condition[] = [
- *   {
- *     id: 'high-natural-score',
- *     if: { operator: 'greaterThan', field: 'scores.natural', value: 20 },
- *     then: { action: 'showResult', target: 'result-natural' }
- *   },
- *   {
- *     id: 'style-is-natural',
- *     if: { operator: 'equals', field: 'selectedStyle', value: 'natural' },
- *     then: { action: 'goto', target: 'step-10' }
- *   }
- * ];
- * 
- * // Determinar próximo step
- * const nextStep = engine.getNextStep('step-05', conditions, 'step-06');
- * console.log(nextStep); // 'result-natural' (primeira condição passou)
- * ```
- */
