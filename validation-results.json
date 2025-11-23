@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-11-23T02:49:14.771Z",
+  "results": [
+    {
+      "test": "Admin Route",
+      "status": "PASS",
+      "duration": 3169,
+      "details": "Title: 🚀 Quiz Flow Pro Verso | Vista-se de Você! - Gisele Galvão"
+    },
+    {
+      "test": "Step Navigation (1→2→3)",
+      "status": "PASS",
+      "duration": 3094,
+      "details": "404s encontrados: 0",
+      "metrics": {
+        "404_count": 0
+      }
+    },
+    {
+      "test": "Time to Interactive",
+      "status": "PASS",
+      "duration": 1193,
+      "details": "TTI: 53.099999997764826ms",
+      "metrics": {
+        "tti": 53.099999997764826,
+        "fcp": 184,
+        "dcl": 0.6000000014901161
+      }
+    },
+    {
+      "test": "Performance Monitor",
+      "status": "SKIP",
+      "duration": 3158,
+      "details": "Monitor não ativo"
+    }
+  ]
+}

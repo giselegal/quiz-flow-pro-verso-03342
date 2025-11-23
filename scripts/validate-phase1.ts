@@ -5,6 +5,7 @@
  */
 
 import { chromium } from 'playwright';
+import { writeFileSync } from 'fs';
 
 interface ValidationResult {
   test: string;
