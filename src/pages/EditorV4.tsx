@@ -30,10 +30,24 @@ import { cn } from '@/lib/utils';
 // ============================================================================
 
 function EditorLayoutV4() {
-    const { state, getAllSteps, goToStep } = useQuizV4();
+    const context = useQuizV4();
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
     const [showPropertiesPanel, setShowPropertiesPanel] = useState(true);
 
+    // Safety check
+    if (!context) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                    <AlertCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
+                    <p className="text-lg font-semibold">Erro ao carregar contexto</p>
+                    <p className="text-sm text-gray-500">QuizV4Provider não encontrado</p>
+                </div>
+            </div>
+        );
+    }
+
+    const { state, getAllSteps, goToStep } = context;
     const { currentStep, isLoading, error, quiz } = state;
     const allSteps = getAllSteps();
 
