@@ -13,14 +13,14 @@
  * ✅ Versionamento: Sistema de migração e controle de versão
  */
 
-// Re-export everything from the core template service  
-export * from '../core/funnel/services/TemplateService';
+// Re-export everything from the canonical template service
+export * from './canonical/TemplateService';
 
 // Re-export the default service with backward compatibility
-export { templateService as default } from '../core/funnel/services/TemplateService';
+export { templateService as default } from './canonical/TemplateService';
 
 // Import to ensure templateService is available
-import { templateService } from '../core/funnel/services/TemplateService';
+import { templateService } from './canonical/TemplateService';
 
 // Export specific methods for compatibility
 export const supabaseTemplateService = templateService;
