@@ -7,10 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🚀 Quiz Flow Pro Verso | Vista-se de Você! - Gisele Galvão</title>
   <meta name="description" content="Descubra seu estilo pessoal único com nosso quiz interativo." />
-  <!-- 🛡️ CSP: endurece execução bloqueando domínios Lovable em dev/preview.
-    Ajuste conforme necessário para adicionar novas origens confiáveis. -->
+  <!-- 🛡️ CSP: Política de segurança de conteúdo para produção -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.gpteng.co; script-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.gpteng.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.gpteng.co https://lovable.dev https://*.lovable.app ws://localhost:* ws://127.0.0.1:* http://localhost:* http://127.0.0.1:*; img-src 'self' data: blob: https://res.cloudinary.com; frame-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self' https://lovable.dev https://*.lovable.app;" />
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://quiz-flow-pro-verso-03342.onrender.com https://fonts.googleapis.com https://fonts.gstatic.com ws://localhost:* ws://127.0.0.1:* http://localhost:* http://127.0.0.1:*; img-src 'self' data: blob: https://res.cloudinary.com; frame-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self';" />
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#4F46E5">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,61 +27,6 @@
       width: 100%;
     }
   </style>
-  <!-- 🛡️ EARLY LOVABLE BLOCKER (apenas fetch; não intercepta XHR) -->
-  <script>
-    (function () {
-      if (typeof window === 'undefined') return;
-      const isInLovablePreview = window.self !== window.top;
-      if (isInLovablePreview) return; // Permitir quando embutido (ex: preview oficial)
-
-      const BLOCK_PATTERNS = ['lovable.dev', 'api.lovable.dev', 'lovableproject.com', '/_sandbox/'];
-      const shouldBlock = (urlString) => BLOCK_PATTERNS.some(p => urlString.includes(p));
-
-      // 🔧 FIX: Bloqueador mais robusto que intercepta TODOS os tipos de requisição
-      const originalFetch = window.fetch;
-      window.fetch = function (url, options) {
-        let urlString = '';
-        try {
-          urlString = typeof url === 'string' ? url : url instanceof URL ? url.toString() : String(url);
-          // 🔧 FIX: Detectar URLs mal formadas com project ID vazio (//collaborators)
-          const hasMalformedUrl = urlString.includes('projects//') || urlString.includes('api.lovable.dev/projects//');
-
-          if (shouldBlock(urlString) || hasMalformedUrl) {
-            if (hasMalformedUrl) {
-              console.warn('🛡️ Bloqueada requisição Lovable mal formada (project ID ausente):', urlString);
-            }
-            return Promise.resolve(new Response(
-              JSON.stringify({
-                status: 'blocked',
-                message: 'Lovable disabled in local dev',
-                originalUrl: urlString
-              }),
-              { status: 200, headers: { 'Content-Type': 'application/json' } }
-            ));
-          }
-        } catch (e) {
-          console.warn('Erro ao processar URL no bloqueador:', e);
-        }
-        return originalFetch.call(this, url, options);
-      };
-
-      // 🔧 FIX: Interceptar XMLHttpRequest também (para libs que não usam fetch)
-      if (typeof XMLHttpRequest !== 'undefined') {
-        const originalOpen = XMLHttpRequest.prototype.open;
-        XMLHttpRequest.prototype.open = function (method, url) {
-          const urlString = String(url);
-          const hasMalformedUrl = urlString.includes('projects//') || urlString.includes('api.lovable.dev/projects//');
-
-          if (shouldBlock(urlString) || hasMalformedUrl) {
-            console.warn('🛡️ Bloqueada XHR Lovable:', urlString);
-            // Não chama o open original - bloqueia completamente
-            return;
-          }
-          return originalOpen.apply(this, arguments);
-        };
-      }
-    })();
-  </script>
 </head>
 
 <body>

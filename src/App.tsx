@@ -242,20 +242,7 @@ function AppCore() {
                                         {(params) => <RedirectRoute to={`/editor/${params.funnelId}`} />}
                                     </Route>
 
-                                    <Route path="/editor-modular">
-                                        <RedirectRoute to="/editor" />
-                                    </Route>
-
-                                    {/* 🎯 EDITOR CANÔNICO - Delega para EditorRoutes */}
-                                    {/* IMPORTANTE: Rotas específicas ANTES de rotas com parâmetros */}
-                                    <Route path="/editor/templates">
-                                        <div data-testid="editor-templates-page">
-                                            <EditorTemplatesPage />
-                                        </div>
-                                    </Route>
-
-                                    {/* 🎯 EDITOR ROUTES - Removed (src/pages/editor/index.tsx deleted) */}
-                                    {/* Editor functionality available through EditorModular */}
+                                    {/* Rotas de editor consolidadas - usar /editor-new */}}
 
                                     {/* 🎯 FASE 1: Preview Sandbox Isolado (iframe) */}
                                     <Route path="/preview-sandbox">
@@ -487,11 +474,14 @@ function AppCore() {
                                     <Route path="/dashboard-admin">
                                         <RedirectRoute to="/admin" />
                                     </Route>
+                                    <Route path="/editor">
+                                        <RedirectRoute to="/editor-new" />
+                                    </Route>
                                     <Route path="/editor-pro">
                                         <RedirectRoute to="/editor-new" />
                                     </Route>
                                     <Route path="/quiz-builder">
-                                        <RedirectRoute to="/editor" />
+                                        <RedirectRoute to="/editor-new" />
                                     </Route>
 
                                     {/* 📄 404 */}

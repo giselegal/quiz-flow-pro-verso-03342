@@ -31,7 +31,7 @@
     {
       "name": "Criar Quiz",
       "short_name": "Novo Quiz",
-      "url": "/editor",
+      "url": "/editor-new",
       "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
     },
     {

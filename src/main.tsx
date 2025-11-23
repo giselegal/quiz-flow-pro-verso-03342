@@ -39,14 +39,8 @@ import './styles/design-system.css';
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
 import { initBrowserCleanup } from './lib/utils/browserCleanup';
 import { cleanupConsoleWarnings } from './lib/utils/development';
-// 🔧 WEBSOCKET: Otimizador para resolver problemas de reconexão
-import { initializeWebSocketOptimization } from './lib/utils/websocket-optimizer';
-// 📊 RUDDERSTACK: Otimizador para resolver problemas de analytics
-import { initializeRudderStackOptimization } from './lib/utils/rudderstack-optimizer';
 // 🛡️ Deprecation guards: evitar alert cross-origin e listeners de unload
 import { installDeprecationGuards } from './lib/utils/deprecationGuards';
-// 🛡️ DEVELOPMENT: Bloquear conexões Lovable em desenvolvimento
-import './lib/utils/blockLovableInDev';
 // 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
 import './lib/utils/canvasPerformanceControl';
 // ✨ MODULAR STEPS: adiar auto-registro dos componentes para pós-paint
@@ -212,14 +206,6 @@ if (import.meta.env.DEV) {
   // Limpeza de warnings comuns de navegador (Permissions-Policy, sandbox, preload não usado)
   if (typeof window !== 'undefined') {
     initBrowserCleanup();
-  }
-  // Inicializar otimizadores para desenvolvimento
-  initializeWebSocketOptimization();
-  const DISABLE_ANALYTICS = (import.meta as any)?.env?.VITE_DISABLE_ANALYTICS === 'true';
-  if (!DISABLE_ANALYTICS) {
-    initializeRudderStackOptimization();
-  } else {
-    try { appLogger.info('🚫 Analytics desativado via VITE_DISABLE_ANALYTICS'); } catch { }
   }
 }
 
