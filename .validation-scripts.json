@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "validate:phase1": "tsx scripts/validate-phase1.ts",
+    "validate:lighthouse": "node scripts/lighthouse-audit.cjs",
+    "validate:cleanup": "tsx scripts/cleanup-analysis.ts",
+    "validate:all": "npm run validate:phase1 && npm run validate:cleanup",
+    "validate:dashboard": "bash scripts/show-dashboard.sh",
+    "validate:report": "cat IMPLEMENTATION_REPORT.md"
+  },
+  "description": "Scripts de validação das 3 fases de otimização"
+}
