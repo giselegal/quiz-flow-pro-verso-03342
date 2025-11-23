@@ -9,7 +9,6 @@ import { routePreloader } from '@/lib/utils/routePreloader';
 // 🎯 HIGH PRIORITY (preload on app init)
 export const CRITICAL_ROUTES = {
   editor: '/editor',
-  auth: '/auth',
   admin: '/admin',
 } as const;
 
@@ -34,12 +33,6 @@ export const setupCriticalRoutes = () => {
   // HIGH PRIORITY - Preload imediato em idle
   routePreloader.register(CRITICAL_ROUTES.editor, {
     component: () => import('@/components/editor/quiz/QuizModularEditor'),
-    priority: 'high',
-    preloadOnIdle: true,
-  });
-
-  routePreloader.register(CRITICAL_ROUTES.auth, {
-    component: () => import('@/pages/AuthPage'),
     priority: 'high',
     preloadOnIdle: true,
   });
