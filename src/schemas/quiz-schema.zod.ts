@@ -313,3 +313,14 @@ export function getSchemaErrors(data: unknown): string[] {
     `${err.path.join('.')}: ${err.message}`
   );
 }
+
+// ============================================================================
+// TYPE EXPORTS (para compatibilidade com imports antigos)
+// ============================================================================
+
+export type QuizStep = z.infer<typeof QuizStepSchemaZ>;
+export type QuizBlock = z.infer<typeof QuizBlockSchemaZ>;
+export type QuizTheme = z.infer<typeof QuizThemeSchemaZ>;
+export type QuizSchema = z.infer<typeof QuizSchemaZ>;
+export type NavigationCondition = z.infer<typeof NavigationConditionZ>;
+export type ValidationRule = z.infer<typeof ValidationRuleZ>;

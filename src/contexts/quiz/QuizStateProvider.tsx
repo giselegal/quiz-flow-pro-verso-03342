@@ -12,6 +12,8 @@
 
 import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
+import { LogicEngine } from '@/lib/logic-engine';
+import type { Condition } from '@/lib/logic-engine';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -70,6 +72,11 @@ export interface QuizContextValue {
     // Configuration
     setTotalQuestions: (total: number) => void;
     setMaxScore: (max: number) => void;
+
+    // 🆕 FASE 2: Logic Engine integration
+    logicEngine: LogicEngine;
+    evaluateNavigation: (currentStep: string, conditions: Condition[], defaultNext: string) => string;
+    shouldShowResult: (conditions: Condition[]) => boolean;
 }
 
 interface QuizStateProviderProps {
@@ -249,6 +256,53 @@ export function QuizStateProvider({
         setMaxScoreValue(max);
     }, []);
 
+    // 🆕 FASE 2: Logic Engine instance
+    const logicEngine = useMemo(() => {
+        const engine = new LogicEngine({
+            answers,
+            progress,
+            score: progress.currentScore,
+            completionPercentage: progress.completionPercentage
+        });
+        return engine;
+    }, [answers, progress]);
+
+    // 🆕 FASE 2: Evaluate navigation based on conditions
+    const evaluateNavigation = useCallback((
+        currentStep: string,
+        conditions: Condition[],
+        defaultNext: string
+    ): string => {
+        // Atualizar contexto do logic engine
+        logicEngine.updateContext('currentStep', currentStep);
+        logicEngine.updateContext('answers', answers);
+        logicEngine.updateContext('score', progress.currentScore);
+
+        // Avaliar condições e retornar próximo step
+        const nextStep = logicEngine.getNextStep(currentStep, conditions, defaultNext);
+
+        appLogger.info('[QuizState] Navigation evaluated:', {
+            currentStep,
+            nextStep,
+            conditionsCount: conditions.length
+        });
+
+        return nextStep || currentStep;
+    }, [logicEngine, answers, progress]);
+
+    // 🆕 FASE 2: Check if should show result
+    const shouldShowResult = useCallback((conditions: Condition[]): boolean => {
+        const matchedCondition = logicEngine.evaluateConditions(conditions);
+        const shouldShow = matchedCondition?.then.action === 'showResult';
+
+        appLogger.info('[QuizState] Result check:', {
+            shouldShow,
+            matchedCondition: matchedCondition?.id
+        });
+
+        return shouldShow;
+    }, [logicEngine]);
+
     // Build state object
     const state: QuizState = useMemo(() => ({
         answers,
@@ -275,6 +329,9 @@ export function QuizStateProvider({
         getScore,
         setTotalQuestions,
         setMaxScore,
+        logicEngine,
+        evaluateNavigation,
+        shouldShowResult,
     }), [
         state,
         setAnswer,

@@ -5,11 +5,11 @@
  * Inspirado em Formbricks e SurveyJS.
  */
 
-import type { QuizStepZ, QuizBlockZ } from '@/schemas/quiz-schema.zod';
+import { QuizStepSchemaZ, QuizBlockSchemaZ } from '@/schemas/quiz-schema.zod';
 import { z } from 'zod';
 
-type QuizStep = z.infer<typeof QuizStepZ>;
-type QuizBlock = z.infer<typeof QuizBlockZ>;
+type QuizStep = z.infer<typeof QuizStepSchemaZ>;
+type QuizBlock = z.infer<typeof QuizBlockSchemaZ>;
 
 /**
  * Builder para criar steps de question
@@ -229,7 +229,7 @@ export class QuestionBuilder {
    */
   build(): QuizStep {
     // Validar com Zod
-    return QuizStepZ.parse(this.step);
+    return QuizStepSchemaZ.parse(this.step) as QuizStep;
   }
 }
 
@@ -239,7 +239,7 @@ export class QuestionBuilder {
 export class IntroBuilder extends QuestionBuilder {
   constructor(id: string, order: number) {
     super(id, order);
-    this.step.type = 'intro';
+    (this as any).step.type = 'intro';
   }
 }
 
@@ -249,7 +249,7 @@ export class IntroBuilder extends QuestionBuilder {
 export class TransitionBuilder extends QuestionBuilder {
   constructor(id: string, order: number) {
     super(id, order);
-    this.step.type = 'transition';
+    (this as any).step.type = 'transition';
   }
 }
 
@@ -259,7 +259,7 @@ export class TransitionBuilder extends QuestionBuilder {
 export class ResultBuilder extends QuestionBuilder {
   constructor(id: string, order: number) {
     super(id, order);
-    this.step.type = 'result';
+    (this as any).step.type = 'result';
   }
 }
 

@@ -50,7 +50,8 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
   // ✅ useEditor agora é opcional - não quebra se usado fora do EditorProvider
   const editorContext = useEditor({ optional: true });
   const state = editorContext?.state;
-  const stages = state?.stepBlocks ? Object.keys(state.stepBlocks).map((id, index) => ({ id, order: index + 1 })) : [];
+  // Removed stepBlocks dependency - não existe em EditorState
+  const stages: any[] = [];
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [templatesMetadata, setTemplatesMetadata] = useState<Record<string, TemplateMetadata>>({});
@@ -180,7 +181,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
   // Carregar metadata de todos os templates
   useEffect(() => {
     // ✅ Guard: só executa se tiver state (dentro do editor)
-    if (!state?.stepBlocks) {
+    if (!state) {
       return;
     }
 
@@ -211,7 +212,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
   const loadTemplate = useCallback(
     async (stageId: string): Promise<StageTemplate | null> => {
       // ✅ Guard: método só funciona dentro do editor
-      if (!state?.stepBlocks) {
+      if (!state) {
         appLogger.warn('⚠️ loadTemplate não disponível fora do EditorProvider');
         return null;
       }

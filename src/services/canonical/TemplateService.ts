@@ -271,6 +271,73 @@ export class TemplateService extends BaseCanonicalService {
   // ==================== CORE OPERATIONS ====================
 
   /**
+   * 🆕 FASE 1: Carregar template v4 com validação Zod
+   */
+  async loadV4Template(): Promise<ServiceResult<any>> {
+    try {
+      this.log('📂 Loading quiz21-v4.json...');
+      
+      const response = await fetch('/templates/quiz21-v4.json', {
+        cache: 'no-cache'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to load v4 template: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Validar com Zod
+      const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
+      const validated = QuizSchemaZ.parse(data);
+      
+      this.log(`✅ v4 template loaded and validated: ${validated.steps.length} steps`);
+      
+      // Cache do template v4
+      cacheService.templates.set('quiz21-v4', validated, 3600000); // 1 hora
+      
+      return this.createResult(validated);
+    } catch (error) {
+      this.error('❌ Failed to load v4 template:', error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
+   * 🆕 FASE 1: Obter step específico do template v4
+   */
+  async getStepV4(stepId: string): Promise<ServiceResult<any>> {
+    try {
+      // Tentar carregar do cache primeiro
+      const cached = cacheService.templates.get<any>('quiz21-v4');
+      
+      let v4Template;
+      if (cached.success && cached.data) {
+        v4Template = cached.data;
+      } else {
+        const result = await this.loadV4Template();
+        if (!result.success) {
+          return result;
+        }
+        v4Template = result.data;
+      }
+      
+      // Encontrar step
+      const step = v4Template.steps.find((s: any) => s.id === stepId);
+      
+      if (!step) {
+        return this.createError(new Error(`Step ${stepId} not found in v4 template`));
+      }
+      
+      this.log(`✅ Step ${stepId} loaded from v4 (${step.blocks.length} blocks)`);
+      return this.createResult(step);
+    } catch (error) {
+      this.error(`❌ Failed to load step ${stepId} from v4:`, error);
+      return this.createError(error as Error);
+    }
+  }
+
+  /**
    * Obter template por ID
    */
   async getTemplate(id: string): Promise<ServiceResult<Template>> {
