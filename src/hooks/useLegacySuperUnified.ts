@@ -167,7 +167,14 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
     currentFunnel: funnel.currentFunnel,
   }), [editor, funnel.currentFunnel]);
 
-  return {
+  // ✅ OTIMIZAÇÃO: Memoizar createFunnel para evitar re-criação a cada render
+  const createFunnel = useCallback(async (name: string) => {
+    const id = await unifiedEditor.createFunnel(name);
+    return { id };
+  }, [unifiedEditor]);
+
+  // ✅ OTIMIZAÇÃO: Memoizar objeto retornado para evitar re-renders em consumers
+  return useMemo(() => ({
     // Slices
     auth,
     theme,
@@ -199,10 +206,7 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
     // Funil / persistência
     saveFunnel: unifiedEditor.saveFunnel,
     publishFunnel,
-    createFunnel: async (name: string) => {
-      const id = await unifiedEditor.createFunnel(name);
-      return { id };
-    },
+    createFunnel,
     saveStepBlocks,
     ensureAllDirtyStepsSaved,
 
@@ -214,7 +218,12 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
 
     // UI helper
     showToast: ui.showToast,
-  };
+  }), [
+    auth, theme, editor, funnel, navigation, quiz, result, storage, 
+    sync, validation, collaboration, versioning, ui, state,
+    setSelectedBlock, publishFunnel, createFunnel, saveStepBlocks, 
+    ensureAllDirtyStepsSaved, unifiedEditor
+  ]);
 }
 
 /**
