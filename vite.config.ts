@@ -44,16 +44,6 @@ export default defineConfig({
             '@radix-ui/react-tabs',
             '@radix-ui/react-tooltip',
           ],
-          // Features por módulo
-          'editor-core': [
-            './src/components/editor/EditorContext.tsx',
-            './src/hooks/useEditor.ts',
-            './src/contexts/editor/EditorStateProvider.tsx',
-          ],
-          'quiz-runtime': [
-            './src/components/quiz/QuizContext.tsx',
-            './src/contexts/quiz/QuizStateProvider.tsx',
-          ],
         },
       },
     },
