@@ -76,6 +76,28 @@ export default defineConfig({
             'src/testing/**/*.test.ts',
           ],
         },
+        // Replica aliases para garantir resolução dentro do projeto 'react'
+        resolve: {
+          alias: {
+            '@/hooks': path.resolve(__dirname, './src/hooks'),
+            '@': path.resolve(__dirname, './src'),
+            '@/': path.resolve(__dirname, './src'),
+            '@components': path.resolve(__dirname, './src/components'),
+            '@services': path.resolve(__dirname, './src/services'),
+            '@hooks': path.resolve(__dirname, './src/hooks'),
+            '@utils': path.resolve(__dirname, './src/utils'),
+            '@lib': path.resolve(__dirname, './src/lib'),
+            '@types': path.resolve(__dirname, './src/types'),
+            '@config': path.resolve(__dirname, './src/config'),
+            '@templates': path.resolve(__dirname, './src/templates'),
+            '@consolidated': path.resolve(__dirname, './src/consolidated'),
+            '@optimization': path.resolve(__dirname, './src/optimization'),
+            '@migration': path.resolve(__dirname, './src/migration'),
+            '@testing': path.resolve(__dirname, './src/testing')
+          },
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.mjs'],
+          dedupe: ['react', 'react-dom']
+        }
       },
     ],
     include: [
@@ -156,6 +178,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      // Alias específicos priorizados antes dos genéricos para evitar conflito na resolução
+      '@/hooks': path.resolve(__dirname, './src/hooks'),
       '@': path.resolve(__dirname, './src'),
       '@/': path.resolve(__dirname, './src'), // Suporte explícito para padrão '@/algum/caminho'
       // 🔁 Alinhado com aliases do Vite (vite.config.ts) para permitir importar páginas completas

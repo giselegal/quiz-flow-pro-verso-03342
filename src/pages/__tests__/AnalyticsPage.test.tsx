@@ -1,11 +1,38 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import AnalyticsPage from '@/pages/dashboard/AnalyticsPage';
 
-// Mock do hook useFunnelAnalytics usando alias alinhado com vitest.config atualizado
+// ---------------------------------------------------------------------------
+// Estratégia de isolamento:
+// 1. Evita import estático da página (quebrando resolução de alias em Vitest)
+// 2. Mocka todos os módulos com alias usados internamente ANTES do import dinâmico
+// 3. Usa import relativo da página para evitar falha em '@/pages/...'
+// ---------------------------------------------------------------------------
+
+// Mocks dos componentes de UI para reduzir a árvore e garantir resolução
+vi.mock('@/components/ui/card', () => ({
+    Card: (p: any) => <div data-testid="card" {...p} />,
+    CardHeader: (p: any) => <div data-testid="card-header" {...p} />,
+    CardTitle: (p: any) => <div data-testid="card-title" {...p} />,
+    CardDescription: (p: any) => <div data-testid="card-description" {...p} />,
+    CardContent: (p: any) => <div data-testid="card-content" {...p} />,
+}));
+vi.mock('@/components/ui/button', () => ({
+    Button: (p: any) => <button data-testid="button" {...p} />
+}));
+vi.mock('@/components/ui/badge', () => ({
+    Badge: (p: any) => <span data-testid="badge" {...p} />
+}));
+vi.mock('@/components/ui/alert', () => ({
+    Alert: (p: any) => <div data-testid="alert" {...p} />,
+    AlertDescription: (p: any) => <div data-testid="alert-description" {...p} />
+}));
+
+// Mock do hook principal com referência direta ao mock
+// Inicializa mock do hook antes da página para permitir configurar retorno antes do import dinâmico
+const funnelHookMock: ReturnType<typeof vi.fn> = vi.fn();
 vi.mock('@/hooks/useFunnelAnalytics', () => ({
-    useFunnelAnalytics: vi.fn()
+    useFunnelAnalytics: funnelHookMock
 }));
 
 // Tipagem simplificada para ajudar nos retornos fake
@@ -31,8 +58,14 @@ interface MockStepMetric {
     mostCommonAnswers?: Array<{ value: string; count: number }>;
 }
 
-// Utilitário para acessar o mock
-const getHookMock = () => (require('@/hooks/useFunnelAnalytics') as any).useFunnelAnalytics as ReturnType<typeof vi.fn>;
+// Helper para acessar mock do hook sem require()
+const getHookMock = () => funnelHookMock;
+
+// Import dinâmico isolado (executado após mocks)
+async function loadPage() {
+    const mod = await import('../dashboard/AnalyticsPage');
+    return mod.default || mod.AnalyticsPage || mod;
+}
 
 describe('AnalyticsPage (integração)', () => {
     beforeEach(() => {
@@ -68,7 +101,7 @@ describe('AnalyticsPage (integração)', () => {
         overallConversionRate: 66.7,
     };
 
-    it('deve renderizar estado de carregamento inicial', () => {
+    it('deve renderizar estado de carregamento inicial', async () => {
         getHookMock().mockReturnValue({
             funnelMetrics: null,
             stepMetrics: [],
@@ -77,14 +110,14 @@ describe('AnalyticsPage (integração)', () => {
             error: null,
             refresh: vi.fn(),
         });
-
+        const AnalyticsPage = await loadPage();
         render(<AnalyticsPage />);
 
         expect(screen.getByText(/Carregando Analytics/i)).toBeInTheDocument();
         expect(screen.getByText(/Processando dados do Supabase/i)).toBeInTheDocument();
     });
 
-    it('deve renderizar estado de erro e permitir retry', () => {
+    it('deve renderizar estado de erro e permitir retry', async () => {
         const refresh = vi.fn();
         getHookMock().mockReturnValue({
             funnelMetrics: null,
@@ -94,7 +127,7 @@ describe('AnalyticsPage (integração)', () => {
             error: new Error('Falha na carga'),
             refresh,
         });
-
+        const AnalyticsPage = await loadPage();
         render(<AnalyticsPage />);
 
         expect(screen.getByText(/Erro ao carregar analytics/i)).toBeInTheDocument();
@@ -104,7 +137,7 @@ describe('AnalyticsPage (integração)', () => {
         expect(refresh).toHaveBeenCalledTimes(1);
     });
 
-    it('deve renderizar métricas principais quando disponíveis', () => {
+    it('deve renderizar métricas principais quando disponíveis', async () => {
         getHookMock().mockReturnValue({
             funnelMetrics: baseMetrics,
             stepMetrics: baseSteps,
@@ -113,7 +146,7 @@ describe('AnalyticsPage (integração)', () => {
             error: null,
             refresh: vi.fn(),
         });
-
+        const AnalyticsPage = await loadPage();
         render(<AnalyticsPage />);
 
         // Cards principais
@@ -125,7 +158,7 @@ describe('AnalyticsPage (integração)', () => {
         expect(screen.getByText(/Score Médio/i)).toBeInTheDocument();
     });
 
-    it('deve renderizar funil de conversão com mensagem de steps adicionais', () => {
+    it('deve renderizar funil de conversão com mensagem de steps adicionais', async () => {
         getHookMock().mockReturnValue({
             funnelMetrics: baseMetrics,
             stepMetrics: baseSteps,
@@ -134,7 +167,7 @@ describe('AnalyticsPage (integração)', () => {
             error: null,
             refresh: vi.fn(),
         });
-
+        const AnalyticsPage = await loadPage();
         render(<AnalyticsPage />);
 
         // Verifica steps renderizados parcialmente (limit = 10)
@@ -143,7 +176,7 @@ describe('AnalyticsPage (integração)', () => {
         expect(screen.getByText(/e mais 5 steps/i)).toBeInTheDocument();
     });
 
-    it('deve renderizar seção de steps com maior dropoff', () => {
+    it('deve renderizar seção de steps com maior dropoff', async () => {
         getHookMock().mockReturnValue({
             funnelMetrics: baseMetrics,
             stepMetrics: baseSteps,
@@ -152,7 +185,7 @@ describe('AnalyticsPage (integração)', () => {
             error: null,
             refresh: vi.fn(),
         });
-
+        const AnalyticsPage = await loadPage();
         render(<AnalyticsPage />);
 
         expect(screen.getByText(/Steps com Maior Dropoff/i)).toBeInTheDocument();
@@ -160,7 +193,7 @@ describe('AnalyticsPage (integração)', () => {
         expect(screen.getAllByText(/dropoff/i).length).toBeGreaterThan(0);
     });
 
-    it('deve renderizar respostas mais comuns quando presentes', () => {
+    it('deve renderizar respostas mais comuns quando presentes', async () => {
         getHookMock().mockReturnValue({
             funnelMetrics: baseMetrics,
             stepMetrics: baseSteps,
@@ -169,7 +202,7 @@ describe('AnalyticsPage (integração)', () => {
             error: null,
             refresh: vi.fn(),
         });
-
+        const AnalyticsPage = await loadPage();
         render(<AnalyticsPage />);
 
         expect(screen.getByText(/Respostas Mais Comuns por Step/i)).toBeInTheDocument();
