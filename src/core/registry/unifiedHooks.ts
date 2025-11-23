@@ -57,10 +57,13 @@ export function useBlockRegistryStats() {
  */
 export function useBlockDefinitions(types: string[]) {
   return useMemo(() => {
+    const allAliases = BlockRegistry.getAliases();
     return types.map(type => ({
       type,
       definition: BlockRegistry.getDefinition(type),
-      aliases: BlockRegistry.getAliases(type)
+      aliases: Array.from(allAliases.entries())
+        .filter(([, target]) => target === type)
+        .map(([alias]) => alias)
     }));
   }, [types]);
 }

@@ -11,6 +11,7 @@
 import { useMemo, useCallback } from 'react';
 import { BlockRegistry } from '../blocks/registry';
 import type { BlockDefinition, BlockPropertyDefinition } from '../blocks/types';
+import { PropertyTypeEnum } from '../blocks/types';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
@@ -65,8 +66,8 @@ export function useBlockValidation(blockType: string, options: ValidationOptions
 
     // Valida propriedades se definição tem schema
     if (definition.properties && options.checkRequired !== false) {
-      Object.entries(definition.properties).forEach(([key, propDef]) => {
-        const propDefinition = propDef as BlockPropertyDefinition;
+      definition.properties.forEach(propDefinition => {
+        const key = propDefinition.key;
         const value = blockData.properties?.[key];
 
         // Verifica propriedades obrigatórias
@@ -124,7 +125,7 @@ export function useBlockPropertiesValidation(blockType: string) {
       return { valid: false, errors, warnings };
     }
 
-    const propDefinition = definition.properties?.[key] as BlockPropertyDefinition | undefined;
+    const propDefinition = definition.properties?.find(p => p.key === key);
 
     if (!propDefinition) {
       warnings.push(`Propriedade não definida no schema: ${key}`);
@@ -145,22 +146,12 @@ export function useBlockPropertiesValidation(blockType: string) {
     }
 
     // Valida valor mínimo/máximo para números
-    if (propDefinition.type === 'number' && typeof value === 'number') {
-      if (propDefinition.min !== undefined && value < propDefinition.min) {
-        errors.push(`Valor de ${key} abaixo do mínimo (${propDefinition.min})`);
+    if (propDefinition.type.toString().includes('NUMBER') && typeof value === 'number') {
+      if (propDefinition.validation?.min !== undefined && value < propDefinition.validation.min) {
+        errors.push(`Valor de ${key} abaixo do mínimo (${propDefinition.validation.min})`);
       }
-      if (propDefinition.max !== undefined && value > propDefinition.max) {
-        errors.push(`Valor de ${key} acima do máximo (${propDefinition.max})`);
-      }
-    }
-
-    // Valida comprimento para strings
-    if (propDefinition.type === 'string' && typeof value === 'string') {
-      if (propDefinition.minLength !== undefined && value.length < propDefinition.minLength) {
-        errors.push(`Texto de ${key} muito curto (mínimo: ${propDefinition.minLength})`);
-      }
-      if (propDefinition.maxLength !== undefined && value.length > propDefinition.maxLength) {
-        errors.push(`Texto de ${key} muito longo (máximo: ${propDefinition.maxLength})`);
+      if (propDefinition.validation?.max !== undefined && value > propDefinition.validation.max) {
+        errors.push(`Valor de ${key} acima do máximo (${propDefinition.validation.max})`);
       }
     }
 
@@ -202,40 +193,39 @@ export function useBlockPropertiesValidation(blockType: string) {
 /**
  * Valida se um valor corresponde ao tipo esperado
  */
-function validatePropertyType(value: any, expectedType: string): boolean {
-  switch (expectedType) {
-    case 'string':
-      return typeof value === 'string';
-    
-    case 'number':
-      return typeof value === 'number' && !isNaN(value);
-    
-    case 'boolean':
-      return typeof value === 'boolean';
-    
-    case 'array':
-      return Array.isArray(value);
-    
-    case 'object':
-      return typeof value === 'object' && value !== null && !Array.isArray(value);
-    
-    case 'color':
-      return typeof value === 'string' && /^#[0-9A-Fa-f]{6}$/.test(value);
-    
-    case 'url':
-      return typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'));
-    
-    case 'image':
-      return typeof value === 'string' && (
-        value.startsWith('http://') || 
-        value.startsWith('https://') || 
-        value.startsWith('data:image/')
-      );
-    
-    default:
-      appLogger.warn(`Tipo de propriedade desconhecido: ${expectedType}`);
-      return true; // Assume válido para tipos desconhecidos
+function validatePropertyType(value: any, expectedType: PropertyTypeEnum): boolean {
+  const typeStr = expectedType.toString();
+  
+  if (typeStr.includes('TEXT') || typeStr.includes('TEXTAREA')) {
+    return typeof value === 'string';
   }
+  
+  if (typeStr.includes('NUMBER') || typeStr.includes('RANGE')) {
+    return typeof value === 'number' && !isNaN(value);
+  }
+  
+  if (typeStr.includes('BOOLEAN')) {
+    return typeof value === 'boolean';
+  }
+  
+  if (typeStr.includes('ARRAY') || typeStr.includes('MULTISELECT')) {
+    return Array.isArray(value);
+  }
+  
+  if (typeStr.includes('OBJECT') || typeStr.includes('JSON')) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+  }
+  
+  if (typeStr.includes('COLOR')) {
+    return typeof value === 'string' && /^#[0-9A-Fa-f]{6}$/.test(value);
+  }
+  
+  if (typeStr.includes('URL')) {
+    return typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://') || value === '');
+  }
+  
+  appLogger.warn(`Tipo de propriedade desconhecido: ${expectedType}`);
+  return true; // Assume válido para tipos desconhecidos
 }
 
 /**

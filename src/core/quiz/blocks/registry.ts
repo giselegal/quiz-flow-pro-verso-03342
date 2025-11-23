@@ -9,6 +9,7 @@
  */
 
 import type { BlockDefinition } from './types';
+import { BlockCategoryEnum, PropertyTypeEnum } from './types';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
@@ -30,94 +31,138 @@ class BlockRegistryClass {
     private registerDefaultBlocks(): void {
         // Blocos básicos
         this.register({
-            id: 'text',
+            type: 'text',
             name: 'Texto',
-            category: 'content',
-            properties: {
-                content: {
-                    type: 'string',
+            description: 'Bloco de texto simples',
+            category: BlockCategoryEnum.CONTENT,
+            properties: [
+                {
+                    key: 'content',
+                    type: PropertyTypeEnum.TEXTAREA,
                     label: 'Conteúdo',
-                    required: true,
-                    default: 'Digite o texto aqui'
+                    description: 'Texto a ser exibido',
+                    defaultValue: 'Digite o texto aqui',
+                    required: true
                 }
+            ],
+            defaultProperties: {
+                content: 'Digite o texto aqui'
             }
         });
 
         this.register({
-            id: 'heading',
+            type: 'heading',
             name: 'Título',
-            category: 'content',
-            properties: {
-                text: {
-                    type: 'string',
+            description: 'Bloco de título/cabeçalho',
+            category: BlockCategoryEnum.CONTENT,
+            properties: [
+                {
+                    key: 'text',
+                    type: PropertyTypeEnum.TEXT,
                     label: 'Texto do título',
-                    required: true,
-                    default: 'Título'
+                    description: 'Texto do cabeçalho',
+                    defaultValue: 'Título',
+                    required: true
                 },
-                level: {
-                    type: 'number',
+                {
+                    key: 'level',
+                    type: PropertyTypeEnum.NUMBER,
                     label: 'Nível',
-                    default: 2,
-                    min: 1,
-                    max: 6
+                    description: 'Nível hierárquico (1-6)',
+                    defaultValue: 2,
+                    validation: {
+                        min: 1,
+                        max: 6
+                    }
                 }
+            ],
+            defaultProperties: {
+                text: 'Título',
+                level: 2
             }
         });
 
         this.register({
-            id: 'image',
+            type: 'image',
             name: 'Imagem',
-            category: 'visual',
-            properties: {
-                src: {
-                    type: 'image',
+            description: 'Bloco de imagem',
+            category: BlockCategoryEnum.MEDIA,
+            properties: [
+                {
+                    key: 'src',
+                    type: PropertyTypeEnum.URL,
                     label: 'URL da imagem',
-                    required: true,
-                    default: ''
+                    description: 'Caminho ou URL da imagem',
+                    defaultValue: '',
+                    required: true
                 },
-                alt: {
-                    type: 'string',
+                {
+                    key: 'alt',
+                    type: PropertyTypeEnum.TEXT,
                     label: 'Texto alternativo',
-                    default: ''
+                    description: 'Descrição da imagem para acessibilidade',
+                    defaultValue: ''
                 }
+            ],
+            defaultProperties: {
+                src: '',
+                alt: ''
             }
         });
 
         this.register({
-            id: 'button',
+            type: 'button',
             name: 'Botão',
-            category: 'interactive',
-            properties: {
-                text: {
-                    type: 'string',
+            description: 'Botão de ação/CTA',
+            category: BlockCategoryEnum.CONTENT,
+            properties: [
+                {
+                    key: 'text',
+                    type: PropertyTypeEnum.TEXT,
                     label: 'Texto do botão',
-                    required: true,
-                    default: 'Clique aqui'
+                    description: 'Texto exibido no botão',
+                    defaultValue: 'Clique aqui',
+                    required: true
                 },
-                url: {
-                    type: 'url',
+                {
+                    key: 'url',
+                    type: PropertyTypeEnum.URL,
                     label: 'URL',
-                    default: ''
+                    description: 'Link de destino',
+                    defaultValue: ''
                 }
+            ],
+            defaultProperties: {
+                text: 'Clique aqui',
+                url: ''
             }
         });
 
         this.register({
-            id: 'question',
+            type: 'question',
             name: 'Questão',
-            category: 'question',
-            properties: {
-                questionText: {
-                    type: 'string',
+            description: 'Bloco de pergunta do quiz',
+            category: BlockCategoryEnum.QUESTION,
+            properties: [
+                {
+                    key: 'questionText',
+                    type: PropertyTypeEnum.TEXTAREA,
                     label: 'Texto da questão',
-                    required: true,
-                    default: 'Qual é a sua pergunta?'
+                    description: 'Pergunta a ser exibida',
+                    defaultValue: 'Qual é a sua pergunta?',
+                    required: true
                 },
-                multiSelect: {
-                    type: 'boolean',
+                {
+                    key: 'multiSelect',
+                    type: PropertyTypeEnum.BOOLEAN,
                     label: 'Seleção múltipla',
-                    default: false
+                    description: 'Permitir selecionar múltiplas opções',
+                    defaultValue: false
                 }
+            ],
+            defaultProperties: {
+                questionText: 'Qual é a sua pergunta?',
+                multiSelect: false
             }
         });
 
@@ -133,10 +178,10 @@ class BlockRegistryClass {
      * Registra uma nova definição de bloco
      */
     register(definition: BlockDefinition): void {
-        this.definitions.set(definition.id, definition);
+        this.definitions.set(definition.type, definition);
         this.categoriesCache.clear(); // Invalida cache de categorias
         
-        appLogger.debug(`Block registered: ${definition.id}`, { data: [definition] });
+        appLogger.debug(`Block registered: ${definition.type}`, { data: [definition] });
     }
 
     /**
@@ -231,6 +276,13 @@ class BlockRegistryClass {
         this.aliases.clear();
         this.categoriesCache.clear();
         appLogger.debug('BlockRegistry cleared');
+    }
+
+    /**
+     * Obtém todos os aliases registrados
+     */
+    getAliases(): Map<string, string> {
+        return new Map(this.aliases);
     }
 
     /**

@@ -138,7 +138,7 @@ export const usePureBuilder = (): PureBuilderAPI => {
     currentStep,
     selectedBlockId: editor.state.selectedBlockId,
     stepBlocks,
-    isLoading: Boolean(editor.isLoading || editor.stageActions?.isLoadingStage),
+    isLoading: Boolean(editor.isLoading),
     totalSteps: editor.stages?.length ?? 0,
   };
 
