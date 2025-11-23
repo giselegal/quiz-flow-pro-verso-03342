@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/vitest';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, within } from '@testing-library/react';
 
 // ---------------------------------------------------------------------------
 // Estratégia de isolamento:
@@ -155,9 +155,13 @@ describe('AnalyticsPage (integração)', () => {
         // Cards principais
         expect(screen.getByText(/Total de Sessões/i)).toBeInTheDocument();
         expect(screen.getByText(String(baseMetrics.totalSessions))).toBeInTheDocument();
-        // Evita colisão com texto "Taxa de Conversão Geral" usando role heading
-        expect(screen.getByRole('heading', { name: /Taxa de Conversão/i })).toBeInTheDocument();
-        expect(screen.getByText(new RegExp(`${baseMetrics.conversionRate}%`))).toBeInTheDocument();
+        // Heading exclusivo do card de conversão
+        const conversionHeading = screen.getByRole('heading', { name: /Taxa de Conversão/i });
+        expect(conversionHeading).toBeInTheDocument();
+        // Limita busca ao card correto para evitar confusão com "Taxa de Conversão Geral"
+        const conversionCard = conversionHeading.parentElement?.parentElement; // CardHeader -> Card
+        expect(conversionCard).toBeTruthy();
+        expect(within(conversionCard as HTMLElement).getByText(new RegExp(`${baseMetrics.conversionRate}%`))).toBeInTheDocument();
         expect(screen.getByText(/Tempo Médio/i)).toBeInTheDocument();
         expect(screen.getByText(/Score Médio/i)).toBeInTheDocument();
     });
