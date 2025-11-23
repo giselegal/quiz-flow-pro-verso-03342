@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { fileURLToPath, URL } from 'node:url'
+
+const resolvePath = (dir: string) => fileURLToPath(new URL(dir, import.meta.url))
 
 export default defineConfig({
   plugins: [
@@ -14,15 +17,15 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': '/src',
-      '@components': '/src/components',
-      '@services': '/src/services',
-      '@hooks': '/src/hooks',
-      '@utils': '/src/utils',
-      '@lib': '/src/lib',
-      '@types': '/src/types',
-      '@config': '/src/config',
-      '@templates': '/src/templates',
+      '@': resolvePath('./src'),
+      '@components': resolvePath('./src/components'),
+      '@services': resolvePath('./src/services'),
+      '@hooks': resolvePath('./src/hooks'),
+      '@utils': resolvePath('./src/utils'),
+      '@lib': resolvePath('./src/lib'),
+      '@types': resolvePath('./src/types'),
+      '@config': resolvePath('./src/config'),
+      '@templates': resolvePath('./src/templates'),
     },
   },
   server: {
