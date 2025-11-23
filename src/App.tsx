@@ -57,11 +57,8 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
-// 🧪 EDITOR MODULAR - FASE 1, 2, 3 (Registry Universal)
-const EditorModular = lazy(() => import('./pages/EditorModular'));
-
-// 🎯 FASE 4: Editor V4 com Zod validation
-const EditorV4 = lazy(() => import('./pages/EditorV4').then(m => ({ default: m.EditorV4 })));
+// 🎯 EDITOR COM VALIDAÇÃO ZOD E LOGIC ENGINE
+const Editor = lazy(() => import('./pages/EditorV4').then(m => ({ default: m.EditorV4 })));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -235,24 +232,20 @@ function AppCore() {
                                         </Suspense>
                                     </Route>
 
-                                    {/* 🚀 EDITOR EXPERIMENTAL (DEV ONLY) */}
-                                    {/* 🔄 DEPRECATED ROUTES - Auto-redirect to canonical /editor */}
-                                    <Route path="/editor-new">
-                                        <RedirectRoute to="/editor" />
-                                    </Route>
-
-                                    <Route path="/editor-new/:funnelId">
-                                        {(params) => <RedirectRoute to={`/editor/${params.funnelId}`} />}
-                                    </Route>
-
-                                    {/* 🎯 FASE 4: Editor V4 com Zod validation e Logic Engine */}
-                                    <Route path="/editor-v4">
-                                        <Suspense fallback={<PageLoadingFallback message="Carregando Editor v4..." />}>
-                                            <EditorV4 />
+                                    {/* 🎯 EDITOR COM VALIDAÇÃO ZOD E LOGIC ENGINE */}
+                                    <Route path="/editor">
+                                        <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
+                                            <Editor />
                                         </Suspense>
                                     </Route>
 
-                                    {/* Rotas de editor consolidadas - usar /editor-new */}
+                                    <Route path="/editor/:funnelId">
+                                        {(params) => (
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
+                                                <Editor />
+                                            </Suspense>
+                                        )}
+                                    </Route>
 
                                     {/* 🎯 FASE 1: Preview Sandbox Isolado (iframe) */}
                                     <Route path="/preview-sandbox">
@@ -484,14 +477,20 @@ function AppCore() {
                                     <Route path="/dashboard-admin">
                                         <RedirectRoute to="/admin" />
                                     </Route>
-                                    <Route path="/editor">
-                                        <RedirectRoute to="/editor-new" />
+                                    <Route path="/editor-new">
+                                        <RedirectRoute to="/editor" />
+                                    </Route>
+                                    <Route path="/editor-new/:funnelId">
+                                        {(params) => <RedirectRoute to={`/editor/${params.funnelId}`} />}
+                                    </Route>
+                                    <Route path="/editor-v4">
+                                        <RedirectRoute to="/editor" />
                                     </Route>
                                     <Route path="/editor-pro">
-                                        <RedirectRoute to="/editor-new" />
+                                        <RedirectRoute to="/editor" />
                                     </Route>
                                     <Route path="/quiz-builder">
-                                        <RedirectRoute to="/editor-new" />
+                                        <RedirectRoute to="/editor" />
                                     </Route>
 
                                     {/* 📄 404 */}
