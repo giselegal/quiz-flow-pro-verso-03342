@@ -9,20 +9,22 @@
  * @date 2025-01-17
  */
 
-import { BlockRegistry } from './registry';
+import type { BlockRegistryClass } from './registry';
 import { BlockCategoryEnum, PropertyTypeEnum } from './types';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * FASE 1: Blocos Críticos (Questions + Results)
  * Prioridade: 🔴 ALTA
+ * 
+ * Função para registrar extensões - chamada após BlockRegistry estar pronto
  */
+export function registerQuiz21Extensions(BlockRegistry: BlockRegistryClass): void {
+  // ========================================
+  // QUESTION BLOCKS
+  // ========================================
 
-// ========================================
-// QUESTION BLOCKS
-// ========================================
-
-BlockRegistry.register({
+  BlockRegistry.register({
   type: 'question-hero',
   name: 'Question Hero',
   category: BlockCategoryEnum.QUESTION,
@@ -417,33 +419,34 @@ BlockRegistry.register({
   },
 });
 
-/**
- * VALIDAÇÃO: Todos os blocos do quiz21-complete.json devem estar registrados agora
- * 
- * Blocos registrados (20 novos + 13 existentes = 33 total):
- * ✅ question-hero
- * ✅ question-navigation
- * ✅ question-title
- * ✅ options-grid
- * ✅ result-main
- * ✅ result-congrats
- * ✅ result-description
- * ✅ result-image
- * ✅ result-cta
- * ✅ result-share
- * ✅ quiz-intro-header
- * ✅ transition-hero
- * ✅ transition-text
- * ✅ offer-hero
- * ✅ pricing
- * ✅ CTAButton
- * ✅ text-inline
- * ✅ quiz-score-display
- * ✅ result-progress-bars
- * ✅ result-secondary-styles
- * 
- * Cobertura: 24/24 blocos do template (100%) ✅
- */
+  /**
+   * VALIDAÇÃO: Todos os blocos do quiz21-complete.json devem estar registrados agora
+   * 
+   * Blocos registrados (20 novos + 13 existentes = 33 total):
+   * ✅ question-hero
+   * ✅ question-navigation
+   * ✅ question-title
+   * ✅ options-grid
+   * ✅ result-main
+   * ✅ result-congrats
+   * ✅ result-description
+   * ✅ result-image
+   * ✅ result-cta
+   * ✅ result-share
+   * ✅ quiz-intro-header
+   * ✅ transition-hero
+   * ✅ transition-text
+   * ✅ offer-hero
+   * ✅ pricing
+   * ✅ CTAButton
+   * ✅ text-inline
+   * ✅ quiz-score-display
+   * ✅ result-progress-bars
+   * ✅ result-secondary-styles
+   * 
+   * Cobertura: 24/24 blocos do template (100%) ✅
+   */
 
-appLogger.info('[BlockRegistry] ✅ Registered 20 additional blocks for quiz21-complete.json');
-appLogger.info('[BlockRegistry] 📊 Total coverage: 100% (24/24 blocks from template)');
+  appLogger.info('[BlockRegistry] ✅ Registered 20 additional blocks for quiz21-complete.json');
+  appLogger.info('[BlockRegistry] 📊 Total coverage: 100% (24/24 blocks from template)');
+}
