@@ -191,6 +191,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
                                         <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
                                         Atualizando...
                                     </Badge>
+                                )}
                             </div>
                         </div>
                     </div>
