@@ -1,6 +1,8 @@
+/**
+ * @legacy DEPRECATED - Migrar para o sistema oficial em src/core/quiz/
+ */
 export class TemplateRegistry {
   private static instance: TemplateRegistry | null = null;
- * @legacy DEPRECATED - Migrar para o sistema oficial em src/core/quiz/
   private store: Map<string, any> = new Map();
 
   static getInstance(): TemplateRegistry {
