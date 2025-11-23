@@ -93,9 +93,6 @@ const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigration
 // 🛠️ PÁGINAS ADMIN (lazy estáveis)
 const AdminAnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
 const AdminParticipantsPage = lazy(() => import('./pages/admin/ParticipantsPage'));
-// Atenção: Alguns nomes originais não existiam (TemplatesPage, ABTestsPage).
-// Substituídos pelos arquivos reais detectados no filesystem.
-const AdminTemplatesPage = lazy(() => import('./pages/admin/MyTemplatesPage'));
 const AdminSettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
 const AdminIntegrationsPage = lazy(() => import('./pages/admin/IntegrationsPage'));
 const AdminABTestsPage = lazy(() => import('./pages/admin/ABTestPage'));
@@ -469,11 +466,7 @@ function AppCore() {
                                         </Suspense>
                                     </Route>
 
-                                    <Route path="/admin/templates">
-                                        <Suspense fallback={<PageLoadingFallback message="Carregando Templates..." />}>
-                                            <AdminTemplatesPage />
-                                        </Suspense>
-                                    </Route>
+                                    {/* /admin/templates route removed - MyTemplatesPage deleted */}
 
                                     {/* 📈 Adoção camada canônica (Dev) */}
                                     <Route path="/admin/canonical-adoption">
