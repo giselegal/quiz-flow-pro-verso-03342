@@ -1,5 +1,7 @@
 import { Block } from '@/types/editor';
 
+type QuizExampleBlock = Omit<Block, 'order'>;
+
 /**
  * 🎯 EXEMPLO COMPLETO DE QUIZ INTERATIVO
  *
@@ -8,7 +10,7 @@ import { Block } from '@/types/editor';
  * - 18 questões de estilo
  * - Resultado e oferta
  */
-export const QUIZ_EXEMPLO_COMPLETO: Block[] = [
+const QUIZ_EXEMPLO_COMPLETO_DATA: QuizExampleBlock[] = [
   // ===== ETAPA 1: INTRODUÇÃO =====
   {
     id: 'intro-header',
@@ -704,6 +706,11 @@ export const QUIZ_EXEMPLO_COMPLETO: Block[] = [
     },
   },
 ];
+
+export const QUIZ_EXEMPLO_COMPLETO: Block[] = QUIZ_EXEMPLO_COMPLETO_DATA.map((block, index) => ({
+  ...block,
+  order: index + 1,
+}));
 
 /**
  * 🎯 CONFIGURAÇÃO DO RESULTADO DO QUIZ

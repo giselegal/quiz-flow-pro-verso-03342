@@ -430,6 +430,16 @@ export type BlockContent =
   | CTAContent
   | ImageContent;
 
+export interface BlockOption {
+  id: string;
+  text: string;
+  imageUrl?: string;
+  value?: string;
+  category?: string;
+  points?: number;
+  [key: string]: any;
+}
+
 export interface EditableContent {
   title?: string;
 
@@ -543,7 +553,7 @@ export interface EditableContent {
 
   iconColor?: string;
 
-  options?: Array<{ id: string; text: string; imageUrl?: string; value?: string }>;
+  options?: BlockOption[];
 
   [key: string]: any;
 }
