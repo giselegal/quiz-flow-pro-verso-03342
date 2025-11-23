@@ -17,64 +17,64 @@ import { appLogger } from '@/lib/utils/appLogger';
 
 // Lazy load components for better performance
 const QuestionProgress = React.lazy(() =>
-    import('@/components/blocks/QuestionProgress.tsx').then(m => ({ default: m.QuestionProgress }))
+    import('@/components/blocks/quiz/QuizNavigationBlock')
 );
 
 const QuestionNavigation = React.lazy(() =>
-    import('@/components/blocks/QuestionNavigation.tsx').then(m => ({ default: m.QuestionNavigation }))
+    import('@/components/blocks/quiz/QuizNavigationBlock')
 );
 
 const QuestionTitle = React.lazy(() =>
-    import('@/components/blocks/QuestionTitle.tsx').then(m => ({ default: m.QuestionTitle }))
+    import('@/components/blocks/RichTextBlock')
 );
 
 const TextInline = React.lazy(() =>
-    import('@/components/blocks/TextInline.tsx').then(m => ({ default: m.TextInline }))
+    import('@/components/blocks/RichTextBlock')
 );
 
 const QuizIntroHeader = React.lazy(() =>
-    import('@/components/blocks/QuizIntroHeader.tsx').then(m => ({ default: m.QuizIntroHeader }))
+    import('@/components/blocks/quiz/QuizIntroBlock')
 );
 
 const FormInput = React.lazy(() =>
-    import('@/components/blocks/FormInput.tsx').then(m => ({ default: m.FormInput }))
+    import('@/components/blocks/LeadFormBlock')
 );
 
 const OptionsGrid = React.lazy(() =>
-    import('@/components/blocks/OptionsGrid.tsx').then(m => ({ default: m.OptionsGrid }))
+    import('@/components/blocks/quiz/QuizOptionsGridBlock')
 );
 
 const ResultDisplay = React.lazy(() =>
-    import('@/components/blocks/ResultDisplay.tsx').then(m => ({ default: m.ResultDisplay }))
+    import('@/components/blocks/quiz/QuizResultsBlock')
 );
 
 const OfferCard = React.lazy(() =>
-    import('@/components/blocks/OfferCard.tsx').then(m => ({ default: m.OfferCard }))
+    import('@/components/blocks/ButtonBlock')
 );
 
 // Legacy support
 const IntroLogo = React.lazy(() =>
-    import('@/components/blocks/legacy/IntroLogo.tsx').then(m => ({ default: m.IntroLogo }))
+    import('@/components/blocks/RichTextBlock')
 );
 
 const IntroTitle = React.lazy(() =>
-    import('@/components/blocks/legacy/IntroTitle.tsx').then(m => ({ default: m.IntroTitle }))
+    import('@/components/blocks/RichTextBlock')
 );
 
 const IntroSubtitle = React.lazy(() =>
-    import('@/components/blocks/legacy/IntroSubtitle.tsx').then(m => ({ default: m.IntroSubtitle }))
+    import('@/components/blocks/RichTextBlock')
 );
 
 const IntroDescription = React.lazy(() =>
-    import('@/components/blocks/legacy/IntroDescription.tsx').then(m => ({ default: m.IntroDescription }))
+    import('@/components/blocks/RichTextBlock')
 );
 
 const IntroForm = React.lazy(() =>
-    import('@/components/blocks/legacy/IntroForm.tsx').then(m => ({ default: m.IntroForm }))
+    import('@/components/blocks/LeadFormBlock')
 );
 
 const IntroButton = React.lazy(() =>
-    import('@/components/blocks/legacy/IntroButton.tsx').then(m => ({ default: m.IntroButton }))
+    import('@/components/blocks/ButtonBlock')
 );
 
 // Component map
