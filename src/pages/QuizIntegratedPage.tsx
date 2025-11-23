@@ -1,7 +1,7 @@
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { QuizOptimizedRenderer } from '@/components/quiz/QuizOptimizedRenderer';
-import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
+import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useEditor } from '@/hooks/useEditor';
@@ -165,19 +165,11 @@ const QuizIntegratedRenderer: React.FC = () => {
  */
 const QuizPage: React.FC = () => {
   return (
-    <UnifiedAppProvider
-      context={FunnelContext.PREVIEW}
-      autoLoad={true}
-      debugMode={true}
-      initialFeatures={{
-        enableCache: true,
-        enableAnalytics: true,
-      }}
-    >
+    <SuperUnifiedProviderV3>
       <SuperUnifiedProvider>
         <QuizIntegratedRenderer />
       </SuperUnifiedProvider>
-    </UnifiedAppProvider>
+    </SuperUnifiedProviderV3>
   );
 };
 

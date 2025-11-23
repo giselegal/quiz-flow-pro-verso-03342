@@ -20,7 +20,7 @@ import {
 
 // Providers necessários
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
-import { UnifiedAppProvider } from '@/contexts/providers/UnifiedAppProvider';
+import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // Components especializados
@@ -266,16 +266,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 // Wrapped component with providers
 const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props) => {
   return (
-    <UnifiedAppProvider
-      context={FunnelContext.EDITOR}
-      autoLoad={true}
-      debugMode={false}
-      initialFeatures={{
-        enableCache: true,
-        enableAnalytics: true,
-        enableAdvancedEditor: true,
-      }}
-    >
+    <SuperUnifiedProviderV3>
       <SuperUnifiedProvider>
         <Suspense fallback={
           <div className="flex items-center justify-center h-screen">
@@ -288,7 +279,7 @@ const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props
           <QuizEditorIntegratedPageCore {...props} />
         </Suspense>
       </SuperUnifiedProvider>
-    </UnifiedAppProvider>
+    </SuperUnifiedProviderV3>
   );
 };
 
