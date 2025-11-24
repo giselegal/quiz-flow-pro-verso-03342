@@ -132,7 +132,7 @@ export class HistoryManager {
    */
   private async initializeService(): Promise<void> {
     appLogger.info('🚀 Inicializando HistoryManager...');
-    
+
     try {
       await this.loadPersistedHistory();
       this.scheduleCleanup();
@@ -216,7 +216,7 @@ export class HistoryManager {
   ): Promise<HistoryEntry> {
     try {
       const entryId = `entry-${crypto.randomUUID?.() ?? Math.random().toString(36).substr(2, 9)}`;
-      
+
       const entry: HistoryEntry = {
         id: entryId,
         timestamp: new Date(),
@@ -267,8 +267,8 @@ export class HistoryManager {
 
     // Aplicar filtros
     if (filter.dateRange) {
-      entries = entries.filter(entry => 
-        entry.timestamp >= filter.dateRange!.start && 
+      entries = entries.filter(entry =>
+        entry.timestamp >= filter.dateRange!.start &&
         entry.timestamp <= filter.dateRange!.end,
       );
     }
@@ -282,30 +282,30 @@ export class HistoryManager {
     }
 
     if (filter.authors && filter.authors.length > 0) {
-      entries = entries.filter(entry => 
+      entries = entries.filter(entry =>
         entry.metadata.author && filter.authors!.includes(entry.metadata.author),
       );
     }
 
     if (filter.importance && filter.importance.length > 0) {
-      entries = entries.filter(entry => 
+      entries = entries.filter(entry =>
         filter.importance!.includes(entry.metadata.importance),
       );
     }
 
     if (filter.tags && filter.tags.length > 0) {
-      entries = entries.filter(entry => 
-        entry.metadata.tags && 
+      entries = entries.filter(entry =>
+        entry.metadata.tags &&
         entry.metadata.tags.some(tag => filter.tags!.includes(tag)),
       );
     }
 
     if (filter.search) {
       const searchLower = filter.search.toLowerCase();
-      entries = entries.filter(entry => 
+      entries = entries.filter(entry =>
         entry.description.toLowerCase().includes(searchLower) ||
         entry.entityId.toLowerCase().includes(searchLower) ||
-        entry.changes.some(change => 
+        entry.changes.some(change =>
           change.description?.toLowerCase().includes(searchLower),
         ),
       );
@@ -319,12 +319,12 @@ export class HistoryManager {
    */
   searchHistory(query: string, limit: number = 50): HistoryEntry[] {
     const queryLower = query.toLowerCase();
-    
+
     return Array.from(this.history.values())
-      .filter(entry => 
+      .filter(entry =>
         entry.description.toLowerCase().includes(queryLower) ||
         entry.entityId.toLowerCase().includes(queryLower) ||
-        entry.changes.some(change => 
+        entry.changes.some(change =>
           change.description?.toLowerCase().includes(queryLower),
         ),
       )
@@ -337,7 +337,7 @@ export class HistoryManager {
    */
   getStats(): HistoryStats {
     const entries = Array.from(this.history.values());
-    
+
     // Estatísticas por tipo
     const entriesByType = entries.reduce((acc, entry) => {
       acc[entry.type] = (acc[entry.type] || 0) + 1;
@@ -370,30 +370,30 @@ export class HistoryManager {
     // Período mais ativo
     const hourCounts = new Map<number, number>();
     const dayCounts = new Map<number, number>();
-    
+
     entries.forEach(entry => {
       const hour = entry.timestamp.getHours();
       const day = entry.timestamp.getDay();
-      
+
       hourCounts.set(hour, (hourCounts.get(hour) || 0) + 1);
       dayCounts.set(day, (dayCounts.get(day) || 0) + 1);
     });
 
     const mostActiveHour = Array.from(hourCounts.entries())
-      .sort(([,a], [,b]) => b - a)[0] || [0, 0];
-    
+      .sort(([, a], [, b]) => b - a)[0] || [0, 0];
+
     const mostActiveDay = Array.from(dayCounts.entries())
-      .sort(([,a], [,b]) => b - a)[0] || [0, 0];
+      .sort(([, a], [, b]) => b - a)[0] || [0, 0];
 
     // Entidades mais alteradas
     const entityChangeCounts = new Map<string, { entityId: string; entityType: string; count: number }>();
-    
+
     entries.forEach(entry => {
       const key = `${entry.entity}-${entry.entityId}`;
-      const current = entityChangeCounts.get(key) || { 
-        entityId: entry.entityId, 
-        entityType: entry.entity, 
-        count: 0, 
+      const current = entityChangeCounts.get(key) || {
+        entityId: entry.entityId,
+        entityType: entry.entity,
+        count: 0,
       };
       current.count += entry.changes.length;
       entityChangeCounts.set(key, current);
@@ -429,7 +429,7 @@ export class HistoryManager {
    */
   exportHistory(format: 'json' | 'csv' | 'html', filter?: HistoryFilter): HistoryExport {
     const entries = this.getHistory(filter);
-    
+
     const exportData: HistoryExport = {
       format,
       entries,
@@ -453,15 +453,15 @@ export class HistoryManager {
   private async cleanupOldEntries(): Promise<void> {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - this.config.retentionDays);
-    
+
     const entriesToDelete = Array.from(this.history.values())
       .filter(entry => entry.timestamp < cutoffDate)
       .slice(0, this.history.size - this.config.maxEntries);
-    
+
     for (const entry of entriesToDelete) {
       this.history.delete(entry.id);
     }
-    
+
     await this.persistHistory();
     appLogger.info(`🧹 ${entriesToDelete.length} entradas antigas removidas`);
   }
@@ -487,7 +487,7 @@ export class HistoryManager {
     description?: string,
   ): Promise<void> {
     const importance = this.calculateImportance(operation, entity, changes);
-    
+
     await this.addEntry(
       operation,
       entity,
@@ -530,13 +530,13 @@ export class HistoryManager {
       delete: 'Excluído',
       restore: 'Restaurado',
     };
-    
+
     const entities = {
       funnel: 'funil',
       stage: 'etapa',
       block: 'bloco',
     };
-    
+
     return `${operations[operation as keyof typeof operations]} ${entities[entity as keyof typeof entities]} ${entityId}`;
   }
 
@@ -545,12 +545,12 @@ export class HistoryManager {
    */
   private generateTags(operation: string, entity: string): string[] {
     const tags: string[] = [operation, entity];
-    
+
     if (operation === 'delete') tags.push('destructive');
     if (entity === 'funnel') tags.push('critical');
     if (entity === 'stage') tags.push('structural');
     if (entity === 'block') tags.push('content');
-    
+
     return tags;
   }
 

@@ -211,7 +211,7 @@ class EditorDashboardSyncServiceImpl {
             const newFunnel = await funnelService.createFunnel({
                 name: funnelData.name || 'Novo Funil',
             });
-            
+
             if (!newFunnel) {
                 throw new Error('Falha ao criar funil');
             }
@@ -261,7 +261,7 @@ class EditorDashboardSyncServiceImpl {
 
             // 1. Deletar usando funnelService canônico
             const success = await funnelService.deleteFunnel(funnelId);
-            
+
             if (!success) {
                 throw new Error('Falha ao deletar funil do banco de dados');
             }
