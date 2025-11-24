@@ -40,6 +40,38 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   stepIndex = 0,
   onClose,
 }) => {
+  // Convert stepIndex to stepId string
+  const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
+
+  // Tentar usar o hook de forma segura
+  let hookResult: any = null;
+  let hookError: Error | null = null;
+
+  try {
+    hookResult = useStepBlocks(stepId);
+  } catch (error) {
+    hookError = error as Error;
+    console.warn('PropertiesPanel: useStepBlocks failed', error);
+  }
+
+  // Se o hook falhou, mostrar mensagem de erro amigável
+  if (hookError || !hookResult) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        <AlertCircle className="w-8 h-8 mx-auto mb-2" />
+        <p className="mb-2">Editor context not available</p>
+        <p className="text-xs text-gray-400">
+          This panel requires QuizV4Provider context
+        </p>
+        {onClose && (
+          <Button onClick={onClose} variant="outline" className="mt-4" size="sm">
+            Close
+          </Button>
+        )}
+      </div>
+    );
+  }
+
   const {
     getBlock,
     updateBlock,
@@ -49,7 +81,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     moveBlockDown,
     getBlockIndex,
     blocks,
-  } = useStepBlocks(stepIndex);
+  } = hookResult;
 
   const [localValues, setLocalValues] = useState<Record<string, any>>({});
   const [hasChanges, setHasChanges] = useState(false);
