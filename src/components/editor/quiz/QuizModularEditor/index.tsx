@@ -1946,7 +1946,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             </div>
                                         </div>
                                     </div>
-                                ) : canvasMode === 'edit' ? (
+                                ) : previewMode === 'live' ? (
                                     <StepErrorBoundary
                                         stepKey={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
@@ -2004,7 +2004,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         >
                                             <PreviewPanel
                                                 currentStepKey={currentStepKey}
-                                                blocks={previewMode === 'live' ? wysiwyg.state.blocks : blocks}
+                                                blocks={blocks}
                                                 selectedBlockId={selectedBlockId}
                                                 onBlockSelect={handleBlockSelect}
                                                 isVisible={true}
