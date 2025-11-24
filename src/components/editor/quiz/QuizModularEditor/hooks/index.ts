@@ -41,6 +41,12 @@ export {
   type VisualizationMode,
 } from './useEditorMode';
 
+export {
+  useDraftProperties,
+  type UseDraftPropertiesOptions,
+  type UseDraftPropertiesResult,
+} from './useDraftProperties';
+
 // ============================================================================
 // HOOKS EXISTENTES
 // ============================================================================
