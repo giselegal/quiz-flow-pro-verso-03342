@@ -293,12 +293,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [resourceMetadata, setTemplateLoading]);
 
     // Local UI state
-    const [canvasMode, setCanvasMode] = useState<'edit' | 'preview'>(() => {
-        try {
-            const v = localStorage.getItem('qm-editor:canvas-mode');
-            return v === 'preview' ? 'preview' : 'edit';
-        } catch { return 'edit'; }
-    });
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>(() => {
         try {
             const v = localStorage.getItem('qm-editor:preview-mode');
@@ -333,10 +327,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             return (saved as 'mobile' | 'tablet' | 'desktop' | 'full') || 'full';
         } catch { return 'full'; }
     });
-
-    useEffect(() => {
-        try { localStorage.setItem('qm-editor:canvas-mode', canvasMode); } catch { }
-    }, [canvasMode]);
 
     useEffect(() => {
         try { localStorage.setItem('qm-editor:viewport', viewport); } catch { }
@@ -1680,13 +1670,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <div className="flex items-center gap-2 flex-wrap">
                             <ToggleGroup
                                 type="single"
-                                value={
-                                    canvasMode === 'edit'
-                                        ? 'edit'
-                                        : previewMode === 'production'
-                                            ? 'preview:production'
-                                            : 'preview:editor'
-                                }
+                                value={previewMode}
                                 onValueChange={(val: string) => {
                                     // ✅ FIX: Sempre manter um valor selecionado (não permitir desmarcação)
                                     if (!val) return;
@@ -1720,20 +1704,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     aria-label="Visualizar publicado"
                                     className="min-w-[90px]"
                                 >
-                                    <Eye className="w-3 h-3 mr-1" />
-                                    <span className="hidden lg:inline">Visualizar (Editor)</span>
-                                    <span className="hidden sm:inline lg:hidden">Preview Ed</span>
-                                    <span className="sm:hidden">Prev</span>
-                                </ToggleGroupItem>
-                                <ToggleGroupItem
-                                    value="preview:production"
-                                    title="Visualizar dados publicados (versão final) (Ctrl+3)"
-                                    aria-label="Visualizar dados publicados"
-                                    className="min-w-[70px]"
-                                >
                                     <Play className="w-3 h-3 mr-1" />
-                                    <span className="hidden lg:inline">Visualizar (Publicado)</span>
-                                    <span className="hidden sm:inline lg:hidden">Preview Pub</span>
+                                    <span className="hidden sm:inline">Publicado</span>
                                     <span className="sm:hidden">Pub</span>
                                 </ToggleGroupItem>
                             </ToggleGroup>
