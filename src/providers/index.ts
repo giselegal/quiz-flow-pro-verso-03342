@@ -20,7 +20,7 @@ export {
 } from './UnifiedAppProvider';
 
 // 🔧 INTERNO: Usado internamente por UnifiedAppProvider (exposto apenas para testes e extensão avançada)
-export { SuperUnifiedProvider } from './SuperUnifiedProviderV2';
+// SuperUnifiedProvider deve ser importado de @/contexts/providers/SuperUnifiedProviderV2
 export { useSuperUnified, useUnifiedAuth } from '@/hooks/useSuperUnified';
 
 // 🎥 FEATURE: Live preview via WebSocket (usado em editor avançado)
