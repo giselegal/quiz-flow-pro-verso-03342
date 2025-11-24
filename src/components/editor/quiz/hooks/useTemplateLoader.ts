@@ -20,7 +20,7 @@
 import { useState, useEffect, useRef } from 'react';
 // usar appLogger unificado
 import { quizEditorBridge } from '@/services/canonical/TemplateService';
-import { UnifiedCacheService } from '@/services/UnifiedCacheService';
+import { cacheService } from '@/services/canonical';
 import type { EditableQuizStep } from '../types';
 import { TemplateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/lib/utils/appLogger';

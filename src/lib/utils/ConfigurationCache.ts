@@ -8,7 +8,7 @@
  * Atualmente redireciona para UnifiedCacheService
  */
 
-import { cacheService } from '@/services/UnifiedCacheService';
+import { cacheService } from '@/services/canonical';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface CacheEntry<T> {

@@ -3,7 +3,7 @@
 
 // ⚠️ NOTA: Migrado para sistema JSON (step-XX.json) - usa templates dinâmicos
 import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
-import { cacheService } from '@/services/UnifiedCacheService';
+import { cacheService } from '@/services/canonical';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { appLogger } from '@/lib/utils/logger';
 
