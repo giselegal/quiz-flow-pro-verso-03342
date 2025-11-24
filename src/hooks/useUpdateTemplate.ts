@@ -184,7 +184,8 @@ export function useCreateTemplate(
         config: input.config || {},
         metadata: input.metadata || {},
         status: input.status || 'draft',
-        user_id: input.user_id || 'system', // Required field
+        // TODO Phase 2: Integrate with auth context to get real user_id
+        user_id: input.user_id || 'system', // Temporary fallback - should come from auth
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };

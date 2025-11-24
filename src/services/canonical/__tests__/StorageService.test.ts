@@ -150,8 +150,15 @@ describe('StorageService - Canonical Service Tests', () => {
 
   describe('Validação de Input', () => {
     it('deve validar tamanho máximo de arquivo', async () => {
-      // Create a large blob exceeding max size
-      const largeBlob = new Blob(['x'.repeat(100 * 1024 * 1024)]); // 100MB
+      // Create a smaller test blob to avoid memory issues in CI
+      // We're testing the validation logic, not actual large file handling
+      const largeBlob = new Blob(['x'.repeat(10 * 1024 * 1024)]); // 10MB for testing
+      
+      // Mock a file size that exceeds the limit
+      Object.defineProperty(largeBlob, 'size', {
+        value: 100 * 1024 * 1024, // Pretend it's 100MB
+        writable: false,
+      });
       
       const result = await storageService.uploadFile({
         file: largeBlob,

@@ -100,8 +100,8 @@ export function useTemplate(
   } = options;
 
   return useQuery<Template | null, Error>({
-    // Query key for React Query cache
-    queryKey: ['template', id],
+    // Query key for React Query cache (using factory for consistency)
+    queryKey: templateKeys.detail(id),
     
     // Query function
     queryFn: async () => {

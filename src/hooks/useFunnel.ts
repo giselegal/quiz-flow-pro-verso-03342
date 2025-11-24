@@ -97,8 +97,8 @@ export function useFunnel(
   } = options;
 
   return useQuery<Funnel | null, Error>({
-    // Query key for React Query cache
-    queryKey: ['funnel', id],
+    // Query key for React Query cache (using factory for consistency)
+    queryKey: funnelKeys.detail(id),
     
     // Query function
     queryFn: async () => {
