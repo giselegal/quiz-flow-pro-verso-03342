@@ -1,5 +1,5 @@
 // Importa os componentes
-import { EnhancedUniversalPropertiesPanel } from './EnhancedUniversalPropertiesPanel';
+import { EnhancedUniversalPropertiesPanel } from './EnhancedUniversalPropertiesPanel.simple';
 
 // Exporta os componentes principais como nomeados
 export { EnhancedUniversalPropertiesPanel };
