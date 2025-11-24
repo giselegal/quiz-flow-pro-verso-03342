@@ -33,17 +33,27 @@ import { CSS } from '@dnd-kit/utilities';
 
 import { SortableStepItem } from './SortableStepItem';
 import { appLogger } from '@/lib/utils/appLogger';
+import type { ValidationError, ValidationWarning } from '@/lib/utils/templateValidation';
 
 export type StepNavigatorColumnProps = {
     initialStepKey?: string;
     steps?: { key: string; title: string }[];
     currentStepKey?: string | null;
     onSelectStep: (stepKey: string) => void;
+    validationErrors?: ValidationError[];
+    validationWarnings?: ValidationWarning[];
 };
 
 // Nota: Em iterações futuras, os passos serão carregados do serviço/estado global
 // e virtualizados para listas grandes.
-function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSelectStep }: StepNavigatorColumnProps) {
+function StepNavigatorColumnImpl({ 
+    initialStepKey, 
+    steps, 
+    currentStepKey, 
+    onSelectStep,
+    validationErrors,
+    validationWarnings,
+}: StepNavigatorColumnProps) {
     const { toast } = useToast();
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState<{
@@ -321,6 +331,8 @@ function StepNavigatorColumnImpl({ initialStepKey, steps, currentStepKey, onSele
                                             onSelect={() => onSelectStep(s.key)}
                                             onDelete={() => openDeleteDialog(s.key, s.title)}
                                             onDuplicate={() => handleDuplicateStep(s.key)}
+                                            errors={validationErrors}
+                                            warnings={validationWarnings}
                                         />
                                     );
                                 })}

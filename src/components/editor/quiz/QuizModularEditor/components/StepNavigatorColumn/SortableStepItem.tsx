@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { appLogger } from '@/lib/utils/appLogger';
+import { StepHealthBadge } from '../StepHealthBadge';
+import type { ValidationError, ValidationWarning } from '@/lib/utils/templateValidation';
 
 export interface SortableStepItemProps {
   id: string;
@@ -22,6 +24,8 @@ export interface SortableStepItemProps {
   onSelect?: () => void;
   onDelete?: (stepId: string) => void;
   onDuplicate?: () => void | Promise<void>;
+  errors?: ValidationError[];
+  warnings?: ValidationWarning[];
 }
 
 export const SortableStepItem: React.FC<SortableStepItemProps> = ({
@@ -34,6 +38,8 @@ export const SortableStepItem: React.FC<SortableStepItemProps> = ({
   onSelect,
   onDelete,
   onDuplicate,
+  errors,
+  warnings,
 }) => {
   // Usar onSelect se fornecido, caso contrário usar onClick para compatibilidade
   const handleClick = onSelect || onClick;
@@ -87,6 +93,16 @@ export const SortableStepItem: React.FC<SortableStepItemProps> = ({
       >
         {title}
       </button>
+
+      {/* Health Badge */}
+      {(errors || warnings) && (
+        <StepHealthBadge
+          stepId={id}
+          errors={errors}
+          warnings={warnings}
+          showLabel={true}
+        />
+      )}
 
       {/* Actions Menu */}
       {onDelete && (
