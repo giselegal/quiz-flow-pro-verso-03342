@@ -25,13 +25,14 @@ import type { EditorResource } from '@/types/editor-resource';
 import { validateAndNormalizeTemplate, formatValidationErrors } from '@/templates/validation/normalize';
 // Import Template Dialog
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
-// Autosave com lock e coalescing
-import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
 // Autosave feedback visual
 import { AutosaveIndicator } from '../AutosaveIndicator';
 // Template Health Panel
 import { TemplateHealthPanel } from './components/TemplateHealthPanel';
-import { useAutosaveIndicator } from '../AutosaveIndicator.hook';
+// 🎯 FASE 3.1: Novos hooks refatorados
+import { useStepNavigation } from './hooks/useStepNavigation';
+import { useAutoSave } from './hooks/useAutoSave';
+import { useEditorMode as useEditorModeLocal } from './hooks/useEditorMode';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
 import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 // ✅ WAVE 2: Performance Monitor
@@ -40,7 +41,6 @@ import { PerformanceMonitor } from '@/components/editor/PerformanceMonitor';
 import { useWYSIWYGBridge } from '@/hooks/useWYSIWYGBridge';
 import ViewportSelector, { type ViewportSize } from '@/components/editor/quiz/ViewportSelector';
 import { ViewportContainer } from '@/components/editor/quiz/ViewportSelector/ViewportContainer';
-import { useEditorMode } from '@/hooks/useEditorMode';
 import { useSnapshot } from '@/hooks/useSnapshot';
 import { useVirtualizedBlocks } from '@/hooks/useVirtualizedBlocks';
 
@@ -160,34 +160,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
 
-    // 💾 Autosave Indicator (Feedback Visual)
-    const autosaveIndicator = useAutosaveIndicator();
-
-    // 🔒 Autosave Queue com Lock (GARGALO R1 + G35)
-    const { queueSave: queueAutosave, flush: flushAutosave } = useQueuedAutosave({
-        // Mantemos a assinatura de saveStepBlocks compatível (stepNumber é derivado do stepKey)
-        saveFn: async (_blocks: Block[], stepKey: string) => {
-            const stepNumber = parseInt(stepKey.replace(/\D/g, ''), 10) || 1;
+    // 🎯 FASE 3.1: Auto-save com novo hook refatorado
+    const autoSave = useAutoSave({
+        enabled: enableAutoSave && !!resourceId,
+        debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
+        onSave: async () => {
+            const stepNumber = safeCurrentStep;
             await saveStepBlocks(stepNumber);
         },
-        debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
-        maxRetries: 3,
-        onUnsaved: (stepKey) => {
-            appLogger.debug(`⏱️ [Autosave] Alterações não salvas em ${stepKey}`);
-            autosaveIndicator.setUnsaved();
-        },
-        onSaving: (stepKey) => {
-            appLogger.debug(`💾 [Autosave] Salvando ${stepKey}...`);
-            autosaveIndicator.setSaving();
-        },
-        onSuccess: (stepKey) => {
-            appLogger.info(`✅ [Autosave] Step salvo: ${stepKey}`);
-            autosaveIndicator.setSaved();
-        },
-        onError: (stepKey, error) => {
-            appLogger.error(`❌ [Autosave] Falha ao salvar ${stepKey}:`, error);
-            autosaveIndicator.setError(error.message);
-        },
+        data: wysiwyg?.state?.blocks || [],
     });
 
     // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
@@ -341,10 +322,29 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch { }
     }, [previewMode]);
 
-    // 🎮 Editor Mode: State machine para modos
-    const editorMode = useEditorMode({
-        previewMode,
+    // 🎯 FASE 3.1: Editor Mode com controle completo de UI (preview, edit, visualization, painéis)
+    const editorModeUI = useEditorModeLocal({
+        initialPreviewMode: viewport === 'mobile' ? 'mobile' : viewport === 'tablet' ? 'tablet' : 'desktop',
+        initialEditMode: 'design',
+        initialVisualizationMode: 'blocks',
+        initialShowComponentLibrary: true,
+        initialShowProperties: true,
+        initialShowPreview: false,
     });
+
+    // Compatibilidade: badge para UI antiga
+    const editorMode = useMemo(() => ({
+        isEditable: previewMode === 'live',
+        dataSource: previewMode === 'live' ? 'local' as const : 'production' as const,
+        showValidation: previewMode === 'live',
+        showDraftIndicator: previewMode === 'live',
+        badge: previewMode === 'live'
+            ? { icon: '📝', text: 'Editando', color: 'blue' as const }
+            : { icon: '✅', text: 'Publicado', color: 'green' as const },
+        description: previewMode === 'live'
+            ? 'Edição ao vivo - mudanças aparecem instantaneamente'
+            : 'Visualizando dados publicados (versão final)',
+    }), [previewMode]);
 
     // 💾 Snapshot System: Recuperação de drafts
     const snapshot = useSnapshot({
@@ -358,9 +358,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         onAutoSave: (blocks, stepKey) => {
             // Salvar snapshot antes do auto-save
             if (snapshot.saveSnapshot) {
-                snapshot.saveSnapshot(blocks, viewport, editorMode.dataSource as any, safeCurrentStep);
+                snapshot.saveSnapshot(blocks, viewport, 'local', safeCurrentStep);
             }
-            queueAutosave(stepKey, blocks);
+            // 🎯 FASE 3.1: Trigger auto-save via novo hook
+            autoSave.triggerSave();
         },
         autoSaveDelay: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         enableValidation: true,
@@ -517,56 +518,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         overscan: 3
     });
 
-    // ✅ WAVE 1: Navegação instantânea - UI update imediato, lazy load em background
-    const handleSelectStep = useCallback((key: string) => {
-        appLogger.info('🔵 [handleSelectStep] Iniciando navegação:', { data: [{ key, currentStepKey }] });
+    // 🎯 FASE 3.1: Navegação de steps com hook refatorado
+    const stepNavigation = useStepNavigation({
+        currentStepKey,
+        loadedTemplate,
+        setCurrentStep,
+        setSelectedBlock,
+        templateId: props.templateId,
+        resourceId,
+    });
 
-        if (key === currentStepKey) {
-            appLogger.info('⚠️ [handleSelectStep] Step já está selecionado, ignorando');
-            return;
-        }
-
-        // 🎯 FASE 1 CRÍTICO: Limpar selectedBlockId ao mudar de step (evita bloco órfão)
-        appLogger.info('🧹 [handleSelectStep] Limpando selectedBlockId ao navegar para:', { data: [key] });
-        setSelectedBlock(null);
-        appLogger.info(`🧹 [FASE1] selectedBlockId resetado ao navegar: ${currentStepKey} → ${key}`);
-
-        // 🎯 WAVE 1 FIX: Atualizar UI IMEDIATAMENTE (não bloqueia)
-        if (loadedTemplate?.steps?.length) {
-            const index = loadedTemplate.steps.findIndex((s: any) => s.id === key);
-            const newStep = index >= 0 ? index + 1 : 1;
-            appLogger.info('🔵 [handleSelectStep] Calculado newStep:', { data: [{ index, newStep, safeCurrentStep }] });
-
-            if (newStep !== safeCurrentStep) {
-                appLogger.info('✅ [handleSelectStep] Chamando setCurrentStep:', { data: [newStep] });
-                setCurrentStep(newStep);
-                appLogger.info(`⚡ [WAVE1] Navegação instantânea: ${currentStepKey} → ${key}`);
-            } else {
-                appLogger.info('⚠️ [handleSelectStep] newStep === safeCurrentStep, pulando');
-            }
-        } else {
-            // Fallback: extrair número do step-XX
-            const match = key.match(/step-(\d{1,2})/i);
-            const num = match ? parseInt(match[1], 10) : 1;
-            appLogger.info('🔵 [handleSelectStep] Fallback:', { data: [{ match, num }] });
-            setCurrentStep(num);
-            appLogger.info(`⚡ [WAVE1] Navegação instantânea (fallback): step ${num}`);
-        }
-
-        // 🔄 Lazy load em BACKGROUND (não bloqueia UI)
-        const tid = props.templateId ?? resourceId;
-        if (tid) {
-            templateService.getStep(key, tid)
-                .then(stepResult => {
-                    if (stepResult.success) {
-                        appLogger.info(`✅ [WAVE1] Step ${key} carregado em background`);
-                    }
-                })
-                .catch(error => {
-                    appLogger.warn(`⚠️ [WAVE1] Erro ao carregar step ${key}:`, { data: [error] });
-                });
-        }
-    }, [currentStepKey, loadedTemplate, safeCurrentStep, setCurrentStep, setSelectedBlock, props.templateId, resourceId]);
+    // Alias para manter compatibilidade com código existente
+    const handleSelectStep = stepNavigation.handleSelectStep;
 
     const handleAddBlock = useCallback((type: string) => {
         const stepIndex = safeCurrentStep;
@@ -1765,6 +1728,30 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                         <div className="w-px h-6 bg-gray-300 hidden lg:block" /> {/* Separator */}
 
+                        {/* 🎯 FASE 3.1: Controles de visibilidade dos painéis */}
+                        <div className="flex items-center gap-1">
+                            <Button
+                                size="sm"
+                                variant={editorModeUI.showComponentLibrary ? "default" : "outline"}
+                                onClick={editorModeUI.toggleComponentLibrary}
+                                className="h-7 px-2"
+                                title="Mostrar/ocultar biblioteca de componentes"
+                            >
+                                📚
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={editorModeUI.showProperties ? "default" : "outline"}
+                                onClick={editorModeUI.toggleProperties}
+                                className="h-7 px-2"
+                                title="Mostrar/ocultar painel de propriedades"
+                            >
+                                ⚙️
+                            </Button>
+                        </div>
+
+                        <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
+
                         {/* 🐛 DEBUG: Toggle para painel simples */}
                         <Button
                             size="sm"
@@ -1783,16 +1770,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             {useSimplePropertiesPanel ? '🐛 Debug' : '⚙️ Full'}
                         </Button>
 
+                        {/* 🎯 FASE 3.1: Indicador de auto-save com novo hook */}
                         {enableAutoSave && (
                             <AutosaveIndicator
-                                status={autosaveIndicator.status}
-                                errorMessage={autosaveIndicator.errorMessage}
+                                status={autoSave.saveStatus as any}
+                                errorMessage={undefined}
                                 onRetry={() => {
-                                    const stepBlocks = unifiedState.editor.stepBlocks as Record<string, Block[]>;
-                                    const blocks = stepBlocks[currentStepKey] || [];
-                                    if (currentStepKey && blocks.length > 0) {
-                                        queueAutosave(currentStepKey, blocks);
-                                    }
+                                    autoSave.triggerSave();
                                 }}
                                 className="animate-fade-in"
                             />
@@ -1896,27 +1880,32 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
-                    <Panel defaultSize={20} minSize={15} maxSize={30}>
-                        <Suspense
-                            fallback={
-                                <div className="p-4 text-sm text-gray-500">
-                                    Carregando biblioteca…
-                                </div>
-                            }
-                        >
-                            <div
-                                className="h-full border-r bg-white overflow-y-auto"
-                                data-testid="column-library"
-                            >
-                                <ComponentLibraryColumn
-                                    currentStepKey={currentStepKey}
-                                    onAddBlock={handleAddBlock}
-                                />
-                            </div>
-                        </Suspense>
-                    </Panel>
+                    {/* 🎯 FASE 3.1: Painel de biblioteca com controle de visibilidade */}
+                    {editorModeUI.showComponentLibrary && (
+                        <>
+                            <Panel defaultSize={20} minSize={15} maxSize={30}>
+                                <Suspense
+                                    fallback={
+                                        <div className="p-4 text-sm text-gray-500">
+                                            Carregando biblioteca…
+                                        </div>
+                                    }
+                                >
+                                    <div
+                                        className="h-full border-r bg-white overflow-y-auto"
+                                        data-testid="column-library"
+                                    >
+                                        <ComponentLibraryColumn
+                                            currentStepKey={currentStepKey}
+                                            onAddBlock={handleAddBlock}
+                                        />
+                                    </div>
+                                </Suspense>
+                            </Panel>
 
-                    <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
+                            <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
+                        </>
+                    )}
 
                     <Panel defaultSize={40} minSize={30}>
                         <Suspense
@@ -2016,44 +2005,47 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
-                    <Panel defaultSize={25} minSize={20} maxSize={35}>
-                        <Suspense
-                            fallback={
-                                <div className="p-4 text-sm text-gray-500">
-                                    Carregando propriedades…
-                                </div>
-                            }
-                        >
-                            <div
-                                className="h-full border-l bg-white overflow-y-auto"
-                                data-testid="column-properties"
+                    {/* 🎯 FASE 3.1: Painel de propriedades com controle de visibilidade */}
+                    {editorModeUI.showProperties && (
+                        <Panel defaultSize={25} minSize={20} maxSize={35}>
+                            <Suspense
+                                fallback={
+                                    <div className="p-4 text-sm text-gray-500">
+                                        Carregando propriedades…
+                                    </div>
+                                }
                             >
-                                {/* DEBUG removido para limpar console */}
+                                <div
+                                    className="h-full border-l bg-white overflow-y-auto"
+                                    data-testid="column-properties"
+                                >
+                                    {/* DEBUG removido para limpar console */}
 
-                                {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
-                                {useSimplePropertiesPanel ? (
-                                    <PropertiesColumn
-                                        selectedBlock={selectedBlock}
-                                        blocks={wysiwyg.state.blocks}
-                                        onBlockSelect={handleWYSIWYGBlockSelect}
-                                        onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                        onClearSelection={handleWYSIWYGClearSelection}
-                                    />
-                                ) : (
-                                    <PropertiesColumnWithJson
-                                        selectedBlock={selectedBlock}
-                                        blocks={wysiwyg.state.blocks}
-                                        onBlockSelect={handleWYSIWYGBlockSelect}
-                                        onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                        onClearSelection={handleWYSIWYGClearSelection}
-                                        fullTemplate={fullTemplate}
-                                        onTemplateChange={handleTemplateChange}
-                                        templateId={currentStepKey}
-                                    />
-                                )}
-                            </div>
-                        </Suspense>
-                    </Panel>
+                                    {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
+                                    {useSimplePropertiesPanel ? (
+                                        <PropertiesColumn
+                                            selectedBlock={selectedBlock}
+                                            blocks={wysiwyg.state.blocks}
+                                            onBlockSelect={handleWYSIWYGBlockSelect}
+                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                            onClearSelection={handleWYSIWYGClearSelection}
+                                        />
+                                    ) : (
+                                        <PropertiesColumnWithJson
+                                            selectedBlock={selectedBlock}
+                                            blocks={wysiwyg.state.blocks}
+                                            onBlockSelect={handleWYSIWYGBlockSelect}
+                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                            onClearSelection={handleWYSIWYGClearSelection}
+                                            fullTemplate={fullTemplate}
+                                            onTemplateChange={handleTemplateChange}
+                                            templateId={currentStepKey}
+                                        />
+                                    )}
+                                </div>
+                            </Suspense>
+                        </Panel>
+                    )}
                 </PanelGroup>
 
                 {/* 🏥 Template Health Panel (sidebar) */}
