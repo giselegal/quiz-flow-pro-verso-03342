@@ -43,14 +43,14 @@ const TemplateDiagnosticPage: React.FC = () => {
 
             // 2. Testar templateService
             try {
-                const builtinTemplates = templateService.listBuiltins();
-                const allTemplates = templateService.listAll();
+                const allTemplatesResult = templateService.listTemplates();
+                const allTemplates = allTemplatesResult.success ? allTemplatesResult.data : [];
                 results.libraryService = {
-                    status: 'success',
-                    builtinCount: builtinTemplates.length,
+                    status: allTemplatesResult.success ? 'success' : 'error',
+                    builtinCount: allTemplates.length,
                     totalCount: allTemplates.length,
                     templates: allTemplates.map((t: Template) => ({ id: t.id, name: t.name })),
-                    error: null,
+                    error: allTemplatesResult.success ? null : allTemplatesResult.error?.message || 'Unknown error',
                 };
             } catch (error: any) {
                 results.libraryService = {
