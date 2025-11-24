@@ -609,9 +609,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     appLogger.info(`✅ [QuizModularEditor] Metadata carregada: ${stepsMeta.length} steps`);
 
                     // 🔍 G5 FIX: Validar integridade completa das etapas
-                    if (stepsMeta.length > 0) {
-                        runFullValidation(tid, stepsMeta.length, signal);
-                    }
+                    // Sempre valida, mesmo se metadata está vazia (usa 21 steps como default)
+                    const stepsToValidate = stepsMeta.length > 0 ? stepsMeta.length : 21;
+                    runFullValidation(tid, stepsToValidate, signal);
                 }
             } catch (error) {
                 if (!signal.aborted) {
@@ -628,7 +628,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         // 🔍 G5 FIX: Validação completa de integridade
         async function runFullValidation(tid: string, stepCount: number, signal: AbortSignal) {
             try {
-                appLogger.info(`[G5] Iniciando validação completa: ${tid} (${stepCount} steps)`);
+                appLogger.info(`[G5] 🏥 Iniciando validação completa: ${tid} (${stepCount} steps)`);
+                console.log('🏥 [HealthPanel] Validação iniciada:', { tid, stepCount });
 
                 const result = await validateTemplateIntegrityFull(
                     tid,
@@ -644,6 +645,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         validateDependencies: true,
                     }
                 );
+                
+                console.log('🏥 [HealthPanel] Validação concluída:', {
+                    isValid: result.isValid,
+                    errorsCount: result.errors.length,
+                    warningsCount: result.warnings.length,
+                    summary: result.summary
+                });
 
                 if (!signal.aborted) {
                     const formattedResult = formatValidationResult(result);
