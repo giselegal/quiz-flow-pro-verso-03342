@@ -341,7 +341,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 🎮 Editor Mode: State machine para modos
     const editorMode = useEditorMode({
-        canvasMode,
         previewMode,
     });
 
@@ -363,7 +362,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         },
         autoSaveDelay: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         enableValidation: true,
-        mode: previewMode === 'live' ? 'edit-live' : 'preview-production',
+        mode: previewMode === 'live' ? 'preview-live' : 'preview-production',
     });
 
     // 💾 Recuperar snapshot no mount
