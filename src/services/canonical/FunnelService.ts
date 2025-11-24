@@ -1,10 +1,13 @@
 /**
- * 🎯 CANONICAL FUNNEL SERVICE - FASE 2.2
+ * 🎯 CANONICAL FUNNEL SERVICE - FASE 2.2 (SINGLE SOURCE OF TRUTH)
+ * 
+ * ⭐ Este é o ÚNICO serviço canônico para gestão de Funis no sistema.
+ * Toda operação relacionada a funis DEVE passar por este serviço.
  * 
  * Serviço canônico unificado para gestão de Funis
  * Consolida 15+ serviços fragmentados em 1 interface clara
  * 
- * ELIMINA/DEPRECA:
+ * ELIMINA/DEPRECA (239 → 35 serviços - Fase 1):
  * ❌ FunnelService (v1)
  * ❌ FunnelServiceRefactored  
  * ❌ FunnelUnifiedService
@@ -23,6 +26,19 @@
  * ✅ Validação de schema
  * ✅ Suporte a templates
  * ✅ Modo local + Supabase
+ * 
+ * 🎯 ROADMAP DE MIGRAÇÃO:
+ * - Fase 1 (Atual): Estrutura canônica estabelecida com feature flags
+ * - Fase 2: Migração progressiva de consumidores usando USE_CANONICAL_FUNNEL_SERVICE
+ * - Fase 3: Deprecação completa dos serviços legados
+ * - Fase 4: Remoção dos serviços deprecated
+ * 
+ * 📋 TODO - PRÓXIMAS MIGRAÇÕES:
+ * - [ ] Migrar lógica de contexto do ContextualFunnelService
+ * - [ ] Integrar features avançadas do EnhancedFunnelService
+ * - [ ] Consolidar persistência do FunnelConfigPersistenceService
+ * - [ ] Unificar validações complexas do FunnelValidationService
+ * - [ ] Migrar lógica de publicação do FunnelPublishingService
  * 
  * @version 2.0.0
  * @author AI Agent - Fase 2 Consolidação

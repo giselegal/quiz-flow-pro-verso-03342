@@ -1,10 +1,13 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════════════╗
- * ║                      STORAGE SERVICE - CANONICAL                         ║
+ * ║                  STORAGE SERVICE - CANONICAL (SINGLE SOURCE OF TRUTH)    ║
  * ╠══════════════════════════════════════════════════════════════════════════╣
+ * ║ ⭐ Este é o ÚNICO serviço canônico para armazenamento no sistema.        ║
+ * ║ Toda operação de storage DEVE passar por este serviço.                  ║
+ * ║                                                                          ║
  * ║ Serviço unificado para gerenciamento de armazenamento                   ║
  * ║                                                                          ║
- * ║ CONSOLIDATES (7 services → 1):                                          ║
+ * ║ CONSOLIDATES (7 services → 1) (239 → 35 serviços - Fase 1):            ║
  * ║  1. SupabaseStorageClient     - Supabase Storage API                    ║
  * ║  2. FileUploadService         - File upload handling                    ║
  * ║  3. ImageStorageService       - Image optimization & storage            ║
@@ -29,6 +32,18 @@
  * ║  • Singleton pattern                                                     ║
  * ║  • Specialized APIs (files, images, browser)                            ║
  * ║  • Built-in caching                                                      ║
+ * ║                                                                          ║
+ * ║ 🎯 ROADMAP DE MIGRAÇÃO:                                                  ║
+ * ║ - Fase 1 (Atual): Estrutura canônica estabelecida com feature flags     ║
+ * ║ - Fase 2: Migração progressiva usando USE_CANONICAL_STORAGE_SERVICE     ║
+ * ║ - Fase 3: Deprecação completa dos serviços legados                      ║
+ * ║ - Fase 4: Remoção dos serviços deprecated                               ║
+ * ║                                                                          ║
+ * ║ 📋 TODO - PRÓXIMAS MIGRAÇÕES:                                            ║
+ * ║ - [ ] Migrar asset versioning do AssetManager                           ║
+ * ║ - [ ] Integrar metadata tracking avançado                               ║
+ * ║ - [ ] Consolidar operações de mídia do MediaStorageService              ║
+ * ║ - [ ] Unificar abstrações do StorageProvider                            ║
  * ╚══════════════════════════════════════════════════════════════════════════╝
  */
 
