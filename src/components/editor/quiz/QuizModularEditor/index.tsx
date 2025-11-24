@@ -38,8 +38,8 @@ import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 import { PerformanceMonitor } from '@/components/editor/PerformanceMonitor';
 // 🎨 WYSIWYG: Sistema de edição ao vivo
 import { useWYSIWYGBridge } from '@/hooks/useWYSIWYGBridge';
-import ViewportSelector, { type ViewportSize } from './ViewportSelector';
-import { ViewportContainer } from './ViewportSelector/ViewportContainer';
+import ViewportSelector, { type ViewportSize } from '@/components/editor/quiz/ViewportSelector';
+import { ViewportContainer } from '@/components/editor/quiz/ViewportSelector/ViewportContainer';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
