@@ -110,12 +110,14 @@ const PropertyControl: React.FC<{
 
   // 🔍 DEBUG: Wrapper para logar todas as mudanças
   const handleChange = (newValue: any) => {
-    appLogger.info('🎛️ [PropertyControl] onChange:', { data: [{
-            propertyKey,
-            oldValue: value,
-            newValue,
-            control: normalizedControl
-          }] });
+    appLogger.info('🎛️ [PropertyControl] onChange:', {
+      data: [{
+        propertyKey,
+        oldValue: value,
+        newValue,
+        control: normalizedControl
+      }]
+    });
     onChange(newValue);
   };
 
@@ -124,6 +126,7 @@ const PropertyControl: React.FC<{
       case 'text':
         return (
           <Input
+            id={propertyKey}
             value={value || ''}
             onChange={(e) => handleChange(e.target.value)}
             placeholder={schema.default || ''}
@@ -133,6 +136,7 @@ const PropertyControl: React.FC<{
       case 'textarea':
         return (
           <Textarea
+            id={propertyKey}
             value={value || ''}
             onChange={(e) => handleChange(e.target.value)}
             placeholder={schema.default || ''}
@@ -143,6 +147,7 @@ const PropertyControl: React.FC<{
       case 'number':
         return (
           <Input
+            id={propertyKey}
             type="number"
             value={value || schema.default || 0}
             onChange={(e) => handleChange(Number(e.target.value))}
@@ -187,6 +192,7 @@ const PropertyControl: React.FC<{
         return (
           <div className="flex items-center space-x-2">
             <Switch
+              id={propertyKey}
               checked={value || schema.default || false}
               onCheckedChange={handleChange}
             />

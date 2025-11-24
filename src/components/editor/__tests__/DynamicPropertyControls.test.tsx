@@ -64,8 +64,8 @@ describe('DynamicPropertyControls', () => {
             />
         );
 
-        expect(screen.getByText(/Schema não encontrado/i)).toBeInTheDocument();
-        expect(screen.getByText(/unknown-block/)).toBeInTheDocument();
+        expect(screen.getByText(/Schema não encontrado/i)).not.toBeNull();
+        expect(screen.getByText(/unknown-block/)).not.toBeNull();
     });
 
     it('deve renderizar controles baseados no schema', () => {
@@ -105,15 +105,13 @@ describe('DynamicPropertyControls', () => {
         );
 
         // Verifica se o label do título está presente
-        expect(screen.getByLabelText('Título')).toBeInTheDocument();
-        expect(screen.getByDisplayValue('Meu Título')).toBeInTheDocument();
+        expect(screen.getByLabelText('Título')).not.toBeNull();
+        expect(screen.getByDisplayValue('Meu Título')).not.toBeNull();
 
         // Verifica se o toggle está presente
-        expect(screen.getByText('Mostrar Descrição')).toBeInTheDocument();
-        expect(screen.getByRole('switch')).toBeInTheDocument();
-    });
-
-    it('deve chamar onChange quando um valor é alterado', () => {
+        expect(screen.getByText('Mostrar Descrição')).not.toBeNull();
+        expect(screen.getByRole('switch')).not.toBeNull();
+    }); it('deve chamar onChange quando um valor é alterado', () => {
         const mockSchema = {
             type: 'test-block',
             label: 'Test Block',
