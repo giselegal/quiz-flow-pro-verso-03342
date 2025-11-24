@@ -91,11 +91,11 @@ class EditorDashboardSyncServiceImpl {
             appLogger.info(`🔄 EditorDashboardSync: Sincronizando salvamento do funil ${funnelId}...`);
 
             // 1. Salvar usando funnelService canônico
-            const saveResult = await funnelService.saveFunnel(funnelData as any);
-            if (!saveResult.success || !saveResult.data) {
+            const result = await funnelService.updateFunnel(funnelId, funnelData as any);
+            if (!result) {
                 throw new Error('Falha ao salvar funil');
             }
-            const savedFunnel = saveResult.data;
+            const savedFunnel = result;
 
             // 2. Criar evento de sincronização
             const syncEvent: EditorSyncEvent = {
@@ -142,18 +142,19 @@ class EditorDashboardSyncServiceImpl {
             appLogger.info(`🚀 EditorDashboardSync: Sincronizando publicação do funil ${funnelId}...`);
 
             // 1. Marcar como publicado
+            const currentVersion = typeof funnelData.version === 'number' ? funnelData.version : 0;
             const publishedData = {
                 ...funnelData,
                 is_published: true,
-                version: (funnelData.version || 0) + 1,
+                version: currentVersion + 1,
             };
 
             // 2. Salvar usando funnelService canônico
-            const saveResult = await funnelService.saveFunnel(publishedData as any);
-            if (!saveResult.success || !saveResult.data) {
+            const result = await funnelService.updateFunnel(funnelId, publishedData as any);
+            if (!result) {
                 throw new Error('Falha ao publicar funil');
             }
-            const publishedFunnel = saveResult.data;
+            const publishedFunnel = result;
 
             // 3. Criar evento de sincronização
             const syncEvent: EditorSyncEvent = {
@@ -207,16 +208,13 @@ class EditorDashboardSyncServiceImpl {
             appLogger.info('🆕 EditorDashboardSync: Sincronizando criação de novo funil...');
 
             // 1. Criar funil usando funnelService canônico
-            const createResult = await funnelService.saveFunnel({
-                ...funnelData,
-                id: funnelData.id || crypto.randomUUID(),
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            } as any);
-            if (!createResult.success || !createResult.data) {
+            const newFunnel = await funnelService.createFunnel({
+                name: funnelData.name || 'Novo Funil',
+            });
+            
+            if (!newFunnel) {
                 throw new Error('Falha ao criar funil');
             }
-            const newFunnel = createResult.data;
 
             // 2. Criar evento de sincronização
             const syncEvent: EditorSyncEvent = {
