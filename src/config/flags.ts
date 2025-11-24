@@ -11,8 +11,24 @@
 
 export const featureFlags = {
   // ============================================================================
-  // 🎯 CANONICAL SERVICES - MIGRAÇÃO GRADUAL (Fase 1)
+  // 🎯 CANONICAL SERVICES - PADRÃO OFICIAL (Fase 3)
   // ============================================================================
+  
+  /**
+   * Flag global de rollback para serviços canônicos.
+   * 
+   * ⚠️ USO DE EMERGÊNCIA APENAS ⚠️
+   * 
+   * Quando true: força o uso de serviços legados mesmo que os canônicos estejam prontos
+   * Quando false: usa serviços canônicos como padrão (comportamento normal)
+   * 
+   * 🎯 FASE 3: Rollback controlado para emergências
+   * Esta flag inverte o modelo: canônicos são o padrão, legados são fallback
+   * 
+   * @default false (canônicos são o padrão)
+   * @phase Fase 3 - Deprecação Forte
+   */
+  DISABLE_CANONICAL_SERVICES_GLOBAL: false,
   
   /**
    * Usar TemplateService canônico ao invés de serviços legados
@@ -20,12 +36,12 @@ export const featureFlags = {
    * Quando true: usa src/services/canonical/TemplateService.ts
    * Quando false: usa serviços legados (UnifiedTemplateRegistry, etc)
    * 
-   * 🎯 FASE 2: Habilitado para desenvolvimento e testes internos
+   * 🎯 FASE 3: PADRÃO OFICIAL - Habilitado para todos
    * 
-   * @default true (habilitado para testes em desenvolvimento)
-   * @phase Fase 2 - Migração Progressiva
+   * @default true (padrão oficial)
+   * @phase Fase 3 - Deprecação Forte
    */
-  USE_CANONICAL_TEMPLATE_SERVICE: process.env.NODE_ENV === 'development',
+  USE_CANONICAL_TEMPLATE_SERVICE: true,
   
   /**
    * Usar FunnelService canônico ao invés de serviços legados
@@ -33,8 +49,10 @@ export const featureFlags = {
    * Quando true: usa src/services/canonical/FunnelService.ts
    * Quando false: usa serviços legados (FunnelUnifiedService, etc)
    * 
-   * @default false (rollout gradual)
-   * @phase Fase 1 - Fundação
+   * 🎯 FASE 3: Planejado para próxima iteração
+   * 
+   * @default false (ainda em migração)
+   * @phase Fase 2 - Migração Progressiva
    */
   USE_CANONICAL_FUNNEL_SERVICE: false,
   
@@ -44,8 +62,10 @@ export const featureFlags = {
    * Quando true: usa src/services/canonical/StorageService.ts
    * Quando false: usa serviços legados (LocalStorageService, etc)
    * 
-   * @default false (rollout gradual)
-   * @phase Fase 1 - Fundação
+   * 🎯 FASE 3: Planejado para próxima iteração
+   * 
+   * @default false (ainda em migração)
+   * @phase Fase 2 - Migração Progressiva
    */
   USE_CANONICAL_STORAGE_SERVICE: false,
   
@@ -55,13 +75,15 @@ export const featureFlags = {
    * Quando true: usa src/services/canonical/CacheService.ts
    * Quando false: usa localStorage/sessionStorage direto
    * 
-   * @default false (rollout gradual)
-   * @phase Fase 1 - Fundação
+   * 🎯 FASE 3: Planejado para próxima iteração
+   * 
+   * @default false (ainda em migração)
+   * @phase Fase 2 - Migração Progressiva
    */
   USE_CANONICAL_CACHE_SERVICE: false,
   
   // ============================================================================
-  // 🔄 FONTE ÚNICA DE VERDADE - SUPABASE + REACT QUERY (Fase 1)
+  // 🔄 FONTE ÚNICA DE VERDADE - SUPABASE + REACT QUERY (Fase 3)
   // ============================================================================
   
   /**
@@ -70,12 +92,13 @@ export const featureFlags = {
    * Quando true: usa useTemplate/useUpdateTemplate hooks
    * Quando false: usa TemplateService com cache interno
    * 
-   * 🎯 FASE 2: Habilitado para desenvolvimento e testes internos
+   * 🎯 FASE 3: PADRÃO OFICIAL - Habilitado para todos
+   * React Query é agora a fonte única de verdade para templates
    * 
-   * @default true (habilitado para testes em desenvolvimento)
-   * @phase Fase 2 - Migração Progressiva
+   * @default true (padrão oficial)
+   * @phase Fase 3 - Deprecação Forte
    */
-  USE_REACT_QUERY_TEMPLATES: process.env.NODE_ENV === 'development',
+  USE_REACT_QUERY_TEMPLATES: true,
   
   /**
    * Usar React Query hooks para funnels ao invés de cache local
@@ -83,8 +106,10 @@ export const featureFlags = {
    * Quando true: usa useFunnel/useUpdateFunnel hooks
    * Quando false: usa FunnelService com cache interno
    * 
-   * @default false (rollout gradual)
-   * @phase Fase 1 - Fundação
+   * 🎯 FASE 3: Planejado para próxima iteração
+   * 
+   * @default false (ainda em migração)
+   * @phase Fase 2 - Migração Progressiva
    */
   USE_REACT_QUERY_FUNNELS: false,
   

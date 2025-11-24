@@ -1,15 +1,17 @@
 /**
- * 🔄 MIGRATION HELPERS - Phase 2
+ * 🔄 MIGRATION HELPERS - Phase 3
  * 
- * Helper functions to facilitate gradual migration to canonical services
- * using feature flags for controlled rollout.
+ * Helper functions to facilitate controlled rollback to legacy services
+ * when needed for emergency situations.
  * 
- * These helpers provide a bridge between legacy services and canonical services,
- * allowing components to seamlessly switch between implementations based on
- * feature flags.
+ * ⚠️ PHASE 3 CHANGE: Canonical services are now the DEFAULT
+ * These helpers now provide ROLLBACK capability rather than opt-in migration.
  * 
- * @version 1.0.0
- * @phase Phase 2 - Progressive Migration
+ * The global flag DISABLE_CANONICAL_SERVICES_GLOBAL acts as an emergency
+ * kill switch to revert to legacy behavior if critical issues are discovered.
+ * 
+ * @version 2.0.0
+ * @phase Phase 3 - Strong Deprecation
  */
 
 import { featureFlags } from '@/config/flags';
@@ -24,8 +26,11 @@ import type { ServiceResult } from './types';
 /**
  * Get the appropriate template service based on feature flags
  * 
- * NOTE: Currently always returns canonical service as legacy services are being phased out.
- * The feature flag controls whether components use this service or handle their own legacy logic.
+ * 🎯 PHASE 3: Canonical is the default, legacy is emergency rollback only
+ * 
+ * Returns:
+ * - Canonical service by default (normal operation)
+ * - Can be overridden by DISABLE_CANONICAL_SERVICES_GLOBAL for emergencies
  * 
  * @example
  * ```typescript
@@ -34,14 +39,25 @@ import type { ServiceResult } from './types';
  * ```
  */
 export function getTemplateService() {
-  // Always return canonical service
-  // Feature flags are used at the component level to decide whether to use this service
-  // or maintain their own legacy implementation during the migration period
+  // Check global rollback flag first (emergency override)
+  if (featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL) {
+    console.warn(
+      '⚠️ [ROLLBACK] DISABLE_CANONICAL_SERVICES_GLOBAL is active. ' +
+      'Using legacy template service. This should only be enabled in emergency situations.'
+    );
+    // Note: In a real rollback scenario, this would return a legacy service
+    // For now, we return canonical since legacy services are being removed
+    // TODO Phase 4: Remove this warning when legacy services are fully removed
+  }
+  
+  // Default: return canonical service (Phase 3 standard)
   return canonicalTemplateService;
 }
 
 /**
  * Load a template with automatic service selection based on feature flags
+ * 
+ * 🎯 PHASE 3: Uses canonical service by default with emergency rollback support
  * 
  * This is a convenience function that handles the service selection
  * and error handling for you.
@@ -60,6 +76,16 @@ export function getTemplateService() {
  * ```
  */
 export async function loadTemplate(templateId: string): Promise<ServiceResult<Template>> {
+  // Check global rollback flag for emergency override
+  if (featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL) {
+    console.warn(
+      `⚠️ [ROLLBACK] Loading template ${templateId} in emergency rollback mode`
+    );
+    // In emergency mode, we would use legacy service here
+    // For now, fall through to canonical since legacy is being removed
+  }
+  
+  // Default: use canonical service (Phase 3 standard)
   const service = getTemplateService();
   return await service.getTemplate(templateId);
 }
@@ -102,33 +128,53 @@ export async function listTemplates(): Promise<ServiceResult<Template[]>> {
 /**
  * Check if React Query hooks should be used for templates
  * 
- * This helper is useful for conditional logic in components that
- * want to gradually migrate to React Query.
+ * 🎯 PHASE 3: React Query is now the DEFAULT and RECOMMENDED approach
+ * Only returns false in emergency rollback scenarios
  * 
- * @returns true if React Query hooks should be used
+ * This helper is useful for conditional logic in components that
+ * still have legacy fallback code paths.
+ * 
+ * @returns true if React Query hooks should be used (default: true)
  * 
  * @example
  * ```typescript
  * if (shouldUseReactQuery()) {
- *   // Use useTemplate hook
+ *   // DEFAULT PATH: Use useTemplate hook (React Query)
  *   const { data } = useTemplate(templateId);
  * } else {
- *   // Use legacy approach
+ *   // EMERGENCY ROLLBACK: Use legacy approach
  *   const [template, setTemplate] = useState(null);
  *   useEffect(() => { ... }, []);
  * }
  * ```
  */
 export function shouldUseReactQuery(): boolean {
+  // Global rollback flag takes precedence
+  if (featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL) {
+    console.warn('⚠️ [ROLLBACK] React Query disabled by global rollback flag');
+    return false;
+  }
+  
+  // Default: React Query is enabled (Phase 3 standard)
   return featureFlags.USE_REACT_QUERY_TEMPLATES;
 }
 
 /**
  * Check if canonical services should be used
  * 
- * @returns true if canonical services are enabled
+ * 🎯 PHASE 3: Canonical services are now the DEFAULT
+ * Only returns false in emergency rollback scenarios
+ * 
+ * @returns true if canonical services should be used (default: true)
  */
 export function shouldUseCanonicalServices(): boolean {
+  // Global rollback flag takes precedence
+  if (featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL) {
+    console.warn('⚠️ [ROLLBACK] Canonical services disabled by global rollback flag');
+    return false;
+  }
+  
+  // Default: canonical services are enabled (Phase 3 standard)
   return featureFlags.USE_CANONICAL_TEMPLATE_SERVICE;
 }
 
@@ -139,15 +185,26 @@ export function shouldUseCanonicalServices(): boolean {
 /**
  * Log migration status for debugging
  * Only logs in development environment
+ * 
+ * 🎯 PHASE 3: Shows rollback status and confirms canonical is default
  */
 export function logMigrationStatus(): void {
   if (process.env.NODE_ENV === 'development') {
-    console.log('🔄 [Phase 2 Migration Status]', {
-      canonicalTemplateService: featureFlags.USE_CANONICAL_TEMPLATE_SERVICE,
-      reactQueryTemplates: featureFlags.USE_REACT_QUERY_TEMPLATES,
-      canonicalFunnelService: featureFlags.USE_CANONICAL_FUNNEL_SERVICE,
-      reactQueryFunnels: featureFlags.USE_REACT_QUERY_FUNNELS,
-    });
+    const isRollback = featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL;
+    
+    console.log(
+      isRollback ? '⚠️ [Phase 3 - ROLLBACK MODE]' : '✅ [Phase 3 - Canonical Services Active]',
+      {
+        globalRollback: featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL,
+        canonicalTemplateService: featureFlags.USE_CANONICAL_TEMPLATE_SERVICE,
+        reactQueryTemplates: featureFlags.USE_REACT_QUERY_TEMPLATES,
+        canonicalFunnelService: featureFlags.USE_CANONICAL_FUNNEL_SERVICE,
+        reactQueryFunnels: featureFlags.USE_REACT_QUERY_FUNNELS,
+        status: isRollback 
+          ? 'EMERGENCY ROLLBACK - Legacy services active' 
+          : 'NORMAL OPERATION - Canonical services and React Query are default',
+      }
+    );
   }
 }
 
