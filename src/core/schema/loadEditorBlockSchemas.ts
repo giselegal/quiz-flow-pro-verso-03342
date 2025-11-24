@@ -145,6 +145,9 @@ export function loadEditorBlockSchemas(): void {
 
   const totalSchemas = schemas.length + Object.keys(blockPropertySchemas).length;
   appLogger.info(`[EditorBlockSchemas] ✅ ${totalSchemas} schemas de blocos carregados (${schemas.length} JSON + ${Object.keys(blockPropertySchemas).length} TypeScript)`);
+  
+  // 🐛 DEBUG: Listar todos os tipos de blocos carregados
+  console.log('📦 [loadEditorBlockSchemas] Tipos carregados:', Object.keys(blockTypes));
+  console.log('📦 [loadEditorBlockSchemas] quiz-intro-header incluído?', !!blockTypes['quiz-intro-header']);
+  console.log('📦 [loadEditorBlockSchemas] intro-title incluído?', !!blockTypes['intro-title']);
 }
-
-// Nota: Auto-load removido para permitir controle de timing pelo bootstrap

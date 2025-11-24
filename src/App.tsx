@@ -153,6 +153,10 @@ function AppCore() {
         try {
             loadDefaultSchemas();
             appLogger.info('✅ Default + editor block schemas loaded (IMMEDIATE)');
+            // 🐛 DEBUG: Listar schemas carregados (usando import síncrono)
+            import('@/core/schema/SchemaInterpreter').then(({ schemaInterpreter }) => {
+                console.log('📦 [App.tsx] Schemas carregados:', schemaInterpreter.listAllSchemas());
+            });
         } catch (e) {
             appLogger.error('❌ CRÍTICO: Falha ao carregar schemas:', { data: [e] });
         }
