@@ -27,17 +27,23 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
 
       const result = service.steps.list();
       expect(result.success).toBe(true);
-      expect(result.data).toHaveLength(21);
+      if (result.success) {
+        expect(result.data).toHaveLength(21);
+      }
     });
 
     it('deve sobrescrever template anterior', () => {
       service.setActiveTemplate('template1', 10);
       let result = service.steps.list();
-      expect(result.data).toHaveLength(10);
+      if (result.success) {
+        expect(result.data).toHaveLength(10);
+      }
 
       service.setActiveTemplate('template2', 15);
       result = service.steps.list();
-      expect(result.data).toHaveLength(15);
+      if (result.success) {
+        expect(result.data).toHaveLength(15);
+      }
     });
 
     it('deve aceitar 0 steps (modo vazio)', () => {
@@ -45,8 +51,10 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
 
       const result = service.steps.list();
       expect(result.success).toBe(true);
-      // Com 0 steps, pode retornar array vazio ou fallback dependendo da lógica
-      expect(Array.isArray(result.data)).toBe(true);
+      if (result.success) {
+        // Com 0 steps, pode retornar array vazio ou fallback dependendo da lógica
+        expect(Array.isArray(result.data)).toBe(true);
+      }
     });
 
     it('deve lidar com números grandes de steps', () => {
@@ -54,7 +62,19 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
 
       const result = service.steps.list();
       expect(result.success).toBe(true);
-      expect(result.data).toHaveLength(100);
+      if (result.success) {
+        expect(result.data).toHaveLength(100);
+      }
+    });
+  });
+    it('deve lidar com números grandes de steps', () => {
+      service.setActiveTemplate('bigTemplate', 100);
+
+      const result = service.steps.list();
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toHaveLength(100);
+      }
     });
   });
 
@@ -64,19 +84,21 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
 
       const result = service.steps.list();
 
-      expect(result).toMatchObject({
-        success: true,
-        data: expect.any(Array),
-      });
-
-      expect(result.data).toHaveLength(21);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBeInstanceOf(Array);
+        expect(result.data).toHaveLength(21);
+      }
     });
 
     it('deve retornar steps com estrutura válida', () => {
       service.setActiveTemplate('quiz21StepsComplete', 21);
 
       const result = service.steps.list();
-      const firstStep = result.data?.[0];
+      expect(result.success).toBe(true);
+      if (!result.success) return;
+      
+      const firstStep = result.data[0];
 
       expect(firstStep).toMatchObject({
         id: expect.stringMatching(/^step-\d{2}$/),
@@ -91,9 +113,11 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
       service.setActiveTemplate('quiz21StepsComplete', 21);
 
       const result = service.steps.list();
+      expect(result.success).toBe(true);
+      if (!result.success) return;
 
-      for (let i = 1; i < result.data!.length; i++) {
-        expect(result.data![i].order).toBeGreaterThan(result.data![i - 1].order);
+      for (let i = 1; i < result.data.length; i++) {
+        expect(result.data[i].order).toBeGreaterThan(result.data[i - 1].order);
       }
     });
 
@@ -101,8 +125,10 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
       service.setActiveTemplate('quiz21StepsComplete', 21);
 
       const result = service.steps.list();
+      expect(result.success).toBe(true);
+      if (!result.success) return;
 
-      result.data!.forEach((step, index) => {
+      result.data.forEach((step: any, index: number) => {
         expect(step.id).toBe(`step-${String(index + 1).padStart(2, '0')}`);
         expect(step.order).toBe(index + 1);
         expect(step.name).toContain('Etapa');
@@ -119,8 +145,10 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
       const result = service.steps.list();
 
       expect(result.success).toBe(true);
-      // Deve usar fallback de 21 steps para quiz21StepsComplete
-      expect(result.data).toHaveLength(21);
+      if (result.success) {
+        // Deve usar fallback de 21 steps para quiz21StepsComplete
+        expect(result.data).toHaveLength(21);
+      }
     });
 
     it('deve retornar array vazio para template desconhecido sem steps', () => {
@@ -129,8 +157,10 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
       const result = service.steps.list();
 
       expect(result.success).toBe(true);
-      // Sem fallback, retorna vazio
-      expect(result.data).toHaveLength(0);
+      if (result.success) {
+        // Sem fallback, retorna vazio
+        expect(result.data).toHaveLength(0);
+      }
     });
   });
 
@@ -147,7 +177,9 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
         const result = service.steps.list();
 
         expect(result.success).toBe(true);
-        expect(result.data).toHaveLength(steps);
+        if (result.success) {
+          expect(result.data).toHaveLength(steps);
+        }
       });
     });
 
@@ -160,7 +192,9 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
       // Todos devem retornar o mesmo
       results.forEach(result => {
         expect(result.success).toBe(true);
-        expect(result.data).toHaveLength(21);
+        if (result.success) {
+          expect(result.data).toHaveLength(21);
+        }
       });
     });
 
@@ -191,7 +225,9 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
 
       const result = service.steps.list();
       expect(result.success).toBe(true);
-      expect(result.data!.length).toBeGreaterThanOrEqual(0);
+      if (result.success) {
+        expect(result.data.length).toBeGreaterThanOrEqual(0);
+      }
     });
 
     it('deve preservar estado durante falhas', () => {
@@ -207,7 +243,9 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
       // Deve manter estado anterior ou resetar
       const result = service.steps.list();
       expect(result.success).toBe(true);
-      expect(Array.isArray(result.data)).toBe(true);
+      if (result.success) {
+        expect(Array.isArray(result.data)).toBe(true);
+      }
     });
   });
 
@@ -220,7 +258,10 @@ describe('TemplateService - setActiveTemplate & steps.list', () => {
 
       const duration = Date.now() - startTime;
 
-      expect(result.data).toHaveLength(100);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toHaveLength(100);
+      }
       expect(duration).toBeLessThan(50); // Deve ser rápido mesmo com 100 steps
     });
 

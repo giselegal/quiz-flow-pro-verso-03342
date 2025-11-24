@@ -69,7 +69,13 @@ vi.mock('@/lib/utils/templateValidation', () => ({
             summary: {
                 totalSteps: 21,
                 validSteps: 21,
+                emptySteps: 0,
+                missingSteps: 0,
                 totalBlocks: 100,
+                validBlocks: 100,
+                invalidBlocks: 0,
+                duplicateIds: 0,
+                missingSchemas: 0,
             },
         })
     ),
@@ -121,9 +127,9 @@ describe('QuizModularEditor - Template Loading Integration', () => {
         it('deve chamar setActiveTemplate ANTES de steps.list()', async () => {
             const callOrder: string[] = [];
 
-            setActiveTemplateSpy.mockImplementation((...args) => {
+            setActiveTemplateSpy.mockImplementation((templateId: string, totalSteps: number) => {
                 callOrder.push('setActiveTemplate');
-                return templateService.setActiveTemplate(...args);
+                return templateService.setActiveTemplate(templateId, totalSteps);
             });
 
             stepsListSpy.mockImplementation(() => {
@@ -286,9 +292,9 @@ describe('QuizModularEditor - Template Loading Integration', () => {
             const timeline: Array<{ time: number; event: string }> = [];
             const startTime = Date.now();
 
-            setActiveTemplateSpy.mockImplementation((...args) => {
+            setActiveTemplateSpy.mockImplementation((templateId: string, totalSteps: number) => {
                 timeline.push({ time: Date.now() - startTime, event: 'setActiveTemplate' });
-                return templateService.setActiveTemplate(...args);
+                return templateService.setActiveTemplate(templateId, totalSteps);
             });
 
             stepsListSpy.mockImplementation(() => {
@@ -298,13 +304,23 @@ describe('QuizModularEditor - Template Loading Integration', () => {
 
             const { validateTemplateIntegrity } = await import('@/lib/utils/templateValidation');
             const validateSpy = vi.mocked(validateTemplateIntegrity);
-            validateSpy.mockImplementation(async (...args) => {
+            validateSpy.mockImplementation(async () => {
                 timeline.push({ time: Date.now() - startTime, event: 'validation' });
                 return {
                     isValid: true,
                     errors: [],
                     warnings: [],
-                    summary: { totalSteps: 21, validSteps: 21, totalBlocks: 100 },
+                    summary: {
+                        totalSteps: 21,
+                        validSteps: 21,
+                        emptySteps: 0,
+                        missingSteps: 0,
+                        totalBlocks: 100,
+                        validBlocks: 100,
+                        invalidBlocks: 0,
+                        duplicateIds: 0,
+                        missingSchemas: 0,
+                    },
                 };
             });
 
