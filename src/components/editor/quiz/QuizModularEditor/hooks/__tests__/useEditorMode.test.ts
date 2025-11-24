@@ -126,19 +126,22 @@ describe('useEditorMode', () => {
       initialShowPreview: false,
     }));
 
-    expect(result.current.visiblePanelsCount).toBe(2);
+    // Canvas (1) + Library (1) + Properties (1) = 3
+    expect(result.current.visiblePanelsCount).toBe(3);
 
     act(() => {
       result.current.setShowPreview(true);
     });
 
-    expect(result.current.visiblePanelsCount).toBe(3);
+    // Canvas (1) + Library (1) + Properties (1) + Preview (1) = 4
+    expect(result.current.visiblePanelsCount).toBe(4);
 
     act(() => {
       result.current.setShowComponentLibrary(false);
     });
 
-    expect(result.current.visiblePanelsCount).toBe(2);
+    // Canvas (1) + Properties (1) + Preview (1) = 3
+    expect(result.current.visiblePanelsCount).toBe(3);
   });
 
   it('deve identificar layout compacto', () => {
@@ -148,14 +151,15 @@ describe('useEditorMode', () => {
       initialShowPreview: true,
     }));
 
-    // 3+ painéis = layout compacto
+    // Canvas (1) + Library (1) + Properties (1) + Preview (1) = 4 painéis = layout compacto
     expect(result.current.isCompactLayout).toBe(true);
 
     act(() => {
       result.current.setShowPreview(false);
+      result.current.setShowComponentLibrary(false);
     });
 
-    // 2 painéis = não compacto
+    // Canvas (1) + Properties (1) = 2 painéis = não compacto
     expect(result.current.isCompactLayout).toBe(false);
   });
 

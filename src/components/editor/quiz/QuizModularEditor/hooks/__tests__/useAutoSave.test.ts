@@ -115,9 +115,7 @@ describe('useAutoSave', () => {
       await result.current.triggerSave();
     });
 
-    await waitFor(() => {
-      expect(result.current.saveStatus).toBe('error');
-    }, { timeout: 1000 });
+    expect(result.current.saveStatus).toBe('error');
   });
 
   it('deve permitir trigger manual de save', async () => {
