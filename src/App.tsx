@@ -59,7 +59,6 @@ const AccessibilityAuditorPage = lazy(() => import('./components/a11y/Accessibil
 
 // 🎯 EDITOR PRINCIPAL - QuizModularEditor com EditorProviderUnified
 const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
-const EditorProviderUnified = lazy(() => import('./contexts/providers/EditorProviderUnified').then(m => ({ default: m.EditorProviderUnified })));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
