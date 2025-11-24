@@ -22,6 +22,7 @@
 import { historyService } from '@/services/canonical/HistoryService';
 import type { HistoryEntry as CanonicalHistoryEntry } from '@/services/canonical/HistoryService';
 import { appLogger } from '@/lib/utils/appLogger';
+import { StorageService } from '@/services/core/StorageService';
 
 type VersionChange = {
   field?: string;
