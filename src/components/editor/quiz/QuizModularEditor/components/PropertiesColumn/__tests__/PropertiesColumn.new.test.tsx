@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 import React from 'react';
 import PropertiesColumn from '../index';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
@@ -105,7 +106,7 @@ describe('PropertiesColumn Integration', () => {
       order: 0,
       properties: { title: 'Initial Title' },
       content: {},
-    };
+    } as any;
 
     const mockSchema = {
       type: 'test-block',
@@ -143,7 +144,7 @@ describe('PropertiesColumn Integration', () => {
       order: 0,
       properties: { title: 'Initial Title' },
       content: {},
-    };
+    } as any;
 
     const mockSchema = {
       type: 'test-block',
@@ -195,7 +196,7 @@ describe('PropertiesColumn Integration', () => {
       order: 0,
       properties: {},
       content: {},
-    };
+    } as any;
 
     (schemaInterpreter.getBlockSchema as any).mockReturnValue(null);
     (normalizeBlockData as any).mockReturnValue(mockBlock);
@@ -219,7 +220,7 @@ describe('PropertiesColumn Integration', () => {
       order: 0,
       properties: { showDescription: false },
       content: {},
-    };
+    } as any;
 
     const mockSchema = {
       type: 'quiz:boolean-block',
@@ -249,13 +250,17 @@ describe('PropertiesColumn Integration', () => {
     const toggle = screen.getByRole('switch');
     expect(toggle).toHaveAttribute('aria-checked', 'false');
 
+    // Alternar o toggle para marcar como dirty e habilitar o botão de salvar
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-checked', 'true');
+
     const saveButton = screen.getByText(/Salvar Alterações/i);
     fireEvent.click(saveButton);
 
     expect(mockOnBlockUpdate).toHaveBeenCalledWith(
       'block-boolean-1',
       expect.objectContaining({
-        properties: expect.objectContaining({ showDescription: false }),
+        properties: expect.objectContaining({ showDescription: true }),
       })
     );
   });
@@ -272,7 +277,7 @@ describe('PropertiesColumn Integration', () => {
         ],
       },
       content: {},
-    };
+    } as any;
 
     const mockSchema = {
       type: 'quiz:options-grid',
