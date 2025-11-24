@@ -71,7 +71,11 @@ type EditorAction =
     | { type: 'CLEAR_VALIDATION_ERRORS'; payload?: string }
     | { type: 'RESET_EDITOR' };
 
+// Interface de contexto unificada que oferece duas camadas de acesso:
+// 1. Propriedades flat (back-compat com código já migrado parcialmente)
+// 2. Estrutura canonical { state, actions } para novos componentes e para alinhamento com EditorContextType legado.
 export interface EditorContextValue extends EditorState {
+    // ===== CAMADA LEGADO (flat) =====
     setCurrentStep: (step: number) => void;
     selectBlock: (blockId: string | null) => void;
     togglePreview: (enabled?: boolean) => void;
@@ -91,6 +95,29 @@ export interface EditorContextValue extends EditorState {
     resetEditor: () => void;
     getStepBlocks: (step: number) => Block[];
     isStepDirty: (step: number) => boolean;
+    // ===== CAMADA UNIFICADA (canonical) =====
+    state: EditorState; // espelha o estado completo
+    actions: {
+        setCurrentStep: (step: number) => void;
+        selectBlock: (blockId: string | null) => void;
+        togglePreview: (enabled?: boolean) => void;
+        toggleEditing: (enabled?: boolean) => void;
+        toggleDrag: (enabled?: boolean) => void;
+        copyBlock: (block: Block) => void;
+        pasteBlock: (step: number, index?: number) => void;
+        setStepBlocks: (step: number, blocks: Block[]) => void;
+        updateBlock: (step: number, blockId: string, updates: Partial<Block>) => void;
+        addBlock: (step: number, block: Block, index?: number) => void;
+        removeBlock: (step: number, blockId: string) => void;
+        reorderBlocks: (step: number, blocks: Block[]) => void;
+        markSaved: () => void;
+        markModified: (step: string) => void;
+        addValidationError: (error: ValidationError) => void;
+        clearValidationErrors: (blockId?: string) => void;
+        resetEditor: () => void;
+        getStepBlocks: (step: number) => Block[];
+        isStepDirty: (step: number) => boolean;
+    };
 }
 
 // ============================================================================
@@ -447,28 +474,36 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
     // ============================================================================
 
     const contextValue = useMemo<EditorContextValue>(
-        () => ({
-            ...state,
-            setCurrentStep,
-            selectBlock,
-            togglePreview,
-            toggleEditing,
-            toggleDrag,
-            copyBlock,
-            pasteBlock,
-            setStepBlocks,
-            updateBlock,
-            addBlock,
-            removeBlock,
-            reorderBlocks,
-            markSaved,
-            markModified,
-            addValidationError,
-            clearValidationErrors,
-            resetEditor,
-            getStepBlocks,
-            isStepDirty,
-        }),
+        () => {
+            // Agrupamento canonical de actions
+            const actions = {
+                setCurrentStep,
+                selectBlock,
+                togglePreview,
+                toggleEditing,
+                toggleDrag,
+                copyBlock,
+                pasteBlock,
+                setStepBlocks,
+                updateBlock,
+                addBlock,
+                removeBlock,
+                reorderBlocks,
+                markSaved,
+                markModified,
+                addValidationError,
+                clearValidationErrors,
+                resetEditor,
+                getStepBlocks,
+                isStepDirty,
+            };
+            return {
+                ...state, // exposição flat (legado)
+                ...actions, // métodos flat
+                state, // acesso canonical state
+                actions, // acesso canonical actions
+            };
+        },
         [
             state,
             setCurrentStep,
