@@ -13,16 +13,6 @@
 // PROVIDER OFICIAL
 // ============================================================================
 
-// ✅ OFFICIAL - Provider único recomendado (use este!)
-import {
-    HeaderSection,
-    UserInfoSection,
-    ProgressSection,
-    MainImageSection,
-    ModularResultHeaderBlock,
-    LazyModularResultEditor,
-    LazyResponsivePreview,
-} from './modules';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ⚠️ DEPRECATED - Aliases de compatibilidade (serão removidos)
