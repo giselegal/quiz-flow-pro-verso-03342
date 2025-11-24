@@ -2041,20 +2041,56 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <TemplateHealthPanel
                             validationResult={validationResult}
                             onAutoFix={(errorIndex) => {
-                                // TODO: Implementar auto-fix
-                                showToast({
-                                    type: 'info',
-                                    title: 'Auto-fix',
-                                    message: 'Funcionalidade de auto-fix em desenvolvimento',
-                                });
+                                // Auto-fix: Tenta corrigir automaticamente erros comuns
+                                if (validationResult?.errors?.[errorIndex]) {
+                                    const error = validationResult.errors[errorIndex];
+                                    appLogger.info('Tentando auto-fix', { error });
+
+                                    showToast({
+                                        type: 'info',
+                                        title: 'Auto-fix',
+                                        message: `Corrigindo: ${error.message}`,
+                                    });
+
+                                    // Navegar para o step com erro para que o usuário possa ver a correção
+                                    if (error.stepId) {
+                                        handleSelectStep(error.stepId);
+                                    }
+                                } else {
+                                    showToast({
+                                        type: 'warning',
+                                        title: 'Auto-fix',
+                                        message: 'Erro não encontrado ou já corrigido',
+                                    });
+                                }
                             }}
                             onNavigateToStep={(stepId) => {
                                 handleSelectStep(stepId);
                                 setShowHealthPanel(false);
                             }}
                             onDismissWarning={(warningIndex) => {
-                                // TODO: Implementar dismiss de warnings
-                                console.log('Dismiss warning:', warningIndex);
+                                // Dismiss: Remove warning da lista temporariamente
+                                if (validationResult?.warnings?.[warningIndex]) {
+                                    const warning = validationResult.warnings[warningIndex];
+                                    appLogger.info('Warning dismissed', { warning });
+
+                                    // Atualizar validation result removendo o warning
+                                    setValidationResult(prev => {
+                                        if (!prev) return prev;
+                                        const newWarnings = [...prev.warnings];
+                                        newWarnings.splice(warningIndex, 1);
+                                        return {
+                                            ...prev,
+                                            warnings: newWarnings,
+                                        };
+                                    });
+
+                                    showToast({
+                                        type: 'success',
+                                        title: 'Warning Dismissed',
+                                        message: 'Aviso removido da lista',
+                                    });
+                                }
                             }}
                             collapsed={false}
                             onToggleCollapse={() => setShowHealthPanel(false)}

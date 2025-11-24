@@ -5,6 +5,8 @@ import { appLogger } from '@/lib/utils/appLogger';
 export type PersistenceOptions = {
   autoSaveInterval?: number // ms
   enableAutoSave?: boolean
+  resourceId?: string // ID do recurso (funnel/template)
+  templateId?: string // ID do template
   onSaveSuccess?: (stepKey: string) => void
   onSaveError?: (stepKey: string, error: Error) => void
   getDirtyBlocks?: () => { stepKey: string; blocks: any[] } | null
@@ -14,6 +16,8 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
   const {
     autoSaveInterval = 3000, // 3s padrão
     enableAutoSave = true,
+    resourceId,
+    templateId,
     onSaveSuccess,
     onSaveError,
     getDirtyBlocks,
@@ -33,8 +37,9 @@ export function useEditorPersistence(options: PersistenceOptions = {}) {
 
     try {
       // Usar FunnelService canônico para persistir
-      // TODO: Obter funnelId do contexto/props; usando 'current' como fallback
-      const funnelId = 'current' // Placeholder - implementar contexto de funnel
+      // Obter funnelId do resourceId se disponível, senão usar 'current' como fallback
+      const funnelId = resourceId || templateId || 'current'
+      appLogger.debug('Salvando blocos do step', { funnelId, stepKey, blockCount: blocks.length })
       const success = await funnelService.saveStepBlocks(funnelId, stepKey, blocks)
       
       if (success) {
