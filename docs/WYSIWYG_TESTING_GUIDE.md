@@ -45,32 +45,26 @@ wysiwyg.state.isDirty // Ver se há mudanças não salvas
 
 ### 3. Modos de Visualização
 
-**Objetivo:** Validar 3 modos (Edit, Preview Live, Preview Production).
+**Objetivo:** Validar 2 modos (Edição ao vivo e Publicado).
 
 **Passos:**
 
-#### Modo Edit (Ctrl+1)
+#### Modo Edição ao vivo (Ctrl+1) - PADRÃO
 1. Pressionar `Ctrl+1`
 2. **Resultado esperado:**
-   - Badge: "✏️ Editando" (azul)
-   - Canvas editável
+   - Badge: "📝 Editando" (azul)
+   - Canvas editável com WYSIWYG
    - Validação ativa
    - Dot laranja se houver mudanças não salvas
+   - Mudanças aparecem instantaneamente no canvas
 
-#### Modo Preview Live (Ctrl+2)
-1. Fazer mudanças no editor
-2. Pressionar `Ctrl+2`
-3. **Resultado esperado:**
-   - Badge: "📝 Editor" (azul)
-   - Canvas NÃO editável
-   - Mostra dados locais (incluindo não salvos)
-
-#### Modo Preview Production (Ctrl+3)
-1. Pressionar `Ctrl+3`
+#### Modo Publicado (Ctrl+2)
+1. Pressionar `Ctrl+2`
 2. **Resultado esperado:**
    - Badge: "✅ Publicado" (verde)
-   - Canvas NÃO editável
+   - Canvas NÃO editável (modo preview)
    - Mostra apenas dados salvos no backend
+   - Sem indicador de mudanças pendentes
 
 ---
 
