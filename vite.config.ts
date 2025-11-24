@@ -33,18 +33,66 @@ export default defineConfig({
     // ✅ OTIMIZAÇÃO: Code splitting agressivo
     rollupOptions: {
       output: {
-        manualChunks: {
+        manualChunks(id) {
           // Vendors principais
-          'vendor-react': ['react', 'react-dom', 'react/jsx-runtime'],
-          'vendor-router': ['wouter', 'react-router-dom'],
-          'vendor-ui': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-select',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-tooltip',
-          ],
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('jsx-runtime')) {
+              return 'vendor-react';
+            }
+            if (id.includes('wouter') || id.includes('react-router')) {
+              return 'vendor-router';
+            }
+            if (id.includes('@radix-ui')) {
+              return 'vendor-ui';
+            }
+            // Acessibilidade lazy (579 KB) - carregar apenas quando necessário
+            if (id.includes('axe-core')) {
+              return 'vendor-axe';
+            }
+            // Drag-and-drop
+            if (id.includes('sortable') || id.includes('dnd-kit')) {
+              return 'vendor-dnd';
+            }
+            // Outros vendors
+            return 'vendor-misc';
+          }
+
+          // 🎯 CODE SPLITTING POR DOMÍNIO DE APLICAÇÃO
+          
+          // Editor (300-400 KB)
+          if (id.includes('/src/pages/editor/') || 
+              id.includes('/src/components/editor/') ||
+              id.includes('EditorContext') ||
+              id.includes('EditorService')) {
+            return 'app-editor';
+          }
+          
+          // Quiz Runtime (200-300 KB)
+          if (id.includes('/src/pages/quiz/') || 
+              id.includes('/src/components/quiz/') ||
+              id.includes('QuizContext') ||
+              id.includes('quizDataService')) {
+            return 'app-quiz';
+          }
+          
+          // Admin/Dashboard (200-300 KB)
+          if (id.includes('/src/pages/admin/') || 
+              id.includes('/src/components/admin/') ||
+              id.includes('AdminLayout') ||
+              id.includes('Dashboard')) {
+            return 'app-admin';
+          }
+
+          // Serviços Canônicos (consolidados)
+          if (id.includes('/src/services/canonical/')) {
+            return 'services-canonical';
+          }
+
+          // Templates e Schemas
+          if (id.includes('/src/config/schemas/') || 
+              id.includes('/src/templates/')) {
+            return 'templates-config';
+          }
         },
       },
     },
