@@ -152,9 +152,15 @@ export function useWYSIWYG(
 
   // Processar fila de atualizações (batch updates)
   const processUpdateQueue = useCallback(() => {
-    if (updateQueueRef.current.size === 0) return;
+    console.log('📦 [useWYSIWYG] processUpdateQueue chamado, fila:', updateQueueRef.current.size);
+    
+    if (updateQueueRef.current.size === 0) {
+      console.log('⚠️ [useWYSIWYG] Fila vazia, nada a processar');
+      return;
+    }
 
     const updates = Array.from(updateQueueRef.current.entries());
+    console.log('🔄 [useWYSIWYG] Processando', updates.length, 'atualizações da fila');
     updateQueueRef.current.clear();
 
     setBlocks((prevBlocks) => {
@@ -204,12 +210,22 @@ export function useWYSIWYG(
 
   // Enfileirar atualização (debounced)
   const enqueueUpdate = useCallback((blockId: string, updates: Partial<Block>) => {
+    console.log('🔄 [useWYSIWYG] enqueueUpdate chamado:', {
+      blockId,
+      updates,
+      mode,
+      willProcessImmediately: mode === 'edit' || mode === 'preview-live',
+    });
+    
     const existing = updateQueueRef.current.get(blockId) || {};
     updateQueueRef.current.set(blockId, { ...existing, ...updates });
 
-    // Processar imediatamente em modo edit para WYSIWYG instantâneo
-    if (mode === 'edit') {
+    // Processar imediatamente em modo edit/preview-live para WYSIWYG instantâneo
+    if (mode === 'edit' || mode === 'preview-live') {
+      console.log('⚡ [useWYSIWYG] Processando fila IMEDIATAMENTE (modo:', mode, ')');
       processUpdateQueue();
+    } else {
+      console.log('⏳ [useWYSIWYG] Aguardando debounce (modo:', mode, ')');
     }
   }, [mode, processUpdateQueue]);
 

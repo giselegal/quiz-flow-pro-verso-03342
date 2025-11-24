@@ -146,10 +146,12 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
     // Override updateBlockProperties para sincronização instantânea
     updateBlockProperties: useCallback(
       (blockId: string, properties: Partial<Block['properties']>) => {
+        console.log('🔗 [WYSIWYGBridge] updateBlockProperties chamado:', { blockId, properties, mode });
         wysiwygActions.updateBlockProperties(blockId, properties);
 
-        // Em modo edit, sincronizar imediatamente com SuperUnified
-        if (mode === 'edit' && !isSyncingRef.current) {
+        // Em modo edit/preview-live, sincronizar imediatamente com SuperUnified
+        if ((mode === 'edit' || mode === 'preview-live') && !isSyncingRef.current) {
+          console.log('⚡ [WYSIWYGBridge] Sincronizando com SuperUnified...');
           try {
             isSyncingRef.current = true;
             const block = wysiwygState.blocks.find((b) => b.id === blockId);
