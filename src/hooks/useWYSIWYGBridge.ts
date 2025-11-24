@@ -62,7 +62,7 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
           isSyncingRef.current = true;
           const block = wysiwygState.blocks.find((b) => b.id === blockId);
           if (block) {
-            unifiedUpdateBlock(currentStep, block.order, { ...block, ...updates });
+            unifiedUpdateBlock(currentStep, blockId, { ...block, ...updates });
           }
         } catch (error) {
           appLogger.error('[WYSIWYGBridge] Erro ao sincronizar com SuperUnified:', error);
@@ -122,10 +122,9 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
         if (mode === 'edit' && !isSyncingRef.current) {
           try {
             isSyncingRef.current = true;
-            const blockIndex = wysiwygState.blocks.findIndex((b) => b.id === blockId);
-            if (blockIndex !== -1) {
-              const block = wysiwygState.blocks[blockIndex];
-              unifiedUpdateBlock(currentStep, blockIndex, {
+            const block = wysiwygState.blocks.find((b) => b.id === blockId);
+            if (block) {
+              unifiedUpdateBlock(currentStep, blockId, {
                 ...block,
                 properties: { ...block.properties, ...properties },
               });

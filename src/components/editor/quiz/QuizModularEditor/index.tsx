@@ -2026,8 +2026,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                 wysiwyg.actions.updateBlockProperties(id, updates.properties);
                                             } else if (updates.content) {
                                                 wysiwyg.actions.updateBlockContent(id, updates.content);
-                                            } else if (updates.config) {
-                                                wysiwyg.actions.updateBlockConfig(id, updates.config);
                                             } else {
                                                 wysiwyg.actions.updateBlock(id, updates);
                                             }
@@ -2066,8 +2064,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                 wysiwyg.actions.updateBlockProperties(id, updates.properties);
                                             } else if (updates.content) {
                                                 wysiwyg.actions.updateBlockContent(id, updates.content);
-                                            } else if (updates.config) {
-                                                wysiwyg.actions.updateBlockConfig(id, updates.config);
                                             } else {
                                                 wysiwyg.actions.updateBlock(id, updates);
                                             }
