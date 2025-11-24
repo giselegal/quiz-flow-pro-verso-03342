@@ -38,40 +38,97 @@ export default function EditorModular() {
 
   // Carregar schemas
   useEffect(() => {
-    appLogger.info('[EditorModular] Inicializando...');
-    loadDefaultSchemas();
-    
-    const comps = loadComponentsFromRegistry();
-    const cats = groupComponentsByCategory(comps);
-    
-    setComponents(comps);
-    setCategories(cats);
-    setLoaded(isSchemasLoaded());
-    
-    appLogger.info(`[EditorModular] ✅ ${comps.length} componentes carregados`);
+    try {
+      appLogger.info('[EditorModular] 🚀 Inicializando...');
+
+      // 1. Carregar schemas
+      loadDefaultSchemas();
+      appLogger.info('[EditorModular] ✅ Schemas carregados');
+
+      // 2. Verificar se foi carregado
+      const schemasOk = isSchemasLoaded();
+      appLogger.info('[EditorModular] 📊 Schemas status:', { loaded: schemasOk });
+
+      // 3. Carregar componentes do registry
+      const comps = loadComponentsFromRegistry();
+      appLogger.info('[EditorModular] 📦 Componentes carregados:', { count: comps.length });
+
+      // 4. Agrupar por categoria
+      const cats = groupComponentsByCategory(comps);
+      appLogger.info('[EditorModular] 📂 Categorias:', {
+        categories: Object.keys(cats),
+        total: Object.keys(cats).length
+      });
+
+      // 5. Atualizar estado
+      setComponents(comps);
+      setCategories(cats);
+      setLoaded(schemasOk);
+
+      appLogger.info('[EditorModular] ✅ Inicialização completa', {
+        components: comps.length,
+        categories: Object.keys(cats).length,
+        loaded: schemasOk
+      });
+    } catch (error: any) {
+      appLogger.error('[EditorModular] ❌ ERRO na inicialização:', {
+        error: error.message,
+        stack: error.stack
+      });
+      console.error('❌ EditorModular falhou:', error);
+    }
   }, []);
 
   const addTestBlock = (type: string) => {
     try {
+      appLogger.info('[EditorModular] 🎯 Adicionando bloco:', { type });
+
+      // Verificar se schema existe antes de criar
+      const schema = schemaInterpreter.getBlockSchema(type);
+      if (!schema) {
+        const error = `Schema não encontrado para tipo: ${type}`;
+        appLogger.error('[EditorModular] ❌ Schema missing:', { type });
+        console.error('❌', error);
+        alert(`Erro: ${error}`);
+        return;
+      }
+
       const element = createElementFromSchema(type);
+      appLogger.info('[EditorModular] ✅ Elemento criado:', {
+        id: element.id,
+        type: element.type,
+        propertiesCount: Object.keys(element.properties || {}).length
+      });
+
       const newBlock: TestBlock = {
         id: element.id,
         type: element.type,
         properties: element.properties || {},
         content: element.content || {},
       };
-      
+
       setTestBlocks(prev => [...prev, newBlock]);
       setSelectedBlock(newBlock);
-      appLogger.info('[EditorModular] Bloco adicionado:', { data: [newBlock] });
-    } catch (error) {
-      appLogger.error('[EditorModular] Erro ao adicionar bloco:', { data: [error] });
+
+      appLogger.info('[EditorModular] ✅ Bloco adicionado ao canvas:', {
+        blockId: newBlock.id,
+        totalBlocks: testBlocks.length + 1
+      });
+    } catch (error: any) {
+      const errorMsg = error.message || String(error);
+      appLogger.error('[EditorModular] ❌ ERRO ao adicionar bloco:', {
+        type,
+        error: errorMsg,
+        stack: error.stack
+      });
+      console.error('❌ Erro ao adicionar bloco:', error);
+      alert(`Erro ao adicionar bloco: ${errorMsg}`);
     }
   };
 
   const updateBlockProperty = (key: string, value: any) => {
     if (!selectedBlock) return;
-    
+
     const updated = {
       ...selectedBlock,
       properties: {
@@ -79,9 +136,9 @@ export default function EditorModular() {
         [key]: value,
       },
     };
-    
+
     setSelectedBlock(updated);
-    setTestBlocks(prev => 
+    setTestBlocks(prev =>
       prev.map(b => b.id === updated.id ? updated : b)
     );
   };
@@ -105,13 +162,13 @@ export default function EditorModular() {
                 FASE 1 + 2 + 3: Registry Universal Integrado
               </p>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <Badge variant={loaded ? "default" : "secondary"} className="flex items-center gap-1">
                 {loaded ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                 {loaded ? 'Schemas Carregados' : 'Carregando...'}
               </Badge>
-              
+
               <Badge variant="outline">
                 {components.length} Componentes
               </Badge>
@@ -156,7 +213,7 @@ export default function EditorModular() {
                       {loaded ? 'Sim' : 'Não'}
                     </div>
                   </div>
-                  
+
                   <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="text-sm text-blue-600 font-medium">Total de Componentes</div>
                     <div className="text-2xl font-bold text-blue-700 mt-1">
@@ -247,11 +304,10 @@ export default function EditorModular() {
                         {testBlocks.map(block => (
                           <div
                             key={block.id}
-                            className={`border-2 rounded-lg p-4 bg-white cursor-pointer transition-all ${
-                              selectedBlock?.id === block.id
+                            className={`border-2 rounded-lg p-4 bg-white cursor-pointer transition-all ${selectedBlock?.id === block.id
                                 ? 'border-primary shadow-lg'
                                 : 'border-slate-200 hover:border-slate-300'
-                            }`}
+                              }`}
                             onClick={() => setSelectedBlock(block)}
                           >
                             <div className="flex items-center justify-between mb-3">
@@ -267,7 +323,7 @@ export default function EditorModular() {
                                 <X className="w-4 h-4" />
                               </Button>
                             </div>
-                            
+
                             <UniversalBlock
                               type={block.type}
                               properties={block.properties}
