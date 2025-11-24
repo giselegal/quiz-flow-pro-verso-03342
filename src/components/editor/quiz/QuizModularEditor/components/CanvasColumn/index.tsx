@@ -220,17 +220,18 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
     const [error, setError] = useState<string | null>(null);
     const [tick, setTick] = useState(0); // força re-render quando necessário
 
-    // 🔄 React Query: centralizar carregamento sempre via hook (props como initialData)
+    // 🔄 React Query: buscar do backend APENAS se não recebeu blocks via props (modo production)
+    const shouldFetchFromBackend = !blocksFromProps || (Array.isArray(blocksFromProps) && blocksFromProps.length === 0);
     const { data: fetchedBlocks, isLoading: isLoadingQuery, error: queryError } = useStepBlocksQuery({
         stepId: currentStepKey,
-        enabled: !!currentStepKey,
+        enabled: !!currentStepKey && shouldFetchFromBackend,
     });
 
-    // Selecionar blocos com memoização: se arrays são estritamente iguais ou conteúdo id/length igual, reusa referência
+    // Selecionar blocos: priorizar props (modo live) sobre fetch (modo production)
     const blocks: Block[] | null = useMemo(() => {
-        const source = (fetchedBlocks ?? blocksFromProps ?? null) as Block[] | null;
+        const source = (blocksFromProps ?? fetchedBlocks ?? null) as Block[] | null;
         return source ? [...source] : source; // shallow copy para evitar mutações externas
-    }, [fetchedBlocks, blocksFromProps, tick]);
+    }, [blocksFromProps, fetchedBlocks, tick]);
 
     // ✅ SPRINT 1: Auto metrics tracking
     useAutoMetrics('CanvasColumn', {
@@ -246,15 +247,16 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
 
     // Log de diagnóstico quando props.blocks mudar
     useEffect(() => {
-        if (!blocksFromProps) return;
-        appLogger.info('🔄 [CanvasColumn] Props blocks changed:', {
-            data: [{
-                currentStepKey,
-                blocksCount: blocksFromProps?.length || 0,
-                blockIds: blocksFromProps?.map(b => b.id) || [],
-            }]
+        console.log('🎨 [CanvasColumn] Renderização:', {
+            currentStepKey,
+            blocksFromProps: blocksFromProps?.length || 0,
+            fetchedBlocks: fetchedBlocks?.length || 0,
+            finalBlocks: blocks?.length || 0,
+            isEditable,
+            shouldFetchFromBackend,
+            propsBlockIds: blocksFromProps?.map(b => b.id).slice(0, 3) || [],
         });
-    }, [blocksFromProps, currentStepKey]);
+    }, [blocksFromProps, fetchedBlocks, blocks, currentStepKey, isEditable, shouldFetchFromBackend]);
 
     // ✅ SPRINT 1: Usar hook seguro para event listeners
     useSafeEventListener('block-updated', (event: Event) => {

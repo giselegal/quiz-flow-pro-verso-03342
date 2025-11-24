@@ -1964,11 +1964,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             >
                                                 <CanvasColumn
                                                     currentStepKey={currentStepKey}
-                                                    blocks={
-                                                        previewMode === 'live'
+                                                    blocks={(() => {
+                                                        const blocksToRender = previewMode === 'live'
                                                             ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
-                                                            : blocks
-                                                    }
+                                                            : blocks;
+                                                        console.log('📊 [QuizModularEditor] Passando blocks para CanvasColumn:', {
+                                                            previewMode,
+                                                            isVirtualized: virtualization.isVirtualized,
+                                                            wysiwygBlocks: wysiwyg.state.blocks?.length,
+                                                            persistedBlocks: blocks?.length,
+                                                            finalBlocks: blocksToRender?.length,
+                                                            blockIds: blocksToRender?.map(b => b.id).slice(0, 3),
+                                                        });
+                                                        return blocksToRender;
+                                                    })()}
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
