@@ -1,4 +1,3 @@
-# This is a test comment added at the top of the README file
 # 🎯 Quiz Flow Pro - Verso 03342
 
 Sistema interativo profissional de criação e gerenciamento de quizzes e funis de conversão com arquitetura consolidada de alta performance.
