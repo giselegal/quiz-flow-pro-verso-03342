@@ -8,6 +8,15 @@ export * from './templateService';
 // TODO: Migrate remaining services to appropriate features
 
 // ============================================================================
+// Canonical Services Aliases (Temporary - Phase 4 Migration)
+// ============================================================================
+// These aliases provide backward compatibility during incremental migration
+// TODO: Remove after all imports migrated to @/services/canonical
+
+export { analyticsService } from './canonical/AnalyticsService';
+export { analyticsService as AnalyticsService } from './canonical/AnalyticsService';
+
+// ============================================================================
 // Unified Services (Phase 1 - Consolidation)
 // ============================================================================
 

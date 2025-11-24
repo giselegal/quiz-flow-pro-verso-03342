@@ -66,7 +66,7 @@ export { quizSupabaseService } from '@/services/quizSupabaseService';
 
 // Validação e Analytics (barrel compatível)
 export { funnelValidationService } from '@/services/funnelValidationService';
-export { AnalyticsService } from '@/services/AnalyticsService';
+// AnalyticsService migrado para canonical - use: import { analyticsService, AnalyticsService } from '@/services/canonical'
 
 // Config API e serviço
 // export { ConfigurationAPI } from '@/services/ConfigurationAPI'; // DEPRECATED: Removido em 31/out/2025

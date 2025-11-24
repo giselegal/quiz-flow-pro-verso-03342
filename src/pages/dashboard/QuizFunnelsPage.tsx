@@ -34,7 +34,7 @@ import { QuizFunnelCard } from '@/components/dashboard/QuizFunnelCard';
 import { unifiedCRUDService } from '@/services/UnifiedCRUDService';
 import { historyManager } from '@/services/HistoryManager';
 import { generateFunnelId } from '@/lib/utils/idGenerator';
-import { analyticsService } from '@/services/AnalyticsService';
+import { analyticsService } from '@/services/canonical';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface QuizFunnel {

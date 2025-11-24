@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { analyticsService } from '@/services/AnalyticsService';
+import { analyticsService } from '@/services/canonical';
 import { StorageService } from '@/services/core/StorageService';
 
 interface AnalyticsDebugPanelProps {

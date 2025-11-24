@@ -19,7 +19,7 @@ import {
 } from '../interfaces/EditorInterfaces';
 
 // Importar serviços de analytics canônicos
-import { analyticsService, AnalyticsService } from '@/services/AnalyticsService';
+import { analyticsService, AnalyticsService } from '@/services/canonical';
 import { PerformanceMonitor } from '@/lib/utils/performanceMonitoring';
 // Reaproveitar a mesma instância para eventos em tempo real
 type RealTimeAnalytics = AnalyticsService;
