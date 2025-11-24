@@ -2,10 +2,10 @@ import { useCallback } from 'react';
 import { templateService } from '@/services/canonical';
 import { appLogger } from '@/lib/utils/appLogger';
 
-// 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO STEPTEMPLATE SERVICE
-export const getStepTemplate = (stepId: string) => {
+// 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO TEMPLATE SERVICE
+export const getStepTemplate = async (stepId: string) => {
   try {
-    appLogger.info(`🔍 Obtendo template da etapa "${stepId}" via stepTemplateService...`);
+    appLogger.info(`🔍 Obtendo template da etapa "${stepId}" via templateService...`);
 
     // Converter stepId para número (etapa-1 → 1, ou "1" → 1)
     const stepNumber =
@@ -17,12 +17,12 @@ export const getStepTemplate = (stepId: string) => {
 
     // Usar o serviço canônico que acessa os templates individuais
     const stepIdStr = `step-${stepNumber.toString().padStart(2, '0')}`;
-    const templateResult = templateService.getStep(stepIdStr);
+    const templateResult = await templateService.getStep(stepIdStr);
     const template = templateResult?.success ? templateResult.data : [];
 
     if (template && template.length > 0) {
       appLogger.info(`✅ Template encontrado para etapa ${stepNumber}: ${template.length} blocos`);
-      appLogger.info('🧱 Tipos de blocos:', { data: [template.map(b => b.type)] });
+      appLogger.info('🧱 Tipos de blocos:', { data: [template.map((b: any) => b.type)] });
 
       return template.map((block: any) => ({
         type: block.type,
@@ -90,7 +90,7 @@ export const useStepTemplateHandlers = (
 
   // Handler para popular uma etapa com blocos padrão - TODAS AS 21 ETAPAS
   const handlePopulateStep = useCallback(
-    (stepId: string) => {
+    async (stepId: string) => {
       appLogger.info(`🎯 [NOVO SISTEMA] Populando etapa ${stepId} com template modular`);
 
       // 🧹 LIMPEZA: Remover blocos existentes antes de carregar novos
@@ -112,8 +112,8 @@ export const useStepTemplateHandlers = (
       appLogger.info(`🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`);
 
       try {
-        // 🎯 Usar novo sistema de templates das steps
-        const stepTemplate = getStepTemplate(stepNumber.toString());
+        // 🎯 Usar novo sistema de templates das steps (async)
+        const stepTemplate = await getStepTemplate(stepNumber.toString());
 
         appLogger.info('🧪 [DEBUG] Template retornado:', { data: [stepTemplate] });
         appLogger.info('🧪 [DEBUG] Template é array?', { data: [Array.isArray(stepTemplate)] });
@@ -160,10 +160,10 @@ export const useStepTemplateHandlers = (
         }
 
         appLogger.info(`Template encontrado! ${stepTemplate.length} blocos para carregar`);
-        appLogger.info('🧱 Tipos de blocos:', { data: [stepTemplate.map(b => b.type)] });
+        appLogger.info('🧱 Tipos de blocos:', { data: [stepTemplate.map((b: any) => b.type)] });
 
         // 🔄 Aplicar todos os blocos do template
-        stepTemplate.forEach((blockData, index) => {
+        stepTemplate.forEach((blockData: any, index: number) => {
           appLogger.info(`🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`, { data: [blockData.type] });
           appLogger.info('🧪 [DEBUG] Dados do bloco:', { data: [blockData] });
 
