@@ -177,6 +177,7 @@ const PropertyControl: React.FC<{
               </span>
             </div>
             <Slider
+              id={propertyKey}
               value={[rangeValue]}
               onValueChange={([newValue]) => handleChange(newValue)}
               min={rangeMin}
