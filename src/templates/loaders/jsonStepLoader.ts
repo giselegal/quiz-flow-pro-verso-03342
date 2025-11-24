@@ -2,6 +2,8 @@ import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 import { cacheManager } from '@/lib/cache/CacheManager';
 import { cacheService } from '@/services/canonical';
+import { getGlobalTheme } from '@/config/globalTheme';
+import { ASSETS } from '@/config/assets';
 
 // Legacy templateCache API wrapper
 const templateCache = {
