@@ -1748,7 +1748,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             setViewport(recovered.viewport);
                                             setCurrentStep(recovered.currentStep);
                                             snapshot.clearSnapshot();
-                                            showToast('Draft recuperado com sucesso!', 'success');
+                                            showToast({
+                                                type: 'success',
+                                                title: 'Draft Recuperado',
+                                                message: 'Suas alterações não salvas foram recuperadas com sucesso!',
+                                            });
                                         }
                                     }}
                                     className="h-7 text-xs hidden md:flex items-center gap-1"
