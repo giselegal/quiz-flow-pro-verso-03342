@@ -2,10 +2,14 @@ import { templateService } from '@/services/canonical/TemplateService';
 import { BaseUnifiedService } from './UnifiedServiceManager';
 
 /**
+ * @deprecated Use `templateService` from '@/services/canonical/TemplateService' directly
+ * 
  * ConsolidatedTemplateService
- * Wrapper fino em torno do `templateService` canônico,
- * apenas para manter compatibilidade com imports existentes
- * em `QuizDataService`, `TemplateLoader` e `ServiceRegistry`.
+ * Wrapper fino em torno do `templateService` canônico.
+ * 
+ * ⚠️ FASE 3.2 - Este serviço está DEPRECATED
+ * Todos os imports foram migrados para usar templateService diretamente.
+ * Mantido apenas para compatibilidade com código legado.
  */
 
 export class ConsolidatedTemplateService extends BaseUnifiedService {

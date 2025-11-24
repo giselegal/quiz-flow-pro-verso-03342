@@ -7,7 +7,8 @@ let __warmupStarted = false;
 
 async function __warmupCache() {
   try {
-    const full = await consolidatedTemplateService.getTemplate('quiz21StepsComplete');
+    const result = await templateService.getTemplate('quiz21StepsComplete');
+    const full = result.success ? result.data : null;
     if (full?.steps?.length) {
       const map: Record<string, any[]> = {};
       for (const s of full.steps) {
@@ -20,7 +21,8 @@ async function __warmupCache() {
     const map: Record<string, any[]> = {};
     for (let i = 1; i <= 21; i++) {
       try {
-        const blocks = await consolidatedTemplateService.getStepBlocks(`step-${i}`);
+        const result = await templateService.getStep(`step-${i}`);
+        const blocks = result.success ? (result.data as any[]) : [];
         map[`step-${i}`] = blocks || [];
       } catch {
         map[`step-${i}`] = [];

@@ -646,7 +646,8 @@ export class TemplateLoader {
    */
   private async loadFromConsolidated(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
-      const blocks = await consolidatedTemplateService.getStepBlocks(normalizedKey);
+      const result = await templateService.getStep(normalizedKey);
+      const blocks = result.success ? (result.data as any[]) : [];
       if (Array.isArray(blocks) && blocks.length > 0) {
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
         appLogger.info(`📦 Consolidated → ${normalizedKey}: ${blocks.length} blocos`);

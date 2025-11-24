@@ -187,10 +187,11 @@ const {
 - [x] Integrar controle de visibilidade de painéis
 - [x] Criar testes unitários dos hooks (28 testes passando)
 
-### Fase 3.2 (Planejado)
-- [ ] Consolidar serviços de template
-- [ ] Definir HierarchicalTemplateSource como canônico
-- [ ] Migrar imports
+### Fase 3.2 (✅ Concluída)
+- [x] Consolidar serviços de template
+- [x] Definir templateService (canonical) como único serviço
+- [x] Migrar imports (UniversalStepEditor, QuizDataService, TemplateLoader)
+- [x] Depreciar ConsolidatedTemplateService
 
 ### Fase 3.3 (Planejado)
 - [ ] Remover @ts-nocheck
