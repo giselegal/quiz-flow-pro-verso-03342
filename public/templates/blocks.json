@@ -1,0 +1,567 @@
+{
+  "version": "4.0",
+  "blocks": {
+    "blk-quiz-intro-header-000": {
+      "id": "quiz-intro-header",
+      "type": "quiz-intro-header",
+      "order": 0,
+      "properties": {
+        "logoUrl": "{{asset.logo}}",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 132,
+        "logoHeight": 55,
+        "showLogo": true,
+        "logoPosition": "center",
+        "showProgress": true,
+        "progressValue": 5,
+        "progressMax": 100,
+        "progressHeight": 4,
+        "progressStyle": "bar",
+        "progressColor": "{{theme.colors.primary}}",
+        "progressBackgroundColor": "#E5DDD5",
+        "showBackButton": false,
+        "backButtonStyle": "icon",
+        "backButtonPosition": "left",
+        "headerStyle": "default",
+        "backgroundColor": "#FAF9F7",
+        "showBorder": false,
+        "isSticky": false,
+        "enableAnimation": true,
+        "marginTop": 0,
+        "marginBottom": 16,
+        "contentMaxWidth": 640,
+        "animationType": "fade",
+        "animationDuration": 300
+      },
+      "parentId": null
+    },
+    "blk-intro-title-001": {
+      "id": "intro-title",
+      "type": "intro-title",
+      "order": 1,
+      "properties": {
+        "padding": 16,
+        "type": "fade",
+        "duration": 300,
+        "animationType": "fade",
+        "animationDuration": 300,
+        "textAlign": "center",
+        "fontSize": "28px",
+        "fontWeight": "700"
+      },
+      "content": {
+        "title": "<span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">nada combina com você</span>."
+      },
+      "parentId": null
+    },
+    "blk-intro-image-002": {
+      "id": "intro-image",
+      "type": "intro-image",
+      "order": 2,
+      "properties": {
+        "objectFit": "contain",
+        "maxWidth": 300,
+        "borderRadius": "8px"
+      },
+      "content": {
+        "src": "{{asset.logo}}",
+        "alt": "Descubra seu estilo predominante",
+        "width": 300,
+        "height": 204,
+        "imageUrl": "{{asset.logo}}"
+      },
+      "parentId": null
+    },
+    "blk-intro-description-003": {
+      "id": "intro-description",
+      "type": "intro-description",
+      "order": 3,
+      "properties": {
+        "padding": 16,
+        "animationType": "fade",
+        "animationDuration": 300,
+        "textAlign": "center"
+      },
+      "content": {
+        "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[{{theme.colors.primary}}]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
+      },
+      "parentId": null
+    },
+    "blk-intro-form-004": {
+      "id": "intro-form",
+      "type": "intro-form",
+      "order": 4,
+      "properties": {
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300,
+        "animationType": "fade",
+        "animationDuration": 300
+      },
+      "content": {
+        "label": "Como posso te chamar?",
+        "placeholder": "Digite seu primeiro nome aqui...",
+        "buttonText": "Quero Descobrir meu Estilo Agora!",
+        "required": true,
+        "helperText": "Seu nome é necessário para personalizar sua experiência."
+      },
+      "parentId": null
+    },
+    "blk-question-progress-005": {
+      "id": "progress-bar-step-02",
+      "type": "question-progress",
+      "order": 0,
+      "properties": {
+        "padding": 8
+      },
+      "content": {
+        "stepNumber": 2,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "{{theme.colors.primary}}",
+        "backgroundColor": "#e5e7eb"
+      },
+      "parentId": null
+    },
+    "blk-question-title-006": {
+      "id": "step-02-title",
+      "type": "question-title",
+      "order": 1,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300
+      },
+      "content": {
+        "text": "Pergunta 1 de 10",
+        "subtitle": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
+      },
+      "parentId": null
+    },
+    "blk-options-grid-007": {
+      "id": "step-02-options",
+      "type": "options-grid",
+      "order": 2,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Conforto, leveza e praticidade no vestir",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Discrição, caimento clássico e sobriedade",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Praticidade com um toque de estilo atual",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Elegância refinada, moderna e sem exageros",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Delicadeza em tecidos suaves e fluidos",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Sensualidade com destaque para o corpo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Impacto visual com peças estruturadas e assimétricas",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Mix criativo com formas ousadas e originais",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true
+      },
+      "parentId": null
+    },
+    "blk-question-navigation-008": {
+      "id": "navigation-step-02",
+      "type": "question-navigation",
+      "order": 3,
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      },
+      "parentId": null
+    },
+    "blk-question-hero-009": {
+      "id": "question-hero-04",
+      "type": "question-hero",
+      "order": 2,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300,
+        "delay": 0,
+        "easing": "ease-out"
+      },
+      "content": {
+        "questionNumber": "3 de 10",
+        "questionText": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "currentQuestion": 3,
+        "totalQuestions": 13,
+        "progressValue": 19,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "parentId": null
+    },
+    "blk-transition-hero-010": {
+      "id": "transition-hero-12",
+      "type": "transition-hero",
+      "order": 0,
+      "properties": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32,
+        "type": "scale",
+        "duration": 500,
+        "delay": 0,
+        "easing": "ease-out"
+      },
+      "content": {
+        "title": "🕐 Enquanto calculamos o seu resultado...",
+        "subtitle": "Estamos montando seu perfil de estilo personalizado",
+        "message": "Continue para descobrir ainda mais sobre seu estilo único!",
+        "autoAdvanceDelay": 3500,
+        "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      },
+      "parentId": null
+    },
+    "blk-transition-text-011": {
+      "id": "step-12-transition-text",
+      "type": "transition-text",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300
+      },
+      "content": {
+        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      },
+      "parentId": null
+    },
+    "blk-ctabutton-012": {
+      "id": "step-12-transition-cta",
+      "type": "CTAButton",
+      "order": 2,
+      "properties": {},
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "medium"
+      },
+      "parentId": null
+    },
+    "blk-result-congrats-013": {
+      "id": "result-congrats",
+      "type": "result-congrats",
+      "order": 0,
+      "properties": {
+        "enabled": true,
+        "order": 1,
+        "props": {
+          "showCelebration": true,
+          "celebrationEmoji": "🎉",
+          "celebrationAnimation": "bounce",
+          "greetingFormat": "Olá, {userName}!",
+          "titleFormat": "Seu Estilo Predominante é:",
+          "styleNameDisplay": "{styleName}",
+          "colors": {
+            "greeting": "#432818",
+            "greetingHighlight": "{{theme.colors.primary}}",
+            "title": "#432818",
+            "styleName": "{{theme.colors.primary}}"
+          },
+          "spacing": {
+            "padding": "3rem 1.5rem",
+            "marginBottom": "2.5rem"
+          }
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-quiz-score-display-014": {
+      "id": "quiz-score-celebration",
+      "type": "quiz-score-display",
+      "order": 0.5,
+      "properties": {
+        "enabled": true,
+        "order": 1.5,
+        "props": {
+          "variant": "celebration",
+          "showScore": true,
+          "showLevel": true,
+          "showBadges": true,
+          "showBreakdown": true,
+          "animateOnMount": true,
+          "confettiEnabled": true,
+          "theme": {
+            "primaryColor": "{{theme.colors.primary}}",
+            "secondaryColor": "#432818",
+            "accentColor": "#a08966",
+            "backgroundColor": "#fffaf7",
+            "successColor": "#2d5f3f"
+          },
+          "labels": {
+            "title": "🏆 Sua Pontuação Final",
+            "scoreLabel": "Pontos Totais",
+            "levelLabel": "Nível Alcançado",
+            "badgesLabel": "Badges Conquistadas",
+            "breakdownLabel": "Detalhamento"
+          },
+          "spacing": {
+            "padding": "2rem 1.5rem",
+            "marginBottom": "2rem"
+          }
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-result-main-015": {
+      "id": "result-main",
+      "type": "result-main",
+      "order": 1,
+      "properties": {
+        "enabled": true,
+        "order": 2,
+        "props": {
+          "layout": "two-column",
+          "imagePosition": "left",
+          "showStyleImage": true,
+          "styleImage": {
+            "aspectRatio": "4/5",
+            "showDecorations": true,
+            "decorationColor": "{{theme.colors.primary}}",
+            "fallbackEnabled": true,
+            "showLabel": true
+          },
+          "showIntroText": true,
+          "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
+          "showDescription": true,
+          "showGuideImage": true
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-result-progress-bars-016": {
+      "id": "result-progress-bars",
+      "type": "result-progress-bars",
+      "order": 2,
+      "properties": {
+        "enabled": true,
+        "order": 3,
+        "props": {
+          "topCount": 3,
+          "showPercentage": true,
+          "percentageFormat": "{percentage}%",
+          "animationDelay": 200,
+          "colors": {
+            "primary": "{{theme.colors.primary}}",
+            "secondary": "#a08966",
+            "tertiary": "#8c7757"
+          },
+          "titleFormat": "Além do {primaryStyle}, você também tem traços de:"
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-result-secondary-styles-017": {
+      "id": "result-secondary-styles",
+      "type": "result-secondary-styles",
+      "order": 3,
+      "properties": {
+        "enabled": true,
+        "order": 4,
+        "props": {
+          "showKeywords": true,
+          "keywordsTitle": "Palavras que te definem:",
+          "tagColor": "{{theme.colors.primary}}",
+          "tagStyle": "rounded-full"
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-result-image-018": {
+      "id": "result-image",
+      "type": "result-image",
+      "order": 4,
+      "properties": {
+        "enabled": true,
+        "order": 5,
+        "props": {
+          "position": "center",
+          "aspectRatio": "4/5",
+          "maxWidth": "28rem",
+          "centered": true,
+          "showDecorations": false
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-result-description-019": {
+      "id": "result-description",
+      "type": "result-description",
+      "order": 5,
+      "properties": {
+        "enabled": true,
+        "order": 6,
+        "props": {
+          "showTransitionText": true,
+          "transitionText": "Mas lembre-se: você não é só um estilo.",
+          "showPersuasiveQuestions": true,
+          "persuasiveQuestionsTitle": "💭 Você já se perguntou...",
+          "persuasiveQuestionsIcon": "❓",
+          "showClosingMessage": true,
+          "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-result-cta-020": {
+      "id": "button-cta-primary",
+      "type": "result-cta",
+      "order": 6,
+      "properties": {
+        "enabled": true,
+        "order": 7
+      },
+      "content": {
+        "text": "{ctaPrimaryText}",
+        "url": "{ctaPrimaryUrl}",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "{{theme.colors.primary}}",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      },
+      "parentId": null
+    },
+    "blk-result-share-021": {
+      "id": "result-share",
+      "type": "result-share",
+      "order": 7,
+      "properties": {
+        "enabled": true,
+        "order": 8
+      },
+      "content": {
+        "title": "Compartilhe seu resultado",
+        "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
+        "platforms": [
+          "facebook",
+          "twitter",
+          "whatsapp",
+          "linkedin"
+        ]
+      },
+      "parentId": null
+    },
+    "blk-text-inline-022": {
+      "id": "transformation-benefits",
+      "type": "text-inline",
+      "order": 8,
+      "properties": {
+        "enabled": true,
+        "order": 8,
+        "props": {
+          "content": "<h3>Transforme Sua Imagem, Revele Sua Essência</h3><p>Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.</p><ul><li>🎯 Clareza de estilo para se vestir com facilidade todos os dias</li><li>🎨 Cores e formas que comunicam quem você é e o que você quer</li><li>💼 Imagem que chega primeiro: autoridade sem perder autenticidade</li><li>👗 Guarda-roupa estratégico que conversa entre si</li></ul>",
+          "align": "left",
+          "style": "rich-text"
+        }
+      },
+      "content": {},
+      "parentId": null
+    },
+    "blk-offer-hero-023": {
+      "id": "offer-hero-21",
+      "type": "offer-hero",
+      "order": 0,
+      "properties": {
+        "type": "scale",
+        "duration": 500
+      },
+      "content": {
+        "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
+        "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
+        "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
+        "urgencyMessage": "Oferta por tempo limitado!"
+      },
+      "parentId": null
+    },
+    "blk-pricing-024": {
+      "id": "pricing-21",
+      "type": "pricing",
+      "order": 1,
+      "properties": {
+        "type": "slideUp",
+        "duration": 500
+      },
+      "content": {
+        "pricing": {
+          "originalPrice": 447,
+          "salePrice": 97,
+          "currency": "R$",
+          "installments": {
+            "count": 8,
+            "value": 14.11
+          }
+        },
+        "title": "Investimento que Transforma",
+        "ctaText": "Quero Transformar Meu Estilo Agora!",
+        "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj"
+      },
+      "parentId": null
+    }
+  }
+}

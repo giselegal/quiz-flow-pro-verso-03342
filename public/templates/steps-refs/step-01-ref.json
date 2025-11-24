@@ -1,0 +1,11 @@
+{
+  "id": "step-01",
+  "version": "4.0",
+  "blockIds": [
+    "blk-quiz-intro-header-000",
+    "blk-intro-title-001",
+    "blk-intro-image-002",
+    "blk-intro-description-003",
+    "blk-intro-form-004"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "step-14",
+  "version": "4.0",
+  "blockIds": [
+    "blk-question-progress-005",
+    "blk-question-title-006",
+    "blk-question-hero-009",
+    "blk-options-grid-007",
+    "blk-question-navigation-008"
+  ]
+}
