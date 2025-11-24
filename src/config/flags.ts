@@ -20,10 +20,12 @@ export const featureFlags = {
    * Quando true: usa src/services/canonical/TemplateService.ts
    * Quando false: usa serviços legados (UnifiedTemplateRegistry, etc)
    * 
-   * @default false (rollout gradual)
-   * @phase Fase 1 - Fundação
+   * 🎯 FASE 2: Habilitado para desenvolvimento e testes internos
+   * 
+   * @default true (habilitado para testes em desenvolvimento)
+   * @phase Fase 2 - Migração Progressiva
    */
-  USE_CANONICAL_TEMPLATE_SERVICE: false,
+  USE_CANONICAL_TEMPLATE_SERVICE: process.env.NODE_ENV === 'development',
   
   /**
    * Usar FunnelService canônico ao invés de serviços legados
@@ -68,10 +70,12 @@ export const featureFlags = {
    * Quando true: usa useTemplate/useUpdateTemplate hooks
    * Quando false: usa TemplateService com cache interno
    * 
-   * @default false (rollout gradual)
-   * @phase Fase 1 - Fundação
+   * 🎯 FASE 2: Habilitado para desenvolvimento e testes internos
+   * 
+   * @default true (habilitado para testes em desenvolvimento)
+   * @phase Fase 2 - Migração Progressiva
    */
-  USE_REACT_QUERY_TEMPLATES: false,
+  USE_REACT_QUERY_TEMPLATES: process.env.NODE_ENV === 'development',
   
   /**
    * Usar React Query hooks para funnels ao invés de cache local

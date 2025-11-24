@@ -48,51 +48,56 @@ export const TemplateFunnelService = createDeprecatedAlias(
 );
 
 // ============================================================================
-// TEMPLATE SERVICES - 12 serviços → 2 canônicos
+// TEMPLATE SERVICES - 12 serviços → 1 canônico
 // ============================================================================
 
-import { UnifiedTemplateService } from './UnifiedTemplateService';
-// Exportar canônicos diretamente para facilitar migração por barrel
-export { UnifiedTemplateService } from './UnifiedTemplateService';
+// 🎯 FASE 2: Use canonical TemplateService as the single source of truth
+import { templateService } from './canonical/TemplateService';
+export { templateService } from './canonical/TemplateService';
 
-/** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
-export const TemplateService = createDeprecatedAlias(
-  UnifiedTemplateService as any,
-  'TemplateService',
+/** @deprecated Use templateService from '@/services/canonical/TemplateService' */
+export const UnifiedTemplateService = createDeprecatedAlias(
+  templateService as any,
   'UnifiedTemplateService',
+  'templateService (canonical)',
 );
 
-/** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
+/** @deprecated Use templateService from '@/services/canonical/TemplateService' */
+export const TemplateService = createDeprecatedAlias(
+  templateService as any,
+  'TemplateService',
+  'templateService (canonical)',
+);
+
+/** @deprecated Use templateService from '@/services/canonical/TemplateService' */
 export const JsonTemplateService = createDeprecatedAlias(
-  UnifiedTemplateService as any,
+  templateService as any,
   'JsonTemplateService',
-  'UnifiedTemplateService',
+  'templateService (canonical)',
 );
 
 // AIEnhancedHybridTemplateService removido (sem alias)
 
-/** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
+/** @deprecated Use templateService from '@/services/canonical/TemplateService' */
 export const TemplateEditorService = createDeprecatedAlias(
-  UnifiedTemplateService as any,
+  templateService as any,
   'TemplateEditorService',
-  'UnifiedTemplateService',
+  'templateService (canonical)',
 );
 
-/** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
+/** @deprecated Use templateService from '@/services/canonical/TemplateService' */
 export const TemplateRuntimeService = createDeprecatedAlias(
-  UnifiedTemplateService as any,
+  templateService as any,
   'TemplateRuntimeService',
-  'UnifiedTemplateService',
+  'templateService (canonical)',
 );
 
-/** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
+/** @deprecated Use templateService from '@/services/canonical/TemplateService' */
 export const customTemplateService = createDeprecatedAlias(
-  UnifiedTemplateService as any,
+  templateService as any,
   'customTemplateService',
-  'UnifiedTemplateService',
+  'templateService (canonical)',
 );
-
-// Re-export já feito acima
 
 // ============================================================================
 // STORAGE SERVICES - 6 serviços → 1 canônico
