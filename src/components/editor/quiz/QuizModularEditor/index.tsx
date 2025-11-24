@@ -1945,7 +1945,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             </div>
                                         </div>
                                     </div>
-                                ) : previewMode === 'live' ? (
+                                ) : (
                                     <StepErrorBoundary
                                         stepKey={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
@@ -1964,21 +1964,27 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             >
                                                 <CanvasColumn
                                                     currentStepKey={currentStepKey}
-                                                    blocks={virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks}
-                                                    selectedBlockId={wysiwyg.state.selectedBlockId}
-                                                    onRemoveBlock={id => {
+                                                    blocks={
+                                                        previewMode === 'live'
+                                                            ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
+                                                            : blocks
+                                                    }
+                                                    selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
+                                                    onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
                                                         removeBlock(safeCurrentStep, id);
-                                                    }}
-                                                    onMoveBlock={(from, to) => {
+                                                    }) : undefined}
+                                                    onMoveBlock={previewMode === 'live' ? ((from, to) => {
                                                         wysiwyg.actions.reorderBlocks(from, to);
-                                                    }}
-                                                    onUpdateBlock={(id, patch) => {
+                                                    }) : undefined}
+                                                    onUpdateBlock={previewMode === 'live' ? ((id, patch) => {
                                                         wysiwyg.actions.updateBlock(id, patch);
                                                         updateBlock(safeCurrentStep, id, patch);
-                                                    }}
+                                                    }) : undefined}
                                                     onBlockSelect={(id) => {
-                                                        wysiwyg.actions.selectBlock(id);
+                                                        if (previewMode === 'live') {
+                                                            wysiwyg.actions.selectBlock(id);
+                                                        }
                                                         handleBlockSelect(id);
                                                     }}
                                                     hasTemplate={Boolean(
@@ -1987,45 +1993,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                         resourceId
                                                     )}
                                                     onLoadTemplate={handleLoadTemplate}
+                                                    isEditable={previewMode === 'live'}
                                                 />
                                             </div>
-                                        </ViewportContainer>
-                                    </StepErrorBoundary>
-                                ) : (
-                                    <StepErrorBoundary
-                                        stepKey={currentStepKey || 'unknown'}
-                                        onReset={() => handleReloadStep()}
-                                    >
-                                        <ViewportContainer
-                                            viewport={viewport}
-                                            showRuler={true}
-                                            className="h-full overflow-auto"
-                                        >
-                                            <PreviewPanel
-                                                currentStepKey={currentStepKey}
-                                                blocks={blocks}
-                                                selectedBlockId={selectedBlockId}
-                                                onBlockSelect={handleBlockSelect}
-                                                isVisible={true}
-                                                className="h-full"
-                                                previewMode={previewMode}
-                                                funnelId={
-                                                    unifiedState.currentFunnel?.id || null
-                                                }
-                                                onStepChange={sid => {
-                                                    const match = String(sid || '').match(
-                                                        /step-(\d{1,2})/i
-                                                    );
-                                                    const num = match
-                                                        ? parseInt(match[1], 10)
-                                                        : safeCurrentStep;
-                                                    if (
-                                                        Number.isFinite(num) &&
-                                                        num !== safeCurrentStep
-                                                    )
-                                                        setCurrentStep(num);
-                                                }}
-                                            />
                                         </ViewportContainer>
                                     </StepErrorBoundary>
                                 )}

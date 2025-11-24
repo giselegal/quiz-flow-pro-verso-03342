@@ -30,6 +30,7 @@ export type CanvasColumnProps = {
     onBlockSelect?: (blockId: string) => void;
     hasTemplate?: boolean;
     onLoadTemplate?: () => void;
+    isEditable?: boolean; // 🆕 Controla se permite edição (drag-drop, remove, etc)
 };
 
 const SortableBlockItem = React.memo(function SortableBlockItem({
@@ -87,13 +88,15 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
             `}
             onClick={e => {
                 const target = e.target as HTMLElement;
-                appLogger.info('🖱️ [CanvasColumn] Click no bloco:', { data: [{
-                                    blockId: block.id,
-                                    blockType: block.type,
-                                    targetTag: target.tagName,
-                                    isButton: target.tagName.toLowerCase() === 'button',
-                                    onSelectExists: !!onSelect
-                                }] });
+                appLogger.info('🖱️ [CanvasColumn] Click no bloco:', {
+                    data: [{
+                        blockId: block.id,
+                        blockType: block.type,
+                        targetTag: target.tagName,
+                        isButton: target.tagName.toLowerCase() === 'button',
+                        onSelectExists: !!onSelect
+                    }]
+                });
 
                 if (target.tagName.toLowerCase() === 'button') {
                     appLogger.info('⏭️ Click em button, ignorando seleção');
