@@ -179,7 +179,13 @@ class EditorDataService {
                 // Atualizar cache
                 this.cache.set(cacheKey, [updatedStep]);
 
-                // Salvar no localStorage como backup
+                // Salvar no localStorage como backup (DEPRECATED - Phase 3)
+                if (process.env.NODE_ENV === 'development') {
+                    console.warn(
+                        '⚠️ [DEPRECATED - Phase 3] Direct localStorage.setItem for templates is deprecated. ' +
+                        'Use canonical TemplateService or React Query hooks instead.'
+                    );
+                }
                 localStorage.setItem(`editor-${cacheKey}`, JSON.stringify([updatedStep]));
 
                 // Notificar mudanças
@@ -209,7 +215,24 @@ class EditorDataService {
         this.emit('multi-save-completed', { templateId, data });
     }
 
+    /**
+     * @deprecated PHASE 3: Direct localStorage usage for templates is deprecated.
+     * Use canonical TemplateService or React Query hooks instead.
+     * This method remains for emergency rollback only.
+     * 
+     * Migration path:
+     * - Use templateService.saveTemplate() for service layer
+     * - Use useUpdateTemplate() hook for React components
+     */
     private async saveToLocalStorage(templateId: string, data: any): Promise<void> {
+        // Deprecation warning in development
+        if (process.env.NODE_ENV === 'development') {
+            console.warn(
+                '⚠️ [DEPRECATED - Phase 3] saveToLocalStorage is deprecated. ' +
+                'Use canonical TemplateService or React Query hooks instead.'
+            );
+        }
+        
         localStorage.setItem(`editor-template-${templateId}`, JSON.stringify(data));
         appLogger.info(`💾 Salvo no localStorage: ${templateId}`);
     }

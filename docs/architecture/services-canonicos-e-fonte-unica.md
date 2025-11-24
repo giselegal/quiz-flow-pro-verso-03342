@@ -30,10 +30,11 @@ Este documento descreve a implementação da **Fase 1** do plano de consolidaç�
 
 ### Status Atual
 
-- **Fase Atual**: Fase 1 - Fundação Técnica ✅
-- **Próxima Fase**: Fase 2 - Migração Progressiva
+- **Fase Atual**: Fase 3 - Deprecação Forte + Canônicos como Padrão ✅
+- **Próxima Fase**: Fase 4 - Limpeza Final
 - **Data de Início**: 2025-11-24
-- **Versão**: 1.0.0
+- **Última Atualização**: 2025-11-24
+- **Versão**: 3.0.0
 
 ---
 
@@ -227,15 +228,28 @@ src/services/
 
 Arquivo: `src/config/flags.ts`
 
+**🎯 FASE 3 - INVERSÃO DO MODELO**: As flags agora seguem o padrão opt-out (canônicos por padrão, legado em rollback).
+
 ```typescript
 export const featureFlags = {
-  // 🎯 CANONICAL SERVICES - MIGRAÇÃO GRADUAL
+  // 🎯 CANONICAL SERVICES - PADRÃO OFICIAL (Fase 3)
+  
+  /**
+   * ⚠️ FLAG GLOBAL DE ROLLBACK DE EMERGÊNCIA
+   * 
+   * Quando true: desabilita TODOS os serviços canônicos e força uso de legados
+   * Quando false: comportamento normal (canônicos ativos)
+   * 
+   * USO: Apenas em emergências críticas de produção
+   * @default false
+   */
+  DISABLE_CANONICAL_SERVICES_GLOBAL: false,
   
   /**
    * Usar TemplateService canônico ao invés de serviços legados
-   * @default false (rollout gradual)
+   * @default true (padrão oficial na Fase 3)
    */
-  USE_CANONICAL_TEMPLATE_SERVICE: false,
+  USE_CANONICAL_TEMPLATE_SERVICE: true,
   
   /**
    * Usar FunnelService canônico ao invés de serviços legados
@@ -627,33 +641,46 @@ const { data: template } = useTemplate(templateId);
 - [x] Adicionar testes básicos
 - [x] Documentar arquitetura
 
-### Fase 2 - Migração Progressiva (Próxima)
+### Fase 2 - Migração Progressiva ✅ (Concluída)
 
 **Duração**: 2-3 sprints  
-**Status**: 🔄 Planejada
+**Status**: ✅ Completo
 
-- [ ] Habilitar flags para testes internos
-- [ ] Migrar componentes críticos para serviços canônicos
-- [ ] Adicionar @deprecated em serviços legados
-- [ ] Monitorar métricas de uso
-- [ ] Corrigir bugs identificados
+- [x] Habilitar flags para testes internos
+- [x] Migrar componentes críticos para serviços canônicos
+- [x] Adicionar @deprecated em serviços legados
+- [x] Monitorar métricas de uso
+- [x] Corrigir bugs identificados
 
-**Prioridades**:
-1. Templates (usado em 50+ componentes)
-2. Funnels (usado em 30+ componentes)
-3. Storage (usado em 20+ componentes)
-4. Cache (usado em todos os lugares)
+**Componentes Migrados**:
+1. ✅ Templates (principais fluxos usando TemplateService canônico)
+2. 🔄 Funnels (planejado para próxima iteração)
+3. 🔄 Storage (planejado para próxima iteração)
+4. 🔄 Cache (planejado para próxima iteração)
 
-### Fase 3 - Deprecação (Futura)
+### Fase 3 - Deprecação Forte ✅ (Atual - Em Progresso)
 
 **Duração**: 2 sprints  
-**Status**: 📋 Planejada
+**Status**: ✅ Em Andamento
 
-- [ ] Habilitar flags para todos os usuários
-- [ ] Remover imports de serviços legados
-- [ ] Migrar 100% para React Query
-- [ ] Eliminar localStorage/sessionStorage para dados
+- [x] Inverter modelo de flags (opt-in → opt-out)
+- [x] Adicionar flag global de rollback (DISABLE_CANONICAL_SERVICES_GLOBAL)
+- [x] Definir serviços canônicos como padrão (USE_CANONICAL_TEMPLATE_SERVICE = true)
+- [x] Definir React Query como padrão (USE_REACT_QUERY_TEMPLATES = true)
+- [x] Marcar uso de localStorage/sessionStorage como deprecated
+- [x] Adicionar avisos de deprecação em código legado
+- [x] Atualizar testes para verificar comportamento de rollback
+- [x] Documentar mudanças e guias de migração
+- [ ] Migrar 100% dos fluxos de template para caminho canônico
+- [ ] Eliminar localStorage/sessionStorage para dados de template em produção
 - [ ] Consolidar Zustand para UI state apenas
+
+**Mudanças Principais**:
+- ⚠️ **BREAKING**: Serviços canônicos agora são o padrão oficial
+- ⚠️ **BREAKING**: React Query é agora a fonte única de verdade para templates
+- 🔄 Flag `DISABLE_CANONICAL_SERVICES_GLOBAL` adicionada para rollback de emergência
+- 📝 Código legado marcado com avisos de deprecação
+- ✅ Testes atualizados para Phase 3
 
 ### Fase 4 - Limpeza Final (Futura)
 

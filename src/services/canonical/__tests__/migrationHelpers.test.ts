@@ -1,11 +1,14 @@
 /**
  * 🧪 MIGRATION HELPERS TESTS
  * 
- * Tests for Phase 2 migration helper utilities that facilitate
- * gradual migration to canonical services with feature flags.
+ * Tests for Phase 3 migration helper utilities that provide
+ * rollback capability from canonical services to legacy services.
  * 
- * @version 1.0.0
- * @phase Phase 2 - Progressive Migration
+ * Phase 3 Change: Canonical services are now the default.
+ * These tests verify rollback behavior for emergency scenarios.
+ * 
+ * @version 2.0.0
+ * @phase Phase 3 - Strong Deprecation
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -26,8 +29,9 @@ import type { ServiceResult } from '../types';
 // Mock the feature flags module
 vi.mock('@/config/flags', () => ({
   featureFlags: {
-    USE_CANONICAL_TEMPLATE_SERVICE: false,
-    USE_REACT_QUERY_TEMPLATES: false,
+    DISABLE_CANONICAL_SERVICES_GLOBAL: false, // Phase 3: Global rollback flag
+    USE_CANONICAL_TEMPLATE_SERVICE: true,     // Phase 3: Now default true
+    USE_REACT_QUERY_TEMPLATES: true,          // Phase 3: Now default true
     USE_CANONICAL_FUNNEL_SERVICE: false,
     USE_REACT_QUERY_FUNNELS: false,
   },
@@ -49,26 +53,56 @@ describe('Migration Helpers', () => {
   });
 
   describe('shouldUseReactQuery', () => {
-    it('should return false when flag is disabled', () => {
+    it('should return true by default (Phase 3 default)', () => {
+      (featureFlags as any).USE_REACT_QUERY_TEMPLATES = true;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+      expect(shouldUseReactQuery()).toBe(true);
+    });
+
+    it('should return false when flag is explicitly disabled', () => {
       (featureFlags as any).USE_REACT_QUERY_TEMPLATES = false;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
       expect(shouldUseReactQuery()).toBe(false);
     });
 
-    it('should return true when flag is enabled', () => {
+    it('should return false when global rollback flag is enabled', () => {
       (featureFlags as any).USE_REACT_QUERY_TEMPLATES = true;
-      expect(shouldUseReactQuery()).toBe(true);
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = true;
+      expect(shouldUseReactQuery()).toBe(false);
+    });
+
+    it('should prioritize global rollback flag over specific flag', () => {
+      // Even if specific flag is true, global rollback takes precedence
+      (featureFlags as any).USE_REACT_QUERY_TEMPLATES = true;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = true;
+      expect(shouldUseReactQuery()).toBe(false);
     });
   });
 
   describe('shouldUseCanonicalServices', () => {
-    it('should return false when flag is disabled', () => {
+    it('should return true by default (Phase 3 default)', () => {
+      (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+      expect(shouldUseCanonicalServices()).toBe(true);
+    });
+
+    it('should return false when flag is explicitly disabled', () => {
       (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = false;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
       expect(shouldUseCanonicalServices()).toBe(false);
     });
 
-    it('should return true when flag is enabled', () => {
+    it('should return false when global rollback flag is enabled', () => {
       (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
-      expect(shouldUseCanonicalServices()).toBe(true);
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = true;
+      expect(shouldUseCanonicalServices()).toBe(false);
+    });
+
+    it('should prioritize global rollback flag over specific flag', () => {
+      // Even if specific flag is true, global rollback takes precedence
+      (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = true;
+      expect(shouldUseCanonicalServices()).toBe(false);
     });
   });
 
@@ -199,21 +233,32 @@ describe('Migration Helpers', () => {
   });
 
   describe('Integration with Feature Flags', () => {
+    beforeEach(() => {
+      // Reset global rollback flag to false for these tests
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+    });
+
     it('should respect feature flag changes', () => {
       // Initially disabled
       (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = false;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
       expect(shouldUseCanonicalServices()).toBe(false);
       
       // Enable flag
       (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
       expect(shouldUseCanonicalServices()).toBe(true);
       
       // Disable again
       (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = false;
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
       expect(shouldUseCanonicalServices()).toBe(false);
     });
 
     it('should handle multiple flags independently', () => {
+      // Ensure global rollback is disabled
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+      
       (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
       (featureFlags as any).USE_REACT_QUERY_TEMPLATES = false;
       
@@ -249,6 +294,83 @@ describe('Migration Helpers', () => {
       expect(isError(result)).toBe(true);
       // Error can be undefined in edge cases
       expect(() => unwrapResult(result)).toThrow();
+    });
+  });
+});
+
+describe('Phase 3 - Global Rollback Flag Behavior', () => {
+  beforeEach(() => {
+    // Reset to Phase 3 defaults
+    (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+    (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
+    (featureFlags as any).USE_REACT_QUERY_TEMPLATES = true;
+  });
+
+  describe('Emergency Rollback Scenarios', () => {
+    it('should disable all canonical features when global rollback is active', () => {
+      // Enable global rollback
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = true;
+      
+      // All canonical features should be disabled
+      expect(shouldUseCanonicalServices()).toBe(false);
+      expect(shouldUseReactQuery()).toBe(false);
+    });
+
+    it('should work normally when global rollback is disabled', () => {
+      // Normal operation (Phase 3 defaults)
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+      
+      // All canonical features should be enabled
+      expect(shouldUseCanonicalServices()).toBe(true);
+      expect(shouldUseReactQuery()).toBe(true);
+    });
+
+    it('should return canonical service even during rollback (legacy services removed)', () => {
+      // Enable global rollback
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = true;
+      
+      // Service should still be returned (legacy services are being removed)
+      const service = getTemplateService();
+      expect(service).toBeDefined();
+      expect(service.getTemplate).toBeDefined();
+    });
+  });
+
+  describe('Flag Precedence', () => {
+    it('global rollback flag should override all other flags', () => {
+      // Set all flags to enabled
+      (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
+      (featureFlags as any).USE_REACT_QUERY_TEMPLATES = true;
+      
+      // Enable global rollback
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = true;
+      
+      // All should return false due to global rollback
+      expect(shouldUseCanonicalServices()).toBe(false);
+      expect(shouldUseReactQuery()).toBe(false);
+    });
+
+    it('specific flags should work when global rollback is disabled', () => {
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+      
+      // Test individual flag control
+      (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
+      expect(shouldUseCanonicalServices()).toBe(true);
+      
+      (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = false;
+      expect(shouldUseCanonicalServices()).toBe(false);
+    });
+  });
+
+  describe('Phase 3 Default Behavior', () => {
+    it('should have canonical services enabled by default', () => {
+      // Reset to defaults
+      (featureFlags as any).DISABLE_CANONICAL_SERVICES_GLOBAL = false;
+      (featureFlags as any).USE_CANONICAL_TEMPLATE_SERVICE = true;
+      (featureFlags as any).USE_REACT_QUERY_TEMPLATES = true;
+      
+      expect(shouldUseCanonicalServices()).toBe(true);
+      expect(shouldUseReactQuery()).toBe(true);
     });
   });
 });

@@ -1,8 +1,18 @@
 /**
  * 🎨 HOOK PARA GERENCIAR TEMPLATES PERSONALIZADOS DO USUÁRIO
  * 
+ * ⚠️ DEPRECATION WARNING - PHASE 3
+ * This hook uses localStorage for template storage which is being phased out.
+ * 
+ * MIGRATION PATH:
+ * - New code should use: useTemplate() and useUpdateTemplate() from '@/hooks/useTemplate'
+ * - These hooks use React Query + Supabase as the single source of truth
+ * - This hook remains for legacy support and will be removed in Phase 4
+ * 
  * Hook específico para o contexto MY_TEMPLATES, isolando templates
  * personalizados criados/editados pelo usuário dos templates públicos
+ * 
+ * @deprecated Use useTemplate() and useUpdateTemplate() instead
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -91,11 +101,21 @@ export const useMyTemplates = () => {
             // Carregar dados completos de cada template
             const loadedTemplates: UserTemplate[] = [];
 
+            // DEPRECATED - Phase 3: Direct localStorage usage
+            if (process.env.NODE_ENV === 'development' && templateIds.length > 0) {
+                console.warn(
+                    '⚠️ [DEPRECATED - Phase 3] useMyTemplates uses localStorage. ' +
+                    'Migrate to useTemplate() hook with React Query + Supabase.'
+                );
+            }
+
             for (const id of templateIds) {
                 // Tenta nova chave contextualizada
                 let templateStr = safeGetItem(TEMPLATE_KEY_NEW(id), CTX);
                 // Fallback: chave legada por generateContextualStorageKey
-                if (!templateStr) templateStr = localStorage.getItem(TEMPLATE_KEY_LEGACY(id));
+                if (!templateStr) {
+                    templateStr = localStorage.getItem(TEMPLATE_KEY_LEGACY(id));
+                }
                 if (templateStr) {
                     try {
                         const template = JSON.parse(templateStr);
