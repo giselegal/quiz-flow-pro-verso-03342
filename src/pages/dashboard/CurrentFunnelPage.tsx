@@ -42,7 +42,7 @@ import {
     ChevronRight,
 } from 'lucide-react';
 import { Link } from 'wouter';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+import { RealDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -111,20 +111,21 @@ const CurrentFunnelPage: React.FC = () => {
 
             appLogger.info('📊 Carregando métricas do funil atual...');
 
-            const realTimeMetrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+            const analyticsService = new RealDataAnalyticsService();
+            const realMetrics = await analyticsService.getRealMetrics();
 
-            // getAdvancedAnalytics pode não estar disponível, usar fallback
-            let analyticsData: any = null;
-            try {
-                if (typeof (EnhancedUnifiedDataService as any).getAdvancedAnalytics === 'function') {
-                    analyticsData = await (EnhancedUnifiedDataService as any).getAdvancedAnalytics({
-                        funnel: CURRENT_FUNNEL.slug,
-                        timeRange: '7d',
-                    });
-                }
-            } catch (analyticsError) {
-                appLogger.warn('⚠️ getAdvancedAnalytics não disponível, usando fallback');
-            }
+            // Converter RealMetrics para o formato esperado
+            const realTimeMetrics = {
+                activeUsers: realMetrics.activeUsersNow,
+                conversionRate: realMetrics.conversionRate,
+                totalRevenue: 0, // TODO: Implementar cálculo de revenue
+            };
+
+            const analyticsData = {
+                views: realMetrics.totalSessions,
+                completions: realMetrics.completedSessions,
+                conversionRate: realMetrics.conversionRate,
+            };
 
             setMetrics({
                 realTime: realTimeMetrics,

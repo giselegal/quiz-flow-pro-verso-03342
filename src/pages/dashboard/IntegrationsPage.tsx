@@ -2,8 +2,7 @@
  * 🔗 PÁGINA DE INTEGRAÇÕES
  */
 
-import React, { useState, useEffect } from 'react';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 

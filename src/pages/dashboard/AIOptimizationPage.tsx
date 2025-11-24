@@ -4,12 +4,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+import { RealDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
 import { AIOptimizationPanel } from '@/components/ai/AIOptimizationPanel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
+import {
   Brain,
   TrendingUp,
   Zap,
@@ -25,11 +25,12 @@ export const AIOptimizationPage: React.FC = () => {
   // Real data integration
   const [isLoading, setIsLoading] = useState(true);
   const [realTimeMetrics, setRealTimeMetrics] = useState<any>(null);
-  
+
   useEffect(() => {
     const loadRealData = async () => {
       try {
-        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        const analyticsService = new RealDataAnalyticsService();
+        const metrics = await analyticsService.getRealMetrics();
         setRealTimeMetrics(metrics);
         appLogger.info('✅ ' + 'AIOptimizationPage.tsx' + ' carregado com dados reais:', { data: [metrics] });
       } catch (error) {
@@ -38,7 +39,7 @@ export const AIOptimizationPage: React.FC = () => {
         setIsLoading(false);
       }
     };
-    
+
     loadRealData();
   }, []);
   return (
