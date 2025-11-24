@@ -224,7 +224,7 @@ const PropertyControl: React.FC<{
       case 'dropdown':
         return (
           <Select value={String(value || schema.default || '')} onValueChange={handleChange}>
-            <SelectTrigger>
+            <SelectTrigger id={propertyKey}>
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
             <SelectContent>
