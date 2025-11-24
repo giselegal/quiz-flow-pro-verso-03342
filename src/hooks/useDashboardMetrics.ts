@@ -29,11 +29,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/services/integrations/supabase/customClient';
-import { AnalyticsService } from '@/services/canonical';
+import { analyticsService } from '@/services/canonical';
 import { appLogger } from '@/lib/utils/appLogger';
-
-// Instância singleton do analytics service
-const analyticsService = new AnalyticsService();
 
 export interface DashboardMetrics {
   // Sessões

@@ -602,6 +602,29 @@ export class AnalyticsService extends BaseCanonicalService {
     return { success: true, data: session || null };
   }
 
+  /**
+   * Get metrics by category
+   */
+  getMetricsByCategory(category: MetricCategory): Metric[] {
+    return this.metricsList.get(category) || [];
+  }
+
+  /**
+   * Get session metrics as a record
+   */
+  getSessionMetrics(): Record<string, number> {
+    const session = this.sessionsMap.get(this.currentSessionId);
+    if (!session) return {};
+    
+    return {
+      currentStep: session.currentStep,
+      totalSteps: session.totalSteps,
+      completionPercentage: session.completionPercentage,
+      timeSpent: session.timeSpent,
+      responses: session.responses,
+    };
+  }
+
   // ============================================================================
   // DASHBOARD METRICS
   // ============================================================================

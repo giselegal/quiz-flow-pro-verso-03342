@@ -16,9 +16,9 @@ export const AnalyticsDebugPanel: React.FC<AnalyticsDebugPanelProps> = ({ autoRe
 
     const refresh = () => {
         const cats: any[] = [];
-        ['performance', 'collaboration', 'versioning', 'usage', 'system'].forEach(cat => {
-            const list = analyticsService.getMetricsByCategory(cat as any);
-            if (list.length) cats.push(...list.map(m => ({ ...m, category: cat })));
+        (['performance', 'collaboration', 'versioning', 'usage', 'system'] as const).forEach(cat => {
+            const list = analyticsService.getMetricsByCategory(cat);
+            if (list.length) cats.push(...list.map((m: any) => ({ ...m, category: cat })));
         });
         setMetrics(cats.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()));
         setSessionMetrics(analyticsService.getSessionMetrics());
