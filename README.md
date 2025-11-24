@@ -42,9 +42,91 @@ npm run dev
 | **Segurança** | 🟢 Melhorado | XSS Prevention com DOMPurify |
 | **Organização** | 🟢 Excelente | 57→34 arquivos na raiz (-40%) |
 
-**✅ Consolidação Completa (7/8 Etapas):**
+**✅ Consolidação Completa (8/8 Etapas):**
 
 Ver: [CHANGELOG.md](./CHANGELOG.md) para detalhes completos
+
+
+## 🏗️ Canonical Services Architecture (Phase 4 - FINALIZED)
+
+**Status**: ✅ Production Ready | **Version**: 4.0.0 | **Date**: 24 Nov 2025
+
+This project uses a **canonical services architecture** where all business logic flows through a single, unified service layer. As of Phase 4, this is now the **permanent and only supported architecture**.
+
+### Key Principles
+
+1. **Single Source of Truth**: Each domain has exactly ONE canonical service
+2. **No Feature Flags**: Migration-related flags have been permanently removed
+3. **React Query Integration**: All data fetching uses React Query hooks
+4. **Result Pattern**: Consistent error handling with `ServiceResult<T>`
+5. **No Legacy Paths**: All legacy service code paths have been removed
+
+### Canonical Services (12 Total)
+
+| Service | Purpose | Status |
+|---------|---------|--------|
+| `TemplateService` | Template management | ✅ Production |
+| `FunnelService` | Funnel management | ✅ Production |
+| `CacheService` | Caching layer | ✅ Production |
+| `StorageService` | File & storage operations | ✅ Production |
+| `AnalyticsService` | Metrics & tracking | ✅ Production |
+| `ValidationService` | Validation & RBAC | ✅ Production |
+| `MonitoringService` | Performance & health | ✅ Production |
+| `NotificationService` | User notifications | ✅ Production |
+| `AuthService` | Authentication | ✅ Production |
+| `ConfigService` | Configuration management | ✅ Production |
+| `HistoryService` | Undo/redo & versioning | ✅ Production |
+| `EditorService` | Editor operations | ✅ Production |
+
+### Usage Example
+
+```typescript
+// ✅ CORRECT: Use canonical service through React Query
+import { useTemplateList } from '@/hooks/useTemplate';
+import { useCreateTemplate } from '@/hooks/useUpdateTemplate';
+
+function MyComponent() {
+  const { data: templates, isLoading } = useTemplateList();
+  const createMutation = useCreateTemplate();
+  
+  // All operations go through canonical service
+  return <div>{/* ... */}</div>;
+}
+
+// ❌ INCORRECT: Don't import legacy services or use feature flags
+import { getAllTemplates } from '@/services/templates/templateService'; // REMOVED
+import { featureFlags } from '@/config/flags'; // Migration flags REMOVED
+```
+
+### Rollback Strategy
+
+**Important**: Runtime feature flags are NO LONGER AVAILABLE.
+
+If critical issues are discovered, rollback must be done via Git:
+
+```bash
+# Revert Phase 4 to restore Phase 3 with emergency rollback capability
+git revert <phase-4-commit-hash>
+
+# Or rollback to specific commit
+git reset --hard <phase-3-commit-hash>
+```
+
+This will restore:
+- Emergency rollback flag (`DISABLE_CANONICAL_SERVICES_GLOBAL`)
+- Migration helper functions
+- Dual-path logic in affected components
+
+### Migration History
+
+- **Phase 1**: Established canonical services with feature flags
+- **Phase 2**: Migrated components to use canonical services
+- **Phase 3**: Inverted flags - canonical became default, legacy became emergency rollback
+- **Phase 4** (Current): Removed ALL migration code and feature flags - canonical is permanent
+
+For detailed migration history, see:
+- [SERVICES_MIGRATION_PROGRESS.md](./SERVICES_MIGRATION_PROGRESS.md)
+- [SERVICES_CONSOLIDATION_REPORT.md](./SERVICES_CONSOLIDATION_REPORT.md)
 
 
 ## 📚 Documentação
