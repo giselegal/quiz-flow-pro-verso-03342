@@ -47,6 +47,7 @@ import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
 import { appLogger } from '@/lib/utils/appLogger';
 import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
+import { EditorProvider } from '@/contexts/editor/EditorContext';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -242,16 +243,14 @@ function AppCore() {
                                             return (
                                                 <EditorErrorBoundary>
                                                     <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                        <EditorProviderUnified
+                                                        <EditorProvider
                                                             funnelId={funnelId}
-                                                            templateId={templateId}
-                                                            enableSupabase={Boolean(funnelId)}
                                                         >
                                                             <QuizModularEditor
                                                                 templateId={templateId}
                                                                 funnelId={funnelId}
                                                             />
-                                                        </EditorProviderUnified>
+                                                        </EditorProvider>
                                                     </Suspense>
                                                 </EditorErrorBoundary>
                                             );
@@ -262,14 +261,13 @@ function AppCore() {
                                         {(params) => (
                                             <EditorErrorBoundary>
                                                 <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                    <EditorProviderUnified
+                                                    <EditorProvider
                                                         funnelId={params.funnelId}
-                                                        enableSupabase={true}
                                                     >
                                                         <QuizModularEditor
                                                             funnelId={params.funnelId}
                                                         />
-                                                    </EditorProviderUnified>
+                                                    </EditorProvider>
                                                 </Suspense>
                                             </EditorErrorBoundary>
                                         )}

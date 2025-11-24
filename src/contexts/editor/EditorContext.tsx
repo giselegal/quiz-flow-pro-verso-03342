@@ -91,7 +91,21 @@ interface EditorContextType {
   funnelId: string;
   setFunnelId: (id: string) => void;
 
-  // Block actions
+  // Actions object (for compatibility)
+  actions: {
+    addBlock: (type: BlockType) => Promise<string>;
+    updateBlock: (id: string, content: any) => Promise<void>;
+    deleteBlock: (id: string) => Promise<void>;
+    reorderBlocks: (startIndex: number, endIndex: number) => void;
+    selectBlock: (id: string | null) => void;
+    togglePreview: (preview?: boolean) => void;
+    save: () => Promise<void>;
+    setCurrentStep: (step: number) => void;
+    ensureStepLoaded: (step: number) => Promise<void>;
+    setSelectedBlockId: (id: string | null) => void;
+  };
+
+  // Block actions (direct access - legacy)
   addBlock: (type: BlockType) => Promise<string>;
   updateBlock: (id: string, content: any) => Promise<void>;
   deleteBlock: (id: string) => Promise<void>;
@@ -206,6 +220,9 @@ const initialState: EditorState = {
   selectedBlockId: null,
   isPreviewing: false,
   isGlobalStylesOpen: false,
+  stepBlocks: {},
+  currentStep: 1,
+  totalSteps: 21,
 };
 
 // Reducer
@@ -736,7 +753,25 @@ export const EditorProvider: React.FC<{
     funnelId: currentFunnelId,
     setFunnelId: setCurrentFunnelId,
 
-    // Block actions
+    // Actions object
+    actions: {
+      addBlock,
+      updateBlock,
+      deleteBlock,
+      reorderBlocks,
+      selectBlock,
+      togglePreview,
+      save,
+      setCurrentStep: async (step: number) => {
+        await stageActions.setActiveStage(`step-${step}`);
+      },
+      ensureStepLoaded: async (step: number) => {
+        await stageActions.setActiveStage(`step-${step}`);
+      },
+      setSelectedBlockId,
+    },
+
+    // Block actions (direct)
     addBlock,
     updateBlock,
     deleteBlock,
@@ -829,6 +864,20 @@ export const useEditor = (): EditorContextType => {
       // Funnel management
       funnelId: 'fallback-funnel',
       setFunnelId: noop,
+
+      // Actions object
+      actions: {
+        addBlock: async () => generateStableId('fallback-block', 'fallback-block'),
+        updateBlock: noopAsync,
+        deleteBlock: noopAsync,
+        reorderBlocks: noop,
+        selectBlock: noop,
+        togglePreview: noop,
+        save: async () => {},
+        setCurrentStep: noop,
+        ensureStepLoaded: noopAsync,
+        setSelectedBlockId: noop,
+      },
 
       // Block actions
       addBlock: async () => generateStableId('fallback-block', 'fallback-block'),

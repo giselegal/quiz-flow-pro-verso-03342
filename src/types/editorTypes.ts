@@ -6,14 +6,21 @@ export interface EditorState {
   blocks: Block[];
   isGlobalStylesOpen: boolean;
   /**
-   * Mapa de blocos por etapa. Mantido opcional para compatibilidade com contextos legados,
-   * mas populado pelo EditorContext principal para eliminar dependências de "any".
+   * Mapa de blocos por etapa.
    */
-  stepBlocks?: Record<string, Block[]>;
+  stepBlocks: Record<string, Block[]>;
   /**
    * Índice numérico da etapa atualmente ativa (1-indexed).
    */
-  currentStep?: number;
+  currentStep: number;
+  /**
+   * Total de etapas do template.
+   */
+  totalSteps: number;
+  /**
+   * Validação por etapa.
+   */
+  stepValidation?: Record<number, { isValid: boolean }>;
   /**
    * Flag de carregamento exposta para componentes que mostram skeletons.
    */
