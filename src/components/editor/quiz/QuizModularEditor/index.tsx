@@ -373,7 +373,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         },
         autoSaveDelay: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         enableValidation: true,
-        mode: canvasMode === 'edit' ? 'edit' : previewMode === 'live' ? 'preview-live' : 'preview-production',
+        mode: previewMode === 'live' ? 'edit-live' : 'preview-production',
     });
 
     // 💾 Recuperar snapshot no mount
@@ -422,49 +422,27 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
             }
 
-            // Atalhos simples: Ctrl+1/2/3 (sem Alt)
+            // Atalhos simples: Ctrl+1/2 (sem Alt)
             if (isMacOrWin && !e.altKey) {
                 if (e.key === '1') {
                     e.preventDefault();
-                    setCanvasMode('edit');
-                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Modo Editar (Ctrl+1)');
+                    setPreviewMode('live');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Edição ao vivo (Ctrl+1)');
                     return;
                 } else if (e.key === '2') {
                     e.preventDefault();
-                    setCanvasMode('preview');
-                    setPreviewMode('live');
-                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Preview Editor (Ctrl+2)');
-                    return;
-                } else if (e.key === '3') {
-                    e.preventDefault();
-                    setCanvasMode('preview');
                     setPreviewMode('production');
-                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Preview Publicado (Ctrl+3)');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Preview Publicado (Ctrl+2)');
                     return;
                 }
             }
 
-            // Atalho legado: Ctrl+Shift+P para toggle preview
+            // Atalho legado: Ctrl+Shift+P para toggle entre modos
             if (!e.ctrlKey || !e.shiftKey) return;
             const k = String(e.key || '').toLowerCase();
             if (k === 'p') {
                 e.preventDefault();
-                if (canvasMode === 'edit') {
-                    setCanvasMode('preview');
-                    setPreviewMode('live');
-                } else {
-                    setCanvasMode('edit');
-                }
-            } else if (k === 'l') {
-                if (canvasMode === 'preview') {
-                    e.preventDefault();
-                    setPreviewMode('live');
-                }
-            } else if (k === 'o') {
-                if (canvasMode === 'preview') {
-                    e.preventDefault();
-                    setPreviewMode('production');
-                }
+                setPreviewMode(prev => prev === 'live' ? 'production' : 'live');
             }
         };
         window.addEventListener('keydown', handler);
@@ -961,7 +939,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ G1 FIX: Auto-selecionar primeiro bloco se selectedBlockId for null ou inválido
     useEffect(() => {
-        if (canvasMode === 'edit' && (!selectedBlockId || !blocks?.find(b => b.id === selectedBlockId))) {
+        if (previewMode === 'live' && (!selectedBlockId || !blocks?.find(b => b.id === selectedBlockId))) {
             const first = blocks && blocks[0];
             if (first) {
                 appLogger.debug(`[G1] Auto-selecionando primeiro bloco: ${first.id}`);
@@ -1714,17 +1692,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     if (!val) return;
 
                                     // Aplicar mudança de modo
-                                    if (val === 'edit') {
-                                        setCanvasMode('edit');
-                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Edição');
-                                    } else if (val === 'preview:editor') {
-                                        setCanvasMode('preview');
+                                    if (val === 'live') {
                                         setPreviewMode('live');
-                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Visualização (Editor)');
-                                    } else if (val === 'preview:production') {
-                                        setCanvasMode('preview');
+                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Edição ao vivo');
+                                    } else if (val === 'production') {
                                         setPreviewMode('production');
-                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Visualização (Publicado)');
+                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Publicado');
                                     }
                                 }}
                                 size="sm"
@@ -1732,20 +1705,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 aria-label="Modo do canvas"
                             >
                                 <ToggleGroupItem
-                                    value="edit"
-                                    title="Editar no Canvas - Arraste blocos, edite propriedades (Ctrl+1)"
-                                    aria-label="Modo de edição"
-                                    className="min-w-[70px]"
+                                    value="live"
+                                    title="Edição ao vivo - mudanças instantâneas (Ctrl+1)"
+                                    aria-label="Edição ao vivo"
+                                    className="min-w-[110px]"
                                 >
                                     <Edit3 className="w-3 h-3 mr-1" />
-                                    <span className="hidden sm:inline">Editar</span>
-                                    <span className="sm:hidden">Edit</span>
+                                    <span className="hidden sm:inline">Edição ao vivo</span>
+                                    <span className="sm:hidden">Live</span>
                                 </ToggleGroupItem>
                                 <ToggleGroupItem
-                                    value="preview:editor"
-                                    title="Visualizar dados do editor (incluindo não salvos) (Ctrl+2)"
-                                    aria-label="Visualizar dados do editor"
-                                    className="min-w-[70px]"
+                                    value="production"
+                                    title="Visualizar dados publicados (Ctrl+2)"
+                                    aria-label="Visualizar publicado"
+                                    className="min-w-[90px]"
                                 >
                                     <Eye className="w-3 h-3 mr-1" />
                                     <span className="hidden lg:inline">Visualizar (Editor)</span>

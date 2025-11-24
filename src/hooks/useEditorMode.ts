@@ -1,19 +1,17 @@
 /**
  * 🎮 useEditorMode - State Machine para Modos do Editor
  * 
- * Centraliza a lógica dos 3 modos de visualização:
- * - Edit: Edição completa com WYSIWYG
- * - Preview Live: Visualização com dados locais (não salvos)
+ * Centraliza a lógica dos 2 modos de visualização:
+ * - Preview Live: Edição ao vivo com dados locais (WYSIWYG)
  * - Preview Production: Visualização com dados publicados
  * 
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 import { useMemo } from 'react';
 
-export type CanvasMode = 'edit' | 'preview';
 export type PreviewMode = 'live' | 'production';
-export type DataSource = 'local' | 'local-synced' | 'production';
+export type DataSource = 'local' | 'production';
 
 export interface EditorModeConfig {
   /** Permite edição */
@@ -35,44 +33,27 @@ export interface EditorModeConfig {
 }
 
 export interface UseEditorModeOptions {
-  canvasMode: CanvasMode;
   previewMode: PreviewMode;
 }
 
 /**
  * Hook que retorna configuração do modo atual do editor
  */
-export function useEditorMode({ canvasMode, previewMode }: UseEditorModeOptions): EditorModeConfig {
+export function useEditorMode({ previewMode }: UseEditorModeOptions): EditorModeConfig {
   return useMemo(() => {
-    // Modo Edição
-    if (canvasMode === 'edit') {
+    // Modo Preview Live (edição ao vivo)
+    if (previewMode === 'live') {
       return {
         isEditable: true,
         dataSource: 'local',
         showValidation: true,
         showDraftIndicator: true,
         badge: {
-          icon: '✏️',
+          icon: '📝',
           text: 'Editando',
           color: 'blue',
         },
-        description: 'Modo edição - mudanças aparecem instantaneamente (WYSIWYG)',
-      };
-    }
-
-    // Modo Preview Live (dados do editor)
-    if (previewMode === 'live') {
-      return {
-        isEditable: false,
-        dataSource: 'local-synced',
-        showValidation: false,
-        showDraftIndicator: true,
-        badge: {
-          icon: '📝',
-          text: 'Editor',
-          color: 'blue',
-        },
-        description: 'Visualizando dados do editor (incluindo não salvos)',
+        description: 'Edição ao vivo - mudanças aparecem instantaneamente',
       };
     }
 
@@ -89,7 +70,7 @@ export function useEditorMode({ canvasMode, previewMode }: UseEditorModeOptions)
       },
       description: 'Visualizando dados publicados (versão final)',
     };
-  }, [canvasMode, previewMode]);
+  }, [previewMode]);
 }
 
 export default useEditorMode;
