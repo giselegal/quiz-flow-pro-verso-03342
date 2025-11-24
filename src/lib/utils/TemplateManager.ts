@@ -59,9 +59,17 @@ export class TemplateManager {
   }
 
   static async preloadCommonTemplates(): Promise<void> {
-    // Preload common steps via canonical service
-    const commonSteps = ['step-01', 'step-02', 'step-20', 'step-21'];
-    await Promise.all(commonSteps.map(id => templateService.getStep(id)));
+    // Preload crítico + vizinhos: ativa steps centrais e resultados antecipados
+    const critical = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
+    const neighbor = (id: string) => {
+      const m = id.match(/step-(\d{2})/); if (!m) return [];
+      const num = parseInt(m[1], 10); return [num-1, num+1]
+        .filter(n => n>=1 && n<=21)
+        .map(n => `step-${String(n).padStart(2,'0')}`);
+    };
+    const toLoad = new Set<string>();
+    critical.forEach(s => { toLoad.add(s); neighbor(s).forEach(n => toLoad.add(n)); });
+    await Promise.all(Array.from(toLoad).map(id => templateService.getStep(id)));
   }
 
   static async reloadTemplate(stepId: string, funnelId?: string): Promise<Block[]> {

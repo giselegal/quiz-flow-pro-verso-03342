@@ -240,37 +240,51 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       }
     } catch { /* IndexedDB might not be available */ }
 
-    // 3. Determinar fontes de dados baseado no modo
-    // MODO EDITOR (JSON_ONLY ou sem funnelId): Apenas JSON
-    // MODO PRODUCTION (com funnelId): USER_EDIT → JSON fallback
-    const editorMode = this.JSON_ONLY || !funnelId || this.ONLINE_DISABLED;
+    // 3. Nova ordem de fontes (Fase 4 otimização):
+    // Cache(L1/L2) → JSON local → USER_EDIT (overlay) → ADMIN_OVERRIDE (overlay) → Fallback emergencial
+    // Motivo: reduzir 404 e latência ao evitar chamadas Supabase antes de termos base local.
+    const productionMode = !this.JSON_ONLY && !!funnelId && !this.ONLINE_DISABLED;
 
-    if (editorMode) {
-      // 🎯 Modo Editor: JSON-first (caminho direto, sem overhead)
-      return await this.loadFromJSON(stepId, startTime, cacheKey);
-    }
+    // JSON sempre primeiro (editor ou produção) para base estável
+    const jsonResult = await this.loadFromJSON(stepId, startTime, cacheKey);
 
-    // 🎯 Modo Production: Tentar USER_EDIT, depois JSON
-    try {
-      const blocks = await this.getFromUserEdit(stepId, funnelId);
-      if (blocks && blocks.length > 0) {
-        const loadTime = performance.now() - startTime;
-        const result: DataSourceResult<Block[]> = {
-          data: blocks,
-          metadata: { source: DataSourcePriority.USER_EDIT, timestamp: Date.now(), cacheHit: false, loadTime }
-        };
-        if (this.options.enableCache) this.setInCache(cacheKey, result);
-        this.cacheToIndexedDB(idbKey, blocks, 10 * 60_000);
-        this.log(stepId, 'LOADED', DataSourcePriority.USER_EDIT, loadTime);
-        this.recordMetric(stepId, DataSourcePriority.USER_EDIT, loadTime);
-        return result;
+    // Em modo produção tentar overlay de USER_EDIT se existir (substitui totalmente blocos se não vazio)
+    if (productionMode) {
+      try {
+        const userEditBlocks = await this.getFromUserEdit(stepId, funnelId);
+        if (userEditBlocks && userEditBlocks.length > 0) {
+          const loadTime = performance.now() - startTime;
+          const result: DataSourceResult<Block[]> = {
+            data: userEditBlocks,
+            metadata: { source: DataSourcePriority.USER_EDIT, timestamp: Date.now(), cacheHit: false, loadTime }
+          };
+          if (this.options.enableCache) this.setInCache(cacheKey, result);
+          this.cacheToIndexedDB(idbKey, userEditBlocks, 30 * 60_000); // cache user edits por 30min
+          this.log(stepId, 'OVERLAY_USER_EDIT', DataSourcePriority.USER_EDIT, loadTime);
+          this.recordMetric(stepId, DataSourcePriority.USER_EDIT, loadTime);
+          return result;
+        }
+        // Se não houver USER_EDIT tentar ADMIN_OVERRIDE
+        const adminOverride = await this.getFromAdminOverride(stepId);
+        if (adminOverride && adminOverride.length > 0) {
+          const loadTime = performance.now() - startTime;
+          const result: DataSourceResult<Block[]> = {
+            data: adminOverride,
+            metadata: { source: DataSourcePriority.ADMIN_OVERRIDE, timestamp: Date.now(), cacheHit: false, loadTime }
+          };
+          if (this.options.enableCache) this.setInCache(cacheKey, result);
+          this.cacheToIndexedDB(idbKey, adminOverride, 30 * 60_000);
+          this.log(stepId, 'OVERLAY_ADMIN_OVERRIDE', DataSourcePriority.ADMIN_OVERRIDE, loadTime);
+          this.recordMetric(stepId, DataSourcePriority.ADMIN_OVERRIDE, loadTime);
+          return result;
+        }
+      } catch (error) {
+        appLogger.debug(`[HierarchicalSource] Overlay remoto ignorado (${stepId}):`, { data: [error] });
       }
-    } catch (error) {
-      appLogger.warn(`⚠️ [HierarchicalSource] USER_EDIT falhou para ${stepId}, usando JSON fallback`);
     }
 
-    // Fallback: JSON
-    return await this.loadFromJSON(stepId, startTime, cacheKey);
+    // Se chegamos aqui, manter resultado JSON (já inclui fallback emergencial se falhou)
+    return jsonResult;
   }
 
   /**
@@ -293,10 +307,10 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
           }
         };
         if (this.options.enableCache) this.setInCache(cacheKey, result);
-        
-        // Cache no IndexedDB apenas em produção
+
+        // Cache no IndexedDB (TTL 1h para JSON base)
         if (!this.LIVE_EDIT) {
-          this.cacheToIndexedDB(stepId, blocks, 10 * 60_000);
+          this.cacheToIndexedDB(stepId, blocks, 60 * 60_000);
         }
         
         this.log(stepId, 'LOADED_JSON', DataSourcePriority.TEMPLATE_DEFAULT, loadTime);
