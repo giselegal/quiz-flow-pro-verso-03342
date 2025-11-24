@@ -33,6 +33,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import { IndexedTemplateCache } from './IndexedTemplateCache';
 import { appLogger } from '@/lib/utils/appLogger';
+import { getGlobalTheme } from '@/config/globalTheme';
 
 /**
  * 🔒 Flags globais de comportamento (centralizar lógica para evitar drift)
@@ -256,7 +257,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
           const loadTime = performance.now() - startTime;
           const result: DataSourceResult<Block[]> = {
             data: userEditBlocks,
-            metadata: { source: DataSourcePriority.USER_EDIT, timestamp: Date.now(), cacheHit: false, loadTime }
+            metadata: { source: DataSourcePriority.USER_EDIT, timestamp: Date.now(), cacheHit: false, loadTime, themeVersion: getGlobalTheme().version }
           };
           if (this.options.enableCache) this.setInCache(cacheKey, result);
           this.cacheToIndexedDB(idbKey, userEditBlocks, 30 * 60_000); // cache user edits por 30min
@@ -270,7 +271,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
           const loadTime = performance.now() - startTime;
           const result: DataSourceResult<Block[]> = {
             data: adminOverride,
-            metadata: { source: DataSourcePriority.ADMIN_OVERRIDE, timestamp: Date.now(), cacheHit: false, loadTime }
+            metadata: { source: DataSourcePriority.ADMIN_OVERRIDE, timestamp: Date.now(), cacheHit: false, loadTime, themeVersion: getGlobalTheme().version }
           };
           if (this.options.enableCache) this.setInCache(cacheKey, result);
           this.cacheToIndexedDB(idbKey, adminOverride, 30 * 60_000);
@@ -303,7 +304,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
             timestamp: Date.now(), 
             cacheHit: false, 
             loadTime,
-            version: 'v3.2'
+            version: 'v3.2',
+            themeVersion: getGlobalTheme().version,
           }
         };
         if (this.options.enableCache) this.setInCache(cacheKey, result);
@@ -702,7 +704,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
         timestamp: Date.now(),
         cacheHit: false,
         loadTime: 0,
-        version: 'emergency-fallback'
+        version: 'emergency-fallback',
+        themeVersion: getGlobalTheme().version,
       }
     };
   }

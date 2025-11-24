@@ -29,6 +29,8 @@ export interface SourceMetadata {
   cacheHit: boolean;
   loadTime: number;
   version?: string;
+  // 🔗 Quick Win: Incluir referência ao tema global (não serializar grande objeto em cada bloco)
+  themeVersion?: string; // ex: '4.0'
 }
 
 /**
