@@ -171,12 +171,43 @@ src/
 
 O editor modular de produção está localizado em:
 
+### 🎨 Sistema WYSIWYG (v1.0 - 2025)
+
+**Edição Visual Instantânea** - Mudanças no Painel de Propriedades aparecem imediatamente no Canvas.
+
+#### ✨ Features
+
+- **Edição em Tempo Real**: Sincronização instantânea entre propriedades e canvas
+- **3 Modos de Visualização**:
+  - **Edit** (Ctrl+1): Modo edição completo
+  - **Preview Live** (Ctrl+2): Visualização com dados locais (não salvos)
+  - **Preview Production** (Ctrl+3): Visualização com dados publicados
+- **Viewport Responsivo** (Ctrl+Alt+1/2/3/0):
+  - Mobile: 375px (iPhone SE)
+  - Tablet: 768px (iPad)
+  - Desktop: 1280px
+  - Full: 100% (sem restrições)
+- **Auto-save Inteligente**: Salva automaticamente após 2s de inatividade
+- **Validação em Tempo Real**: Valida blocos antes de renderizar
+
+#### ⌨️ Atalhos de Teclado
+
+| Atalho | Ação |
+|--------|------|
+| `Ctrl + 1` | Modo Editar |
+| `Ctrl + 2` | Preview Editor (Live) |
+| `Ctrl + 3` | Preview Publicado |
+| `Ctrl + Alt + 1/2/3/0` | Viewport Mobile/Tablet/Desktop/Full |
+| `Ctrl + Z` | Desfazer |
+| `Ctrl + Y` | Refazer |
+
+📖 **Documentação Completa**: [docs/WYSIWYG_ARCHITECTURE.md](./docs/WYSIWYG_ARCHITECTURE.md)
 
 ### Arquitetura do Editor (4 Colunas)
 1. **Steps Panel**: Navegação entre etapas do funil
 2. **Component Library**: Biblioteca de componentes drag & drop
-3. **Visual Canvas**: Preview em tempo real com drop zones
-4. **Properties Panel**: Edição detalhada de propriedades
+3. **Visual Canvas**: Preview em tempo real com drop zones (WYSIWYG)
+4. **Properties Panel**: Edição detalhada de propriedades (atualização instantânea)
 
 ### Features
 
