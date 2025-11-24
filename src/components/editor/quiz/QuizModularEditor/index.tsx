@@ -437,7 +437,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
-    }, [canvasMode]);
+    }, [previewMode]);
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável
     const handleBlockSelect = useCallback((blockId: string | null) => {
@@ -936,7 +936,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 setSelectedBlock(first.id);
             }
         }
-    }, [blocks, selectedBlockId, canvasMode, setSelectedBlock]);
+    }, [blocks, selectedBlockId, previewMode, setSelectedBlock]);
 
     // Lazy load visible step + prefetch neighbors
     useEffect(() => {
