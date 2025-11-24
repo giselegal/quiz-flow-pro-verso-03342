@@ -1909,7 +1909,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                 {/* 🏥 Template Health Panel (sidebar) */}
                 {showHealthPanel && (
-                    <div className="fixed right-4 top-20 bottom-4 w-96 z-40 shadow-2xl">
+                    <div className="fixed right-4 top-20 bottom-4 w-96 z-50 shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                         <TemplateHealthPanel
                             validationResult={validationResult}
                             onAutoFix={(errorIndex) => {

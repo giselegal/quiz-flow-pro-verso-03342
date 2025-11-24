@@ -128,16 +128,14 @@ export function TemplateHealthPanel({
 
     if (!validationResult) {
         return (
-            <Card className="p-4">
+            <Card className="p-4 bg-white dark:bg-gray-800">
                 <div className="flex items-center gap-2 text-muted-foreground">
                     <Info className="w-4 h-4" />
                     <span className="text-sm">Executando validação...</span>
                 </div>
             </Card>
         );
-    }
-
-    const { errors, warnings, summary, isValid } = validationResult;
+    } const { errors, warnings, summary, isValid } = validationResult;
     const criticalErrors = errors.filter(e => e.severity === 'critical');
     const highErrors = errors.filter(e => e.severity === 'high');
     const mediumErrors = errors.filter(e => e.severity === 'medium');
@@ -179,14 +177,12 @@ export function TemplateHealthPanel({
     );
 
     if (collapsed) {
-        return <Card>{header}</Card>;
+        return <Card className="bg-white dark:bg-gray-800">{header}</Card>;
     }
 
     return (
-        <Card className="overflow-hidden">
-            {header}
-
-            {/* Summary Stats */}
+        <Card className="overflow-hidden bg-white dark:bg-gray-800">
+            {header}            {/* Summary Stats */}
             <div className="grid grid-cols-3 gap-4 p-4 bg-muted/30 text-xs">
                 <div>
                     <div className="text-muted-foreground mb-1">Steps Válidos</div>
