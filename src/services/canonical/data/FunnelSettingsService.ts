@@ -353,61 +353,33 @@ export class FunnelSettingsService extends BaseCanonicalService {
   }
 
   // ============================================================================
-  // VALIDATE SETTINGS
+  // STATIC METHODS (for backward compatibility)
   // ============================================================================
 
-  async validateSettings(settings: PublicationSettings): Promise<ServiceResult<{ isValid: boolean; errors: string[] }>> {
-    CanonicalServicesMonitor.trackUsage(this.name, 'validateSettings');
-
-    try {
-      // Usar o endpoint de validação da API
-      const response = await this.apiCall('/api/funnels/validate/settings', {
-        method: 'POST',
-        body: JSON.stringify(settings),
-      });
-
-      if (!response.success) {
-        return this.createError(new Error(`Validation failed: ${response.error}`));
-      }
-
-      return this.createResult(response.data);
-    } catch (error) {
-      // Fallback para validação local se a API falhar
-      const errors: string[] = [];
-
-      // Validar domain
-      if (!settings.domain.slug) {
-        errors.push('Slug é obrigatório');
-      } else if (!/^[a-z0-9-]+$/.test(settings.domain.slug)) {
-        errors.push('Slug deve conter apenas letras minúsculas, números e hífens');
-      }
-
-      // Validar SEO
-      if (settings.seo.title && settings.seo.title.length > 60) {
-        errors.push('Título SEO não deve exceder 60 caracteres');
-      }
-      if (settings.seo.description && settings.seo.description.length > 160) {
-        errors.push('Descrição SEO não deve exceder 160 caracteres');
-      }
-
-      // Validar tracking
-      if (settings.tracking.googleAnalytics && !/^G-[A-Z0-9]+$/.test(settings.tracking.googleAnalytics)) {
-        errors.push('ID do Google Analytics inválido (formato: G-XXXXXXXXXX)');
-      }
-      if (settings.tracking.facebookPixel && !/^\d+$/.test(settings.tracking.facebookPixel)) {
-        errors.push('ID do Facebook Pixel deve conter apenas números');
-      }
-
-      // Validar results
-      if (!settings.results.primary.title) {
-        errors.push('Perfil primário deve ter um título');
-      }
-
-      return this.createResult({
-        isValid: errors.length === 0,
-        errors,
-      });
+  static async loadSettings(funnelId: string): Promise<PublicationSettings> {
+    const instance = FunnelSettingsService.getInstance();
+    const result = await instance.getSettings(funnelId);
+    if (!result.success || !result.data) {
+      throw new Error(result.error?.message || 'Failed to load settings');
     }
+    return result.data;
+  }
+
+  static async saveSettings(funnelId: string, settings: PublicationSettings): Promise<void> {
+    const instance = FunnelSettingsService.getInstance();
+    const result = await instance.updateSettings(funnelId, settings);
+    if (!result.success) {
+      throw new Error(result.error?.message || 'Failed to save settings');
+    }
+  }
+
+  static async exportSettings(funnelId: string): Promise<string> {
+    const instance = FunnelSettingsService.getInstance();
+    const result = await instance.getSettings(funnelId);
+    if (!result.success || !result.data) {
+      throw new Error(result.error?.message || 'Failed to export settings');
+    }
+    return JSON.stringify(result.data, null, 2);
   }
 }
 
