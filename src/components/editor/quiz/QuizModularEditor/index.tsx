@@ -1542,7 +1542,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                         <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                             <ToggleGroup
                                 type="single"
                                 value={
@@ -1571,29 +1571,59 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     }
                                 }}
                                 size="sm"
+                                className="gap-1.5"
                                 aria-label="Modo do canvas"
                             >
-                                <ToggleGroupItem value="edit" title="Editar no Canvas" aria-label="Modo de edição">
+                                <ToggleGroupItem
+                                    value="edit"
+                                    title="Editar no Canvas - Arraste blocos, edite propriedades (Ctrl+1)"
+                                    aria-label="Modo de edição"
+                                    className="min-w-[70px]"
+                                >
                                     <Edit3 className="w-3 h-3 mr-1" />
-                                    Editar
+                                    <span className="hidden sm:inline">Editar</span>
+                                    <span className="sm:hidden">Edit</span>
                                 </ToggleGroupItem>
                                 <ToggleGroupItem
                                     value="preview:editor"
-                                    title="Visualizar dados do editor"
+                                    title="Visualizar dados do editor (incluindo não salvos) (Ctrl+2)"
                                     aria-label="Visualizar dados do editor"
+                                    className="min-w-[70px]"
                                 >
                                     <Eye className="w-3 h-3 mr-1" />
-                                    Visualizar (Editor)
+                                    <span className="hidden lg:inline">Visualizar (Editor)</span>
+                                    <span className="hidden sm:inline lg:hidden">Preview Ed</span>
+                                    <span className="sm:hidden">Prev</span>
                                 </ToggleGroupItem>
                                 <ToggleGroupItem
                                     value="preview:production"
-                                    title="Visualizar dados publicados"
+                                    title="Visualizar dados publicados (versão final) (Ctrl+3)"
                                     aria-label="Visualizar dados publicados"
+                                    className="min-w-[70px]"
                                 >
                                     <Play className="w-3 h-3 mr-1" />
-                                    Visualizar (Publicado)
+                                    <span className="hidden lg:inline">Visualizar (Publicado)</span>
+                                    <span className="hidden sm:inline lg:hidden">Preview Pub</span>
+                                    <span className="sm:hidden">Pub</span>
                                 </ToggleGroupItem>
                             </ToggleGroup>
+
+                            {/* Indicador de fonte de dados */}
+                            {canvasMode === 'preview' && (
+                                <div className="text-xs px-2 py-1 rounded-md transition-colors hidden md:flex items-center gap-1"
+                                    style={{
+                                        backgroundColor: previewMode === 'live' ? 'rgb(219 234 254)' : 'rgb(209 250 229)',
+                                        color: previewMode === 'live' ? 'rgb(30 58 138)' : 'rgb(6 78 59)'
+                                    }}
+                                    title={previewMode === 'live' ? 'Exibindo dados do editor (não salvos)' : 'Exibindo dados publicados'}
+                                >
+                                    {previewMode === 'live' ? (
+                                        <>📝 Editor</>
+                                    ) : (
+                                        <>✅ Publicado</>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
