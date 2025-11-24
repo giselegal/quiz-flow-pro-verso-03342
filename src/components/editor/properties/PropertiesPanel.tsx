@@ -1,37 +1,33 @@
 /**
- * 🎯 PROPERTIES PANEL - Painel Dinâmico de Edição de Propriedades
+ * 🎯 PROPERTIES PANEL V4 - Painel Alinhado com Zod Schema
  * 
  * Painel lateral direito que permite editar propriedades dos blocos.
- * - Gera campos dinamicamente baseado no tipo de bloco
- * - Atualiza JSON via useStepBlocks
- * - Live preview enquanto edita (debounce 300ms)
- * - Ações: Delete, Duplicate, Move Up/Down
+ * ✅ Validação com Zod (QuizBlockSchemaZ)
+ * ✅ Integração com useStepBlocksV4
+ * ✅ Suporte a properties, content e metadata
+ * ✅ Live preview com debounce (300ms)
+ * ✅ Ações: Delete, Duplicate, Move Up/Down
+ * 
+ * @version 4.0.0 - Alinhado com quiz-schema.zod.ts
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useStepBlocks } from '@/hooks/useStepBlocksV4';
-// import { getBlockDefinition } from '@/core/runtime/quiz/blocks/BlockRegistry'; // TODO: Missing export
+import { QuizBlockSchemaZ, type QuizBlock } from '@/schemas/quiz-schema.zod';
 import { Button } from '@/components/ui/button';
-
-// Stub temporário
-const getBlockDefinition = (type: string) => null;
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Trash2, Copy, ArrowUp, ArrowDown, X, Save, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import AdvancedPropertiesPanel from './AdvancedPropertiesPanel';
+import { Switch } from '@/components/ui/switch';
+import { Trash2, Copy, ArrowUp, ArrowDown, X, AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface PropertiesPanelProps {
   blockId?: string | null;
   stepIndex?: number;
-  selectedBlock?: any | null;
-  onUpdate?: (updates: any) => void;
-  onDelete?: (id: string) => void;
   onClose?: () => void;
 }
 
@@ -83,84 +79,167 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     blocks,
   } = hookResult;
 
-  const [localValues, setLocalValues] = useState<Record<string, any>>({});
+  // Estado local para edição
+  const [localBlock, setLocalBlock] = useState<QuizBlock | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
 
   // Obter bloco atual
   const block = blockId ? getBlock(blockId) : null;
-  const definition = block ? getBlockDefinition(block.type) : null;
   const blockIndex = blockId ? getBlockIndex(blockId) : -1;
 
-  // Inicializar valores locais quando bloco muda
+  // Sincronizar estado local com bloco atual
   useEffect(() => {
     if (block) {
-      // 🎯 USAR getBlockConfig para prioridade correta: config > properties > content
-      const { getBlockConfig } = require('@/lib/utils/blockConfigMerger');
-      setLocalValues(getBlockConfig(block));
+      setLocalBlock({ ...block });
       setHasChanges(false);
+      setValidationErrors([]);
+      appLogger.debug('📝 PropertiesPanel: Block carregado', { data: [block.id, block.type] });
     }
   }, [block?.id]);
 
-  // Debounced update
+  // Debounced update com validação Zod
   useEffect(() => {
-    if (!hasChanges || !blockId) return;
+    if (!hasChanges || !blockId || !localBlock) return;
 
     const timer = setTimeout(() => {
-      // Separar content e properties
-      const content: Record<string, any> = {};
-      const properties: Record<string, any> = {};
+      // Validar com Zod antes de salvar
+      const validationResult = QuizBlockSchemaZ.safeParse(localBlock);
 
-      Object.entries(localValues).forEach(([key, value]) => {
-        // Se está nas defaultProps.content, vai para content
-        if (definition?.defaultProps.content && key in definition.defaultProps.content) {
-          content[key] = value;
-        } else {
-          properties[key] = value;
-        }
-      });
+      if (!validationResult.success) {
+        const errors = validationResult.error.errors.map(err =>
+          `${err.path.join('.')}: ${err.message}`
+        );
+        setValidationErrors(errors);
+        appLogger.error('❌ Validação Zod falhou:', { data: [errors] });
+        return;
+      }
 
-      updateBlock(blockId, {
-        content: Object.keys(content).length > 0 ? content : undefined,
-        properties: Object.keys(properties).length > 0 ? properties : undefined,
-      });
+      // Limpar erros e atualizar
+      setValidationErrors([]);
 
+      // Atualizar apenas os campos modificados
+      const updates: Partial<QuizBlock> = {
+        properties: localBlock.properties,
+        content: localBlock.content,
+      };
+
+      updateBlock(blockId, updates);
       setHasChanges(false);
+
+      appLogger.info('✅ Block atualizado com sucesso:', { data: [blockId] });
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [localValues, hasChanges, blockId, updateBlock, definition]);
+  }, [localBlock, hasChanges, blockId, updateBlock]);
 
-  // Handler genérico de mudança
-  const handleChange = useCallback((key: string, value: any) => {
-    setLocalValues(prev => ({
-      ...prev,
-      [key]: value,
-    }));
+  // Handlers para properties
+  const handlePropertyChange = useCallback((key: string, value: any) => {
+    if (!localBlock) return;
+
+    setLocalBlock(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        properties: {
+          ...prev.properties,
+          [key]: value,
+        },
+      };
+    });
     setHasChanges(true);
-  }, []);
+  }, [localBlock]);
 
-  if (!block) {
+  // Handlers para content
+  const handleContentChange = useCallback((key: string, value: any) => {
+    if (!localBlock) return;
+
+    setLocalBlock(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        content: {
+          ...prev.content,
+          [key]: value,
+        },
+      };
+    });
+    setHasChanges(true);
+  }, [localBlock]);
+
+  // Handlers para metadata
+  const handleMetadataChange = useCallback((key: string, value: any) => {
+    if (!localBlock) return;
+
+    setLocalBlock(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        metadata: {
+          editable: true,
+          reorderable: true,
+          reusable: true,
+          deletable: true,
+          ...prev.metadata,
+          [key]: value,
+        },
+      };
+    });
+    setHasChanges(true);
+  }, [localBlock]);
+
+  if (!block || !localBlock) {
     return (
-      <div className="h-full flex items-center justify-center text-muted-foreground">
-        <span>Nenhum bloco selecionado</span>
-        {onClose && (
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-4 h-4" />
-          </Button>
-        )}
+      <div className="h-full flex items-center justify-center text-muted-foreground p-4">
+        <div className="text-center">
+          <AlertCircle className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+          <p className="text-sm">Nenhum bloco selecionado</p>
+          {onClose && (
+            <Button variant="outline" size="sm" onClick={onClose} className="mt-4">
+              <X className="w-4 h-4 mr-2" />
+              Fechar
+            </Button>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
     <aside className="w-80 bg-white border-l flex flex-col h-full">
-      <div className="p-4 border-b flex items-center justify-between">
-        <h2 className="text-sm font-semibold">{block.type}</h2>
+      {/* Header com ações */}
+      <div className="p-4 border-b flex items-center justify-between bg-gray-50">
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="text-xs">
+            {localBlock.type}
+          </Badge>
+          {hasChanges && (
+            <Badge variant="outline" className="text-xs text-orange-600">
+              Não salvo
+            </Badge>
+          )}
+        </div>
         <div className="flex gap-1">
-          <Button size="icon" variant="ghost" onClick={() => duplicateBlock(block.id)}>
+          {blockIndex > 0 && (
+            <Button size="icon" variant="ghost" onClick={() => moveBlockUp(block.id)} title="Mover para cima">
+              <ArrowUp className="w-4 h-4" />
+            </Button>
+          )}
+          {blockIndex < blocks.length - 1 && (
+            <Button size="icon" variant="ghost" onClick={() => moveBlockDown(block.id)} title="Mover para baixo">
+              <ArrowDown className="w-4 h-4" />
+            </Button>
+          )}
+          <Button size="icon" variant="ghost" onClick={() => duplicateBlock(block.id)} title="Duplicar">
             <Copy className="w-4 h-4" />
           </Button>
-          <Button size="icon" variant="ghost" onClick={() => deleteBlock(block.id)}>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => deleteBlock(block.id)}
+            disabled={localBlock.metadata?.deletable === false}
+            title={localBlock.metadata?.deletable === false ? 'Não pode ser deletado' : 'Deletar'}
+          >
             <Trash2 className="w-4 h-4" />
           </Button>
           {onClose && (
@@ -170,204 +249,190 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           )}
         </div>
       </div>
-      <ScrollArea className="flex-1 p-4">
-        {/* Usar painel avançado para tipos específicos */}
-        {block.type === 'result-calculation' ? (
-          <div className="space-y-4">
-            <div className="text-xs text-gray-600 mb-4">
-              🧮 Painel Avançado - Cálculo de Resultados
+
+      {/* Validação status */}
+      {validationErrors.length > 0 && (
+        <div className="p-3 bg-red-50 border-b border-red-200">
+          <div className="flex items-start gap-2">
+            <XCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-xs font-medium text-red-900 mb-1">Erros de Validação:</p>
+              <ul className="text-xs text-red-700 space-y-1">
+                {validationErrors.map((error, i) => (
+                  <li key={i}>• {error}</li>
+                ))}
+              </ul>
             </div>
-            {/* Por enquanto, usar o rendering padrão mas com labels específicos */}
-            {Object.entries(localValues).map(([key, value]) => {
-              if (key === 'calculationMethod') {
-                return (
-                  <div key={key} className="mb-4">
-                    <Label className="text-sm font-medium">Método de Cálculo</Label>
-                    <Select value={value} onValueChange={(newValue) => handleChange(key, newValue)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="weighted_sum">Soma Ponderada</SelectItem>
-                        <SelectItem value="percentage">Percentual</SelectItem>
-                        <SelectItem value="ranking">Ranking</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                );
-              }
-
-              if (key === 'scoreMapping') {
-                return (
-                  <div key={key} className="mb-4">
-                    <Label className="text-sm font-medium">Mapeamento de Estilos</Label>
-                    <Textarea
-                      value={JSON.stringify(value, null, 2)}
-                      onChange={e => {
-                        try {
-                          const parsed = JSON.parse(e.target.value);
-                          handleChange(key, parsed);
-                        } catch {
-                          // Ignorar parse errors enquanto digita
-                        }
-                      }}
-                      className="font-mono text-xs"
-                      rows={8}
-                      placeholder="JSON com configuração dos estilos"
-                    />
-                    <div className="text-xs text-gray-500 mt-1">
-                      Exemplo: {'{"romantico": {"min": 0, "max": 100, "label": "Romântico"}}'}
-                    </div>
-                  </div>
-                );
-              }
-
-              if (key === 'resultLogic') {
-                return (
-                  <div key={key} className="mb-4">
-                    <Label className="text-sm font-medium">Lógica de Resultado</Label>
-                    <Textarea
-                      value={JSON.stringify(value, null, 2)}
-                      onChange={e => {
-                        try {
-                          const parsed = JSON.parse(e.target.value);
-                          handleChange(key, parsed);
-                        } catch {
-                          // Ignorar parse errors enquanto digita
-                        }
-                      }}
-                      className="font-mono text-xs"
-                      rows={4}
-                    />
-                  </div>
-                );
-              }
-
-              // Para outros campos, usar o rendering padrão
-              const valueType = typeof value;
-              if (valueType === 'string') {
-                return (
-                  <div key={key} className="mb-4">
-                    <Label className="text-sm">{key}</Label>
-                    <Input
-                      value={value || ''}
-                      onChange={e => handleChange(key, e.target.value)}
-                    />
-                  </div>
-                );
-              }
-
-              if (valueType === 'boolean') {
-                return (
-                  <div key={key} className="mb-4 flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id={`checkbox-${key}`}
-                      checked={!!value}
-                      onChange={e => handleChange(key, e.target.checked)}
-                      className="h-4 w-4"
-                    />
-                    <Label htmlFor={`checkbox-${key}`} className="text-sm">{key}</Label>
-                  </div>
-                );
-              }
-
-              return null;
-            })}
           </div>
-        ) : (
-          definition && Object.entries(localValues).map(([key, value]) => {
-            // Renderiza controles dinamicamente conforme tipo do valor
-            const valueType = typeof value;
+        </div>
+      )}
 
-            if (valueType === 'string') {
-              // Se é longo, usar textarea, senão input
-              const isLong = String(value).length > 50;
+      {!validationErrors.length && hasChanges && (
+        <div className="p-2 bg-blue-50 border-b border-blue-200">
+          <div className="flex items-center gap-2 text-xs text-blue-700">
+            <CheckCircle2 className="w-3 h-3" />
+            <span>Salvando automaticamente...</span>
+          </div>
+        </div>
+      )}
 
-              if (isLong) {
-                return (
-                  <div key={key} className="mb-4">
-                    <Label>{key}</Label>
-                    <Textarea
-                      value={value || ''}
-                      onChange={e => handleChange(key, e.target.value)}
-                    />
-                  </div>
-                );
-              }
+      <ScrollArea className="flex-1 p-4">
+        {/* Seção: Properties */}
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Properties</h3>
+            <Badge variant="outline" className="text-xs">
+              {Object.keys(localBlock.properties).length} campos
+            </Badge>
+          </div>
 
-              return (
-                <div key={key} className="mb-4">
-                  <Label>{key}</Label>
-                  <Input
-                    value={value || ''}
-                    onChange={e => handleChange(key, e.target.value)}
+          {Object.entries(localBlock.properties).map(([key, value]) => (
+            <div key={`prop-${key}`} className="space-y-2">
+              <Label htmlFor={`prop-${key}`} className="text-xs font-medium text-gray-700">
+                {key}
+              </Label>
+              {typeof value === 'boolean' ? (
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id={`prop-${key}`}
+                    checked={value}
+                    onCheckedChange={(checked) => handlePropertyChange(key, checked)}
                   />
+                  <Label htmlFor={`prop-${key}`} className="text-xs text-gray-600">
+                    {value ? 'Sim' : 'Não'}
+                  </Label>
                 </div>
-              );
-            }
+              ) : typeof value === 'number' ? (
+                <Input
+                  id={`prop-${key}`}
+                  type="number"
+                  value={value}
+                  onChange={(e) => handlePropertyChange(key, parseFloat(e.target.value))}
+                  className="text-sm"
+                />
+              ) : (
+                <Textarea
+                  id={`prop-${key}`}
+                  value={String(value)}
+                  onChange={(e) => handlePropertyChange(key, e.target.value)}
+                  className="text-sm min-h-[60px]"
+                  rows={2}
+                />
+              )}
+            </div>
+          ))}
+        </div>
 
-            if (valueType === 'number') {
-              return (
-                <div key={key} className="mb-4">
-                  <Label>{key}</Label>
-                  <Input
-                    type="number"
-                    value={value || 0}
-                    onChange={e => handleChange(key, Number(e.target.value))}
-                  />
-                </div>
-              );
-            }
+        <Separator className="my-6" />
 
-            if (valueType === 'boolean') {
-              return (
-                <div key={key} className="mb-4 flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id={`checkbox-${key}`}
-                    checked={!!value}
-                    onChange={e => handleChange(key, e.target.checked)}
-                    className="h-4 w-4"
-                  />
-                  <Label htmlFor={`checkbox-${key}`}>{key}</Label>
-                </div>
-              );
-            }
+        {/* Seção: Content */}
+        {localBlock.content && Object.keys(localBlock.content).length > 0 && (
+          <>
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Content</h3>
+                <Badge variant="outline" className="text-xs">
+                  {Object.keys(localBlock.content).length} campos
+                </Badge>
+              </div>
 
-            // Para tipos complexos (arrays, objects), usar JSON
-            if (valueType === 'object') {
-              return (
-                <div key={key} className="mb-4">
-                  <Label>{key}</Label>
+              {Object.entries(localBlock.content).map(([key, value]) => (
+                <div key={`content-${key}`} className="space-y-2">
+                  <Label htmlFor={`content-${key}`} className="text-xs font-medium text-gray-700">
+                    {key}
+                  </Label>
                   <Textarea
-                    value={JSON.stringify(value, null, 2)}
-                    onChange={e => {
-                      try {
-                        const parsed = JSON.parse(e.target.value);
-                        handleChange(key, parsed);
-                      } catch {
-                        // Ignorar parse errors enquanto digita
-                      }
-                    }}
-                    className="font-mono text-xs"
-                    rows={6}
+                    id={`content-${key}`}
+                    value={String(value)}
+                    onChange={(e) => handleContentChange(key, e.target.value)}
+                    className="text-sm min-h-[80px]"
+                    rows={3}
                   />
                 </div>
-              );
-            }
+              ))}
+            </div>
+            <Separator className="my-6" />
+          </>
+        )}
 
-            return null;
-          })
+        {/* Seção: Metadata */}
+        {localBlock.metadata && (
+          <div className="space-y-4">
+            <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Metadata</h3>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="meta-editable"
+                  checked={localBlock.metadata.editable ?? true}
+                  onCheckedChange={(checked) => handleMetadataChange('editable', checked)}
+                />
+                <Label htmlFor="meta-editable" className="text-xs">Editável</Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="meta-reorderable"
+                  checked={localBlock.metadata.reorderable ?? true}
+                  onCheckedChange={(checked) => handleMetadataChange('reorderable', checked)}
+                />
+                <Label htmlFor="meta-reorderable" className="text-xs">Reordenável</Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="meta-reusable"
+                  checked={localBlock.metadata.reusable ?? true}
+                  onCheckedChange={(checked) => handleMetadataChange('reusable', checked)}
+                />
+                <Label htmlFor="meta-reusable" className="text-xs">Reutilizável</Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="meta-deletable"
+                  checked={localBlock.metadata.deletable ?? true}
+                  onCheckedChange={(checked) => handleMetadataChange('deletable', checked)}
+                />
+                <Label htmlFor="meta-deletable" className="text-xs">Deletável</Label>
+              </div>
+            </div>
+
+            {localBlock.metadata.component && (
+              <div className="space-y-2 mt-4">
+                <Label className="text-xs font-medium text-gray-700">Componente</Label>
+                <Input
+                  value={localBlock.metadata.component}
+                  onChange={(e) => handleMetadataChange('component', e.target.value)}
+                  className="text-sm"
+                  placeholder="Nome do componente"
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Debug Info */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <details className="text-xs">
+              <summary className="font-medium cursor-pointer text-gray-700 mb-2">
+                🔍 Debug Info (Dev Only)
+              </summary>
+              <pre className="mt-2 p-2 bg-white rounded border text-[10px] overflow-auto max-h-60">
+                {JSON.stringify(localBlock, null, 2)}
+              </pre>
+            </details>
+          </div>
         )}
       </ScrollArea>
-      <div className="border-t p-4 flex gap-2">
-        <Button size="sm" variant="secondary" disabled={!hasChanges} onClick={() => setHasChanges(false)}>
-          Descartar
-        </Button>
-        <Button size="sm" variant="default" disabled={!hasChanges} onClick={() => setHasChanges(false)}>
-          Salvar
-        </Button>
+
+      {/* Footer com info adicional */}
+      <div className="p-3 border-t bg-gray-50 text-xs text-gray-600">
+        <div className="flex justify-between items-center">
+          <span>Bloco: <code className="text-xs bg-gray-200 px-1 rounded">{localBlock.id}</code></span>
+          <span>Ordem: {localBlock.order}</span>
+        </div>
       </div>
     </aside>
   );
