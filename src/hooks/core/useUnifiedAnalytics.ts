@@ -9,8 +9,22 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { analyticsService, Metric, AnalyticsEvent, Alert } from '../../services/AnalyticsService';
+import { analyticsService } from '@/services/canonical';
+import type { Metric, AnalyticsEvent, MetricCategory } from '@/services/canonical/AnalyticsService';
 import { appLogger } from '@/lib/utils/appLogger';
+
+// Alert type local (não existe no AnalyticsService)
+interface Alert {
+  id: string;
+  type: 'performance' | 'collaboration' | 'versioning' | 'usage' | 'system';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  message: string;
+  threshold: number;
+  currentValue: number;
+  timestamp: Date;
+  resolved: boolean;
+}
 
 export interface AnalyticsState {
   // Métricas
@@ -35,7 +49,7 @@ export interface AnalyticsState {
 
 export interface AnalyticsActions {
   // Métricas
-  recordMetric: (name: string, value: number, unit: string, category: Metric['category'], tags?: Record<string, string>) => Promise<void>;
+  recordMetric: (name: string, value: number, unit: string, category: MetricCategory, tags?: Record<string, string>) => Promise<void>;
   recordEvent: (type: string, properties?: Record<string, any>) => Promise<void>;
 
   // Coleta de dados

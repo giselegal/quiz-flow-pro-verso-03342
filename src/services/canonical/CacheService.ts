@@ -9,8 +9,13 @@
  */
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
-import { cacheService as unifiedCache, CacheStore } from '../UnifiedCacheService';
+import { cacheService as unifiedCache } from '../unified/UnifiedCacheService';
 import { appLogger } from '@/lib/utils/appLogger';
+
+/**
+ * Cache store types
+ */
+export type CacheStore = 'generic' | 'templates' | 'funnels' | 'steps' | 'blocks';
 
 /**
  * Cache statistics por categoria
