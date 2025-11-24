@@ -9,7 +9,7 @@
  */
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
-import { cacheService as unifiedCache } from '../unified/UnifiedCacheService';
+import { unifiedCache } from '../unified/UnifiedCacheService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
@@ -36,7 +36,7 @@ export interface CacheSetOptions {
    * Time to live em milissegundos
    */
   ttl?: number;
-  
+
   /**
    * Store específico (default: 'generic')
    */
@@ -218,7 +218,7 @@ export class CacheService extends BaseCanonicalService {
     try {
       const allStats = unifiedCache.getAllStats();
       const result: Record<string, CacheStats> = {};
-      
+
       for (const [store, stats] of Object.entries(allStats.stores)) {
         result[store] = {
           hitRate: stats.hitRate,
@@ -228,7 +228,7 @@ export class CacheService extends BaseCanonicalService {
           entriesCount: stats.size,
         };
       }
-      
+
       return this.createResult(result as Record<CacheStore, CacheStats>);
     } catch (error) {
       this.error('getAllStats failed:', error);
@@ -262,16 +262,16 @@ export class CacheService extends BaseCanonicalService {
    * Cache para templates (TTL padrão: 10min)
    */
   templates = {
-    set: <T,>(key: string, value: T, ttl = 10 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 10 * 60 * 1000) =>
       this.set(key, value, { store: 'templates', ttl }),
-    
-    get: <T,>(key: string) => 
+
+    get: <T,>(key: string) =>
       this.get<T>(key, 'templates'),
-    
-    invalidate: (key: string) => 
+
+    invalidate: (key: string) =>
       this.delete(key, 'templates'),
-    
-    invalidateStep: (stepId: string) => 
+
+    invalidateStep: (stepId: string) =>
       this.invalidateByPrefix(stepId, 'templates'),
   };
 
@@ -279,13 +279,13 @@ export class CacheService extends BaseCanonicalService {
    * Cache para funnels (TTL padrão: 10min)
    */
   funnels = {
-    set: <T,>(key: string, value: T, ttl = 10 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 10 * 60 * 1000) =>
       this.set(key, value, { store: 'funnels', ttl }),
-    
-    get: <T,>(key: string) => 
+
+    get: <T,>(key: string) =>
       this.get<T>(key, 'funnels'),
-    
-    invalidate: (funnelId: string) => 
+
+    invalidate: (funnelId: string) =>
       this.invalidateByPrefix(funnelId, 'funnels'),
   };
 
@@ -293,13 +293,13 @@ export class CacheService extends BaseCanonicalService {
    * Cache para configurações (TTL padrão: 2min)
    */
   configs = {
-    set: <T,>(key: string, value: T, ttl = 2 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 2 * 60 * 1000) =>
       this.set(key, value, { store: 'configs', ttl }),
-    
-    get: <T,>(key: string) => 
+
+    get: <T,>(key: string) =>
       this.get<T>(key, 'configs'),
-    
-    invalidate: (key: string) => 
+
+    invalidate: (key: string) =>
       this.delete(key, 'configs'),
   };
 
@@ -307,13 +307,13 @@ export class CacheService extends BaseCanonicalService {
    * Cache para blocks (TTL padrão: 5min)
    */
   blocks = {
-    set: <T,>(key: string, value: T, ttl = 5 * 60 * 1000) => 
+    set: <T,>(key: string, value: T, ttl = 5 * 60 * 1000) =>
       this.set(key, value, { store: 'blocks', ttl }),
-    
-    get: <T,>(key: string) => 
+
+    get: <T,>(key: string) =>
       this.get<T>(key, 'blocks'),
-    
-    invalidate: (blockId: string) => 
+
+    invalidate: (blockId: string) =>
       this.delete(blockId, 'blocks'),
   };
 
@@ -324,11 +324,11 @@ export class CacheService extends BaseCanonicalService {
       // Test basic operations
       const testKey = '__health_check__';
       const testValue = { timestamp: Date.now() };
-      
+
       this.set(testKey, testValue, { ttl: 1000 });
       const result = this.get(testKey);
       this.delete(testKey);
-      
+
       return result.success && result.data !== null;
     } catch (error) {
       appLogger.warn('[CacheService] Health check falhou:', { data: [error] });

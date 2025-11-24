@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { EnhancedUnifiedDataService, type RealTimeMetrics } from '@/services/core/EnhancedUnifiedDataService';
+import { RealDataAnalyticsService, type RealMetrics } from '@/services/core/RealDataAnalyticsService';
 import {
     Users,
     TrendingUp,
@@ -149,7 +149,7 @@ const SimpleLineChart: React.FC<SimpleLineChartProps> = ({ data, title }) => {
         y: 100 - (item.conversions / maxValue) * 80,
     }));
 
-    const pathData = points.map((point, index) => 
+    const pathData = points.map((point, index) =>
         `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`,
     ).join(' ');
 
@@ -205,17 +205,19 @@ const EnhancedRealTimeDashboard: React.FC = () => {
             setIsLoading(true);
             appLogger.info('📊 EnhancedRealTimeDashboard: Carregando métricas em tempo real...');
 
-            const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
-            setRealTimeMetrics(metrics);
+            const analyticsService = new RealDataAnalyticsService();
+            const metrics = await analyticsService.getRealMetrics();
+            setRealTimeMetrics(metrics as any);
             setLastUpdated(new Date());
 
-            appLogger.info('✅ Real-time metrics loaded:', { data: [{
-                            totalSessions: metrics.totalSessions,
-                            activeUsersRealTime: metrics.activeUsersRealTime,
-                            sessionsLastHour: metrics.sessionsLastHour,
-                            conversionRate: metrics.conversionRate,
-                            source: 'EnhancedUnifiedDataService (Supabase)',
-                        }] });
+            appLogger.info('✅ Real-time metrics loaded:', {
+                data: [{
+                    totalSessions: metrics.totalSessions,
+                    activeUsersNow: metrics.activeUsersNow,
+                    conversionRate: metrics.conversionRate,
+                    source: 'RealDataAnalyticsService (Supabase)',
+                }]
+            });
 
         } catch (error) {
             appLogger.error('❌ Erro ao carregar métricas em tempo real:', { data: [error] });
@@ -226,7 +228,6 @@ const EnhancedRealTimeDashboard: React.FC = () => {
 
     const handleRefresh = async () => {
         setRefreshing(true);
-        await EnhancedUnifiedDataService.forceRefresh();
         await loadDashboardData();
         setRefreshing(false);
     };
@@ -238,15 +239,14 @@ const EnhancedRealTimeDashboard: React.FC = () => {
     useEffect(() => {
         loadDashboardData();
 
-        // Set up real-time subscription
-        const unsubscribe = EnhancedUnifiedDataService.subscribeToRealTimeUpdates((metrics) => {
-            setRealTimeMetrics(metrics);
-            setLastUpdated(new Date());
+        // Auto-refresh every 30 seconds
+        const interval = setInterval(() => {
+            loadDashboardData();
             appLogger.info('🔄 Real-time data updated automatically');
-        });
+        }, 30000);
 
         return () => {
-            unsubscribe();
+            clearInterval(interval);
         };
     }, []);
 
@@ -290,9 +290,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                         </Badge>
                     </p>
                 </div>
-                <Button 
-                    onClick={handleRefresh} 
-                    variant="outline" 
+                <Button
+                    onClick={handleRefresh}
+                    variant="outline"
                     size="sm"
                     disabled={refreshing}
                     className="flex items-center space-x-2"
@@ -396,8 +396,8 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                                 data={realTimeMetrics.topDevices.map(device => ({
                                     label: device.name,
                                     value: device.percentage,
-                                    color: device.name === 'Desktop' ? 'bg-blue-500' : 
-                                           device.name === 'Mobile' ? 'bg-green-500' : 'bg-purple-500',
+                                    color: device.name === 'Desktop' ? 'bg-blue-500' :
+                                        device.name === 'Mobile' ? 'bg-green-500' : 'bg-purple-500',
                                 }))}
                             />
                         )}
@@ -418,8 +418,8 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                                 data={realTimeMetrics.geographicData.map((country, index) => ({
                                     label: country.country,
                                     value: country.users,
-                                    color: index === 0 ? 'bg-green-500' : 
-                                           index === 1 ? 'bg-blue-500' : 'bg-gray-500',
+                                    color: index === 0 ? 'bg-green-500' :
+                                        index === 1 ? 'bg-blue-500' : 'bg-gray-500',
                                 }))}
                             />
                         )}
@@ -458,9 +458,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                             data={realTimeMetrics.topBrowsers.map((browser, index) => ({
                                 label: browser.name,
                                 value: browser.percentage,
-                                color: index === 0 ? 'bg-orange-500' : 
-                                       index === 1 ? 'bg-blue-500' : 
-                                       index === 2 ? 'bg-red-500' : 'bg-gray-500',
+                                color: index === 0 ? 'bg-orange-500' :
+                                    index === 1 ? 'bg-blue-500' :
+                                        index === 2 ? 'bg-red-500' : 'bg-gray-500',
                             }))}
                         />
                     )}

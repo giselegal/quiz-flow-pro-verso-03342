@@ -34,11 +34,11 @@ export const ResultOrchestrator = {
 
         // 2) Se nada foi pontuado (total 0), fazer fallback canônico por template
         const summed = Object.values(scores).reduce((a, b) => a + b, 0);
-    if (!summed) {
+        if (!summed) {
             try {
-        const mod = await import('@/templates/quiz21StepsComplete');
-        const QUIZ_STYLE_21_STEPS_TEMPLATE = (mod as any).QUIZ_STYLE_21_STEPS_TEMPLATE;
-        const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
+                const mod = await import('@/templates/quiz21StepsComplete');
+                const QUIZ_STYLE_21_STEPS_TEMPLATE = (mod as any).QUIZ_STYLE_21_STEPS_TEMPLATE;
+                const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
                 const canonTotals = accumulateCanonicalScores(canonical, selectionsByQuestion);
                 const compat: Record<string, string> = {
                     natural: 'Natural',

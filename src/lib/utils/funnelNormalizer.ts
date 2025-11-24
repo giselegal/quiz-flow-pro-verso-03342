@@ -111,22 +111,22 @@ export const getTemplateInfo = async (funnelId: string) => {
   }
 
   // Fallback: tentar templateLibraryService
-  try {
-    const { templateLibraryService } = await import('@/services/templateLibraryService');
-    const template = templateLibraryService.getById(normalized.baseId);
-
-    if (template) {
-      appLogger.info('✅ Template encontrado no templateLibraryService:', { data: [template] });
-      return {
-        ...normalized,
-        template,
-        totalSteps: Object.keys(template.steps || {}).length || 1,
-        templateName: template.name || normalized.baseId,
-      };
-    }
-  } catch (error) {
-    appLogger.warn('⚠️ Erro ao carregar template do templateLibraryService:', { data: [error] });
-  }
+  // TODO: templateLibraryService não existe mais
+  // try {
+  //   const { templateLibraryService } = await import('@/services/templateLibraryService');
+  //   const template = templateLibraryService.getById(normalized.baseId);
+  //   if (template) {
+  //     appLogger.info('✅ Template encontrado no templateLibraryService:', { data: [template] });
+  //     return {
+  //       ...normalized,
+  //       template,
+  //       totalSteps: Object.keys(template.steps || {}).length || 1,
+  //       templateName: template.name || normalized.baseId,
+  //     };
+  //   }
+  // } catch (error) {
+  //   appLogger.warn('⚠️ Erro ao carregar template do templateLibraryService:', { data: [error] });
+  // }
 
   // Fallback: retornar info básica
   appLogger.info('⚠️ Usando fallback para:', { data: [normalized.baseId] });

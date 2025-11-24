@@ -6,7 +6,7 @@
  */
 
 import { StorageService } from './StorageService';
-import { ContextualStorageService } from './ContextualStorageService';
+// import { ContextualStorageService } from './ContextualStorageService'; // TODO: Missing file
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EVENTS from '@/core/constants/events';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -31,39 +31,30 @@ export interface UnifiedQuizData {
   result?: any;
 }
 
-class UnifiedQuizStorageService {
+export class UnifiedQuizStorageService {
   private readonly STORAGE_KEY = 'unifiedQuizData';
   private readonly LEGACY_KEYS = ['userSelections', 'quizAnswers'];
-  private contextualStorage: ContextualStorageService;
+  private context: FunnelContext;
 
   constructor(context: FunnelContext = FunnelContext.EDITOR) {
-    this.contextualStorage = new ContextualStorageService(context);
+    this.context = context;
   }
 
   /**
    * Permite alterar o contexto dinamicamente
    */
   setContext(context: FunnelContext): void {
-    this.contextualStorage = new ContextualStorageService(context);
+    this.context = context;
   }
 
   /**
    * Carrega dados unificados, migrando dados legados se necessário
    */
   loadData(): UnifiedQuizData {
-    // Tentar carregar dados unificados do storage contextual primeiro
-    const unified = this.contextualStorage.getJSON<UnifiedQuizData>(this.STORAGE_KEY);
+    // Tentar carregar dados unificados
+    const unified = StorageService.safeGetJSON<UnifiedQuizData>(this.STORAGE_KEY);
     if (unified && this.isValidUnifiedData(unified)) {
       return unified;
-    }
-
-    // Fallback: tentar carregar do storage legado (sem contexto)
-    const legacyUnified = StorageService.safeGetJSON<UnifiedQuizData>(this.STORAGE_KEY);
-    if (legacyUnified && this.isValidUnifiedData(legacyUnified)) {
-      // Migrar para storage contextual
-      this.contextualStorage.setJSON(this.STORAGE_KEY, legacyUnified);
-      StorageService.safeRemove(this.STORAGE_KEY);
-      return legacyUnified;
     }
 
     // Se não existir, migrar dados legados
@@ -77,7 +68,7 @@ class UnifiedQuizStorageService {
     data.metadata.lastUpdated = new Date().toISOString();
     data.metadata.version = '2.0';
 
-    const success = this.contextualStorage.setJSON(this.STORAGE_KEY, data);
+    const success = StorageService.safeSetJSON(this.STORAGE_KEY, data);
 
     if (success) {
       // Notificar mudanças para hooks e componentes
@@ -212,10 +203,12 @@ class UnifiedQuizStorageService {
     // Salvar dados migrados
     this.saveData(unified);
 
-    appLogger.info('✅ UnifiedQuizStorage: Migração concluída', { data: [{
-            selections: Object.keys(unified.selections).length,
-            formData: Object.keys(unified.formData).length,
-          }] });
+    appLogger.info('✅ UnifiedQuizStorage: Migração concluída', {
+      data: [{
+        selections: Object.keys(unified.selections).length,
+        formData: Object.keys(unified.formData).length,
+      }]
+    });
 
     return unified;
   }

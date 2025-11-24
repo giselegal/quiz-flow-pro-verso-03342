@@ -59,12 +59,12 @@ export function useStepBlocksV4(stepId: string) {
 
     // Validate with Zod
     const validationResult = QuizBlockSchemaZ.safeParse(updatedBlock);
-    
+
     if (!validationResult.success) {
-      appLogger.error('❌ Validação Zod falhou:', { 
-        data: [validationResult.error.errors] 
+      appLogger.error('❌ Validação Zod falhou:', {
+        data: [validationResult.error.errors]
       });
-      
+
       // Return validation errors
       return {
         success: false,
@@ -77,8 +77,8 @@ export function useStepBlocksV4(stepId: string) {
 
     // TODO: Implement actual update in QuizV4Provider
     // For now, just log success
-    appLogger.info('✅ Block atualizado e validado:', { 
-      data: [blockId, Object.keys(updates)] 
+    appLogger.info('✅ Block atualizado e validado:', {
+      data: [blockId, Object.keys(updates)]
     });
 
     return { success: true, data: validationResult.data };
@@ -116,17 +116,17 @@ export function useStepBlocksV4(stepId: string) {
 
     // Validate new block
     const validationResult = QuizBlockSchemaZ.safeParse(newBlock);
-    
+
     if (!validationResult.success) {
-      appLogger.error('❌ Validação do block duplicado falhou:', { 
-        data: [validationResult.error.errors] 
+      appLogger.error('❌ Validação do block duplicado falhou:', {
+        data: [validationResult.error.errors]
       });
       return;
     }
 
     // TODO: Implement in QuizV4Provider
     appLogger.info('📋 Block duplicado:', { data: [blockId, newBlock.id] });
-    
+
     return validationResult.data;
   }, [getBlock]);
 
@@ -158,10 +158,10 @@ export function useStepBlocksV4(stepId: string) {
   const addBlock = useCallback((block: QuizBlock, position?: number) => {
     // Validate with Zod
     const validationResult = QuizBlockSchemaZ.safeParse(block);
-    
+
     if (!validationResult.success) {
-      appLogger.error('❌ Validação do novo block falhou:', { 
-        data: [validationResult.error.errors] 
+      appLogger.error('❌ Validação do novo block falhou:', {
+        data: [validationResult.error.errors]
       });
       return {
         success: false,
@@ -173,8 +173,8 @@ export function useStepBlocksV4(stepId: string) {
     }
 
     // TODO: Implement in QuizV4Provider
-    appLogger.info('➕ Novo block adicionado:', { 
-      data: [block.id, block.type, position] 
+    appLogger.info('➕ Novo block adicionado:', {
+      data: [block.id, block.type, position]
     });
 
     return { success: true, data: validationResult.data };
@@ -212,7 +212,7 @@ export function useStepBlocksV4(stepId: string) {
     // Data
     step,
     blocks,
-    
+
     // Block operations
     getBlock,
     getBlockIndex,
@@ -222,12 +222,15 @@ export function useStepBlocksV4(stepId: string) {
     moveBlockUp,
     moveBlockDown,
     addBlock,
-    
+
     // Validation
     validateAllBlocks,
-    
+
     // State
     isLoading: state.isLoading,
     error: state.error,
   };
 }
+
+// Export alias for compatibility
+export { useStepBlocksV4 as useStepBlocks };

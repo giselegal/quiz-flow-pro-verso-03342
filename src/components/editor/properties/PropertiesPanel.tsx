@@ -9,9 +9,12 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
-import { getBlockDefinition } from '@/editor/registry/BlockRegistry';
+import { useStepBlocks } from '@/hooks/useStepBlocksV4';
+// import { getBlockDefinition } from '@/core/runtime/quiz/blocks/BlockRegistry'; // TODO: Missing export
 import { Button } from '@/components/ui/button';
+
+// Stub temporário
+const getBlockDefinition = (type: string) => null;
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
