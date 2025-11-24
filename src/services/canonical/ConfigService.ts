@@ -1004,4 +1004,12 @@ export class ConfigService extends BaseCanonicalService {
 // EXPORTS
 // ============================================================================
 
+/**
+ * Singleton instance for generic configuration management
+ * 
+ * NOTE: For funnel-specific configuration, use ConfigurationService from '@/services/ConfigurationService'
+ * This service handles generic app config (feature flags, env vars, theme, integrations)
+ */
+export const configService = ConfigService.getInstance();
+
 export default ConfigService;
