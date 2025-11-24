@@ -36,6 +36,10 @@ import { useAutosaveIndicator } from '../AutosaveIndicator.hook';
 import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 // ✅ WAVE 2: Performance Monitor
 import { PerformanceMonitor } from '@/components/editor/PerformanceMonitor';
+// 🎨 WYSIWYG: Sistema de edição ao vivo
+import { useWYSIWYGBridge } from '@/hooks/useWYSIWYGBridge';
+import ViewportSelector, { type ViewportSize } from './ViewportSelector';
+import { ViewportContainer } from './ViewportSelector/ViewportContainer';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -319,9 +323,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch { return false; }
     });
 
+    // 📐 Viewport State (WYSIWYG)
+    const [viewport, setViewport] = useState<'mobile' | 'tablet' | 'desktop' | 'full'>(() => {
+        try {
+            const saved = localStorage.getItem('qm-editor:viewport');
+            return (saved as 'mobile' | 'tablet' | 'desktop' | 'full') || 'full';
+        } catch { return 'full'; }
+    });
+
     useEffect(() => {
         try { localStorage.setItem('qm-editor:canvas-mode', canvasMode); } catch { }
     }, [canvasMode]);
+
+    useEffect(() => {
+        try { localStorage.setItem('qm-editor:viewport', viewport); } catch { }
+    }, [viewport]);
 
     useEffect(() => {
         try { localStorage.setItem('qm-editor:show-health-panel', String(showHealthPanel)); } catch { }
@@ -330,11 +346,47 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch { }
     }, [previewMode]);
 
-    // ⌨️ Atalhos de teclado para alternar modos (Ctrl+1/2/3)
+    // 🎨 WYSIWYG Bridge: Sincronização instantânea entre propriedades e canvas
+    const wysiwyg = useWYSIWYGBridge({
+        currentStep: safeCurrentStep,
+        onAutoSave: (blocks, stepKey) => queueAutosave(stepKey, blocks),
+        autoSaveDelay: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
+        enableValidation: true,
+        mode: canvasMode === 'edit' ? 'edit' : previewMode === 'live' ? 'preview-live' : 'preview-production',
+    });
+
+    // ⌨️ Atalhos de teclado para alternar modos (Ctrl+1/2/3) e viewport (Ctrl+Alt+1/2/3/0)
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
-            // Atalhos simples: Ctrl+1/2/3
-            if (e.ctrlKey || e.metaKey) {
+            const isMacOrWin = e.ctrlKey || e.metaKey;
+
+            // Atalhos de viewport: Ctrl+Alt+1/2/3/0
+            if (isMacOrWin && e.altKey) {
+                if (e.key === '1') {
+                    e.preventDefault();
+                    setViewport('mobile');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Viewport Mobile (Ctrl+Alt+1)');
+                    return;
+                } else if (e.key === '2') {
+                    e.preventDefault();
+                    setViewport('tablet');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Viewport Tablet (Ctrl+Alt+2)');
+                    return;
+                } else if (e.key === '3') {
+                    e.preventDefault();
+                    setViewport('desktop');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Viewport Desktop (Ctrl+Alt+3)');
+                    return;
+                } else if (e.key === '0') {
+                    e.preventDefault();
+                    setViewport('full');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Viewport Full (Ctrl+Alt+0)');
+                    return;
+                }
+            }
+
+            // Atalhos simples: Ctrl+1/2/3 (sem Alt)
+            if (isMacOrWin && !e.altKey) {
                 if (e.key === '1') {
                     e.preventDefault();
                     setCanvasMode('edit');
@@ -1652,6 +1704,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                         <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
 
+                        {/* 📐 Viewport Selector (WYSIWYG) */}
+                        <ViewportSelector
+                            value={viewport}
+                            onChange={setViewport}
+                            className="hidden lg:flex"
+                        />
+
+                        <div className="w-px h-6 bg-gray-300 hidden lg:block" /> {/* Separator */}
+
                         {/* 🐛 DEBUG: Toggle para painel simples */}
                         <Button
                             size="sm"
@@ -1839,80 +1900,83 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         stepKey={currentStepKey || 'unknown'}
                                         onReset={handleReloadStep}
                                     >
-                                        <div
-                                            className={
-                                                isLoadingStep
-                                                    ? 'pointer-events-none opacity-50'
-                                                    : ''
-                                            }
+                                        <ViewportContainer
+                                            viewport={viewport}
+                                            showRuler={true}
+                                            className="h-full overflow-auto"
                                         >
-                                            <CanvasColumn
-                                                currentStepKey={currentStepKey}
-                                                blocks={blocks}
-                                                selectedBlockId={selectedBlockId}
-                                                onRemoveBlock={id =>
-                                                    removeBlock(safeCurrentStep, id)
+                                            <div
+                                                className={
+                                                    isLoadingStep
+                                                        ? 'pointer-events-none opacity-50'
+                                                        : ''
                                                 }
-                                                onMoveBlock={(from, to) => {
-                                                    const list = blocks || [];
-                                                    const reordered = [...list];
-                                                    const [moved] = reordered.splice(
-                                                        from,
-                                                        1
-                                                    );
-                                                    reordered.splice(to, 0, moved);
-                                                    reorderBlocks(
-                                                        safeCurrentStep,
-                                                        normalizeOrder(reordered)
-                                                    );
-                                                }}
-                                                onUpdateBlock={(id, patch) =>
-                                                    updateBlock(
-                                                        safeCurrentStep,
-                                                        id,
-                                                        patch
-                                                    )
-                                                }
-                                                onBlockSelect={handleBlockSelect}
-                                                hasTemplate={Boolean(
-                                                    loadedTemplate ||
-                                                    props.templateId ||
-                                                    resourceId
-                                                )}
-                                                onLoadTemplate={handleLoadTemplate}
-                                            />
-                                        </div>
+                                            >
+                                                <CanvasColumn
+                                                    currentStepKey={currentStepKey}
+                                                    blocks={wysiwyg.state.blocks}
+                                                    selectedBlockId={wysiwyg.state.selectedBlockId}
+                                                    onRemoveBlock={id => {
+                                                        wysiwyg.actions.removeBlock(id);
+                                                        removeBlock(safeCurrentStep, id);
+                                                    }}
+                                                    onMoveBlock={(from, to) => {
+                                                        wysiwyg.actions.reorderBlocks(from, to);
+                                                    }}
+                                                    onUpdateBlock={(id, patch) => {
+                                                        wysiwyg.actions.updateBlock(id, patch);
+                                                        updateBlock(safeCurrentStep, id, patch);
+                                                    }}
+                                                    onBlockSelect={(id) => {
+                                                        wysiwyg.actions.selectBlock(id);
+                                                        handleBlockSelect(id);
+                                                    }}
+                                                    hasTemplate={Boolean(
+                                                        loadedTemplate ||
+                                                        props.templateId ||
+                                                        resourceId
+                                                    )}
+                                                    onLoadTemplate={handleLoadTemplate}
+                                                />
+                                            </div>
+                                        </ViewportContainer>
                                     </StepErrorBoundary>
                                 ) : (
                                     <StepErrorBoundary
                                         stepKey={currentStepKey || 'unknown'}
                                         onReset={() => handleReloadStep()}
                                     >
-                                        <PreviewPanel
-                                            currentStepKey={currentStepKey}
-                                            blocks={blocks}
-                                            selectedBlockId={selectedBlockId}
-                                            onBlockSelect={handleBlockSelect}
-                                            isVisible={true}
-                                            className="h-full"
-                                            previewMode={previewMode}
-                                            funnelId={
-                                                unifiedState.currentFunnel?.id || null
-                                            }
-                                            onStepChange={sid => {
-                                                const match = String(sid || '').match(
-                                                    /step-(\d{1,2})/i
-                                                );
-                                                const num = match
-                                                    ? parseInt(match[1], 10)
-                                                    : safeCurrentStep;
-                                                if (
-                                                    Number.isFinite(num) &&
-                                                    num !== safeCurrentStep
-                                                )
-                                                    setCurrentStep(num);
-                                            }}
-                                        />
+                                        <ViewportContainer
+                                            viewport={viewport}
+                                            showRuler={true}
+                                            className="h-full overflow-auto"
+                                        >
+                                            <PreviewPanel
+                                                currentStepKey={currentStepKey}
+                                                blocks={previewMode === 'live' ? wysiwyg.state.blocks : blocks}
+                                                selectedBlockId={selectedBlockId}
+                                                onBlockSelect={handleBlockSelect}
+                                                isVisible={true}
+                                                className="h-full"
+                                                previewMode={previewMode}
+                                                funnelId={
+                                                    unifiedState.currentFunnel?.id || null
+                                                }
+                                                onStepChange={sid => {
+                                                    const match = String(sid || '').match(
+                                                        /step-(\d{1,2})/i
+                                                    );
+                                                    const num = match
+                                                        ? parseInt(match[1], 10)
+                                                        : safeCurrentStep;
+                                                    if (
+                                                        Number.isFinite(num) &&
+                                                        num !== safeCurrentStep
+                                                    )
+                                                        setCurrentStep(num);
+                                                }}
+                                            />
+                                        </ViewportContainer>
                                     </StepErrorBoundary>
                                 )}
                             </div>
@@ -1939,46 +2003,81 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 {useSimplePropertiesPanel ? (
                                     <PropertiesColumn
                                         selectedBlock={
-                                            blocks.find(b => b.id === selectedBlockId) ||
+                                            wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) ||
                                             undefined
                                         }
-                                        blocks={blocks}
-                                        onBlockSelect={handleBlockSelect}
+                                        blocks={wysiwyg.state.blocks}
+                                        onBlockSelect={(id) => {
+                                            wysiwyg.actions.selectBlock(id);
+                                            handleBlockSelect(id);
+                                        }}
                                         onBlockUpdate={(
                                             id: string,
                                             updates: Partial<Block>
                                         ) => {
-                                            console.group('🔄 [QuizModularEditor] onBlockUpdate chamado');
+                                            console.group('🎨 [WYSIWYG] onBlockUpdate chamado');
                                             appLogger.info('blockId:', { data: [id] });
                                             appLogger.info('updates:', { data: [updates] });
                                             appLogger.info('currentStep:', { data: [safeCurrentStep] });
                                             console.groupEnd();
-                                            appLogger.info('🔄 [QuizModularEditor] onBlockUpdate', { blockId: id, updates, step: safeCurrentStep });
-                                            updateBlock(safeCurrentStep, id, updates);
+
+                                            // 🚀 WYSIWYG: Atualização instantânea via hook
+                                            if (updates.properties) {
+                                                wysiwyg.actions.updateBlockProperties(id, updates.properties);
+                                            } else if (updates.content) {
+                                                wysiwyg.actions.updateBlockContent(id, updates.content);
+                                            } else if (updates.config) {
+                                                wysiwyg.actions.updateBlockConfig(id, updates.config);
+                                            } else {
+                                                wysiwyg.actions.updateBlock(id, updates);
+                                            }
+
+                                            // Sync com SuperUnified (acontece automaticamente via bridge)
+                                            appLogger.info('✨ [WYSIWYG] Atualização instantânea aplicada');
                                         }}
-                                        onClearSelection={() => setSelectedBlock(null)}
+                                        onClearSelection={() => {
+                                            wysiwyg.actions.selectBlock(null);
+                                            setSelectedBlock(null);
+                                        }}
                                     />
                                 ) : (
                                     <PropertiesColumnWithJson
                                         selectedBlock={
-                                            blocks.find(b => b.id === selectedBlockId) ||
+                                            wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) ||
                                             undefined
                                         }
-                                        blocks={blocks}
-                                        onBlockSelect={handleBlockSelect}
+                                        blocks={wysiwyg.state.blocks}
+                                        onBlockSelect={(id) => {
+                                            wysiwyg.actions.selectBlock(id);
+                                            handleBlockSelect(id);
+                                        }}
                                         onBlockUpdate={(
                                             id: string,
                                             updates: Partial<Block>
                                         ) => {
-                                            console.group('🔄 [QuizModularEditor] onBlockUpdate chamado');
+                                            console.group('🎨 [WYSIWYG] onBlockUpdate chamado');
                                             appLogger.info('blockId:', { data: [id] });
                                             appLogger.info('updates:', { data: [updates] });
                                             appLogger.info('currentStep:', { data: [safeCurrentStep] });
                                             console.groupEnd();
-                                            appLogger.info('🔄 [QuizModularEditor] onBlockUpdate', { blockId: id, updates, step: safeCurrentStep });
-                                            updateBlock(safeCurrentStep, id, updates);
+
+                                            // 🚀 WYSIWYG: Atualização instantânea via hook
+                                            if (updates.properties) {
+                                                wysiwyg.actions.updateBlockProperties(id, updates.properties);
+                                            } else if (updates.content) {
+                                                wysiwyg.actions.updateBlockContent(id, updates.content);
+                                            } else if (updates.config) {
+                                                wysiwyg.actions.updateBlockConfig(id, updates.config);
+                                            } else {
+                                                wysiwyg.actions.updateBlock(id, updates);
+                                            }
+
+                                            appLogger.info('✨ [WYSIWYG] Atualização instantânea aplicada');
                                         }}
-                                        onClearSelection={() => setSelectedBlock(null)}
+                                        onClearSelection={() => {
+                                            wysiwyg.actions.selectBlock(null);
+                                            setSelectedBlock(null);
+                                        }}
                                         fullTemplate={fullTemplate}
                                         onTemplateChange={handleTemplateChange}
                                         templateId={currentStepKey}

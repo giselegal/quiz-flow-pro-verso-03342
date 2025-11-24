@@ -52,8 +52,6 @@ export interface WYSIWYGActions {
   updateBlockProperties: (blockId: string, properties: Partial<Block['properties']>) => void;
   /** Atualizar conteúdo de um bloco */
   updateBlockContent: (blockId: string, content: Partial<Block['content']>) => void;
-  /** Atualizar configurações de um bloco */
-  updateBlockConfig: (blockId: string, config: Partial<Block['config']>) => void;
   /** Atualizar bloco completo */
   updateBlock: (blockId: string, updates: Partial<Block>) => void;
   /** Adicionar novo bloco */
@@ -247,10 +245,6 @@ export function useWYSIWYG(
 
       updateBlockContent: (blockId: string, content: Partial<Block['content']>) => {
         enqueueUpdate(blockId, { content: { ...content } });
-      },
-
-      updateBlockConfig: (blockId: string, config: Partial<Block['config']>) => {
-        enqueueUpdate(blockId, { config: { ...config } });
       },
 
       updateBlock: (blockId: string, updates: Partial<Block>) => {
