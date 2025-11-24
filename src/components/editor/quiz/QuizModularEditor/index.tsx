@@ -767,23 +767,61 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             try {
                 const svc: any = templateService;
                 const templateOrResource = props.templateId ?? resourceId;
+
+                // 🔥 DEBUG FORÇADO
+                console.log('🔥🔥🔥 [DEBUG] ensureStepBlocks INICIOU', {
+                    stepId,
+                    stepIndex,
+                    templateId: props.templateId,
+                    resourceId,
+                    templateOrResource,
+                    temResourceId: !!templateOrResource
+                });
+
                 if (!templateOrResource) {
+                    console.error('❌❌❌ [DEBUG] templateOrResource é UNDEFINED!', {
+                        propsTemplateId: props.templateId,
+                        propsResourceId: props.resourceId,
+                        propsFunnelId: props.funnelId,
+                        resourceId
+                    });
                     appLogger.warn('[QuizModularEditor] ensureStepBlocks chamado sem templateOrResource');
                     setStepLoading(false);
                     return;
                 }
 
+                console.log(`🔍🔍🔍 [DEBUG] Chamando templateService.getStep('${stepId}', '${templateOrResource}')`);
                 appLogger.info(`🔍 [QuizModularEditor] Chamando getStep para ${stepId}, template: ${templateOrResource}`);
+
                 const result = await svc.getStep(stepId, templateOrResource, { signal });
+
+                console.log('📦📦📦 [DEBUG] getStep retornou:', {
+                    success: result?.success,
+                    hasData: !!result?.data,
+                    blocksCount: result?.data?.length || 0,
+                    firstBlock: result?.data?.[0],
+                    blockIds: result?.data?.map((b: any) => b.id).slice(0, 5) || []
+                });
+
                 appLogger.info(`📦 [QuizModularEditor] getStep retornou:`, {
                     success: result?.success,
                     blocksCount: result?.data?.length || 0,
                     blockIds: result?.data?.map((b: any) => b.id).slice(0, 5) || []
                 });
+
                 if (!signal.aborted && result?.success && result.data) {
+                    console.log(`✅✅✅ [DEBUG] Chamando setStepBlocks(${stepIndex}, ${result.data.length} blocos)`);
                     appLogger.info(`✅ [QuizModularEditor] Chamando setStepBlocks com ${result.data.length} blocos`);
                     setStepBlocks(stepIndex, result.data);
+
+                    console.log('🎯🎯🎯 [DEBUG] setStepBlocks COMPLETO - Estado deve ter sido atualizado');
                 } else {
+                    console.warn('⚠️⚠️⚠️ [DEBUG] getStep NÃO retornou dados válidos:', {
+                        aborted: signal.aborted,
+                        success: result?.success,
+                        hasData: !!result?.data,
+                        dataLength: result?.data?.length
+                    });
                     appLogger.warn(`⚠️ [QuizModularEditor] getStep não retornou dados válidos`, {
                         aborted: signal.aborted,
                         success: result?.success,
@@ -791,6 +829,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     });
                 }
             } catch (e) {
+                console.error('💥💥💥 [DEBUG] ensureStepBlocks ERRO:', e);
                 if (!signal.aborted) {
                     appLogger.error('[QuizModularEditor] lazyLoadStep falhou:', e);
                 }
