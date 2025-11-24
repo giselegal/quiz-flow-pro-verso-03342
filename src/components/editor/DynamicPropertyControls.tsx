@@ -11,7 +11,7 @@
  * - Controles type-safe com fallback
  */
 
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -156,6 +156,12 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
     return JSON.stringify(value, null, 2);
   });
   const [localJsonError, setLocalJsonError] = useState<string | undefined>();
+  const [imageError, setImageError] = useState<boolean>(false);
+
+  // Reset image error when value changes
+  useEffect(() => {
+    setImageError(false);
+  }, [value]);
 
   // ✅ Use getInitialValueFromSchema to properly handle falsy values
   const getDisplayValue = useCallback((val: any) => {
@@ -426,14 +432,12 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
               placeholder="URL da imagem ou upload..."
               className={error ? 'border-red-500' : ''}
             />
-            {displayValue && (
+            {displayValue && !imageError && (
               <img
                 src={displayValue}
                 alt="Preview"
                 className="w-full h-32 object-cover rounded border"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
+                onError={() => setImageError(true)}
               />
             )}
           </div>
