@@ -42,6 +42,7 @@ import ViewportSelector, { type ViewportSize } from '@/components/editor/quiz/Vi
 import { ViewportContainer } from '@/components/editor/quiz/ViewportSelector/ViewportContainer';
 import { useEditorMode } from '@/hooks/useEditorMode';
 import { useSnapshot } from '@/hooks/useSnapshot';
+import { useVirtualizedBlocks } from '@/hooks/useVirtualizedBlocks';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -426,6 +427,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         () => wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) || undefined,
         [wysiwyg.state.blocks, wysiwyg.state.selectedBlockId]
     );
+
+    // 🚀 PERFORMANCE: Virtualização para listas grandes (> 50 blocos)
+    const virtualization = useVirtualizedBlocks({
+        blocks: wysiwyg.state.blocks,
+        estimatedBlockHeight: 150,
+        threshold: 50,
+        overscan: 3
+    });
 
     // ⌨️ Atalhos de teclado para alternar modos (Ctrl+1/2/3) e viewport (Ctrl+Alt+1/2/3/0)
     useEffect(() => {
@@ -2099,78 +2108,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
                                 {useSimplePropertiesPanel ? (
                                     <PropertiesColumn
-                                        selectedBlock={
-                                            wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) ||
-                                            undefined
-                                        }
+                                        selectedBlock={selectedBlock}
                                         blocks={wysiwyg.state.blocks}
-                                        onBlockSelect={(id) => {
-                                            wysiwyg.actions.selectBlock(id);
-                                            handleBlockSelect(id);
-                                        }}
-                                        onBlockUpdate={(
-                                            id: string,
-                                            updates: Partial<Block>
-                                        ) => {
-                                            console.group('🎨 [WYSIWYG] onBlockUpdate chamado');
-                                            appLogger.info('blockId:', { data: [id] });
-                                            appLogger.info('updates:', { data: [updates] });
-                                            appLogger.info('currentStep:', { data: [safeCurrentStep] });
-                                            console.groupEnd();
-
-                                            // 🚀 WYSIWYG: Atualização instantânea via hook
-                                            if (updates.properties) {
-                                                wysiwyg.actions.updateBlockProperties(id, updates.properties);
-                                            } else if (updates.content) {
-                                                wysiwyg.actions.updateBlockContent(id, updates.content);
-                                            } else {
-                                                wysiwyg.actions.updateBlock(id, updates);
-                                            }
-
-                                            // Sync com SuperUnified (acontece automaticamente via bridge)
-                                            appLogger.info('✨ [WYSIWYG] Atualização instantânea aplicada');
-                                        }}
-                                        onClearSelection={() => {
-                                            wysiwyg.actions.selectBlock(null);
-                                            setSelectedBlock(null);
-                                        }}
+                                        onBlockSelect={handleWYSIWYGBlockSelect}
+                                        onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                        onClearSelection={handleWYSIWYGClearSelection}
                                     />
                                 ) : (
                                     <PropertiesColumnWithJson
-                                        selectedBlock={
-                                            wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) ||
-                                            undefined
-                                        }
+                                        selectedBlock={selectedBlock}
                                         blocks={wysiwyg.state.blocks}
-                                        onBlockSelect={(id) => {
-                                            wysiwyg.actions.selectBlock(id);
-                                            handleBlockSelect(id);
-                                        }}
-                                        onBlockUpdate={(
-                                            id: string,
-                                            updates: Partial<Block>
-                                        ) => {
-                                            console.group('🎨 [WYSIWYG] onBlockUpdate chamado');
-                                            appLogger.info('blockId:', { data: [id] });
-                                            appLogger.info('updates:', { data: [updates] });
-                                            appLogger.info('currentStep:', { data: [safeCurrentStep] });
-                                            console.groupEnd();
-
-                                            // 🚀 WYSIWYG: Atualização instantânea via hook
-                                            if (updates.properties) {
-                                                wysiwyg.actions.updateBlockProperties(id, updates.properties);
-                                            } else if (updates.content) {
-                                                wysiwyg.actions.updateBlockContent(id, updates.content);
-                                            } else {
-                                                wysiwyg.actions.updateBlock(id, updates);
-                                            }
-
-                                            appLogger.info('✨ [WYSIWYG] Atualização instantânea aplicada');
-                                        }}
-                                        onClearSelection={() => {
-                                            wysiwyg.actions.selectBlock(null);
-                                            setSelectedBlock(null);
-                                        }}
+                                        onBlockSelect={handleWYSIWYGBlockSelect}
+                                        onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                        onClearSelection={handleWYSIWYGClearSelection}
                                         fullTemplate={fullTemplate}
                                         onTemplateChange={handleTemplateChange}
                                         templateId={currentStepKey}
