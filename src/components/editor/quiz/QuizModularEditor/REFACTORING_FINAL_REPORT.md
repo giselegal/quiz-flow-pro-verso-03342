@@ -427,6 +427,23 @@ export interface UseEditorModeReturn {
 
 ---
 
+## 🔧 Melhorias Pós-Refatoração
+
+### Implementado em 2025-11-24
+- ✅ **Auto-fix de validação**: Implementado lógica para corrigir erros automaticamente
+- ✅ **Dismiss de warnings**: Permite remover warnings da lista temporariamente
+- ✅ **FunnelId dinâmico**: useEditorPersistence agora usa resourceId/templateId ao invés de placeholder hardcoded
+- ✅ **Logging aprimorado**: Adicionado appLogger.debug para rastreamento de saves
+
+**Arquivos modificados:**
+- `index.tsx`: Handlers de auto-fix e dismiss implementados
+- `hooks/useEditorPersistence.ts`: Parâmetros resourceId/templateId adicionados
+
+**Testes validados:**
+- ✅ 28/28 testes de hooks ainda passando após melhorias
+
+---
+
 ## 🚀 Próximos Passos Recomendados
 
 ### Fase 4 (Opcional) - Performance

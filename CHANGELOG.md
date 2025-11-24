@@ -57,6 +57,16 @@ Grande refatoração focando em modularidade, testabilidade e TypeScript strict 
 
 **Documentação:** `src/components/editor/quiz/QuizModularEditor/REFACTORING_FINAL_REPORT.md`
 
+### Melhorias Adicionais (Pós-Refatoração)
+**Data**: 2025-11-24 (mesmo dia)
+
+- ✅ **Auto-fix implementado**: TemplateHealthPanel agora pode corrigir erros automaticamente
+- ✅ **Dismiss de warnings**: Usuários podem remover warnings temporariamente
+- ✅ **FunnelId dinâmico**: useEditorPersistence usa resourceId/templateId ao invés de placeholder
+- ✅ **Logging aprimorado**: Rastreamento detalhado de operações de save
+
+**Resultado:** Zero TODOs críticos pendentes no QuizModularEditor
+
 ---
 
 ## [Unreleased] - 2025-11-22
