@@ -228,10 +228,20 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
     });
 
     // Selecionar blocos: priorizar props (modo live) sobre fetch (modo production)
+    // ⚠️ IMPORTANTE: Se blocksFromProps existe, IGNORE completamente fetchedBlocks (pode ser cache do React Query)
     const blocks: Block[] | null = useMemo(() => {
-        const source = (blocksFromProps ?? fetchedBlocks ?? null) as Block[] | null;
-        return source ? [...source] : source; // shallow copy para evitar mutações externas
-    }, [blocksFromProps, fetchedBlocks, tick]);
+        let source: Block[] | null = null;
+
+        if (blocksFromProps && blocksFromProps.length > 0) {
+            // Modo live: usar props (WYSIWYG local state)
+            source = blocksFromProps;
+        } else if (shouldFetchFromBackend && fetchedBlocks) {
+            // Modo production: usar backend fetch
+            source = fetchedBlocks;
+        }
+
+        return source ? [...source] : null; // shallow copy para evitar mutações externas
+    }, [blocksFromProps, fetchedBlocks, shouldFetchFromBackend, tick]);
 
     // ✅ SPRINT 1: Auto metrics tracking
     useAutoMetrics('CanvasColumn', {
@@ -247,14 +257,23 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
 
     // Log de diagnóstico quando props.blocks mudar
     useEffect(() => {
+        const dataSource = blocksFromProps && blocksFromProps.length > 0
+            ? 'PROPS (WYSIWYG)'
+            : shouldFetchFromBackend && fetchedBlocks
+                ? 'BACKEND (React Query)'
+                : 'NENHUM';
+
         console.log('🎨 [CanvasColumn] Renderização:', {
             currentStepKey,
             blocksFromProps: blocksFromProps?.length || 0,
             fetchedBlocks: fetchedBlocks?.length || 0,
             finalBlocks: blocks?.length || 0,
+            dataSource,
             isEditable,
             shouldFetchFromBackend,
             propsBlockIds: blocksFromProps?.map(b => b.id).slice(0, 3) || [],
+            fetchedBlockIds: fetchedBlocks?.map(b => b.id).slice(0, 3) || [],
+            finalBlockIds: blocks?.map(b => b.id).slice(0, 3) || [],
         });
     }, [blocksFromProps, fetchedBlocks, blocks, currentStepKey, isEditable, shouldFetchFromBackend]);
 
@@ -318,6 +337,15 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
     }
 
     if (!blocks || blocks.length === 0) {
+        console.log('❌ [CanvasColumn] NENHUM BLOCO - Retornando early:', {
+            blocksIsNull: blocks === null,
+            blocksIsUndefined: blocks === undefined,
+            blocksLength: blocks?.length || 0,
+            hasTemplate,
+            blocksFromPropsCount: blocksFromProps?.length || 0,
+            fetchedBlocksCount: fetchedBlocks?.length || 0,
+        });
+
         // ✅ NOVO: Mostrar EmptyCanvasState se não tem template carregado
         if (!hasTemplate && onLoadTemplate) {
             return <EmptyCanvasState onLoadTemplate={onLoadTemplate} />;

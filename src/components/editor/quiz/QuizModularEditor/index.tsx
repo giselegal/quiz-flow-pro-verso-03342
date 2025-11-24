@@ -296,7 +296,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [previewMode, setPreviewMode] = useState<'live' | 'production'>(() => {
         try {
             const v = localStorage.getItem('qm-editor:preview-mode');
-            return v === 'production' ? 'production' : 'live';
+            const mode = v === 'production' ? 'production' : 'live';
+            console.log('🔧 [QuizModularEditor] Preview mode inicial:', { localStorage: v, mode });
+            return mode;
         } catch { return 'live'; }
     });
 
