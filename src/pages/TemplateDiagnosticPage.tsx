@@ -11,8 +11,12 @@ import { CheckCircle, XCircle, AlertTriangle, Folder, FileText } from 'lucide-re
 
 // Importações de templates e serviços
 import { AVAILABLE_TEMPLATES, TemplateConfig } from '@/config/templates';
-import { templateLibraryService, type FunnelTemplate } from '@/services/templateLibraryService';
+import { templateService } from '@/services/canonical';
+import type { Template } from '@/services/canonical/TemplateService';
 import { getUnifiedTemplates, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
+
+// Legacy FunnelTemplate type alias
+type FunnelTemplate = Template & { steps: Record<string, any[]> };
 import useMyTemplates from '@/hooks/useMyTemplates';
 import { appLogger } from '@/lib/utils/appLogger';
 

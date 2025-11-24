@@ -1,7 +1,15 @@
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 import { cacheManager } from '@/lib/cache/CacheManager';
-import { templateCache } from '@/services/TemplateCache';
+import { cacheService } from '@/services/canonical';
+
+// Legacy templateCache API wrapper
+const templateCache = {
+  get: (key: string) => cacheService.get(key, { store: 'templates' }).then(r => r.success ? r.data : null),
+  set: (key: string, value: any, ttl?: number) => cacheService.set(key, value, { store: 'templates', ttl }),
+  has: (key: string) => cacheService.has(key, { store: 'templates' }),
+  clear: () => cacheService.clear({ store: 'templates' }),
+};
 
 // ✅ G4 FIX: Cache de paths falhos para evitar requisições repetidas
 const failedPathsCache = new Map<string, number>();
