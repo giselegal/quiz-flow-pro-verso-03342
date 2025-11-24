@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Eye, Edit3, Play, Save, Download, Upload, Undo2, Redo2 } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
-import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult } from '@/lib/utils/templateValidation';
+import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult, type TemplateValidationResult } from '@/lib/utils/templateValidation';
 // Loading context (provider + hook)
 import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadingContext';
 // Arquitetura unificada de recursos
@@ -29,6 +29,8 @@ import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 import { useQueuedAutosave } from '@/hooks/useQueuedAutosave';
 // Autosave feedback visual
 import { AutosaveIndicator } from '../AutosaveIndicator';
+// Template Health Panel
+import { TemplateHealthPanel } from './components/TemplateHealthPanel';
 import { useAutosaveIndicator } from '../AutosaveIndicator.hook';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
 import { useStepPrefetch } from '@/hooks/useStepPrefetch';
@@ -308,9 +310,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
     const [templateLoadError, setTemplateLoadError] = useState(false);
 
+    // 🏥 Health Panel State
+    const [validationResult, setValidationResult] = useState<TemplateValidationResult | null>(null);
+    const [showHealthPanel, setShowHealthPanel] = useState<boolean>(() => {
+        try {
+            const saved = localStorage.getItem('qm-editor:show-health-panel');
+            return saved === 'true';
+        } catch { return false; }
+    });
+
     useEffect(() => {
         try { localStorage.setItem('qm-editor:canvas-mode', canvasMode); } catch { }
     }, [canvasMode]);
+
+    useEffect(() => {
+        try { localStorage.setItem('qm-editor:show-health-panel', String(showHealthPanel)); } catch { }
+    }, [showHealthPanel]);
     useEffect(() => {
         try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch { }
     }, [previewMode]);
@@ -633,15 +648,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 if (!signal.aborted) {
                     const formattedResult = formatValidationResult(result);
 
+                    // 🏥 Armazenar resultado para TemplateHealthPanel
+                    setValidationResult(result);
+
                     if (!result.isValid) {
                         // Erros críticos encontrados
                         appLogger.error(`[G5] Template inválido:\n${formattedResult}`);
                         showToast({
                             type: 'error',
                             title: 'Template Inválido',
-                            message: `${result.errors.filter(e => e.severity === 'critical').length} erros críticos encontrados`,
+                            message: `${result.errors.filter(e => e.severity === 'critical').length} erros críticos encontrados. Clique no ícone de saúde para ver detalhes.`,
                             duration: 6000,
                         });
+                        // Auto-abrir painel de saúde em caso de erros críticos
+                        setShowHealthPanel(true);
                     } else if (result.warnings.length > 0 || result.errors.length > 0) {
                         // Warnings ou erros não-críticos
                         appLogger.warn(`[G5] Template com avisos:\n${formattedResult}`);
