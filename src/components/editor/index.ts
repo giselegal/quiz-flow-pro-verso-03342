@@ -41,10 +41,10 @@ export { default as EditBlockContent } from './EditBlockContent';
 export { StepsPanel } from './StepsPanel';
 
 // 🎯 PAINEL DE PROPRIEDADES RECOMENDADO (use este!)
-export { EnhancedUniversalPropertiesPanel } from '../universal';
+export { EnhancedUniversalPropertiesPanel } from '@/components/universal';
 
 // ❌ DEPRECIADO: Componentes de propriedades antigos (não usar)
-// Para compatibilidade apenas - use EnhancedUniversalPropertiesPanel de ../universal/
+// Para compatibilidade apenas - use EnhancedUniversalPropertiesPanel de @/components/universal
 export * from './properties';
 
 // ============================================================================
