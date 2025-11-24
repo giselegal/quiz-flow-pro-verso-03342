@@ -5,7 +5,7 @@
  * gradual migration to canonical services with feature flags.
  * 
  * @version 1.0.0
- * @phase Fase 2 - Migração Progressiva
+ * @phase Phase 2 - Progressive Migration
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';

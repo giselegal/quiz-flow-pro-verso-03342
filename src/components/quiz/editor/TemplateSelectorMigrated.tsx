@@ -12,7 +12,7 @@
  * - Uses canonical TemplateService through migration helpers
  * 
  * @version 2.0.0 - Phase 2 Migration
- * @phase Fase 2 - Migração Progressiva
+ * @phase Phase 2 - Progressive Migration
  */
 
 import React, { useState, useEffect } from 'react';

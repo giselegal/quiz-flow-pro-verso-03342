@@ -9,7 +9,7 @@
  * feature flags.
  * 
  * @version 1.0.0
- * @phase Fase 2 - Migração Progressiva
+ * @phase Phase 2 - Progressive Migration
  */
 
 import { featureFlags } from '@/config/flags';
@@ -24,6 +24,9 @@ import type { ServiceResult } from './types';
 /**
  * Get the appropriate template service based on feature flags
  * 
+ * NOTE: Currently always returns canonical service as legacy services are being phased out.
+ * The feature flag controls whether components use this service or handle their own legacy logic.
+ * 
  * @example
  * ```typescript
  * const service = getTemplateService();
@@ -31,13 +34,10 @@ import type { ServiceResult } from './types';
  * ```
  */
 export function getTemplateService() {
-  if (featureFlags.USE_CANONICAL_TEMPLATE_SERVICE) {
-    return canonicalTemplateService;
-  }
-  
-  // Fallback to legacy service if flag is disabled
-  // This allows gradual migration without breaking existing functionality
-  return canonicalTemplateService; // For now, always use canonical
+  // Always return canonical service
+  // Feature flags are used at the component level to decide whether to use this service
+  // or maintain their own legacy implementation during the migration period
+  return canonicalTemplateService;
 }
 
 /**
