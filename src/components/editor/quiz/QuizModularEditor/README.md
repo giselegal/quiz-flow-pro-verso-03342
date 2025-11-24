@@ -281,3 +281,154 @@ Para dúvidas sobre a arquitetura refatorada:
 ---
 
 **Última atualização:** Fase 3.1 - Novembro 2025
+
+---
+
+## 🎛️ Painel de Propriedades Nocode
+
+### Princípio
+
+**O painel nocode nunca edita o JSON oficial diretamente; ele edita um draft validado e apenas comita ao estado global quando consistente.**
+
+### Arquitetura
+
+O painel de propriedades implementa o padrão "Draft + Commit":
+
+1. **Draft Local**: Quando um bloco é selecionado, suas propriedades são carregadas em um estado draft local
+2. **Validação em Tempo Real**: Cada alteração de campo é validada contra o schema do bloco
+3. **Commit Explícito**: O usuário deve clicar "Aplicar" para salvar as alterações no estado global
+4. **Cancelamento**: O botão "Cancelar" reverte o draft para o estado original
+
+### Componentes Envolvidos
+
+```
+src/core/schema/
+├── SchemaInterpreter.ts     # Define PropertySchema e BlockTypeSchema
+└── propertyValidation.ts    # Helpers de coerção e validação
+
+src/components/editor/
+├── DynamicPropertyControls.tsx  # Renderiza controles baseados no schema
+└── quiz/QuizModularEditor/
+    ├── hooks/
+    │   └── useDraftProperties.ts  # Hook para gerenciamento de draft
+    └── components/
+        └── PropertiesColumn/
+            └── index.tsx          # Painel principal de propriedades
+```
+
+### Hook useDraftProperties
+
+```typescript
+import { useDraftProperties } from './hooks';
+
+const {
+  draft,            // Estado atual do draft
+  errors,           // Erros de validação por campo
+  isDirty,          // Se há alterações não salvas
+  isValid,          // Se todos os campos são válidos
+  updateField,      // Atualiza um campo com validação
+  updateJsonField,  // Atualiza campo JSON com buffer de texto
+  commitDraft,      // Aplica draft ao estado global
+  cancelDraft,      // Reverte para estado original
+  getJsonBuffer,    // Obtém buffer de texto para campo JSON
+} = useDraftProperties({
+  schema,              // Schema do bloco
+  initialProperties,   // Propriedades iniciais
+  onCommit: (props) => // Callback ao aplicar
+});
+```
+
+### Validação por Campo
+
+O helper `coerceAndValidateProperty` em `propertyValidation.ts` suporta:
+
+- **Coerção de tipo**: string → number, string → boolean, etc.
+- **required**: Impede commit com campos obrigatórios vazios
+- **min/max**: Validação de range para números
+- **pattern**: Validação por regex
+- **enum**: Validação contra lista de valores permitidos
+- **custom**: Função de validação customizada
+
+### JSON Editor Seguro
+
+O controle `json-editor` agora usa um buffer de texto separado:
+
+1. O usuário digita JSON no textarea
+2. A cada alteração, tentamos fazer parse
+3. Se válido: atualizamos o draft com o objeto parseado
+4. Se inválido: mostramos erro mas NÃO corrompemos o valor anterior
+
+### Tratamento de Valores Falsy
+
+A função `getInitialValueFromSchema` trata corretamente:
+
+- `0` não é substituído por default
+- `false` não é substituído por default  
+- `''` não é substituído por default
+- Apenas `undefined` e `null` usam o default do schema
+
+### Boas Práticas
+
+#### Adicionando Novas Propriedades
+
+1. Defina a propriedade no schema do bloco em `blockPropertySchemas.ts`
+2. Especifique o tipo (`type`), controle (`control`) e validações
+3. O `DynamicPropertyControls` renderizará automaticamente
+
+```typescript
+// Exemplo de definição de propriedade
+myProperty: {
+  type: 'number',
+  control: 'range',
+  label: 'Minha Propriedade',
+  default: 50,
+  required: true,
+  validation: {
+    min: 0,
+    max: 100,
+    step: 5
+  }
+}
+```
+
+#### Adicionando Novos Tipos de Controle
+
+1. Adicione o tipo em `PropertyControlType` em `propertyValidation.ts`
+2. Adicione o mapeamento em `normalizeControlType`
+3. Implemente o case no switch de `PropertyControl` em `DynamicPropertyControls.tsx`
+4. Trate valores falsy corretamente usando `getInitialValueFromSchema`
+
+### Fluxo de Dados
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Seleção de Bloco                          │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  normalizeBlockData() → merge com defaults do schema         │
+│                    ↓                                         │
+│              initialProperties                               │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 useDraftProperties()                         │
+│                                                              │
+│  ┌─────────┐   updateField()    ┌──────────┐                │
+│  │  draft  │ ◄─────────────────►│  errors  │                │
+│  └─────────┘                    └──────────┘                │
+│       │                                                      │
+│       ▼                                                      │
+│  DynamicPropertyControls (renderiza draft, mostra errors)    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                   commitDraft() │ cancelDraft()
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  createSynchronizedBlockUpdate() → onBlockUpdate()          │
+│                    ↓                                         │
+│         Estado Global (Zustand / Context)                    │
+└─────────────────────────────────────────────────────────────┘
+```

@@ -1,11 +1,17 @@
 /**
- * 🎛️ DYNAMIC PROPERTY CONTROLS - FASE 2 Integração
+ * 🎛️ DYNAMIC PROPERTY CONTROLS - FASE 2 Integração + Draft Pattern
  * 
- * Gera controles de propriedades dinamicamente baseado em schemas
- * Elimina necessidade de if/else hardcoded no painel de propriedades
+ * Gera controles de propriedades dinamicamente baseado em schemas.
+ * Agora integrado com o sistema de draft e validação em tempo real.
+ * 
+ * MELHORIAS:
+ * - Validação por campo em tempo real
+ * - JSON editor com buffer de texto (evita estados inconsistentes)
+ * - Tratamento correto de valores falsy (0, false, '')
+ * - Controles type-safe com fallback
  */
 
-import React from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,14 +19,26 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
-import { Plus, X, AlertTriangle } from 'lucide-react';
+import { Plus, X, AlertTriangle, AlertCircle } from 'lucide-react';
 import { schemaInterpreter, PropertySchema } from '@/core/schema/SchemaInterpreter';
 import { appLogger } from '@/lib/utils/appLogger';
+import {
+  PropertyControlType,
+  normalizeControlType as normalizeControlTypeFn,
+  getInitialValueFromSchema,
+  safeParseJson
+} from '@/core/schema/propertyValidation';
 
 interface DynamicPropertyControlsProps {
   elementType: string;
   properties: Record<string, any>;
   onChange: (key: string, value: any) => void;
+  /** Optional: field-level errors from draft validation */
+  errors?: Record<string, string>;
+  /** Optional: callback for JSON field text changes (for buffer support) */
+  onJsonTextChange?: (key: string, text: string) => void;
+  /** Optional: get JSON buffer text for a field */
+  getJsonBuffer?: (key: string) => string;
 }
 
 /**
@@ -30,6 +48,9 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
   elementType,
   properties,
   onChange,
+  errors = {},
+  onJsonTextChange,
+  getJsonBuffer,
 }) => {
   const schema = schemaInterpreter.getBlockSchema(elementType);
 
@@ -84,9 +105,13 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
         <PropertyControl
           key={key}
           propertyKey={key}
+          elementType={elementType}
           schema={propSchema}
           value={properties[key]}
+          error={errors[key]}
           onChange={(value) => onChange(key, value)}
+          onJsonTextChange={onJsonTextChange ? (text) => onJsonTextChange(key, text) : undefined}
+          getJsonBuffer={getJsonBuffer ? () => getJsonBuffer(key) : undefined}
         />
       ))}
     </div>
@@ -95,21 +120,50 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
 
 /**
  * Renderiza controle individual baseado no tipo de propriedade
+ * Memoized para evitar re-renders desnecessários
  */
-const PropertyControl: React.FC<{
+interface PropertyControlProps {
   propertyKey: string;
+  elementType: string;
   schema: PropertySchema;
   value: any;
+  error?: string;
   onChange: (value: any) => void;
-}> = ({ propertyKey, schema, value, onChange }) => {
+  onJsonTextChange?: (text: string) => void;
+  getJsonBuffer?: () => string;
+}
+
+const PropertyControl: React.FC<PropertyControlProps> = memo(({
+  propertyKey,
+  elementType,
+  schema,
+  value,
+  error,
+  onChange,
+  onJsonTextChange,
+  getJsonBuffer
+}) => {
   const label = schema.label || propertyKey;
   const description = schema.description;
 
-  // ✅ Normalizar control type (compatibilidade com blockPropertySchemas)
-  const normalizedControl = normalizeControlType(schema.control);
+  // ✅ Use type-safe normalizeControlType with logging for unknown types
+  const normalizedControl = normalizeControlTypeFn(schema.control, elementType, propertyKey);
+  
+  // ✅ State for local JSON text buffer when not using external buffer
+  const [localJsonText, setLocalJsonText] = useState<string>(() => {
+    if (value === undefined || value === null) return '{}';
+    if (typeof value === 'string') return value;
+    return JSON.stringify(value, null, 2);
+  });
+  const [localJsonError, setLocalJsonError] = useState<string | undefined>();
+
+  // ✅ Use getInitialValueFromSchema to properly handle falsy values
+  const getDisplayValue = useCallback((val: any) => {
+    return getInitialValueFromSchema(schema, val);
+  }, [schema]);
 
   // 🔍 DEBUG: Wrapper para logar todas as mudanças
-  const handleChange = (newValue: any) => {
+  const handleChange = useCallback((newValue: any) => {
     appLogger.info('🎛️ [PropertyControl] onChange:', {
       data: [{
         propertyKey,
@@ -119,49 +173,94 @@ const PropertyControl: React.FC<{
       }]
     });
     onChange(newValue);
-  };
+  }, [propertyKey, value, normalizedControl, onChange]);
+
+  // ✅ JSON Editor handler with text buffer
+  const handleJsonChange = useCallback((textValue: string) => {
+    if (onJsonTextChange) {
+      // Use external buffer from useDraftProperties
+      onJsonTextChange(textValue);
+    } else {
+      // Use local buffer
+      setLocalJsonText(textValue);
+      const { value: parsed, error: parseError, isValid } = safeParseJson(textValue);
+      
+      if (isValid) {
+        setLocalJsonError(undefined);
+        handleChange(parsed);
+      } else {
+        setLocalJsonError(parseError);
+        // Don't call handleChange with invalid JSON - keep the previous valid value
+      }
+    }
+  }, [onJsonTextChange, handleChange]);
+
+  // Get JSON text to display
+  const getJsonDisplayText = useCallback(() => {
+    if (getJsonBuffer) {
+      return getJsonBuffer();
+    }
+    return localJsonText;
+  }, [getJsonBuffer, localJsonText]);
 
   const renderControl = () => {
     switch (normalizedControl) {
-      case 'text':
+      case 'text': {
+        // ✅ Preserve empty strings, don't replace with placeholder
+        const displayValue = value !== undefined && value !== null ? String(value) : '';
         return (
           <Input
             id={propertyKey}
-            value={value || ''}
+            value={displayValue}
             onChange={(e) => handleChange(e.target.value)}
-            placeholder={schema.default || ''}
+            placeholder={schema.default !== undefined ? String(schema.default) : ''}
+            className={error ? 'border-red-500' : ''}
           />
         );
+      }
 
-      case 'textarea':
+      case 'textarea': {
+        const displayValue = value !== undefined && value !== null ? String(value) : '';
         return (
           <Textarea
             id={propertyKey}
-            value={value || ''}
+            value={displayValue}
             onChange={(e) => handleChange(e.target.value)}
-            placeholder={schema.default || ''}
+            placeholder={schema.default !== undefined ? String(schema.default) : ''}
             rows={4}
+            className={error ? 'border-red-500' : ''}
           />
         );
+      }
 
-      case 'number':
+      case 'number': {
+        // ✅ Preserve 0 as valid value, use default only when undefined/null
+        const displayValue = getDisplayValue(value);
+        const numValue = displayValue !== undefined && displayValue !== null ? displayValue : '';
         return (
           <Input
             id={propertyKey}
             type="number"
-            value={value || schema.default || 0}
-            onChange={(e) => handleChange(Number(e.target.value))}
+            value={numValue}
+            onChange={(e) => {
+              const num = e.target.value === '' ? undefined : Number(e.target.value);
+              handleChange(num);
+            }}
             min={schema.validation?.min}
             max={schema.validation?.max}
+            step={schema.validation?.step}
+            className={error ? 'border-red-500' : ''}
           />
         );
+      }
 
       case 'range': {
-        // ✅ NOVO: Controle de slider para propriedades numéricas com min/max
-        const rangeValue = typeof value === 'number' ? value : (schema.default || 0);
-        const rangeMin = schema.validation?.min || 0;
-        const rangeMax = schema.validation?.max || 100;
-        const rangeStep = schema.validation?.step || 1;
+        // ✅ Preserve 0 as valid value
+        const displayValue = getDisplayValue(value);
+        const rangeValue = typeof displayValue === 'number' ? displayValue : (schema.default ?? 0);
+        const rangeMin = schema.validation?.min ?? 0;
+        const rangeMax = schema.validation?.max ?? 100;
+        const rangeStep = schema.validation?.step ?? 1;
 
         return (
           <div className="space-y-2">
@@ -189,45 +288,56 @@ const PropertyControl: React.FC<{
         );
       }
 
-      case 'toggle':
+      case 'toggle': {
+        // ✅ Preserve false as valid value
+        const displayValue = getDisplayValue(value);
+        const boolValue = typeof displayValue === 'boolean' 
+          ? displayValue 
+          : (typeof schema.default === 'boolean' ? schema.default : false);
         return (
           <div className="flex items-center space-x-2">
             <Switch
               id={propertyKey}
-              checked={typeof value === 'boolean'
-                ? value
-                : (typeof schema.default === 'boolean' ? schema.default : false)}
+              checked={boolValue}
               onCheckedChange={handleChange}
             />
             <span className="text-sm text-muted-foreground">
-              {value ? 'Ativado' : 'Desativado'}
+              {boolValue ? 'Ativado' : 'Desativado'}
             </span>
           </div>
         );
+      }
 
-      case 'color-picker':
+      case 'color-picker': {
+        const displayValue = getDisplayValue(value);
+        const colorValue = displayValue ?? schema.default ?? '#000000';
         return (
           <div className="flex items-center space-x-2">
             <Input
               type="color"
-              value={value || schema.default || '#000000'}
+              value={colorValue}
               onChange={(e) => handleChange(e.target.value)}
               className="w-16 h-10"
             />
             <Input
               type="text"
-              value={value || schema.default || '#000000'}
+              value={colorValue}
               onChange={(e) => handleChange(e.target.value)}
               placeholder="#000000"
-              className="flex-1"
+              className={`flex-1 ${error ? 'border-red-500' : ''}`}
             />
           </div>
         );
+      }
 
-      case 'dropdown':
+      case 'dropdown': {
+        const displayValue = getDisplayValue(value);
+        const selectValue = displayValue !== undefined && displayValue !== null 
+          ? String(displayValue) 
+          : (schema.default !== undefined ? String(schema.default) : '');
         return (
-          <Select value={String(value || schema.default || '')} onValueChange={handleChange}>
-            <SelectTrigger id={propertyKey}>
+          <Select value={selectValue} onValueChange={handleChange}>
+            <SelectTrigger id={propertyKey} className={error ? 'border-red-500' : ''}>
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
             <SelectContent>
@@ -239,15 +349,15 @@ const PropertyControl: React.FC<{
             </SelectContent>
           </Select>
         );
+      }
 
       case 'options-list': {
-        // ✅ NOVO: Editor de lista de opções (usado em options-grid, quiz-transition, etc)
         const optionsList = Array.isArray(value) ? value : [];
 
         return (
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {optionsList.map((option: any, index: number) => (
-              <div key={index} className="flex gap-2 p-2 border rounded bg-muted/30">
+              <div key={option.id || index} className="flex gap-2 p-2 border rounded bg-muted/30">
                 <div className="flex-1 space-y-1">
                   <Input
                     value={option.text || option.label || ''}
@@ -305,50 +415,71 @@ const PropertyControl: React.FC<{
         );
       }
 
-      case 'image-upload':
+      case 'image-upload': {
+        const displayValue = value !== undefined && value !== null ? String(value) : '';
         return (
           <div className="space-y-2">
             <Input
               type="url"
-              value={value || ''}
+              value={displayValue}
               onChange={(e) => handleChange(e.target.value)}
               placeholder="URL da imagem ou upload..."
+              className={error ? 'border-red-500' : ''}
             />
-            {value && (
+            {displayValue && (
               <img
-                src={value}
+                src={displayValue}
                 alt="Preview"
                 className="w-full h-32 object-cover rounded border"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
               />
             )}
           </div>
         );
+      }
 
-      case 'json-editor':
+      case 'json-editor': {
+        // ✅ JSON Editor with text buffer - never directly writes invalid JSON to state
+        const jsonError = error || localJsonError;
+        const jsonText = getJsonDisplayText();
+        
         return (
-          <Textarea
-            value={typeof value === 'string' ? value : JSON.stringify(value, null, 2)}
-            onChange={(e) => {
-              try {
-                const parsed = JSON.parse(e.target.value);
-                handleChange(parsed);
-              } catch {
-                handleChange(e.target.value);
-              }
-            }}
-            placeholder="{}"
-            rows={6}
-            className="font-mono text-xs"
-          />
+          <div className="space-y-2">
+            <Textarea
+              value={jsonText}
+              onChange={(e) => handleJsonChange(e.target.value)}
+              placeholder="{}"
+              rows={6}
+              className={`font-mono text-xs ${jsonError ? 'border-red-500' : ''}`}
+            />
+            {jsonError && (
+              <div className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
+                <AlertCircle className="h-3 w-3" />
+                <span>{jsonError}</span>
+              </div>
+            )}
+          </div>
         );
+      }
 
-      default:
+      default: {
+        // ✅ Fallback with warning about unsupported control type
+        const displayValue = value !== undefined && value !== null ? String(value) : '';
         return (
-          <Input
-            value={value || ''}
-            onChange={(e) => handleChange(e.target.value)}
-          />
+          <div className="space-y-1">
+            <Input
+              value={displayValue}
+              onChange={(e) => handleChange(e.target.value)}
+              className={error ? 'border-red-500' : ''}
+            />
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              Tipo de controle não suportado: {schema.control}
+            </p>
+          </div>
         );
+      }
     }
   };
 
@@ -362,28 +493,24 @@ const PropertyControl: React.FC<{
         <p className="text-xs text-muted-foreground">{description}</p>
       )}
       {renderControl()}
+      {error && !['json-editor'].includes(normalizedControl) && (
+        <div className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
+          <AlertCircle className="h-3 w-3" />
+          <span>{error}</span>
+        </div>
+      )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison for memoization
+  return (
+    prevProps.propertyKey === nextProps.propertyKey &&
+    prevProps.value === nextProps.value &&
+    prevProps.error === nextProps.error &&
+    prevProps.schema === nextProps.schema
+  );
+});
 
-/**
- * ✅ CORREÇÃO: Normaliza tipos de controle dos schemas para tipos internos
- * Mapeia blockPropertySchemas types → DynamicPropertyControls control types
- */
-function normalizeControlType(control: string | undefined): string {
-  if (!control) return 'text';
-
-  const mapping: Record<string, string> = {
-    // blockPropertySchemas.ts → DynamicPropertyControls
-    'select': 'dropdown',
-    'color': 'color-picker',
-    'boolean': 'toggle',
-    'json': 'json-editor',
-    'range': 'range',
-    'options-list': 'options-list',
-  };
-
-  return mapping[control] || control;
-}
+PropertyControl.displayName = 'PropertyControl';
 
 export default DynamicPropertyControls;

@@ -174,13 +174,13 @@ describe('PropertiesColumn Integration', () => {
     fireEvent.change(input, { target: { value: 'New Title' } });
 
     // PropertiesColumn tem um debounce ou botão de salvar?
-    // Olhando o código, tem um botão de salvar e um auto-save debounced.
+    // Olhando o código, tem um botão de aplicar e um padrão draft.
 
-    // Vamos verificar se o botão de salvar fica habilitado
-    const saveButton = screen.getByText(/Salvar Alterações/i);
+    // Vamos verificar se o botão de aplicar fica habilitado
+    const saveButton = screen.getByRole('button', { name: /Aplicar/i });
     expect(saveButton).toBeInTheDocument();
 
-    // Clicar em salvar
+    // Clicar em aplicar
     fireEvent.click(saveButton);
 
     // Verificar se onBlockUpdate foi chamado
@@ -250,11 +250,11 @@ describe('PropertiesColumn Integration', () => {
     const toggle = screen.getByRole('switch');
     expect(toggle).toHaveAttribute('aria-checked', 'false');
 
-    // Alternar o toggle para marcar como dirty e habilitar o botão de salvar
+    // Alternar o toggle para marcar como dirty e habilitar o botão de aplicar
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute('aria-checked', 'true');
 
-    const saveButton = screen.getByText(/Salvar Alterações/i);
+    const saveButton = screen.getByRole('button', { name: /Aplicar/i });
     fireEvent.click(saveButton);
 
     expect(mockOnBlockUpdate).toHaveBeenCalledWith(
@@ -311,7 +311,7 @@ describe('PropertiesColumn Integration', () => {
     const firstOptionInput = screen.getByDisplayValue('Opção 1') as HTMLInputElement;
     fireEvent.change(firstOptionInput, { target: { value: 'Opção 1 editada' } });
 
-    const saveButton = screen.getByText(/Salvar Alterações/i);
+    const saveButton = screen.getByRole('button', { name: /Aplicar/i });
     fireEvent.click(saveButton);
 
     expect(mockOnBlockUpdate).toHaveBeenCalledWith(
