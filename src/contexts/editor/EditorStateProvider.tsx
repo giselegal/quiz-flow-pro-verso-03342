@@ -441,7 +441,14 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
     }, []);
 
     const getStepBlocks = useCallback((step: number): Block[] => {
-        return state.stepBlocks[step] || [];
+        const blocks = state.stepBlocks[step] || [];
+        console.log('📦 [EditorStateProvider] getStepBlocks chamado:', {
+            step,
+            blocksCount: blocks.length,
+            blockIds: blocks.map(b => b.id).slice(0, 3),
+            allStepsKeys: Object.keys(state.stepBlocks),
+        });
+        return blocks;
     }, [state.stepBlocks]);
 
     const isStepDirty = useCallback((step: number): boolean => {
