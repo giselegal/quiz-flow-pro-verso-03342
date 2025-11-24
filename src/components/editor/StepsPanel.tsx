@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services/canonical';
 
 interface Step {
   id: string;
@@ -100,21 +100,22 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
   // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO TEMPLATE SERVICE CANÔNICO (FONTE ÚNICA)
   const serviceStepsReference = useMemo(() => {
+    // Usar listTemplates() que retorna as 21 etapas do quiz
     try {
       appLogger.debug('📋 StepsPanel: Obtendo referência das etapas do templateService...');
-      const allStepsResult = templateService.listSteps();
+      const allStepsResult = templateService.listTemplates();
       const allSteps = allStepsResult?.success ? allStepsResult.data : [];
 
       if (allSteps && allSteps.length > 0) {
-        const serviceSteps = allSteps.map((stepInfo: any) => ({
+        const serviceSteps = allSteps.map((stepInfo: any, index: number) => ({
           id: stepInfo.id,
           name: stepInfo.name,
-          order: stepInfo.order,
-          type: stepInfo.type,
+          order: index + 1,
+          type: 'question' as const,
           description: stepInfo.description,
-          blocksCount: stepInfo.blocksCount || 0,
-          hasTemplate: stepInfo.hasTemplate || true,
-          multiSelect: stepInfo.multiSelect,
+          blocksCount: 0,
+          hasTemplate: true,
+          multiSelect: 3,
         }));
 
         appLogger.debug(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services/canonical';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO STEPTEMPLATE SERVICE
