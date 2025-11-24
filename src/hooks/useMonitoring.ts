@@ -131,9 +131,13 @@ export const useMonitoring = (options?: {
    */
   const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
     // Normaliza para assinatura simples (nome + propriedades)
-    analyticsService.trackEvent(eventName, {
-      component: trackComponent,
-      ...properties,
+    analyticsService.trackEvent({
+      type: 'editor_action' as const,
+      properties: {
+        action: eventName,
+        component: trackComponent,
+        ...properties,
+      },
     });
   }, [trackComponent]);
 
