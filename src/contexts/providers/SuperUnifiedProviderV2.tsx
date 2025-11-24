@@ -48,6 +48,7 @@ import { SyncProvider, useSync } from '@/contexts/sync/SyncProvider';
 import { ValidationProvider, useValidation } from '@/contexts/validation/ValidationProvider';
 import { CollaborationProvider, useCollaboration } from '@/contexts/collaboration/CollaborationProvider';
 import { VersioningProvider, useVersioning } from '@/contexts/versioning/VersioningProvider';
+import { UIProvider, useUI } from '@/contexts/providers/UIProvider';
 
 // ============================================================================
 // COMPOSED PROVIDER
