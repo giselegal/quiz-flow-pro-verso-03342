@@ -249,8 +249,32 @@ function EditorLayoutV4() {
 // ============================================================================
 
 export function EditorV4() {
+    // 🔍 Ler template da URL: ?template=quiz21StepsComplete
+    const params = new URLSearchParams(window.location.search);
+    const templateId = params.get('template');
+
+    // 🎯 Mapear templateId para caminho do JSON
+    let templatePath = '/templates/quiz21-v4.json'; // default
+
+    if (templateId) {
+        // Tentar vários caminhos possíveis
+        const possiblePaths = [
+            `/templates/funnels/${templateId}/master.json`,
+            `/templates/funnels/${templateId}.json`,
+            `/templates/${templateId}.json`,
+            `/templates/quiz21-v4.json`, // fallback
+        ];
+
+        // Por enquanto, usar o primeiro caminho (master.json)
+        // TODO: Implementar detecção de arquivo existente via fetch
+        templatePath = possiblePaths[0];
+
+        console.log(`🔍 [EditorV4] Template solicitado: ${templateId}`);
+        console.log(`📁 [EditorV4] Caminho resolvido: ${templatePath}`);
+    }
+
     return (
-        <QuizV4Provider templatePath="/templates/quiz21-v4.json">
+        <QuizV4Provider templatePath={templatePath}>
             <EditorLayoutV4 />
         </QuizV4Provider>
     );
