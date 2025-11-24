@@ -1,12 +1,12 @@
 /**
  * 📝 TEMPLATE SERVICE - Canonical Service (SINGLE SOURCE OF TRUTH)
  * 
- * ⭐ Este é o ÚNICO serviço canônico para gestão de templates no sistema.
- * Toda operação relacionada a templates DEVE passar por este serviço.
+ * ⭐ This is the ONLY canonical service for template management in the system.
+ * All template operations MUST go through this service.
  * 
- * Service canônico que consolida 20+ services de template em uma API unificada
+ * Canonical service that consolidates 20+ template services into a unified API.
  * 
- * CONSOLIDA (239 → 35 serviços - Fase 1):
+ * CONSOLIDATES:
  * - stepTemplateService.ts
  * - UnifiedTemplateRegistry.ts
  * - HybridTemplateService.ts
@@ -21,23 +21,16 @@
  * - UnifiedBlockStorageService.ts
  * - TemplateRegistry.ts
  * - templateThumbnailService.ts
- * ... (mais 6+ services)
+ * ... (6+ more services)
  * 
- * 🎯 ROADMAP DE MIGRAÇÃO:
- * - Fase 1 (Atual): Estrutura canônica estabelecida com feature flags
- * - Fase 2: Migração progressiva de consumidores usando USE_CANONICAL_TEMPLATE_SERVICE
- * - Fase 3: Deprecação completa dos serviços legados
- * - Fase 4: Remoção dos serviços deprecated
+ * ARCHITECTURE:
+ * - Uses HierarchicalTemplateSource for data access
+ * - Integrates with React Query for state management
+ * - Provides Result pattern for error handling
+ * - Supports both Supabase and local storage
  * 
- * 📋 TODO - PRÓXIMAS MIGRAÇÕES:
- * - [ ] Migrar lógica de thumbnails do templateThumbnailService
- * - [ ] Consolidar caching complexo do TemplatesCacheService
- * - [ ] Integrar AI enhancements do AIEnhancedHybridTemplateService
- * - [ ] Unificar operações de biblioteca do templateLibraryService
- * - [ ] Migrar customizações do customTemplateService
- * 
- * @version 1.0.0
- * @status PRODUCTION-READY
+ * @version 4.0.0 - Phase 4 Finalized
+ * @status PRODUCTION-READY (Canonical Only)
  */
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';

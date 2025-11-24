@@ -1,31 +1,20 @@
 /**
  * 🗄️ CACHE SERVICE - Canonical Facade (SINGLE SOURCE OF TRUTH)
  * 
- * ⭐ Este é o ÚNICO serviço canônico para cache no sistema.
- * Toda operação de cache DEVE passar por este serviço.
+ * ⭐ This is the ONLY canonical service for cache operations in the system.
+ * All cache operations MUST go through this service.
  * 
- * Service canônico que expõe API simplificada para cache unificado
- * Abstrai complexidade do UnifiedCacheService para consumidores
+ * Canonical service that exposes a simplified API for unified caching.
+ * Abstracts the complexity of UnifiedCacheService for consumers.
  * 
- * 🎯 CONSOLIDAÇÃO (239 → 35 serviços - Fase 1):
- * Este serviço faz parte do plano de consolidação arquitetural, substituindo
- * múltiplas implementações de cache dispersas pelo código.
+ * ARCHITECTURE:
+ * - Provides multi-store caching (generic, templates, funnels, steps, blocks)
+ * - Integrates with React Query for server-side cache
+ * - Supports localStorage and sessionStorage backends
+ * - Implements TTL and cache invalidation strategies
  * 
- * 🎯 ROADMAP DE MIGRAÇÃO:
- * - Fase 1 (Atual): Estrutura canônica estabelecida com feature flags
- * - Fase 2: Migração progressiva de consumidores usando USE_CANONICAL_CACHE_SERVICE
- * - Fase 3: Deprecação de localStorage/sessionStorage direto para dados de negócio
- * - Fase 4: Unificação completa com React Query como camada primária
- * 
- * 📋 TODO - PRÓXIMAS MIGRAÇÕES:
- * - [ ] Substituir acessos diretos a localStorage por este serviço
- * - [ ] Substituir acessos diretos a sessionStorage por este serviço
- * - [ ] Migrar Zustand stores de dados de negócio para React Query
- * - [ ] Integrar com React Query para cache híbrido server/client
- * - [ ] Implementar estratégias de invalidação cross-tab
- * 
- * @version 1.0.0
- * @status PRODUCTION-READY
+ * @version 4.0.0 - Phase 4 Finalized
+ * @status PRODUCTION-READY (Canonical Only)
  */
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';

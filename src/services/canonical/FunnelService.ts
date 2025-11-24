@@ -1,13 +1,13 @@
 /**
- * 🎯 CANONICAL FUNNEL SERVICE - FASE 2.2 (SINGLE SOURCE OF TRUTH)
+ * 🎯 CANONICAL FUNNEL SERVICE (SINGLE SOURCE OF TRUTH)
  * 
- * ⭐ Este é o ÚNICO serviço canônico para gestão de Funis no sistema.
- * Toda operação relacionada a funis DEVE passar por este serviço.
+ * ⭐ This is the ONLY canonical service for funnel management in the system.
+ * All funnel operations MUST go through this service.
  * 
- * Serviço canônico unificado para gestão de Funis
- * Consolida 15+ serviços fragmentados em 1 interface clara
+ * Unified canonical service for funnel management.
+ * Consolidates 15+ fragmented services into 1 clear interface.
  * 
- * ELIMINA/DEPRECA (239 → 35 serviços - Fase 1):
+ * CONSOLIDATES:
  * ❌ FunnelService (v1)
  * ❌ FunnelServiceRefactored  
  * ❌ FunnelUnifiedService
@@ -15,33 +15,20 @@
  * ❌ EnhancedFunnelService
  * ❌ ContextualFunnelService
  * ❌ MigratedContextualFunnelService
- * ❌ FunnelConfigPersistenceService (parcial)
- * ❌ FunnelComponentsService (integrado)
- * ... +6 outros
+ * ❌ FunnelConfigPersistenceService (partial)
+ * ❌ FunnelComponentsService (integrated)
+ * ... +6 others
  * 
  * FEATURES:
- * ✅ CRUD completo de funis
- * ✅ Gestão de component_instances
- * ✅ Cache inteligente (Hybrid Strategy)
- * ✅ Validação de schema
- * ✅ Suporte a templates
- * ✅ Modo local + Supabase
+ * ✅ Complete CRUD for funnels
+ * ✅ Component instance management
+ * ✅ Intelligent caching (Hybrid Strategy)
+ * ✅ Schema validation
+ * ✅ Template support
+ * ✅ Local + Supabase modes
  * 
- * 🎯 ROADMAP DE MIGRAÇÃO:
- * - Fase 1 (Atual): Estrutura canônica estabelecida com feature flags
- * - Fase 2: Migração progressiva de consumidores usando USE_CANONICAL_FUNNEL_SERVICE
- * - Fase 3: Deprecação completa dos serviços legados
- * - Fase 4: Remoção dos serviços deprecated
- * 
- * 📋 TODO - PRÓXIMAS MIGRAÇÕES:
- * - [ ] Migrar lógica de contexto do ContextualFunnelService
- * - [ ] Integrar features avançadas do EnhancedFunnelService
- * - [ ] Consolidar persistência do FunnelConfigPersistenceService
- * - [ ] Unificar validações complexas do FunnelValidationService
- * - [ ] Migrar lógica de publicação do FunnelPublishingService
- * 
- * @version 2.0.0
- * @author AI Agent - Fase 2 Consolidação
+ * @version 4.0.0 - Phase 4 Finalized
+ * @status PRODUCTION-READY (Canonical Only)
  */
 
 import { supabase } from '@/lib/supabase';
