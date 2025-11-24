@@ -41,6 +41,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
     onMoveBlock,
     onRemoveBlock,
     onUpdateBlock,
+    isEditable = true,
 }: {
     block: Block;
     index: number;
@@ -49,8 +50,12 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
     onMoveBlock?: (fromIndex: number, toIndex: number) => void;
     onRemoveBlock?: (blockId: string) => void;
     onUpdateBlock?: (blockId: string, patch: Partial<Block>) => void;
+    isEditable?: boolean;
 }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver } = useSafeSortable({ id: block.id });
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver } = useSafeSortable({
+        id: block.id,
+        disabled: !isEditable // 🆕 Desabilitar drag quando não editável
+    });
 
     // 🆕 G30 FIX: Melhor feedback visual durante drag
     const style: React.CSSProperties = {
@@ -210,7 +215,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
     prev.onUpdateBlock === next.onUpdateBlock
 ));
 
-function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect, hasTemplate, onLoadTemplate }: CanvasColumnProps) {
+function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBlockId, onRemoveBlock, onMoveBlock, onUpdateBlock, onBlockSelect, hasTemplate, onLoadTemplate, isEditable = true }: CanvasColumnProps) {
     // ✅ CRITICAL FIX: Todos os hooks devem vir ANTES de qualquer return condicional
     const [error, setError] = useState<string | null>(null);
     const [tick, setTick] = useState(0); // força re-render quando necessário
