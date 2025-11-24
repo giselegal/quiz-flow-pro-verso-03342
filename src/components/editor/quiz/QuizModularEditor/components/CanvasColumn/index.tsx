@@ -69,7 +69,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
                 ? '0 4px 12px rgba(59, 130, 246, 0.3)'
                 : undefined,
         zIndex: isDragging ? 50 : isOver ? 10 : undefined,
-        cursor: isDragging ? 'grabbing' : 'grab',
+        cursor: isEditable ? (isDragging ? 'grabbing' : 'grab') : 'default',
     };
 
     return (
