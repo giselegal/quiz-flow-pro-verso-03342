@@ -14,7 +14,7 @@ vi.mock('@/core/schema/SchemaInterpreter', () => ({
 }));
 
 vi.mock('@/lib/utils/editorEventBus', () => ({
-  onBlockUpdate: vi.fn(() => () => {}), // Retorna função de unsubscribe
+  onBlockUpdate: vi.fn(() => () => { }), // Retorna função de unsubscribe
 }));
 
 vi.mock('@/core/adapters/BlockDataNormalizer', () => ({
@@ -102,6 +102,7 @@ describe('PropertiesColumn Integration', () => {
     const mockBlock = {
       id: 'block-1',
       type: 'test-block',
+      order: 0,
       properties: { title: 'Initial Title' },
       content: {},
     };
@@ -139,6 +140,7 @@ describe('PropertiesColumn Integration', () => {
     const mockBlock = {
       id: 'block-1',
       type: 'test-block',
+      order: 0,
       properties: { title: 'Initial Title' },
       content: {},
     };
@@ -172,17 +174,17 @@ describe('PropertiesColumn Integration', () => {
 
     // PropertiesColumn tem um debounce ou botão de salvar?
     // Olhando o código, tem um botão de salvar e um auto-save debounced.
-    
+
     // Vamos verificar se o botão de salvar fica habilitado
     const saveButton = screen.getByText(/Salvar Alterações/i);
     expect(saveButton).toBeInTheDocument();
-    
+
     // Clicar em salvar
     fireEvent.click(saveButton);
 
     // Verificar se onBlockUpdate foi chamado
     expect(mockOnBlockUpdate).toHaveBeenCalledWith('block-1', expect.objectContaining({
-        properties: expect.objectContaining({ title: 'New Title' })
+      properties: expect.objectContaining({ title: 'New Title' })
     }));
   });
 
@@ -190,6 +192,7 @@ describe('PropertiesColumn Integration', () => {
     const mockBlock = {
       id: 'block-1',
       type: 'unknown-block',
+      order: 0,
       properties: {},
       content: {},
     };
@@ -207,5 +210,114 @@ describe('PropertiesColumn Integration', () => {
 
     expect(screen.getByText('Schema não encontrado')).toBeInTheDocument();
     expect(screen.queryByLabelText('Título')).not.toBeInTheDocument();
+  });
+
+  it('deve respeitar valor booleano false vindo do modelo JSON', () => {
+    const mockBlock = {
+      id: 'block-boolean-1',
+      type: 'quiz:boolean-block',
+      order: 0,
+      properties: { showDescription: false },
+      content: {},
+    };
+
+    const mockSchema = {
+      type: 'quiz:boolean-block',
+      label: 'Boolean Block',
+      category: 'content',
+      properties: {
+        showDescription: {
+          type: 'boolean',
+          control: 'toggle',
+          label: 'Mostrar Descrição',
+          default: true,
+        },
+      },
+    };
+
+    (schemaInterpreter.getBlockSchema as any).mockReturnValue(mockSchema);
+    (normalizeBlockData as any).mockReturnValue(mockBlock);
+
+    render(
+      <PropertiesColumn
+        selectedBlock={mockBlock}
+        onBlockUpdate={mockOnBlockUpdate}
+        onClearSelection={mockOnClearSelection}
+      />
+    );
+
+    const toggle = screen.getByRole('switch');
+    expect(toggle).toHaveAttribute('aria-checked', 'false');
+
+    const saveButton = screen.getByText(/Salvar Alterações/i);
+    fireEvent.click(saveButton);
+
+    expect(mockOnBlockUpdate).toHaveBeenCalledWith(
+      'block-boolean-1',
+      expect.objectContaining({
+        properties: expect.objectContaining({ showDescription: false }),
+      })
+    );
+  });
+
+  it('deve renderizar e persistir lista de opções (options-list) do modelo JSON', () => {
+    const mockBlock = {
+      id: 'block-options-1',
+      type: 'quiz:options-grid',
+      order: 0,
+      properties: {
+        options: [
+          { id: 'opt-1', text: 'Opção 1', value: 'option-1' },
+          { id: 'opt-2', text: 'Opção 2', value: 'option-2' },
+        ],
+      },
+      content: {},
+    };
+
+    const mockSchema = {
+      type: 'quiz:options-grid',
+      label: 'Options Grid',
+      category: 'content',
+      properties: {
+        options: {
+          type: 'array',
+          control: 'options-list',
+          label: 'Opções',
+        },
+      },
+    };
+
+    (schemaInterpreter.getBlockSchema as any).mockReturnValue(mockSchema);
+    (normalizeBlockData as any).mockReturnValue(mockBlock);
+
+    render(
+      <PropertiesColumn
+        selectedBlock={mockBlock}
+        onBlockUpdate={mockOnBlockUpdate}
+        onClearSelection={mockOnClearSelection}
+      />
+    );
+
+    // Deve haver inputs para as opções existentes
+    expect(screen.getByDisplayValue('Opção 1')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Opção 2')).toBeInTheDocument();
+
+    // Editar a primeira opção
+    const firstOptionInput = screen.getByDisplayValue('Opção 1') as HTMLInputElement;
+    fireEvent.change(firstOptionInput, { target: { value: 'Opção 1 editada' } });
+
+    const saveButton = screen.getByText(/Salvar Alterações/i);
+    fireEvent.click(saveButton);
+
+    expect(mockOnBlockUpdate).toHaveBeenCalledWith(
+      'block-options-1',
+      expect.objectContaining({
+        properties: expect.objectContaining({
+          options: expect.arrayContaining([
+            expect.objectContaining({ text: 'Opção 1 editada' }),
+          ]),
+        }),
+      })
+    );
   });
 });
