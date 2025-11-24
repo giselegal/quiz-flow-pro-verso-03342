@@ -98,33 +98,33 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
 
-  // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO STEPTEMPLATE SERVICE (FONTE ÚNICA)
+  // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO TEMPLATE SERVICE CANÔNICO (FONTE ÚNICA)
   const serviceStepsReference = useMemo(() => {
     try {
-      appLogger.debug('📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...');
-      const allSteps = stepTemplateService.getAllSteps();
+      appLogger.debug('📋 StepsPanel: Obtendo referência das etapas do templateService...');
+      const allStepsResult = templateService.listSteps();
+      const allSteps = allStepsResult?.success ? allStepsResult.data : [];
 
       if (allSteps && allSteps.length > 0) {
-        const serviceSteps = allSteps.map(stepInfo => ({
+        const serviceSteps = allSteps.map((stepInfo: any) => ({
           id: stepInfo.id,
           name: stepInfo.name,
           order: stepInfo.order,
           type: stepInfo.type,
           description: stepInfo.description,
-          blocksCount: stepInfo.blocksCount,
-          hasTemplate: stepInfo.hasTemplate,
+          blocksCount: stepInfo.blocksCount || 0,
+          hasTemplate: stepInfo.hasTemplate || true,
           multiSelect: stepInfo.multiSelect,
         }));
 
         appLogger.debug(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
         appLogger.debug(
-          '📊 StepsPanel: Estatísticas dos templates:',
-          stepTemplateService.getTemplateStats(),
+          '📊 StepsPanel: Estatísticas dos templates disponíveis'
         );
         return serviceSteps;
       }
     } catch (error) {
-      appLogger.error('❌ StepsPanel: Erro ao obter referência do stepTemplateService:', error);
+      appLogger.error('❌ StepsPanel: Erro ao obter referência do templateService:', error);
     }
 
     return [];
