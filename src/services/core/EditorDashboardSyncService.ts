@@ -229,8 +229,7 @@ class EditorDashboardSyncServiceImpl {
             // 3. Notificar listeners
             this.emitSyncEvent(syncEvent);
 
-            // 4. Limpar cache
-            UnifiedDataService.clearAllCache();
+            // 4. Cache gerenciado automaticamente
 
             // 5. Mostrar notificação
             this.showNotification({
