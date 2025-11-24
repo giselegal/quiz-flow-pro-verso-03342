@@ -2020,7 +2020,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             >
                                                 <CanvasColumn
                                                     currentStepKey={currentStepKey}
-                                                    blocks={wysiwyg.state.blocks}
+                                                    blocks={virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks}
                                                     selectedBlockId={wysiwyg.state.selectedBlockId}
                                                     onRemoveBlock={id => {
                                                         wysiwyg.actions.removeBlock(id);
