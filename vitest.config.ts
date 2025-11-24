@@ -60,7 +60,29 @@ export default defineConfig({
             'src/optimization/**/*.{test,spec}.{ts,tsx}',
             'src/migration/**/*.{test,spec}.{ts,tsx}',
             'src/hooks/**/*.{test,spec}.ts', // Hooks sem JSX
+            'tests/unit/**/*.test.ts', // 🧪 Testes unitários
+            'tests/integration/**/*.test.ts', // 🧪 Testes de integração
           ],
+        },
+        resolve: {
+          alias: {
+            '@/hooks': path.resolve(__dirname, './src/hooks'),
+            '@': path.resolve(__dirname, './src'),
+            '@/': path.resolve(__dirname, './src'),
+            '@components': path.resolve(__dirname, './src/components'),
+            '@services': path.resolve(__dirname, './src/services'),
+            '@hooks': path.resolve(__dirname, './src/hooks'),
+            '@utils': path.resolve(__dirname, './src/utils'),
+            '@lib': path.resolve(__dirname, './src/lib'),
+            '@types': path.resolve(__dirname, './src/types'),
+            '@config': path.resolve(__dirname, './src/config'),
+            '@templates': path.resolve(__dirname, './src/templates'),
+            '@consolidated': path.resolve(__dirname, './src/consolidated'),
+            '@optimization': path.resolve(__dirname, './src/optimization'),
+            '@migration': path.resolve(__dirname, './src/migration'),
+            '@testing': path.resolve(__dirname, './src/testing')
+          },
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.mjs'],
         },
       },
       {
@@ -106,6 +128,9 @@ export default defineConfig({
       'src/**/__tests__/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'src/tests/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'src/testing/**/*.test.ts', // Nossos testes consolidados
+      // 🧪 Testes de integração e unitários do mecanismo JSON
+      'tests/unit/**/*.test.ts',
+      'tests/integration/**/*.test.ts',
     ],
     exclude: [
       'node_modules/**',
