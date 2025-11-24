@@ -50,6 +50,14 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
   // Obter blocos do step atual
   const currentBlocks = getStepBlocks(currentStep);
 
+  // 🚨 DEBUG: Log dos blocos vindos do SuperUnified
+  console.log('🔗 [WYSIWYGBridge] Inicialização/Re-render:', {
+    currentStep,
+    mode,
+    currentBlocksFromUnified: currentBlocks?.length || 0,
+    currentBlocksIds: currentBlocks?.map(b => b.id).slice(0, 3) || [],
+  });
+
   // Inicializar WYSIWYG com blocos do step
   const [wysiwygState, wysiwygActions] = useWYSIWYG(currentBlocks, {
     autoSaveDelay,
@@ -93,12 +101,34 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
 
   // Sincronizar quando step muda ou blocos mudam externamente
   useEffect(() => {
+    // 🚨 DEBUG: Log completo do estado da sincronização
+    console.log('🔗 [WYSIWYGBridge] useEffect verificando sincronização:', {
+      currentStep,
+      lastSyncedStep: lastSyncedStepRef.current,
+      stepChanged: lastSyncedStepRef.current !== currentStep,
+      currentBlocksCount: currentBlocks?.length || 0,
+      wysiwygBlocksCount: wysiwygState.blocks?.length || 0,
+      currentBlocksIds: currentBlocks?.map(b => b.id).slice(0, 3) || [],
+      wysiwygBlocksIds: wysiwygState.blocks?.map(b => b.id).slice(0, 3) || [],
+      isSyncing: isSyncingRef.current,
+      mode,
+    });
+
     const shouldSync =
       lastSyncedStepRef.current !== currentStep ||
       JSON.stringify(currentBlocks) !== JSON.stringify(wysiwygState.blocks);
 
+    console.log('🔗 [WYSIWYGBridge] Decisão de sincronização:', {
+      shouldSync,
+      reason: lastSyncedStepRef.current !== currentStep ? 'step mudou' : 'blocos diferentes',
+    });
+
     if (shouldSync && !isSyncingRef.current) {
       isSyncingRef.current = true;
+      console.log('🔄 [WYSIWYGBridge] RESETANDO blocos WYSIWYG com:', {
+        newBlocks: currentBlocks?.length || 0,
+        newBlocksIds: currentBlocks?.map(b => b.id).slice(0, 3) || [],
+      });
       wysiwygActions.reset(currentBlocks);
       lastSyncedStepRef.current = currentStep;
       appLogger.debug('[WYSIWYGBridge] Blocos resetados:', {
@@ -107,7 +137,7 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
       });
       isSyncingRef.current = false;
     }
-  }, [currentStep, currentBlocks, wysiwygState.blocks, wysiwygActions]);
+  }, [currentStep, currentBlocks, wysiwygState.blocks, wysiwygActions, mode]);
 
   // Actions estendidas com sincronização
   const bridgedActions = {

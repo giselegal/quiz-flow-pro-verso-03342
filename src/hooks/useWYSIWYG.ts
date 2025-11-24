@@ -82,6 +82,13 @@ export function useWYSIWYG(
     mode = 'edit',
   } = options;
 
+  // 🚨 DEBUG: Log de inicialização
+  console.log('🎨 [useWYSIWYG] Inicialização com initialBlocks:', {
+    count: initialBlocks?.length || 0,
+    ids: initialBlocks?.map(b => b.id).slice(0, 3) || [],
+    mode,
+  });
+
   // Estado local (fonte da verdade para renderização)
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -293,6 +300,12 @@ export function useWYSIWYG(
       },
 
       reset: (newBlocks: Block[]) => {
+        console.log('🔄 [useWYSIWYG] RESET chamado:', {
+          oldBlocksCount: blocks.length,
+          oldBlocksIds: blocks.map(b => b.id).slice(0, 3),
+          newBlocksCount: newBlocks?.length || 0,
+          newBlocksIds: newBlocks?.map(b => b.id).slice(0, 3) || [],
+        });
         setBlocks(newBlocks);
         setIsDirty(false);
         setValidationErrors(new Map());
