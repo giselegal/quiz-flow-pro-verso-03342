@@ -5,10 +5,16 @@ import { cacheService } from '@/services/canonical';
 
 // Legacy templateCache API wrapper
 const templateCache = {
-  get: (key: string) => cacheService.get(key, { store: 'templates' }).then(r => r.success ? r.data : null),
+  get: (key: string) => {
+    const result = cacheService.get(key, 'templates');
+    return result.success ? result.data : null;
+  },
   set: (key: string, value: any, ttl?: number) => cacheService.set(key, value, { store: 'templates', ttl }),
-  has: (key: string) => cacheService.has(key, { store: 'templates' }),
-  clear: () => cacheService.clear({ store: 'templates' }),
+  has: (key: string) => cacheService.has(key, 'templates'),
+  clear: () => {
+    const result = cacheService.clearStore('templates');
+    return result;
+  },
 };
 
 // ✅ G4 FIX: Cache de paths falhos para evitar requisições repetidas
