@@ -72,7 +72,20 @@ export class SchemaInterpreter {
    * Obtém schema de um tipo de bloco
    */
   getBlockSchema(type: string): BlockTypeSchema | undefined {
-    return this.schemas.get(type);
+    const schema = this.schemas.get(type);
+    console.log(`🔍 [SchemaInterpreter] getBlockSchema("${type}"):`, {
+      found: !!schema,
+      totalSchemas: this.schemas.size,
+      availableTypes: Array.from(this.schemas.keys()).slice(0, 10),
+    });
+    return schema;
+  }
+
+  /**
+   * 🐛 DEBUG: Lista todos os schemas carregados
+   */
+  listAllSchemas(): string[] {
+    return Array.from(this.schemas.keys());
   }
 
   /**
