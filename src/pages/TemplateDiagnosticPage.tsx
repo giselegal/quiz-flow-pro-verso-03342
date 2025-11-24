@@ -41,15 +41,15 @@ const TemplateDiagnosticPage: React.FC = () => {
                 error: null,
             };
 
-            // 2. Testar templateLibraryService
+            // 2. Testar templateService
             try {
-                const builtinTemplates = templateLibraryService.listBuiltins();
-                const allTemplates = templateLibraryService.listAll();
+                const builtinTemplates = templateService.listBuiltins();
+                const allTemplates = templateService.listAll();
                 results.libraryService = {
                     status: 'success',
                     builtinCount: builtinTemplates.length,
                     totalCount: allTemplates.length,
-                    templates: allTemplates.map(t => ({ id: t.id, name: t.name })),
+                    templates: allTemplates.map((t: Template) => ({ id: t.id, name: t.name })),
                     error: null,
                 };
             } catch (error: any) {
@@ -200,7 +200,7 @@ const TemplateDiagnosticPage: React.FC = () => {
                             <CardTitle>Template Library Service</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-sm text-gray-600 mb-2">templateLibraryService</p>
+                            <p className="text-sm text-gray-600 mb-2">templateService</p>
                             <div className="flex gap-2">
                                 <Badge variant="outline">{diagnostics.libraryService?.builtinCount || 0} builtin</Badge>
                                 <Badge variant="outline">{diagnostics.libraryService?.totalCount || 0} total</Badge>

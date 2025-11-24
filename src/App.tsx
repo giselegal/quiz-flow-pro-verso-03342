@@ -43,6 +43,7 @@ import { PWANotifications } from './components/PWANotifications';
 // 🚀 FASE 3: SuperUnifiedProvider V3 (optimized architecture)
 import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { EditorProviderUnified } from '@/components/editor';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
 import { appLogger } from '@/lib/utils/appLogger';
