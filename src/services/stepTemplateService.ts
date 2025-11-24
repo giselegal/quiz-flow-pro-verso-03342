@@ -44,10 +44,10 @@ async function preloadAllTemplates(): Promise<void> {
                   position: section.order || index,
                 };
               });
-              cacheService.set('templates', `step-${stepNumber}`, blocks, 10 * 60 * 1000); // 10min cache
+              cacheService.set(`step-${stepNumber}`, blocks, { store: 'templates', ttl: 10 * 60 * 1000 }); // 10min cache
               appLogger.info(`✅ Template ${stepNumber} pré-carregado: ${blocks.length} blocos`);
             } else if (template.blocks && Array.isArray(template.blocks)) {
-              cacheService.set('templates', `step-${stepNumber}`, template.blocks, 10 * 60 * 1000);
+              cacheService.set(`step-${stepNumber}`, template.blocks, { store: 'templates', ttl: 10 * 60 * 1000 });
               appLogger.info(`✅ Template ${stepNumber} pré-carregado: ${template.blocks.length} blocos`);
             }
           });
@@ -59,13 +59,15 @@ async function preloadAllTemplates(): Promise<void> {
   });
 
   await Promise.allSettled(promises);
-  const stats = cacheService.getStoreStats('templates');
+  const statsResult = cacheService.getStoreStats('templates');
+  const stats = statsResult.success ? statsResult.data : { size: 0, hits: 0, misses: 0 };
   appLogger.info(`🎯 Pré-carregamento concluído: ${stats.size}/${TOTAL_STEPS} templates`);
 }
 
 // 🔧 FUNÇÃO SÍNCRONA QUE USA CACHE
 function getTemplateFromCache(stepNumber: number): any[] {
-  const cached = cacheService.get<any[]>('templates', `step-${stepNumber}`);
+  const result = cacheService.get<any[]>(`step-${stepNumber}`, { store: 'templates' });
+  const cached = result.success ? result.data : null;
   if (cached && Array.isArray(cached)) {
     appLogger.info(`💾 Template ${stepNumber} do cache: ${cached.length} blocos`);
     return cached;
