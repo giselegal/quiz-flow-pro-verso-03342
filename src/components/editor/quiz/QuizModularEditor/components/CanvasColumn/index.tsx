@@ -152,21 +152,21 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
             <BlockTypeRenderer
                 block={block}
                 isSelected={isSelected}
-                isEditable={true}
+                isEditable={isEditable}
                 onSelect={(blockId: string) => onSelect?.(blockId)}
                 onOpenProperties={(blockId: string) => {
-                    if (onUpdateBlock) {
+                    if (isEditable && onUpdateBlock) {
                         onUpdateBlock(blockId, block);
                     }
                 }}
                 contextData={{
-                    canvasMode: 'editor',
+                    canvasMode: isEditable ? 'editor' : 'preview',
                     stepNumber: block.properties?.stepNumber,
                 }}
             />
 
-            {/* Quick Insert (somente quando há onUpdateBlock e conteúdo mínimo ausente) */}
-            {onUpdateBlock && (
+            {/* Quick Insert (somente quando editável e há onUpdateBlock e conteúdo mínimo ausente) */}
+            {isEditable && onUpdateBlock && (
                 <div className="mt-1">
                     {(() => {
                         const type = String((block as any).type);
@@ -382,13 +382,14 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
                                 index={idx}
                                 isSelected={selectedBlockId === b.id}
                                 onSelect={onBlockSelect}
-                                onMoveBlock={(from, to) => {
+                                onMoveBlock={isEditable ? ((from, to) => {
                                     // Clamp 'to' para dentro da lista
                                     const clampedTo = Math.max(0, Math.min((blocks?.length || 1) - 1, to));
                                     onMoveBlock?.(from, clampedTo);
-                                }}
-                                onRemoveBlock={onRemoveBlock}
-                                onUpdateBlock={onUpdateBlock}
+                                }) : undefined}
+                                onRemoveBlock={isEditable ? onRemoveBlock : undefined}
+                                onUpdateBlock={isEditable ? onUpdateBlock : undefined}
+                                isEditable={isEditable}
                             />
                         );
                     })}
