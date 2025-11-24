@@ -1,21 +1,20 @@
 /**
- * 🔄 TEMPLATE SELECTOR - PHASE 2 MIGRATED VERSION
+ * 📋 TEMPLATE SELECTOR - CANONICAL VERSION
  * 
- * This component demonstrates Phase 2 migration to canonical services and React Query.
- * It uses feature flags to conditionally use the new architecture while maintaining
- * backward compatibility.
+ * This component uses the canonical services architecture with React Query.
+ * All legacy paths and feature flag conditionals have been removed.
  * 
- * KEY CHANGES FROM ORIGINAL:
- * - Uses featureFlags to conditionally enable React Query
- * - Falls back to legacy implementation when flags are disabled
- * - Demonstrates gradual migration pattern
- * - Uses canonical TemplateService through migration helpers
+ * ARCHITECTURE:
+ * - Uses React Query hooks for data fetching and mutations
+ * - Uses canonical TemplateService through React Query
+ * - No feature flags or conditional logic
+ * - Single, stable code path
  * 
- * @version 2.0.0 - Phase 2 Migration
- * @phase Phase 2 - Progressive Migration
+ * @version 4.0.0 - Phase 4 Finalized
+ * @phase Phase 4 - Canonical Only (No Legacy Support)
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -43,33 +42,19 @@ import { Plus, Copy, Trash2, Edit, Check, X, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { appLogger } from '@/lib/utils/appLogger';
 
-// 🎯 PHASE 2: Import feature flags and migration helpers
-import { featureFlags } from '@/config/flags';
-import { shouldUseReactQuery, loadTemplate } from '@/services/canonical/migrationHelpers';
-
-// 🎯 PHASE 2: Conditional imports based on feature flags
-// React Query hooks (used when USE_REACT_QUERY_TEMPLATES is true)
+// Canonical React Query hooks (permanent, no feature flags)
 import { useTemplateList } from '@/hooks/useTemplate';
 import { useCreateTemplate, useDeleteTemplate } from '@/hooks/useUpdateTemplate';
-
-// Legacy service (used when flags are disabled)
-import {
-  getAllTemplates,
-  createTemplate as legacyCreateTemplate,
-  duplicateTemplate as legacyDuplicateTemplate,
-  deleteTemplate as legacyDeleteTemplate,
-} from '@/services/templates/templateService';
 
 interface TemplateSelectorProps {
   onSelectTemplate: (templateId: string) => void;
 }
 
 /**
- * Template Selector with Phase 2 migration support
+ * Template Selector using canonical services architecture
  * 
- * This component uses feature flags to choose between:
- * - React Query hooks + Supabase (when USE_REACT_QUERY_TEMPLATES is true)
- * - Legacy localStorage-based service (when flag is false)
+ * Uses React Query hooks + Supabase for all operations.
+ * No legacy paths or feature flag conditionals.
  */
 const TemplateSelectorMigrated: React.FC<TemplateSelectorProps> = ({ onSelectTemplate }) => {
   // ============================================================================
@@ -81,27 +66,21 @@ const TemplateSelectorMigrated: React.FC<TemplateSelectorProps> = ({ onSelectTem
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState<string | null>(null);
 
   // ============================================================================
-  // PHASE 2: CONDITIONAL DATA FETCHING
+  // DATA FETCHING (Canonical React Query)
   // ============================================================================
   
-  // Use React Query when flag is enabled
-  const useReactQuery = shouldUseReactQuery();
-  
-  // React Query hooks (only used when feature flag is enabled)
   const {
-    data: reactQueryTemplates,
-    isLoading: isLoadingReactQuery,
-    refetch: refetchReactQuery,
+    data: templates,
+    isLoading,
+    refetch,
   } = useTemplateList(
     { status: 'published' },
-    { enabled: useReactQuery }
+    { enabled: true }
   );
   
   const createTemplateMutation = useCreateTemplate({
     onSuccess: () => {
-      if (useReactQuery) {
-        refetchReactQuery();
-      }
+      refetch();
       toast({
         title: 'Template criado',
         description: 'O novo template foi criado com sucesso.',
@@ -122,9 +101,7 @@ const TemplateSelectorMigrated: React.FC<TemplateSelectorProps> = ({ onSelectTem
   
   const deleteTemplateMutation = useDeleteTemplate({
     onSuccess: () => {
-      if (useReactQuery) {
-        refetchReactQuery();
-      }
+      refetch();
       toast({
         title: 'Template excluído',
         description: 'O template foi excluído com sucesso.',
@@ -141,41 +118,6 @@ const TemplateSelectorMigrated: React.FC<TemplateSelectorProps> = ({ onSelectTem
     },
   });
 
-  // Legacy state (only used when feature flag is disabled)
-  const [legacyTemplates, setLegacyTemplates] = useState<any[]>([]);
-  const [isLoadingLegacy, setIsLoadingLegacy] = useState(false);
-
-  // Legacy loading effect
-  useEffect(() => {
-    if (!useReactQuery) {
-      loadLegacyTemplates();
-    }
-  }, [useReactQuery]);
-
-  const loadLegacyTemplates = () => {
-    setIsLoadingLegacy(true);
-    try {
-      const loadedTemplates = getAllTemplates();
-      setLegacyTemplates(loadedTemplates);
-    } catch (error) {
-      appLogger.error('Erro ao carregar templates (legacy):', { data: [error] });
-      toast({
-        title: 'Erro ao carregar templates',
-        description: 'Não foi possível carregar os templates.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoadingLegacy(false);
-    }
-  };
-
-  // ============================================================================
-  // UNIFIED DATA ACCESS (works with both implementations)
-  // ============================================================================
-  
-  const templates = useReactQuery ? (reactQueryTemplates || []) : legacyTemplates;
-  const isLoading = useReactQuery ? isLoadingReactQuery : isLoadingLegacy;
-
   // ============================================================================
   // HANDLERS
   // ============================================================================
@@ -190,114 +132,30 @@ const TemplateSelectorMigrated: React.FC<TemplateSelectorProps> = ({ onSelectTem
       return;
     }
 
-    if (useReactQuery) {
-      // Use React Query mutation
-      await createTemplateMutation.mutateAsync({
-        name: newTemplateName,
-        description: newTemplateDescription,
-        status: 'draft',
-        blocks: [],
-        config: {},
-        metadata: {
-          isPublic: false,
-          category: 'custom',
-        },
-      });
-    } else {
-      // Use legacy service
-      try {
-        const newTemplate = {
-          name: newTemplateName,
-          description: newTemplateDescription,
-          isPublished: false,
-          questions: [],
-          resultPageSettings: {
-            styleType: 'classic',
-            blocks: [],
-            headerConfig: {},
-            mainContentConfig: {},
-            offerConfig: {},
-          },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        legacyCreateTemplate(newTemplate);
-        setIsCreateDialogOpen(false);
-        setNewTemplateName('');
-        setNewTemplateDescription('');
-        loadLegacyTemplates();
-
-        toast({
-          title: 'Template criado',
-          description: 'O novo template foi criado com sucesso.',
-        });
-      } catch (error) {
-        appLogger.error('Erro ao criar template (legacy):', { data: [error] });
-        toast({
-          title: 'Erro ao criar template',
-          description: 'Não foi possível criar o novo template.',
-          variant: 'destructive',
-        });
-      }
-    }
+    await createTemplateMutation.mutateAsync({
+      name: newTemplateName,
+      description: newTemplateDescription,
+      status: 'draft',
+      blocks: [],
+      config: {},
+      metadata: {
+        isPublic: false,
+        category: 'custom',
+      },
+    });
   };
 
   const handleDuplicateTemplate = async (id: string) => {
-    if (useReactQuery) {
-      // TODO: Implement with React Query when available
-      toast({
-        title: 'Em desenvolvimento',
-        description: 'Duplicação via React Query será implementada em breve.',
-        variant: 'default',
-      });
-    } else {
-      // Use legacy service
-      try {
-        const duplicatedId = legacyDuplicateTemplate(id);
-        if (duplicatedId) {
-          loadLegacyTemplates();
-          toast({
-            title: 'Template duplicado',
-            description: 'O template foi duplicado com sucesso.',
-          });
-        }
-      } catch (error) {
-        appLogger.error('Erro ao duplicar template:', { data: [error] });
-        toast({
-          title: 'Erro ao duplicar',
-          description: 'Não foi possível duplicar o template.',
-          variant: 'destructive',
-        });
-      }
-    }
+    // TODO: Implement template duplication with React Query
+    toast({
+      title: 'Em desenvolvimento',
+      description: 'Duplicação de templates será implementada em breve.',
+      variant: 'default',
+    });
   };
 
   const handleDeleteTemplate = async (id: string) => {
-    if (useReactQuery) {
-      // Use React Query mutation
-      await deleteTemplateMutation.mutateAsync({ id });
-    } else {
-      // Use legacy service
-      try {
-        const success = legacyDeleteTemplate(id);
-        if (success) {
-          loadLegacyTemplates();
-          setIsDeleteConfirmOpen(null);
-          toast({
-            title: 'Template excluído',
-            description: 'O template foi excluído com sucesso.',
-          });
-        }
-      } catch (error) {
-        appLogger.error('Erro ao excluir template:', { data: [error] });
-        toast({
-          title: 'Erro ao excluir',
-          description: 'Não foi possível excluir o template.',
-          variant: 'destructive',
-        });
-      }
-    }
+    await deleteTemplateMutation.mutateAsync({ id });
   };
 
   // ============================================================================
@@ -306,17 +164,6 @@ const TemplateSelectorMigrated: React.FC<TemplateSelectorProps> = ({ onSelectTem
 
   return (
     <div className="space-y-6">
-      {/* Header with migration status indicator (dev only) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">🔄 Phase 2 Migration Status:</span>
-            <span className={useReactQuery ? 'text-green-600' : 'text-orange-600'}>
-              {useReactQuery ? '✅ React Query Enabled' : '⚠️ Legacy Mode'}
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* Create Template Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -379,7 +226,7 @@ const TemplateSelectorMigrated: React.FC<TemplateSelectorProps> = ({ onSelectTem
       )}
 
       {/* Templates Grid */}
-      {!isLoading && (
+      {!isLoading && templates && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {templates.map((template: any) => (
             <Card key={template.id} className="hover:shadow-lg transition-shadow">

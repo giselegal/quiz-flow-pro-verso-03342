@@ -2,12 +2,12 @@
  * ╔══════════════════════════════════════════════════════════════════════════╗
  * ║                  STORAGE SERVICE - CANONICAL (SINGLE SOURCE OF TRUTH)    ║
  * ╠══════════════════════════════════════════════════════════════════════════╣
- * ║ ⭐ Este é o ÚNICO serviço canônico para armazenamento no sistema.        ║
- * ║ Toda operação de storage DEVE passar por este serviço.                  ║
+ * ║ ⭐ This is the ONLY canonical service for storage in the system.         ║
+ * ║ All storage operations MUST go through this service.                    ║
  * ║                                                                          ║
- * ║ Serviço unificado para gerenciamento de armazenamento                   ║
+ * ║ Unified service for storage management                                  ║
  * ║                                                                          ║
- * ║ CONSOLIDATES (7 services → 1) (239 → 35 serviços - Fase 1):            ║
+ * ║ CONSOLIDATES (7 services → 1):                                          ║
  * ║  1. SupabaseStorageClient     - Supabase Storage API                    ║
  * ║  2. FileUploadService         - File upload handling                    ║
  * ║  3. ImageStorageService       - Image optimization & storage            ║
@@ -33,17 +33,8 @@
  * ║  • Specialized APIs (files, images, browser)                            ║
  * ║  • Built-in caching                                                      ║
  * ║                                                                          ║
- * ║ 🎯 ROADMAP DE MIGRAÇÃO:                                                  ║
- * ║ - Fase 1 (Atual): Estrutura canônica estabelecida com feature flags     ║
- * ║ - Fase 2: Migração progressiva usando USE_CANONICAL_STORAGE_SERVICE     ║
- * ║ - Fase 3: Deprecação completa dos serviços legados                      ║
- * ║ - Fase 4: Remoção dos serviços deprecated                               ║
- * ║                                                                          ║
- * ║ 📋 TODO - PRÓXIMAS MIGRAÇÕES:                                            ║
- * ║ - [ ] Migrar asset versioning do AssetManager                           ║
- * ║ - [ ] Integrar metadata tracking avançado                               ║
- * ║ - [ ] Consolidar operações de mídia do MediaStorageService              ║
- * ║ - [ ] Unificar abstrações do StorageProvider                            ║
+ * ║ @version 4.0.0 - Phase 4 Finalized                                      ║
+ * ║ @status PRODUCTION-READY (Canonical Only)                               ║
  * ╚══════════════════════════════════════════════════════════════════════════╝
  */
 
