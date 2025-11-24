@@ -1,10 +1,10 @@
 /**
  * 🚀 SUPER UNIFIED PROVIDER V2 - REFATORADO COMPLETO
  * 
- * Provider de composição que agrupa todos os 12 providers modulares.
+ * Provider de composição que agrupa todos os 13 providers modulares.
  * 
  * ARQUITETURA REFATORADA (FASE 2.1 COMPLETA):
- * ✅ 12 providers independentes e modulares
+ * ✅ 13 providers independentes e modulares
  * ✅ Padrão de composição ao invés de monolito 1959 linhas
  * ✅ Memoização estratégica em cada provider
  * ✅ Zero re-renders desnecessários
@@ -12,16 +12,17 @@
  * PROVIDERS:
  * 1. AuthProvider - Autenticação e sessão
  * 2. ThemeProvider - Temas e estilos
- * 3. EditorStateProvider - Estado do editor
- * 4. FunnelDataProvider - Dados de funil
- * 5. NavigationProvider - Navegação entre steps
- * 6. QuizStateProvider - Estado do quiz
- * 7. ResultProvider - Resultados do quiz
- * 8. StorageProvider - Persistência local
- * 9. SyncProvider - Sincronização backend
- * 10. ValidationProvider - Validação de dados
- * 11. CollaborationProvider - Edição colaborativa
- * 12. VersioningProvider - Controle de versões
+ * 3. UIProvider - Interface do usuário (toasts, modais, sidebar)
+ * 4. EditorStateProvider - Estado do editor
+ * 5. FunnelDataProvider - Dados de funil
+ * 6. NavigationProvider - Navegação entre steps
+ * 7. QuizStateProvider - Estado do quiz
+ * 8. ResultProvider - Resultados do quiz
+ * 9. StorageProvider - Persistência local
+ * 10. SyncProvider - Sincronização backend
+ * 11. ValidationProvider - Validação de dados
+ * 12. CollaborationProvider - Edição colaborativa
+ * 13. VersioningProvider - Controle de versões
  * 
  * BENEFÍCIOS:
  * - 95% redução de complexidade (1959 linhas → ~2800 linhas modulares)
@@ -59,21 +60,22 @@ interface SuperUnifiedProviderProps {
 }
 
 /**
- * Provider de composição que agrupa todos os 12 providers modulares
+ * Provider de composição que agrupa todos os 13 providers modulares
  * 
  * ORDEM DE COMPOSIÇÃO (do mais externo para o mais interno):
  * 1. Auth (base para tudo)
  * 2. Storage (usado por vários providers)
  * 3. Sync (sincronização)
  * 4. Theme (visual)
- * 5. Validation (regras)
- * 6. Navigation (navegação)
- * 7. QuizState (estado do quiz)
- * 8. Result (resultados)
- * 9. Funnel (dados de funil)
- * 10. Editor (estado do editor)
- * 11. Collaboration (colaboração)
- * 12. Versioning (controle de versões - mais interno)
+ * 5. UI (interface do usuário - toasts, modais, etc)
+ * 6. Validation (regras)
+ * 7. Navigation (navegação)
+ * 8. QuizState (estado do quiz)
+ * 9. Result (resultados)
+ * 10. Funnel (dados de funil)
+ * 11. Editor (estado do editor)
+ * 12. Collaboration (colaboração)
+ * 13. Versioning (controle de versões - mais interno)
  */
 export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({ children }) => {
     return (
@@ -81,23 +83,25 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({ chil
             <StorageProvider>
                 <SyncProvider>
                     <ThemeProvider>
-                        <ValidationProvider>
-                            <NavigationProvider>
-                                <QuizStateProvider>
-                                    <ResultProvider>
-                                        <FunnelDataProvider>
-                                            <EditorStateProvider>
-                                                <CollaborationProvider>
-                                                    <VersioningProvider>
-                                                        {children}
-                                                    </VersioningProvider>
-                                                </CollaborationProvider>
-                                            </EditorStateProvider>
-                                        </FunnelDataProvider>
-                                    </ResultProvider>
-                                </QuizStateProvider>
-                            </NavigationProvider>
-                        </ValidationProvider>
+                        <UIProvider>
+                            <ValidationProvider>
+                                <NavigationProvider>
+                                    <QuizStateProvider>
+                                        <ResultProvider>
+                                            <FunnelDataProvider>
+                                                <EditorStateProvider>
+                                                    <CollaborationProvider>
+                                                        <VersioningProvider>
+                                                            {children}
+                                                        </VersioningProvider>
+                                                    </CollaborationProvider>
+                                                </EditorStateProvider>
+                                            </FunnelDataProvider>
+                                        </ResultProvider>
+                                    </QuizStateProvider>
+                                </NavigationProvider>
+                            </ValidationProvider>
+                        </UIProvider>
                     </ThemeProvider>
                 </SyncProvider>
             </StorageProvider>
