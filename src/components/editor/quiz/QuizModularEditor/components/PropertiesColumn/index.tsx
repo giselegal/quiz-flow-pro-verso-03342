@@ -50,23 +50,16 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     const [isSaving, setIsSaving] = React.useState(false); // 🎯 FASE 1: Estado de salvamento
     const prevSelectedIdRef = React.useRef<string | null>(null);
 
-    // 🔍 DEBUG CRÍTICO: Log TUDO que o painel recebe
-    React.useEffect(() => {
-        console.group('🔍 [PropertiesColumn] Estado Completo');
-        appLogger.info('selectedBlockProp:', { data: [selectedBlockProp] });
-        appLogger.info('blocks:', { data: [blocks] });
-        appLogger.info('Análise:', { data: [{
-                    hasSelectedBlockProp: !!selectedBlockProp,
-                    selectedBlockId: selectedBlockProp?.id,
-                    selectedBlockType: selectedBlockProp?.type,
-                    blocksCount: blocks?.length || 0,
-                    blockIds: blocks?.map(b => b.id) || [],
-                    hasOnBlockSelect: !!onBlockSelect,
-                    willAutoSelect: !selectedBlockProp && blocks && blocks.length > 0,
-                    firstBlockId: blocks?.[0]?.id
-                }] });
-        console.groupEnd();
-    }, [selectedBlockProp, blocks, onBlockSelect]);
+    // 🔍 DEBUG: Desabilitado para reduzir poluição do console
+    // Habilite via VITE_DEBUG_PROPERTIES=true no .env.local se necessário
+    // React.useEffect(() => {
+    //     if (import.meta.env.VITE_DEBUG_PROPERTIES === 'true') {
+    //         console.log('🔍 [PropertiesColumn]', { 
+    //             selectedId: selectedBlockProp?.id, 
+    //             blocksCount: blocks?.length 
+    //         });
+    //     }
+    // }, [selectedBlockProp, blocks]);
 
     // ✅ WAVE 1 FIX: Auto-select primeiro bloco se nenhum selecionado
     const selectedBlock = useMemo(() => {
@@ -212,10 +205,12 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, editedProperties);
 
                 appLogger.info('synchronizedUpdate criado:', { data: [synchronizedUpdate] });
-                appLogger.info('Chamando onBlockUpdate com:', { data: [{
-                                    blockId: selectedBlock.id,
-                                    updates: synchronizedUpdate
-                                }] });
+                appLogger.info('Chamando onBlockUpdate com:', {
+                    data: [{
+                        blockId: selectedBlock.id,
+                        updates: synchronizedUpdate
+                    }]
+                });
 
                 onBlockUpdate(selectedBlock.id, synchronizedUpdate);
 
@@ -260,11 +255,13 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 setIsSaving(false);
             }
         } else {
-            appLogger.warn('❌ Não salvou:', { data: [{
-                            hasBlock: !!selectedBlock,
-                            isDirty,
-                            reason: !selectedBlock ? 'Sem bloco selecionado' : 'Não há mudanças (isDirty=false)'
-                        }] });
+            appLogger.warn('❌ Não salvou:', {
+                data: [{
+                    hasBlock: !!selectedBlock,
+                    isDirty,
+                    reason: !selectedBlock ? 'Sem bloco selecionado' : 'Não há mudanças (isDirty=false)'
+                }]
+            });
         }
         console.groupEnd();
     }, [selectedBlock, isDirty, editedProperties, onBlockUpdate]);

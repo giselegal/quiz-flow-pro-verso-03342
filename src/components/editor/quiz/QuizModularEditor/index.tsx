@@ -127,19 +127,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const resourceMetadata = props.editorResource ?? null;
 
     // 🐛 DEBUG: Verificar se resourceId está chegando e se vai carregar JSON
-    appLogger.info('🔍 [QuizModularEditor] Props recebidas:', { data: [{
+    appLogger.info('🔍 [QuizModularEditor] Props recebidas:', {
+        data: [{
             resourceId: props.resourceId,
             templateId: props.templateId,
             funnelId: props.funnelId,
             resourceIdFinal: resourceId
-        }] });
+        }]
+    });
 
-    appLogger.info('🚨 [QuizModularEditor] DIAGNÓSTICO CRÍTICO:', { data: [{
+    appLogger.info('🚨 [QuizModularEditor] DIAGNÓSTICO CRÍTICO:', {
+        data: [{
             temResourceId: !!resourceId,
             vaiCarregarJSON: !!(props.templateId || resourceId),
             razao: !resourceId ? '❌ resourceId está undefined - JSON NÃO SERÁ CARREGADO!' : '✅ resourceId OK - JSON será carregado',
             urlAtual: typeof window !== 'undefined' ? window.location.href : 'SSR'
-        }] });
+        }]
+    });
 
     // Safe current step
     const safeCurrentStep = Math.max(1, unifiedState.editor.currentStep || 1);
@@ -341,11 +345,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável
     const handleBlockSelect = useCallback((blockId: string | null) => {
-        appLogger.info('🎯 [handleBlockSelect] CHAMADO com:', { data: [{
-                    blockId,
-                    isNull: blockId === null,
-                    selectedBlockIdAtual: selectedBlockId
-                }] });
+        appLogger.info('🎯 [handleBlockSelect] CHAMADO com:', {
+            data: [{
+                blockId,
+                isNull: blockId === null,
+                selectedBlockIdAtual: selectedBlockId
+            }]
+        });
 
         if (!blockId) {
             appLogger.info('❌ blockId null, limpando seleção');
@@ -709,23 +715,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         [safeCurrentStep, setStepBlocks]
     );
 
-    // 🔍 DEBUG: Log what getStepBlocks returns
-    useEffect(() => {
-        console.group('🎯 [QuizModularEditor] getStepBlocks chamado');
-        appLogger.info('safeCurrentStep:', { data: [safeCurrentStep] });
-        appLogger.info('rawBlocks:', { data: [rawBlocks] });
-        appLogger.info('blocks (normalized):', { data: [blocks] });
-        appLogger.info('selectedBlockId:', { data: [selectedBlockId] });
-        appLogger.info('Análise:', { data: [{
-                    rawBlocksIsNull: rawBlocks === null,
-                    blocksIsArray: Array.isArray(blocks),
-                    blocksCount: blocks.length,
-                    blockIds: blocks.map(b => b.id),
-                    hasSelectedBlockId: !!selectedBlockId,
-                    selectedBlockExists: blocks.some(b => b.id === selectedBlockId)
-                }] });
-        console.groupEnd();
-    }, [safeCurrentStep, rawBlocks, blocks, selectedBlockId]);
+    // 🔍 DEBUG: Desabilitado para reduzir poluição do console
+    // useEffect(() => {
+    //     if (import.meta.env.VITE_DEBUG_EDITOR === 'true') {
+    //         console.log('🎯 getStepBlocks:', { step: safeCurrentStep, count: blocks.length });
+    //     }
+    // }, [safeCurrentStep, blocks]);
 
     useEffect(() => {
         try {
@@ -738,21 +733,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch { }
     }, [selectedBlockId, blocks]);
 
-    // 🐛 DEBUG CRÍTICO: Log detalhado do estado de seleção
-    useEffect(() => {
-        console.group('🧩 PROPRIEDADES DEBUG');
-        appLogger.info('safeCurrentStep:', { data: [safeCurrentStep] });
-        appLogger.info('selectedBlockId:', { data: [selectedBlockId] });
-        appLogger.info('blocksCount:', { data: [blocks?.length] });
-        appLogger.info('selectedBlock:', { data: [blocks?.find(b => b.id === selectedBlockId)] });
-        appLogger.info('Análise:', { data: [{
-                    temBlocks: !!blocks,
-                    temSelecao: !!selectedBlockId,
-                    selecaoValida: !!(selectedBlockId && blocks?.find(b => b.id === selectedBlockId)),
-                    blockIds: blocks?.map(b => b.id) || [],
-                }] });
-        console.groupEnd();
-    }, [safeCurrentStep, selectedBlockId, blocks]);
+    // 🐛 DEBUG: Desabilitado para reduzir poluição do console
+    // useEffect(() => {
+    //     if (import.meta.env.VITE_DEBUG_PROPERTIES === 'true') {
+    //         console.log('🧩 Propriedades:', { selectedBlockId, blocksCount: blocks?.length });
+    //     }
+    // }, [selectedBlockId, blocks]);
 
     // ✅ G1 FIX: Auto-selecionar primeiro bloco se selectedBlockId for null ou inválido
     useEffect(() => {
@@ -1777,24 +1763,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 className="h-full border-l bg-white overflow-y-auto"
                                 data-testid="column-properties"
                             >
-                                {/* 🔍 DEBUG: Log do que está sendo passado */}
-                                {(() => {
-                                    const selectedBlock = blocks?.find(b => b.id === selectedBlockId);
-                                    console.group('🎯 [QuizModularEditor] Renderizando PropertiesColumn');
-                                    appLogger.info('selectedBlockId:', { data: [selectedBlockId] });
-                                    appLogger.info('blocks:', { data: [blocks] });
-                                    appLogger.info('selectedBlock encontrado:', { data: [selectedBlock] });
-                                    appLogger.info('Análise:', { data: [{
-                                                                            hasBlocks: !!blocks,
-                                                                            blocksCount: blocks?.length || 0,
-                                                                            blockIds: blocks?.map(b => b.id) || [],
-                                                                            hasSelectedBlockId: !!selectedBlockId,
-                                                                            foundBlock: !!selectedBlock,
-                                                                            blockType: selectedBlock?.type
-                                                                        }] });
-                                    console.groupEnd();
-                                    return null;
-                                })()}
+                                {/* DEBUG removido para limpar console */}
 
                                 {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
                                 {useSimplePropertiesPanel ? (
