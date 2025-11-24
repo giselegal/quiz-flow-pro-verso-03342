@@ -8,7 +8,7 @@ import { AnalyticsSettings } from '@/components/editor/funnel-settings/sections/
 import { WebhookSettings } from '@/components/editor/funnel-settings/sections/WebhookSettings';
 import { DomainSettings } from '@/components/editor/funnel-settings/sections/DomainSettings';
 import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
-import { FunnelSettingsService } from '@/services/funnelSettingsService';
+import { FunnelSettingsService } from '@/services/canonical/data/FunnelSettingsService';
 import { Save, X, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { appLogger } from '@/lib/utils/appLogger';

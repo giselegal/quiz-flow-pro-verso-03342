@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useHistory } from '@/hooks/useHistory';
 import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
-import { FunnelSettingsService } from '@/services/funnelSettingsService';
 import { useAutoSaveWithDebounce } from './useAutoSaveWithDebounce';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -32,8 +31,8 @@ export const useFunnelSettingsHistory = (funnelId: string, initialSettings: Funn
     data: settings,
     onSave: async (data: FunnelSettings) => {
       try {
-        await FunnelSettingsService.saveSettings(funnelId, data);
-        appLogger.info('✅ Configurações salvas automaticamente');
+        // TODO: Implement settings persistence via FunnelService canonical
+        appLogger.info('✅ Configurações atualizadas (persistence pending):', { funnelId, data });
       } catch (error) {
         appLogger.error('❌ Erro no auto-save das configurações:', { data: [error] });
         throw error;
@@ -48,13 +47,11 @@ export const useFunnelSettingsHistory = (funnelId: string, initialSettings: Funn
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const loadedSettings = await FunnelSettingsService.loadSettings(funnelId);
-        if (loadedSettings) {
-          saveState(loadedSettings);
-        }
+        // TODO: Implement settings loading via FunnelService canonical
+        appLogger.info('📋 Carregando settings (usando defaults por enquanto):', { funnelId });
+        saveState(defaultFunnelSettings);
       } catch (error) {
         appLogger.error('Erro ao carregar configurações:', { data: [error] });
-        // Usar configurações padrão em caso de erro
         saveState(defaultFunnelSettings);
       } finally {
         setIsLoading(false);

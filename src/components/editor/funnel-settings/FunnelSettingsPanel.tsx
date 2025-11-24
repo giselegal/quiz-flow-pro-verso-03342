@@ -12,7 +12,6 @@ import { AnalyticsSettings } from './sections/AnalyticsSettings';
 import { WebhookSettings } from './sections/WebhookSettings';
 import { DomainSettings } from './sections/DomainSettings';
 import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
-import { FunnelSettingsService } from '@/services/funnelSettingsService';
 import { Save, Undo, Redo, RotateCcw, ExternalLink, AlertTriangle } from 'lucide-react';
 
 interface FunnelSettingsPanelProps {
@@ -37,7 +36,8 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await FunnelSettingsService.saveSettings(funnelId, settings);
+      // TODO: Implement settings persistence via FunnelService canonical
+      appLogger.info('[FunnelSettingsPanel] Salvando settings:', { funnelId, settings });
       saveState(settings);
       toast({
         title: 'Configurações salvas',

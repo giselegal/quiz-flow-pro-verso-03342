@@ -41,6 +41,7 @@ export * from './StorageService';
 export * from './ConfigService';
 export * from './HistoryService';
 export * from './EditorService';
+export * from './FunnelService';
 export * from './monitoring';
 
 // TODO: Exportar quando implementados
