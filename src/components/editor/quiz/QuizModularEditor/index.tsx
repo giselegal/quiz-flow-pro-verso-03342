@@ -1673,14 +1673,29 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 >
                     <Panel defaultSize={15} minSize={10} maxSize={25}>
                         <div
-                            className="h-full border-r bg-white overflow-y-auto"
+                            className="h-full border-r bg-white overflow-y-auto flex flex-col"
                             data-testid="column-steps"
                         >
                             <StepNavigatorColumn
                                 steps={navSteps}
                                 currentStepKey={currentStepKey}
                                 onSelectStep={handleSelectStep}
+                                validationErrors={validationResult?.errors}
+                                validationWarnings={validationResult?.warnings}
                             />
+
+                            {/* 🏥 Health Panel Toggle Button */}
+                            <div className="p-2 border-t mt-auto">
+                                <Button
+                                    size="sm"
+                                    variant={showHealthPanel ? 'default' : 'outline'}
+                                    onClick={() => setShowHealthPanel(!showHealthPanel)}
+                                    className="w-full text-xs"
+                                    title="Template Health Panel"
+                                >
+                                    {validationResult?.isValid ? '✓' : '⚠'} Saúde do Template
+                                </Button>
+                            </div>
                         </div>
                     </Panel>
 
@@ -1891,6 +1906,33 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         </Suspense>
                     </Panel>
                 </PanelGroup>
+
+                {/* 🏥 Template Health Panel (sidebar) */}
+                {showHealthPanel && (
+                    <div className="fixed right-4 top-20 bottom-4 w-96 z-40 shadow-2xl">
+                        <TemplateHealthPanel
+                            validationResult={validationResult}
+                            onAutoFix={(errorIndex) => {
+                                // TODO: Implementar auto-fix
+                                showToast({
+                                    type: 'info',
+                                    title: 'Auto-fix',
+                                    message: 'Funcionalidade de auto-fix em desenvolvimento',
+                                });
+                            }}
+                            onNavigateToStep={(stepId) => {
+                                handleSelectStep(stepId);
+                                setShowHealthPanel(false);
+                            }}
+                            onDismissWarning={(warningIndex) => {
+                                // TODO: Implementar dismiss de warnings
+                                console.log('Dismiss warning:', warningIndex);
+                            }}
+                            collapsed={false}
+                            onToggleCollapse={() => setShowHealthPanel(false)}
+                        />
+                    </div>
+                )}
 
                 {import.meta.env.DEV && MetricsPanel && (
                     <Suspense fallback={null}>
