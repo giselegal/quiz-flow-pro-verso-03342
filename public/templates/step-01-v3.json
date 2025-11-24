@@ -24,33 +24,6 @@
     },
     "scoringAddedAt": "2025-11-05T21:52:52.452Z"
   },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
-    },
-    "spacing": {
-      "sm": 8,
-      "md": 16,
-      "lg": 24,
-      "xl": 32
-    },
-    "borderRadius": {
-      "sm": 4,
-      "md": 8,
-      "lg": 12,
-      "xl": 16
-    }
-  },
   "validation": {
     "required": [
       "selectedOptions"
@@ -77,7 +50,7 @@
       "type": "quiz-intro-header",
       "order": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        "logoUrl": "{{asset.logo}}",
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 132,
         "logoHeight": 55,
@@ -88,7 +61,7 @@
         "progressMax": 100,
         "progressHeight": 4,
         "progressStyle": "bar",
-        "progressColor": "#B89B7A",
+        "progressColor": "{{theme.colors.primary}}",
         "progressBackgroundColor": "#E5DDD5",
         "showBackButton": false,
         "backButtonStyle": "icon",
@@ -121,7 +94,7 @@
         "fontWeight": "700"
       },
       "content": {
-        "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+        "title": "<span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">nada combina com você</span>."
       },
       "parentId": null
     },
@@ -135,11 +108,11 @@
         "borderRadius": "8px"
       },
       "content": {
-        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        "src": "{{asset.logo}}",
         "alt": "Descubra seu estilo predominante",
         "width": 300,
         "height": 204,
-        "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png"
+        "imageUrl": "{{asset.logo}}"
       },
       "parentId": null
     },
@@ -154,7 +127,7 @@
         "textAlign": "center"
       },
       "content": {
-        "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
+        "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[{{theme.colors.primary}}]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
       },
       "parentId": null
     },

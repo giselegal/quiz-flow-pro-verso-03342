@@ -162,7 +162,7 @@
   ],
   "theme": {
     "colors": {
-      "primary": "#B89B7A",
+      "primary": "{{theme.colors.primary}}",
       "secondary": "#432818",
       "background": "#fffaf7",
       "text": "#432818"

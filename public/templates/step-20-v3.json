@@ -49,20 +49,6 @@
       "description": "Se não fizer sentido pra você, o reembolso é simples e sem perguntas."
     }
   },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "secondary": "#432818",
-      "background": "#fffaf7",
-      "text": "#432818",
-      "accent": "#a08966",
-      "success": "#2d5f3f"
-    },
-    "fonts": {
-      "heading": "Playfair Display",
-      "body": "Inter"
-    }
-  },
   "layout": {
     "containerWidth": "full",
     "maxWidth": "1280px",
@@ -86,9 +72,9 @@
           "styleNameDisplay": "{styleName}",
           "colors": {
             "greeting": "#432818",
-            "greetingHighlight": "#B89B7A",
+            "greetingHighlight": "{{theme.colors.primary}}",
             "title": "#432818",
-            "styleName": "#B89B7A"
+            "styleName": "{{theme.colors.primary}}"
           },
           "spacing": {
             "padding": "3rem 1.5rem",
@@ -115,7 +101,7 @@
           "animateOnMount": true,
           "confettiEnabled": true,
           "theme": {
-            "primaryColor": "#B89B7A",
+            "primaryColor": "{{theme.colors.primary}}",
             "secondaryColor": "#432818",
             "accentColor": "#a08966",
             "backgroundColor": "#fffaf7",
@@ -151,7 +137,7 @@
           "styleImage": {
             "aspectRatio": "4/5",
             "showDecorations": true,
-            "decorationColor": "#B89B7A",
+            "decorationColor": "{{theme.colors.primary}}",
             "fallbackEnabled": true,
             "showLabel": true
           },
@@ -177,7 +163,7 @@
           "percentageFormat": "{percentage}%",
           "animationDelay": 200,
           "colors": {
-            "primary": "#B89B7A",
+            "primary": "{{theme.colors.primary}}",
             "secondary": "#a08966",
             "tertiary": "#8c7757"
           },
@@ -197,7 +183,7 @@
         "props": {
           "showKeywords": true,
           "keywordsTitle": "Palavras que te definem:",
-          "tagColor": "#B89B7A",
+          "tagColor": "{{theme.colors.primary}}",
           "tagStyle": "rounded-full"
         }
       },
@@ -256,7 +242,7 @@
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
-        "backgroundColor": "#B89B7A",
+        "backgroundColor": "{{theme.colors.primary}}",
         "textColor": "#ffffff",
         "hoverColor": "#a08966"
       },
@@ -328,7 +314,7 @@
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
-        "backgroundColor": "#B89B7A",
+        "backgroundColor": "{{theme.colors.primary}}",
         "textColor": "#ffffff",
         "hoverColor": "#a08966"
       },

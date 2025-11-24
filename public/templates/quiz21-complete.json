@@ -60,7 +60,7 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
@@ -111,7 +111,7 @@
           "type": "quiz-intro-header",
           "order": 0,
           "properties": {
-            "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+            "logoUrl": "{{asset.logo}}",
             "logoAlt": "Logo Gisele Galvão",
             "logoWidth": 132,
             "logoHeight": 55,
@@ -122,7 +122,7 @@
             "progressMax": 100,
             "progressHeight": 4,
             "progressStyle": "bar",
-            "progressColor": "#B89B7A",
+            "progressColor": "{{theme.colors.primary}}",
             "progressBackgroundColor": "#E5DDD5",
             "showBackButton": false,
             "backButtonStyle": "icon",
@@ -155,7 +155,7 @@
             "fontWeight": "700"
           },
           "content": {
-            "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+            "title": "<span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">nada combina com você</span>."
           },
           "parentId": null
         },
@@ -169,11 +169,11 @@
             "borderRadius": "8px"
           },
           "content": {
-            "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+            "src": "{{asset.logo}}",
             "alt": "Descubra seu estilo predominante",
             "width": 300,
             "height": 204,
-            "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png"
+            "imageUrl": "{{asset.logo}}"
           },
           "parentId": null
         },
@@ -188,7 +188,7 @@
             "textAlign": "center"
           },
           "content": {
-            "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
+            "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[{{theme.colors.primary}}]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
           },
           "parentId": null
         },
@@ -235,7 +235,7 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
@@ -278,7 +278,7 @@
             "stepNumber": 2,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -406,7 +406,7 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
@@ -448,7 +448,7 @@
             "stepNumber": 3,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -582,14 +582,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -640,7 +640,7 @@
             "stepNumber": 4,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -805,14 +805,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -851,7 +851,7 @@
             "stepNumber": 5,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1003,14 +1003,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -1049,7 +1049,7 @@
             "stepNumber": 6,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1209,14 +1209,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -1255,7 +1255,7 @@
             "stepNumber": 7,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1415,14 +1415,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -1461,7 +1461,7 @@
             "stepNumber": 8,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1621,14 +1621,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -1667,7 +1667,7 @@
             "stepNumber": 9,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1827,14 +1827,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -1873,7 +1873,7 @@
             "stepNumber": 10,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2033,14 +2033,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -2079,7 +2079,7 @@
             "stepNumber": 11,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2235,7 +2235,7 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937"
@@ -2329,14 +2329,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -2375,7 +2375,7 @@
             "stepNumber": 13,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2505,14 +2505,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -2551,7 +2551,7 @@
             "stepNumber": 14,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2681,14 +2681,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -2727,7 +2727,7 @@
             "stepNumber": 15,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2857,14 +2857,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -2903,7 +2903,7 @@
             "stepNumber": 16,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -3033,14 +3033,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -3079,7 +3079,7 @@
             "stepNumber": 17,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -3209,14 +3209,14 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937",
           "border": "#E5E7EB",
-          "selected": "#B89B7A",
+          "selected": "{{theme.colors.primary}}",
           "hover": "#F3E8D3"
         },
         "fonts": {
@@ -3255,7 +3255,7 @@
             "stepNumber": 18,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "#B89B7A",
+            "barColor": "{{theme.colors.primary}}",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -3390,7 +3390,7 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "secondary": "#432818",
           "background": "#FAF9F7",
           "text": "#1F2937"
@@ -3508,7 +3508,7 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "secondary": "#432818",
           "background": "#fffaf7",
           "text": "#432818",
@@ -3543,9 +3543,9 @@
               "styleNameDisplay": "{styleName}",
               "colors": {
                 "greeting": "#432818",
-                "greetingHighlight": "#B89B7A",
+                "greetingHighlight": "{{theme.colors.primary}}",
                 "title": "#432818",
-                "styleName": "#B89B7A"
+                "styleName": "{{theme.colors.primary}}"
               },
               "spacing": {
                 "padding": "3rem 1.5rem",
@@ -3572,7 +3572,7 @@
               "animateOnMount": true,
               "confettiEnabled": true,
               "theme": {
-                "primaryColor": "#B89B7A",
+                "primaryColor": "{{theme.colors.primary}}",
                 "secondaryColor": "#432818",
                 "accentColor": "#a08966",
                 "backgroundColor": "#fffaf7",
@@ -3608,7 +3608,7 @@
               "styleImage": {
                 "aspectRatio": "4/5",
                 "showDecorations": true,
-                "decorationColor": "#B89B7A",
+                "decorationColor": "{{theme.colors.primary}}",
                 "fallbackEnabled": true,
                 "showLabel": true
               },
@@ -3634,7 +3634,7 @@
               "percentageFormat": "{percentage}%",
               "animationDelay": 200,
               "colors": {
-                "primary": "#B89B7A",
+                "primary": "{{theme.colors.primary}}",
                 "secondary": "#a08966",
                 "tertiary": "#8c7757"
               },
@@ -3654,7 +3654,7 @@
             "props": {
               "showKeywords": true,
               "keywordsTitle": "Palavras que te definem:",
-              "tagColor": "#B89B7A",
+              "tagColor": "{{theme.colors.primary}}",
               "tagStyle": "rounded-full"
             }
           },
@@ -3713,7 +3713,7 @@
             "variant": "primary",
             "size": "large",
             "fullWidth": true,
-            "backgroundColor": "#B89B7A",
+            "backgroundColor": "{{theme.colors.primary}}",
             "textColor": "#ffffff",
             "hoverColor": "#a08966"
           },
@@ -3785,7 +3785,7 @@
             "variant": "primary",
             "size": "large",
             "fullWidth": true,
-            "backgroundColor": "#B89B7A",
+            "backgroundColor": "{{theme.colors.primary}}",
             "textColor": "#ffffff",
             "hoverColor": "#a08966"
           },
@@ -3821,7 +3821,7 @@
       },
       "theme": {
         "colors": {
-          "primary": "#B89B7A",
+          "primary": "{{theme.colors.primary}}",
           "primaryHover": "#A68B6A",
           "primaryLight": "#F3E8D3",
           "secondary": "#432818",
@@ -3940,7 +3940,7 @@
     },
     "theme": {
       "colors": {
-        "primary": "#B89B7A",
+        "primary": "{{theme.colors.primary}}",
         "primaryHover": "#A68B6A",
         "primaryLight": "#F3E8D3",
         "secondary": "#432818",
