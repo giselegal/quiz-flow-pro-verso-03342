@@ -37,10 +37,10 @@ import { DataSourcePriority } from '@/services/core/TemplateDataSource';
 // 🆔 ID Generator (W1: Quick Win - Replace Date.now())
 import { generateCustomStepId, generateBlockId } from '@/lib/utils/idGenerator';
 // 🎯 PR3: Built-in Templates Loader (JSON build-time)
-import { 
-  getBuiltInTemplateById, 
+import {
+  getBuiltInTemplateById,
   hasBuiltInTemplate,
-  listBuiltInTemplateIds 
+  listBuiltInTemplateIds
 } from '@/services/templates/builtInTemplates';
 import { loadFullTemplate } from '@/templates/registry';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -231,7 +231,7 @@ export class TemplateService extends BaseCanonicalService {
 
   private constructor(options?: ServiceOptions) {
     super('TemplateService', '1.0.0', options);
-  // registry legacy removido; hierarchicalTemplateSource cobre fluxo principal
+    // registry legacy removido; hierarchicalTemplateSource cobre fluxo principal
   }
 
   static getInstance(options?: ServiceOptions): TemplateService {
@@ -242,7 +242,7 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   protected async onInitialize(): Promise<void> {
-  this.log('TemplateService initialized (UnifiedTemplateRegistry removido)');
+    this.log('TemplateService initialized (UnifiedTemplateRegistry removido)');
 
     // ✅ FASE 1: Preload de steps críticos para eliminar cache MISS
     try {
@@ -276,26 +276,26 @@ export class TemplateService extends BaseCanonicalService {
   async loadV4Template(): Promise<ServiceResult<any>> {
     try {
       this.log('📂 Loading quiz21-v4.json...');
-      
+
       const response = await fetch('/templates/quiz21-v4.json', {
         cache: 'no-cache'
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to load v4 template: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
-      
+
       // Validar com Zod
       const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
       const validated = QuizSchemaZ.parse(data);
-      
+
       this.log(`✅ v4 template loaded and validated: ${validated.steps.length} steps`);
-      
+
       // Cache do template v4
       cacheService.templates.set('quiz21-v4', validated, 3600000); // 1 hora
-      
+
       return this.createResult(validated);
     } catch (error) {
       this.error('❌ Failed to load v4 template:', error);
@@ -310,7 +310,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       // Tentar carregar do cache primeiro
       const cached = cacheService.templates.get<any>('quiz21-v4');
-      
+
       let v4Template;
       if (cached.success && cached.data) {
         v4Template = cached.data;
@@ -321,14 +321,14 @@ export class TemplateService extends BaseCanonicalService {
         }
         v4Template = result.data;
       }
-      
+
       // Encontrar step
       const step = v4Template.steps.find((s: any) => s.id === stepId);
-      
+
       if (!step) {
         return this.createError(new Error(`Step ${stepId} not found in v4 template`));
       }
-      
+
       this.log(`✅ Step ${stepId} loaded from v4 (${step.blocks.length} blocks)`);
       return this.createResult(step);
     } catch (error) {
@@ -403,7 +403,7 @@ export class TemplateService extends BaseCanonicalService {
    * @param options Opções incluindo AbortSignal para cancelamento
    */
   async getStep(
-    stepId: string, 
+    stepId: string,
     templateId?: string,
     options?: ServiceOptions
   ): Promise<ServiceResult<Block[]>> {
@@ -434,19 +434,19 @@ export class TemplateService extends BaseCanonicalService {
       // 🎯 PRIORIDADE 1: Verificar se existe template built-in JSON
       if (templateId && hasBuiltInTemplate(templateId)) {
         this.log(`✅ [BUILT-IN] Template ${templateId} disponível como JSON`);
-        
+
         try {
           const builtInTemplate = await loadFullTemplate(templateId);
           if (builtInTemplate && builtInTemplate.steps[stepId]) {
             const blocks = builtInTemplate.steps[stepId];
             this.log(`✅ [BUILT-IN] Step ${stepId} carregado do JSON (${blocks.length} blocos)`);
-            
+
             editorMetrics.trackLoadTime(stepId, performance.now() - startTime, {
               source: 'built-in-json',
               blocksCount: blocks.length,
               cacheHit: false,
             });
-            
+
             return this.createResult(blocks);
           }
         } catch (error) {
@@ -500,7 +500,7 @@ export class TemplateService extends BaseCanonicalService {
         this.log(`🚫 [CANCELLED] getStep ${stepId} foi cancelado`);
         return this.createError(new Error('Operation cancelled'));
       }
-      
+
       editorMetrics.trackError(error as Error, { stepId, templateId });
       this.error('getStep failed:', error);
       return this.createError(error as Error);
@@ -549,7 +549,7 @@ export class TemplateService extends BaseCanonicalService {
       if (signal?.aborted || (error as Error).message === 'Operation aborted') {
         throw error; // Re-throw para tratar no caller
       }
-      
+
       this.error('[NEW] getStepFromHierarchicalSource failed:', error);
       // Se JSON-only estiver ativo, não cair no legado para evitar drift/registry
       if (this.JSON_ONLY) {
@@ -596,8 +596,8 @@ export class TemplateService extends BaseCanonicalService {
     }
 
     // FASE 2: Carregar do registry (lazy loading)
-  // Registry legacy removido: usar hierarchicalTemplateSource (ou JSON) como fallback
-  const blocks = await this.registryCompat.getStep(stepId, templateId);
+    // Registry legacy removido: usar hierarchicalTemplateSource (ou JSON) como fallback
+    const blocks = await this.registryCompat.getStep(stepId, templateId);
 
     // ✅ Verificar cancelamento após fetch
     if (signal?.aborted) {
@@ -690,7 +690,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       // Invalidar todos os caches
       cacheService.templates.invalidate(id);
-  await this.registryCompat.invalidate(id);
+      await this.registryCompat.invalidate(id);
 
       this.log(`Template deleted: ${id}`);
       return this.createResult(undefined);
@@ -794,7 +794,7 @@ export class TemplateService extends BaseCanonicalService {
     this.activeTemplateSteps = totalSteps;
     appLogger.info(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} com ${totalSteps} etapas`);
     this.log(`✅ Template ativo: ${templateId} (${totalSteps} etapas)`);
-    
+
     // 🆕 Sincronizar com HierarchicalTemplateSource
     hierarchicalTemplateSource.setActiveTemplate(templateId);
   }
@@ -984,11 +984,11 @@ export class TemplateService extends BaseCanonicalService {
    * @param options Opções incluindo preloadAll e AbortSignal
    */
   async prepareTemplate(
-    templateId: string, 
+    templateId: string,
     options?: { preloadAll?: boolean; signal?: AbortSignal }
   ): Promise<ServiceResult<void>> {
     const signal = options?.signal;
-    
+
     try {
       // ✅ Verificar cancelamento
       if (signal?.aborted) {
@@ -998,12 +998,12 @@ export class TemplateService extends BaseCanonicalService {
       // 🎯 PRIORIDADE 1: Verificar se existe built-in JSON
       if (hasBuiltInTemplate(templateId)) {
         this.log(`✅ [BUILT-IN] Preparando template ${templateId} do JSON`);
-        
+
         const builtInTemplate = await loadFullTemplate(templateId);
         if (builtInTemplate) {
           const totalSteps = builtInTemplate.totalSteps || Object.keys(builtInTemplate.steps).length;
           this.setActiveTemplate(templateId, totalSteps);
-          
+
           this.log(`✅ [BUILT-IN] Template ${templateId} preparado: ${totalSteps} steps`);
           return this.createResult(undefined);
         }
@@ -1042,7 +1042,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   async preloadTemplate(templateId: string, options?: ServiceOptions): Promise<ServiceResult<void>> {
     const signal = options?.signal;
-    
+
     try {
       // ✅ Verificar cancelamento
       if (signal?.aborted) {
@@ -1056,7 +1056,7 @@ export class TemplateService extends BaseCanonicalService {
         this.log(`🚫 [CANCELLED] preloadTemplate ${templateId} foi cancelado`);
         return this.createError(new Error('Operation cancelled'));
       }
-      
+
       this.error('preloadTemplate failed:', error);
       return this.createError(error as Error);
     }
@@ -1067,7 +1067,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   invalidateTemplate(id: string): void {
     cacheService.templates.invalidate(id);
-  this.registryCompat.invalidate(id);
+    this.registryCompat.invalidate(id);
     this.loadedSteps.delete(id); // 🚀 FASE 3.1: Limpar do lazy load
     this.log(`Template invalidated: ${id}`);
   }
@@ -1086,7 +1086,7 @@ export class TemplateService extends BaseCanonicalService {
   clearCache(): void {
     cacheService.clearStore('templates');
     // UnifiedTemplateRegistry tem clearL1()
-  this.registryCompat.clearL1();
+    this.registryCompat.clearL1();
     this.loadedSteps.clear(); // 🚀 FASE 3.1: Limpar lazy load
     this.stepLoadPromises.clear();
     this.log('Template cache cleared');
@@ -1104,7 +1104,7 @@ export class TemplateService extends BaseCanonicalService {
     lastReport: ReturnType<typeof editorMetrics.getReport>;
   } {
     const report = editorMetrics.getReport();
-    
+
     return {
       cacheHitRate: report.summary.cacheHitRate,
       stepsLoadedInMemory: this.loadedSteps.size,
@@ -1120,7 +1120,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   logCacheReport(): void {
     const stats = this.getCacheStats();
-    
+
     console.group('📊 Template Cache Stats');
     appLogger.info(`Cache Hit Rate: ${stats.cacheHitRate}`);
     appLogger.info(`Steps in Memory: ${stats.stepsLoadedInMemory}`);
@@ -1236,9 +1236,9 @@ export class TemplateService extends BaseCanonicalService {
           totalSteps = 21;
           appLogger.warn(`⚠️ [TemplateService.steps.list] activeTemplateSteps não setado, usando fallback de 21 steps`);
         }
-        
+
         appLogger.info(`🔍 [TemplateService.steps.list] activeTemplateSteps = ${totalSteps}, activeTemplateId = ${this.activeTemplateId}`);
-        
+
         for (let i = 1; i <= totalSteps; i++) {
           const info = this.STEP_MAPPING[i] || {
             name: `Etapa ${i}`,
@@ -1594,13 +1594,23 @@ export class TemplateService extends BaseCanonicalService {
   async getAllSteps(): Promise<Record<string, any>> {
     const allSteps: Record<string, any> = {};
 
+    // Determinar templateId baseado no activeFunnelId ou usar padrão
+    let templateId = this.activeFunnelId || 'quiz21StepsComplete';
+
+    // Normalizar IDs legados para o ID do template JSON
+    if (templateId === 'quiz-estilo-21-steps' || templateId === 'quiz-estilo-completo') {
+      templateId = 'quiz21StepsComplete';
+    }
+
+    this.log(`📚 getAllSteps usando templateId: ${templateId}`);
+
     for (let i = 1; i <= 21; i++) {
       const stepId = `step-${i.toString().padStart(2, '0')}`;
       const stepInfo = this.STEP_MAPPING[i];
 
       if (stepInfo) {
-        // Carregar blocks via registry
-        const result = await this.getStep(stepId);
+        // Carregar blocks via registry COM templateId
+        const result = await this.getStep(stepId, templateId);
         const blocks = result.success ? result.data : [];
 
         allSteps[stepId] = {
@@ -1610,7 +1620,7 @@ export class TemplateService extends BaseCanonicalService {
           description: stepInfo.description,
           multiSelect: stepInfo.multiSelect,
           nextStep: i < 21 ? `step-${(i + 1).toString().padStart(2, '0')}` : undefined,
-          blocks, // ✅ BLOCOS REAIS
+          blocks, // ✅ BLOCOS REAIS DO JSON
         };
       }
     }
@@ -1692,7 +1702,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       // Usar HierarchicalTemplateSource para salvar (USER_EDIT priority)
       const funnelId = this.activeFunnelId || undefined;
-      
+
       if (this.USE_HIERARCHICAL_SOURCE && funnelId) {
         await hierarchicalTemplateSource.setPrimary(stepId, blocks, funnelId);
       } else {
@@ -1700,10 +1710,10 @@ export class TemplateService extends BaseCanonicalService {
         // Sem funnel ativo: armazenar apenas em cache local
         cacheService.templates.set(stepId, blocks);
       }
-      
+
       // Invalidar cache
       this.invalidateTemplate(stepId);
-      
+
       return this.createResult(undefined as void);
     } catch (error) {
       this.error('saveStep failed:', error);
@@ -1720,16 +1730,16 @@ export class TemplateService extends BaseCanonicalService {
   ): Promise<ServiceResult<StepInfo[]>> {
     try {
       const steps: StepInfo[] = [];
-      
+
       for (let i = 1; i <= 21; i++) {
         const stepId = `step-${String(i).padStart(2, '0')}`;
         const stepInfo = this.STEP_MAPPING[i];
-        
+
         if (stepInfo) {
           // Verificar se tem template carregado
           const result = await this.getStep(stepId, templateId, options);
           const blocks = result.success ? result.data : [];
-          
+
           steps.push({
             id: stepId,
             order: i,
@@ -1742,7 +1752,7 @@ export class TemplateService extends BaseCanonicalService {
           });
         }
       }
-      
+
       return this.createResult(steps);
     } catch (error) {
       this.error('listSteps failed:', error);
@@ -1761,7 +1771,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       // Gerar ID único para o bloco
       const blockId = generateBlockId();
-      
+
       const newBlock: Block = {
         id: blockId,
         type: blockDTO.type as any, // Cast para compatibilidade com BlockType
@@ -1770,25 +1780,25 @@ export class TemplateService extends BaseCanonicalService {
         content: blockDTO.content || {},
         parentId: blockDTO.parentId || undefined,
       };
-      
+
       // Obter blocos atuais do step
       const stepResult = await this.getStep(stepId, undefined, options);
       if (!stepResult.success) {
         throw stepResult.error;
       }
-      
+
       const currentBlocks = stepResult.data;
-      
+
       // Adicionar novo bloco ao final
       newBlock.order = currentBlocks.length;
       const updatedBlocks = [...currentBlocks, newBlock];
-      
+
       // Salvar step atualizado
       const saveResult = await this.saveStep(stepId, updatedBlocks, options);
       if (!saveResult.success) {
         throw saveResult.error;
       }
-      
+
       return this.createResult(newBlock);
     } catch (error) {
       this.error('createBlock failed:', error);
@@ -1811,30 +1821,30 @@ export class TemplateService extends BaseCanonicalService {
       if (!stepResult.success) {
         throw stepResult.error;
       }
-      
+
       const currentBlocks = stepResult.data;
       const blockIndex = currentBlocks.findIndex(b => b.id === blockId);
-      
+
       if (blockIndex === -1) {
         throw new Error(`Block ${blockId} not found in ${stepId}`);
       }
-      
+
       // Atualizar bloco
       const updatedBlock = {
         ...currentBlocks[blockIndex],
         ...updates,
         id: blockId, // Garantir que ID não muda
       };
-      
+
       const updatedBlocks = [...currentBlocks];
       updatedBlocks[blockIndex] = updatedBlock;
-      
+
       // Salvar step atualizado
       const saveResult = await this.saveStep(stepId, updatedBlocks, options);
       if (!saveResult.success) {
         throw saveResult.error;
       }
-      
+
       return this.createResult(updatedBlock);
     } catch (error) {
       this.error('updateBlock failed:', error);
@@ -1856,25 +1866,25 @@ export class TemplateService extends BaseCanonicalService {
       if (!stepResult.success) {
         throw stepResult.error;
       }
-      
+
       const currentBlocks = stepResult.data;
       const updatedBlocks = currentBlocks.filter(b => b.id !== blockId);
-      
+
       if (updatedBlocks.length === currentBlocks.length) {
         throw new Error(`Block ${blockId} not found in ${stepId}`);
       }
-      
+
       // Renormalizar ordem
       updatedBlocks.forEach((b, index) => {
         b.order = index;
       });
-      
+
       // Salvar step atualizado
       const saveResult = await this.saveStep(stepId, updatedBlocks, options);
       if (!saveResult.success) {
         throw saveResult.error;
       }
-      
+
       return this.createResult(undefined as void);
     } catch (error) {
       this.error('deleteBlock failed:', error);
@@ -1893,11 +1903,11 @@ export class TemplateService extends BaseCanonicalService {
     try {
       const errors: string[] = [];
       const warnings: string[] = [];
-      
+
       if (!stepId || !stepId.match(/step-\d{2}/)) {
         errors.push('Invalid stepId format. Expected: step-NN');
       }
-      
+
       if (!Array.isArray(blocks)) {
         errors.push('Blocks must be an array');
       } else {
@@ -1913,7 +1923,7 @@ export class TemplateService extends BaseCanonicalService {
             warnings.push(`Block ${index} has invalid order`);
           }
         });
-        
+
         // Verificar ordem sequencial
         const orders = blocks.map(b => b.order).sort((a, b) => a - b);
         for (let i = 0; i < orders.length; i++) {
@@ -1923,7 +1933,7 @@ export class TemplateService extends BaseCanonicalService {
           }
         }
       }
-      
+
       return this.createResult({
         isValid: errors.length === 0,
         errors,
