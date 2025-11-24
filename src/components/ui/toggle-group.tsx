@@ -18,7 +18,7 @@ export const ToggleGroup = React.forwardRef<
   <ToggleGroupPrimitive.Root
     ref={ref}
     type={type as any}
-    className={cn('flex items-center justify-center gap-1', className as any)}
+    className={cn('inline-flex items-center justify-start gap-1.5', className as any)}
     {...props}
   >
     <ToggleGroupContext.Provider value={{ variant, size }}>{children as React.ReactNode}</ToggleGroupContext.Provider>

@@ -330,8 +330,32 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch { }
     }, [previewMode]);
 
+    // ⌨️ Atalhos de teclado para alternar modos (Ctrl+1/2/3)
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
+            // Atalhos simples: Ctrl+1/2/3
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === '1') {
+                    e.preventDefault();
+                    setCanvasMode('edit');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Modo Editar (Ctrl+1)');
+                    return;
+                } else if (e.key === '2') {
+                    e.preventDefault();
+                    setCanvasMode('preview');
+                    setPreviewMode('live');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Preview Editor (Ctrl+2)');
+                    return;
+                } else if (e.key === '3') {
+                    e.preventDefault();
+                    setCanvasMode('preview');
+                    setPreviewMode('production');
+                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Preview Publicado (Ctrl+3)');
+                    return;
+                }
+            }
+
+            // Atalho legado: Ctrl+Shift+P para toggle preview
             if (!e.ctrlKey || !e.shiftKey) return;
             const k = String(e.key || '').toLowerCase();
             if (k === 'p') {
