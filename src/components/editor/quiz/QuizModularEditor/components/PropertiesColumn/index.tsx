@@ -66,14 +66,14 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     }, [selectedBlock?.id]);
 
     // Get schema and initial properties for the draft
-    const schema = useMemo(() => 
+    const schema = useMemo(() =>
         selectedBlock ? schemaInterpreter.getBlockSchema(selectedBlock.type) : null,
         [selectedBlock?.type]
     );
 
     const initialProperties = useMemo(() => {
         if (!selectedBlock) return {};
-        
+
         // Normalizar dados do bloco
         const normalizedBlock = normalizeBlockData(selectedBlock);
         const merged = { ...normalizedBlock.properties };
@@ -125,7 +125,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         cancelDraft,
         getJsonBuffer,
     } = useDraftProperties({
-        schema,
+        schema: schema || null,
         initialProperties,
         onCommit: handleCommit,
     });

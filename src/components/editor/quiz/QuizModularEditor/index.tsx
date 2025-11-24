@@ -160,17 +160,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
 
-    // 🎯 FASE 3.1: Auto-save com novo hook refatorado
-    const autoSave = useAutoSave({
-        enabled: enableAutoSave && !!resourceId,
-        debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
-        onSave: async () => {
-            const stepNumber = safeCurrentStep;
-            await saveStepBlocks(stepNumber);
-        },
-        data: wysiwyg?.state?.blocks || [],
-    });
-
     // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
     useEffect(() => {
         try {
@@ -356,16 +345,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const wysiwyg = useWYSIWYGBridge({
         currentStep: safeCurrentStep,
         onAutoSave: (blocks, stepKey) => {
-            // Salvar snapshot antes do auto-save
-            if (snapshot.saveSnapshot) {
-                snapshot.saveSnapshot(blocks, viewport, 'local', safeCurrentStep);
-            }
-            // 🎯 FASE 3.1: Trigger auto-save via novo hook
-            autoSave.triggerSave();
+            // Auto-save será tratado pelo hook useAutoSave
         },
         autoSaveDelay: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         enableValidation: true,
         mode: previewMode === 'live' ? 'preview-live' : 'preview-production',
+    });
+
+    // 🎯 FASE 3.1: Auto-save com novo hook refatorado (após wysiwyg)
+    const autoSave = useAutoSave({
+        enabled: enableAutoSave && !!resourceId,
+        debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
+        onSave: async () => {
+            const stepNumber = safeCurrentStep;
+            await saveStepBlocks(stepNumber);
+        },
+        data: wysiwyg?.state?.blocks || [],
     });
 
     // 💾 Recuperar snapshot no mount
@@ -612,16 +607,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [props.templateId, loadedTemplate, setCurrentStep, unifiedState.editor.currentStep]);
 
-    // Auto-save por etapa usando Queue com Lock (evita concorrência e coalesce mudanças)
-    useEffect(() => {
-        if (!enableAutoSave || !isDirty) return;
-
-        const stepBlocks = unifiedState.editor.stepBlocks as Record<string, Block[]>;
-        const currentBlocks = stepBlocks[currentStepKey] || [];
-        queueAutosave(currentStepKey, currentBlocks);
-
-        // Cleanup não necessário - queueAutosave já gerencia debounce interno
-    }, [enableAutoSave, isDirty, currentStepKey, unifiedState.editor.stepBlocks, queueAutosave]);
+    // 🎯 FASE 3.1: Auto-save automático gerenciado pelo hook useAutoSave
+    // (mudanças nos blocos disparam auto-save via hook)
 
     // DnD sensors (usando hook seguro)
     const sensors = useSafeDndSensors();
@@ -1133,7 +1120,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             // Garantir persistência de todas as etapas sujas antes do snapshot global
             try {
-                await flushAutosave();
+                await autoSave.triggerSave();
                 await (unified as any).ensureAllDirtyStepsSaved?.();
             } catch (error) {
                 appLogger.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', {
@@ -1154,7 +1141,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 message: 'Erro ao salvar funil',
             });
         }
-    }, [props.templateId, resourceId, loadedTemplate?.steps, unifiedState.editor.stepBlocks, saveFunnel, showToast, unified, flushAutosave]);
+    }, [props.templateId, resourceId, loadedTemplate?.steps, unifiedState.editor.stepBlocks, saveFunnel, showToast, unified, autoSave]);
 
     // Reload current step (retry)
     const handleReloadStep = useCallback(async () => {
