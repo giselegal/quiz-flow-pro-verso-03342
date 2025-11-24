@@ -119,9 +119,9 @@ const QuizFunnelsPage: React.FC = () => {
       const formattedFunnels: QuizFunnel[] = await Promise.all(
         quizFunnels.map(async (funnel: any) => {
           // Carregar analytics
-          const analytics = await analyticsService.getMetricsByCategory('usage');
-          const views = analytics.find(m => m.name === 'pageViews')?.value || 0;
-          const completions = analytics.find(m => m.name === 'conversions')?.value || 0;
+          const analytics = analyticsService.getMetricsByCategory('usage');
+          const views = analytics.find((m: any) => m.name === 'pageViews')?.value || 0;
+          const completions = analytics.find((m: any) => m.name === 'conversions')?.value || 0;
           const conversionRate = views > 0 ? (completions / views) * 100 : 0;
 
           // Carregar versões
