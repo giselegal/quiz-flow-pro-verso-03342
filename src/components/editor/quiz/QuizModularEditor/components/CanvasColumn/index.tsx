@@ -123,7 +123,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
                     : 'text-muted-foreground'
                     }`}>{block.type}</div>
                 <div className="flex items-center gap-1">
-                    {typeof onMoveBlock === 'function' && (
+                    {isEditable && typeof onMoveBlock === 'function' && (
                         <>
                             <button
                                 className="text-[10px] px-1 py-0.5 border rounded disabled:opacity-50"
@@ -139,7 +139,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
                             >↓</button>
                         </>
                     )}
-                    {typeof onRemoveBlock === 'function' && (
+                    {isEditable && typeof onRemoveBlock === 'function' && (
                         <button
                             className="text-[10px] px-1 py-0.5 border rounded text-red-600"
                             onClick={e => { e.stopPropagation(); onRemoveBlock(block.id); }}
