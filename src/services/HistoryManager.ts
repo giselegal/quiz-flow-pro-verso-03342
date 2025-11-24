@@ -1,17 +1,27 @@
 /**
+ * ⚠️ LEGACY ADAPTER - Redirects to canonical HistoryService
+ * 
  * 🎯 HISTORY MANAGER - GERENCIADOR DE HISTÓRICO DE MUDANÇAS
  * 
  * Serviço especializado para gerenciar histórico detalhado de mudanças,
  * integrando com VersioningService e UnifiedCRUDService.
  * 
- * FUNCIONALIDADES:
- * ✅ Histórico detalhado de mudanças
- * ✅ Timeline de eventos
- * ✅ Filtros e busca no histórico
- * ✅ Exportação de histórico
- * ✅ Análise de padrões de mudança
- * ✅ Integração com undo/redo
+ * Este serviço foi consolidado em `HistoryService` canônico.
+ * 
+ * @deprecated Use `historyService` from '@/services/canonical/HistoryService' instead
+ * 
+ * FUNCIONALIDADES MIGRADAS:
+ * ✅ Histórico detalhado de mudanças → historyService.addEntry()
+ * ✅ Timeline de eventos → historyService.getHistory()
+ * ✅ Filtros e busca no histórico → historyService.getHistory(filter)
+ * ✅ Exportação de histórico → historyService.audit.getLogs()
+ * ✅ Análise de padrões → historyService.getStats()
+ * ✅ Integração com undo/redo → historyService.undo.undo/redo()
  */
+
+import { historyService } from '@/services/canonical/HistoryService';
+import type { HistoryEntry as CanonicalHistoryEntry } from '@/services/canonical/HistoryService';
+import { appLogger } from '@/lib/utils/appLogger';
 
 type VersionChange = {
   field?: string;
@@ -20,10 +30,6 @@ type VersionChange = {
   description?: string;
   timestamp?: Date;
 };
-import { UnifiedFunnel, UnifiedStage } from './UnifiedCRUDService';
-import { Block } from '@/types/editor';
-import { StorageService } from '@/services/core/StorageService';
-import { appLogger } from '@/lib/utils/appLogger';
 
 // =============================================================================
 // TIPOS E INTERFACES

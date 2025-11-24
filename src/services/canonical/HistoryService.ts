@@ -943,5 +943,10 @@ export class HistoryService extends BaseCanonicalService {
 // EXPORTS
 // ============================================================================
 
+/**
+ * Singleton instance for history management
+ */
+export const historyService = HistoryService.getInstance();
+
 export default HistoryService;
   
