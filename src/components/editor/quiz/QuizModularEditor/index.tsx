@@ -40,6 +40,8 @@ import { PerformanceMonitor } from '@/components/editor/PerformanceMonitor';
 import { useWYSIWYGBridge } from '@/hooks/useWYSIWYGBridge';
 import ViewportSelector, { type ViewportSize } from '@/components/editor/quiz/ViewportSelector';
 import { ViewportContainer } from '@/components/editor/quiz/ViewportSelector/ViewportContainer';
+import { useEditorMode } from '@/hooks/useEditorMode';
+import { useSnapshot } from '@/hooks/useSnapshot';
 
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
@@ -346,14 +348,48 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try { localStorage.setItem('qm-editor:preview-mode', previewMode); } catch { }
     }, [previewMode]);
 
+    // 🎮 Editor Mode: State machine para modos
+    const editorMode = useEditorMode({
+        canvasMode,
+        previewMode,
+    });
+
+    // 💾 Snapshot System: Recuperação de drafts
+    const snapshot = useSnapshot({
+        resourceId: resourceId || '',
+        enabled: enableAutoSave && !!resourceId,
+    });
+
     // 🎨 WYSIWYG Bridge: Sincronização instantânea entre propriedades e canvas
     const wysiwyg = useWYSIWYGBridge({
         currentStep: safeCurrentStep,
-        onAutoSave: (blocks, stepKey) => queueAutosave(stepKey, blocks),
+        onAutoSave: (blocks, stepKey) => {
+            // Salvar snapshot antes do auto-save
+            if (snapshot.saveSnapshot) {
+                snapshot.saveSnapshot(blocks, viewport, editorMode.dataSource as any, safeCurrentStep);
+            }
+            queueAutosave(stepKey, blocks);
+        },
         autoSaveDelay: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         enableValidation: true,
         mode: canvasMode === 'edit' ? 'edit' : previewMode === 'live' ? 'preview-live' : 'preview-production',
     });
+
+    // 💾 Recuperar snapshot no mount
+    useEffect(() => {
+        if (snapshot.hasSnapshot && resourceId) {
+            const recovered = snapshot.recoverSnapshot();
+            if (recovered && window.confirm(
+                `Encontrado draft não salvo de ${Math.round((snapshot.snapshotAge || 0) / 1000)}s atrás. Deseja recuperar?`
+            )) {
+                appLogger.info('[Snapshot] Recuperando draft...');
+                wysiwyg.actions.reset(recovered.blocks);
+                setViewport(recovered.viewport);
+                setCurrentStep(recovered.currentStep);
+                snapshot.clearSnapshot();
+            }
+        }
+    }, [snapshot.hasSnapshot, resourceId]);
 
     // ⌨️ Atalhos de teclado para alternar modos (Ctrl+1/2/3) e viewport (Ctrl+Alt+1/2/3/0)
     useEffect(() => {
