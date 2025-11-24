@@ -57,8 +57,9 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
-// 🎯 EDITOR COM VALIDAÇÃO ZOD E LOGIC ENGINE
-const Editor = lazy(() => import('./pages/EditorV4').then(m => ({ default: m.EditorV4 })));
+// 🎯 EDITOR PRINCIPAL - QuizModularEditor com EditorProviderUnified
+const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
+const EditorProviderUnified = lazy(() => import('./contexts/providers/EditorProviderUnified').then(m => ({ default: m.EditorProviderUnified })));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -232,18 +233,46 @@ function AppCore() {
                                         </Suspense>
                                     </Route>
 
-                                    {/* 🎯 EDITOR COM VALIDAÇÃO ZOD E LOGIC ENGINE */}
+                                    {/* 🎯 EDITOR PRINCIPAL - QuizModularEditor */}
                                     <Route path="/editor">
-                                        <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                            <Editor />
-                                        </Suspense>
+                                        {() => {
+                                            const params = new URLSearchParams(window.location.search);
+                                            const templateId = params.get('template') || undefined;
+                                            const funnelId = params.get('funnelId') || params.get('funnel') || undefined;
+
+                                            return (
+                                                <EditorErrorBoundary>
+                                                    <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
+                                                        <EditorProviderUnified
+                                                            funnelId={funnelId}
+                                                            templateId={templateId}
+                                                            enableSupabase={Boolean(funnelId)}
+                                                        >
+                                                            <QuizModularEditor
+                                                                templateId={templateId}
+                                                                funnelId={funnelId}
+                                                            />
+                                                        </EditorProviderUnified>
+                                                    </Suspense>
+                                                </EditorErrorBoundary>
+                                            );
+                                        }}
                                     </Route>
 
                                     <Route path="/editor/:funnelId">
                                         {(params) => (
-                                            <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                <Editor />
-                                            </Suspense>
+                                            <EditorErrorBoundary>
+                                                <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
+                                                    <EditorProviderUnified
+                                                        funnelId={params.funnelId}
+                                                        enableSupabase={true}
+                                                    >
+                                                        <QuizModularEditor
+                                                            funnelId={params.funnelId}
+                                                        />
+                                                    </EditorProviderUnified>
+                                                </Suspense>
+                                            </EditorErrorBoundary>
                                         )}
                                     </Route>
 
