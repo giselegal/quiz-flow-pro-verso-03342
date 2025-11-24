@@ -28,6 +28,38 @@ UI (Modular Steps) → Renderers (UnifiedStepRenderer) → Providers/Hooks (Edit
 
 Observação: `ensureStepLoaded(step)` é o contrato para garantir que uma etapa esteja carregada e pronta no canvas/preview.
 
+### Camada de Compatibilidade Temporária (EditorStateProvider)
+Para reduzir >60 erros de tipagem entre implementações antigas (`EditorContextType` dependente de `state` e `actions`) e o novo modelo simplificado, foi introduzido no arquivo `src/contexts/editor/EditorStateProvider.tsx` um valor de contexto híbrido que expõe:
+
+```
+// Acesso legado (flat)
+currentStep, stepBlocks, addBlock(...), updateBlock(...)
+
+// Acesso canonical (novo + back-compat)
+state: EditorState
+actions: {
+	setCurrentStep, selectBlock, addBlock, updateBlock, removeBlock, reorderBlocks,
+	togglePreview, toggleEditing, toggleDrag, copyBlock, pasteBlock,
+	setStepBlocks, markSaved, markModified, addValidationError,
+	clearValidationErrors, resetEditor, getStepBlocks, isStepDirty
+}
+```
+
+Benefícios:
+- Evita refatoração em massa imediata de componentes que usam `context.state.X`
+- Permite migração incremental para o formato canonical (`state` / `actions`)
+- Elimina necessidade de duplicar providers simultâneos para o Editor
+
+Plano de Migração:
+1. Novos componentes usam apenas `state` e `actions`.
+2. Componentes existentes que acessam propriedades flat permanecem funcionando sem alteração.
+3. Fase final: remover exposição flat após 100% de adoção (registrar progresso em `PROJECT_STATUS.md`).
+
+Garantias:
+- Nenhum `@ts-nocheck` adicionado.
+- Tipos consolidados sem quebra de runtime.
+- Build validado pós alteração (`npm run build`).
+
 ## Renderização Modular Compartilhada
 - Módulo compartilhado: `src/components/quiz-modular/index.ts`
 - Componentes reexportados (usados tanto no Editor quanto na Produção):
