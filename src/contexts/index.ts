@@ -34,6 +34,8 @@ export { VersioningProvider, useVersioning } from './versioning/VersioningProvid
 
 // Composed Provider
 export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifiedProviderV2';
+// Provider minimalista (Fase 4 simplificação) - uso recomendado para rotas sem recursos avançados
+export { SimpleAppProvider, useSimpleApp } from './providers/SimpleAppProvider';
 
 /**
  * 🚀 SUPER UNIFIED V1 (LEGACY - EM USO ATIVO)
