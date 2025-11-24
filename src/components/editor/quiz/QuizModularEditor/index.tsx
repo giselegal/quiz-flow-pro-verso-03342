@@ -1720,21 +1720,42 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 </ToggleGroupItem>
                             </ToggleGroup>
 
-                            {/* Indicador de fonte de dados */}
-                            {canvasMode === 'preview' && (
-                                <div className="text-xs px-2 py-1 rounded-md transition-colors hidden md:flex items-center gap-1"
-                                    style={{
-                                        backgroundColor: previewMode === 'live' ? 'rgb(219 234 254)' : 'rgb(209 250 229)',
-                                        color: previewMode === 'live' ? 'rgb(30 58 138)' : 'rgb(6 78 59)'
+                            {/* 🎮 Indicador de modo usando state machine */}
+                            <div
+                                className="text-xs px-2 py-1 rounded-md transition-colors hidden md:flex items-center gap-1"
+                                style={{
+                                    backgroundColor: editorMode.badge.color === 'blue' ? 'rgb(219 234 254)' : 'rgb(209 250 229)',
+                                    color: editorMode.badge.color === 'blue' ? 'rgb(30 58 138)' : 'rgb(6 78 59)'
+                                }}
+                                title={editorMode.description}
+                            >
+                                <span>{editorMode.badge.icon}</span>
+                                <span>{editorMode.badge.text}</span>
+                                {editorMode.showDraftIndicator && wysiwyg.state.isDirty && (
+                                    <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" title="Mudanças não salvas" />
+                                )}
+                            </div>
+
+                            {/* 💾 Indicador de snapshot disponível */}
+                            {snapshot.hasSnapshot && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                        const recovered = snapshot.recoverSnapshot();
+                                        if (recovered) {
+                                            wysiwyg.actions.reset(recovered.blocks);
+                                            setViewport(recovered.viewport);
+                                            setCurrentStep(recovered.currentStep);
+                                            snapshot.clearSnapshot();
+                                            showToast('Draft recuperado com sucesso!', 'success');
+                                        }
                                     }}
-                                    title={previewMode === 'live' ? 'Exibindo dados do editor (não salvos)' : 'Exibindo dados publicados'}
+                                    className="h-7 text-xs hidden md:flex items-center gap-1"
                                 >
-                                    {previewMode === 'live' ? (
-                                        <>📝 Editor</>
-                                    ) : (
-                                        <>✅ Publicado</>
-                                    )}
-                                </div>
+                                    <span>💾</span>
+                                    <span>Recuperar draft ({Math.round((snapshot.snapshotAge || 0) / 1000)}s)</span>
+                                </Button>
                             )}
                         </div>
 
