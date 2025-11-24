@@ -28,7 +28,6 @@
 export * from './types';
 
 // Canonical Services - Unified API Layer
-export * from './types';
 export * from './CacheService';
 export * from './TemplateService';
 export * from './DataService';
@@ -41,7 +40,16 @@ export * from './StorageService';
 export * from './ConfigService';
 export * from './HistoryService';
 export * from './EditorService';
-export * from './FunnelService';
+// FunnelService - exportação explícita para evitar conflito de UnifiedFunnelData com types.ts
+export { 
+  CanonicalFunnelService, 
+  funnelService,
+  type FunnelMetadata,
+  type CreateFunnelInput,
+  type UpdateFunnelInput,
+  type ComponentInstance,
+  type FunnelWithComponents
+} from './FunnelService';
 export * from './monitoring';
 
 // TODO: Exportar quando implementados
