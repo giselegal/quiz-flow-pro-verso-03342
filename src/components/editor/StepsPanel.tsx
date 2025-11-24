@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { stepTemplateService } from '../../services/stepTemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 
 interface Step {
   id: string;

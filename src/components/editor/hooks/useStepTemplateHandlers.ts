@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { stepTemplateService } from '@/services/stepTemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO STEPTEMPLATE SERVICE
@@ -15,8 +15,10 @@ export const getStepTemplate = (stepId: string) => {
 
     appLogger.info(`🔧 Convertido "${stepId}" para número: ${stepNumber}`);
 
-    // Usar o novo serviço que acessa os templates individuais
-    const template = stepTemplateService.getStepTemplate(stepNumber);
+    // Usar o serviço canônico que acessa os templates individuais
+    const stepIdStr = `step-${stepNumber.toString().padStart(2, '0')}`;
+    const templateResult = templateService.getStep(stepIdStr);
+    const template = templateResult?.success ? templateResult.data : [];
 
     if (template && template.length > 0) {
       appLogger.info(`✅ Template encontrado para etapa ${stepNumber}: ${template.length} blocos`);
