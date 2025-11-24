@@ -569,15 +569,35 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         appLogger.debug('[QuizModularEditor] Warmup failed:', err);
                     });
 
-                // Buscar lista de steps (agora passando o templateId explicitamente)
-                const templateStepsResult =
-                    (await svc.steps?.list?.({ signal, templateId: tid })) ?? { success: false };
+                // 🎯 CRÍTICO: Definir template ativo ANTES de chamar steps.list()
+                // Isso garante que o TemplateService retorne os steps corretos
+                const defaultStepCount = 21;
+                try {
+                    if (typeof svc.setActiveTemplate === 'function') {
+                        svc.setActiveTemplate(tid, defaultStepCount);
+                        appLogger.info(`✅ [QuizModularEditor] Template ativo definido: ${tid} (${defaultStepCount} steps)`);
+                    } else {
+                        appLogger.warn('[QuizModularEditor] setActiveTemplate não disponível');
+                    }
+                } catch (err) {
+                    appLogger.error('[QuizModularEditor] Erro ao definir template ativo:', err);
+                }
 
+                // Buscar lista de steps (método síncrono, sem parâmetros)
                 let stepsMeta: any[] = [];
-                if (templateStepsResult.success && Array.isArray(templateStepsResult.data)) {
-                    stepsMeta = templateStepsResult.data;
-                } else {
-                    stepsMeta = Array.from({ length: 21 }, (_, i) => ({
+                try {
+                    const templateStepsResult = svc.steps?.list?.() ?? { success: false, data: [] };
+
+                    if (templateStepsResult.success && Array.isArray(templateStepsResult.data)) {
+                        stepsMeta = templateStepsResult.data;
+                        appLogger.info(`✅ [QuizModularEditor] Steps carregados: ${stepsMeta.length} steps`);
+                    } else {
+                        throw new Error('steps.list() retornou resultado inválido');
+                    }
+                } catch (err) {
+                    // Fallback: criar array padrão de 21 steps
+                    appLogger.warn('[QuizModularEditor] Usando fallback de steps:', err);
+                    stepsMeta = Array.from({ length: defaultStepCount }, (_, i) => ({
                         id: `step-${String(i + 1).padStart(2, '0')}`,
                         order: i + 1,
                         name: `Etapa ${i + 1}`,
@@ -645,7 +665,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         validateDependencies: true,
                     }
                 );
-                
+
                 console.log('🏥 [HealthPanel] Validação concluída:', {
                     isValid: result.isValid,
                     errorsCount: result.errors.length,
