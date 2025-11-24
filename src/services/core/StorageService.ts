@@ -1,9 +1,15 @@
 import { appLogger } from '@/lib/utils/appLogger';
+import { storageService as canonicalStorage } from '@/services/canonical/StorageService';
+
 /**
+ * ⚠️ LEGACY ADAPTER - Redirects to canonical StorageService
+ * 
  * StorageService – wrappers seguros para armazenamento no navegador
  * - JSON seguro (parse/stringify)
  * - Tratamento de quota excedida com fallback para sessionStorage
  * - Silencioso em produção; logs apenas em DEV
+ * 
+ * @deprecated Use `storageService` from '@/services/canonical' instead
  */
 export const StorageService = {
   // Fallback em memória para ambientes sem Storage (ex.: testes Node)

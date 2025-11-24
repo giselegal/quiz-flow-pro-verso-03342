@@ -6,7 +6,6 @@ import { Play, Eye, Sparkles } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
 import { cloneFunnelTemplate } from '@/lib/utils/cloneFunnel';
-import { UnifiedStorageService } from '@/services/aliases';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import EditorLayout from '@/components/layout/EditorLayout';
 import { appLogger } from '@/lib/utils/appLogger';

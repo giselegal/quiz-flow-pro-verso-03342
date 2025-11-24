@@ -936,4 +936,9 @@ export class StorageService extends BaseCanonicalService {
 // EXPORTS
 // ============================================================================
 
+/**
+ * Singleton instance for storage operations
+ */
+export const storageService = StorageService.getInstance();
+
 export default StorageService;
