@@ -44,41 +44,41 @@ export const featureFlags = {
   USE_CANONICAL_TEMPLATE_SERVICE: true,
   
   /**
-   * Usar FunnelService canônico ao invés de serviços legados
+   * Use canonical FunnelService instead of legacy services
    * 
-   * Quando true: usa src/services/canonical/FunnelService.ts
-   * Quando false: usa serviços legados (FunnelUnifiedService, etc)
+   * When true: uses src/services/canonical/FunnelService.ts
+   * When false: uses legacy services (FunnelUnifiedService, etc)
    * 
-   * 🎯 FASE 3: Planejado para próxima iteração
+   * 🎯 PHASE 3: Planned for next iteration
    * 
-   * @default false (ainda em migração)
-   * @phase Fase 2 - Migração Progressiva
+   * @default false (still in migration)
+   * @phase Phase 2 - Progressive Migration
    */
   USE_CANONICAL_FUNNEL_SERVICE: false,
   
   /**
-   * Usar StorageService canônico ao invés de serviços legados
+   * Use canonical StorageService instead of legacy services
    * 
-   * Quando true: usa src/services/canonical/StorageService.ts
-   * Quando false: usa serviços legados (LocalStorageService, etc)
+   * When true: uses src/services/canonical/StorageService.ts
+   * When false: uses legacy services (LocalStorageService, etc)
    * 
-   * 🎯 FASE 3: Planejado para próxima iteração
+   * 🎯 PHASE 3: Planned for next iteration
    * 
-   * @default false (ainda em migração)
-   * @phase Fase 2 - Migração Progressiva
+   * @default false (still in migration)
+   * @phase Phase 2 - Progressive Migration
    */
   USE_CANONICAL_STORAGE_SERVICE: false,
   
   /**
-   * Usar CacheService canônico ao invés de acessos diretos
+   * Use canonical CacheService instead of direct access
    * 
-   * Quando true: usa src/services/canonical/CacheService.ts
-   * Quando false: usa localStorage/sessionStorage direto
+   * When true: uses src/services/canonical/CacheService.ts
+   * When false: uses localStorage/sessionStorage directly
    * 
-   * 🎯 FASE 3: Planejado para próxima iteração
+   * 🎯 PHASE 3: Planned for next iteration
    * 
-   * @default false (ainda em migração)
-   * @phase Fase 2 - Migração Progressiva
+   * @default false (still in migration)
+   * @phase Phase 2 - Progressive Migration
    */
   USE_CANONICAL_CACHE_SERVICE: false,
   
@@ -101,15 +101,15 @@ export const featureFlags = {
   USE_REACT_QUERY_TEMPLATES: true,
   
   /**
-   * Usar React Query hooks para funnels ao invés de cache local
+   * Use React Query hooks for funnels instead of local cache
    * 
-   * Quando true: usa useFunnel/useUpdateFunnel hooks
-   * Quando false: usa FunnelService com cache interno
+   * When true: uses useFunnel/useUpdateFunnel hooks
+   * When false: uses FunnelService with internal cache
    * 
-   * 🎯 FASE 3: Planejado para próxima iteração
+   * 🎯 PHASE 3: Planned for next iteration
    * 
-   * @default false (ainda em migração)
-   * @phase Fase 2 - Migração Progressiva
+   * @default false (still in migration)
+   * @phase Phase 2 - Progressive Migration
    */
   USE_REACT_QUERY_FUNNELS: false,
   

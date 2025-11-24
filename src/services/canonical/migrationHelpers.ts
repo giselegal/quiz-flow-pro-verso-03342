@@ -43,14 +43,13 @@ export function getTemplateService() {
   if (featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL) {
     console.warn(
       '⚠️ [ROLLBACK] DISABLE_CANONICAL_SERVICES_GLOBAL is active. ' +
-      'Using legacy template service. This should only be enabled in emergency situations.'
+      'Note: Legacy services have been removed in Phase 3, so canonical service is still used. ' +
+      'The rollback flag affects feature detection (React Query, cache behavior) but not the service itself.'
     );
-    // Note: In a real rollback scenario, this would return a legacy service
-    // For now, we return canonical since legacy services are being removed
-    // TODO Phase 4: Remove this warning when legacy services are fully removed
   }
   
   // Default: return canonical service (Phase 3 standard)
+  // Note: Even during rollback, we return canonical service since legacy services are removed
   return canonicalTemplateService;
 }
 
@@ -76,16 +75,7 @@ export function getTemplateService() {
  * ```
  */
 export async function loadTemplate(templateId: string): Promise<ServiceResult<Template>> {
-  // Check global rollback flag for emergency override
-  if (featureFlags.DISABLE_CANONICAL_SERVICES_GLOBAL) {
-    console.warn(
-      `⚠️ [ROLLBACK] Loading template ${templateId} in emergency rollback mode`
-    );
-    // In emergency mode, we would use legacy service here
-    // For now, fall through to canonical since legacy is being removed
-  }
-  
-  // Default: use canonical service (Phase 3 standard)
+  // Use canonical service (rollback warnings handled by getTemplateService)
   const service = getTemplateService();
   return await service.getTemplate(templateId);
 }

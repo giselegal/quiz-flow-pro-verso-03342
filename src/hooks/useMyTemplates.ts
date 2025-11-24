@@ -101,15 +101,15 @@ export const useMyTemplates = () => {
             // Carregar dados completos de cada template
             const loadedTemplates: UserTemplate[] = [];
 
+            // DEPRECATED - Phase 3: Direct localStorage usage
+            if (process.env.NODE_ENV === 'development' && templateIds.length > 0) {
+                console.warn(
+                    '⚠️ [DEPRECATED - Phase 3] useMyTemplates uses localStorage. ' +
+                    'Migrate to useTemplate() hook with React Query + Supabase.'
+                );
+            }
+
             for (const id of templateIds) {
-                // DEPRECATED - Phase 3: Direct localStorage usage
-                if (process.env.NODE_ENV === 'development') {
-                    console.warn(
-                        '⚠️ [DEPRECATED - Phase 3] useMyTemplates uses localStorage. ' +
-                        'Migrate to useTemplate() hook with React Query + Supabase.'
-                    );
-                }
-                
                 // Tenta nova chave contextualizada
                 let templateStr = safeGetItem(TEMPLATE_KEY_NEW(id), CTX);
                 // Fallback: chave legada por generateContextualStorageKey
