@@ -46,10 +46,10 @@ export type StepNavigatorColumnProps = {
 
 // Nota: Em iterações futuras, os passos serão carregados do serviço/estado global
 // e virtualizados para listas grandes.
-function StepNavigatorColumnImpl({ 
-    initialStepKey, 
-    steps, 
-    currentStepKey, 
+function StepNavigatorColumnImpl({
+    initialStepKey,
+    steps,
+    currentStepKey,
     onSelectStep,
     validationErrors,
     validationWarnings,
