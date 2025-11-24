@@ -240,12 +240,14 @@ function AppCore() {
                                             const params = new URLSearchParams(window.location.search);
                                             const templateId = params.get('template') || undefined;
                                             const funnelId = params.get('funnelId') || params.get('funnel') || undefined;
+                                            const resourceId = params.get('resource') || templateId; // 🔥 FIX: resourceId da URL
 
                                             return (
                                                 <EditorErrorBoundary>
                                                     <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
                                                         <EditorProviderUnified>
                                                             <QuizModularEditor
+                                                                resourceId={resourceId}
                                                                 templateId={templateId}
                                                                 funnelId={funnelId}
                                                             />
