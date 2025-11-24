@@ -1,2 +1,2 @@
 export { ConfigPanel } from './ConfigPanel';
-export { EnhancedUniversalPropertiesPanel } from '../../universal/EnhancedUniversalPropertiesPanel';
+export { EnhancedUniversalPropertiesPanel } from '@/components/universal';
