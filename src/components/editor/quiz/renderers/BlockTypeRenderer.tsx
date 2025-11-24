@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import SafeBoundary from '@/components/common/SafeBoundary';
 import type { Block } from '@/types/editor';
 import QuizIntroHeaderBlock from './blocks/QuizIntroHeaderBlock';
@@ -483,4 +483,58 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
     );
 };
 
-export default React.memo(BlockTypeRenderer);
+/**
+ * Custom comparison para React.memo
+ * Re-renderiza apenas se propriedades relevantes mudarem
+ */
+const arePropsEqual = (prevProps: BlockRendererProps, nextProps: BlockRendererProps): boolean => {
+    // Sempre re-renderizar se seleção mudou
+    if (prevProps.isSelected !== nextProps.isSelected) {
+        return false;
+    }
+
+    // Sempre re-renderizar se editabilidade mudou
+    if (prevProps.isEditable !== nextProps.isEditable) {
+        return false;
+    }
+
+    // Comparar block properties (shallow)
+    const prevBlock = prevProps.block;
+    const nextBlock = nextProps.block;
+
+    if (prevBlock.id !== nextBlock.id) return false;
+    if (prevBlock.type !== nextBlock.type) return false;
+    if (prevBlock.order !== nextBlock.order) return false;
+
+    // Comparar properties (shallow)
+    const prevProps_ = prevBlock.properties || {};
+    const nextProps_ = nextBlock.properties || {};
+    const prevKeys = Object.keys(prevProps_);
+    const nextKeys = Object.keys(nextProps_);
+
+    if (prevKeys.length !== nextKeys.length) return false;
+
+    for (const key of prevKeys) {
+        if (prevProps_[key] !== nextProps_[key]) {
+            return false;
+        }
+    }
+
+    // Comparar content (shallow)
+    const prevContent = prevBlock.content || {};
+    const nextContent = nextBlock.content || {};
+    const prevContentKeys = Object.keys(prevContent);
+    const nextContentKeys = Object.keys(nextContent);
+
+    if (prevContentKeys.length !== nextContentKeys.length) return false;
+
+    for (const key of prevContentKeys) {
+        if (prevContent[key] !== nextContent[key]) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+export default memo(BlockTypeRenderer, arePropsEqual);

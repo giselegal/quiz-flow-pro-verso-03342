@@ -391,6 +391,42 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [snapshot.hasSnapshot, resourceId]);
 
+    // 🚀 PERFORMANCE: Callbacks otimizados para handlers do WYSIWYG
+    const handleWYSIWYGBlockSelect = useCallback((id: string | null) => {
+        wysiwyg.actions.selectBlock(id);
+        handleBlockSelect(id);
+    }, [wysiwyg.actions, handleBlockSelect]);
+
+    const handleWYSIWYGBlockUpdate = useCallback((id: string, updates: Partial<Block>) => {
+        console.group('🎨 [WYSIWYG] onBlockUpdate chamado');
+        appLogger.info('blockId:', { data: [id] });
+        appLogger.info('updates:', { data: [updates] });
+        appLogger.info('currentStep:', { data: [safeCurrentStep] });
+        console.groupEnd();
+
+        // 🚀 WYSIWYG: Atualização instantânea via hook
+        if (updates.properties) {
+            wysiwyg.actions.updateBlockProperties(id, updates.properties);
+        } else if (updates.content) {
+            wysiwyg.actions.updateBlockContent(id, updates.content);
+        } else {
+            wysiwyg.actions.updateBlock(id, updates);
+        }
+
+        appLogger.info('✨ [WYSIWYG] Atualização instantânea aplicada');
+    }, [wysiwyg.actions, safeCurrentStep]);
+
+    const handleWYSIWYGClearSelection = useCallback(() => {
+        wysiwyg.actions.selectBlock(null);
+        setSelectedBlock(null);
+    }, [wysiwyg.actions, setSelectedBlock]);
+
+    // 🚀 PERFORMANCE: Memo para bloco selecionado
+    const selectedBlock = useMemo(
+        () => wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) || undefined,
+        [wysiwyg.state.blocks, wysiwyg.state.selectedBlockId]
+    );
+
     // ⌨️ Atalhos de teclado para alternar modos (Ctrl+1/2/3) e viewport (Ctrl+Alt+1/2/3/0)
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
