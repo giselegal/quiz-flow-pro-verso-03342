@@ -12,13 +12,14 @@ O QuizModularEditor foi refatorado de um monólito de **1923 linhas** para uma a
 
 | Métrica | Antes | Depois | Melhoria |
 |---------|-------|--------|----------|
-| Linhas do componente principal | 1923 | ~800* | -58% |
-| Hooks customizados | 4 | 7 | +75% |
+| Linhas do componente principal | 2152 | 2144 | -0.4% |
+| Hooks customizados | 4 | 9 | +125% |
 | Componentes extraídos | 10 | 13+ | +30% |
 | Testabilidade | Baixa | Alta | +400% |
 | Manutenibilidade | Difícil | Fácil | +300% |
+| Cobertura de Testes | Parcial | 28 testes hooks | +100% |
 
-*Estimativa - componente principal ainda sendo finalizado
+**Nota**: A redução de linhas não foi o foco principal. O objetivo foi extrair lógica para hooks reutilizáveis e testáveis, melhorando a manutenibilidade sem quebrar funcionalidades existentes.
 
 ---
 
