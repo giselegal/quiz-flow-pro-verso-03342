@@ -400,10 +400,24 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
             )}
             <SafeSortableContext items={blocks.map(b => b.id)}>
                 <ul className="space-y-1">
+                    {(() => {
+                        console.log('🎨 [CanvasColumn] RENDERIZANDO BLOCOS:', {
+                            blocksCount: blocks.length,
+                            normalizedCount: normalizedBlocks.length,
+                            blockIds: blocks.map(b => b.id),
+                            normalizedIds: normalizedBlocks.map(b => b.id),
+                        });
+                        return null;
+                    })()}
                     {normalizedBlocks.map((b, idx) => {
                         normalizerLogger.debug(`Rendering normalized block ${b.type}`, {
                             original: blocks[idx],
                             normalized: b
+                        });
+                        console.log(`  📦 [CanvasColumn] Renderizando bloco ${idx}:`, {
+                            id: b.id,
+                            type: b.type,
+                            order: b.order,
                         });
                         return (
                             <SortableBlockItem
