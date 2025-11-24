@@ -83,6 +83,42 @@ describe('DynamicPropertyControls', () => {
         cleanup();
     });
 
+    it('deve respeitar valor booleano false mesmo com default true', () => {
+        const mockSchema = {
+            type: 'boolean-block',
+            label: 'Boolean Block',
+            category: 'content',
+            properties: {
+                showDescription: {
+                    type: 'boolean',
+                    control: 'toggle',
+                    label: 'Mostrar Descrição',
+                    default: true,
+                },
+            },
+        };
+
+        (schemaInterpreter.getBlockSchema as any).mockReturnValue(mockSchema);
+
+        const properties = {
+            showDescription: false,
+        };
+
+        render(
+            <DynamicPropertyControls
+                elementType="boolean-block"
+                properties={properties}
+                onChange={mockOnChange}
+            />
+        );
+
+        const toggle = screen.getByRole('switch');
+        expect(toggle).toHaveAttribute('aria-checked', 'false');
+
+        fireEvent.click(toggle);
+        expect(mockOnChange).toHaveBeenCalledWith('showDescription', true);
+    });
+
     it('deve renderizar mensagem de erro quando schema não é encontrado', () => {
         (schemaInterpreter.getBlockSchema as any).mockReturnValue(undefined);
 

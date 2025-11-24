@@ -194,7 +194,9 @@ const PropertyControl: React.FC<{
           <div className="flex items-center space-x-2">
             <Switch
               id={propertyKey}
-              checked={value || schema.default || false}
+              checked={typeof value === 'boolean'
+                ? value
+                : (typeof schema.default === 'boolean' ? schema.default : false)}
               onCheckedChange={handleChange}
             />
             <span className="text-sm text-muted-foreground">
