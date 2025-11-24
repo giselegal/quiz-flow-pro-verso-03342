@@ -1,5 +1,5 @@
-// 📊 QUIZ DATA SERVICE (migrado para consolidatedTemplateService com cache síncrono)
-import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
+// 📊 QUIZ DATA SERVICE (migrado para templateService canônico com cache síncrono)
+import { templateService } from '@/services/canonical/TemplateService';
 
 // Cache síncrono para manter API compatível
 let __cachedSteps: Record<string, any[]> = {};

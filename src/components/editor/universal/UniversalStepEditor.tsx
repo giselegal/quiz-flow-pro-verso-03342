@@ -12,7 +12,7 @@
 
 import React from 'react';
 import { appLogger } from '@/lib/utils/logger';
-import consolidatedTemplateService from '@/services/core/ConsolidatedTemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 
 export interface UniversalStepEditorProps {
     stepId: string;
@@ -131,7 +131,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
     const handleNext = () => {
         // ✅ CORRIGIDO: Obter totalSteps dinamicamente
-    const availableSteps = 21;
+        const availableSteps = 21;
         if (stepNumber < availableSteps) {
             const nextStepId = `step-${stepNumber + 1}`;
             onStepChange?.(nextStepId);
