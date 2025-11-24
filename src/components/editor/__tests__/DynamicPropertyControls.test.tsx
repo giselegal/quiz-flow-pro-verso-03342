@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import React from 'react';
 import { DynamicPropertyControls } from '../DynamicPropertyControls';
 import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
@@ -51,6 +51,10 @@ describe('DynamicPropertyControls', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+    });
+
+    afterEach(() => {
+        cleanup();
     });
 
     it('deve renderizar mensagem de erro quando schema não é encontrado', () => {
