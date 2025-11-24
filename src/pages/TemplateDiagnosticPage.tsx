@@ -11,8 +11,7 @@ import { CheckCircle, XCircle, AlertTriangle, Folder, FileText } from 'lucide-re
 
 // Importações de templates e serviços
 import { AVAILABLE_TEMPLATES, TemplateConfig } from '@/config/templates';
-import { templateService } from '@/services/canonical';
-import type { Template } from '@/services/canonical/TemplateService';
+import { templateService, type Template } from '@/services/canonical';
 import { getUnifiedTemplates, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 
 // Legacy FunnelTemplate type alias
