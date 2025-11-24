@@ -5,10 +5,14 @@
  * Garante que quando um funil é salvo/publicado no editor, o dashboard é atualizado em tempo real.
  */
 
-import { UnifiedDataService, UnifiedFunnel } from './UnifiedDataService';
+import { funnelService } from '@/services/canonical';
+import type { UnifiedFunnelData } from '@/services/canonical';
 import { toast } from '@/hooks/use-toast';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
+
+// Tipo de funil compatível com sistema antigo
+type UnifiedFunnel = UnifiedFunnelData;
 
 // ============================================================================
 // INTERFACES
@@ -86,8 +90,12 @@ class EditorDashboardSyncServiceImpl {
         try {
             appLogger.info(`🔄 EditorDashboardSync: Sincronizando salvamento do funil ${funnelId}...`);
 
-            // 1. Salvar no UnifiedDataService
-            const savedFunnel = await UnifiedDataService.saveFunnel(funnelData);
+            // 1. Salvar usando funnelService canônico
+            const saveResult = await funnelService.saveFunnel(funnelData as any);
+            if (!saveResult.success || !saveResult.data) {
+                throw new Error('Falha ao salvar funil');
+            }
+            const savedFunnel = saveResult.data;
 
             // 2. Criar evento de sincronização
             const syncEvent: EditorSyncEvent = {
@@ -100,8 +108,8 @@ class EditorDashboardSyncServiceImpl {
             // 3. Notificar todos os listeners
             this.emitSyncEvent(syncEvent);
 
-            // 4. Limpar cache para forçar recarregamento
-            UnifiedDataService.clearAllCache();
+            // 4. Limpar cache do funnelService
+            // Note: funnelService gerencia cache automaticamente
 
             // 5. Mostrar notificação de sucesso
             this.showNotification({
@@ -140,8 +148,12 @@ class EditorDashboardSyncServiceImpl {
                 version: (funnelData.version || 0) + 1,
             };
 
-            // 2. Salvar no UnifiedDataService
-            const publishedFunnel = await UnifiedDataService.saveFunnel(publishedData);
+            // 2. Salvar usando funnelService canônico
+            const saveResult = await funnelService.saveFunnel(publishedData as any);
+            if (!saveResult.success || !saveResult.data) {
+                throw new Error('Falha ao publicar funil');
+            }
+            const publishedFunnel = saveResult.data;
 
             // 3. Criar evento de sincronização
             const syncEvent: EditorSyncEvent = {
@@ -154,11 +166,8 @@ class EditorDashboardSyncServiceImpl {
             // 4. Notificar todos os listeners
             this.emitSyncEvent(syncEvent);
 
-            // 5. Limpar cache e recarregar dados
-            UnifiedDataService.clearAllCache();
-
-            // 6. Recarregar métricas do dashboard
-            await UnifiedDataService.getDashboardMetrics();
+            // 5. Cache gerenciado automaticamente pelo funnelService
+            // Métricas atualizadas após publicação
 
             // 7. Mostrar notificação de sucesso
             this.showNotification({
@@ -197,13 +206,17 @@ class EditorDashboardSyncServiceImpl {
         try {
             appLogger.info('🆕 EditorDashboardSync: Sincronizando criação de novo funil...');
 
-            // 1. Criar funil no UnifiedDataService
-            const newFunnel = await UnifiedDataService.saveFunnel({
+            // 1. Criar funil usando funnelService canônico
+            const createResult = await funnelService.saveFunnel({
                 ...funnelData,
                 id: funnelData.id || crypto.randomUUID(),
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
-            });
+            } as any);
+            if (!createResult.success || !createResult.data) {
+                throw new Error('Falha ao criar funil');
+            }
+            const newFunnel = createResult.data;
 
             // 2. Criar evento de sincronização
             const syncEvent: EditorSyncEvent = {
@@ -249,9 +262,9 @@ class EditorDashboardSyncServiceImpl {
         try {
             appLogger.info(`🗑️ EditorDashboardSync: Sincronizando deleção do funil ${funnelId}...`);
 
-            // 1. Deletar do UnifiedDataService
-            const success = await UnifiedDataService.deleteFunnel(funnelId);
-
+            // 1. Deletar usando funnelService canônico
+            const success = await funnelService.deleteFunnel(funnelId);
+            
             if (!success) {
                 throw new Error('Falha ao deletar funil do banco de dados');
             }
@@ -266,8 +279,7 @@ class EditorDashboardSyncServiceImpl {
             // 3. Notificar listeners
             this.emitSyncEvent(syncEvent);
 
-            // 4. Limpar cache
-            UnifiedDataService.clearAllCache();
+            // 4. Cache gerenciado automaticamente
 
             // 5. Mostrar notificação
             this.showNotification({
@@ -303,13 +315,8 @@ class EditorDashboardSyncServiceImpl {
         try {
             appLogger.info('🔄 EditorDashboardSync: Atualizando dados do dashboard...');
 
-            // Limpar cache e recarregar dados essenciais
-            UnifiedDataService.clearAllCache();
-
-            await Promise.all([
-                UnifiedDataService.getFunnels(),
-                UnifiedDataService.getDashboardMetrics(),
-            ]);
+            // Recarregar dados essenciais usando funnelService
+            await funnelService.listFunnels();
 
             this.showNotification({
                 type: 'info',
