@@ -17,4 +17,12 @@ export function useEditor(options: UseEditorOptions = {}) {
   }
 }
 
+/**
+ * Hook opcional para acessar o contexto do editor.
+ * Retorna null se usado fora do EditorProvider (sem lançar erro).
+ */
+export function useEditorOptional() {
+  return useEditor({ optional: true });
+}
+
 export default useEditor;
