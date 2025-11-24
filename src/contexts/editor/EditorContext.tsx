@@ -38,6 +38,46 @@ const getStepTemplate = async (stepNumber: number, funnelId?: string) => {
   }
 };
 
+const STEP_KEY_REGEX = /step-(\d+)/i;
+
+const normalizeStepKey = (raw: string | number): string => {
+  if (typeof raw === 'number') {
+    return `step-${raw}`;
+  }
+
+  const match = raw.match(STEP_KEY_REGEX);
+  if (match) {
+    return `step-${parseInt(match[1], 10)}`;
+  }
+
+  const numeric = parseInt(raw, 10);
+  if (!Number.isNaN(numeric)) {
+    return `step-${numeric}`;
+  }
+
+  return raw;
+};
+
+const formatStepKeyVariants = (raw: string | number): string[] => {
+  const normalized = normalizeStepKey(raw);
+  const variants = new Set<string>();
+
+  const numericMatch = normalized.match(STEP_KEY_REGEX);
+  if (numericMatch) {
+    const numericValue = parseInt(numericMatch[1], 10);
+    const padded = numericValue.toString().padStart(2, '0');
+    variants.add(`step-${numericValue}`);
+    variants.add(`step-${padded}`);
+    variants.add(String(numericValue));
+    variants.add(padded);
+  }
+
+  variants.add(typeof raw === 'string' ? raw : `step-${raw}`);
+  variants.add(normalized);
+
+  return Array.from(variants);
+};
+
 // Extended interface with all expected properties
 interface EditorContextType {
   // Core state

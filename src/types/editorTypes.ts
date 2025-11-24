@@ -5,6 +5,19 @@ export interface EditorState {
   isPreviewing: boolean;
   blocks: Block[];
   isGlobalStylesOpen: boolean;
+  /**
+   * Mapa de blocos por etapa. Mantido opcional para compatibilidade com contextos legados,
+   * mas populado pelo EditorContext principal para eliminar dependências de "any".
+   */
+  stepBlocks?: Record<string, Block[]>;
+  /**
+   * Índice numérico da etapa atualmente ativa (1-indexed).
+   */
+  currentStep?: number;
+  /**
+   * Flag de carregamento exposta para componentes que mostram skeletons.
+   */
+  isLoading?: boolean;
 }
 
 export interface EditorAction {
