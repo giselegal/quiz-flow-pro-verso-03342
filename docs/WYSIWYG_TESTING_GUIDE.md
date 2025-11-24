@@ -124,9 +124,8 @@ wysiwyg.state.validationErrors // Map com erros por bloco
 
 | Atalho | Ação | Como Testar |
 |--------|------|-------------|
-| `Ctrl+1` | Modo Edit | Pressionar e verificar badge "✏️ Editando" |
-| `Ctrl+2` | Preview Live | Pressionar e verificar badge "📝 Editor" |
-| `Ctrl+3` | Preview Production | Pressionar e verificar badge "✅ Publicado" |
+| `Ctrl+1` | Edição ao vivo | Pressionar e verificar badge "📝 Editando" |
+| `Ctrl+2` | Publicado | Pressionar e verificar badge "✅ Publicado" |
 | `Ctrl+Alt+1` | Viewport Mobile | Canvas anima para 375px |
 | `Ctrl+Alt+2` | Viewport Tablet | Canvas anima para 768px |
 | `Ctrl+Alt+3` | Viewport Desktop | Canvas anima para 1280px |
