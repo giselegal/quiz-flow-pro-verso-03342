@@ -58,8 +58,8 @@ export function useQuizV4Loader(options: UseQuizV4LoaderOptions = {}): UseQuizV4
     try {
       appLogger.info('🔄 Carregando quiz v4...', { data: [templatePath] });
 
-      // Fetch do JSON
-      const response = await fetch(templatePath);
+      // Fetch do JSON (bind to window to preserve context)
+      const response = await window.fetch(templatePath);
       if (!response.ok) {
         throw new Error(`Falha ao carregar ${templatePath}: ${response.status}`);
       }
