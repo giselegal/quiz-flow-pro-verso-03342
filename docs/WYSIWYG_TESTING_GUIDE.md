@@ -200,11 +200,11 @@ Sistema está funcionando se:
 
 - [ ] ✅ Edição instantânea (mudanças aparecem no canvas sem delay)
 - [ ] ✅ 4 viewports funcionam com animação suave
-- [ ] ✅ 3 modos mostram badges corretos
+- [ ] ✅ 2 modos mostram badges corretos (Edição ao vivo / Publicado)
 - [ ] ✅ Auto-save ocorre após 2s de inatividade
 - [ ] ✅ Snapshot salva e recupera corretamente
 - [ ] ✅ Validação mostra erros visualmente
-- [ ] ✅ Todos os 9 atalhos de teclado funcionam
+- [ ] ✅ Atalhos de teclado funcionam (Ctrl+1/2 para modos, Ctrl+Alt+0/1/2/3 para viewports)
 - [ ] ✅ Dot laranja aparece quando há mudanças não salvas
 - [ ] ✅ Botão de recuperar draft aparece quando há snapshot
 
