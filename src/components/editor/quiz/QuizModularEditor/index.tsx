@@ -465,7 +465,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [unifiedState.editor.stepBlocks]);
 
     const navSteps = useMemo(() => {
+        console.log('🔥🔥🔥 [DEBUG] navSteps recalculando:', {
+            hasLoadedTemplate: !!loadedTemplate,
+            stepsLength: loadedTemplate?.steps?.length || 0,
+            stepBlocksKeys: Object.keys(unifiedState.editor.stepBlocks || {}).length
+        });
+
         if (loadedTemplate?.steps?.length) {
+            console.log('🔥 [DEBUG] Usando loadedTemplate.steps:', loadedTemplate.steps.length);
             return loadedTemplate.steps.map((s: any) => ({
                 key: s.id,
                 title: `${String(s.order).padStart(2, '0')} - ${s.name}`,
@@ -478,6 +485,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             .sort((a, b) => a - b);
 
         if (indexes.length === 0) {
+            console.log('🔥 [DEBUG] Usando fallback de 21 steps');
             // 🔧 FIX: Gerar todos 21 steps ao invés de apenas 2
             return Array.from({ length: 21 }, (_, i) => ({
                 key: `step-${String(i + 1).padStart(2, '0')}`,
@@ -485,6 +493,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }));
         }
 
+        console.log('🔥 [DEBUG] Usando stepBlocks indexes:', indexes);
         return indexes.map((i) => ({
             key: `step-${String(i).padStart(2, '0')}`,
             title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
@@ -561,6 +570,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
 
                 if (!signal.aborted) {
+                    console.log('🔥🔥🔥 [DEBUG] setLoadedTemplate CHAMADO:', {
+                        tid,
+                        stepsMetaLength: stepsMeta.length,
+                        primeiros3: stepsMeta.slice(0, 3).map(s => ({ id: s.id, name: s.name }))
+                    });
                     setLoadedTemplate({ name: `Template: ${tid} (JSON v3)`, steps: stepsMeta });
                     try {
                         const p = new URLSearchParams(window.location.search);
