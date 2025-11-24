@@ -1,5 +1,5 @@
 // ⚙️ PROPERTIES COLUMN - FASE 8 UI Avançado
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -49,6 +49,10 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     const [hasError, setHasError] = React.useState(false);
     const [isSaving, setIsSaving] = React.useState(false); // 🎯 FASE 1: Estado de salvamento
     const prevSelectedIdRef = React.useRef<string | null>(null);
+    const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // 🚀 AUTO-SAVE DEBOUNCED: Salva automaticamente após 500ms de inatividade
+    const AUTO_SAVE_DELAY_MS = 500;
 
     // 🔍 DEBUG: Desabilitado para reduzir poluição do console
     // Habilite via VITE_DEBUG_PROPERTIES=true no .env.local se necessário
@@ -81,10 +85,26 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         return firstBlock;
     }, [selectedBlockProp, blocks, onBlockSelect]);
 
+    // 🧹 Cleanup do timer de auto-save quando desmontar ou trocar bloco
+    useEffect(() => {
+        return () => {
+            if (autoSaveTimerRef.current) {
+                clearTimeout(autoSaveTimerRef.current);
+                autoSaveTimerRef.current = null;
+            }
+        };
+    }, [selectedBlock?.id]);
+
     // Auto-save suave ao trocar de seleção se houver alterações pendentes no bloco anterior
     React.useEffect(() => {
         const prevId = prevSelectedIdRef.current;
         const nextId = selectedBlock?.id || null;
+
+        // Limpar timer pendente ao trocar de bloco
+        if (autoSaveTimerRef.current && prevId !== nextId) {
+            clearTimeout(autoSaveTimerRef.current);
+            autoSaveTimerRef.current = null;
+        }
 
         if (prevId && prevId !== nextId && isDirty) {
             // Encontrar o bloco anterior para fazer auto-save sincronizado
@@ -182,13 +202,29 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             };
             appLogger.info('editedProperties ANTES:', { data: [prev] });
             appLogger.info('editedProperties DEPOIS:', { data: [next] });
+
+            // 🚀 AUTO-SAVE DEBOUNCED: Agendar save automático
+            if (autoSaveTimerRef.current) {
+                clearTimeout(autoSaveTimerRef.current);
+            }
+
+            autoSaveTimerRef.current = setTimeout(() => {
+                if (selectedBlock) {
+                    console.log('⚡ [PropertiesColumn] AUTO-SAVE disparando para:', selectedBlock.id);
+                    const synchronizedUpdate = createSynchronizedBlockUpdate(selectedBlock, next);
+                    onBlockUpdate(selectedBlock.id, synchronizedUpdate);
+                    setIsDirty(false);
+                    appLogger.info('✅ [PropertiesColumn] Auto-save executado');
+                }
+            }, AUTO_SAVE_DELAY_MS);
+
             return next;
         });
         setIsDirty(true);
 
-        appLogger.info('✅ Propriedade atualizada, isDirty = true');
+        appLogger.info('✅ Propriedade atualizada, isDirty = true, auto-save agendado');
         console.groupEnd();
-    }, [editedProperties, isDirty]);
+    }, [editedProperties, isDirty, selectedBlock, onBlockUpdate]);
 
     const handleSave = useCallback(async () => {
         console.group('💾 [PropertiesColumn] handleSave');
@@ -562,9 +598,14 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 // ✅ WAVE 2.9: React.memo para evitar re-renders desnecessários
 // Componente só re-renderiza quando selectedBlock ou callbacks mudarem
 export default React.memo(PropertiesColumn, (prevProps, nextProps) => {
-    // Custom comparison: só re-renderizar se dados relevantes mudarem
+    // Custom comparison: re-renderizar se ID ou CONTEÚDO do bloco mudarem
+    const sameId = prevProps.selectedBlock?.id === nextProps.selectedBlock?.id;
+    const sameContent = sameId &&
+        JSON.stringify(prevProps.selectedBlock?.properties) === JSON.stringify(nextProps.selectedBlock?.properties) &&
+        JSON.stringify(prevProps.selectedBlock?.content) === JSON.stringify(nextProps.selectedBlock?.content);
+
     return (
-        prevProps.selectedBlock?.id === nextProps.selectedBlock?.id &&
+        sameContent &&
         prevProps.blocks?.length === nextProps.blocks?.length &&
         prevProps.onBlockUpdate === nextProps.onBlockUpdate &&
         prevProps.onClearSelection === nextProps.onClearSelection &&
