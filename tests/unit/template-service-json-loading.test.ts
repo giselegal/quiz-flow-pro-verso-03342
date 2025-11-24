@@ -92,8 +92,10 @@ describe('TemplateService - JSON Loading', () => {
             const result = await templateService.getStep('step-01', 'quiz21StepsComplete');
 
             expect(result.success).toBe(true);
-            expect(result.data).toBeDefined();
-            expect(Array.isArray(result.data)).toBe(true);
+            if (result.success) {
+                expect(result.data).toBeDefined();
+                expect(Array.isArray(result.data)).toBe(true);
+            }
         });
 
         it('deve carregar blocks do JSON', async () => {
@@ -108,14 +110,18 @@ describe('TemplateService - JSON Loading', () => {
             const result = await templateService.getStep('step-20', 'quiz21StepsComplete');
 
             expect(result.success).toBe(true);
-            expect(result.data).toBeDefined();
+            if (result.success) {
+                expect(result.data).toBeDefined();
+            }
         });
 
         it('deve carregar step-21 (oferta)', async () => {
             const result = await templateService.getStep('step-21', 'quiz21StepsComplete');
 
             expect(result.success).toBe(true);
-            expect(result.data).toBeDefined();
+            if (result.success) {
+                expect(result.data).toBeDefined();
+            }
         });
     });
 
