@@ -1,26 +1,104 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "https://example.com/schemas/template.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "/schemas/template.schema.json",
+	"$comment": "Quiz template schema - validates template structure for quiz flows",
 	"title": "Template Schema",
 	"type": "object",
 	"additionalProperties": true,
+	"required": ["id", "name"],
 	"properties": {
-		"id": { "type": "string" },
-		"name": { "type": "string" },
-		"description": { "type": "string" },
-		"templateVersion": { "type": "string" },
-		"metadata": { "type": "object", "additionalProperties": true },
-		"steps": {
+		"id": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9_-]+$",
+			"description": "Unique template identifier"
+		},
+		"name": {
+			"type": "string",
+			"minLength": 1,
+			"description": "Template display name"
+		},
+		"description": {
+			"type": "string",
+			"description": "Template description"
+		},
+		"templateVersion": {
+			"type": "string",
+			"pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+			"description": "Semantic version of the template"
+		},
+		"version": {
+			"type": "string",
+			"pattern": "^\\d+\\.\\d+\\.\\d+$",
+			"description": "Template version (semver format)"
+		},
+		"schemaVersion": {
+			"type": "string",
+			"description": "Schema version used"
+		},
+		"templateId": {
+			"type": "string",
+			"description": "Alternative template identifier"
+		},
+		"templateIdAlias": {
+			"type": "string",
+			"description": "Human-readable template alias"
+		},
+		"metadata": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Template metadata including author, dates, tags"
+		},
+		"theme": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Theme configuration for colors, fonts, spacing"
+		},
+		"settings": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Template settings including scoring configuration"
+		},
+		"runtime": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Runtime configuration for scoring and weights"
+		},
+		"stages": {
 			"type": "array",
 			"items": {
 				"type": "object",
-				"additionalProperties": true,
-				"properties": {
-					"id": { "type": "string" },
-					"blocks": { "type": "array", "items": { "type": "object" } }
-				}
-			}
+				"additionalProperties": true
+			},
+			"description": "Array of quiz stages"
 		},
-		"blocks": { "type": "array", "items": { "type": "object" } }
+		"steps": {
+			"oneOf": [
+				{
+					"type": "array",
+					"items": {
+						"type": "object",
+						"additionalProperties": true,
+						"properties": {
+							"id": { "type": "string" },
+							"blocks": { "type": "array", "items": { "type": "object" } }
+						}
+					}
+				},
+				{
+					"type": "object",
+					"additionalProperties": true,
+					"description": "Object-based steps structure (keyed by step id)"
+				}
+			],
+			"description": "Quiz steps (array or object format)"
+		},
+		"blocks": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true
+			},
+			"description": "Direct block definitions"
+		}
 	}
 }
