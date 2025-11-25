@@ -291,29 +291,26 @@ class PersistenceService {
     /**
      * Listar versões disponíveis
      */
-    async listVersions(stepId: string): Promise<PersistenceResult<Array<{ version: number; timestamp: number }>>> {
+    async listVersions(funnelId: string): Promise<ListVersionsResult> {
         try {
-            const { data, error } = await supabase
-                .from('editor_blocks')
-                .select('version, updated_at')
-                .eq('step_id', stepId)
-                .not('version', 'is', null)
-                .order('version', { ascending: false });
+            const versions = this.storage.get(funnelId) || [];
             
-            if (error) throw error;
+            // Ordenar por timestamp (mais recente primeiro)
+            const sortedVersions = [...versions].sort((a, b) => b.timestamp - a.timestamp);
             
             return {
                 success: true,
-                data: data?.map((v: any) => ({
+                versions: sortedVersions.map(v => ({
                     version: v.version,
-                    timestamp: v.updated_at,
-                })) || [],
+                    timestamp: v.timestamp,
+                    blockCount: v.blocks.length,
+                })),
             };
         } catch (error) {
             appLogger.error('[PersistenceService] Erro ao listar versões:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error : new Error('Erro desconhecido'),
+                error: error instanceof Error ? error.message : 'Unknown error',
             };
         }
     }
