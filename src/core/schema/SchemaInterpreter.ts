@@ -21,6 +21,7 @@ export interface PropertySchema {
     max?: number;
     step?: number;
     pattern?: string;
+    enum?: string[];
     custom?: (value: any) => boolean | string;
   };
 }

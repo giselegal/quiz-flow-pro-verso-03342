@@ -108,6 +108,9 @@ export function useBlockValidation(blockType: string, options: ValidationOptions
   };
 }
 
+// Tipo utilitário exportado para consumidores externos
+export type BlockValidationHookResult = ReturnType<typeof useBlockValidation>;
+
 /**
  * Hook para validar propriedades específicas de um bloco
  */
