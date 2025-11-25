@@ -1,4 +1,5 @@
 import React from 'react';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import SinglePropertiesPanel from '../SinglePropertiesPanel';
@@ -31,8 +32,9 @@ describe('SinglePropertiesPanel - logger fallback', () => {
         try {
             (global as any).appLogger = { info: () => { } } as any;
             render(<SinglePropertiesPanel {...props} />);
-            // Expect panel to render content related to the block
-            expect(screen.getByText(/Hello/)).toBeInTheDocument();
+            // Expect panel to render header and block type information
+            expect(screen.getByText(/Propriedades/)).toBeInTheDocument();
+            expect(screen.getByText(/TextBlock/)).toBeInTheDocument();
         } finally {
             (global as any).appLogger = originalLogger;
         }
