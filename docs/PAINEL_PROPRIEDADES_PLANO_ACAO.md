@@ -154,3 +154,4 @@ Organizar o painel em seções colapsáveis, com ordem e microcópias pensadas p
 
 ## 🧠 Observações finais
 O plano mantém 100% de compatibilidade com o template unificado (`quiz21StepsComplete.ts`) e com o fluxo atual de auto‑avanço, validação e pontuação. Prioriza operações reais do dia a dia (ordenar, editar, duplicar, presets) e dá segurança com validação e feedback contínuos.
+
