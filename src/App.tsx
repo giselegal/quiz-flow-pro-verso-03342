@@ -54,6 +54,10 @@ import { EditorProvider } from '@/contexts/editor/EditorContext';
 const Home = lazy(() => import('./pages/Home'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+// 🎉 PÁGINAS DE FEEDBACK (Publish Success, Error)
+const PublishSuccessPage = lazy(() => import('./pages/PublishSuccessPage'));
+const ErrorPage = lazy(() => import('./pages/ErrorPage'));
+
 // 🔍 PÁGINAS DE DIAGNÓSTICO
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
@@ -331,6 +335,20 @@ function AppCore() {
                                                 )}
                                             </Suspense>
                                         )}
+                                    </Route>
+
+                                    {/* 🎉 PUBLISH SUCCESS PAGE */}
+                                    <Route path="/publish/success">
+                                        <Suspense fallback={<PageLoadingFallback message="Carregando..." />}>
+                                            <PublishSuccessPage />
+                                        </Suspense>
+                                    </Route>
+
+                                    {/* 🚨 ERROR PAGE */}
+                                    <Route path="/error">
+                                        <Suspense fallback={<PageLoadingFallback message="Carregando..." />}>
+                                            <ErrorPage />
+                                        </Suspense>
                                     </Route>
 
                                     {/* 🔍 PÁGINAS DE DIAGNÓSTICO */}
