@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>✅ ATIVAR Properties Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card {
+            background: white;
+            color: #333;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .status {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .status.active {
+            background: #4ade80;
+            color: #064e3b;
+        }
+
+        .status.inactive {
+            background: #f87171;
+            color: #7f1d1d;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-activate {
+            background: #4ade80;
+            color: #064e3b;
+        }
+
+        .btn-deactivate {
+            background: #f87171;
+            color: #7f1d1d;
+        }
+
+        .btn-test {
+            background: #60a5fa;
+            color: #1e3a8a;
+        }
+
+        .info {
+            background: #e0e7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #6366f1;
+        }
+
+        .code {
+            background: #1e293b;
+            color: #a5f3fc;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>🎨 Ativar/Desativar Properties Panel</h1>
+
+        <div class="status" id="status">
+            Verificando...
+        </div>
+
+        <div class="info">
+            <strong>ℹ️ O que é isso?</strong><br>
+            O QuizModularEditor tem DOIS painéis de propriedades:
+            <ul>
+                <li><strong>PropertiesColumn</strong> - Painel PRINCIPAL com todas as features</li>
+                <li><strong>PropertiesColumnWithJson</strong> - Painel legado com editor JSON</li>
+            </ul>
+            Esta página controla qual dos dois está ativo.
+        </div>
+
+        <button class="btn-activate" onclick="activate()">
+            ✅ ATIVAR PropertiesColumn Principal
+        </button>
+
+        <button class="btn-deactivate" onclick="deactivate()">
+            ❌ DESATIVAR (usar PropertiesColumnWithJson)
+        </button>
+
+        <button class="btn-test" onclick="openEditor()">
+            🚀 Abrir Editor para Testar
+        </button>
+
+        <div class="info">
+            <strong>📝 Debug Info:</strong>
+            <div class="code" id="debug"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus() {
+            const value = localStorage.getItem('editor:useSimplePropertiesPanel');
+            const status = document.getElementById('status');
+            const debug = document.getElementById('debug');
+
+            if (value === 'true') {
+                status.className = 'status active';
+                status.innerHTML = '✅ PropertiesColumn Principal ATIVO';
+            } else {
+                status.className = 'status inactive';
+                status.innerHTML = '❌ PropertiesColumnWithJson (legado) ATIVO';
+            }
+
+            debug.textContent = `localStorage['editor:useSimplePropertiesPanel'] = "${value || 'null'}"`;
+        }
+
+        function activate() {
+            localStorage.setItem('editor:useSimplePropertiesPanel', 'true');
+            updateStatus();
+            alert('✅ PropertiesColumn principal ATIVADO!\n\nRecarregue o editor (/editor?template=quiz21StepsComplete) para ver as mudanças.');
+        }
+
+        function deactivate() {
+            localStorage.setItem('editor:useSimplePropertiesPanel', 'false');
+            updateStatus();
+            alert('❌ PropertiesColumn desativado!\n\nUsará PropertiesColumnWithJson (legado).\n\nRecarregue o editor para ver as mudanças.');
+        }
+
+        function openEditor() {
+            window.open('/editor?template=quiz21StepsComplete', '_blank');
+        }
+
+        // Auto-update status
+        updateStatus();
+        setInterval(updateStatus, 1000);
+    </script>
+</body>
+
+</html>
