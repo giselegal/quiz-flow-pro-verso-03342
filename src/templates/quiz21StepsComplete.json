@@ -166,6 +166,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Escolha seu tipo de roupa favorita",
           "options": [
             {
               "id": "natural",
@@ -279,6 +280,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Como você se descreve?",
           "options": [
             {
               "id": "natural",
@@ -419,6 +421,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Qual visual você mais se identifica?",
           "options": [
             {
               "id": "natural",
@@ -562,6 +565,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Quais detalhes você gosta?",
           "options": [
             {
               "id": "natural",
@@ -697,6 +701,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Quais estampas você mais se identifica?",
           "options": [
             {
               "id": "natural",
@@ -840,6 +845,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Qual casaco é seu favorito?",
           "options": [
             {
               "id": "natural",
