@@ -26,58 +26,97 @@
  * ```
  */
 
-import { supabase } from '@/services/integrations/supabase/client';
 import type { Block } from '@/core/schemas';
-import { validateBlocks } from '@/core/schemas';
+import { validateBlock } from '@/core/schemas/blockSchema';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export interface SaveOptions {
-    optimistic?: boolean;
-    createVersion?: boolean;
+    validateBeforeSave?: boolean;
+    maxRetries?: number;
     metadata?: Record<string, any>;
 }
 
 export interface LoadOptions {
-    version?: number;
     includeMetadata?: boolean;
 }
 
-export interface PersistenceResult<T> {
-    success: boolean;
-    data?: T;
-    error?: Error;
-    version?: number;
+export type SaveResult =
+    | { success: true; version: string }
+    | { success: false; error: string };
+
+export type LoadResult =
+    | { success: true; blocks: Block[]; version: string }
+    | { success: false; error: string };
+
+export type VersionInfo = {
+    version: string;
+    timestamp: number;
+    blockCount: number;
+};
+
+export type ListVersionsResult =
+    | { success: true; versions: VersionInfo[] }
+    | { success: false; error: string };
+
+export type RollbackResult =
+    | { success: true; version: string }
+    | { success: false; error: string };
+
+/**
+ * Storage para dados persistidos (simulando DB)
+ */
+interface StoredData {
+    funnelId: string;
+    version: string;
+    timestamp: number;
+    blocks: Block[];
+    metadata?: Record<string, any>;
 }
 
 /**
  * Classe principal do serviço de persistência
  */
 class PersistenceService {
+    private storage: Map<string, StoredData[]> = new Map();
     private pendingOperations: Map<string, Promise<any>> = new Map();
     
     /**
-     * Salvar blocos de um step
+     * Salvar blocos de um funnel
      */
     async saveBlocks(
-        stepId: string,
+        funnelId: string,
         blocks: Block[],
         options: SaveOptions = {}
-    ): Promise<PersistenceResult<Block[]>> {
+    ): Promise<SaveResult> {
         try {
-            // Validar blocos
-            const validation = validateBlocks(blocks);
-            if (!validation.success) {
-                throw new Error(`Validação falhou: ${validation.error.message}`);
+            // Validar funnelId
+            if (!funnelId || funnelId.trim() === '') {
+                return {
+                    success: false,
+                    error: 'FunnelId cannot be empty',
+                };
+            }
+            
+            // Validar blocos se solicitado
+            if (options.validateBeforeSave !== false) {
+                for (const block of blocks) {
+                    const validation = validateBlock(block);
+                    if (!validation.success) {
+                        return {
+                            success: false,
+                            error: `Block validation failed: ${validation.error.message}`,
+                        };
+                    }
+                }
             }
             
             // Deduplicar operações concorrentes
-            const operationKey = `save:${stepId}`;
+            const operationKey = `save:${funnelId}`;
             if (this.pendingOperations.has(operationKey)) {
-                appLogger.debug(`[PersistenceService] Operação já em andamento: ${operationKey}`);
                 return this.pendingOperations.get(operationKey)!;
             }
             
-            const operation = this._saveBlocksInternal(stepId, blocks, options);
+            const operation = this._saveBlocksInternal(funnelId, blocks, options);
             this.pendingOperations.set(operationKey, operation);
             
             try {
@@ -90,7 +129,7 @@ class PersistenceService {
             appLogger.error('[PersistenceService] Erro ao salvar blocos:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error : new Error('Erro desconhecido'),
+                error: error instanceof Error ? error.message : 'Unknown error',
             };
         }
     }
@@ -99,108 +138,107 @@ class PersistenceService {
      * Implementação interna de save com retry
      */
     private async _saveBlocksInternal(
-        stepId: string,
+        funnelId: string,
         blocks: Block[],
         options: SaveOptions
-    ): Promise<PersistenceResult<Block[]>> {
-        const maxRetries = 3;
-        let lastError: Error | undefined;
+    ): Promise<SaveResult> {
+        const maxRetries = options.maxRetries ?? 3;
+        let lastError: string | undefined;
         
         for (let attempt = 0; attempt < maxRetries; attempt++) {
             try {
                 const timestamp = Date.now();
+                const version = `v${timestamp}`;
                 
-                // Salvar no Supabase
-                const { data, error } = await supabase
-                    .from('editor_blocks')
-                    .upsert({
-                        step_id: stepId,
-                        blocks: blocks,
-                        metadata: options.metadata || {},
-                        updated_at: timestamp,
-                        version: options.createVersion ? timestamp : undefined,
-                    })
-                    .select();
+                // Criar novo registro de versão
+                const storedData: StoredData = {
+                    funnelId,
+                    version,
+                    timestamp,
+                    blocks: JSON.parse(JSON.stringify(blocks)), // Deep clone
+                    metadata: options.metadata,
+                };
                 
-                if (error) throw error;
+                // Obter versões existentes
+                const existingVersions = this.storage.get(funnelId) || [];
                 
-                appLogger.info(`[PersistenceService] Blocos salvos: ${stepId}`, {
+                // Adicionar nova versão
+                existingVersions.push(storedData);
+                this.storage.set(funnelId, existingVersions);
+                
+                appLogger.info(`[PersistenceService] Blocos salvos: ${funnelId}`, {
                     count: blocks.length,
-                    version: data?.[0]?.version,
+                    version,
                 });
                 
                 return {
                     success: true,
-                    data: blocks,
-                    version: data?.[0]?.version,
+                    version,
                 };
             } catch (error) {
-                lastError = error instanceof Error ? error : new Error('Erro desconhecido');
+                lastError = error instanceof Error ? error.message : 'Unknown error';
                 appLogger.warn(`[PersistenceService] Tentativa ${attempt + 1} falhou:`, error);
                 
                 if (attempt < maxRetries - 1) {
-                    await this._delay(Math.pow(2, attempt) * 1000); // Exponential backoff
+                    await this._delay(Math.pow(2, attempt) * 100); // Exponential backoff
                 }
             }
         }
         
         return {
             success: false,
-            error: lastError,
+            error: lastError || 'Max retries exceeded',
         };
     }
     
     /**
-     * Carregar blocos de um step
+     * Carregar blocos de um funnel
      */
     async loadBlocks(
-        stepId: string,
-        options: LoadOptions = {}
-    ): Promise<PersistenceResult<Block[]>> {
+        funnelId: string,
+        version?: string
+    ): Promise<LoadResult> {
         try {
-            let query = supabase
-                .from('editor_blocks')
-                .select('*')
-                .eq('step_id', stepId);
+            const versions = this.storage.get(funnelId);
             
-            if (options.version) {
-                query = query.eq('version', options.version);
-            } else {
-                query = query.order('updated_at', { ascending: false }).limit(1);
-            }
-            
-            const { data, error } = await query;
-            
-            if (error) throw error;
-            
-            if (!data || data.length === 0) {
+            if (!versions || versions.length === 0) {
                 return {
-                    success: true,
-                    data: [],
+                    success: false,
+                    error: `Funnel "${funnelId}" not found`,
                 };
             }
             
-            const blocks = data[0].blocks;
-            const validation = validateBlocks(blocks);
+            let storedData: StoredData | undefined;
             
-            if (!validation.success) {
-                throw new Error(`Dados inválidos do banco: ${validation.error.message}`);
+            if (version) {
+                // Carregar versão específica
+                storedData = versions.find(v => v.version === version);
+                if (!storedData) {
+                    return {
+                        success: false,
+                        error: `Version "${version}" not found`,
+                    };
+                }
+            } else {
+                // Carregar versão mais recente
+                storedData = versions[versions.length - 1];
             }
             
-            appLogger.info(`[PersistenceService] Blocos carregados: ${stepId}`, {
-                count: blocks.length,
+            appLogger.info(`[PersistenceService] Blocos carregados: ${funnelId}`, {
+                count: storedData.blocks.length,
+                version: storedData.version,
             });
             
             return {
                 success: true,
-                data: validation.data,
-                version: data[0].version,
+                blocks: JSON.parse(JSON.stringify(storedData.blocks)), // Deep clone
+                version: storedData.version,
             };
         } catch (error) {
             appLogger.error('[PersistenceService] Erro ao carregar blocos:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error : new Error('Erro desconhecido'),
+                error: error instanceof Error ? error.message : 'Unknown error',
             };
         }
     }
@@ -208,30 +246,44 @@ class PersistenceService {
     /**
      * Fazer rollback para uma versão anterior
      */
-    async rollback(stepId: string, version: number): Promise<PersistenceResult<Block[]>> {
+    async rollback(funnelId: string, version: string): Promise<RollbackResult> {
         try {
-            appLogger.info(`[PersistenceService] Rollback: ${stepId} → versão ${version}`);
+            appLogger.info(`[PersistenceService] Rollback: ${funnelId} → versão ${version}`);
             
             // Carregar versão antiga
-            const loadResult = await this.loadBlocks(stepId, { version });
+            const loadResult = await this.loadBlocks(funnelId, version);
             
-            if (!loadResult.success || !loadResult.data) {
-                throw new Error('Versão não encontrada');
+            if (!loadResult.success) {
+                return {
+                    success: false,
+                    error: loadResult.error,
+                };
             }
             
-            // Salvar como versão atual
-            return await this.saveBlocks(stepId, loadResult.data, {
-                createVersion: true,
+            // Salvar como nova versão
+            const saveResult = await this.saveBlocks(funnelId, loadResult.blocks, {
                 metadata: {
                     rolledBackFrom: Date.now(),
                     rolledBackTo: version,
                 },
             });
+            
+            if (!saveResult.success) {
+                return {
+                    success: false,
+                    error: saveResult.error,
+                };
+            }
+            
+            return {
+                success: true,
+                version: saveResult.version,
+            };
         } catch (error) {
             appLogger.error('[PersistenceService] Erro no rollback:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error : new Error('Erro desconhecido'),
+                error: error instanceof Error ? error.message : 'Unknown error',
             };
         }
     }
