@@ -88,23 +88,33 @@ describe('Template ID Mapping', () => {
   });
 
   describe('getKnownTemplates()', () => {
-    it('deve retornar lista de templates conhecidos', () => {
+    it('deve retornar lista de templates conhecidos incluindo aliases', () => {
       const templates = getKnownTemplates();
       
-      expect(templates).toHaveLength(1); // Apenas quiz21StepsComplete (sem aliases)
+      expect(templates).toHaveLength(2); // quiz21StepsComplete + alias quiz21
+      
+      // Primeiro: principal
       expect(templates[0]).toEqual({
         jsonId: 'quiz21StepsComplete',
         uuid: '00000000-0000-0000-0000-000000000001',
         funnelUuid: '00000000-0000-0000-0000-000000000101',
       });
+      
+      // Segundo: alias
+      expect(templates[1]).toEqual({
+        jsonId: 'quiz21',
+        uuid: '00000000-0000-0000-0000-000000000001',
+        funnelUuid: '00000000-0000-0000-0000-000000000101',
+      });
     });
 
-    it('não deve incluir aliases na lista', () => {
+    it('deve incluir aliases na lista para facilitar lookup', () => {
       const templates = getKnownTemplates();
       const ids = templates.map(t => t.jsonId);
       
-      expect(ids).not.toContain('quiz21');
-      expect(ids).not.toContain('quiz21-complete');
+      // Ambos devem estar presentes
+      expect(ids).toContain('quiz21StepsComplete');
+      expect(ids).toContain('quiz21');
     });
   });
 
