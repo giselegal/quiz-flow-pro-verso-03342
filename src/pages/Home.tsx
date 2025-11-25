@@ -253,7 +253,7 @@ export const Home: React.FC = () => {
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Confiado por Líderes da Indústria
+                Confiado por líderes do setor
               </h2>
               <p className="text-slate-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
                 Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
@@ -284,7 +284,7 @@ export const Home: React.FC = () => {
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Tudo Que Você Precisa Para Ter Sucesso
+                Tudo o que você precisa para ter sucesso
               </h2>
               <p className="text-slate-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
                 Recursos poderosos projetados para ajudá-lo a criar, otimizar e escalar suas campanhas de quiz
@@ -311,7 +311,7 @@ export const Home: React.FC = () => {
         <section id="testimonials" className="py-24 bg-white">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">O que Nossos Clientes Dizem</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">O que nossos clientes dizem</h2>
               <p className="text-slate-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">Empresas de todos os tamanhos usam QuizFlow para crescer mais rápido</p>
             </div>
 
@@ -368,7 +368,7 @@ export const Home: React.FC = () => {
         <section id="pricing" className="py-24 bg-slate-50">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Planos Simples e Transparentes</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Planos simples e transparentes</h2>
               <p className="text-slate-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">Escolha o plano ideal para seu estágio de crescimento</p>
             </div>
 
