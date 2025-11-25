@@ -30,6 +30,8 @@ export const Home: React.FC = () => {
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [isVslOpen, setIsVslOpen] = useState(false);
+  const [isInlineVideoReady, setIsInlineVideoReady] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Navigation helper function
   const navigate = (path: string) => {
@@ -43,6 +45,20 @@ export const Home: React.FC = () => {
       setIsLoading(false);
     }, 300);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Respect user accessibility setting for reduced motion
+  useEffect(() => {
+    try {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const updatePref = () => setPrefersReducedMotion(!!mediaQuery.matches);
+      updatePref();
+      mediaQuery.addEventListener?.('change', updatePref);
+      return () => mediaQuery.removeEventListener?.('change', updatePref);
+    } catch (err) {
+      // In non-browser test environments, matchMedia may not exist
+      setPrefersReducedMotion(false);
+    }
   }, []);
 
   // Auto-rotate testimonials (not needed for now)
@@ -321,13 +337,23 @@ export const Home: React.FC = () => {
                 >
                   <div className="absolute -inset-6 bg-gradient-to-tr from-[#3bbef3]/30 via-transparent to-[#ea7af6]/40 opacity-70 blur-3xl" />
                   <div className="relative rounded-3xl overflow-hidden border border-white/12 shadow-[0_24px_80px_rgba(15,23,42,0.9)]">
+                    {!isInlineVideoReady && (
+                      <div className="absolute inset-0 bg-[#0a0f1f] flex items-center justify-center">
+                        <div className="animate-pulse w-20 h-20 rounded-full bg-white/10" />
+                      </div>
+                    )}
                     <video
                       src="/videos/vsl-quizflowpro.mp4"
-                      autoPlay
+                      autoPlay={!prefersReducedMotion}
                       muted
-                      loop
+                      loop={!prefersReducedMotion}
                       playsInline
+                      preload="metadata"
+                      aria-label="Preview do vídeo VSL do QuizFlowPro"
+                      title="Preview VSL — QuizFlowPro"
                       className="w-full h-full object-cover"
+                      onCanPlay={() => setIsInlineVideoReady(true)}
+                      onPlay={() => appLogger.info('▶️ Inline VSL playing')}
                     />
                     <div className="absolute bottom-3 left-3 flex items-center gap-2">
                       <Badge className="bg-white/10 text-white border-white/20">Preview VSL</Badge>
