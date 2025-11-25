@@ -108,7 +108,7 @@ describe('StorageService - Canonical Service Tests', () => {
       const testKey = 'expiring-key';
       
       // Set item com TTL de 1ms (vai expirar imediatamente)
-      storageService.setItem(testKey, 'value', { ttl: 1 });
+      storageService.setItem(testKey, 'value', 1);
       
       // Wait for expiration
       setTimeout(() => {

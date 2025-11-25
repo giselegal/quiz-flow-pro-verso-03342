@@ -19,6 +19,15 @@ export class TemplateRegistry {
   registerTemplate(template: any): void {
     // no-op stub
   }
+
+  // Methods expected by TemplateLoader
+  has(id: string): boolean {
+    return false;
+  }
+
+  get(id: string): any | null {
+    return null;
+  }
 }
 
 export default TemplateRegistry;
