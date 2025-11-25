@@ -6,7 +6,7 @@ import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/Sup
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import { useBlocksFromSupabase } from '@/hooks/useBlocksFromSupabase';
 import { useBlockMutations } from '@/hooks/useBlockMutations';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
 // ✅ CORREÇÃO: Usar ModernPropertiesPanel que aceita selectedBlock
 import ModernPropertiesPanel from '../properties/ModernPropertiesPanel';
@@ -44,6 +44,15 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
     funnelId || '',
     currentStep - 1 // step_number zero-based no banco; ajuste conforme necessário
   );
+
+  React.useEffect(() => {
+    console.log('📁 Blocos carregados do Supabase:', {
+      count: supabaseBlocks?.length || 0,
+      isLoading: loadingBlocks,
+      blocks: supabaseBlocks,
+      funnelId
+    });
+  }, [supabaseBlocks, loadingBlocks, funnelId]);
 
   const { updateBlock, deleteBlock } = useBlockMutations();
 
@@ -109,8 +118,46 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   };
 
   const config = resultPageConfig || defaultConfig;
+
+  // Blocos mock para teste se não houver dados
+  const mockBlocks = React.useMemo(() => [
+    {
+      id: 'mock-header-1',
+      type: 'header',
+      properties: { title: 'Título de Teste', subtitle: 'Subtitulo' },
+      content: { text: 'Conteúdo do cabeçalho' },
+      order: 0
+    },
+    {
+      id: 'mock-text-1',
+      type: 'text',
+      properties: { content: 'Este é um bloco de texto de teste. Clique para editar!' },
+      content: {},
+      order: 1
+    },
+    {
+      id: 'mock-image-1',
+      type: 'image',
+      properties: { src: 'https://via.placeholder.com/400x300', alt: 'Imagem de teste' },
+      content: {},
+      order: 2
+    }
+  ], []);
+
   // Fix type compatibility by ensuring content is always defined
-  const sourceBlocks = supabaseBlocks && supabaseBlocks.length > 0 ? supabaseBlocks : (config.blocks || []);
+  let sourceBlocks = supabaseBlocks && supabaseBlocks.length > 0
+    ? supabaseBlocks
+    : (config.blocks || []);
+
+  // Se ainda não tem blocos, usar mock
+  if (!sourceBlocks || sourceBlocks.length === 0) {
+    console.log('⚠️ Usando blocos mock para teste');
+    sourceBlocks = mockBlocks as any;
+  }
+
+  React.useEffect(() => {
+    console.log('🎯 sourceBlocks final:', sourceBlocks);
+  }, [sourceBlocks]);
 
   // 🐛 DEBUG: Ver blocos finais
   React.useEffect(() => {
@@ -124,6 +171,12 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   const selectedBlock = selectedBlockId
     ? sourceBlocks.find((b: any) => b.id === selectedBlockId) || null
     : null;
+
+  React.useEffect(() => {
+    if (selectedBlockId) {
+      console.log('🎯 Bloco selecionado:', { selectedBlockId, selectedBlock });
+    }
+  }, [selectedBlockId, selectedBlock]);
 
   const safeSelectedBlock = selectedBlock
     ? {
