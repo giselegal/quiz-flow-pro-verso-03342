@@ -18,13 +18,14 @@ export function useBlockMutations() {
 
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['blocks'] });
-      toast.success('Bloco atualizado!');
+      console.log('✅ Bloco atualizado:', id);
+      toast.success('Bloco atualizado com sucesso!');
     },
     onError: (error) => {
-      console.error('Erro ao atualizar bloco:', error);
-      toast.error('Falha ao salvar bloco');
+      console.error('❌ Erro ao atualizar bloco:', error);
+      toast.error('Falha ao salvar alterações');
     }
   });
 
