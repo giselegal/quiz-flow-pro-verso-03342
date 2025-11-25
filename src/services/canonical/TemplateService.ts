@@ -53,6 +53,8 @@ import {
 } from '@/services/templates/builtInTemplates';
 import { loadFullTemplate } from '@/templates/registry';
 import { appLogger } from '@/lib/utils/appLogger';
+// 🆔 ID Mapping para Supabase
+import { getTemplateUUID, getFunnelUUID } from '@/lib/utils/templateIdMapping';
 
 /**
  * Template metadata
