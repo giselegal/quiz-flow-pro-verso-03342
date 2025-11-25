@@ -213,10 +213,10 @@ export class MultiLayerCacheStrategy {
   async get<T>(store: CacheStore, key: string): Promise<T | null> {
     // L1: Memory (ultra-rápido)
     const l1Value = this.l1.get<T>(store, key);
-    if (l1Value !== null) {
+    if (typeof l1Value !== 'undefined' && l1Value !== null) {
       this.metrics.l1Hits++;
       logger.debug('cache', '💾 [L1 HIT]', { store, key });
-      return l1Value;
+      return l1Value as T;
     }
     this.metrics.l1Misses++;
 
@@ -236,7 +236,7 @@ export class MultiLayerCacheStrategy {
 
     // L3: IndexedDB (persistente)
     try {
-      const l3Value = await this.l3.get<T>(store, key);
+      const l3Value = await (this.l3 as any).get<T>(store, key);
       if (l3Value !== null) {
         this.metrics.l3Hits++;
         logger.debug('cache', '💾 [L3 HIT] Promoting to L1+L2', { store, key });
