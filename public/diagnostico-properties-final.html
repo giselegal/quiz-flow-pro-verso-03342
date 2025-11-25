@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>🔧 DIAGNÓSTICO COMPLETO Properties Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .status-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #888;
+        }
+
+        .status-card.success {
+            border-left-color: #10b981;
+        }
+
+        .status-card.error {
+            border-left-color: #ef4444;
+        }
+
+        .status-card.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .status-card h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .status-card .value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .console-output {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .instructions {
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔧 DIAGNÓSTICO COMPLETO: Properties Panel</h1>
+
+        <div class="instructions">
+            <strong>📋 INSTRUÇÕES:</strong>
+            <ol>
+                <li>Clique em "🔧 ATIVAR Properties Panel" abaixo</li>
+                <li>Aguarde o alerta de confirmação</li>
+                <li>Clique em "🚀 Abrir Editor"</li>
+                <li>No editor, clique em qualquer bloco no canvas</li>
+                <li>Volte aqui e clique em "📊 Verificar Status"</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Ações Rápidas</h2>
+            <div class="buttons">
+                <button class="btn-primary" onclick="activatePanel()">
+                    🔧 ATIVAR Properties Panel
+                </button>
+                <button class="btn-danger" onclick="deactivatePanel()">
+                    ❌ DESATIVAR Properties Panel
+                </button>
+                <button class="btn-info" onclick="openEditor()">
+                    🚀 Abrir Editor
+                </button>
+                <button class="btn-warning" onclick="checkStatus()">
+                    📊 Verificar Status
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Status Atual</h2>
+            <div id="status" class="status-grid"></div>
+        </div>
+
+        <div class="section">
+            <h2>🐛 Console Logs</h2>
+            <div id="console" class="console-output">Aguardando logs...</div>
+        </div>
+    </div>
+
+    <script>
+        const logs = [];
+        const maxLogs = 50;
+
+        // Interceptar console
+        ['log', 'error', 'warn', 'info'].forEach(method => {
+            const original = console[method];
+            console[method] = function (...args) {
+                const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+                const msg = args.map(a =>
+                    typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)
+                ).join(' ');
+
+                logs.push(`[${timestamp}] [${method.toUpperCase()}] ${msg}`);
+                if (logs.length > maxLogs) logs.shift();
+
+                updateConsole();
+                original.apply(console, args);
+            };
+        });
+
+        function updateConsole() {
+            document.getElementById('console').textContent = logs.join('\n') || 'Nenhum log capturado ainda...';
+        }
+
+        function addStatus(title, value, type = 'warning') {
+            const statusDiv = document.getElementById('status');
+            const card = document.createElement('div');
+            card.className = `status-card ${type}`;
+            card.innerHTML = `
+                <h3>${title}</h3>
+                <div class="value">${value}</div>
+            `;
+            statusDiv.appendChild(card);
+        }
+
+        function activatePanel() {
+            localStorage.setItem('editor:useSimplePropertiesPanel', 'true');
+            console.log('✅ Properties Panel ATIVADO');
+            alert('✅ Properties Panel ATIVADO!\n\nAgora clique em "🚀 Abrir Editor" para testar.');
+            checkStatus();
+        }
+
+        function deactivatePanel() {
+            localStorage.setItem('editor:useSimplePropertiesPanel', 'false');
+            console.log('❌ Properties Panel DESATIVADO');
+            alert('❌ Properties Panel DESATIVADO!\n\nUsará PropertiesColumnWithJson (legado).');
+            checkStatus();
+        }
+
+        function openEditor() {
+            console.log('🚀 Abrindo editor...');
+            window.open('/editor?template=quiz21StepsComplete', '_blank');
+        }
+
+        function checkStatus() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '';
+
+            // 1. Flag localStorage
+            const flag = localStorage.getItem('editor:useSimplePropertiesPanel');
+            addStatus(
+                'Flag useSimplePropertiesPanel',
+                flag === 'true' ? '✅ ATIVADO' : '❌ DESATIVADO',
+                flag === 'true' ? 'success' : 'error'
+            );
+
+            // 2. Verificar se está no editor
+            const isInEditor = window.location.pathname.includes('/editor');
+            addStatus(
+                'Está no Editor?',
+                isInEditor ? '✅ Sim' : '⚠️ Não',
+                isInEditor ? 'success' : 'warning'
+            );
+
+            // 3. Verificar DOM (se estiver no editor)
+            if (isInEditor) {
+                const propsColumn = document.querySelector('[data-testid="column-properties"]');
+                addStatus(
+                    'PropertiesColumn no DOM',
+                    propsColumn ? '✅ Encontrado' : '❌ Não encontrado',
+                    propsColumn ? 'success' : 'error'
+                );
+
+                const blocks = document.querySelectorAll('[data-block-id]');
+                addStatus(
+                    'Blocos no Canvas',
+                    `${blocks.length} blocos`,
+                    blocks.length > 0 ? 'success' : 'warning'
+                );
+            }
+
+            // 4. Logs recentes
+            const recentLogs = logs.slice(-10).filter(l =>
+                l.includes('PropertiesColumn') ||
+                l.includes('handleWYSIWYGBlockSelect') ||
+                l.includes('selectedBlock')
+            );
+            addStatus(
+                'Logs Relevantes (últimos 10)',
+                recentLogs.length > 0 ? `${recentLogs.length} encontrados` : 'Nenhum',
+                recentLogs.length > 0 ? 'success' : 'warning'
+            );
+
+            console.log('📊 Status verificado:', {
+                flag,
+                isInEditor,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Auto-check ao carregar
+        setTimeout(checkStatus, 1000);
+        setInterval(checkStatus, 5000); // Re-check a cada 5s
+    </script>
+</body>
+
+</html>
