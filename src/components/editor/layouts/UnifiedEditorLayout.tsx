@@ -139,20 +139,20 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
                   onDeleteBlock={handleBlockDelete}
                   scopeId={'unified-layout'}
                 />
-                <ResizablePanel defaultSize={15} minSize={12}>
-                  <ModernPropertiesPanel
-                    selectedBlock={safeSelectedBlock}
-                    onUpdate={(updates) => {
-                      if (selectedBlockId) {
-                        handleBlockUpdate(updates);
-                      }
-                    }}
-                    onDelete={handleBlockDelete}
-                    onClose={() => setSelectedBlockId(null)}
-                  />
-                </ResizablePanel>dleBlockUpdate}
-                onDelete={handleBlockDelete}
-                onClose={() => setSelectedBlockId(null)}
+              </ResizablePanel>
+
+              <ResizableHandle withHandle />
+
+              <ResizablePanel defaultSize={15} minSize={12}>
+                <ModernPropertiesPanel
+                  selectedBlock={safeSelectedBlock}
+                  onUpdate={(updates) => {
+                    if (selectedBlockId) {
+                      handleBlockUpdate(updates);
+                    }
+                  }}
+                  onDelete={handleBlockDelete}
+                  onClose={() => setSelectedBlockId(null)}
                 />
               </ResizablePanel>
             </ResizablePanelGroup>
