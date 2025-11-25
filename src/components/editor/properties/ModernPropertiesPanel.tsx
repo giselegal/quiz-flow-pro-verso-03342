@@ -455,10 +455,10 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     const propertyUpdates: any = {};
     const contentUpdates: any = {};
 
-    // Caso especial: 'options' deve ser salvo em content.options
+    // Sempre salvar propriedades de UI em properties
     if (propKey === 'options') {
-      contentUpdates.options = value;
-      appLogger.debug('🎯 Special case: Saving options to content.options');
+      propertyUpdates.options = value;
+      appLogger.debug('🎯 Saving options to properties.options');
     } else if (propKey.startsWith('content.')) {
       const contentKey = propKey.substring(8);
       contentUpdates[contentKey] = value;
@@ -503,7 +503,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
     Object.entries(updates).forEach(([key, val]) => {
       if (key === 'options') {
-        contentUpdates.options = val;
+        propertyUpdates.options = val;
       } else if (key.startsWith('content.')) {
         const contentKey = key.substring(8);
         contentUpdates[contentKey] = val;

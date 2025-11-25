@@ -56,9 +56,10 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 setIsLoading(true);
                 appLogger.debug('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
 
-                // Buscar dados do step via serviço consolidado (JSON > registry > TS fallback)
+                // Buscar dados do step via serviço canônico
                 const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
-                const stepBlocks = await consolidatedTemplateService.getStepBlocks(stepKey);
+                const result = await templateService.getStep(stepKey);
+                const stepBlocks = result.success ? ((result.data as any[]) ?? []) : [];
 
                 if (stepBlocks && Array.isArray(stepBlocks) && stepBlocks.length > 0) {
                     const stepInfo = {

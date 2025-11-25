@@ -24,6 +24,7 @@ import { cacheService } from '@/services/canonical';
 import type { EditableQuizStep } from '../types';
 import { TemplateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/lib/utils/appLogger';
+import { UnifiedCacheService } from '@/services/unified/UnifiedCacheService';
 
 export interface TemplateLoaderState {
     loading: boolean;
