@@ -80,6 +80,7 @@ export const blockDefinitionToSchema = (definition: BlockDefinition): BlockTypeS
       description: property.description,
       default: property.defaultValue,
       required: property.required,
+      category: property.category,
       validation: {
         min: property.validation?.min,
         max: property.validation?.max,

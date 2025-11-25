@@ -17,6 +17,9 @@ export interface PropertySchema {
   label?: string;
   description?: string;
   required?: boolean;
+  category?: string;
+  panelSection?: string;
+  tags?: string[];
   validation?: {
     min?: number;
     max?: number;
