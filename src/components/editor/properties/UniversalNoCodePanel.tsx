@@ -1,6 +1,11 @@
 /**
  * 🎨 PAINEL UNIVERSAL NOCODE
  *
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see archive/legacy/README.md - Instruções de migração
+ *
  * Interface principal para edição de propriedades com:
  * - Extração automática de todas as propriedades
  * - Sistema de interpolação visual

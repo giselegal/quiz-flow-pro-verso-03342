@@ -1,18 +1,41 @@
+/**
+ * 🎯 PropertiesColumn - Coluna canônica de propriedades para o editor
+ * 
+ * ⚠️ IMPORTANTE: Esta é a camada de interface recomendada para uso no editor.
+ * Internamente utiliza SinglePropertiesPanel (painel canônico).
+ * 
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see PropertiesPanelTypes.ts - Tipos canônicos
+ */
 import React, { Suspense, useEffect } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { SinglePropertiesPanel } from './SinglePropertiesPanel';
+import type { PropertiesPanelProps } from '@/types/editor/PropertiesPanelTypes';
 
+/**
+ * Props canônicas para PropertiesColumn
+ * Alinhadas com PropertiesPanelProps do PropertiesPanelTypes.ts
+ */
 export interface PropertiesColumnProps {
+  /** Bloco atualmente selecionado */
   selectedBlock: Block | undefined;
+  /** Callback para atualizar propriedades do bloco */
   onUpdate: (updates: Record<string, any>) => void;
+  /** Callback para fechar o painel */
   onClose: () => void;
+  /** Callback para deletar o bloco selecionado */
   onDelete: () => void;
+  /** Callback para duplicar o bloco selecionado */
   onDuplicate?: () => void;
+  /** Callback para resetar propriedades */
   onReset?: () => void;
+  /** Modo de preview (responsividade) */
   previewMode?: 'desktop' | 'tablet' | 'mobile';
+  /** Callback para alterar modo de preview */
   onPreviewModeChange?: (mode: 'desktop' | 'tablet' | 'mobile') => void;
+  /** Classes CSS adicionais */
   className?: string;
 }
 

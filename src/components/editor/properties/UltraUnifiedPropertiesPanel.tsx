@@ -1,6 +1,11 @@
 /**
  * 🌟 ULTRA UNIFIED PROPERTIES PANEL
  * 
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see archive/legacy/README.md - Instruções de migração
+ * 
  * Painel consolidado que unifica o melhor de todos os painéis de propriedades:
  * 
  * ✨ RECURSOS CONSOLIDADOS:

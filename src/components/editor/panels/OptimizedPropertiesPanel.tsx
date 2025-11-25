@@ -1,6 +1,11 @@
 /**
  * 🎨 OPTIMIZED PROPERTIES PANEL - CLEAN ARCHITECTURE
  * 
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see archive/legacy/README.md - Instruções de migração
+ * 
  * Painel de propriedades otimizado usando Clean Architecture
  * com performance melhorada e UI responsiva
  */

@@ -1,6 +1,11 @@
 /**
  * 🎯 PROPERTIES PANEL V4 - Painel Alinhado com Zod Schema
  * 
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see archive/legacy/README.md - Instruções de migração
+ * 
  * Painel lateral direito que permite editar propriedades dos blocos.
  * ✅ Validação com Zod (QuizBlockSchemaZ)
  * ✅ Integração com useStepBlocksV4
