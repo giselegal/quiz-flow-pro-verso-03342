@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import { useBlocksFromSupabase } from '@/hooks/useBlocksFromSupabase';
+import { useBlockMutations } from '@/hooks/useBlockMutations';
 import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
 // ✅ CORREÇÃO: Usar ModernPropertiesPanel que aceita selectedBlock
@@ -33,19 +34,23 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
     currentStep - 1 // step_number zero-based no banco; ajuste conforme necessário
   );
 
+  const { updateBlock, deleteBlock } = useBlockMutations();
+
   const handleComponentSelect = (type: string) => {
     appLogger.debug('Component selected:', type);
   };
 
   const handleBlockUpdate = (updates: any) => {
     if (selectedBlockId) {
-      appLogger.debug('Block updated:', selectedBlockId, updates);
+      // appLogger.debug('Block updated:', selectedBlockId, updates);
+      updateBlock({ id: selectedBlockId, updates });
     }
   };
 
   const handleBlockDelete = () => {
     if (selectedBlockId) {
-      appLogger.debug('Block deleted:', selectedBlockId);
+      // appLogger.debug('Block deleted:', selectedBlockId);
+      deleteBlock(selectedBlockId);
       setSelectedBlockId(null);
     }
   };
@@ -134,16 +139,20 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
                   onDeleteBlock={handleBlockDelete}
                   scopeId={'unified-layout'}
                 />
-              </ResizablePanel>
-
-              <ResizableHandle withHandle />
-
-              <ResizablePanel defaultSize={15} minSize={12}>
-                <ModernPropertiesPanel
-                  selectedBlock={safeSelectedBlock}
-                  onUpdate={handleBlockUpdate}
-                  onDelete={handleBlockDelete}
-                  onClose={() => setSelectedBlockId(null)}
+                <ResizablePanel defaultSize={15} minSize={12}>
+                  <ModernPropertiesPanel
+                    selectedBlock={safeSelectedBlock}
+                    onUpdate={(updates) => {
+                      if (selectedBlockId) {
+                        handleBlockUpdate(updates);
+                      }
+                    }}
+                    onDelete={handleBlockDelete}
+                    onClose={() => setSelectedBlockId(null)}
+                  />
+                </ResizablePanel>dleBlockUpdate}
+                onDelete={handleBlockDelete}
+                onClose={() => setSelectedBlockId(null)}
                 />
               </ResizablePanel>
             </ResizablePanelGroup>
