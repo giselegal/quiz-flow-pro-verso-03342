@@ -1049,7 +1049,8 @@
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
           "validationMessage": "Selecione 3 opções para continuar",
-          "requiredSelections": 3
+          "requiredSelections": 3,
+          "title": "Qual sua calça favorita?"
         }
       },
       {
@@ -1192,7 +1193,8 @@
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
           "validationMessage": "Selecione 3 opções para continuar",
-          "requiredSelections": 3
+          "requiredSelections": 3,
+          "title": "Qual desses sapatos você tem ou mais gosta?"
         }
       },
       {
@@ -1335,7 +1337,8 @@
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
           "validationMessage": "Selecione 3 opções para continuar",
-          "requiredSelections": 3
+          "requiredSelections": 3,
+          "title": "Qual bolsa é a sua cara?"
         }
       },
       {
@@ -1470,7 +1473,8 @@
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
           "validationMessage": "Selecione 3 opções para continuar",
-          "requiredSelections": 3
+          "requiredSelections": 3,
+          "title": "Qual acessório mais combina com você?"
         }
       },
       {
@@ -1630,7 +1634,8 @@
           "showImages": true,
           "imageSize": 256,
           "autoAdvance": true,
-          "autoAdvanceDelay": 1500
+          "autoAdvanceDelay": 1500,
+          "title": "Qual maquiagem é a sua cara?"
         }
       },
       {
@@ -1743,7 +1748,8 @@
           "showImages": true,
           "imageSize": 256,
           "autoAdvance": true,
-          "autoAdvanceDelay": 1500
+          "autoAdvanceDelay": 1500,
+          "title": "Qual penteado você gosta mais?"
         }
       },
       {
@@ -1856,7 +1862,8 @@
           "showImages": true,
           "imageSize": 256,
           "autoAdvance": true,
-          "autoAdvanceDelay": 1500
+          "autoAdvanceDelay": 1500,
+          "title": "Qual decoração de casa você prefere?"
         }
       },
       {
@@ -1969,7 +1976,8 @@
           "showImages": true,
           "imageSize": 256,
           "autoAdvance": true,
-          "autoAdvanceDelay": 1500
+          "autoAdvanceDelay": 1500,
+          "title": "Qual mulher mais te inspira?"
         }
       },
       {
@@ -2082,7 +2090,8 @@
           "showImages": true,
           "imageSize": 256,
           "autoAdvance": true,
-          "autoAdvanceDelay": 1500
+          "autoAdvanceDelay": 1500,
+          "title": "Qual palavra mais te representa?"
         }
       },
       {
@@ -2195,7 +2204,8 @@
           "showImages": true,
           "imageSize": 256,
           "autoAdvance": true,
-          "autoAdvanceDelay": 1500
+          "autoAdvanceDelay": 1500,
+          "title": "O que você mais valoriza?"
         }
       },
       {
