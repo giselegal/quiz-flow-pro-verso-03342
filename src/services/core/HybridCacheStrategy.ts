@@ -100,19 +100,19 @@ export class HybridCacheStrategy {
     try {
       // L1: Memory cache
       const l1Value = cache.get<T>(memoryStore, key);
-      if (l1Value !== null) {
+      if (typeof l1Value !== 'undefined' && l1Value !== null) {
         this.metrics.l1Hits++;
         performanceProfiler.end(`hybridCache.get:${key}`);
         appLogger.debug(`💾 [L1 HIT] ${memoryStore}:${key}`);
-        return l1Value;
+        return l1Value as T;
       }
 
       this.metrics.l1Misses++;
       appLogger.debug(`💾 [L1 MISS] ${memoryStore}:${key} → checking L2`);
 
       // L2: IndexedDB
-      const l2Value = await indexedDBCache.get<T>(diskStore, key);
-      if (l2Value !== null) {
+      const l2Value = await (indexedDBCache as any).get<T>(diskStore, key);
+      if (typeof l2Value !== 'undefined' && l2Value !== null) {
         this.metrics.l2Hits++;
         appLogger.debug(`💾 [L2 HIT] ${diskStore}:${key}`);
 
