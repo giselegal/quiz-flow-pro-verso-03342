@@ -119,7 +119,13 @@ export function useBlockDraft(
     const [draftData, setDraftData] = useState<Block | null>(originalBlock);
     const [history, setHistory] = useState<Array<Block | null>>([originalBlock]);
     const [historyIndex, setHistoryIndex] = useState(0);
+    const historyIndexRef = useRef(0);
     const HISTORY_LIMIT = 100;
+    
+    // Sincronizar ref com estado
+    useEffect(() => {
+        historyIndexRef.current = historyIndex;
+    }, [historyIndex]);
     
     // Sincronizar com mudanças externas do block original
     useEffect(() => {
@@ -174,9 +180,10 @@ export function useBlockDraft(
             if (!prev) return prev;
             const next = { ...prev, ...updates };
             
-            // Adicionar ao histórico com limite
+            // Atualizar histórico usando ref para valor atual
             setHistory(h => {
-                const newHistory = h.slice(0, historyIndex + 1);
+                const currentIndex = historyIndexRef.current;
+                const newHistory = h.slice(0, currentIndex + 1);
                 newHistory.push(next);
                 
                 // Limitar tamanho do history
@@ -186,22 +193,22 @@ export function useBlockDraft(
                 
                 return newHistory;
             });
+            
             setHistoryIndex(i => {
                 const newIndex = i + 1;
-                // Ajustar índice se exceder limite
                 return newIndex >= HISTORY_LIMIT ? HISTORY_LIMIT - 1 : newIndex;
             });
             
             return next;
         });
-    }, [historyIndex]);
+    }, []);
     
     // Update helpers
     const updateContent = useCallback((key: string, value: any) => {
         if (!draftData) return;
         update({
-            content: {
-                ...draftData.content,
+            properties: {
+                ...draftData.properties,
                 [key]: value,
             },
         });

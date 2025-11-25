@@ -53,7 +53,7 @@ describe('useBlockDraft', () => {
                 result.current.updateContent('title', 'Updated');
             });
 
-            expect(result.current.data.properties.title).toBe('Updated');
+            expect(result.current.data!.properties!.title).toBe('Updated');
             expect(result.current.isDirty).toBe(true);
         });
 
@@ -67,8 +67,8 @@ describe('useBlockDraft', () => {
                 result.current.updateContent('subtitle', 'New Subtitle');
             });
 
-            expect(result.current.data.properties.title).toBe('New Title');
-            expect(result.current.data.properties.subtitle).toBe('New Subtitle');
+            expect(result.current.data!.properties!.title).toBe('New Title');
+            expect(result.current.data!.properties!.subtitle).toBe('New Subtitle');
         });
 
         it('deve atualizar propriedades inteiras', () => {
@@ -80,8 +80,8 @@ describe('useBlockDraft', () => {
                 result.current.updateProperties({ title: 'Updated', subtitle: 'New' });
             });
 
-            expect(result.current.data.properties.title).toBe('Updated');
-            expect(result.current.data.properties.subtitle).toBe('New');
+            expect(result.current.data!.properties!.title).toBe('Updated');
+            expect(result.current.data!.properties!.subtitle).toBe('New');
         });
 
         it('deve fazer update genérico do bloco', () => {
@@ -93,7 +93,7 @@ describe('useBlockDraft', () => {
                 result.current.update({ order: 999 });
             });
 
-            expect(result.current.data.order).toBe(999);
+            expect(result.current.data!.order).toBe(999);
             expect(result.current.isDirty).toBe(true);
         });
     });
@@ -157,7 +157,7 @@ describe('useBlockDraft', () => {
             });
 
             expect(result.current.isDirty).toBe(false);
-            expect(result.current.data.properties.title).toBe('Original');
+            expect(result.current.data!.properties!.title).toBe('Original');
         });
     });
 
@@ -171,13 +171,13 @@ describe('useBlockDraft', () => {
                 result.current.updateContent('title', 'Modified');
             });
 
-            expect(result.current.data.properties.title).toBe('Modified');
+            expect(result.current.data!.properties!.title).toBe('Modified');
 
             act(() => {
                 result.current.undo();
             });
 
-            expect(result.current.data.properties.title).toBe('Original');
+            expect(result.current.data!.properties!.title).toBe('Original');
         });
 
         it('deve fazer redo de mudança desfeita', () => {
@@ -190,13 +190,13 @@ describe('useBlockDraft', () => {
                 result.current.undo();
             });
 
-            expect(result.current.data.properties.title).toBe('Original');
+            expect(result.current.data!.properties!.title).toBe('Original');
 
             act(() => {
                 result.current.redo();
             });
 
-            expect(result.current.data.properties.title).toBe('Modified');
+            expect(result.current.data!.properties!.title).toBe('Modified');
         });
 
         it('deve lidar com múltiplos undo/redo', () => {
@@ -210,22 +210,22 @@ describe('useBlockDraft', () => {
                 result.current.updateContent('title', 'Step 3');
             });
 
-            expect(result.current.data.properties.title).toBe('Step 3');
+            expect(result.current.data!.properties!.title).toBe('Step 3');
 
             act(() => {
                 result.current.undo();
             });
-            expect(result.current.data.properties.title).toBe('Step 2');
+            expect(result.current.data!.properties!.title).toBe('Step 2');
 
             act(() => {
                 result.current.undo();
             });
-            expect(result.current.data.properties.title).toBe('Step 1');
+            expect(result.current.data!.properties!.title).toBe('Step 1');
 
             act(() => {
                 result.current.redo();
             });
-            expect(result.current.data.properties.title).toBe('Step 2');
+            expect(result.current.data!.properties!.title).toBe('Step 2');
         });
 
         it('deve indicar quando pode fazer undo', () => {
@@ -340,7 +340,7 @@ describe('useBlockDraft', () => {
                 result.current.cancel();
             });
 
-            expect(result.current.data.properties.title).toBe('Original');
+            expect(result.current.data!.properties!.title).toBe('Original');
             expect(result.current.isDirty).toBe(false);
         });
 
@@ -372,7 +372,7 @@ describe('useBlockDraft', () => {
 
             rerender({ block: block2 });
 
-            expect(result.current.data.properties.title).toBe('Version 2');
+            expect(result.current.data!.properties!.title).toBe('Version 2');
         });
 
         it('deve lidar com updates rápidos consecutivos', () => {
@@ -386,7 +386,7 @@ describe('useBlockDraft', () => {
                 }
             });
 
-            expect(result.current.data.properties.title).toBe('Update 99');
+            expect(result.current.data!.properties!.title).toBe('Update 99');
             expect(result.current.isDirty).toBe(true);
         });
 
