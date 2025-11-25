@@ -1,29 +1,88 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "https://example.com/schemas/component.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "/schemas/component.schema.json",
+	"$comment": "Component/Block schema - validates individual quiz components",
 	"title": "Component Schema",
 	"type": "object",
 	"additionalProperties": true,
+	"required": ["type"],
 	"properties": {
-		"id": { "type": "string" },
-		"type": { "type": "string" },
-		"properties": { "type": "object", "additionalProperties": true },
+		"id": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9_-]+$",
+			"description": "Unique component identifier"
+		},
+		"type": {
+			"type": "string",
+			"enum": [
+				"heading",
+				"text",
+				"paragraph",
+				"image",
+				"video",
+				"button",
+				"question-single",
+				"question-multiple",
+				"question-grid",
+				"progress-bar",
+				"timer",
+				"countdown",
+				"result-title",
+				"result-cta",
+				"result-share",
+				"offer",
+				"testimonial",
+				"quiz-intro-header",
+				"intro-logo",
+				"form",
+				"container",
+				"spacer",
+				"divider",
+				"custom"
+			],
+			"description": "Component type identifier"
+		},
+		"content": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Component content data"
+		},
+		"properties": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Component properties and configuration"
+		},
+		"styles": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Component style overrides"
+		},
 		"children": {
 			"type": "array",
-			"items": { "$ref": "#/definitions/component" }
+			"items": { "$ref": "#/$defs/component" },
+			"description": "Nested child components"
+		},
+		"metadata": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Component metadata"
 		}
 	},
-	"required": ["type"],
-	"definitions": {
+	"$defs": {
 		"component": {
 			"type": "object",
 			"additionalProperties": true,
+			"required": ["type"],
 			"properties": {
-				"id": { "type": "string" },
+				"id": {
+					"type": "string",
+					"pattern": "^[a-zA-Z0-9_-]+$"
+				},
 				"type": { "type": "string" },
-				"properties": { "type": "object", "additionalProperties": true }
-			},
-			"required": ["type"]
+				"content": { "type": "object", "additionalProperties": true },
+				"properties": { "type": "object", "additionalProperties": true },
+				"styles": { "type": "object", "additionalProperties": true }
+			}
 		}
 	}
 }

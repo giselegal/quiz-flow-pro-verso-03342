@@ -1,0 +1,390 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "/schemas/quiz-template-v4.schema.json",
+	"$comment": "Comprehensive schema for Quiz Template v4.0 - validates complete quiz structure",
+	"title": "Quiz Template v4 Schema",
+	"type": "object",
+	"additionalProperties": true,
+	"required": ["version", "metadata"],
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "JSON Schema reference for IDE validation"
+		},
+		"version": {
+			"type": "string",
+			"pattern": "^\\d+\\.\\d+\\.\\d+$",
+			"description": "Template version in semver format (e.g., 4.0.0)"
+		},
+		"schemaVersion": {
+			"type": "string",
+			"description": "Schema version used for validation"
+		},
+		"templateVersion": {
+			"type": "string",
+			"description": "Alternative version field for backwards compatibility"
+		},
+		"templateId": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9_-]+$",
+			"description": "Unique template identifier"
+		},
+		"templateIdAlias": {
+			"type": "string",
+			"description": "Human-readable template alias"
+		},
+		"name": {
+			"type": "string",
+			"minLength": 1,
+			"description": "Template display name"
+		},
+		"description": {
+			"type": "string",
+			"description": "Template description"
+		},
+		"metadata": {
+			"type": "object",
+			"required": ["id", "name"],
+			"properties": {
+				"id": {
+					"type": "string",
+					"pattern": "^[a-zA-Z0-9_-]+$",
+					"description": "Metadata unique identifier"
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Template name"
+				},
+				"description": {
+					"type": "string"
+				},
+				"author": {
+					"type": "string"
+				},
+				"createdAt": {
+					"type": "string",
+					"description": "Creation timestamp (ISO 8601)"
+				},
+				"updatedAt": {
+					"type": "string",
+					"description": "Last update timestamp (ISO 8601)"
+				},
+				"version": {
+					"type": "string",
+					"pattern": "^\\d+\\.\\d+\\.\\d+$"
+				},
+				"tags": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Template tags for categorization"
+				}
+			},
+			"additionalProperties": true
+		},
+		"theme": {
+			"type": "object",
+			"properties": {
+				"colors": {
+					"type": "object",
+					"properties": {
+						"primary": { "type": "string" },
+						"primaryHover": { "type": "string" },
+						"primaryLight": { "type": "string" },
+						"secondary": { "type": "string" },
+						"background": { "type": "string" },
+						"text": { "type": "string" },
+						"border": { "type": "string" }
+					},
+					"additionalProperties": true
+				},
+				"fonts": {
+					"type": "object",
+					"properties": {
+						"heading": { "type": "string" },
+						"body": { "type": "string" }
+					},
+					"additionalProperties": true
+				},
+				"spacing": {
+					"type": "object",
+					"additionalProperties": { "type": "number" }
+				},
+				"borderRadius": {
+					"type": "object",
+					"additionalProperties": { "type": "number" }
+				}
+			},
+			"additionalProperties": true,
+			"description": "Theme configuration for visual styling"
+		},
+		"settings": {
+			"type": "object",
+			"properties": {
+				"minStages": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 30
+				},
+				"maxStages": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 30
+				},
+				"allowDynamicStages": {
+					"type": "boolean"
+				},
+				"scoring": {
+					"type": "object",
+					"properties": {
+						"enabled": { "type": "boolean" },
+						"method": {
+							"type": "string",
+							"enum": ["simple", "weighted", "category-points", "custom"]
+						}
+					},
+					"additionalProperties": true
+				}
+			},
+			"additionalProperties": true,
+			"description": "Template settings and configuration"
+		},
+		"runtime": {
+			"type": "object",
+			"properties": {
+				"scoring": {
+					"type": "object",
+					"properties": {
+						"weights": { "type": "object" },
+						"optionWeights": { "type": "object" },
+						"weightQuestions": { "type": "number" }
+					},
+					"additionalProperties": true
+				}
+			},
+			"additionalProperties": true,
+			"description": "Runtime configuration for scoring engine"
+		},
+		"stages": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/stage"
+			},
+			"description": "Array of quiz stages"
+		},
+		"steps": {
+			"oneOf": [
+				{
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/step"
+					}
+				},
+				{
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#/$defs/step"
+					}
+				}
+			],
+			"description": "Quiz steps (array or object format)"
+		},
+		"blocks": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/block"
+			},
+			"description": "Root-level block definitions"
+		},
+		"outcomes": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/outcome"
+			},
+			"description": "Possible quiz outcomes/results"
+		},
+		"logic": {
+			"$ref": "#/$defs/logic",
+			"description": "Conditional logic configuration"
+		}
+	},
+	"$defs": {
+		"stage": {
+			"type": "object",
+			"required": ["id"],
+			"properties": {
+				"id": {
+					"type": "string",
+					"pattern": "^[a-zA-Z0-9_-]+$"
+				},
+				"name": { "type": "string" },
+				"description": { "type": "string" },
+				"type": {
+					"type": "string",
+					"enum": ["intro", "question", "transition", "result", "offer", "custom"]
+				},
+				"order": {
+					"type": "integer",
+					"minimum": 0
+				},
+				"blocks": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/block" }
+				},
+				"metadata": {
+					"type": "object",
+					"additionalProperties": true
+				}
+			},
+			"additionalProperties": true
+		},
+		"step": {
+			"type": "object",
+			"properties": {
+				"templateVersion": { "type": "string" },
+				"metadata": {
+					"type": "object",
+					"properties": {
+						"id": { "type": "string" },
+						"name": { "type": "string" },
+						"description": { "type": "string" },
+						"category": { "type": "string" },
+						"tags": {
+							"type": "array",
+							"items": { "type": "string" }
+						}
+					},
+					"additionalProperties": true
+				},
+				"blocks": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/block" }
+				},
+				"sections": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"additionalProperties": true
+					}
+				}
+			},
+			"additionalProperties": true
+		},
+		"block": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"id": {
+					"type": "string",
+					"pattern": "^[a-zA-Z0-9_-]+$"
+				},
+				"type": {
+					"type": "string",
+					"description": "Block type identifier"
+				},
+				"content": {
+					"type": "object",
+					"additionalProperties": true
+				},
+				"properties": {
+					"type": "object",
+					"additionalProperties": true
+				},
+				"styles": {
+					"type": "object",
+					"additionalProperties": true
+				},
+				"children": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/block" }
+				},
+				"metadata": {
+					"type": "object",
+					"additionalProperties": true
+				}
+			},
+			"additionalProperties": true
+		},
+		"outcome": {
+			"type": "object",
+			"required": ["id", "title"],
+			"properties": {
+				"id": {
+					"type": "string",
+					"pattern": "^[a-zA-Z0-9_-]+$"
+				},
+				"title": {
+					"type": "string",
+					"minLength": 1
+				},
+				"description": { "type": "string" },
+				"category": { "type": "string" },
+				"scoreRange": {
+					"type": "object",
+					"properties": {
+						"min": { "type": "number" },
+						"max": { "type": "number" }
+					}
+				},
+				"condition": {
+					"type": "object",
+					"additionalProperties": true
+				},
+				"actions": {
+					"type": "array",
+					"items": { "type": "object" }
+				},
+				"blocks": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/block" }
+				}
+			},
+			"additionalProperties": true
+		},
+		"logic": {
+			"type": "object",
+			"properties": {
+				"conditions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": ["operator"],
+						"properties": {
+							"id": { "type": "string" },
+							"operator": { "type": "string" }
+						},
+						"additionalProperties": true
+					}
+				},
+				"actions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": ["type"],
+						"properties": {
+							"type": { "type": "string" },
+							"params": { "type": "object" }
+						},
+						"additionalProperties": true
+					}
+				},
+				"rules": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": ["when", "then"],
+						"properties": {
+							"when": { "type": "string" },
+							"then": {
+								"type": "array",
+								"items": { "type": "string" }
+							}
+						},
+						"additionalProperties": true
+					}
+				}
+			},
+			"additionalProperties": true
+		}
+	}
+}

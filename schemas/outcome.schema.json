@@ -1,21 +1,82 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "https://example.com/schemas/outcome.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "/schemas/outcome.schema.json",
+	"$comment": "Outcome schema - validates quiz result outcomes and scoring",
 	"title": "Outcome Schema",
 	"type": "object",
 	"additionalProperties": true,
+	"required": ["id", "title"],
 	"properties": {
-		"id": { "type": "string" },
-		"title": { "type": "string" },
-		"description": { "type": "string" },
+		"id": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9_-]+$",
+			"description": "Unique outcome identifier"
+		},
+		"title": {
+			"type": "string",
+			"minLength": 1,
+			"description": "Outcome title displayed to user"
+		},
+		"description": {
+			"type": "string",
+			"description": "Outcome description"
+		},
+		"category": {
+			"type": "string",
+			"description": "Outcome category for grouping"
+		},
 		"scoreRange": {
 			"type": "object",
 			"additionalProperties": false,
+			"required": ["min", "max"],
 			"properties": {
-				"min": { "type": "number" },
-				"max": { "type": "number" }
-			}
+				"min": {
+					"type": "number",
+					"description": "Minimum score for this outcome"
+				},
+				"max": {
+					"type": "number",
+					"description": "Maximum score for this outcome"
+				}
+			},
+			"description": "Score range that triggers this outcome"
 		},
-		"actions": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+		"condition": {
+			"type": "object",
+			"additionalProperties": true,
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": ["score_range", "category_match", "custom"],
+					"description": "Condition type"
+				}
+			},
+			"description": "Advanced condition for outcome selection"
+		},
+		"actions": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"properties": {
+					"type": { "type": "string" },
+					"params": { "type": "object" }
+				}
+			},
+			"description": "Actions to execute when this outcome is selected"
+		},
+		"blocks": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true
+			},
+			"description": "Blocks to display for this outcome"
+		},
+		"metadata": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Outcome metadata"
+		}
 	}
 }

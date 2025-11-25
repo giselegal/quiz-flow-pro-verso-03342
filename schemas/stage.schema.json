@@ -1,23 +1,78 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "https://example.com/schemas/stage.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "/schemas/stage.schema.json",
+	"$comment": "Stage schema - validates quiz stages/steps structure",
 	"title": "Stage Schema",
 	"type": "object",
 	"additionalProperties": true,
+	"required": ["id"],
 	"properties": {
-		"id": { "type": "string" },
-		"title": { "type": "string" },
+		"id": {
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9_-]+$",
+			"description": "Unique stage identifier"
+		},
+		"name": {
+			"type": "string",
+			"description": "Stage display name"
+		},
+		"title": {
+			"type": "string",
+			"description": "Stage title"
+		},
+		"description": {
+			"type": "string",
+			"description": "Stage description"
+		},
+		"type": {
+			"type": "string",
+			"enum": ["intro", "question", "transition", "result", "offer", "custom"],
+			"description": "Stage type"
+		},
+		"order": {
+			"type": "integer",
+			"minimum": 0,
+			"description": "Stage order in the sequence"
+		},
+		"blocks": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": true
+			},
+			"description": "Blocks contained in this stage"
+		},
 		"steps": {
 			"type": "array",
 			"items": {
 				"type": "object",
 				"additionalProperties": true,
 				"properties": {
-					"id": { "type": "string" },
+					"id": {
+						"type": "string",
+						"pattern": "^[a-zA-Z0-9_-]+$"
+					},
 					"title": { "type": "string" },
-					"blocks": { "type": "array", "items": { "type": "object" } }
+					"blocks": {
+						"type": "array",
+						"items": { "type": "object", "additionalProperties": true }
+					}
 				}
-			}
+			},
+			"description": "Nested steps within this stage"
+		},
+		"metadata": {
+			"type": "object",
+			"additionalProperties": true,
+			"properties": {
+				"scoring": {
+					"type": "object",
+					"properties": {
+						"weight": { "type": "number", "minimum": 0 }
+					}
+				}
+			},
+			"description": "Stage metadata including scoring configuration"
 		}
 	}
 }

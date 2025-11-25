@@ -278,13 +278,27 @@ async function main() {
     }
     // Optional: JSON Schema validation via AJV (if installed)
     try {
-        const { default: Ajv } = await import('ajv');
-        const ajv = new Ajv({ allErrors: true, strict: false });
+        // Use AJV 2020 for Draft 2020-12 support
+        const { default: Ajv2020 } = await import('ajv/dist/2020.js');
+        const addFormats = (await import('ajv-formats')).default;
+        const ajv = new Ajv2020({ allErrors: true, strict: false });
+        addFormats(ajv);
         const schemasDir = path.join(ROOT, 'schemas');
-        const templateSchemaPath = path.join(schemasDir, 'template.schema.json');
+        
+        // Load all schemas for cross-referencing
+        const schemaFiles = ['template.schema.json', 'component.schema.json', 'stage.schema.json', 'logic.schema.json', 'outcome.schema.json', 'quiz-template-v4.schema.json'];
+        for (const sf of schemaFiles) {
+            try {
+                const schemaPath = path.join(schemasDir, sf);
+                const schema = JSON.parse(await fs.readFile(schemaPath, 'utf8'));
+                ajv.addSchema(schema, schema.$id || `/schemas/${sf}`);
+            } catch {}
+        }
+        
+        const templateSchemaPath = path.join(schemasDir, 'quiz-template-v4.schema.json');
         let templateSchema = null;
         try { templateSchema = JSON.parse(await fs.readFile(templateSchemaPath, 'utf8')); } catch {}
-        const validateTemplate = templateSchema ? ajv.compile(templateSchema) : null;
+        const validateTemplate = templateSchema ? ajv.getSchema(templateSchema.$id) || ajv.compile(templateSchema) : null;
         for (const a of audits) {
             const p = a.file.replace(/\\/g, '/');
             if (a.error || !a.__data) continue;

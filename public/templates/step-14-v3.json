@@ -1,4 +1,5 @@
 {
+  "$schema": "/schemas/quiz-template-v4.schema.json",
   "templateVersion": "3.0",
   "metadata": {
     "id": "step-14-strategic-v3",
