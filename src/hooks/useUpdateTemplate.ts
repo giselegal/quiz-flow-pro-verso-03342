@@ -185,7 +185,7 @@ export function useCreateTemplate(
         metadata: input.metadata || {},
         status: input.status || 'draft',
         // TODO Phase 2: Integrate with auth context to get real user_id
-        user_id: input.user_id || 'system', // Temporary fallback - should come from auth
+        return data as Template;
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
