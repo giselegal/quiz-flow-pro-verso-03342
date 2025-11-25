@@ -707,13 +707,13 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
     );
 };
 
-interface SinglePropertiesPanelProps {
+import type { ModernPropertiesPanelProps } from '@/types/editor/PropertiesPanelTypes';
+
+interface SinglePropertiesPanelProps extends Omit<ModernPropertiesPanelProps, 'selectedBlock'> {
     selectedBlock: UnifiedBlock | null;
-    onUpdate?: (updates: Record<string, any>) => void; // Compatível com o formato do editor atual
-    onDelete?: () => void;
-    onDuplicate?: () => void;
-    onClose?: () => void;
-}interface PropertyFieldProps {
+}
+
+interface PropertyFieldProps {
     property: any;
     value: any;
     onChange: (value: any) => void;
