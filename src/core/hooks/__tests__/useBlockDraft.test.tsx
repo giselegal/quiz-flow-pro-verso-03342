@@ -7,6 +7,8 @@
  * - Undo/Redo
  * - Validação
  * - Commit/Cancel
+ * 
+ * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -17,7 +19,7 @@ import { createBlock } from '../../schemas/blockSchema';
 describe('useBlockDraft', () => {
     describe('Inicialização', () => {
         it('deve inicializar com bloco fornecido', () => {
-            const block = createBlock('intro-title', { title: 'Initial' });
+            const block = createBlock('intro-title', { properties: { title: 'Initial' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -27,7 +29,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve inicializar sem validação por padrão', () => {
-            const block = createBlock('intro-title', { title: 'Test' });
+            const block = createBlock('intro-title', { properties: { title: 'Test' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -43,7 +45,7 @@ describe('useBlockDraft', () => {
 
     describe('Update operations', () => {
         it('deve atualizar conteúdo e marcar como dirty', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -56,10 +58,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve atualizar múltiplos campos', () => {
-            const block = createBlock('intro-title', {
-                title: 'Original Title',
-                subtitle: 'Original Subtitle',
-            });
+            const block = createBlock('intro-title', { properties: { title: 'Original Title', subtitle: 'Original Subtitle' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -73,7 +72,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve atualizar propriedades inteiras', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -86,7 +85,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve fazer update genérico do bloco', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -101,7 +100,7 @@ describe('useBlockDraft', () => {
 
     describe('Dirty tracking', () => {
         it('deve iniciar como não-dirty', () => {
-            const block = createBlock('intro-title', { title: 'Test' });
+            const block = createBlock('intro-title', { properties: { title: 'Test' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -109,7 +108,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve marcar como dirty após mudança', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -121,7 +120,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve limpar dirty após commit', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
             const onCommit = vi.fn();
 
             const { result } = renderHook(() => useBlockDraft(block, { onCommit }));
@@ -143,7 +142,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve limpar dirty após cancel', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -164,7 +163,7 @@ describe('useBlockDraft', () => {
 
     describe('Undo/Redo', () => {
         it('deve fazer undo de mudança', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -182,7 +181,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve fazer redo de mudança desfeita', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -201,7 +200,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve lidar com múltiplos undo/redo', () => {
-            const block = createBlock('intro-title', { title: 'Step 0' });
+            const block = createBlock('intro-title', { properties: { title: 'Step 0' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -230,7 +229,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve indicar quando pode fazer undo', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -244,7 +243,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve indicar quando pode fazer redo', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -259,7 +258,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve limpar redo history ao fazer nova mudança', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -280,7 +279,7 @@ describe('useBlockDraft', () => {
 
     describe('Validação', () => {
         it('deve validar automaticamente quando habilitado', () => {
-            const block = createBlock('intro-title', { title: 'Valid' });
+            const block = createBlock('intro-title', { properties: { title: 'Valid' } });
 
             const { result } = renderHook(() =>
                 useBlockDraft(block, { validateOnChange: true })
@@ -297,7 +296,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve não validar quando desabilitado', () => {
-            const block = createBlock('intro-title', { title: 'Test' });
+            const block = createBlock('intro-title', { properties: { title: 'Test' } });
 
             const { result } = renderHook(() =>
                 useBlockDraft(block, { validateOnChange: false })
@@ -313,7 +312,7 @@ describe('useBlockDraft', () => {
 
     describe('Commit/Cancel', () => {
         it('deve chamar onCommit com dados atualizados', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
             const onCommit = vi.fn();
 
             const { result } = renderHook(() => useBlockDraft(block, { onCommit }));
@@ -332,7 +331,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve restaurar estado original ao cancelar', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -346,7 +345,7 @@ describe('useBlockDraft', () => {
         });
 
         it('não deve chamar onCommit ao cancelar', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
             const onCommit = vi.fn();
 
             const { result } = renderHook(() => useBlockDraft(block, { onCommit }));
@@ -362,14 +361,14 @@ describe('useBlockDraft', () => {
 
     describe('Edge cases', () => {
         it('deve lidar com bloco sendo atualizado externamente', () => {
-            const block1 = createBlock('intro-title', { title: 'Version 1' });
+            const block1 = createBlock('intro-title', { properties: { title: 'Version 1' } });
 
             const { result, rerender } = renderHook(
                 ({ block }) => useBlockDraft(block),
                 { initialProps: { block: block1 } }
             );
 
-            const block2 = createBlock('intro-title', { title: 'Version 2' });
+            const block2 = createBlock('intro-title', { properties: { title: 'Version 2' } });
 
             rerender({ block: block2 });
 
@@ -377,7 +376,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve lidar com updates rápidos consecutivos', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 
@@ -392,7 +391,7 @@ describe('useBlockDraft', () => {
         });
 
         it('deve manter history limitado', () => {
-            const block = createBlock('intro-title', { title: 'Original' });
+            const block = createBlock('intro-title', { properties: { title: 'Original' } });
 
             const { result } = renderHook(() => useBlockDraft(block));
 

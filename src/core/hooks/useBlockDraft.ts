@@ -47,13 +47,13 @@ import { appLogger } from '@/lib/utils/appLogger';
 
 export interface BlockDraftAPI {
     /** Dados do rascunho atual */
-    data: Block;
+    data: Block | null;
     
     /** Se o rascunho tem mudanças não salvas */
     isDirty: boolean;
     
-    /** Erro de validação, se houver */
-    validationError: string | null;
+    /** Erros de validação */
+    errors: string[];
     
     /** Se o rascunho é válido */
     isValid: boolean;
@@ -64,8 +64,11 @@ export interface BlockDraftAPI {
     /** Atualizar content específico */
     updateContent: (key: string, value: any) => void;
     
-    /** Atualizar properties específica */
+    /** Atualizar property específica */
     updateProperty: (key: string, value: any) => void;
+    
+    /** Atualizar properties inteiras */
+    updateProperties: (properties: Record<string, any>) => void;
     
     /** Salvar rascunho (commit para estado global) */
     commit: () => void;
@@ -99,6 +102,9 @@ export interface UseBlockDraftOptions {
     /** Validação customizada adicional */
     customValidation?: (block: Block) => string | null;
     
+    /** Validar em cada mudança */
+    validateOnChange?: boolean;
+    
     /** Debounce de validação em ms */
     validationDebounce?: number;
 }
@@ -107,65 +113,84 @@ export interface UseBlockDraftOptions {
  * Hook principal
  */
 export function useBlockDraft(
-    originalBlock: Block,
+    originalBlock: Block | null,
     options: UseBlockDraftOptions = {}
 ): BlockDraftAPI {
-    const [draftData, setDraftData] = useState<Block>(originalBlock);
-    const [history, setHistory] = useState<Block[]>([originalBlock]);
+    const [draftData, setDraftData] = useState<Block | null>(originalBlock);
+    const [history, setHistory] = useState<Array<Block | null>>([originalBlock]);
     const [historyIndex, setHistoryIndex] = useState(0);
+    const HISTORY_LIMIT = 100;
     
     // Sincronizar com mudanças externas do block original
     useEffect(() => {
-        setDraftData(originalBlock);
-        setHistory([originalBlock]);
-        setHistoryIndex(0);
-    }, [originalBlock.id]); // Resetar apenas quando ID muda
+        if (originalBlock) {
+            setDraftData(originalBlock);
+            setHistory([originalBlock]);
+            setHistoryIndex(0);
+        }
+    }, [originalBlock?.id]); // Resetar apenas quando ID muda
     
     // Dirty tracking
     const isDirty = useMemo(() => {
+        if (!draftData || !originalBlock) return false;
         return JSON.stringify(draftData) !== JSON.stringify(originalBlock);
     }, [draftData, originalBlock]);
     
     // Validação
-    const { validationError, isValid } = useMemo(() => {
-        const result = validateBlock(draftData);
-        
-        if (!result.success) {
+    const { errors, isValid } = useMemo(() => {
+        // Não validar se desabilitado ou se não há dados
+        if (!draftData || options.validateOnChange === false) {
             return {
-                validationError: result.error.errors[0]?.message || 'Erro de validação',
-                isValid: false,
+                errors: [],
+                isValid: true,
             };
+        }
+        
+        const errorList: string[] = [];
+        
+        // Validação com Zod
+        const result = validateBlock(draftData);
+        if (!result.success) {
+            errorList.push(...result.error.errors.map(e => e.message));
         }
         
         // Validação customizada
         if (options.customValidation) {
             const customError = options.customValidation(draftData);
             if (customError) {
-                return {
-                    validationError: customError,
-                    isValid: false,
-                };
+                errorList.push(customError);
             }
         }
         
         return {
-            validationError: null,
-            isValid: true,
+            errors: errorList,
+            isValid: errorList.length === 0,
         };
-    }, [draftData, options.customValidation]);
+    }, [draftData, options.validateOnChange, options.customValidation]);
     
     // Update com history tracking
     const update = useCallback((updates: Partial<Block>) => {
         setDraftData(prev => {
+            if (!prev) return prev;
             const next = { ...prev, ...updates };
             
-            // Adicionar ao histórico
+            // Adicionar ao histórico com limite
             setHistory(h => {
                 const newHistory = h.slice(0, historyIndex + 1);
                 newHistory.push(next);
+                
+                // Limitar tamanho do history
+                if (newHistory.length > HISTORY_LIMIT) {
+                    return newHistory.slice(-HISTORY_LIMIT);
+                }
+                
                 return newHistory;
             });
-            setHistoryIndex(i => i + 1);
+            setHistoryIndex(i => {
+                const newIndex = i + 1;
+                // Ajustar índice se exceder limite
+                return newIndex >= HISTORY_LIMIT ? HISTORY_LIMIT - 1 : newIndex;
+            });
             
             return next;
         });
@@ -173,26 +198,40 @@ export function useBlockDraft(
     
     // Update helpers
     const updateContent = useCallback((key: string, value: any) => {
+        if (!draftData) return;
         update({
             content: {
                 ...draftData.content,
                 [key]: value,
             },
         });
-    }, [draftData.content, update]);
+    }, [draftData, update]);
     
     const updateProperty = useCallback((key: string, value: any) => {
+        if (!draftData) return;
         update({
             properties: {
                 ...draftData.properties,
                 [key]: value,
             },
         });
-    }, [draftData.properties, update]);
+    }, [draftData, update]);
+    
+    const updateProperties = useCallback((properties: Record<string, any>) => {
+        if (!draftData) return;
+        update({
+            properties: {
+                ...draftData.properties,
+                ...properties,
+            },
+        });
+    }, [draftData, update]);
     
     // Commit
     const commit = useCallback(() => {
-        if (!isValid) {
+        if (!draftData) return;
+        
+        if (!isValid && options.validateOnChange !== false) {
             appLogger.warn('[useBlockDraft] Tentativa de commit com dados inválidos');
             return;
         }
@@ -200,13 +239,15 @@ export function useBlockDraft(
         appLogger.debug('[useBlockDraft] Commit:', draftData.id);
         options.onCommit?.(draftData);
         
-        // Resetar history após commit
+        // Resetar history após commit mas manter isDirty como false
         setHistory([draftData]);
         setHistoryIndex(0);
     }, [draftData, isValid, options]);
     
     // Cancel
     const cancel = useCallback(() => {
+        if (!originalBlock) return;
+        
         appLogger.debug('[useBlockDraft] Cancel:', originalBlock.id);
         setDraftData(originalBlock);
         setHistory([originalBlock]);
@@ -238,11 +279,12 @@ export function useBlockDraft(
     return {
         data: draftData,
         isDirty,
-        validationError,
+        errors,
         isValid,
         update,
         updateContent,
         updateProperty,
+        updateProperties,
         commit,
         cancel,
         reset,
