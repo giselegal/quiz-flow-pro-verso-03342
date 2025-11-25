@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>🔧 FIX Properties Panel</title>
+    <script>
+        // ATIVAR IMEDIATAMENTE
+        localStorage.setItem('editor:useSimplePropertiesPanel', 'true');
+        
+        // Redirecionar para o editor
+        setTimeout(() => {
+            alert('✅ Properties Panel ATIVADO!\n\nRedirecionando para o editor...');
+            window.location.href = '/editor?template=quiz21StepsComplete';
+        }, 500);
+    </script>
+</head>
+<body style="font-family: monospace; padding: 50px; background: #000; color: #0f0;">
+    <h1>⚡ Ativando Properties Panel...</h1>
+    <p>Aguarde...</p>
+</body>
+</html>

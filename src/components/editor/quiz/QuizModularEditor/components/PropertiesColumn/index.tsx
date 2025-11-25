@@ -46,15 +46,30 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
     // ✅ WAVE 1 FIX: Auto-select primeiro bloco se nenhum selecionado
     const selectedBlock = useMemo(() => {
+        console.log('🔍 [PropertiesColumn] selectedBlock recalculando:', {
+            temSelectedBlockProp: !!selectedBlockProp,
+            selectedBlockPropId: selectedBlockProp?.id,
+            blocksLength: blocks?.length || 0,
+            primeiroBlockId: blocks?.[0]?.id
+        });
+
         if (selectedBlockProp) {
+            console.log('✅ [PropertiesColumn] Usando selectedBlockProp:', selectedBlockProp.id);
             return selectedBlockProp;
         }
 
         // Fallback: auto-selecionar primeiro bloco
         const firstBlock = blocks && blocks.length > 0 ? blocks[0] : null;
         if (firstBlock && onBlockSelect && !prevSelectedIdRef.current) {
+            console.log('🎯 [PropertiesColumn] AUTO-SELECIONANDO primeiro bloco:', firstBlock.id);
             appLogger.info('[PropertiesColumn] Auto-selecionando primeiro bloco:', { data: [firstBlock.id] });
             setTimeout(() => onBlockSelect(firstBlock.id), 0);
+        } else {
+            console.log('⚠️ [PropertiesColumn] NÃO vai auto-selecionar:', {
+                temFirstBlock: !!firstBlock,
+                temOnBlockSelect: !!onBlockSelect,
+                prevSelected: prevSelectedIdRef.current
+            });
         }
 
         return firstBlock;
@@ -193,6 +208,12 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     const hasErrors = Object.keys(errors).length > 0;
 
     if (!selectedBlock) {
+        console.error('❌ [PropertiesColumn] NENHUM BLOCO SELECIONADO!', {
+            selectedBlockProp,
+            blocksLength: blocks?.length || 0,
+            blocks: blocks?.map(b => ({ id: b.id, type: b.type }))
+        });
+
         return (
             <div className="w-80 border-l bg-gradient-to-b from-muted/20 to-background">
                 <div className="p-4 border-b bg-background/50 backdrop-blur-sm">
@@ -216,6 +237,15 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                             <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
                             <p className="text-xs text-blue-700 dark:text-blue-300">
                                 Arraste componentes da biblioteca<br />para começar a criar seu quiz
+                            </p>
+                        </div>
+                    )}
+                    {blocks && blocks.length > 0 && (
+                        <div className="mt-4 p-3 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200 dark:border-red-900">
+                            <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 mx-auto mb-2" />
+                            <p className="text-xs text-red-700 dark:text-red-300">
+                                🐛 DEBUG: Há {blocks.length} blocos mas nenhum selecionado!<br />
+                                Clique em um bloco no canvas.
                             </p>
                         </div>
                     )}

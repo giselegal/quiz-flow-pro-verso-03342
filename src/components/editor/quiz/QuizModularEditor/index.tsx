@@ -471,9 +471,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 🚀 PERFORMANCE: Callbacks otimizados para handlers do WYSIWYG
     const handleWYSIWYGBlockSelect = useCallback((id: string | null) => {
+        console.log('🖱️ [QuizModularEditor] handleWYSIWYGBlockSelect chamado:', {
+            blockId: id,
+            currentSelectedId: wysiwyg.state.selectedBlockId
+        });
         wysiwyg.actions.selectBlock(id);
         handleBlockSelect(id);
-    }, [wysiwyg.actions, handleBlockSelect]);
+    }, [wysiwyg.actions, handleBlockSelect, wysiwyg.state.selectedBlockId]);
 
     const handleWYSIWYGBlockUpdate = useCallback((id: string, updates: Partial<Block>) => {
         console.group('🎨 [WYSIWYG] onBlockUpdate chamado');
@@ -500,10 +504,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [wysiwyg.actions, setSelectedBlock]);
 
     // 🚀 PERFORMANCE: Memo para bloco selecionado
-    const selectedBlock = useMemo(
-        () => wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) || undefined,
-        [wysiwyg.state.blocks, wysiwyg.state.selectedBlockId]
-    );
+    const selectedBlock = useMemo(() => {
+        const found = wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) || undefined;
+        console.log('🎯 [QuizModularEditor] selectedBlock calculado:', {
+            selectedBlockId: wysiwyg.state.selectedBlockId,
+            blocksLength: wysiwyg.state.blocks.length,
+            found: !!found,
+            foundId: found?.id,
+            foundType: found?.type
+        });
+        return found;
+    }, [wysiwyg.state.blocks, wysiwyg.state.selectedBlockId]);
 
     // 🚀 PERFORMANCE: Virtualização para listas grandes (> 50 blocos)
     const virtualization = useVirtualizedBlocks({
