@@ -10,7 +10,7 @@ import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
 import PropertiesColumnWithJson from '@/components/editor/quiz/QuizModularEditor/components/PropertiesColumn/PropertiesColumnWithJson';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
-import { useEditor } from '@/contexts/editor/EditorContext';
+import { useEditor } from '@/contexts/editor/EditorStateProvider';
 import { templateService } from '@/services/canonical/TemplateService';
 
 interface UnifiedEditorLayoutProps {
