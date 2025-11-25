@@ -81,7 +81,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     }, [selectedBlock?.id]);
 
     // Obtém definição oficial do bloco diretamente do BlockRegistry
-    const { definition: blockDefinition, schema, source: blockDefinitionSource } = useBlockDefinition(selectedBlock?.type);
+    const { definition: blockDefinition, schema } = useBlockDefinition(selectedBlock?.type);
 
     const initialProperties = useMemo(() => {
         if (!selectedBlock) return {};
