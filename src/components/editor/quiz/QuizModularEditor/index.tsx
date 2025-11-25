@@ -1294,6 +1294,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Publish funnel
     const handlePublish = useCallback(async () => {
         try {
+            let funnelId = unifiedState.currentFunnel?.id;
+            
             if (!unifiedState.currentFunnel) {
                 const created = await unified.createFunnel('Meu Quiz');
                 if (!created?.id) {
@@ -1304,6 +1306,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     });
                     return;
                 }
+                funnelId = created.id;
             }
             // 🔍 G5 FIX: Validação de integridade antes de publicar
             if (loadedTemplate) {
@@ -1368,6 +1371,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 title: 'Publicado',
                 message: 'Seu funil foi publicado com sucesso!',
             });
+
+            // 🎉 Redirecionar para página de sucesso
+            if (funnelId) {
+                const successUrl = `/publish/success?funnelId=${encodeURIComponent(funnelId)}&publishedAt=${encodeURIComponent(new Date().toISOString())}`;
+                window.location.href = successUrl;
+            }
         } catch (e) {
             showToast({
                 type: 'error',
@@ -2008,7 +2017,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
-                                                        (adapter.actions.deleteBlock ?? removeBlock)(id);
+                                                        // ✅ Use canonical deleteBlock from adapter
+                                                        adapter.actions.deleteBlock(id);
                                                     }) : undefined}
                                                     onMoveBlock={previewMode === 'live' ? ((from, to) => {
                                                         wysiwyg.actions.reorderBlocks(from, to);

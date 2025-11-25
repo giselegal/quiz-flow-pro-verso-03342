@@ -1,6 +1,11 @@
 /**
  * 🚀 OptimizedPropertiesPanel - Painel de Propriedades Otimizado v2.0
  *
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see archive/legacy/README.md - Instruções de migração
+ *
  * Melhorias implementadas:
  * - Performance otimizada com memoização avançada
  * - Loading states e feedback visual aprimorado

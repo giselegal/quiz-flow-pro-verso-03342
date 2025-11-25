@@ -1,6 +1,11 @@
 /**
  * 🎛️ MODERN PROPERTIES PANEL
  * 
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see archive/legacy/README.md - Instruções de migração
+ * 
  * Sistema de painel de propriedades moderno baseado em shadcn/ui + Radix UI
  * Substitui o LEVA com interface mais profissional e organizada por categorias
  */

@@ -1,5 +1,12 @@
 /**
- * 🎯 SinglePropertiesPanel - Painel de propriedades unificado e simplificado
+ * 🎯 SinglePropertiesPanel - Painel de propriedades CANÔNICO e OFICIAL
+ * 
+ * ⚠️ IMPORTANTE: Este é o painel de propriedades OFICIAL e RECOMENDADO no fluxo principal.
+ * Para novos desenvolvimentos, sempre use SinglePropertiesPanel (diretamente ou via PropertiesColumn).
+ * 
+ * Painéis legados (ModernPropertiesPanel, UniversalNoCodePanel, OptimizedPropertiesPanel, 
+ * UltraUnifiedPropertiesPanel, PropertiesPanel.tsx) foram movidos para archive/legacy 
+ * e devem ser usados APENAS para referência ou demonstração.
  * 
  * Características:
  * - ✅ IDs únicos garantidos por instância
@@ -7,6 +14,11 @@
  * - ✅ Todas as funcionalidades dos editores específicos
  * - ✅ Zero duplicação de código
  * - ✅ Performance otimizada
+ * - ✅ Integração com useDraftProperties para validação
+ * - ✅ Sistema híbrido: editores especializados + fallback genérico
+ * 
+ * @see PropertiesColumn - Wrapper que utiliza SinglePropertiesPanel
+ * @see PropertiesPanelTypes.ts - Tipos canônicos para o painel
  */
 
 import React, { useCallback, useMemo, useId, memo, lazy, Suspense, useState, useRef, useEffect } from 'react';
@@ -719,11 +731,22 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
     );
 };
 
-import type { ModernPropertiesPanelProps } from '@/types/editor/PropertiesPanelTypes';
+import type { ModernPropertiesPanelProps, PropertiesPanelProps } from '@/types/editor/PropertiesPanelTypes';
 
-interface SinglePropertiesPanelProps extends Omit<ModernPropertiesPanelProps, 'selectedBlock'> {
+/**
+ * Props canônicas para SinglePropertiesPanel
+ * Estende ModernPropertiesPanelProps com UnifiedBlock ao invés de Block
+ * 
+ * @see PropertiesPanelProps - Interface base canônica
+ * @see ModernPropertiesPanelProps - Interface estendida com selectedBlock
+ */
+export interface SinglePropertiesPanelProps extends Omit<ModernPropertiesPanelProps, 'selectedBlock'> {
+    /** Bloco selecionado (UnifiedBlock ou null) */
     selectedBlock: UnifiedBlock | null;
 }
+
+// Re-export canonical types for consumers
+export type { PropertiesPanelProps, ModernPropertiesPanelProps } from '@/types/editor/PropertiesPanelTypes';
 
 interface PropertyFieldProps {
     property: any;
