@@ -276,8 +276,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [useSimplePropertiesPanel, setUseSimplePropertiesPanel] = useState<boolean>(() => {
         try {
             const v = localStorage.getItem('qm-editor:use-simple-properties');
-            return v === 'true';
-        } catch { return false; }
+            const isTrue = v === 'true';
+            console.log('🔍 [QuizModularEditor] useSimplePropertiesPanel inicial:', {
+                localStorageValue: v,
+                resultado: isTrue,
+                chave: 'qm-editor:use-simple-properties'
+            });
+            // 🔥 FORÇAR TRUE POR PADRÃO (teste)
+            return isTrue || true; // TRUE por padrão!
+        } catch { return true; } // TRUE em caso de erro
     });
 
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
@@ -1756,16 +1763,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             variant={useSimplePropertiesPanel ? "default" : "outline"}
                             onClick={() => {
                                 const newValue = !useSimplePropertiesPanel;
+                                console.log('🔄 [QuizModularEditor] Alternando painel:', {
+                                    de: useSimplePropertiesPanel,
+                                    para: newValue
+                                });
                                 setUseSimplePropertiesPanel(newValue);
                                 try {
                                     localStorage.setItem('qm-editor:use-simple-properties', String(newValue));
+                                    console.log('💾 localStorage atualizado:', localStorage.getItem('qm-editor:use-simple-properties'));
                                 } catch { }
-                                appLogger.info(`[QuizModularEditor] Painel de propriedades: ${newValue ? 'SIMPLES' : 'COMPLETO'}`);
+                                appLogger.info(`[QuizModularEditor] Painel de propriedades: ${newValue ? 'PropertiesColumn' : 'PropertiesColumnWithJson'}`);
+                                showToast({ type: 'info', title: `${newValue ? '✅ PropertiesColumn' : '📝 PropertiesColumnWithJson'} ativado` });
                             }}
                             className="h-7"
-                            title="Alternar entre painel simples (debug) e completo"
+                            title="Alternar entre PropertiesColumn (principal) e PropertiesColumnWithJson (legado)"
                         >
-                            {useSimplePropertiesPanel ? '🐛 Debug' : '⚙️ Full'}
+                            {useSimplePropertiesPanel ? '✅ PropertiesColumn' : '📝 WithJson'}
                         </Button>
 
                         {/* 🎯 FASE 3.1: Indicador de auto-save com novo hook */}
@@ -2020,26 +2033,35 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     {/* DEBUG removido para limpar console */}
 
                                     {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
-                                    {useSimplePropertiesPanel ? (
-                                        <PropertiesColumn
-                                            selectedBlock={selectedBlock}
-                                            blocks={wysiwyg.state.blocks}
-                                            onBlockSelect={handleWYSIWYGBlockSelect}
-                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                            onClearSelection={handleWYSIWYGClearSelection}
-                                        />
-                                    ) : (
-                                        <PropertiesColumnWithJson
-                                            selectedBlock={selectedBlock}
-                                            blocks={wysiwyg.state.blocks}
-                                            onBlockSelect={handleWYSIWYGBlockSelect}
-                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                            onClearSelection={handleWYSIWYGClearSelection}
-                                            fullTemplate={fullTemplate}
-                                            onTemplateChange={handleTemplateChange}
-                                            templateId={currentStepKey}
-                                        />
-                                    )}
+                                    {(() => {
+                                        console.log('🎨 [QuizModularEditor] Renderizando painel:', {
+                                            useSimplePropertiesPanel,
+                                            painel: useSimplePropertiesPanel ? 'PropertiesColumn' : 'PropertiesColumnWithJson',
+                                            selectedBlock: selectedBlock?.id,
+                                            blocksLength: wysiwyg.state.blocks.length
+                                        });
+
+                                        return useSimplePropertiesPanel ? (
+                                            <PropertiesColumn
+                                                selectedBlock={selectedBlock}
+                                                blocks={wysiwyg.state.blocks}
+                                                onBlockSelect={handleWYSIWYGBlockSelect}
+                                                onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                                onClearSelection={handleWYSIWYGClearSelection}
+                                            />
+                                        ) : (
+                                            <PropertiesColumnWithJson
+                                                selectedBlock={selectedBlock}
+                                                blocks={wysiwyg.state.blocks}
+                                                onBlockSelect={handleWYSIWYGBlockSelect}
+                                                onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                                onClearSelection={handleWYSIWYGClearSelection}
+                                                fullTemplate={fullTemplate}
+                                                onTemplateChange={handleTemplateChange}
+                                                templateId={currentStepKey}
+                                            />
+                                        );
+                                    })()}
                                 </div>
                             </Suspense>
                         </Panel>
