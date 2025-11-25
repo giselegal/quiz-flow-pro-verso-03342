@@ -71,6 +71,14 @@ export interface UseTemplateOptions extends Omit<UseQueryOptions<Template | null
   enabled?: boolean;
 }
 
+/**
+ * Options for hooks that return arrays of templates
+ */
+export interface UseTemplatesOptions extends Omit<UseQueryOptions<Template[], Error>, 'queryKey' | 'queryFn'> {
+  staleTime?: number;
+  enabled?: boolean;
+}
+
 // ============================================================================
 // HOOK
 // ============================================================================
@@ -154,7 +162,7 @@ export function useTemplate(
  */
 export function useTemplates(
   ids: string[],
-  options: UseTemplateOptions = {}
+  options: UseTemplatesOptions = {}
 ): UseQueryResult<Template[], Error> {
   const {
     staleTime = 5 * 60 * 1000,
@@ -187,7 +195,7 @@ export function useTemplates(
     retry: 2,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     
-    ...restOptions,
+    ...(restOptions as any),
   });
 }
 
@@ -204,7 +212,7 @@ export function useTemplateList(
     userId?: string;
     limit?: number;
   } = {},
-  options: UseTemplateOptions = {}
+  options: UseTemplatesOptions = {}
 ): UseQueryResult<Template[], Error> {
   const {
     staleTime = 2 * 60 * 1000, // 2 minutes for list
@@ -247,7 +255,7 @@ export function useTemplateList(
     enabled,
     retry: 2,
     
-    ...restOptions,
+    ...(restOptions as any),
   });
 }
 
