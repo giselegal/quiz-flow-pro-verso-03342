@@ -205,51 +205,129 @@ export function useBlockDraft(
     
     // Update helpers
     const updateContent = useCallback((key: string, value: any) => {
-        if (!draftData) return;
-        update({
-            properties: {
-                ...draftData.properties,
-                [key]: value,
-            },
+        setDraftData(prev => {
+            if (!prev) return prev;
+            const next = {
+                ...prev,
+                properties: {
+                    ...prev.properties,
+                    [key]: value,
+                },
+            };
+            
+            // Atualizar histórico usando ref para valor atual
+            setHistory(h => {
+                const currentIndex = historyIndexRef.current;
+                const newHistory = h.slice(0, currentIndex + 1);
+                newHistory.push(next);
+                
+                // Limitar tamanho do history
+                if (newHistory.length > HISTORY_LIMIT) {
+                    return newHistory.slice(-HISTORY_LIMIT);
+                }
+                
+                return newHistory;
+            });
+            
+            setHistoryIndex(i => {
+                const newIndex = i + 1;
+                return newIndex >= HISTORY_LIMIT ? HISTORY_LIMIT - 1 : newIndex;
+            });
+            
+            return next;
         });
-    }, [draftData, update]);
+    }, []);
     
     const updateProperty = useCallback((key: string, value: any) => {
-        if (!draftData) return;
-        update({
-            properties: {
-                ...draftData.properties,
-                [key]: value,
-            },
+        setDraftData(prev => {
+            if (!prev) return prev;
+            const next = {
+                ...prev,
+                properties: {
+                    ...prev.properties,
+                    [key]: value,
+                },
+            };
+            
+            // Atualizar histórico usando ref para valor atual
+            setHistory(h => {
+                const currentIndex = historyIndexRef.current;
+                const newHistory = h.slice(0, currentIndex + 1);
+                newHistory.push(next);
+                
+                // Limitar tamanho do history
+                if (newHistory.length > HISTORY_LIMIT) {
+                    return newHistory.slice(-HISTORY_LIMIT);
+                }
+                
+                return newHistory;
+            });
+            
+            setHistoryIndex(i => {
+                const newIndex = i + 1;
+                return newIndex >= HISTORY_LIMIT ? HISTORY_LIMIT - 1 : newIndex;
+            });
+            
+            return next;
         });
-    }, [draftData, update]);
+    }, []);
     
     const updateProperties = useCallback((properties: Record<string, any>) => {
-        if (!draftData) return;
-        update({
-            properties: {
-                ...draftData.properties,
-                ...properties,
-            },
+        setDraftData(prev => {
+            if (!prev) return prev;
+            const next = {
+                ...prev,
+                properties: {
+                    ...prev.properties,
+                    ...properties,
+                },
+            };
+            
+            // Atualizar histórico usando ref para valor atual
+            setHistory(h => {
+                const currentIndex = historyIndexRef.current;
+                const newHistory = h.slice(0, currentIndex + 1);
+                newHistory.push(next);
+                
+                // Limitar tamanho do history
+                if (newHistory.length > HISTORY_LIMIT) {
+                    return newHistory.slice(-HISTORY_LIMIT);
+                }
+                
+                return newHistory;
+            });
+            
+            setHistoryIndex(i => {
+                const newIndex = i + 1;
+                return newIndex >= HISTORY_LIMIT ? HISTORY_LIMIT - 1 : newIndex;
+            });
+            
+            return next;
         });
-    }, [draftData, update]);
+    }, []);
     
     // Commit
     const commit = useCallback(() => {
-        if (!draftData) return;
-        
-        if (!isValid && options.validateOnChange !== false) {
-            appLogger.warn('[useBlockDraft] Tentativa de commit com dados inválidos');
-            return;
-        }
-        
-        appLogger.debug('[useBlockDraft] Commit:', draftData.id);
-        options.onCommit?.(draftData);
-        
-        // Resetar history após commit mas manter isDirty como false
-        setHistory([draftData]);
-        setHistoryIndex(0);
-    }, [draftData, isValid, options]);
+        // Usar setDraftData para pegar o valor mais recente
+        setDraftData(current => {
+            if (!current) return current;
+            
+            if (!isValid && options.validateOnChange !== false) {
+                appLogger.warn('[useBlockDraft] Tentativa de commit com dados inválidos');
+                return current;
+            }
+            
+            appLogger.debug('[useBlockDraft] Commit:', current.id);
+            options.onCommit?.(current);
+            
+            // Resetar history após commit mas manter isDirty como false
+            setHistory([current]);
+            setHistoryIndex(0);
+            historyIndexRef.current = 0;
+            
+            return current;
+        });
+    }, [isValid, options]);
     
     // Cancel
     const cancel = useCallback(() => {
