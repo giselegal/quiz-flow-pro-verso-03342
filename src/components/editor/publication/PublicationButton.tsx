@@ -47,11 +47,10 @@ export function PublicationSettingsButton({
             appLogger.debug('🚀 PublicationButton: Iniciando publicação com sincronização...');
 
             // 1. Buscar dados atuais do funil usando serviço canônico
-            const funnelResult = await funnelService.getFunnel(funnelId);
-            if (!funnelResult.success || !funnelResult.data) {
+            const currentFunnel = await funnelService.getFunnel(funnelId);
+            if (!currentFunnel) {
                 throw new Error('Funil não encontrado');
             }
-            const currentFunnel = funnelResult.data;
 
             // 2. Publicar usando o serviço original
             await publishFunnel();
