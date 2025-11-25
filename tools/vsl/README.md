@@ -52,6 +52,27 @@ cp -f tools/vsl/output/vsl-quizflowpro.mp4 public/videos/vsl-quizflowpro.mp4
 ```
 A Home já possui um botão “Assistir VSL” com modal player que carrega este arquivo.
 
+## Cenas reais com pessoas
+Para usar vídeos reais que combinam com a narrativa, adicione arquivos MP4 em `tools/vsl/assets/videos/` com os nomes abaixo (o `config.json` já referencia estes caminhos):
+
+- `01-frustracao.mp4` — frustração/baixa conversão
+- `02-metricas-duvida.mp4` — métricas/analytics e indecisão
+- `03-flow-interativo.mp4` — interação guiada em dispositivo
+- `04-quiz-mobile.mp4` — quiz em smartphone
+- `05-saas-dashboard.mp4` — dashboard SaaS + equipe
+- `06-analytics.mp4` — gráficos e crescimento
+- `07-equipe-otimista.mp4` — equipe comemorando
+- `08-templates.mp4` — biblioteca de templates e personalização
+- `09-depoimentos.mp4` — depoimentos/prova social
+- `10-cta.mp4` — ação de clique/inscrição
+
+Fontes recomendadas (licenças adequadas):
+- Pexels: vídeos gratuitos sem atribuição (https://www.pexels.com/pt-br/videos/)
+- Pixabay: verifique licença por clipe (https://pixabay.com/videos/)
+- Videvo: alguns exigem atribuição (https://www.videvo.net/)
+
+Importante: não inclua material sem licença ou com marcas registradas reconhecíveis.
+
 ## Dicas de conteúdo
 - Use vídeos reais com pessoas (frustração, equipe, métricas, depoimentos). Evite conteúdos com direitos autorais sem licença adequada.
 - Mantenha duração por cena entre 4–7s (o script estima baseado no texto, mas você pode ajustar encurtando linhas).
