@@ -345,18 +345,34 @@ export function useBlockDraft(
     
     // Undo/Redo
     const undo = useCallback(() => {
-        if (historyIndex > 0) {
-            setHistoryIndex(i => i - 1);
-            setDraftData(history[historyIndex - 1]);
-        }
-    }, [history, historyIndex]);
+        setHistoryIndex(currentIndex => {
+            if (currentIndex > 0) {
+                const newIndex = currentIndex - 1;
+                setHistory(h => {
+                    setDraftData(h[newIndex]);
+                    return h;
+                });
+                historyIndexRef.current = newIndex;
+                return newIndex;
+            }
+            return currentIndex;
+        });
+    }, []);
     
     const redo = useCallback(() => {
-        if (historyIndex < history.length - 1) {
-            setHistoryIndex(i => i + 1);
-            setDraftData(history[historyIndex + 1]);
-        }
-    }, [history, historyIndex]);
+        setHistoryIndex(currentIndex => {
+            setHistory(h => {
+                if (currentIndex < h.length - 1) {
+                    const newIndex = currentIndex + 1;
+                    setDraftData(h[newIndex]);
+                    historyIndexRef.current = newIndex;
+                    return newIndex;
+                }
+                return currentIndex;
+            });
+            return currentIndex;
+        });
+    }, []);
     
     const canUndo = historyIndex > 0;
     const canRedo = historyIndex < history.length - 1;
