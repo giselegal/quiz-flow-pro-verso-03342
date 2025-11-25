@@ -6,6 +6,8 @@
  * - Persistência localStorage
  * - Reset para padrões
  * - React hook
+ * 
+ * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -35,9 +37,11 @@ const localStorageMock = (() => {
   };
 })();
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock,
+  });
+}
 
 describe('featureFlags', () => {
   beforeEach(() => {
