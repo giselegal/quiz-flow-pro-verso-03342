@@ -8,23 +8,23 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 describe('EditorV4 - Template URL Parameter', () => {
-    let originalLocation: Location;
+    let originalLocation: any;
 
     beforeEach(() => {
         // Salvar location original
         originalLocation = window.location;
 
-        // Mock window.location
+        // Mock window.location (cast para any para evitar tipos read-only)
         delete (window as any).location;
-        window.location = {
+        (window as any).location = {
             ...originalLocation,
             search: '',
-        } as Location;
+        } as any;
     });
 
     afterEach(() => {
         // Restaurar location original
-        window.location = originalLocation;
+        (window as any).location = originalLocation;
     });
 
     describe('Template ID Mapping', () => {
