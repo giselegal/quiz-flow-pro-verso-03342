@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import Home from '../Home';
 
-vi.mock('@/contexts', () => ({
+vi.mock('@/contexts/auth/AuthProvider', () => ({
   useAuth: () => ({ user: null, logout: vi.fn() }),
 }));
 
