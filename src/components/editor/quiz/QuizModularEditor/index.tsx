@@ -1792,7 +1792,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     console.log('💾 localStorage atualizado:', localStorage.getItem('qm-editor:use-simple-properties'));
                                 } catch { }
                                 appLogger.info(`[QuizModularEditor] Painel de propriedades: ${newValue ? 'PropertiesColumn' : 'PropertiesColumnWithJson'}`);
-                                showToast({ type: 'info', title: `${newValue ? '✅ PropertiesColumn' : '📝 PropertiesColumnWithJson'} ativado` });
+                                showToast({
+                                    type: 'info',
+                                    title: `${newValue ? '✅ PropertiesColumn' : '📝 PropertiesColumnWithJson'} ativado`,
+                                    message: `Painel alternado para ${newValue ? 'versão principal com SinglePropertiesPanel' : 'versão com editor JSON integrado'}.`
+                                });
                             }}
                             className="h-7"
                             title="Alternar entre PropertiesColumn (principal) e PropertiesColumnWithJson (legado)"

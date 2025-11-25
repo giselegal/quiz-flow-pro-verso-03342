@@ -90,7 +90,7 @@ const applyCustomValidation = (schema: ZodTypeAny, validation?: ExtendedValidati
   });
 };
 
-const buildStringSchema = (property: PropertySchema, validation?: ExtendedValidation) => {
+const buildStringSchema = (property: PropertySchema, validation?: ExtendedValidation): ZodTypeAny => {
   let schema = z.string();
 
   if (validation?.minLength !== undefined) {
@@ -116,12 +116,15 @@ const buildStringSchema = (property: PropertySchema, validation?: ExtendedValida
   if (allowedValues?.length) {
     const primitives = allowedValues.filter((value) => ['string', 'number', 'boolean'].includes(typeof value)) as Array<string | number | boolean>;
     if (primitives.length === allowedValues.length) {
-      schema = buildLiteralUnion(primitives) ?? schema;
-    } else {
-      schema = schema.refine((value) => value === undefined || allowedValues.includes(value), {
-        message: 'Valor não listado nas opções permitidas',
-      });
+      const literalUnion = buildLiteralUnion(primitives);
+      if (literalUnion) {
+        return literalUnion;
+      }
     }
+
+    return schema.refine((value) => value === undefined || allowedValues.includes(value), {
+      message: 'Valor não listado nas opções permitidas',
+    });
   }
 
   return schema;
