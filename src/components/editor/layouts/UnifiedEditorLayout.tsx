@@ -6,7 +6,8 @@ import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/Sup
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
-import PropertiesPanel from '../properties/PropertiesPanel';
+// ✅ CORREÇÃO: Usar ModernPropertiesPanel que aceita selectedBlock
+import ModernPropertiesPanel from '../properties/ModernPropertiesPanel';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
 import { useEditor } from '@/contexts/editor/EditorContext';
@@ -129,7 +130,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
               <ResizableHandle withHandle />
 
               <ResizablePanel defaultSize={15} minSize={12}>
-                <PropertiesPanel
+                <ModernPropertiesPanel
                   selectedBlock={safeSelectedBlock}
                   onUpdate={handleBlockUpdate}
                   onDelete={handleBlockDelete}

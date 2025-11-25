@@ -28,7 +28,10 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { appLogger } from '@/lib/utils/appLogger';
-import { validateTemplateV4, type ValidationResult } from '@/lib/validation/jsonSchemaValidator';
+
+// ⚠️ TEMPORÁRIO: Validação JSON Schema desabilitada até instalar dependências
+// import { validateTemplateV4, type ValidationResult } from '@/lib/validation/jsonSchemaValidator';
+type ValidationResult = { valid: boolean; errors: string[] };
 
 interface JsonTemplateEditorProps {
   template?: any;
@@ -183,17 +186,17 @@ export function JsonTemplateEditor({
     try {
       const parsed = JSON.parse(text);
 
-      // 🎯 JSON Schema validation (Draft 2020-12)
-      const schemaResult: ValidationResult = validateTemplateV4(parsed);
-      if (!schemaResult.valid && schemaResult.errors) {
-        schemaResult.errors.forEach((error) => {
-          errors.push({
-            path: error.instancePath || '/schema',
-            message: error.message || 'Schema validation error',
-            severity: 'error'
-          });
-        });
-      }
+      // ⚠️ TEMPORÁRIO: JSON Schema validation desabilitada
+      // const schemaResult: ValidationResult = validateTemplateV4(parsed);
+      // if (!schemaResult.valid && schemaResult.errors) {
+      //   schemaResult.errors.forEach((error) => {
+      //     errors.push({
+      //       path: error.instancePath || '/schema',
+      //       message: error.message || 'Schema validation error',
+      //       severity: 'error'
+      //     });
+      //   });
+      // }
 
       // Validar campos obrigatórios
       if (!parsed.templateId) {

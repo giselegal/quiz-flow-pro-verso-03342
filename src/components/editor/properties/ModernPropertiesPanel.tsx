@@ -20,8 +20,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
-// Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+// ✅ CORREÇÃO: Usar adaptador universal para resolver problemas de contexto
+import { useEditorAdapter } from '@/hooks/useEditorAdapter';
 import { PropertyType } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
 import OptionsGridQuickPanel from './quick/OptionsGridQuickPanel';
@@ -401,24 +401,28 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   onDelete,
   onDuplicate,
 }) => {
-  const editorContext = useEditor({ optional: true });
-  if (!editorContext) return null;
-  const { actions, currentStep } = editorContext;
+  // ✅ CORREÇÃO: Usar adaptador universal que resolve problemas de contexto
+  const editor = useEditorAdapter();
+  const { actions, currentStep, selectedBlock: contextSelectedBlock } = editor;
+
+  // Usar selectedBlock do contexto como fallback se não fornecido via props
+  const effectiveSelectedBlock = selectedBlock || contextSelectedBlock;
+
   // Construir stepKey legado compatível (ex: step-01)
   const currentStepKey = React.useMemo(() => `step-${String(currentStep).padStart(2, '0')}`, [currentStep]);
 
   // Descobrir propriedades usando sistema existente
   const discoveredProperties = React.useMemo(() => {
-    if (!selectedBlock) return [];
+    if (!effectiveSelectedBlock) return [];
 
-    appLogger.debug('🔍 ModernPropertiesPanel: Discovering properties for block:', selectedBlock.type);
-    appLogger.debug('📦 Current block data:', selectedBlock);
+    appLogger.debug('🔍 ModernPropertiesPanel: Discovering properties for block:', effectiveSelectedBlock.type);
+    appLogger.debug('📦 Current block data:', effectiveSelectedBlock);
 
-    const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
+    const props = getPropertiesForComponentType(effectiveSelectedBlock.type, effectiveSelectedBlock);
     appLogger.debug('📊 ModernPropertiesPanel: Found properties:', props.length);
 
     // Debug específico para options-grid
-    if (selectedBlock.type === 'options-grid') {
+    if (effectiveSelectedBlock.type === 'options-grid') {
       appLogger.debug('🎯 OPTIONS-GRID DEBUG:');
       appLogger.debug('   - Total properties found:', props.length);
       const optionsProperty = props.find(p => p.key === 'options');
@@ -426,7 +430,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
         appLogger.debug('   ✅ OPTIONS property found:', optionsProperty);
         appLogger.debug('   - Type:', optionsProperty.type);
         appLogger.debug('   - Default value:', optionsProperty.defaultValue);
-        appLogger.debug('   - Current value from block:', getCurrentValue('options', selectedBlock));
+        appLogger.debug('   - Current value from block:', getCurrentValue('options', effectiveSelectedBlock));
       } else {
         appLogger.debug('   ❌ OPTIONS property NOT found!');
         appLogger.debug('   - Available properties:', props.map(p => p.key));
@@ -434,7 +438,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     }
 
     return props;
-  }, [selectedBlock]);
+  }, [effectiveSelectedBlock]);
 
   // Organizar propriedades por categoria
   const categorizedProperties = React.useMemo(() => {
@@ -443,7 +447,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
   // Callback para atualizar propriedade
   const handlePropertyUpdate = React.useCallback((propKey: string, value: any) => {
-    if (!selectedBlock) return;
+    if (!effectiveSelectedBlock) return;
 
     appLogger.debug('📤 ModernPropertiesPanel updating property:', propKey, 'with value:', value);
 
@@ -467,14 +471,14 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
     if (Object.keys(propertyUpdates).length > 0) {
       finalUpdates.properties = {
-        ...selectedBlock.properties,
+        ...effectiveSelectedBlock.properties,
         ...propertyUpdates,
       };
     }
 
     if (Object.keys(contentUpdates).length > 0) {
       finalUpdates.content = {
-        ...selectedBlock.content,
+        ...effectiveSelectedBlock.content,
         ...contentUpdates,
       };
     }
@@ -486,13 +490,13 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
       onUpdate(finalUpdates);
     } else {
       // updateBlock takes (id, content) - merge stepKey context into update if needed
-      actions.updateBlock(selectedBlock.id, finalUpdates);
+      actions.updateBlock(effectiveSelectedBlock.id, finalUpdates);
     }
-  }, [selectedBlock, actions, onUpdate]);
+  }, [effectiveSelectedBlock, actions, onUpdate]);
 
   // Atualização em lote (usado pelo Quick Panel)
   const handleBatchUpdate = React.useCallback((updates: Record<string, any>) => {
-    if (!selectedBlock) return;
+    if (!effectiveSelectedBlock) return;
 
     const propertyUpdates: Record<string, any> = {};
     const contentUpdates: Record<string, any> = {};
@@ -511,13 +515,13 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     const finalUpdates: any = {};
     if (Object.keys(propertyUpdates).length > 0) {
       finalUpdates.properties = {
-        ...selectedBlock.properties,
+        ...effectiveSelectedBlock.properties,
         ...propertyUpdates,
       };
     }
     if (Object.keys(contentUpdates).length > 0) {
       finalUpdates.content = {
-        ...selectedBlock.content,
+        ...effectiveSelectedBlock.content,
         ...contentUpdates,
       };
     }
@@ -526,11 +530,11 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
       onUpdate(finalUpdates);
     } else {
       // updateBlock takes (id, content)
-      actions.updateBlock(selectedBlock.id, finalUpdates);
+      actions.updateBlock(effectiveSelectedBlock.id, finalUpdates);
     }
-  }, [selectedBlock, onUpdate, actions]);
+  }, [effectiveSelectedBlock, onUpdate, actions]);
 
-  if (!selectedBlock) {
+  if (!effectiveSelectedBlock) {
     return (
       <div className="h-full flex items-center justify-center p-6">
         <div className="text-center space-y-3">
@@ -571,7 +575,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
             <h2 className="text-lg font-semibold">Propriedades</h2>
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="text-xs">
-                {selectedBlock.type}
+                {effectiveSelectedBlock.type}
               </Badge>
               {onClose && (
                 <Button
@@ -592,9 +596,9 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
         </div>
 
         {/* Quick Panel para Options Grid (Fase 1) */}
-        {selectedBlock.type === 'options-grid' && (
+        {effectiveSelectedBlock.type === 'options-grid' && (
           <div className="sticky top-0 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-md p-3">
-            <OptionsGridQuickPanel block={selectedBlock} onBatchUpdate={handleBatchUpdate} />
+            <OptionsGridQuickPanel block={effectiveSelectedBlock} onBatchUpdate={handleBatchUpdate} />
           </div>
         )}
 
@@ -629,7 +633,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {category.properties.map((property: any) => {
-                    const currentValue = getCurrentValue(property.key, selectedBlock);
+                    const currentValue = getCurrentValue(property.key, effectiveSelectedBlock);
                     return (
                       <PropertyControl
                         key={property.key}
@@ -657,7 +661,14 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
               variant="outline"
               size="sm"
               className="w-full"
-              onClick={() => onDuplicate?.()}
+              onClick={() => {
+                if (onDuplicate) {
+                  onDuplicate();
+                } else {
+                  // ✅ Usar método duplicateBlock do adaptador
+                  actions.duplicateBlock(effectiveSelectedBlock.id);
+                }
+              }}
             >
               Duplicar Componente
             </Button>
@@ -666,12 +677,12 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
               size="sm"
               className="w-full"
               onClick={() => {
-                if (selectedBlock) {
+                if (effectiveSelectedBlock) {
                   if (onDelete) {
                     onDelete();
                   } else {
                     // removeBlock takes only the id
-                    actions.removeBlock(selectedBlock.id);
+                    actions.removeBlock(effectiveSelectedBlock.id);
                   }
                 }
               }}
