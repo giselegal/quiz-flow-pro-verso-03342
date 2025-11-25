@@ -555,3 +555,6 @@ export const useEditorState = (): EditorContextValue => {
 
     return context;
 };
+
+// Alias canônico para novos consumidores
+export const useEditor = useEditorState;
