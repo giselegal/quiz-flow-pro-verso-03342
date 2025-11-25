@@ -1,8 +1,14 @@
 /**
  * 🎛️ DYNAMIC PROPERTIES PANEL - Painel de Propriedades Automático
  * 
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see docs/PROPERTIES_PANEL_QUICK_GUIDE.md - Instruções de migração
+ * 
  * Painel que carrega automaticamente as propriedades editáveis
- * de qualquer componente baseado na API
+ * de qualquer componente baseado na API.
+ * Este arquivo será removido em uma versão futura.
  */
 
 import { useState, useMemo } from 'react';

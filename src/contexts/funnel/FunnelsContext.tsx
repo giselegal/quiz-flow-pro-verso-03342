@@ -1,3 +1,14 @@
+/**
+ * 🔄 FUNNELS CONTEXT (LEGACY)
+ *
+ * ⚠️ DEPRECATED: Este contexto é LEGADO. Use FunnelDataProvider ou serviços canônicos.
+ * @deprecated Migre para FunnelDataProvider + useFunnelData ou FunnelService
+ * @see FunnelDataProvider - Provider canônico para dados de funil
+ * @see src/services/canonical/FunnelService.ts - Serviço canônico de funil
+ *
+ * Este arquivo será removido em uma versão futura.
+ */
+
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { StorageService } from '@/services/core/StorageService';

@@ -1,3 +1,14 @@
+/**
+ * 🔄 STEPS CONTEXT (LEGACY)
+ * 
+ * ⚠️ DEPRECATED: Este contexto é LEGADO. Use EditorStateProvider ou StepNavigationProvider.
+ * @deprecated Migre para EditorStateProvider + useEditorState
+ * @see EditorStateProvider - Provider canônico para estado do editor
+ * @see src/contexts/navigation/NavigationProvider.tsx - Provider para navegação de steps
+ * 
+ * Este arquivo será removido em uma versão futura.
+ */
+
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
