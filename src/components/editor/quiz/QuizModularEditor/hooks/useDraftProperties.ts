@@ -20,10 +20,13 @@ import {
   DraftValidationResult
 } from '@/core/schema/propertyValidation';
 import { appLogger } from '@/lib/utils/appLogger';
+import type { ZodTypeAny } from 'zod';
 
 export interface UseDraftPropertiesOptions {
   /** The block schema for validation */
   schema: BlockTypeSchema | null;
+  /** Optional schema derivado em Zod para validações compostas */
+  zodSchema?: ZodTypeAny | null;
   /** Initial properties from the block */
   initialProperties: Record<string, any>;
   /** Callback when draft is committed */
@@ -60,6 +63,7 @@ export interface UseDraftPropertiesResult {
  */
 export function useDraftProperties({
   schema,
+  zodSchema = null,
   initialProperties,
   onCommit,
   autoCommitOnBlur = false
@@ -77,6 +81,8 @@ export function useDraftProperties({
 
   const [draft, setDraft] = useState<Record<string, any>>(getInitialDraft);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [zodErrors, setZodErrors] = useState<Record<string, string>>({});
   const [jsonBuffers, setJsonBuffers] = useState<Record<string, string>>({});
   
   // Track the initial properties for dirty detection
@@ -96,15 +102,19 @@ export function useDraftProperties({
   useEffect(() => {
     const newDraft = getInitialDraft();
     setDraft(newDraft);
-    setErrors({});
-    setJsonBuffers({});
-    initialRef.current = initialProperties;
+  const errors = useMemo(() => ({ ...zodErrors, ...fieldErrors }), [zodErrors, fieldErrors]);
+
+  const isValid = useMemo(() => {
+    return Object.keys(errors).length === 0;
+  }, [errors]);
     
     appLogger.info('[useDraftProperties] Draft reset due to initialProperties change', {
       data: [{ keys: Object.keys(newDraft) }]
     });
   }, [initialProperties, getInitialDraft]);
 
+    setFieldErrors({});
+    setZodErrors({});
   /**
    * Update a single field in the draft with validation
    */

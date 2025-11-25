@@ -81,7 +81,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     }, [selectedBlock?.id]);
 
     // Obtém definição oficial do bloco diretamente do BlockRegistry
-    const { definition: blockDefinition, schema } = useBlockDefinition(selectedBlock?.type);
+    const { definition: blockDefinition, schema, zodSchema } = useBlockDefinition(selectedBlock?.type);
 
     const initialProperties = useMemo(() => {
         if (!selectedBlock) return {};
@@ -138,6 +138,7 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         getJsonBuffer,
     } = useDraftProperties({
         schema: schema || null,
+        zodSchema,
         initialProperties,
         onCommit: handleCommit,
     });
