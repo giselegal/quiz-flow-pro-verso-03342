@@ -58,9 +58,9 @@ export function PublicationSettingsButton({
             // 3. Sincronizar com dashboard usando EditorDashboardSyncService
             const syncSuccess = await EditorDashboardSyncService.syncFunnelPublish(funnelId, {
                 ...currentFunnel,
-                is_published: true,
+                status: 'published', // canonical update expects status or isActive
                 settings: {
-                    ...currentFunnel.settings,
+                    ...(currentFunnel.config || {}),
                     ...settings, // Aplicar configurações de publicação
                 },
             });
