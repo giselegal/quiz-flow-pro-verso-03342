@@ -48,7 +48,6 @@ import { useOptimizedUnifiedProperties } from '@/hooks/useOptimizedUnifiedProper
 import { useDebouncedCallback } from '@/hooks/useDebounce';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { schemaInterpreter, type BlockTypeSchema } from '@/core/schema/SchemaInterpreter';
 import { buildZodSchemaFromBlockSchema } from '@/core/schema/zodSchemaBuilder';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
@@ -689,6 +688,36 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         contentKeys: selectedBlock?.content ? Object.keys(selectedBlock.content) : 'N/A',
         contentValues: selectedBlock?.content || 'N/A',
     });
+
+    const builderSchema = useMemo(() => {
+        if (!selectedBlock) return null;
+        try {
+            const schema = schemaInterpreter.getBlockSchema(selectedBlock.type);
+            if (schema) {
+                appLogger.info('[SinglePropertiesPanel] Schema encontrado para builder', {
+                    data: [{ blockType: selectedBlock.type }],
+                });
+            }
+            return schema ?? null;
+        } catch (error) {
+            appLogger.warn('[SinglePropertiesPanel] Falha ao recuperar schema do builder', {
+                data: [{ blockType: selectedBlock.type, error }],
+            });
+            return null;
+        }
+    }, [selectedBlock]);
+
+    if (selectedBlock && builderSchema) {
+        return (
+            <BuilderDrivenPanel
+                block={selectedBlock}
+                schema={builderSchema}
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+                onDuplicate={onDuplicate}
+            />
+        );
+    }
 
     // Hook otimizado de propriedades com debouncing
     const { updateProperty, getPropertiesByCategory } = useOptimizedUnifiedProperties({
