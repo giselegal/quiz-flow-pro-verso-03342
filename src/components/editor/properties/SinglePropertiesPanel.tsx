@@ -509,12 +509,12 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
                 <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
                         <CardTitle className="text-sm font-semibold">{schema.label ?? block.type}</CardTitle>
-                        +                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            +                            <span className="font-mono">#{block.id}</span>
-                            +                            <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
-                                +                                {schema.category}
-                                +                            </Badge>
-                            +                        </div>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span className="font-mono">#{block.id}</span>
+                            <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
+                                {schema.category}
+                            </Badge>
+                        </div>
                     </div>
                     <div className="flex items-center gap-2">
                         {onDuplicate && (
