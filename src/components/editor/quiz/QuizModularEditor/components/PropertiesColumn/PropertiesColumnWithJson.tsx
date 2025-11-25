@@ -2,13 +2,23 @@
  * 🎨 PROPERTIES COLUMN WITH JSON EDITOR
  * 
  * Wrapper que adiciona funcionalidade de edição JSON ao PropertiesColumn
- * mantendo as 4 colunas originais do editor
+ * mantendo as 4 colunas originais do editor.
+ * 
+ * Características:
+ * - Separação entre textValue (buffer de texto) e parsedValue (valor parseado)
+ * - Commit só ocorre se JSON é válido
+ * - Mensagens claras de erro para JSON inválido
+ * 
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see useDraftProperties - Hook para gerenciamento de draft
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileJson, Settings } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { FileJson, Settings, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { JsonTemplateEditor } from '@/components/editor/JsonEditor';
+import { safeParseJson } from '@/core/schema/propertyValidation';
 import type { Block } from '@/types/editor';
 
 // Import do componente original
@@ -39,6 +49,34 @@ export function PropertiesColumnWithJson({
 }: PropertiesColumnWithJsonProps) {
   const [activeTab, setActiveTab] = useState<'properties' | 'json'>('properties');
   
+  // Estado local para separar textValue e parsedValue
+  const [jsonError, setJsonError] = useState<string | null>(null);
+  const [jsonIsValid, setJsonIsValid] = useState<boolean>(true);
+  
+  // Callback para validar e aplicar mudanças de JSON
+  const handleTemplateChangeWithValidation = useCallback((newTemplate: any) => {
+    // Se já é um objeto (não string), aceita diretamente
+    if (typeof newTemplate !== 'string') {
+      setJsonError(null);
+      setJsonIsValid(true);
+      onTemplateChange?.(newTemplate);
+      return;
+    }
+    
+    // Se é string, tenta parsear
+    const { value, error, isValid } = safeParseJson(newTemplate);
+    
+    setJsonIsValid(isValid);
+    
+    if (isValid) {
+      setJsonError(null);
+      onTemplateChange?.(value);
+    } else {
+      setJsonError(error ?? 'JSON inválido');
+      // Não faz commit se JSON é inválido
+    }
+  }, [onTemplateChange]);
+  
   return (
     <div className="h-full flex flex-col bg-background border-l">
       {/* Tabs Header */}
@@ -52,6 +90,12 @@ export function PropertiesColumnWithJson({
             <TabsTrigger value="json" className="text-xs">
               <FileJson className="h-3.5 w-3.5 mr-1.5" />
               JSON
+              {/* Indicador de status de validação */}
+              {activeTab === 'json' && !jsonIsValid && (
+                <Badge variant="destructive" className="ml-1.5 h-4 px-1">
+                  <AlertCircle className="h-2.5 w-2.5" />
+                </Badge>
+              )}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -68,12 +112,28 @@ export function PropertiesColumnWithJson({
             onBlockSelect={onBlockSelect}
           />
         ) : (
-          <div className="h-full overflow-y-auto p-4">
-            <JsonTemplateEditor
-              template={fullTemplate}
-              onTemplateChange={onTemplateChange}
-              templateId={templateId}
-            />
+          <div className="h-full overflow-y-auto">
+            {/* Status bar para erros de JSON */}
+            {jsonError && (
+              <div className="px-4 py-2 bg-destructive/10 border-b border-destructive/20 flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-destructive" />
+                <span className="text-xs text-destructive">{jsonError}</span>
+              </div>
+            )}
+            {!jsonError && jsonIsValid && (
+              <div className="px-4 py-2 bg-green-500/10 border-b border-green-500/20 flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <span className="text-xs text-green-600">JSON válido - alterações serão aplicadas</span>
+              </div>
+            )}
+            
+            <div className="p-4">
+              <JsonTemplateEditor
+                template={fullTemplate}
+                onTemplateChange={handleTemplateChangeWithValidation}
+                templateId={templateId}
+              />
+            </div>
           </div>
         )}
       </div>
