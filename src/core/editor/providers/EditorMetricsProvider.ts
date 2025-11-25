@@ -104,10 +104,10 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             }, this.config.flushInterval);
         }
 
-        // Registrar no sistema de monitoramento
-        this.monitoringService.trackEvent('editor_metrics_initialized', {
+        // Registrar no sistema de monitoramento usando trackEditorAction
+        this.monitoringService.trackEditorAction('editor_metrics_initialized', {
             sessionId: this.sessionId,
-            config: this.config,
+            config: JSON.stringify(this.config),
         });
     }
 
@@ -146,17 +146,17 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.checkRealTimeAlerts(enhancedMetric);
 
         // Integrar com sistema global
-        this.monitoringService.recordMetric(
-            `editor.${metric.operation}.${metric.type}`,
-            metric.value,
-            metric.unit,
-            'performance',
-            {
+        this.monitoringService.recordMetric({
+            name: `editor.${metric.operation}.${metric.type}`,
+            value: metric.value,
+            unit: metric.unit,
+            category: 'performance',
+            tags: {
                 funnelId: metric.funnelId || 'unknown',
                 operation: metric.operation,
                 sessionId: this.sessionId,
             },
-        );
+        });
 
         // Atualizar sessão de uso
         this.updateUsageSession(metric.operation, metric.type === 'error_count');
@@ -290,13 +290,13 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.usageMetrics.push(metrics);
 
         // Integrar com analytics em tempo real
-        this.realTimeAnalytics.trackEvent('editor_session_complete', {
+        this.realTimeAnalytics.trackEditorAction('editor_session_complete', {
             sessionId: metrics.sessionId,
-            duration: metrics.duration,
-            operationCounts: metrics.operationCounts,
-            errorCount: metrics.errorCount,
-            successfulSaves: metrics.successfulSaves,
-            performanceIssues: metrics.performanceIssues,
+            duration: String(metrics.duration),
+            operationCounts: JSON.stringify(metrics.operationCounts),
+            errorCount: String(metrics.errorCount),
+            successfulSaves: String(metrics.successfulSaves),
+            performanceIssues: JSON.stringify(metrics.performanceIssues),
         });
     }
 
@@ -455,9 +455,9 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.fallbackMetrics = this.fallbackMetrics.filter(f => f.timestamp > cutoff);
         this.usageMetrics = this.usageMetrics.filter(u => u.sessionStart > cutoff);
 
-        this.monitoringService.trackEvent('editor_metrics_cleared', {
+        this.monitoringService.trackEditorAction('editor_metrics_cleared', {
             cutoff: cutoff.toISOString(),
-            remainingCount: this.metrics.length,
+            remainingCount: String(this.metrics.length),
         });
     }
 
@@ -493,7 +493,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
 
     private recordAlert(type: string, message: string, data: any): void {
         // Registrar alerta via analytics
-        this.realTimeAnalytics.trackEvent('editor_alert', {
+        this.realTimeAnalytics.trackEditorAction('editor_alert', {
             type,
             message,
             sessionId: this.sessionId,
@@ -525,8 +525,8 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
 
     private flushToMonitoring(): void {
         // Flush dos dados para sistema de monitoramento
-        this.monitoringService.trackEvent('editor_metrics_flush', {
-            metricsCount: this.metrics.length,
+        this.monitoringService.trackEditorAction('editor_metrics_flush', {
+            metricsCount: String(this.metrics.length),
             sessionId: this.sessionId,
         });
     }
@@ -553,7 +553,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         // Flush final
         this.flushToMonitoring();
 
-        this.monitoringService.trackEvent('editor_metrics_disposed', {
+        this.monitoringService.trackEditorAction('editor_metrics_disposed', {
             sessionId: this.sessionId,
         });
     }

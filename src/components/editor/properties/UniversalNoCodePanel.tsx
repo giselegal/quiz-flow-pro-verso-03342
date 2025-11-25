@@ -121,8 +121,8 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
   const filteredProperties = useMemo(() => {
     const filtered: CategorizedProperties = {};
 
-    Object.entries(categorizedProperties).forEach(([category, properties]) => {
-      const matchingProps = properties.filter(prop => {
+    Object.entries(categorizedProperties).forEach(([category, properties]: [string, PropertyField[]]) => {
+      const matchingProps = properties.filter((prop: PropertyField & { isAdvanced?: boolean }) => {
         const matchesSearch = !searchQuery ||
           prop.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
           prop.key.toLowerCase().includes(searchQuery.toLowerCase());
@@ -167,8 +167,8 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
   // Estatísticas do bloco
   const blockStats = useMemo(() => {
     const totalProps = extractedProperties.length;
-    const requiredProps = extractedProperties.filter(p => p.isRequired).length;
-    const interpolatedProps = extractedProperties.filter(p => p.supportsInterpolation).length;
+    const requiredProps = extractedProperties.filter((p: PropertyField) => p.isRequired).length;
+    const interpolatedProps = extractedProperties.filter((p: PropertyField & { supportsInterpolation?: boolean }) => p.supportsInterpolation).length;
     const categories = Object.keys(categorizedProperties).length;
 
     return { totalProps, requiredProps, interpolatedProps, categories };
@@ -525,8 +525,8 @@ const PropertyEditor: React.FC<{
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
             <SelectContent>
-              {property.options?.map((option, index) => {
-                const key = typeof option === 'string' ? option : option.value;
+              {property.options?.map((option: { value: string | number; label: string } | string, index: number) => {
+                const key = typeof option === 'string' ? option : String(option.value);
                 const label = typeof option === 'string' ? option : option.label;
                 return (
                   <SelectItem key={`${key}-${index}`} value={key}>

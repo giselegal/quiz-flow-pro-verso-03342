@@ -485,7 +485,8 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (onUpdate) {
       onUpdate(finalUpdates);
     } else {
-      actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
+      // updateBlock takes (id, content) - merge stepKey context into update if needed
+      actions.updateBlock(selectedBlock.id, finalUpdates);
     }
   }, [selectedBlock, actions, onUpdate]);
 
@@ -524,7 +525,8 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (onUpdate) {
       onUpdate(finalUpdates);
     } else {
-      actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
+      // updateBlock takes (id, content)
+      actions.updateBlock(selectedBlock.id, finalUpdates);
     }
   }, [selectedBlock, onUpdate, actions]);
 
@@ -668,7 +670,8 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                   if (onDelete) {
                     onDelete();
                   } else {
-                    actions.removeBlock(currentStepKey, selectedBlock.id);
+                    // removeBlock takes only the id
+                    actions.removeBlock(selectedBlock.id);
                   }
                 }
               }}

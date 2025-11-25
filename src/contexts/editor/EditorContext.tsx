@@ -91,11 +91,16 @@ interface EditorContextType {
   funnelId: string;
   setFunnelId: (id: string) => void;
 
+  // Current step (for convenience access)
+  currentStep: number;
+
   // Actions object (for compatibility)
   actions: {
     addBlock: (type: BlockType) => Promise<string>;
     updateBlock: (id: string, content: any) => Promise<void>;
     deleteBlock: (id: string) => Promise<void>;
+    removeBlock: (id: string) => Promise<void>; // Alias for deleteBlock
+    addBlockAtIndex: (type: BlockType, index: number) => Promise<string>;
     reorderBlocks: (startIndex: number, endIndex: number) => void;
     selectBlock: (id: string | null) => void;
     togglePreview: (preview?: boolean) => void;
@@ -341,6 +346,42 @@ export const EditorProvider: React.FC<{
       appLogger.warn('[EditorContext] Falha ao persistir remoção de bloco', { data: [error] });
     }
   }, [state.blocks, activeStageId, currentFunnelId]);
+
+  // Alias for deleteBlock - for compatibility with components expecting removeBlock
+  const removeBlock = deleteBlock;
+
+  // Add block at a specific index position
+  const addBlockAtIndex = useCallback(
+    async (type: BlockType, index: number): Promise<string> => {
+      const stageId = activeStageId || 'step-1';
+      const newBlock: Block = {
+        id: generateBlockId(type, index, stageId),
+        type,
+        content: {},
+        properties: {
+          funnelId: currentFunnelId,
+          stageId,
+        },
+        order: index,
+      };
+
+      // Insert at position and update orders
+      const newBlocks = [...state.blocks];
+      newBlocks.splice(index, 0, newBlock);
+      const reorderedBlocks = newBlocks.map((block, i) => ({ ...block, order: i }));
+
+      dispatch({ type: 'SET_BLOCKS', payload: reorderedBlocks });
+      appLogger.info('🔗 Block created at index:', { data: [index, currentFunnelId] });
+
+      try {
+        await persistBlocks(stageId, currentFunnelId, reorderedBlocks);
+      } catch (error) {
+        appLogger.warn('[EditorContext] Falha ao persistir novo bloco (auto-save fará retry)', { data: [error] });
+      }
+      return newBlock.id;
+    },
+    [state.blocks, currentFunnelId, activeStageId],
+  );
 
   // Replace all blocks at once (useful when loading templates or switching steps)
   const replaceBlocks = useCallback((blocks: Block[]) => {
@@ -753,11 +794,16 @@ export const EditorProvider: React.FC<{
     funnelId: currentFunnelId,
     setFunnelId: setCurrentFunnelId,
 
+    // Current step (convenience accessor)
+    currentStep: state.currentStep,
+
     // Actions object
     actions: {
       addBlock,
       updateBlock,
       deleteBlock,
+      removeBlock, // Alias for deleteBlock
+      addBlockAtIndex,
       reorderBlocks,
       selectBlock,
       togglePreview,
@@ -865,11 +911,16 @@ export const useEditor = (): EditorContextType => {
       funnelId: 'fallback-funnel',
       setFunnelId: noop,
 
+      // Current step
+      currentStep: 1,
+
       // Actions object
       actions: {
         addBlock: async () => generateStableId('fallback-block', 'fallback-block'),
         updateBlock: noopAsync,
         deleteBlock: noopAsync,
+        removeBlock: noopAsync, // Alias for deleteBlock
+        addBlockAtIndex: async () => generateStableId('fallback-block', 'fallback-block'),
         reorderBlocks: noop,
         selectBlock: noop,
         togglePreview: noop,

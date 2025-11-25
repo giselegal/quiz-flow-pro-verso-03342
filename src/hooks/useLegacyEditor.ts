@@ -33,6 +33,10 @@ export interface LegacyEditorAPI {
 export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
     const editorContext = useEditor();
 
+    if (!editorContext) {
+        throw new Error('useLegacyEditor must be used within an EditorProvider');
+    }
+
     if (enableWarnings) {
         appLogger.warn('⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditor diretamente.');
     }
@@ -49,16 +53,19 @@ export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
             return editorContext.state.stepBlocks[stepKey] || [];
         },
 
-        updateBlock: async (stepKey: string, blockId: string, updates: any) => {
-            await editorContext.actions.updateBlock(stepKey, blockId, updates);
+        // Legacy API: updateBlock(stepKey, blockId, updates) -> new API: updateBlock(blockId, updates)
+        updateBlock: async (_stepKey: string, blockId: string, updates: any) => {
+            await editorContext.actions.updateBlock(blockId, updates);
         },
 
-        addBlock: async (stepKey: string, block: any) => {
-            await editorContext.actions.addBlock(stepKey, block);
+        // Legacy API: addBlock(stepKey, block) -> new API: addBlock(type) returns id
+        addBlock: async (_stepKey: string, block: any) => {
+            await editorContext.actions.addBlock(block.type || 'text');
         },
 
-        removeBlock: async (stepKey: string, blockId: string) => {
-            await editorContext.actions.removeBlock(stepKey, blockId);
+        // Legacy API: removeBlock(stepKey, blockId) -> new API: removeBlock(blockId)
+        removeBlock: async (_stepKey: string, blockId: string) => {
+            await editorContext.actions.removeBlock(blockId);
         },
     };
 }

@@ -21,11 +21,6 @@ export const ConditionalFieldsWrapper: React.FC<ConditionalFieldsWrapperProps> =
 }) => {
   // Verifica se o campo deve ser exibido baseado nas condições
   const shouldShow = React.useMemo(() => {
-    // Se não tem condição, sempre mostrar
-    if (!property.validation || property.validation.length === 0) {
-      return true;
-    }
-
     // Verificar condições do registry (when)
     const registryCondition = (property as any).when;
     if (registryCondition) {
@@ -35,17 +30,12 @@ export const ConditionalFieldsWrapper: React.FC<ConditionalFieldsWrapperProps> =
       }
     }
 
-    // Verificar outras validações
-    for (const rule of property.validation) {
-      if (rule.type === 'custom') {
-        // Lógica customizada para mostrar/ocultar
-        const customRule = rule.value as any;
-        if (customRule?.dependsOn) {
-          const dependentProperty = allProperties.find(p => p.key === customRule.dependsOn);
-          if (dependentProperty && dependentProperty.value !== customRule.when) {
-            return false;
-          }
-        }
+    // Se tem conditional, verificar
+    const conditional = (property as any).conditional;
+    if (conditional) {
+      const dependentProperty = allProperties.find(p => p.key === conditional.key);
+      if (dependentProperty) {
+        return dependentProperty.value === conditional.value;
       }
     }
 

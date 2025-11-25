@@ -36,6 +36,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 }) => {
     // Hooks
     const editorContext = useEditor();
+    
+    // Fallback when editor context is not available
+    if (!editorContext) {
+        return <div className="flex items-center justify-center h-full">Loading editor...</div>;
+    }
+    
     const { state, actions } = editorContext;
     const notification = useNotification();
     const canvasRef = useRef<HTMLDivElement>(null);
@@ -161,7 +167,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
         if (selectedBlockId) {
             appLogger.debug('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
-            actions.updateBlock(currentStepKey, selectedBlockId, updates);
+            // updateBlock takes (id, content)
+            actions.updateBlock(selectedBlockId, updates);
 
             // Verificar se o estado foi atualizado
             setTimeout(() => {
@@ -177,9 +184,10 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     const handleDeleteBlock = useCallback(() => {
         if (selectedBlockId) {
-            actions.removeBlock(currentStepKey, selectedBlockId);
+            // deleteBlock takes only the id
+            actions.deleteBlock(selectedBlockId);
         }
-    }, [actions, currentStepKey, selectedBlockId]);
+    }, [actions, selectedBlockId]);
 
     // Resolver funnelId do editor (se disponível) ou da URL
     const resolvedFunnelId = useMemo(() => {

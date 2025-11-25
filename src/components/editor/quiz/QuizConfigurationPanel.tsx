@@ -31,13 +31,17 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
   selectedBlock: _selectedBlock,
   onUpdate: _onUpdate,
 }) => {
-  const { activeStageId } = useEditor();
+  const editor = useEditor();
   const [selectedStep, setSelectedStep] = useState<any>(null);
   const [, setEditingQuestion] = useState<any>(null);
+  
+  // Get activeStageId from editor context or use default
+  const activeStageId = editor?.activeStageId || 'step-1';
 
   // Identificar o tipo de step atual baseado na configuração JSON
   useEffect(() => {
-    const currentStepIndex = Number(activeStageId) - 1;
+    const stepMatch = activeStageId.match(/step-(\d+)/);
+    const currentStepIndex = stepMatch ? Number(stepMatch[1]) - 1 : 0;
     if (currentStepIndex >= 0 && currentStepIndex < QUIZ_CONFIGURATION.steps.length) {
       setSelectedStep(QUIZ_CONFIGURATION.steps[currentStepIndex]);
     }
