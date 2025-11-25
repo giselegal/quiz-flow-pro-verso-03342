@@ -44,11 +44,43 @@ export interface DomainSettings {
   subdomain: string;
 }
 
+/**
+ * FunnelSettings básico (compat com versão original)
+ */
 export interface FunnelSettings {
   seo: SEOSettings;
   analytics: AnalyticsSettings;
   webhooks: WebhookSettings;
   domain: DomainSettings;
+}
+
+/**
+ * PublicationSettings básico (de FunnelSettingsService)
+ */
+export interface PublicationSettingsBasic {
+  domain?: {
+    slug?: string;
+    seoFriendlyUrl?: boolean;
+  };
+  results?: any;
+  seo?: any;
+  tracking?: any;
+  security?: any;
+}
+
+/**
+ * Unificação de FunnelSettings + PublicationSettings
+ * Use este tipo quando precisar de compatibilidade com ambos
+ */
+export interface UnifiedFunnelSettings extends FunnelSettings {
+  // Campos extras de PublicationSettings
+  publication?: {
+    status?: 'draft' | 'published' | 'archived';
+    publishedAt?: string;
+    baseUrl?: string;
+    customDomain?: string;
+    slug?: string;
+  };
 }
 
 export const defaultFunnelSettings: FunnelSettings = {

@@ -7,8 +7,8 @@ import { SEOSettings } from '@/components/editor/funnel-settings/sections/SEOSet
 import { AnalyticsSettings } from '@/components/editor/funnel-settings/sections/AnalyticsSettings';
 import { WebhookSettings } from '@/components/editor/funnel-settings/sections/WebhookSettings';
 import { DomainSettings } from '@/components/editor/funnel-settings/sections/DomainSettings';
-import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
-import { FunnelSettingsService } from '@/services/canonical/data/FunnelSettingsService';
+import { FunnelSettings, defaultFunnelSettings, UnifiedFunnelSettings } from '@/types/funnelSettings';
+import { FunnelSettingsService, PublicationSettings } from '@/services/canonical/data/FunnelSettingsService';
 import { Save, X, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { appLogger } from '@/lib/utils/appLogger';

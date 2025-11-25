@@ -365,7 +365,7 @@ export class FunnelSettingsService extends BaseCanonicalService {
     return result.data;
   }
 
-  static async saveSettings(funnelId: string, settings: PublicationSettings): Promise<void> {
+  static async saveSettings(funnelId: string, settings: PublicationSettings | any): Promise<void> {
     const instance = FunnelSettingsService.getInstance();
     const result = await instance.updateSettings(funnelId, settings);
     if (!result.success) {
