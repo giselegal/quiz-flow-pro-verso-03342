@@ -141,13 +141,13 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-brand-brightBlue to-brand-lightBlue rounded-lg flex items-center justify-center">
+              <div className="w-9 h-9 bg-gradient-to-br from-brand-brightBlue to-brand-lightBlue rounded-xl flex items-center justify-center shadow-sm">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] bg-clip-text text-transparent">
-                QuizFlow
-              </span>
-              <Badge variant="secondary" className="ml-2 text-xs">Pro</Badge>
+              <div className="flex flex-col leading-tight">
+                <span className="text-2xl font-extrabold bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] bg-clip-text text-transparent">QuizFlowPro</span>
+                <small className="text-xs text-slate-300 -mt-1">Quizzes que convertem</small>
+              </div>
             </div>
 
             <nav className="hidden md:flex items-center space-x-8">
@@ -201,12 +201,12 @@ export const Home: React.FC = () => {
                 QuizFlowPro
               </Badge>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-white leading-tight tracking-tight">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-tight tracking-tight">
                 QuizFlowPro — quizzes que convertem
               </h1>
 
-              <p className="text-xl md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-                Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar taxas de conversão — rápido, intuitivo e integrado aos seus fluxos de marketing.
+              <p className="text-lg md:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
+                Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -262,12 +262,15 @@ export const Home: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {stats.map((stat, index) => (
-                <Card key={index} className="text-center border border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-[#101726]">
+                <Card
+                  key={index}
+                  className="text-center border border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-tr from-[#0f1724]/60 to-[#0b1220]/50 backdrop-blur-sm"
+                >
                   <CardContent className="p-10">
-                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
-                      <stat.icon className={`h-8 w-8 text-white`} />
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
+                      <stat.icon className={`h-7 w-7 text-white`} />
                     </div>
-                    <div className="text-4xl md:text-5xl font-bold text-white mb-3">{stat.number}</div>
+                    <div className="text-4xl md:text-5xl font-extrabold text-white mb-3">{stat.number}</div>
                     <div className="text-slate-300 font-medium text-lg">{stat.label}</div>
                   </CardContent>
                 </Card>
@@ -290,13 +293,13 @@ export const Home: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <Card key={index} className="p-8 hover:shadow-lg transition-all duration-300 border border-slate-700 bg-[#101726] hover:-translate-y-1">
+                <Card key={index} className="p-8 hover:shadow-lg transition-all duration-300 border border-slate-700 bg-gradient-to-tr from-[#0f1724]/40 to-[#0b1220]/40 hover:-translate-y-1">
                   <CardContent className="p-0">
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
                       <feature.icon className={`h-7 w-7 text-white`} />
                     </div>
                     <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                    <p className="text-slate-300 leading-relaxed">{feature.description}</p>
+                    <p className="text-slate-300/90 leading-relaxed">{feature.description}</p>
                   </CardContent>
                 </Card>
               ))}

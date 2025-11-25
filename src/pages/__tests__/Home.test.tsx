@@ -20,10 +20,10 @@ describe('Home page', () => {
   it('renderiza seções principais após loading', () => {
     render(<Home />);
     vi.runAllTimers();
-    expect(screen.getByText('Confiado por Líderes da Indústria')).toBeDefined();
-    expect(screen.getByText('Tudo Que Você Precisa Para Ter Sucesso')).toBeDefined();
-    expect(screen.getByText('O que Nossos Clientes Dizem')).toBeDefined();
-    expect(screen.getByText('Planos Simples e Transparentes')).toBeDefined();
-    expect(screen.getByText('Começar Teste Grátis')).toBeDefined();
+    expect(screen.getByText('Confiado por líderes do setor')).toBeDefined();
+    expect(screen.getByText('Tudo o que você precisa para ter sucesso')).toBeDefined();
+    expect(screen.getByText('O que nossos clientes dizem')).toBeDefined();
+    expect(screen.getByText('Planos simples e transparentes')).toBeDefined();
+    expect(screen.getByText('Iniciar teste gratuito')).toBeDefined();
   });
 });
