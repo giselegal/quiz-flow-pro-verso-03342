@@ -2360,7 +2360,9 @@
             "showGuideImage": true
           }
         },
-        "content": {}
+        "content": {
+          "title": "Seu Estilo Predominante"
+        }
       },
       {
         "id": "result-progress-bars",
@@ -2434,7 +2436,9 @@
             "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
           }
         },
-        "content": {}
+        "content": {
+          "text": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia."
+        }
       },
       {
         "id": "button-cta-primary",
@@ -2445,6 +2449,8 @@
           "order": 7
         },
         "content": {
+          "buttonText": "Quero Aprofundar Meu Estilo",
+          "buttonUrl": "#metodo",
           "text": "{ctaPrimaryText}",
           "url": "{ctaPrimaryUrl}",
           "variant": "primary",
@@ -2513,6 +2519,8 @@
           "order": 10
         },
         "content": {
+          "buttonText": "Comece Agora Sua Transformação",
+          "buttonUrl": "#comprar",
           "text": "{ctaSecondaryText}",
           "url": "{ctaSecondaryUrl}",
           "variant": "primary",
