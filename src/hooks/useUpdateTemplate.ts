@@ -202,7 +202,7 @@ export function useCreateTemplate(
         throw new Error(`Failed to create template: ${error.message}`);
       }
 
-      return data as Template;
+      return data as unknown as Template;
     },
 
     // Invalidate cache after successful creation
@@ -249,7 +249,7 @@ export function useDeleteTemplate(
       }
 
       // Soft delete by setting status to archived
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('templates')
         .update({
           status: 'archived',
@@ -299,7 +299,7 @@ export function useHardDeleteTemplate(
       }
 
       // Hard delete
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('templates')
         .delete()
         .eq('id', id);
@@ -345,7 +345,7 @@ export function useBulkUpdateTemplates(
       const promises = inputs.map(async (input) => {
         const { id, ...updates } = input;
 
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('templates')
           .update({
             ...updates,
@@ -359,7 +359,7 @@ export function useBulkUpdateTemplates(
           throw new Error(`Failed to update template ${id}: ${error.message}`);
         }
 
-        return data as Template;
+        return data as unknown as Template;
       });
 
       return await Promise.all(promises);
