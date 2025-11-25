@@ -46,27 +46,27 @@ export const Home: React.FC = () => {
     // Auto-rotate could be implemented here if needed
   }, []);
 
-  
+
 
   // Stats data
   const stats = useMemo(() => [
     {
       number: '15K+',
-      label: 'Quizzes Criados',
+      label: 'Quizzes criados',
       icon: Target,
       color: 'text-blue-600',
       bg: 'bg-blue-50',
     },
     {
       number: '94%',
-      label: 'Taxa de Conversão',
+      label: 'Taxa de conversão',
       icon: TrendingUp,
       color: 'text-green-600',
       bg: 'bg-green-50',
     },
     {
       number: '2min',
-      label: 'Tempo de Configuração',
+      label: 'Tempo de configuração',
       icon: Zap,
       color: 'text-purple-600',
       bg: 'bg-purple-50',
@@ -76,29 +76,29 @@ export const Home: React.FC = () => {
   const features = useMemo(() => [
     {
       icon: Target,
-      title: 'Editor Visual',
-      description: 'Interface intuitiva de arrastar e soltar para criar quizzes sem programação',
+      title: 'Editor visual',
+      description: 'Editor visual de arrastar e soltar — crie quizzes sem precisar programar',
       color: 'text-blue-600',
       bg: 'bg-blue-50',
     },
     {
       icon: BarChart3,
-      title: 'Análises Avançadas',
-      description: 'Métricas detalhadas de performance e rastreamento de conversão para otimização',
+      title: 'Análises avançadas',
+      description: 'Métricas detalhadas e rastreamento de conversões para otimizar resultados',
       color: 'text-green-600',
       bg: 'bg-green-50',
     },
     {
       icon: Users,
-      title: 'Captura de Leads',
-      description: 'Integração perfeita com CRM e ferramentas de automação de marketing',
+      title: 'Captação de leads',
+      description: 'Integração com CRMs e ferramentas de automação para qualificar contatos automaticamente',
       color: 'text-purple-600',
       bg: 'bg-purple-50',
     },
     {
       icon: Zap,
-      title: 'Templates Prontos',
-      description: 'Biblioteca de designs profissionais com templates específicos por setor',
+      title: 'Templates prontos',
+      description: 'Biblioteca de layouts profissionais e templates por setor para acelerar o lançamento',
       color: 'text-orange-600',
       bg: 'bg-orange-50',
     },
@@ -111,8 +111,8 @@ export const Home: React.FC = () => {
     },
     {
       icon: CheckCircle,
-      title: 'Responsivo Mobile',
-      description: 'Performance perfeita em todos os dispositivos e tamanhos de tela',
+      title: 'Totalmente responsivo',
+      description: 'Design e performance otimizados para todos os dispositivos e tamanhos de tela',
       color: 'text-teal-600',
       bg: 'bg-teal-50',
     },
@@ -124,7 +124,7 @@ export const Home: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-brand-background via-brand-light to-brand-lightBlue/20 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-brightBlue border-t-transparent mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium">Loading QuizFlow...</p>
+          <p className="text-slate-600 font-medium">Carregando QuizFlow...</p>
         </div>
       </div>
     );
@@ -133,8 +133,8 @@ export const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>Quiz Flow Pro Verso | Vista-se de Você! - Gisele Galvão</title>
-        <meta name="description" content="Descubra seu estilo pessoal único com nosso quiz interativo." />
+        <title>QuizFlowPro — Crie quizzes que convertem | Gisele Galvão</title>
+        <meta name="description" content="QuizFlowPro: crie quizzes interativos para captar leads qualificados, segmentar público e aumentar conversões — editor visual, templates prontos e integrações com CRMs." />
       </Helmet>
       {/* Modern Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0b1020]/90 border-b border-transparent shadow-sm">
@@ -151,9 +151,9 @@ export const Home: React.FC = () => {
             </div>
 
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Features</a>
-              <a href="#testimonials" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Reviews</a>
-              <a href="#pricing" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Pricing</a>
+              <a href="#features" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Recursos</a>
+              <a href="#testimonials" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Depoimentos</a>
+              <a href="#pricing" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Planos</a>
               <Button onClick={() => navigate('/demo/templates')} variant="ghost" size="sm" className="text-brand-brightBlue hover:text-brand-brightBlue/80">
                 <Zap className="h-4 w-4 mr-1" />
                 Demo
@@ -198,15 +198,15 @@ export const Home: React.FC = () => {
             <div className="text-center max-w-5xl mx-auto">
               <Badge className="mb-8 bg-[#132036] text-[#3bbef3] border-[#3bbef3]/30 hover:bg-[#132036]/80 transition-colors px-4 py-2">
                 <Sparkles className="h-4 w-4 mr-2" />
-                Vista-se de Você
+                QuizFlowPro
               </Badge>
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-white leading-tight tracking-tight">
-                Vista-se de Você
+                QuizFlowPro — quizzes que convertem
               </h1>
 
               <p className="text-xl md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-                Descubra seu estilo pessoal único com nosso quiz interativo.
+                Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar taxas de conversão — rápido, intuitivo e integrado aos seus fluxos de marketing.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -216,7 +216,7 @@ export const Home: React.FC = () => {
                   onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
                 >
                   <Zap className="h-5 w-5 mr-2" />
-                  {user ? 'Ir para Dashboard' : 'Começar Teste Grátis'}
+                  {user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito'}
                 </Button>
                 <Button
                   variant="outline"
@@ -379,7 +379,7 @@ export const Home: React.FC = () => {
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates básicos</li>
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Coleta de leads</li>
                   </ul>
-                  <Button onClick={() => navigate('/criar-funil')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Começar Grátis</Button>
+                  <Button onClick={() => navigate('/criar-funil')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Começar gratuitamente</Button>
                 </CardContent>
               </Card>
 
@@ -426,7 +426,7 @@ export const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" onClick={() => navigate(user ? '/dashboard' : '/criar-funil')} className="bg-white text-[#0a0f1f] hover:bg-slate-100 px-8 py-4 text-lg font-semibold">
                 <Zap className="mr-2 h-5 w-5" />
-                Começar Teste Grátis
+                Iniciar teste gratuito
               </Button>
               <Button variant="outline" size="lg" onClick={() => window.open('mailto:sales@quizflow.pro')} className="border-2 border-white text-white hover:bg-white hover:text-[#0a0f1f] px-8 py-4 text-lg font-semibold">
                 <ArrowRight className="mr-2 h-5 w-5" />
