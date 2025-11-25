@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "node generate-vsl.mjs"
+    "build": "node generate-vsl.mjs",
+    "download": "node download-assets.mjs"
   },
   "dependencies": {
     "ffmpeg-static": "^5.1.0",
