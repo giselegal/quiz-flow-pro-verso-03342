@@ -48,7 +48,7 @@ import { useOptimizedUnifiedProperties } from '@/hooks/useOptimizedUnifiedProper
 import { useDebouncedCallback } from '@/hooks/useDebounce';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { schemaInterpreter, type BlockTypeSchema } from '@/core/schema/SchemaInterpreter';
+import { schemaInterpreter, type BlockTypeSchema, type PropertySchema } from '@/core/schema/SchemaInterpreter';
 import { buildZodSchemaFromBlockSchema } from '@/core/schema/zodSchemaBuilder';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { useDraftProperties } from '@/components/editor/quiz/QuizModularEditor/hooks/useDraftProperties';
@@ -457,6 +457,51 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
     const handleCancel = useCallback(() => {
         cancelDraft();
     }, [cancelDraft]);
+
+    const sections = useMemo(() => buildPanelSections(schema), [schema]);
+
+    const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+        setOpenSections((prev) => {
+            const next: Record<string, boolean> = {};
+            sections.forEach((section, index) => {
+                next[section.id] = prev[section.id] ?? index === 0;
+            });
+            return next;
+        });
+    }, [sections]);
+
+    const availablePresetGroups = useMemo(() => {
+        const groups = BLOCK_PRESET_GROUPS[schema.type] ?? [];
+        return groups
+            .map((group) => ({
+                ...group,
+                items: group.items.filter((item) =>
+                    Object.keys(item.updates).some((key) => schema.properties[key] !== undefined),
+                ),
+            }))
+            .filter((group) => group.items.length > 0);
+    }, [schema]);
+
+    const applyPreset = useCallback((updates: Record<string, any>) => {
+        const applicableEntries = Object.entries(updates).filter(([key]) => schema.properties[key] !== undefined);
+
+        if (!applicableEntries.length) {
+            appLogger.warn('[SinglePropertiesPanel] Preset sem propriedades compatíveis', {
+                data: [{ blockType: schema.type, updates }],
+            });
+            return;
+        }
+
+        applicableEntries.forEach(([key, value]) => {
+            updateField(key, value);
+        });
+
+        appLogger.info('[SinglePropertiesPanel] Preset aplicado', {
+            data: [{ blockId: block.id, presetKeys: applicableEntries.map(([key]) => key) }],
+        });
+    }, [schema, updateField, block.id]);
 
     return (
         <Card className="h-full flex flex-col border-0 bg-transparent">
