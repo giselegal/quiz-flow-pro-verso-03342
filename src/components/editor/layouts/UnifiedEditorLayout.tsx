@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
 import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
+import { useBlocksFromSupabase } from '@/hooks/useBlocksFromSupabase';
 import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
 // ✅ CORREÇÃO: Usar ModernPropertiesPanel que aceita selectedBlock
@@ -24,6 +25,13 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   const { resultPageConfig } = useResultPageConfig('Natural');
+  const editorCtx = (() => { try { return useEditor(); } catch { return null as any; } })();
+  const funnelId = editorCtx?.funnelId as string | undefined;
+  const currentStep = editorCtx?.currentStep ?? 1;
+  const { data: supabaseBlocks, isLoading: loadingBlocks } = useBlocksFromSupabase(
+    funnelId || '',
+    currentStep - 1 // step_number zero-based no banco; ajuste conforme necessário
+  );
 
   const handleComponentSelect = (type: string) => {
     appLogger.debug('Component selected:', type);
@@ -77,8 +85,9 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
   const config = resultPageConfig || defaultConfig;
   // Fix type compatibility by ensuring content is always defined
+  const sourceBlocks = supabaseBlocks && supabaseBlocks.length > 0 ? supabaseBlocks : (config.blocks || []);
   const selectedBlock = selectedBlockId
-    ? config.blocks?.find((b: any) => b.id === selectedBlockId) || null
+    ? sourceBlocks.find((b: any) => b.id === selectedBlockId) || null
     : null;
 
   const safeSelectedBlock = selectedBlock
@@ -118,7 +127,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
               <ResizablePanel defaultSize={70} minSize={60}>
                 <CanvasDropZone
-                  blocks={config.blocks || []}
+                  blocks={sourceBlocks}
                   selectedBlockId={selectedBlockId}
                   onSelectBlock={setSelectedBlockId}
                   onUpdateBlock={handleBlockUpdate}
