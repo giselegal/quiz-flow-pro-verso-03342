@@ -73,6 +73,33 @@ Fontes recomendadas (licenças adequadas):
 
 Importante: não inclua material sem licença ou com marcas registradas reconhecíveis.
 
+## Download automático (Pexels API)
+Você pode automatizar o download dos clipes base usando a API do Pexels.
+
+1. Crie uma conta e obtenha sua chave em: https://www.pexels.com/api/
+2. Exporte a variável de ambiente:
+```bash
+export PEXELS_API_KEY="sua_chave_aqui"
+```
+3. Execute o script:
+```bash
+cd tools/vsl
+npm run download
+```
+O script `download-assets.mjs` fará:
+- Busca por cada query pré-definida.
+- Seleciona o melhor arquivo (>=1280px se disponível).
+- Salva em `assets/videos/<numero>-<slug>.mp4`.
+- Mantém arquivos existentes (não sobrescreve).
+
+Relatório final mostra status por cena (ok, skip-exists, no-results, error).
+
+Após o download, gere o vídeo normalmente:
+```bash
+npm run build
+cp -f output/vsl-quizflowpro.mp4 ../../public/videos/vsl-quizflowpro.mp4
+```
+
 ## Dicas de conteúdo
 - Use vídeos reais com pessoas (frustração, equipe, métricas, depoimentos). Evite conteúdos com direitos autorais sem licença adequada.
 - Mantenha duração por cena entre 4–7s (o script estima baseado no texto, mas você pode ajustar encurtando linhas).
