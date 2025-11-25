@@ -63,7 +63,7 @@ export interface PropertyField {
   }>;
   
   // For interpolated-text fields
-  availableVariables?: string[];
+  availableVariables?: DynamicVariable[];
   
   // For array fields
   itemSchema?: PropertyField[];
@@ -91,6 +91,7 @@ export interface DynamicVariable {
   description: string;
   category: 'user' | 'quiz' | 'result' | 'system';
   example: string;
+  currentValue: string; // Current value for preview interpolation
 }
 
 /**
@@ -104,6 +105,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Nome do usuário inserido no quiz',
     category: 'user',
     example: 'Maria',
+    currentValue: 'Maria',
   },
   {
     key: 'userEmail',
@@ -111,6 +113,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Email do usuário (se coletado)',
     category: 'user',
     example: 'maria@email.com',
+    currentValue: 'maria@email.com',
   },
   
   // Quiz variables
@@ -120,6 +123,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Título configurado para o quiz',
     category: 'quiz',
     example: 'Descubra Seu Estilo',
+    currentValue: 'Descubra Seu Estilo',
   },
   {
     key: 'currentStep',
@@ -127,6 +131,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Número da etapa atual',
     category: 'quiz',
     example: '5',
+    currentValue: '1',
   },
   {
     key: 'totalSteps',
@@ -134,6 +139,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Número total de etapas',
     category: 'quiz',
     example: '21',
+    currentValue: '21',
   },
   {
     key: 'progress',
@@ -141,6 +147,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Porcentagem de progresso no quiz',
     category: 'quiz',
     example: '75%',
+    currentValue: '0%',
   },
   
   // Result variables
@@ -150,6 +157,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Título do resultado do quiz',
     category: 'result',
     example: 'Estilo Clássico',
+    currentValue: 'Seu Estilo',
   },
   {
     key: 'resultScore',
@@ -157,6 +165,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Pontuação obtida no quiz',
     category: 'result',
     example: '85',
+    currentValue: '0',
   },
   {
     key: 'resultDescription',
@@ -164,6 +173,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Descrição do resultado',
     category: 'result',
     example: 'Você tem um estilo clássico e elegante!',
+    currentValue: 'Sua descrição de resultado',
   },
   
   // System variables
@@ -173,6 +183,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Data atual formatada',
     category: 'system',
     example: '15/11/2024',
+    currentValue: new Date().toLocaleDateString('pt-BR'),
   },
   {
     key: 'currentTime',
@@ -180,6 +191,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Hora atual formatada',
     category: 'system',
     example: '14:30',
+    currentValue: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
   },
 ];
 
@@ -232,7 +244,7 @@ class PropertyExtractionServiceClass {
           return {
             ...prop,
             type: 'interpolated-text' as PropertyFieldType,
-            availableVariables: AVAILABLE_VARIABLES.map(v => v.key),
+            availableVariables: AVAILABLE_VARIABLES,
           };
         }
       }

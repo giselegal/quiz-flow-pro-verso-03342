@@ -84,7 +84,8 @@ export const Step20ComponentsButton: React.FC = () => {
         content: {},
         properties: {},
       };
-      await actions.addBlock(stepKey, newBlock);
+      // addBlock takes only type
+      await actions.addBlock(type);
     } catch (error) {
       appLogger.error('Erro ao adicionar componente Step 20:', error);
     }
@@ -92,15 +93,8 @@ export const Step20ComponentsButton: React.FC = () => {
 
   const handleAddCompleteTemplate = async () => {
     try {
-      const stepKey = `step-${state.currentStep}`;
-      const templateBlock = {
-        id: `step20-complete-template-${Date.now()}`,
-        type: 'step20-complete-template' as BlockType,
-        order: 0,
-        content: {},
-        properties: {},
-      };
-      await actions.addBlock(stepKey, templateBlock);
+      // addBlock takes only type
+      await actions.addBlock('step20-complete-template' as BlockType);
     } catch (error) {
       appLogger.error('Erro ao adicionar template completo Step 20:', error);
     }

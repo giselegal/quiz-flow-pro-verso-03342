@@ -271,7 +271,8 @@ export const ComponentsSidebar: React.FC = () => {
       content: {},
       order: 0,
     };
-    actions.addBlock(stepKey, newBlock);
+    // addBlock takes only the type, returns the new block ID
+    actions.addBlock(type);
   };
 
   // Filtrar componentes baseado na etapa ativa
