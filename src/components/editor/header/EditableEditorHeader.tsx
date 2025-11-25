@@ -80,11 +80,18 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
   customTitle,
   onSave,
 }) => {
-  const { state, actions } = useEditor();
+  const editor = useEditor();
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [virtDisabled, setVirtDisabled] = useState<boolean>(false);
+  
+  // Fallback when editor context is not available
+  if (!editor) {
+    return null;
+  }
+  
+  const { state, actions } = editor;
 
   const safeCurrentStep = state.currentStep || 1;
   const stepAnalysis = getStepAnalysis(safeCurrentStep);

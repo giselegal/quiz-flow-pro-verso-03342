@@ -77,7 +77,14 @@ const ModeRenderer: React.FC<{
   mode: 'visual' | 'headless' | 'production' | 'funnel';
   funnelId?: string;
 }> = ({ mode, funnelId }) => {
-  const { state, actions } = useEditor();
+  const editor = useEditor();
+  
+  // Fallback when editor context is not available
+  if (!editor) {
+    return <div className="flex items-center justify-center h-full">Loading editor...</div>;
+  }
+  
+  const { state, actions } = editor;
 
   const totalSteps = useMemo(() => {
     return state.totalSteps || 21;
@@ -156,8 +163,8 @@ const ModeRenderer: React.FC<{
                     }
                     selectedBlockId={state.selectedBlockId}
                     onSelectBlock={actions.setSelectedBlockId}
-                    onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}
-                    onDeleteBlock={(blockId) => actions.removeBlock(`step-${state.currentStep}`, blockId)}
+                    onUpdateBlock={(blockId, updates) => actions.updateBlock(blockId, updates)}
+                    onDeleteBlock={(blockId) => actions.deleteBlock(blockId)}
                   />
                 </LazyBoundary>
               </div>
@@ -187,8 +194,8 @@ const ModeRenderer: React.FC<{
                 }
                 selectedBlockId={state.selectedBlockId}
                 onSelectBlock={actions.setSelectedBlockId}
-                onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}
-                onDeleteBlock={(blockId) => actions.removeBlock(`step-${state.currentStep}`, blockId)}
+                onUpdateBlock={(blockId, updates) => actions.updateBlock(blockId, updates)}
+                onDeleteBlock={(blockId) => actions.deleteBlock(blockId)}
                 className="h-full border border-border rounded-lg"
               />
             </LazyBoundary>
@@ -256,8 +263,8 @@ const ModeRenderer: React.FC<{
                     }
                     selectedBlockId={state.selectedBlockId}
                     onSelectBlock={actions.setSelectedBlockId}
-                    onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}
-                    onDeleteBlock={(blockId) => actions.removeBlock(`step-${state.currentStep}`, blockId)}
+                    onUpdateBlock={(blockId, updates) => actions.updateBlock(blockId, updates)}
+                    onDeleteBlock={(blockId) => actions.deleteBlock(blockId)}
                   />
                 </LazyBoundary>
               </div>
@@ -291,8 +298,15 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   initialStep = 1,
   className = 'h-full w-full',
 }) => {
-  const { state, actions } = useEditor();
+  const editor = useEditor();
   const [streamProgress, setStreamProgress] = React.useState(0);
+  
+  // Fallback when editor context is not available
+  if (!editor) {
+    return <div className="flex items-center justify-center h-full">Loading editor...</div>;
+  }
+  
+  const { state, actions, blockActions } = editor;
 
   React.useEffect(() => {
     Promise.all([
@@ -314,13 +328,16 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
       const adapter = new (require('@/editor/adapters/TemplateToFunnelAdapter').TemplateToFunnelAdapter)();
       (async () => {
         for await (const { stage, progress } of adapter.convertTemplateToFunnelStream({ templateId: candidateTemplate, loadAllSteps: true })) {
-          actions.setStepBlocks(stage.id, stage.blocks as any[]);
+          // Use blockActions.replaceBlocks if available, or dispatch directly
+          if (blockActions?.replaceBlocks) {
+            blockActions.replaceBlocks(stage.blocks as any[]);
+          }
           setStreamProgress(progress);
         }
         setStreamProgress(1);
       })();
     } catch {}
-  }, [actions]);
+  }, [blockActions]);
 
   // Extrair funções estáveis
   const { ensureStepLoaded, setCurrentStep } = actions;

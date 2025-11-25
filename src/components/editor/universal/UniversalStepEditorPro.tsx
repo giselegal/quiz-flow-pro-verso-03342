@@ -36,6 +36,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 }) => {
     // Hooks
     const editorContext = useEditor();
+    
+    // Fallback when editor context is not available
+    if (!editorContext) {
+        return <div className="flex items-center justify-center h-full">Loading editor...</div>;
+    }
+    
     const { state, actions } = editorContext;
     const notification = useNotification();
     const canvasRef = useRef<HTMLDivElement>(null);
