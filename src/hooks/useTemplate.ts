@@ -112,7 +112,7 @@ export function useTemplate(
 
       // Fetch from Supabase
       const { data, error } = await supabase
-        .from('templates')
+        .from((supabase as any).from ? 'templates' : ('templates' as any))
         .select('*')
         .eq('id', id)
         .single();
