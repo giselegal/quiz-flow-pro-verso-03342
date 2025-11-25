@@ -7,7 +7,7 @@ import { useBlocksFromSupabase } from '@/hooks/useBlocksFromSupabase';
 import { useBlockMutations } from '@/hooks/useBlockMutations';
 import React, { useState, useCallback, useEffect } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
-import ModernPropertiesPanel from '../properties/ModernPropertiesPanel';
+import ModernPropertiesPanel from '@/archive/legacy-panels/ModernPropertiesPanel';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
 import { useEditor } from '@/contexts/editor/EditorContext';

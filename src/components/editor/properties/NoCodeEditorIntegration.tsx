@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, Eye, Code } from 'lucide-react';
-import { UniversalNoCodePanel } from './UniversalNoCodePanel';
+import { default as UniversalNoCodePanel } from '@/archive/legacy-panels/UniversalNoCodePanel';
 import { NoCodePropertiesPanelClean } from './NoCodePropertiesPanelClean';
 import type { Block } from '@/types/editor';
 
@@ -54,7 +54,7 @@ export const NoCodeEditorIntegration: React.FC<NoCodeEditorIntegrationProps> = (
           </h3>
           <Badge variant="secondary">{activeStageId}</Badge>
         </div>
-        
+
         <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as any)}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="simple" className="text-xs">

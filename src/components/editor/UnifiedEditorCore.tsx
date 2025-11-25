@@ -27,7 +27,7 @@ const EditorToolbar = React.lazy(() => import('@/components/editor/toolbar/Edito
 const StepSidebar = React.lazy(() => import('@/components/editor/sidebars/StepSidebar'));
 const UnifiedComponentsPanel = React.lazy(() => import('@/components/editor/panels/UnifiedComponentsPanel'));
 const CanvasDropZone = React.lazy(() => import('@/components/editor/canvas/CanvasDropZone.simple'));
-const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/components/editor/properties/UltraUnifiedPropertiesPanel'));
+const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/archive/legacy-panels/UltraUnifiedPropertiesPanel'));
 
 // 🎯 FALLBACK COMPONENTS (removed deprecated ModularEditorPro)
 // 💡 Produção (quiz renderer) declarado no topo para evitar recriações
@@ -78,12 +78,12 @@ const ModeRenderer: React.FC<{
   funnelId?: string;
 }> = ({ mode, funnelId }) => {
   const editor = useEditor();
-  
+
   // Fallback when editor context is not available
   if (!editor) {
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
-  
+
   const { state, actions } = editor;
 
   const totalSteps = useMemo(() => {
@@ -300,12 +300,12 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
 }) => {
   const editor = useEditor();
   const [streamProgress, setStreamProgress] = React.useState(0);
-  
+
   // Fallback when editor context is not available
   if (!editor) {
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
-  
+
   const { state, actions, blockActions } = editor;
 
   React.useEffect(() => {
@@ -314,7 +314,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
       import('@/components/editor/panels/UnifiedComponentsPanel'),
       import('@/components/editor/canvas/CanvasDropZone.simple'),
       import('@/components/editor/properties/UltraUnifiedPropertiesPanel'),
-    ]).catch(() => {});
+    ]).catch(() => { });
   }, []);
 
   React.useEffect(() => {
@@ -336,7 +336,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
         }
         setStreamProgress(1);
       })();
-    } catch {}
+    } catch { }
   }, [blockActions]);
 
   // Extrair funções estáveis

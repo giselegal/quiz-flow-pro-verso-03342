@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { UniversalNoCodePanel } from './UniversalNoCodePanel';
+import { default as UniversalNoCodePanel } from '@/archive/legacy-panels/UniversalNoCodePanel';
 import type { Block } from '@/types/editor';
 
 interface NoCodePropertiesPanelCleanProps {

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { OptimizedPropertiesPanel } from '../OptimizedPropertiesPanel';
+import { default as OptimizedPropertiesPanel } from '@/archive/legacy-panels/OptimizedPropertiesPanel';
 
 // Mock completo dos módulos UI para testes leves
 vi.mock('@/components/ui/button', () => ({
