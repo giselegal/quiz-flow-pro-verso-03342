@@ -1,3 +1,26 @@
+/**
+ * @deprecated Este hook está DEPRECATED e será removido na FASE 3.
+ * 
+ * ⚠️ INCOMPATÍVEL com @core/contexts/EditorContext.
+ * Criado para abstrair API "PureBuilder" (legada).
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ Antigo (deprecated)
+ * import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+ * const { actions } = usePureBuilder();
+ * actions.addBlock(stepKey, block);
+ * 
+ * // ✅ Novo (recomendado)
+ * import { useEditor } from '@/core/hooks';
+ * const editor = useEditor();
+ * editor.addBlock(step, block);
+ * ```
+ * 
+ * @see docs/LEGACY_HOOKS_DEPRECATION.md - Guia completo de migração
+ * SERÁ REMOVIDO NA FASE 3.
+ */
+
 import { useCallback, useMemo } from 'react';
 import { useEditorCompat as useEditor } from '@/core/contexts/EditorContext';
 import type { Block } from '@/types/editor';
@@ -5,7 +28,9 @@ import type { Block } from '@/types/editor';
 // Log de deprecação em desenvolvimento
 if (import.meta.env.DEV) {
   console.warn(
-    '⚠️ usePureBuilderCompat: Este hook está deprecated'
+    '🚨 DEPRECATED: usePureBuilderCompat será removido na FASE 3.\n' +
+    'Migre para: import { useEditor } from "@/core/hooks";\n' +
+    'Veja: docs/LEGACY_HOOKS_DEPRECATION.md'
   );
 }
 import { appLogger } from '@/lib/utils/appLogger';

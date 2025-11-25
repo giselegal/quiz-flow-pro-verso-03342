@@ -1,18 +1,32 @@
 /**
- * 🎯 useEditorAdapter - Hook CANÔNICO para gerenciamento de blocos
+ * @deprecated Este hook está DEPRECATED e será removido na FASE 3.
  * 
- * ⚠️ IMPORTANTE: Este é o hook OFICIAL para acessar e gerenciar blocos no editor.
- * Fornece uma interface padronizada que abstrai o contexto subjacente (legado ou atual).
+ * ⚠️ INCOMPATÍVEL com @core/contexts/EditorContext.
+ * Criado para abstrair diferenças entre EditorContext.tsx e QuizV4Provider.tsx (ambos legados).
+ * Com a nova arquitetura @core, este hook não é mais necessário.
  * 
- * Interface pública:
- * - state: { currentStep, selectedBlockId, selectedBlock, blocks, isPreviewing, isLoading }
- * - actions: { addBlock, updateBlock, deleteBlock, removeBlock, duplicateBlock, save, setSelectedBlockId }
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ Antigo (deprecated)
+ * import { useEditorAdapter } from '@/hooks/editor/useEditorAdapter';
+ * const editor = useEditorAdapter();
+ * editor.deleteBlock(blockId);
  * 
- * A ação pública é `deleteBlock(blockId)`, que internamente faz a ponte para 
- * `removeBlock(stepKey, blockId)` quando necessário para contextos legados.
+ * // ✅ Novo (recomendado)
+ * import { useEditor } from '@/core/hooks';
+ * const editor = useEditor();
+ * editor.removeBlock(step, blockId);
+ * ```
  * 
- * @see EditorAdapter - Interface de tipos
- * @see PropertiesPanelTypes.ts - Tipos canônicos
+ * DIFERENÇAS PRINCIPAIS:
+ * - Step sempre explícito (mais claro, menos mágico)
+ * - API mínima e explícita (sem métodos "helper")
+ * - Type-safe (TypeScript verifica todos os argumentos)
+ * 
+ * @see docs/LEGACY_HOOKS_DEPRECATION.md - Guia completo de migração
+ * @see docs/CORE_ARCHITECTURE_MIGRATION.md - Arquitetura @core
+ * 
+ * SERÁ REMOVIDO NA FASE 3.
  */
 
 import { useMemo, useCallback } from 'react';
@@ -22,7 +36,9 @@ import { v4 as uuidv4 } from 'uuid';
 // Log de deprecação em desenvolvimento
 if (import.meta.env.DEV) {
   console.warn(
-    '⚠️ useEditorAdapter: Considere migrar para @/core/hooks/useEditor'
+    '🚨 DEPRECATED: useEditorAdapter será removido na FASE 3.\n' +
+    'Migre para: import { useEditor } from "@/core/hooks";\n' +
+    'Veja: docs/LEGACY_HOOKS_DEPRECATION.md'
   );
 }
 import { appLogger } from '@/lib/utils/appLogger';

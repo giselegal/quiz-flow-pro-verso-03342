@@ -1,13 +1,27 @@
 /**
- * 🎯 QUIZ V4 PROVIDER - INTEGRAÇÃO COMPLETA
+ * @deprecated Este QuizV4Provider está DEPRECATED e será removido na FASE 4.
  * 
- * Provider que integra:
+ * ⚠️ USE @core/contexts/EditorContext PARA NOVOS DESENVOLVIMENTOS.
+ * 
+ * Provider legado que integra:
  * - Carregamento de quiz21-v4.json
  * - Validação com Zod schemas
  * - Logic Engine para navegação
  * - Estado de respostas e progresso
  * 
- * FASE 4: Integração E2E
+ * Mantido temporariamente para compatibilidade com componentes não migrados.
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ Antigo (deprecated)
+ * import { useQuizV4 } from '@/contexts/quiz/QuizV4Provider';
+ * 
+ * // ✅ Novo (recomendado)
+ * import { useEditor } from '@/core/contexts/EditorContext';
+ * ```
+ * 
+ * @see docs/CORE_ARCHITECTURE_MIGRATION.md - Guia completo de migração
+ * SERÁ REMOVIDO NA FASE 4.
  */
 
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
@@ -102,6 +116,15 @@ interface QuizV4ProviderProps {
 // ============================================================================
 
 const QuizV4Context = createContext<QuizV4ContextValue | undefined>(undefined);
+
+// Warning de deprecação em desenvolvimento
+if (import.meta.env.DEV) {
+    console.warn(
+        '🚨 DEPRECATED: QuizV4Provider em uso.\n' +
+        'Migre para: import { EditorStateProvider } from "@/core/contexts/EditorContext";\n' +
+        'Veja: docs/CORE_ARCHITECTURE_MIGRATION.md'
+    );
+}
 
 // ============================================================================
 // PROVIDER

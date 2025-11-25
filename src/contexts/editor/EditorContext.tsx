@@ -1,3 +1,27 @@
+/**
+ * @deprecated Este EditorContext legado está DEPRECATED e será removido na FASE 4.
+ * 
+ * ⚠️ USE @core/contexts/EditorContext PARA NOVOS DESENVOLVIMENTOS.
+ * 
+ * Este arquivo contém a implementação legada (2847 linhas) que será substituída.
+ * Mantido temporariamente para compatibilidade com componentes não migrados.
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ Antigo (deprecated)
+ * import { useEditor } from '@/contexts/editor/EditorContext';
+ * 
+ * // ✅ Novo (recomendado)
+ * import { useEditor } from '@/core/contexts/EditorContext';
+ * // ou
+ * import { useEditor } from '@/core/hooks';
+ * ```
+ * 
+ * @see docs/CORE_ARCHITECTURE_MIGRATION.md - Guia completo de migração
+ * @see src/core/contexts/EditorContext - Nova implementação
+ * SERÁ REMOVIDO NA FASE 4.
+ */
+
 import { useSmartAutosave } from '@/hooks/useSmartAutosave';
 import { toast } from '@/hooks/use-toast';
 // Importação direta do TemplateManager para evitar problemas de dependência circular
@@ -37,6 +61,15 @@ const getStepTemplate = async (stepNumber: number, funnelId?: string) => {
     return null;
   }
 };
+
+// Warning de deprecação em desenvolvimento
+if (import.meta.env.DEV) {
+  console.warn(
+    '🚨 DEPRECATED: EditorContext legado em uso.\n' +
+    'Migre para: import { EditorStateProvider } from "@/core/contexts/EditorContext";\n' +
+    'Veja: docs/CORE_ARCHITECTURE_MIGRATION.md'
+  );
+}
 
 const STEP_KEY_REGEX = /step-(\d+)/i;
 
@@ -924,7 +957,7 @@ export const useEditor = (): EditorContextType => {
         reorderBlocks: noop,
         selectBlock: noop,
         togglePreview: noop,
-        save: async () => {},
+        save: async () => { },
         setCurrentStep: noop,
         ensureStepLoaded: noopAsync,
         setSelectedBlockId: noop,
