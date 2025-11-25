@@ -136,7 +136,7 @@ test.describe('Properties Panel - Testes de Edição E2E', () => {
       await page.waitForTimeout(500);
       
       // Procurar indicador de alterações não salvas
-      const unsavedIndicator = page.locator('text=/alterações não (aplicadas|salvas)/i, [class*="unsaved"], [class*="dirty"]');
+      const unsavedIndicator = page.locator('text=/alterações não (aplicadas|salvas)/i').or(page.locator('[class*="unsaved"]')).or(page.locator('[class*="dirty"]'));
       
       if (await unsavedIndicator.count() > 0) {
         const indicatorText = await unsavedIndicator.first().textContent();
