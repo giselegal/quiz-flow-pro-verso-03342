@@ -30,9 +30,9 @@ describe('EditorV4 - Template URL Parameter', () => {
     describe('Template ID Mapping', () => {
         it('deve mapear quiz21StepsComplete para quiz21-v4.json', () => {
             // Simular URL: /editor?template=quiz21StepsComplete
-            window.location.search = '?template=quiz21StepsComplete';
+            (window as any).location.search = '?template=quiz21StepsComplete';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
@@ -48,9 +48,9 @@ describe('EditorV4 - Template URL Parameter', () => {
         });
 
         it('deve mapear quiz21-complete para quiz21-complete.json', () => {
-            window.location.search = '?template=quiz21-complete';
+            (window as any).location.search = '?template=quiz21-complete';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
@@ -66,9 +66,9 @@ describe('EditorV4 - Template URL Parameter', () => {
         });
 
         it('deve usar fallback quando template não é reconhecido', () => {
-            window.location.search = '?template=unknown-template';
+            (window as any).location.search = '?template=unknown-template';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
@@ -84,9 +84,9 @@ describe('EditorV4 - Template URL Parameter', () => {
         });
 
         it('deve usar default quando não há parâmetro template', () => {
-            window.location.search = '';
+            (window as any).location.search = '';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             const templatePath = '/templates/quiz21-v4.json';
@@ -108,8 +108,8 @@ describe('EditorV4 - Template URL Parameter', () => {
             ];
 
             testCases.forEach(({ url, expected }) => {
-                window.location.search = url;
-                const params = new URLSearchParams(window.location.search);
+                (window as any).location.search = url;
+                const params = new URLSearchParams((window as any).location.search);
                 const templateId = params.get('template');
 
                 expect(templateId).toBe(expected);
@@ -117,18 +117,18 @@ describe('EditorV4 - Template URL Parameter', () => {
         });
 
         it('deve lidar com caracteres especiais em URL', () => {
-            window.location.search = '?template=quiz21%20StepsComplete';
+            (window as any).location.search = '?template=quiz21%20StepsComplete';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             expect(templateId).toBe('quiz21 StepsComplete');
         });
 
         it('deve ignorar parâmetros extras', () => {
-            window.location.search = '?template=quiz21StepsComplete&step=1&funnelId=test-123&foo=bar';
+            (window as any).location.search = '?template=quiz21StepsComplete&step=1&funnelId=test-123&foo=bar';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             expect(templateId).toBe('quiz21StepsComplete');
@@ -146,9 +146,9 @@ describe('EditorV4 - Template URL Parameter', () => {
             ];
 
             knownTemplates.forEach(({ id, path }) => {
-                window.location.search = `?template=${id}`;
+                (window as any).location.search = `?template=${id}`;
 
-                const params = new URLSearchParams(window.location.search);
+                const params = new URLSearchParams((window as any).location.search);
                 const templateId = params.get('template');
 
                 const templateMap: Record<string, string> = {
@@ -181,9 +181,9 @@ describe('EditorV4 - Template URL Parameter', () => {
         it('deve logar template solicitado e caminho resolvido', () => {
             const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
 
-            window.location.search = '?template=quiz21StepsComplete';
+            (window as any).location.search = '?template=quiz21StepsComplete';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
@@ -209,18 +209,18 @@ describe('EditorV4 - Template URL Parameter', () => {
 
     describe('Edge Cases', () => {
         it('deve lidar com template vazio', () => {
-            window.location.search = '?template=';
+            (window as any).location.search = '?template=';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             expect(templateId).toBe('');
         });
 
         it('deve lidar com múltiplos parâmetros template (usar primeiro)', () => {
-            window.location.search = '?template=quiz21-v4&template=quiz21-complete';
+            (window as any).location.search = '?template=quiz21-v4&template=quiz21-complete';
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
             // URLSearchParams.get() retorna o primeiro valor
@@ -235,9 +235,9 @@ describe('EditorV4 - Template URL Parameter', () => {
             ];
 
             testCases.forEach(({ input, shouldMatch }) => {
-                window.location.search = `?template=${input}`;
+                (window as any).location.search = `?template=${input}`;
 
-                const params = new URLSearchParams(window.location.search);
+                const params = new URLSearchParams((window as any).location.search);
                 const templateId = params.get('template');
 
                 const templateMap: Record<string, string> = {
