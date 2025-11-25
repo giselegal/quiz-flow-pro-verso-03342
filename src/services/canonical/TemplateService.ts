@@ -215,6 +215,34 @@ export class TemplateService extends BaseCanonicalService {
   // 🎯 Custom Steps (modo "Começar do Zero")
   private customSteps: Map<string, StepInfo> = new Map();
 
+  /**
+   * 🆔 Converte JSON ID para UUID do Supabase quando necessário
+   * @param templateId - ID do JSON (ex: 'quiz21StepsComplete')
+   * @returns UUID do Supabase se conhecido, ou ID original
+   */
+  private resolveTemplateId(templateId: string): string {
+    const uuid = getTemplateUUID(templateId);
+    if (uuid) {
+      appLogger.info(`🆔 [resolveTemplateId] Convertendo ${templateId} → ${uuid}`);
+      return uuid;
+    }
+    return templateId;
+  }
+
+  /**
+   * 🆔 Converte funnel JSON ID para UUID do Supabase quando necessário
+   * @param funnelId - ID do JSON do funnel
+   * @returns UUID do Supabase se conhecido, ou ID original
+   */
+  private resolveFunnelId(funnelId: string): string {
+    const uuid = getFunnelUUID(funnelId);
+    if (uuid) {
+      appLogger.info(`🆔 [resolveFunnelId] Convertendo ${funnelId} → ${uuid}`);
+      return uuid;
+    }
+    return funnelId;
+  }
+
   // Mapeamento das 21 etapas do Quiz de Estilo
   private readonly STEP_MAPPING: Record<number, Omit<StepInfo, 'id' | 'order' | 'blocksCount' | 'hasTemplate'>> = {
     1: { name: 'Introdução', type: 'intro', description: 'Apresentação do Quiz de Estilo' },
@@ -801,25 +829,33 @@ export class TemplateService extends BaseCanonicalService {
    * 🎯 Definir template ativo (afeta número de steps na navegação)
    */
   setActiveTemplate(templateId: string, totalSteps: number): void {
-    this.activeTemplateId = templateId;
+    // 🆔 Converter JSON ID para UUID se necessário
+    const resolvedId = this.resolveTemplateId(templateId);
+    
+    this.activeTemplateId = resolvedId;
     this.activeTemplateSteps = totalSteps;
-    appLogger.info(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} com ${totalSteps} etapas`);
-    this.log(`✅ Template ativo: ${templateId} (${totalSteps} etapas)`);
+    appLogger.info(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} → ${resolvedId} com ${totalSteps} etapas`);
+    this.log(`✅ Template ativo: ${resolvedId} (${totalSteps} etapas)`);
 
     // 🆕 Sincronizar com HierarchicalTemplateSource
-    hierarchicalTemplateSource.setActiveTemplate(templateId);
+    hierarchicalTemplateSource.setActiveTemplate(resolvedId);
   }
 
   /**
    * 🎯 Definir funnel ativo (afeta HierarchicalTemplateSource → USER_EDIT)
    */
   setActiveFunnel(funnelId: string | null): void {
-    this.activeFunnelId = funnelId || null;
-    if (funnelId) {
-      this.log(`✅ Funnel ativo para USER_EDIT: ${funnelId}`);
-    } else {
+    if (!funnelId) {
+      this.activeFunnelId = null;
       this.log('ℹ️ Funnel ativo removido (voltando para TEMPLATE_DEFAULT/ADMIN_OVERRIDE)');
+      return;
     }
+    
+    // 🆔 Converter JSON ID para UUID se necessário
+    const resolvedId = this.resolveFunnelId(funnelId);
+    this.activeFunnelId = resolvedId;
+    appLogger.info(`🎯 [setActiveFunnel] Definindo funnel ativo: ${funnelId} → ${resolvedId}`);
+    this.log(`✅ Funnel ativo para USER_EDIT: ${resolvedId}`);
   }
 
   /**
