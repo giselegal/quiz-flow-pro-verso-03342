@@ -20,6 +20,7 @@ import React, { Suspense, useMemo, useCallback } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useEditor } from '@/hooks/useEditor';
+import useEditorAdapter from '@/hooks/useEditorAdapter';
 import { logger } from '@/lib/utils/debugLogger';
 
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)
@@ -78,6 +79,7 @@ const ModeRenderer: React.FC<{
   funnelId?: string;
 }> = ({ mode, funnelId }) => {
   const editor = useEditor();
+  const adapter = useEditorAdapter();
 
   // Fallback when editor context is not available
   if (!editor) {
@@ -161,10 +163,10 @@ const ModeRenderer: React.FC<{
                       (state.stepBlocks as any)[`step-${String(state.currentStep).padStart(2, '0')}`] ||
                       []
                     }
-                    selectedBlockId={state.selectedBlockId}
-                    onSelectBlock={actions.setSelectedBlockId}
-                    onUpdateBlock={(blockId, updates) => actions.updateBlock(blockId, updates)}
-                    onDeleteBlock={(blockId) => actions.deleteBlock(blockId)}
+                    selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
+                    onSelectBlock={adapter.actions.setSelectedBlockId ?? actions.setSelectedBlockId}
+                    onUpdateBlock={(blockId, updates) => (adapter.actions.updateBlock ?? actions.updateBlock)(blockId, updates)}
+                    onDeleteBlock={(blockId) => (adapter.actions.deleteBlock ?? actions.deleteBlock)(blockId)}
                   />
                 </LazyBoundary>
               </div>
@@ -192,10 +194,10 @@ const ModeRenderer: React.FC<{
                   (state.stepBlocks as any)[`step-${String(state.currentStep).padStart(2, '0')}`] ||
                   []
                 }
-                selectedBlockId={state.selectedBlockId}
-                onSelectBlock={actions.setSelectedBlockId}
-                onUpdateBlock={(blockId, updates) => actions.updateBlock(blockId, updates)}
-                onDeleteBlock={(blockId) => actions.deleteBlock(blockId)}
+                selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
+                onSelectBlock={adapter.actions.setSelectedBlockId ?? actions.setSelectedBlockId}
+                onUpdateBlock={(blockId, updates) => (adapter.actions.updateBlock ?? actions.updateBlock)(blockId, updates)}
+                onDeleteBlock={(blockId) => (adapter.actions.deleteBlock ?? actions.deleteBlock)(blockId)}
                 className="h-full border border-border rounded-lg"
               />
             </LazyBoundary>

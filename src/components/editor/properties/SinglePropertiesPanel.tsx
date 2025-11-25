@@ -99,6 +99,17 @@ const createMatcher = (keys: string[]): ((key: string) => boolean) => {
     return (key: string) => set.has(key);
 };
 
+// Safety wrapper: in some test environments `appLogger` may be mocked or partially defined.
+// Use `loggerSafe` to avoid runtime TypeErrors when debug/info/warn are not functions.
+const loggerSafe = ((): typeof appLogger | Console => {
+    try {
+        if (appLogger && typeof (appLogger as any).debug === 'function') return appLogger;
+    } catch (e) {
+        // fallthrough
+    }
+    return console;
+})();
+
 const BLOCK_SECTION_PRESETS: Record<string, SectionPreset[]> = {
     'options-grid': [
         {

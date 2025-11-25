@@ -31,6 +31,7 @@ import { AutosaveIndicator } from '../AutosaveIndicator';
 import { TemplateHealthPanel } from './components/TemplateHealthPanel';
 // 🎯 FASE 3.1: Novos hooks refatorados
 import { useStepNavigation } from './hooks/useStepNavigation';
+import useEditorAdapter from '@/hooks/useEditorAdapter';
 import { useAutoSave } from './hooks/useAutoSave';
 import { useEditorMode as useEditorModeLocal } from './hooks/useEditorMode';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
@@ -159,6 +160,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const currentStepKey = `step-${String(safeCurrentStep).padStart(2, '0')}`;
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
+    const adapter = useEditorAdapter();
 
     // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
     useEffect(() => {
@@ -2006,14 +2008,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
-                                                        removeBlock(safeCurrentStep, id);
+                                                        (adapter.actions.deleteBlock ?? removeBlock)(id);
                                                     }) : undefined}
                                                     onMoveBlock={previewMode === 'live' ? ((from, to) => {
                                                         wysiwyg.actions.reorderBlocks(from, to);
                                                     }) : undefined}
                                                     onUpdateBlock={previewMode === 'live' ? ((id, patch) => {
                                                         wysiwyg.actions.updateBlock(id, patch);
-                                                        updateBlock(safeCurrentStep, id, patch);
+                                                        (adapter.actions.updateBlock ?? ((bid, p) => updateBlock(safeCurrentStep, bid, p)))(id, patch);
                                                     }) : undefined}
                                                     onBlockSelect={(id) => {
                                                         if (previewMode === 'live') {
