@@ -8,19 +8,20 @@
  * - Ações: Delete, Duplicate, Move Up/Down
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { useStepBlocks } from '@/editor/hooks/useStepBlocks';
-import { getBlockDefinition } from '@/editor/registry/BlockRegistry';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Trash2, Copy, ArrowUp, ArrowDown, X, Save, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+/**
+ * Painel de propriedades clássico (v1) – DESCONTINUADO.
+ *
+ * Este componente atualizava o JSON oficial dos blocos diretamente via
+ * `useStepBlocks`, sem rascunho nem validação estruturada. Foi mantido
+ * apenas como stub para evitar usos acidentais em novas telas.
+ *
+ * Para qualquer implementação nova, use a infraestrutura canônica:
+ * - `SinglePropertiesPanel` em `src/components/editor/properties/SinglePropertiesPanel.tsx`
+ * - `PropertiesColumnWithJson` em
+ *   `src/components/editor/quiz/QuizModularEditor/components/PropertiesColumn/PropertiesColumnWithJson.tsx`
+ */
+
+import React from 'react';
 
 interface PropertiesPanelProps {
     blockId: string | null;
