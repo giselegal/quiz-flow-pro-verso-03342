@@ -89,12 +89,36 @@ const scenes = [
 const narrationText = `Você já sentiu que está fazendo tudo para crescer no digital, mas os resultados não aparecem?\n\nVocê posta, faz live, cria conteúdo… e mesmo assim as vendas não acompanham seu esforço.\n\nTalvez você tenha um método poderoso, um curso incrível ou clientes satisfeitos. Mas na hora de escalar, tudo trava. Você não sabe por onde começar, qual passo dar primeiro, e sente que perde oportunidades todos os dias.\n\nQuem está crescendo de verdade cria experiências interativas que conduzem o lead passo a passo até a decisão de compra. Uma das mais poderosas são os quizzes e funis inteligentes.\n\nQuizFlowPro nasceu para quem quer alavancar e escalar no digital, mesmo sem saber por onde começar, usando quizzes e funis inteligentes para transformar visitantes em leads qualificados e leads em clientes.\n\nCom o QuizFlowPro, você cria quizzes alinhados ao seu método, mapeia perfil e momento de cada lead, direciona automaticamente para a oferta certa e acompanha em tempo real quais funis convertem mais — sem programar, sem depender de tech, sem virar escravo de lançamentos.\n\nSe você não sabe por onde começar, use nossos modelos prontos de funis. Personalize perguntas, textos e resultados, e valide sua oferta em poucas horas.\n\nProfissionais e empresas já usam o QuizFlowPro para triplicar a conversão, construir listas segmentadas e escalar com previsibilidade.\n\nSe quer parar de andar em círculos e ter um caminho claro para escalar no digital, teste o QuizFlowPro e veja na prática como um único quiz bem desenhado pode mudar tudo.`;
 
 async function synthesizeAudio(text, outFile) {
-  const base64 = await googleTTS.getAudioBase64(text, {
+  // For long texts, split into multiple chunks and concat with ffmpeg
+  const parts = await googleTTS.getAllAudioBase64(text, {
     lang: 'pt',
     slow: false,
     host: 'https://translate.google.com'
   });
-  fs.writeFileSync(outFile, Buffer.from(base64, 'base64'));
+
+  const tmpDir = path.join(outDir, 'tmp-audio');
+  if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+
+  const listPath = path.join(tmpDir, 'files.txt');
+  const listLines = [];
+
+  for (let i = 0; i < parts.length; i++) {
+    const p = parts[i];
+    const pFile = path.join(tmpDir, `part-${String(i + 1).padStart(2, '0')}.mp3`);
+    fs.writeFileSync(pFile, Buffer.from(p.base64, 'base64'));
+    listLines.push(`file '${pFile.replace(/'/g, "'\\''")}'`);
+  }
+
+  fs.writeFileSync(listPath, listLines.join('\n'));
+
+  await new Promise((resolve, reject) => {
+    const ff = spawn(ffmpegPath, ['-y', '-f', 'concat', '-safe', '0', '-i', listPath, '-c', 'copy', outFile], { stdio: 'inherit' });
+    ff.on('error', reject);
+    ff.on('close', code => {
+      if (code === 0) resolve();
+      else reject(new Error(`ffmpeg audio concat exited with code ${code}`));
+    });
+  });
 }
 
 async function createSceneImage(scene, index) {
