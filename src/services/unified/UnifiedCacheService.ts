@@ -579,9 +579,7 @@ export class UnifiedCacheService {
   }
 
   // Alias to satisfy older callers that call unifiedCache.set(store, key, value, ttl)
-  set<T = any>(store: string, key: string, data: T, ttl?: number): void {
-    return this.setEntry<T>(store, key, data, ttl);
-  }
+  // (alias removed — handled by overloaded `set` implementation above)
 
   // Legacy multi-arg signature: get(store, key)
   getEntry<T = any>(store: string, key: string): T | undefined {
@@ -590,9 +588,7 @@ export class UnifiedCacheService {
   }
 
   // Alias for unifiedCache.get(store, key)
-  get<T = any>(store: string, key: string): T | undefined {
-    return this.getEntry<T>(store, key);
-  }
+  // (alias removed — handled by overloaded `get` implementation above)
 
   // Legacy has/delete wrappers
   hasEntry(store: string, key: string): boolean {
@@ -600,18 +596,14 @@ export class UnifiedCacheService {
   }
 
   // Alias for unifiedCache.has(store, key)
-  has(store: string, key: string): boolean {
-    return this.hasEntry(store, key);
-  }
+  // (alias removed — handled by overloaded `has` implementation above)
 
   deleteEntry(store: string, key: string): boolean {
     return this.delete(this.composeKey(store, key));
   }
 
   // Alias for unifiedCache.delete(store, key)
-  delete(store: string, key: string): boolean {
-    return this.deleteEntry(store, key);
-  }
+  // (alias removed — handled by overloaded `delete` implementation above)
 
   // Invalidate by prefix within a store
   invalidateByPrefix(store: string, prefix: string): number {
