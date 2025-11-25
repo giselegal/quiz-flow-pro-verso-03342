@@ -14,6 +14,12 @@ FASE 9 implementa validação Zod completa para **todos os blocos** das 21 etapa
 
 ## 🎯 Objetivos Alcançados
 
+### 🔄 Atualização 25/11/2025
+- 🔧 `zodSchemaBuilder` passou a cobrir arrays, objetos, multiselects e campos JSON aplicando `min/max length`, `min/max items`, padrões e validadores customizados do `BlockRegistry`.
+- 🪄 Defaults e regras de `required` são herdados automaticamente (inclusive quando definidos como `defaultValue` nos schemas legados).
+- 🎯 Campos de cor, URL/imagem e dropdowns ganharam validações específicas (regex hex, URL relativa/absoluta e enums derivadas de `options`).
+- ✅ A suíte `src/core/schema/__tests__/zodSchemaBuilder.test.ts` garante comportamentos-chave (strings, dropdowns, arrays/options-list, defaults e validadores custom).
+
 ### 1. Expansão de Schemas Zod (`lib/validation.ts`)
 
 Criados **27 schemas Zod** cobrindo todos os tipos de blocos:
