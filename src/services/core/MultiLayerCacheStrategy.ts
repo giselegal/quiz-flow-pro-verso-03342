@@ -277,7 +277,7 @@ export class MultiLayerCacheStrategy {
     this.l2.set(store, key, value, ttl);
 
     // L3: IndexedDB (assíncrono em background)
-    this.l3.set(store, key, value, ttl).catch((error) => {
+    this.l3.set(store, key, value, ttl).catch((error: any) => {
       logger.error('cache', 'L3 background write failed:', error);
     });
 

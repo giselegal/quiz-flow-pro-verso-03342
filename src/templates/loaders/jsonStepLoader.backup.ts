@@ -7,16 +7,52 @@ import { ASSETS } from '@/config/assets';
 
 // Legacy templateCache API wrapper
 const templateCache = {
-  get: (key: string) => {
-    const result = cacheService.get(key, 'templates');
+  // Backwards-compatible get: accept (key) or (key, templateId)
+  get: (key: string, templateId?: string) => {
+    const cacheKey = templateId ? `${templateId}:${key}` : key;
+    const result = cacheService.get(cacheKey, 'templates');
     return result.success ? result.data : null;
   },
-  set: (key: string, value: any, ttl?: number) => cacheService.set(key, value, { store: 'templates', ttl }),
-  has: (key: string) => cacheService.has(key, 'templates'),
+  set: (key: string, value: any, templateId?: string, ttl?: number) => {
+    const cacheKey = templateId ? `${templateId}:${key}` : key;
+    return cacheService.set(cacheKey, value, { store: 'templates', ttl });
+  },
+  has: (key: string, templateId?: string) => {
+    const cacheKey = templateId ? `${templateId}:${key}` : key;
+    return cacheService.has(cacheKey, 'templates');
+  },
   clear: () => {
     const result = cacheService.clearStore('templates');
     return result;
   },
+  // Optional advanced helpers — provide safe no-op implementations if not present in canonical cache
+  getStepFromMaster: (stepId: string, templateId?: string) => {
+    // Try to read master keyed by templateId:master
+    if (!templateId) return null;
+    const masterKey = `${templateId}:master`;
+    const res = cacheService.get(masterKey, 'templates');
+    if (!res.success || !res.data) return null;
+    const steps = res.data as Record<string, any>;
+    return steps[stepId] || null;
+  },
+  setMaster: (templateId: string, masterSteps: Record<string, any>) => {
+    const masterKey = `${templateId}:master`;
+    return cacheService.set(masterKey, masterSteps, { store: 'templates' });
+  },
+  preloadAdjacent: (stepNumber: number, templateId?: string) => {
+    // Best-effort: no-op if not implemented elsewhere
+    try {
+      // If templateId provided, attempt to prefetch neighbor keys into cache by reading master
+      if (!templateId) return Promise.resolve();
+      const masterKey = `${templateId}:master`;
+      const res = cacheService.get(masterKey, 'templates');
+      if (!res.success || !res.data) return Promise.resolve();
+      // No heavy lifting here — caller expects a promise
+      return Promise.resolve();
+    } catch (e) {
+      return Promise.resolve();
+    }
+  }
 };
 
 // ✅ G4 FIX: Cache de paths falhos para evitar requisições repetidas
