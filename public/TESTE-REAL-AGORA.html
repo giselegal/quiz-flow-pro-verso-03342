@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>🔥 TESTE REAL - FORÇAR PROPERTIES PANEL</title>
+    <script>
+        // EXECUTAR IMEDIATAMENTE
+        console.log('🔥 [TESTE REAL] Iniciando...');
+        
+        // 1. ATIVAR FLAG
+        localStorage.setItem('qm-editor:use-simple-properties', 'true');
+        console.log('✅ Flag ativada:', localStorage.getItem('qm-editor:use-simple-properties'));
+        
+        // 2. REDIRECIONAR
+        setTimeout(() => {
+            window.location.href = '/editor?template=quiz21StepsComplete';
+        }, 500);
+    </script>
+</head>
+<body style="background:#000;color:#0f0;font-family:monospace;padding:50px;">
+    <h1>🔥 REDIRECIONANDO...</h1>
+    <p>Aguarde...</p>
+</body>
+</html>
