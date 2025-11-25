@@ -238,7 +238,7 @@ export const Home: React.FC = () => {
                 >
                   <Zap className="h-5 w-5 mr-2" />
                   {user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito'}
-                </Button>
+                </MotionButton>
                 <MotionButton
                   variant="outline"
                   size="lg"
@@ -249,7 +249,7 @@ export const Home: React.FC = () => {
                 >
                   <Target className="h-5 w-5 mr-2" />
                   Ver Templates
-                </Button>
+                </MotionButton>
               </div>
 
               {/* Social Proof */}
@@ -350,7 +350,8 @@ export const Home: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
+              <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }} whileHover={{ y: -6 }}>
+                <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-4 text-yellow-500">
                     <Star className="h-5 w-5" />
@@ -363,9 +364,11 @@ export const Home: React.FC = () => {
                   <div className="text-slate-900 font-semibold">Mariana, Head de Marketing</div>
                   <div className="text-slate-500 text-sm">E-commerce de Beleza</div>
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
 
-              <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
+              <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.06 }} whileHover={{ y: -6 }}>
+                <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-4 text-yellow-500">
                     <Star className="h-5 w-5" />
@@ -378,9 +381,11 @@ export const Home: React.FC = () => {
                   <div className="text-slate-900 font-semibold">Lucas, Growth Lead</div>
                   <div className="text-slate-500 text-sm">Startup SaaS</div>
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
 
-              <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
+              <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.65, delay: 0.12 }} whileHover={{ y: -6 }}>
+                <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-4 text-yellow-500">
                     <Star className="h-5 w-5" />
@@ -393,7 +398,8 @@ export const Home: React.FC = () => {
                   <div className="text-slate-900 font-semibold">Aline, Diretora de Produto</div>
                   <div className="text-slate-500 text-sm">EduTech</div>
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -407,7 +413,8 @@ export const Home: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <Card className="border border-slate-200 bg-white">
+              <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
+                <Card className="border border-slate-200 bg-white">
                 <CardContent className="p-8">
                   <div className="text-slate-900 text-xl font-bold mb-2">Starter</div>
                   <div className="text-4xl font-extrabold text-slate-900 mb-6">R$0<span className="text-lg font-medium text-slate-500">/mês</span></div>
@@ -416,13 +423,17 @@ export const Home: React.FC = () => {
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates básicos</li>
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Coleta de leads</li>
                   </ul>
-                  <Button onClick={() => navigate('/criar-funil')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Começar gratuitamente</Button>
+                  <MotionButton onClick={() => navigate('/criar-funil')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Começar gratuitamente</MotionButton>
                 </CardContent>
-              </Card>
+                </Card>
+                </motion.div>
 
-              <Card className="border-2 border-brand-lightBlue bg-white shadow-lg relative">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.06 }}>
+                <Card className="border-2 border-brand-lightBlue bg-white shadow-lg relative">
                 <CardContent className="p-8">
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-light text-brand-brightBlue">Mais Popular</Badge>
+                  <motion.div className="absolute -top-3 left-1/2 -translate-x-1/2" animate={{ scale: [1, 1.03, 1], opacity: [0.95, 1, 0.95] }} transition={{ repeat: Infinity, duration: 2.5 }}>
+                    <Badge className="bg-brand-light text-brand-brightBlue">Mais Popular</Badge>
+                  </motion.div>
                   <div className="text-slate-900 text-xl font-bold mb-2">Pro</div>
                   <div className="text-4xl font-extrabold text-slate-900 mb-6">R$99<span className="text-lg font-medium text-slate-500">/mês</span></div>
                   <ul className="space-y-3 text-slate-700 mb-8">
@@ -431,11 +442,13 @@ export const Home: React.FC = () => {
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Análises avançadas</li>
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Teste A/B</li>
                   </ul>
-                  <Button onClick={() => navigate('/admin')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue">Assinar Pro</Button>
+                  <MotionButton onClick={() => navigate('/admin')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Assinar Pro</MotionButton>
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
 
-              <Card className="border border-slate-200 bg-white">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.12 }}>
+                <Card className="border border-slate-200 bg-white">
                 <CardContent className="p-8">
                   <div className="text-slate-900 text-xl font-bold mb-2">Enterprise</div>
                   <div className="text-4xl font-extrabold text-slate-900 mb-6">Custom</div>
@@ -444,9 +457,10 @@ export const Home: React.FC = () => {
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Integrações avançadas</li>
                     <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Onboarding personalizado</li>
                   </ul>
-                  <Button onClick={() => window.open('mailto:sales@quizflow.pro')} variant="outline" className="w-full">Falar com Vendas</Button>
+                  <MotionButton onClick={() => window.open('mailto:sales@quizflow.pro')} variant="outline" className="w-full" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Falar com Vendas</MotionButton>
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -454,21 +468,23 @@ export const Home: React.FC = () => {
         {/* CTA Final */}
         <section className="py-24" style={{ background: 'linear-gradient(90deg, #3bbef3, #ea7af6)' }}>
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Pronto Para Transformar Seu Negócio?
-            </h2>
-            <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto">
-              Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões
-            </p>
+            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Pronto Para Transformar Seu Negócio?
+              </h2>
+              <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto">
+                Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões
+              </p>
+            </motion.div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={() => navigate(user ? '/dashboard' : '/criar-funil')} className="bg-white text-[#0a0f1f] hover:bg-slate-100 px-8 py-4 text-lg font-semibold">
+              <MotionButton size="lg" onClick={() => navigate(user ? '/dashboard' : '/criar-funil')} className="bg-white text-[#0a0f1f] hover:bg-slate-100 px-8 py-4 text-lg font-semibold" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Zap className="mr-2 h-5 w-5" />
                 Iniciar teste gratuito
-              </Button>
-              <Button variant="outline" size="lg" onClick={() => window.open('mailto:sales@quizflow.pro')} className="border-2 border-white text-white hover:bg-white hover:text-[#0a0f1f] px-8 py-4 text-lg font-semibold">
+              </MotionButton>
+              <MotionButton variant="outline" size="lg" onClick={() => window.open('mailto:sales@quizflow.pro')} className="border-2 border-white text-white hover:bg-white hover:text-[#0a0f1f] px-8 py-4 text-lg font-semibold" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <ArrowRight className="mr-2 h-5 w-5" />
                 Falar com Vendas
-              </Button>
+              </MotionButton>
             </div>
           </div>
         </section>
