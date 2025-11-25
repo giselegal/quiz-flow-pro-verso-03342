@@ -259,12 +259,15 @@ function estimateDurations(scenesArr, wps = 2.2) {
   return durations;
 }
 
+// Animated slide generation (synthetic AI-style scene): slow zoom + subtle movement
 async function buildSceneVideoFromImage(imageFile, duration, outFile) {
-  const args = ['-y', '-loop', '1', '-t', String(duration), '-i', imageFile, '-c:v', 'libx264', '-pix_fmt', 'yuv420p', outFile];
+  const frames = duration * 25; // target fps 25
+  const vf = `zoompan=z='min(zoom+0.0015,1.05)':fps=25:d=${frames},scale=1280:720,format=yuv420p`;
+  const args = ['-y', '-loop', '1', '-i', imageFile, '-vf', vf, '-t', String(duration), '-c:v', 'libx264', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', outFile];
   await new Promise((resolve, reject) => {
     const ff = spawn(ffmpegPath, args, { stdio: 'inherit' });
     ff.on('error', reject);
-    ff.on('close', code => (code === 0 ? resolve() : reject(new Error(`ffmpeg image->video exited with code ${code}`))));
+    ff.on('close', code => (code === 0 ? resolve() : reject(new Error(`ffmpeg animated slide exited with code ${code}`))));
   });
 }
 

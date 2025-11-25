@@ -100,6 +100,14 @@ npm run build
 cp -f output/vsl-quizflowpro.mp4 ../../public/videos/vsl-quizflowpro.mp4
 ```
 
+## Modo cenas AI sintéticas (sem API)
+Se você não quiser usar nenhuma chave ou vídeos externos, o gerador cria automaticamente cenas animadas (zoom suave) a partir de slides estilizados para cada cena. Basta garantir que não existam arquivos correspondentes em `assets/videos/` e rodar:
+```bash
+cd tools/vsl
+npm run build
+```
+Cada slide aplica animação de zoom leve com sobreposição de texto, simulando movimento ambiente sem dependências externas.
+
 ## Dicas de conteúdo
 - Use vídeos reais com pessoas (frustração, equipe, métricas, depoimentos). Evite conteúdos com direitos autorais sem licença adequada.
 - Mantenha duração por cena entre 4–7s (o script estima baseado no texto, mas você pode ajustar encurtando linhas).
