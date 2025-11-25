@@ -82,7 +82,7 @@ export interface ServiceOptions {
  */
 export type ServiceResult<T> =
   | { success: true; data: T; error?: undefined }
-  | { success: false; data: null; error: Error };
+  | { success: false; data?: null; error: Error };
 
 /**
  * Base class abstrata para canonical services
