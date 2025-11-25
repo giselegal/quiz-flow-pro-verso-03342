@@ -1,46 +1,87 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "https://example.com/schemas/logic.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "/schemas/logic.schema.json",
+	"$comment": "Logic schema - validates conditional logic and rules for quiz flows",
 	"title": "Logic Schema",
 	"type": "object",
-	"additionalProperties": true,
+	"additionalProperties": false,
 	"properties": {
 		"conditions": {
 			"type": "array",
 			"items": {
 				"type": "object",
-				"additionalProperties": true,
+				"additionalProperties": false,
+				"required": ["operator"],
 				"properties": {
-					"id": { "type": "string" },
-					"left": { "type": ["string", "number", "boolean", "object", "array", "null"] },
-					"operator": { "type": "string" },
-					"right": { "type": ["string", "number", "boolean", "object", "array", "null"] }
-				},
-				"required": ["operator"]
-			}
+					"id": {
+						"type": "string",
+						"pattern": "^[a-zA-Z0-9_-]+$",
+						"description": "Condition identifier"
+					},
+					"left": {
+						"description": "Left operand for comparison"
+					},
+					"operator": {
+						"type": "string",
+						"enum": ["equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEqual", "lessThanOrEqual", "contains", "notContains", "startsWith", "endsWith", "matches", "in", "notIn"],
+						"description": "Comparison operator"
+					},
+					"right": {
+						"description": "Right operand for comparison"
+					}
+				}
+			},
+			"description": "Array of conditions to evaluate"
 		},
 		"actions": {
 			"type": "array",
 			"items": {
 				"type": "object",
 				"additionalProperties": true,
+				"required": ["type"],
 				"properties": {
-					"type": { "type": "string" },
-					"params": { "type": "object", "additionalProperties": true }
-				},
-				"required": ["type"]
-			}
+					"type": {
+						"type": "string",
+						"enum": ["navigate", "setVariable", "showBlock", "hideBlock", "submitForm", "triggerEvent", "redirect", "custom"],
+						"description": "Action type"
+					},
+					"params": {
+						"type": "object",
+						"additionalProperties": true,
+						"description": "Action parameters"
+					}
+				}
+			},
+			"description": "Array of actions to execute"
 		},
 		"rules": {
 			"type": "array",
 			"items": {
 				"type": "object",
-				"additionalProperties": true,
+				"additionalProperties": false,
+				"required": ["when", "then"],
 				"properties": {
-					"when": { "type": "string" },
-					"then": { "type": "array", "items": { "type": "string" } }
+					"id": {
+						"type": "string",
+						"description": "Rule identifier"
+					},
+					"when": {
+						"type": "string",
+						"description": "Condition expression"
+					},
+					"then": {
+						"type": "array",
+						"items": { "type": "string" },
+						"description": "Actions to execute when condition is met"
+					},
+					"otherwise": {
+						"type": "array",
+						"items": { "type": "string" },
+						"description": "Actions to execute when condition is not met"
+					}
 				}
-			}
+			},
+			"description": "Array of conditional rules"
 		}
 	}
 }

@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { appLogger } from '@/lib/utils/appLogger';
+import { validateTemplateV4, type ValidationResult } from '@/lib/validation/jsonSchemaValidator';
 
 interface JsonTemplateEditorProps {
   template?: any;
@@ -181,6 +182,18 @@ export function JsonTemplateEditor({
 
     try {
       const parsed = JSON.parse(text);
+
+      // 🎯 JSON Schema validation (Draft 2020-12)
+      const schemaResult: ValidationResult = validateTemplateV4(parsed);
+      if (!schemaResult.valid && schemaResult.errorMessages) {
+        schemaResult.errorMessages.forEach((msg: string) => {
+          errors.push({
+            path: msg.split(':')[0] || 'schema',
+            message: msg,
+            severity: 'error'
+          });
+        });
+      }
 
       // Validar campos obrigatórios
       if (!parsed.templateId) {
