@@ -29,7 +29,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   const editorCtx = (() => { try { return useEditor(); } catch { return null as any; } })();
   const funnelId = editorCtx?.funnelId as string | undefined;
   const currentStep = editorCtx?.currentStep ?? 1;
-  
+
   // 🐛 DEBUG: Ver o que está chegando
   React.useEffect(() => {
     console.log('🔍 UnifiedEditorLayout Estado:', {
@@ -39,13 +39,22 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
       selectedBlockId
     });
   }, [funnelId, currentStep, editorCtx, selectedBlockId]);
-  
+
   const { data: supabaseBlocks, isLoading: loadingBlocks } = useBlocksFromSupabase(
     funnelId || '',
     currentStep - 1 // step_number zero-based no banco; ajuste conforme necessário
   );
 
   const { updateBlock, deleteBlock } = useBlockMutations();
+
+  // 🐛 DEBUG: Ver se blocos carregaram
+  React.useEffect(() => {
+    console.log('🔍 Blocos do Supabase:', {
+      count: supabaseBlocks?.length || 0,
+      blocks: supabaseBlocks,
+      isLoading: loadingBlocks
+    });
+  }, [supabaseBlocks, loadingBlocks]);
 
   const handleComponentSelect = (type: string) => {
     appLogger.debug('Component selected:', type);
@@ -102,7 +111,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   const config = resultPageConfig || defaultConfig;
   // Fix type compatibility by ensuring content is always defined
   const sourceBlocks = supabaseBlocks && supabaseBlocks.length > 0 ? supabaseBlocks : (config.blocks || []);
-  
+
   // 🐛 DEBUG: Ver blocos finais
   React.useEffect(() => {
     console.log('📦 Source blocks:', {
@@ -111,7 +120,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
       blocks: sourceBlocks.slice(0, 2) // primeiros 2 para não poluir
     });
   }, [sourceBlocks, supabaseBlocks]);
-  
+
   const selectedBlock = selectedBlockId
     ? sourceBlocks.find((b: any) => b.id === selectedBlockId) || null
     : null;
@@ -123,7 +132,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
       properties: selectedBlock.properties || {},
     }
     : null;
-  
+
   // 🐛 DEBUG: Ver seleção
   React.useEffect(() => {
     if (selectedBlockId) {
