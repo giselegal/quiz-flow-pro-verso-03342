@@ -152,7 +152,7 @@ export const Home: React.FC = () => {
         <meta name="description" content="QuizFlowPro: crie quizzes interativos para captar leads qualificados, segmentar público e aumentar conversões — editor visual, templates prontos e integrações com CRMs." />
       </Helmet>
       {/* Modern Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0b1020]/90 border-b border-transparent shadow-sm">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#050816]/90 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
@@ -166,10 +166,30 @@ export const Home: React.FC = () => {
             </div>
 
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Recursos</a>
-              <a href="#testimonials" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Depoimentos</a>
-              <a href="#pricing" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Planos</a>
-              <Button onClick={() => navigate('/demo/templates')} variant="ghost" size="sm" className="text-brand-brightBlue hover:text-brand-brightBlue/80">
+              <a
+                href="#features"
+                className="relative text-slate-100/80 hover:text-white font-medium transition-colors after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 hover:after:w-full after:bg-[#3bbef3] after:transition-all"
+              >
+                Recursos
+              </a>
+              <a
+                href="#testimonials"
+                className="relative text-slate-100/80 hover:text-white font-medium transition-colors after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 hover:after:w-full after:bg-[#3bbef3] after:transition-all"
+              >
+                Depoimentos
+              </a>
+              <a
+                href="#pricing"
+                className="relative text-slate-100/80 hover:text-white font-medium transition-colors after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 hover:after:w-full after:bg-[#3bbef3] after:transition-all"
+              >
+                Planos
+              </a>
+              <Button
+                onClick={() => navigate('/demo/templates')}
+                variant="ghost"
+                size="sm"
+                className="text-slate-100/80 hover:text-white border border-white/10 rounded-full px-4"
+              >
                 <Zap className="h-4 w-4 mr-1" />
                 Demo
               </Button>
@@ -206,73 +226,137 @@ export const Home: React.FC = () => {
 
       <main>
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 overflow-hidden bg-[#0a0f1f]">
+        <section className="relative py-28 lg:py-32 overflow-hidden bg-[#0a0f1f]">
           <div className="absolute inset-0 bg-gradient-to-br from-[#3bbef3]/25 via-transparent to-[#ea7af6]/25"></div>
 
           <div className="container mx-auto px-6 relative z-10">
-            <div className="text-center max-w-5xl mx-auto">
-              <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45 }}>
-                <Badge className="mb-8 bg-[#132036] text-[#3bbef3] border-[#3bbef3]/30 hover:bg-[#132036]/80 transition-colors px-4 py-2">
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  QuizFlowPro
-                </Badge>
-              </motion.div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+              <div className="text-center lg:text-left">
+                <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45 }}>
+                  <Badge className="mb-8 bg-[#132036] text-[#3bbef3] border-[#3bbef3]/30 hover:bg-[#132036]/80 transition-colors px-4 py-2">
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    QuizFlowPro
+                  </Badge>
+                </motion.div>
 
-              <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                <motion.h1 custom={0} variants={heroVariants} className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-tight tracking-tight">
-                  QuizFlowPro — quizzes que convertem
-                </motion.h1>
+                <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                  <motion.h1 custom={0} variants={heroVariants} className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-[1.05] tracking-tight">
+                    QuizFlowPro — quizzes que convertem
+                  </motion.h1>
 
-                <motion.p custom={1} variants={heroVariants} className="text-lg md:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-                  Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing.
-                </motion.p>
-              </motion.div>
+                  <motion.p custom={1} variants={heroVariants} className="text-lg md:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
+                    Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing.
+                  </motion.p>
+                </motion.div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-                <MotionButton
-                  size="lg"
-                  className="bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] hover:from-[#38bdf8] hover:to-[#e879f9] text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
-                  onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Zap className="h-5 w-5 mr-2" />
-                  {user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito'}
-                </MotionButton>
-                <MotionButton
-                  variant="outline"
-                  size="lg"
-                  className="text-lg px-10 py-4 border-2 border-slate-600 text-white hover:bg-slate-800 rounded-xl transition-all"
-                  onClick={() => navigate('/templates')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Target className="h-5 w-5 mr-2" />
-                  Ver Templates
-                </MotionButton>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-16">
+                  <MotionButton
+                    size="lg"
+                    className="bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] hover:from-[#38bdf8] hover:to-[#e879f9] text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Zap className="h-5 w-5 mr-2" />
+                    {user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito'}
+                  </MotionButton>
+                  <MotionButton
+                    variant="outline"
+                    size="lg"
+                    className="text-lg px-10 py-4 border-2 border-slate-600 text-white hover:bg-slate-800 rounded-xl transition-all"
+                    onClick={() => navigate('/templates')}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Target className="h-5 w-5 mr-2" />
+                    Ver Templates
+                  </MotionButton>
+                </div>
+
+                {/* Social Proof */}
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 text-sm text-slate-400">
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                    <span className="font-medium">4.9/5 avaliação</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Users className="h-4 w-4 text-blue-600 mr-1" />
+                    <span className="font-medium">10.000+ usuários</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
+                    <span className="font-medium">5 min configuração</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Social Proof */}
-              <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-slate-500">
-                <div className="flex items-center">
-                  <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                  <span className="font-medium">4.9/5 avaliação</span>
-                </div>
-                <div className="flex items-center">
-                  <Users className="h-4 w-4 text-blue-600 mr-1" />
-                  <span className="font-medium">10.000+ usuários</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="font-medium">5 min configuração</span>
-                </div>
+              {/* Hero Right - Product Mock */}
+              <div className="hidden lg:block">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative max-w-md ml-auto"
+                >
+                  <div className="absolute -inset-6 bg-gradient-to-tr from-[#3bbef3]/30 via-transparent to-[#ea7af6]/40 opacity-70 blur-3xl" />
+                  <div className="relative rounded-3xl bg-[#050816]/90 border border-white/12 shadow-[0_24px_80px_rgba(15,23,42,0.9)] backdrop-blur-2xl p-6">
+                    <div className="flex items-center justify-between mb-6">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.2em] text-slate-400 mb-1">Visão Geral</p>
+                        <p className="text-sm font-medium text-white">Performance dos seus quizzes</p>
+                      </div>
+                      <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/30">Tempo real</Badge>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                      <div className="rounded-2xl bg-white/5 border border-white/5 p-3">
+                        <p className="text-[11px] text-slate-400 mb-1">Taxa de conversão</p>
+                        <p className="text-lg font-semibold text-white">27,4%</p>
+                        <span className="inline-flex items-center text-[11px] text-emerald-400 mt-1">
+                          <TrendingUp className="h-3 w-3 mr-1" />+4,2%
+                        </span>
+                      </div>
+                      <div className="rounded-2xl bg-white/5 border border-white/5 p-3">
+                        <p className="text-[11px] text-slate-400 mb-1">Leads gerados</p>
+                        <p className="text-lg font-semibold text-white">3.418</p>
+                        <span className="inline-flex items-center text-[11px] text-emerald-400 mt-1">
+                          <ArrowRight className="h-3 w-3 mr-1" />+18%
+                        </span>
+                      </div>
+                      <div className="rounded-2xl bg-white/5 border border-white/5 p-3">
+                        <p className="text-[11px] text-slate-400 mb-1">Quizzes ativos</p>
+                        <p className="text-lg font-semibold text-white">12</p>
+                        <span className="inline-flex items-center text-[11px] text-slate-400 mt-1">Auto-scale</span>
+                      </div>
+                    </div>
+                    <div className="rounded-2xl bg-white/5 border border-white/5 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-[11px] text-slate-400">Funis em destaque</span>
+                        <span className="text-[11px] text-slate-300">Últimos 30 dias</span>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs text-slate-300">
+                          <span className="truncate mr-3">Quiz de recomendação de produto</span>
+                          <span className="font-medium">42% conv.</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-slate-300">
+                          <span className="truncate mr-3">Diagnóstico de maturidade</span>
+                          <span className="font-medium">31% conv.</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-slate-300">
+                          <span className="truncate mr-3">Pré-venda consultiva</span>
+                          <span className="font-medium">24% conv.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Metrics - Modern & Clean */}
-        <section className="py-24 bg-[#0a0f1f]">
+        <section className="py-28 lg:py-32 bg-[#0a0f1f]">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -293,7 +377,7 @@ export const Home: React.FC = () => {
                 >
                   <Card
                     key={index}
-                    className="text-center border border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-tr from-[#0f1724]/60 to-[#0b1220]/50 backdrop-blur-sm"
+                    className="text-center border border-slate-700/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-tr from-[#0f1724]/70 to-[#020617]/90 backdrop-blur-xl ring-1 ring-white/5"
                   >
                     <CardContent className="p-10">
                       <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
@@ -312,7 +396,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Features */}
-        <section id="features" className="py-24 bg-[#0a0f1f]">
+        <section id="features" className="py-28 lg:py-32 bg-[#0a0f1f]">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -326,7 +410,7 @@ export const Home: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <motion.div key={index} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
-                  <Card key={index} className="p-8 hover:shadow-lg transition-all duration-300 border border-slate-700 bg-gradient-to-tr from-[#0f1724]/40 to-[#0b1220]/40 hover:-translate-y-1">
+                  <Card key={index} className="p-8 hover:shadow-2xl transition-all duration-300 border border-white/5 bg-gradient-to-tr from-[#0f1724]/60 to-[#020617]/90 hover:-translate-y-2 rounded-2xl">
                     <CardContent className="p-0">
                       <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
                         <feature.icon className={`h-7 w-7 text-white`} />
@@ -491,11 +575,22 @@ export const Home: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-slate-400">
-            © 2024 QuizFlow. Todos os direitos reservados.
+      <footer className="bg-[#050816] border-t border-white/5 text-slate-400 py-10 text-sm">
+        <div className="container mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p>
+            © 2025 QuizFlowPro. Todos os direitos reservados.
           </p>
+          <div className="flex items-center gap-4">
+            <a href="#features" className="hover:text-slate-200 transition-colors">Produto</a>
+            <a href="#pricing" className="hover:text-slate-200 transition-colors">Planos</a>
+            <button
+              type="button"
+              onClick={() => window.open('mailto:support@quizflow.pro')}
+              className="hover:text-slate-200 transition-colors"
+            >
+              Suporte
+            </button>
+          </div>
         </div>
       </footer>
     </div>
