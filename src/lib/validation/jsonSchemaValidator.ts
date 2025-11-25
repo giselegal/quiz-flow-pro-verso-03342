@@ -194,7 +194,15 @@ export function validateBatch(
 export function hasSchemaReference(data: unknown): boolean {
   if (typeof data !== 'object' || data === null) return false;
   const obj = data as Record<string, unknown>;
-  return typeof obj.$schema === 'string' && obj.$schema.length > 0;
+  if (typeof obj.$schema !== 'string' || obj.$schema.length === 0) return false;
+  
+  // Validate that $schema is a recognizable path
+  const validSchemaPatterns = [
+    /^\/schemas\//,
+    /^https?:\/\/json-schema\.org\//,
+    /\.schema\.json$/
+  ];
+  return validSchemaPatterns.some(pattern => pattern.test(obj.$schema as string));
 }
 
 /**
@@ -206,13 +214,16 @@ export function getSchemaInfo(schemaType: SchemaType): {
   version: string;
 } | null {
   const schemaId = schemaIdMap[schemaType];
-  const schema = ajv.getSchema(schemaId)?.schema as Record<string, unknown> | undefined;
-
-  if (!schema) return null;
+  const validator = ajv.getSchema(schemaId);
+  
+  if (!validator || !validator.schema) return null;
+  
+  const schema = validator.schema;
+  if (typeof schema !== 'object' || schema === null) return null;
 
   return {
-    id: (schema.$id as string) || schemaId,
-    title: (schema.title as string) || schemaType,
+    id: (typeof schema.$id === 'string' ? schema.$id : schemaId),
+    title: (typeof schema.title === 'string' ? schema.title : schemaType),
     version: 'draft/2020-12',
   };
 }

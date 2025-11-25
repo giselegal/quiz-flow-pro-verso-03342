@@ -185,11 +185,11 @@ export function JsonTemplateEditor({
 
       // 🎯 JSON Schema validation (Draft 2020-12)
       const schemaResult: ValidationResult = validateTemplateV4(parsed);
-      if (!schemaResult.valid && schemaResult.errorMessages) {
-        schemaResult.errorMessages.forEach((msg: string) => {
+      if (!schemaResult.valid && schemaResult.errors) {
+        schemaResult.errors.forEach((error) => {
           errors.push({
-            path: msg.split(':')[0] || 'schema',
-            message: msg,
+            path: error.instancePath || '/schema',
+            message: error.message || 'Schema validation error',
             severity: 'error'
           });
         });

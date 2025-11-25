@@ -4,7 +4,7 @@
 	"$comment": "Logic schema - validates conditional logic and rules for quiz flows",
 	"title": "Logic Schema",
 	"type": "object",
-	"additionalProperties": false,
+	"additionalProperties": true,
 	"properties": {
 		"conditions": {
 			"type": "array",

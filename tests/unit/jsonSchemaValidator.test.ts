@@ -285,6 +285,22 @@ describe('JSON Schema Validator', () => {
       expect(hasSchemaReference(withSchema)).toBe(true);
     });
 
+    it('should detect json-schema.org URLs', () => {
+      const withSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+      };
+
+      expect(hasSchemaReference(withSchema)).toBe(true);
+    });
+
+    it('should reject invalid schema paths', () => {
+      const withInvalidSchema = {
+        $schema: 'not-a-valid-schema',
+      };
+
+      expect(hasSchemaReference(withInvalidSchema)).toBe(false);
+    });
+
     it('should return false for missing $schema', () => {
       const withoutSchema = {
         version: '4.0.0',
@@ -317,7 +333,13 @@ describe('JSON Schema Validator', () => {
 
   describe('validate() generic function', () => {
     it('should work with all schema types', () => {
-      const testCases: { type: SchemaType; data: any; expectedValid: boolean }[] = [
+      interface TestCase {
+        type: SchemaType;
+        data: Record<string, unknown>;
+        expectedValid: boolean;
+      }
+      
+      const testCases: TestCase[] = [
         { type: 'template', data: { id: 'test', name: 'Test' }, expectedValid: true },
         { type: 'component', data: { type: 'heading' }, expectedValid: true },
         { type: 'stage', data: { id: 'stage-1' }, expectedValid: true },
