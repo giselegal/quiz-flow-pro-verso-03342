@@ -79,6 +79,24 @@ export { useABTest } from './useABTest';
 export { useGlobalLoading } from './useGlobalLoading';
 export { useUtmParameters } from './useUtmParameters';
 
+// ============================================================================
+// 🔄 LEGACY COMPATIBILITY HOOKS
+// ============================================================================
+// These hooks provide backward compatibility with legacy code.
+// Use these when migrating from old APIs.
+
+/**
+ * @deprecated Use useEditor from EditorContext or useUnifiedEditor
+ */
+export { useLegacyEditor, useOptionalLegacyEditor } from './useLegacyEditor';
+
+/**
+ * @deprecated Use individual hooks (useAuth, useTheme, useEditorState, etc.)
+ */
+export { useLegacySuperUnified, useMigrateAuth, useMigrateTheme, useMigrateEditor } from './useLegacySuperUnified';
+
+// ============================================================================
+
 // 📊 Updated statistics (after consolidation)
 export const HOOKS_STATS = {
   total: 27, // Increased from 25 with two new unified hooks
@@ -89,12 +107,14 @@ export const HOOKS_STATS = {
     utility: 8, // Essential utilities only
     responsive: 2,
     data: 3, // Unified persistence + Supabase
+    legacy: 3, // Legacy compatibility hooks
   },
   consolidations: {
     'useEditor + useUnifiedEditor + useEditorReusableComponents': 'useUnifiedEditor',
     'Multiple property hooks': 'Integrated into useUnifiedEditor',
     'Fragmented schemas': 'Master unified schema',
     'Multiple persistence systems': 'UnifiedPersistenceService',
+    'useSuperUnified': 'useLegacySuperUnified (compatibility) -> individual hooks',
   },
   improvements: {
     hooks_reduction: '52% (48 -> 25)',
@@ -105,6 +125,8 @@ export const HOOKS_STATS = {
   deprecated: [
     'useUnifiedEditor (compatibility layer)',
     'useEditor (compatibility layer)',
+    'useLegacyEditor (use useEditor from EditorContext)',
+    'useLegacySuperUnified (use individual hooks)',
     'Hooks with @ts-nocheck (7 hooks marked for migration)',
   ],
   performance_improvements: {

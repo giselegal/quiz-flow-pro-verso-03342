@@ -1,3 +1,14 @@
+/**
+ * 🎛️ ENHANCED PROPERTIES PANEL
+ * 
+ * ⚠️ DEPRECATED: Este painel é LEGADO. Use SinglePropertiesPanel ao invés.
+ * @deprecated Migre para SinglePropertiesPanel ou PropertiesColumn
+ * @see SinglePropertiesPanel - Painel canônico de propriedades
+ * @see docs/PROPERTIES_PANEL_QUICK_GUIDE.md - Instruções de migração
+ * 
+ * Este arquivo será removido em uma versão futura.
+ */
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

@@ -1,8 +1,14 @@
 /**
- * User Data Context - Replaces critical localStorage usage with Supabase
+ * 🔄 USER DATA CONTEXT - LEGACY
+ *
+ * ⚠️ DEPRECATED: Este contexto é LEGADO. Use StorageProvider ou serviços canônicos.
+ * @deprecated Migre para StorageProvider + useStorage ou DataService
+ * @see StorageProvider - Provider canônico para dados
+ * @see src/services/canonical/StorageService.ts - Serviço canônico de storage
  *
  * This context manages user-specific data that was previously stored in localStorage,
  * now properly persisted in Supabase for reliability and consistency.
+ * Este arquivo será removido em uma versão futura.
  */
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
