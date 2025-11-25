@@ -37,6 +37,7 @@
  */
 
 import React, { ReactNode, useMemo } from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 import { AuthProvider, useAuth } from '@/contexts/auth/AuthProvider';
 import { ThemeProvider, useTheme } from '@/contexts/theme/ThemeProvider';
 import { EditorStateProvider, useEditorState } from '@/contexts/editor/EditorStateProvider';
@@ -78,6 +79,32 @@ interface SuperUnifiedProviderProps {
  * 13. Versioning (controle de versões - mais interno)
  */
 export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({ children }) => {
+    // Evitar múltiplas montagens aninhadas durante testes ou integrações.
+    // Usamos uma flag global no `window` (JSDOM/tests têm `window`) para tornar
+    // o provider idempotente: se já existe um provider acima, retornamos
+    // os `children` sem re-encapsular. Fazemos um cleanup no unmount.
+    const GLOBAL_KEY = '__SUPER_UNIFIED_PROVIDER_PRESENT';
+    if (typeof window !== 'undefined') {
+        const count = (window as any)[GLOBAL_KEY] as number | undefined;
+        if (count && count > 0) {
+            // Já existe provider montado acima — evitar dupla montagem
+            appLogger.debug('[SuperUnifiedProvider] Provider já presente. Pulando composição aninhada.');
+            return <>{children}</>;
+        }
+        // Marcar presença antes do render
+        (window as any)[GLOBAL_KEY] = (count || 0) + 1;
+    }
+
+    // Ao desmontar, decrementamos o contador para não vazar entre testes
+    React.useEffect(() => {
+        return () => {
+            if (typeof window !== 'undefined') {
+                const cur = (window as any)[GLOBAL_KEY] as number | undefined;
+                if (cur && cur > 0) (window as any)[GLOBAL_KEY] = cur - 1;
+            }
+        };
+    }, []);
+
     return (
         <AuthProvider>
             <StorageProvider>
