@@ -252,7 +252,7 @@ class PersistenceService {
             
             return {
                 success: true,
-                data: data?.map(v => ({
+                data: data?.map((v: any) => ({
                     version: v.version,
                     timestamp: v.updated_at,
                 })) || [],
