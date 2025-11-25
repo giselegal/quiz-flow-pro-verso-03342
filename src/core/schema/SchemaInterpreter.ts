@@ -9,8 +9,8 @@ import { appLogger } from '@/lib/utils/appLogger';
  */
 
 export interface PropertySchema {
-  type: 'string' | 'number' | 'boolean' | 'color' | 'image' | 'select' | 'json';
-  control: 'text' | 'textarea' | 'number' | 'toggle' | 'color-picker' | 'image-upload' | 'dropdown' | 'json-editor' | 'range' | 'options-list';
+  type: 'string' | 'number' | 'boolean' | 'color' | 'image' | 'select' | 'json' | 'array' | 'object';
+  control: 'text' | 'textarea' | 'number' | 'toggle' | 'color-picker' | 'image-upload' | 'dropdown' | 'json-editor' | 'range' | 'options-list' | 'rich-text';
   default?: any;
   options?: Array<{ label: string; value: any }>;
   label?: string;
@@ -21,7 +21,12 @@ export interface PropertySchema {
     max?: number;
     step?: number;
     pattern?: string;
-    enum?: string[];
+    enum?: Array<string | number | boolean>;
+    required?: boolean;
+    minLength?: number;
+    maxLength?: number;
+    minItems?: number;
+    maxItems?: number;
     custom?: (value: any) => boolean | string;
   };
 }
