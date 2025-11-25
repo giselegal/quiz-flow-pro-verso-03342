@@ -76,13 +76,15 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
         if (!templateId || funnelId) return;
 
         setLoadingTemplate(true);
-        templateService.loadTemplate(templateId)
-            .then(template => {
+        // templateService não tem loadTemplate, usar fetch direto ou outro método
+        fetch(`/templates/${templateId}.json`)
+            .then(res => res.json())
+            .then((template: any) => {
                 const stepBlocks = template?.steps?.[currentStep - 1]?.blocks || [];
                 console.log('✅ Template carregado:', template?.name, stepBlocks.length, 'blocos');
                 setTemplateBlocks(stepBlocks);
             })
-            .catch(err => {
+            .catch((err: Error) => {
                 console.error('❌ Erro ao carregar template:', err);
                 setTemplateBlocks([]);
             })

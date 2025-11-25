@@ -44,9 +44,10 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
     const loadSettings = async () => {
         setIsLoading(true);
         try {
-            const loadedSettings = await FunnelSettingsService.loadSettings(funnelId);
-            if (loadedSettings) {
-                setSettings(loadedSettings);
+            const loadedSettings = await FunnelSettingsService.loadSettings(funnelId) as any;
+            // Converter PublicationSettings para FunnelSettings se necessário
+            if (loadedSettings && loadedSettings.seo) {
+                setSettings(loadedSettings as FunnelSettings);
                 appLogger.info('✅ Configurações carregadas para o funil:', { data: [funnelId, loadedSettings] });
             } else {
                 setSettings(defaultFunnelSettings);
@@ -120,9 +121,18 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
         }));
     };
 
-    const handleExportSettings = () => {
+    const handleExportSettings = async () => {
         try {
-            FunnelSettingsService.exportSettings(funnelId, 'json');
+            const json = await FunnelSettingsService.exportSettings(funnelId);
+            // Download do JSON
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `funnel-settings-${funnelId}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
             toast({
                 title: 'Configurações exportadas',
                 description: 'Arquivo de configurações baixado com sucesso.',
