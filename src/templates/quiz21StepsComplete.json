@@ -990,6 +990,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Qual sua calça favorita?",
           "options": [
             {
               "id": "natural",
@@ -1049,8 +1050,7 @@
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
           "validationMessage": "Selecione 3 opções para continuar",
-          "requiredSelections": 3,
-          "title": "Qual sua calça favorita?"
+          "requiredSelections": 3
         }
       },
       {
@@ -1134,6 +1134,7 @@
           "gap": 16
         },
         "content": {
+          "title": "Qual desses sapatos você tem ou mais gosta?",
           "options": [
             {
               "id": "natural",
@@ -1193,8 +1194,7 @@
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
           "validationMessage": "Selecione 3 opções para continuar",
-          "requiredSelections": 3,
-          "title": "Qual desses sapatos você tem ou mais gosta?"
+          "requiredSelections": 3
         }
       },
       {
