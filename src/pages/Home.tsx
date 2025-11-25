@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -130,6 +131,20 @@ export const Home: React.FC = () => {
     );
   }
 
+  const MotionButton = motion(Button);
+
+  const heroVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: (i = 1) => ({ opacity: 1, y: 0, transition: { delay: i * 0.12, duration: 0.5, ease: 'easeOut' } }),
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
+  };
+
+  const cardHover = { y: -6, boxShadow: '0 12px 30px rgba(2,6,23,0.5)', transition: { duration: 0.25 } };
+
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
@@ -196,33 +211,41 @@ export const Home: React.FC = () => {
 
           <div className="container mx-auto px-6 relative z-10">
             <div className="text-center max-w-5xl mx-auto">
-              <Badge className="mb-8 bg-[#132036] text-[#3bbef3] border-[#3bbef3]/30 hover:bg-[#132036]/80 transition-colors px-4 py-2">
-                <Sparkles className="h-4 w-4 mr-2" />
-                QuizFlowPro
-              </Badge>
+              <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45 }}>
+                <Badge className="mb-8 bg-[#132036] text-[#3bbef3] border-[#3bbef3]/30 hover:bg-[#132036]/80 transition-colors px-4 py-2">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  QuizFlowPro
+                </Badge>
+              </motion.div>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-tight tracking-tight">
-                QuizFlowPro — quizzes que convertem
-              </h1>
+              <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                <motion.h1 custom={0} variants={heroVariants} className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-tight tracking-tight">
+                  QuizFlowPro — quizzes que convertem
+                </motion.h1>
 
-              <p className="text-lg md:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-                Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing.
-              </p>
+                <motion.p custom={1} variants={heroVariants} className="text-lg md:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
+                  Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing.
+                </motion.p>
+              </motion.div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-                <Button
+                <MotionButton
                   size="lg"
                   className="bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] hover:from-[#38bdf8] hover:to-[#e879f9] text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
                   onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <Zap className="h-5 w-5 mr-2" />
                   {user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito'}
                 </Button>
-                <Button
+                <MotionButton
                   variant="outline"
                   size="lg"
                   className="text-lg px-10 py-4 border-2 border-slate-600 text-white hover:bg-slate-800 rounded-xl transition-all"
                   onClick={() => navigate('/templates')}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <Target className="h-5 w-5 mr-2" />
                   Ver Templates
@@ -262,18 +285,27 @@ export const Home: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {stats.map((stat, index) => (
-                <Card
+                <motion.div
                   key={index}
-                  className="text-center border border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-tr from-[#0f1724]/60 to-[#0b1220]/50 backdrop-blur-sm"
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                 >
-                  <CardContent className="p-10">
-                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
-                      <stat.icon className={`h-7 w-7 text-white`} />
-                    </div>
-                    <div className="text-4xl md:text-5xl font-extrabold text-white mb-3">{stat.number}</div>
-                    <div className="text-slate-300 font-medium text-lg">{stat.label}</div>
-                  </CardContent>
-                </Card>
+                  <Card
+                    key={index}
+                    className="text-center border border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-tr from-[#0f1724]/60 to-[#0b1220]/50 backdrop-blur-sm"
+                  >
+                    <CardContent className="p-10">
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
+                        <stat.icon className={`h-7 w-7 text-white`} />
+                      </div>
+                      <motion.div className="text-4xl md:text-5xl font-extrabold text-white mb-3" initial={{ scale: 0.9, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ type: 'spring', stiffness: 110 }}>
+                        {stat.number}
+                      </motion.div>
+                      <div className="text-slate-300 font-medium text-lg">{stat.label}</div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -293,15 +325,17 @@ export const Home: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <Card key={index} className="p-8 hover:shadow-lg transition-all duration-300 border border-slate-700 bg-gradient-to-tr from-[#0f1724]/40 to-[#0b1220]/40 hover:-translate-y-1">
-                  <CardContent className="p-0">
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
-                      <feature.icon className={`h-7 w-7 text-white`} />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                    <p className="text-slate-300/90 leading-relaxed">{feature.description}</p>
-                  </CardContent>
-                </Card>
+                <motion.div key={index} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
+                  <Card key={index} className="p-8 hover:shadow-lg transition-all duration-300 border border-slate-700 bg-gradient-to-tr from-[#0f1724]/40 to-[#0b1220]/40 hover:-translate-y-1">
+                    <CardContent className="p-0">
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
+                        <feature.icon className={`h-7 w-7 text-white`} />
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                      <p className="text-slate-300/90 leading-relaxed">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
