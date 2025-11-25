@@ -1,0 +1,14 @@
+{
+  "name": "quizflowpro-vsl",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node generate-vsl.mjs"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.1.0",
+    "google-tts-api": "^2.0.2",
+    "jimp": "^0.22.10"
+  }
+}
