@@ -34,6 +34,7 @@ const unifiedCache = unifiedCacheService;
 import { convertComponentInstancesToBlocks, filterValidInstances } from '@/lib/utils/componentInstanceConverter';
 import { retryWithBackoff, isNetworkError, isSupabaseError } from '@/lib/utils/retryWithBackoff';
 import { appLogger } from '@/lib/utils/appLogger';
+import TemplateRegistry from '@/services/editor/TemplateRegistry';
 
 export type TemplateSource =
   | 'normalized-json'

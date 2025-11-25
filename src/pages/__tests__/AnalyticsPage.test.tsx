@@ -65,7 +65,8 @@ const getHookMock = () => funnelHookMock;
 // Import dinâmico isolado (executado após mocks)
 async function loadPage() {
     const mod = await import('../dashboard/AnalyticsPage.testable');
-    return mod.default || mod.AnalyticsPageTestable || mod;
+    const anyMod: any = mod;
+    return anyMod.default || anyMod.AnalyticsPageTestable || anyMod;
 }
 
 describe('AnalyticsPage (integração)', () => {
