@@ -620,52 +620,55 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
                         )}
 
                         <div className="space-y-3">
-                            {sections.map((section) => (
-                                <div key={section.id} className="rounded-lg border border-border/60 bg-card">
-                                    <Collapsible
-                                        open={openSections[section.id]}
-                                        onOpenChange={(value) =>
-                                            setOpenSections((prev) => ({ ...prev, [section.id]: value }))
-                                        }
-                                    >
-                                        <CollapsibleTrigger asChild>
-                                            <button
-                                                type="button"
-                                                className={cn(
-                                                    'flex w-full items-center justify-between gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors',
-                                                    openSections[section.id] ? 'bg-muted/70' : 'hover:bg-muted/40'
-                                                )}
-                                            >
-                                                <div className="flex-1">
-                                                    <div>{section.title}</div>
-                                                    {section.description && (
-                                                        <p className="text-xs font-normal text-muted-foreground">
-                                                            {section.description}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <ChevronDown
+                            {sections.map((section) => {
+                                const isOpen = Boolean(openSections[section.id]);
+                                return (
+                                    <div key={section.id} className="rounded-lg border border-border/60 bg-card">
+                                        <Collapsible
+                                            open={isOpen}
+                                            onOpenChange={(value) =>
+                                                setOpenSections((prev) => ({ ...prev, [section.id]: value }))
+                                            }
+                                        >
+                                            <CollapsibleTrigger asChild>
+                                                <button
+                                                    type="button"
                                                     className={cn(
-                                                        'h-4 w-4 shrink-0 transition-transform',
-                                                        openSections[section.id] ? 'rotate-180' : ''
+                                                        'flex w-full items-center justify-between gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors',
+                                                        isOpen ? 'bg-muted/70' : 'hover:bg-muted/40'
                                                     )}
+                                                >
+                                                    <div className="flex-1">
+                                                        <div>{section.title}</div>
+                                                        {section.description && (
+                                                            <p className="text-xs font-normal text-muted-foreground">
+                                                                {section.description}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    <ChevronDown
+                                                        className={cn(
+                                                            'h-4 w-4 shrink-0 transition-transform',
+                                                            isOpen ? 'rotate-180' : ''
+                                                        )}
+                                                    />
+                                                </button>
+                                            </CollapsibleTrigger>
+                                            <CollapsibleContent className="px-4 pb-4 pt-3">
+                                                <DynamicPropertyControls
+                                                    elementType={block.type}
+                                                    schemaOverride={{ ...schema, properties: section.properties }}
+                                                    properties={draft}
+                                                    onChange={(key, value) => updateField(key, value)}
+                                                    errors={errors}
+                                                    onJsonTextChange={(key, value) => updateJsonField(key, value)}
+                                                    getJsonBuffer={(key) => getJsonBuffer(key)}
                                                 />
-                                            </button>
-                                        </CollapsibleTrigger>
-                                        <CollapsibleContent className="px-4 pb-4 pt-3">
-                                            <DynamicPropertyControls
-                                                elementType={block.type}
-                                                schemaOverride={{ ...schema, properties: section.properties }}
-                                                properties={draft}
-                                                onChange={(key, value) => updateField(key, value)}
-                                                errors={errors}
-                                                onJsonTextChange={(key, value) => updateJsonField(key, value)}
-                                                getJsonBuffer={(key) => getJsonBuffer(key)}
-                                            />
-                                        </CollapsibleContent>
-                                    </Collapsible>
-                                </div>
-                            ))}
+                                            </CollapsibleContent>
+                                        </Collapsible>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </ScrollArea>
