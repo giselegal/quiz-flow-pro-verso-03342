@@ -22,10 +22,6 @@
         "type": "quiz-intro-header",
         "order": 0,
         "properties": {
-          "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
-          "logoAlt": "Logo Gisele Galvão",
-          "logoWidth": 132,
-          "logoHeight": 55,
           "showLogo": true,
           "logoPosition": "center",
           "showProgress": true,
@@ -49,7 +45,12 @@
           "animationType": "fade",
           "animationDuration": 300
         },
-        "content": {}
+        "content": {
+          "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+          "logoAlt": "Logo Gisele Galvão",
+          "logoWidth": 132,
+          "logoHeight": 55
+        }
       },
       {
         "id": "intro-title",
