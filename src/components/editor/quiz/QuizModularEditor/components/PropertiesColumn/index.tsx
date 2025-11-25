@@ -16,13 +16,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
-import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
-import { schemaInterpreter } from '@/core/schema/SchemaInterpreter';
+import { DynamicPropertyRenderer } from './DynamicPropertyRenderer';
 import { onBlockUpdate as subscribeToBlockUpdates } from '@/lib/utils/editorEventBus';
 import { normalizeBlockData, createSynchronizedBlockUpdate, normalizerLogger } from '@/core/adapters/BlockDataNormalizer';
 import { appLogger } from '@/lib/utils/appLogger';
 import { toast } from '@/components/ui/use-toast';
 import { useDraftProperties } from '../../hooks/useDraftProperties';
+import { useBlockDefinition } from '../../hooks/useBlockDefinition';
 
 interface PropertiesColumnProps {
     selectedBlock?: Block | undefined;
@@ -80,11 +80,8 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         prevSelectedIdRef.current = selectedBlock?.id || null;
     }, [selectedBlock?.id]);
 
-    // Get schema and initial properties for the draft
-    const schema = useMemo(() =>
-        selectedBlock ? schemaInterpreter.getBlockSchema(selectedBlock.type) : null,
-        [selectedBlock?.type]
-    );
+    // Obtém definição oficial do bloco diretamente do BlockRegistry
+    const { definition: blockDefinition, schema, source: blockDefinitionSource } = useBlockDefinition(selectedBlock?.type);
 
     const initialProperties = useMemo(() => {
         if (!selectedBlock) return {};
@@ -311,13 +308,21 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                                     Bloco Selecionado
                                 </Label>
                                 <Badge variant="secondary" className="text-[10px]">
-                                    {selectedBlock.type}
+                                    {blockDefinition?.category ?? selectedBlock.type}
                                 </Badge>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Sparkles className="h-3 w-3 text-primary/70" />
-                                <p className="text-xs font-mono truncate">
-                                    {selectedBlock.id}
+                            <div className="space-y-1">
+                                <p className="text-sm font-semibold leading-tight">
+                                    {blockDefinition?.name ?? selectedBlock.type}
+                                </p>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <Sparkles className="h-3 w-3 text-primary/70" />
+                                    <span className="font-mono truncate">
+                                        {selectedBlock.type}
+                                    </span>
+                                </div>
+                                <p className="text-[11px] text-muted-foreground/80">
+                                    #{selectedBlock.id}
                                 </p>
                             </div>
                         </div>
@@ -355,11 +360,13 @@ const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
                                     <CollapsibleContent className="animate-accordion-down">
                                         <div className="p-4 pt-0 space-y-4">
-                                            <DynamicPropertyControls
-                                                elementType={selectedBlock.type}
+                                            <DynamicPropertyRenderer
+                                                blockType={selectedBlock.type}
+                                                definition={blockDefinition}
+                                                schema={schema}
                                                 properties={draft}
-                                                onChange={handlePropertyChange}
                                                 errors={errors}
+                                                onChange={handlePropertyChange}
                                                 onJsonTextChange={updateJsonField}
                                                 getJsonBuffer={getJsonBuffer}
                                             />

@@ -20,7 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Plus, X, AlertTriangle, AlertCircle } from 'lucide-react';
-import { schemaInterpreter, PropertySchema } from '@/core/schema/SchemaInterpreter';
+import { schemaInterpreter, PropertySchema, BlockTypeSchema } from '@/core/schema/SchemaInterpreter';
 import { appLogger } from '@/lib/utils/appLogger';
 import {
   PropertyControlType,
@@ -33,6 +33,8 @@ interface DynamicPropertyControlsProps {
   elementType: string;
   properties: Record<string, any>;
   onChange: (key: string, value: any) => void;
+  /** Optional: override schema (BlockRegistry bridge) */
+  schemaOverride?: BlockTypeSchema | null;
   /** Optional: field-level errors from draft validation */
   errors?: Record<string, string>;
   /** Optional: callback for JSON field text changes (for buffer support) */
@@ -48,11 +50,12 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
   elementType,
   properties,
   onChange,
+  schemaOverride,
   errors = {},
   onJsonTextChange,
   getJsonBuffer,
 }) => {
-  const schema = schemaInterpreter.getBlockSchema(elementType);
+  const schema = schemaOverride ?? schemaInterpreter.getBlockSchema(elementType);
 
   // ✅ CORREÇÃO 2: Debug logging detalhado
   appLogger.info('🎛️ [DynamicPropertyControls] Renderizando:', {
@@ -148,7 +151,7 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
 
   // ✅ Use type-safe normalizeControlType with logging for unknown types
   const normalizedControl = normalizeControlTypeFn(schema.control, elementType, propertyKey);
-  
+
   // ✅ State for local JSON text buffer when not using external buffer
   const [localJsonText, setLocalJsonText] = useState<string>(() => {
     if (value === undefined || value === null) return '{}';
@@ -190,7 +193,7 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
       // Use local buffer
       setLocalJsonText(textValue);
       const { value: parsed, error: parseError, isValid } = safeParseJson(textValue);
-      
+
       if (isValid) {
         setLocalJsonError(undefined);
         handleChange(parsed);
@@ -297,8 +300,8 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
       case 'toggle': {
         // ✅ Preserve false as valid value
         const displayValue = getDisplayValue(value);
-        const boolValue = typeof displayValue === 'boolean' 
-          ? displayValue 
+        const boolValue = typeof displayValue === 'boolean'
+          ? displayValue
           : (typeof schema.default === 'boolean' ? schema.default : false);
         return (
           <div className="flex items-center space-x-2">
@@ -338,8 +341,8 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
 
       case 'dropdown': {
         const displayValue = getDisplayValue(value);
-        const selectValue = displayValue !== undefined && displayValue !== null 
-          ? String(displayValue) 
+        const selectValue = displayValue !== undefined && displayValue !== null
+          ? String(displayValue)
           : (schema.default !== undefined ? String(schema.default) : '');
         return (
           <Select value={selectValue} onValueChange={handleChange}>
@@ -448,7 +451,7 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
         // ✅ JSON Editor with text buffer - never directly writes invalid JSON to state
         const jsonError = error || localJsonError;
         const jsonText = getJsonDisplayText();
-        
+
         return (
           <div className="space-y-2">
             <Textarea
