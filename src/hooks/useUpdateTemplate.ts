@@ -118,7 +118,7 @@ export function useUpdateTemplate(
       };
 
       // Update in Supabase
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('templates')
         .update(payload)
         .eq('id', id)
@@ -191,7 +191,7 @@ export function useCreateTemplate(
       };
 
       // Create in Supabase
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('templates')
         .insert(payload)
         .select()
