@@ -6,7 +6,7 @@
  */
 
 import { StorageService } from './StorageService';
-// import { ContextualStorageService } from './ContextualStorageService'; // TODO: Missing file
+import ContextualStorageService from './ContextualStorageService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EVENTS from '@/core/constants/events';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -35,9 +35,11 @@ export class UnifiedQuizStorageService {
   private readonly STORAGE_KEY = 'unifiedQuizData';
   private readonly LEGACY_KEYS = ['userSelections', 'quizAnswers'];
   private context: FunnelContext;
+  private contextualStorage: ContextualStorageService;
 
   constructor(context: FunnelContext = FunnelContext.EDITOR) {
     this.context = context;
+    this.contextualStorage = new ContextualStorageService(this.context);
   }
 
   /**
