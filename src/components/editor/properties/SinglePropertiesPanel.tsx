@@ -10,7 +10,7 @@
  */
 
 import React, { useCallback, useMemo, useId, memo, lazy, Suspense, useState, useRef, useEffect } from 'react';
-import { appLogger } from '@/lib/utils/logger';
+import { appLogger as importedAppLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -100,10 +100,11 @@ const createMatcher = (keys: string[]): ((key: string) => boolean) => {
 };
 
 // Safety wrapper: in some test environments `appLogger` may be mocked or partially defined.
-// Use `loggerSafe` to avoid runtime TypeErrors when debug/info/warn are not functions.
-const loggerSafe = ((): typeof appLogger | Console => {
+// Define a local `appLogger` that falls back to `console` so calls like `appLogger.debug(...)`
+// won't throw when the test mocks do not provide all logging methods.
+const appLogger: typeof importedAppLogger | Console = (() => {
     try {
-        if (appLogger && typeof (appLogger as any).debug === 'function') return appLogger;
+        if (importedAppLogger && typeof (importedAppLogger as any).debug === 'function') return importedAppLogger;
     } catch (e) {
         // fallthrough
     }

@@ -76,7 +76,18 @@ function StepNavigatorColumnImpl({
     );
 
     // Preferir fonte canônica de steps; aceitar override via prop "steps"
-    const canonicalSteps = useMemo(() => templateService.steps.list(), [refreshKey]);
+    const canonicalSteps = useMemo(() => {
+        try {
+            if (templateService?.steps && typeof templateService.steps.list === 'function') {
+                return templateService.steps.list();
+            }
+            appLogger.warn('[StepNavigatorColumn] templateService.steps.list não disponível, retornando lista vazia');
+        } catch (e) {
+            appLogger.error('[StepNavigatorColumn] erro ao obter steps via templateService', { data: [e] });
+        }
+
+        return { success: true, data: [] };
+    }, [refreshKey]);
     const [localItems, setLocalItems] = useState<{ key: string; title: string }[]>([]);
 
     // Sincronizar items com canonicalSteps
