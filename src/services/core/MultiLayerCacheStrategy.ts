@@ -236,8 +236,8 @@ export class MultiLayerCacheStrategy {
 
     // L3: IndexedDB (persistente)
     try {
-      const l3Value = await (this.l3 as any).get<T>(store, key);
-      if (l3Value !== null) {
+      const l3Value = await (this.l3 as any).get(store, key) as T | null;
+      if (typeof l3Value !== 'undefined' && l3Value !== null) {
         this.metrics.l3Hits++;
         logger.debug('cache', '💾 [L3 HIT] Promoting to L1+L2', { store, key });
         

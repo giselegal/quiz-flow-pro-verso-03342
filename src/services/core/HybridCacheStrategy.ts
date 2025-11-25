@@ -111,7 +111,7 @@ export class HybridCacheStrategy {
       appLogger.debug(`💾 [L1 MISS] ${memoryStore}:${key} → checking L2`);
 
       // L2: IndexedDB
-      const l2Value = await (indexedDBCache as any).get<T>(diskStore, key);
+      const l2Value = await (indexedDBCache as any).get(diskStore, key) as T | null;
       if (typeof l2Value !== 'undefined' && l2Value !== null) {
         this.metrics.l2Hits++;
         appLogger.debug(`💾 [L2 HIT] ${diskStore}:${key}`);
