@@ -505,16 +505,16 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
 
     return (
         <Card className="h-full flex flex-col border-0 bg-transparent">
-            <CardHeader className="pb-3 space-y-2">
+            <CardHeader className="sticky top-0 z-40 space-y-2 border-b border-border/60 bg-background/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/80">
                 <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
                         <CardTitle className="text-sm font-semibold">{schema.label ?? block.type}</CardTitle>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span className="font-mono">#{block.id}</span>
-                            <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
-                                {schema.category}
-                            </Badge>
-                        </div>
+                        +                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            +                            <span className="font-mono">#{block.id}</span>
+                            +                            <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
+                                +                                {schema.category}
+                                +                            </Badge>
+                            +                        </div>
                     </div>
                     <div className="flex items-center gap-2">
                         {onDuplicate && (
@@ -552,68 +552,153 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
                 </div>
             </CardHeader>
 
-            <CardContent className="flex-1 min-h-0 flex flex-col gap-4">
-                {schema.description && (
-                    <Alert>
-                        <Info className="w-4 h-4" />
-                        <AlertDescription className="text-xs">
-                            {schema.description}
-                        </AlertDescription>
-                    </Alert>
-                )}
+            <CardContent className="flex-1 min-h-0 px-0 py-0">
+                <ScrollArea className="h-full">
+                    <div className="px-6 py-5 space-y-5">
+                        {schema.description && (
+                            <Alert>
+                                <Info className="w-4 h-4" />
+                                <AlertDescription className="text-xs">
+                                    {schema.description}
+                                </AlertDescription>
+                            </Alert>
+                        )}
 
-                {hasErrors && (
-                    <Alert variant="destructive">
-                        <XCircle className="w-4 h-4" />
-                        <AlertDescription className="text-xs space-y-1">
-                            {Object.entries(errors).map(([key, message]) => (
-                                <div key={key}>
-                                    <strong>{key}:</strong> {message}
+                        {hasErrors && (
+                            <Alert variant="destructive">
+                                <XCircle className="w-4 h-4" />
+                                <AlertDescription className="text-xs space-y-1">
+                                    {Object.entries(errors).map(([key, message]) => (
+                                        <div key={key}>
+                                            <strong>{key}:</strong> {message}
+                                        </div>
+                                    ))}
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
+                        {availablePresetGroups.length > 0 && (
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase text-muted-foreground">
+                                    <Sparkles className="h-3 w-3" />
+                                    Presets rápidos
+                                </div>
+                                {availablePresetGroups.map((group) => (
+                                    <div
+                                        key={group.id}
+                                        className="space-y-2 rounded-lg border border-dashed border-border/60 bg-muted/30 p-3"
+                                    >
+                                        <div>
+                                            <p className="text-xs font-medium text-foreground">{group.title}</p>
+                                            {group.description && (
+                                                <p className="text-[11px] text-muted-foreground">{group.description}</p>
+                                            )}
+                                        </div>
+                                        <div className="grid gap-2">
+                                            {group.items.map((item) => (
+                                                <div key={item.id} className="flex flex-wrap items-center gap-2">
+                                                    <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant="secondary"
+                                                        className="h-8 text-xs"
+                                                        onClick={() => applyPreset(item.updates)}
+                                                    >
+                                                        {item.label}
+                                                    </Button>
+                                                    {item.helperText && (
+                                                        <span className="text-[11px] text-muted-foreground">
+                                                            {item.helperText}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="space-y-3">
+                            {sections.map((section) => (
+                                <div key={section.id} className="rounded-lg border border-border/60 bg-card">
+                                    <Collapsible
+                                        open={openSections[section.id]}
+                                        onOpenChange={(value) =>
+                                            setOpenSections((prev) => ({ ...prev, [section.id]: value }))
+                                        }
+                                    >
+                                        <CollapsibleTrigger asChild>
+                                            <button
+                                                type="button"
+                                                className={cn(
+                                                    'flex w-full items-center justify-between gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors',
+                                                    openSections[section.id] ? 'bg-muted/70' : 'hover:bg-muted/40'
+                                                )}
+                                            >
+                                                <div className="flex-1">
+                                                    <div>{section.title}</div>
+                                                    {section.description && (
+                                                        <p className="text-xs font-normal text-muted-foreground">
+                                                            {section.description}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <ChevronDown
+                                                    className={cn(
+                                                        'h-4 w-4 shrink-0 transition-transform',
+                                                        openSections[section.id] ? 'rotate-180' : ''
+                                                    )}
+                                                />
+                                            </button>
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent className="px-4 pb-4 pt-3">
+                                            <DynamicPropertyControls
+                                                elementType={block.type}
+                                                schemaOverride={{ ...schema, properties: section.properties }}
+                                                properties={draft}
+                                                onChange={(key, value) => updateField(key, value)}
+                                                errors={errors}
+                                                onJsonTextChange={(key, value) => updateJsonField(key, value)}
+                                                getJsonBuffer={(key) => getJsonBuffer(key)}
+                                            />
+                                        </CollapsibleContent>
+                                    </Collapsible>
                                 </div>
                             ))}
-                        </AlertDescription>
-                    </Alert>
-                )}
-
-                <ScrollArea className="flex-1 pr-2">
-                    <DynamicPropertyControls
-                        elementType={block.type}
-                        schemaOverride={schema}
-                        properties={draft}
-                        onChange={(key, value) => updateField(key, value)}
-                        errors={errors}
-                        onJsonTextChange={(key, value) => updateJsonField(key, value)}
-                        getJsonBuffer={(key) => getJsonBuffer(key)}
-                    />
+                        </div>
+                    </div>
                 </ScrollArea>
             </CardContent>
 
-            <div className="border-t p-4 flex items-center gap-2">
-                <Button
-                    onClick={handleApply}
-                    disabled={!isDirty || hasErrors || isSaving}
-                    className="flex-1 gap-2 text-xs"
-                >
-                    {isSaving ? (
-                        <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            Validando...
-                        </>
-                    ) : (
-                        <>
-                            <Check className="w-4 h-4" />
-                            Aplicar
-                        </>
-                    )}
-                </Button>
-                <Button
-                    variant="outline"
-                    onClick={handleCancel}
-                    disabled={!isDirty || isSaving}
-                    className="text-xs"
-                >
-                    Cancelar
-                </Button>
+            <div className="sticky bottom-0 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+                <div className="flex items-center gap-2">
+                    <Button
+                        onClick={handleApply}
+                        disabled={!isDirty || hasErrors || isSaving}
+                        className="flex-1 gap-2 text-xs"
+                    >
+                        {isSaving ? (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Validando...
+                            </>
+                        ) : (
+                            <>
+                                <Check className="w-4 h-4" />
+                                Aplicar
+                            </>
+                        )}
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={handleCancel}
+                        disabled={!isDirty || isSaving}
+                        className="text-xs"
+                    >
+                        Cancelar
+                    </Button>
+                </div>
             </div>
         </Card>
     );
