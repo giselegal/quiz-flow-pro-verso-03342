@@ -360,8 +360,8 @@ export function useBlockDraft(
     }, []);
     
     const redo = useCallback(() => {
-        setHistoryIndex(currentIndex => {
-            setHistory(h => {
+        setHistory(h => {
+            setHistoryIndex(currentIndex => {
                 if (currentIndex < h.length - 1) {
                     const newIndex = currentIndex + 1;
                     setDraftData(h[newIndex]);
@@ -370,7 +370,7 @@ export function useBlockDraft(
                 }
                 return currentIndex;
             });
-            return currentIndex;
+            return h;
         });
     }, []);
     
