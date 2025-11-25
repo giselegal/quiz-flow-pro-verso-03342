@@ -167,7 +167,7 @@ describe('PropertiesColumn - Busca de Bloco por ID', () => {
         const found = blocks.find(b => b.id === targetId);
 
         expect(found).toBeDefined();
-        expect(found?.type).toBe('input');
+        expect(found?.type).toBe('text-input'); // FIX: tipo correto é 'text-input'
         expect(found?.content).toEqual({ question: 'Q?' });
     });
 
