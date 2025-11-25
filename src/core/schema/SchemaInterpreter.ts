@@ -1,3 +1,4 @@
+
 import { appLogger } from '@/lib/utils/appLogger';
 /**
  * 🎯 SCHEMA INTERPRETER - FASE 1 Registry Universal Dinâmico
