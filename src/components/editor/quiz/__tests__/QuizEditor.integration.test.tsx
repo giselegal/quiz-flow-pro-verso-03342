@@ -46,7 +46,7 @@ describe('Quiz Editor Integration Tests', () => {
             render(<EditorWrapper />);
 
             await waitFor(() => {
-                expect(screen.getByTestId('quiz-editor')).toBeInTheDocument();
+                expect(screen.getByTestId('quiz-editor')).toBeTruthy();
             });
 
             // Não deve ter erros de hooks
@@ -72,10 +72,10 @@ describe('Quiz Editor Integration Tests', () => {
 
             render(<EditorWrapper />);
 
-            expect(screen.getByTestId('column-1')).toBeInTheDocument();
-            expect(screen.getByTestId('column-2')).toBeInTheDocument();
-            expect(screen.getByTestId('column-3')).toBeInTheDocument();
-            expect(screen.getByTestId('column-4')).toBeInTheDocument();
+            expect(screen.getByTestId('column-1')).toBeTruthy();
+            expect(screen.getByTestId('column-2')).toBeTruthy();
+            expect(screen.getByTestId('column-3')).toBeTruthy();
+            expect(screen.getByTestId('column-4')).toBeTruthy();
         });
 
         it('TC-INT-003: Canvas Tab deve estar ativo por padrão', () => {
@@ -89,7 +89,7 @@ describe('Quiz Editor Integration Tests', () => {
             render(<EditorWrapper />);
 
             const canvasTab = screen.getByTestId('tab-trigger-canvas');
-            expect(canvasTab).toHaveAttribute('aria-selected', 'true');
+            expect(canvasTab.getAttribute('aria-selected')).toBe('true');
         });
     });
 
@@ -121,7 +121,7 @@ describe('Quiz Editor Integration Tests', () => {
             expect(onStepChange).toHaveBeenCalledWith('step-2');
 
             // Canvas deve continuar renderizado
-            expect(screen.getByTestId('canvas-area')).toBeInTheDocument();
+            expect(screen.getByTestId('canvas-area')).toBeTruthy();
         });
 
         it('TC-INT-005: deve preservar estado ao navegar entre steps', async () => {
@@ -155,19 +155,19 @@ describe('Quiz Editor Integration Tests', () => {
             render(<EditorWrapper />);
 
             // Step 1 deve ter 2 blocos
-            expect(screen.getByTestId('block-block-a')).toBeInTheDocument();
-            expect(screen.getByTestId('block-block-b')).toBeInTheDocument();
+            expect(screen.getByTestId('block-block-a')).toBeTruthy();
+            expect(screen.getByTestId('block-block-b')).toBeTruthy();
 
             // Navegar para Step 2
             await user.click(screen.getByTestId('nav-step-2'));
-            expect(screen.getByTestId('block-block-c')).toBeInTheDocument();
+            expect(screen.getByTestId('block-block-c')).toBeTruthy();
 
             // Voltar para Step 1
             await user.click(screen.getByTestId('nav-step-1'));
 
             // Blocos do Step 1 devem estar preservados
-            expect(screen.getByTestId('block-block-a')).toBeInTheDocument();
-            expect(screen.getByTestId('block-block-b')).toBeInTheDocument();
+            expect(screen.getByTestId('block-block-a')).toBeTruthy();
+            expect(screen.getByTestId('block-block-b')).toBeTruthy();
         });
 
         it('TC-INT-006: deve navegar rapidamente entre múltiplos steps', async () => {
@@ -556,7 +556,7 @@ describe('Quiz Editor Integration Tests', () => {
 
                 return (
                     <div>
-                        <button onClick={() => addAction(`Action ${  history.length}`)} data-testid="add-action">
+                        <button onClick={() => addAction(`Action ${history.length}`)} data-testid="add-action">
                             Add Action
                         </button>
                         <button onClick={undo} disabled={currentIndex === 0} data-testid="undo">
