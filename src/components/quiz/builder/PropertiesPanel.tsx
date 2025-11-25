@@ -1,10 +1,9 @@
+import React, { useMemo } from 'react';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { QuizComponentData } from '@/types/quizBuilder';
 import { Trash2 } from 'lucide-react';
+import SinglePropertiesPanel from '@/components/editor/properties/SinglePropertiesPanel';
 
 interface PropertiesPanelProps {
   selectedComponentId: string | null;
@@ -21,6 +20,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onDelete,
   onClose,
 }) => {
+  const component = useMemo(
+    () => components.find(c => c.id === selectedComponentId) || null,
+    [components, selectedComponentId],
+  );
+
   if (!selectedComponentId) {
     return (
       <div className="p-4 text-center text-[#432818]/60">
@@ -29,108 +33,48 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     );
   }
 
-  const component = components.find(c => c.id === selectedComponentId);
-
   if (!component) {
     return <div className="p-4 text-center text-[#432818]/60">Componente não encontrado</div>;
   }
 
-  const data = component.data || {};
+  const blockLike = {
+    id: component.id,
+    type: component.type as any,
+    content: component.data || {},
+    properties: {},
+    order: 0,
+  } as any;
 
-  const handleUpdate = (field: string, value: any) => {
-    onUpdate(selectedComponentId, {
-      ...data,
-      [field]: value,
+  const handleUpdate = (updates: Record<string, any>) => {
+    onUpdate(component.id, {
+      ...(component.data || {}),
+      ...updates,
     });
   };
 
   return (
     <div className="h-full p-4 space-y-4 bg-white">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <h3 className="text-lg font-medium text-[#432818]">Propriedades</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          style={{ color: '#432818' }}
-          onClick={() => onDelete(selectedComponentId)}
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            style={{ color: '#432818' }}
+            onClick={() => onDelete(component.id)}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+          {onClose && (
+            <Button variant="ghost" size="sm" style={{ color: '#432818' }} onClick={onClose}>
+              Fechar
+            </Button>
+          )}
+        </div>
       </div>
 
-      <Card className="p-4 space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="title">Título</Label>
-          <Input
-            id="title"
-            value={data.title || ''}
-            placeholder="Digite o título"
-            onChange={e => handleUpdate('title', e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="subtitle">Subtítulo</Label>
-          <Input
-            id="subtitle"
-            value={data.subtitle || ''}
-            placeholder="Digite o subtítulo"
-            onChange={e => handleUpdate('subtitle', e.target.value)}
-          />
-        </div>
-
-        {component.type === 'text' && (
-          <div className="space-y-2">
-            <Label htmlFor="text">Texto</Label>
-            <Textarea
-              id="text"
-              value={data.text || ''}
-              placeholder="Digite o texto"
-              className="min-h-[100px]"
-              onChange={e => handleUpdate('text', e.target.value)}
-            />
-          </div>
-        )}
-
-        {(component.type === 'image' || data.imageUrl !== undefined) && (
-          <div className="space-y-2">
-            <Label htmlFor="imageUrl">URL da Imagem</Label>
-            <Input
-              id="imageUrl"
-              value={data.imageUrl || ''}
-              placeholder="https://exemplo.com/imagem.jpg"
-              onChange={e => handleUpdate('imageUrl', e.target.value)}
-            />
-          </div>
-        )}
-
-        {component.type === 'stageQuestion' && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="question">Pergunta</Label>
-              <Textarea
-                id="question"
-                value={data.question || ''}
-                placeholder="Digite a pergunta"
-                className="min-h-[80px]"
-                onChange={e => handleUpdate('question', e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="multiSelect">Múltipla Escolha</Label>
-              <Input
-                id="multiSelect"
-                type="number"
-                min="0"
-                max="10"
-                value={data.multiSelect || 0}
-                onChange={e => handleUpdate('multiSelect', parseInt(e.target.value) || 0)}
-              />
-              <p className="text-xs text-[#8F7A6A]">0 para escolha única, 1+ para múltipla</p>
-            </div>
-          </div>
-        )}
+      <Card className="p-2 h-[calc(100%-2.5rem)] overflow-hidden">
+        <SinglePropertiesPanel block={blockLike} onUpdate={handleUpdate} />
       </Card>
     </div>
   );
