@@ -64,6 +64,9 @@ import { schemaInterpreter, type BlockTypeSchema, type PropertySchema } from '@/
 import { buildZodSchemaFromBlockSchema } from '@/core/schema/zodSchemaBuilder';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { useDraftProperties } from '@/components/editor/quiz/QuizModularEditor/hooks/useDraftProperties';
+import { useBlockDraft } from '@/core/hooks/useBlockDraft';
+import { getFeatureFlag } from '@/core/utils/featureFlags';
+import type { Block } from '@/core/schemas/blockSchema';
 import { Settings, Type, Palette, Layout, Trash2, Copy, Check, Loader2, XCircle, Info, ChevronDown, Sparkles } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
@@ -110,6 +113,68 @@ const createMatcher = (keys: string[]): ((key: string) => boolean) => {
     const set = new Set(keys);
     return (key: string) => set.has(key);
 };
+
+// ===== ADAPTER: useBlockDraft → useDraftProperties =====
+/**
+ * Adapter que permite usar useBlockDraft (core) com a interface do useDraftProperties (legacy).
+ * Ativado via feature flag 'useCoreDraftHook'.
+ */
+function useDraftPropertiesAdapter(
+    block: UnifiedBlock,
+    options: {
+        schema: BlockTypeSchema | null;
+        zodSchema?: any;
+        initialProperties: Record<string, any>;
+        onCommit: (properties: Record<string, any>) => void;
+    }
+) {
+    // Converter UnifiedBlock para Block (adicionar order se não existir)
+    const coreBlock: Block = {
+        ...block,
+        order: (block as any).order ?? 0,
+    } as Block;
+
+    const draft = useBlockDraft(coreBlock, {
+        onCommit: (committedBlock) => {
+            options.onCommit(committedBlock.properties || {});
+        },
+        validateOnChange: false, // Validar apenas no commit
+    });
+
+    return {
+        draft: draft.data?.properties || {},
+        errors: draft.errors.reduce((acc, err) => {
+            acc[err] = err;
+            return acc;
+        }, {} as Record<string, string>),
+        isDirty: draft.isDirty,
+        isValid: draft.isValid,
+        updateField: (key: string, value: any) => {
+            draft.updateProperty(key, value);
+            return { value, error: undefined, isValid: true };
+        },
+        updateJsonField: (key: string, textValue: string) => {
+            try {
+                const parsed = JSON.parse(textValue);
+                draft.updateProperty(key, parsed);
+                return { isValid: true };
+            } catch {
+                return { error: 'JSON inválido', isValid: false };
+            }
+        },
+        commitDraft: () => {
+            draft.commit();
+            return draft.isValid;
+        },
+        cancelDraft: () => {
+            draft.cancel();
+        },
+        getJsonBuffer: (key: string) => {
+            const value = draft.data?.properties?.[key];
+            return value !== undefined ? JSON.stringify(value, null, 2) : '';
+        },
+    };
+}
 
 // Safety wrapper: in some test environments `appLogger` may be mocked or partially defined.
 // Define a local `appLogger` that falls back to `console` so calls like `appLogger.debug(...)`
@@ -449,6 +514,23 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
         baselineRef.current = { ...baselineRef.current, ...values };
     }, [onUpdate, block.id]);
 
+    // 🎯 FEATURE FLAG: Usar novo hook do core ou hook legacy
+    const useCoreDraft = getFeatureFlag('useCoreDraftHook');
+
+    const draftHookResult = useCoreDraft
+        ? useDraftPropertiesAdapter(block, {
+            schema,
+            zodSchema,
+            initialProperties,
+            onCommit: handleCommit,
+        })
+        : useDraftProperties({
+            schema,
+            zodSchema,
+            initialProperties,
+            onCommit: handleCommit,
+        });
+
     const {
         draft,
         errors,
@@ -458,12 +540,7 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
         commitDraft,
         cancelDraft,
         getJsonBuffer,
-    } = useDraftProperties({
-        schema,
-        zodSchema,
-        initialProperties,
-        onCommit: handleCommit,
-    });
+    } = draftHookResult;
 
     const [isSaving, setIsSaving] = useState(false);
     const hasErrors = Object.keys(errors).length > 0;

@@ -34,6 +34,7 @@ export interface FeatureFlags {
     useUnifiedEditor: boolean;
     useUnifiedContext: boolean;
     useSinglePropertiesPanel: boolean;
+    useCoreDraftHook: boolean;
     
     // Performance
     enableLazyLoading: boolean;
@@ -60,6 +61,7 @@ const DEFAULT_FLAGS: FeatureFlags = {
     useUnifiedEditor: import.meta.env.DEV,
     useUnifiedContext: import.meta.env.DEV,
     useSinglePropertiesPanel: import.meta.env.DEV,
+    useCoreDraftHook: false, // Experimental - desabilitado por padrão
     
     // Performance - Sempre habilitadas
     enableLazyLoading: true,
@@ -99,16 +101,17 @@ function loadFlags(): FeatureFlags {
                 
                 if (typeof parsed === 'object' && parsed !== null) {
                     // Mesclar com defaults
-                    cachedFlags = { ...DEFAULT_FLAGS, ...parsed };
+                    const mergedFlags: FeatureFlags = { ...DEFAULT_FLAGS, ...parsed };
                     
                     // Garantir que valores são booleanos
-                    (Object.keys(cachedFlags) as Array<keyof FeatureFlags>).forEach(key => {
-                        if (typeof cachedFlags![key] !== 'boolean') {
-                            cachedFlags![key] = DEFAULT_FLAGS[key];
+                    (Object.keys(mergedFlags) as Array<keyof FeatureFlags>).forEach(key => {
+                        if (typeof mergedFlags[key] !== 'boolean') {
+                            mergedFlags[key] = DEFAULT_FLAGS[key];
                         }
                     });
                     
-                    return cachedFlags;
+                    cachedFlags = mergedFlags;
+                    return mergedFlags;
                 }
             }
         }

@@ -23,6 +23,7 @@
 import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect, ReactNode } from 'react';
 import { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
+import { useAutoSave } from '@/core/hooks/useAutoSave';
 
 // ============================================================================
 // TYPES
@@ -95,6 +96,10 @@ export interface EditorContextValue extends EditorState {
     resetEditor: () => void;
     getStepBlocks: (step: number) => Block[];
     isStepDirty: (step: number) => boolean;
+    // ===== AUTO-SAVE STATUS =====
+    isSaving: boolean;
+    autoSaveError: Error | null;
+    forceSave: () => Promise<void>;
     // ===== CAMADA UNIFICADA (canonical) =====
     state: EditorState; // espelha o estado completo
     actions: {
@@ -358,6 +363,64 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
     );
 
     // ============================================================================
+    // AUTO-SAVE INTEGRATION
+    // ============================================================================
+
+    const {
+        isSaving,
+        lastSaved: autoSaveTimestamp,
+        error: autoSaveError,
+        forceSave,
+        recoveredData,
+        clearRecovery,
+    } = useAutoSave({
+        key: 'editor-state',
+        data: {
+            stepBlocks: state.stepBlocks,
+            currentStep: state.currentStep,
+            dirtySteps: state.dirtySteps,
+            modifiedSteps: state.modifiedSteps,
+        },
+        debounceMs: 2000,
+        enableRecovery: true,
+        onSave: (key) => {
+            dispatch({ type: 'MARK_SAVED', payload: Date.now() });
+            appLogger.info('[EditorStateProvider] Auto-save concluído', {
+                data: [{ key, timestamp: Date.now() }],
+            });
+        },
+        onError: (error) => {
+            appLogger.error('[EditorStateProvider] Auto-save falhou', {
+                data: [{ error: error.message }],
+            });
+        },
+    });
+
+    // Recovery de dados ao montar
+    useEffect(() => {
+        if (recoveredData && recoveredData.stepBlocks) {
+            appLogger.info('[EditorStateProvider] Recuperando dados salvos', {
+                data: [{ steps: Object.keys(recoveredData.stepBlocks).length }],
+            });
+
+            // Restaurar cada step
+            Object.entries(recoveredData.stepBlocks).forEach(([step, blocks]) => {
+                dispatch({
+                    type: 'SET_STEP_BLOCKS',
+                    payload: { step: Number(step), blocks: blocks as Block[] },
+                });
+            });
+
+            // Restaurar step atual se disponível
+            if (recoveredData.currentStep) {
+                dispatch({ type: 'SET_CURRENT_STEP', payload: recoveredData.currentStep });
+            }
+
+            clearRecovery();
+        }
+    }, [recoveredData, clearRecovery]);
+
+    // ============================================================================
     // METHODS
     // ============================================================================
 
@@ -509,6 +572,10 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
                 ...actions, // métodos flat
                 state, // acesso canonical state
                 actions, // acesso canonical actions
+                // Auto-save status
+                isSaving,
+                autoSaveError,
+                forceSave,
             };
         },
         [
@@ -532,6 +599,9 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
             resetEditor,
             getStepBlocks,
             isStepDirty,
+            isSaving,
+            autoSaveError,
+            forceSave,
         ]
     );
 
