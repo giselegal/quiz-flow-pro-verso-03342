@@ -9,7 +9,7 @@
  * - ✅ Performance otimizada
  */
 
-import React, { useCallback, useMemo, useId, memo, lazy, Suspense } from 'react';
+import React, { useCallback, useMemo, useId, memo, lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,7 +46,14 @@ const MentorPropertyEditor = lazy(() => import('./editors/MentorPropertyEditor')
 import { PropertyType, UnifiedBlock } from '@/hooks/useUnifiedProperties';
 import { useOptimizedUnifiedProperties } from '@/hooks/useOptimizedUnifiedProperties';
 import { useDebouncedCallback } from '@/hooks/useDebounce';
-import { Settings, Type, Palette, Layout, Trash2, Copy } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { schemaInterpreter, type BlockTypeSchema } from '@/core/schema/SchemaInterpreter';
+import { buildZodSchemaFromBlockSchema } from '@/core/schema/zodSchemaBuilder';
+import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
+import { useDraftProperties } from '@/components/editor/quiz/QuizModularEditor/hooks/useDraftProperties';
+import { Settings, Type, Palette, Layout, Trash2, Copy, Check, Loader2, XCircle, Info } from 'lucide-react';
 
 // ===== INTERFACES =====
 
