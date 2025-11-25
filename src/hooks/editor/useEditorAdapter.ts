@@ -151,12 +151,16 @@ export function useEditorAdapter(): EditorAdapter {
     }
 
     const newId = uuidv4();
+    // Calculate unique order by finding the max existing order
+    const existingOrders = (ctx?.state?.blocks ?? []).map((b: Block) => b.order ?? 0);
+    const newOrder = existingOrders.length > 0 ? Math.max(...existingOrders) + 1 : 0;
+    
     const newBlock: Block = {
       id: newId,
       type,
       properties: {},
       content: {},
-      order: (ctx?.state?.blocks?.length ?? 0),
+      order: newOrder,
     };
 
     try {

@@ -63,19 +63,10 @@ export function PublishSuccessPage(_props: PublishSuccessPageProps) {
       appLogger.info('[PublishSuccessPage] Link copied to clipboard');
     } catch (error) {
       appLogger.error('[PublishSuccessPage] Copy failed:', error);
-      // Fallback for older browsers
-      try {
-        const input = document.createElement('input');
-        input.value = publishData.previewUrl;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch {
-        appLogger.error('[PublishSuccessPage] Fallback copy also failed');
-      }
+      // Show manual copy instruction as fallback
+      // The Clipboard API is widely supported now, but in case it fails
+      // we'll show a toast with instructions
+      alert(`Copie o link manualmente: ${publishData.previewUrl}`);
     }
   }, [publishData.previewUrl]);
 

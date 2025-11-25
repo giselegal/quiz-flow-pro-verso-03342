@@ -54,7 +54,7 @@ export function PropertiesColumnWithJson({
   const [jsonIsValid, setJsonIsValid] = useState<boolean>(true);
   
   // Callback para validar e aplicar mudanças de JSON
-  const handleTemplateChangeWithValidation = useCallback((newTemplate: any) => {
+  const handleTemplateChangeWithValidation = useCallback((newTemplate: string | Record<string, unknown>) => {
     // Se já é um objeto (não string), aceita diretamente
     if (typeof newTemplate !== 'string') {
       setJsonError(null);

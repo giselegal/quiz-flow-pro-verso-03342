@@ -112,16 +112,9 @@ export function ErrorPage(_props: ErrorPageProps) {
   }, [isOnline]);
 
   const handleRetry = () => {
-    try {
-      const referrer = document.referrer;
-      if (referrer && referrer !== window.location.href) {
-        window.location.href = referrer;
-      } else {
-        window.location.reload();
-      }
-    } catch {
-      window.location.reload();
-    }
+    // Use safe navigation - reload current page instead of using referrer
+    // to avoid potential open redirect attacks
+    window.location.reload();
   };
 
   return (
