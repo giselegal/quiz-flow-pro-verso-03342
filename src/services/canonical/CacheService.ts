@@ -121,7 +121,8 @@ export class CacheService extends BaseCanonicalService {
   ): ServiceResult<T | null> {
     try {
       const value = unifiedCache.get<T>(store, key);
-      return this.createResult(value);
+      const normalized = typeof value === 'undefined' ? null : value;
+      return this.createResult(normalized);
     } catch (error) {
       this.error('get failed:', error);
       return this.createError(error as Error);

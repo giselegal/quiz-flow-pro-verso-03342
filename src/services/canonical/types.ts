@@ -74,10 +74,15 @@ export interface ServiceOptions {
 
 /**
  * Result pattern para operações que podem falhar
+ *
+ * NOTE: Historically this was a strict discriminated union which required
+ * callers to narrow before accessing `.data`. Many existing call-sites and
+ * tests access `.data` directly (assuming success). To reduce churn we
+ * expose `.data` always (null on error) while keeping `success`/`error`.
  */
-export type ServiceResult<T> = 
-  | { success: true; data: T }
-  | { success: false; error: Error };
+export type ServiceResult<T> =
+  | { success: true; data: T; error?: undefined }
+  | { success: false; data: null; error: Error };
 
 /**
  * Base class abstrata para canonical services
@@ -165,7 +170,8 @@ export abstract class BaseCanonicalService implements ICanonicalService {
    */
   protected failure<T>(errorCode: string, message: string): ServiceResult<T> {
     return { 
-      success: false, 
+      success: false,
+      data: null,
       error: new Error(`[${errorCode}] ${message}`),
     };
   }
@@ -175,7 +181,7 @@ export abstract class BaseCanonicalService implements ICanonicalService {
   }
 
   protected createError<T>(error: Error): ServiceResult<T> {
-    return { success: false, error };
+    return { success: false, data: null, error };
   }
 }
 
