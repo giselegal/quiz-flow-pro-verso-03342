@@ -8,7 +8,8 @@
  */
 
 // ✅ CANONICAL: Main component - use this for all new implementations
-export { SinglePropertiesPanel, default as PropertiesPanel } from './SinglePropertiesPanel';
+export { SinglePropertiesPanel } from './SinglePropertiesPanel';
+export { SinglePropertiesPanel as PropertiesPanel } from './SinglePropertiesPanel';
 export type { SinglePropertiesPanelProps } from './SinglePropertiesPanel';
 
 /**
