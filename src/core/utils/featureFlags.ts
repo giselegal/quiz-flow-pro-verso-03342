@@ -24,116 +24,194 @@
  * ```
  */
 
-const STORAGE_PREFIX = 'feature:';
+const STORAGE_KEY = 'featureFlags';
 
 /**
  * Definição de todas as feature flags disponíveis
  */
 export interface FeatureFlags {
-    // Editor
+    // Editor Architecture
     useUnifiedEditor: boolean;
     useUnifiedContext: boolean;
     useSinglePropertiesPanel: boolean;
-    useUnifiedPersistence: boolean;
     
     // Performance
     enableLazyLoading: boolean;
-    enableCodeSplitting: boolean;
-    enableMemoization: boolean;
+    enableAdvancedValidation: boolean;
+    usePersistenceService: boolean;
+    
+    // Developer Experience
+    enableErrorBoundaries: boolean;
+    enablePerformanceMonitoring: boolean;
+    enableDebugPanel: boolean;
     
     // Experimental
-    enableRealTimeCollaboration: boolean;
-    enableVersioning: boolean;
-    enableAutoSave: boolean;
-    
-    // Debug
-    enableDebugLogs: boolean;
-    enablePerformanceMonitoring: boolean;
+    enableExperimentalFeatures: boolean;
+    useNewUIComponents: boolean;
+    enableAccessibilityEnhancements: boolean;
 }
 
 /**
- * Valores padrão das flags (produção)
+ * Valores padrão das flags
+ * Em desenvolvimento, flags experimentais são habilitadas por padrão.
  */
 const DEFAULT_FLAGS: FeatureFlags = {
-    // Editor
-    useUnifiedEditor: false, // Gradual rollout
-    useUnifiedContext: true, // Já está estável
-    useSinglePropertiesPanel: true, // Já está estável
-    useUnifiedPersistence: false, // Em desenvolvimento
+    // Editor Architecture - Habilitadas em desenvolvimento
+    useUnifiedEditor: import.meta.env.DEV,
+    useUnifiedContext: import.meta.env.DEV,
+    useSinglePropertiesPanel: import.meta.env.DEV,
     
-    // Performance
+    // Performance - Sempre habilitadas
     enableLazyLoading: true,
-    enableCodeSplitting: true,
-    enableMemoization: true,
+    enableAdvancedValidation: true,
+    usePersistenceService: true,
     
-    // Experimental
-    enableRealTimeCollaboration: false,
-    enableVersioning: false,
-    enableAutoSave: true,
+    // Developer Experience
+    enableErrorBoundaries: true,
+    enablePerformanceMonitoring: import.meta.env.DEV,
+    enableDebugPanel: import.meta.env.DEV,
     
-    // Debug
-    enableDebugLogs: process.env.NODE_ENV === 'development',
-    enablePerformanceMonitoring: false,
+    // Experimental - Apenas em desenvolvimento
+    enableExperimentalFeatures: import.meta.env.DEV,
+    useNewUIComponents: import.meta.env.DEV,
+    enableAccessibilityEnhancements: true,
 };
 
 /**
- * Obter valor de uma flag
+ * Cache em memória das flags
  */
-function getFlag(key: keyof FeatureFlags): boolean {
-    const storageKey = `${STORAGE_PREFIX}${key}`;
-    const stored = localStorage.getItem(storageKey);
-    
-    if (stored !== null) {
-        return stored === 'true';
+let cachedFlags: FeatureFlags | null = null;
+
+/**
+ * Carrega flags do localStorage
+ */
+function loadFlags(): FeatureFlags {
+    if (cachedFlags) {
+        return cachedFlags;
     }
     
-    return DEFAULT_FLAGS[key];
+    try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                
+                if (typeof parsed === 'object' && parsed !== null) {
+                    // Mesclar com defaults
+                    cachedFlags = { ...DEFAULT_FLAGS, ...parsed };
+                    
+                    // Garantir que valores são booleanos
+                    (Object.keys(cachedFlags) as Array<keyof FeatureFlags>).forEach(key => {
+                        if (typeof cachedFlags![key] !== 'boolean') {
+                            cachedFlags![key] = DEFAULT_FLAGS[key];
+                        }
+                    });
+                    
+                    return cachedFlags;
+                }
+            }
+        }
+    } catch (error) {
+        if (import.meta.env.DEV) {
+            console.warn('Failed to load feature flags:', error);
+        }
+    }
+    
+    cachedFlags = { ...DEFAULT_FLAGS };
+    return cachedFlags;
+}
+
+/**
+ * Persiste flags no localStorage
+ */
+function saveFlags(flags: FeatureFlags): void {
+    try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(flags));
+        }
+    } catch (error) {
+        if (import.meta.env.DEV) {
+            console.warn('Failed to save feature flags:', error);
+        }
+    }
+}
+
+/**
+ * Obtém o valor de uma feature flag
+ * 
+ * @param flag Nome da feature flag
+ * @returns Valor booleano da flag
+ */
+export function getFeatureFlag<K extends keyof FeatureFlags>(
+    flag: K
+): FeatureFlags[K] {
+    const flags = loadFlags();
+    return flags[flag];
 }
 
 /**
  * Definir valor de uma flag
  */
-export function setFeatureFlag(key: keyof FeatureFlags, value: boolean): void {
-    const storageKey = `${STORAGE_PREFIX}${key}`;
-    localStorage.setItem(storageKey, String(value));
+export function setFeatureFlag<K extends keyof FeatureFlags>(
+    key: K,
+    value: FeatureFlags[K]
+): void {
+    const flags = loadFlags();
+    flags[key] = value;
+    cachedFlags = flags;
+    saveFlags(flags);
     
     // Disparar evento para componentes reagirem
-    window.dispatchEvent(new CustomEvent('featureFlagChanged', {
-        detail: { key, value }
-    }));
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('featureFlagChanged', {
+            detail: { key, value }
+        }));
+    }
 }
 
 /**
  * Resetar uma flag para valor padrão
  */
 export function resetFeatureFlag(key: keyof FeatureFlags): void {
-    const storageKey = `${STORAGE_PREFIX}${key}`;
-    localStorage.removeItem(storageKey);
+    const flags = loadFlags();
+    flags[key] = DEFAULT_FLAGS[key];
+    cachedFlags = flags;
+    saveFlags(flags);
     
-    window.dispatchEvent(new CustomEvent('featureFlagChanged', {
-        detail: { key, value: DEFAULT_FLAGS[key] }
-    }));
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('featureFlagChanged', {
+            detail: { key, value: DEFAULT_FLAGS[key] }
+        }));
+    }
 }
 
 /**
- * Resetar todas as flags
+ * Resetar todas as flags para valores padrão
  */
 export function resetAllFeatureFlags(): void {
-    Object.keys(DEFAULT_FLAGS).forEach(key => {
-        localStorage.removeItem(`${STORAGE_PREFIX}${key}`);
-    });
+    cachedFlags = { ...DEFAULT_FLAGS };
+    saveFlags(cachedFlags);
     
-    window.dispatchEvent(new CustomEvent('featureFlagsReset'));
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('featureFlagsReset'));
+    }
+}
+
+/**
+ * Alias para resetAllFeatureFlags (compatibilidade com testes)
+ */
+export function resetFeatureFlags(): void {
+    resetAllFeatureFlags();
 }
 
 /**
  * Obter todas as flags atuais
+ * 
+ * @returns Objeto com todas as flags e seus valores
  */
 export function getAllFeatureFlags(): FeatureFlags {
-    return Object.keys(DEFAULT_FLAGS).reduce((acc, key) => {
-        acc[key as keyof FeatureFlags] = getFlag(key as keyof FeatureFlags);
-        return acc;
-    }, {} as FeatureFlags);
+    return { ...loadFlags() };
 }
 
 /**
@@ -141,7 +219,7 @@ export function getAllFeatureFlags(): FeatureFlags {
  */
 export const featureFlags = new Proxy({} as FeatureFlags, {
     get(_target, prop: keyof FeatureFlags) {
-        return getFlag(prop);
+        return getFeatureFlag(prop);
     },
 });
 
@@ -151,7 +229,7 @@ export const featureFlags = new Proxy({} as FeatureFlags, {
 import { useEffect, useState } from 'react';
 
 export function useFeatureFlag(key: keyof FeatureFlags): boolean {
-    const [value, setValue] = useState(() => getFlag(key));
+    const [value, setValue] = useState(() => getFeatureFlag(key));
     
     useEffect(() => {
         const handler = (e: Event) => {
