@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useEditor } from '@/core/contexts/EditorContext';
+import { useEditorCompat as useEditor } from '@/core/contexts/EditorContext';
 import type { Block } from '@/types/editor';
 
 // Log de deprecação em desenvolvimento

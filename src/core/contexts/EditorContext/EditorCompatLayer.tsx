@@ -20,17 +20,39 @@ import { useEditor as useEditorCanonical } from './EditorStateProvider';
 import type { Block } from '@/types/editor';
 
 export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
-    // API legada
+    // API legada - State Extensions
+    state: ReturnType<typeof useEditorCanonical>['state'] & {
+        blocks: Block[]; // Lista plana do step atual
+    };
+
+    // API legada - Properties
     setSelectedBlockId: (id: string | null) => void;
     deleteBlock: (blockId: string) => Promise<void>;
     ensureStepLoaded: (step: number) => Promise<void>;
     addBlockAtIndex: (step: number, block: Block, index: number) => void;
     activeStageId: string;
+    isPreviewing: boolean;
+    isLoading: boolean;
+    save: () => void;
+
+    // API legada - Actions
     blockActions: {
         addBlock: (step: number, block: Block, index?: number) => void;
         updateBlock: (step: number, blockId: string, updates: Partial<Block>) => void;
         removeBlock: (step: number, blockId: string) => void;
         duplicateBlock: (step: number, blockId: string) => void;
+    };
+
+    // API legada - Stages (multi-step)
+    stages: Array<{
+        id: string;
+        metadata: {
+            blocks: Block[];
+        };
+    }>;
+
+    stageActions: {
+        setActiveStage: (stageId: string) => Promise<void>;
     };
 }
 
@@ -43,6 +65,13 @@ export function useEditorCompat(): EditorCompatAPI {
     const compat = useMemo(() => {
         // Derivar activeStageId do currentStep
         const activeStageId = `step-${String(editor.currentStep).padStart(2, '0')}`;
+
+        // Adapter: state.blocks (flat list do step atual)
+        const currentStepBlocks = editor.getStepBlocks(editor.currentStep);
+        const compatState = {
+            ...editor.state,
+            blocks: currentStepBlocks, // Adiciona blocks como lista plana
+        };
 
         // Adapter: setSelectedBlockId → selectBlock
         const setSelectedBlockId = (id: string | null) => {
@@ -90,14 +119,43 @@ export function useEditorCompat(): EditorCompatAPI {
             },
         };
 
+        // Adapter: stages array (compatibilidade com código legado multi-step)
+        const stages = Object.keys(editor.state.stepBlocks).map(stepNum => {
+            const num = parseInt(stepNum);
+            const stepKey = `step-${String(num).padStart(2, '0')}`;
+            return {
+                id: stepKey,
+                metadata: {
+                    blocks: editor.getStepBlocks(num),
+                },
+            };
+        });
+
+        // Adapter: stageActions
+        const stageActions = {
+            setActiveStage: async (stageId: string) => {
+                const match = stageId.match(/step-(\d+)/);
+                if (match) {
+                    const stepNum = parseInt(match[1]);
+                    editor.setCurrentStep(stepNum);
+                }
+            },
+        };
+
         return {
             ...editor,
+            state: compatState, // State com blocks
             setSelectedBlockId,
             deleteBlock,
             ensureStepLoaded,
             addBlockAtIndex,
             activeStageId,
             blockActions,
+            stages,
+            stageActions,
+            isPreviewing: editor.isPreviewMode,
+            isLoading: false, // EditorStateProvider não tem isLoading
+            save: editor.markSaved, // Adapter: save → markSaved
         };
     }, [editor]);
 
