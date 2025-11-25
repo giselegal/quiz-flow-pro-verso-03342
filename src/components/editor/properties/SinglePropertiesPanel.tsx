@@ -52,7 +52,9 @@ import { schemaInterpreter, type BlockTypeSchema } from '@/core/schema/SchemaInt
 import { buildZodSchemaFromBlockSchema } from '@/core/schema/zodSchemaBuilder';
 import { DynamicPropertyControls } from '@/components/editor/DynamicPropertyControls';
 import { useDraftProperties } from '@/components/editor/quiz/QuizModularEditor/hooks/useDraftProperties';
-import { Settings, Type, Palette, Layout, Trash2, Copy, Check, Loader2, XCircle, Info } from 'lucide-react';
+import { Settings, Type, Palette, Layout, Trash2, Copy, Check, Loader2, XCircle, Info, ChevronDown, Sparkles } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
 
 // ===== INTERFACES =====
 
