@@ -66,6 +66,311 @@ interface BuilderDrivenPanelProps {
     onDuplicate?: () => void;
 }
 
+type PanelSection = {
+    id: string;
+    title: string;
+    description?: string;
+    properties: Record<string, PropertySchema>;
+};
+
+type SectionPreset = {
+    id: string;
+    title: string;
+    description?: string;
+    match: (key: string, property: PropertySchema) => boolean;
+};
+
+type PresetItem = {
+    id: string;
+    label: string;
+    updates: Record<string, any>;
+    helperText?: string;
+};
+
+type PresetGroup = {
+    id: string;
+    title: string;
+    description?: string;
+    items: PresetItem[];
+};
+
+const createMatcher = (keys: string[]): ((key: string) => boolean) => {
+    const set = new Set(keys);
+    return (key: string) => set.has(key);
+};
+
+const BLOCK_SECTION_PRESETS: Record<string, SectionPreset[]> = {
+    'options-grid': [
+        {
+            id: 'layout',
+            title: 'Layout',
+            description: 'Organize colunas, espaçamentos e posicionamentos.',
+            match: (key) => createMatcher([
+                'columns',
+                'gridGap',
+                'responsiveColumns',
+                'padding',
+                'marginTop',
+                'marginBottom',
+                'contentMode',
+                'textPosition',
+                'imageLayout',
+                'imagePosition',
+            ])(key),
+        },
+        {
+            id: 'selection',
+            title: 'Seleção e Validação',
+            description: 'Defina regras de seleção e mensagens de validação.',
+            match: (key) => createMatcher([
+                'multipleSelection',
+                'minSelections',
+                'maxSelections',
+                'requiredSelections',
+                'allowDeselection',
+                'showSelectionCount',
+                'selectionCountText',
+                'enableValidation',
+                'showValidationMessage',
+                'validationMessage',
+                'validationMessageColor',
+            ])(key),
+        },
+        {
+            id: 'auto-advance',
+            title: 'Auto-avanço',
+            description: 'Controle quando avançar automaticamente.',
+            match: (key) => createMatcher([
+                'autoAdvanceOnComplete',
+                'autoAdvanceDelay',
+                'autoAdvanceOnMaxSelection',
+            ])(key),
+        },
+        {
+            id: 'pontuacao',
+            title: 'Pontuação',
+            description: 'Ajuste visibilidade e pontuação das opções.',
+            match: (key) => createMatcher([
+                'showPoints',
+                'options',
+            ])(key),
+        },
+        {
+            id: 'aparencia',
+            title: 'Aparência',
+            description: 'Cores, estilo de seleção e efeitos visuais.',
+            match: (key) => createMatcher([
+                'showImages',
+                'imageSize',
+                'imageWidth',
+                'imageHeight',
+                'imageBorderRadius',
+                'imageObjectFit',
+                'backgroundColor',
+                'borderColor',
+                'selectedColor',
+                'selectedBorderColor',
+                'hoverColor',
+                'hoverBorderColor',
+                'textColor',
+                'selectedTextColor',
+                'borderRadius',
+                'borderWidth',
+                'selectionStyle',
+                'selectionAnimation',
+                'hoverEffect',
+                'scale',
+                'opacity',
+                'disabledOpacity',
+            ])(key),
+        },
+        {
+            id: 'acoes',
+            title: 'Ações e Navegação',
+            description: 'Controle botões e fluxo da questão.',
+            match: (key) => createMatcher([
+                'showButtons',
+                'buttonPosition',
+                'enableButtonOnlyWhenValid',
+                'nextButtonText',
+                'nextButtonUrl',
+                'nextButtonAction',
+                'showPreviousButton',
+                'previousButtonText',
+            ])(key),
+        },
+        {
+            id: 'opcoes',
+            title: 'Opções',
+            description: 'Gerencie a lista de opções exibidas.',
+            match: (key) => key === 'options',
+        },
+    ],
+};
+
+const CATEGORY_LABELS: Record<string, { title: string; description?: string }> = {
+    content: { title: 'Conteúdo', description: 'Textos, itens e dados exibidos.' },
+    layout: { title: 'Layout', description: 'Estrutura e distribuição visual.' },
+    behavior: { title: 'Comportamento', description: 'Regras de seleção e fluxo.' },
+    style: { title: 'Aparência', description: 'Cores, estilos e efeitos visuais.' },
+    animation: { title: 'Animações', description: 'Movimentos e transições.' },
+    advanced: { title: 'Avançado', description: 'Ajustes avançados e técnicos.' },
+};
+
+const CATEGORY_ORDER = ['content', 'layout', 'behavior', 'style', 'animation', 'advanced', 'general'];
+
+const formatCategoryLabel = (category: string) => {
+    if (!category) return 'Outros';
+    return category.charAt(0).toUpperCase() + category.slice(1);
+};
+
+const buildPanelSections = (schema: BlockTypeSchema): PanelSection[] => {
+    const presets = BLOCK_SECTION_PRESETS[schema.type] ?? [];
+    const assigned = new Set<string>();
+    const sections: PanelSection[] = [];
+
+    presets.forEach((preset) => {
+        const matchedEntries = Object.entries(schema.properties).filter(([key, property]) => {
+            if (assigned.has(key)) return false;
+            return preset.match(key, property);
+        });
+
+        if (!matchedEntries.length) {
+            return;
+        }
+
+        matchedEntries.forEach(([key]) => assigned.add(key));
+
+        sections.push({
+            id: preset.id,
+            title: preset.title,
+            description: preset.description,
+            properties: Object.fromEntries(matchedEntries),
+        });
+    });
+
+    const remainingEntries = Object.entries(schema.properties).filter(([key]) => !assigned.has(key));
+
+    if (remainingEntries.length) {
+        const grouped = new Map<string, Array<[string, PropertySchema]>>();
+        remainingEntries.forEach(([key, property]) => {
+            const category = property.category ?? 'general';
+            if (!grouped.has(category)) {
+                grouped.set(category, []);
+            }
+            grouped.get(category)!.push([key, property]);
+        });
+
+        const sortedCategories = Array.from(grouped.keys()).sort((a, b) => {
+            const indexA = CATEGORY_ORDER.indexOf(a);
+            const indexB = CATEGORY_ORDER.indexOf(b);
+            const safeA = indexA === -1 ? CATEGORY_ORDER.length : indexA;
+            const safeB = indexB === -1 ? CATEGORY_ORDER.length : indexB;
+            return safeA - safeB;
+        });
+
+        sortedCategories.forEach((category) => {
+            const entries = grouped.get(category)!;
+            const metadata = CATEGORY_LABELS[category];
+            sections.push({
+                id: `category-${category}`,
+                title: metadata?.title ?? formatCategoryLabel(category),
+                description: metadata?.description,
+                properties: Object.fromEntries(entries),
+            });
+        });
+    }
+
+    if (!sections.length) {
+        sections.push({
+            id: 'default',
+            title: 'Configurações',
+            properties: { ...schema.properties },
+        });
+    }
+
+    return sections;
+};
+
+const BLOCK_PRESET_GROUPS: Record<string, PresetGroup[]> = {
+    'options-grid': [
+        {
+            id: 'layout-presets',
+            title: 'Layout Rápido',
+            description: 'Escolha rapidamente a estrutura das opções.',
+            items: [
+                {
+                    id: 'layout-1col',
+                    label: '1 coluna',
+                    updates: { columns: 1, responsiveColumns: false },
+                },
+                {
+                    id: 'layout-2col',
+                    label: '2 colunas',
+                    updates: { columns: 2, responsiveColumns: true },
+                },
+                {
+                    id: 'layout-imagem-texto',
+                    label: 'Imagem + Texto',
+                    updates: { contentMode: 'text-and-image', showImages: true, imageLayout: 'vertical' },
+                },
+            ],
+        },
+        {
+            id: 'selection-presets',
+            title: 'Seleção',
+            description: 'Aplique regras de seleção frequentes.',
+            items: [
+                {
+                    id: 'selection-exact-3',
+                    label: 'Exatamente 3',
+                    helperText: 'Ideal para etapas 2–11',
+                    updates: {
+                        multipleSelection: true,
+                        minSelections: 3,
+                        maxSelections: 3,
+                        requiredSelections: 3,
+                        showSelectionCount: true,
+                    },
+                },
+                {
+                    id: 'selection-min1-max3',
+                    label: 'Mín 1 / Máx 3',
+                    updates: {
+                        multipleSelection: true,
+                        minSelections: 1,
+                        maxSelections: 3,
+                        requiredSelections: 1,
+                        showSelectionCount: true,
+                    },
+                },
+            ],
+        },
+        {
+            id: 'auto-advance-presets',
+            title: 'Auto-avanço',
+            description: 'Escolha a velocidade do auto-avanço.',
+            items: [
+                {
+                    id: 'auto-advance-250',
+                    label: '250 ms',
+                    updates: { autoAdvanceOnComplete: true, autoAdvanceDelay: 250 },
+                },
+                {
+                    id: 'auto-advance-800',
+                    label: '800 ms',
+                    updates: { autoAdvanceOnComplete: true, autoAdvanceDelay: 800 },
+                },
+                {
+                    id: 'auto-advance-1500',
+                    label: '1,5 s',
+                    updates: { autoAdvanceOnComplete: true, autoAdvanceDelay: 1500 },
+                },
+            ],
+        },
+    ],
+};
+
 const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
     block,
     schema,
