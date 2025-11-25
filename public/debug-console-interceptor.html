@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>🐛 DEBUG CONSOLE INTERCEPTOR</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+        }
+
+        #toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            padding: 10px;
+            border-bottom: 2px solid #0f0;
+            z-index: 99999;
+        }
+
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #0c0;
+        }
+
+        #logs {
+            margin-top: 60px;
+            padding: 20px;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .log {
+            padding: 5px;
+            margin: 2px 0;
+            border-left: 3px solid #333;
+        }
+
+        .log.properties {
+            border-color: #ff0;
+            background: #222;
+        }
+
+        .log.wysiwyg {
+            border-color: #0ff;
+            background: #112;
+        }
+
+        .log.click {
+            border-color: #f0f;
+            background: #212;
+        }
+
+        .log.error {
+            border-color: #f00;
+            background: #300;
+            color: #f00;
+        }
+
+        .timestamp {
+            color: #666;
+            margin-right: 10px;
+        }
+
+        .filter {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 5px 10px;
+            background: #333;
+            cursor: pointer;
+        }
+
+        .filter.active {
+            background: #0f0;
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toolbar">
+        <button onclick="ativarFlag()">✅ ATIVAR FLAG</button>
+        <button onclick="abrirEditor()">🚀 ABRIR EDITOR</button>
+        <button onclick="clearLogs()">🗑️ LIMPAR</button>
+        <button onclick="exportLogs()">💾 EXPORTAR</button>
+
+        <span style="margin-left: 20px;">Filtros:</span>
+        <span class="filter active" onclick="toggleFilter('properties')">🎨 Properties</span>
+        <span class="filter active" onclick="toggleFilter('wysiwyg')">🔄 WYSIWYG</span>
+        <span class="filter active" onclick="toggleFilter('click')">🖱️ Click</span>
+        <span class="filter active" onclick="toggleFilter('error')">❌ Error</span>
+    </div>
+
+    <div id="logs"></div>
+
+    <script>
+        const logsDiv = document.getElementById('logs');
+        const allLogs = [];
+        const filters = {
+            properties: true,
+            wysiwyg: true,
+            click: true,
+            error: true
+        };
+
+        function toggleFilter(type) {
+            filters[type] = !filters[type];
+            const btn = event.target;
+            btn.classList.toggle('active');
+            renderLogs();
+        }
+
+        function addLog(type, msg) {
+            const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+            allLogs.push({ type, msg, timestamp });
+            if (allLogs.length > 500) allLogs.shift();
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const filtered = allLogs.filter(log => filters[log.type]);
+            logsDiv.innerHTML = filtered.map(log =>
+                `<div class="log ${log.type}">
+                    <span class="timestamp">${log.timestamp}</span>
+                    ${log.msg}
+                </div>`
+            ).join('');
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        function clearLogs() {
+            allLogs.length = 0;
+            renderLogs();
+        }
+
+        function exportLogs() {
+            const text = allLogs.map(l => `[${l.timestamp}] [${l.type}] ${l.msg}`).join('\n');
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `properties-panel-debug-${Date.now()}.txt`;
+            a.click();
+        }
+
+        function ativarFlag() {
+            localStorage.setItem('qm-editor:use-simple-properties', 'true');
+            addLog('properties', '✅ Flag ativada: qm-editor:use-simple-properties = true');
+            alert('✅ Flag ativada!\n\nAgora abra o editor.');
+        }
+
+        function abrirEditor() {
+            addLog('properties', '🚀 Abrindo editor...');
+            window.open('/editor?template=quiz21StepsComplete', '_blank');
+        }
+
+        // INTERCEPTAR CONSOLE GLOBAL
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function (...args) {
+            const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
+
+            let type = 'properties';
+            if (msg.includes('PropertiesColumn') || msg.includes('🎨') || msg.includes('🔍')) {
+                type = 'properties';
+            } else if (msg.includes('WYSIWYG') || msg.includes('🔄') || msg.includes('wysiwyg')) {
+                type = 'wysiwyg';
+            } else if (msg.includes('Click') || msg.includes('🖱️') || msg.includes('click')) {
+                type = 'click';
+            }
+
+            addLog(type, msg);
+            originalLog.apply(console, args);
+        };
+
+        console.error = function (...args) {
+            const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
+            addLog('error', '❌ ' + msg);
+            originalError.apply(console, args);
+        };
+
+        console.warn = function (...args) {
+            const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
+            addLog('error', '⚠️ ' + msg);
+            originalWarn.apply(console, args);
+        };
+
+        // MONITORAR LOCALSTORAGE
+        setInterval(() => {
+            const flag = localStorage.getItem('qm-editor:use-simple-properties');
+            if (flag !== window.lastFlag) {
+                window.lastFlag = flag;
+                addLog('properties', `🔄 localStorage mudou: qm-editor:use-simple-properties = ${flag}`);
+            }
+        }, 1000);
+
+        addLog('properties', '🐛 Console Interceptor ATIVO - Pronto para capturar logs!');
+        addLog('properties', '📋 Instruções: 1) Clique "✅ ATIVAR FLAG" 2) Clique "🚀 ABRIR EDITOR" 3) No editor, clique em um bloco');
+    </script>
+</body>
+
+</html>

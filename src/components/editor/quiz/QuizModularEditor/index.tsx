@@ -324,9 +324,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         initialEditMode: 'design',
         initialVisualizationMode: 'blocks',
         initialShowComponentLibrary: true,
-        initialShowProperties: true,
+        initialShowProperties: true, // 🔥 SEMPRE TRUE
         initialShowPreview: false,
     });
+
+    // 🐛 DEBUG: Logar estado do editorModeUI
+    React.useEffect(() => {
+        console.log('🔍 [QuizModularEditor] editorModeUI.showProperties:', editorModeUI.showProperties);
+        if (!editorModeUI.showProperties) {
+            console.error('❌ [PONTO CEGO] showProperties está FALSE! Properties Panel NÃO será renderizado!');
+        }
+    }, [editorModeUI.showProperties]);
 
     // Compatibilidade: badge para UI antiga
     const editorMode = useMemo(() => ({
@@ -1747,7 +1755,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             <Button
                                 size="sm"
                                 variant={editorModeUI.showProperties ? "default" : "outline"}
-                                onClick={editorModeUI.toggleProperties}
+                                onClick={() => {
+                                    console.log('🔄 [QuizModularEditor] Toggle Properties:', {
+                                        antes: editorModeUI.showProperties,
+                                        depois: !editorModeUI.showProperties
+                                    });
+                                    if (editorModeUI.showProperties) {
+                                        console.warn('⚠️ [PONTO CEGO] Tentando DESLIGAR Properties Panel!');
+                                        alert('⚠️ Properties Panel não pode ser desligado neste modo de debug!');
+                                        return; // 🔥 IMPEDIR DESLIGAR
+                                    }
+                                    editorModeUI.toggleProperties();
+                                }}
                                 className="h-7 px-2"
                                 title="Mostrar/ocultar painel de propriedades"
                             >
