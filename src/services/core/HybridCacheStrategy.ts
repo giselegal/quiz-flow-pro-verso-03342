@@ -18,7 +18,8 @@
  * ✅ TTL unificado
  */
 
-import { UnifiedCacheService, CacheStore } from '../UnifiedCacheService';
+import { UnifiedCacheService } from '../unified/UnifiedCacheService';
+import type { CacheStore } from '../canonical/CacheService';
 import { indexedDBCache } from './IndexedDBCache';
 import { performanceProfiler } from '@/lib/utils/performanceProfiler';
 import { appLogger } from '@/lib/utils/logger';

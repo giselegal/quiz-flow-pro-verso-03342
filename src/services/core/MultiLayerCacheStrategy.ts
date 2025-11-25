@@ -20,7 +20,8 @@
  * ✅ Fallback automático entre camadas
  */
 
-import { UnifiedCacheService, CacheStore } from '../UnifiedCacheService';
+import { UnifiedCacheService } from '../unified/UnifiedCacheService';
+import type { CacheStore } from '../canonical/CacheService';
 import { indexedDBCache } from './IndexedDBCache';
 import { appLogger } from '@/lib/utils/appLogger';
 

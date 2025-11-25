@@ -130,7 +130,7 @@ export function useUpdateTemplate(
         throw new Error(`Failed to update template: ${error.message}`);
       }
 
-      return data as Template;
+      return data as unknown as Template;
     },
 
     // Invalidate cache after successful update
@@ -185,7 +185,6 @@ export function useCreateTemplate(
         metadata: input.metadata || {},
         status: input.status || 'draft',
         // TODO Phase 2: Integrate with auth context to get real user_id
-        return data as Template;
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
