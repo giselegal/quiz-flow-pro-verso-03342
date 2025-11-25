@@ -161,7 +161,7 @@ export class UnifiedCacheService {
   // CORE OPERATIONS
   // ============================================================================
 
-  get<T = any>(key: string): T | undefined {
+  private getByKey<T = any>(key: string): T | undefined {
     const entry = this.cache.get(key);
 
     if (!entry) {
@@ -184,7 +184,17 @@ export class UnifiedCacheService {
     return entry.data as T;
   }
 
-  set<T = any>(key: string, data: T, type: CacheEntryType = 'metadata', ttl?: number): void {
+  // Overloads: allow both get(key) and get(store, key) for backwards compat
+  get<T = any>(key: string): T | undefined;
+  get<T = any>(store: string, key: string): T | undefined;
+  get<T = any>(arg1: string, arg2?: string): T | undefined {
+    if (typeof arg2 === 'string') {
+      return this.getByKey<T>(this.composeKey(arg1, arg2));
+    }
+    return this.getByKey<T>(arg1);
+  }
+
+  private setByKey<T = any>(key: string, data: T, type: CacheEntryType = 'metadata', ttl?: number): void {
     const size = this.calculateSize(data);
     const now = Date.now();
     const effectiveTTL = ttl ?? TTL_BY_TYPE[type] ?? this.config.defaultTTL;
@@ -215,30 +225,55 @@ export class UnifiedCacheService {
     });
   }
 
-  has(key: string): boolean {
-    const entry = this.cache.get(key);
+  // Overloads: allow both set(key, data, type?, ttl?) and set(store, key, data, ttl?) for legacy callers
+  set<T = any>(key: string, data: T, type?: CacheEntryType, ttl?: number): void;
+  set<T = any>(store: string, key: string, data: T, ttl?: number): void;
+  set<T = any>(arg1: string, arg2: any, arg3?: any, arg4?: any): void {
+    // If called with (store, key, data, ttl)
+    if (arguments.length >= 3 && typeof arg3 !== 'undefined' && typeof arg2 === 'string' && arguments.length <= 4) {
+      // store, key, data, ttl?
+      const store = arg1 as string;
+      const key = arg2 as string;
+      const data = arg3 as T;
+      const ttl = arg4 as number | undefined;
+      return this.setByKey<T>(this.composeKey(store, key), data, this.mapStoreToType(store), ttl);
+    }
+
+    // Fallback to original signature: (key, data, type?, ttl?)
+    const key = arg1 as string;
+    const data = arg2 as T;
+    const type = arg3 as CacheEntryType | undefined;
+    const ttl = arg4 as number | undefined;
+    return this.setByKey<T>(key, data, type ?? 'metadata', ttl);
+  }
+
+  // has: support has(key) and has(store, key)
+  has(key: string): boolean;
+  has(store: string, key: string): boolean;
+  has(arg1: string, arg2?: string): boolean {
+    const k = typeof arg2 === 'string' ? this.composeKey(arg1, arg2) : arg1;
+    const entry = this.cache.get(k);
     if (!entry) return false;
-    
-    // Verificar expiração
     if (Date.now() > entry.expiresAt) {
-      this.cache.delete(key);
+      this.cache.delete(k);
       return false;
     }
-    
     return true;
   }
 
-  delete(key: string): boolean {
-    const deleted = this.cache.delete(key);
-    
+  // delete: support delete(key) and delete(store, key)
+  delete(key: string): boolean;
+  delete(store: string, key: string): boolean;
+  delete(arg1: string, arg2?: string): boolean {
+    const k = typeof arg2 === 'string' ? this.composeKey(arg1, arg2) : arg1;
+    const deleted = this.cache.delete(k);
     if (deleted) {
       this.eventBus.emit({
         type: 'delete',
-        key,
+        key: k,
         timestamp: Date.now(),
       });
     }
-    
     return deleted;
   }
 
@@ -495,6 +530,147 @@ export class UnifiedCacheService {
   /** @deprecated Use clear() */
   clearCache(): void {
     this.clear();
+  }
+
+  // ============================================================================
+  // BACKWARDS-COMPATIBILITY WRAPPERS (for older callers expecting multi-store)
+  // These helpers allow the older `CacheService` facade to call unifiedCache
+  // using the (store, key) signature without changing every call-site.
+  // ============================================================================
+
+  private composeKey(store: string, key: string) {
+    return `${store}:${key}`;
+  }
+
+  private mapStoreToType(store: string): CacheEntryType {
+    switch (store) {
+      case 'templates':
+      case 'template':
+        return 'template';
+      case 'steps':
+      case 'step':
+        return 'step';
+      case 'blocks':
+      case 'block':
+        return 'block';
+      case 'funnels':
+      case 'funnel':
+        return 'funnel';
+      case 'component':
+      case 'components':
+        return 'component';
+      case 'user':
+        return 'user';
+      case 'preview':
+        return 'preview';
+      case 'metadata':
+      case 'generic':
+      case 'configs':
+      default:
+        return 'metadata';
+    }
+  }
+
+  // Legacy multi-arg signature: set(store, key, value, ttl?)
+  setEntry<T = any>(store: string, key: string, data: T, ttl?: number): void {
+    const composed = this.composeKey(store, key);
+    const type = this.mapStoreToType(store);
+    return this.set<T>(composed, data, type, ttl);
+  }
+
+  // Alias to satisfy older callers that call unifiedCache.set(store, key, value, ttl)
+  set<T = any>(store: string, key: string, data: T, ttl?: number): void {
+    return this.setEntry<T>(store, key, data, ttl);
+  }
+
+  // Legacy multi-arg signature: get(store, key)
+  getEntry<T = any>(store: string, key: string): T | undefined {
+    const composed = this.composeKey(store, key);
+    return this.get<T>(composed);
+  }
+
+  // Alias for unifiedCache.get(store, key)
+  get<T = any>(store: string, key: string): T | undefined {
+    return this.getEntry<T>(store, key);
+  }
+
+  // Legacy has/delete wrappers
+  hasEntry(store: string, key: string): boolean {
+    return this.has(this.composeKey(store, key));
+  }
+
+  // Alias for unifiedCache.has(store, key)
+  has(store: string, key: string): boolean {
+    return this.hasEntry(store, key);
+  }
+
+  deleteEntry(store: string, key: string): boolean {
+    return this.delete(this.composeKey(store, key));
+  }
+
+  // Alias for unifiedCache.delete(store, key)
+  delete(store: string, key: string): boolean {
+    return this.deleteEntry(store, key);
+  }
+
+  // Invalidate by prefix within a store
+  invalidateByPrefix(store: string, prefix: string): number {
+    const pattern = new RegExp(`^${store}:${prefix}`);
+    return this.invalidatePattern(pattern);
+  }
+
+  // Clear a logical store (by CacheEntryType)
+  clearStore(store: string): void {
+    const type = this.mapStoreToType(store);
+    this.invalidateType(type);
+  }
+
+  // Clear everything - kept for compatibility
+  clearAll(): void {
+    this.clear();
+  }
+
+  // Provide store-specific stats
+  getStoreStats(store: string) {
+    const stats = this.getStats();
+    const type = this.mapStoreToType(store);
+    const byType = stats.byType[type] ?? { count: 0, size: 0 };
+    return {
+      hitRate: stats.hitRate,
+      hits: stats.hitRate * (stats.totalEntries || 1),
+      misses: 0,
+      memoryUsage: byType.size,
+      size: byType.count,
+    };
+  }
+
+  // Return all stats grouped by store-like keys
+  getAllStats() {
+    const stats = this.getStats();
+    const stores: Record<string, any> = {};
+    for (const [typeKey, val] of Object.entries(stats.byType)) {
+      stores[typeKey] = {
+        hitRate: stats.hitRate,
+        hits: Math.round(stats.hitRate * (stats.totalEntries || 1)),
+        misses: 0,
+        memoryUsage: val.size,
+        size: val.count,
+      };
+    }
+    return { stores };
+  }
+
+  // Log stats for compatibility
+  logStats(): void {
+    const stats = this.getStats();
+    appLogger.info('📊 [UnifiedCache] Stats:', { data: [stats] });
+  }
+
+  // Reset metrics counters
+  resetStats(): void {
+    this.hitCount = 0;
+    this.missCount = 0;
+    this.evictionCount = 0;
   }
 }
 

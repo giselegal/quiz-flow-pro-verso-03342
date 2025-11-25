@@ -24,7 +24,7 @@ import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Cache store types
  */
-export type CacheStore = 'generic' | 'templates' | 'funnels' | 'steps' | 'blocks';
+export type CacheStore = 'generic' | 'templates' | 'funnels' | 'steps' | 'blocks' | 'configs';
 
 /**
  * Cache statistics por categoria
