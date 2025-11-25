@@ -253,13 +253,17 @@ function AppCore() {
                                             return (
                                                 <EditorErrorBoundary>
                                                     <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                        <EditorProviderUnified>
-                                                            <QuizModularEditor
-                                                                resourceId={resourceId}
-                                                                templateId={templateId}
-                                                                funnelId={funnelId}
-                                                            />
-                                                        </EditorProviderUnified>
+                                                        <SuperUnifiedProviderV3>
+                                                            <SuperUnifiedProvider>
+                                                                <EditorProviderUnified>
+                                                                    <QuizModularEditor
+                                                                        resourceId={resourceId}
+                                                                        templateId={templateId}
+                                                                        funnelId={funnelId}
+                                                                    />
+                                                                </EditorProviderUnified>
+                                                            </SuperUnifiedProvider>
+                                                        </SuperUnifiedProviderV3>
                                                     </Suspense>
                                                 </EditorErrorBoundary>
                                             );
@@ -270,11 +274,15 @@ function AppCore() {
                                         {(params) => (
                                             <EditorErrorBoundary>
                                                 <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                    <EditorProviderUnified>
-                                                        <QuizModularEditor
-                                                            funnelId={params.funnelId}
-                                                        />
-                                                    </EditorProviderUnified>
+                                                    <SuperUnifiedProviderV3>
+                                                        <SuperUnifiedProvider>
+                                                            <EditorProviderUnified>
+                                                                <QuizModularEditor
+                                                                    funnelId={params.funnelId}
+                                                                />
+                                                            </EditorProviderUnified>
+                                                        </SuperUnifiedProvider>
+                                                    </SuperUnifiedProviderV3>
                                                 </Suspense>
                                             </EditorErrorBoundary>
                                         )}
