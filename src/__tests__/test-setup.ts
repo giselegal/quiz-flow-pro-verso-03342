@@ -4,6 +4,7 @@
 
 import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 import * as matchers from '@testing-library/jest-dom/matchers';
 import React from 'react';
 
@@ -38,6 +39,12 @@ vi.mock('next-themes', () => {
 
 // Estende os matchers do Vitest com os do jest-dom
 expect.extend(matchers);
+
+// Assegura que o `expect` global aponte para o `expect` do Vitest.
+// Em alguns ambientes/mocks antigos o `expect` pode ser substituído por Chai,
+// causando erros como "Invalid Chai property: toHaveTextContent".
+// Forçamos aqui para evitar colisões entre bibliotecas de assertion.
+;(globalThis as any).expect = expect;
 
 // Cleanup automático após cada teste
 afterEach(() => {
