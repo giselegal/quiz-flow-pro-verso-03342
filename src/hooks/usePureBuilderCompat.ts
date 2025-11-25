@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useEditor } from '@/contexts/editor/EditorContext';
+import { useEditor } from '@/contexts/editor/EditorStateProvider';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 

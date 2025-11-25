@@ -1,27 +1,27 @@
-import { useEditor as useEditorContext, EditorContext } from '@/contexts/editor/EditorContext';
+/**
+ * @deprecated Este arquivo é legado. Use diretamente useEditor de EditorStateProvider.
+ * @see src/contexts/editor/EditorStateProvider.tsx
+ */
+import { useEditor as useEditorCanonical } from '@/contexts/editor/EditorStateProvider';
 import { appLogger } from '@/lib/utils/appLogger';
-import { useContext } from 'react';
 
 interface UseEditorOptions {
   optional?: boolean;
 }
 
-// Get the EditorContextType from the context
-type EditorContextType = NonNullable<ReturnType<typeof useEditorContext>>;
+// Get the EditorContextType from the canonical provider
+type EditorContextType = ReturnType<typeof useEditorCanonical>;
 
 export function useEditor(options: UseEditorOptions = {}): EditorContextType | null {
-  const context = useContext(EditorContext);
-  
-  if (!context) {
+  try {
+    return useEditorCanonical();
+  } catch (error) {
     if (options.optional) {
       appLogger.warn('⚠️ useEditor (optional) chamado fora do contexto. Retornando null.');
       return null;
     }
-    // The fallback is returned from useEditorContext when context is null
-    return useEditorContext();
+    throw error;
   }
-  
-  return context;
 }
 
 /**

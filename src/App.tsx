@@ -48,7 +48,7 @@ import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { ProviderGuard } from '@/components/ProviderGuard';
 import { appLogger } from '@/lib/utils/appLogger';
 import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
-import { EditorProvider } from '@/contexts/editor/EditorContext';
+// EditorProvider legado removido - usar SuperUnifiedProvider que já inclui EditorStateProvider
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));

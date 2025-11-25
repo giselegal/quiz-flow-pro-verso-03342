@@ -16,7 +16,7 @@
  */
 
 import { useMemo, useCallback } from 'react';
-import { useEditor } from '@/contexts/editor/EditorContext';
+import { useEditor } from '@/contexts/editor/EditorStateProvider';
 import { v4 as uuidv4 } from 'uuid';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { EditorAdapter } from '@/types/editor/PropertiesPanelTypes';
