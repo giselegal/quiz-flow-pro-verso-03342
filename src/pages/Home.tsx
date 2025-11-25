@@ -311,7 +311,7 @@ export const Home: React.FC = () => {
                 </div>
               </div>
 
-              {/* Hero Right - Product Mock */}
+              {/* Hero Right - Inline VSL Preview */}
               <div className="hidden lg:block">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -320,54 +320,26 @@ export const Home: React.FC = () => {
                   className="relative max-w-md ml-auto"
                 >
                   <div className="absolute -inset-6 bg-gradient-to-tr from-[#3bbef3]/30 via-transparent to-[#ea7af6]/40 opacity-70 blur-3xl" />
-                  <div className="relative rounded-3xl bg-[#050816]/90 border border-white/12 shadow-[0_24px_80px_rgba(15,23,42,0.9)] backdrop-blur-2xl p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-slate-400 mb-1">Visão Geral</p>
-                        <p className="text-sm font-medium text-white">Performance dos seus quizzes</p>
-                      </div>
-                      <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/30">Tempo real</Badge>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 mb-6">
-                      <div className="rounded-2xl bg-white/5 border border-white/5 p-3">
-                        <p className="text-[11px] text-slate-400 mb-1">Taxa de conversão</p>
-                        <p className="text-lg font-semibold text-white">27,4%</p>
-                        <span className="inline-flex items-center text-[11px] text-emerald-400 mt-1">
-                          <TrendingUp className="h-3 w-3 mr-1" />+4,2%
-                        </span>
-                      </div>
-                      <div className="rounded-2xl bg-white/5 border border-white/5 p-3">
-                        <p className="text-[11px] text-slate-400 mb-1">Leads gerados</p>
-                        <p className="text-lg font-semibold text-white">3.418</p>
-                        <span className="inline-flex items-center text-[11px] text-emerald-400 mt-1">
-                          <ArrowRight className="h-3 w-3 mr-1" />+18%
-                        </span>
-                      </div>
-                      <div className="rounded-2xl bg-white/5 border border-white/5 p-3">
-                        <p className="text-[11px] text-slate-400 mb-1">Quizzes ativos</p>
-                        <p className="text-lg font-semibold text-white">12</p>
-                        <span className="inline-flex items-center text-[11px] text-slate-400 mt-1">Auto-scale</span>
-                      </div>
-                    </div>
-                    <div className="rounded-2xl bg-white/5 border border-white/5 p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[11px] text-slate-400">Funis em destaque</span>
-                        <span className="text-[11px] text-slate-300">Últimos 30 dias</span>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-xs text-slate-300">
-                          <span className="truncate mr-3">Quiz de recomendação de produto</span>
-                          <span className="font-medium">42% conv.</span>
-                        </div>
-                        <div className="flex items-center justify-between text-xs text-slate-300">
-                          <span className="truncate mr-3">Diagnóstico de maturidade</span>
-                          <span className="font-medium">31% conv.</span>
-                        </div>
-                        <div className="flex items-center justify-between text-xs text-slate-300">
-                          <span className="truncate mr-3">Pré-venda consultiva</span>
-                          <span className="font-medium">24% conv.</span>
-                        </div>
-                      </div>
+                  <div className="relative rounded-3xl overflow-hidden border border-white/12 shadow-[0_24px_80px_rgba(15,23,42,0.9)]">
+                    <video
+                      src="/videos/vsl-quizflowpro.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                      <Badge className="bg-white/10 text-white border-white/20">Preview VSL</Badge>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-white/10 text-white border-white/30 hover:bg-white/20"
+                        onClick={() => setIsVslOpen(true)}
+                      >
+                        <Play className="h-4 w-4 mr-1" />
+                        Assistir
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
