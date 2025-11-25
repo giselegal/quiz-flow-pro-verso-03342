@@ -35,9 +35,18 @@ export function useEditorAdapter() {
     // Use addBlock if available, otherwise try updateBlock
     const addBlockFn = ctx?.actions?.addBlock ?? ctx?.addBlock;
     if (addBlockFn) {
-      await addBlockFn(blockToDuplicate.type, duplicatedBlock.properties, duplicatedBlock.content);
-      appLogger.info('Block duplicated:', { data: [id, newId] });
-      return newId;
+      try {
+        // support both APIs: addBlock(block) and addBlock(type, props, content)
+        if ((addBlockFn as any).length === 1) {
+          await (addBlockFn as any)(duplicatedBlock);
+        } else {
+          await (addBlockFn as any)(blockToDuplicate.type, duplicatedBlock.properties, duplicatedBlock.content);
+        }
+        appLogger.info('Block duplicated:', { data: [id, newId] });
+        return newId;
+      } catch (err) {
+        appLogger.error('Failed to duplicate block via addBlockFn:', err);
+      }
     }
     
     appLogger.warn('No addBlock function available');

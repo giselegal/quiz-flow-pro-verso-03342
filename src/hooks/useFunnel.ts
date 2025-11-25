@@ -151,13 +151,13 @@ export function useFunnel(
  */
 export function useFunnels(
   ids: string[],
-  options: UseFunnelOptions = {}
+  options: Omit<UseQueryOptions<Funnel[], Error>, 'queryKey' | 'queryFn'> = {}
 ): UseQueryResult<Funnel[], Error> {
   const {
     staleTime = 5 * 60 * 1000,
     enabled = true,
     ...restOptions
-  } = options;
+  } = options as any;
 
   return useQuery<Funnel[], Error>({
     queryKey: ['funnels', 'byIds', ids],
@@ -201,13 +201,13 @@ export function useFunnelList(
     userId?: string;
     limit?: number;
   } = {},
-  options: UseFunnelOptions = {}
+  options: Omit<UseQueryOptions<Funnel[], Error>, 'queryKey' | 'queryFn'> = {}
 ): UseQueryResult<Funnel[], Error> {
   const {
     staleTime = 2 * 60 * 1000, // 2 minutes for list
     enabled = true,
     ...restOptions
-  } = options;
+  } = options as any;
 
   return useQuery<Funnel[], Error>({
     queryKey: ['funnels', 'list', filters],
