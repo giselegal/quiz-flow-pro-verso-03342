@@ -16,8 +16,15 @@
  */
 
 import { useMemo, useCallback } from 'react';
-import { useEditor } from '@/contexts/editor/EditorStateProvider';
+import { useEditor } from '@/core/contexts/EditorContext';
 import { v4 as uuidv4 } from 'uuid';
+
+// Log de deprecação em desenvolvimento
+if (import.meta.env.DEV) {
+  console.warn(
+    '⚠️ useEditorAdapter: Considere migrar para @/core/hooks/useEditor'
+  );
+}
 import { appLogger } from '@/lib/utils/appLogger';
 import type { EditorAdapter } from '@/types/editor/PropertiesPanelTypes';
 import type { Block, BlockType } from '@/types/editor';

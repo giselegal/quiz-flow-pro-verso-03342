@@ -1,9 +1,27 @@
 /**
- * @deprecated Este arquivo é legado. Use diretamente useEditor de EditorStateProvider.
- * @see src/contexts/editor/EditorStateProvider.tsx
+ * @deprecated Este arquivo é LEGADO. Use @core/hooks ao invés.
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ Antigo (deprecated)
+ * import { useEditor } from '@/hooks/useEditor';
+ * 
+ * // ✅ Novo (recomendado)
+ * import { useEditor } from '@/core/hooks';
+ * ```
+ * 
+ * Este arquivo será removido em versões futuras.
+ * @see @core/hooks/useEditor
  */
-import { useEditor as useEditorCanonical } from '@/contexts/editor/EditorStateProvider';
+import { useEditor as useEditorCanonical } from '@/core/contexts/EditorContext';
 import { appLogger } from '@/lib/utils/appLogger';
+
+// Log de deprecação em desenvolvimento
+if (import.meta.env.DEV) {
+  console.warn(
+    '⚠️ DEPRECATED: @/hooks/useEditor está deprecated. Use @/core/hooks/useEditor'
+  );
+}
 
 interface UseEditorOptions {
   optional?: boolean;

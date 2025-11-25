@@ -1,6 +1,13 @@
 import { useCallback, useMemo } from 'react';
-import { useEditor } from '@/contexts/editor/EditorStateProvider';
+import { useEditor } from '@/core/contexts/EditorContext';
 import type { Block } from '@/types/editor';
+
+// Log de deprecação em desenvolvimento
+if (import.meta.env.DEV) {
+  console.warn(
+    '⚠️ usePureBuilderCompat: Este hook está deprecated'
+  );
+}
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface PureBuilderState {
