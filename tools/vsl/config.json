@@ -1,0 +1,17 @@
+{
+  "useElevenLabs": false,
+  "voiceId": "",
+  "voiceSpeed": 1.25,
+  "scenes": [
+    { "title": "Você está fazendo tudo…", "lines": ["Posta, faz live, cria conteúdo…", "Mas as vendas não acompanham o esforço."], "assetVideo": "assets/videos/01-frustracao.mp4" },
+    { "title": "Você tem um método", "lines": ["Curso incrível, clientes satisfeitos…", "Na hora de escalar, tudo trava."], "assetVideo": "assets/videos/02-metricas-duvida.mp4" },
+    { "title": "A virada de chave", "lines": ["Experiências interativas conduzem o lead", "até a decisão de compra."], "assetVideo": "assets/videos/03-flow-interativo.mp4" },
+    { "title": "Quizzes e funis", "lines": ["Entendem o momento", "segmentam e entregam a mensagem certa."], "assetVideo": "assets/videos/04-quiz-mobile.mp4" },
+    { "title": "QuizFlowPro", "lines": ["Alavancar e escalar no digital", "mesmo sem saber por onde começar."], "assetVideo": "assets/videos/05-saas-dashboard.mp4" },
+    { "title": "Clareza de tráfego", "lines": ["Quem chega? Quem tem perfil?", "Onde desistem?"], "assetVideo": "assets/videos/06-analytics.mp4" },
+    { "title": "Com o QuizFlowPro", "lines": ["Cria quizzes alinhados ao seu método", "acompanha conversões em tempo real."], "assetVideo": "assets/videos/07-equipe-otimista.mp4" },
+    { "title": "Comece mesmo sem saber", "lines": ["Modelos de funis prontos", "personalize e valide sua oferta."], "assetVideo": "assets/videos/08-templates.mp4" },
+    { "title": "Prova social", "lines": ["Triplique a conversão", "liste segmentadas e escale."], "assetVideo": "assets/videos/09-depoimentos.mp4" },
+    { "title": "Chamada para ação", "lines": ["Teste o QuizFlowPro", "um único quiz muda tudo."], "assetVideo": "assets/videos/10-cta.mp4" }
+  ]
+}

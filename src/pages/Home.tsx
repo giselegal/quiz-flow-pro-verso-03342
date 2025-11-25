@@ -14,6 +14,8 @@ import {
   CheckCircle,
   Star,
   ArrowRight,
+  Play,
+  X,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth/AuthProvider';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -27,6 +29,7 @@ export const Home: React.FC = () => {
   appLogger.info('🏠 Home: useAuth called, user:', { data: [user ? 'authenticated' : 'not authenticated'] });
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
+  const [isVslOpen, setIsVslOpen] = useState(false);
 
   // Navigation helper function
   const navigate = (path: string) => {
@@ -277,6 +280,17 @@ export const Home: React.FC = () => {
                   >
                     <Target className="h-5 w-5 mr-2" />
                     Ver Templates
+                  </MotionButton>
+                  <MotionButton
+                    variant="outline"
+                    size="lg"
+                    className="text-lg px-10 py-4 border-2 border-[#3bbef3] text-white hover:bg-slate-800 rounded-xl transition-all"
+                    onClick={() => setIsVslOpen(true)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Play className="h-5 w-5 mr-2" />
+                    Assistir VSL
                   </MotionButton>
                 </div>
 
@@ -580,6 +594,40 @@ export const Home: React.FC = () => {
           </div>
         </section>
       </main>
+
+      {/* VSL Modal */}
+      {isVslOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setIsVslOpen(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.96, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="relative w-full max-w-4xl bg-[#0a0f1f] border border-white/10 rounded-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              aria-label="Fechar"
+              className="absolute top-3 right-3 text-white/80 hover:text-white p-2 rounded-full bg-white/10"
+              onClick={() => setIsVslOpen(false)}
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <div className="aspect-video w-full bg-black">
+              <video
+                src="/videos/vsl-quizflowpro.mp4"
+                controls
+                autoPlay
+                className="w-full h-full"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
 
       {/* Footer */}
       <footer className="bg-[#050816] border-t border-white/5 text-slate-400 py-10 text-sm">
