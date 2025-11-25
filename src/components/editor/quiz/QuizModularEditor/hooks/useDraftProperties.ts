@@ -10,14 +10,13 @@
  */
 
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { PropertySchema, BlockTypeSchema } from '@/core/schema/SchemaInterpreter';
+import { BlockTypeSchema } from '@/core/schema/SchemaInterpreter';
 import {
   coerceAndValidateProperty,
   validateDraft,
   getInitialValueFromSchema,
   safeParseJson,
   PropertyValidationResult,
-  DraftValidationResult
 } from '@/core/schema/propertyValidation';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { ZodTypeAny } from 'zod';
@@ -79,8 +78,7 @@ export function useDraftProperties({
     return draft;
   }, [schema, initialProperties]);
 
-  const [draft, setDraft] = useState<Record<string, any>>(getInitialDraft);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [draft, setDraft] = useState<Record<string, any>>(() => getInitialDraft());
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [zodErrors, setZodErrors] = useState<Record<string, string>>({});
   const [jsonBuffers, setJsonBuffers] = useState<Record<string, string>>({});
@@ -89,58 +87,73 @@ export function useDraftProperties({
   const initialRef = useRef<Record<string, any>>(initialProperties);
 
   // Compute isDirty
-  const isDirty = useMemo(() => {
-    return JSON.stringify(draft) !== JSON.stringify(initialRef.current);
-  }, [draft]);
+  const isDirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(initialRef.current), [draft]);
+  const errors = useMemo(() => ({ ...zodErrors, ...fieldErrors }), [zodErrors, fieldErrors]);
+  const isValid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
-  // Compute isValid
-  const isValid = useMemo(() => {
-    return Object.keys(errors).length === 0;
-  }, [errors]);
+  const runZodValidation = useCallback((nextDraft: Record<string, any>): boolean => {
+    if (!zodSchema) {
+      setZodErrors({});
+      return true;
+    }
+
+    const result = zodSchema.safeParse(nextDraft);
+    if (result.success) {
+      setZodErrors({});
+      return true;
+    }
+
+    const mappedErrors: Record<string, string> = {};
+    result.error.errors.forEach((err) => {
+      const key = err.path?.[0];
+      if (typeof key === 'string') {
+        mappedErrors[key] = err.message;
+      }
+    });
+
+    setZodErrors(mappedErrors);
+    return false;
+  }, [zodSchema]);
 
   // Reset draft when initial properties change (e.g., block selection changes)
   useEffect(() => {
     const newDraft = getInitialDraft();
     setDraft(newDraft);
-  const errors = useMemo(() => ({ ...zodErrors, ...fieldErrors }), [zodErrors, fieldErrors]);
-
-  const isValid = useMemo(() => {
-    return Object.keys(errors).length === 0;
-  }, [errors]);
+    setFieldErrors({});
+    setZodErrors({});
+    setJsonBuffers({});
+    initialRef.current = initialProperties;
+    runZodValidation(newDraft);
     
     appLogger.info('[useDraftProperties] Draft reset due to initialProperties change', {
       data: [{ keys: Object.keys(newDraft) }]
     });
-  }, [initialProperties, getInitialDraft]);
+  }, [initialProperties, getInitialDraft, runZodValidation]);
 
-    setFieldErrors({});
-    setZodErrors({});
   /**
    * Update a single field in the draft with validation
    */
   const updateField = useCallback((key: string, value: any): PropertyValidationResult => {
     const propSchema = schema?.properties[key];
-    
-    // If no schema, just store the value
-    if (!propSchema) {
-      setDraft(prev => ({ ...prev, [key]: value }));
-      return { value, isValid: true };
-    }
+    const result = propSchema
+      ? coerceAndValidateProperty(propSchema, value)
+      : { value, isValid: true };
 
-    // Validate and coerce
-    const result = coerceAndValidateProperty(propSchema, value);
+    setDraft(prev => {
+      const nextDraft = { ...prev, [key]: result.value };
+      runZodValidation(nextDraft);
+      return nextDraft;
+    });
 
-    // Update draft with coerced value
-    setDraft(prev => ({ ...prev, [key]: result.value }));
-
-    // Update errors
-    setErrors(prev => {
+    setFieldErrors(prev => {
       if (result.error) {
         return { ...prev, [key]: result.error };
-      } else {
-        const { [key]: _, ...rest } = prev;
-        return rest;
       }
+      if (!(key in prev)) {
+        return prev;
+      }
+      const { [key]: _, ...rest } = prev;
+      return rest;
     });
 
     appLogger.info('[useDraftProperties] Field updated:', {
@@ -154,7 +167,7 @@ export function useDraftProperties({
     });
 
     return result;
-  }, [schema]);
+  }, [schema, runZodValidation]);
 
   /**
    * Update a JSON field with a text buffer
@@ -168,20 +181,24 @@ export function useDraftProperties({
     const { value, error, isValid } = safeParseJson(textValue);
 
     if (isValid) {
-      // Update draft with parsed value
-      setDraft(prev => ({ ...prev, [key]: value }));
-      // Clear error
-      setErrors(prev => {
+      setDraft(prev => {
+        const nextDraft = { ...prev, [key]: value };
+        runZodValidation(nextDraft);
+        return nextDraft;
+      });
+      setFieldErrors(prev => {
+        if (!(key in prev)) {
+          return prev;
+        }
         const { [key]: _, ...rest } = prev;
         return rest;
       });
     } else {
-      // Set error but don't update draft value
-      setErrors(prev => ({ ...prev, [key]: error || 'JSON inválido' }));
+      setFieldErrors(prev => ({ ...prev, [key]: error || 'JSON inválido' }));
     }
 
     return { error, isValid };
-  }, []);
+  }, [runZodValidation]);
 
   /**
    * Get the JSON text buffer for a field
@@ -208,6 +225,11 @@ export function useDraftProperties({
   const commitDraft = useCallback((): boolean => {
     // Validate all fields
     if (!schema) {
+      const zodOk = runZodValidation(draft);
+      if (!zodOk) {
+        appLogger.warn('[useDraftProperties] Commit bloqueado - erros Zod (no schema)');
+        return false;
+      }
       onCommit(draft);
       initialRef.current = { ...draft };
       appLogger.info('[useDraftProperties] Draft committed (no schema)');
@@ -217,32 +239,38 @@ export function useDraftProperties({
     const validation = validateDraft(schema.properties, draft);
 
     if (!validation.isValid) {
-      setErrors(validation.errors);
+      setFieldErrors(validation.errors);
       appLogger.warn('[useDraftProperties] Commit blocked - validation errors:', {
         data: [validation.errors]
       });
       return false;
     }
 
-    // Commit validated values
+    const zodIsValid = runZodValidation(validation.values);
+    if (!zodIsValid) {
+      appLogger.warn('[useDraftProperties] Commit bloqueado - erros Zod');
+      return false;
+    }
+
     onCommit(validation.values);
     initialRef.current = { ...validation.values };
-    setErrors({});
+    setFieldErrors({});
     
     appLogger.info('[useDraftProperties] Draft committed successfully');
     return true;
-  }, [schema, draft, onCommit]);
+  }, [schema, draft, onCommit, runZodValidation]);
 
   /**
    * Cancel editing and revert to initial properties
    */
   const cancelDraft = useCallback(() => {
     setDraft({ ...initialRef.current });
-    setErrors({});
+    setFieldErrors({});
     setJsonBuffers({});
+    runZodValidation(initialRef.current);
     
     appLogger.info('[useDraftProperties] Draft cancelled, reverted to initial');
-  }, []);
+  }, [runZodValidation]);
 
   /**
    * Reset draft with new initial properties
@@ -251,11 +279,12 @@ export function useDraftProperties({
     initialRef.current = newProperties;
     const newDraft = getInitialDraft();
     setDraft(newDraft);
-    setErrors({});
+    setFieldErrors({});
     setJsonBuffers({});
+    runZodValidation(newDraft);
     
     appLogger.info('[useDraftProperties] Draft reset with new properties');
-  }, [getInitialDraft]);
+  }, [getInitialDraft, runZodValidation]);
 
   return {
     draft,
