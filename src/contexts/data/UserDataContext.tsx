@@ -1,5 +1,5 @@
 /**
- * 🔄 USER DATA CONTEXT - LEGACY
+ * 🔄 USER DATA CONTEXT (LEGACY)
  *
  * ⚠️ DEPRECATED: Este contexto é LEGADO. Use StorageProvider ou serviços canônicos.
  * @deprecated Migre para StorageProvider + useStorage ou DataService

@@ -107,7 +107,7 @@ export const HOOKS_STATS = {
     utility: 8, // Essential utilities only
     responsive: 2,
     data: 3, // Unified persistence + Supabase
-    legacy: 3, // Legacy compatibility hooks
+    legacy: 2, // Legacy compatibility hooks (useLegacyEditor, useLegacySuperUnified)
   },
   consolidations: {
     'useEditor + useUnifiedEditor + useEditorReusableComponents': 'useUnifiedEditor',

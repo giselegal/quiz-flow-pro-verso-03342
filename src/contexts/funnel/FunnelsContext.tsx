@@ -1,5 +1,5 @@
 /**
- * 🔄 FUNNELS CONTEXT - LEGACY
+ * 🔄 FUNNELS CONTEXT (LEGACY)
  *
  * ⚠️ DEPRECATED: Este contexto é LEGADO. Use FunnelDataProvider ou serviços canônicos.
  * @deprecated Migre para FunnelDataProvider + useFunnelData ou FunnelService

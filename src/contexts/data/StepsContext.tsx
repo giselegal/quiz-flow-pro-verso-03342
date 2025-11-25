@@ -1,5 +1,5 @@
 /**
- * 🔄 STEPS CONTEXT - LEGACY
+ * 🔄 STEPS CONTEXT (LEGACY)
  * 
  * ⚠️ DEPRECATED: Este contexto é LEGADO. Use EditorStateProvider ou StepNavigationProvider.
  * @deprecated Migre para EditorStateProvider + useEditorState

@@ -12,13 +12,25 @@ export { SinglePropertiesPanel, default as PropertiesPanel } from './SinglePrope
 export type { SinglePropertiesPanelProps } from './SinglePropertiesPanel';
 
 /**
+ * Legacy aliases for backwards compatibility.
+ * All of these re-export SinglePropertiesPanel.
+ * 
  * @deprecated Use SinglePropertiesPanel instead
- * Legacy aliases for backwards compatibility
  */
+
+/** @deprecated Use SinglePropertiesPanel instead */
 export { SinglePropertiesPanel as EnhancedPropertiesPanel } from './SinglePropertiesPanel';
+
+/** @deprecated Use SinglePropertiesPanel instead */
 export { SinglePropertiesPanel as ModernPropertiesPanel } from './SinglePropertiesPanel';
+
+/** @deprecated Use SinglePropertiesPanel instead */
 export { SinglePropertiesPanel as DynamicPropertiesPanel } from './SinglePropertiesPanel';
+
+/** @deprecated Use SinglePropertiesPanel instead */
 export { SinglePropertiesPanel as OptimizedPropertiesPanel } from './SinglePropertiesPanel';
+
+/** @deprecated Use SinglePropertiesPanel instead */
 export { SinglePropertiesPanel as UltraUnifiedPropertiesPanel } from './SinglePropertiesPanel';
 
 // Property editors
