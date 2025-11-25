@@ -2008,7 +2008,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
-                                                        (adapter.actions.deleteBlock ?? removeBlock)(id);
+                                                        // ✅ Use canonical deleteBlock from adapter
+                                                        adapter.actions.deleteBlock(id);
                                                     }) : undefined}
                                                     onMoveBlock={previewMode === 'live' ? ((from, to) => {
                                                         wysiwyg.actions.reorderBlocks(from, to);
