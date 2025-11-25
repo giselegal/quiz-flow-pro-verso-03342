@@ -111,8 +111,8 @@ export function useTemplate(
       }
 
       // Fetch from Supabase
-      const { data, error } = await supabase
-        .from((supabase as any).from ? 'templates' : ('templates' as any))
+      const { data, error } = await (supabase as any)
+        .from('templates')
         .select('*')
         .eq('id', id)
         .single();
@@ -170,7 +170,7 @@ export function useTemplates(
         return [];
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('templates')
         .select('*')
         .in('id', ids);
@@ -216,7 +216,7 @@ export function useTemplateList(
     queryKey: ['templates', 'list', filters],
     
     queryFn: async () => {
-      let query = supabase
+      let query = (supabase as any)
         .from('templates')
         .select('*')
         .order('updated_at', { ascending: false });
