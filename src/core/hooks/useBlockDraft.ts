@@ -41,7 +41,7 @@
  * ```
  */
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { Block, validateBlock } from '@/core/schemas';
 import { appLogger } from '@/lib/utils/appLogger';
 
