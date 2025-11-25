@@ -22,8 +22,8 @@ describe('persistenceService', () => {
   describe('saveBlocks', () => {
     it('deve salvar blocos com sucesso', async () => {
       const blocks = [
-        createBlock('intro-title', { title: 'Test 1' }),
-        createBlock('intro-subtitle', { subtitle: 'Test 2' }),
+        createBlock('intro-title', { properties: { title: 'Test 1' } }),
+        createBlock('intro-subtitle', { properties: { subtitle: 'Test 2' } }),
       ];
 
       const result = await persistenceService.saveBlocks('test-funnel-1', blocks);
@@ -59,7 +59,7 @@ describe('persistenceService', () => {
 
     it('deve permitir salvar sem validação quando especificado', async () => {
       const blocks = [
-        createBlock('intro-title', { title: 'Test' }),
+        createBlock('intro-title', { properties: { title: 'Test' } }),
       ];
 
       const result = await persistenceService.saveBlocks(
@@ -78,7 +78,7 @@ describe('persistenceService', () => {
     });
 
     it('deve gerar versões diferentes para saves consecutivos', async () => {
-      const blocks = [createBlock('intro-title', { title: 'Test' })];
+      const blocks = [createBlock('intro-title', { properties: { title: 'Test' } })];
 
       const result1 = await persistenceService.saveBlocks('test-funnel-5', blocks);
       await new Promise((resolve) => setTimeout(resolve, 10)); // Pequeno delay
@@ -96,7 +96,7 @@ describe('persistenceService', () => {
   describe('loadBlocks', () => {
     it('deve carregar blocos salvos', async () => {
       const originalBlocks = [
-        createBlock('intro-title', { title: 'Original' }),
+        createBlock('intro-title', { properties: { title: 'Original' } }),
       ];
 
       await persistenceService.saveBlocks('test-funnel-6', originalBlocks);
@@ -120,8 +120,8 @@ describe('persistenceService', () => {
     });
 
     it('deve carregar versão específica quando fornecida', async () => {
-      const blocks1 = [createBlock('intro-title', { title: 'Version 1' })];
-      const blocks2 = [createBlock('intro-title', { title: 'Version 2' })];
+      const blocks1 = [createBlock('intro-title', { properties: { title: 'Version 1' } })];
+      const blocks2 = [createBlock('intro-title', { properties: { title: 'Version 2' } })];
 
       const save1 = await persistenceService.saveBlocks('test-funnel-7', blocks1);
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -143,7 +143,7 @@ describe('persistenceService', () => {
 
   describe('listVersions', () => {
     it('deve listar todas as versões salvas', async () => {
-      const blocks = [createBlock('intro-title', { title: 'Test' })];
+      const blocks = [createBlock('intro-title', { properties: { title: 'Test' } })];
 
       await persistenceService.saveBlocks('test-funnel-8', blocks);
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -177,8 +177,8 @@ describe('persistenceService', () => {
 
   describe('rollback', () => {
     it('deve fazer rollback para versão anterior', async () => {
-      const blocks1 = [createBlock('intro-title', { title: 'Version 1' })];
-      const blocks2 = [createBlock('intro-title', { title: 'Version 2' })];
+      const blocks1 = [createBlock('intro-title', { properties: { title: 'Version 1' } })];
+      const blocks2 = [createBlock('intro-title', { properties: { title: 'Version 2' } })];
 
       const save1 = await persistenceService.saveBlocks('test-funnel-9', blocks1);
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -212,7 +212,7 @@ describe('persistenceService', () => {
 
   describe('Retry logic', () => {
     it('deve fazer retry em caso de falha transitória', async () => {
-      const blocks = [createBlock('intro-title', { title: 'Test' })];
+      const blocks = [createBlock('intro-title', { properties: { title: 'Test' } })];
 
       // Mock de falha transitória
       let attempts = 0;
@@ -242,7 +242,7 @@ describe('persistenceService', () => {
     });
 
     it('deve desistir após max retries', async () => {
-      const blocks = [createBlock('intro-title', { title: 'Test' })];
+      const blocks = [createBlock('intro-title', { properties: { title: 'Test' } })];
 
       vi.spyOn(persistenceService, 'saveBlocks').mockRejectedValue(
         new Error('Persistent error')
@@ -260,9 +260,9 @@ describe('persistenceService', () => {
 
   describe('Concorrência', () => {
     it('deve lidar com saves concorrentes', async () => {
-      const blocks1 = [createBlock('intro-title', { title: 'Concurrent 1' })];
-      const blocks2 = [createBlock('intro-title', { title: 'Concurrent 2' })];
-      const blocks3 = [createBlock('intro-title', { title: 'Concurrent 3' })];
+      const blocks1 = [createBlock('intro-title', { properties: { title: 'Concurrent 1' } })];
+      const blocks2 = [createBlock('intro-title', { properties: { title: 'Concurrent 2' } })];
+      const blocks3 = [createBlock('intro-title', { properties: { title: 'Concurrent 3' } })];
 
       const results = await Promise.all([
         persistenceService.saveBlocks('test-funnel-13', blocks1),
@@ -280,7 +280,7 @@ describe('persistenceService', () => {
   describe('Performance', () => {
     it('deve salvar 100 blocos em tempo razoável', async () => {
       const blocks = Array.from({ length: 100 }, (_, i) =>
-        createBlock('intro-title', { title: `Block ${i}` })
+        createBlock('intro-title', { properties: { title: `Block ${i}` } })
       );
 
       const start = performance.now();
@@ -294,7 +294,7 @@ describe('persistenceService', () => {
 
   describe('Edge cases', () => {
     it('deve lidar com funnelId vazio', async () => {
-      const blocks = [createBlock('intro-title', { title: 'Test' })];
+      const blocks = [createBlock('intro-title', { properties: { title: 'Test' } })];
 
       const result = await persistenceService.saveBlocks('', blocks);
 
