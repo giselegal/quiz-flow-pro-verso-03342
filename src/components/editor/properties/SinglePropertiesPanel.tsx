@@ -57,6 +57,217 @@ import { Settings, Type, Palette, Layout, Trash2, Copy, Check, Loader2, XCircle,
 
 // ===== INTERFACES =====
 
+interface BuilderDrivenPanelProps {
+    block: UnifiedBlock;
+    schema: BlockTypeSchema;
+    onUpdate?: (updates: Record<string, any>) => void;
+    onDelete?: () => void;
+    onDuplicate?: () => void;
+}
+
+const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
+    block,
+    schema,
+    onUpdate,
+    onDelete,
+    onDuplicate,
+}) => {
+    const zodSchema = useMemo(() => {
+        try {
+            return buildZodSchemaFromBlockSchema(schema);
+        } catch (error) {
+            appLogger.error('[SinglePropertiesPanel] Falha ao construir schema Zod', {
+                data: [{ blockType: schema.type, error }],
+            });
+            return null;
+        }
+    }, [schema]);
+
+    const initialProperties = useMemo(() => {
+        const merged: Record<string, any> = { ...(block.properties ?? {}) };
+
+        Object.entries(schema.properties).forEach(([key, propertySchema]) => {
+            if (merged[key] === undefined && propertySchema.default !== undefined) {
+                merged[key] = propertySchema.default;
+            }
+        });
+
+        return merged;
+    }, [block.properties, schema]);
+
+    const baselineRef = useRef<Record<string, any>>(initialProperties);
+
+    useEffect(() => {
+        baselineRef.current = initialProperties;
+    }, [initialProperties, block.id, schema.type]);
+
+    const handleCommit = useCallback((values: Record<string, any>) => {
+        const diff: Record<string, any> = {};
+        Object.entries(values).forEach(([key, value]) => {
+            if (baselineRef.current[key] !== value) {
+                diff[key] = value;
+            }
+        });
+
+        if (Object.keys(diff).length > 0) {
+            onUpdate?.(diff);
+            appLogger.info('[SinglePropertiesPanel] Atualizações aplicadas via builder', {
+                data: [{ blockId: block.id, updates: diff }],
+            });
+        }
+
+        baselineRef.current = { ...baselineRef.current, ...values };
+    }, [onUpdate, block.id]);
+
+    const {
+        draft,
+        errors,
+        isDirty,
+        updateField,
+        updateJsonField,
+        commitDraft,
+        cancelDraft,
+        getJsonBuffer,
+    } = useDraftProperties({
+        schema,
+        zodSchema,
+        initialProperties,
+        onCommit: handleCommit,
+    });
+
+    const [isSaving, setIsSaving] = useState(false);
+    const hasErrors = Object.keys(errors).length > 0;
+
+    const handleApply = useCallback(() => {
+        setIsSaving(true);
+        const success = commitDraft();
+        setIsSaving(false);
+
+        if (!success) {
+            appLogger.warn('[SinglePropertiesPanel] Commit bloqueado por erros de validação');
+        }
+    }, [commitDraft]);
+
+    const handleCancel = useCallback(() => {
+        cancelDraft();
+    }, [cancelDraft]);
+
+    return (
+        <Card className="h-full flex flex-col border-0 bg-transparent">
+            <CardHeader className="pb-3 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1">
+                        <CardTitle className="text-sm font-semibold">{schema.label ?? block.type}</CardTitle>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span className="font-mono">#{block.id}</span>
+                            <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
+                                {schema.category}
+                            </Badge>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {onDuplicate && (
+                            <Button variant="outline" size="sm" className="h-8 text-xs" onClick={onDuplicate}>
+                                <Copy className="w-3 h-3 mr-1" />
+                                Duplicar
+                            </Button>
+                        )}
+                        {onDelete && (
+                            <Button variant="destructive" size="sm" className="h-8 text-xs" onClick={onDelete}>
+                                <Trash2 className="w-3 h-3 mr-1" />
+                                Remover
+                            </Button>
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs">
+                    {hasErrors ? (
+                        <span className="flex items-center gap-1 text-destructive">
+                            <XCircle className="w-3 h-3" />
+                            Erros de validação
+                        </span>
+                    ) : isDirty ? (
+                        <span className="flex items-center gap-1 text-amber-600">
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            Alterações não aplicadas
+                        </span>
+                    ) : (
+                        <span className="flex items-center gap-1 text-green-600">
+                            <Check className="w-3 h-3" />
+                            Sincronizado
+                        </span>
+                    )}
+                </div>
+            </CardHeader>
+
+            <CardContent className="flex-1 min-h-0 flex flex-col gap-4">
+                {schema.description && (
+                    <Alert>
+                        <Info className="w-4 h-4" />
+                        <AlertDescription className="text-xs">
+                            {schema.description}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                {hasErrors && (
+                    <Alert variant="destructive">
+                        <XCircle className="w-4 h-4" />
+                        <AlertDescription className="text-xs space-y-1">
+                            {Object.entries(errors).map(([key, message]) => (
+                                <div key={key}>
+                                    <strong>{key}:</strong> {message}
+                                </div>
+                            ))}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                <ScrollArea className="flex-1 pr-2">
+                    <DynamicPropertyControls
+                        elementType={block.type}
+                        schemaOverride={schema}
+                        properties={draft}
+                        onChange={(key, value) => updateField(key, value)}
+                        errors={errors}
+                        onJsonTextChange={(key, value) => updateJsonField(key, value)}
+                        getJsonBuffer={(key) => getJsonBuffer(key)}
+                    />
+                </ScrollArea>
+            </CardContent>
+
+            <div className="border-t p-4 flex items-center gap-2">
+                <Button
+                    onClick={handleApply}
+                    disabled={!isDirty || hasErrors || isSaving}
+                    className="flex-1 gap-2 text-xs"
+                >
+                    {isSaving ? (
+                        <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Validando...
+                        </>
+                    ) : (
+                        <>
+                            <Check className="w-4 h-4" />
+                            Aplicar
+                        </>
+                    )}
+                </Button>
+                <Button
+                    variant="outline"
+                    onClick={handleCancel}
+                    disabled={!isDirty || isSaving}
+                    className="text-xs"
+                >
+                    Cancelar
+                </Button>
+            </div>
+        </Card>
+    );
+};
+
 interface SinglePropertiesPanelProps {
     selectedBlock: UnifiedBlock | null;
     onUpdate?: (updates: Record<string, any>) => void; // Compatível com o formato do editor atual
