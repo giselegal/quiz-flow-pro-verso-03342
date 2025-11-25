@@ -156,12 +156,19 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <div className="w-9 h-9 bg-gradient-to-br from-brand-brightBlue to-brand-lightBlue rounded-xl flex items-center justify-center shadow-sm">
-                <Sparkles className="w-5 h-5 text-white" />
+              <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#3bbef3] to-[#ea7af6] flex items-center justify-center shadow-lg">
+                <div className="relative w-6 h-6">
+                  <span className="absolute w-1.5 h-1.5 rounded-full bg-white top-0 left-0" />
+                  <span className="absolute w-1.5 h-1.5 rounded-full bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  <span className="absolute w-1.5 h-1.5 rounded-full bg-white bottom-0 right-0" />
+                  <span className="absolute w-[2px] h-[18px] bg-white/40 left-[7px] top-[3px] rotate-45 origin-top rounded-full" />
+                </div>
               </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-2xl font-extrabold bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] bg-clip-text text-transparent">QuizFlowPro</span>
-                <small className="text-xs text-slate-300 -mt-1">Quizzes que convertem</small>
+                <span className="text-[22px] font-extrabold bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] bg-clip-text text-transparent tracking-tight">
+                  QuizFlowPro
+                </span>
+                <small className="text-[11px] text-slate-300 -mt-0.5">Quizzes que convertem</small>
               </div>
             </div>
 
