@@ -7,7 +7,7 @@ import { useBlocksFromSupabase } from '@/hooks/useBlocksFromSupabase';
 import { useBlockMutations } from '@/hooks/useBlockMutations';
 import React, { useState, useCallback, useEffect } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
-import ModernPropertiesPanel from '@/archive/legacy-panels/ModernPropertiesPanel';
+import PropertiesColumnWithJson from '@/components/editor/quiz/QuizModularEditor/components/PropertiesColumn/PropertiesColumnWithJson';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
 import { useEditor } from '@/contexts/editor/EditorContext';
@@ -225,14 +225,15 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
                             <ResizableHandle withHandle />
 
                             <ResizablePanel defaultSize={15} minSize={12}>
-                                <ModernPropertiesPanel
-                                    selectedBlock={safeSelectedBlock}
-                                    onUpdate={safeSelectedBlock ? (updates) => {
-                                        console.log('🎨 Properties panel update:', { blockId: safeSelectedBlock.id, updates });
-                                        handleBlockUpdate(safeSelectedBlock.id, updates);
-                                    } : undefined}
-                                    onDelete={handleBlockDelete}
-                                    onClose={() => setSelectedBlockId(null)}
+                                <PropertiesColumnWithJson
+                                    selectedBlock={safeSelectedBlock as any}
+                                    onBlockUpdate={(blockId, updates) => {
+                                        console.log('🎨 Properties column update:', { blockId, updates });
+                                        handleBlockUpdate(blockId, updates);
+                                    }}
+                                    onClearSelection={() => setSelectedBlockId(null)}
+                                    blocks={sourceBlocks as any}
+                                    onBlockSelect={setSelectedBlockId}
                                 />
                             </ResizablePanel>
                         </ResizablePanelGroup>
