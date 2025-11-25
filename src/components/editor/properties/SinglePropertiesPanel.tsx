@@ -705,7 +705,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
             });
             return null;
         }
-    }, [selectedBlock]);
+    }, [selectedBlock?.type]);
 
     if (selectedBlock && builderSchema) {
         return (
