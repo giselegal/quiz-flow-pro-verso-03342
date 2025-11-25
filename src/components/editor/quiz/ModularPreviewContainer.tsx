@@ -77,11 +77,17 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     useEffect(() => {
         if (!setCurrentStep || !ensureStepLoaded) return;
         const current = state.currentStep;
-        const numeric = parseInt(current.replace('step-', '')) || 1;
+        let numeric = 1;
+        if (typeof current === 'string') {
+            numeric = parseInt(current.replace('step-', '')) || 1;
+        } else if (typeof current === 'number') {
+            numeric = current;
+        }
+
         try {
             setCurrentStep(numeric);
             // Garante que templates/blocos modulares da etapa sejam carregados no provider
-            ensureStepLoaded(current).catch((e: any) => {
+            ensureStepLoaded(numeric).catch((e: any) => {
                 appLogger.warn('[ModularPreviewContainer] ensureStepLoaded falhou:', e?.message || e);
             });
         } catch (e) {
