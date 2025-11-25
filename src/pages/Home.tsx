@@ -352,52 +352,52 @@ export const Home: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }} whileHover={{ y: -6 }}>
                 <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
-                <CardContent className="p-8">
-                  <div className="flex items-center mb-4 text-yellow-500">
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                  </div>
-                  <p className="text-slate-700 leading-relaxed mb-6">Triplicamos a taxa de conversão em 30 dias com quizzes personalizados. A configuração foi rápida e a análise é impecável.</p>
-                  <div className="text-slate-900 font-semibold">Mariana, Head de Marketing</div>
-                  <div className="text-slate-500 text-sm">E-commerce de Beleza</div>
-                </CardContent>
+                  <CardContent className="p-8">
+                    <div className="flex items-center mb-4 text-yellow-500">
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                    </div>
+                    <p className="text-slate-700 leading-relaxed mb-6">Triplicamos a taxa de conversão em 30 dias com quizzes personalizados. A configuração foi rápida e a análise é impecável.</p>
+                    <div className="text-slate-900 font-semibold">Mariana, Head de Marketing</div>
+                    <div className="text-slate-500 text-sm">E-commerce de Beleza</div>
+                  </CardContent>
                 </Card>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.06 }} whileHover={{ y: -6 }}>
                 <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
-                <CardContent className="p-8">
-                  <div className="flex items-center mb-4 text-yellow-500">
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                  </div>
-                  <p className="text-slate-700 leading-relaxed mb-6">Integração perfeita com nosso CRM. Em poucos minutos, lançamos campanhas que geram leads qualificados diariamente.</p>
-                  <div className="text-slate-900 font-semibold">Lucas, Growth Lead</div>
-                  <div className="text-slate-500 text-sm">Startup SaaS</div>
-                </CardContent>
+                  <CardContent className="p-8">
+                    <div className="flex items-center mb-4 text-yellow-500">
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                    </div>
+                    <p className="text-slate-700 leading-relaxed mb-6">Integração perfeita com nosso CRM. Em poucos minutos, lançamos campanhas que geram leads qualificados diariamente.</p>
+                    <div className="text-slate-900 font-semibold">Lucas, Growth Lead</div>
+                    <div className="text-slate-500 text-sm">Startup SaaS</div>
+                  </CardContent>
                 </Card>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.65, delay: 0.12 }} whileHover={{ y: -6 }}>
                 <Card className="border border-slate-200 shadow-sm hover:shadow-lg transition-all bg-white">
-                <CardContent className="p-8">
-                  <div className="flex items-center mb-4 text-yellow-500">
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                    <Star className="h-5 w-5" />
-                  </div>
-                  <p className="text-slate-700 leading-relaxed mb-6">Ferramenta moderna, rápida e com templates incríveis. Ideal para equipes que prezam por performance e design.</p>
-                  <div className="text-slate-900 font-semibold">Aline, Diretora de Produto</div>
-                  <div className="text-slate-500 text-sm">EduTech</div>
-                </CardContent>
+                  <CardContent className="p-8">
+                    <div className="flex items-center mb-4 text-yellow-500">
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                      <Star className="h-5 w-5" />
+                    </div>
+                    <p className="text-slate-700 leading-relaxed mb-6">Ferramenta moderna, rápida e com templates incríveis. Ideal para equipes que prezam por performance e design.</p>
+                    <div className="text-slate-900 font-semibold">Aline, Diretora de Produto</div>
+                    <div className="text-slate-500 text-sm">EduTech</div>
+                  </CardContent>
                 </Card>
               </motion.div>
             </div>
@@ -415,50 +415,50 @@ export const Home: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
                 <Card className="border border-slate-200 bg-white">
-                <CardContent className="p-8">
-                  <div className="text-slate-900 text-xl font-bold mb-2">Starter</div>
-                  <div className="text-4xl font-extrabold text-slate-900 mb-6">R$0<span className="text-lg font-medium text-slate-500">/mês</span></div>
-                  <ul className="space-y-3 text-slate-700 mb-8">
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />1 quiz ativo</li>
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates básicos</li>
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Coleta de leads</li>
-                  </ul>
-                  <MotionButton onClick={() => navigate('/criar-funil')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Começar gratuitamente</MotionButton>
-                </CardContent>
+                  <CardContent className="p-8">
+                    <div className="text-slate-900 text-xl font-bold mb-2">Starter</div>
+                    <div className="text-4xl font-extrabold text-slate-900 mb-6">R$0<span className="text-lg font-medium text-slate-500">/mês</span></div>
+                    <ul className="space-y-3 text-slate-700 mb-8">
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />1 quiz ativo</li>
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates básicos</li>
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Coleta de leads</li>
+                    </ul>
+                    <MotionButton onClick={() => navigate('/criar-funil')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Começar gratuitamente</MotionButton>
+                  </CardContent>
                 </Card>
-                </motion.div>
+              </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.06 }}>
                 <Card className="border-2 border-brand-lightBlue bg-white shadow-lg relative">
-                <CardContent className="p-8">
-                  <motion.div className="absolute -top-3 left-1/2 -translate-x-1/2" animate={{ scale: [1, 1.03, 1], opacity: [0.95, 1, 0.95] }} transition={{ repeat: Infinity, duration: 2.5 }}>
-                    <Badge className="bg-brand-light text-brand-brightBlue">Mais Popular</Badge>
-                  </motion.div>
-                  <div className="text-slate-900 text-xl font-bold mb-2">Pro</div>
-                  <div className="text-4xl font-extrabold text-slate-900 mb-6">R$99<span className="text-lg font-medium text-slate-500">/mês</span></div>
-                  <ul className="space-y-3 text-slate-700 mb-8">
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Quizzes ilimitados</li>
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates premium</li>
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Análises avançadas</li>
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Teste A/B</li>
-                  </ul>
-                  <MotionButton onClick={() => navigate('/admin')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Assinar Pro</MotionButton>
-                </CardContent>
+                  <CardContent className="p-8">
+                    <motion.div className="absolute -top-3 left-1/2 -translate-x-1/2" animate={{ scale: [1, 1.03, 1], opacity: [0.95, 1, 0.95] }} transition={{ repeat: Infinity, duration: 2.5 }}>
+                      <Badge className="bg-brand-light text-brand-brightBlue">Mais Popular</Badge>
+                    </motion.div>
+                    <div className="text-slate-900 text-xl font-bold mb-2">Pro</div>
+                    <div className="text-4xl font-extrabold text-slate-900 mb-6">R$99<span className="text-lg font-medium text-slate-500">/mês</span></div>
+                    <ul className="space-y-3 text-slate-700 mb-8">
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Quizzes ilimitados</li>
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Templates premium</li>
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Análises avançadas</li>
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Teste A/B</li>
+                    </ul>
+                    <MotionButton onClick={() => navigate('/admin')} className="w-full bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Assinar Pro</MotionButton>
+                  </CardContent>
                 </Card>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.12 }}>
                 <Card className="border border-slate-200 bg-white">
-                <CardContent className="p-8">
-                  <div className="text-slate-900 text-xl font-bold mb-2">Enterprise</div>
-                  <div className="text-4xl font-extrabold text-slate-900 mb-6">Custom</div>
-                  <ul className="space-y-3 text-slate-700 mb-8">
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />SLA e suporte dedicado</li>
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Integrações avançadas</li>
-                    <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Onboarding personalizado</li>
-                  </ul>
-                  <MotionButton onClick={() => window.open('mailto:sales@quizflow.pro')} variant="outline" className="w-full" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Falar com Vendas</MotionButton>
-                </CardContent>
+                  <CardContent className="p-8">
+                    <div className="text-slate-900 text-xl font-bold mb-2">Enterprise</div>
+                    <div className="text-4xl font-extrabold text-slate-900 mb-6">Custom</div>
+                    <ul className="space-y-3 text-slate-700 mb-8">
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />SLA e suporte dedicado</li>
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Integrações avançadas</li>
+                      <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-600 mr-2" />Onboarding personalizado</li>
+                    </ul>
+                    <MotionButton onClick={() => window.open('mailto:sales@quizflow.pro')} variant="outline" className="w-full" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Falar com Vendas</MotionButton>
+                  </CardContent>
                 </Card>
               </motion.div>
             </div>
