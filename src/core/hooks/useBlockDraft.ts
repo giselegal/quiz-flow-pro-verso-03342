@@ -136,11 +136,13 @@ export function useBlockDraft(
         }
     }, [originalBlock?.id]); // Resetar apenas quando ID muda
     
-    // Dirty tracking
+    // Dirty tracking - compara com o primeiro item do history (estado após último commit/reset)
     const isDirty = useMemo(() => {
-        if (!draftData || !originalBlock) return false;
-        return JSON.stringify(draftData) !== JSON.stringify(originalBlock);
-    }, [draftData, originalBlock]);
+        if (!draftData) return false;
+        const baseState = history[0];
+        if (!baseState) return false;
+        return JSON.stringify(draftData) !== JSON.stringify(baseState);
+    }, [draftData, history]);
     
     // Validação
     const { errors, isValid } = useMemo(() => {
@@ -345,31 +347,27 @@ export function useBlockDraft(
     
     // Undo/Redo
     const undo = useCallback(() => {
-        setHistoryIndex(currentIndex => {
-            if (currentIndex > 0) {
+        const currentIndex = historyIndexRef.current;
+        if (currentIndex > 0) {
+            setHistory(h => {
                 const newIndex = currentIndex - 1;
-                setHistory(h => {
-                    setDraftData(h[newIndex]);
-                    return h;
-                });
+                setDraftData(h[newIndex]);
+                setHistoryIndex(newIndex);
                 historyIndexRef.current = newIndex;
-                return newIndex;
-            }
-            return currentIndex;
-        });
+                return h;
+            });
+        }
     }, []);
     
     const redo = useCallback(() => {
+        const currentIndex = historyIndexRef.current;
         setHistory(h => {
-            setHistoryIndex(currentIndex => {
-                if (currentIndex < h.length - 1) {
-                    const newIndex = currentIndex + 1;
-                    setDraftData(h[newIndex]);
-                    historyIndexRef.current = newIndex;
-                    return newIndex;
-                }
-                return currentIndex;
-            });
+            if (currentIndex < h.length - 1) {
+                const newIndex = currentIndex + 1;
+                setDraftData(h[newIndex]);
+                setHistoryIndex(newIndex);
+                historyIndexRef.current = newIndex;
+            }
             return h;
         });
     }, []);
