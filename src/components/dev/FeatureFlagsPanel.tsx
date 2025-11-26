@@ -93,7 +93,7 @@ export function FeatureFlagsPanel({ defaultOpen = false, className }: FeatureFla
 
     // Filtrar flags
     const getFilteredFlags = () => {
-        let flagsToShow: Array<[string, keyof FeatureFlags[]]> = [];
+        let flagsToShow: Array<[string, keyof FeatureFlags]> = [];
 
         if (filterCategory === 'all') {
             Object.entries(categorizedFlags).forEach(([category, keys]) => {
@@ -110,7 +110,7 @@ export function FeatureFlagsPanel({ defaultOpen = false, className }: FeatureFla
 
         if (searchTerm) {
             flagsToShow = flagsToShow.filter(([_, key]) =>
-                key.toLowerCase().includes(searchTerm.toLowerCase())
+                String(key).toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
 
