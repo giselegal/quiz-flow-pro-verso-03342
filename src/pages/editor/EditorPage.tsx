@@ -80,14 +80,19 @@ export default function EditorPage() {
 
     // 🔄 Redirecionar ?template= para ?funnel= (padronização de URL)
     React.useEffect(() => {
-        if (templateParam && !funnelIdFromQuery) {
+        // Sempre padronizar ?template= para ?funnel= para evitar conflito de parâmetros
+        if (templateParam) {
             const newUrl = new URL(window.location.href);
             newUrl.searchParams.delete('template');
-            newUrl.searchParams.set('funnel', templateParam);
+            // Se já houver um funnel, manter; senão usar o templateParam
+            const existingFunnel = newUrl.searchParams.get('funnel') || newUrl.searchParams.get('funnelId');
+            if (!existingFunnel) {
+                newUrl.searchParams.set('funnel', templateParam);
+            }
             window.history.replaceState({}, '', newUrl.toString());
             appLogger.info('🔄 URL padronizada: ?template= → ?funnel=', { from: templateParam });
         }
-    }, [templateParam, funnelIdFromQuery]);
+    }, [templateParam]);
 
     return (
         <ErrorBoundary

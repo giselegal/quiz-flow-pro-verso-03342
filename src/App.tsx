@@ -263,12 +263,14 @@ function AppCore() {
                                                 const resourceIdParam = params.get('resource') || templateParam; // 🔥 FIX: resourceId da URL
 
                                                 // 🔄 PADRONIZAÇÃO: ?template= → ?funnel=
-                                                if (templateParam && !funnelId) {
+                                                if (templateParam) {
                                                     const url = new URL(window.location.href);
                                                     url.searchParams.delete('template');
-                                                    url.searchParams.set('funnel', templateParam);
+                                                    if (!funnelId) {
+                                                        url.searchParams.set('funnel', templateParam);
+                                                        funnelId = templateParam;
+                                                    }
                                                     window.history.replaceState({}, '', url.toString());
-                                                    funnelId = templateParam;
                                                 }
 
                                                 // 🛟 Fallback dev/test para funil padrão
