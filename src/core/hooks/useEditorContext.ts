@@ -195,19 +195,14 @@ export function useEditorContext(): UnifiedEditorContext {
       canRedo: editor.canRedo,
     };
   }, [
-    auth,
-    theme,
+    authStorage,
+    realTime,
+    validationResult,
+    ux,
     editor,
     funnel,
-    navigation,
     quiz,
-    result,
-    storage,
-    sync,
-    validation,
-    collaboration,
     versioning,
-    ui,
   ]);
 
   return context;
