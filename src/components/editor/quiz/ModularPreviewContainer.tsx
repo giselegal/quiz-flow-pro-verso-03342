@@ -57,7 +57,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     } = useQuizState(funnelId, externalSteps);
 
     // Detecta se já existe um EditorProviderUnified acima
-    const maybeEditor = useEditorOptional?.();
+    const maybeEditor = useEditorCompatOptional();
     // Debug: status do provider
     try {
         const hasProvider = !!maybeEditor;

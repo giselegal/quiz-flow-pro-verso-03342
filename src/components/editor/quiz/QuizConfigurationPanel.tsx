@@ -31,7 +31,7 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
   selectedBlock: _selectedBlock,
   onUpdate: _onUpdate,
 }) => {
-  const editor = useEditor();
+  const editor = useEditorCompatOptional();
   const [selectedStep, setSelectedStep] = useState<any>(null);
   const [, setEditingQuestion] = useState<any>(null);
   
