@@ -30,7 +30,7 @@ import {
     Activity,
     Download,
 } from 'lucide-react';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================

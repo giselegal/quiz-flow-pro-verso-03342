@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { LoadingFallback } from './ui/loading-fallback';
 
 interface RedirectRouteProps {

@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { Crown, Lock, Users, Zap } from 'lucide-react';
 import React from 'react';
 

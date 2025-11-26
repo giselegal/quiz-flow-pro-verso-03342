@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 // Agora usamos o serviço canônico para criar funil e salvar blocos por etapa
 import { funnelService } from '@/services/canonical/FunnelService';
 import { Save } from 'lucide-react';

@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useLocation } from 'wouter';
 import { Route } from 'wouter';

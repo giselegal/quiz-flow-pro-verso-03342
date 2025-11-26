@@ -2,7 +2,7 @@ import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';

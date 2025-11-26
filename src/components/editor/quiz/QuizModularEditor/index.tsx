@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';

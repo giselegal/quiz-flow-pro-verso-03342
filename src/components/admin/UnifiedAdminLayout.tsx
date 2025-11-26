@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useUserName } from '@/hooks/useUserName';
 

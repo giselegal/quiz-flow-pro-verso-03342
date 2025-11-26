@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/ui/logo';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { makeStepKey } from '@/lib/utils/stepKey';

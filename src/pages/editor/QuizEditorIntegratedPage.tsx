@@ -32,7 +32,7 @@ import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
 import { useTemplateLoader } from '@/hooks/useTemplateLoader';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditorPersistence } from '@/hooks/useEditorPersistence';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 
 // Services
 import { QuizToEditorAdapter } from '@/lib/adapters/QuizToEditorAdapter';

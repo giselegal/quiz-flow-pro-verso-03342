@@ -3,7 +3,7 @@ import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { Calendar, FolderOpen, MoreHorizontal, Plus, Search, Settings, Users } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 

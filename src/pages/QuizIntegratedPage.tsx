@@ -4,7 +4,7 @@ import { QuizOptimizedRenderer } from '@/components/quiz/QuizOptimizedRenderer';
 import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { SuperUnifiedProvider } from '@/contexts';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';

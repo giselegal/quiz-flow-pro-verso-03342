@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 
 interface StepAnalyticsDashboardProps {
   totalSteps: number;

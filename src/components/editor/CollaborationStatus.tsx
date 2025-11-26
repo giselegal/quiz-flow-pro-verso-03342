@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { Crown, Edit, Eye, UserPlus, Users, Wifi, WifiOff } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';

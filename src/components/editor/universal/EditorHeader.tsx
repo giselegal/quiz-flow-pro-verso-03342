@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { AutoSaveIndicatorWithTooltip } from '../AutoSaveIndicator';
 import EditorNoCodePanel from '../EditorNoCodePanel';
 

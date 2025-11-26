@@ -1,5 +1,5 @@
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import type { Block } from '@/types/editor';
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';

@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { StyleResult } from '@/types/quiz';
 
 interface HeaderProps {

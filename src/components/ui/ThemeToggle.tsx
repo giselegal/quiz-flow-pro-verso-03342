@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 
 interface ThemeToggleProps {
     size?: 'sm' | 'default' | 'lg';

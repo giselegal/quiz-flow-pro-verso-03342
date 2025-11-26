@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useEditorContext } from '@/core/hooks/useEditorContext';
+import { useEditorContext } from '@/core';
 import { LogOut } from 'lucide-react';
 import { appLogger } from '@/lib/utils/appLogger';
 
