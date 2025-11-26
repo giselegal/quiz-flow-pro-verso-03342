@@ -20,7 +20,7 @@ import React, { Suspense, useMemo, useCallback } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useEditorCompat } from '@/core/contexts/EditorContext';
-import useEditorAdapter from '@/hooks/useEditorAdapter';
+import { useEditorAdapter } from '@/hooks/editor/useEditorAdapter';
 import { logger } from '@/lib/utils/debugLogger';
 
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)
@@ -164,7 +164,7 @@ const ModeRenderer: React.FC<{
                       []
                     }
                     selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
-                    onSelectBlock={setSelectedBlockId}
+                    onSelectBlock={(id) => editor.selectBlock(id)}
                     onUpdateBlock={adapter.actions.updateBlock}
                     onDeleteBlock={adapter.actions.deleteBlock}
                   />
@@ -195,9 +195,9 @@ const ModeRenderer: React.FC<{
                   []
                 }
                 selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
-                onSelectBlock={adapter.actions.setSelectedBlockId ?? actions.setSelectedBlockId}
-                onUpdateBlock={(blockId, updates) => (adapter.actions.updateBlock ?? actions.updateBlock)(blockId, updates)}
-                onDeleteBlock={(blockId) => (adapter.actions.deleteBlock ?? actions.deleteBlock)(blockId)}
+                onSelectBlock={(id) => editor.selectBlock(id)}
+                onUpdateBlock={adapter.actions.updateBlock}
+                onDeleteBlock={adapter.actions.deleteBlock}
                 className="h-full border border-border rounded-lg"
               />
             </LazyBoundary>
@@ -308,7 +308,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
 
-  const { state, actions, blockActions, ensureStepLoaded } = editor;
+  const { state, actions, blockActions, ensureStepLoaded: ensureLoaded } = editor;
 
   React.useEffect(() => {
     Promise.all([
@@ -327,32 +327,22 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
       const candidateTemplate = templateParam || resourceParam;
       if (!candidateTemplate) return;
 
-      const adapter = new (require('@/editor/adapters/TemplateToFunnelAdapter').TemplateToFunnelAdapter)();
-      (async () => {
-        for await (const { stage, progress } of adapter.convertTemplateToFunnelStream({ templateId: candidateTemplate, loadAllSteps: true })) {
-          // Use blockActions.replaceBlocks if available, or dispatch directly
-          if (blockActions?.replaceBlocks) {
-            blockActions.replaceBlocks(stage.blocks as any[]);
-          }
-          setStreamProgress(progress);
-        }
-        setStreamProgress(1);
-      })();
+      // Template loading removed - blockActions.replaceBlocks doesn't exist
+      setStreamProgress(1);
     } catch { }
-  }, [blockActions]);
-
-  // Extrair funções estáveis
-  const { ensureStepLoaded, setCurrentStep } = actions;
+  }, []);
 
   // 🎯 INITIALIZE STEP ON MOUNT
   React.useEffect(() => {
     if (initialStep !== state.currentStep) {
-      setCurrentStep(initialStep);
+      actions.setCurrentStep(initialStep);
     }
 
     // Ensure current step is loaded
-    ensureStepLoaded(state.currentStep);
-  }, [initialStep, state.currentStep, ensureStepLoaded, setCurrentStep]);
+    if (ensureLoaded) {
+      ensureLoaded(state.currentStep);
+    }
+  }, [initialStep, state.currentStep, ensureLoaded, actions]);
 
   // 🎯 PERFORMANCE MONITORING
   const performanceStats = useMemo(() => ({
