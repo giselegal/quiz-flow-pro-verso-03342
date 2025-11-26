@@ -25,7 +25,7 @@ import { validateAndNormalizeTemplate, formatValidationErrors } from '@/template
 // Import Template Dialog
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 // Autosave feedback visual
-import { AutosaveIndicator } from '../AutosaveIndicator';
+import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
 // Template Health Panel
 import { TemplateHealthPanel } from './components/TemplateHealthPanel';
 // 🎯 FASE 3.1: Novos hooks refatorados
