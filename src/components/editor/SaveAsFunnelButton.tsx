@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 // Agora usamos o serviço canônico para criar funil e salvar blocos por etapa
 import { funnelService } from '@/services/canonical/FunnelService';
 import { Save } from 'lucide-react';
@@ -29,8 +29,7 @@ export const SaveAsFunnelButton: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  // Context opcional para evitar erro em ambientes de teste/fora do provider
-  const editor = useEditor({ optional: true } as any);
+  const { editor } = useEditorContext();
   const { toast } = useToast();
 
   // Mostrar sempre que NÃO estiver em modo funnel (mais flexível que exigir ?template=)
@@ -40,8 +39,6 @@ export const SaveAsFunnelButton: React.FC = () => {
   const isFunnelMode = Boolean(params.get('funnelId') || params.get('funnel'));
 
   if (isFunnelMode) return null;
-  // Se não estiver dentro do EditorProviderUnified, não renderiza o botão (evita throw de hook)
-  if (!editor) return null;
 
   const handleSave = async () => {
     if (!name.trim()) {

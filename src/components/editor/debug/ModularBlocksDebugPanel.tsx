@@ -1,11 +1,8 @@
 import React from 'react';
-// Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 
 export function ModularBlocksDebugPanel() {
-  const editor = useEditor({ optional: true });
-
-  if (!editor) return null;
+  const { editor } = useEditorContext();
 
   const { stepBlocks, currentStep } = editor.state;
   const currentStepKey = `step-${currentStep}`;

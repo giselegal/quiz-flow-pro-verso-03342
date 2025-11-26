@@ -15,7 +15,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,13 +43,10 @@ export type SelectionContextType =
 // ============================================================================
 
 export function UniversalPropertiesPanel() {
-    const editor = useEditor({ optional: true });
+    const { editor } = useEditorContext();
 
     // Detectar contexto baseado em seleção (prioridade: Block > Step > Funnel)
     const context = useMemo((): SelectionContextType => {
-        if (!editor) {
-            return { type: 'funnel', data: null };
-        }
 
         const currentStepKey = `step-${editor.state.currentStep}`;
         const currentStepBlocks = editor.state.stepBlocks?.[currentStepKey] || [];
@@ -58,7 +55,7 @@ export function UniversalPropertiesPanel() {
         if (editor.state?.selectedBlockId) {
             // Normaliza o ID para remover prefixos de DnD wrappers
             const normalizedSelectedId = normalizeBlockId(editor.state.selectedBlockId);
-            
+
             const block = currentStepBlocks.find(
                 (b: any) => {
                     const normalizedBlockId = normalizeBlockId(b.id);

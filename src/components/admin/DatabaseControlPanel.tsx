@@ -2,13 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-// Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 
 export const DatabaseControlPanel: React.FC = () => {
-  const editorContext = useEditor({ optional: true });
-  if (!editorContext) return null;
-  const { state } = editorContext;
+  const { editor } = useEditorContext();
+  const { state } = editor;
   const databaseMode: 'local' | 'supabase' = 'supabase';
   const connectionStatus = 'connected' as const;
 
