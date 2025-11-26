@@ -111,6 +111,14 @@ export async function loadFunnel(
       const validation = validateFunnel(funnel);
       if (!validation.valid) {
         console.error(`[LoadFunnel] Validation failed for "${funnelId}":`, validation.errors);
+        console.error('[LoadFunnel] Funnel structure:', {
+          hasMetadata: !!funnel.metadata,
+          hasTheme: !!funnel.theme,
+          hasSettings: !!funnel.settings,
+          hasSteps: !!funnel.steps,
+          stepsType: typeof funnel.steps,
+          metadataKeys: funnel.metadata ? Object.keys(funnel.metadata) : [],
+        });
         throw new Error(
           `Funnel "${funnelId}" failed validation. Check console for details.`
         );

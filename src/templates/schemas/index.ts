@@ -54,7 +54,7 @@ export const FunnelMetadataSchema = z.object({
   createdAt: z.string().datetime('Data inválida').optional(),
   updatedAt: z.string().datetime('Data inválida').optional(),
   tags: z.array(z.string()).default([]),
-});
+}).passthrough();
 
 export const FunnelThemeSchema = z.object({
   colors: z.object({
@@ -93,7 +93,7 @@ export const FunnelSchema = z.object({
   theme: FunnelThemeSchema.optional(),
   settings: FunnelSettingsSchema.optional(),
   steps: z.record(z.string(), z.array(BlockSchema)),
-});
+}).passthrough(); // Permite propriedades extras como 'assets'
 
 export type FunnelMetadata = z.infer<typeof FunnelMetadataSchema>;
 export type FunnelTheme = z.infer<typeof FunnelThemeSchema>;

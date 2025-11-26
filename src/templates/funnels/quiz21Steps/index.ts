@@ -69,12 +69,14 @@ export function clearStepsCache() {
 export const quiz21StepsComplete: Funnel = {
   metadata: {
     ...metadata,
-    ...assets,
-  },
+    // Assets separados (não mesclados no metadata para evitar conflitos com schema)
+  } as any,
   theme,
   settings,
   steps: {}, // Steps carregados via loadStep()
-};
+  // Assets disponíveis como propriedade extra
+  assets,
+} as Funnel;
 
 // ============================================================================
 // VERSÃO COM STEP 01 PRÉ-CARREGADO (Para inicialização rápida)
