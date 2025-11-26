@@ -55,8 +55,14 @@ extract_step() {
     const content = fs.readFileSync('$LEGACY_FILE', 'utf8');
     
     // Encontrar início do step
-    const stepPattern = new RegExp(\`'${step_id}': \\\\[([\\\\s\\\\S]*?)\\\\],\\\\n\\\\n  'step-\`, 'g');
-    const match = stepPattern.exec(content);
+    const stepPatternMid = new RegExp(\`'${step_id}': \\\\[([\\\\s\\\\S]*?)\\\\],\\\\n\\\\n  'step-\`, 'g');
+    let match = stepPatternMid.exec(content);
+    
+    // Fallback: último step (não tem próximo 'step-')
+    if (!match) {
+      const stepPatternLast = new RegExp(\`'${step_id}': \\\\[([\\\\s\\\\S]*?)\\\\]\\\\s*,\\\\s*\\\\n\\\\};\`);
+      match = stepPatternLast.exec(content);
+    }
     
     if (!match) {
       console.error('Step não encontrado: ${step_id}');
