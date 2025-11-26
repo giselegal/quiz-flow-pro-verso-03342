@@ -103,8 +103,8 @@ export async function loadFunnel(
 
   try {
     // 3. Carregar funnel dinamicamente
-    const module = await loader();
-    const funnel = 'default' in module ? module.default : module;
+    const mod = await loader();
+    const funnel: Funnel = (mod as any).default ?? (mod as any);
 
     // 4. Validar com Zod (se habilitado)
     if (validate) {

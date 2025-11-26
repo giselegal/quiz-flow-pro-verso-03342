@@ -476,8 +476,8 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       // 🔄 Migrado para lazy loader dinâmico
       const { loadFunnel } = await import('@/templates/loaders/dynamic');
       const funnel = await loadFunnel('quiz21StepsComplete', { validate: false, useCache: true });
-      const blocks = funnel.steps?.[stepId];
-      return (Array.isArray(blocks) ? blocks : null);
+      const blocksUnknown = funnel.steps?.[stepId] as unknown;
+      return Array.isArray(blocksUnknown) ? (blocksUnknown as unknown as Block[]) : null;
     } catch (error) {
       appLogger.debug('[HierarchicalSource] Fallback not found:', { data: [{ stepId }] });
       return null;
