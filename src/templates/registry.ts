@@ -12,7 +12,9 @@
  * 3. Backend templates - se disponível
  */
 
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from './quiz21StepsComplete';
+// ⚠️ Legacy import removido. Usar lazy loader dinâmico.
+import { loadFunnel } from '@/templates/loaders/dynamic';
+import { loadStep as loadQuiz21Step } from '@/templates/funnels/quiz21Steps/config';
 import { Block } from '@/types/editor';
 import { 
   getBuiltInTemplateById, 
@@ -55,16 +57,28 @@ const TEMPLATE_REGISTRY: Record<string, () => Promise<FullTemplate>> = {
 async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
   appLogger.info('🎯 [TemplateRegistry] Carregando quiz21StepsComplete...');
   
-  const steps: Record<string, Block[]> = {};
-  let totalSteps = 0;
+  // 1) Carregar funil via lazy loader
+  const funnel = await loadFunnel('quiz21StepsComplete', { validate: true, useCache: true });
 
-  // Converter cada step do template para formato do editor
-  for (const [stepKey, stepBlocks] of Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE)) {
-    if (stepKey.startsWith('step-') && Array.isArray(stepBlocks)) {
-      steps[stepKey] = stepBlocks as Block[];
-      totalSteps++;
+  // 2) Montar mapa de steps: se vazio (lazy), carregar steps 1..21 sob demanda
+  const steps: Record<string, Block[]> = {};
+  const maxSteps = (funnel.metadata as any)?.totalSteps || 21;
+  const existing = funnel.steps || {} as Record<string, Block[]>;
+
+  if (Object.keys(existing).length > 0) {
+    for (const [k, v] of Object.entries(existing)) steps[k] = v as Block[];
+  } else {
+    for (let i = 1; i <= maxSteps; i++) {
+      const id = `step-${String(i).padStart(2, '0')}`;
+      try {
+        const blocks = (await loadQuiz21Step(i)) as any;
+        steps[id] = (blocks?.default ?? blocks) as Block[];
+      } catch (e) {
+        appLogger.warn(`⚠️ [TemplateRegistry] Step não encontrado: ${id}`);
+      }
     }
   }
+  const totalSteps = Object.keys(steps).length;
 
   const template: FullTemplate = {
     id: 'quiz21StepsComplete',
@@ -73,12 +87,12 @@ async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
       id: 'quiz21StepsComplete',
       name: 'Quiz de Estilo Pessoal (21 Etapas)',
       description: 'Quiz completo com 21 etapas: coleta de nome, 10 questões pontuadas, 6 questões estratégicas, resultado personalizado e oferta',
-      version: '2.0.0',
+      version: (funnel.metadata as any)?.version || '3.0.0',
       totalSteps,
       type: 'quiz',
-      tags: ['fashion', 'personality', 'style', 'quiz', 'conversion'],
-      author: 'Quiz Quest Team',
-      created: '2024-01-01',
+      tags: (funnel.metadata as any)?.tags || ['fashion', 'personality', 'style', 'quiz', 'conversion'],
+      author: (funnel.metadata as any)?.author || 'Quiz Quest Team',
+      created: (funnel.metadata as any)?.createdAt || '2024-01-01',
     },
     steps,
     totalSteps,

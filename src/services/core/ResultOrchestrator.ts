@@ -36,9 +36,27 @@ export const ResultOrchestrator = {
         const summed = Object.values(scores).reduce((a, b) => a + b, 0);
         if (!summed) {
             try {
-                const mod = await import('@/templates/quiz21StepsComplete');
-                const QUIZ_STYLE_21_STEPS_TEMPLATE = (mod as any).QUIZ_STYLE_21_STEPS_TEMPLATE;
-                const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
+                // 🔄 Migrado para novo sistema de funis (lazy loader)
+                const { loadFunnel } = await import('@/templates/loaders/dynamic');
+                const funnel = await loadFunnel('quiz21StepsComplete', { validate: true, useCache: true });
+                // Montar mapa de steps; se vazio, carregar steps 1..21 (fallback)
+                const steps: Record<string, any[]> = {};
+                const total = (funnel.metadata as any)?.totalSteps || 21;
+                const existing = funnel.steps || {} as Record<string, any[]>;
+                if (Object.keys(existing).length > 0) {
+                    for (const [k, v] of Object.entries(existing)) steps[k] = v as any[];
+                } else {
+                    for (let i = 1; i <= total; i++) {
+                        const id = `step-${String(i).padStart(2, '0')}`;
+                        try {
+                            const mod = await import(`@/templates/funnels/quiz21Steps/steps/${id}.ts`);
+                            steps[id] = (mod as any).default ?? mod;
+                        } catch {
+                            // tolerar ausência de step
+                        }
+                    }
+                }
+                const canonical = toCanonicalAny(steps);
                 const canonTotals = accumulateCanonicalScores(canonical, selectionsByQuestion);
                 const compat: Record<string, string> = {
                     natural: 'Natural',
@@ -59,7 +77,9 @@ export const ResultOrchestrator = {
                     if (mapped[name] == null) mapped[name] = 0;
                 }
                 scores = mapped;
-                total = Object.values(mapped).reduce((a, b) => a + b, 0) || 1;
+                // atualizar total local
+                const newTotal = Object.values(mapped).reduce((a, b) => a + b, 0) || 1;
+                total = newTotal;
             } catch (e) {
                 // manter pontuação zero se adapter falhar; payload lida com isso
             }
