@@ -255,26 +255,34 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
 /**
  * Normaliza template JSON built-in para formato FullTemplate
  * Aceita formatos v3.1 e raw editor export
+ * 
+ * ESTRUTURAS SUPORTADAS:
+ * 1. { steps: { "step-01": Block[] } } - Array direto de blocos
+ * 2. { steps: { "step-01": { blocks: Block[] } } } - Objeto com propriedade blocks
  */
 function normalizeBuiltInTemplate(builtIn: any, templateId: string): FullTemplate {
-  // Se já está no formato correto
-  if (builtIn.steps && builtIn.metadata) {
-    return builtIn as FullTemplate;
-  }
-  
   // Converter de formato v3.1 ou raw export
   const steps: Record<string, Block[]> = {};
   let totalSteps = 0;
   
   // Processar steps do template
   if (builtIn.steps && typeof builtIn.steps === 'object') {
-    for (const [stepKey, stepBlocks] of Object.entries(builtIn.steps)) {
-      if (Array.isArray(stepBlocks)) {
-        steps[stepKey] = stepBlocks as Block[];
+    for (const [stepKey, stepData] of Object.entries(builtIn.steps)) {
+      // Caso 1: stepData é um array direto de blocos
+      if (Array.isArray(stepData)) {
+        steps[stepKey] = stepData as Block[];
         totalSteps++;
+      }
+      // Caso 2: stepData é um objeto com propriedade 'blocks' (formato v3.0)
+      else if (stepData && typeof stepData === 'object' && Array.isArray((stepData as any).blocks)) {
+        steps[stepKey] = (stepData as any).blocks as Block[];
+        totalSteps++;
+        appLogger.debug(`[normalizeBuiltInTemplate] ${stepKey}: extraído ${((stepData as any).blocks as any[]).length} blocos do objeto step`);
       }
     }
   }
+  
+  appLogger.info(`[normalizeBuiltInTemplate] Template ${templateId}: ${totalSteps} steps processados`);
   
   return {
     id: templateId,
