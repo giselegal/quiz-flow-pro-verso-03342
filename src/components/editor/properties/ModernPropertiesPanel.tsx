@@ -25,8 +25,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
-// ✅ CORREÇÃO: Usar adaptador universal para resolver problemas de contexto
-import { useEditorAdapter } from '@/hooks/useEditorAdapter';
+// ✅ CORREÇÃO: Usar EditorCompat para APIs legadas
+import { useEditorCompat } from '@/core/contexts/EditorContext';
 import { PropertyType } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
 import OptionsGridQuickPanel from './quick/OptionsGridQuickPanel';
@@ -670,8 +670,8 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                 if (onDuplicate) {
                   onDuplicate();
                 } else {
-                  // ✅ Usar método duplicateBlock do adaptador
-                  actions.duplicateBlock(effectiveSelectedBlock.id);
+                  // ✅ Usar blockActions.duplicateBlock com step e blockId
+                  blockActions.duplicateBlock(state.currentStep, effectiveSelectedBlock.id);
                 }
               }}
             >
@@ -686,8 +686,8 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                   if (onDelete) {
                     onDelete();
                   } else {
-                    // removeBlock takes only the id
-                    actions.removeBlock(effectiveSelectedBlock.id);
+                    // blockActions.removeBlock takes (step, blockId)
+                    blockActions.removeBlock(state.currentStep, effectiveSelectedBlock.id);
                   }
                 }
               }}

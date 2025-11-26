@@ -2,7 +2,7 @@ import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorCompat } from '@/core/contexts/EditorContext';
 import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
@@ -34,15 +34,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     className = '',
     onStepChange,
 }) => {
-    // Hooks
-    const editorContext = useEditor();
-    
-    // Fallback when editor context is not available
-    if (!editorContext) {
-        return <div className="flex items-center justify-center h-full">Loading editor...</div>;
-    }
-    
-    const { state, actions } = editorContext;
+    // Hooks - usar EditorCompat para APIs legadas
+    const editor = useEditorCompat();
+    const { state, blockActions, ensureStepLoaded } = editor;
     const notification = useNotification();
     const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -140,18 +134,15 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         desc: `Configuração do step ${step}`,
     }), []);
 
-    // Extrair funções estáveis
-    const { setCurrentStep: actionsSetCurrentStep, ensureStepLoaded } = actions;
-
     const handleStepSelect = useCallback((step: number) => {
-        actionsSetCurrentStep(step);
+        editor.setCurrentStep(step);
         onStepChange?.(step.toString());
 
         // Garantir que a etapa seja carregada se não existir
         if (ensureStepLoaded) {
             ensureStepLoaded(step);
         }
-    }, [actionsSetCurrentStep, ensureStepLoaded, onStepChange]);
+    }, [editor, ensureStepLoaded, onStepChange]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
         appLogger.debug('🔄 handleUpdateBlock chamado:', {
@@ -166,9 +157,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         });
 
         if (selectedBlockId) {
-            appLogger.debug('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
-            // updateBlock takes (id, content)
-            actions.updateBlock(selectedBlockId, updates);
+            appLogger.debug('🚀 Chamando blockActions.updateBlock:', { currentStepKey, selectedBlockId, updates });
+            // blockActions.updateBlock takes (step, blockId, updates)
+            blockActions.updateBlock(state.currentStep, selectedBlockId, updates);
 
             // Verificar se o estado foi atualizado
             setTimeout(() => {
@@ -180,14 +171,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         } else {
             appLogger.warn('⚠️  Nenhum bloco selecionado para atualizar');
         }
-    }, [actions, currentStepKey, selectedBlockId, selectedBlock, state.stepBlocks]);
+    }, [blockActions, currentStepKey, selectedBlockId, selectedBlock, state.stepBlocks, state.currentStep]);
 
     const handleDeleteBlock = useCallback(() => {
         if (selectedBlockId) {
-            // deleteBlock takes only the id
-            actions.deleteBlock(selectedBlockId);
+            // blockActions.removeBlock takes (step, blockId)
+            blockActions.removeBlock(state.currentStep, selectedBlockId);
         }
-    }, [actions, selectedBlockId]);
+    }, [blockActions, selectedBlockId, state.currentStep]);
 
     // Resolver funnelId do editor (se disponível) ou da URL
     const resolvedFunnelId = useMemo(() => {
