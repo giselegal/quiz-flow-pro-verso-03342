@@ -121,7 +121,7 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions): UseTemplat
                 };
 
                 setData(templateData);
-                loadedIdRef.current = tid;
+                loadedIdRef.current = tid ?? null;
                 
                 const duration = performance.now() - startTime;
                 appLogger.info(`✅ [useTemplateLoader] Template carregado em ${duration.toFixed(0)}ms: ${result.data.length} steps`);

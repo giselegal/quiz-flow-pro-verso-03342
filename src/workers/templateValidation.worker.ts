@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import { validateTemplateIntegrityFull } from '@/lib/utils/templateValidation';
+import { validateTemplateIntegrity } from '@/lib/utils/templateValidation';
 
 export interface ValidationMessage {
     type: 'VALIDATE';
@@ -55,7 +55,7 @@ self.onmessage = async (e: MessageEvent<ValidationMessage>) => {
     const { templateId, stepCount, stepsData } = e.data.payload;
 
     try {
-        const result = await validateTemplateIntegrityFull(
+        const result = await validateTemplateIntegrity(
             templateId,
             stepCount,
             async (stepId: string) => {
