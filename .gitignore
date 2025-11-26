@@ -131,3 +131,8 @@ supabase/access.token
 # Migration reports
 migration-*-report.json
 
+
+# Template builds (não versionar)
+dist/templates/
+public/templates/*.json
+.backup-templates-*/
