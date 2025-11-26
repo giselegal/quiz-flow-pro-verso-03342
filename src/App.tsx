@@ -258,9 +258,33 @@ function AppCore() {
                                         <Route path="/editor">
                                             {() => {
                                                 const params = new URLSearchParams(window.location.search);
-                                                const templateId = params.get('template') || undefined;
-                                                const funnelId = params.get('funnelId') || params.get('funnel') || undefined;
-                                                const resourceId = params.get('resource') || templateId; // 🔥 FIX: resourceId da URL
+                                                const templateParam = params.get('template') || undefined;
+                                                let funnelId = params.get('funnelId') || params.get('funnel') || undefined;
+                                                const resourceIdParam = params.get('resource') || templateParam; // 🔥 FIX: resourceId da URL
+
+                                                // 🔄 PADRONIZAÇÃO: ?template= → ?funnel=
+                                                if (templateParam && !funnelId) {
+                                                    const url = new URL(window.location.href);
+                                                    url.searchParams.delete('template');
+                                                    url.searchParams.set('funnel', templateParam);
+                                                    window.history.replaceState({}, '', url.toString());
+                                                    funnelId = templateParam;
+                                                }
+
+                                                // 🛟 Fallback dev/test para funil padrão
+                                                try {
+                                                    const env = (import.meta as any)?.env || {};
+                                                    const isTestEnv = !!env.VITEST || env.MODE === 'test' || typeof (globalThis as any).vitest !== 'undefined';
+                                                    const isDev = !!env.DEV;
+                                                    if (!funnelId && (isTestEnv || isDev)) {
+                                                        funnelId = 'quiz21StepsComplete';
+                                                        const url = new URL(window.location.href);
+                                                        url.searchParams.set('funnel', funnelId);
+                                                        window.history.replaceState({}, '', url.toString());
+                                                    }
+                                                } catch { }
+
+                                                const resourceId = resourceIdParam;
 
                                                 return (
                                                     <EditorErrorBoundary>
@@ -270,7 +294,7 @@ function AppCore() {
                                                                     <EditorProviderUnified>
                                                                         <QuizModularEditor
                                                                             resourceId={resourceId}
-                                                                            templateId={templateId}
+                                                                            templateId={templateParam}
                                                                             funnelId={funnelId}
                                                                         />
                                                                     </EditorProviderUnified>

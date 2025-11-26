@@ -11,7 +11,7 @@ import React from 'react';
 import type { ViewportSize } from './index';
 import { VIEWPORT_CONFIGS } from './index';
 
-export interface ViewportContainerProps {
+export interface ViewportContainerProps extends React.HTMLAttributes<HTMLDivElement> {
     /** Tamanho do viewport */
     viewport: ViewportSize;
     /** Conteúdo a ser renderizado */
@@ -27,6 +27,7 @@ export function ViewportContainer({
     children,
     className = '',
     showRuler = false,
+    ...rest
 }: ViewportContainerProps) {
     const config = VIEWPORT_CONFIGS[viewport];
     const width = config.width;
@@ -54,6 +55,7 @@ export function ViewportContainer({
                 style={containerStyle}
                 data-viewport={viewport}
                 data-width={width}
+                {...rest}
             >
                 {children}
             </div>
