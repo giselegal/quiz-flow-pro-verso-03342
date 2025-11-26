@@ -26,9 +26,9 @@ vi.mock('@/hooks/useEditorPersistence', () => ({
     useEditorPersistence: editorPersistenceHookMock
 }));
 
-const superUnifiedHookMock: ReturnType<typeof vi.fn> = vi.fn();
-vi.mock('@/hooks/useSuperUnified', () => ({
-    useSuperUnified: superUnifiedHookMock
+const editorContextHookMock: ReturnType<typeof vi.fn> = vi.fn();
+vi.mock('@/core/hooks/useEditorContext', () => ({
+    useEditorContext: editorContextHookMock
 }));
 
 interface MockBlock {
@@ -38,7 +38,7 @@ interface MockBlock {
 }
 
 const getEditorHook = () => editorPersistenceHookMock;
-const getSuperUnifiedHook = () => superUnifiedHookMock;
+const getEditorContextHook = () => editorContextHookMock;
 
 async function loadPage() {
     const mod = await import('../editor/QuizEditorIntegratedPage.testable');
@@ -48,8 +48,8 @@ async function loadPage() {
 describe('QuizEditorIntegratedPage (integração)', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        // Mock padrão do useSuperUnified
-        getSuperUnifiedHook().mockReturnValue({
+        // Mock padrão do useEditorContext
+        getEditorContextHook().mockReturnValue({
             getStepBlocks: () => [],
         });
     });

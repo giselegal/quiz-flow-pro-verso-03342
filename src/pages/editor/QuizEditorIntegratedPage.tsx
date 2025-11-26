@@ -32,7 +32,7 @@ import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
 import { useTemplateLoader } from '@/hooks/useTemplateLoader';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditorPersistence } from '@/hooks/useEditorPersistence';
-import { useSuperUnified } from '@/hooks/useSuperUnified';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 
 // Services
 import { QuizToEditorAdapter } from '@/lib/adapters/QuizToEditorAdapter';
@@ -70,7 +70,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   const navigation = useUnifiedStepNavigation();
   const templateLoader = useTemplateLoader();
   const { addNotification } = useNotification();
-  const { getStepBlocks } = useSuperUnified();
+  const { getStepBlocks } = useEditorContext();
 
   // Obter blocos do step atual
   const currentStepBlocks = getStepBlocks(state.currentStep);

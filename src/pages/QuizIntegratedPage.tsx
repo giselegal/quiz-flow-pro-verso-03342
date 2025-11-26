@@ -4,7 +4,7 @@ import { QuizOptimizedRenderer } from '@/components/quiz/QuizOptimizedRenderer';
 import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { useSuperUnified } from '@/hooks/useSuperUnified';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { SuperUnifiedProvider } from '@/contexts';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,7 @@ const QuizIntegratedRenderer: React.FC = () => {
   // Hooks devem estar dentro dos providers corretos
   const editorContext = React.useMemo(() => {
     try {
-      const context = useSuperUnified();
+      const context = useEditorContext();
       return {
         state: context.state,
         actions: {
@@ -34,8 +34,8 @@ const QuizIntegratedRenderer: React.FC = () => {
           updateBlock: context.updateBlock,
           deleteBlock: context.removeBlock,
         },
-        computed: { 
-          currentBlocks: context.getStepBlocks?.(1) || [] 
+        computed: {
+          currentBlocks: context.getStepBlocks?.(1) || []
         },
         blockActions: {
           setSelectedBlockId: context.setSelectedBlock,
