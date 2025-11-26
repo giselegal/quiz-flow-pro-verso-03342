@@ -30,7 +30,7 @@ import {
     Activity,
     Download,
 } from 'lucide-react';
-import { useTheme } from '@/styles/themes';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -74,7 +74,8 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
         quiz_starts: 0,
         leads: 0,
     });
-    const theme = useTheme();
+    const { ux } = useEditorContext();
+    const { theme } = ux;
 
     // ============================================================================
     // CARREGAMENTO DE DADOS

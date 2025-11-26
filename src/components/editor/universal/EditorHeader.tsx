@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
-import { useTheme } from '@/components/theme-provider';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { AutoSaveIndicatorWithTooltip } from '../AutoSaveIndicator';
 import EditorNoCodePanel from '../EditorNoCodePanel';
 
@@ -37,7 +37,8 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
     lastSaved = null,
     autoSaveError = null,
 }) => {
-    const { theme, setTheme } = useTheme();
+    const { ux } = useEditorContext();
+    const { theme, setTheme } = ux;
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
