@@ -375,14 +375,48 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         mode: previewMode === 'live' ? 'preview-live' : 'preview-production',
     });
 
+    // 💾 Enhanced save com persistenceService (retry automático + versionamento)
+    const saveStepBlocksEnhanced = useCallback(async (stepNumber: number) => {
+        const blocks = wysiwyg?.state?.blocks || [];
+        const usePersistence = getFeatureFlag?.('usePersistenceService') ?? true;
+
+        if (usePersistence && resourceId) {
+            try {
+                // Validar blocos antes de salvar
+                const invalidBlocks = blocks.filter(block => {
+                    const validation = validateBlock(block);
+                    return !validation.success;
+                });
+
+                if (invalidBlocks.length > 0) {
+                    appLogger.warn('[saveStepBlocks] Blocos inválidos detectados:', invalidBlocks.length);
+                }
+
+                // Usar persistenceService com retry automático
+                await persistenceService.saveBlocks(
+                    `${resourceId}:step-${stepNumber}`,
+                    blocks,
+                    { maxRetries: 3, validateBeforeSave: true }
+                );
+                appLogger.info('✅ [persistenceService] Blocos salvos com sucesso');
+            } catch (error) {
+                appLogger.error('❌ [persistenceService] Erro, fallback para saveStepBlocks:', error);
+                // Fallback para método original
+                await saveStepBlocks(stepNumber);
+            }
+        } else {
+            // Usar método original
+            await saveStepBlocks(stepNumber);
+        }
+    }, [resourceId, wysiwyg?.state?.blocks, saveStepBlocks]);
+
     // 🎯 FASE 3.1: Auto-save com hook core (após wysiwyg)
     const autoSave = enableAutoSave && resourceId ? useAutoSave({
         key: `editor-autosave:${resourceId}:step-${safeCurrentStep}`,
         data: wysiwyg?.state?.blocks || [],
         debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         onSave: async (key) => {
-            const stepNumber = safeCurrentStep;
-            await saveStepBlocks(stepNumber);
+            await saveStepBlocksEnhanced(safeCurrentStep);
         },
         enableRecovery: true,
     }) : {
