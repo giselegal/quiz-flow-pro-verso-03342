@@ -151,20 +151,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const isReadOnly = props.isReadOnly ?? false;
     const resourceMetadata = props.editorResource ?? null;
 
-    // 🐛 DEBUG: Verificar se resourceId está chegando e se vai carregar JSON
+    // 🔄 DEBUG: Padronização template → funnel
     appLogger.info('🔍 [QuizModularEditor] Props recebidas:', {
         data: [{
             resourceId: props.resourceId,
-            templateId: props.templateId,
-            funnelId: props.funnelId,
-            resourceIdFinal: resourceId
+            funnelId: props.funnelId || props.templateId, // templateId = funnelId
+            templateId_deprecated: props.templateId,
+            resourceIdFinal: resourceId,
+            isEditableModel: true
         }]
     });
 
-    appLogger.info('🚨 [QuizModularEditor] DIAGNÓSTICO CRÍTICO:', {
+    appLogger.info('🚨 [QuizModularEditor] DIAGNÓSTICO:', {
         data: [{
             temResourceId: !!resourceId,
-            vaiCarregarJSON: !!(props.templateId || resourceId),
+            vaiCarregarJSON: !!resourceId,
+            tipoModelo: 'editável e duplicável',
             razao: !resourceId ? '❌ resourceId está undefined - JSON NÃO SERÁ CARREGADO!' : '✅ resourceId OK - JSON será carregado',
             urlAtual: typeof window !== 'undefined' ? window.location.href : 'SSR'
         }]
