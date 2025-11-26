@@ -23,7 +23,29 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate as useNavigateRouter, useLocation as useLocationRouter } from 'react-router-dom';
+
+// Hook seguro que funciona com ou sem Router
+const useSafeNavigate = () => {
+    try {
+        return useNavigateRouter();
+    } catch {
+        // Fallback quando Router não está disponível
+        return (path: string) => {
+            appLogger.warn('[UXProvider] navigate chamado sem Router, usando window.location');
+            window.location.href = path;
+        };
+    }
+};
+
+const useSafeLocation = () => {
+    try {
+        return useLocationRouter();
+    } catch {
+        // Fallback quando Router não está disponível
+        return { pathname: window.location.pathname, search: window.location.search };
+    }
+};
 
 // ============================================================================
 // TYPES - THEME
@@ -173,9 +195,9 @@ export const UXProvider: React.FC<UXProviderProps> = ({ children }) => {
     const [reducedMotion, setReducedMotion] = useState(false);
     const [highContrast, setHighContrast] = useState(false);
 
-    // Navigation
-    const navigateHook = useNavigate();
-    const location = useLocation();
+    // Navigation - usar hooks seguros
+    const navigateHook = useSafeNavigate();
+    const location = useSafeLocation();
 
     // ============================================================================
     // THEME METHODS
