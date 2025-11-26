@@ -120,6 +120,7 @@ export default defineConfig({
       'wouter',
       '@radix-ui/react-dialog',
       '@radix-ui/react-dropdown-menu',
+      'dompurify',
     ],
   },
 })
