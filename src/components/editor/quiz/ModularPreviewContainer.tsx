@@ -116,7 +116,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
         };
         window.addEventListener('keydown', onKeyDown);
         return () => window.removeEventListener('keydown', onKeyDown);
-    }, [ui?.propertiesPanelOpen, togglePropertiesPanel, state.currentStep, stepBlocks, setSelectedBlockId]);
+    }, [ui?.propertiesPanelOpen, togglePropertiesPanel, state.currentStep, stepBlocks, selectBlock]);
 
     const sessionData = useMemo(() => {
         const map: Record<string, any> = {
