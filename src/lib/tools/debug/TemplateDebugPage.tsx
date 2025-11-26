@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { getLoadedFunnelSync } from '@/templates/loaders/dynamic';
 import { normalizeStepBlocks } from '@/config/quizStepsComplete';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -14,14 +14,18 @@ const TemplateDebugPage: React.FC = () => {
     useEffect(() => {
         appLogger.info('🔍 TemplateDebugPage mounted');
 
+        // 🔄 Ler do lazy loader cache
+        const funnel = getLoadedFunnelSync('quiz21StepsComplete');
+        const rawTemplate = funnel?.steps || {};
+
         // 1. Verificar template bruto
         const templateData = {
-            hasTemplate: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
-            templateType: typeof QUIZ_STYLE_21_STEPS_TEMPLATE,
-            templateKeys: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE) : [],
-            keyCount: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0,
-            sampleEntries: QUIZ_STYLE_21_STEPS_TEMPLATE ?
-                Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).slice(0, 3).map(([k, v]) => [
+            hasTemplate: !!rawTemplate,
+            templateType: typeof rawTemplate,
+            templateKeys: rawTemplate ? Object.keys(rawTemplate) : [],
+            keyCount: rawTemplate ? Object.keys(rawTemplate).length : 0,
+            sampleEntries: rawTemplate ?
+                Object.entries(rawTemplate).slice(0, 3).map(([k, v]) => [
                     k,
                     Array.isArray(v) ? `Array[${v.length}]` : typeof v,
                 ]) : [],
