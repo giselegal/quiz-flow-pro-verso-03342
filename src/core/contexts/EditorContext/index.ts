@@ -32,5 +32,6 @@ export {
 export {
     // Hook com camada de compatibilidade (para código legado)
     useEditorCompat,
+    useEditorCompat as useEditorCompatOptional, // Alias opcional
     type EditorCompatAPI,
 } from './EditorCompatLayer';
