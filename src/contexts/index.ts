@@ -50,10 +50,9 @@ export { SimpleAppProvider, useSimpleApp } from './providers/SimpleAppProvider';
  * Roadmap: Será deprecado após migração completa para V2
  * Ver: CHECKLIST_RESOLUCAO_DUPLICACOES.md
  * 
- * @deprecated Use SuperUnifiedProvider (V2) com hooks individuais
- * Compat hook disponível via import direto: import { useSuperUnified } from '@/hooks/useSuperUnified'
+ * @deprecated Use useEditorContext() para API consolidada
  * 
- * NOTA: Não re-exportamos aqui para evitar dependências circulares
+ * NOTA: Hook antigo useSuperUnified foi removido - migre para useEditorContext
  */
 
 // 🆕 FASE 3: PureBuilder compatibility

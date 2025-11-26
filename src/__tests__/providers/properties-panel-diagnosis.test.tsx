@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { UIProvider, useUI } from '@/contexts/providers/UIProvider';
-import { useSuperUnified } from '@/hooks/useSuperUnified';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import type { Block } from '@/types/editor';
 import React from 'react';
 
@@ -42,10 +42,10 @@ const Providers = ({ children }: { children: React.ReactNode }) => (
     </SuperUnifiedProvider>
 );
 
-const renderUnifiedHook = () => renderHook(() => useSuperUnified(), { wrapper: Providers });
+const renderUnifiedHook = () => renderHook(() => useEditorContext(), { wrapper: Providers });
 const renderUIHook = () => renderHook(() => useUI(), { wrapper: Providers });
 
-const seedStepBlocks = (editor: ReturnType<typeof useSuperUnified>['editor'], blocks: Block[] = baseBlocks) => {
+const seedStepBlocks = (editor: ReturnType<typeof useEditorContext>['editor'], blocks: Block[] = baseBlocks) => {
     act(() => {
         editor.setStepBlocks(1, blocks);
     });

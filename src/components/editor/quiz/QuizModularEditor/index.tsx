@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
-import { useSuperUnified } from '@/hooks/useSuperUnified';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { useUI } from '@/contexts/providers/UIProvider';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
@@ -96,7 +96,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // React Query client para prefetch/invalidações
     const queryClient = useQueryClient();
     // Core systems
-    const unified = useSuperUnified();
+    const unified = useEditorContext();
     const dnd = useDndSystem();
     const { enableAutoSave } = useFeatureFlags();
 
@@ -116,7 +116,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         saveFunnel,
         saveStepBlocks,
         publishFunnel,
-        showToast,
         getStepBlocks,
         setStepBlocks,
         setSelectedBlock,
@@ -127,7 +126,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         removeBlock,
         reorderBlocks,
         updateBlock,
+        funnel, // Access to funnel methods
+        ux, // Access to UX methods (showToast)
     } = unified;
+    const { showToast } = ux;
+    const { createFunnel } = funnel;
     // UI slice agora via UIProvider
     const { state: uiState } = useUI();
 
@@ -1295,9 +1298,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const handlePublish = useCallback(async () => {
         try {
             let funnelId = unifiedState.currentFunnel?.id;
-            
+
             if (!unifiedState.currentFunnel) {
-                const created = await unified.createFunnel('Meu Quiz');
+                const created = await createFunnel('Meu Quiz');
                 if (!created?.id) {
                     showToast({
                         type: 'error',

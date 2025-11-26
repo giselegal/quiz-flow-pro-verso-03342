@@ -1,5 +1,5 @@
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
-import { useSuperUnified } from '@/hooks/useSuperUnified';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import type { Block } from '@/types/editor';
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 
 // Helper consumer to expose context to the test via refs
 const ConsumerBridge = ({ ctxRef, stateRef }: any) => {
-  const ctx = useSuperUnified();
+  const ctx = useEditorContext();
   // keep refs updated
   React.useEffect(() => {
     if (ctx) {
