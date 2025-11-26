@@ -95,7 +95,7 @@ test.describe('✏️ Suite 03: Editor de Quiz', () => {
         await page.waitForTimeout(2000);
 
         // Tentar clicar em um botão qualquer
-        const buttons = await page.locator('button:visible').all();
+            const buttons = await page.locator('button:visible:not([disabled])').all();
         
         if (buttons.length > 0) {
             // Clicar no primeiro botão visível
