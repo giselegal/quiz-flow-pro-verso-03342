@@ -144,6 +144,25 @@ defer(() => {
   }
 });
 
+// 🎯 PRÉ-CARREGAR FUNNEL PRINCIPAL (lazy loader)
+// Popular cache para ferramentas de debug e editor
+defer(() => {
+  import('@/templates/loaders/dynamic')
+    .then(({ loadFunnel }) => {
+      return loadFunnel('quiz21StepsComplete', { validate: true, useCache: true });
+    })
+    .then(() => {
+      if (import.meta.env.DEV) {
+        appLogger.info('✅ Funnel principal pré-carregado no cache (lazy loader)');
+      }
+    })
+    .catch((e) => {
+      if (import.meta.env.DEV) {
+        appLogger.warn('⚠️ Falha ao pré-carregar funnel:', { data: [e] });
+      }
+    });
+});
+
 // Pré-carregar schemas críticos para evitar fallback legacy em blocos de resultado
 // Dividir preload em batches para evitar monopolizar o primeiro idle e permitir cancelamento futuro
 const schemaPreloadBatches: string[][] = [
