@@ -268,11 +268,11 @@ export const UXProvider: React.FC<UXProviderProps> = ({ children }) => {
     }, [navigateHook]);
 
     const goBack = useCallback(() => {
-        navigateHook(-1);
+        (navigateHook as any)(-1);
     }, [navigateHook]);
 
     const goForward = useCallback(() => {
-        navigateHook(1);
+        (navigateHook as any)(1);
     }, [navigateHook]);
 
     // ============================================================================
