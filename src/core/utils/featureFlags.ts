@@ -71,7 +71,7 @@ const DEFAULT_FLAGS: FeatureFlags = {
     useUnifiedEditor: import.meta.env.DEV,
     useUnifiedContext: import.meta.env.DEV,
     useSinglePropertiesPanel: import.meta.env.DEV,
-    useCoreDraftHook: false, // Experimental - desabilitado por padrão
+    useCoreDraftHook: true, // ✅ Core hook ativado - melhor gestão de drafts
     
     // Performance - Sempre habilitadas
     enableLazyLoading: true,
