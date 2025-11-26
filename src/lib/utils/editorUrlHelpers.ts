@@ -46,20 +46,55 @@ export const parseEditorUrl = (): EditorUrlParams => {
  */
 export const updateEditorUrl = (params: EditorUrlParams): void => {
   const currentUrl = new URL(window.location.href);
+  let changed = false;
 
-  if (params.funnelId) currentUrl.searchParams.set('funnel', params.funnelId);
-  if (params.template) currentUrl.searchParams.set('template', params.template);
-  if (params.stage) currentUrl.searchParams.set('stage', params.stage);
-  if (params.preview !== undefined) {
-    if (params.preview) {
-      currentUrl.searchParams.set('preview', 'true');
-    } else {
-      currentUrl.searchParams.delete('preview');
+  if (params.funnelId) {
+    const prev = currentUrl.searchParams.get('funnel');
+    if (prev !== params.funnelId) {
+      currentUrl.searchParams.set('funnel', params.funnelId);
+      changed = true;
     }
   }
-  if (params.viewport) currentUrl.searchParams.set('viewport', params.viewport);
 
-  window.history.pushState({}, '', currentUrl.toString());
+  if (params.template) {
+    const prev = currentUrl.searchParams.get('template');
+    if (prev !== params.template) {
+      currentUrl.searchParams.set('template', params.template);
+      changed = true;
+    }
+  }
+
+  if (params.stage) {
+    const prev = currentUrl.searchParams.get('stage');
+    if (prev !== params.stage) {
+      currentUrl.searchParams.set('stage', params.stage);
+      changed = true;
+    }
+  }
+
+  if (params.preview !== undefined) {
+    const prev = currentUrl.searchParams.get('preview') === 'true';
+    if (prev !== params.preview) {
+      if (params.preview) {
+        currentUrl.searchParams.set('preview', 'true');
+      } else {
+        currentUrl.searchParams.delete('preview');
+      }
+      changed = true;
+    }
+  }
+
+  if (params.viewport) {
+    const prev = currentUrl.searchParams.get('viewport');
+    if (prev !== params.viewport) {
+      currentUrl.searchParams.set('viewport', params.viewport);
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    window.history.pushState({}, '', currentUrl.toString());
+  }
 };
 
 /**
