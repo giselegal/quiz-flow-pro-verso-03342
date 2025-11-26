@@ -38,6 +38,12 @@ import { ValidationProvider } from '@/contexts/validation/ValidationProvider';
 import { CollaborationProvider } from '@/contexts/collaboration/CollaborationProvider';
 import { VersioningProvider } from '@/contexts/versioning/VersioningProvider';
 
+// ✅ FASE 3: Providers Consolidados
+import { AuthStorageProvider } from '@/contexts/consolidated/AuthStorageProvider';
+import { RealTimeProvider } from '@/contexts/consolidated/RealTimeProvider';
+import { ValidationResultProvider } from '@/contexts/consolidated/ValidationResultProvider';
+import { UXProvider } from '@/contexts/consolidated/UXProvider';
+
 // ============================================================================
 // PROVIDER GROUPS WITH MEMO BARRIERS
 // ============================================================================
@@ -45,12 +51,15 @@ import { VersioningProvider } from '@/contexts/versioning/VersioningProvider';
 /**
  * 🔵 Core Group: Auth + Storage
  * Raramente muda, base estável para outros providers
+ * ✅ FASE 3: Usando AuthStorageProvider consolidado + providers legados
  */
 const CoreProvidersGroup = memo<{ children: ReactNode }>(({ children }) => {
     return (
         <AuthProvider>
             <StorageProvider>
-                {children}
+                <AuthStorageProvider>
+                    {children}
+                </AuthStorageProvider>
             </StorageProvider>
         </AuthProvider>
     );
@@ -60,12 +69,17 @@ CoreProvidersGroup.displayName = 'CoreProvidersGroup';
 /**
  * 🟣 UI Group: Theme + Validation
  * Muda ocasionalmente (tema, validações)
+ * ✅ FASE 3: Usando UXProvider e ValidationResultProvider consolidados + providers legados
  */
 const UIProvidersGroup = memo<{ children: ReactNode }>(({ children }) => {
     return (
         <ThemeProvider>
             <ValidationProvider>
-                {children}
+                <UXProvider>
+                    <ValidationResultProvider>
+                        {children}
+                    </ValidationResultProvider>
+                </UXProvider>
             </ValidationProvider>
         </ThemeProvider>
     );
@@ -93,13 +107,16 @@ EditorProvidersGroup.displayName = 'EditorProvidersGroup';
 /**
  * 🟡 Data Group: Quiz + Result + Sync
  * Gerencia dados do quiz e sincronização
+ * ✅ FASE 3: Usando RealTimeProvider consolidado + providers legados
  */
 const DataProvidersGroup = memo<{ children: ReactNode }>(({ children }) => {
     return (
         <QuizStateProvider>
             <ResultProvider>
                 <SyncProvider>
-                    {children}
+                    <RealTimeProvider>
+                        {children}
+                    </RealTimeProvider>
                 </SyncProvider>
             </ResultProvider>
         </QuizStateProvider>
