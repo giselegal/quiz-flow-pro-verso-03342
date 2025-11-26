@@ -671,7 +671,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                   onDuplicate();
                 } else {
                   // ✅ Usar método duplicateBlock do adaptador
-                  actions.duplicateBlock(effectiveSelectedBlock.id);
+                  adapterActions.duplicateBlock(effectiveSelectedBlock.id);
                 }
               }}
             >
