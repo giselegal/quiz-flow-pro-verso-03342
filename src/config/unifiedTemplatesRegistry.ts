@@ -175,63 +175,7 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
         ],
     },
 
-    // 🔗 ALIAS para compatibilidade com código legado
-    'quiz-estilo-completo': {
-        id: 'quiz-estilo-completo',
-        name: 'Quiz de Estilo Pessoal - 21 Etapas Completo',
-        description: 'Template principal completo para descoberta do estilo pessoal com 21 etapas, incluindo coleta de dados, quiz pontuado, questões estratégicas e ofertas',
-        category: 'quiz-complete',
-        theme: 'fashion-premium',
-        stepCount: 21,
-        isOfficial: true,
-        usageCount: 2150,
-        tags: ['principal', 'estilo', 'completo', '21-etapas', 'premium', 'legacy-alias'],
-        features: [
-            'Template Principal',
-            'Quiz Pontuado Completo',
-            'Questões Estratégicas',
-            'Resultado + Oferta Premium',
-            'Persistência JSON',
-            'SEO Otimizado',
-        ],
-        conversionRate: '94%',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        createdAt: '2024-12-01T00:00:00.000Z',
-        updatedAt: '2025-09-11T14:30:00.000Z',
-        version: '2.1.0',
-        parentTemplateId: 'quiz21StepsComplete', // Aponta para o template principal
-        inheritanceType: 'extend',
-    },
-
-    // 🔗 ALIAS para compatibilidade com rota do quiz público
-    'quiz-estilo-21-steps': {
-        id: 'quiz-estilo-21-steps',
-        name: 'Quiz de Estilo Pessoal - 21 Etapas',
-        description: 'Template principal completo para descoberta do estilo pessoal com 21 etapas, incluindo coleta de dados, quiz pontuado, questões estratégicas e ofertas',
-        category: 'quiz-complete',
-        theme: 'fashion-premium',
-        stepCount: 21,
-        isOfficial: true,
-        usageCount: 2150,
-        tags: ['principal', 'estilo', 'completo', '21-etapas', 'premium', 'legacy-alias'],
-        features: [
-            'Template Principal',
-            'Quiz Pontuado Completo',
-            'Questões Estratégicas',
-            'Resultado + Oferta Premium',
-            'Persistência JSON',
-            'SEO Otimizado',
-        ],
-        conversionRate: '94%',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        createdAt: '2024-12-01T00:00:00.000Z',
-        updatedAt: '2025-09-11T14:30:00.000Z',
-        version: '2.1.0',
-        parentTemplateId: 'quiz21StepsComplete', // Aponta para o template principal
-        inheritanceType: 'extend',
-    },
-
-    // 🚀 EXEMPLO DE TEMPLATE COM HERANÇA
+    // 🚀 TEMPLATE COM HERANÇA (versão express otimizada)
     'quiz-style-express': {
         id: 'quiz-style-express',
         name: 'Quiz de Estilo Express - 10 Etapas',
@@ -650,8 +594,15 @@ export function getUnifiedTemplates(options: {
     search?: string;
     sortBy?: 'name' | 'usageCount' | 'conversionRate';
     officialOnly?: boolean;
+    excludeAliases?: boolean; // Nova opção para excluir aliases
 } = {}) {
     let templates = TemplateRegistry.getAll();
+
+    // 🚀 NOVO: Filtrar aliases/duplicações (templates que herdam de outros)
+    // Por padrão, excluir aliases para evitar duplicações na UI
+    if (options.excludeAliases !== false) {
+        templates = templates.filter(t => !t.parentTemplateId);
+    }
 
     // Filtrar por categoria
     if (options.category && options.category !== 'all') {

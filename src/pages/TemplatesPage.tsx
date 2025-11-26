@@ -12,10 +12,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { 
-    Sparkles, 
-    Users, 
-    TrendingUp, 
+import {
+    Sparkles,
+    Users,
+    TrendingUp,
     Plus,
     FileText,
     Palette,
@@ -71,7 +71,7 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
 
     // Carregar templates do registry unificado
     const unifiedTemplates = getUnifiedTemplates();
-    
+
     // Converter para formato compatível e adicionar template vazio
     const availableTemplates = [
         ...unifiedTemplates.map(template => ({
@@ -95,7 +95,7 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
     const dynamicCategories = Array.from(new Set(unifiedTemplates.map(t => t.category)));
     const categories = ['Todos', ...dynamicCategories, 'Básico'];
 
-    const filteredTemplates = availableTemplates.filter(template => 
+    const filteredTemplates = availableTemplates.filter(template =>
         selectedCategory === 'Todos' || template.category === selectedCategory,
     );
 
@@ -103,15 +103,15 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
         if (templateId === 'template-blank') {
             setIsDialogOpen(true);
         } else {
-            // Para templates pré-configurados, ir direto para o editor
-            setLocation(`/editor?template=${templateId}`);
+            // Para templates pré-configurados, ir direto para o editor com ?funnel=
+            setLocation(`/editor?funnel=${templateId}`);
             onTemplateSelect?.(templateId);
         }
     };
 
     const handleCreateBlankFunnel = () => {
         if (!newFunnelName.trim()) return;
-        
+
         const funnelId = `funnel-${Date.now()}`;
         setLocation(`/editor/${funnelId}?name=${encodeURIComponent(newFunnelName)}`);
         onTemplateSelect?.('template-blank', newFunnelName);
@@ -157,8 +157,8 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                     {filteredTemplates.map((template) => {
                         const IconComponent = template.icon;
                         return (
-                            <Card 
-                                key={template.id} 
+                            <Card
+                                key={template.id}
                                 className="group hover:shadow-lg transition-all duration-200 cursor-pointer border-2 hover:border-primary/20"
                                 onClick={() => handleTemplateSelect(template.id)}
                             >
@@ -173,9 +173,9 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                                                     Popular
                                                 </Badge>
                                             )}
-                                             <Badge variant="outline">
+                                            <Badge variant="outline">
                                                 {template.steps} etapas
-                                             </Badge>
+                                            </Badge>
                                         </div>
                                     </div>
                                     <CardTitle className="group-hover:text-primary transition-colors">
@@ -202,16 +202,16 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
 
                 {/* Quick Actions */}
                 <div className="flex justify-center mt-12 gap-4">
-                    <Button 
-                        size="lg" 
+                    <Button
+                        size="lg"
                         onClick={() => handleTemplateSelect('template-blank')}
                         className="flex items-center gap-2"
                     >
                         <Plus className="h-5 w-5" />
                         Criar Funil Vazio
                     </Button>
-                    <Button 
-                        size="lg" 
+                    <Button
+                        size="lg"
                         variant="outline"
                         onClick={() => setLocation('/editor/templates')}
                         className="flex items-center gap-2"
@@ -219,8 +219,8 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                         <Sparkles className="h-5 w-5" />
                         Templates Avançados
                     </Button>
-                    <Button 
-                        size="lg" 
+                    <Button
+                        size="lg"
                         variant="outline"
                         onClick={() => setLocation('/dashboard')}
                         className="flex items-center gap-2"
@@ -252,7 +252,7 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button 
+                        <Button
                             onClick={handleCreateBlankFunnel}
                             disabled={!newFunnelName.trim()}
                         >
