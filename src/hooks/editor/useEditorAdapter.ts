@@ -30,7 +30,7 @@
  */
 
 import { useMemo, useCallback } from 'react';
-import { useEditorCompat as useEditor } from '@/core/contexts/EditorContext';
+import { useEditor } from '@/contexts/editor/EditorContext';
 import { v4 as uuidv4 } from 'uuid';
 
 // Log de deprecação em desenvolvimento

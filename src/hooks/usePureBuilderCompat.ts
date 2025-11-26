@@ -22,7 +22,7 @@
  */
 
 import { useCallback, useMemo } from 'react';
-import { useEditorCompat as useEditor } from '@/core/contexts/EditorContext';
+import { useEditor } from '@/contexts/editor/EditorContext';
 import type { Block } from '@/types/editor';
 
 // Log de deprecação em desenvolvimento
