@@ -88,7 +88,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     }, [sessionData]);
 
     // Provider opcional do Editor para seleção/persistência de blocos reais
-    const editor = useEditor({ optional: true } as any);
+    const editor = useEditorCompatOptional();
     // Normaliza a chave do step para o formato step-XX (zero à esquerda)
     const stepKey = useMemo(() => {
         const id = String(step?.id || '');

@@ -12,7 +12,8 @@ interface ResultPageBuilderProps {
 }
 
 export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primaryStyle }) => {
-  const editorContext = useEditor({ optional: true });
+  const editorContext = useEditorCompatOptional();
+  const adapter = useEditorAdapter();
   if (!editorContext) return null;
   const { actions, state } = editorContext;
   const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
