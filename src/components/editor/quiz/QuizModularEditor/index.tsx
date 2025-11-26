@@ -282,7 +282,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try {
             const v = localStorage.getItem('qm-editor:preview-mode');
             const mode = v === 'production' ? 'production' : 'live';
-            console.log('🔧 [QuizModularEditor] Preview mode inicial:', { localStorage: v, mode });
             return mode;
         } catch { return 'live'; }
     });
@@ -292,11 +291,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try {
             const v = localStorage.getItem('qm-editor:use-simple-properties');
             const isTrue = v === 'true';
-            console.log('🔍 [QuizModularEditor] useSimplePropertiesPanel inicial:', {
-                localStorageValue: v,
-                resultado: isTrue,
-                chave: 'qm-editor:use-simple-properties'
-            });
             // 🔥 FORÇAR TRUE POR PADRÃO (teste)
             return isTrue || true; // TRUE por padrão!
         } catch { return true; } // TRUE em caso de erro
@@ -343,13 +337,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         initialShowPreview: false,
     });
 
-    // 🐛 DEBUG: Logar estado do editorModeUI
-    React.useEffect(() => {
-        console.log('🔍 [QuizModularEditor] editorModeUI.showProperties:', editorModeUI.showProperties);
-        if (!editorModeUI.showProperties) {
-            console.error('❌ [PONTO CEGO] showProperties está FALSE! Properties Panel NÃO será renderizado!');
-        }
-    }, [editorModeUI.showProperties]);
+    // 🐛 DEBUG: Logar estado do editorModeUI (desabilitado para performance)
+    // React.useEffect(() => {
+    //     if (import.meta.env.DEV) {
+    //         console.log('🔍 [QuizModularEditor] editorModeUI.showProperties:', editorModeUI.showProperties);
+    //     }
+    // }, [editorModeUI.showProperties]);
 
     // Compatibilidade: badge para UI antiga
     const editorMode = useMemo(() => ({
@@ -468,22 +461,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável
     const handleBlockSelect = useCallback((blockId: string | null) => {
-        appLogger.info('🎯 [handleBlockSelect] CHAMADO com:', {
-            data: [{
-                blockId,
-                isNull: blockId === null,
-                selectedBlockIdAtual: selectedBlockId
-            }]
-        });
-
         if (!blockId) {
-            appLogger.info('❌ blockId null, limpando seleção');
             setSelectedBlock(null);
             return;
         }
 
-        appLogger.info('✅ [handleBlockSelect] Definindo selectedBlock:', { data: [blockId] });
-        appLogger.info(`📍 [WAVE1] Selecionando bloco: ${blockId}`);
         setSelectedBlock(blockId);
 
         // Auto-scroll suave + highlight visual
@@ -501,21 +483,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 🚀 PERFORMANCE: Callbacks otimizados para handlers do WYSIWYG
     const handleWYSIWYGBlockSelect = useCallback((id: string | null) => {
-        console.log('🖱️ [QuizModularEditor] handleWYSIWYGBlockSelect chamado:', {
-            blockId: id,
-            currentSelectedId: wysiwyg.state.selectedBlockId
-        });
         wysiwyg.actions.selectBlock(id);
         handleBlockSelect(id);
     }, [wysiwyg.actions, handleBlockSelect, wysiwyg.state.selectedBlockId]);
 
     const handleWYSIWYGBlockUpdate = useCallback((id: string, updates: Partial<Block>) => {
-        console.group('🎨 [WYSIWYG] onBlockUpdate chamado');
-        appLogger.info('blockId:', { data: [id] });
-        appLogger.info('updates:', { data: [updates] });
-        appLogger.info('currentStep:', { data: [safeCurrentStep] });
-        console.groupEnd();
-
         // 🚀 WYSIWYG: Atualização instantânea via hook
         if (updates.properties) {
             wysiwyg.actions.updateBlockProperties(id, updates.properties);
@@ -524,8 +496,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } else {
             wysiwyg.actions.updateBlock(id, updates);
         }
-
-        appLogger.info('✨ [WYSIWYG] Atualização instantânea aplicada');
     }, [wysiwyg.actions, safeCurrentStep]);
 
     const handleWYSIWYGClearSelection = useCallback(() => {
@@ -536,13 +506,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // 🚀 PERFORMANCE: Memo para bloco selecionado
     const selectedBlock = useMemo(() => {
         const found = wysiwyg.state.blocks.find(b => b.id === wysiwyg.state.selectedBlockId) || undefined;
-        console.log('🎯 [QuizModularEditor] selectedBlock calculado:', {
-            selectedBlockId: wysiwyg.state.selectedBlockId,
-            blocksLength: wysiwyg.state.blocks.length,
-            found: !!found,
-            foundId: found?.id,
-            foundType: found?.type
-        });
         return found;
     }, [wysiwyg.state.blocks, wysiwyg.state.selectedBlockId]);
 
@@ -605,14 +568,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [unifiedState.editor.stepBlocks]);
 
     const navSteps = useMemo(() => {
-        console.log('🔥🔥🔥 [DEBUG] navSteps recalculando:', {
-            hasLoadedTemplate: !!loadedTemplate,
-            stepsLength: loadedTemplate?.steps?.length || 0,
-            stepBlocksKeys: Object.keys(unifiedState.editor.stepBlocks || {}).length
-        });
-
         if (loadedTemplate?.steps?.length) {
-            console.log('🔥 [DEBUG] Usando loadedTemplate.steps:', loadedTemplate.steps.length);
             return loadedTemplate.steps.map((s: any) => ({
                 key: s.id,
                 title: `${String(s.order).padStart(2, '0')} - ${s.name}`,
@@ -625,7 +581,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             .sort((a, b) => a - b);
 
         if (indexes.length === 0) {
-            console.log('🔥 [DEBUG] Usando fallback de 21 steps');
             // 🔧 FIX: Gerar todos 21 steps ao invés de apenas 2
             return Array.from({ length: 21 }, (_, i) => ({
                 key: `step-${String(i + 1).padStart(2, '0')}`,
@@ -633,7 +588,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }));
         }
 
-        console.log('🔥 [DEBUG] Usando stepBlocks indexes:', indexes);
         return indexes.map((i) => ({
             key: `step-${String(i).padStart(2, '0')}`,
             title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
