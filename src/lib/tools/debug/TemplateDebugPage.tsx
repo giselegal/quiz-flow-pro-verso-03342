@@ -35,8 +35,8 @@ const TemplateDebugPage: React.FC = () => {
         setTemplateInfo(templateData);
 
         // 2. Verificar normalização
-        if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
-            const normalized = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+        if (rawTemplate && Object.keys(rawTemplate).length > 0) {
+            const normalized = normalizeStepBlocks(rawTemplate);
             const normalizedData = {
                 normalizedKeys: Object.keys(normalized),
                 keyCount: Object.keys(normalized).length,
