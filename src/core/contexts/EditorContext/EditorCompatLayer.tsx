@@ -25,7 +25,7 @@ export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
         blocks: Block[]; // Lista plana do step atual
     };
 
-    // API legada - Properties
+    // API legada - Flat properties (back-compat)
     setSelectedBlockId: (id: string | null) => void;
     deleteBlock: (blockId: string) => Promise<void>;
     ensureStepLoaded: (step: number) => Promise<void>;
@@ -34,8 +34,18 @@ export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
     isPreviewing: boolean;
     isLoading: boolean;
     save: () => void;
+    duplicateBlock: (blockId: string) => Promise<void>;
 
-    // API legada - Actions
+    // API legada - Actions object extensions
+    actions: ReturnType<typeof useEditorCanonical>['actions'] & {
+        setSelectedBlockId: (id: string | null) => void;
+        deleteBlock: (blockId: string) => Promise<void>;
+        ensureStepLoaded: (step: number) => Promise<void>;
+        addBlockAtIndex: (step: number, block: Block, index: number) => void;
+        duplicateBlock: (blockId: string) => Promise<void>;
+    };
+
+    // API legada - Block Actions
     blockActions: {
         addBlock: (step: number, block: Block, index?: number) => void;
         updateBlock: (step: number, blockId: string, updates: Partial<Block>) => void;
@@ -94,6 +104,20 @@ export function useEditorCompat(): EditorCompatAPI {
             editor.addBlock(step, block, index);
         };
 
+        // Adapter: duplicateBlock
+        const duplicateBlock = async (blockId: string) => {
+            const blocks = editor.getStepBlocks(editor.currentStep);
+            const block = blocks.find(b => b.id === blockId);
+            if (block) {
+                const duplicate = {
+                    ...block,
+                    id: `${block.id}-copy-${Date.now()}`,
+                };
+                const index = blocks.findIndex(b => b.id === blockId);
+                editor.addBlock(editor.currentStep, duplicate, index + 1);
+            }
+        };
+
         // Adapter: blockActions object
         const blockActions = {
             addBlock: (step: number, block: Block, index?: number) => {
@@ -142,13 +166,25 @@ export function useEditorCompat(): EditorCompatAPI {
             },
         };
 
-        return {
-            ...editor,
-            state: compatState, // State com blocks
+        // Extended actions with legacy APIs
+        const extendedActions = {
+            ...editor.actions,
             setSelectedBlockId,
             deleteBlock,
             ensureStepLoaded,
             addBlockAtIndex,
+            duplicateBlock,
+        };
+
+        return {
+            ...editor,
+            state: compatState, // State com blocks
+            actions: extendedActions, // Actions estendidas
+            setSelectedBlockId,
+            deleteBlock,
+            ensureStepLoaded,
+            addBlockAtIndex,
+            duplicateBlock,
             activeStageId,
             blockActions,
             stages,
