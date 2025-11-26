@@ -76,34 +76,15 @@ export function useEditorAdapter(): EditorAdapter {
   const deleteBlock = useCallback(async (blockId: string): Promise<void> => {
     appLogger.debug('[useEditorAdapter] deleteBlock called:', { blockId, currentStepKey });
     
-    // Tentar usar deleteBlock direto (API nova)
+    // Usar deleteBlock do contexto (assinatura: deleteBlock(blockId))
     const deleteBlockFn = ctx?.actions?.deleteBlock ?? ctx?.deleteBlock;
     if (deleteBlockFn) {
       try {
         await deleteBlockFn(blockId);
-        appLogger.info('[useEditorAdapter] Block deleted via deleteBlock:', { data: [blockId] });
+        appLogger.info('[useEditorAdapter] Block deleted:', { data: [blockId] });
         return;
       } catch (err) {
-        appLogger.warn('[useEditorAdapter] deleteBlock failed, trying removeBlock:', err);
-      }
-    }
-
-    // Fallback: usar removeBlock(stepKey, blockId) - API legada
-    const removeBlockFn = ctx?.actions?.removeBlock ?? ctx?.removeBlock;
-    if (removeBlockFn) {
-      try {
-        // Verificar se a API requer stepKey (legada) ou apenas blockId
-        if (removeBlockFn.length >= 2) {
-          // API legada: removeBlock(stepKey, blockId)
-          await removeBlockFn(currentStepKey, blockId);
-        } else {
-          // API nova: removeBlock(blockId)
-          await removeBlockFn(blockId);
-        }
-        appLogger.info('[useEditorAdapter] Block deleted via removeBlock:', { data: [blockId] });
-        return;
-      } catch (err) {
-        appLogger.error('[useEditorAdapter] removeBlock failed:', err);
+        appLogger.error('[useEditorAdapter] deleteBlock failed:', err);
       }
     }
 
@@ -137,22 +118,25 @@ export function useEditorAdapter(): EditorAdapter {
       order: (blockToDuplicate.order ?? 0) + 1,
     };
 
-    // Use addBlock if available
+    // Use addBlock if available (assinatura: addBlock(type))
     const addBlockFn = ctx?.actions?.addBlock ?? ctx?.addBlock;
     if (addBlockFn) {
       try {
-        // Support different API signatures
-        if (addBlockFn.length === 1) {
-          await addBlockFn(duplicatedBlock);
-        } else if (addBlockFn.length === 2) {
-          // addBlock(stepIndex, block)
-          await addBlockFn(currentStep, duplicatedBlock);
-        } else {
-          // addBlock(type, props, content)
-          await addBlockFn(blockToDuplicate.type, duplicatedBlock.properties, duplicatedBlock.content);
+        // addBlock retorna o ID do novo bloco, mas não aceita o bloco completo
+        // Precisamos criar e depois atualizar
+        const newBlockId = await addBlockFn(blockToDuplicate.type);
+        
+        // Atualizar com as propriedades duplicadas
+        const updateBlockFn = ctx?.actions?.updateBlock ?? ctx?.updateBlock;
+        if (updateBlockFn) {
+          await updateBlockFn(newBlockId, {
+            properties: duplicatedBlock.properties,
+            content: duplicatedBlock.content,
+          });
         }
-        appLogger.info('[useEditorAdapter] Block duplicated:', { data: [id, newId] });
-        return newId;
+        
+        appLogger.info('[useEditorAdapter] Block duplicated:', { data: [id, newBlockId] });
+        return newBlockId;
       } catch (err) {
         appLogger.error('[useEditorAdapter] Failed to duplicate block:', err);
       }
@@ -187,15 +171,10 @@ export function useEditorAdapter(): EditorAdapter {
     };
 
     try {
-      if (addBlockFn.length === 1) {
-        await addBlockFn(newBlock);
-      } else if (addBlockFn.length === 2) {
-        await addBlockFn(currentStep, newBlock);
-      } else {
-        await addBlockFn(type, {}, {});
-      }
-      appLogger.info('[useEditorAdapter] Block added:', { data: [type, newId] });
-      return newId;
+      // addBlock(type) retorna o ID do bloco criado
+      const blockId = await addBlockFn(type);
+      appLogger.info('[useEditorAdapter] Block added:', { data: [type, blockId] });
+      return blockId;
     } catch (err) {
       appLogger.error('[useEditorAdapter] Failed to add block:', err);
       throw err;
@@ -214,13 +193,8 @@ export function useEditorAdapter(): EditorAdapter {
     }
 
     try {
-      // Support different API signatures
-      if (updateBlockFn.length === 2) {
-        await updateBlockFn(id, updates);
-      } else if (updateBlockFn.length === 3) {
-        // updateBlock(stepIndex, blockId, updates)
-        await updateBlockFn(currentStep, id, updates);
-      }
+      // updateBlock(id, updates)
+      await updateBlockFn(id, updates);
       appLogger.debug('[useEditorAdapter] Block updated:', { data: [id] });
     } catch (err) {
       appLogger.error('[useEditorAdapter] Failed to update block:', err);
@@ -239,12 +213,8 @@ export function useEditorAdapter(): EditorAdapter {
     }
 
     try {
-      if (reorderFn.length === 2) {
-        reorderFn(startIndex, endIndex);
-      } else if (reorderFn.length === 3) {
-        // reorderBlocks(stepIndex, startIndex, endIndex)
-        reorderFn(currentStep, startIndex, endIndex);
-      }
+      // reorderBlocks(startIndex, endIndex)
+      reorderFn(startIndex, endIndex);
       appLogger.debug('[useEditorAdapter] Blocks reordered');
     } catch (err) {
       appLogger.error('[useEditorAdapter] Failed to reorder blocks:', err);
@@ -255,7 +225,8 @@ export function useEditorAdapter(): EditorAdapter {
    * selectBlock - Seleciona um bloco
    */
   const selectBlock = useCallback((id: string | null): void => {
-    const setSelectedFn = ctx?.actions?.setSelectedBlockId ?? ctx?.setSelectedBlockId ?? ctx?.selectBlock;
+    // selectBlock ou setSelectedBlockId (blockActions tem setSelectedBlockId)
+    const setSelectedFn = ctx?.selectBlock ?? ctx?.blockActions?.setSelectedBlockId;
     
     if (setSelectedFn) {
       setSelectedFn(id);
@@ -277,7 +248,8 @@ export function useEditorAdapter(): EditorAdapter {
    * save - Salva o estado atual
    */
   const save = useCallback(async (): Promise<void> => {
-    const saveFn = ctx?.actions?.save ?? ctx?.save;
+    // save existe no contexto legado
+    const saveFn = ctx?.save;
     
     if (saveFn) {
       await saveFn();
@@ -288,10 +260,11 @@ export function useEditorAdapter(): EditorAdapter {
    * setCurrentStep - Define a etapa atual
    */
   const setCurrentStep = useCallback((step: number): void => {
-    const setStepFn = ctx?.actions?.setCurrentStep ?? ctx?.setCurrentStep;
+    // setCurrentStep não existe no contexto, usar stageActions.setActiveStage
+    const setActiveStageFn = ctx?.stageActions?.setActiveStage;
     
-    if (setStepFn) {
-      setStepFn(step);
+    if (setActiveStageFn) {
+      setActiveStageFn(`step-${step}`);
     }
   }, [ctx]);
 
@@ -299,10 +272,11 @@ export function useEditorAdapter(): EditorAdapter {
    * ensureStepLoaded - Garante que uma etapa está carregada
    */
   const ensureStepLoaded = useCallback(async (step: number): Promise<void> => {
-    const ensureFn = ctx?.actions?.ensureStepLoaded ?? ctx?.ensureStepLoaded;
+    // ensureStepLoaded não existe, usar setActiveStage que já carrega a etapa
+    const setActiveStageFn = ctx?.stageActions?.setActiveStage;
     
-    if (ensureFn) {
-      await ensureFn(step);
+    if (setActiveStageFn) {
+      await setActiveStageFn(`step-${step}`);
     }
   }, [ctx]);
 

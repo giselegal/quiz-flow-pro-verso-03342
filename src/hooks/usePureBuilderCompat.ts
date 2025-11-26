@@ -101,18 +101,23 @@ export const usePureBuilder = (): PureBuilderAPI => {
     block: Partial<Block> & { type: string },
   ): Promise<string | null> => {
     try {
-      const normalized = await ensureStepLoaded(stepKey);
-      const add = editor.blockActions?.addBlockAtPosition ?? editor.blockActions?.addBlock;
+      await ensureStepLoaded(stepKey);
+      const add = editor.blockActions?.addBlock ?? editor.addBlock;
       if (!add) {
         appLogger.warn('[PureBuilderCompat] addBlock não disponível');
         return null;
       }
-      const newId = await add(block.type as any, normalized);
+      // addBlock aceita apenas type, retorna o ID
+      const newId = await add(block.type as any);
+      // Atualizar bloco com content e properties
       if (newId && (block.content || block.properties)) {
-        await editor.updateBlock(newId, {
-          content: block.content ?? {},
-          properties: block.properties ?? {},
-        });
+        const updateFn = editor.updateBlock;
+        if (updateFn) {
+          await updateFn(newId, {
+            content: block.content,
+            properties: block.properties,
+          });
+        }
       }
       if (editor.setSelectedBlockId) {
         editor.setSelectedBlockId(newId);
@@ -122,12 +127,15 @@ export const usePureBuilder = (): PureBuilderAPI => {
       appLogger.error('[PureBuilderCompat] Falha ao adicionar bloco', { data: [error] });
       return null;
     }
-  }, [ensureStepLoaded, editor.blockActions, editor.updateBlock, editor.setSelectedBlockId]);
+  }, [ensureStepLoaded, editor.blockActions, editor.addBlock, editor.updateBlock, editor.setSelectedBlockId]);
 
   const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Partial<Block>) => {
     try {
       await ensureStepLoaded(stepKey);
-      await editor.updateBlock(blockId, updates);
+      // updateBlock aceita (id, updates) - 2 parâmetros
+      if (editor.updateBlock) {
+        await editor.updateBlock(blockId, updates);
+      }
     } catch (error) {
       appLogger.error('[PureBuilderCompat] Falha ao atualizar bloco', { data: [error] });
     }
