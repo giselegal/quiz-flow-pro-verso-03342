@@ -670,7 +670,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
     const fallbackBlocks: Block[] = [
       {
         id: `${stepId}-emergency-title`,
-        type: 'text',
+        type: 'text' as const,
         properties: {
           fontSize: '2xl',
           fontWeight: 'bold',
@@ -684,7 +684,7 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
       },
       {
         id: `${stepId}-emergency-description`,
-        type: 'text',
+        type: 'text' as const,
         properties: {
           fontSize: 'base',
           textAlign: 'center',
