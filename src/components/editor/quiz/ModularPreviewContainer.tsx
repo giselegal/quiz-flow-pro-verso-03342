@@ -3,7 +3,7 @@ import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
 import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
-import { useEditorOptional } from '@/hooks/useEditor';
+import { useEditorUnifiedOptional } from '@/hooks/editor';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -57,7 +57,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     } = useQuizState(funnelId, externalSteps);
 
     // Detecta se já existe um EditorProviderUnified acima
-    const maybeEditor = useEditorOptional?.();
+    const maybeEditor = useEditorUnifiedOptional();
     // Debug: status do provider
     try {
         const hasProvider = !!maybeEditor;
