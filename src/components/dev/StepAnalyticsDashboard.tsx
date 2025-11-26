@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 
 interface StepAnalyticsDashboardProps {
   totalSteps: number;
@@ -10,9 +10,8 @@ interface StepAnalyticsDashboardProps {
  * Exibe informações detalhadas sobre o estado atual do editor e métricas por etapa
  */
 export const StepAnalyticsDashboard: React.FC<StepAnalyticsDashboardProps> = ({ totalSteps }) => {
-  const editorContext = useEditor({ optional: true });
-  if (!editorContext) return null;
-  const { state } = editorContext;
+  const { editor } = useEditorContext();
+  const { state } = editor;
 
   // Calcular métricas por etapa
   const stepMetrics = React.useMemo(() => {

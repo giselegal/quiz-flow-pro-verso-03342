@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { StyleResult } from '@/types/quiz';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { PreviewPanel } from './PreviewPanel';
@@ -11,9 +11,13 @@ interface ResultPageBuilderProps {
 }
 
 export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primaryStyle }) => {
-  const editorContext = useEditor({ optional: true });
-  if (!editorContext) return null;
-  const { actions, state } = editorContext;
+  const { editor } = useEditorContext();
+  const { state } = editor;
+  const actions = {
+    addBlock: (step: number, block: any) => editor.addBlock(step, block),
+    updateBlock: (step: number, blockId: string, updates: any) => editor.updateBlock(step, blockId, updates),
+    removeBlock: (step: number, blockId: string) => editor.removeBlock(step, blockId),
+  };
   const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
 
   const currentStepKey = `step-${state.currentStep}`;
