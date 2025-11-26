@@ -76,15 +76,15 @@ if (import.meta.env.DEV) {
 }
 
 export type QuizModularEditorProps = {
-    /** ID unificado do recurso (template, funnel ou draft) */
+    /** ID unificado do recurso - agora sempre funnelId (editável e duplicável) */
     resourceId?: string;
     /** Metadata do recurso (fornecida por useEditorResource) */
     editorResource?: EditorResource | null;
     /** Se o recurso é somente leitura */
     isReadOnly?: boolean;
-    /** @deprecated */
+    /** ID do funnel - padrão para templates editáveis */
     funnelId?: string;
-    /** @deprecated */
+    /** @deprecated - Use funnelId ao invés. Mantido para retrocompatibilidade */
     templateId?: string;
     /** Step inicial (opcional) */
     initialStepKey?: string;
@@ -146,7 +146,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const uiState = ux;
 
     // Resource unification (support legacy props)
-    const resourceId = props.resourceId || props.templateId || props.funnelId;
+    // 🔄 PADRONIZAÇÃO: templateId é tratado como funnelId (editável)
+    const resourceId = props.resourceId || props.funnelId || props.templateId;
     const isReadOnly = props.isReadOnly ?? false;
     const resourceMetadata = props.editorResource ?? null;
 
