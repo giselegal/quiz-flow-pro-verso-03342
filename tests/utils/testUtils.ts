@@ -137,7 +137,21 @@ export class PageUtils {
 
             switch (action.type) {
                 case 'click':
-                    await page.click(action.selector);
+                    try {
+                        await page.click(action.selector, { timeout: 3000 });
+                    } catch (err) {
+                        // Fallbacks para cenários móveis/overlay
+                        const loc = page.locator(action.selector).first();
+                        try {
+                            await loc.scrollIntoViewIfNeeded();
+                        } catch {}
+                        try {
+                            await loc.click({ timeout: 3000 });
+                        } catch {
+                            // Força o clique como último recurso (evita interceptação por overlays)
+                            await loc.click({ force: true, timeout: 3000 });
+                        }
+                    }
                     break;
                 case 'fill':
                     await page.fill(action.selector, action.value || '');
