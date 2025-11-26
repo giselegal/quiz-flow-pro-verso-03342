@@ -1,0 +1,13 @@
+{
+  "id": "quiz21StepsComplete",
+  "name": "Quiz de Estilo Pessoal (21 Etapas)",
+  "version": "3.0.0",
+  "description": "Template completo do quiz de estilo pessoal com 21 etapas, incluindo introdução, formulários, perguntas e resultados.",
+  "author": "Quiz Flow Pro",
+  "createdAt": "2024-11-10",
+  "updatedAt": "2024-11-26",
+  "totalSteps": 21,
+  "category": "quiz",
+  "tags": ["estilo-pessoal", "completo", "21-steps", "personalizado"],
+  "thumbnail": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
+}

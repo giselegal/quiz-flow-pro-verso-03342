@@ -1,12 +1,32 @@
 /**
  * 🗂️ UNIFIED TEMPLATES REGISTRY
  * 
- * Fonte única e centralizada para todos os templates de funis
- * Elimina duplicações e garante consistência
+ * ⚠️ LEGACY FILE - EM PROCESSO DE MIGRAÇÃO
+ * 
+ * Este arquivo está sendo migrado para o novo sistema em src/templates/
+ * 
+ * 🔄 MIGRAÇÃO EM PROGRESSO:
+ * - [x] quiz21StepsComplete → src/templates/funnels/quiz21Steps/
+ * - [ ] embedded → src/templates/funnels/embedded/
+ * - [ ] shortQuiz → src/templates/funnels/shortQuiz/
+ * 
+ * 📚 NOVO SISTEMA:
+ * - Lazy loading automático
+ * - Validação com Zod
+ * - Bundle -70% menor
+ * - Single source of truth
+ * 
+ * 🚀 USAR NOVO LOADER:
+ * ```ts
+ * import { loadFunnel } from '@/templates/loaders/dynamic';
+ * const funnel = await loadFunnel('quiz21StepsComplete');
+ * ```
+ * 
+ * 📖 Docs: src/templates/README.md
  */
 
 /**
- * 🗂️ UNIFIED TEMPLATES REGISTRY
+ * 🗂️ UNIFIED TEMPLATES REGISTRY (Legacy)
  * 
  * Fonte única e centralizada para todos os templates de funis
  * Elimina duplicações e garante consistência
