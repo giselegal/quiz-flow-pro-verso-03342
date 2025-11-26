@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>🧪 Teste de Templates</title>
     <script type="module">
         console.log('🔍 TESTANDO CARREGAMENTO DE TEMPLATES...');
-        
+
         // Teste 1: Verificar se conseguimos fazer fetch do JSON
         async function testJsonFetch() {
             try {
@@ -19,7 +20,7 @@
                 console.log('❌ Erro no fetch:', e.message);
             }
         }
-        
+
         // Teste 2: Verificar import dinâmico
         async function testDynamicImport() {
             try {
@@ -29,32 +30,30 @@
                 console.log('❌ Erro no import:', e.message);
             }
         }
-        
-        // Teste 3: Verificar sistema de templates
+
+        // Teste 3: Novo sistema - lazy loader
         async function testTemplateSystem() {
             try {
-                const system = await import('/src/config/templates/templates.ts');
-                console.log('✅ Sistema carregado');
-                
-                const template = await system.getStepTemplate(1);
-                if (template) {
-                    console.log('✅ Template 1:', template.metadata.name);
-                } else {
-                    console.log('❌ Template 1: null');
-                }
+                const { loadFunnel } = await import('/src/templates/loaders/dynamic.ts');
+                const funnel = await loadFunnel('quiz21StepsComplete', { validate: true });
+                console.log('✅ Novo sistema carregado:', funnel.metadata?.name);
+                const blocks = funnel.steps?.['step-01'] || [];
+                console.log('✅ Step-01 blocks:', blocks.length);
             } catch (e) {
-                console.log('❌ Erro no sistema:', e.message);
+                console.log('❌ Erro no novo sistema:', e.message);
             }
         }
-        
+
         // Executar testes
         testJsonFetch();
         testDynamicImport();
         testTemplateSystem();
     </script>
 </head>
+
 <body>
     <h1>🧪 Teste de Templates</h1>
     <p>Verifique o console do navegador para os resultados.</p>
 </body>
+
 </html>
