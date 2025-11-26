@@ -14,8 +14,7 @@
  * 5. Manter texto interno intacto
  */
 
-import * as DOMPurifyModule from 'dompurify';
-const DOMPurify = DOMPurifyModule.default || DOMPurifyModule;
+import DOMPurify from 'dompurify';
 
 const ALLOWED_TAGS = [
   'b', 'strong', 'i', 'em', 'u', 'br', 'span', 'p', 'div', 
