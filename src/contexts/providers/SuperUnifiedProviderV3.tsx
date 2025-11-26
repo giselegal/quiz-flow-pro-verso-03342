@@ -27,7 +27,7 @@
 import React, { ReactNode, memo } from 'react';
 import { AuthProvider } from '@/contexts/auth/AuthProvider';
 import { ThemeProvider } from '@/contexts/theme/ThemeProvider';
-import { EditorStateProvider } from '@/contexts/editor/EditorStateProvider';
+import { EditorStateProvider } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { FunnelDataProvider } from '@/contexts/funnel/FunnelDataProvider';
 import { NavigationProvider } from '@/contexts/navigation/NavigationProvider';
 import { QuizStateProvider } from '@/contexts/quiz/QuizStateProvider';
