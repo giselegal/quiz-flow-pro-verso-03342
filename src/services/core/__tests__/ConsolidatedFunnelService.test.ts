@@ -266,6 +266,7 @@ describe('ConsolidatedFunnelService', () => {
   describe('createFunnel', () => {
     it('deve criar novo funnel com sucesso', async () => {
       const newFunnelData = {
+        id: 'funnel-new-123',
         name: 'New Funnel',
         description: 'New Description',
         user_id: 'user-789',
@@ -310,6 +311,7 @@ describe('ConsolidatedFunnelService', () => {
       });
 
       await consolidatedFunnelService.createFunnel({
+        id: 'funnel-test-456',
         name: 'Test',
         user_id: 'user-1',
       });
@@ -331,6 +333,7 @@ describe('ConsolidatedFunnelService', () => {
 
       await expect(
         consolidatedFunnelService.createFunnel({
+          id: 'funnel-invalid-789',
           name: 'Invalid',
           user_id: 'user-1',
         })

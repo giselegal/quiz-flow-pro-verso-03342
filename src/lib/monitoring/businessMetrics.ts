@@ -151,13 +151,14 @@ class BusinessMetricsTracker {
       {
         name: 'quiz.completion',
         op: 'conversion',
+        attributes: {
+          funnel_id: session.funnelId,
+          duration_ms: duration,
+          duration_minutes: durationMinutes,
+          steps_completed: session.totalSteps,
+        },
       },
-      (span) => {
-        span?.setData('funnel_id', session.funnelId);
-        span?.setData('duration_ms', duration);
-        span?.setData('duration_minutes', durationMinutes);
-        span?.setData('steps_completed', session.totalSteps);
-      }
+      () => {}
     );
 
     // Limpar sessão
@@ -198,13 +199,14 @@ class BusinessMetricsTracker {
       {
         name: 'quiz.dropoff',
         op: 'abandonment',
+        attributes: {
+          funnel_id: session.funnelId,
+          drop_off_step: dropOffStep,
+          duration_ms: duration,
+          reason: reason || 'unknown',
+        },
       },
-      (span) => {
-        span?.setData('funnel_id', session.funnelId);
-        span?.setData('drop_off_step', dropOffStep);
-        span?.setData('duration_ms', duration);
-        span?.setData('reason', reason || 'unknown');
-      }
+      () => {}
     );
 
     // Limpar sessão
@@ -259,12 +261,13 @@ class BusinessMetricsTracker {
       {
         name: `step.${stepNumber}.load`,
         op: 'performance',
+        attributes: {
+          session_id: sessionId,
+          step_number: stepNumber,
+          load_time_ms: loadTime,
+        },
       },
-      (span) => {
-        span?.setData('session_id', sessionId);
-        span?.setData('step_number', stepNumber);
-        span?.setData('load_time_ms', loadTime);
-      }
+      () => {}
     );
 
     // Alertar se load time for muito alto

@@ -120,11 +120,12 @@ export function useComponentPerformance(componentName: string) {
         {
           name: `component.mount.slow`,
           op: 'performance',
+          attributes: {
+            component_name: componentName,
+            mount_time_ms: mountTime,
+          },
         },
-        (span) => {
-          span?.setData('component_name', componentName);
-          span?.setData('mount_time_ms', mountTime);
-        }
+        () => {}
       );
     }
 
@@ -173,14 +174,9 @@ export function useUserActionTracking() {
         {
           name: `user.${actionName}`,
           op: 'interaction',
+          attributes: data || {},
         },
-        (span) => {
-          if (data) {
-            Object.entries(data).forEach(([key, value]) => {
-              span?.setData(key, value);
-            });
-          }
-        }
+        () => {}
       );
     }
   }, []);
@@ -261,13 +257,14 @@ export function useAPITracking() {
           {
             name: `api.${method}.${endpoint}`,
             op: 'http.client',
+            attributes: {
+              duration_ms: duration,
+              status,
+              endpoint,
+              method,
+            },
           },
-          (span) => {
-            span?.setData('duration_ms', duration);
-            span?.setData('status', status);
-            span?.setData('endpoint', endpoint);
-            span?.setData('method', method);
-          }
+          () => {}
         );
       }
     },
