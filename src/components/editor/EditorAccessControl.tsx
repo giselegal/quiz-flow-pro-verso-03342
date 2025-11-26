@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { Crown, Lock, Users, Zap } from 'lucide-react';
 import React from 'react';
 
@@ -18,7 +18,8 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
   requiredPlan = 'free',
   feature = 'editor',
 }) => {
-  const { user } = useAuth();
+  const { auth } = useEditorContext();
+  const { user } = auth;
   const profile = user?.user_metadata;
   const hasPermission = (permission: string) => {
     return user?.app_metadata?.permissions?.includes(permission) ?? false;
@@ -133,7 +134,8 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
 
 // Componente para mostrar informações do plano do usuário
 export const UserPlanInfo: React.FC = () => {
-  const { user } = useAuth();
+  const { auth } = useEditorContext();
+  const { user } = auth;
   const profile = user?.user_metadata;
 
   if (!profile) return null;

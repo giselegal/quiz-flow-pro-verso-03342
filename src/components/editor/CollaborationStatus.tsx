@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { Crown, Edit, Eye, UserPlus, Users, Wifi, WifiOff } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
@@ -25,7 +25,8 @@ interface CollaborationStatusProps {
 }
 
 export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projectId }) => {
-  const { user } = useAuth();
+  const { auth } = useEditorContext();
+  const { user } = auth;
   const profile = user?.user_metadata;
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [isConnected] = useState(true);
@@ -73,10 +74,10 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
           ...c,
           cursor: c.isOnline
             ? {
-                ...c.cursor!,
-                x: Math.random() * 800,
-                y: Math.random() * 600,
-              }
+              ...c.cursor!,
+              x: Math.random() * 800,
+              y: Math.random() * 600,
+            }
             : undefined,
         })),
       );
@@ -169,9 +170,8 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
         {collaborators.map(collaborator => (
           <div
             key={collaborator.id}
-            className={`flex items-center gap-2 p-2 rounded-md ${
-              collaborator.isOnline ? 'bg-green-50' : 'bg-muted/50'
-            }`}
+            className={`flex items-center gap-2 p-2 rounded-md ${collaborator.isOnline ? 'bg-green-50' : 'bg-muted/50'
+              }`}
           >
             <div className="relative">
               <Avatar className="h-6 w-6">

@@ -3,7 +3,7 @@ import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/contexts';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { Calendar, FolderOpen, MoreHorizontal, Plus, Search, Settings, Users } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
@@ -25,7 +25,8 @@ interface Project {
 }
 
 export const ProjectWorkspace: React.FC = () => {
-  const { user } = useAuth();
+  const { auth } = useEditorContext();
+  const { user } = auth;
   const profile = user?.user_metadata;
   const [projects, setProjects] = useState<Project[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
