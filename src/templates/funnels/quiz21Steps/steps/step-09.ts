@@ -1,0 +1,153 @@
+/**
+ * 🎯 STEP 9 - Auto-gerado pela migração
+ * 
+ * Migrado de: src/templates/quiz21StepsComplete.ts
+ */
+
+import type { Block } from '../../../schemas';
+
+export const step9: Block[] = [
+    {
+      "id": "progress-bar-step-09",
+      "type": "question-progress",
+      "order": 0,
+      "properties": {
+        "padding": 8
+      },
+      "content": {
+        "stepNumber": 9,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      }
+    },
+    {
+      "id": "step-09-question-title",
+      "type": "question-title",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
+      }
+    },
+    {
+      "id": "question-hero-09",
+      "type": "question-hero",
+      "order": 2,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "questionNumber": "8 de 10",
+        "questionText": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
+        "currentQuestion": 8,
+        "totalQuestions": 13,
+        "progressValue": 43,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      }
+    },
+    {
+      "id": "options-grid-09",
+      "type": "options-grid",
+      "order": 3,
+      "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Tênis nude casual e confortável",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Scarpin nude de salto baixo",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Sandália dourada com salto bloco",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Scarpin nude salto alto e fino",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Sandália anabela off white",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Sandália rosa de tiras finas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Scarpin preto moderno com vinil transparente",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Scarpin colorido estampado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      }
+    },
+    {
+      "id": "navigation-step-09",
+      "type": "question-navigation",
+      "order": 4,
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Avançar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      }
+    }
+  ];
+
+export default step9;

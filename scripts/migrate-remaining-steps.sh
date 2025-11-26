@@ -48,7 +48,8 @@ extract_step() {
   
   echo -e "${YELLOW}📝 Extraindo ${step_id}...${NC}"
   
-  # Usar node para extrair JSON do arquivo TypeScript
+  # Usar node para extrair JSON do arquivo TypeScript (não falhar o script em caso de erro)
+  set +e
   node -e "
     const fs = require('fs');
     const content = fs.readFileSync('$LEGACY_FILE', 'utf8');
@@ -81,12 +82,16 @@ export default step${step_num};
     fs.writeFileSync('$output_file', output);
     console.log('✅ Step ${step_id} migrado com sucesso');
   " 2>&1
+  rc=$?
+  set -e
   
-  if [ $? -eq 0 ]; then
-    ((MIGRATED++))
+  if [ $rc -eq 0 ]; then
+    ((MIGRATED++)) || true
   else
-    ((FAILED++))
+    ((FAILED++)) || true
   fi
+
+  return 0
 }
 
 # Migrar steps 02 a 21

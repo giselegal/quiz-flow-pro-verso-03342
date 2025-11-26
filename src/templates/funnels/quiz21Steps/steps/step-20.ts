@@ -1,0 +1,264 @@
+/**
+ * 🎯 STEP 20 - Auto-gerado pela migração
+ * 
+ * Migrado de: src/templates/quiz21StepsComplete.ts
+ */
+
+import type { Block } from '../../../schemas';
+
+export const step20: Block[] = [
+    {
+      "id": "result-congrats",
+      "type": "result-congrats",
+      "order": 0,
+      "properties": {
+        "enabled": true,
+        "order": 1,
+        "props": {
+          "showCelebration": true,
+          "celebrationEmoji": "🎉",
+          "celebrationAnimation": "bounce",
+          "greetingFormat": "Olá, {userName}!",
+          "titleFormat": "Seu Estilo Predominante é:",
+          "styleNameDisplay": "{styleName}",
+          "colors": {
+            "greeting": "#432818",
+            "greetingHighlight": "#B89B7A",
+            "title": "#432818",
+            "styleName": "#B89B7A"
+          },
+          "spacing": {
+            "padding": "3rem 1.5rem",
+            "marginBottom": "2.5rem"
+          }
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "quiz-score-celebration",
+      "type": "quiz-score-display",
+      "order": 0.5,
+      "properties": {
+        "enabled": true,
+        "order": 1.5,
+        "props": {
+          "variant": "celebration",
+          "showScore": true,
+          "showLevel": true,
+          "showBadges": true,
+          "showBreakdown": true,
+          "animateOnMount": true,
+          "confettiEnabled": true,
+          "theme": {
+            "primaryColor": "#B89B7A",
+            "secondaryColor": "#432818",
+            "accentColor": "#a08966",
+            "backgroundColor": "#fffaf7",
+            "successColor": "#2d5f3f"
+          },
+          "labels": {
+            "title": "🏆 Sua Pontuação Final",
+            "scoreLabel": "Pontos Totais",
+            "levelLabel": "Nível Alcançado",
+            "badgesLabel": "Badges Conquistadas",
+            "breakdownLabel": "Detalhamento"
+          },
+          "spacing": {
+            "padding": "2rem 1.5rem",
+            "marginBottom": "2rem"
+          }
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "result-main",
+      "type": "result-main",
+      "order": 1,
+      "properties": {
+        "enabled": true,
+        "order": 2,
+        "props": {
+          "layout": "two-column",
+          "imagePosition": "left",
+          "showStyleImage": true,
+          "styleImage": {
+            "aspectRatio": "4/5",
+            "showDecorations": true,
+            "decorationColor": "#B89B7A",
+            "fallbackEnabled": true,
+            "showLabel": true
+          },
+          "showIntroText": true,
+          "introText": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
+          "showDescription": true,
+          "showGuideImage": true
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "result-progress-bars",
+      "type": "result-progress-bars",
+      "order": 2,
+      "properties": {
+        "enabled": true,
+        "order": 3,
+        "props": {
+          "topCount": 3,
+          "showPercentage": true,
+          "percentageFormat": "{percentage}%",
+          "animationDelay": 200,
+          "colors": {
+            "primary": "#B89B7A",
+            "secondary": "#a08966",
+            "tertiary": "#8c7757"
+          },
+          "titleFormat": "Além do {primaryStyle}, você também tem traços de:"
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "result-secondary-styles",
+      "type": "result-secondary-styles",
+      "order": 3,
+      "properties": {
+        "enabled": true,
+        "order": 4,
+        "props": {
+          "showKeywords": true,
+          "keywordsTitle": "Palavras que te definem:",
+          "tagColor": "#B89B7A",
+          "tagStyle": "rounded-full"
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "result-image",
+      "type": "result-image",
+      "order": 4,
+      "properties": {
+        "enabled": true,
+        "order": 5,
+        "props": {
+          "position": "center",
+          "aspectRatio": "4/5",
+          "maxWidth": "28rem",
+          "centered": true,
+          "showDecorations": false
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "result-description",
+      "type": "result-description",
+      "order": 5,
+      "properties": {
+        "enabled": true,
+        "order": 6,
+        "props": {
+          "showTransitionText": true,
+          "transitionText": "Mas lembre-se: você não é só um estilo.",
+          "showPersuasiveQuestions": true,
+          "persuasiveQuestionsTitle": "💭 Você já se perguntou...",
+          "persuasiveQuestionsIcon": "❓",
+          "showClosingMessage": true,
+          "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "button-cta-primary",
+      "type": "result-cta",
+      "order": 6,
+      "properties": {
+        "enabled": true,
+        "order": 7
+      },
+      "content": {
+        "text": "{ctaPrimaryText}",
+        "url": "{ctaPrimaryUrl}",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      }
+    },
+    {
+      "id": "result-share",
+      "type": "result-share",
+      "order": 7,
+      "properties": {
+        "enabled": true,
+        "order": 8
+      },
+      "content": {
+        "title": "Compartilhe seu resultado",
+        "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
+        "platforms": [
+          "facebook",
+          "twitter",
+          "whatsapp",
+          "linkedin"
+        ]
+      }
+    },
+    {
+      "id": "transformation-benefits",
+      "type": "text-inline",
+      "order": 8,
+      "properties": {
+        "enabled": true,
+        "order": 8,
+        "props": {
+          "content": "<h3>Transforme Sua Imagem, Revele Sua Essência</h3><p>Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.</p><ul><li>🎯 Clareza de estilo para se vestir com facilidade todos os dias</li><li>🎨 Cores e formas que comunicam quem você é e o que você quer</li><li>💼 Imagem que chega primeiro: autoridade sem perder autenticidade</li><li>👗 Guarda-roupa estratégico que conversa entre si</li></ul>",
+          "align": "left",
+          "style": "rich-text"
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "method-steps",
+      "type": "text-inline",
+      "order": 9,
+      "properties": {
+        "enabled": true,
+        "order": 9,
+        "props": {
+          "content": "<h3>O que você vai aprender no Método 5 Passos</h3><div><h4>🪞 Passo 1 — Estilo de Ser</h4><p>Descubra seus 3 estilos predominantes e entenda como traduzir sua personalidade no vestir.</p></div><div><h4>🎨 Passo 2 — Cores</h4><p>As cores são uma linguagem emocional. Aprenda como escolher tons que valorizam sua beleza natural.</p></div><div><h4>🧍‍♀️ Passo 3 — Biotipo</h4><p>Entenda as linhas e proporções do seu corpo e como se vestir para equilibrar formas.</p></div><div><h4>🧹 Passo 4 — Detox do Guarda-Roupa</h4><p>Um processo de autoconhecimento através do desapego.</p></div><div><h4>👗 Passo 5 — Guarda-Roupa de Sucesso</h4><p>Monte um guarda-roupa funcional e inteligente, com peças-chave e combinações rápidas.</p></div>",
+          "align": "left",
+          "style": "rich-text"
+        }
+      },
+      "content": {}
+    },
+    {
+      "id": "button-cta-final",
+      "type": "result-cta",
+      "order": 10,
+      "properties": {
+        "enabled": true,
+        "order": 10
+      },
+      "content": {
+        "text": "{ctaSecondaryText}",
+        "url": "{ctaSecondaryUrl}",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      }
+    }
+  ];
+
+export default step20;

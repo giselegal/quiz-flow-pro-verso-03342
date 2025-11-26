@@ -1,0 +1,123 @@
+/**
+ * 🎯 STEP 16 - Auto-gerado pela migração
+ * 
+ * Migrado de: src/templates/quiz21StepsComplete.ts
+ */
+
+import type { Block } from '../../../schemas';
+
+export const step16: Block[] = [
+    {
+      "id": "progress-bar-step-16",
+      "type": "question-progress",
+      "order": 0,
+      "properties": {
+        "padding": 8
+      },
+      "content": {
+        "stepNumber": 16,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      }
+    },
+    {
+      "id": "step-16-question-title",
+      "type": "question-title",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+      }
+    },
+    {
+      "id": "question-hero-16",
+      "type": "question-hero",
+      "order": 2,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "questionNumber": "Q14 - INVESTIMENTO",
+        "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
+        "currentQuestion": 14,
+        "totalQuestions": 13,
+        "progressValue": 71,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      }
+    },
+    {
+      "id": "options-grid-16",
+      "type": "options-grid",
+      "order": 3,
+      "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "columns": 2,
+        "gap": 16
+      },
+      "content": {
+        "options": [
+          {
+            "id": "sim-quero",
+            "text": "Sim! Se existisse algo assim, eu quero",
+            "value": "sim-quero"
+          },
+          {
+            "id": "sim-momento-certo",
+            "text": "Sim, mas teria que ser no momento certo",
+            "value": "sim-momento-certo"
+          },
+          {
+            "id": "tenho-duvidas",
+            "text": "Tenho dúvidas se funcionaria pra mim",
+            "value": "tenho-duvidas"
+          },
+          {
+            "id": "nao-prefiro-continuar",
+            "text": "Não, prefiro continuar como estou",
+            "value": "nao-prefiro-continuar"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      }
+    },
+    {
+      "id": "navigation-step-16",
+      "type": "question-navigation",
+      "order": 4,
+      "properties": {
+        "showBack": true,
+        "showNext": true,
+        "type": "fade",
+        "duration": 300,
+        "padding": 16
+      },
+      "content": {
+        "backLabel": "Voltar",
+        "nextLabel": "Continuar",
+        "backVariant": "outline",
+        "nextVariant": "default"
+      }
+    }
+  ];
+
+export default step16;
