@@ -43,6 +43,14 @@ export function clearFunnelCache(): void {
 }
 
 /**
+ * Obtém um funnel já carregado do cache de forma síncrona
+ * Retorna undefined se ainda não estiver em cache
+ */
+export function getLoadedFunnelSync(funnelId: string): Funnel | undefined {
+  return loadedFunnels.get(funnelId);
+}
+
+/**
  * Pré-carrega um funnel em background (opcional)
  */
 export function preloadFunnel(funnelId: string): void {

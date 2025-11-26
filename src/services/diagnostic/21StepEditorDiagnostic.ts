@@ -4,7 +4,7 @@
  */
 
 import { getBlocksForStep } from '@/config/quizStepsComplete';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { getLoadedFunnelSync } from '@/templates/loaders/dynamic';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export interface DiagnosticResults {
@@ -228,9 +228,13 @@ function investigateBlockLoading(): DiagnosticResult {
     let successCount = 0;
     let failureCount = 0;
 
+    // Tentar obter steps do funil carregado no cache (lazy loader)
+    const funnel = getLoadedFunnelSync('quiz21StepsComplete');
+    const stepBlocks = funnel?.steps || undefined;
+
     for (let step = 1; step <= 21; step++) {
       try {
-        const blocks = getBlocksForStep(step, QUIZ_STYLE_21_STEPS_TEMPLATE);
+        const blocks = getBlocksForStep(step, stepBlocks);
         const isSuccess = Array.isArray(blocks);
 
         stepResults.push({
@@ -254,6 +258,19 @@ function investigateBlockLoading(): DiagnosticResult {
 
     // Check for failed lookups
     const failedLookups = typeof window !== 'undefined' ? (window as any).__EDITOR_FAILED_BLOCK_LOOKUPS__ : [];
+
+    if (!stepBlocks) {
+      return {
+        status: 'warning',
+        message: 'Funil não está pré-carregado no cache (loader dinâmico)',
+        details: {
+          hint: 'Abra o editor/quiz que usa quiz21StepsComplete para popular o cache primeiro',
+        },
+        recommendations: [
+          'Navegar até /editor?funnel=quiz21StepsComplete antes de rodar o diagnóstico',
+        ],
+      };
+    }
 
     if (failureCount > 5 || (failedLookups && failedLookups.length > 10)) {
       return {
