@@ -264,7 +264,7 @@ describe('AuthStorageProvider', () => {
             });
 
             await act(async () => {
-                await result.current.persistUserData();
+                await result.current.persistUserData({ id: 'user-789', email: 'integrated@example.com' });
             });
 
             const userData = result.current.getUserData();
@@ -285,7 +285,7 @@ describe('AuthStorageProvider', () => {
                     error: null,
                 });
                 await result.current.login('clear@example.com', 'password123');
-                await result.current.persistUserData();
+                await result.current.persistUserData({ id: 'user-999', email: 'clear@example.com' });
             });
 
             expect(result.current.getUserData()).not.toBeNull();

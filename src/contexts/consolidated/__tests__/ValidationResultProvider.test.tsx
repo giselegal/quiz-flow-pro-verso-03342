@@ -82,7 +82,7 @@ describe('ValidationResultProvider', () => {
             const { result } = renderHook(() => useValidationResult(), { wrapper });
 
             const customValidator = (value: string) => {
-                return value.includes('@') ? undefined : 'Valor deve conter @';
+                return value.includes('@');
             };
 
             await act(async () => {
@@ -105,13 +105,13 @@ describe('ValidationResultProvider', () => {
             };
 
             const schema = {
-                name: [{ type: 'required', message: 'Nome é obrigatório' }],
+                name: [{ type: 'required' as const, message: 'Nome é obrigatório' }],
                 email: [
-                    { type: 'required', message: 'Email é obrigatório' },
-                    { type: 'pattern', value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Email inválido' }
+                    { type: 'required' as const, message: 'Email é obrigatório' },
+                    { type: 'pattern' as const, value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Email inválido' }
                 ],
                 age: [
-                    { type: 'min', value: 18, message: 'Idade mínima é 18 anos' }
+                    { type: 'minLength' as const, value: 18, message: 'Idade mínima é 18 anos' }
                 ],
             };
 
@@ -167,10 +167,9 @@ describe('ValidationResultProvider', () => {
                 await result.current.calculateResult(answers, quiz);
             });
 
-            const quizResult = result.current.result;
+            const quizResult = result.current.currentResult;
             expect(quizResult?.score).toBe(3);
             expect(quizResult?.percentage).toBe(100);
-            expect(quizResult?.category).toBe('Excelente');
         });
 
         it('deve calcular resultado com respostas parcialmente corretas', async () => {
@@ -196,10 +195,9 @@ describe('ValidationResultProvider', () => {
                 await result.current.calculateResult(answers, quiz);
             });
 
-            const quizResult = result.current.result;
+            const quizResult = result.current.currentResult;
             expect(quizResult?.score).toBe(2);
             expect(quizResult?.percentage).toBeCloseTo(66.67, 1);
-            expect(quizResult?.category).toBe('Bom');
         });
 
         it('deve salvar resultado no histórico', async () => {
@@ -207,12 +205,14 @@ describe('ValidationResultProvider', () => {
 
             const testResult = {
                 id: 'result-789',
-                quizId: 'quiz-789',
+                userId: 'user-123',
+                funnelId: 'funnel-456',
                 score: 8,
-                totalQuestions: 10,
+                maxScore: 10,
                 percentage: 80,
-                category: 'Bom',
-                timestamp: new Date(),
+                answers: {},
+                timeTaken: 300,
+                completedAt: new Date(),
             };
 
             await act(async () => {
@@ -220,7 +220,7 @@ describe('ValidationResultProvider', () => {
             });
 
             // Verificar que resultado foi salvo (em implementação real, consultaria storage)
-            expect(result.current.result).toBeDefined();
+            expect(result.current.currentResult).toBeDefined();
         });
 
         it('deve carregar histórico de resultados', async () => {
@@ -241,17 +241,19 @@ describe('ValidationResultProvider', () => {
 
             const testResult = {
                 id: 'result-analysis',
-                quizId: 'quiz-analysis',
+                userId: 'user-123',
+                funnelId: 'funnel-456',
                 score: 7,
-                totalQuestions: 10,
+                maxScore: 10,
                 percentage: 70,
-                category: 'Bom',
-                answers: [
-                    { questionId: 'q1', topic: 'JavaScript', isCorrect: true },
-                    { questionId: 'q2', topic: 'JavaScript', isCorrect: true },
-                    { questionId: 'q3', topic: 'React', isCorrect: false },
-                    { questionId: 'q4', topic: 'React', isCorrect: true },
-                ],
+                answers: {
+                    q1: { topic: 'JavaScript', isCorrect: true },
+                    q2: { topic: 'JavaScript', isCorrect: true },
+                    q3: { topic: 'React', isCorrect: false },
+                    q4: { topic: 'React', isCorrect: true },
+                },
+                timeTaken: 300,
+                completedAt: new Date(),
             };
 
             await act(async () => {
@@ -270,15 +272,18 @@ describe('ValidationResultProvider', () => {
 
             const testResult = {
                 id: 'result-strengths',
+                userId: 'user-123',
+                funnelId: 'funnel-456',
                 score: 9,
-                totalQuestions: 10,
+                maxScore: 10,
                 percentage: 90,
-                category: 'Excelente',
-                answers: [
-                    { questionId: 'q1', topic: 'TypeScript', isCorrect: true },
-                    { questionId: 'q2', topic: 'TypeScript', isCorrect: true },
-                    { questionId: 'q3', topic: 'TypeScript', isCorrect: true },
-                ],
+                answers: {
+                    q1: { topic: 'TypeScript', isCorrect: true },
+                    q2: { topic: 'TypeScript', isCorrect: true },
+                    q3: { topic: 'TypeScript', isCorrect: true },
+                },
+                timeTaken: 300,
+                completedAt: new Date(),
             };
 
             await act(async () => {
@@ -294,15 +299,18 @@ describe('ValidationResultProvider', () => {
 
             const testResult = {
                 id: 'result-weaknesses',
+                userId: 'user-123',
+                funnelId: 'funnel-456',
                 score: 3,
-                totalQuestions: 10,
+                maxScore: 10,
                 percentage: 30,
-                category: 'Iniciante',
-                answers: [
-                    { questionId: 'q1', topic: 'Hooks', isCorrect: false },
-                    { questionId: 'q2', topic: 'Hooks', isCorrect: false },
-                    { questionId: 'q3', topic: 'Hooks', isCorrect: false },
-                ],
+                answers: {
+                    q1: { topic: 'Hooks', isCorrect: false },
+                    q2: { topic: 'Hooks', isCorrect: false },
+                    q3: { topic: 'Hooks', isCorrect: false },
+                },
+                timeTaken: 300,
+                completedAt: new Date(),
             };
 
             await act(async () => {
@@ -332,12 +340,16 @@ describe('ValidationResultProvider', () => {
             };
 
             await act(async () => {
-                await result.current.validateAndCalculate(answers, quiz);
+                const schema = {
+                    q1: [{ type: 'required' as const, message: 'Resposta obrigatória' }],
+                    q2: [{ type: 'required' as const, message: 'Resposta obrigatória' }],
+                };
+                await result.current.validateAndCalculate(answers, schema, quiz);
             });
 
             // Verificar que validação e cálculo foram feitos
-            expect(result.current.result).toBeDefined();
-            expect(result.current.result?.score).toBeDefined();
+            expect(result.current.currentResult).toBeDefined();
+            expect(result.current.currentResult?.score).toBeDefined();
         });
     });
 

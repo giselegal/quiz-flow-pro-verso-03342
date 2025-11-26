@@ -148,9 +148,11 @@ describe('RealTimeProvider', () => {
             });
 
             const changeEvent = {
-                type: 'block-update',
+                type: 'update' as const,
                 blockId: 'block-456',
                 data: { content: 'Updated content' },
+                userId: 'user-test',
+                timestamp: new Date(),
             };
 
             await act(async () => {
@@ -229,7 +231,7 @@ describe('RealTimeProvider', () => {
             const callback = vi.fn();
 
             await act(async () => {
-                result.current.subscribeToChanges(callback);
+                result.current.subscribeToChanges('room-123', callback);
             });
 
             // Em implementação real, callback seria chamado ao receber eventos
