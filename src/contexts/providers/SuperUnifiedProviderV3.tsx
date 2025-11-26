@@ -90,13 +90,16 @@ UIProvidersGroup.displayName = 'UIProvidersGroup';
  * 🟢 Editor Group: Editor + Navigation + Funnel
  * Muda frequentemente (seleção de blocos, navegação, dados)
  * Isolado por memo para não propagar mudanças para grupos superiores
+ * ✅ FASE 3: Adicionado EditorStateProvider do @/core para suportar useEditorContext
  */
 const EditorProvidersGroup = memo<{ children: ReactNode }>(({ children }) => {
     return (
         <NavigationProvider>
             <FunnelDataProvider>
                 <EditorStateProvider>
-                    {children}
+                    <CoreEditorStateProvider>
+                        {children}
+                    </CoreEditorStateProvider>
                 </EditorStateProvider>
             </FunnelDataProvider>
         </NavigationProvider>
