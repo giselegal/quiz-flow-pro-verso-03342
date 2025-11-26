@@ -212,14 +212,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [unifiedState.currentFunnel?.id]);
 
-    // 🆕 G20 & G28 FIX: Prefetch inteligente de steps adjacentes
+    // 🔥 HOTFIX 5: Prefetch otimizado com debounce adequado e cache mais curto
+    // PROBLEMA RESOLVIDO: Prefetch disparava em TODA navegação + cache de 10min desatualizado
+    // SOLUÇÃO: Debounce de 300ms + validação de necessidade de prefetch
     useStepPrefetch({
         currentStepId: currentStepKey,
         funnelId: props.funnelId,
         totalSteps: 21,
         enabled: true,
-        radius: 1, // Prefetch step anterior e próximo
-        debounceMs: 16,
+        radius: 1, // Prefetch apenas step anterior e próximo (não N+2)
+        debounceMs: 300, // Aumentado de 16ms para 300ms - evita prefetch em navegação rápida
     });
 
     useEffect(() => {
