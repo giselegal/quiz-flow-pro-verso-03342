@@ -9,7 +9,7 @@ test.describe('Debug Manual - Sistema Real', () => {
     });
     
     // Navegar para o editor
-    await page.goto('http://localhost:8080/editor?template=quiz21StepsComplete');
+    await page.goto('http://localhost:8080/editor?funnel=quiz21StepsComplete');
     
     // Aguardar carregamento completo
     await page.waitForLoadState('networkidle');

@@ -34,7 +34,7 @@ test('🔥 DEBUG REAL: O que está acontecendo no Canvas?', async ({ page }) => 
     console.log('🔥 ABRINDO EDITOR NO NAVEGADOR');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-    await page.goto('http://localhost:8080/editor?template=quiz21StepsComplete');
+    await page.goto('http://localhost:8080/editor?funnel=quiz21StepsComplete');
     
     console.log('⏳ Aguardando carregamento inicial...\n');
     await page.waitForLoadState('networkidle');

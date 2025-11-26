@@ -14,7 +14,7 @@ test('🔍 CAPTURAR CONSOLE LOGS REAIS', async ({ page }) => {
         console.error(`[PAGE ERROR] ${error.message}\n${error.stack}`);
     });
 
-    await page.goto('http://localhost:8080/editor?template=quiz21StepsComplete');
+    await page.goto('http://localhost:8080/editor?funnel=quiz21StepsComplete');
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(5000);
 

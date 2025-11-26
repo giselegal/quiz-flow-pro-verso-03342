@@ -15,7 +15,7 @@ test.describe('Quiz 21 Steps - Visual Regression (Componentes)', () => {
 
   test.beforeEach(async ({ browser }) => {
     page = await browser.newPage({ viewport: VIEWPORT });
-    await page.goto('/editor?template=quiz21StepsComplete&mode=preview');
+    await page.goto('/editor?funnel=quiz21StepsComplete&mode=preview');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
   });

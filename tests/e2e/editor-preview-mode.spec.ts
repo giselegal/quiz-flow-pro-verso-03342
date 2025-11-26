@@ -13,7 +13,7 @@
 
 import { test, expect, Page } from '@playwright/test';
 
-const EDITOR_URL = '/editor?template=quiz21StepsComplete';
+const EDITOR_URL = '/editor?funnel=quiz21StepsComplete';
 const TIMEOUT_NAVIGATION = 10000;
 const TIMEOUT_RENDER = 5000;
 

@@ -22,7 +22,7 @@ test.describe('🔥 VALIDAÇÃO COMPLETA DO FIX', () => {
 
         // 1. Verificar URL e resourceId
         console.log('📍 PASSO 1: Verificando URL e resourceId...');
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('domcontentloaded');
 
         const url = page.url();
@@ -142,7 +142,7 @@ test.describe('🔥 VALIDAÇÃO COMPLETA DO FIX', () => {
                 }
             });
 
-            await page.goto(`/editor?template=${alias}`);
+            await page.goto(`/editor?funnel=${alias}`);
             await page.waitForLoadState('networkidle');
             await page.waitForTimeout(1000);
 
@@ -159,7 +159,7 @@ test.describe('🔥 VALIDAÇÃO COMPLETA DO FIX', () => {
         console.log('\n🔄 Testando normalização de IDs...\n');
 
         // Testar com ID legado
-        await page.goto('/editor?template=quiz-estilo-21-steps');
+        await page.goto('/editor?funnel=quiz-estilo-21-steps');
         await page.waitForLoadState('domcontentloaded');
 
         const normalized = await page.evaluate(() => {

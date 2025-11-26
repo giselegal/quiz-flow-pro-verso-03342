@@ -13,7 +13,7 @@ test.describe('Editor (JSON v3) - edição básica', () => {
     test.setTimeout(120000);
     
     // Setar flags antes de carregar a página
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded', timeout: 60000 });
     
     await page.evaluate(() => {
       try {

@@ -28,7 +28,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
         });
 
         // Navegar para editor com template
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         
         // Aguardar página carregar
         await page.waitForLoadState('networkidle');
@@ -59,7 +59,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
             }
         });
 
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
 
@@ -81,7 +81,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
     });
 
     test('deve mostrar loader enquanto carrega template', async ({ page }) => {
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         
         // Deve mostrar algum indicador de loading
         const hasLoader = await page.locator('[data-testid*="loading"], [class*="loading"], [class*="spinner"]').first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -93,7 +93,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
     });
 
     test('deve renderizar canvas do editor', async ({ page }) => {
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('networkidle');
         
         // Procurar pelo canvas ou área de edição
@@ -107,7 +107,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
     });
 
     test('deve ter templateId na URL após navegação', async ({ page }) => {
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('domcontentloaded');
         
         const url = page.url();
@@ -126,7 +126,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
             }
         });
 
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('networkidle');
         
         // Filtrar apenas erros relevantes (não fontes, imagens externas, etc)
@@ -149,7 +149,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
             console.log('❌ JS Error:', error.message);
         });
 
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('networkidle');
         
         // Filtrar erros conhecidos/não críticos
@@ -166,7 +166,7 @@ test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
 
 test.describe('Validação da Correção do resourceId', () => {
     test('App.tsx deve passar resourceId da URL para QuizModularEditor', async ({ page }) => {
-        await page.goto('/editor?template=quiz21StepsComplete');
+        await page.goto('/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('domcontentloaded');
         
         // Verificar se o parâmetro está na URL

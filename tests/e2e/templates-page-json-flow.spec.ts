@@ -4,7 +4,7 @@
  * Valida o fluxo:
  * 1. Usuário acessa /templates
  * 2. Seleciona um template (ex: quiz21StepsComplete)
- * 3. É redirecionado para /editor?template=quiz21StepsComplete
+ * 3. É redirecionado para /editor?funnel=quiz21StepsComplete
  * 4. JSON quiz21-complete.json é carregado via TemplateService
  * 5. 21 steps são renderizados com blocos reais
  */
@@ -87,7 +87,7 @@ test.describe('Rota /templates - Carregamento de JSON', () => {
         }).first();
 
         // Interceptar navegação
-        const navigationPromise = page.waitForURL(/\/editor\?template=/);
+        const navigationPromise = page.waitForURL(/\/editor\?funnel=/);
 
         await firstTemplate.click();
 
@@ -96,7 +96,7 @@ test.describe('Rota /templates - Carregamento de JSON', () => {
 
         // Verificar URL contém template ID
         const url = page.url();
-        expect(url).toContain('/editor?template=');
+        expect(url).toContain('/editor?funnel=');
         console.log(`✅ Redirecionado para: ${url}`);
     });
 
@@ -123,7 +123,7 @@ test.describe('Rota /templates - Carregamento de JSON', () => {
         await template21Steps.click();
 
         // Aguardar redirecionamento
-        await page.waitForURL(/\/editor\?template=/);
+        await page.waitForURL(/\/editor\?funnel=/);
 
         // Aguardar carregamento do editor
         await page.waitForTimeout(2000);
@@ -249,7 +249,7 @@ test.describe('Rota /templates - Carregamento de JSON', () => {
 
             // 3. PASSO 3: Clicar e aguardar redirecionamento
             await mainTemplate.click();
-            await page.waitForURL(/\/editor\?template=/);
+            await page.waitForURL(/\/editor\?funnel=/);
             
             const url = page.url();
             expect(url).toContain('template=');

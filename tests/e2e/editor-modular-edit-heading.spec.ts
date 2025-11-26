@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Editor Modular - Editar Propriedade (Texto)', () => {
   test('deve editar o texto de um bloco e refletir no Canvas', async ({ page }) => {
     // Abre a rota do editor, seta a flag e recarrega para aplicar (com fallback de navegação)
-    const url = '/editor?template=quiz21StepsComplete';
+    const url = '/editor?funnel=quiz21StepsComplete';
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => { try { localStorage.setItem('editor:phase2:modular', '1'); } catch {} });
     try {

@@ -36,8 +36,8 @@ test.describe('Editor com Template - Diagnóstico Completo', () => {
     // ============================
     // FASE 1: CARREGAMENTO INICIAL
     // ============================
-    test('T1.1 - Deve acessar /editor?template=quiz21StepsComplete', async () => {
-        await page.goto('http://localhost:5173/editor?template=quiz21StepsComplete');
+    test('T1.1 - Deve acessar /editor?funnel=quiz21StepsComplete', async () => {
+        await page.goto('http://localhost:5173/editor?funnel=quiz21StepsComplete');
         await page.waitForLoadState('networkidle');
         
         const url = page.url();

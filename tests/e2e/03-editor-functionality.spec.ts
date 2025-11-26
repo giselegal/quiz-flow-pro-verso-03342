@@ -266,7 +266,7 @@ test.describe('📝 Editor - Criação de Novo Funil', () => {
     });
 
     test('deve carregar com template de 21 etapas', async ({ page }) => {
-        await page.goto(`${EDITOR_URL}?template=quiz-estilo-21-steps`);
+        await page.goto(`${EDITOR_URL}?funnel=quiz-estilo-21-steps`);
         await page.waitForLoadState('networkidle');
         await closeStartupModal(page);
 

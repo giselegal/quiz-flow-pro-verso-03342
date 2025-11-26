@@ -8,7 +8,7 @@ test.describe('Properties Panel - Testes de Edição E2E', () => {
     });
     
     // Navegar para o editor
-    await page.goto('/editor?template=quiz21StepsComplete');
+    await page.goto('/editor?funnel=quiz21StepsComplete');
     
     // Aguardar carregamento
     await page.waitForLoadState('networkidle');

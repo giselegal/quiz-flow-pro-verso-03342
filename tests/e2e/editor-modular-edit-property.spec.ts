@@ -5,12 +5,12 @@ import { test, expect } from '@playwright/test';
 test.describe('Editor modular - editar propriedade de bloco', () => {
   test('editar campo de texto reflete no preview do canvas', async ({ page }) => {
     // Abre o editor, liga a flag e recarrega para aplicar
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => { try { localStorage.setItem('editor:phase2:modular', '1'); } catch {} });
     try {
       await page.reload({ waitUntil: 'domcontentloaded' });
     } catch {
-      await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+      await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
     }
 
     // Aguarda layout modular e canvas

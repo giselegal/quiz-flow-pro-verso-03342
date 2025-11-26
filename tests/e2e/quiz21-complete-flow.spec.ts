@@ -21,7 +21,7 @@ test.describe('Quiz 21 Steps Complete - Fluxo E2E', () => {
     page = await browser.newPage();
     
     // Navegar para o preview do editor com template quiz21StepsComplete
-    await page.goto('/editor?template=quiz21StepsComplete&mode=preview');
+    await page.goto('/editor?funnel=quiz21StepsComplete&mode=preview');
     
     // Aguardar carregamento completo
     await page.waitForLoadState('networkidle');

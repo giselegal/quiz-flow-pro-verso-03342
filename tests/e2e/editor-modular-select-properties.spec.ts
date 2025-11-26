@@ -5,13 +5,13 @@ import { test, expect } from '@playwright/test';
 test.describe('Editor modular - seleção e painel de propriedades', () => {
   test('ao selecionar um bloco, o painel mostra o tipo do bloco', async ({ page }) => {
     // Abre o editor, liga a flag e recarrega para aplicar
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => { try { localStorage.setItem('editor:phase2:modular', '1'); } catch {} });
     try {
       await page.reload({ waitUntil: 'domcontentloaded' });
     } catch {
       // Fallback em navegadores que abortam reload no dev server: navega novamente
-      await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+      await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
     }
 
     // Aguarda layout modular

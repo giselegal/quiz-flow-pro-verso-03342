@@ -28,7 +28,7 @@ test.describe('Quiz 21 Steps - Visual Regression Testing', () => {
     page = await browser.newPage({ viewport: VIEWPORT });
     
     // Navegar para preview do editor
-    await page.goto('/editor?template=quiz21StepsComplete&mode=preview');
+    await page.goto('/editor?funnel=quiz21StepsComplete&mode=preview');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000); // Aguardar animações iniciais
   });
@@ -333,7 +333,7 @@ test.describe('Quiz 21 Steps - Visual Regression (Mobile)', () => {
   test.beforeEach(async ({ browser }) => {
     page = await browser.newPage({ viewport: MOBILE_VIEWPORT });
     
-    await page.goto('/editor?template=quiz21StepsComplete&mode=preview');
+    await page.goto('/editor?funnel=quiz21StepsComplete&mode=preview');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
   });

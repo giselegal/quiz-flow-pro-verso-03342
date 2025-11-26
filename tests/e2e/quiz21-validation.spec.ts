@@ -12,7 +12,7 @@ import { test, expect, Page } from '@playwright/test';
 
 test.describe('Quiz 21 Steps - Validações', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/editor?template=quiz21StepsComplete&mode=preview');
+    await page.goto('/editor?funnel=quiz21StepsComplete&mode=preview');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
   });

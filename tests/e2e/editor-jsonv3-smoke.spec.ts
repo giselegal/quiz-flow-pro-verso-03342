@@ -11,7 +11,7 @@ test.describe('Editor JSON v3 - Smoke Test', () => {
 
     // 1) Configurar flags ANTES de navegar
     await page.goto('about:blank');
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
 
     await page.evaluate(() => {
       localStorage.setItem('VITE_TEMPLATE_JSON_ONLY', 'true');
@@ -21,7 +21,7 @@ test.describe('Editor JSON v3 - Smoke Test', () => {
     });
 
     // 2) Navegar novamente com flags aplicadas
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'networkidle', timeout: 90000 });
+    await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'networkidle', timeout: 90000 });
 
     // 4) Esperar React hidratar (indicador: qualquer botão ou input)
     await page.waitForSelector('button, input, [role="button"]', { timeout: 60000 });
@@ -76,7 +76,7 @@ test.describe('Editor JSON v3 - Smoke Test', () => {
 
   test('valida localStorage flags aplicadas', async ({ page }) => {
     await page.goto('about:blank');
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
 
     await page.evaluate(() => {
       localStorage.setItem('VITE_TEMPLATE_JSON_ONLY', 'true');
@@ -84,7 +84,7 @@ test.describe('Editor JSON v3 - Smoke Test', () => {
     });
 
     // Navegar novamente em vez de reload
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    await page.goto('/editor?funnel=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
 
     const flags = await page.evaluate(() => ({
       jsonOnly: localStorage.getItem('VITE_TEMPLATE_JSON_ONLY'),

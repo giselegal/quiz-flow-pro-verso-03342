@@ -32,7 +32,7 @@ async function enterPreview(page: import('@playwright/test').Page) {
 }
 
 // Usa URL absoluta para evitar dependência do baseURL do Playwright
-const EDITOR_URL = 'http://localhost:8080/editor?template=quiz21StepsComplete';
+const EDITOR_URL = 'http://localhost:8080/editor?funnel=quiz21StepsComplete';
 
 test.describe('Editor Preview - Testes Visuais', () => {
     test.beforeEach(async ({ page }) => {
