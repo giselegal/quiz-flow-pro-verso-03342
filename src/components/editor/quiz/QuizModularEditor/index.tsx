@@ -2023,6 +2023,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             viewport={viewport}
                                             showRuler={true}
                                             className="h-full overflow-auto"
+                                            data-testid={previewMode === 'live' ? 'canvas-edit-mode' : 'canvas-preview-mode'}
                                         >
                                             <div
                                                 className={
