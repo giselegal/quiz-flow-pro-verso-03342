@@ -43,20 +43,32 @@ export default function EditorPage() {
 
     // Capturar query params
     const searchParams = new URLSearchParams(window.location.search);
-    const templateId = searchParams.get('template') || undefined;
+    const templateParam = searchParams.get('template');
     const funnelIdFromQuery = searchParams.get('funnelId') || searchParams.get('funnel') || undefined;
 
-    // Determinar funnelId (prioritário: URL params > query string)
-    const funnelId = paramsWithId?.funnelId || funnelIdFromQuery;
+    // 🔄 PADRONIZAÇÃO: ?template= agora é tratado como ?funnel=
+    // Templates são funis editáveis e duplicáveis
+    const funnelId = paramsWithId?.funnelId || funnelIdFromQuery || templateParam || undefined;
 
     // Feature flag para usar editor unificado
     const useUnifiedEditor = useFeatureFlag('useUnifiedEditor');
 
     appLogger.info('🎯 EditorPage rendered', {
-        templateId,
         funnelId,
+        isFromTemplate: !!templateParam,
         useUnifiedEditor,
     });
+
+    // 🔄 Redirecionar ?template= para ?funnel= (padronização de URL)
+    React.useEffect(() => {
+        if (templateParam && !funnelIdFromQuery) {
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.delete('template');
+            newUrl.searchParams.set('funnel', templateParam);
+            window.history.replaceState({}, '', newUrl.toString());
+            appLogger.info('🔄 URL padronizada: ?template= → ?funnel=', { from: templateParam });
+        }
+    }, [templateParam, funnelIdFromQuery]);
 
     return (
         <ErrorBoundary
@@ -75,7 +87,6 @@ export default function EditorPage() {
                     />
                 }>
                     <QuizModularEditor
-                        templateId={templateId}
                         funnelId={funnelId}
                     />
                 </Suspense>
