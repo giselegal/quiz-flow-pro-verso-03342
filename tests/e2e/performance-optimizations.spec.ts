@@ -253,11 +253,12 @@ test.describe('🔥 Performance Optimizations - E2E Tests', () => {
         metrics.loadTime = Date.now() - startLoad;
         
         // 2. Primeira interação
-        await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(500);
+        const canvas = page.locator('[data-testid="column-canvas"]');
+        await canvas.waitFor({ state: 'visible', timeout: 10000 });
+        await page.waitForTimeout(1000);
         
         const startInteraction = Date.now();
-        await page.locator('[data-testid="column-canvas"]').click({ force: true, timeout: 10000 });
+        await canvas.click({ force: true, timeout: 10000 });
         metrics.firstInteraction = Date.now() - startInteraction;
         
         // 3. Navegação (3 steps)
@@ -339,11 +340,11 @@ test.describe('🔍 Testes de Regressão', () => {
         }
         
         // Toggle para preview
-        // Aguardar página estável
-        await page.waitForLoadState('networkidle');
+        // Aguardar toggle estar visível
+        const previewToggle = page.locator('[data-testid="preview-mode-toggle"], button:has-text("Publicado")').first();
+        await previewToggle.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
         await page.waitForTimeout(1000);
         
-        const previewToggle = page.locator('[data-testid="preview-mode-toggle"], button:has-text("Publicado")').first();
         if (await previewToggle.isVisible()) {
             await previewToggle.scrollIntoViewIfNeeded();
             await page.waitForTimeout(200);
