@@ -97,9 +97,7 @@ const EditorProvidersGroup = memo<{ children: ReactNode }>(({ children }) => {
         <NavigationProvider>
             <FunnelDataProvider>
                 <EditorStateProvider>
-                    <CoreEditorStateProvider>
-                        {children}
-                    </CoreEditorStateProvider>
+                    {children}
                 </EditorStateProvider>
             </FunnelDataProvider>
         </NavigationProvider>
