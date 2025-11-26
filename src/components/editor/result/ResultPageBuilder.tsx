@@ -31,8 +31,8 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
         <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
           <ComponentsSidebar
             onComponentSelect={async (type: string) => {
-              // addBlock takes (type) and returns the new block id
-              const newBlockId = await actions.addBlock(type as any);
+              // Use adapter's addBlock
+              const newBlockId = await adapter.actions.addBlock(type as any);
               setSelectedComponent(newBlockId);
             }}
           />
@@ -58,14 +58,14 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
             onClose={() => setSelectedComponent(null)}
             onUpdate={content => {
               if (selectedComponent) {
-                // updateBlock takes (id, content)
-                actions.updateBlock(selectedComponent, { content });
+                // Use adapter's updateBlock
+                adapter.actions.updateBlock(selectedComponent, content);
               }
             }}
             onDelete={() => {
               if (selectedComponent) {
-                // removeBlock takes (id)
-                actions.removeBlock(selectedComponent);
+                // Use adapter's deleteBlock
+                adapter.actions.deleteBlock(selectedComponent);
                 setSelectedComponent(null);
               }
             }}
