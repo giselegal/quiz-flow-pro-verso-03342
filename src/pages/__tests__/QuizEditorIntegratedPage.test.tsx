@@ -94,7 +94,7 @@ describe('QuizEditorIntegratedPage (integração)', () => {
             redo: vi.fn(),
             clearError: vi.fn(),
         });
-        getSuperUnifiedHook().mockReturnValue({
+        getEditorContextHook().mockReturnValue({
             getStepBlocks: () => baseBlocks,
         });
 
@@ -270,7 +270,7 @@ describe('QuizEditorIntegratedPage (integração)', () => {
             redo: vi.fn(),
             clearError: vi.fn(),
         });
-        getSuperUnifiedHook().mockReturnValue({
+        getEditorContextHook().mockReturnValue({
             getStepBlocks: () => baseBlocks,
         });
 

@@ -54,6 +54,12 @@ export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
     stageActions: {
         setActiveStage: (stageId: string) => Promise<void>;
     };
+
+    // Undo/Redo
+    undo: () => void;
+    redo: () => void;
+    canUndo: boolean;
+    canRedo: boolean;
 }
 
 /**
@@ -156,6 +162,11 @@ export function useEditorCompat(): EditorCompatAPI {
             isPreviewing: editor.isPreviewMode,
             isLoading: false, // EditorStateProvider não tem isLoading
             save: editor.markSaved, // Adapter: save → markSaved
+            // Undo/Redo (from EditorStateProvider)
+            undo: () => { }, // TODO: Implement undo
+            redo: () => { }, // TODO: Implement redo
+            canUndo: false, // TODO: Implement undo state
+            canRedo: false, // TODO: Implement redo state
         };
     }, [editor]);
 

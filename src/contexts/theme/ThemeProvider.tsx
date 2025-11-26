@@ -62,6 +62,7 @@ export interface ThemeState {
 }
 
 export interface ThemeContextValue extends ThemeState {
+    theme: ThemeMode; // Compat alias for mode
     setTheme: (mode: ThemeMode) => void;
     setColors: (colors: Partial<ThemeColors>) => void;
     setTypography: (typography: Partial<ThemeTypography>) => void;
@@ -275,6 +276,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const contextValue = useMemo<ThemeContextValue>(
         () => ({
             ...state,
+            theme: state.mode, // Compat alias
             setTheme,
             setColors,
             setTypography,

@@ -22,12 +22,11 @@ vi.mock('@/contexts/auth/AuthProvider', () => ({
 
 vi.mock('@/contexts/theme/ThemeProvider', () => ({
     useTheme: () => ({
-        theme: 'light',
+        mode: 'light',
+        theme: 'light', // Compat alias
         setTheme: vi.fn(),
     }),
-}));
-
-vi.mock('@/core/contexts/EditorContext/EditorCompatLayer', () => ({
+})); vi.mock('@/core/contexts/EditorContext/EditorCompatLayer', () => ({
     useEditorCompat: () => ({
         state: {
             stepBlocks: {
@@ -50,25 +49,32 @@ vi.mock('@/core/contexts/EditorContext/EditorCompatLayer', () => ({
             return [];
         }),
         setStepBlocks: vi.fn(),
+        isPreviewMode: false,
+        markSaved: vi.fn(),
+        // Undo/Redo
         undo: vi.fn(),
         redo: vi.fn(),
         canUndo: false,
         canRedo: false,
-        isPreviewMode: false,
-        markSaved: vi.fn(),
     }),
-}));
-
-vi.mock('@/contexts/funnel/FunnelDataProvider', () => ({
+})); vi.mock('@/contexts/funnel/FunnelDataProvider', () => ({
     useFunnelData: () => ({
         currentFunnel: { id: 'test-funnel', name: 'Test Funnel' },
+        funnels: [],
+        isLoading: false,
+        error: null,
+        loadFunnels: vi.fn().mockResolvedValue(undefined),
+        loadFunnel: vi.fn().mockResolvedValue(undefined),
+        createFunnel: vi.fn().mockResolvedValue({ id: 'new', name: 'New' }),
+        updateFunnel: vi.fn().mockResolvedValue(undefined),
+        deleteFunnel: vi.fn().mockResolvedValue(undefined),
+        setCurrentFunnel: vi.fn(),
+        clearError: vi.fn(),
         saveFunnel: vi.fn().mockResolvedValue(undefined),
         publishFunnel: vi.fn().mockResolvedValue(undefined),
         updateFunnelStepBlocks: vi.fn().mockResolvedValue(undefined),
     }),
-}));
-
-// Mock dos outros providers com retornos básicos
+}));// Mock dos outros providers com retornos básicos
 vi.mock('@/contexts/navigation/NavigationProvider', () => ({
     useNavigation: () => ({ navigate: vi.fn() }),
 }));
