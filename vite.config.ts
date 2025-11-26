@@ -27,10 +27,8 @@ export default defineConfig({
       '@types': resolvePath('./src/types'),
       '@config': resolvePath('./src/config'),
       '@templates': resolvePath('./src/templates'),
-      // ✅ FIX: Forçar resolução ESM do DOMPurify (Windows compatibility)
-      'dompurify': fileURLToPath(new URL('./node_modules/dompurify/dist/purify.es.mjs', import.meta.url)),
     },
-    // ✅ Priorizar exports ESM sobre CommonJS
+    // ✅ Priorizar exports ESM sobre CommonJS (Windows compatibility)
     conditions: ['import', 'module', 'browser', 'default'],
   },
   build: {
@@ -62,28 +60,28 @@ export default defineConfig({
           }
 
           // 🎯 CODE SPLITTING POR DOMÍNIO DE APLICAÇÃO
-          
+
           // Editor (300-400 KB)
-          if (id.includes('/src/pages/editor/') || 
-              id.includes('/src/components/editor/') ||
-              id.includes('EditorContext') ||
-              id.includes('EditorService')) {
+          if (id.includes('/src/pages/editor/') ||
+            id.includes('/src/components/editor/') ||
+            id.includes('EditorContext') ||
+            id.includes('EditorService')) {
             return 'app-editor';
           }
-          
+
           // Quiz Runtime (200-300 KB)
-          if (id.includes('/src/pages/quiz/') || 
-              id.includes('/src/components/quiz/') ||
-              id.includes('QuizContext') ||
-              id.includes('quizDataService')) {
+          if (id.includes('/src/pages/quiz/') ||
+            id.includes('/src/components/quiz/') ||
+            id.includes('QuizContext') ||
+            id.includes('quizDataService')) {
             return 'app-quiz';
           }
-          
+
           // Admin/Dashboard (200-300 KB)
-          if (id.includes('/src/pages/admin/') || 
-              id.includes('/src/components/admin/') ||
-              id.includes('AdminLayout') ||
-              id.includes('Dashboard')) {
+          if (id.includes('/src/pages/admin/') ||
+            id.includes('/src/components/admin/') ||
+            id.includes('AdminLayout') ||
+            id.includes('Dashboard')) {
             return 'app-admin';
           }
 
@@ -93,8 +91,8 @@ export default defineConfig({
           }
 
           // Templates e Schemas
-          if (id.includes('/src/config/schemas/') || 
-              id.includes('/src/templates/')) {
+          if (id.includes('/src/config/schemas/') ||
+            id.includes('/src/templates/')) {
             return 'templates-config';
           }
         },
