@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/theme-provider';
+import { AutoSaveIndicatorWithTooltip } from '../AutoSaveIndicator';
 import EditorNoCodePanel from '../EditorNoCodePanel';
 
 export interface EditorHeaderProps {
@@ -15,6 +16,10 @@ export interface EditorHeaderProps {
     notification: any;
     renderIcon: (name: string, className?: string) => React.ReactNode;
     getStepAnalysis: (step: number) => { icon: string; label: string; desc: string };
+    // Auto-save status
+    isSaving?: boolean;
+    lastSaved?: number | null;
+    autoSaveError?: Error | null;
 }
 
 const EditorHeader: React.FC<EditorHeaderProps> = ({
@@ -28,6 +33,9 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
     notification,
     renderIcon,
     getStepAnalysis,
+    isSaving = false,
+    lastSaved = null,
+    autoSaveError = null,
 }) => {
     const { theme, setTheme } = useTheme();
     const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -112,6 +120,14 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
 
                     {/* Seção de Controles */}
                     <div className="flex items-center gap-4">
+                        {/* Auto-save Indicator */}
+                        <AutoSaveIndicatorWithTooltip
+                            isSaving={isSaving}
+                            lastSaved={lastSaved}
+                            error={autoSaveError}
+                            className="mr-2"
+                        />
+
                         {/* Indicador de Status */}
                         <div className="flex items-center gap-2">
                             <div
@@ -203,7 +219,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                                 actions.importJSON(json);
                                                 notification?.success?.('JSON importado com sucesso!');
                                             } catch (error) {
-                                                notification?.error?.(`Erro ao importar JSON: ${  (error as Error).message}`);
+                                                notification?.error?.(`Erro ao importar JSON: ${(error as Error).message}`);
                                             }
                                         };
                                         reader.readAsText(file);

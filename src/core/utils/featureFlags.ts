@@ -40,16 +40,26 @@ export interface FeatureFlags {
     enableLazyLoading: boolean;
     enableAdvancedValidation: boolean;
     usePersistenceService: boolean;
+    enableBatchOperations: boolean;
+    useOptimisticUpdates: boolean;
+    
+    // Validation & Error Handling
+    useValidationOnType: boolean;
+    showInlineValidationErrors: boolean;
+    enableStrictValidation: boolean;
     
     // Developer Experience
     enableErrorBoundaries: boolean;
     enablePerformanceMonitoring: boolean;
     enableDebugPanel: boolean;
+    showDevTools: boolean;
     
     // Experimental
     enableExperimentalFeatures: boolean;
     useNewUIComponents: boolean;
     enableAccessibilityEnhancements: boolean;
+    enableAdvancedDragDrop: boolean;
+    useVirtualScrolling: boolean;
 }
 
 /**
@@ -67,16 +77,26 @@ const DEFAULT_FLAGS: FeatureFlags = {
     enableLazyLoading: true,
     enableAdvancedValidation: true,
     usePersistenceService: true,
+    enableBatchOperations: import.meta.env.DEV, // Batch updates para melhor performance
+    useOptimisticUpdates: import.meta.env.DEV, // UI otimista antes de confirmar no backend
+    
+    // Validation & Error Handling
+    useValidationOnType: false, // Validação enquanto digita (pode ser lento)
+    showInlineValidationErrors: true, // Mostrar erros inline nos campos
+    enableStrictValidation: import.meta.env.DEV, // Validação mais rigorosa
     
     // Developer Experience
     enableErrorBoundaries: true,
     enablePerformanceMonitoring: import.meta.env.DEV,
     enableDebugPanel: import.meta.env.DEV,
+    showDevTools: import.meta.env.DEV, // Painel de dev tools
     
     // Experimental - Apenas em desenvolvimento
     enableExperimentalFeatures: import.meta.env.DEV,
     useNewUIComponents: import.meta.env.DEV,
     enableAccessibilityEnhancements: true,
+    enableAdvancedDragDrop: false, // Drag & drop com animações avançadas
+    useVirtualScrolling: false, // Virtual scrolling para grandes listas
 };
 
 /**
