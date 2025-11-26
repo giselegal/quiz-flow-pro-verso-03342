@@ -67,7 +67,8 @@ export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
 }
 
 /**
- * Hook que adiciona camada de compatibilidade sobre o EditorStateProvider
+ * Hook opcional para acessar o contexto do editor.
+ * Retorna null se usado fora do EditorProvider (sem lançar erro).
  */
 export function useEditorCompat(): EditorCompatAPI {
     const editor = useEditorCanonical();
@@ -196,4 +197,15 @@ export function useEditorCompat(): EditorCompatAPI {
     }, [editor]);
 
     return compat;
+}
+
+/**
+ * Hook opcional compatível que retorna null se não estiver no contexto
+ */
+export function useEditorCompatOptional(): EditorCompatAPI | null {
+    try {
+        return useEditorCompat();
+    } catch {
+        return null;
+    }
 }
