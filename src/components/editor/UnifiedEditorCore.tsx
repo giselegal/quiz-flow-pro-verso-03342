@@ -19,7 +19,7 @@
 import React, { Suspense, useMemo, useCallback } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorCompat } from '@/core/contexts/EditorContext';
 import useEditorAdapter from '@/hooks/useEditorAdapter';
 import { logger } from '@/lib/utils/debugLogger';
 
@@ -78,7 +78,7 @@ const ModeRenderer: React.FC<{
   mode: 'visual' | 'headless' | 'production' | 'funnel';
   funnelId?: string;
 }> = ({ mode, funnelId }) => {
-  const editor = useEditor();
+  const editor = useEditorCompat();
   const adapter = useEditorAdapter();
 
   // Fallback when editor context is not available
@@ -86,7 +86,7 @@ const ModeRenderer: React.FC<{
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
 
-  const { state, actions } = editor;
+  const { state, actions, deleteBlock, ensureStepLoaded, setSelectedBlockId, activeStageId, blockActions } = editor;
 
   const totalSteps = useMemo(() => {
     return state.totalSteps || 21;
@@ -128,7 +128,7 @@ const ModeRenderer: React.FC<{
                     ) as Record<number, boolean>}
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
-                      actions.ensureStepLoaded(s);
+                      ensureStepLoaded(s);
                     }}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
@@ -164,9 +164,9 @@ const ModeRenderer: React.FC<{
                       []
                     }
                     selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
-                    onSelectBlock={adapter.actions.setSelectedBlockId ?? actions.setSelectedBlockId}
-                    onUpdateBlock={(blockId, updates) => (adapter.actions.updateBlock ?? actions.updateBlock)(blockId, updates)}
-                    onDeleteBlock={(blockId) => (adapter.actions.deleteBlock ?? actions.deleteBlock)(blockId)}
+                    onSelectBlock={setSelectedBlockId}
+                    onUpdateBlock={adapter.actions.updateBlock}
+                    onDeleteBlock={adapter.actions.deleteBlock}
                   />
                 </LazyBoundary>
               </div>
@@ -243,7 +243,7 @@ const ModeRenderer: React.FC<{
                     ) as Record<number, boolean>}
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
-                      actions.ensureStepLoaded(s);
+                      ensureStepLoaded(s);
                     }}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
@@ -264,9 +264,9 @@ const ModeRenderer: React.FC<{
                       []
                     }
                     selectedBlockId={state.selectedBlockId}
-                    onSelectBlock={actions.setSelectedBlockId}
-                    onUpdateBlock={(blockId, updates) => actions.updateBlock(blockId, updates)}
-                    onDeleteBlock={(blockId) => actions.deleteBlock(blockId)}
+                    onSelectBlock={setSelectedBlockId}
+                    onUpdateBlock={adapter.actions.updateBlock}
+                    onDeleteBlock={adapter.actions.deleteBlock}
                   />
                 </LazyBoundary>
               </div>
@@ -300,7 +300,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   initialStep = 1,
   className = 'h-full w-full',
 }) => {
-  const editor = useEditor();
+  const editor = useEditorCompat();
   const [streamProgress, setStreamProgress] = React.useState(0);
 
   // Fallback when editor context is not available
@@ -308,7 +308,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
 
-  const { state, actions, blockActions } = editor;
+  const { state, actions, blockActions, ensureStepLoaded } = editor;
 
   React.useEffect(() => {
     Promise.all([
