@@ -26,8 +26,9 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
 // ✅ CORREÇÃO: Usar adaptador universal para resolver problemas de contexto
-import { useEditorAdapter } from '@/hooks/useEditorAdapter';
+import { useEditorAdapter } from '@/hooks/editor/useEditorAdapter';
 import { PropertyType } from '@/hooks/useUnifiedProperties';
+import type { Block } from '@/types/editor';
 import type { Block } from '@/types/editor';
 import OptionsGridQuickPanel from './quick/OptionsGridQuickPanel';
 import {

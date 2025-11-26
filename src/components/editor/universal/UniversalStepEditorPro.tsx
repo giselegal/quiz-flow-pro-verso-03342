@@ -42,7 +42,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         return <div className="flex items-center justify-center h-full">Loading editor...</div>;
     }
     
-    const { state, actions, ensureStepLoaded } = editorContext;
+    const { state, actions, ensureStepLoaded: ensureLoaded } = editorContext;
     const notification = useNotification();
     const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -62,7 +62,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         const map: Record<number, boolean> = {};
         for (let step = 1; step <= 21; step++) {
             const stepKey = `step-${step}`;
-            const blocks = stepBlocksRef[stepKey];
+            const blocks = stepBlocksRef[stepKey as any];
             map[step] = Array.isArray(blocks) && blocks.length > 0;
         }
         return map;
@@ -141,13 +141,16 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }), []);
 
     // Extrair funções estáveis
-    const { setCurrentStep: actionsSetCurrentStep, ensureStepLoaded } = actions;
+    const { setCurrentStep: actionsSetCurrentStep } = actions;
 
     const handleStepSelect = useCallback((step: number) => {
         actionsSetCurrentStep(step);
         onStepChange?.(step.toString());
 
         // Garantir que a etapa seja carregada se não existir
+        if (ensureLoaded) {
+            ensureLoaded(step);
+        }
         if (ensureStepLoaded) {
             ensureStepLoaded(step);
         }
