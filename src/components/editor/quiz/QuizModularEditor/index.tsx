@@ -665,16 +665,32 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             // Função interna para adaptar blocos v3 (config → properties)
             const adapt = (arr: any[]): Block[] => arr.map((b: any, i: number) => {
+                // Detectar formato v3: objeto com config sem properties/content definidos
                 if (b && b.config && !b.properties && !b.content) {
                     const cfg = b.config || {};
+                    // Separar campos claramente de conteúdo visual (logoUrl, logoAlt, title, text, html, imageUrl, src, alt, placeholder, buttonText)
+                    const contentKeys = [
+                        'logoUrl', 'logoAlt', 'title', 'titleHtml', 'text', 'html', 'imageUrl', 'src', 'alt', 'placeholder', 'buttonText', 'label', 'helperText'
+                    ];
+                    const derivedContent: Record<string, any> = {};
+                    for (const k of contentKeys) {
+                        if (k in cfg) derivedContent[k] = (cfg as any)[k];
+                    }
+                    // Restante permanece em properties
+                    const { order: cfgOrder, ...restCfg } = cfg;
+                    // Não duplicar campos já movidos para content
+                    for (const k of contentKeys) {
+                        delete (restCfg as any)[k];
+                    }
                     return {
                         id: b.id || `block-${i}`,
                         type: b.type || 'unknown',
-                        properties: { ...cfg },
-                        content: {},
-                        order: typeof cfg.order === 'number' ? cfg.order : i,
+                        properties: { ...restCfg },
+                        content: { ...derivedContent },
+                        order: typeof cfgOrder === 'number' ? cfgOrder : i,
                     } as Block;
                 }
+                // Formato esperado já com properties/content
                 return b as Block;
             });
 
