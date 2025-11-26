@@ -137,7 +137,7 @@ function useDraftPropertiesAdapter(
         onCommit: (committedBlock) => {
             options.onCommit(committedBlock.properties || {});
         },
-        validateOnChange: false, // Validar apenas no commit
+        validateOnChange: true, // ✅ Validação Zod em tempo real ativada
     });
 
     return {

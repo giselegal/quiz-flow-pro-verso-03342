@@ -5,5 +5,6 @@
  */
 
 export * from './useEditor';
+export * from './useEditorContext';
 export * from './useBlockDraft';
 export * from './useAutoSave';

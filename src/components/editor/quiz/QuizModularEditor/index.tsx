@@ -8,6 +8,7 @@ import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
 import { useEditorContext, persistenceService, validateBlock } from '@/core';
+import { getFeatureFlag } from '@/core/utils/featureFlags';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
