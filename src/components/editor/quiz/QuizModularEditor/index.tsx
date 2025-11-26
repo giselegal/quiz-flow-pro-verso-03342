@@ -129,7 +129,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         funnel, // Access to funnel methods
         ux, // Access to UX methods (showToast)
     } = unified;
-    const { showToast } = ux;
+
+    // Helper to adapt showToast signature (UXProvider expects: message, type, duration)
+    const toast = useCallback((config: { type: string; title?: string; message: string; duration?: number }) => {
+        const msg = config.title ? `${config.title}: ${config.message}` : config.message;
+        ux.showToast(msg, config.type as any, config.duration);
+    }, [ux]);
+
+    // For backward compatibility in dependencies
+    const showToast = toast;
+
     const { createFunnel } = funnel;
     // UI slice agora via UIProvider
     const { state: uiState } = useUI();
@@ -789,7 +798,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     if (!result.isValid) {
                         // Erros críticos encontrados
                         appLogger.error(`[G5] Template inválido:\n${formattedResult}`);
-                        showToast({
+                        toast({
                             type: 'error',
                             title: 'Template Inválido',
                             message: `${result.errors.filter(e => e.severity === 'critical').length} erros críticos encontrados. Clique no ícone de saúde para ver detalhes.`,
@@ -800,7 +809,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     } else if (result.warnings.length > 0 || result.errors.length > 0) {
                         // Warnings ou erros não-críticos
                         appLogger.warn(`[G5] Template com avisos:\n${formattedResult}`);
-                        showToast({
+                        toast({
                             type: 'warning',
                             title: 'Template com Avisos',
                             message: `${result.warnings.length} avisos, ${result.errors.length} erros menores`,
@@ -1081,7 +1090,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     undo();
 
-                    showToast({
+                    toast({
                         type: 'error',
                         title: 'Erro ao adicionar bloco',
                         message: 'O bloco não pôde ser adicionado. Tente novamente.',
@@ -1118,7 +1127,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                         undo();
 
-                        showToast({
+                        toast({
                             type: 'error',
                             title: 'Erro ao reordenar',
                             message: 'A reordenação foi desfeita. Tente novamente.',
@@ -1160,13 +1169,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }
             await saveFunnel();
 
-            showToast({
+            toast({
                 type: 'success',
                 title: 'Salvo!',
                 message: 'Funil salvo com sucesso',
             });
         } catch (error) {
-            showToast({
+            toast({
                 type: 'error',
                 title: 'Erro',
                 message: 'Erro ao salvar funil',
@@ -1300,9 +1309,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             let funnelId = unifiedState.currentFunnel?.id;
 
             if (!unifiedState.currentFunnel) {
-                const created = await createFunnel('Meu Quiz');
+                const created = await createFunnel({ name: 'Meu Quiz' } as any);
                 if (!created?.id) {
-                    showToast({
+                    toast({
                         type: 'error',
                         title: 'Erro',
                         message: 'Falha ao criar funil para publicar',
@@ -1337,7 +1346,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 // Bloquear publicação se houver erros críticos
                 const criticalErrors = integrityResult.errors.filter(e => e.severity === 'critical');
                 if (criticalErrors.length > 0) {
-                    showToast({
+                    toast({
                         type: 'error',
                         title: 'Erros críticos detectados',
                         message: `Impossível publicar: ${criticalErrors.length} erros críticos encontrados`,
@@ -1347,7 +1356,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                 // Avisar sobre erros não-críticos mas permitir publicação
                 if (integrityResult.errors.length > 0) {
-                    showToast({
+                    toast({
                         type: 'warning',
                         title: 'Avisos detectados',
                         message: `${integrityResult.errors.length} problemas encontrados (não críticos)`,
@@ -1369,7 +1378,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 appLogger.warn('[G42] Erro ao invalidar cache após publicação', cacheError);
             }
 
-            showToast({
+            toast({
                 type: 'success',
                 title: 'Publicado',
                 message: 'Seu funil foi publicado com sucesso!',
@@ -1381,7 +1390,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 window.location.href = successUrl;
             }
         } catch (e) {
-            showToast({
+            toast({
                 type: 'error',
                 title: 'Erro ao publicar',
                 message: 'Não foi possível publicar o funil. Tente novamente.',
@@ -1395,7 +1404,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
         if (!tid) {
             appLogger.error('[QuizModularEditor] handleLoadTemplate chamado sem templateId/resourceId');
-            showToast({
+            toast({
                 type: 'error',
                 title: 'Nenhum template selecionado',
                 message: 'Abra o editor com um resourceId ou templateId válido para carregar um template.',
@@ -1494,7 +1503,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     e => e.severity === 'critical'
                 );
                 if (criticalErrors.length > 0) {
-                    showToast({
+                    toast({
                         type: 'error',
                         title: 'Template com erros críticos',
                         message: `Encontrados ${criticalErrors.length} erros críticos que impedem a importação`,
@@ -1503,7 +1512,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
 
                 if (integrityResult.errors.length > 0) {
-                    showToast({
+                    toast({
                         type: 'warning',
                         title: 'Template com avisos',
                         message: `${integrityResult.errors.length} problemas detectados (não críticos)`,
@@ -1516,7 +1525,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         warnings: validationResult.warnings,
                     });
 
-                    showToast({
+                    toast({
                         type: 'info',
                         title: 'Template normalizado',
                         message: `${validationResult.warnings.length} IDs legados foram atualizados para UUID v4`,
@@ -1531,7 +1540,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                         if (!isNaN(stepIndex)) {
                             setStepBlocks(stepIndex, blocks);
-                            showToast({
+                            toast({
                                 type: 'success',
                                 title: 'Step importado',
                                 message: `${blocks.length} blocos importados para ${stepId}`,
@@ -1568,7 +1577,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     setCurrentStep(1);
 
-                    showToast({
+                    toast({
                         type: 'success',
                         title: 'Template importado',
                         message: `${stepEntries.length} steps importados com ${totalBlocks} blocos no total`,
@@ -1581,7 +1590,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 queryClient.invalidateQueries({ queryKey: ['templates'] });
             } catch (error) {
                 appLogger.error('[QuizModularEditor] Erro ao importar template:', error);
-                showToast({
+                toast({
                     type: 'error',
                     title: 'Erro ao importar',
                     message:
@@ -1729,7 +1738,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             setViewport(recovered.viewport);
                                             setCurrentStep(recovered.currentStep);
                                             snapshot.clearSnapshot();
-                                            showToast({
+                                            toast({
                                                 type: 'success',
                                                 title: 'Draft Recuperado',
                                                 message: 'Suas alterações não salvas foram recuperadas com sucesso!',
@@ -1806,7 +1815,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     console.log('💾 localStorage atualizado:', localStorage.getItem('qm-editor:use-simple-properties'));
                                 } catch { }
                                 appLogger.info(`[QuizModularEditor] Painel de propriedades: ${newValue ? 'PropertiesColumn' : 'PropertiesColumnWithJson'}`);
-                                showToast({
+                                toast({
                                     type: 'info',
                                     title: `${newValue ? '✅ PropertiesColumn' : '📝 PropertiesColumnWithJson'} ativado`,
                                     message: `Painel alternado para ${newValue ? 'versão principal com SinglePropertiesPanel' : 'versão com editor JSON integrado'}.`
@@ -2117,7 +2126,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     const error = validationResult.errors[errorIndex];
                                     appLogger.info('Tentando auto-fix', { error });
 
-                                    showToast({
+                                    toast({
                                         type: 'info',
                                         title: 'Auto-fix',
                                         message: `Corrigindo: ${error.message}`,
@@ -2128,7 +2137,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         handleSelectStep(error.stepId);
                                     }
                                 } else {
-                                    showToast({
+                                    toast({
                                         type: 'warning',
                                         title: 'Auto-fix',
                                         message: 'Erro não encontrado ou já corrigido',
@@ -2156,7 +2165,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         };
                                     });
 
-                                    showToast({
+                                    toast({
                                         type: 'success',
                                         title: 'Warning Dismissed',
                                         message: 'Aviso removido da lista',
