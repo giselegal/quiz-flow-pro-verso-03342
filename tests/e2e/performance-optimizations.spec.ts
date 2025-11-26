@@ -75,11 +75,11 @@ test.describe('🔥 Performance Optimizations - E2E Tests', () => {
         });
         
         // Toggle para preview mode
-        // Aguardar página estável
-        await page.waitForLoadState('networkidle');
+        // Aguardar toggle estar visível
+        const previewToggle = page.locator('[data-testid="preview-mode-toggle"], button:has-text("Publicado")').first();
+        await previewToggle.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
         await page.waitForTimeout(1000);
         
-        const previewToggle = page.locator('[data-testid="preview-mode-toggle"], button:has-text("Publicado")').first();
         if (await previewToggle.isVisible()) {
             await previewToggle.click({ force: true, timeout: 10000 }); // Force click + timeout maior
             await page.waitForTimeout(1500); // Aguardar modo preview
@@ -112,13 +112,13 @@ test.describe('🔥 Performance Optimizations - E2E Tests', () => {
         // Testar se UI permanece responsiva durante validação
         const startInteraction = Date.now();
         
-        // Aguardar página estar estável antes de interagir
-        await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(500); // Aguardar animações
-        
-        // Clicar no canvas com retry
+        // Aguardar canvas estar visível e clicável
         const canvas = page.locator('[data-testid="column-canvas"]');
-        await canvas.click({ timeout: 10000, force: true, trial: false }); // Timeout maior + force
+        await canvas.waitFor({ state: 'visible', timeout: 10000 });
+        await page.waitForTimeout(1000); // Aguardar animações/overlay
+        
+        // Clicar no canvas
+        await canvas.click({ timeout: 10000, force: true }); // Force click
         
         const interactionTime = Date.now() - startInteraction;
         
