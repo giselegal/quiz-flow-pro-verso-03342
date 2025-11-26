@@ -111,7 +111,7 @@ export const SaveAsFunnelButton: React.FC = () => {
         onClick={() => setOpen(true)}
         variant="outline"
         size="sm"
-        className="fixed top-3 left-3 z-[10000] pointer-events-auto gap-2"
+        className="fixed top-3 left-3 z-20 pointer-events-auto gap-2"
       >
         <Save className="h-4 w-4" />
         Salvar como Funil

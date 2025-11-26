@@ -602,7 +602,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
         {/* Quick Panel para Options Grid (Fase 1) */}
         {effectiveSelectedBlock.type === 'options-grid' && (
-          <div className="sticky top-0 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-md p-3">
+          <div className="sticky top-0 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-md p-3 pointer-events-auto">
             <OptionsGridQuickPanel block={effectiveSelectedBlock} onBatchUpdate={handleBatchUpdate} />
           </div>
         )}

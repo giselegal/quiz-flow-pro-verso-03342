@@ -605,7 +605,7 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
 
     return (
         <Card className="h-full flex flex-col border-0 bg-transparent">
-            <CardHeader className="sticky top-0 z-40 space-y-2 border-b border-border/60 bg-background/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+            <CardHeader className="sticky top-0 z-20 space-y-2 border-b border-border/60 bg-background/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/80">
                 <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
                         <CardTitle className="text-sm font-semibold">{schema.label ?? block.type}</CardTitle>
@@ -774,7 +774,7 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
                 </ScrollArea>
             </CardContent>
 
-            <div className="sticky bottom-0 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+            <div className="sticky bottom-0 z-20 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
                 <div className="flex items-center gap-2">
                     <Button
                         onClick={handleApply}

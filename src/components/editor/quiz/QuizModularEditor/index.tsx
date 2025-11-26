@@ -1994,7 +1994,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             }
                         >
                             <div
-                                className="h-full bg-gray-50 overflow-y-auto"
+                                className="relative z-0 h-full bg-gray-50 overflow-y-auto"
                                 data-testid="column-canvas"
                             >
                                 {isLoadingTemplate ? (
