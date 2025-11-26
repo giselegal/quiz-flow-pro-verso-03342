@@ -25,36 +25,43 @@
  * @phase FASE-2
  */
 
-import { useAuth } from '@/contexts/auth/AuthProvider';
-import { useTheme } from '@/contexts/theme/ThemeProvider';
+// ✅ FASE 3: Usando providers consolidados
+import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
+import { useRealTime } from '@/contexts/consolidated/RealTimeProvider';
+import { useValidationResult } from '@/contexts/consolidated/ValidationResultProvider';
+import { useUX } from '@/contexts/consolidated/UXProvider';
+
+// Providers que permanecem separados
 import { useEditorCompat } from '@/core/contexts/EditorContext/EditorCompatLayer';
 import { useFunnelData } from '@/contexts/funnel/FunnelDataProvider';
-import { useNavigation } from '@/contexts/navigation/NavigationProvider';
 import { useQuizState } from '@/contexts/quiz/QuizStateProvider';
-import { useResult } from '@/contexts/result/ResultProvider';
-import { useStorage } from '@/contexts/storage/StorageProvider';
-import { useSync } from '@/contexts/sync/SyncProvider';
-import { useValidation } from '@/contexts/validation/ValidationProvider';
-import { useCollaboration } from '@/contexts/collaboration/CollaborationProvider';
 import { useVersioning } from '@/contexts/versioning/VersioningProvider';
-import { useUI } from '@/contexts/providers/UIProvider';
+
 import { useMemo } from 'react';
 
 export interface UnifiedEditorContext {
-  // Core providers
-  auth: ReturnType<typeof useAuth>;
-  theme: ReturnType<typeof useTheme>;
+  // ✅ FASE 3: Providers consolidados (8 → 4)
+  authStorage: ReturnType<typeof useAuthStorage>;
+  realTime: ReturnType<typeof useRealTime>;
+  validationResult: ReturnType<typeof useValidationResult>;
+  ux: ReturnType<typeof useUX>;
+
+  // Providers mantidos separados (4)
   editor: ReturnType<typeof useEditorCompat>;
   funnel: ReturnType<typeof useFunnelData>;
-  navigation: ReturnType<typeof useNavigation>;
   quiz: ReturnType<typeof useQuizState>;
-  result: ReturnType<typeof useResult>;
-  storage: ReturnType<typeof useStorage>;
-  sync: ReturnType<typeof useSync>;
-  validation: ReturnType<typeof useValidation>;
-  collaboration: ReturnType<typeof useCollaboration>;
   versioning: ReturnType<typeof useVersioning>;
-  ui: ReturnType<typeof useUI>;
+
+  // Aliases para compatibilidade com código legado
+  auth: ReturnType<typeof useAuthStorage>;
+  storage: ReturnType<typeof useAuthStorage>;
+  sync: ReturnType<typeof useRealTime>;
+  collaboration: ReturnType<typeof useRealTime>;
+  validation: ReturnType<typeof useValidationResult>;
+  result: ReturnType<typeof useValidationResult>;
+  theme: ReturnType<typeof useUX>;
+  ui: ReturnType<typeof useUX>;
+  navigation: ReturnType<typeof useUX>;
 
   // Unified state (for compatibility)
   state: {
@@ -87,38 +94,45 @@ export interface UnifiedEditorContext {
 
 /**
  * Hook principal - substitui useSuperUnified com API modernizada
+ * ✅ FASE 3: Reduzido de 13 para 8 providers (4 consolidados + 4 separados)
  */
 export function useEditorContext(): UnifiedEditorContext {
-  const auth = useAuth();
-  const theme = useTheme();
+  // Providers consolidados
+  const authStorage = useAuthStorage();
+  const realTime = useRealTime();
+  const validationResult = useValidationResult();
+  const ux = useUX();
+
+  // Providers separados
   const editor = useEditorCompat();
   const funnel = useFunnelData();
-  const navigation = useNavigation();
   const quiz = useQuizState();
-  const result = useResult();
-  const storage = useStorage();
-  const sync = useSync();
-  const validation = useValidation();
-  const collaboration = useCollaboration();
   const versioning = useVersioning();
-  const ui = useUI();
 
   const context = useMemo<UnifiedEditorContext>(() => {
     return {
-      // Providers
-      auth,
-      theme,
+      // ✅ FASE 3: Providers consolidados
+      authStorage,
+      realTime,
+      validationResult,
+      ux,
+
+      // Providers separados
       editor,
       funnel,
-      navigation,
       quiz,
-      result,
-      storage,
-      sync,
-      validation,
-      collaboration,
       versioning,
-      ui,
+
+      // Aliases para compatibilidade
+      auth: authStorage,
+      storage: authStorage,
+      sync: realTime,
+      collaboration: realTime,
+      validation: validationResult,
+      result: validationResult,
+      theme: ux,
+      ui: ux,
+      navigation: ux,
 
       // Unified state
       state: {
