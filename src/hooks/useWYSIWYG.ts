@@ -108,12 +108,23 @@ export function useWYSIWYG(
 
   // Reset quando initialBlocks mudar externamente
   useEffect(() => {
+    // Apenas resetar se os blocos mudarem de verdade (não em preview mode)
+    if (mode === 'preview-live' || mode === 'preview-production') {
+      // No preview, apenas atualizar na montagem inicial
+      if (blocksRef.current.length === 0 && initialBlocks.length > 0) {
+        setBlocks(initialBlocks);
+        setIsDirty(false);
+        appLogger.debug('[useWYSIWYG] Blocos inicializados no preview');
+      }
+      return;
+    }
+    
     if (initialBlocks !== blocksRef.current) {
       setBlocks(initialBlocks);
       setIsDirty(false);
       appLogger.debug('[useWYSIWYG] Blocos resetados externamente');
     }
-  }, [initialBlocks]);
+  }, [initialBlocks, mode]);
 
   // Validação em tempo real
   const validateBlock = useCallback((block: Block): string[] => {
@@ -214,14 +225,15 @@ export function useWYSIWYG(
       blockId,
       updates,
       mode,
-      willProcessImmediately: mode === 'edit' || mode === 'preview-live',
+      willProcessImmediately: mode === 'edit',
     });
     
     const existing = updateQueueRef.current.get(blockId) || {};
     updateQueueRef.current.set(blockId, { ...existing, ...updates });
 
-    // Processar imediatamente em modo edit/preview-live para WYSIWYG instantâneo
-    if (mode === 'edit' || mode === 'preview-live') {
+    // Processar imediatamente APENAS em modo edit para WYSIWYG instantâneo
+    // Em preview-live/preview-production, usar debounce para evitar loops
+    if (mode === 'edit') {
       console.log('⚡ [useWYSIWYG] Processando fila IMEDIATAMENTE (modo:', mode, ')');
       processUpdateQueue();
     } else {

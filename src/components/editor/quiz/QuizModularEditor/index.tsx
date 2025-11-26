@@ -1071,18 +1071,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     appLogger.info(`✅ [QuizModularEditor] setStepBlocks(normalized): ${normalizedBlocks.length} blocos`);
                     setStepBlocks(stepIndex, normalizedBlocks);
 
-                    // 🔄 Sync WYSIWYG
-                    try {
-                        wysiwyg.actions.reset(normalizedBlocks);
-                        const keepId = wysiwyg.state.selectedBlockId;
-                        if (keepId && normalizedBlocks.some((b: any) => b.id === keepId)) {
-                            wysiwyg.actions.selectBlock(keepId);
-                        } else {
-                            const first = normalizedBlocks[0];
-                            if (first) wysiwyg.actions.selectBlock(first.id);
+                    // 🔄 Sync WYSIWYG - apenas em modo edit para evitar loops em preview
+                    if (previewMode === 'live' && wysiwyg.state.blocks.length > 0) {
+                        console.log('🚫 [QuizModularEditor] Preview mode: ignorando reset WYSIWYG para prevenir flickering');
+                    } else {
+                        try {
+                            wysiwyg.actions.reset(normalizedBlocks);
+                            const keepId = wysiwyg.state.selectedBlockId;
+                            if (keepId && normalizedBlocks.some((b: any) => b.id === keepId)) {
+                                wysiwyg.actions.selectBlock(keepId);
+                            } else {
+                                const first = normalizedBlocks[0];
+                                if (first) wysiwyg.actions.selectBlock(first.id);
+                            }
+                        } catch (e) {
+                            appLogger.warn('[QuizModularEditor] Falha ao resetar WYSIWYG após normalização', { data: [e] });
                         }
-                    } catch (e) {
-                        appLogger.warn('[QuizModularEditor] Falha ao resetar WYSIWYG após normalização', { data: [e] });
                     }
                 } else {
                     console.warn('⚠️⚠️⚠️ [DEBUG] getStep sem dados utilizáveis após normalização:', {

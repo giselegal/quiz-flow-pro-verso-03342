@@ -77,8 +77,10 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
     },
   });
 
-  // Sincronizar quando step muda
+  // Sincronizar quando step muda (apenas em modo edit)
   useEffect(() => {
+    if (mode !== 'edit') return; // Prevenir resets em preview
+    
     if (lastSyncedStepRef.current !== currentStep) {
       console.log('🔗 [WYSIWYGBridge] Step mudou:', {
         from: lastSyncedStepRef.current,
@@ -87,7 +89,7 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
       lastSyncedStepRef.current = currentStep;
       // Reset será feito externamente via resetBlocks
     }
-  }, [currentStep]);
+  }, [currentStep, mode]);
 
   // Actions estendidas
   const bridgedActions = {
