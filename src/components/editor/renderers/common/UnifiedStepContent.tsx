@@ -2,7 +2,7 @@ import React, { memo, useMemo, useCallback } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { EditableQuizStep } from '@/components/editor/quiz/types';
 import { adaptStepData } from '@/lib/utils/StepDataAdapter';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorUnifiedOptional } from '@/hooks/editor';
 import { computeResult } from '@/lib/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
@@ -88,7 +88,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     }, [sessionData]);
 
     // Provider opcional do Editor para seleção/persistência de blocos reais
-    const editor = useEditor({ optional: true } as any);
+    const editor = useEditorUnifiedOptional();
     // Normaliza a chave do step para o formato step-XX (zero à esquerda)
     const stepKey = useMemo(() => {
         const id = String(step?.id || '');

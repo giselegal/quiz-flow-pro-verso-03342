@@ -18,7 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
 // Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorUnified } from '@/hooks/editor';
 import { Settings, Grid, Eye, Palette } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
@@ -31,7 +31,7 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
   selectedBlock: _selectedBlock,
   onUpdate: _onUpdate,
 }) => {
-  const editor = useEditor();
+  const editor = useEditorUnified() as any;
   const [selectedStep, setSelectedStep] = useState<any>(null);
   const [, setEditingQuestion] = useState<any>(null);
   
