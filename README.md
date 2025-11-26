@@ -4,10 +4,14 @@ Sistema interativo profissional de criação e gerenciamento de quizzes e funis 
 
 [![Performance](https://img.shields.io/badge/Performance-Excelente-success)]()
 [![Bundle Size](https://img.shields.io/badge/Bundle-180KB-success)]()
-[![Tests](https://img.shields.io/badge/Tests-Passing-success)]()
+[![Tests](https://img.shields.io/badge/Tests-455_files-success)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)]()
 [![React](https://img.shields.io/badge/React-18-blue)]()
+[![Status](https://img.shields.io/badge/Status-FASE_0_Conclu%C3%ADda-green)]()
+[![Security](https://img.shields.io/badge/Security-7%2F10-yellow)]()
 
+> **🎉 FASE 0 Concluída (85%)** - Arquitetura analisada, gargalos identificados, roadmap de 17 semanas criado.  
+> 📊 [Ver Roadmap](.archive/reports/CONSOLIDATION_ROADMAP.md) | 🔒 [Audit Segurança](.archive/reports/SECURITY_AUDIT_REPORT.md)
 
 ## 🚀 Quick Start
 
@@ -32,19 +36,30 @@ npm run dev
 
 ## 📊 Status do Projeto
 
-**Última Atualização:** 22 de Novembro de 2025
+**Última Atualização:** 26 de Novembro de 2025 - **FASE 0: Quick Wins Concluída** ✅
 
 | Aspecto | Status | Métrica |
 |---------|--------|---------|
-| **Performance** | 🟢 Excelente | 180KB bundle, ~2s TTI |
-| **Testes** | 🟢 Excelente | 115 passing, 31 security tests |
-| **Build** | 🟢 OK | Sem erros TypeScript |
-| **Segurança** | 🟢 Melhorado | XSS Prevention com DOMPurify |
-| **Organização** | 🟢 Excelente | 57→34 arquivos na raiz (-40%) |
+| **Organização** | 🟢 Excelente | 40→15 arquivos raiz (-62%) |
+| **Performance** | 🟢 Excelente | 8.7M dev, 180KB prod |
+| **Testes** | 🟡 Bom | 455 arquivos de teste |
+| **Segurança** | 🟡 Melhorando | 7/10 (6 vulns, CSP ativo) |
+| **Arquitetura** | 🟡 Em Progresso | 101 serviços, 140 deprecated |
+| **Build** | 🟢 OK | Sem erros críticos |
 
-**✅ Consolidação Completa (8/8 Etapas):**
+### 🎯 Roadmap de Consolidação
 
-Ver: [CHANGELOG.md](./CHANGELOG.md) para detalhes completos
+**FASE 0:** ✅ 85% Concluída (1 semana)
+- ✅ Arquivos organizados (-62%)
+- ✅ Gargalos identificados
+- ✅ Auditoria de segurança
+- ✅ Roadmap 17 semanas criado
+
+**FASE 1:** 📋 Planejada (4 semanas) - Estabilização
+**FASE 2:** 📋 Planejada (8 semanas) - Consolidação (101→35 serviços)
+**FASE 3:** 📋 Planejada (4 semanas) - Otimização
+
+📖 [Ver Roadmap Completo](.archive/reports/CONSOLIDATION_ROADMAP.md) | 📊 [Status Detalhado](PROJECT_STATUS_UPDATED.md)
 
 
 ## 🏗️ Canonical Services Architecture (Phase 4 - FINALIZED)
