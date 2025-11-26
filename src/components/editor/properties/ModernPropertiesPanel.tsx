@@ -671,7 +671,6 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                   onDuplicate();
                 } else {
                   // Duplicar bloco criando uma cópia
-                  const currentStep = state.currentStep || 1;
                   const blockToDuplicate = effectiveSelectedBlock;
                   const newBlock = {
                     ...blockToDuplicate,
