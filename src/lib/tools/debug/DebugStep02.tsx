@@ -1,5 +1,5 @@
 import { useEditor } from '@/hooks/useEditor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { getLoadedFunnelSync } from '@/templates/loaders/dynamic';
 import React from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -12,8 +12,9 @@ const DebugStep02: React.FC = () => {
   const blockActions = { addBlock: async (type: string) => 'new-id' };
   const activeStageId = 'step-1';
 
-  // Obtém o template da etapa 2 do template completo
-  const step02Template = QUIZ_STYLE_21_STEPS_TEMPLATE['step-2'] || [];
+  // 🔄 Obtém o template da etapa 2 do lazy loader cache
+  const funnel = getLoadedFunnelSync('quiz21StepsComplete');
+  const step02Template = funnel?.steps?.['step-2'] || funnel?.steps?.['step-02'] || [];
   const optionsBlock = step02Template.find((block: any) => block.type === 'options-grid');
 
   const debugInfo = {

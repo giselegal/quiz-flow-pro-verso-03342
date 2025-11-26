@@ -473,9 +473,11 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   if (!this.options.fallbackToStatic || isFallbackDisabled()) return null;
 
     try {
-      const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
-      const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
-      return blocks || null;
+      // 🔄 Migrado para lazy loader dinâmico
+      const { loadFunnel } = await import('@/templates/loaders/dynamic');
+      const funnel = await loadFunnel('quiz21StepsComplete', { validate: false, useCache: true });
+      const blocks = funnel.steps?.[stepId];
+      return (Array.isArray(blocks) ? blocks : null);
     } catch (error) {
       appLogger.debug('[HierarchicalSource] Fallback not found:', { data: [{ stepId }] });
       return null;

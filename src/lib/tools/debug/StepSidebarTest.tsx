@@ -3,8 +3,8 @@
  * Para debug do problema dos steps não aparecendo
  */
 
-import React, { useState, useMemo } from 'react';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import React, { useState, useMemo, useEffect } from 'react';
+import { getLoadedFunnelSync } from '@/templates/loaders/dynamic';
 import { normalizeStepBlocks } from '@/config/quizStepsComplete';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -15,11 +15,13 @@ const SimpleStepSidebar: React.FC<{
     onSelectStep: (step: number) => void;
 }> = ({ currentStep, stepHasBlocks, onSelectStep }) => {
 
-    appLogger.info('🔍 SimpleStepSidebar render:', { data: [{
+    appLogger.info('🔍 SimpleStepSidebar render:', {
+        data: [{
             currentStep,
             stepHasBlocksKeys: Object.keys(stepHasBlocks),
             stepsWithBlocks: Object.entries(stepHasBlocks).filter(([, has]) => has).map(([step]) => step),
-        }] });
+        }]
+    });
 
     return (
         <div className="w-[13rem] bg-gray-900 text-white h-full flex flex-col">
@@ -69,12 +71,17 @@ const StepSidebarTest: React.FC = () => {
 
     // Simular o que o EditorProvider faz
     const stepBlocks = useMemo(() => {
-        const normalized = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-        appLogger.info('🔍 StepSidebarTest normalized blocks:', { data: [{
-                    keyCount: Object.keys(normalized).length,
-                    keys: Object.keys(normalized),
-                    blockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length]),
-                }] });
+        // 🔄 Ler do lazy loader cache se disponível
+        const funnel = getLoadedFunnelSync('quiz21StepsComplete');
+        const rawTemplate = funnel?.steps || {};
+        const normalized = normalizeStepBlocks(rawTemplate);
+        appLogger.info('🔍 StepSidebarTest normalized blocks:', {
+            data: [{
+                keyCount: Object.keys(normalized).length,
+                keys: Object.keys(normalized),
+                blockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length]),
+            }]
+        });
         return normalized;
     }, []);
 

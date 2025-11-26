@@ -1,21 +1,23 @@
 /**
- * 🎯 CENTRALIZED TEMPLATE IMPORTS
+ * 🎯 CENTRALIZED TEMPLATE IMPORTS (DEPRECATED)
  * 
- * Este arquivo centraliza todos os imports de templates para evitar
- * warnings do Vite sobre imports dinâmicos/estáticos misturados.
+ * ⚠️ AVISO: Este arquivo está sendo descontinuado em favor do lazy loader.
+ * Migre para: import { loadFunnel } from '@/templates/loaders/dynamic';
+ * 
+ * Mantido temporariamente para compatibilidade com código legado.
  */
 
-// Import estático do template principal (JSON - fonte canônica)
+// Import estático do template principal (JSON - fonte canônica) - DEPRECATED
 import QUIZ_STYLE_21_STEPS_TEMPLATE from './quiz21StepsComplete.json';
-// Deprecated TemplateRegistry removido; usar fallback TS
 import { normalizeTemplateBlocks } from '@/lib/utils/blockNormalization';
 import { appLogger } from '@/lib/utils/appLogger';
 
-// Export centralizado para uso em imports dinâmicos (fonte canônica)
+// DEPRECATED: usar loadFunnel('quiz21StepsComplete') em vez disto
 export const getQuiz21StepsTemplate = () => {
-  // Template é Record<string, Block[]>, retornar como tal
+  appLogger.warn('[imports.ts] getQuiz21StepsTemplate está DEPRECATED. Use loadFunnel do lazy loader.');
+  // Fallback legado mantido temporariamente
   const result = { ...QUIZ_STYLE_21_STEPS_TEMPLATE };
-  (result as any)._source = 'ts';
+  (result as any)._source = 'json-legacy';
   return result;
 };
 
