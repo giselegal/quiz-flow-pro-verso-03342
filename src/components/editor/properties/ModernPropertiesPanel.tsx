@@ -406,15 +406,16 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   onDelete,
   onDuplicate,
 }) => {
-  // ✅ CORREÇÃO: Usar adaptador universal que resolve problemas de contexto
-  const editor = useEditorAdapter();
-  const { actions, currentStep, selectedBlock: contextSelectedBlock } = editor;
+  // Hook de compatibilidade para APIs legadas
+  const editor = useEditorCompat();
+  const { state, selectedBlockId: contextSelectedBlockId, blockActions } = editor;
 
   // Usar selectedBlock do contexto como fallback se não fornecido via props
-  const effectiveSelectedBlock = selectedBlock || contextSelectedBlock;
+  const effectiveSelectedBlock = selectedBlock || (contextSelectedBlockId ? 
+    editor.getStepBlocks(state.currentStep).find((b: any) => b.id === contextSelectedBlockId) : null);
 
   // Construir stepKey legado compatível (ex: step-01)
-  const currentStepKey = React.useMemo(() => `step-${String(currentStep).padStart(2, '0')}`, [currentStep]);
+  const currentStepKey = React.useMemo(() => `step-${String(state.currentStep).padStart(2, '0')}`, [state.currentStep]);
 
   // Descobrir propriedades usando sistema existente
   const discoveredProperties = React.useMemo(() => {
