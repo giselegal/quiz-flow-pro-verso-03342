@@ -22,7 +22,7 @@ echo "════════════════════════�
 echo "OPÇÃO 1: Supabase Dashboard (RECOMENDADO)"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
-echo "1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw"
+echo "1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref"
 echo "2. Navegue para: SQL Editor"
 echo "3. Clique em: New Query"
 echo "4. Cole o conteúdo do arquivo:"

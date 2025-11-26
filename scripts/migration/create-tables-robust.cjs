@@ -1,7 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Configuração do Supabase com chave de serviço
-const SUPABASE_URL = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
+const SUPABASE_URL = 'https://your-supabase-project.supabase.co';
 const SUPABASE_SERVICE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjM0NDQ2MCwiZXhwIjoyMDY3OTIwNDYwfQ.jkXLyH0tJttuL_P-Kt7dGsIzyBuLWZRJ3NZi6F9trUI';
 

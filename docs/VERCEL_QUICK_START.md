@@ -68,7 +68,7 @@ vercel --prod
 **Via CLI:**
 ```bash
 vercel env add VITE_SUPABASE_URL
-# Cole: https://pwtjuuhchtbzttrzoutw.supabase.co
+# Cole: https://your-supabase-project.supabase.co
 
 vercel env add VITE_SUPABASE_ANON_KEY
 # Cole: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -83,7 +83,7 @@ vercel env add VITE_SUPABASE_ANON_KEY
 
 ### 2. Supabase Auth URLs
 
-1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
+1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
 
 2. **Site URL:**
    ```

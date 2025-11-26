@@ -64,7 +64,7 @@ async function main() {
         const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL
         const deriveFromUrl = (u) => {
             try {
-                const host = new URL(u).host // pwtjuuhchtbzttrzoutw.supabase.co
+                const host = new URL(u).host // your-supabase-project-ref.supabase.co
                 const ref = host.split('.')[0]
                 return ref && ref.length > 5 ? ref : null
             } catch { return null }

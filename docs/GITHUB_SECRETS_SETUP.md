@@ -32,7 +32,7 @@ Ou navegue manualmente:
 2. **Name:** `VITE_SUPABASE_URL`
 3. **Secret:** Cole o valor:
    ```
-   https://pwtjuuhchtbzttrzoutw.supabase.co
+   https://your-supabase-project.supabase.co
    ```
 4. Clique em **Add secret**
 
@@ -42,7 +42,7 @@ Ou navegue manualmente:
 2. **Name:** `VITE_SUPABASE_ANON_KEY`
 3. **Secret:** Cole o valor do seu `.env`:
    ```
-   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w
+   your-supabase-anon-key
    ```
 4. Clique em **Add secret**
 

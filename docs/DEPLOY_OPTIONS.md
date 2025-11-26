@@ -101,7 +101,7 @@ Via dashboard: https://app.netlify.com/sites/YOUR-SITE/settings/deploys#environm
 
 ### 2. Supabase Auth URLs
 
-Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
+Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
 
 Adicione sua URL de deploy:
 ```
@@ -125,7 +125,7 @@ https://seu-projeto.netlify.app/auth/callback
 ./scripts/apply-rls-manual.sh
 ```
 
-Ou acesse direto: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/editor
+Ou acesse direto: https://supabase.com/dashboard/project/your-supabase-project-ref/editor
 
 E execute: `supabase/migrations/20251123_critical_rls_policies.sql`
 
@@ -258,9 +258,9 @@ npm run build
 - CLI: https://docs.netlify.com/cli/get-started/
 
 **Supabase:**
-- Dashboard: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw
-- Auth: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
-- SQL Editor: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/editor
+- Dashboard: https://supabase.com/dashboard/project/your-supabase-project-ref
+- Auth: https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
+- SQL Editor: https://supabase.com/dashboard/project/your-supabase-project-ref/editor
 
 ---
 

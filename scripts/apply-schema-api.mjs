@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 // SCRIPT PARA APLICAR SCHEMA SUPABASE VIA API
 // ============================================================================
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://pwtjuuhchtbzttrzoutw.supabase.co';
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://your-supabase-project.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {

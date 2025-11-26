@@ -13,7 +13,7 @@
 
 ### Opção A: Via Dashboard (Recomendado)
 
-1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/editor
+1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/editor
 
 2. No SQL Editor, clique em **"New query"**
 
@@ -44,7 +44,7 @@ chmod +x scripts/apply-rls-manual.sh
 ## 🔐 PASSO 2: Configurar Supabase Auth
 
 ### 2.1 Acessar Configurações
-https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
+https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
 
 ### 2.2 Configurar URLs
 
@@ -108,7 +108,7 @@ git push origin main
 
 3. Adicione variáveis de ambiente:
 ```
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
@@ -157,7 +157,7 @@ Acesse sua URL de staging e teste:
 netlify logs
 
 # Supabase logs
-# Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/logs/explorer
+# Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/logs/explorer
 ```
 
 ---

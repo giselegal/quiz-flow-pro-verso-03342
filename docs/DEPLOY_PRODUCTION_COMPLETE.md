@@ -8,7 +8,7 @@
 
 ### 1. `.env.production` ✅
 ```env
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 VITE_APP_URL=https://giselsegalvao.com.br/quizflowpro
 VITE_BASE_PATH=/quizflowpro
@@ -114,8 +114,8 @@ https://vercel.com/seu-usuario/quiz-flow-pro/settings/environment-variables
 Adicione:
 
 ```
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 VITE_APP_URL=https://quizflowpro.giselsegalvao.com.br
 VITE_BASE_PATH=/
 NODE_ENV=production
@@ -154,7 +154,7 @@ Deploy automático será disparado.
 
 ### **PASSO 7: Configurar Supabase Auth** (5 min)
 
-1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
+1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
 
 2. **Site URL:**
    ```
@@ -177,7 +177,7 @@ Deploy automático será disparado.
 
 ### **PASSO 8: Aplicar RLS Policies** (5 min)
 
-1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/editor
+1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/editor
 
 2. New Query
 
@@ -221,8 +221,8 @@ open https://quizflowpro.giselsegalvao.com.br
 ### Environment Variables no Railway:
 
 ```
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 NODE_ENV=production
 PORT=5000
 ```

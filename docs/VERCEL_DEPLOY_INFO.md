@@ -59,8 +59,8 @@ Acesse: https://vercel.com/quiz-flow/quiz-flow-pro-nu/settings/environment-varia
 Adicione todas as variáveis de `.env.production`:
 
 ```env
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 VITE_APP_URL=https://quiz-flow-pro-nu.vercel.app
 VITE_BASE_PATH=/
 AI_GATEWAY_API_KEY=vck_7sPJrFaeumk6wKjTazgi7WFnCTKyPERndOAQinNyTRSAis6qjR3CRwGz
@@ -77,7 +77,7 @@ vercel --prod
 
 ### 4. Configurar Supabase Auth URLs
 
-Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
+Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
 
 **Site URL:**
 ```

@@ -1,8 +1,8 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const supabaseUrl = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
+const supabaseUrl = 'https://your-supabase-project.supabase.co';
 const supabaseKey =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+  'your-supabase-anon-key';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -19,7 +19,7 @@ async function checkTables() {
       if (error.code === '42P01') {
         console.log('\n❌ A tabela "funnels" não existe no banco de dados.');
         console.log('\n=== SOLUÇÃO MANUAL ===');
-        console.log('1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw');
+        console.log('1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref');
         console.log('2. Vá para "SQL Editor"');
         console.log('3. Execute o SQL abaixo:');
         console.log('\n```sql');

@@ -85,7 +85,7 @@ Redirect URLs:
 
 ### Environment Variables (Vercel)
 ```bash
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
 VITE_SUPABASE_ANON_KEY=ey...
 NODE_ENV=production
 ```

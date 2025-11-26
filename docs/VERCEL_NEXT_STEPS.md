@@ -117,7 +117,7 @@ vercel --prod
 **Via CLI:**
 ```bash
 vercel env add VITE_SUPABASE_URL production
-# Cole: https://pwtjuuhchtbzttrzoutw.supabase.co
+# Cole: https://your-supabase-project.supabase.co
 
 vercel env add VITE_SUPABASE_ANON_KEY production
 # Cole: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -136,7 +136,7 @@ vercel --prod
 
 ### **Passo 6: Configurar Supabase Auth URLs** (3 min)
 
-1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
+1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
 
 2. **Site URL:**
    ```
@@ -196,7 +196,7 @@ STAGING_URL=https://quiz-flow-pro.vercel.app ./scripts/smoke-tests.sh
 ```
 
 Ou manual:
-1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/editor
+1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref/editor
 2. Copie conteúdo de `supabase/migrations/20251123_critical_rls_policies.sql`
 3. Execute (Run)
 

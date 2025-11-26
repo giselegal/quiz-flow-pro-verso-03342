@@ -30,10 +30,10 @@ Adicione estas 4 variáveis:
 
 ```
 VITE_SUPABASE_URL
-https://pwtjuuhchtbzttrzoutw.supabase.co
+https://your-supabase-project.supabase.co
 
 VITE_SUPABASE_ANON_KEY
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w
+your-supabase-anon-key
 
 NODE_ENV
 production

@@ -4,8 +4,8 @@ echo "🚀 APLICANDO SCHEMA COMPLETO NO SUPABASE VIA API"
 echo "================================================"
 
 # Configuração
-SUPABASE_URL="https://pwtjuuhchtbzttrzoutw.supabase.co"
-ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w"
+SUPABASE_URL="https://your-supabase-project.supabase.co"
+ANON_KEY="your-supabase-anon-key"
 
 echo "🔗 Supabase: $SUPABASE_URL"
 echo ""
@@ -248,7 +248,7 @@ else
     echo ""
     echo "🔧 ALTERNATIVA - USAR SUPABASE DASHBOARD:"
     echo "========================================"
-    echo "1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw"
+    echo "1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref"
     echo "2. SQL Editor → New Query"
     echo "3. Cole o arquivo: SCHEMA_SUPABASE_REUSABLE_COMPONENTS.sql"
     echo "4. Execute"

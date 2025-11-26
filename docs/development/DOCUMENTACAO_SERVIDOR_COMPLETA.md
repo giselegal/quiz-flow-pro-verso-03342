@@ -196,7 +196,7 @@ server.listen(PORT, () => {
 | -------------- | -------------------- |
 | **Tipo**       | PostgreSQL           |
 | **Provider**   | Supabase             |
-| **Project ID** | pwtjuuhchtbzttrzoutw |
+| **Project ID** | your-supabase-project-ref |
 | **Ambiente**   | Cloud                |
 | **ORM**        | Drizzle Kit          |
 

@@ -5,8 +5,8 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Configurações do Supabase
-const SUPABASE_URL = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+const SUPABASE_URL = 'https://your-supabase-project.supabase.co';
+const SUPABASE_SERVICE_KEY = 'your-supabase-anon-key';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 

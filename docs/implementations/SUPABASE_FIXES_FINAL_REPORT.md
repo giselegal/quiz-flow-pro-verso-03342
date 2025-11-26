@@ -3,7 +3,7 @@
 ## ✅ PROBLEMAS IDENTIFICADOS E CORRIGIDOS
 
 ### 🚨 Problemas Originais:
-1. **Múltiplos erros 404 do Supabase** - `pwtjuuhchtbzttrzoutw.supabase.co/rest/v1/quiz_drafts` (25+ ocorrências)
+1. **Múltiplos erros 404 do Supabase** - `your-supabase-project-ref.supabase.co/rest/v1/quiz_drafts` (25+ ocorrências)
 2. **Timeouts de configuração** - `quiz-global-config`, `quiz-theme-config`, `quiz-step-1`
 3. **Script MIME type incorreto** - `test-canvas-preview-sync.js` não executava
 4. **LocalConfigProvider undefined** - Erro de referência em produção

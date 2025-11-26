@@ -20,7 +20,7 @@ fi
 echo "📋 Instruções para aplicar as políticas RLS:"
 echo ""
 echo "1. Acesse o Supabase Dashboard:"
-echo "   https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw"
+echo "   https://supabase.com/dashboard/project/your-supabase-project-ref"
 echo ""
 echo "2. Vá em: SQL Editor (menu lateral esquerdo)"
 echo ""

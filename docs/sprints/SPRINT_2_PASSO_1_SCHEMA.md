@@ -12,7 +12,7 @@ Você precisa executar **5 queries SQL** no Supabase Dashboard para mapear o sch
 
 ### Acesso ao Supabase SQL Editor
 
-1. Abrir: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/sql/new
+1. Abrir: https://supabase.com/dashboard/project/your-supabase-project-ref/sql/new
 2. Ou: Dashboard → SQL Editor → New Query
 
 ---

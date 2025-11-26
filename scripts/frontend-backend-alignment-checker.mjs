@@ -9,8 +9,8 @@ import { createClient } from '@supabase/supabase-js';
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
-const supabaseUrl = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+const supabaseUrl = 'https://your-supabase-project.supabase.co';
+const supabaseAnonKey = 'your-supabase-anon-key';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

@@ -6,8 +6,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+const supabaseUrl = 'https://your-supabase-project.supabase.co';
+const supabaseAnonKey = 'your-supabase-anon-key';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -225,7 +225,7 @@ async function main() {
     console.log('   - Clique: "Aplicar via API"');
     console.log('');
     console.log('2. 📝 MÉTODO MANUAL OTIMIZADO:');
-    console.log('   - Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw');
+    console.log('   - Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref');
     console.log('   - Vá para: SQL Editor');
     console.log('   - Execute: supabase/migrations/006_component_configurations.sql');
     console.log('');

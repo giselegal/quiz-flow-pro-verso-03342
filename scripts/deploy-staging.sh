@@ -131,7 +131,7 @@ echo "     VITE_SUPABASE_URL=$VITE_SUPABASE_URL"
 echo "     VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY"
 echo ""
 echo "  2. Configure redirect URLs no Supabase Dashboard:"
-echo "     https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration"
+echo "     https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration"
 echo ""
 echo "  3. Adicione seu domínio de staging em 'Site URL' e 'Redirect URLs'"
 echo ""
@@ -173,7 +173,7 @@ VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 \`\`\`
 
 ### 2. Supabase Auth URLs
-Configure no dashboard: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw/auth/url-configuration
+Configure no dashboard: https://supabase.com/dashboard/project/your-supabase-project-ref/auth/url-configuration
 
 - **Site URL:** https://seu-dominio-staging.netlify.app
 - **Redirect URLs:** 

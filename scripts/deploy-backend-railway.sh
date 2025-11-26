@@ -70,7 +70,7 @@ if [ "$CONFIGURE_ENV" = "y" ] || [ "$CONFIGURE_ENV" = "Y" ]; then
     echo "Adicione as seguintes variáveis no Railway Dashboard:"
     echo "https://railway.app/dashboard"
     echo ""
-    echo "VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co"
+    echo "VITE_SUPABASE_URL=https://your-supabase-project.supabase.co"
     echo "VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     echo "NODE_ENV=production"
     echo "PORT=5000"

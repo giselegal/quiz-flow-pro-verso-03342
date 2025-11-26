@@ -17,8 +17,8 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 // Configuração
-const supabaseUrl = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+const supabaseUrl = 'https://your-supabase-project.supabase.co';
+const supabaseAnonKey = 'your-supabase-anon-key';
 
 // ============================================================================
 // STRATEGY 1: SERVICE ROLE KEY
@@ -238,9 +238,9 @@ function generateManualInstructions() {
 
     <div class="step">
         <h3>🎯 Passo 1: Acessar Supabase Dashboard</h3>
-        <p>1. Acesse: <a href="https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw" target="_blank" class="btn">Supabase Dashboard</a></p>
+        <p>1. Acesse: <a href="https://supabase.com/dashboard/project/your-supabase-project-ref" target="_blank" class="btn">Supabase Dashboard</a></p>
         <p>2. Faça login se necessário</p>
-        <p>3. Certifique-se de estar no projeto correto: <strong>pwtjuuhchtbzttrzoutw</strong></p>
+        <p>3. Certifique-se de estar no projeto correto: <strong>your-supabase-project-ref</strong></p>
     </div>
 
     <div class="step">
@@ -367,7 +367,7 @@ async function autoRegenerateTypes() {
   
   try {
     const { stdout, stderr } = await execAsync(
-      `npx supabase gen types typescript --project-id pwtjuuhchtbzttrzoutw`,
+      `npx supabase gen types typescript --project-id your-supabase-project-ref`,
       { cwd: process.cwd() }
     );
     

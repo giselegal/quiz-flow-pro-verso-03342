@@ -257,7 +257,7 @@ export const useQuiz21Steps = () => {
 
 ```bash
 # ===== SUPABASE - BANCO DE DADOS =====
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
 
 # ===== EDITOR DE FUNIL =====

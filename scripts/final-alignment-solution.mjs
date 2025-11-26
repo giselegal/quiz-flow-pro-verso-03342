@@ -9,8 +9,8 @@ import { createClient } from '@supabase/supabase-js';
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
-const supabaseUrl = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+const supabaseUrl = 'https://your-supabase-project.supabase.co';
+const supabaseAnonKey = 'your-supabase-anon-key';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -38,7 +38,7 @@ async function solution1_ValidateComponentConfigurations() {
         console.log('🚀 SOLUÇÃO IMEDIATA:');
         console.log('   1. A interface web está disponível: apply-migration-web.html');
         console.log('   2. Clique "Verificar Status" → "Aplicar Migration"');
-        console.log('   3. Ou execute: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw');
+        console.log('   3. Ou execute: https://supabase.com/dashboard/project/your-supabase-project-ref');
         console.log('   4. SQL Editor → Execute migration SQL');
         console.log('');
         
@@ -127,7 +127,7 @@ function createMigrationInstructions() {
 4. ✅ Aguarde: Validação automática
 
 ### MÉTODO 2: Supabase Dashboard (Manual)
-1. 🌐 Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw
+1. 🌐 Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref
 2. 📝 Vá para: SQL Editor → New Query
 3. 📋 Execute: supabase/migrations/006_component_configurations.sql
 4. ✅ Clique: Run

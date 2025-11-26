@@ -17,11 +17,11 @@ NC='\033[0m'
 echo -e "${BLUE}📋 Análise dos Erros 404:${NC}"
 echo "-------------------------------------------"
 echo ""
-echo "Erro 1: pwtjuuhchtbzttrzoutw…ete-1760491377394"
+echo "Erro 1: your-supabase-project-ref…ete-1760491377394"
 echo "  → Parece ser um ID de funnel do Supabase"
 echo "  → Formato: [funnel-id]-[timestamp]"
 echo ""
-echo "Erro 2: pwtjuuhchtbzttrzoutw…d_at.desc&limit=1"
+echo "Erro 2: your-supabase-project-ref…d_at.desc&limit=1"
 echo "  → Parece ser uma query do Supabase"
 echo "  → created_at.desc&limit=1 → buscando último registro"
 echo ""
@@ -90,8 +90,8 @@ echo ""
 echo -e "${BLUE}📋 Procurando por IDs de funnel:${NC}"
 echo "-------------------------------------------"
 
-# O ID do erro: pwtjuuhchtbzttrzoutw
-FUNNEL_ID_PATTERN="pwtjuuhchtbzttrzoutw"
+# O ID do erro: your-supabase-project-ref
+FUNNEL_ID_PATTERN="your-supabase-project-ref"
 
 if grep -rq "$FUNNEL_ID_PATTERN" src/ 2>/dev/null; then
     echo -e "${YELLOW}⚠️${NC}  ID de funnel hardcoded encontrado no código"

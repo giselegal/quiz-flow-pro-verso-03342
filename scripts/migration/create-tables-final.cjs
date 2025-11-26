@@ -1,9 +1,9 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Configuração correta do Supabase
-const SUPABASE_URL = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
+const SUPABASE_URL = 'https://your-supabase-project.supabase.co';
 const SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+  'your-supabase-anon-key';
 const SUPABASE_SERVICE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjM0NDQ2MCwiZXhwIjoyMDY3OTIwNDYwfQ.jkXLyH0tJttuL_P-Kt7dGsIzyBuLWZRJ3NZi6F9trUI';
 
@@ -258,7 +258,7 @@ async function createTablesCorrectProject() {
   } catch (error) {
     console.error('❌ Erro geral:', error.message);
     console.log('\n💡 Solução manual:');
-    console.log(`   1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw`);
+    console.log(`   1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref`);
     console.log('   2. Vá para "SQL Editor"');
     console.log('   3. Execute o SQL do arquivo create-funnel-tables.sql');
   }

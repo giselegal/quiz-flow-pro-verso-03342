@@ -3,7 +3,7 @@
 ## ⚠️ PRÉ-REQUISITOS
 
 - ✅ Supabase CLI instalado (v2.54.11) - **OK**
-- ✅ Projeto configurado (pwtjuuhchtbzttrzoutw) - **OK**
+- ✅ Projeto configurado (your-supabase-project-ref) - **OK**
 - ⚠️ Autenticação necessária
 
 ---
@@ -11,7 +11,7 @@
 ## 📋 OPÇÃO 1: Via Supabase Dashboard (Mais Segura para Produção)
 
 ### Passo 1: Acessar Dashboard
-1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw
+1. Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref
 2. Login com suas credenciais
 
 ### Passo 2: Aplicar Migração de Performance Indexes
@@ -63,7 +63,7 @@ supabase login
 
 ### Passo 2: Linkar ao Projeto
 ```bash
-supabase link --project-ref pwtjuuhchtbzttrzoutw
+supabase link --project-ref your-supabase-project-ref
 ```
 - Será solicitada a senha do banco de dados
 - A senha está em: Dashboard → Settings → Database → Connection string

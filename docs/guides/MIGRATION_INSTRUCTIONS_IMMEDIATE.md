@@ -9,7 +9,7 @@
 4. ✅ Aguarde: Validação automática
 
 ### MÉTODO 2: Supabase Dashboard (Manual)
-1. 🌐 Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw
+1. 🌐 Acesse: https://supabase.com/dashboard/project/your-supabase-project-ref
 2. 📝 Vá para: SQL Editor → New Query
 3. 📋 Execute: supabase/migrations/006_component_configurations.sql
 4. ✅ Clique: Run

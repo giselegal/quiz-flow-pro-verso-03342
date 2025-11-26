@@ -35,7 +35,7 @@ O sistema utiliza variáveis de ambiente para configurar diferentes aspectos da 
 
 ```bash
 # URL principal do projeto Supabase
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
 
 # Chave pública (anon key) - segura para frontend
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...

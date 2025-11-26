@@ -44,7 +44,7 @@ const cspDirectives = {
   ],
   'connect-src': [
     "'self'",
-    'https://pwtjuuhchtbzttrzoutw.supabase.co',
+    'https://your-supabase-project.supabase.co',
     'https://*.supabase.co',
     'wss://*.supabase.co',
     'https://api.github.com',

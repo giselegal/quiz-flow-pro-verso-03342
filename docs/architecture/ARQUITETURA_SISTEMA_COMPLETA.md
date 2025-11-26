@@ -92,7 +92,7 @@ Build: Vite + esbuild
 
 #### **Configuração Supabase**
 ```env
-VITE_SUPABASE_URL=https://pwtjuuhchtbzttrzoutw.supabase.co
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
 VITE_SUPABASE_ANON_KEY=[KEY]
 VITE_EDITOR_SUPABASE_ENABLED=true
 ```

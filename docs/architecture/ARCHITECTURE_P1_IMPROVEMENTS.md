@@ -29,7 +29,7 @@
 ### **Problema Original**
 - **~50 arquivos** importando `@/integrations/supabase/client`
 - Metade da app conectando ao projeto Lovable Cloud (`dgpbqhjktlnjiatcqheh`)
-- Outra metade tentando conectar ao projeto externo (`pwtjuuhchtbzttrzoutw`)
+- Outra metade tentando conectar ao projeto externo (`your-supabase-project-ref`)
 - Dados inconsistentes entre componentes
 
 ### **Solução Implementada**

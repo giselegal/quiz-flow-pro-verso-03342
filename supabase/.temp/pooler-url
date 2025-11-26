@@ -1,1 +1,1 @@
-postgresql://postgres.pwtjuuhchtbzttrzoutw@aws-0-us-east-2.pooler.supabase.com:5432/postgres
+postgresql://postgres.your-supabase-project-ref@aws-0-us-east-2.pooler.supabase.com:5432/postgres
