@@ -439,7 +439,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 `Encontrado draft não salvo de ${Math.round((snapshot.snapshotAge || 0) / 1000)}s atrás. Deseja recuperar?`
             )) {
                 appLogger.info('[Snapshot] Recuperando draft...');
-                wysiwyg.actions.reset(recovered.blocks);
+                // Apenas resetar WYSIWYG em modo edit
+                if (previewMode !== 'live') {
+                    wysiwyg.actions.reset(recovered.blocks);
+                }
                 setViewport(recovered.viewport);
                 setCurrentStep(recovered.currentStep);
                 snapshot.clearSnapshot();
@@ -989,8 +992,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // }, [selectedBlockId, blocks]);
 
     // ✅ G1 FIX: Auto-selecionar primeiro bloco se selectedBlockId for null ou inválido
+    // ⚠️ IMPORTANTE: Não rodar em preview-live para evitar loops infinitos
     useEffect(() => {
-        if (previewMode === 'live' && (!selectedBlockId || !blocks?.find(b => b.id === selectedBlockId))) {
+        // Desabilitar auto-seleção em modo preview para prevenir loops
+        if (previewMode === 'live') return;
+
+        if (!selectedBlockId || !blocks?.find(b => b.id === selectedBlockId)) {
             const first = blocks && blocks[0];
             if (first) {
                 appLogger.debug(`[G1] Auto-selecionando primeiro bloco: ${first.id}`);
@@ -1855,7 +1862,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     onClick={() => {
                                         const recovered = snapshot.recoverSnapshot();
                                         if (recovered) {
-                                            wysiwyg.actions.reset(recovered.blocks);
+                                            // Apenas resetar WYSIWYG em modo edit
+                                            if (previewMode !== 'live') {
+                                                wysiwyg.actions.reset(recovered.blocks);
+                                            }
                                             setViewport(recovered.viewport);
                                             setCurrentStep(recovered.currentStep);
                                             snapshot.clearSnapshot();
