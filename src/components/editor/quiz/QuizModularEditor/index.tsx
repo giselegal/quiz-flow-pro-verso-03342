@@ -31,7 +31,7 @@ import { TemplateHealthPanel } from './components/TemplateHealthPanel';
 // 🎯 FASE 3.1: Novos hooks refatorados
 import { useStepNavigation } from './hooks/useStepNavigation';
 import useEditorAdapter from '@/hooks/useEditorAdapter';
-import { useAutoSave } from './hooks/useAutoSave';
+import { useAutoSave } from '@/core';
 import { useEditorMode as useEditorModeLocal } from './hooks/useEditorMode';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
 import { useStepPrefetch } from '@/hooks/useStepPrefetch';
@@ -375,16 +375,24 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         mode: previewMode === 'live' ? 'preview-live' : 'preview-production',
     });
 
-    // 🎯 FASE 3.1: Auto-save com novo hook refatorado (após wysiwyg)
-    const autoSave = useAutoSave({
-        enabled: enableAutoSave && !!resourceId,
+    // 🎯 FASE 3.1: Auto-save com hook core (após wysiwyg)
+    const autoSave = enableAutoSave && resourceId ? useAutoSave({
+        key: `editor-autosave:${resourceId}:step-${safeCurrentStep}`,
+        data: wysiwyg?.state?.blocks || [],
         debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
-        onSave: async () => {
+        onSave: async (key) => {
             const stepNumber = safeCurrentStep;
             await saveStepBlocks(stepNumber);
         },
-        data: wysiwyg?.state?.blocks || [],
-    });
+        enableRecovery: true,
+    }) : {
+        isSaving: false,
+        lastSaved: null,
+        error: null,
+        forceSave: async () => { },
+        recoveredData: null,
+        clearRecovery: () => { },
+    };
 
     // 💾 Recuperar snapshot no mount
     useEffect(() => {
@@ -1115,7 +1123,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             // Garantir persistência de todas as etapas sujas antes do snapshot global
             try {
-                await autoSave.triggerSave();
+                await autoSave.forceSave();
                 await (unified as any).ensureAllDirtyStepsSaved?.();
             } catch (error) {
                 appLogger.warn('[QuizModularEditor] Erro ao salvar steps pendentes antes do snapshot:', {
@@ -1782,13 +1790,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             {useSimplePropertiesPanel ? '✅ PropertiesColumn' : '📝 WithJson'}
                         </Button>
 
-                        {/* 🎯 FASE 3.1: Indicador de auto-save com novo hook */}
+                        {/* 🎯 FASE 3.1: Indicador de auto-save com hook core */}
                         {enableAutoSave && (
                             <AutosaveIndicator
-                                status={autoSave.saveStatus as any}
-                                errorMessage={undefined}
+                                status={autoSave.isSaving ? 'saving' : autoSave.error ? 'error' : autoSave.lastSaved ? 'saved' : 'idle'}
+                                errorMessage={autoSave.error?.message}
                                 onRetry={() => {
-                                    autoSave.triggerSave();
+                                    autoSave.forceSave();
                                 }}
                                 className="animate-fade-in"
                             />
