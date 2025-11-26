@@ -205,7 +205,7 @@ export const RealTimeProvider: React.FC<RealTimeProviderProps> = ({
                     });
                     setCollaborators(users);
                 })
-                .subscribe(async (status) => {
+                .subscribe(async (status: any) => {
                     if (status === 'SUBSCRIBED') {
                         await channel.track({
                             userId: currentUserId,

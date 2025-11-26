@@ -672,12 +672,16 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                 } else {
                   // Duplicar bloco criando uma cópia
                   const blockToDuplicate = effectiveSelectedBlock;
-                  const newBlock = {
-                    ...blockToDuplicate,
-                    id: `block-${Date.now()}`,
-                    order: (blockToDuplicate.order || 0) + 1,
-                  };
-                  actions.addBlock(currentStep, newBlock);
+                  // addBlock aceita apenas type, depois atualizamos
+                  actions.addBlock(blockToDuplicate.type).then((newId) => {
+                    if (newId && actions.updateBlock) {
+                      actions.updateBlock(newId, {
+                        properties: blockToDuplicate.properties,
+                        content: blockToDuplicate.content,
+                        order: (blockToDuplicate.order || 0) + 1,
+                      });
+                    }
+                  });
                 }
               }}
             >
