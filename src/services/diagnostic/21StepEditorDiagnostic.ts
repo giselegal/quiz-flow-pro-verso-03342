@@ -458,8 +458,10 @@ function investigateFinalStepsProcessing(): DiagnosticResult {
   try {
     // Test final steps (19-21) specifically
     const finalSteps = [19, 20, 21];
+    const funnel = getLoadedFunnelSync('quiz21StepsComplete');
+    const stepBlocks = funnel?.steps || undefined;
     const finalStepResults = finalSteps.map(step => {
-      const blocks = getBlocksForStep(step, QUIZ_STYLE_21_STEPS_TEMPLATE);
+      const blocks = getBlocksForStep(step, stepBlocks);
       return {
         step,
         hasBlocks: Array.isArray(blocks) && blocks.length > 0,
