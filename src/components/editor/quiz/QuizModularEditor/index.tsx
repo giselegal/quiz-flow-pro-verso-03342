@@ -1891,323 +1891,323 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             Importar JSON
                         </Button>
                     </div>
-            </header>
+                </header>
 
-            {/* Panels */}
-            <PanelGroup
-                direction="horizontal"
-                className="flex-1"
-                autoSaveId={PANEL_LAYOUT_KEY}
-                onLayout={(sizes: number[]) => {
-                    try {
-                        localStorage.setItem(PANEL_LAYOUT_KEY, JSON.stringify(sizes));
-                        setPanelLayout(sizes);
-                    } catch (error) {
-                        appLogger.warn(
-                            '[QuizModularEditor] Falha ao salvar layout de painéis:',
-                            error
-                        );
-                    }
-                }}
-            >
-                <Panel defaultSize={15} minSize={10} maxSize={25}>
-                    <div
-                        className="h-full border-r bg-white overflow-y-auto flex flex-col"
-                        data-testid="column-steps"
-                    >
-                        <StepNavigatorColumn
-                            steps={navSteps}
-                            currentStepKey={currentStepKey}
-                            onSelectStep={handleSelectStep}
-                            validationErrors={validationResult?.errors}
-                            validationWarnings={validationResult?.warnings}
-                        />
-
-                        {/* 🏥 Health Panel Toggle Button */}
-                        <div className="p-2 border-t mt-auto">
-                            <Button
-                                size="sm"
-                                variant={showHealthPanel ? 'default' : 'outline'}
-                                onClick={() => setShowHealthPanel(!showHealthPanel)}
-                                className="w-full text-xs"
-                                title="Template Health Panel"
-                            >
-                                {validationResult?.isValid ? '✓' : '⚠'} Saúde do Template
-                            </Button>
-                        </div>
-                    </div>
-                </Panel>
-
-                <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
-
-                {/* 🎯 FASE 3.1: Painel de biblioteca com controle de visibilidade */}
-                {editorModeUI.showComponentLibrary && (
-                    <>
-                        <Panel defaultSize={20} minSize={15} maxSize={30}>
-                            <Suspense
-                                fallback={
-                                    <div className="p-4 text-sm text-gray-500">
-                                        Carregando biblioteca…
-                                    </div>
-                                }
-                            >
-                                <div
-                                    className="h-full border-r bg-white overflow-y-auto"
-                                    data-testid="column-library"
-                                >
-                                    <ComponentLibraryColumn
-                                        currentStepKey={currentStepKey}
-                                        onAddBlock={handleAddBlock}
-                                    />
-                                </div>
-                            </Suspense>
-                        </Panel>
-
-                        <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
-                    </>
-                )}
-
-                <Panel defaultSize={40} minSize={30}>
-                    <Suspense
-                        fallback={
-                            <div className="flex items-center justify-center h-full text-gray-500">
-                                Carregando canvas…
-                            </div>
+                {/* Panels */}
+                <PanelGroup
+                    direction="horizontal"
+                    className="flex-1"
+                    autoSaveId={PANEL_LAYOUT_KEY}
+                    onLayout={(sizes: number[]) => {
+                        try {
+                            localStorage.setItem(PANEL_LAYOUT_KEY, JSON.stringify(sizes));
+                            setPanelLayout(sizes);
+                        } catch (error) {
+                            appLogger.warn(
+                                '[QuizModularEditor] Falha ao salvar layout de painéis:',
+                                error
+                            );
                         }
-                    >
+                    }}
+                >
+                    <Panel defaultSize={15} minSize={10} maxSize={25}>
                         <div
-                            className="h-full bg-gray-50 overflow-y-auto"
-                            data-testid="column-canvas"
+                            className="h-full border-r bg-white overflow-y-auto flex flex-col"
+                            data-testid="column-steps"
                         >
-                            {isLoadingTemplate ? (
-                                <div className="h-full flex items-center justify-center">
-                                    <div className="text-sm text-gray-500 animate-pulse">
-                                        Carregando etapas do template…
-                                    </div>
-                                </div>
-                            ) : isLoadingStep ? (
-                                <div className="h-full flex items-center justify-center">
-                                    <div className="text-center">
-                                        <div className="text-sm text-gray-500 animate-pulse mb-2">
-                                            Carregando etapa…
-                                        </div>
-                                        <div className="text-xs text-gray-400">
-                                            {currentStepKey}
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <StepErrorBoundary
-                                    stepKey={currentStepKey || 'unknown'}
-                                    onReset={handleReloadStep}
+                            <StepNavigatorColumn
+                                steps={navSteps}
+                                currentStepKey={currentStepKey}
+                                onSelectStep={handleSelectStep}
+                                validationErrors={validationResult?.errors}
+                                validationWarnings={validationResult?.warnings}
+                            />
+
+                            {/* 🏥 Health Panel Toggle Button */}
+                            <div className="p-2 border-t mt-auto">
+                                <Button
+                                    size="sm"
+                                    variant={showHealthPanel ? 'default' : 'outline'}
+                                    onClick={() => setShowHealthPanel(!showHealthPanel)}
+                                    className="w-full text-xs"
+                                    title="Template Health Panel"
                                 >
-                                    <ViewportContainer
-                                        viewport={viewport}
-                                        showRuler={true}
-                                        className="h-full overflow-auto"
-                                    >
-                                        <div
-                                            className={
-                                                isLoadingStep
-                                                    ? 'pointer-events-none opacity-50'
-                                                    : ''
-                                            }
-                                        >
-                                            <CanvasColumn
-                                                currentStepKey={currentStepKey}
-                                                blocks={(() => {
-                                                    const blocksToRender = previewMode === 'live'
-                                                        ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
-                                                        : blocks;
-                                                    console.log('📊 [QuizModularEditor] Passando blocks para CanvasColumn:', {
-                                                        previewMode,
-                                                        isVirtualized: virtualization.isVirtualized,
-                                                        wysiwygBlocks: wysiwyg.state.blocks?.length,
-                                                        persistedBlocks: blocks?.length,
-                                                        finalBlocks: blocksToRender?.length,
-                                                        blockIds: blocksToRender?.map(b => b.id).slice(0, 3),
-                                                    });
-                                                    return blocksToRender;
-                                                })()}
-                                                selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
-                                                onRemoveBlock={previewMode === 'live' ? (id => {
-                                                    wysiwyg.actions.removeBlock(id);
-                                                    // ✅ Use canonical deleteBlock from adapter
-                                                    adapter.actions.deleteBlock(id);
-                                                }) : undefined}
-                                                onMoveBlock={previewMode === 'live' ? ((from, to) => {
-                                                    wysiwyg.actions.reorderBlocks(from, to);
-                                                }) : undefined}
-                                                onUpdateBlock={previewMode === 'live' ? ((id, patch) => {
-                                                    wysiwyg.actions.updateBlock(id, patch);
-                                                    (adapter.actions.updateBlock ?? ((bid, p) => updateBlock(safeCurrentStep, bid, p)))(id, patch);
-                                                }) : undefined}
-                                                onBlockSelect={(id) => {
-                                                    if (previewMode === 'live') {
-                                                        wysiwyg.actions.selectBlock(id);
-                                                    }
-                                                    handleBlockSelect(id);
-                                                }}
-                                                hasTemplate={Boolean(
-                                                    loadedTemplate ||
-                                                    props.templateId ||
-                                                    resourceId
-                                                )}
-                                                onLoadTemplate={handleLoadTemplate}
-                                                isEditable={previewMode === 'live'}
-                                            />
-                                        </div>
-                                    </ViewportContainer>
-                                </StepErrorBoundary>
-                            )}
+                                    {validationResult?.isValid ? '✓' : '⚠'} Saúde do Template
+                                </Button>
+                            </div>
                         </div>
-                    </Suspense>
-                </Panel>
+                    </Panel>
 
-                <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
+                    <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
-                {/* 🎯 FASE 3.1: Painel de propriedades com controle de visibilidade */}
-                {editorModeUI.showProperties && (
-                    <Panel defaultSize={25} minSize={20} maxSize={35}>
+                    {/* 🎯 FASE 3.1: Painel de biblioteca com controle de visibilidade */}
+                    {editorModeUI.showComponentLibrary && (
+                        <>
+                            <Panel defaultSize={20} minSize={15} maxSize={30}>
+                                <Suspense
+                                    fallback={
+                                        <div className="p-4 text-sm text-gray-500">
+                                            Carregando biblioteca…
+                                        </div>
+                                    }
+                                >
+                                    <div
+                                        className="h-full border-r bg-white overflow-y-auto"
+                                        data-testid="column-library"
+                                    >
+                                        <ComponentLibraryColumn
+                                            currentStepKey={currentStepKey}
+                                            onAddBlock={handleAddBlock}
+                                        />
+                                    </div>
+                                </Suspense>
+                            </Panel>
+
+                            <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
+                        </>
+                    )}
+
+                    <Panel defaultSize={40} minSize={30}>
                         <Suspense
                             fallback={
-                                <div className="p-4 text-sm text-gray-500">
-                                    Carregando propriedades…
+                                <div className="flex items-center justify-center h-full text-gray-500">
+                                    Carregando canvas…
                                 </div>
                             }
                         >
                             <div
-                                className="h-full border-l bg-white overflow-y-auto"
-                                data-testid="column-properties"
+                                className="h-full bg-gray-50 overflow-y-auto"
+                                data-testid="column-canvas"
                             >
-                                {/* DEBUG removido para limpar console */}
-
-                                {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
-                                {(() => {
-                                    console.log('🎨 [QuizModularEditor] Renderizando painel:', {
-                                        useSimplePropertiesPanel,
-                                        painel: useSimplePropertiesPanel ? 'PropertiesColumn' : 'PropertiesColumnWithJson',
-                                        selectedBlock: selectedBlock?.id,
-                                        blocksLength: wysiwyg.state.blocks.length
-                                    });
-
-                                    return useSimplePropertiesPanel ? (
-                                        <PropertiesColumn
-                                            selectedBlock={selectedBlock}
-                                            blocks={wysiwyg.state.blocks}
-                                            onBlockSelect={handleWYSIWYGBlockSelect}
-                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                            onClearSelection={handleWYSIWYGClearSelection}
-                                        />
-                                    ) : (
-                                        <PropertiesColumnWithJson
-                                            selectedBlock={selectedBlock}
-                                            blocks={wysiwyg.state.blocks}
-                                            onBlockSelect={handleWYSIWYGBlockSelect}
-                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                            onClearSelection={handleWYSIWYGClearSelection}
-                                            fullTemplate={fullTemplate}
-                                            onTemplateChange={handleTemplateChange}
-                                            templateId={currentStepKey}
-                                        />
-                                    );
-                                })()}
+                                {isLoadingTemplate ? (
+                                    <div className="h-full flex items-center justify-center">
+                                        <div className="text-sm text-gray-500 animate-pulse">
+                                            Carregando etapas do template…
+                                        </div>
+                                    </div>
+                                ) : isLoadingStep ? (
+                                    <div className="h-full flex items-center justify-center">
+                                        <div className="text-center">
+                                            <div className="text-sm text-gray-500 animate-pulse mb-2">
+                                                Carregando etapa…
+                                            </div>
+                                            <div className="text-xs text-gray-400">
+                                                {currentStepKey}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <StepErrorBoundary
+                                        stepKey={currentStepKey || 'unknown'}
+                                        onReset={handleReloadStep}
+                                    >
+                                        <ViewportContainer
+                                            viewport={viewport}
+                                            showRuler={true}
+                                            className="h-full overflow-auto"
+                                        >
+                                            <div
+                                                className={
+                                                    isLoadingStep
+                                                        ? 'pointer-events-none opacity-50'
+                                                        : ''
+                                                }
+                                            >
+                                                <CanvasColumn
+                                                    currentStepKey={currentStepKey}
+                                                    blocks={(() => {
+                                                        const blocksToRender = previewMode === 'live'
+                                                            ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
+                                                            : blocks;
+                                                        console.log('📊 [QuizModularEditor] Passando blocks para CanvasColumn:', {
+                                                            previewMode,
+                                                            isVirtualized: virtualization.isVirtualized,
+                                                            wysiwygBlocks: wysiwyg.state.blocks?.length,
+                                                            persistedBlocks: blocks?.length,
+                                                            finalBlocks: blocksToRender?.length,
+                                                            blockIds: blocksToRender?.map(b => b.id).slice(0, 3),
+                                                        });
+                                                        return blocksToRender;
+                                                    })()}
+                                                    selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
+                                                    onRemoveBlock={previewMode === 'live' ? (id => {
+                                                        wysiwyg.actions.removeBlock(id);
+                                                        // ✅ Use canonical deleteBlock from adapter
+                                                        adapter.actions.deleteBlock(id);
+                                                    }) : undefined}
+                                                    onMoveBlock={previewMode === 'live' ? ((from, to) => {
+                                                        wysiwyg.actions.reorderBlocks(from, to);
+                                                    }) : undefined}
+                                                    onUpdateBlock={previewMode === 'live' ? ((id, patch) => {
+                                                        wysiwyg.actions.updateBlock(id, patch);
+                                                        (adapter.actions.updateBlock ?? ((bid, p) => updateBlock(safeCurrentStep, bid, p)))(id, patch);
+                                                    }) : undefined}
+                                                    onBlockSelect={(id) => {
+                                                        if (previewMode === 'live') {
+                                                            wysiwyg.actions.selectBlock(id);
+                                                        }
+                                                        handleBlockSelect(id);
+                                                    }}
+                                                    hasTemplate={Boolean(
+                                                        loadedTemplate ||
+                                                        props.templateId ||
+                                                        resourceId
+                                                    )}
+                                                    onLoadTemplate={handleLoadTemplate}
+                                                    isEditable={previewMode === 'live'}
+                                                />
+                                            </div>
+                                        </ViewportContainer>
+                                    </StepErrorBoundary>
+                                )}
                             </div>
                         </Suspense>
                     </Panel>
-                )}
-            </PanelGroup>
 
-            {/* 🏥 Template Health Panel (sidebar) */}
-            {showHealthPanel && (
-                <div className="fixed right-4 top-20 bottom-4 w-96 z-50 shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                    <TemplateHealthPanel
-                        validationResult={validationResult}
-                        onAutoFix={(errorIndex) => {
-                            // Auto-fix: Tenta corrigir automaticamente erros comuns
-                            if (validationResult?.errors?.[errorIndex]) {
-                                const error = validationResult.errors[errorIndex];
-                                appLogger.info('Tentando auto-fix', { error });
+                    <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
-                                toast({
-                                    type: 'info',
-                                    title: 'Auto-fix',
-                                    message: `Corrigindo: ${error.message}`,
-                                });
-
-                                // Navegar para o step com erro para que o usuário possa ver a correção
-                                if (error.stepId) {
-                                    handleSelectStep(error.stepId);
+                    {/* 🎯 FASE 3.1: Painel de propriedades com controle de visibilidade */}
+                    {editorModeUI.showProperties && (
+                        <Panel defaultSize={25} minSize={20} maxSize={35}>
+                            <Suspense
+                                fallback={
+                                    <div className="p-4 text-sm text-gray-500">
+                                        Carregando propriedades…
+                                    </div>
                                 }
-                            } else {
-                                toast({
-                                    type: 'warning',
-                                    title: 'Auto-fix',
-                                    message: 'Erro não encontrado ou já corrigido',
-                                });
+                            >
+                                <div
+                                    className="h-full border-l bg-white overflow-y-auto"
+                                    data-testid="column-properties"
+                                >
+                                    {/* DEBUG removido para limpar console */}
+
+                                    {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
+                                    {(() => {
+                                        console.log('🎨 [QuizModularEditor] Renderizando painel:', {
+                                            useSimplePropertiesPanel,
+                                            painel: useSimplePropertiesPanel ? 'PropertiesColumn' : 'PropertiesColumnWithJson',
+                                            selectedBlock: selectedBlock?.id,
+                                            blocksLength: wysiwyg.state.blocks.length
+                                        });
+
+                                        return useSimplePropertiesPanel ? (
+                                            <PropertiesColumn
+                                                selectedBlock={selectedBlock}
+                                                blocks={wysiwyg.state.blocks}
+                                                onBlockSelect={handleWYSIWYGBlockSelect}
+                                                onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                                onClearSelection={handleWYSIWYGClearSelection}
+                                            />
+                                        ) : (
+                                            <PropertiesColumnWithJson
+                                                selectedBlock={selectedBlock}
+                                                blocks={wysiwyg.state.blocks}
+                                                onBlockSelect={handleWYSIWYGBlockSelect}
+                                                onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                                onClearSelection={handleWYSIWYGClearSelection}
+                                                fullTemplate={fullTemplate}
+                                                onTemplateChange={handleTemplateChange}
+                                                templateId={currentStepKey}
+                                            />
+                                        );
+                                    })()}
+                                </div>
+                            </Suspense>
+                        </Panel>
+                    )}
+                </PanelGroup>
+
+                {/* 🏥 Template Health Panel (sidebar) */}
+                {showHealthPanel && (
+                    <div className="fixed right-4 top-20 bottom-4 w-96 z-50 shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                        <TemplateHealthPanel
+                            validationResult={validationResult}
+                            onAutoFix={(errorIndex) => {
+                                // Auto-fix: Tenta corrigir automaticamente erros comuns
+                                if (validationResult?.errors?.[errorIndex]) {
+                                    const error = validationResult.errors[errorIndex];
+                                    appLogger.info('Tentando auto-fix', { error });
+
+                                    toast({
+                                        type: 'info',
+                                        title: 'Auto-fix',
+                                        message: `Corrigindo: ${error.message}`,
+                                    });
+
+                                    // Navegar para o step com erro para que o usuário possa ver a correção
+                                    if (error.stepId) {
+                                        handleSelectStep(error.stepId);
+                                    }
+                                } else {
+                                    toast({
+                                        type: 'warning',
+                                        title: 'Auto-fix',
+                                        message: 'Erro não encontrado ou já corrigido',
+                                    });
+                                }
+                            }}
+                            onNavigateToStep={(stepId) => {
+                                handleSelectStep(stepId);
+                                setShowHealthPanel(false);
+                            }}
+                            onDismissWarning={(warningIndex) => {
+                                // Dismiss: Remove warning da lista temporariamente
+                                if (validationResult?.warnings?.[warningIndex]) {
+                                    const warning = validationResult.warnings[warningIndex];
+                                    appLogger.info('Warning dismissed', { warning });
+
+                                    // Atualizar validation result removendo o warning
+                                    setValidationResult(prev => {
+                                        if (!prev) return prev;
+                                        const newWarnings = [...prev.warnings];
+                                        newWarnings.splice(warningIndex, 1);
+                                        return {
+                                            ...prev,
+                                            warnings: newWarnings,
+                                        };
+                                    });
+
+                                    toast({
+                                        type: 'success',
+                                        title: 'Warning Dismissed',
+                                        message: 'Aviso removido da lista',
+                                    });
+                                }
+                            }}
+                            collapsed={false}
+                            onToggleCollapse={() => setShowHealthPanel(false)}
+                        />
+                    </div>
+                )}
+
+                {import.meta.env.DEV && MetricsPanel && (
+                    <Suspense fallback={null}>
+                        <MetricsPanel />
+                    </Suspense>
+                )}
+
+                {/* ✅ WAVE 2: Performance Monitor em tempo real */}
+                {import.meta.env.DEV && (
+                    <Suspense fallback={null}>
+                        <PerformanceMonitor
+                            selectedBlockId={selectedBlockId}
+                            selectedBlockType={
+                                blocks?.find(b => b.id === selectedBlockId)?.type ||
+                                null
                             }
-                        }}
-                        onNavigateToStep={(stepId) => {
-                            handleSelectStep(stepId);
-                            setShowHealthPanel(false);
-                        }}
-                        onDismissWarning={(warningIndex) => {
-                            // Dismiss: Remove warning da lista temporariamente
-                            if (validationResult?.warnings?.[warningIndex]) {
-                                const warning = validationResult.warnings[warningIndex];
-                                appLogger.info('Warning dismissed', { warning });
+                        />
+                    </Suspense>
+                )}
 
-                                // Atualizar validation result removendo o warning
-                                setValidationResult(prev => {
-                                    if (!prev) return prev;
-                                    const newWarnings = [...prev.warnings];
-                                    newWarnings.splice(warningIndex, 1);
-                                    return {
-                                        ...prev,
-                                        warnings: newWarnings,
-                                    };
-                                });
-
-                                toast({
-                                    type: 'success',
-                                    title: 'Warning Dismissed',
-                                    message: 'Aviso removido da lista',
-                                });
-                            }
-                        }}
-                        collapsed={false}
-                        onToggleCollapse={() => setShowHealthPanel(false)}
-                    />
-                </div>
-            )}
-
-            {import.meta.env.DEV && MetricsPanel && (
-                <Suspense fallback={null}>
-                    <MetricsPanel />
-                </Suspense>
-            )}
-
-            {/* ✅ WAVE 2: Performance Monitor em tempo real */}
-            {import.meta.env.DEV && (
-                <Suspense fallback={null}>
-                    <PerformanceMonitor
-                        selectedBlockId={selectedBlockId}
-                        selectedBlockType={
-                            blocks?.find(b => b.id === selectedBlockId)?.type ||
-                            null
-                        }
-                    />
-                </Suspense>
-            )}
-
-            {/* Import Template Dialog */}
-            <ImportTemplateDialog
-                open={isImportDialogOpen}
-                onClose={() => setIsImportDialogOpen(false)}
-                onImport={handleImportTemplate}
-                currentStepKey={currentStepKey}
-            />
-        </div>
+                {/* Import Template Dialog */}
+                <ImportTemplateDialog
+                    open={isImportDialogOpen}
+                    onClose={() => setIsImportDialogOpen(false)}
+                    onImport={handleImportTemplate}
+                    currentStepKey={currentStepKey}
+                />
+            </div>
         </SafeDndContext >
     );
 }
