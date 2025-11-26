@@ -1472,6 +1472,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, unifiedState.editor.currentStep, showToast]);
 
+    // 🚀 Auto-load de template/funil quando houver resourceId/funnelId presente
+    useEffect(() => {
+        const tid = props.templateId ?? resourceId ?? props.funnelId;
+        if (!tid) return;
+        // Evitar múltiplas chamadas
+        if (loadedTemplate || templateLoadError) return;
+        // Disparar carregamento inicial silencioso
+        (async () => {
+            try {
+                await handleLoadTemplate();
+            } catch {
+                // erro já tratado internamente
+            }
+        })();
+    }, [props.templateId, props.funnelId, resourceId, loadedTemplate, templateLoadError, handleLoadTemplate]);
+
     // Import template from JSON
     const handleImportTemplate = useCallback(
         async (template: any, stepId?: string) => {
@@ -2024,6 +2040,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             showRuler={true}
                                             className="h-full overflow-auto"
                                             data-testid={previewMode === 'live' ? 'canvas-edit-mode' : 'canvas-preview-mode'}
+                                            data-step-id={currentStepKey || 'unknown'}
                                         >
                                             <div
                                                 className={

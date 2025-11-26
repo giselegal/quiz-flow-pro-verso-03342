@@ -380,6 +380,7 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
                 ? 'bg-blue-50 border-2 border-blue-400 border-dashed shadow-inner'
                 : 'border border-transparent hover:border-gray-200'
                 }`}
+            data-step-id={currentStepKey || 'unknown'}
         >
             <div className="text-sm font-medium mb-2 flex items-center justify-between">
                 <span>{currentStepKey}</span>
