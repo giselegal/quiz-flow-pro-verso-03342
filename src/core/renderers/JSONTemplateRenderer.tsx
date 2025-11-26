@@ -3,12 +3,20 @@
  * 
  * Renderiza blocos simples usando templates HTML + Mustache
  * Garante performance otimizada sem necessidade de TSX components
+ * 
+ * @security FASE 1 - Sprint 1
+ * - Mustache escapa HTML automaticamente com {{double braces}}
+ * - Sanitização adicional com DOMPurify no HTML final renderizado
+ * - Proteção contra XSS em templates dinâmicos
+ * 
+ * @warning Templates devem usar {{var}} ao invés de {{{var}}} para conteúdo do usuário
  */
 
 import React, { useEffect, useState, useMemo } from 'react';
 import Mustache from 'mustache';
 import { getTemplatePath } from '@/config/block-complexity-map';
 import { appLogger } from '@/lib/utils/logger';
+import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
 
 // Cache global de templates HTML
 const templateCache = new Map<string, string>();
@@ -186,12 +194,12 @@ export const JSONTemplateRenderer: React.FC<JSONTemplateRendererProps> = ({
   }
 
   // Renderizar HTML usando dangerouslySetInnerHTML
-  // Seguro porque sanitizamos os dados no renderTemplate
+  // Sanitizado com DOMPurify para proteção contra XSS
   return (
     <div
       className={`json-template-block ${className}`}
       style={style}
-      dangerouslySetInnerHTML={{ __html: html }}
+      dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
     />
   );
 };

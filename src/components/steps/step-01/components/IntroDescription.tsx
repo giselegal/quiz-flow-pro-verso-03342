@@ -2,9 +2,14 @@
  * 📝 DESCRIÇÃO DA INTRODUÇÃO
  * 
  * Componente para o texto descritivo da etapa de introdução.
+ * 
+ * @security FASE 1 - Sprint 1
+ * - Sanitização com DOMPurify aplicada em texto dinâmico
+ * - Proteção contra XSS em conteúdo HTML customizado
  */
 
 import React from 'react';
+import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
 
 interface IntroDescriptionProps {
     text?: string;
@@ -42,7 +47,7 @@ const IntroDescription: React.FC<IntroDescriptionProps> = ({
     return (
         <p className="text-sm text-center leading-relaxed px-2 sm:text-base text-gray-600">
             {text ? (
-                <span dangerouslySetInnerHTML={{ __html: text }} />
+                <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }} />
             ) : (
                 defaultText
             )}

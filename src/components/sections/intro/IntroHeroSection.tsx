@@ -2,6 +2,10 @@
  * 🚀 IntroHeroSection - Seção hero para página de introdução
  * 
  * Componente modular para apresentação inicial do quiz
+ * 
+ * @security FASE 1 - Sprint 1
+ * - Sanitização com DOMPurify aplicada em title e subtitle
+ * - Proteção contra XSS em conteúdo HTML dinâmico
  */
 
 import React from 'react';
@@ -9,6 +13,7 @@ import { SectionContainer } from '../shared/SectionContainer';
 import { AnimatedTransition } from '../shared/AnimatedTransition';
 import { DesignTokens } from '@/styles/design-tokens';
 import { useResponsive } from '@/hooks/useResponsive';
+import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
 import type { BaseSectionProps } from '@/types/section-types';
 
 export interface IntroHeroContent {
@@ -135,7 +140,7 @@ export const IntroHeroSection: React.FC<IntroHeroSectionProps> = ({
                         marginBottom: DesignTokens.spacing.md,
                         lineHeight: DesignTokens.lineHeights.tight,
                     }}
-                    dangerouslySetInnerHTML={{ __html: title }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(title) }}
                 />
 
                 {/* Hero Image */}
@@ -166,7 +171,7 @@ export const IntroHeroSection: React.FC<IntroHeroSectionProps> = ({
                             marginBottom: description ? DesignTokens.spacing.md : 0,
                             lineHeight: DesignTokens.lineHeights.normal,
                         }}
-                        dangerouslySetInnerHTML={{ __html: subtitle }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(subtitle) }}
                     />
                 )}
 

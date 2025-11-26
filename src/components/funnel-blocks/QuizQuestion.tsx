@@ -9,6 +9,7 @@ import {
   QuestionOption,
 } from './types';
 import { appLogger } from '@/lib/utils/appLogger';
+import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
 
 // Interface para estilos customizados
 interface CustomStyles {
@@ -163,13 +164,15 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   };
 
   // LOG DE DEBUG - verificar se as opções estão chegando
-  appLogger.info('🔍 QuizQuestion DEBUG:', { data: [{
-        question,
-        optionsLength: options?.length,
-        firstOption: options?.[0],
-        multipleSelection,
-        showNextButton,
-      }] });
+  appLogger.info('🔍 QuizQuestion DEBUG:', {
+    data: [{
+      question,
+      optionsLength: options?.length,
+      firstOption: options?.[0],
+      multipleSelection,
+      showNextButton,
+    }]
+  });
 
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelections);
   const [hasAnswered, setHasAnswered] = useState(false);
@@ -473,7 +476,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           {customStyles?.contentType !== 'image-only' && option.imageUrl && (
             <div className="py-2 px-4 w-full flex flex-row text-base items-center text-full-primary justify-between">
               <div className="break-words w-full custom-quill quill ql-editor quill-option text-centered mt-2">
-                {option.text && <p dangerouslySetInnerHTML={{ __html: option.text }} />}
+                {option.text && <p dangerouslySetInnerHTML={{ __html: sanitizeHtml(option.text) }} />}
               </div>
             </div>
           )}

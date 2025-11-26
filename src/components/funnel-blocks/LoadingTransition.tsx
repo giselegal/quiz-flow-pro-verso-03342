@@ -8,6 +8,11 @@ import { BlockComponentProps, LoadingType, Alignment, InteractionCallbacks } fro
  * Renderiza uma tela de loading com diferentes tipos de animação, mensagens
  * personalizáveis e transição automática após um tempo determinado.
  *
+ * @security FASE 1 - Sprint 1
+ * - Uso de dangerouslySetInnerHTML para CSS keyframes estático
+ * - NãO contém dados dinâmicos do usuário (seguro)
+ * - CSS puro para animações bounce, pulse e ping
+ *
  * @example
  * <LoadingTransition
  *   message="Analisando suas respostas..."
@@ -247,7 +252,8 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
         </button>
       )}
 
-      {/* Estilos CSS para animações */}
+      {/* Estilos CSS para animações 
+          @security CSS estático (keyframes) - NÃO contém dados dinâmicos */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
