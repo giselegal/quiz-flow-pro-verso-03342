@@ -2093,34 +2093,34 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 className="relative z-0 h-full bg-gray-50 overflow-y-auto"
                                 data-testid="column-canvas"
                             >
-                                {isLoadingTemplate ? (
-                                    <div className="h-full flex items-center justify-center">
-                                        <div className="text-sm text-gray-500 animate-pulse">
-                                            Carregando etapas do template…
-                                        </div>
-                                    </div>
-                                ) : isLoadingStep ? (
-                                    <div className="h-full flex items-center justify-center">
-                                        <div className="text-center">
-                                            <div className="text-sm text-gray-500 animate-pulse mb-2">
-                                                Carregando etapa…
-                                            </div>
-                                            <div className="text-xs text-gray-400">
-                                                {currentStepKey}
+                                <ViewportContainer
+                                    viewport={viewport}
+                                    showRuler={true}
+                                    className="h-full overflow-auto"
+                                    data-testid={previewMode === 'live' ? 'canvas-edit-mode' : 'canvas-preview-mode'}
+                                    data-step-id={currentStepKey || 'unknown'}
+                                >
+                                    {isLoadingTemplate ? (
+                                        <div className="h-full flex items-center justify-center">
+                                            <div className="text-sm text-gray-500 animate-pulse">
+                                                Carregando etapas do template…
                                             </div>
                                         </div>
-                                    </div>
-                                ) : (
-                                    <StepErrorBoundary
-                                        stepKey={currentStepKey || 'unknown'}
-                                        onReset={handleReloadStep}
-                                    >
-                                        <ViewportContainer
-                                            viewport={viewport}
-                                            showRuler={true}
-                                            className="h-full overflow-auto"
-                                            data-testid={previewMode === 'live' ? 'canvas-edit-mode' : 'canvas-preview-mode'}
-                                            data-step-id={currentStepKey || 'unknown'}
+                                    ) : isLoadingStep ? (
+                                        <div className="h-full flex items-center justify-center">
+                                            <div className="text-center">
+                                                <div className="text-sm text-gray-500 animate-pulse mb-2">
+                                                    Carregando etapa…
+                                                </div>
+                                                <div className="text-xs text-gray-400">
+                                                    {currentStepKey}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <StepErrorBoundary
+                                            stepKey={currentStepKey || 'unknown'}
+                                            onReset={handleReloadStep}
                                         >
                                             <div
                                                 className={
@@ -2148,7 +2148,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
-                                                        // ✅ Use canonical deleteBlock from adapter
                                                         adapter.actions.deleteBlock(id);
                                                     }) : undefined}
                                                     onMoveBlock={previewMode === 'live' ? ((from, to) => {
@@ -2173,9 +2172,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     isEditable={previewMode === 'live'}
                                                 />
                                             </div>
-                                        </ViewportContainer>
-                                    </StepErrorBoundary>
-                                )}
+                                        </StepErrorBoundary>
+                                    )}
+                                </ViewportContainer>
                             </div>
                         </Suspense>
                     </Panel>
