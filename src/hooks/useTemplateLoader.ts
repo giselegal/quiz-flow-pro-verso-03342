@@ -1,4 +1,3 @@
-import { getStepTemplate } from '@/config/templates/templates';
 import { useEditor } from '@/hooks/useEditor';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
@@ -188,19 +187,8 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
     const loadAllMetadata = async () => {
       const metadata: Record<string, TemplateMetadata> = {};
 
-      for (const stage of stages) {
-        const template = await getStepTemplate(stage.order);
-        if (template) {
-          metadata[stage.id] = {
-            id: stage.id,
-            name: template.metadata?.name || `Template ${stage.order}`,
-            description: template.metadata?.description,
-            type: template.metadata?.type || 'default',
-            version: template.metadata?.version || '1.0.0',
-            blocksCount: template.blocks?.length || 0,
-          };
-        }
-      }
+      // Mantido vazio por ora; fonte de verdade via TemplateService/getStep
+      // Opcional: preencher metadados sob demanda via TemplateService
 
       setTemplatesMetadata(metadata);
     };
@@ -226,20 +214,31 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
           return cachedTemplates[stageId];
         }
 
-        // Carregar do sistema de templates
-        const stage = stages.find((s: any) => s.id === stageId);
-        if (!stage) throw new Error(`Stage ${stageId} not found`);
+        // Carregar via TemplateService usando stageId → stepId
+        const match = stageId.match(/(\d{1,2})$/) || stageId.match(/step-(\d{2})/);
+        if (!match) throw new Error(`Stage ${stageId} inválido (sem step)`);
+        const stepNumber = parseInt(match[1], 10);
+        const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
 
-        const template = await getStepTemplate(stage.order);
-        if (!template) throw new Error(`Template for stage ${stageId} not found`);
+        const templateService = TemplateService.getInstance();
+        const result = await templateService.getStep(stepId);
+        if (!result.success) throw new Error(`Template para ${stageId} não encontrado`);
+
+        // Adaptar para estrutura esperada por quem consome este hook
+        const blocks = result.data as Block[];
+        const stageTemplate = {
+          metadata: { id: stepId, name: `Template ${stepNumber}` },
+          blocks,
+          version: 'v3.2',
+        } as any;
 
         // Atualizar cache
         setCachedTemplates(prev => ({
           ...prev,
-          [stageId]: template,
+          [stageId]: stageTemplate,
         }));
 
-        return template;
+        return stageTemplate;
       } catch (err) {
         setError(err as Error);
         return null;
