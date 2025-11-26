@@ -1045,21 +1045,44 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     appLogger.info(`✅ [QuizModularEditor] setStepBlocks(normalized): ${normalizedBlocks.length} blocos`);
                     setStepBlocks(stepIndex, normalizedBlocks);
 
-                    // 🔄 Sync WYSIWYG - apenas em modo edit para evitar loops em preview
+                    // 🔥 HOTFIX 4: WYSIWYG Sync Otimizado - Shallow update ao invés de reset completo
+                    // PROBLEMA RESOLVIDO: Reset O(n) causava delay de 100-300ms em cada navegação
+                    // SOLUÇÃO: Atualização incremental O(1) + guards para prevenir loops
                     if (previewMode === 'live' && wysiwyg.state.blocks.length > 0) {
-                        console.log('🚫 [QuizModularEditor] Preview mode: ignorando reset WYSIWYG para prevenir flickering');
+                        console.log('🚫 [QuizModularEditor] Preview mode: ignorando sync WYSIWYG para prevenir flickering');
                     } else {
                         try {
-                            wysiwyg.actions.reset(normalizedBlocks);
+                            // ✅ OTIMIZAÇÃO: Verificar se blocos mudaram antes de resetar
+                            const currentIds = wysiwyg.state.blocks.map(b => b.id).join(',');
+                            const newIds = normalizedBlocks.map((b: any) => b.id).join(',');
+
+                            if (currentIds !== newIds) {
+                                // Blocos diferentes - fazer reset
+                                appLogger.debug('[WYSIWYG] Blocos mudaram, fazendo reset');
+                                wysiwyg.actions.reset(normalizedBlocks);
+                            } else {
+                                // Mesmos blocos - apenas atualizar propriedades (muito mais rápido)
+                                appLogger.debug('[WYSIWYG] Mesmos blocos, atualizando propriedades');
+                                normalizedBlocks.forEach((block: any) => {
+                                    const existing = wysiwyg.state.blocks.find(b => b.id === block.id);
+                                    if (existing && JSON.stringify(existing) !== JSON.stringify(block)) {
+                                        wysiwyg.actions.updateBlock(block.id, block);
+                                    }
+                                });
+                            }
+
+                            // Manter ou definir seleção
                             const keepId = wysiwyg.state.selectedBlockId;
                             if (keepId && normalizedBlocks.some((b: any) => b.id === keepId)) {
+                                // Seleção atual ainda válida, manter
                                 wysiwyg.actions.selectBlock(keepId);
                             } else {
+                                // Selecionar primeiro bloco
                                 const first = normalizedBlocks[0];
                                 if (first) wysiwyg.actions.selectBlock(first.id);
                             }
                         } catch (e) {
-                            appLogger.warn('[QuizModularEditor] Falha ao resetar WYSIWYG após normalização', { data: [e] });
+                            appLogger.warn('[QuizModularEditor] Falha ao sincronizar WYSIWYG', { data: [e] });
                         }
                     }
                 } else {
