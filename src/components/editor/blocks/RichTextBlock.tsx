@@ -2,9 +2,12 @@
  * RichTextBlock - Componente de texto rico usando Quill.js
  *
  * Fornece edição de texto avançada com formatação, listas, links, etc.
+ * 
+ * @security Implementa sanitização de HTML com DOMPurify para prevenir XSS
  */
 
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import DOMPurify from 'dompurify';
 import 'quill/dist/quill.snow.css';
 
 // Importação lazy do ReactQuill
@@ -125,22 +128,36 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
     return tmp.textContent || tmp.innerText || '';
   };
 
+  // Sanitiza o conteúdo HTML para prevenir XSS
+  const sanitizeHtml = (html: string): string => {
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: [
+        'p', 'br', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3',
+        'ul', 'ol', 'li', 'a', 'img', 'span', 'div'
+      ],
+      ALLOWED_ATTR: [
+        'href', 'src', 'alt', 'title', 'class', 'style',
+        'target', 'rel', 'width', 'height'
+      ],
+      ALLOW_DATA_ATTR: false,
+    });
+  };
+
   const isEmpty = !currentContent || stripHtml(currentContent).trim().length === 0;
+  const safeContent = isEmpty ? placeholder : sanitizeHtml(currentContent);
 
   return (
     <div
-      className={`relative group transition-all duration-200 ${
-        isSelected ? 'ring-2 ring-[#B89B7A] ring-opacity-50' : ''
-      } ${className}`}
+      className={`relative group transition-all duration-200 ${isSelected ? 'ring-2 ring-[#B89B7A] ring-opacity-50' : ''
+        } ${className}`}
       onClick={handleClick}
     >
       <div
-        className={`rich-text-display cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-4 rounded-md border-2 border-transparent hover:border-gray-200 ${
-          isEmpty ? 'text-gray-400 italic' : ''
-        }`}
+        className={`rich-text-display cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-4 rounded-md border-2 border-transparent hover:border-gray-200 ${isEmpty ? 'text-gray-400 italic' : ''
+          }`}
         style={{ minHeight: `${minHeight}px` }}
         dangerouslySetInnerHTML={{
-          __html: isEmpty ? placeholder : currentContent,
+          __html: safeContent,
         }}
       />
 
