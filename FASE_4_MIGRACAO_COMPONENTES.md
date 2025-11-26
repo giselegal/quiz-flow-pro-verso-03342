@@ -8,7 +8,7 @@
 
 ## 📊 PROGRESSO ATUAL
 
-### Componentes Migrados: 5/∞
+### Componentes Migrados: 9/∞
 
 | # | Componente | Providers Antigos | Novo | Status |
 |---|------------|-------------------|------|--------|
@@ -17,10 +17,14 @@
 | 3 | `ProtectedRoute.tsx` | `useAuth()` | `useEditorContext().auth` | ✅ |
 | 4 | `LogoutButton.tsx` | `useAuth()` | `useEditorContext().auth` | ✅ |
 | 5 | `Header.tsx` | `useAuth()` | `useEditorContext().auth` | ✅ |
+| 6 | `EditorAccessControl.tsx` | `useAuth()` (2x) | `useEditorContext().auth` | ✅ |
+| 7 | `UserPlanInfo.tsx` | `useAuth()` | `useEditorContext().auth` | ✅ |
+| 8 | `ProjectWorkspace.tsx` | `useAuth()` | `useEditorContext().auth` | ✅ |
+| 9 | `CollaborationStatus.tsx` | `useAuth()` | `useEditorContext().auth` | ✅ |
 
 ### Impacto
-- **5 componentes** migrados
-- **7 imports** removidos de providers individuais
+- **9 componentes** migrados
+- **11 imports** removidos de providers individuais
 - **0 erros** TypeScript após migração
 - **100% compatibilidade** mantida via aliases
 
@@ -75,9 +79,9 @@ function MyComponent() {
 ## 📋 COMPONENTES PENDENTES
 
 ### Alta Prioridade (Auth)
-- [ ] `EditorAccessControl.tsx` (2x `useAuth()`)
-- [ ] `ProjectWorkspace.tsx` (`useAuth()`)
-- [ ] `CollaborationStatus.tsx` (`useAuth()`)
+- [x] `EditorAccessControl.tsx` (2x `useAuth()`) ✅
+- [x] `ProjectWorkspace.tsx` (`useAuth()`) ✅
+- [x] `CollaborationStatus.tsx` (`useAuth()`) ✅
 
 ### Média Prioridade (Theme/UI)
 - [ ] `ThemeToggle.tsx` (`useTheme()`)
@@ -171,9 +175,9 @@ TypeScript continua fornecendo autocomplete e verificação de tipos completa.
 
 ### Redução de Imports
 ```
-Antes:  7 imports de providers individuais
-Depois: 5 imports de useEditorContext
-Redução: ~28% nos componentes migrados
+Antes:  11 imports de providers individuais
+Depois: 9 imports de useEditorContext
+Redução: ~18% nos componentes migrados
 ```
 
 ### Erros TypeScript
