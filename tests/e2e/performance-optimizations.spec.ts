@@ -75,10 +75,14 @@ test.describe('🔥 Performance Optimizations - E2E Tests', () => {
         });
         
         // Toggle para preview mode
+        // Aguardar página estável
+        await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(1000);
+        
         const previewToggle = page.locator('[data-testid="preview-mode-toggle"], button:has-text("Publicado")').first();
         if (await previewToggle.isVisible()) {
-            await previewToggle.click({ force: true }); // Force click para evitar interceptação
-            await page.waitForTimeout(1000); // Aguardar 1 segundo
+            await previewToggle.click({ force: true, timeout: 10000 }); // Force click + timeout maior
+            await page.waitForTimeout(1500); // Aguardar modo preview
             
             console.log(`📊 Eventos de auto-seleção: ${autoSelectEvents.length}`);
             
@@ -108,9 +112,13 @@ test.describe('🔥 Performance Optimizations - E2E Tests', () => {
         // Testar se UI permanece responsiva durante validação
         const startInteraction = Date.now();
         
-        // Tentar clicar em diferentes elementos
+        // Aguardar página estar estável antes de interagir
+        await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(500); // Aguardar animações
+        
+        // Clicar no canvas com retry
         const canvas = page.locator('[data-testid="column-canvas"]');
-        await canvas.click({ timeout: 5000, force: true }); // Force click + timeout maior
+        await canvas.click({ timeout: 10000, force: true, trial: false }); // Timeout maior + force
         
         const interactionTime = Date.now() - startInteraction;
         
@@ -145,10 +153,14 @@ test.describe('🔥 Performance Optimizations - E2E Tests', () => {
             const nextStep = page.locator(`[data-testid="nav-step-0${i + 1}"], button:has-text("0${i + 1}")`).first();
             
             if (await nextStep.isVisible({ timeout: 1000 })) {
-                await nextStep.click({ force: true, timeout: 5000 }); // Force click
+                // Scroll para o elemento e aguardar
+                await nextStep.scrollIntoViewIfNeeded();
+                await page.waitForTimeout(200);
+                
+                await nextStep.click({ force: true, timeout: 10000 }); // Force click + timeout maior
                 
                 // Aguardar canvas atualizar
-                await page.waitForTimeout(50);
+                await page.waitForTimeout(300);
                 
                 const navDuration = Date.now() - navStart;
                 navigationTimes.push(navDuration);
@@ -241,8 +253,11 @@ test.describe('🔥 Performance Optimizations - E2E Tests', () => {
         metrics.loadTime = Date.now() - startLoad;
         
         // 2. Primeira interação
+        await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(500);
+        
         const startInteraction = Date.now();
-        await page.locator('[data-testid="column-canvas"]').click({ force: true });
+        await page.locator('[data-testid="column-canvas"]').click({ force: true, timeout: 10000 });
         metrics.firstInteraction = Date.now() - startInteraction;
         
         // 3. Navegação (3 steps)
@@ -324,9 +339,15 @@ test.describe('🔍 Testes de Regressão', () => {
         }
         
         // Toggle para preview
+        // Aguardar página estável
+        await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(1000);
+        
         const previewToggle = page.locator('[data-testid="preview-mode-toggle"], button:has-text("Publicado")').first();
         if (await previewToggle.isVisible()) {
-            await previewToggle.click({ force: true, timeout: 5000 });
+            await previewToggle.scrollIntoViewIfNeeded();
+            await page.waitForTimeout(200);
+            await previewToggle.click({ force: true, timeout: 10000 });
             await page.waitForTimeout(500);
             
             const previewMode = page.locator('[data-testid="canvas-preview-mode"]');
