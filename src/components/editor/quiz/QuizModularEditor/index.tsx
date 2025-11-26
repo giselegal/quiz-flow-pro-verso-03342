@@ -47,7 +47,9 @@ import { useVirtualizedBlocks } from '@/hooks/useVirtualizedBlocks';
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
 
-// Lazy columns
+// Lazy columns with graceful degradation
+// ✅ BEST PRACTICE: Usar Error Boundaries ao invés de catch no lazy import
+// Isso permite que React Suspense e ErrorBoundary funcionem corretamente
 const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
 const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
