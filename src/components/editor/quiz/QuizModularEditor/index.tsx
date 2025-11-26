@@ -295,9 +295,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try {
             const v = localStorage.getItem('qm-editor:use-simple-properties');
             const isTrue = v === 'true';
-            // 🔥 FORÇAR TRUE POR PADRÃO (teste)
-            return isTrue || true; // TRUE por padrão!
-        } catch { return true; } // TRUE em caso de erro
+            return isTrue; // usar apenas o valor salvo; padrão: false
+        } catch { return false; }
     });
 
     const [loadedTemplate, setLoadedTemplate] = useState<{ name: string; steps: any[] } | null>(null);
@@ -992,6 +991,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     console.log(`✅✅✅ [DEBUG] Chamando setStepBlocks(${stepIndex}, ${result.data.length} blocos)`);
                     appLogger.info(`✅ [QuizModularEditor] Chamando setStepBlocks com ${result.data.length} blocos`);
                     setStepBlocks(stepIndex, result.data);
+
+                    // 🔄 Sincronizar WYSIWYG com os blocos carregados
+                    try {
+                        wysiwyg.actions.reset(result.data);
+                        // Preservar seleção atual se existir nesse step
+                        const keepId = wysiwyg.state.selectedBlockId;
+                        if (keepId && result.data.some((b: any) => b.id === keepId)) {
+                            wysiwyg.actions.selectBlock(keepId);
+                        } else {
+                            // Selecionar primeiro bloco apenas se nada estiver selecionado
+                            const first = result.data[0];
+                            if (first) wysiwyg.actions.selectBlock(first.id);
+                        }
+                    } catch (e) {
+                        appLogger.warn('[QuizModularEditor] Falha ao resetar WYSIWYG após loadStep', { data: [e] });
+                    }
 
                     console.log('🎯🎯🎯 [DEBUG] setStepBlocks COMPLETO - Estado deve ter sido atualizado');
                 } else {
