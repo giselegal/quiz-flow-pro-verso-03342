@@ -41,12 +41,12 @@ export const ResultOrchestrator = {
                 const funnel = await loadFunnel('quiz21StepsComplete', { validate: true, useCache: true });
                 // Montar mapa de steps; se vazio, carregar steps 1..21 (fallback)
                 const steps: Record<string, any[]> = {};
-                const total = (funnel.metadata as any)?.totalSteps || 21;
+                const maxSteps = (funnel.metadata as any)?.totalSteps || 21;
                 const existing = funnel.steps || {} as Record<string, any[]>;
                 if (Object.keys(existing).length > 0) {
                     for (const [k, v] of Object.entries(existing)) steps[k] = v as any[];
                 } else {
-                    for (let i = 1; i <= total; i++) {
+                    for (let i = 1; i <= maxSteps; i++) {
                         const id = `step-${String(i).padStart(2, '0')}`;
                         try {
                             const mod = await import(`@/templates/funnels/quiz21Steps/steps/${id}.ts`);
