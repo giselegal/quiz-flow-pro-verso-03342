@@ -1,17 +1,14 @@
 /**
- * 🔗 useWYSIWYGBridge - Ponte entre useWYSIWYG e useSuperUnified
+ * 🔗 useWYSIWYGBridge - Wrapper simplificado para useWYSIWYG
  * 
- * Conecta o sistema WYSIWYG local com o state management global do editor.
- * Sincroniza mudanças bidirecionalmente:
- * - WYSIWYG → SuperUnified (auto-save)
- * - SuperUnified → WYSIWYG (quando step muda ou dados carregam)
+ * Conecta o sistema WYSIWYG local com callbacks externos para auto-save.
+ * Gerencia sincronização de blocos entre steps.
  * 
- * @version 1.0.0
+ * @version 2.0.0 - Removida dependência do useSuperUnified deprecated
  */
 
 import { useEffect, useCallback, useRef } from 'react';
 import { useWYSIWYG } from './useWYSIWYG';
-import { useSuperUnified } from './useSuperUnified';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { Block } from '@/types/editor';
 
@@ -29,7 +26,7 @@ export interface WYSIWYGBridgeOptions {
 }
 
 /**
- * Hook que une WYSIWYG com SuperUnified
+ * Hook que une WYSIWYG com callbacks externos
  */
 export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
   const {
@@ -40,40 +37,32 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
     mode = 'edit',
   } = options;
 
-  const unified = useSuperUnified();
-  const { getStepBlocks, setStepBlocks, updateBlock: unifiedUpdateBlock } = unified;
-
   // Ref para evitar loops infinitos
   const isSyncingRef = useRef(false);
   const lastSyncedStepRef = useRef<number>(currentStep);
 
-  // Obter blocos do step atual
-  const currentBlocks = getStepBlocks(currentStep);
+  // Inicializar blocos vazios (serão populados externamente)
+  const initialBlocks: Block[] = [];
 
-  // 🚨 DEBUG: Log dos blocos vindos do SuperUnified
+  // 🚨 DEBUG: Log da inicialização
   console.log('🔗 [WYSIWYGBridge] Inicialização/Re-render:', {
     currentStep,
     mode,
-    currentBlocksFromUnified: currentBlocks?.length || 0,
-    currentBlocksIds: currentBlocks?.map(b => b.id).slice(0, 3) || [],
   });
 
-  // Inicializar WYSIWYG com blocos do step
-  const [wysiwygState, wysiwygActions] = useWYSIWYG(currentBlocks, {
+  // Inicializar WYSIWYG com blocos vazios
+  const [wysiwygState, wysiwygActions] = useWYSIWYG(initialBlocks, {
     autoSaveDelay,
     enableValidation,
     mode,
     onBlockUpdate: (blockId, updates) => {
-      // Sincronizar com SuperUnified em modo edit
+      // Callback opcional para notificar mudanças
       if (mode === 'edit' && !isSyncingRef.current) {
         try {
           isSyncingRef.current = true;
-          const block = wysiwygState.blocks.find((b) => b.id === blockId);
-          if (block) {
-            unifiedUpdateBlock(currentStep, blockId, { ...block, ...updates });
-          }
+          appLogger.debug('[WYSIWYGBridge] Block atualizado:', { blockId, updates });
         } catch (error) {
-          appLogger.error('[WYSIWYGBridge] Erro ao sincronizar com SuperUnified:', error);
+          appLogger.error('[WYSIWYGBridge] Erro ao processar atualização:', error);
         } finally {
           isSyncingRef.current = false;
         }
@@ -84,113 +73,54 @@ export function useWYSIWYGBridge(options: WYSIWYGBridgeOptions) {
         const stepKey = `step-${String(currentStep).padStart(2, '0')}`;
         await onAutoSave(blocks, stepKey);
       }
-      // Sincronizar com SuperUnified
-      if (!isSyncingRef.current) {
-        try {
-          isSyncingRef.current = true;
-          setStepBlocks(currentStep, blocks);
-          appLogger.debug('[WYSIWYGBridge] Auto-save sincronizado com SuperUnified');
-        } catch (error) {
-          appLogger.error('[WYSIWYGBridge] Erro ao sincronizar auto-save:', error);
-        } finally {
-          isSyncingRef.current = false;
-        }
-      }
+      appLogger.debug('[WYSIWYGBridge] Auto-save executado');
     },
   });
 
-  // Sincronizar quando step muda ou blocos mudam externamente
+  // Sincronizar quando step muda
   useEffect(() => {
-    // 🚨 DEBUG: Log completo do estado da sincronização
-    console.log('🔗 [WYSIWYGBridge] useEffect verificando sincronização:', {
-      currentStep,
-      lastSyncedStep: lastSyncedStepRef.current,
-      stepChanged: lastSyncedStepRef.current !== currentStep,
-      currentBlocksCount: currentBlocks?.length || 0,
-      wysiwygBlocksCount: wysiwygState.blocks?.length || 0,
-      currentBlocksIds: currentBlocks?.map(b => b.id).slice(0, 3) || [],
-      wysiwygBlocksIds: wysiwygState.blocks?.map(b => b.id).slice(0, 3) || [],
-      isSyncing: isSyncingRef.current,
-      mode,
-    });
-
-    const shouldSync =
-      lastSyncedStepRef.current !== currentStep ||
-      JSON.stringify(currentBlocks) !== JSON.stringify(wysiwygState.blocks);
-
-    console.log('🔗 [WYSIWYGBridge] Decisão de sincronização:', {
-      shouldSync,
-      reason: lastSyncedStepRef.current !== currentStep ? 'step mudou' : 'blocos diferentes',
-    });
-
-    if (shouldSync && !isSyncingRef.current) {
-      isSyncingRef.current = true;
-      console.log('🔄 [WYSIWYGBridge] RESETANDO blocos WYSIWYG com:', {
-        newBlocks: currentBlocks?.length || 0,
-        newBlocksIds: currentBlocks?.map(b => b.id).slice(0, 3) || [],
+    if (lastSyncedStepRef.current !== currentStep) {
+      console.log('🔗 [WYSIWYGBridge] Step mudou:', {
+        from: lastSyncedStepRef.current,
+        to: currentStep,
       });
-      wysiwygActions.reset(currentBlocks);
       lastSyncedStepRef.current = currentStep;
-      appLogger.debug('[WYSIWYGBridge] Blocos resetados:', {
-        step: currentStep,
-        count: currentBlocks.length,
-      });
-      isSyncingRef.current = false;
+      // Reset será feito externamente via resetBlocks
     }
-  }, [currentStep, currentBlocks, wysiwygState.blocks, wysiwygActions, mode]);
+  }, [currentStep]);
 
-  // Actions estendidas com sincronização
+  // Actions estendidas
   const bridgedActions = {
     ...wysiwygActions,
 
-    // Override updateBlockProperties para sincronização instantânea
+    // Override updateBlockProperties com logging
     updateBlockProperties: useCallback(
       (blockId: string, properties: Partial<Block['properties']>) => {
         console.log('🔗 [WYSIWYGBridge] updateBlockProperties chamado:', { blockId, properties, mode });
         wysiwygActions.updateBlockProperties(blockId, properties);
-
-        // Em modo edit/preview-live, sincronizar imediatamente com SuperUnified
-        if ((mode === 'edit' || mode === 'preview-live') && !isSyncingRef.current) {
-          console.log('⚡ [WYSIWYGBridge] Sincronizando com SuperUnified...');
-          try {
-            isSyncingRef.current = true;
-            const block = wysiwygState.blocks.find((b) => b.id === blockId);
-            if (block) {
-              unifiedUpdateBlock(currentStep, blockId, {
-                ...block,
-                properties: { ...block.properties, ...properties },
-              });
-            }
-          } catch (error) {
-            appLogger.error('[WYSIWYGBridge] Erro ao sincronizar updateBlockProperties:', error);
-          } finally {
-            isSyncingRef.current = false;
-          }
-        }
       },
-      [wysiwygActions, mode, currentStep, wysiwygState.blocks, unifiedUpdateBlock]
+      [wysiwygActions, mode]
     ),
 
-    // Sincronizar mudanças com SuperUnified
-    syncToUnified: useCallback(() => {
+    // Método para resetar blocos externamente
+    resetBlocks: useCallback((newBlocks: Block[]) => {
       if (!isSyncingRef.current) {
         try {
           isSyncingRef.current = true;
-          setStepBlocks(currentStep, wysiwygState.blocks);
-          appLogger.info('[WYSIWYGBridge] Sincronização manual com SuperUnified realizada');
+          console.log('🔄 [WYSIWYGBridge] RESETANDO blocos:', newBlocks.length);
+          wysiwygActions.reset(newBlocks);
         } catch (error) {
-          appLogger.error('[WYSIWYGBridge] Erro na sincronização manual:', error);
+          appLogger.error('[WYSIWYGBridge] Erro ao resetar blocos:', error);
         } finally {
           isSyncingRef.current = false;
         }
       }
-    }, [currentStep, wysiwygState.blocks, setStepBlocks]),
+    }, [wysiwygActions]),
   };
 
   return {
     state: wysiwygState,
     actions: bridgedActions,
-    unified,
   };
 }
 
