@@ -396,7 +396,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 // Usar persistenceService com retry automático
                 await persistenceService.saveBlocks(
                     `${resourceId}:step-${stepNumber}`,
-                    blocks,
+                    blocks as any, // Type compatibility entre @/types/editor e @/core/schemas
                     { maxRetries: 3, validateBeforeSave: true }
                 );
                 appLogger.info('✅ [persistenceService] Blocos salvos com sucesso');
