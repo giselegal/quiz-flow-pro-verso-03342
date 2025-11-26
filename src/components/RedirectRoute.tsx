@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigation } from '../hooks/useNavigation';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { LoadingFallback } from './ui/loading-fallback';
 
 interface RedirectRouteProps {
@@ -12,10 +12,11 @@ interface RedirectRouteProps {
  * 🔄 Componente de redirecionamento usando Wouter
  * 
  * Substitui chamadas diretas a window.history.replaceState()
- * por navegação adequada via hook useNavigation.
+ * por navegação adequada via hook useEditorContext.
  */
 export const RedirectRoute = ({ to, preserveQuery = true, children }: RedirectRouteProps) => {
-    const { redirect } = useNavigation();
+    const { navigation } = useEditorContext();
+    const { redirect } = navigation;
 
     useEffect(() => {
         redirect(to, preserveQuery);

@@ -8,7 +8,6 @@ import { SafeDndContext, useSafeDndSensors } from './components/SafeDndContext';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
 import { useEditorContext } from '@/core/hooks/useEditorContext';
-import { useUI } from '@/contexts/providers/UIProvider';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
@@ -140,8 +139,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const showToast = toast;
 
     const { createFunnel } = funnel;
-    // UI slice agora via UIProvider
-    const { state: uiState } = useUI();
+    // UI state agora via ux consolidado
+    const uiState = ux;
 
     // Resource unification (support legacy props)
     const resourceId = props.resourceId || props.templateId || props.funnelId;
@@ -1842,17 +1841,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <Button
                             size="sm"
                             onClick={handleSave}
-                            disabled={uiState.isLoading || isReadOnly}
+                            disabled={isReadOnly}
                             className="h-7"
                         >
                             <Save className="w-3 h-3 mr-1" />
-                            {uiState.isLoading ? 'Salvando...' : 'Salvar'}
+                            Salvar
                         </Button>
                         <Button
                             size="sm"
                             variant="default"
                             onClick={handlePublish}
-                            disabled={uiState.isLoading || isReadOnly}
+                            disabled={isReadOnly}
                             className="h-7 bg-emerald-600 hover:bg-emerald-700"
                             title="Publicar este funil"
                         >
