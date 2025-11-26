@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
 // Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorCompatOptional } from '@/core/contexts/EditorContext';
 import { ArrowRight, CheckCircle2, Circle, RotateCcw } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
@@ -37,7 +37,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   // Hook seguro para o Editor Context (pode não existir)
   let activeStageId: string | undefined;
   try {
-    const editorContext = useEditor();
+    const editorContext = useEditorCompatOptional();
     activeStageId = editorContext?.activeStageId;
   } catch (error) {
     // Editor context não disponível - modo standalone
