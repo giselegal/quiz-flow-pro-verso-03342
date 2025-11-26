@@ -71,11 +71,10 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
 
     // Extrair referências estáveis
     const setCurrentStep = maybeEditor?.actions?.setCurrentStep;
-    const ensureStepLoaded = maybeEditor?.actions?.ensureStepLoaded;
 
     // Sincroniza o provider unificado com a etapa atual do preview e garante que os blocos sejam carregados
     useEffect(() => {
-        if (!setCurrentStep || !ensureStepLoaded) return;
+        if (!setCurrentStep) return;
         const current = state.currentStep;
         let numeric = 1;
         if (typeof current === 'string') {
@@ -86,17 +85,13 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
 
         try {
             setCurrentStep(numeric);
-            // Garante que templates/blocos modulares da etapa sejam carregados no provider
-            ensureStepLoaded(numeric).catch((e: any) => {
-                appLogger.warn('[ModularPreviewContainer] ensureStepLoaded falhou:', e?.message || e);
-            });
         } catch (e) {
             appLogger.warn('[ModularPreviewContainer] sync step no provider falhou:', e);
         }
-    }, [state.currentStep, setCurrentStep, ensureStepLoaded]);
+    }, [state.currentStep, setCurrentStep]);
 
     // Atalho de teclado: tecla "p" abre o painel de propriedades
-    const setSelectedBlockId = maybeEditor?.actions?.setSelectedBlockId;
+    const selectBlock = maybeEditor?.actions?.selectBlock;
     const stepBlocks = maybeEditor?.state?.stepBlocks;
 
     useEffect(() => {
@@ -109,10 +104,10 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
                 try {
                     if (!ui?.propertiesPanelOpen) togglePropertiesPanel();
                     // Se não há seleção ainda, tentar selecionar o primeiro bloco do step atual
-                    const stepKey = state.currentStep;
+                    const stepKey = typeof state.currentStep === 'number' ? state.currentStep : parseInt(String(state.currentStep).replace('step-', '')) || 1;
                     const firstBlockId = stepBlocks?.[stepKey]?.[0]?.id;
-                    if (firstBlockId && setSelectedBlockId) {
-                        setSelectedBlockId(firstBlockId);
+                    if (firstBlockId && selectBlock) {
+                        selectBlock(firstBlockId);
                     }
                 } catch (error) {
                     appLogger.warn('[ModularPreviewContainer] Erro ao processar tecla Tab:', { data: [error] });
