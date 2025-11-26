@@ -250,8 +250,8 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             } catch { /* noop */ }
         }
 
-        if (realId && editor?.actions?.setSelectedBlockId) {
-            editor.actions.setSelectedBlockId(realId);
+        if (realId && editor?.actions?.selectBlock) {
+            editor.actions.selectBlock(realId);
             try {
                 if (!ui?.propertiesPanelOpen) {
                     togglePropertiesPanel();
@@ -263,8 +263,8 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     // Selecionar um bloco real diretamente (usado pelos steps modulares)
     const handleSelectBlock = useCallback((blockId: string) => {
         try {
-            if (editor?.actions?.setSelectedBlockId) {
-                editor.actions.setSelectedBlockId(blockId);
+            if (editor?.actions?.selectBlock) {
+                editor.actions.selectBlock(blockId);
             }
             if (!ui?.propertiesPanelOpen) {
                 togglePropertiesPanel();
@@ -297,8 +297,9 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         // 2. Persistir no EditorStateManager para histórico e re-renderização
         if (editor?.actions?.updateBlock && stepData?.id) {
             try {
-                // updateBlock takes (id, content) - only 2 arguments
-                await editor.actions.updateBlock(stepData.id, {
+                // updateBlock takes (step, blockId, updates)
+                const currentStep = typeof step.id === 'number' ? step.id : parseInt(String(step.id).replace('step-', '')) || 1;
+                await editor.actions.updateBlock(currentStep, stepData.id, {
                     metadata: {
                         ...((stepData as any).metadata || {}),
                         [field]: value,
@@ -352,11 +353,12 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             }
 
             // Find source and destination indexes for reorder
-            const currentBlocks: any[] = (editor.state?.stepBlocks as any)?.[normalizedKey] || [];
-            // For now, just call reorder with start=0 and end=desiredOrder.length-1 as placeholder
-            // The actual reorder logic happens internally based on the new order
-            if (desiredOrder.length > 1) {
-                await editor.actions.reorderBlocks(0, desiredOrder.length - 1);
+            const currentStep = typeof step.id === 'number' ? step.id : parseInt(String(step.id).replace('step-', '')) || 1;
+            const currentBlocks: Block[] = (editor.state?.stepBlocks as any)?.[currentStep] || [];
+            // Reordenar blocos com os IDs na ordem desejada
+            const reorderedBlocks = desiredOrder.map(id => currentBlocks.find((b: Block) => b.id === id)).filter(Boolean) as Block[];
+            if (reorderedBlocks.length > 0) {
+                await editor.actions.reorderBlocks(currentStep, reorderedBlocks);
             }
 
             appLogger.debug('✅ handleBlocksReorder concluído:', { stepId: normalizedKey, newOrder: desiredOrder });
@@ -367,20 +369,21 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
     // Callback para adicionar novos blocos
     const handleAddBlock = useCallback(async (blockType: string, position?: number) => {
-        if (!editor?.actions?.addBlockAtIndex && !editor?.actions?.addBlock) {
+        if (!editor?.actions?.addBlock) {
             appLogger.warn('⏭️ Skip addBlock: editor não disponível');
             return;
         }
 
         try {
-            // addBlock takes (type) and returns id, addBlockAtIndex takes (type, index)
-            if (position !== undefined && editor.actions.addBlockAtIndex) {
-                const blockId = await editor.actions.addBlockAtIndex(blockType as any, position);
-                appLogger.debug('✅ Bloco adicionado na posição:', { blockType, position, blockId });
-            } else if (editor.actions.addBlock) {
-                const blockId = await editor.actions.addBlock(blockType as any);
-                appLogger.debug('✅ Bloco adicionado no final:', { blockType, blockId });
-            }
+            const currentStep = typeof step.id === 'number' ? step.id : parseInt(String(step.id).replace('step-', '')) || 1;
+            const newBlock: Partial<Block> = {
+                id: `block-${Date.now()}`,
+                type: blockType as any,
+                content: {},
+                order: position ?? 999,
+            };
+            await editor.actions.addBlock(currentStep, newBlock as Block, position);
+            appLogger.debug('✅ Bloco adicionado:', { blockType, position, step: currentStep });
         } catch (err) {
             appLogger.error('❌ Erro ao adicionar bloco:', err);
         }
@@ -585,14 +588,14 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                 </DndContext>
             ) : (
                 <>
-            {blocks.map((block) => (
-                <LazyBlockRenderer
-                    key={block.id}
-                    block={block}
-                    isSelected={String((sessionData as any)?.selectedBlockId || '') === String(block.id)}
-                    isEditable={false}
-                />
-            ))}
+                    {blocks.map((block) => (
+                        <LazyBlockRenderer
+                            key={block.id}
+                            block={block}
+                            isSelected={String((sessionData as any)?.selectedBlockId || '') === String(block.id)}
+                            isEditable={false}
+                        />
+                    ))}
                 </>
             )}
 
