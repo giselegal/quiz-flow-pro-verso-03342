@@ -27,7 +27,11 @@ export default defineConfig({
       '@types': resolvePath('./src/types'),
       '@config': resolvePath('./src/config'),
       '@templates': resolvePath('./src/templates'),
+      // ✅ FIX: Forçar resolução ESM do DOMPurify (Windows compatibility)
+      'dompurify': fileURLToPath(new URL('./node_modules/dompurify/dist/purify.es.mjs', import.meta.url)),
     },
+    // ✅ Priorizar exports ESM sobre CommonJS
+    conditions: ['import', 'module', 'browser', 'default'],
   },
   build: {
     // ✅ OTIMIZAÇÃO: Code splitting agressivo
