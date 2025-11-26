@@ -362,9 +362,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }), [previewMode]);
 
     // 💾 Snapshot System: Recuperação de drafts
+    // ⚠️ IMPORTANTE: Desabilitar snapshot em modo preview para evitar loops
     const snapshot = useSnapshot({
         resourceId: resourceId || '',
-        enabled: enableAutoSave && !!resourceId,
+        enabled: enableAutoSave && !!resourceId && previewMode !== 'live',
     });
 
     // 🎨 WYSIWYG Bridge: Sincronização instantânea entre propriedades e canvas
@@ -380,6 +381,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 💾 Enhanced save com persistenceService (retry automático + versionamento)
     const saveStepBlocksEnhanced = useCallback(async (stepNumber: number) => {
+        // Em preview mode, não permitir salvar para evitar loops
+        if (previewMode === 'live') {
+            appLogger.debug('[saveStepBlocks] Ignorado em preview mode');
+            return;
+        }
+
         const blocks = wysiwyg?.state?.blocks || [];
         const usePersistence = getFeatureFlag?.('usePersistenceService') ?? true;
 
@@ -411,10 +418,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             // Usar método original
             await saveStepBlocks(stepNumber);
         }
-    }, [resourceId, wysiwyg?.state?.blocks, saveStepBlocks]);
+    }, [resourceId, previewMode, wysiwyg?.state?.blocks, saveStepBlocks]);
 
     // 🎯 FASE 3.1: Auto-save com hook core (após wysiwyg)
-    const autoSave = enableAutoSave && resourceId ? useAutoSave({
+    // ⚠️ IMPORTANTE: Desabilitar auto-save em modo preview para evitar loops infinitos
+    const autoSave = enableAutoSave && resourceId && previewMode !== 'live' ? useAutoSave({
         key: `editor-autosave:${resourceId}:step-${safeCurrentStep}`,
         data: wysiwyg?.state?.blocks || [],
         debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
