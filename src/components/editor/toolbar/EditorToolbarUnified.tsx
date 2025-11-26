@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/ui/logo';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { makeStepKey } from '@/lib/utils/stepKey';
@@ -17,9 +17,8 @@ interface EditorToolbarUnifiedProps {
 export const EditorToolbarUnified: React.FC<EditorToolbarUnifiedProps> = ({
     className = '',
 }) => {
-    const editorContext = useEditor({ optional: true });
-    if (!editorContext) return null;
-    const { state } = editorContext;
+    const { editor } = useEditorContext();
+    const { state } = editor;
     const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
 
     const totalBlocks = useMemo(() => {

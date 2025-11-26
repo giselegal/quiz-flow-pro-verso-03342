@@ -2,7 +2,7 @@ import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
@@ -35,14 +35,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     onStepChange,
 }) => {
     // Hooks
-    const editorContext = useEditor();
-
-    // Fallback when editor context is not available
-    if (!editorContext) {
-        return <div className="flex items-center justify-center h-full">Loading editor...</div>;
-    }
-
-    const { state, actions } = editorContext;
+    const { editor } = useEditorContext();
+    const { state, actions } = editor;
     const notification = useNotification();
     const canvasRef = useRef<HTMLDivElement>(null);
 

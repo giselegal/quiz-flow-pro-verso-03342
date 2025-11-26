@@ -1,4 +1,4 @@
-import { useEditor } from '@/hooks/useEditor';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -81,18 +81,12 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
   customTitle,
   onSave,
 }) => {
-  const editor = useEditor();
+  const { editor } = useEditorContext();
+  const { state, actions } = editor;
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [virtDisabled, setVirtDisabled] = useState<boolean>(false);
-  
-  // Fallback when editor context is not available
-  if (!editor) {
-    return null;
-  }
-  
-  const { state, actions } = editor;
 
   const safeCurrentStep = state.currentStep || 1;
   const stepAnalysis = getStepAnalysis(safeCurrentStep);
@@ -104,7 +98,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
     const blocks = state.stepBlocks[stepKey] || [];
     return JSON.stringify({ step: safeCurrentStep, blocks }, null, 2);
   };
-  
+
   const importJSON = (json: string): void => {
     // Import JSON and update blocks - stub implementation
     try {
@@ -115,7 +109,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
       appLogger.error('Failed to import JSON:', e);
     }
   };
-  
+
   // Undo/Redo - stub implementation (can be expanded later)
   const canUndo = false;
   const canRedo = false;
