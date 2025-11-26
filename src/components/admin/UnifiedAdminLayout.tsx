@@ -478,7 +478,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                         {/* Atalho direto para editar o funil (carregar editor com template quiz-estilo) */}
                         <Button
                             size="sm"
-                            onClick={() => UnifiedRoutingService.navigate('/editor?template=quiz-estilo')}
+                            onClick={() => UnifiedRoutingService.navigate('/editor?funnel=quiz-estilo')}
                             className="shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium text-white glow-button"
                             style={{
                                 background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,

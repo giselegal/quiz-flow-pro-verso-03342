@@ -825,7 +825,7 @@ const MeusFunisPageReal: React.FC = () => {
                     </p>
                     {selectedStatus === 'todos' && (
                         <div className="flex items-center justify-center gap-3">
-                            <Button variant="outline" onClick={() => window.location.href = '/editor?template=quiz21StepsComplete'}>
+                            <Button variant="outline" onClick={() => window.location.href = '/editor?funnel=quiz21StepsComplete'}>
                                 <Plus className="w-4 h-4 mr-2" />
                                 Abrir Editor com Template
                             </Button>

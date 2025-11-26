@@ -98,7 +98,7 @@ export const FunnelFallback: React.FC<FunnelFallbackProps> = ({
         if (onCreateNew) {
             onCreateNew();
         } else {
-            setLocation('/editor?template=default');
+            setLocation('/editor?funnel=default');
         }
     };
 

@@ -55,7 +55,7 @@ const featuredModels = [
 const FunnelModelsCard: React.FC = () => {
   const handleUseModel = (modelId: string) => {
     const newFunnelId = `funnel-${modelId}-${Date.now()}`;
-    window.open(`/editor?template=${modelId}&funnel=${newFunnelId}`, '_blank');
+    window.open(`/editor?funnel=${modelId}&funnelId=${newFunnelId}`, '_blank');
   };
 
   return (
@@ -69,7 +69,7 @@ const FunnelModelsCard: React.FC = () => {
           Templates prontos para criar funis rapidamente
         </p>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Featured Models */}
         <div className="space-y-3">
@@ -115,7 +115,7 @@ const FunnelModelsCard: React.FC = () => {
             </div>
           ))}
         </div>
-        
+
         {/* View All Button */}
         <div className="pt-3 border-t border-gray-200">
           <Link href="/admin/modelos">
@@ -125,7 +125,7 @@ const FunnelModelsCard: React.FC = () => {
             </Button>
           </Link>
         </div>
-        
+
         {/* Quick Stats */}
         <div className="bg-gray-50 p-3 rounded-lg">
           <div className="grid grid-cols-3 gap-2 text-center">

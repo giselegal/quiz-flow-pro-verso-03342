@@ -108,7 +108,7 @@ const ModelosFunisPage: React.FC = () => {
             ],
             isActive: true,
             templatePath: '/templates/quiz21StepsComplete',
-            editorUrl: '/editor?template=quiz21StepsComplete',
+            editorUrl: '/editor?funnel=quiz21StepsComplete',
           },
           {
             id: 'quiz-estilo-simplificado',
@@ -129,7 +129,7 @@ const ModelosFunisPage: React.FC = () => {
             ],
             isActive: true,
             templatePath: '/templates/quiz10StepsSimplified',
-            editorUrl: '/editor?template=quiz10StepsSimplified',
+            editorUrl: '/editor?funnel=quiz10StepsSimplified',
           },
           {
             id: 'quiz-personalidade-profissional',
@@ -150,7 +150,7 @@ const ModelosFunisPage: React.FC = () => {
             ],
             isActive: true,
             templatePath: '/templates/quizProfessional',
-            editorUrl: '/editor?template=quizProfessional',
+            editorUrl: '/editor?funnel=quizProfessional',
           },
           {
             id: 'lead-magnet-fashion',
@@ -171,7 +171,7 @@ const ModelosFunisPage: React.FC = () => {
             ],
             isActive: true,
             templatePath: '/templates/leadMagnetFashion',
-            editorUrl: '/editor?template=leadMagnetFashion',
+            editorUrl: '/editor?funnel=leadMagnetFashion',
           },
         ];
 
@@ -220,7 +220,7 @@ const ModelosFunisPage: React.FC = () => {
   const handleUseModel = (model: FunnelModel) => {
     appLogger.info('🚀 Usando modelo:', { data: [model.id] });
     const tpl = TemplateService.getTemplate(model.id);
-    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?template=${model.id}`;
+    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?funnel=${model.id}`;
     const newFunnelId = `funnel-${model.id}-${Date.now()}`;
     const url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}funnel=${newFunnelId}`;
     window.open(url, '_blank');
@@ -243,7 +243,7 @@ const ModelosFunisPage: React.FC = () => {
   const handleCloneModel = (model: FunnelModel) => {
     appLogger.info('📋 Clonando modelo:', { data: [model.id] });
     const tpl = TemplateService.getTemplate(model.id);
-    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?template=${model.id}`;
+    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?funnel=${model.id}`;
     const newFunnelId = `clone-${model.id}-${Date.now()}`;
     const joiner = baseUrl.includes('?') ? '&' : '?';
     window.open(`${baseUrl}${joiner}funnel=${newFunnelId}&mode=clone`, '_blank');

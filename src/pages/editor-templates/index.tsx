@@ -91,7 +91,7 @@ const EditorTemplatesPage: React.FC = () => {
 
   const handlePreviewTemplate = (templateId: string) => {
     // Abrir preview em nova aba
-    const previewUrl = `/quiz?template=${templateId}`;
+    const previewUrl = `/quiz?funnel=${templateId}`;
     window.open(previewUrl, '_blank');
   };
 

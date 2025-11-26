@@ -99,7 +99,7 @@ export const EDITOR_URL_EXAMPLES = {
   production: {
     basic: 'https://quiz-quest-challenge-verse.vercel.app/editor',
     withFunnel: 'https://quiz-quest-challenge-verse.vercel.app/editor?funnel=cliente-123',
-    withTemplate: 'https://quiz-quest-challenge-verse.vercel.app/editor?template=funil-21-etapas',
+    withTemplate: 'https://quiz-quest-challenge-verse.vercel.app/editor?funnel=funil-21-etapas',
   },
 
   // Casos específicos

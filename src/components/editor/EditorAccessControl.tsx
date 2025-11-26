@@ -25,7 +25,7 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
     return user?.app_metadata?.permissions?.includes(permission) ?? false;
   };
 
-  // 🚧 Bypass controlado: permitir acesso anônimo quando abrindo via ?template=
+  // 🚧 Bypass controlado: permitir acesso anônimo quando abrindo via ?funnel=
   // Útil para testes rápidos do editor sem exigir login localmente ou em build preview.
   let allowAnonymousDev = false;
   // Fallback direto: se a URL contém 'template=' em qualquer posição, liberar acesso
@@ -56,7 +56,7 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
     // Regras:
     // - Se desabilitado explicitamente via VITE_DISABLE_EDITOR_ANON, não aplicar bypass (a menos que explicitAnon)
     // - Sempre permitir se parâmetro explícito anon=1/allowAnonymous=1
-    // - Permitir quando há ?template= (independente do ambiente), para garantir edição/visualização rápida
+    // - Permitir quando há ?funnel= (independente do ambiente), para garantir edição/visualização rápida
     // - Manter compatibilidade: também permitir se ambiente for dev-like ou houver flag de enable
     allowAnonymousDev = !!(
       allowAnonymousDev ||
@@ -95,7 +95,7 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
             </Button>
             {/* Dica: em dev, pode permitir anônimo via query */}
             <p className="text-[11px] text-muted-foreground/80">
-              Dica: em ambiente local, acesse com <code>?template=quiz21StepsComplete</code> para testes rápidos.
+              Dica: em ambiente local, acesse com <code>?funnel=quiz21StepsComplete</code> para testes rápidos.
             </p>
           </CardContent>
         </Card>

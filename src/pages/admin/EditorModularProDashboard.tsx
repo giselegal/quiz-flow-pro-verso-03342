@@ -64,8 +64,8 @@ const EditorModularProDashboard: React.FC = () => {
           <Link className="text-indigo-700 hover:underline" to="/editor-modular/quiz21StepsComplete">
             /editor-modular/:funnelId?
           </Link>
-          <Link className="text-indigo-700 hover:underline" to="/editor?template=quiz21StepsComplete">
-            /editor?template=quiz21StepsComplete
+          <Link className="text-indigo-700 hover:underline" to="/editor?funnel=quiz21StepsComplete">
+            /editor?funnel=quiz21StepsComplete
           </Link>
         </div>
       </div>

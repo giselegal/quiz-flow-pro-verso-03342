@@ -18,12 +18,14 @@ const TemplatesFunisPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     // DEBUG: Log dos templates para diagnóstico
-    appLogger.info('🔍 DEBUG TEMPLATES:', { data: [{
+    appLogger.info('🔍 DEBUG TEMPLATES:', {
+        data: [{
             AVAILABLE_TEMPLATES,
             totalTemplates: AVAILABLE_TEMPLATES.length,
             activeTemplates: TemplateService.getActiveTemplates(),
             quiz21Template: TemplateService.getTemplate('quiz21StepsComplete'),
-        }] });
+        }]
+    });
 
     const filteredTemplates = React.useMemo(() => {
         // Começar sempre com apenas templates ativos
@@ -55,18 +57,20 @@ const TemplatesFunisPage: React.FC = () => {
     }, [selectedSegment, selectedCategory, selectedDifficulty, searchTerm]);
 
     // DEBUG: Log dos templates filtrados
-    appLogger.info('🔍 DEBUG FILTERED:', { data: [{
+    appLogger.info('🔍 DEBUG FILTERED:', {
+        data: [{
             selectedSegment,
             selectedCategory,
             selectedDifficulty,
             searchTerm,
             filteredCount: filteredTemplates.length,
             filteredTemplates: filteredTemplates.map(t => ({ id: t.id, name: t.name, isActive: t.isActive })),
-        }] });
+        }]
+    });
 
     const handleUseTemplate = (templateId: string) => {
         appLogger.info('Usando template:', { data: [templateId] });
-        window.open(`/editor?template=${templateId}`, '_blank');
+        window.open(`/editor?funnel=${templateId}`, '_blank');
     };
 
     const handlePreviewTemplate = (templateId: string) => {
