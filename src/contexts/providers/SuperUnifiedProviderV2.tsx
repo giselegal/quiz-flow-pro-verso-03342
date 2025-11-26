@@ -149,7 +149,7 @@ export interface UnifiedContextValue {
     // Core
     auth: ReturnType<typeof useAuth>;
     theme: ReturnType<typeof useTheme>;
-    editor: ReturnType<typeof useEditorState>;
+    editor: ReturnType<typeof useEditorCompat>;
     funnel: ReturnType<typeof useFunnelData>;
     // Extended
     navigation: ReturnType<typeof useNavigation>;
@@ -188,7 +188,7 @@ export interface UnifiedContextValue {
 export function useUnifiedContext(): UnifiedContextValue {
     const auth = useAuth();
     const theme = useTheme();
-    const editor = useEditorState();
+    const editor = useEditorCompat();
     const funnel = useFunnelData();
     const navigation = useNavigation();
     const quiz = useQuizState();
@@ -229,7 +229,7 @@ export function useUnifiedContext(): UnifiedContextValue {
 export {
     useAuth,
     useTheme,
-    useEditorState,
+    useEditorCompat as useEditorState,
     useFunnelData,
     useNavigation,
     useQuizState,
