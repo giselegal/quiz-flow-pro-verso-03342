@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { LogOut } from 'lucide-react';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -12,7 +12,8 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
   variant = 'ghost',
   size = 'default',
 }) => {
-  const { signOut, isLoading } = useAuth();
+  const { auth } = useEditorContext();
+  const { signOut, isLoading } = auth;
 
   const handleLogout = async () => {
     try {

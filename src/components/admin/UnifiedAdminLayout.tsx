@@ -21,8 +21,7 @@ import {
 } from 'lucide-react';
 import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-import { useAuth } from '@/contexts/auth/AuthProvider';
-import { useNavigation } from '@/contexts/navigation/NavigationProvider';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useUserName } from '@/hooks/useUserName';
 
@@ -61,8 +60,8 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 }) => {
     const [activeView, setActiveView] = useState(currentView);
     const [syncStats, setSyncStats] = useState(EditorDashboardSyncService.getSyncStats());
-    const { user } = useAuth();
-    const navigation = useNavigation();
+    const { auth, navigation } = useEditorContext();
+    const { user } = auth;
     const displayName = useUserName();
 
     // Map theme providers to expected format

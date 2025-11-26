@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { useAuth } from '@/contexts';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useLocation } from 'wouter';
 import { Route } from 'wouter';
@@ -18,7 +18,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   appLogger.info('🔒 ProtectedRoute: INICIANDO para path:', { data: [path] });
 
-  const { user, isLoading } = useAuth();
+  const { auth } = useEditorContext();
+  const { user, isLoading } = auth;
   const [, setLocation] = useLocation();
 
   // Allow access during development (multiple checks for robustness)
@@ -29,19 +30,21 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     window.location.hostname === 'localhost';
 
   // Enhanced debug log
-  appLogger.info('🔒 ProtectedRoute Debug DETALHADO:', { data: [{
-        path,
-        user: !!user,
-        userDetails: user ? 'Logado' : 'Não logado',
-        isDevelopment,
-        requireAuth,
-        isLoading,
-        hostname: window.location.hostname,
-        env: import.meta.env.MODE,
-        devCheck: import.meta.env.DEV,
-        nodeEnv: process.env.NODE_ENV,
-        componentName: Component.name || 'Unknown',
-      }] });
+  appLogger.info('🔒 ProtectedRoute Debug DETALHADO:', {
+    data: [{
+      path,
+      user: !!user,
+      userDetails: user ? 'Logado' : 'Não logado',
+      isDevelopment,
+      requireAuth,
+      isLoading,
+      hostname: window.location.hostname,
+      env: import.meta.env.MODE,
+      devCheck: import.meta.env.DEV,
+      nodeEnv: process.env.NODE_ENV,
+      componentName: Component.name || 'Unknown',
+    }]
+  });
 
   return (
     <Route path={path}>

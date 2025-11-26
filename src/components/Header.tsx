@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { useAuth } from '@/contexts';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { StyleResult } from '@/types/quiz';
 
 interface HeaderProps {
@@ -21,7 +21,8 @@ export const Header: React.FC<HeaderProps> = ({
   isScrolled: _isScrolled,
   className = '',
 }) => {
-  const { user } = useAuth();
+  const { auth } = useEditorContext();
+  const { user } = auth;
   const displayName =
     userName ||
     (user as any)?.userName ||

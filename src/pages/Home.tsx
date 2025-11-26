@@ -17,7 +17,7 @@ import {
   Play,
   X,
 } from 'lucide-react';
-import { useAuth } from '@/contexts/auth/AuthProvider';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 import { appLogger } from '@/lib/utils/appLogger';
 import { Helmet } from 'react-helmet-async';
 
@@ -25,7 +25,8 @@ export const Home: React.FC = () => {
   appLogger.info('🏠 Home component rendering...');
   appLogger.info('🏠 Home: Mounting component');
 
-  const { user, logout } = useAuth();
+  const { auth } = useEditorContext();
+  const { user, logout } = auth;
   appLogger.info('🏠 Home: useAuth called, user:', { data: [user ? 'authenticated' : 'not authenticated'] });
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
