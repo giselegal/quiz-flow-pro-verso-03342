@@ -68,15 +68,23 @@ export const assets = {
  * IMPORTANTE: Steps são carregados sob demanda para reduzir bundle
  */
 export const loadStep = async (stepNumber: number) => {
-  const stepId = `step${String(stepNumber).padStart(2, '0')}`;
-  
+  const base = String(stepNumber).padStart(2, '0');
+  const idNoHyphen = `step${base}`;
+  const idWithHyphen = `step-${base}`;
+
+  // 1) Tenta arquivo sem hífen (step01.ts)
   try {
-    // Tenta carregar step específico
-    const module = await import(`./steps/${stepId}.ts`);
-    return module.default || module;
-  } catch (error) {
-    console.error(`[Quiz21Steps] Failed to load ${stepId}:`, error);
-    throw new Error(`Step ${stepNumber} not found`);
+    const module = await import(`./steps/${idNoHyphen}.ts`);
+    return (module as any).default || module;
+  } catch (_err1) {
+    // 2) Fallback: tenta arquivo com hífen (step-01.ts)
+    try {
+      const module = await import(`./steps/${idWithHyphen}.ts`);
+      return (module as any).default || module;
+    } catch (_err2) {
+      console.error(`[Quiz21Steps] Failed to load step ${stepNumber} (tried: ${idNoHyphen}.ts, ${idWithHyphen}.ts)`);
+      throw new Error(`Step ${stepNumber} not found`);
+    }
   }
 };
 
