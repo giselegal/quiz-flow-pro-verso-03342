@@ -61,6 +61,7 @@ const step20Components: Step20Component[] = [
 
 export const Step20ComponentsButton: React.FC = () => {
   const editorContext = useEditor({ optional: true });
+  const adapter = useEditorAdapter();
   if (!editorContext) return null;
   const { state, actions } = editorContext;
 
@@ -84,8 +85,8 @@ export const Step20ComponentsButton: React.FC = () => {
         content: {},
         properties: {},
       };
-      // addBlock takes only type
-      await actions.addBlock(type);
+      // Use adapter's addBlock which takes only type
+      await adapter.actions.addBlock(type);
     } catch (error) {
       appLogger.error('Erro ao adicionar componente Step 20:', error);
     }
@@ -93,8 +94,8 @@ export const Step20ComponentsButton: React.FC = () => {
 
   const handleAddCompleteTemplate = async () => {
     try {
-      // addBlock takes only type
-      await actions.addBlock('step20-complete-template' as BlockType);
+      // Use adapter's addBlock which takes only type
+      await adapter.actions.addBlock('step20-complete-template' as BlockType);
     } catch (error) {
       appLogger.error('Erro ao adicionar template completo Step 20:', error);
     }

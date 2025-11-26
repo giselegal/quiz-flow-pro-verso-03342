@@ -260,19 +260,13 @@ const blockCategories: BlockCategory[] = [
 
 export const ComponentsSidebar: React.FC = () => {
   const editorContext = useEditor({ optional: true });
+  const adapter = useEditorAdapter();
   if (!editorContext) return null;
   const { actions, state } = editorContext;
 
   const handleAddBlock = (type: BlockType) => {
-    const stepKey = `step-${state.currentStep}`;
-    const newBlock: Block = {
-      id: `block-${Date.now()}`,
-      type,
-      content: {},
-      order: 0,
-    };
-    // addBlock takes only the type, returns the new block ID
-    actions.addBlock(type);
+    // Use adapter's addBlock which takes only type
+    adapter.actions.addBlock(type);
   };
 
   // Filtrar componentes baseado na etapa ativa
