@@ -849,12 +849,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         validateTemplate();
     }, [templateLoader.data, resourceId, props.templateId, templateValidation, toast]);
 
-    // Prefetch de steps críticos na montagem para navegação mais fluida
+    // 🔥 HOTFIX 6: Prefetch crítico otimizado - reduzir staleTime e priorizar steps essenciais
+    // PROBLEMA RESOLVIDO: Cache de 60s muito longo, steps não-essenciais incluídos
+    // SOLUÇÃO: Apenas steps realmente críticos (01, 12, 20, 21) com cache de 30s
     useEffect(() => {
-        const critical = ['step-01', 'step-12', 'step-19', 'step-20', 'step-21'];
+        const critical = ['step-01', 'step-12', 'step-20', 'step-21']; // Removido step-19 (não essencial)
         const templateOrResource = props.templateId ?? resourceId ?? null;
         const funnel = props.funnelId ?? null;
         if (!templateOrResource) return;
+
+        // Prefetch apenas se não estiver carregando template
+        if (templateLoader.isLoading) return;
 
         critical.forEach((sid) => {
             queryClient
@@ -865,12 +870,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         if (res.success) return res.data;
                         throw res.error ?? new Error('Falha no prefetch crítico');
                     },
-                    staleTime: 60_000,
+                    staleTime: 30_000, // Reduzido de 60s para 30s - cache mais fresco
                 })
                 .catch(() => void 0);
         });
-        // sem cleanup necessário
-    }, [queryClient, props.templateId, resourceId, props.funnelId]);
+    }, [queryClient, props.templateId, resourceId, props.funnelId, templateLoader.isLoading]);
 
     // Blocks from unified - SEMPRE como array para evitar null checks e loops
     const rawBlocks = getStepBlocks(safeCurrentStep);
