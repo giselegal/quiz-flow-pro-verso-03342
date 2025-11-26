@@ -14,8 +14,6 @@
  * 5. Manter texto interno intacto
  */
 
-import DOMPurify from 'dompurify';
-
 const ALLOWED_TAGS = [
   'b', 'strong', 'i', 'em', 'u', 'br', 'span', 'p', 'div', 
   'ul', 'ol', 'li', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -29,25 +27,25 @@ const ALLOWED_ATTR = [
 
 export function sanitizeHtml(input?: string | null): string {
   if (!input || typeof input !== 'string') return '';
-  
+
   try {
-    // Usa DOMPurify para sanitização robusta
-    const clean = DOMPurify.sanitize(input, {
-      ALLOWED_TAGS,
-      ALLOWED_ATTR,
-      ALLOW_DATA_ATTR: false,
-      ALLOW_UNKNOWN_PROTOCOLS: false,
-      SAFE_FOR_TEMPLATES: true,
-    });
-    
-    return clean.trim();
-    } catch {
-        // Em caso de erro, fallback para texto escapado básico
-        return input
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+    const purify = (globalThis as any)?.DOMPurify;
+    if (purify && typeof purify.sanitize === 'function') {
+      const clean = purify.sanitize(input, {
+        ALLOWED_TAGS,
+        ALLOWED_ATTR,
+        ALLOW_DATA_ATTR: false,
+        ALLOW_UNKNOWN_PROTOCOLS: false,
+        SAFE_FOR_TEMPLATES: true,
+      });
+      return String(clean || '').trim();
     }
+  } catch {}
+
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 export default sanitizeHtml;
