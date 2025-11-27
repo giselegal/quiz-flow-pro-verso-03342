@@ -103,7 +103,7 @@ export class FunnelCloneService {
       const duration = performance.now() - startTime;
 
       // Emitir evento de clonagem completa
-      editorEvents.emit('funnel:cloned', {
+      (editorEvents as any).emit('funnel:cloned', {
         originalId: funnelId,
         clonedId: clonedFunnel.id,
         stats: {
@@ -226,13 +226,13 @@ export class FunnelCloneService {
     // Filtrar steps se necessário
     let stepsToClone = originalSteps;
     if (options.includeSteps && options.includeSteps.length > 0) {
-      stepsToClone = originalSteps.filter(step => 
+      stepsToClone = originalSteps.filter((step: any) => 
         options.includeSteps!.includes(step.step_order)
       );
     }
 
     // Preparar dados dos steps clonados
-    const clonedStepsData = stepsToClone.map((step, index) => {
+    const clonedStepsData = stepsToClone.map((step: any, index: number) => {
       const baseData = {
         funnel_id: clonedFunnelId,
         step_order: options.includeSteps ? index + 1 : step.step_order,
@@ -260,7 +260,7 @@ export class FunnelCloneService {
     }
 
     // Mapear IDs antigos → novos
-    stepsToClone.forEach((originalStep, index) => {
+    stepsToClone.forEach((originalStep: any, index: number) => {
       this.idMaps.steps.set(originalStep.id, clonedSteps[index].id);
     });
 
@@ -291,7 +291,7 @@ export class FunnelCloneService {
     }
 
     // Preparar dados dos blocos clonados
-    const clonedBlocksData = originalBlocks.map(block => {
+    const clonedBlocksData = originalBlocks.map((block: any) => {
       const baseData = {
         step_id: clonedStepId,
         component_type: block.component_type,
@@ -322,7 +322,7 @@ export class FunnelCloneService {
     }
 
     // Mapear IDs antigos → novos
-    originalBlocks.forEach((originalBlock, index) => {
+    originalBlocks.forEach((originalBlock: any, index: number) => {
       this.idMaps.blocks.set(originalBlock.id, clonedBlocks[index].id);
     });
 
