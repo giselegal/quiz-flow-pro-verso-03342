@@ -171,7 +171,6 @@ test.describe('📱 Suite 06: Responsividade', () => {
         const mobileMenuSelectors = [
             '[data-testid*="mobile-menu"]',
             '[aria-label*="menu"]',
-            'button:has-text(/menu/i)',
             '.hamburger',
             '.mobile-menu-button'
         ];
@@ -183,6 +182,15 @@ test.describe('📱 Suite 06: Responsividade', () => {
                 foundMobileMenu = true;
                 console.log(`✅ Menu mobile encontrado: ${selector}`);
                 break;
+            }
+        }
+
+        // Verificar botão menu com texto
+        if (!foundMobileMenu) {
+            const menuButton = page.getByRole('button', { name: /menu/i });
+            if (await menuButton.count() > 0) {
+                foundMobileMenu = true;
+                console.log(`✅ Menu mobile encontrado: button com texto 'menu'`);
             }
         }
 

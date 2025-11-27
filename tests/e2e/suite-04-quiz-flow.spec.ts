@@ -93,6 +93,13 @@ test.describe('📝 Suite 04: Fluxo do Quiz', () => {
             }
         }
 
+        // Verificar botão de próximo/continuar separadamente
+        const nextButton = page.getByRole('button', { name: /next|próximo|continuar/i });
+        if (await nextButton.count() > 0) {
+            foundQuizElements++;
+            console.log(`✅ Encontrado botão de próximo/continuar`);
+        }
+
         if (foundQuizElements > 0) {
             console.log(`✅ Interface de quiz detectada (${foundQuizElements} elementos)`);
         } else {
