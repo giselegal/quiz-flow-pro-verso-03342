@@ -68,15 +68,14 @@ export const AutoSaveProvider: React.FC<AutoSaveProviderProps> = ({
         forceSave,
     } = useAutoSave({
         key: 'editor-auto-save',
-        data: {
+        data: enabled ? {
             stepBlocks: editor.state.stepBlocks,
             currentStep: editor.state.currentStep,
             dirtySteps: editor.state.dirtySteps,
             modifiedSteps: editor.state.modifiedSteps,
-        },
+        } : null,
         debounceMs,
         enableRecovery: true,
-        enabled,
         onSave: () => {
             editor.markSaved();
             appLogger.info('[AutoSaveProvider] Auto-save concluído', {
