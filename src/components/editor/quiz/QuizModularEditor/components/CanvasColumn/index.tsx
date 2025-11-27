@@ -57,16 +57,16 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
         disabled: !isEditable // 🆕 Desabilitar drag quando não editável
     });
 
-    // 🆕 G30 FIX: Melhor feedback visual durante drag
+    // ✨ FASE 2: Feedback visual premium durante drag
     const style: React.CSSProperties = {
         transform: SafeCSS?.Transform?.toString(transform) || 'none',
-        transition: transition || 'transform 200ms ease, box-shadow 200ms ease',
-        opacity: isDragging ? 0.4 : 1,
-        scale: isDragging ? '1.05' : '1',
+        transition: transition || 'transform 300ms cubic-bezier(0.18, 0.67, 0.6, 1.22), box-shadow 200ms ease, opacity 150ms ease',
+        opacity: isDragging ? 0.5 : 1,
+        scale: isDragging ? '1.02' : '1',
         boxShadow: isDragging
-            ? '0 12px 24px rgba(0,0,0,0.2)'
+            ? '0 20px 40px rgba(59, 130, 246, 0.3), 0 0 0 2px rgba(59, 130, 246, 0.1)'
             : isOver
-                ? '0 4px 12px rgba(59, 130, 246, 0.3)'
+                ? '0 8px 16px rgba(59, 130, 246, 0.2), 0 0 0 1px rgba(59, 130, 246, 0.2)'
                 : undefined,
         zIndex: isDragging ? 50 : isOver ? 10 : undefined,
         cursor: isEditable ? (isDragging ? 'grabbing' : 'grab') : 'default',
@@ -109,9 +109,21 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
             onClick={handleBlockClick}
             data-block-id={block.id}
         >
-            {/* 🆕 G30 FIX: Linha de drop visual quando outro bloco está sobre este */}
+            {/* ✨ FASE 2: Indicador de drop melhorado com posição */}
             {isOver && !isDragging && (
-                <div className="absolute -top-1 left-0 right-0 h-1 bg-blue-500 rounded-full shadow-lg animate-pulse" />
+                <div className="absolute -top-2 left-0 right-0 h-0.5 transition-all duration-200">
+                    {/* Linha principal */}
+                    <div className="absolute inset-0 bg-blue-500 scale-y-[8] shadow-lg animate-pulse" />
+
+                    {/* Círculos nas extremidades */}
+                    <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full shadow-md" />
+                    <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full shadow-md" />
+
+                    {/* Label de posição */}
+                    <div className="absolute left-1/2 -translate-x-1/2 -top-6 bg-blue-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap shadow-lg">
+                        Inserir aqui (#{index + 1})
+                    </div>
+                </div>
             )}
             <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
