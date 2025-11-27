@@ -117,7 +117,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
 
       // Salvar cada step
       for (const stepKey of Object.keys(stepBlocks)) {
-        const blocks = stepBlocks[stepKey];
+        const blocks = (stepBlocks as any)[stepKey];
         if (!blocks || blocks.length === 0) continue;
 
         // Extrair número do step

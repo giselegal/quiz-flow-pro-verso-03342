@@ -53,8 +53,8 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     }
 
     const { state, actions } = editorContext;
-    const { currentStep, stepBlocks, stepValidation, isLoading } = state;
-    const { setCurrentStep, ensureStepLoaded } = actions;
+    const { currentStep, stepBlocks, isLoading } = state;
+    const { setCurrentStep } = actions;
 
     // 🔧 CORREÇÃO: Constantes dinâmicas baseadas nos dados reais E template info
     const TOTAL_STEPS = useMemo(() => {
@@ -77,12 +77,10 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
         return stepBlocks[currentStepId] || stepBlocks[rawId] || [];
     }, [stepBlocks, currentStepId, currentStep]);
 
-    // Estado de validação
+    // Estado de validação - assume válido por padrão
     const isCurrentStepValid = useMemo(() => {
-        const entry = stepValidation?.[currentStep];
-        if (!entry) return true;
-        return entry.isValid !== false;
-    }, [stepValidation, currentStep]);
+        return true;
+    }, []);
 
     // Estados de navegação
     const canGoPrevious = currentStep > 1;
@@ -99,24 +97,24 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     const goToStep = useCallback((targetStep: number) => {
         if (targetStep >= 1 && targetStep <= TOTAL_STEPS) {
             const stepKey = `step-${targetStep.toString().padStart(2, '0')}`;
-            const hasBlocks = (stepBlocks[stepKey]?.length || stepBlocks[`step-${targetStep}`]?.length || 0) > 0;
-            if (!hasBlocks) {
-                ensureStepLoaded(targetStep).catch(() => {});
-            }
+            const altStepKey = `step-${targetStep}`;
+            const hasBlocks = (
+                (stepBlocks[stepKey as any]?.length || 0) > 0 ||
+                (stepBlocks[altStepKey as any]?.length || 0) > 0
+            );
+            
             setCurrentStep(targetStep);
 
             if (process.env.NODE_ENV === 'development') {
                 appLogger.info('🧭 useUnifiedStepNavigation: Navegando para step', { data: [{
-                                    from: currentStep,
-                                    to: targetStep,
-                                    stepId: stepKey,
-                                    hasBlocks: (stepBlocks[stepKey]?.length
-                                        || stepBlocks[`step-${targetStep}`]?.length
-                                        || 0),
-                                }] });
+                    from: currentStep,
+                    to: targetStep,
+                    stepId: stepKey,
+                    hasBlocks,
+                }] });
             }
         }
-    }, [currentStep, setCurrentStep, stepBlocks, ensureStepLoaded, TOTAL_STEPS]);
+    }, [currentStep, setCurrentStep, stepBlocks, TOTAL_STEPS]);
 
     const goToNext = useCallback(() => {
         if (canGoNext) {

@@ -44,7 +44,7 @@ export interface EditorState {
     isLoading: boolean;
     dragEnabled: boolean;
     clipboardData: Block | null;
-    stepBlocks: Record<number, Block[]>;
+    stepBlocks: Record<string | number, Block[]>;
     dirtySteps: Record<number, boolean>;
     totalSteps: number;
     validationErrors: ValidationError[];

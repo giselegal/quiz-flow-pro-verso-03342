@@ -24,7 +24,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
 
   const totalBlocks = useMemo(() => {
     const stepKey = makeStepKey(state.currentStep || 1);
-    const blocks = state.stepBlocks?.[stepKey] || [];
+    const blocks = (state.stepBlocks as any)?.[stepKey] || [];
     return Array.isArray(blocks) ? blocks.length : 0;
   }, [state.stepBlocks, state.currentStep]);
 
