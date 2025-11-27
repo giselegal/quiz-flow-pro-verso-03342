@@ -14,9 +14,16 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || '';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  test.describe.skip('🔄 Duplicação e Clonagem de Funis', () => {
+    test('Configuração do Supabase é obrigatória para este suite', async () => {
+      test.skip();
+    });
+  });
+} else {
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-test.describe('🔄 Duplicação e Clonagem de Funis', () => {
+  test.describe('🔄 Duplicação e Clonagem de Funis', () => {
   let originalFunnelId: string;
   let clonedFunnelId: string;
 
@@ -286,4 +293,5 @@ test.describe('🔄 Duplicação e Clonagem de Funis', () => {
     // Limpar
     await supabase.from('funnels').delete().eq('id', result.clonedFunnel!.id);
   });
-});
+  });
+}
