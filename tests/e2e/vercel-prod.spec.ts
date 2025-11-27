@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 const PROD_URL = process.env.PROD_URL?.replace(/\/$/, '');
+const BYPASS_TOKEN = process.env.VERCEL_BYPASS_TOKEN || process.env.VERCEL_PROTECTION_BYPASS;
 
 // Util: checa presença de header (case-insensitive)
 function getHeader(headers: Record<string, string>, name: string) {
@@ -9,14 +10,35 @@ function getHeader(headers: Record<string, string>, name: string) {
 }
 
 test.describe('Vercel Deploy (Produção)', () => {
-  test.beforeEach(async ({}, testInfo) => {
+  test.beforeEach(async ({ page }, testInfo) => {
     if (!PROD_URL) {
       test.skip(true, 'PROD_URL não definido. Configure env/secret para executar este teste.');
+    }
+    if (BYPASS_TOKEN) {
+      // Aplicar header de bypass para páginas protegidas de preview
+      await page.setExtraHTTPHeaders({ 'x-vercel-protection-bypass': BYPASS_TOKEN });
+      // Aplicar cookie de bypass (algumas proteções exigem cookie em vez do header)
+      try {
+        const host = new URL(PROD_URL!).hostname;
+        await page.context().addCookies([
+          {
+            name: 'vercel-protection-bypass',
+            value: BYPASS_TOKEN,
+            domain: host,
+            path: '/',
+            secure: true,
+            httpOnly: false,
+            sameSite: 'Lax',
+          },
+        ]);
+      } catch {}
     }
   });
 
   test('Raiz responde 200 e HTML válido', async ({ request }) => {
-    const res = await request.get(`${PROD_URL}/`);
+    const res = await request.get(`${PROD_URL}/`, {
+      headers: BYPASS_TOKEN ? { 'x-vercel-protection-bypass': BYPASS_TOKEN } : undefined,
+    });
     expect(res.status()).toBe(200);
     const ctype = res.headers()['content-type'] || '';
     expect(ctype).toContain('text/html');
@@ -26,7 +48,9 @@ test.describe('Vercel Deploy (Produção)', () => {
   });
 
   test('Headers de segurança presentes (CSP e HSTS)', async ({ request }) => {
-    const res = await request.get(`${PROD_URL}/`);
+    const res = await request.get(`${PROD_URL}/`, {
+      headers: BYPASS_TOKEN ? { 'x-vercel-protection-bypass': BYPASS_TOKEN } : undefined,
+    });
     const headers = res.headers();
     const csp = getHeader(headers as any, 'Content-Security-Policy');
     const hsts = getHeader(headers as any, 'Strict-Transport-Security');
@@ -37,7 +61,9 @@ test.describe('Vercel Deploy (Produção)', () => {
   });
 
   test('SPA fallback funciona (rota interna retorna HTML)', async ({ request }) => {
-    const res = await request.get(`${PROD_URL}/editor`);
+    const res = await request.get(`${PROD_URL}/editor`, {
+      headers: BYPASS_TOKEN ? { 'x-vercel-protection-bypass': BYPASS_TOKEN } : undefined,
+    });
     expect(res.status()).toBe(200);
     const ctype = res.headers()['content-type'] || '';
     expect(ctype).toContain('text/html');
