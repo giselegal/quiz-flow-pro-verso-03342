@@ -447,8 +447,8 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
                         <button
                             className="w-full bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-700 transition-colors text-sm"
                             onClick={() => {
-                                if (actions?.setSelectedBlockId) {
-                                    actions.setSelectedBlockId(null);
+                                if (actions?.selectBlock) {
+                                    actions.selectBlock(null);
                                 }
                             }}
                         >

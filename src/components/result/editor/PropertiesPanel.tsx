@@ -60,7 +60,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <SinglePropertiesPanel block={block} onUpdate={handleUpdate} />
+        <SinglePropertiesPanel selectedBlock={block} onUpdate={handleUpdate} />
       </div>
     </div>
   );

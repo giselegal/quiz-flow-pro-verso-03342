@@ -135,17 +135,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }), []);
 
     // Extrair funções estáveis
-    const { setCurrentStep: actionsSetCurrentStep, ensureStepLoaded } = actions;
+    const { setCurrentStep: actionsSetCurrentStep } = actions;
 
     const handleStepSelect = useCallback((step: number) => {
         actionsSetCurrentStep(step);
         onStepChange?.(step.toString());
-
-        // Garantir que a etapa seja carregada se não existir
-        if (ensureStepLoaded) {
-            ensureStepLoaded(step);
-        }
-    }, [actionsSetCurrentStep, ensureStepLoaded, onStepChange]);
+    }, [actionsSetCurrentStep, onStepChange]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
         appLogger.debug('🔄 handleUpdateBlock chamado:', {
@@ -178,7 +173,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     const handleDeleteBlock = useCallback(() => {
         if (selectedBlockId) {
-            // deleteBlock takes only the id
+            // Use selectBlock para deselecionar e depois remover
+            actions.selectBlock(null);
             actions.deleteBlock(selectedBlockId);
         }
     }, [actions, selectedBlockId]);
@@ -280,7 +276,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                         selectedBlock={selectedBlock}
                                         onUpdate={handleUpdateBlock}
                                         onDelete={handleDeleteBlock}
-                                        onClose={() => actions.setSelectedBlockId?.(null)}
+                                        onClose={() => actions.selectBlock(null)}
                                     />
                                 </LazyBoundary>
                             </div>

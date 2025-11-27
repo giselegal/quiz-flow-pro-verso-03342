@@ -74,7 +74,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       </div>
 
       <Card className="p-2 h-[calc(100%-2.5rem)] overflow-hidden">
-        <SinglePropertiesPanel block={blockLike} onUpdate={handleUpdate} />
+        <SinglePropertiesPanel selectedBlock={blockLike} onUpdate={handleUpdate} />
       </Card>
     </div>
   );
