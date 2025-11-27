@@ -36,6 +36,7 @@ export const BlockTypeSchema = z.enum([
     'intro-image',
     'intro-form',
     'intro-button',
+    'quiz-intro-header',
     
     // Blocos de pergunta
     'question-title',
