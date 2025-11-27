@@ -14,7 +14,7 @@ import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Eye, Edit3, Play, Save, Download, Upload, Undo2, Redo2 } from 'lucide-react';
+import { Eye, Edit3, Play, Save, Download, Upload, Undo2, Redo2, Clock } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult, type TemplateValidationResult } from '@/lib/utils/templateValidation';
 // Loading context (provider + hook)
