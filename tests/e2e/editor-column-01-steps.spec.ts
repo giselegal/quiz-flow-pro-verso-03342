@@ -12,8 +12,9 @@ const TIMEOUT = 60000; // 60s por teste
 
 test.describe('Column 01: Steps Navigator', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(EDITOR_URL, { waitUntil: 'networkidle', timeout: TIMEOUT });
-    await page.waitForSelector('[data-testid="column-steps"]', { timeout: 10000 });
+    await page.goto(EDITOR_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForSelector('[data-testid="column-steps"]', { timeout: 15000 });
+    await page.waitForTimeout(1000); // Aguardar JS carregar
   });
 
   // ✅ TESTE 01: Estrutura HTML correta

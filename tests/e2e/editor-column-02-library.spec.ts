@@ -12,8 +12,9 @@ const TIMEOUT = 60000;
 
 test.describe('Column 02: Component Library', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(EDITOR_URL, { waitUntil: 'networkidle', timeout: TIMEOUT });
-    await page.waitForSelector('[data-testid="column-library"]', { timeout: 10000 });
+    await page.goto(EDITOR_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForSelector('[data-testid="column-library"]', { timeout: 15000 });
+    await page.waitForTimeout(1000);
   });
 
   // ✅ TESTE 01: Estrutura HTML correta

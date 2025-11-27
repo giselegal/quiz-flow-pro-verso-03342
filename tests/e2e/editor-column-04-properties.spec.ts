@@ -12,11 +12,11 @@ const TIMEOUT = 60000;
 
 test.describe('Column 04: Properties Panel', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(EDITOR_URL, { waitUntil: 'networkidle', timeout: TIMEOUT });
+    await page.goto(EDITOR_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
     
     // Aguardar canvas e selecionar primeiro bloco
-    await page.waitForSelector('[data-testid="column-canvas"]', { timeout: 10000 });
-    await page.waitForTimeout(2000);
+    await page.waitForSelector('[data-testid="column-canvas"]', { timeout: 15000 });
+    await page.waitForTimeout(1500);
     
     // Tentar selecionar primeiro bloco
     const firstBlock = page.locator('[data-testid="column-canvas"] [data-block-id]').first();
