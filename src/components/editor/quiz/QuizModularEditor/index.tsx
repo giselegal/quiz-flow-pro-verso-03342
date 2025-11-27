@@ -2054,11 +2054,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <>
                             <Panel defaultSize={20} minSize={15} maxSize={30}>
                                 <Suspense
-                                    fallback={
-                                        <div className="p-4 text-sm text-gray-500">
-                                            Carregando biblioteca…
-                                        </div>
-                                    }
+                                    fallback={<ComponentLibrarySkeleton />}
                                 >
                                     <div
                                         className="h-full border-r bg-white overflow-y-auto"
@@ -2078,11 +2074,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     <Panel defaultSize={40} minSize={30}>
                         <Suspense
-                            fallback={
-                                <div className="flex items-center justify-center h-full text-gray-500">
-                                    Carregando canvas…
-                                </div>
-                            }
+                            fallback={<CanvasSkeleton />}
                         >
                             <div
                                 className="relative z-0 h-full bg-gray-50 overflow-y-auto"
@@ -2180,11 +2172,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     {editorModeUI.showProperties && (
                         <Panel defaultSize={25} minSize={20} maxSize={35}>
                             <Suspense
-                                fallback={
-                                    <div className="p-4 text-sm text-gray-500">
-                                        Carregando propriedades…
-                                    </div>
-                                }
+                                fallback={<PropertiesPanelSkeleton />}
                             >
                                 <div
                                     className="h-full border-l bg-white overflow-y-auto"
