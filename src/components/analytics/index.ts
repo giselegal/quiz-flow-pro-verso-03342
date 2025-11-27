@@ -8,7 +8,7 @@
 export { default as QuizAnalyticsDashboard } from './QuizAnalyticsDashboard';
 export { default as AdvancedFunnel } from './AdvancedFunnel';
 export { MetricCard } from './MetricCard';
-export { LoadingState } from './LoadingState';
+export { AnalyticsLoadingState as LoadingState } from './LoadingState';
 export { DashboardHeader } from './DashboardHeader';
 export { default as EventLogger } from './EventLogger';
 export { default as RealTimeAnalyticsEngine } from './RealTimeAnalyticsEngine';

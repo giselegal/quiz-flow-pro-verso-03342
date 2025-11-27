@@ -74,7 +74,8 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     const currentStepBlocks = useMemo(() => {
         // Tenta chave normalizada e depois chave crua (sem padding) por compatibilidade
         const rawId = `step-${currentStep}`;
-        return stepBlocks[currentStepId] || stepBlocks[rawId] || [];
+        const blocksMap = stepBlocks as Record<string, any[]>;
+        return blocksMap[currentStepId] || blocksMap[rawId] || [];
     }, [stepBlocks, currentStepId, currentStep]);
 
     // Estado de validação - assume válido por padrão
