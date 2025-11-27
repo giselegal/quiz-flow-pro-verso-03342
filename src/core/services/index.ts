@@ -40,6 +40,7 @@ export * from './StorageService';
 export * from './ConfigService';
 export * from './HistoryService';
 export * from './EditorService';
+export * from './persistenceService';
 // FunnelService - exportação explícita para evitar conflito de UnifiedFunnelData com types.ts
 export { 
   CanonicalFunnelService, 

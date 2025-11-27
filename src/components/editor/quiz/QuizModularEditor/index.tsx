@@ -793,15 +793,24 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             try {
                 appLogger.info(`🏥 [Validation] Iniciando validação em Web Worker: ${tid} (${stepCount} steps)`);
 
-                // Carregar todos os steps
+                // ✅ CORREÇÃO ARQUITETURAL: Carregar todos os steps EM PARALELO
+                // Antes: 21 requisições sequenciais (~21s)
+                // Depois: Promise.all (~1s)
                 const stepsData: Record<string, any> = {};
-                for (let i = 1; i <= stepCount; i++) {
-                    const stepId = `step-${String(i).padStart(2, '0')}`;
-                    const res = await templateService.getStep(stepId, tid);
-                    if (res.success) {
-                        stepsData[stepId] = res.data;
-                    }
-                }
+                const stepPromises = Array.from({ length: stepCount }, (_, i) => {
+                    const stepId = `step-${String(i + 1).padStart(2, '0')}`;
+                    return templateService.getStep(stepId, tid)
+                        .then(res => {
+                            if (res.success) {
+                                stepsData[stepId] = res.data;
+                            }
+                        })
+                        .catch(err => {
+                            appLogger.warn(`[Validation] Erro ao carregar ${stepId}:`, err);
+                        });
+                });
+
+                await Promise.all(stepPromises);
 
                 // Validar em worker (não-bloqueante)
                 const result = await templateValidation.validate(tid, stepCount, stepsData);
@@ -843,36 +852,30 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         validateTemplate();
     }, [templateLoader.data, resourceId, props.templateId, templateValidation, toast]);
 
-    // 🔥 HOTFIX 6: Prefetch crítico otimizado - reduzir staleTime e priorizar steps essenciais
-    // PROBLEMA RESOLVIDO: Cache de 60s muito longo, steps não-essenciais incluídos
-    // SOLUÇÃO: Apenas steps realmente críticos (01, 12, 20, 21) com cache de 30s
-    useEffect(() => {
-        const critical = ['step-01', 'step-12', 'step-20', 'step-21']; // Removido step-19 (não essencial)
-        const templateOrResource = props.templateId ?? resourceId ?? null;
-        const funnel = props.funnelId ?? null;
-        if (!templateOrResource) return;
-
-        // Prefetch apenas se não estiver carregando template
-        if (templateLoader.isLoading) return;
-
-        critical.forEach((sid) => {
-            queryClient
-                .prefetchQuery({
-                    queryKey: stepKeys.detail(sid, templateOrResource, funnel),
-                    queryFn: async () => {
-                        const res = await templateService.getStep(sid, templateOrResource);
-                        if (res.success) return res.data;
-                        throw res.error ?? new Error('Falha no prefetch crítico');
-                    },
-                    staleTime: 30_000, // Reduzido de 60s para 30s - cache mais fresco
-                })
-                .catch(() => void 0);
-        });
-    }, [queryClient, props.templateId, resourceId, props.funnelId, templateLoader.isLoading]);
+    // ✅ CORREÇÃO ARQUITETURAL: Prefetch crítico REMOVIDO
+    // useStepPrefetch (linha 206) já gerencia prefetch de steps vizinhos com debounce
+    // Manter dois sistemas de prefetch causa duplicação e concorrência
 
     // Blocks from unified - SEMPRE como array para evitar null checks e loops
     const rawBlocks = getStepBlocks(safeCurrentStep);
     const blocks: Block[] = Array.isArray(rawBlocks) ? rawBlocks : [];
+
+    // ✅ CORREÇÃO ARQUITETURAL: Sincronizar WYSIWYG sempre que blocks mudar
+    // Garante que painel de propriedades (que lê wysiwyg.state.blocks) receba os dados
+    useEffect(() => {
+        if (blocks.length > 0) {
+            const currentIds = wysiwyg.state.blocks.map(b => b.id).sort().join(',');
+            const newIds = blocks.map(b => b.id).sort().join(',');
+
+            if (currentIds !== newIds) {
+                appLogger.debug('[QuizModularEditor] Sincronizando blocks unifiedState → WYSIWYG', {
+                    step: safeCurrentStep,
+                    count: blocks.length
+                });
+                wysiwyg.actions.reset(blocks);
+            }
+        }
+    }, [blocks, safeCurrentStep]);
 
     // 🔧 CRITICAL FIX: Memo para o template completo usado no painel (hooks FORA do JSX)
     const fullTemplate = React.useMemo(
@@ -1128,35 +1131,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
         ensureStepBlocks();
 
-        // ✅ FASE 2: Prefetch melhorado com warmup automático de cache
-        try {
-            // Prefetch vizinhos: N-1, N+1, N+2 (lookahead)
-            const neighborIds = [stepIndex - 1, stepIndex + 1, stepIndex + 2]
-                .filter((i) => i >= 1)
-                .map((i) => `step-${String(i).padStart(2, '0')}`);
-            const templateOrResource = props.templateId ?? resourceId ?? null;
-            const funnel = props.funnelId ?? null;
-
-            if (templateOrResource) {
-                neighborIds.forEach((nid) => {
-                    queryClient
-                        .prefetchQuery({
-                            queryKey: stepKeys.detail(nid, templateOrResource, funnel),
-                            queryFn: async ({ signal: querySignal }) => {
-                                const res = await templateService.getStep(nid, templateOrResource, { signal: querySignal });
-                                if (res.success) return res.data;
-                                throw res.error ?? new Error('Falha no prefetch');
-                            },
-                            staleTime: 10 * 60 * 1000, // FASE 2: 10min (aumentado de 30s)
-                        })
-                        .catch((err) => {
-                            appLogger.warn('[QuizModularEditor] prefetch neighbor failed', err);
-                        });
-                });
-            }
-        } catch (err) {
-            appLogger.warn('[QuizModularEditor] prefetch setup failed', err);
-        }
+        // ✅ CORREÇÃO ARQUITETURAL: Prefetch de vizinhos REMOVIDO
+        // useStepPrefetch (linha 206) já faz isso com:
+        // - Debounce de 300ms (evita prefetch em navegação rápida)
+        // - AbortController (cancela requisições obsoletas)
+        // - radius: 1 (steps N-1 e N+1)
+        // Manter dois sistemas causa duplicação de requisições
         return () => {
             clearTimeout(safetyTimeout);
             controller.abort();
