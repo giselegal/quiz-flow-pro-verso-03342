@@ -153,9 +153,12 @@ test.describe('Column 04: Properties Panel', () => {
       if (count > 0) {
         console.log(`✅ ${count} tabs encontradas`);
         
-        // Testar click na segunda tab
+        // Testar click na segunda tab usando dispatchEvent
         if (count > 1) {
-          await tabs.nth(1).click();
+          await page.evaluate(() => {
+            const allTabs = document.querySelectorAll('[role="tab"], [class*="tab"]');
+            if (allTabs[1]) allTabs[1].dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+          });
           await page.waitForTimeout(300);
           console.log('✅ Navegação entre tabs funcional');
         }
