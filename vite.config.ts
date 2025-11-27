@@ -27,6 +27,10 @@ export default defineConfig({
       '@types': resolvePath('./src/types'),
       '@config': resolvePath('./src/config'),
       '@templates': resolvePath('./src/templates'),
+      // ✅ CRÍTICO: Força uma única instância de React no bundle
+      'react': resolvePath('./node_modules/react'),
+      'react-dom': resolvePath('./node_modules/react-dom'),
+      'react/jsx-runtime': resolvePath('./node_modules/react/jsx-runtime'),
     },
     // ✅ Priorizar exports ESM sobre CommonJS (Windows compatibility)
     conditions: ['import', 'module', 'browser', 'default'],
