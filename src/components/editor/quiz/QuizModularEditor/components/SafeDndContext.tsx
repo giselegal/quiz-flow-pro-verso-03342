@@ -268,6 +268,7 @@ export function SafeDndContext({
 /**
  * Hook seguro para sensores DnD
  * ✨ FASE 1 FIX: Sensores otimizados para DnD responsivo e acessível
+ * ⚠️ IMPORTANTE: Hooks devem ser chamados incondicionalmente (Rules of Hooks)
  */
 export function useSafeDndSensors() {
     if (!useSensor || !useSensors || !PointerSensor) {
@@ -275,29 +276,30 @@ export function useSafeDndSensors() {
     }
 
     try {
+        // ✅ Sempre chamar TODOS os hooks na mesma ordem
+        // Não usar condicionais dentro do array de sensores
         const sensors = useSensors(
-            // 🖱️ PointerSensor: Mouse e Pen
+            // 🖱️ PointerSensor: Mouse e Pen (SEMPRE presente)
             useSensor(PointerSensor, {
                 activationConstraint: {
-                    distance: 5,      // ✅ 5px = padrão recomendado (responsivo sem falsos positivos)
-                    tolerance: 5,     // ✅ Tolerância para evitar jitter
+                    distance: 5,
+                    tolerance: 5,
                 },
             }),
-            // ⌨️ KeyboardSensor: Navegação por teclado (acessibilidade)
-            ...(KeyboardSensor && sortableKeyboardCoordinates ? [
-                useSensor(KeyboardSensor, {
-                    coordinateGetter: sortableKeyboardCoordinates,
-                })
-            ] : []),
-            // 📱 TouchSensor: Suporte a dispositivos touch/mobile
-            ...(TouchSensor ? [
-                useSensor(TouchSensor, {
-                    activationConstraint: {
-                        delay: 250,      // Delay para distinguir scroll de drag
-                        tolerance: 10,   // Tolerância maior para touch
-                    },
-                })
-            ] : [])
+            // ⌨️ KeyboardSensor: SEMPRE chamado, mas apenas se disponível
+            useSensor(KeyboardSensor || PointerSensor, {
+                ...(KeyboardSensor && sortableKeyboardCoordinates
+                    ? { coordinateGetter: sortableKeyboardCoordinates }
+                    : {}
+                ),
+            }),
+            // 📱 TouchSensor: SEMPRE chamado, mas apenas se disponível
+            useSensor(TouchSensor || PointerSensor, {
+                activationConstraint: {
+                    delay: 250,
+                    tolerance: 10,
+                },
+            })
         );
         return sensors;
     } catch (error) {
