@@ -16,13 +16,18 @@ import { test, expect, Page } from '@playwright/test';
 
 test.setTimeout(120_000);
 
-// Helper: Captura screenshot com timestamp
+// Helper: Captura screenshot com timestamp (otimizado)
 async function captureDebugScreenshot(page: Page, name: string) {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  await page.screenshot({
-    path: `test-results/layout-${name}-${timestamp}.png`,
-    fullPage: true
-  });
+  try {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    await page.screenshot({
+      path: `test-results/layout-${name}-${timestamp}.png`,
+      fullPage: false, // Otimizado: apenas viewport visível
+      timeout: 5000 // Timeout curto
+    });
+  } catch (error) {
+    console.warn(`⚠️ Screenshot falhou para ${name}:`, error);
+  }
 }
 
 // Helper: Valida espaçamento e alinhamento
