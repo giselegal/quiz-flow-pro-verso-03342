@@ -156,14 +156,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
         if (selectedBlockId) {
             appLogger.debug('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
-            // updateBlock takes (id, content)
-            actions.updateBlock(selectedBlockId, updates);
+            // updateBlock takes (step, blockId, updates)
+            actions.updateBlock(safeCurrentStep, selectedBlockId, updates);
 
             // Verificar se o estado foi atualizado
             setTimeout(() => {
                 appLogger.debug('⏰ Estado após updateBlock (1s delay):', {
                     newStepBlocks: state.stepBlocks,
-                    currentStepAfterUpdate: state.stepBlocks?.[currentStepKey],
+                    currentStepAfterUpdate: (state.stepBlocks as Record<string, Block[]>)?.[currentStepKey],
                 });
             }, 100);
         } else {
@@ -175,9 +175,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         if (selectedBlockId) {
             // Use selectBlock para deselecionar e depois remover
             actions.selectBlock(null);
-            actions.deleteBlock(selectedBlockId);
+            actions.removeBlock(safeCurrentStep, selectedBlockId);
         }
-    }, [actions, selectedBlockId]);
+    }, [actions, selectedBlockId, safeCurrentStep]);
 
     // Resolver funnelId do editor (se disponível) ou da URL
     const resolvedFunnelId = useMemo(() => {

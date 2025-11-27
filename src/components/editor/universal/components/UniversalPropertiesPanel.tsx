@@ -54,8 +54,8 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
                 }
                 current[updatePath[updatePath.length - 1]] = value;
 
-                // updateBlock takes (id, content)
-                actions.updateBlock(blockId, updates);
+                // updateBlock takes (step, blockId, updates)
+                actions.updateBlock(stepNumber, blockId, updates);
 
                 logger.debug('🔄 Propriedade atualizada:', {
                     blockId,

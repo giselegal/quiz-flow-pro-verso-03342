@@ -228,7 +228,7 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
             className="space-y-6 p-6 rounded-lg"
             style={{
                 background: colors.background,
-                color: colors.text,
+                color: colors.foreground,
             }}
         >
             {/* Header com Nova Identidade Visual */}
@@ -236,23 +236,23 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                 <h2
                     className="text-2xl font-bold flex items-center gap-2 glow-text"
                     style={{
-                        background: `linear-gradient(135deg, ${colors.detailsMinor} 0%, ${colors.buttons} 100%)`,
+                        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
-                        filter: `drop-shadow(0 0 10px ${colors.detailsMinor}50)`,
+                        filter: `drop-shadow(0 0 10px ${colors.primary}50)`,
                     }}
                 >
-                    <Facebook className="w-6 h-6" style={{ color: colors.buttons }} />
+                    <Facebook className="w-6 h-6" style={{ color: colors.primary }} />
                     Facebook Ads Metrics
                     {selectedFunnel !== 'all' && (
                         <Badge
                             variant="outline"
                             className="ml-2 glow-card"
                             style={{
-                                borderColor: colors.detailsMinor,
-                                backgroundColor: `${colors.glowEffect}20`,
-                                color: colors.text,
+                                borderColor: colors.primary,
+                                backgroundColor: `${colors.accent || colors.secondary}20`,
+                                color: colors.foreground,
                             }}
                         >
                             {funnelMetrics[0]?.funnel_name || selectedFunnel}
@@ -267,9 +267,9 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                             className="px-3 py-1 border rounded-md glow-card"
                             style={{
                                 backgroundColor: colors.background,
-                                borderColor: `${colors.detailsMinor}50`,
-                                color: colors.text,
-                                boxShadow: `0 0 10px ${colors.glowEffect}20`,
+                                borderColor: `${colors.primary}50`,
+                                color: colors.foreground,
+                                boxShadow: `0 0 10px ${colors.primary}20`,
                             }}
                         >
                             <option value="all">Todos os Funis</option>
@@ -286,9 +286,9 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                         className="px-3 py-1 border rounded-md glow-card"
                         style={{
                             backgroundColor: colors.background,
-                            borderColor: `${colors.detailsMinor}50`,
-                            color: colors.text,
-                            boxShadow: `0 0 10px ${colors.glowEffect}20`,
+                            borderColor: `${colors.primary}50`,
+                            color: colors.foreground,
+                            boxShadow: `0 0 10px ${colors.primary}20`,
                         }}
                     >
                         <option value="7d">Últimos 7 dias</option>
@@ -302,10 +302,10 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                         disabled={isSyncing}
                         className="glow-button"
                         style={{
-                            background: `linear-gradient(135deg, ${colors.buttons} 0%, ${colors.detailsMinor} 100%)`,
-                            borderColor: colors.buttons,
+                            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+                            borderColor: colors.primary,
                             color: '#ffffff',
-                            boxShadow: `0 0 15px ${colors.buttons}40`,
+                            boxShadow: `0 0 15px ${colors.primary}40`,
                         }}
                     >
                         <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
