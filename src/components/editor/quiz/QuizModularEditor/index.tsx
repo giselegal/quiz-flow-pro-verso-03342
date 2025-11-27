@@ -2231,6 +2231,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 {/* 🏥 Template Health Panel (sidebar) - Posicionado para não sobrepor properties */}
                 {showHealthPanel && (
                     <div className="fixed right-4 top-20 bottom-4 w-80 z-40 shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-gray-800 border-2 border-orange-400 dark:border-orange-600">
+                        {/* Botão de fechar no topo */}
+                        <div className="absolute top-2 right-2 z-50">
+                            <button
+                                onClick={() => setShowHealthPanel(false)}
+                                className="p-1.5 rounded-md bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 shadow-md border border-gray-300 dark:border-gray-600 transition-colors"
+                                title="Fechar painel de validação"
+                                aria-label="Fechar"
+                            >
+                                <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
                         <TemplateHealthPanel
                             validationResult={validationResult}
                             onAutoFix={(errorIndex) => {
