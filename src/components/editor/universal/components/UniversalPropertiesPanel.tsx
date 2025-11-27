@@ -73,7 +73,7 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
         const { type, content, properties } = blockData;
 
         switch (type) {
-            case 'quiz-intro-header':
+            case 'intro-logo-header':
                 return (
                     <div className="space-y-4">
                         <h4 className="font-medium text-gray-100 pb-2 border-b border-gray-700">Configurações do Header</h4>

@@ -75,13 +75,13 @@ export function generateBlockDefinitions(): BlockDefinition[] {
     },
     // --- Itens de Quiz e Conteúdo ampliados para a coluna de componentes ---
     {
-      type: 'quiz-intro-header',
+      type: 'intro-logo-header',
       name: 'Cabeçalho do Quiz',
       label: 'Cabeçalho do Quiz',
       category: 'Quiz',
       description: 'Seção de introdução do quiz',
       icon: Heading,
-      component: ENHANCED_BLOCK_REGISTRY['quiz-intro-header'],
+      component: ENHANCED_BLOCK_REGISTRY['intro-logo-header'],
       defaultProps: {},
       properties: {},
     },

@@ -131,7 +131,7 @@ const baseTemplate = {
 const getTemplateBlocks = (step, config) => {
   const commonHeader = {
     id: `step${step.toString().padStart(2, '0')}-header`,
-    type: 'quiz-intro-header',
+    type: 'intro-logo-header',
     position: 0,
     properties: {
       logoUrl:

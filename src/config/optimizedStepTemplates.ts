@@ -15,7 +15,7 @@ export const OPTIMIZED_STEP_TEMPLATES = {
     blocks: [
       {
         id: 'header-logo',
-        type: 'quiz-intro-header',
+        type: 'intro-logo-header',
         properties: {
           logoUrl:
             'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',

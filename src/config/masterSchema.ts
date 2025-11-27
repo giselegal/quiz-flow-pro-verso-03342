@@ -462,8 +462,8 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
   // QUIZ BLOCKS
   // =============================================================================
 
-  'quiz-intro-header': {
-    type: 'quiz-intro-header',
+  'intro-logo-header': {
+    type: 'intro-logo-header',
     name: 'Cabeçalho do Quiz',
     description: 'Cabeçalho introdutório para início do quiz',
     icon: HelpCircle,
