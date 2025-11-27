@@ -19,7 +19,7 @@ export const StepAnalyticsDashboard: React.FC<StepAnalyticsDashboardProps> = ({ 
 
     for (let i = 1; i <= totalSteps; i++) {
       const stepKey = `step${i}`;
-      const blocks = state.stepBlocks?.[stepKey] || [];
+      const blocks = (state.stepBlocks as Record<string, any[]>)?.[stepKey] || [];
 
       metrics.push({
         step: i,
