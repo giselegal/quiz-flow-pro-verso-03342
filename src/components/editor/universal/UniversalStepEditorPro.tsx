@@ -56,7 +56,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         const map: Record<number, boolean> = {};
         for (let step = 1; step <= 21; step++) {
             const stepKey = `step-${step}`;
-            const blocks = stepBlocksRef[stepKey];
+            const blocks = (stepBlocksRef as Record<string, Block[]>)[stepKey];
             map[step] = Array.isArray(blocks) && blocks.length > 0;
         }
         return map;

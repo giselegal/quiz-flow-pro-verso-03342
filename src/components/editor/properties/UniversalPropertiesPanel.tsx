@@ -49,7 +49,7 @@ export function UniversalPropertiesPanel() {
     const context = useMemo((): SelectionContextType => {
 
         const currentStepKey = `step-${editor.state.currentStep}`;
-        const currentStepBlocks = editor.state.stepBlocks?.[currentStepKey] || [];
+        const currentStepBlocks = (editor.state.stepBlocks as Record<string, any[]>)?.[currentStepKey] || [];
 
         // Prioridade 1: Bloco selecionado
         if (editor.state?.selectedBlockId) {
