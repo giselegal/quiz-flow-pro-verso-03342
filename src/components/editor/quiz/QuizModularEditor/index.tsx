@@ -39,6 +39,8 @@ import { useStepPrefetch } from '@/hooks/useStepPrefetch';
 // 🔥 HOTFIX 1 & 3: Hooks otimizados para carregamento e validação
 import { useTemplateLoader } from '@/hooks/editor/useTemplateLoader';
 import { useTemplateValidation } from '@/hooks/editor/useTemplateValidation';
+// ✅ ARQUITETURA: Hook unificado para carregamento de steps
+import { useStepBlocksLoader } from '@/hooks/editor/useStepBlocksLoader';
 // ✅ WAVE 2: Performance Monitor
 import { PerformanceMonitor } from '@/components/editor/PerformanceMonitor';
 // 🎨 WYSIWYG: Sistema de edição ao vivo
@@ -941,28 +943,27 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         // ❌ IMPORTANTE: REMOVER setSelectedBlock das deps para evitar loop
     }, [blocks, selectedBlockId, previewMode]);
 
-    // Lazy load visible step + prefetch neighbors
+    // ✅ ARQUITETURA: Carregamento de step via hook dedicado
+    // (substituiu 150 linhas de lógica fragmentada)
+    useStepBlocksLoader({
+        templateOrFunnelId: props.templateId ?? resourceId ?? null,
+        stepIndex: safeCurrentStep,
+        setStepBlocks,
+        setStepLoading
+    });
+
+    // ✅ ARQUITETURA: Prefetch de steps vizinhos (otimização separada)
     useEffect(() => {
         const stepIndex = safeCurrentStep;
-        const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
         const controller = new AbortController();
         const { signal } = controller;
 
-        // ✅ CORREÇÃO CRÍTICA: Setar loading ANTES do safety timeout
-        setStepLoading(true);
+        async function prefetchNeighbors() {
+            // Prefetch apenas se não estiver em loading
+            if (isLoadingStep) return;
 
-        // 🔥 SAFETY: Timeout automático para prevenir loading infinito
-        const safetyTimeout = setTimeout(() => {
-            if (!controller.signal.aborted) {
-                console.error('⚠️ [QuizModularEditor] Loading travado > 3s, forçando reset!');
-                setStepLoading(false);
-            }
-        }, 3000); // 3 segundos máximo (teste mais agressivo)
-
-        async function ensureStepBlocks() {
-            // Loading já setado no início do useEffect
             // debounce small
-            await new Promise(resolve => setTimeout(resolve, 50));
+            await new Promise(resolve => setTimeout(resolve, 100));
             if (signal.aborted) return;
 
             try {
