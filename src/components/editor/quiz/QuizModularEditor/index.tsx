@@ -408,26 +408,41 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
         if (usePersistence && resourceId) {
             try {
-                // Validar blocos antes de salvar
+                // Validação opcional para log amigável (persistenceService também valida)
                 const invalidBlocks = blocks.filter(block => {
-                    const validation = validateBlock(block);
+                    const validation = validateBlock(block as any);
                     return !validation.success;
                 });
 
                 if (invalidBlocks.length > 0) {
-                    appLogger.warn('[saveStepBlocks] Blocos inválidos detectados:', invalidBlocks.length);
+                    appLogger.warn('[saveStepBlocksEnhanced] Blocos inválidos detectados antes do save:', invalidBlocks.length);
                 }
 
-                // Usar persistenceService com retry automático
-                await persistenceService.saveBlocks(
-                    `${resourceId}:step-${stepNumber}`,
-                    blocks as any, // Type compatibility entre @/types/editor e @/core/schemas
-                    { maxRetries: 3, validateBeforeSave: true }
+                const result = await persistenceService.saveBlocks(
+                    resourceId,
+                    blocks as any, // compatibilidade entre @/types/editor e @/core/schemas
+                    {
+                        maxRetries: 3,
+                        validateBeforeSave: true,
+                        metadata: {
+                            stepNumber,
+                        },
+                    } as any
                 );
-                appLogger.info('✅ [persistenceService] Blocos salvos com sucesso');
+
+                if (!(result as any)?.success) {
+                    appLogger.error('❌ [persistenceService] SaveResult com falha, fallback para saveStepBlocks', {
+                        data: [result],
+                    });
+                    await saveStepBlocks(stepNumber);
+                    return;
+                }
+
+                appLogger.info('✅ [persistenceService] Blocos salvos com sucesso via resourceId', {
+                    data: [{ stepNumber, resourceId }],
+                });
             } catch (error) {
                 appLogger.error('❌ [persistenceService] Erro, fallback para saveStepBlocks:', error);
-                // Fallback para método original
                 await saveStepBlocks(stepNumber);
             }
         } else {
