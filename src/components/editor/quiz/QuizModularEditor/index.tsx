@@ -1869,6 +1869,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                 )}
                             </div>
 
+                            {/* 💾 Indicador de Auto-save */}
+                            {resourceId && previewMode !== 'live' && (
+                                <AutosaveIndicator
+                                    status={autoSave.isSaving ? 'saving' : autoSave.error ? 'error' : autoSave.lastSaved ? 'saved' : wysiwyg.state.isDirty ? 'unsaved' : 'idle'}
+                                    errorMessage={autoSave.error?.message}
+                                    onRetry={() => autoSave.forceSave()}
+                                    compact={false}
+                                    className="text-xs"
+                                />
+                            )}
+
                             {/* 💾 Indicador de snapshot disponível */}
                             {snapshot.hasSnapshot && (
                                 <Button
