@@ -18,7 +18,7 @@
  */
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
-import { unifiedCache } from '../unified/UnifiedCacheService';
+import { unifiedCache } from '@/services/unified/UnifiedCacheService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
