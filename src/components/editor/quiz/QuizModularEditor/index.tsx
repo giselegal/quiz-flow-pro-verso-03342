@@ -314,7 +314,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const [showHealthPanel, setShowHealthPanel] = useState<boolean>(() => {
         try {
             const saved = localStorage.getItem('qm-editor:show-health-panel');
-            return saved === 'true';
+            // ✅ CORREÇÃO: Sempre iniciar fechado para não sobrepor propriedades
+            return false; // Era: saved === 'true'
         } catch { return false; }
     });
 
@@ -788,10 +789,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     toast({
                         type: 'error',
                         title: 'Template Inválido',
-                        message: `${result.errors.filter(e => e.severity === 'critical').length} erros críticos encontrados.`,
-                        duration: 6000,
+                        message: `${result.errors.filter(e => e.severity === 'critical').length} erros críticos encontrados. Clique no botão "Saúde do Template" para ver detalhes.`,
+                        duration: 8000,
                     });
-                    setShowHealthPanel(true);
+                    // ❌ CORREÇÃO: Não abrir automaticamente para não sobrepor propriedades
+                    // setShowHealthPanel(true);
                 } else if (result.warnings.length > 0 || result.errors.length > 0) {
                     appLogger.warn(`[Validation] Template com avisos:\n${formattedResult}`);
                     toast({
@@ -2226,9 +2228,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     )}
                 </PanelGroup>
 
-                {/* 🏥 Template Health Panel (sidebar) */}
+                {/* 🏥 Template Health Panel (sidebar) - Posicionado para não sobrepor properties */}
                 {showHealthPanel && (
-                    <div className="fixed right-4 top-20 bottom-4 w-96 z-50 shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                    <div className="fixed right-4 top-20 bottom-4 w-80 z-40 shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-gray-800 border-2 border-orange-400 dark:border-orange-600">
                         <TemplateHealthPanel
                             validationResult={validationResult}
                             onAutoFix={(errorIndex) => {
