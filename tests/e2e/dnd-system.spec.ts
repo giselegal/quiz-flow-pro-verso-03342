@@ -44,6 +44,15 @@ async function getCanvasBlocks(page: Page) {
 }
 
 /**
+ * Type guard para bounding box
+ */
+function assertBBox(bbox: { x: number; y: number; width: number; height: number } | null): asserts bbox is { x: number; y: number; width: number; height: number } {
+    if (!bbox) {
+        throw new Error('Bounding box não encontrada');
+    }
+}
+
+/**
  * Executa drag com mouse
  */
 async function dragBlock(page: Page, fromIndex: number, toIndex: number) {
@@ -55,9 +64,8 @@ async function dragBlock(page: Page, fromIndex: number, toIndex: number) {
     const sourceBBox = await sourceBlock.boundingBox();
     const targetBBox = await targetBlock.boundingBox();
 
-    if (!sourceBBox || !targetBBox) {
-        throw new Error('Blocos não encontrados');
-    }
+    assertBBox(sourceBBox);
+    assertBBox(targetBBox);
 
     // Executar drag: hover → mouseDown → mover 5px → arrastar → soltar
     await page.mouse.move(sourceBBox.x + sourceBBox.width / 2, sourceBBox.y + sourceBBox.height / 2);
@@ -162,7 +170,7 @@ test.describe('DND - Mouse/Pointer', () => {
 
         const firstBlock = blocks.first();
         const bbox = await firstBlock.boundingBox();
-        if (!bbox) test.skip();
+        assertBBox(bbox);
 
         // Iniciar drag
         await page.mouse.move(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2);
@@ -194,7 +202,7 @@ test.describe('DND - Mouse/Pointer', () => {
 
         const block0BBox = await blocks.nth(0).boundingBox();
         const block1BBox = await blocks.nth(1).boundingBox();
-        if (!block0BBox || !block1BBox) test.skip();
+        assertBBox(block0BBox); assertBBox(block1BBox);
 
         // Iniciar drag e hover sobre bloco 1
         await page.mouse.move(block0BBox.x + block0BBox.width / 2, block0BBox.y + block0BBox.height / 2);
@@ -390,7 +398,7 @@ test.describe('DND - Touch/Mobile', () => {
 
         const block0BBox = await blocks.nth(0).boundingBox();
         const block1BBox = await blocks.nth(1).boundingBox();
-        if (!block0BBox || !block1BBox) test.skip();
+        assertBBox(block0BBox); assertBBox(block1BBox);
 
         // Touch drag: pressionar (250ms) → arrastar → soltar
         await page.touchscreen.tap(block0BBox.x + block0BBox.width / 2, block0BBox.y + block0BBox.height / 2);
@@ -419,7 +427,7 @@ test.describe('DND - Touch/Mobile', () => {
 
         const block0Text = await blocks.nth(0).textContent();
         const bbox = await blocks.nth(0).boundingBox();
-        if (!bbox) test.skip();
+        assertBBox(bbox);
 
         // Scroll rápido (< 250ms) não deve ativar drag
         await page.touchscreen.tap(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2);
@@ -440,7 +448,7 @@ test.describe('DND - Touch/Mobile', () => {
         if (await blocks.count() < 1) test.skip();
 
         const bbox = await blocks.nth(0).boundingBox();
-        if (!bbox) test.skip();
+        assertBBox(bbox);
 
         // Iniciar drag
         await page.touchscreen.tap(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2);
@@ -475,7 +483,7 @@ test.describe('DND - Colisão Híbrida', () => {
         // Drag de 0 → 2 (saltar 1 bloco)
         const block0BBox = await blocks.nth(0).boundingBox();
         const block2BBox = await blocks.nth(2).boundingBox();
-        if (!block0BBox || !block2BBox) test.skip();
+        assertBBox(block0BBox); assertBBox(block2BBox);
 
         const block0Text = await blocks.nth(0).textContent();
 
@@ -505,7 +513,7 @@ test.describe('DND - Colisão Híbrida', () => {
         if (await blocks.count() < 2) test.skip();
 
         const block1BBox = await blocks.nth(1).boundingBox();
-        if (!block1BBox) test.skip();
+        assertBBox(block1BBox);
 
         // Drag e soltar cursor BEM dentro do bloco 1 (centro)
         await dragBlock(page, 0, 1);
@@ -525,7 +533,7 @@ test.describe('DND - Colisão Híbrida', () => {
         // Drag para área entre blocos (nem corner, nem dentro)
         const block0BBox = await blocks.nth(0).boundingBox();
         const block1BBox = await blocks.nth(1).boundingBox();
-        if (!block0BBox || !block1BBox) test.skip();
+        assertBBox(block0BBox); assertBBox(block1BBox);
 
         await page.mouse.move(block0BBox.x + block0BBox.width / 2, block0BBox.y + block0BBox.height / 2);
         await page.mouse.down();
@@ -600,7 +608,7 @@ test.describe('DND - Performance', () => {
         if (await blocks.count() < 1) test.skip();
 
         const bbox = await blocks.nth(0).boundingBox();
-        if (!bbox) test.skip();
+        assertBBox(bbox);
 
         const startTime = Date.now();
         
@@ -678,7 +686,7 @@ test.describe('DND - Visual Regression', () => {
         if (await blocks.count() < 1) test.skip();
 
         const bbox = await blocks.nth(0).boundingBox();
-        if (!bbox) test.skip();
+        assertBBox(bbox);
 
         // Iniciar drag
         await page.mouse.move(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2);
@@ -700,7 +708,7 @@ test.describe('DND - Visual Regression', () => {
         if (await blocks.count() < 2) test.skip();
 
         const block1BBox = await blocks.nth(1).boundingBox();
-        if (!block1BBox) test.skip();
+        assertBBox(block1BBox);
 
         // Hover sobre bloco 1 durante drag
         await page.mouse.move(block1BBox.x, block1BBox.y);
@@ -743,7 +751,7 @@ test.describe('DND - Edge Cases', () => {
         if (await blocks.count() < 1) test.skip();
 
         const bbox = await blocks.nth(0).boundingBox();
-        if (!bbox) test.skip();
+        assertBBox(bbox);
 
         const blockText = await blocks.nth(0).textContent();
 
