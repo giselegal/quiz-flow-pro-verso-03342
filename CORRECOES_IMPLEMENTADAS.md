@@ -361,7 +361,56 @@ useEffect(() => {
 | 4. Fix previewMode (sync) | 1 linha | N/A | ✅ |
 | 5. Otimizar comparação | +3 linhas | O(n²)→O(n) | ✅ |
 | 6. Declarar stepId/timeout | +5 linhas | N/A | ✅ |
-| **TOTAL** | **-32 linhas** | **3 otimizações** | **6 bugs** |
+| 7. Import TemplateService | 1 linha | N/A | ✅ |
+| **TOTAL** | **-31 linhas** | **3 otimizações** | **7 bugs** |
+
+---
+
+## ✅ Correção 7: Import do TemplateService
+
+**Problema**: Import incorreto em `useStepBlocksLoader.ts` causando erro de build
+
+**Solução**: Corrigir caminho do import
+
+### Antes
+```typescript
+// Linha 3 - src/hooks/editor/useStepBlocksLoader.ts
+import { templateService } from '@/services/template/TemplateService';
+```
+
+**Erro**: 
+```
+Failed to resolve import "@/services/template/TemplateService" 
+from "src/hooks/editor/useStepBlocksLoader.ts". Does the file exist?
+```
+
+### Depois
+```typescript
+// Linha 3 - src/hooks/editor/useStepBlocksLoader.ts
+import { templateService } from '@/services/templateService';
+```
+
+**Benefícios**:
+- ✅ Resolveu erro de build do Vite
+- ✅ 70 testes E2E pararam de falhar
+- ✅ Editor carrega corretamente
+- ✅ Hook useStepBlocksLoader funcional
+
+---
+
+## 📊 Resumo de Impacto Final
+
+| Correção | Linhas Alteradas | Complexidade Reduzida | Bugs Corrigidos |
+|----------|------------------|----------------------|-----------------|
+| 1. Simplificar extractor | -47 linhas | 6→3 formatos | ✅ |
+| 2. Validar array vazio | +1 guard | N/A | ✅ |
+| 2.1. Melhorar logs | +5 linhas | N/A | - |
+| 3. Fix previewMode (seleção) | 1 linha | N/A | ✅ |
+| 4. Fix previewMode (sync) | 1 linha | N/A | ✅ |
+| 5. Otimizar comparação | +3 linhas | O(n²)→O(n) | ✅ |
+| 6. Declarar stepId/timeout | +5 linhas | N/A | ✅ |
+| 7. Import TemplateService | 1 linha | N/A | ✅ |
+| **TOTAL** | **-31 linhas** | **3 otimizações** | **7 bugs** |
 
 ---
 
