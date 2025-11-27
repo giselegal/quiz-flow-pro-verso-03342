@@ -85,7 +85,7 @@ test.describe('🔄 Duplicação e Clonagem de Funis', () => {
 
   test('1. Duplicar funil via API', async () => {
     // Importar serviço de clonagem
-    const { funnelCloneService } = await import('@/services/funnel/FunnelCloneService');
+    const { funnelCloneService } = await import('@/core/funnel/services/FunnelCloneService');
 
     // Clonar funil
     const result = await funnelCloneService.clone(originalFunnelId, {
@@ -201,7 +201,7 @@ test.describe('🔄 Duplicação e Clonagem de Funis', () => {
   });
 
   test('4. Duplicar com transformações', async () => {
-    const { funnelCloneService } = await import('@/services/funnel/FunnelCloneService');
+    const { funnelCloneService } = await import('@/core/funnel/services/FunnelCloneService');
 
     const result = await funnelCloneService.clone(originalFunnelId, {
       name: 'Cópia com Transformações',
@@ -262,7 +262,7 @@ test.describe('🔄 Duplicação e Clonagem de Funis', () => {
 
     expect(error).toBeNull();
 
-    const { funnelCloneService } = await import('@/services/funnel/FunnelCloneService');
+    const { funnelCloneService } = await import('@/core/funnel/services/FunnelCloneService');
 
     // Clonar apenas step 1 e 2
     const result = await funnelCloneService.clone(originalFunnelId, {
