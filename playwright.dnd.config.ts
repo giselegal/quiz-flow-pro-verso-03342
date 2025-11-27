@@ -81,7 +81,9 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 headless: false,
-                slowMo: 500, // Slow motion para ver animações
+                launchOptions: {
+                    slowMo: 500, // Slow motion para ver animações
+                },
             },
         },
     ],
