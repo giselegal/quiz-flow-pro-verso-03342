@@ -45,24 +45,10 @@ export function useDndSystem() {
     }
   }, [])
 
-  const handleDragOver = useCallback((event: DragOverEvent) => {
-    // 🆕 G30 FIX: Lógica melhorada de hover para feedback consistente
-    const { active, over } = event
-
-    if (!over || !active) return
-
-    // Log para debug (pode ser removido depois)
-    if (process.env.NODE_ENV === 'development') {
-      appLogger.info('[DnD] DragOver:', { data: [{
-                activeId: active.id,
-                overId: over.id,
-                draggedItemType: draggedItem?.type,
-              }] })
-    }
-
-    // Forçar re-render para atualizar estados visuais
-    // (o @dnd-kit já gerencia isso internamente, mas explicitamos aqui)
-  }, [draggedItem])
+  const handleDragOver = useCallback((_event: DragOverEvent) => {
+    // 🆕 G30 FIX: @dnd-kit gerencia feedback visual internamente
+    // Mantido para assinatura do handler de evento
+  }, [])
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event

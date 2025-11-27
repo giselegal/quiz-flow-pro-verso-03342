@@ -65,12 +65,13 @@ export interface DndWrapperProps {
  */
 export function useSafeDndSensors() {
   // ✅ SEMPRE chama os mesmos hooks na mesma ordem, sem condicionais
-  // 🔧 CORREÇÃO: Sensores ajustados para permitir clicks normais sem interferência
+  // 🔧 CORREÇÃO CRÍTICA: Usar apenas 'distance' para PointerSensor
+  // PROBLEMA ANTERIOR: Combinar 'distance' + 'delay' requer AMBAS condições,
+  // causando travamentos e clicks não responsivos.
+  // SOLUÇÃO: Usar apenas 'distance' para mouse (resposta imediata após movimento)
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
-      distance: 10,       // Aumentado de 5 para 10 - menos sensível
-      tolerance: 10,      // Aumentado de 5 para 10
-      delay: 150,         // ✨ NOVO: delay de 150ms antes de ativar drag
+      distance: 8,        // Ativar drag após mover 8px - equilíbrio entre click e drag
     },
   });
 
@@ -78,10 +79,11 @@ export function useSafeDndSensors() {
     coordinateGetter: sortableKeyboardCoordinates,
   });
 
+  // TouchSensor mantém delay para distinguir scroll de drag em mobile
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 300,         // Aumentado de 250 para 300ms
-      tolerance: 15,      // Aumentado de 10 para 15
+      delay: 200,         // Delay para distinguir tap de drag
+      tolerance: 8,       // Tolerância de movimento durante delay
     },
   });
 
