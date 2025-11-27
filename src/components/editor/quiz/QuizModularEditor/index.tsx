@@ -2032,13 +2032,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             className="h-full border-r bg-white overflow-y-auto flex flex-col"
                             data-testid="column-steps"
                         >
-                            <StepNavigatorColumn
-                                steps={navSteps}
-                                currentStepKey={currentStepKey}
-                                onSelectStep={handleSelectStep}
-                                validationErrors={validationResult?.errors}
-                                validationWarnings={validationResult?.warnings}
-                            />
+                            <Suspense fallback={<StepNavigatorSkeleton />}>
+                                <StepNavigatorColumn
+                                    steps={navSteps}
+                                    currentStepKey={currentStepKey}
+                                    onSelectStep={handleSelectStep}
+                                    validationErrors={validationResult?.errors}
+                                    validationWarnings={validationResult?.warnings}
+                                />
+                            </Suspense>
 
                             {/* 🏥 Health Panel Toggle Button */}
                             <div className="p-2 border-t mt-auto">

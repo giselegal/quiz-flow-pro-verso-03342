@@ -18,13 +18,13 @@ test.describe('Column 04: Properties Panel', () => {
     await page.waitForSelector('[data-testid="column-canvas"]', { timeout: 15000 });
     await page.waitForTimeout(1500);
     
-    // Tentar selecionar primeiro bloco
+    // Tentar selecionar primeiro bloco usando evaluate para evitar conflito com DnD
     const firstBlock = page.locator('[data-testid="column-canvas"] [data-block-id]').first();
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click({ timeout: 15000, force: true });
-      await page.waitForTimeout(800);
+      await firstBlock.evaluate((el) => el.click());
+      await page.waitForTimeout(1000);
     }
   });
 
