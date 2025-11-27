@@ -42,6 +42,8 @@ export interface FunnelVisualizationProps {
   maxBarHeight?: number;
   /** Se deve mostrar números absolutos */
   showAbsoluteNumbers?: boolean;
+  /** Número padrão de sessões para visualização quando não há dados reais */
+  defaultSessionCount?: number;
   /** Cores personalizadas */
   colors?: {
     good?: string;
@@ -199,6 +201,7 @@ export const FunnelVisualization: React.FC<FunnelVisualizationProps> = ({
   minBarHeight = 30,
   maxBarHeight = 200,
   showAbsoluteNumbers = false,
+  defaultSessionCount = 100,
   colors = DEFAULT_COLORS,
 }) => {
   const { getMetricsByFunnel, getDropOffByStep, getAverageTimeByStep } = useFunnelMetrics();
@@ -221,8 +224,9 @@ export const FunnelVisualization: React.FC<FunnelVisualizationProps> = ({
     });
 
     // Calcular o número inicial (primeiro step)
+    // Usa defaultSessionCount quando não há dados reais para visualização de placeholder
     const firstStepId = steps[0]?.id;
-    const totalStarts = entriesByStep.get(firstStepId) || 100; // Default para visualização
+    const totalStarts = entriesByStep.get(firstStepId) || defaultSessionCount;
 
     return steps.map((step, index) => {
       const entries = entriesByStep.get(step.id) || 0;

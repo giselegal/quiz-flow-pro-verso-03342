@@ -61,11 +61,11 @@ function generateSessionId(): string {
     const existing = sessionStorage.getItem('funnelSessionId');
     if (existing) return existing;
 
-    const newId = `fsess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const newId = `fsess_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     sessionStorage.setItem('funnelSessionId', newId);
     return newId;
   }
-  return `fsess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `fsess_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }
 
 /**
