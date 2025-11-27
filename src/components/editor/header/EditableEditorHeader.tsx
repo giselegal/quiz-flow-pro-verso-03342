@@ -95,7 +95,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
   const exportJSON = (): string => {
     // Export current blocks as JSON
     const stepKey = `step-${safeCurrentStep}`;
-    const blocks = state.stepBlocks[stepKey] || [];
+    const blocks = (state.stepBlocks as Record<string, any[]>)[stepKey] || [];
     return JSON.stringify({ step: safeCurrentStep, blocks }, null, 2);
   };
 
@@ -359,7 +359,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
             <div className="text-blue-700">
               {state.selectedBlockId
                 ? `Editando: ${state.selectedBlockId}`
-                : `${state.stepBlocks[safeCurrentStep]?.length || 0} blocos disponíveis - Clique para editar`}
+                : `${(state.stepBlocks as Record<string, any[]>)[safeCurrentStep]?.length || 0} blocos disponíveis - Clique para editar`}
             </div>
           </div>
         ) : (

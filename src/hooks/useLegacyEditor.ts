@@ -50,7 +50,7 @@ export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
 
         getStepBlocks: (step: number) => {
             const stepKey = `step-${step}`;
-            return editorContext.state.stepBlocks[stepKey] || [];
+            return (editorContext.state.stepBlocks as Record<string, any[]>)[stepKey] || [];
         },
 
         // Legacy API: updateBlock(stepKey, blockId, updates) -> new API: updateBlock(blockId, updates)
