@@ -133,9 +133,9 @@ test.describe('Column 03: Canvas (Editing Area)', () => {
       const firstBlock = blocks.first();
       const blockId = await firstBlock.getAttribute('data-block-id');
       
-      // Click no bloco
-      await firstBlock.click({ timeout: 10000, force: true });
-      await page.waitForTimeout(300);
+      // Click no bloco usando evaluate para evitar conflito com DnD
+      await firstBlock.evaluate((el) => el.click());
+      await page.waitForTimeout(500);
       
       // Verificar se ficou com border azul ou bg-blue (selecionado)
       const classes = await firstBlock.getAttribute('class');
