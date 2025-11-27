@@ -11,6 +11,18 @@
       "destination": "https://seu-backend.railway.app/api/:path*"
     },
     {
+      "source": "/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/*.css",
+      "destination": "/:match*.css"
+    },
+    {
+      "source": "/*.js",
+      "destination": "/:match*.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
