@@ -165,14 +165,14 @@ export function SafeDndContext({
   }, [dndComponents]);
 
   if (!dndReady || disabled || (!DndContext && !dndComponents)) {
-    return <div data-testid=\"safe-dnd-fallback\">{children}</div>;
+    return <div data-testid="safe-dnd-fallback">{children}</div>;
   }
 
   const ActiveDndContext = dndComponents?.DndContext || DndContext;
   const ActiveDragOverlay = dndComponents?.DragOverlay || DragOverlay;
   const activeCollisionDetection = collisionDetection || customCollisionDetection;
 
-  if (!ActiveDndContext) return <div data-testid=\"safe-dnd-no-context\">{children}</div>;
+  if (!ActiveDndContext) return <div data-testid="safe-dnd-no-context">{children}</div>;
 
   try {
     return (
@@ -188,18 +188,18 @@ export function SafeDndContext({
           <ActiveDragOverlay
             dropAnimation={{ duration: 300, easing: 'cubic-bezier(0.18,0.67,0.6,1.22)' }}
           >
-            <div className=\"bg-gradient-to-br from-white to-blue-50 border-2 border-blue-500 shadow-2xl rounded-lg p-4 opacity-95 scale-105 cursor-grabbing backdrop-blur-sm min-w-[280px]\">
-              <div className=\"flex items-center gap-3\">
-                <div className=\"flex flex-col gap-1\">
-                  <div className=\"flex gap-1\"><div className=\"w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse\"/><div className=\"w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse\" style={{animationDelay:'0.1s'}}/></div>
-                  <div className=\"flex gap-1\"><div className=\"w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse\" style={{animationDelay:'0.2s'}}/><div className=\"w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse\" style={{animationDelay:'0.3s'}}/></div>
+            <div className="bg-gradient-to-br from-white to-blue-50 border-2 border-blue-500 shadow-2xl rounded-lg p-4 opacity-95 scale-105 cursor-grabbing backdrop-blur-sm min-w-[280px]">
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-1">
+                  <div className="flex gap-1"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"/><div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" style={{animationDelay:'0.1s'}}/></div>
+                  <div className="flex gap-1"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" style={{animationDelay:'0.2s'}}/><div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" style={{animationDelay:'0.3s'}}/></div>
                 </div>
-                <div className=\"flex-1\">
-                  <div className=\"text-sm font-semibold text-gray-800 mb-0.5\">Movendo bloco</div>
-                  <div className=\"text-xs text-gray-500\">Solte para reposicionar</div>
+                <div className="flex-1">
+                  <div className="text-sm font-semibold text-gray-800 mb-0.5">Movendo bloco</div>
+                  <div className="text-xs text-gray-500">Solte para reposicionar</div>
                 </div>
-                <div className=\"w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg\">
-                  <svg className=\"w-4 h-4 text-white\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path strokeLinecap=\"round\" strokeLinejoin=\"round\" strokeWidth={2} d=\"M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4\"/></svg>
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
                 </div>
               </div>
             </div>
@@ -209,7 +209,7 @@ export function SafeDndContext({
     );
   } catch (err) {
     appLogger.error('[SafeDndContext] erro renderizar', { data: [err] });
-    return <div data-testid=\"safe-dnd-error\">{children}</div>;
+    return <div data-testid="safe-dnd-error">{children}</div>;
   }
 }
 
