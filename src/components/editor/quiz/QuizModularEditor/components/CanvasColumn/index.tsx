@@ -78,14 +78,28 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
 
         // Ignorar clicks em botões internos
         if (target.tagName.toLowerCase() === 'button' && target !== e.currentTarget) {
+            console.log('⚠️  [CanvasColumn] Click ignorado: botão interno');
             return;
         }
 
         // Prevenir propagação para evitar seleções múltiplas
         e.stopPropagation();
 
-        console.log('🎯 CLICK CAPTURADO:', block.id, block.type);
+        console.log('🎯 [CanvasColumn] CLICK CAPTURADO:', {
+            blockId: block.id,
+            blockType: block.type,
+            hasOnSelect: !!onSelect,
+            onSelectType: typeof onSelect
+        });
+
+        if (!onSelect) {
+            console.error('❌ [CanvasColumn] onSelect é undefined! Seleção não será propagada.');
+            return;
+        }
+
+        console.log('✅ [CanvasColumn] Chamando onSelect com blockId:', block.id);
         onSelect?.(block.id);
+        console.log('✅ [CanvasColumn] onSelect chamado com sucesso');
     }, [block.id, block.type, onSelect]);
 
     return (

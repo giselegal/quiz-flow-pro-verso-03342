@@ -577,30 +577,51 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável (sem selectedBlockId nas deps para evitar loop)
     const handleBlockSelect = useCallback((blockId: string | null) => {
+        console.log('🎯 [handleBlockSelect] ENTRADA:', {
+            blockId,
+            tipo: typeof blockId,
+            isNull: blockId === null
+        });
+
         if (!blockId) {
+            console.log('⚠️  [handleBlockSelect] blockId é null/falsy, limpando seleção');
             setSelectedBlock(null);
             return;
         }
 
+        console.log('✅ [handleBlockSelect] Setando selectedBlock:', blockId);
         setSelectedBlock(blockId);
 
         // Auto-scroll suave + highlight visual
         setTimeout(() => {
             const element = document.getElementById(`block-${blockId}`);
             if (element) {
+                console.log('📜 [handleBlockSelect] Fazendo scroll para elemento:', `block-${blockId}`);
                 element.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center',
                     inline: 'nearest'
                 });
+            } else {
+                console.warn('⚠️  [handleBlockSelect] Elemento não encontrado:', `block-${blockId}`);
             }
         }, 100);
     }, [setSelectedBlock]);
 
     // 🚀 PERFORMANCE: Callbacks otimizados para handlers do WYSIWYG (removido wysiwyg.state.selectedBlockId das deps)
     const handleWYSIWYGBlockSelect = useCallback((id: string | null) => {
+        console.log('🖱️  [handleWYSIWYGBlockSelect] ENTRADA:', {
+            id,
+            wysiwygAvailable: !!wysiwyg,
+            actionsAvailable: !!wysiwyg.actions,
+            handleBlockSelectAvailable: !!handleBlockSelect
+        });
+
+        console.log('🔄 [handleWYSIWYGBlockSelect] Chamando wysiwyg.actions.selectBlock');
         wysiwyg.actions.selectBlock(id);
+        console.log('🔄 [handleWYSIWYGBlockSelect] Chamando handleBlockSelect');
         handleBlockSelect(id);
+        console.log('✅ [handleWYSIWYGBlockSelect] Seleção completa');
     }, [wysiwyg.actions, handleBlockSelect]);
 
     const handleWYSIWYGBlockUpdate = useCallback((id: string, updates: Partial<Block>) => {

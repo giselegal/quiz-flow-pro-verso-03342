@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Seleção - QuizModularEditor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section h2 {
+            margin-top: 0;
+            color: #667eea;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status.success {
+            background: #10b981;
+            color: white;
+        }
+
+        .status.error {
+            background: #ef4444;
+            color: white;
+        }
+
+        .status.warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status.info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .log-container {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #666;
+        }
+
+        .log-entry.info {
+            border-color: #3b82f6;
+        }
+
+        .log-entry.warn {
+            border-color: #f59e0b;
+        }
+
+        .log-entry.error {
+            border-color: #ef4444;
+        }
+
+        .log-entry.success {
+            border-color: #10b981;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .metric {
+            display: inline-block;
+            background: #f3f4f6;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .metric strong {
+            color: #667eea;
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .performance-warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🔍 Diagnóstico de Seleção - QuizModularEditor</h1>
+        <p>Teste automático para identificar problemas de seleção e travamento</p>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Métricas em Tempo Real</h2>
+        <div id="metrics">
+            <div class="metric">
+                <strong>Listeners:</strong> <span id="listener-count">0</span>
+            </div>
+            <div class="metric">
+                <strong>Renders:</strong> <span id="render-count">0</span>
+            </div>
+            <div class="metric">
+                <strong>Seleções:</strong> <span id="selection-count">0</span>
+            </div>
+            <div class="metric">
+                <strong>CPU:</strong> <span id="cpu-usage">0%</span>
+            </div>
+            <div class="metric">
+                <strong>Memory:</strong> <span id="memory-usage">0 MB</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎮 Controles de Teste</h2>
+        <button onclick="startDiagnostic()">▶️ Iniciar Diagnóstico</button>
+        <button onclick="testBlockSelection()">🎯 Testar Seleção de Bloco</button>
+        <button onclick="testDragAndDrop()">🖱️ Testar Drag & Drop</button>
+        <button onclick="monitorPerformance()">📈 Monitorar Performance</button>
+        <button onclick="clearLogs()">🗑️ Limpar Logs</button>
+        <button onclick="exportReport()">💾 Exportar Relatório</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Console de Diagnóstico</h2>
+        <div id="log-container" class="log-container"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🖥️ Preview do Editor</h2>
+        <iframe id="editor-iframe" src="about:blank"></iframe>
+    </div>
+
+    <script>
+        let logs = [];
+        let metrics = {
+            listeners: 0,
+            renders: 0,
+            selections: 0,
+            cpuSamples: [],
+            memorySamples: []
+        };
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+            const entry = { timestamp, message, type };
+            logs.push(entry);
+
+            const container = document.getElementById('log-container');
+            const div = document.createElement('div');
+            div.className = `log-entry ${type}`;
+            div.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function updateMetric(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        }
+
+        function clearLogs() {
+            logs = [];
+            document.getElementById('log-container').innerHTML = '';
+            log('Logs limpos', 'info');
+        }
+
+        async function startDiagnostic() {
+            log('🚀 Iniciando diagnóstico completo...', 'info');
+
+            // Carregar o editor no iframe
+            const iframe = document.getElementById('editor-iframe');
+            const url = 'http://localhost:8080/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete';
+
+            log(`📍 Carregando URL: ${url}`, 'info');
+            iframe.src = url;
+
+            // Aguardar carregamento
+            await new Promise(resolve => {
+                iframe.onload = resolve;
+                setTimeout(resolve, 5000); // Timeout de 5s
+            });
+
+            log('✅ Editor carregado', 'success');
+
+            // Injetar script de monitoramento
+            try {
+                injectMonitoringScript(iframe);
+            } catch (error) {
+                log(`❌ Erro ao injetar script: ${error.message}`, 'error');
+            }
+        }
+
+        function injectMonitoringScript(iframe) {
+            const iframeWindow = iframe.contentWindow;
+            const iframeDoc = iframe.contentDocument || iframeWindow.document;
+
+            log('💉 Injetando script de monitoramento...', 'info');
+
+            // Interceptar console.log/warn/error
+            iframeWindow._originalConsole = {
+                log: iframeWindow.console.log,
+                warn: iframeWindow.console.warn,
+                error: iframeWindow.console.error
+            };
+
+            iframeWindow.console.log = function (...args) {
+                log(`[LOG] ${args.join(' ')}`, 'info');
+                iframeWindow._originalConsole.log.apply(console, args);
+            };
+
+            iframeWindow.console.warn = function (...args) {
+                log(`[WARN] ${args.join(' ')}`, 'warn');
+                iframeWindow._originalConsole.warn.apply(console, args);
+            };
+
+            iframeWindow.console.error = function (...args) {
+                log(`[ERROR] ${args.join(' ')}`, 'error');
+                iframeWindow._originalConsole.error.apply(console, args);
+            };
+
+            // Monitorar event listeners
+            let listenerCount = 0;
+            const originalAddEventListener = iframeWindow.EventTarget.prototype.addEventListener;
+            iframeWindow.EventTarget.prototype.addEventListener = function (type, listener, options) {
+                listenerCount++;
+                updateMetric('listener-count', listenerCount);
+
+                if (listenerCount % 10 === 0) {
+                    log(`⚠️ ${listenerCount} event listeners registrados`, 'warning');
+                }
+
+                return originalAddEventListener.call(this, type, listener, options);
+            };
+
+            // Monitorar clicks
+            iframeDoc.addEventListener('click', function (e) {
+                const target = e.target;
+                log(`🖱️ Click em: ${target.tagName} ${target.className}`, 'info');
+
+                // Verificar se é um bloco
+                if (target.closest('[data-block-id]')) {
+                    metrics.selections++;
+                    updateMetric('selection-count', metrics.selections);
+                    const blockId = target.closest('[data-block-id]').getAttribute('data-block-id');
+                    log(`🎯 Bloco selecionado: ${blockId}`, 'success');
+                }
+            }, true);
+
+            log('✅ Script de monitoramento injetado', 'success');
+
+            // Iniciar monitoramento de performance
+            monitorPerformance();
+        }
+
+        async function testBlockSelection() {
+            log('🎯 Testando seleção de blocos...', 'info');
+
+            const iframe = document.getElementById('editor-iframe');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            // Buscar todos os blocos
+            const blocks = iframeDoc.querySelectorAll('[data-block-id], [id^="block-"]');
+            log(`📦 Encontrados ${blocks.length} blocos`, 'info');
+
+            if (blocks.length === 0) {
+                log('❌ Nenhum bloco encontrado!', 'error');
+                return;
+            }
+
+            // Testar seleção de cada bloco
+            for (let i = 0; i < Math.min(blocks.length, 5); i++) {
+                const block = blocks[i];
+                const blockId = block.getAttribute('data-block-id') || block.id;
+
+                log(`🔍 Testando bloco ${i + 1}/${Math.min(blocks.length, 5)}: ${blockId}`, 'info');
+
+                // Simular click
+                const clickEvent = new MouseEvent('click', {
+                    view: iframe.contentWindow,
+                    bubbles: true,
+                    cancelable: true
+                });
+
+                block.dispatchEvent(clickEvent);
+
+                // Aguardar resposta
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Verificar se foi selecionado
+                const isSelected = block.classList.contains('selected') ||
+                    block.classList.contains('ring-2') ||
+                    block.querySelector('.SELECIONADO');
+
+                if (isSelected) {
+                    log(`✅ Bloco ${blockId} selecionado corretamente`, 'success');
+                } else {
+                    log(`⚠️ Bloco ${blockId} não foi selecionado visualmente`, 'warning');
+                }
+            }
+
+            log('✅ Teste de seleção completo', 'success');
+        }
+
+        async function testDragAndDrop() {
+            log('🖱️ Testando Drag & Drop...', 'info');
+
+            const iframe = document.getElementById('editor-iframe');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            const blocks = iframeDoc.querySelectorAll('[data-block-id], [id^="block-"]');
+
+            if (blocks.length < 2) {
+                log('❌ Não há blocos suficientes para testar D&D', 'error');
+                return;
+            }
+
+            const block1 = blocks[0];
+            const block2 = blocks[1];
+
+            log('🎯 Simulando drag do primeiro para o segundo bloco', 'info');
+
+            // Simular eventos de drag
+            const dragStartEvent = new DragEvent('dragstart', {
+                bubbles: true,
+                cancelable: true,
+                view: iframe.contentWindow
+            });
+
+            block1.dispatchEvent(dragStartEvent);
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            const dragOverEvent = new DragEvent('dragover', {
+                bubbles: true,
+                cancelable: true,
+                view: iframe.contentWindow
+            });
+
+            block2.dispatchEvent(dragOverEvent);
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            const dropEvent = new DragEvent('drop', {
+                bubbles: true,
+                cancelable: true,
+                view: iframe.contentWindow
+            });
+
+            block2.dispatchEvent(dropEvent);
+
+            log('✅ Teste de D&D completo', 'success');
+        }
+
+        function monitorPerformance() {
+            log('📈 Iniciando monitoramento de performance...', 'info');
+
+            let lastTime = performance.now();
+            let frameCount = 0;
+
+            function checkPerformance() {
+                const now = performance.now();
+                frameCount++;
+
+                // Calcular FPS aproximado
+                if (now - lastTime >= 1000) {
+                    const fps = frameCount;
+                    frameCount = 0;
+                    lastTime = now;
+
+                    // CPU aproximado (quanto mais longe de 60 FPS, pior)
+                    const cpuUsage = Math.round(((60 - fps) / 60) * 100);
+                    updateMetric('cpu-usage', `${cpuUsage}%`);
+
+                    if (cpuUsage > 50) {
+                        log(`⚠️ CPU alta detectada: ${cpuUsage}%`, 'warning');
+                    }
+                }
+
+                // Memory
+                if (performance.memory) {
+                    const memoryMB = Math.round(performance.memory.usedJSHeapSize / 1048576);
+                    updateMetric('memory-usage', `${memoryMB} MB`);
+
+                    if (memoryMB > 200) {
+                        log(`⚠️ Uso de memória elevado: ${memoryMB} MB`, 'warning');
+                    }
+                }
+
+                // Continuar monitorando
+                requestAnimationFrame(checkPerformance);
+            }
+
+            requestAnimationFrame(checkPerformance);
+        }
+
+        function exportReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                metrics,
+                logs,
+                userAgent: navigator.userAgent,
+                url: window.location.href
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `diagnostic-report-${Date.now()}.json`;
+            a.click();
+
+            log('💾 Relatório exportado', 'success');
+        }
+
+        // Inicialização
+        log('✅ Ferramenta de diagnóstico carregada', 'success');
+        log('👉 Clique em "Iniciar Diagnóstico" para começar', 'info');
+    </script>
+</body>
+
+</html>
