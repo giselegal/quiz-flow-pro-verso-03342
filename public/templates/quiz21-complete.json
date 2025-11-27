@@ -109,7 +109,7 @@
       "blocks": [
         {
           "id": "quiz-intro-header",
-          "type": "quiz-intro-header",
+          "type": "intro-logo-header",
           "order": 0,
           "properties": {
             "logoUrl": "{{asset.logo}}",
