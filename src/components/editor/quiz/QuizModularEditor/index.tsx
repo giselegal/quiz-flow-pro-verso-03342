@@ -1,5 +1,3 @@
-// Aplicar polyfills React primeiro
-import '@/lib/utils/reactPolyfills';
 import React, { Suspense, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { stepKeys } from '@/services/api/steps/hooks';
