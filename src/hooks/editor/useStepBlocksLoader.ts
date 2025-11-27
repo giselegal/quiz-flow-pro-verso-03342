@@ -1,6 +1,6 @@
 // src/hooks/editor/useStepBlocksLoader.ts
 import { useEffect } from 'react';
-import { templateService } from '@/services/template/TemplateService';
+import { templateService } from '@/services/templateService';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 
