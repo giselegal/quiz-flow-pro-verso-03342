@@ -148,6 +148,7 @@ function useDraftPropertiesAdapter(
         }, {} as Record<string, string>),
         isDirty: draft.isDirty,
         isValid: draft.isValid,
+        isValidating: false, // useBlockDraft não tem debounce de validação
         updateField: (key: string, value: any) => {
             draft.updateProperty(key, value);
             return { value, error: undefined, isValid: true };
@@ -171,6 +172,22 @@ function useDraftPropertiesAdapter(
         getJsonBuffer: (key: string) => {
             const value = draft.data?.properties?.[key];
             return value !== undefined ? JSON.stringify(value, null, 2) : '';
+        },
+        getErrorWithSuggestion: (key: string) => {
+            const error = draft.errors.find(e => e === key);
+            if (!error) return null;
+
+            // Sugestões simples baseadas no nome do campo
+            let suggestion: string | undefined;
+            if (key.includes('url')) {
+                suggestion = 'Digite uma URL válida (ex: https://exemplo.com)';
+            } else if (key.includes('email')) {
+                suggestion = 'Digite um email válido (ex: usuario@exemplo.com)';
+            } else if (key.includes('number') || key.includes('count')) {
+                suggestion = 'Digite apenas números';
+            }
+
+            return { error, suggestion };
         },
     };
 }
@@ -534,11 +551,13 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
         draft,
         errors,
         isDirty,
+        isValidating,
         updateField,
         updateJsonField,
         commitDraft,
         cancelDraft,
         getJsonBuffer,
+        getErrorWithSuggestion,
     } = draftHookResult;
 
     const [isSaving, setIsSaving] = useState(false);
@@ -775,16 +794,47 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
             </CardContent>
 
             <div className="sticky bottom-0 z-20 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+                {/* Indicador de validação em progresso */}
+                {isValidating && (
+                    <div className="mb-2 flex items-center gap-2 rounded-md bg-blue-50 px-3 py-2 text-xs text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        Validando alterações...
+                    </div>
+                )}
+
+                {/* Sugestões de erro contextual */}
+                {hasErrors && Object.keys(errors).length > 0 && (
+                    <div className="mb-2 space-y-1 rounded-md bg-red-50 px-3 py-2 text-xs dark:bg-red-950">
+                        {Object.keys(errors).slice(0, 3).map(key => {
+                            const errorInfo = getErrorWithSuggestion?.(key);
+                            if (!errorInfo) return null;
+                            return (
+                                <div key={key} className="flex flex-col gap-0.5">
+                                    <span className="font-medium text-red-700 dark:text-red-300">{errorInfo.error}</span>
+                                    {errorInfo.suggestion && (
+                                        <span className="text-red-600/80 dark:text-red-400/80">💡 {errorInfo.suggestion}</span>
+                                    )}
+                                </div>
+                            );
+                        })}
+                        {Object.keys(errors).length > 3 && (
+                            <span className="text-red-600/60 dark:text-red-400/60">
+                                +{Object.keys(errors).length - 3} erro(s) adicional(is)
+                            </span>
+                        )}
+                    </div>
+                )}
+
                 <div className="flex items-center gap-2">
                     <Button
                         onClick={handleApply}
-                        disabled={!isDirty || hasErrors || isSaving}
+                        disabled={!isDirty || hasErrors || isSaving || isValidating}
                         className="flex-1 gap-2 text-xs"
                     >
-                        {isSaving ? (
+                        {isSaving || isValidating ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                Validando...
+                                {isValidating ? 'Validando...' : 'Aplicando...'}
                             </>
                         ) : (
                             <>
