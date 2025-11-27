@@ -65,10 +65,12 @@ export interface DndWrapperProps {
  */
 export function useSafeDndSensors() {
   // ✅ SEMPRE chama os mesmos hooks na mesma ordem, sem condicionais
+  // 🔧 CORREÇÃO: Sensores ajustados para permitir clicks normais sem interferência
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
-      distance: 5,
-      tolerance: 5,
+      distance: 10,       // Aumentado de 5 para 10 - menos sensível
+      tolerance: 10,      // Aumentado de 5 para 10
+      delay: 150,         // ✨ NOVO: delay de 150ms antes de ativar drag
     },
   });
 
@@ -78,8 +80,8 @@ export function useSafeDndSensors() {
 
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 250,
-      tolerance: 10,
+      delay: 300,         // Aumentado de 250 para 300ms
+      tolerance: 15,      // Aumentado de 10 para 15
     },
   });
 
