@@ -148,20 +148,8 @@ export function SafeDndContext({
         }
     }, [disabled]);
 
-    // Se @dnd-kit não carregou ou está desabilitado, renderizar sem DnD
-    if (!dndReady || disabled || (!DndContext && !dndComponents)) {
-        return (
-            <div data-testid="safe-dnd-fallback">
-                {children}
-            </div>
-        );
-    }
-
-    // Usar componentes carregados dinamicamente ou estáticos
-    const ActiveDndContext = dndComponents?.DndContext || DndContext;
-    const ActiveDragOverlay = dndComponents?.DragOverlay || DragOverlay;
-
-    // ✨ FASE 2: Estratégia de colisão customizada híbrida para listas verticais
+    // Hooks que precisam ser chamados em TODAS as renderizações do componente
+    // (mantendo a ordem estável de hooks mesmo quando DnD ainda não carregou)
     const customCollisionDetection = React.useCallback((args: any) => {
         const activeClosestCorners = dndComponents?.closestCorners || closestCorners;
         const activePointerWithin = dndComponents?.pointerWithin || pointerWithin;
@@ -190,6 +178,19 @@ export function SafeDndContext({
 
         return [];
     }, [dndComponents]);
+
+    // Se @dnd-kit não carregou ou está desabilitado, renderizar sem DnD
+    if (!dndReady || disabled || (!DndContext && !dndComponents)) {
+        return (
+            <div data-testid="safe-dnd-fallback">
+                {children}
+            </div>
+        );
+    }
+
+    // Usar componentes carregados dinamicamente ou estáticos
+    const ActiveDndContext = dndComponents?.DndContext || DndContext;
+    const ActiveDragOverlay = dndComponents?.DragOverlay || DragOverlay;
 
     const activeCollisionDetection = collisionDetection || customCollisionDetection;
 
@@ -271,37 +272,45 @@ export function SafeDndContext({
  * ⚠️ CORREÇÃO DEFINITIVA: SEMPRE chamar os mesmos 3 hooks na mesma ordem
  */
 export function useSafeDndSensors() {
-    if (!useSensor || !useSensors || !PointerSensor) {
-        return [];
-    }
+    // Garantir wrappers estáveis para hooks (mesma ordem e número sempre)
+    // Se @dnd-kit não estiver disponível ainda, usamos stubs que também
+    // chamam hooks internos (useMemo) para manter a ordem consistente.
+    const useSensorHook = useSensor ?? ((Sensor: any, opts?: any) => {
+        // stub que usa useMemo (hook) para manter a mesma assinatura de hooks
+        return React.useMemo(() => ({ __stub: true, Sensor, opts }), [Sensor, opts]);
+    });
+
+    const useSensorsHook = useSensors ?? ((...sensorsArgs: any[]) => {
+        // stub que também usa useMemo e depende do mesmo número de argumentos
+        // (mantendo a ordem de hooks consistente)
+        return React.useMemo(() => [], [
+            // map to stable primitives to keep dependency array shape stable
+            sensorsArgs.length,
+        ]);
+    });
 
     try {
-        // ✅ SOLUÇÃO CORRETA: SEMPRE chamar useSensors com exatamente 3 argumentos
-        // Usar PointerSensor como fallback para sensores não disponíveis
-        const sensors = useSensors(
-            // Sensor 1: PointerSensor (SEMPRE presente)
-            useSensor(PointerSensor, {
-                activationConstraint: {
-                    distance: 5,
-                    tolerance: 5,
-                },
-            }),
-            // Sensor 2: KeyboardSensor OU PointerSensor (fallback)
-            useSensor(
-                KeyboardSensor || PointerSensor,
-                KeyboardSensor && sortableKeyboardCoordinates
-                    ? { coordinateGetter: sortableKeyboardCoordinates }
-                    : { activationConstraint: { distance: 5, tolerance: 5 } }
-            ),
-            // Sensor 3: TouchSensor OU PointerSensor (fallback)
-            useSensor(
-                TouchSensor || PointerSensor,
-                TouchSensor
-                    ? { activationConstraint: { delay: 250, tolerance: 10 } }
-                    : { activationConstraint: { distance: 5, tolerance: 5 } }
-            )
+        const s1 = useSensorHook(PointerSensor, {
+            activationConstraint: { distance: 5, tolerance: 5 },
+        });
+
+        const s2 = useSensorHook(
+            KeyboardSensor || PointerSensor,
+            KeyboardSensor && sortableKeyboardCoordinates
+                ? { coordinateGetter: sortableKeyboardCoordinates }
+                : { activationConstraint: { distance: 5, tolerance: 5 } }
         );
-        return sensors;
+
+        const s3 = useSensorHook(
+            TouchSensor || PointerSensor,
+            TouchSensor
+                ? { activationConstraint: { delay: 250, tolerance: 10 } }
+                : { activationConstraint: { distance: 5, tolerance: 5 } }
+        );
+
+        // Chamar o hook de agregação (real ou stub) sempre — mesma ordem
+        const sensors = useSensorsHook(s1, s2, s3);
+        return sensors || [];
     } catch (error) {
         appLogger.error('❌ [DndWrapper] Erro ao criar sensores DnD:', { data: [error] });
         return [];
