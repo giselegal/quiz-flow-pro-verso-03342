@@ -9,6 +9,8 @@
 
 import { test, expect } from '@playwright/test';
 
+const EDITOR_URL = '/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete';
+
 test.describe('FIX CRÍTICO: resourceId e JSON Loading', () => {
     test.beforeEach(async ({ page }) => {
         // Aumentar timeout para carregamento inicial

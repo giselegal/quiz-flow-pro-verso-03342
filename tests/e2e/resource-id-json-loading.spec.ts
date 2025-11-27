@@ -136,7 +136,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
     });
 
     test('VALIDAÇÃO: Props devem ser passadas para QuizModularEditor', async ({ page }) => {
-        await page.goto('/editor?funnel=quiz21StepsComplete');
+        await page.goto(EDITOR_URL);
 
         // Injetar script para verificar props via React DevTools (se disponível)
         const propsCheck = await page.evaluate(() => {
@@ -256,7 +256,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
 
 test.describe('Validação de Props - Inspeção Direta', () => {
     test('Props resourceId, templateId e funnelId devem ser extraídas da URL', async ({ page }) => {
-        await page.goto('/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete&funnel=test-funnel');
+        await page.goto('/editor?funnel=test-funnel&template=quiz21StepsComplete&resource=quiz21StepsComplete');
 
         // Injetar script para verificar que props foram passadas
         const urlParams = await page.evaluate(() => {
