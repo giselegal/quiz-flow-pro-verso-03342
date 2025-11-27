@@ -1,27 +1,24 @@
 /**
- * 🎯 PROPERTIES PANEL - Painel Dinâmico de Edição de Propriedades
+ * ⚠️ OBSOLETO - NÃO USAR
  * 
- * Painel lateral direito que permite editar propriedades dos blocos.
- * - Gera campos dinamicamente baseado no tipo de bloco
- * - Atualiza JSON via useStepBlocks
- * - Live preview enquanto edita (debounce 300ms)
- * - Ações: Delete, Duplicate, Move Up/Down
- */
-
-/**
- * Painel de propriedades clássico (v1) – DESCONTINUADO.
- *
- * Este componente atualizava o JSON oficial dos blocos diretamente via
- * `useStepBlocks`, sem rascunho nem validação estruturada. Foi mantido
- * apenas como stub para evitar usos acidentais em novas telas.
- *
- * Para qualquer implementação nova, use a infraestrutura canônica:
+ * Este arquivo está obsoleto e será removido.
+ * As importações abaixo são apenas para evitar erros de compilação.
+ * 
+ * Para qualquer implementação nova, use:
  * - `SinglePropertiesPanel` em `src/components/editor/properties/SinglePropertiesPanel.tsx`
  * - `PropertiesColumnWithJson` em
  *   `src/components/editor/quiz/QuizModularEditor/components/PropertiesColumn/PropertiesColumnWithJson.tsx`
+ * 
+ * @deprecated
  */
 
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface PropertiesPanelProps {
     blockId: string | null;
