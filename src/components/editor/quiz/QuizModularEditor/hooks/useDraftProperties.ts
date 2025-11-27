@@ -43,6 +43,8 @@ export interface UseDraftPropertiesResult {
   isDirty: boolean;
   /** Whether all fields are valid */
   isValid: boolean;
+  /** Whether validation is in progress */
+  isValidating: boolean;
   /** Update a single field in the draft */
   updateField: (key: string, value: any) => PropertyValidationResult;
   /** Update JSON field with text buffer */
@@ -55,6 +57,8 @@ export interface UseDraftPropertiesResult {
   resetDraft: (newProperties: Record<string, any>) => void;
   /** Get JSON text buffer for a field */
   getJsonBuffer: (key: string) => string;
+  /** Get enhanced error message with suggestions */
+  getErrorWithSuggestion: (key: string) => { error: string; suggestion?: string } | null;
 }
 
 /**
@@ -82,37 +86,90 @@ export function useDraftProperties({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [zodErrors, setZodErrors] = useState<Record<string, string>>({});
   const [jsonBuffers, setJsonBuffers] = useState<Record<string, string>>({});
+  const [isValidating, setIsValidating] = useState(false);
   
   // Track the initial properties for dirty detection
   const initialRef = useRef<Record<string, any>>(initialProperties);
+  const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Compute isDirty
   const isDirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(initialRef.current), [draft]);
   const errors = useMemo(() => ({ ...zodErrors, ...fieldErrors }), [zodErrors, fieldErrors]);
   const isValid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
-  const runZodValidation = useCallback((nextDraft: Record<string, any>): boolean => {
+  /**
+   * Get error with helpful suggestion
+   */
+  const getErrorWithSuggestion = useCallback((key: string): { error: string; suggestion?: string } | null => {
+    const error = errors[key];
+    if (!error) return null;
+
+    let suggestion: string | undefined;
+
+    // Gerar sugestões baseadas no tipo de erro
+    if (error.includes('obrigatório') || error.includes('required')) {
+      suggestion = 'Este campo não pode ficar vazio';
+    } else if (error.includes('número') || error.includes('number')) {
+      suggestion = 'Digite apenas números (ex: 123)';
+    } else if (error.includes('URL') || error.includes('url')) {
+      suggestion = 'Digite uma URL válida (ex: https://exemplo.com)';
+    } else if (error.includes('email')) {
+      suggestion = 'Digite um email válido (ex: usuario@exemplo.com)';
+    } else if (error.includes('JSON')) {
+      suggestion = 'Verifique se o JSON está bem formatado. Use aspas duplas.';
+    } else if (error.includes('mínimo') || error.includes('minimum')) {
+      suggestion = 'O valor deve ser maior';
+    } else if (error.includes('máximo') || error.includes('maximum')) {
+      suggestion = 'O valor deve ser menor';
+    }
+
+    return { error, suggestion };
+  }, [errors]);
+
+  const runZodValidation = useCallback((nextDraft: Record<string, any>, immediate = false): boolean => {
     if (!zodSchema) {
       setZodErrors({});
+      setIsValidating(false);
       return true;
     }
 
-    const result = zodSchema.safeParse(nextDraft);
-    if (result.success) {
-      setZodErrors({});
-      return true;
+    // Limpar timeout anterior
+    if (validationTimeoutRef.current) {
+      clearTimeout(validationTimeoutRef.current);
     }
 
-    const mappedErrors: Record<string, string> = {};
-    result.error.errors.forEach((err) => {
-      const key = err.path?.[0];
-      if (typeof key === 'string') {
-        mappedErrors[key] = err.message;
+    const validate = () => {
+      const result = zodSchema.safeParse(nextDraft);
+      if (result.success) {
+        setZodErrors({});
+        setIsValidating(false);
+        return true;
       }
-    });
 
-    setZodErrors(mappedErrors);
-    return false;
+      const mappedErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        const key = err.path?.[0];
+        if (typeof key === 'string') {
+          mappedErrors[key] = err.message;
+        }
+      });
+
+      setZodErrors(mappedErrors);
+      setIsValidating(false);
+      return false;
+    };
+
+    if (immediate) {
+      return validate();
+    }
+
+    // Debounce de 300ms para validações durante digitação
+    setIsValidating(true);
+    validationTimeoutRef.current = setTimeout(() => {
+      validate();
+    }, 300);
+
+    return true; // Retorna true temporariamente durante debounce
   }, [zodSchema]);
 
   // Reset draft when initial properties change (e.g., block selection changes)
@@ -122,12 +179,20 @@ export function useDraftProperties({
     setFieldErrors({});
     setZodErrors({});
     setJsonBuffers({});
+    setIsValidating(false);
     initialRef.current = initialProperties;
-    runZodValidation(newDraft);
+    runZodValidation(newDraft, true); // validação imediata no reset
     
     appLogger.info('[useDraftProperties] Draft reset due to initialProperties change', {
       data: [{ keys: Object.keys(newDraft) }]
     });
+
+    // Cleanup
+    return () => {
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current);
+      }
+    };
   }, [initialProperties, getInitialDraft, runZodValidation]);
 
   /**
@@ -291,12 +356,14 @@ export function useDraftProperties({
     errors,
     isDirty,
     isValid,
+    isValidating,
     updateField,
     updateJsonField,
     commitDraft,
     cancelDraft,
     resetDraft,
-    getJsonBuffer
+    getJsonBuffer,
+    getErrorWithSuggestion
   };
 }
 
