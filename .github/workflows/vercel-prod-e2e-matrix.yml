@@ -1,0 +1,39 @@
+name: Vercel Production E2E (Matrix)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        url:
+          - https://quiz-flow-pro-nu.vercel.app
+          - https://quiz-flow-pro-git-main-quiz-flow.vercel.app
+          - https://quiz-flow-hvj5c2qnz-quiz-flow.vercel.app
+    env:
+      PROD_URL: ${{ matrix.url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run production E2E checks
+        run: npm run test:e2e:vercel-prod
