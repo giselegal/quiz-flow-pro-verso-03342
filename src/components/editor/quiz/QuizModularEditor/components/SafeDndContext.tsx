@@ -6,43 +6,46 @@
  * - "Cannot read properties of undefined (reading 'forwardRef')"
  */
 
-// APLICAR POLYFILLS PRIMEIRO
+ * 🔧 REACT + DND CONTEXT WRAPPER - Versão reforçada e segura
 import '@/lib/utils/reactPolyfills';
 import React, { Suspense } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // CORREÇÃO GLOBAL ROBUSTA para React APIs
-if (typeof window !== 'undefined') {
-    // Garantir React global
-    (window as any).React = React;
+// APLICAR POLYFILLS PRIMEIRO
+// Garantir React global
+(window as any).React = React;
 
-    // Polyfills completos para React APIs ausentes
-    const reactPatches = {
-        useLayoutEffect: React.useLayoutEffect || React.useEffect,
-        forwardRef: React.forwardRef || ((render: any) => {
-            return (props: any) => render(props, null);
-        }),
-        createRef: React.createRef || (() => ({ current: null })),
-        memo: React.memo || ((component: any) => component),
-        useMemo: React.useMemo || ((factory: any, deps: any) => factory()),
-        useCallback: React.useCallback || ((callback: any, deps: any) => callback),
-        useImperativeHandle: React.useImperativeHandle || (() => { }),
-        Fragment: React.Fragment || ((props: any) => props.children)
-    };
+// Polyfills completos para React APIs ausentes
+const reactPatches = {
+    useLayoutEffect: React.useLayoutEffect || React.useEffect,
+    forwardRef: React.forwardRef || ((render: any) => {
+        return (props: any) => render(props, null);
+    }),
+    createRef: React.createRef || (() => ({ current: null })),
+    memo: React.memo || ((component: any) => component),
+    useMemo: React.useMemo || ((factory: any, deps: any) => factory()),
+    useCallback: React.useCallback || ((callback: any, deps: any) => callback),
+    useImperativeHandle: React.useImperativeHandle || (() => { }),
+    Fragment: React.Fragment || ((props: any) => props.children)
+};
 
-    // Aplicar patches no React global
-    Object.assign(React, reactPatches);
-    (window as any).React = React;
+// Aplicar patches no React global
+Object.assign(React, reactPatches);
+(window as any).React = React;
 
-    // Também disponibilizar no contexto global para outros bundles
-    if (!(window as any).__REACT_POLYFILLS_APPLIED__) {
-        Object.defineProperty(window, '__REACT_POLYFILLS_APPLIED__', {
-            value: true,
-            writable: false
-        });
+// Também disponibilizar no contexto global para outros bundles
+if (!(window as any).__REACT_POLYFILLS_APPLIED__) {
+    Object.defineProperty(window, '__REACT_POLYFILLS_APPLIED__', {
+        value: true,
+        writable: false
+    });
+    // NOTE: mantemos a importação de possíveis polyfills, mas não
+    // aplicamos monkey-patching ao objeto React global. Isso evita
+    // mascarar problemas reais (por exemplo, múltiplas cópias do React)
 
-        appLogger.info('✅ [SafeDndContext] React polyfills aplicados globalmente');
-    }
+    appLogger.info('✅ [SafeDndContext] React polyfills aplicados globalmente');
+}
 }
 
 // Import estático seguro (ES modules)
@@ -59,29 +62,44 @@ let useSensors: any = null;
 let sortableKeyboardCoordinates: any = null;
 
 // Import dinâmico mais seguro
-const loadDndKit = async () => {
-    try {
-        if (typeof window === 'undefined') return null;
+const [dndCore, dndSortable, dndUtils] = await Promise.all([
+    import('@dnd-kit/core'),
+    import('@dnd-kit/sortable'),
+    import('@dnd-kit/utilities').catch(() => ({ CSS: undefined }))
+]);
 
-        const dndCore = await import('@dnd-kit/core');
-        const dndSortable = await import('@dnd-kit/sortable');
-        return {
-            DndContext: dndCore.DndContext,
-            DragOverlay: dndCore.DragOverlay,
-            closestCenter: dndCore.closestCenter,
-            closestCorners: dndCore.closestCorners,
-            pointerWithin: dndCore.pointerWithin,
-            PointerSensor: dndCore.PointerSensor,
-            KeyboardSensor: dndCore.KeyboardSensor,
-            TouchSensor: dndCore.TouchSensor,
-            useSensor: dndCore.useSensor,
-            useSensors: dndCore.useSensors,
-            sortableKeyboardCoordinates: dndSortable.sortableKeyboardCoordinates,
+return {
+    DndContext: dndCore.DndContext,
+    DragOverlay: dndCore.DragOverlay,
+    closestCenter: dndCore.closestCenter,
+    closestCorners: dndCore.closestCorners,
+    pointerWithin: dndCore.pointerWithin,
+    PointerSensor: dndCore.PointerSensor,
+    KeyboardSensor: dndCore.KeyboardSensor,
+    // Hooks/modules opcionais (carregados via loadDndKit)
+    let useDroppable: any = null;
+    let SortableContext: any = null;
+    let verticalListSortingStrategy: any = null;
+    let useSortable: any = null;
+    let CSS: any = null;
+    TouchSensor: dndCore.TouchSensor,
+    useSensor: dndCore.useSensor,
+    useSensors: dndCore.useSensors,
+    sortableKeyboardCoordinates: dndSortable.sortableKeyboardCoordinates,
+    SortableContext: dndSortable.SortableContext,
+    verticalListSortingStrategy: dndSortable.verticalListSortingStrategy,
+    useSortable: dndSortable.useSortable,
+    CSS: dndUtils.CSS,
+    useDroppable: dndCore.useDroppable
+};
+useSensor: dndCore.useSensor,
+    useSensors: dndCore.useSensors,
+        sortableKeyboardCoordinates: dndSortable.sortableKeyboardCoordinates,
         };
     } catch (error) {
-        appLogger.warn('❌ [SafeDndContext] Falha ao carregar @dnd-kit:', { data: [error] });
-        return null;
-    }
+    appLogger.warn('❌ [SafeDndContext] Falha ao carregar @dnd-kit:', { data: [error] });
+    return null;
+}
 };
 
 // Tentar carregar do window primeiro (se disponível globalmente)
