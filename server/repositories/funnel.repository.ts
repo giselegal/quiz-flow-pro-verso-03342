@@ -251,6 +251,12 @@ export class FunnelRepository {
   }
 
   async delete(id: string): Promise<void> {
+    // Test mode: usar in-memory store
+    if (this.isTestMode) {
+      this.testStore.delete(id);
+      return;
+    }
+
     try {
       const { error } = await this.supabase.from('funnels').delete().eq('id', id);
       if (error) throw new Error(`Failed to delete funnel: ${error.message}`);

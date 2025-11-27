@@ -59,5 +59,8 @@ export default defineConfig({
         url: 'http://localhost:8080',
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
+        env: {
+            PLAYWRIGHT_TEST: 'true', // Enable test mode in FunnelRepository
+        },
     },
 });
