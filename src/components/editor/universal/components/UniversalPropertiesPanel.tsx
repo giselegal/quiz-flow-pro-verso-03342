@@ -25,8 +25,7 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
     onSave,
     className = '',
 }) => {
-    const editorContext = useEditor({ optional: true });
-    if (!editorContext) return null;
+    const editorContext = useEditor();
     const { actions } = editorContext;
 
     // Encontrar o bloco selecionado

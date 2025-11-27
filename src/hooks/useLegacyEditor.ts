@@ -86,19 +86,19 @@ export function useLegacyEditor(enableWarnings = true): LegacyEditorAPI {
             return (editorContext.state.stepBlocks as Record<string, any[]>)[stepKey] || [];
         },
 
-        // Legacy API: updateBlock(stepKey, blockId, updates) -> new API: updateBlock(blockId, updates)
+        // Legacy API: updateBlock(stepKey, blockId, updates) -> new API: updateBlock(step, blockId, updates)
         updateBlock: async (_stepKey: string, blockId: string, updates: any) => {
-            await editorContext.actions.updateBlock(blockId, updates);
+            await editorContext.actions.updateBlock(editorContext.state.currentStep, blockId, updates);
         },
 
-        // Legacy API: addBlock(stepKey, block) -> new API: addBlock(type) returns id
+        // Legacy API: addBlock(stepKey, block) -> new API: addBlock(step, block, index?)
         addBlock: async (_stepKey: string, block: any) => {
-            await editorContext.actions.addBlock(block.type || 'text');
+            await editorContext.actions.addBlock(editorContext.state.currentStep, block);
         },
 
-        // Legacy API: removeBlock(stepKey, blockId) -> new API: removeBlock(blockId)
+        // Legacy API: removeBlock(stepKey, blockId) -> new API: removeBlock(step, blockId)
         removeBlock: async (_stepKey: string, blockId: string) => {
-            await editorContext.actions.removeBlock(blockId);
+            await editorContext.actions.removeBlock(editorContext.state.currentStep, blockId);
         },
     };
 }
