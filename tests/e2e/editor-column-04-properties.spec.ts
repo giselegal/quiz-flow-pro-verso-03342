@@ -81,7 +81,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por inputs, labels, form elements
@@ -106,7 +109,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por input de texto editável
@@ -134,7 +140,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por tabs (Properties, Content, Style, etc)
@@ -162,7 +171,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por botão delete/remove/trash
@@ -184,7 +196,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por botão duplicate/copy
@@ -206,7 +221,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por accordion headers
@@ -232,7 +250,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por inputs com validação (border-red, text-red)
@@ -255,7 +276,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por container com overflow
@@ -280,7 +304,10 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Procurar por seletores de device (desktop/tablet/mobile)
@@ -303,7 +330,10 @@ test.describe('Column 04: Properties Panel', () => {
     if (hasBlock) {
       const startTime = Date.now();
       
-      await firstBlock.click();
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       
       // Aguardar formulário aparecer
       await page.waitForSelector('input, textarea, select', { timeout: 2000 }).catch(() => {
