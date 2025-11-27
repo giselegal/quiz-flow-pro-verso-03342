@@ -7,12 +7,12 @@
 // Core Analytics Components
 export { default as QuizAnalyticsDashboard } from './QuizAnalyticsDashboard';
 export { default as AdvancedFunnel } from './AdvancedFunnel';
-export { default as MetricCard } from './MetricCard';
-export { default as LoadingState } from './LoadingState';
-export { default as DashboardHeader } from './DashboardHeader';
+export { MetricCard } from './MetricCard';
+export { LoadingState } from './LoadingState';
+export { DashboardHeader } from './DashboardHeader';
 export { default as EventLogger } from './EventLogger';
 export { default as RealTimeAnalyticsEngine } from './RealTimeAnalyticsEngine';
-export { default as AnalyticsDashboardOverlay } from './AnalyticsDashboardOverlay';
+export { AnalyticsDashboardOverlay } from './AnalyticsDashboardOverlay';
 export { default as ABTestAlerts } from './ABTestAlerts';
 export { default as ABTestComparison } from './ABTestComparison';
 
