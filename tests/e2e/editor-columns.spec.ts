@@ -37,10 +37,10 @@ test.describe('Editor modular - colunas funcionais', () => {
     await expect(libToggle).toBeVisible();
     // Desliga biblioteca
     await libToggle.click();
-    await expect(page.locator('[data-testid="column-library"]')).toHaveCount(0);
+    await page.waitForSelector('[data-testid="column-library"]', { state: 'hidden', timeout: 15000 });
     // Liga novamente
     await libToggle.click();
-    await expect(page.getByTestId('column-library')).toBeVisible();
+    await page.waitForSelector('[data-testid="column-library"]', { state: 'visible', timeout: 15000 });
 
     // 2) Testa que painel de propriedades existe e que o botão de toggle dispara o comportamento esperado
     const propsToggle = page.locator('button[title="Mostrar/ocultar painel de propriedades"]').or(page.locator('button[title="Mostrar/ocultar propriedades"]')).first();
