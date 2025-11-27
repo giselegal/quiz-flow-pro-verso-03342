@@ -1,11 +1,19 @@
-name: Vercel Production E2E
+name: Vercel Production/Preview E2E
 
 on:
   workflow_dispatch:
     inputs:
       prod_url:
-        description: 'URL do deploy de produção (ex: https://seuapp.vercel.app)'
-        required: true
+        description: 'URL alvo (opcional, se vazio será resolvida via API)'
+        required: false
+      target:
+        description: 'Target (production ou preview)'
+        required: false
+        type: choice
+        options:
+          - production
+          - preview
+        default: preview
   push:
     branches: [ main ]
   pull_request:
@@ -16,6 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROD_URL: ${{ inputs.prod_url || secrets.PROD_URL }}
+      VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TARGET: ${{ inputs.target }}
+      VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,8 +41,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Resolve latest Vercel URL via API
+        id: resolve_url
+        if: env.PROD_URL == ''
+        run: |
+          echo "Resolving latest ${VERCEL_TARGET:-preview} deployment URL"
+          url=$(node tools/vercel-latest-deployment-url.mjs)
+          echo "url=$url" >> $GITHUB_OUTPUT
+
+      - name: Set PROD_URL from resolution
+        if: env.PROD_URL == ''
+        run: |
+          echo "Using resolved URL: ${{ steps.resolve_url.outputs.url }}"
+          echo "PROD_URL=${{ steps.resolve_url.outputs.url }}" >> $GITHUB_ENV
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run production E2E checks
         run: npm run test:e2e:vercel-prod
+        env:
+          PROD_URL: ${{ env.PROD_URL }}
+          VERCEL_PROTECTION_BYPASS: ${{ env.VERCEL_PROTECTION_BYPASS }}
