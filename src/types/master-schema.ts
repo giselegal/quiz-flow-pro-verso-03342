@@ -56,22 +56,68 @@ export const PropertyCategoryEnum = z.enum([
 ]);
 
 export const BlockTypeEnum = z.enum([
+  // Generic blocks
   'text',
   'heading',
   'button',
   'image',
   'video',
   'form',
+  'form-input',
   'divider',
   'spacer',
+  'container',
+  
+  // Quiz blocks
   'quiz-question',
   'quiz-result',
-  'lead-form',
+  'quiz-intro-header',
+  
+  // Intro blocks
+  'intro-logo',
+  'intro-logo-header',
+  'intro-title',
+  'intro-image',
+  'intro-description',
+  'intro-form',
+  'intro-button',
+  
+  // Question blocks
+  'question-title',
+  'question-description',
+  'options-grid',
+  'question-navigation',
+  
+  // Transition blocks
+  'transition-title',
+  'transition-text',
+  'transition-button',
+  
+  // Result blocks
+  'result-header',
+  'result-title',
+  'result-description',
+  'result-image',
+  
+  // Offer blocks
+  'offer-hero',
+  'quiz-offer-hero',
+  'benefits-list',
+  'testimonials',
   'pricing',
+  'guarantee',
+  'urgency-timer',
+  'value-anchoring',
+  'secure-purchase',
+  
+  // Other common blocks
+  'lead-form',
   'testimonial',
   'faq',
   'countdown',
   'progress',
+  'cta-button',
+  'footer-copyright',
   'custom',
 ]);
 
