@@ -149,8 +149,11 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
         const undo = () => appLogger.warn('Undo not implemented in useLegacySuperUnified');
         const redo = () => appLogger.warn('Redo not implemented in useLegacySuperUnified');
 
-        // UX/Theme
-        const { theme, toggleTheme, navigate } = ux;
+        // UX/Theme - construir objeto no formato esperado
+        const themeObj = {
+            mode: ux.theme as 'light' | 'dark',
+            colors: ux.colors,
+        };
 
         // Auto-save status
         const isSaving = editor.isSaving || false;
@@ -171,9 +174,9 @@ export function useLegacySuperUnified(): LegacySuperUnifiedContext {
             canRedo,
             undo,
             redo,
-            theme,
-            toggleTheme,
-            navigate,
+            theme: themeObj,
+            toggleTheme: ux.toggleTheme,
+            navigate: ux.navigate,
             isSaving,
         };
     }, [editor, ux]);
