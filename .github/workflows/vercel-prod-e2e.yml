@@ -22,12 +22,6 @@ on:
 jobs:
   e2e:
     runs-on: ubuntu-latest
-    env:
-      PROD_URL: ${{ inputs.prod_url || secrets.PROD_URL }}
-      VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      VERCEL_TARGET: ${{ inputs.target }}
-      VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,12 +35,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Initialize context vars
+        run: |
+          # Prefer explicit input; fallback to secret
+          if [ -n "${{ inputs.prod_url }}" ]; then
+            echo "PROD_URL=${{ inputs.prod_url }}" >> $GITHUB_ENV
+          elif [ -n "${{ secrets.PROD_URL }}" ]; then
+            echo "PROD_URL=${{ secrets.PROD_URL }}" >> $GITHUB_ENV
+          fi
+          echo "VERCEL_TARGET=${{ inputs.target }}" >> $GITHUB_ENV
+          # Pass protection bypass only to the test step via env, not globally
+
       - name: Resolve latest Vercel URL via API
         id: resolve_url
         if: env.PROD_URL == ''
         run: |
           echo "Resolving latest ${VERCEL_TARGET:-preview} deployment URL"
-          url=$(node tools/vercel-latest-deployment-url.mjs)
+          VERCEL_API_TOKEN='${{ secrets.VERCEL_API_TOKEN }}' \
+          VERCEL_PROJECT_ID='${{ secrets.VERCEL_PROJECT_ID }}' \
+          VERCEL_TARGET='${{ inputs.target }}' \
+          node tools/vercel-latest-deployment-url.mjs > url.txt
+          url=$(cat url.txt)
           echo "url=$url" >> $GITHUB_OUTPUT
 
       - name: Set PROD_URL from resolution
@@ -62,4 +71,4 @@ jobs:
         run: npm run test:e2e:vercel-prod
         env:
           PROD_URL: ${{ env.PROD_URL }}
-          VERCEL_PROTECTION_BYPASS: ${{ env.VERCEL_PROTECTION_BYPASS }}
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
