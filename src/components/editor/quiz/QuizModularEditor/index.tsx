@@ -499,6 +499,32 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         const handler = (e: KeyboardEvent) => {
             const isMacOrWin = e.ctrlKey || e.metaKey;
 
+            // ✨ Atalho Ctrl+S para salvar manualmente
+            if (isMacOrWin && e.key === 's') {
+                e.preventDefault();
+
+                if (resourceId && previewMode !== 'live') {
+                    autoSave.forceSave().then(() => {
+                        toast({
+                            type: 'success',
+                            title: '💾 Salvo com sucesso',
+                            message: 'Suas alterações foram salvas',
+                            duration: 2000,
+                        });
+                    }).catch((error) => {
+                        toast({
+                            type: 'error',
+                            title: '❌ Erro ao salvar',
+                            message: error.message || 'Tente novamente',
+                            duration: 4000,
+                        });
+                    });
+                } else {
+                    handleSave();
+                }
+                return;
+            }
+
             // Atalhos de viewport: Ctrl+Alt+1/2/3/0
             if (isMacOrWin && e.altKey) {
                 if (e.key === '1') {
@@ -1865,10 +1891,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             });
                                         }
                                     }}
-                                    className="h-7 text-xs hidden md:flex items-center gap-1"
+                                    className="h-7 text-xs hidden md:flex items-center gap-1.5 bg-yellow-50 border-yellow-300 text-yellow-700 hover:bg-yellow-100 animate-pulse"
                                 >
-                                    <span>💾</span>
-                                    <span>Recuperar draft ({Math.round((snapshot.snapshotAge || 0) / 1000)}s)</span>
+                                    <Clock className="h-3.5 w-3.5" />
+                                    <span className="font-medium">Recuperar alterações</span>
+                                    <span className="text-[10px] opacity-75">({Math.round((snapshot.snapshotAge || 0) / 1000)}s atrás)</span>
                                 </Button>
                             )}
                         </div>
