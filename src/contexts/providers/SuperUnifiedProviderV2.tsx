@@ -38,8 +38,8 @@
 
 import React, { ReactNode, useMemo } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
-import { AuthProvider, useAuth } from '@/contexts/auth/AuthProvider';
-import { ThemeProvider, useTheme } from '@/contexts/theme/ThemeProvider';
+import { AuthProvider, useAuth } from '@/core/contexts/auth';
+import { ThemeProvider, useTheme } from '@/core/contexts/theme';
 import { EditorStateProvider } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { useEditorCompat } from '@/core/contexts/EditorContext/EditorCompatLayer';
 import { FunnelDataProvider, useFunnelData } from '@/contexts/funnel/FunnelDataProvider';
@@ -48,7 +48,7 @@ import { QuizStateProvider, useQuizState } from '@/contexts/quiz/QuizStateProvid
 import { ResultProvider, useResult } from '@/contexts/result/ResultProvider';
 import { StorageProvider, useStorage } from '@/contexts/storage/StorageProvider';
 import { SyncProvider, useSync } from '@/contexts/sync/SyncProvider';
-import { ValidationProvider, useValidation } from '@/contexts/validation/ValidationProvider';
+import { ValidationProvider, useValidation } from '@/core/contexts/validation';
 import { CollaborationProvider, useCollaboration } from '@/contexts/collaboration/CollaborationProvider';
 import { VersioningProvider, useVersioning } from '@/contexts/versioning/VersioningProvider';
 import { UIProvider, useUI } from '@/contexts/providers/UIProvider';

@@ -14,8 +14,8 @@
  * Assim páginas sem editor não montam estado complexo.
  */
 import React, { ReactNode, useMemo } from 'react';
-import { AuthProvider } from '@/contexts/auth/AuthProvider';
-import { ThemeProvider } from '@/contexts/theme/ThemeProvider';
+import { AuthProvider } from '@/core/contexts/auth';
+import { ThemeProvider } from '@/core/contexts/theme';
 import { EditorStateProvider, useEditorState } from '@/contexts/editor/EditorStateProvider';
 import { FunnelDataProvider, useFunnelData } from '@/contexts/funnel/FunnelDataProvider';
 import { NavigationProvider, useNavigation } from '@/contexts/navigation/NavigationProvider';

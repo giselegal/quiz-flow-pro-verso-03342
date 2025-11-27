@@ -25,8 +25,8 @@
  */
 
 import React, { ReactNode, memo } from 'react';
-import { AuthProvider } from '@/contexts/auth/AuthProvider';
-import { ThemeProvider } from '@/contexts/theme/ThemeProvider';
+import { AuthProvider } from '@/core/contexts/auth';
+import { ThemeProvider } from '@/core/contexts/theme';
 import { EditorStateProvider } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { FunnelDataProvider } from '@/contexts/funnel/FunnelDataProvider';
 import { NavigationProvider } from '@/contexts/navigation/NavigationProvider';
@@ -34,7 +34,7 @@ import { QuizStateProvider } from '@/contexts/quiz/QuizStateProvider';
 import { ResultProvider } from '@/contexts/result/ResultProvider';
 import { StorageProvider } from '@/contexts/storage/StorageProvider';
 import { SyncProvider } from '@/contexts/sync/SyncProvider';
-import { ValidationProvider } from '@/contexts/validation/ValidationProvider';
+import { ValidationProvider } from '@/core/contexts/validation';
 import { CollaborationProvider } from '@/contexts/collaboration/CollaborationProvider';
 import { VersioningProvider } from '@/contexts/versioning/VersioningProvider';
 
