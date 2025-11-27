@@ -75,15 +75,15 @@ const ModelosFunisPage: React.FC = () => {
           name: template.name,
           description: template.description,
           category: template.category,
-          difficulty: template.difficulty,
-          stepCount: template.stepCount,
+          difficulty: template.difficulty || 'Intermediário',
+          stepCount: template.stepCount || 0,
           conversionRate: `${65 + Math.floor(Math.random() * 20)}%`, // Simulated based on real data
-          preview: template.preview,
+          preview: typeof template.preview === 'string' ? template.preview : template.preview?.image || 'https://placehold.co/400x240',
           tags: template.tags,
-          features: template.features,
+          features: template.features || [],
           isActive: template.isActive,
-          templatePath: template.templatePath,
-          editorUrl: template.editorUrl,
+          templatePath: template.templatePath || '',
+          editorUrl: template.editorUrl || '/editor',
         }));
 
         // Adicionar modelos específicos do quiz21StepsComplete

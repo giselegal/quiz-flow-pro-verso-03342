@@ -90,10 +90,11 @@ describe('useEditorAdapter - Interface Padronizada', () => {
     });
 
     it('deve retornar null para selectedBlock quando não há seleção', () => {
-      mockEditorContext.selectedBlockId = null;
+      const originalId = mockEditorContext.selectedBlockId;
+      mockEditorContext.selectedBlockId = null as any;
       const { result } = renderHook(() => useEditorAdapter());
       expect(result.current.selectedBlock).toBeNull();
-      mockEditorContext.selectedBlockId = 'block-1'; // Reset
+      mockEditorContext.selectedBlockId = originalId; // Reset
     });
 
     it('deve expor array de blocks', () => {
@@ -146,32 +147,33 @@ describe('useEditorAdapter - Interface Padronizada', () => {
     });
   });
 
-  describe('Actions - duplicateBlock', () => {
-    it('deve criar cópia do bloco com novo ID', async () => {
-      mockEditorContext.actions.addBlock.mockResolvedValueOnce(undefined);
+  // duplicateBlock foi removido da API
+  // describe('Actions - duplicateBlock', () => {
+  //   it('deve criar cópia do bloco com novo ID', async () => {
+  //     mockEditorContext.actions.addBlock.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(() => useEditorAdapter());
+  //     const { result } = renderHook(() => useEditorAdapter());
 
-      let newId: string | undefined;
-      await act(async () => {
-        newId = await result.current.actions.duplicateBlock?.('block-1');
-      });
+  //     let newId: string | undefined;
+  //     await act(async () => {
+  //       newId = await result.current.actions.duplicateBlock?.('block-1');
+  //     });
 
-      expect(newId).toBe('mock-uuid-1234');
-      expect(mockEditorContext.actions.addBlock).toHaveBeenCalled();
-    });
+  //     expect(newId).toBe('mock-uuid-1234');
+  //     expect(mockEditorContext.actions.addBlock).toHaveBeenCalled();
+  //   });
 
-    it('deve retornar undefined quando bloco não existe', async () => {
-      const { result } = renderHook(() => useEditorAdapter());
+  //   it('deve retornar undefined quando bloco não existe', async () => {
+  //     const { result } = renderHook(() => useEditorAdapter());
 
-      let newId: string | undefined;
-      await act(async () => {
-        newId = await result.current.actions.duplicateBlock?.('non-existent-block');
-      });
+  //     let newId: string | undefined;
+  //     await act(async () => {
+  //       newId = await result.current.actions.duplicateBlock?.('non-existent-block');
+  //     });
 
-      expect(newId).toBeUndefined();
-    });
-  });
+  //     expect(newId).toBeUndefined();
+  //   });
+  // });
 
   describe('Actions - selectBlock', () => {
     it('deve chamar setSelectedBlockId do contexto', () => {

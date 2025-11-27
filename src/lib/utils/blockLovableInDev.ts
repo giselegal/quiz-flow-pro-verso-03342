@@ -163,7 +163,7 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
                     return;
                 }
 
-                return originalSend.call(this, body as Document | XMLHttpRequestBodyInit | null | undefined);
+                return originalSend.call(this, body as XMLHttpRequestBodyInit | null | undefined);
             };
         }
 

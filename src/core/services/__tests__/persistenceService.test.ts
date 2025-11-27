@@ -23,7 +23,7 @@ describe('persistenceService', () => {
     it('deve salvar blocos com sucesso', async () => {
       const blocks = [
         createBlock('intro-title', { properties: { title: 'Test 1' } }),
-        createBlock('intro-subtitle', { properties: { subtitle: 'Test 2' } }),
+        createBlock('intro-description', { properties: { description: 'Test 2' } }),
       ];
 
       const result = await persistenceService.saveBlocks('test-funnel-1', blocks);
@@ -195,7 +195,7 @@ describe('persistenceService', () => {
         // Verificar se dados foram restaurados
         const loadResult = await persistenceService.loadBlocks('test-funnel-9');
         if (loadResult.success) {
-          expect(loadResult.blocks[0].properties.title).toBe('Version 1');
+          expect(loadResult.blocks?.[0]?.properties?.title).toBe('Version 1');
         }
       }
     });
@@ -303,8 +303,8 @@ describe('persistenceService', () => {
 
     it('deve lidar com blocos com IDs duplicados', async () => {
       const blocks = [
-        createBlock('intro-title', { title: 'Test 1' }, 'duplicate-id'),
-        createBlock('intro-subtitle', { subtitle: 'Test 2' }, 'duplicate-id'),
+        createBlock('intro-title', { properties: { title: 'Test 1' }, id: 'duplicate-id' }),
+        createBlock('intro-description', { properties: { description: 'Test 2' }, id: 'duplicate-id' }),
       ];
 
       // Deve aceitar (responsabilidade do chamador garantir IDs únicos)

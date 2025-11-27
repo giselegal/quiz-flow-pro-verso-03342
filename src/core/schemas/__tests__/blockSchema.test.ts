@@ -76,7 +76,7 @@ describe('blockSchema', () => {
   describe('validateBlock', () => {
     it('deve validar bloco válido', () => {
       const block = createBlock('intro-title', {
-        title: 'Valid Block',
+        properties: { title: 'Valid Block' },
       });
 
       const result = validateBlock(block);
@@ -136,7 +136,7 @@ describe('blockSchema', () => {
     });
 
     it('deve validar todos os tipos de blocos suportados', () => {
-      const blockTypes: BlockType[] = [
+      const blockTypes = [
         'intro-logo',
         'intro-title',
         'intro-description',
@@ -155,7 +155,7 @@ describe('blockSchema', () => {
         'heading',
         'image',
         'button',
-      ];
+      ] as const;
 
       blockTypes.forEach((type) => {
         const block = createBlock(type);
@@ -185,9 +185,8 @@ describe('blockSchema', () => {
         properties: {},
         content: {},
         order: 0,
-        // Propriedades opcionais
-        metadata: { custom: 'data' },
-        validation: { required: true },
+        // Propriedades opcionais (metadata não aceita custom field)
+        metadata: { tags: ['test'] },
       };
 
       expect(block).toBeDefined();
@@ -225,9 +224,7 @@ describe('blockSchema', () => {
         properties: { title: 'Full' },
         content: { text: 'Content' },
         order: 1,
-        metadata: { createdAt: Date.now() },
-        validation: { required: true },
-        styling: { className: 'custom' },
+        metadata: { createdAt: Date.now(), tags: ['test'] },
       };
 
       const result = validateBlock(fullBlock);

@@ -28,7 +28,8 @@ describe('useLegacySuperUnified (smoke)', () => {
 
     expect(value).toBeDefined();
     expect(typeof value.setCurrentStep).toBe('function');
-    expect(typeof value.saveFunnel).toBe('function');
+    // saveFunnel não é mais parte da API
+    // expect(typeof value.saveFunnel).toBe('function');
     expect(value.state).toBeDefined();
     expect(value.state.editor).toBeDefined();
   });

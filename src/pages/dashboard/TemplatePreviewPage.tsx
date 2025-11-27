@@ -39,7 +39,8 @@ const TemplatePreviewPage: React.FC = () => {
     const handleUseTemplate = () => {
         // Gera um novo funnelId e abre o editor com o template
         const newFunnelId = `funnel-${template.id}-${Date.now()}`;
-        const url = `${template.editorUrl}${template.editorUrl.includes('?') ? '&' : '?'}funnel=${newFunnelId}`;
+        const editorUrl = template.editorUrl || '/editor';
+        const url = `${editorUrl}${editorUrl.includes('?') ? '&' : '?'}funnel=${newFunnelId}`;
         window.location.href = url;
     };
 
@@ -57,7 +58,7 @@ const TemplatePreviewPage: React.FC = () => {
                         <div className="bg-gray-50 p-6 flex items-center justify-center">
                             {/* Preview image */}
                             <img
-                                src={template.preview}
+                                src={typeof template.preview === 'string' ? template.preview : template.preview?.image || 'https://placehold.co/400x240/EEE/999?text=Preview'}
                                 alt={`Preview ${template.name}`}
                                 className="rounded-lg shadow-md max-h-[320px] object-cover"
                                 onError={(e) => {
@@ -79,22 +80,26 @@ const TemplatePreviewPage: React.FC = () => {
 
                             <p className="text-gray-700 text-sm leading-relaxed">{template.description}</p>
 
-                            <div>
-                                <p className="text-xs font-medium text-gray-700 mb-2">Diferenciais</p>
-                                <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
-                                    {template.features.slice(0, 6).map((f, i) => (
-                                        <li key={i}>{f}</li>
-                                    ))}
-                                </ul>
-                            </div>
+                            {template.features && template.features.length > 0 && (
+                                <div>
+                                    <p className="text-xs font-medium text-gray-700 mb-2">Diferenciais</p>
+                                    <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
+                                        {template.features.slice(0, 6).map((f, i) => (
+                                            <li key={i}>{f}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
 
                             <div className="flex gap-2 pt-2">
                                 <Button onClick={handleUseTemplate} className="bg-blue-600 hover:bg-blue-700">Usar este template</Button>
-                                <a href={template.editorUrl} className="inline-flex">
-                                    <Button variant="outline">
-                                        Abrir no Editor <ExternalLink className="w-4 h-4 ml-2" />
-                                    </Button>
-                                </a>
+                                {template.editorUrl && (
+                                    <a href={template.editorUrl} className="inline-flex">
+                                        <Button variant="outline">
+                                            Abrir no Editor <ExternalLink className="w-4 h-4 ml-2" />
+                                        </Button>
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>

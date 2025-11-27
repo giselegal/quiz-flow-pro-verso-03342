@@ -155,7 +155,9 @@ describe('🧪 SuperUnifiedProvider - Teste de Loop Infinito', () => {
             result.current.addBlock(1, {
                 id: 'test-block',
                 type: 'text',
-                content: 'Test content'
+                content: { text: 'Test content' },
+                order: 0,
+                properties: {}
             });
         });
 

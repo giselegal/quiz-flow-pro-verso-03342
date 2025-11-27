@@ -9,6 +9,8 @@
 
 import { TemplateType } from '@/types/funnel.shared';
 
+export type DifficultyLevel = 'Fácil' | 'Intermediário' | 'Avançado';
+
 export interface TemplateConfig {
     id: string;
     name: string;
@@ -21,7 +23,8 @@ export interface TemplateConfig {
     isActive: boolean;
     createdAt?: string;
     // Campos adicionais para compatibilidade com dashboard
-    difficulty?: 'easy' | 'medium' | 'hard';
+    difficulty?: DifficultyLevel;
+    rating?: number; // Rating 0-5
     stepCount?: number; // Alias de steps
     preview?: {
         image?: string;
@@ -47,7 +50,8 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         category: 'quiz',
         tags: ['quiz', 'fashion', 'style', 'complete'],
         isActive: true,
-        difficulty: 'hard',
+        difficulty: 'Avançado',
+        rating: 4.8,
         features: ['Multi-step', 'Conditional logic', 'Results page', 'Email capture'],
         templatePath: '/templates/quiz-21-steps',
         editorUrl: '/editor/quiz21StepsComplete',
@@ -62,7 +66,8 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         category: 'quiz',
         tags: ['quiz', 'simple', 'fast'],
         isActive: true,
-        difficulty: 'easy',
+        difficulty: 'Fácil',
+        rating: 4.5,
         features: ['Quick setup', 'Basic questions', 'Simple results'],
         templatePath: '/templates/quiz-simple',
         editorUrl: '/editor/quizSimple',
@@ -77,7 +82,8 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         category: 'leadgen',
         tags: ['leadgen', 'capture', 'form'],
         isActive: true,
-        difficulty: 'easy',
+        difficulty: 'Fácil',
+        rating: 4.6,
         features: ['Lead capture', 'Form validation', 'Email integration'],
         templatePath: '/templates/lead-generation',
         editorUrl: '/editor/leadGeneration',
@@ -92,7 +98,8 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         category: 'sales',
         tags: ['sales', 'landing', 'conversion'],
         isActive: true,
-        difficulty: 'medium',
+        difficulty: 'Intermediário',
+        rating: 4.7,
         features: ['CTA optimization', 'Social proof', 'Urgency elements'],
         templatePath: '/templates/sales-page',
         editorUrl: '/editor/salesPage',
