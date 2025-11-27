@@ -62,20 +62,30 @@ export interface UpdateFunnelInput {
 }
 
 export class FunnelRepository {
-  private supabase: SupabaseClient | null;
-  private inMemoryStore: Map<string, Funnel>;
+  private supabase: SupabaseClient;
 
   constructor() {
-    try {
-      this.supabase = getSupabaseClient();
-    } catch (e) {
-      this.supabase = null;
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      throw new Error('[FunnelRepository] Supabase configuration is required. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY environment variables.');
     }
-    this.inMemoryStore = new Map();
+    
+    this.supabase = getSupabaseClient();
+    
+    if (!this.supabase) {
+      throw new Error('[FunnelRepository] Failed to initialize Supabase client');
+    }
   }
 
-  private useInMemory(): boolean {
-    return !this.supabase || !SUPABASE_URL || !SUPABASE_ANON_KEY;
+  /**
+   * Health check to verify Supabase connection
+   */
+  async healthCheck(): Promise<boolean> {
+    try {
+      const { error } = await this.supabase.from('funnels').select('count').limit(1);
+      return !error;
+    } catch {
+      return false;
+    }
   }
 
   async findAll(options?: {
