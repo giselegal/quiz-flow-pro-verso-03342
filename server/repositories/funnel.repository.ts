@@ -94,29 +94,8 @@ export class FunnelRepository {
     page?: number;
     limit?: number;
   }): Promise<{ funnels: Funnel[]; total: number }> {
-    if (this.useInMemory()) {
-      let funnels = Array.from(this.inMemoryStore.values());
-      
-      if (options?.userId) {
-        funnels = funnels.filter(f => f.user_id === options.userId);
-      }
-      if (options?.published !== undefined) {
-        funnels = funnels.filter(f => f.published === options.published);
-      }
-
-      funnels.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
-
-      const total = funnels.length;
-      if (options?.page && options?.limit) {
-        const start = (options.page - 1) * options.limit;
-        funnels = funnels.slice(start, start + options.limit);
-      }
-
-      return { funnels, total };
-    }
-
     try {
-      let query = this.supabase!.from('funnels').select('*', { count: 'exact' });
+      let query = this.supabase.from('funnels').select('*', { count: 'exact' });
 
       if (options?.userId) {
         query = query.eq('user_id', options.userId);
@@ -147,12 +126,8 @@ export class FunnelRepository {
   }
 
   async findById(id: string): Promise<Funnel | null> {
-    if (this.useInMemory()) {
-      return this.inMemoryStore.get(id) || null;
-    }
-
     try {
-      const { data, error } = await this.supabase!
+      const { data, error } = await this.supabase
         .from('funnels')
         .select('*')
         .eq('id', id)
@@ -186,13 +161,8 @@ export class FunnelRepository {
       updated_at: new Date().toISOString(),
     };
 
-    if (this.useInMemory()) {
-      this.inMemoryStore.set(funnel.id, funnel);
-      return funnel;
-    }
-
     try {
-      const { data, error } = await this.supabase!
+      const { data, error } = await this.supabase
         .from('funnels')
         .insert(funnel)
         .select()
@@ -211,27 +181,8 @@ export class FunnelRepository {
     updates: UpdateFunnelInput,
     expectedVersion?: number
   ): Promise<Funnel> {
-    if (this.useInMemory()) {
-      const existing = this.inMemoryStore.get(id);
-      if (!existing) throw new Error('Funnel not found');
-      
-      if (expectedVersion !== undefined && existing.version !== expectedVersion) {
-        throw new Error('CONFLICT: Funnel was modified by another user');
-      }
-
-      const updated = {
-        ...existing,
-        ...updates,
-        version: existing.version + 1,
-        updated_at: new Date().toISOString(),
-      };
-
-      this.inMemoryStore.set(id, updated);
-      return updated;
-    }
-
     try {
-      let query = this.supabase!.from('funnels').update(updates).eq('id', id);
+      let query = this.supabase.from('funnels').update(updates).eq('id', id);
 
       if (expectedVersion !== undefined) {
         query = query.eq('version', expectedVersion);
@@ -261,13 +212,8 @@ export class FunnelRepository {
   }
 
   async delete(id: string): Promise<void> {
-    if (this.useInMemory()) {
-      this.inMemoryStore.delete(id);
-      return;
-    }
-
     try {
-      const { error } = await this.supabase!.from('funnels').delete().eq('id', id);
+      const { error } = await this.supabase.from('funnels').delete().eq('id', id);
       if (error) throw new Error(`Failed to delete funnel: ${error.message}`);
     } catch (error) {
       console.error('[FunnelRepository] delete error:', error);
