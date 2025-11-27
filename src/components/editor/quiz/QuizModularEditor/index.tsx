@@ -986,6 +986,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         const controller = new AbortController();
         const { signal } = controller;
 
+        // 🔥 SAFETY: Timeout automático para prevenir loading infinito
+        const safetyTimeout = setTimeout(() => {
+            if (!controller.signal.aborted) {
+                console.warn('⚠️ [QuizModularEditor] Loading travado detectado, forçando reset');
+                setStepLoading(false);
+            }
+        }, 10000); // 10 segundos máximo
+
         async function ensureStepBlocks() {
             setStepLoading(true);
             // debounce small
@@ -1109,9 +1117,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     appLogger.error('[QuizModularEditor] lazyLoadStep falhou:', e);
                 }
             } finally {
-                if (!signal.aborted) {
-                    setStepLoading(false);
-                }
+                // 🔥 SEMPRE resetar loading, mesmo se aborted
+                setStepLoading(false);
+                clearTimeout(safetyTimeout);
             }
         }
 
@@ -1146,6 +1154,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             appLogger.warn('[QuizModularEditor] prefetch setup failed', err);
         }
         return () => {
+            clearTimeout(safetyTimeout);
             controller.abort();
             setStepLoading(false);
         };
