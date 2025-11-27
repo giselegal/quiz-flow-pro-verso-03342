@@ -112,6 +112,9 @@ export {
 } from './hooks/useBlockValidation';
 export type { BlockValidationHookResult } from './hooks/useBlockValidation';
 
+// Quiz Hooks (migrated from /src/hooks)
+export * from './hooks';
+
 // ===== RE-EXPORTS FOR CONVENIENCE =====
 
 /**

@@ -1,0 +1,422 @@
+// src/hooks/useQuizRulesConfig.ts
+// 🎯 SOLUÇÃO: Hook inteligente que lê configuração JSON centralizada
+
+import { useMemo } from 'react';
+
+// ============================================================================
+// INTERFACES PARA TIPAGEM FORTE
+// ============================================================================
+
+export interface StepValidation {
+    type: 'input' | 'selection' | 'none';
+    required: boolean | string[] | number; // Aceita também number para seleções
+    minSelections?: number;
+    maxSelections?: number;
+    minLength?: number;
+    maxLength?: number;
+    message: string;
+}
+
+export interface StepBehavior {
+    autoAdvance: boolean;
+    autoAdvanceDelay?: number;
+    showProgress: boolean;
+    allowBack: boolean;
+}
+
+export interface StepScoring {
+    enabled: boolean;
+    pointsPerOption: number;
+    categories: string[];
+    weight: number;
+}
+
+export interface StepButton {
+    text: string;
+    activationRule: 'always' | 'requiresValidInput' | 'requiresValidSelection';
+    style: 'primary' | 'secondary' | 'cta';
+}
+
+export interface StepRule {
+    type: 'form' | 'quiz-question' | 'strategic-question' | 'transition' | 'result' | 'offer';
+    category: 'intro' | 'normal' | 'strategic' | 'intermediate' | 'final' | 'result' | 'offer';
+    validation: StepValidation;
+    behavior: StepBehavior;
+    scoring?: StepScoring;
+    button: StepButton;
+}
+
+export interface QuizRulesConfig {
+    meta: {
+        name: string;
+        version: string;
+        description: string;
+        lastUpdated: string;
+    };
+    stepRules: Record<string, StepRule>;
+    globalScoringConfig: {
+        categories: Array<{
+            id: string;
+            name: string;
+            description: string;
+            color: string;
+            weight: number;
+        }>;
+        algorithm: {
+            type: string;
+            normalQuestionWeight: number;
+            strategicQuestionWeight: number;
+            minimumScoreDifference: number;
+            tieBreaker: string;
+        };
+        resultCalculation: {
+            primaryStyle: string;
+            secondaryStyles: string;
+            showPercentages: boolean;
+            roundTo: number;
+        };
+    };
+    validationMessages: {
+        pt: {
+            step1: Record<string, string>;
+            quizQuestions: Record<string, string>;
+            strategicQuestions: Record<string, string>;
+            general: Record<string, string>;
+        };
+    };
+    behaviorPresets: {
+        autoAdvanceSteps: number[];
+        manualAdvanceSteps: number[];
+        scoringSteps: number[];
+        strategicSteps: number[];
+        transitionSteps: number[];
+        inputValidationSteps: number[];
+        selectionValidationSteps: number[];
+        alwaysActiveSteps: number[];
+    };
+    uiConfig: {
+        buttons: Record<string, Record<string, any>>;
+        animations: Record<string, any>;
+    };
+}
+
+// ============================================================================
+// CONFIGURAÇÃO JSON IMPORTADA
+// ============================================================================
+
+// Importar o JSON diretamente (Vite suporta import de JSON)
+import quizRulesConfigData from '@/config/quizRulesConfig';
+import { appLogger } from '@/lib/utils/appLogger';
+
+// ============================================================================
+// HOOK PRINCIPAL
+// ============================================================================
+
+export function useQuizRulesConfig() {
+    const config = useMemo(() => {
+        return quizRulesConfigData as QuizRulesConfig;
+    }, []);
+
+    // ============================================================================
+    // FUNÇÃO: Obter regras de uma etapa específica
+    // ============================================================================
+    const getStepRules = useMemo(() => {
+        return (stepNumber: number): StepRule | null => {
+            const stepKey = stepNumber.toString();
+            const stepRule = config.stepRules[stepKey];
+
+            if (!stepRule) {
+                appLogger.warn(`⚠️ useQuizRulesConfig: Regras não encontradas para step ${stepNumber}`);
+                return null;
+            }
+
+            appLogger.info(`✅ useQuizRulesConfig: Regras carregadas para step ${stepNumber}:`, { data: [{
+                            type: stepRule.type,
+                            validation: stepRule.validation,
+                            behavior: stepRule.behavior,
+                            hasScoring: !!stepRule.scoring,
+                        }] });
+
+            return stepRule;
+        };
+    }, [config]);
+
+    // ============================================================================
+    // FUNÇÃO: Verificar se step requer auto-advance
+    // ============================================================================
+    const shouldAutoAdvance = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.autoAdvanceSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // ============================================================================
+    // FUNÇÃO: Obter delay do auto-advance
+    // ============================================================================
+    const getAutoAdvanceDelay = useMemo(() => {
+        return (stepNumber: number): number => {
+            const stepRule = getStepRules(stepNumber);
+            return stepRule?.behavior.autoAdvanceDelay || config.uiConfig.animations.autoAdvanceDelay || 1000;
+        };
+    }, [config, getStepRules]);
+
+    // ============================================================================
+    // FUNÇÃO: Verificar se step tem pontuação
+    // ============================================================================
+    const hasScoring = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.scoringSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // ============================================================================
+    // FUNÇÃO: Obter configuração de validação
+    // ============================================================================
+    const getValidationConfig = useMemo(() => {
+        return (stepNumber: number): StepValidation | null => {
+            const stepRule = getStepRules(stepNumber);
+            return stepRule?.validation || null;
+        };
+    }, [getStepRules]);
+
+    // ============================================================================
+    // FUNÇÃO: Obter mensagem de validação
+    // ============================================================================
+    const getValidationMessage = useMemo(() => {
+        return (stepNumber: number, messageType?: string): string => {
+            const stepRule = getStepRules(stepNumber);
+
+            if (stepRule?.validation.message) {
+                return stepRule.validation.message;
+            }
+
+            // Fallback para mensagens por categoria
+            const messages = config.validationMessages.pt;
+
+            if (stepNumber === 1) {
+                return messages.step1[messageType || 'emptyName'] || 'Digite seu nome para continuar';
+            } else if (stepNumber >= 2 && stepNumber <= 11) {
+                return messages.quizQuestions[messageType || 'noSelection'] || 'Selecione 3 opções para avançar';
+            } else if (stepNumber >= 13 && stepNumber <= 18) {
+                return messages.strategicQuestions[messageType || 'noSelection'] || 'Selecione uma opção para continuar';
+            }
+
+            return messages.general.error || 'Erro de validação';
+        };
+    }, [config, getStepRules]);
+
+    // ============================================================================
+    // FUNÇÃO: Obter configuração de botão
+    // ============================================================================
+    const getButtonConfig = useMemo(() => {
+        return (stepNumber: number): StepButton | null => {
+            const stepRule = getStepRules(stepNumber);
+            return stepRule?.button || null;
+        };
+    }, [getStepRules]);
+
+    // ============================================================================
+    // FUNÇÃO: Obter configuração de pontuação
+    // ============================================================================
+    const getScoringConfig = useMemo(() => {
+        return (stepNumber: number): StepScoring | null => {
+            const stepRule = getStepRules(stepNumber);
+            return stepRule?.scoring || null;
+        };
+    }, [getStepRules]);
+
+    // ============================================================================
+    // FUNÇÃO: Obter todas as categorias de estilo
+    // ============================================================================
+    const getStyleCategories = useMemo(() => {
+        return () => {
+            return config.globalScoringConfig.categories;
+        };
+    }, [config]);
+
+    // ============================================================================
+    // FUNÇÃO: Obter configuração global de algoritmo
+    // ============================================================================
+    const getAlgorithmConfig = useMemo(() => {
+        return () => {
+            return config.globalScoringConfig.algorithm;
+        };
+    }, [config]);
+
+    // ============================================================================
+    // NOVAS FUNÇÕES PARA AS REGRAS ESPECÍFICAS
+    // ============================================================================
+
+    // Verificar se é etapa de transição (botão sempre ativo)
+    const isTransitionStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.transitionSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Verificar se é etapa estratégica (1 seleção)
+    const isStrategicStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.strategicSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Verificar se é etapa de pontuação (3 seleções)
+    const isScoringStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.scoringSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Obter número de seleções necessárias
+    const getRequiredSelections = useMemo(() => {
+        return (stepNumber: number): number => {
+            if (isScoringStep(stepNumber)) return 3;
+            if (isStrategicStep(stepNumber)) return 1;
+            return 0;
+        };
+    }, [isScoringStep, isStrategicStep]);
+
+    // Verificar se botão deve estar sempre ativo
+    const isAlwaysActiveStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.alwaysActiveSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Obter regra de ativação do botão
+    const getButtonActivationRule = useMemo(() => {
+        return (stepNumber: number): string => {
+            const stepRule = getStepRules(stepNumber);
+            if (!stepRule) return 'always';
+
+            // Etapa 1: requer input válido
+            if (stepNumber === 1) return 'requiresValidInput';
+
+            // Etapas 2-11: requer 3 seleções válidas
+            if (stepNumber >= 2 && stepNumber <= 11) return 'requiresValidSelection';
+
+            // Etapa 12: sempre ativo (transição)
+            if (stepNumber === 12) return 'always';
+
+            // Etapas 13-18: requer 1 seleção válida
+            if (stepNumber >= 13 && stepNumber <= 18) return 'requiresValidSelection';
+
+            // Etapas 19-21: sempre ativo
+            if (stepNumber >= 19 && stepNumber <= 21) return 'always';
+
+            return stepRule.button.activationRule;
+        };
+    }, [getStepRules]);
+
+    // ============================================================================
+    // FUNÇÃO: Debug - Log completo da configuração
+    // ============================================================================
+    const logConfiguration = useMemo(() => {
+        return (stepNumber?: number) => {
+            if (stepNumber) {
+                const stepRule = getStepRules(stepNumber);
+                console.group(`🔍 Quiz Rules Config - Step ${stepNumber}`);
+                appLogger.info('Step Rule:', { data: [stepRule] });
+                appLogger.info('Should Auto Advance:', { data: [shouldAutoAdvance(stepNumber)] });
+                appLogger.info('Auto Advance Delay:', { data: [getAutoAdvanceDelay(stepNumber)] });
+                appLogger.info('Has Scoring:', { data: [hasScoring(stepNumber)] });
+                appLogger.info('Validation Config:', { data: [getValidationConfig(stepNumber)] });
+                appLogger.info('Button Config:', { data: [getButtonConfig(stepNumber)] });
+                console.groupEnd();
+            } else {
+                console.group('🔍 Quiz Rules Config - Global');
+                appLogger.info('Full Config:', { data: [config] });
+                appLogger.info('Auto Advance Steps:', { data: [config.behaviorPresets.autoAdvanceSteps] });
+                appLogger.info('Scoring Steps:', { data: [config.behaviorPresets.scoringSteps] });
+                appLogger.info('Style Categories:', { data: [config.globalScoringConfig.categories] });
+                console.groupEnd();
+            }
+        };
+    }, [config, getStepRules, shouldAutoAdvance, getAutoAdvanceDelay, hasScoring, getValidationConfig, getButtonConfig]);
+
+    // ============================================================================
+    // RETORNO DO HOOK
+    // ============================================================================
+    return {
+        // Configuração completa
+        config,
+
+        // Funções principais
+        getStepRules,
+        shouldAutoAdvance,
+        getAutoAdvanceDelay,
+        hasScoring,
+        getValidationConfig,
+        getValidationMessage,
+        getButtonConfig,
+        getScoringConfig,
+        getStyleCategories,
+        getAlgorithmConfig,
+
+        // Novas funções para regras específicas
+        isTransitionStep,
+        isStrategicStep,
+        isScoringStep,
+        getRequiredSelections,
+        isAlwaysActiveStep,
+        getButtonActivationRule,
+
+        // Debug
+        logConfiguration,
+
+        // Atalhos úteis
+        autoAdvanceSteps: config.behaviorPresets.autoAdvanceSteps,
+        manualAdvanceSteps: config.behaviorPresets.manualAdvanceSteps,
+        scoringSteps: config.behaviorPresets.scoringSteps,
+        strategicSteps: config.behaviorPresets.strategicSteps,
+        transitionSteps: config.behaviorPresets.transitionSteps,
+        inputValidationSteps: config.behaviorPresets.inputValidationSteps,
+        selectionValidationSteps: config.behaviorPresets.selectionValidationSteps,
+        alwaysActiveSteps: config.behaviorPresets.alwaysActiveSteps,
+        styleCategories: config.globalScoringConfig.categories,
+
+        // Metadados
+        version: config.meta.version,
+        lastUpdated: config.meta.lastUpdated,
+    };
+}
+
+// ============================================================================
+// HOOK SIMPLIFICADO COMPATÍVEL COM O ANTERIOR
+// ============================================================================
+
+export function useStepValidation() {
+    const { getStepRules } = useQuizRulesConfig();
+
+    const getStepBehavior = useMemo(() => {
+        return (currentStep: number) => {
+            const stepRule = getStepRules(currentStep);
+
+            if (!stepRule) {
+                return {
+                    requiresValidInput: false,
+                    requiresValidSelection: false,
+                    validationMessage: 'Erro: configuração não encontrada',
+                    shouldAutoAdvance: false,
+                    autoAdvanceDelay: 1000,
+                };
+            }
+
+            const requiresValidInput = stepRule.validation.type === 'input' && stepRule.validation.required;
+            const requiresValidSelection = stepRule.validation.type === 'selection' && stepRule.validation.required;
+
+            return {
+                requiresValidInput,
+                requiresValidSelection,
+                validationMessage: stepRule.validation.message,
+                shouldAutoAdvance: stepRule.behavior.autoAdvance,
+                autoAdvanceDelay: stepRule.behavior.autoAdvanceDelay || 1000,
+            };
+        };
+    }, [getStepRules]);
+
+    return {
+        getStepBehavior,
+    };
+}
