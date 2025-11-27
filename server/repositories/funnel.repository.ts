@@ -63,9 +63,21 @@ export interface UpdateFunnelInput {
 
 export class FunnelRepository {
   private supabase: SupabaseClient;
+  private isTestMode: boolean = false;
+  private testStore: Map<string, Funnel> = new Map();
 
   constructor() {
+    // Permitir modo de teste sem Supabase (apenas para E2E/unit tests)
+    const isTest = process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST === 'true';
+    
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      if (isTest) {
+        console.warn('[FunnelRepository] Running in TEST MODE without Supabase (using in-memory store)');
+        this.isTestMode = true;
+        // Create a mock Supabase client for type compatibility
+        this.supabase = {} as SupabaseClient;
+        return;
+      }
       throw new Error('[FunnelRepository] Supabase configuration is required. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY environment variables.');
     }
     
@@ -80,6 +92,7 @@ export class FunnelRepository {
    * Health check to verify Supabase connection
    */
   async healthCheck(): Promise<boolean> {
+    if (this.isTestMode) return true;
     try {
       const { error } = await this.supabase.from('funnels').select('count').limit(1);
       return !error;
@@ -94,6 +107,12 @@ export class FunnelRepository {
     page?: number;
     limit?: number;
   }): Promise<{ funnels: Funnel[]; total: number }> {
+    // Test mode: usar in-memory store
+    if (this.isTestMode) {
+      const funnels = Array.from(this.testStore.values());
+      return { funnels, total: funnels.length };
+    }
+
     try {
       let query = this.supabase.from('funnels').select('*', { count: 'exact' });
 
@@ -126,6 +145,11 @@ export class FunnelRepository {
   }
 
   async findById(id: string): Promise<Funnel | null> {
+    // Test mode: usar in-memory store
+    if (this.isTestMode) {
+      return this.testStore.get(id) || null;
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('funnels')
@@ -161,6 +185,12 @@ export class FunnelRepository {
       updated_at: new Date().toISOString(),
     };
 
+    // Test mode: usar in-memory store
+    if (this.isTestMode) {
+      this.testStore.set(funnel.id, funnel);
+      return funnel;
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('funnels')
@@ -181,6 +211,15 @@ export class FunnelRepository {
     updates: UpdateFunnelInput,
     expectedVersion?: number
   ): Promise<Funnel> {
+    // Test mode: usar in-memory store
+    if (this.isTestMode) {
+      const existing = this.testStore.get(id);
+      if (!existing) throw new Error('Funnel not found');
+      const updated = { ...existing, ...updates, updated_at: new Date().toISOString() };
+      this.testStore.set(id, updated);
+      return updated;
+    }
+
     try {
       let query = this.supabase.from('funnels').update(updates).eq('id', id);
 
