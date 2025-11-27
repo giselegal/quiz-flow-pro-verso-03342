@@ -531,7 +531,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         return () => window.removeEventListener('keydown', handler);
     }, [previewMode]);
 
-    // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável
+    // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável (sem selectedBlockId nas deps para evitar loop)
     const handleBlockSelect = useCallback((blockId: string | null) => {
         if (!blockId) {
             setSelectedBlock(null);
@@ -551,13 +551,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 });
             }
         }, 100);
-    }, [setSelectedBlock, selectedBlockId]);
+    }, [setSelectedBlock]);
 
-    // 🚀 PERFORMANCE: Callbacks otimizados para handlers do WYSIWYG
+    // 🚀 PERFORMANCE: Callbacks otimizados para handlers do WYSIWYG (removido wysiwyg.state.selectedBlockId das deps)
     const handleWYSIWYGBlockSelect = useCallback((id: string | null) => {
         wysiwyg.actions.selectBlock(id);
         handleBlockSelect(id);
-    }, [wysiwyg.actions, handleBlockSelect, wysiwyg.state.selectedBlockId]);
+    }, [wysiwyg.actions, handleBlockSelect]);
 
     const handleWYSIWYGBlockUpdate = useCallback((id: string, updates: Partial<Block>) => {
         // 🚀 WYSIWYG: Atualização instantânea via hook

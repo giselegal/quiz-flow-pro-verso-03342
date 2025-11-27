@@ -77,7 +77,6 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
             ref={setNodeRef}
             style={style}
             {...attributes}
-            {...listeners}
             className={`
                 border rounded-lg p-2 relative 
                 transition-all duration-200
@@ -89,7 +88,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
                             ? 'border-blue-500 bg-blue-50 shadow-md'
                             : 'border-gray-200 hover:border-gray-400 hover:shadow-sm'
                 }
-                ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}
+                ${isDragging ? 'cursor-grabbing' : isEditable ? 'cursor-pointer' : 'cursor-default'}
             `}
             onClick={e => {
                 const target = e.target as HTMLElement;
@@ -118,10 +117,29 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
                 <div className="absolute -top-1 left-0 right-0 h-1 bg-blue-500 rounded-full shadow-lg animate-pulse" />
             )}
             <div className="flex items-center justify-between mb-1">
-                <div className={`text-xs uppercase ${isSelected
-                    ? 'text-blue-700 font-medium'
-                    : 'text-muted-foreground'
-                    }`}>{block.type}</div>
+                <div className="flex items-center gap-2">
+                    {isEditable && (
+                        <button
+                            {...listeners}
+                            className="cursor-grab hover:bg-gray-100 p-1 rounded text-gray-400 hover:text-gray-600 transition-colors"
+                            title="Arrastar para reordenar"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                <circle cx="3" cy="3" r="1" />
+                                <circle cx="9" cy="3" r="1" />
+                                <circle cx="3" cy="6" r="1" />
+                                <circle cx="9" cy="6" r="1" />
+                                <circle cx="3" cy="9" r="1" />
+                                <circle cx="9" cy="9" r="1" />
+                            </svg>
+                        </button>
+                    )}
+                    <div className={`text-xs uppercase ${isSelected
+                        ? 'text-blue-700 font-medium'
+                        : 'text-muted-foreground'
+                        }`}>{block.type}</div>
+                </div>
                 <div className="flex items-center gap-1">
                     {isEditable && typeof onMoveBlock === 'function' && (
                         <>
