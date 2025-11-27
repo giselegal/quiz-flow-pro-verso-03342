@@ -68,9 +68,9 @@ export interface LegacySuperUnifiedContext {
         colors: {
             primary: string;
             secondary: string;
-            accent: string;
-            background: string;
-            foreground: string;
+            accent?: string;
+            background?: string;
+            foreground?: string;
         };
     };
     toggleTheme: () => void;

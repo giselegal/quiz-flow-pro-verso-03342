@@ -20,6 +20,17 @@ export interface TemplateConfig {
     tags: string[];
     isActive: boolean;
     createdAt?: string;
+    // Campos adicionais para compatibilidade com dashboard
+    difficulty?: 'easy' | 'medium' | 'hard';
+    stepCount?: number; // Alias de steps
+    preview?: {
+        image?: string;
+        video?: string;
+        demo?: string;
+    };
+    features?: string[];
+    templatePath?: string;
+    editorUrl?: string;
 }
 
 /**
@@ -32,9 +43,14 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         description: 'Template completo com 21 etapas para quiz de moda/estilo',
         type: TemplateType.QUIZ_21_STEPS,
         steps: 21,
+        stepCount: 21,
         category: 'quiz',
         tags: ['quiz', 'fashion', 'style', 'complete'],
         isActive: true,
+        difficulty: 'hard',
+        features: ['Multi-step', 'Conditional logic', 'Results page', 'Email capture'],
+        templatePath: '/templates/quiz-21-steps',
+        editorUrl: '/editor/quiz21StepsComplete',
     },
     {
         id: 'quizSimple',
@@ -42,9 +58,14 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         description: 'Template simplificado para quiz rápido',
         type: TemplateType.QUIZ_SIMPLE,
         steps: 5,
+        stepCount: 5,
         category: 'quiz',
         tags: ['quiz', 'simple', 'fast'],
         isActive: true,
+        difficulty: 'easy',
+        features: ['Quick setup', 'Basic questions', 'Simple results'],
+        templatePath: '/templates/quiz-simple',
+        editorUrl: '/editor/quizSimple',
     },
     {
         id: 'leadGeneration',
@@ -52,9 +73,14 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         description: 'Template para captura de leads',
         type: TemplateType.LEAD_GEN,
         steps: 3,
+        stepCount: 3,
         category: 'leadgen',
         tags: ['leadgen', 'capture', 'form'],
         isActive: true,
+        difficulty: 'easy',
+        features: ['Lead capture', 'Form validation', 'Email integration'],
+        templatePath: '/templates/lead-generation',
+        editorUrl: '/editor/leadGeneration',
     },
     {
         id: 'salesPage',
@@ -62,9 +88,14 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         description: 'Template de página de vendas otimizada',
         type: TemplateType.SALES_PAGE,
         steps: 1,
+        stepCount: 1,
         category: 'sales',
         tags: ['sales', 'landing', 'conversion'],
         isActive: true,
+        difficulty: 'medium',
+        features: ['CTA optimization', 'Social proof', 'Urgency elements'],
+        templatePath: '/templates/sales-page',
+        editorUrl: '/editor/salesPage',
     },
 ];
 
@@ -129,5 +160,26 @@ export class TemplateService {
                 t.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
             )
         );
+    }
+
+    // Aliases para compatibilidade com código existente
+    static getTemplate(id: string): TemplateConfig | undefined {
+        return this.getById(id);
+    }
+
+    static getActiveTemplates(): TemplateConfig[] {
+        return this.getActive();
+    }
+
+    static getTemplatesBySegment(segment: string): TemplateConfig[] {
+        // Mapeamento de segmentos para categorias
+        const categoryMap: Record<string, TemplateConfig['category']> = {
+            quiz: 'quiz',
+            leadgen: 'leadgen',
+            sales: 'sales',
+            custom: 'custom',
+        };
+        const category = categoryMap[segment.toLowerCase()];
+        return category ? this.getByCategory(category) : [];
     }
 }
