@@ -672,72 +672,34 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // normalize order helper
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
-    // 🧩 Helper: Normalização de payload heterogêneo de steps (v2/v3/mapeados)
+    // 🧩 Helper: Normalização SIMPLIFICADA de payload de steps
+    // ✅ CORREÇÃO 1: Reduzido de 6 para 3 formatos principais + validação
     const extractBlocksFromStepData = useCallback((raw: any, stepId: string): Block[] => {
         try {
             if (!raw) return [];
-            // Caso 1: Array direto
-            if (Array.isArray(raw)) return raw as Block[];
 
-            // Função interna para adaptar blocos v3 (config → properties)
-            const adapt = (arr: any[]): Block[] => arr.map((b: any, i: number) => {
-                // Detectar formato v3: objeto com config sem properties/content definidos
-                if (b && b.config && !b.properties && !b.content) {
-                    const cfg = b.config || {};
-                    // Separar campos claramente de conteúdo visual (logoUrl, logoAlt, title, text, html, imageUrl, src, alt, placeholder, buttonText)
-                    const contentKeys = [
-                        'logoUrl', 'logoAlt', 'title', 'titleHtml', 'text', 'html', 'imageUrl', 'src', 'alt', 'placeholder', 'buttonText', 'label', 'helperText'
-                    ];
-                    const derivedContent: Record<string, any> = {};
-                    for (const k of contentKeys) {
-                        if (k in cfg) derivedContent[k] = (cfg as any)[k];
-                    }
-                    // Restante permanece em properties
-                    const { order: cfgOrder, ...restCfg } = cfg;
-                    // Não duplicar campos já movidos para content
-                    for (const k of contentKeys) {
-                        delete (restCfg as any)[k];
-                    }
-                    return {
-                        id: b.id || `block-${i}`,
-                        type: b.type || 'unknown',
-                        properties: { ...restCfg },
-                        content: { ...derivedContent },
-                        order: typeof cfgOrder === 'number' ? cfgOrder : i,
-                    } as Block;
-                }
-                // Formato esperado já com properties/content
-                return b as Block;
-            });
+            // Caso 1: Array direto (já normalizado)
+            if (Array.isArray(raw)) {
+                return raw.filter((b: any) => b && b.id && b.type) as Block[];
+            }
 
-            // Caso 2: Objeto com blocks
-            if (raw.blocks && Array.isArray(raw.blocks)) return adapt(raw.blocks);
+            // Caso 2: Objeto com propriedade .blocks
+            if (raw.blocks && Array.isArray(raw.blocks)) {
+                return raw.blocks.filter((b: any) => b && b.id && b.type) as Block[];
+            }
 
-            // Caso 3: Estrutura { steps: { stepId: { blocks: [] } } }
+            // Caso 3: Estrutura aninhada { steps: { stepId: { blocks: [] } } }
             if (raw.steps && raw.steps[stepId]?.blocks && Array.isArray(raw.steps[stepId].blocks)) {
-                return adapt(raw.steps[stepId].blocks);
+                return raw.steps[stepId].blocks.filter((b: any) => b && b.id && b.type) as Block[];
             }
 
-            // Caso 4: Objeto indexado pelo stepId diretamente
-            if (raw[stepId] && raw[stepId].blocks && Array.isArray(raw[stepId].blocks)) {
-                return adapt(raw[stepId].blocks);
-            }
-
-            // Caso 5: v3 etapa única (templateVersion + blocks)
-            if (raw.templateVersion && raw.blocks && Array.isArray(raw.blocks)) return adapt(raw.blocks);
-
-            // Caso 6: Objeto genérico possivelmente com blocos indexados
-            const values = Object.values(raw);
-            if (values.length && values.every(v => typeof v === 'object')) {
-                if (values.some((v: any) => v && (v.type || v.config))) {
-                    // Pode ser coleção de blocos sem ser array
-                    return adapt(values as any[]);
-                }
-            }
-
+            // ⚠️ Formato não reconhecido - log para debug
+            appLogger.warn('[extractBlocksFromStepData] Formato não reconhecido', {
+                data: [{ stepId, hasBlocks: !!raw.blocks, hasSteps: !!raw.steps, keys: Object.keys(raw) }]
+            });
             return [];
         } catch (err) {
-            appLogger.warn('[extractBlocksFromStepData] Falha ao normalizar payload', { data: [err] });
+            appLogger.error('[extractBlocksFromStepData] Erro ao normalizar', { data: [err] });
             return [];
         }
     }, []);
@@ -1042,44 +1004,39 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 // Normalização segura
                 const normalizedBlocks = extractBlocksFromStepData(result?.data, stepId);
 
-                console.log('🧪🧪🧪 [DEBUG] Normalização:', {
+                console.log('🧪 [QuizModularEditor] Normalização:', {
                     stepId,
                     normalizedCount: normalizedBlocks.length,
                     sample: normalizedBlocks.slice(0, 2).map(b => ({ id: b.id, type: b.type }))
                 });
 
-                appLogger.info('📦 [QuizModularEditor] getStep + normalização:', {
-                    success: result?.success,
-                    normalizedCount: normalizedBlocks.length,
-                    rawIsArray: Array.isArray(result?.data)
-                });
-
-                if (!signal.aborted && result?.success && normalizedBlocks) {
-                    console.log(`✅✅✅ [DEBUG] setStepBlocks(${stepIndex}) com ${normalizedBlocks.length} blocos normalizados`);
-                    appLogger.info(`✅ [QuizModularEditor] setStepBlocks(normalized): ${normalizedBlocks.length} blocos`);
+                // ✅ CORREÇÃO 2: Validar array não-vazio antes de gravar
+                if (!signal.aborted && result?.success && normalizedBlocks && normalizedBlocks.length > 0) {
+                    console.log(`✅ [QuizModularEditor] setStepBlocks(${stepIndex}) com ${normalizedBlocks.length} blocos`);
+                    appLogger.info(`✅ [QuizModularEditor] Step carregado: ${normalizedBlocks.length} blocos`);
                     setStepBlocks(stepIndex, normalizedBlocks);
 
-                    // 🔥 HOTFIX 4: WYSIWYG Sync Otimizado - Shallow update ao invés de reset completo
-                    // PROBLEMA RESOLVIDO: Reset O(n) causava delay de 100-300ms em cada navegação
-                    // SOLUÇÃO: Atualização incremental O(1) + guards para prevenir loops
-                    if (previewMode === 'live' && wysiwyg.state.blocks.length > 0) {
-                        console.log('🚫 [QuizModularEditor] Preview mode: ignorando sync WYSIWYG para prevenir flickering');
+                    // 🔥 HOTFIX 4: WYSIWYG Sync Otimizado
+                    // ✅ CORREÇÃO 4: Sincronizar em live mode, não em production
+                    if (previewMode === 'production') {
+                        console.log('🚫 [QuizModularEditor] Production mode: ignorando sync WYSIWYG');
                     } else {
                         try {
-                            // ✅ OTIMIZAÇÃO: Verificar se blocos mudaram antes de resetar
-                            const currentIds = wysiwyg.state.blocks.map(b => b.id).join(',');
-                            const newIds = normalizedBlocks.map((b: any) => b.id).join(',');
+                            // ✅ CORREÇÃO 5: Comparação otimizada sem JSON.stringify
+                            const currentIds = wysiwyg.state.blocks.map(b => b.id).sort().join(',');
+                            const newIds = normalizedBlocks.map((b: any) => b.id).sort().join(',');
 
                             if (currentIds !== newIds) {
                                 // Blocos diferentes - fazer reset
-                                appLogger.debug('[WYSIWYG] Blocos mudaram, fazendo reset');
+                                appLogger.debug('[WYSIWYG] IDs mudaram, fazendo reset');
                                 wysiwyg.actions.reset(normalizedBlocks);
                             } else {
-                                // Mesmos blocos - apenas atualizar propriedades (muito mais rápido)
-                                appLogger.debug('[WYSIWYG] Mesmos blocos, atualizando propriedades');
+                                // Mesmos IDs - atualização incremental
+                                appLogger.debug('[WYSIWYG] Mesmos IDs, sync incremental');
                                 normalizedBlocks.forEach((block: any) => {
                                     const existing = wysiwyg.state.blocks.find(b => b.id === block.id);
-                                    if (existing && JSON.stringify(existing) !== JSON.stringify(block)) {
+                                    // ✅ Comparação shallow ao invés de deep (JSON.stringify)
+                                    if (existing && (existing.type !== block.type || existing.order !== block.order)) {
                                         wysiwyg.actions.updateBlock(block.id, block);
                                     }
                                 });
@@ -1100,15 +1057,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         }
                     }
                 } else {
-                    console.warn('⚠️⚠️⚠️ [DEBUG] getStep sem dados utilizáveis após normalização:', {
-                        aborted: signal.aborted,
-                        success: result?.success,
-                        normalizedCount: normalizedBlocks.length
+                    // ✅ CORREÇÃO 2.1: Log mais claro sobre por que step não foi carregado
+                    const reason = signal.aborted ? 'aborted' :
+                        !result?.success ? 'request_failed' :
+                            normalizedBlocks.length === 0 ? 'empty_blocks' : 'unknown';
+
+                    console.warn('⚠️ [QuizModularEditor] Step não carregado:', {
+                        stepId,
+                        reason,
+                        normalizedCount: normalizedBlocks?.length || 0
                     });
-                    appLogger.warn('[QuizModularEditor] Step sem dados normalizados', {
-                        aborted: signal.aborted,
-                        success: result?.success,
-                        normalizedCount: normalizedBlocks.length
+
+                    appLogger.warn('[QuizModularEditor] Step sem blocos válidos', {
+                        stepId,
+                        reason,
+                        success: result?.success
                     });
                 }
             } catch (e) {
