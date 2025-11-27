@@ -52,7 +52,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
     onUpdateBlock?: (blockId: string, patch: Partial<Block>) => void;
     isEditable?: boolean;
 }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver } = useSafeSortable({
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSafeSortable({
         id: block.id,
         disabled: !isEditable // 🆕 Desabilitar drag quando não editável
     });
@@ -65,10 +65,8 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
         scale: isDragging ? '1.02' : '1',
         boxShadow: isDragging
             ? '0 20px 40px rgba(59, 130, 246, 0.3), 0 0 0 2px rgba(59, 130, 246, 0.1)'
-            : isOver
-                ? '0 8px 16px rgba(59, 130, 246, 0.2), 0 0 0 1px rgba(59, 130, 246, 0.2)'
-                : undefined,
-        zIndex: isDragging ? 50 : isOver ? 10 : undefined,
+            : undefined,
+        zIndex: isDragging ? 50 : undefined,
         cursor: isEditable ? (isDragging ? 'grabbing' : 'grab') : 'default',
     };
 
@@ -101,33 +99,16 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
                 transition-all duration-200
                 ${isDragging
                     ? 'border-blue-500 bg-blue-100 ring-4 ring-blue-200 shadow-xl'
-                    : isOver
-                        ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-300 shadow-lg'
-                        : isSelected
-                            ? 'border-blue-500 bg-blue-50 shadow-md'
-                            : 'border-gray-200 hover:border-gray-400 hover:shadow-sm'
+                    : isSelected
+                        ? 'border-blue-500 bg-blue-50 shadow-md'
+                        : 'border-gray-200 hover:border-gray-400 hover:shadow-sm'
                 }
                 ${isDragging ? 'cursor-grabbing' : isEditable ? 'cursor-pointer' : 'cursor-default'}
             `}
             onClick={handleBlockClick}
             data-block-id={block.id}
         >
-            {/* ✨ FASE 2: Indicador de drop melhorado com posição */}
-            {isOver && !isDragging && (
-                <div className="absolute -top-2 left-0 right-0 h-0.5 transition-all duration-200">
-                    {/* Linha principal */}
-                    <div className="absolute inset-0 bg-blue-500 scale-y-[8] shadow-lg animate-pulse" />
-
-                    {/* Círculos nas extremidades */}
-                    <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full shadow-md" />
-                    <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full shadow-md" />
-
-                    {/* Label de posição */}
-                    <div className="absolute left-1/2 -translate-x-1/2 -top-6 bg-blue-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap shadow-lg">
-                        Inserir aqui (#{index + 1})
-                    </div>
-                </div>
-            )}
+            {/* Indicadores de drop foram removidos deste item para evitar dependência de estado 'isOver' de droppable */}
             <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
                     {isEditable && (
