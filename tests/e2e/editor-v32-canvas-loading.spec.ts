@@ -10,7 +10,7 @@
 import { test, expect, Page } from '@playwright/test';
 import path from 'path';
 
-const EDITOR_URL = 'http://localhost:5173/editor';
+const EDITOR_URL = 'http://localhost:8080/editor';
 const SCREENSHOT_DIR = 'test-results/v32-canvas-screenshots';
 
 // Helper to wait for canvas to be fully loaded
