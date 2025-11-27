@@ -50,8 +50,11 @@ let DndContext: any = null;
 let DragOverlay: any = null;
 let closestCenter: any = null;
 let PointerSensor: any = null;
+let KeyboardSensor: any = null;
+let TouchSensor: any = null;
 let useSensor: any = null;
 let useSensors: any = null;
+let sortableKeyboardCoordinates: any = null;
 
 // Import dinâmico mais seguro
 const loadDndKit = async () => {
@@ -59,13 +62,17 @@ const loadDndKit = async () => {
         if (typeof window === 'undefined') return null;
 
         const dndCore = await import('@dnd-kit/core');
+        const dndSortable = await import('@dnd-kit/sortable');
         return {
             DndContext: dndCore.DndContext,
             DragOverlay: dndCore.DragOverlay,
             closestCenter: dndCore.closestCenter,
             PointerSensor: dndCore.PointerSensor,
+            KeyboardSensor: dndCore.KeyboardSensor,
+            TouchSensor: dndCore.TouchSensor,
             useSensor: dndCore.useSensor,
             useSensors: dndCore.useSensors,
+            sortableKeyboardCoordinates: dndSortable.sortableKeyboardCoordinates,
         };
     } catch (error) {
         appLogger.warn('❌ [SafeDndContext] Falha ao carregar @dnd-kit:', { data: [error] });
@@ -117,6 +124,17 @@ export function SafeDndContext({
         if (!DndContext && !disabled) {
             loadDndKit().then((components) => {
                 if (components) {
+                    // Atribuir sensores globalmente para useSafeDndSensors
+                    DndContext = components.DndContext;
+                    DragOverlay = components.DragOverlay;
+                    closestCenter = components.closestCenter;
+                    PointerSensor = components.PointerSensor;
+                    KeyboardSensor = components.KeyboardSensor;
+                    TouchSensor = components.TouchSensor;
+                    useSensor = components.useSensor;
+                    useSensors = components.useSensors;
+                    sortableKeyboardCoordinates = components.sortableKeyboardCoordinates;
+
                     setDndComponents(components);
                     setDndReady(true);
                 }
@@ -182,7 +200,7 @@ export function SafeDndContext({
 
 /**
  * Hook seguro para sensores DnD
- * 🆕 G30 FIX: Sensores melhorados para drop zones consistentes
+ * ✨ FASE 1 FIX: Sensores otimizados para DnD responsivo e acessível
  */
 export function useSafeDndSensors() {
     if (!useSensor || !useSensors || !PointerSensor) {
@@ -191,15 +209,28 @@ export function useSafeDndSensors() {
 
     try {
         const sensors = useSensors(
+            // 🖱️ PointerSensor: Mouse e Pen
             useSensor(PointerSensor, {
-                // 🎯 FASE 1 FIX: Aumentar distância e delay para reduzir falsos positivos
-                // Problema: distance=3px causava ativação acidental durante cliques normais
-                // Solução: distance=15px + delay=150ms = +30% taxa de sucesso de cliques
                 activationConstraint: {
-                    distance: 15, // Aumentado de 3px para 15px (menos falsos positivos)
-                    delay: 150,   // Adicionar delay de 150ms para distinguir click de drag
+                    distance: 5,      // ✅ 5px = padrão recomendado (responsivo sem falsos positivos)
+                    tolerance: 5,     // ✅ Tolerância para evitar jitter
                 },
-            })
+            }),
+            // ⌨️ KeyboardSensor: Navegação por teclado (acessibilidade)
+            ...(KeyboardSensor && sortableKeyboardCoordinates ? [
+                useSensor(KeyboardSensor, {
+                    coordinateGetter: sortableKeyboardCoordinates,
+                })
+            ] : []),
+            // 📱 TouchSensor: Suporte a dispositivos touch/mobile
+            ...(TouchSensor ? [
+                useSensor(TouchSensor, {
+                    activationConstraint: {
+                        delay: 250,      // Delay para distinguir scroll de drag
+                        tolerance: 10,   // Tolerância maior para touch
+                    },
+                })
+            ] : [])
         );
         return sensors;
     } catch (error) {
@@ -306,8 +337,11 @@ export {
     DragOverlay as UnsafeDragOverlay,
     closestCenter,
     PointerSensor,
+    KeyboardSensor,
+    TouchSensor,
     useSensor,
-    useSensors
+    useSensors,
+    sortableKeyboardCoordinates
 };
 
 export default SafeDndContext;
