@@ -948,16 +948,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         const controller = new AbortController();
         const { signal } = controller;
 
+        // ✅ CORREÇÃO CRÍTICA: Setar loading ANTES do safety timeout
+        setStepLoading(true);
+
         // 🔥 SAFETY: Timeout automático para prevenir loading infinito
         const safetyTimeout = setTimeout(() => {
             if (!controller.signal.aborted) {
-                console.warn('⚠️ [QuizModularEditor] Loading travado detectado, forçando reset');
+                console.error('⚠️ [QuizModularEditor] Loading travado > 3s, forçando reset!');
                 setStepLoading(false);
             }
-        }, 10000); // 10 segundos máximo
+        }, 3000); // 3 segundos máximo (teste mais agressivo)
 
         async function ensureStepBlocks() {
-            setStepLoading(true);
+            // Loading já setado no início do useEffect
             // debounce small
             await new Promise(resolve => setTimeout(resolve, 50));
             if (signal.aborted) return;
