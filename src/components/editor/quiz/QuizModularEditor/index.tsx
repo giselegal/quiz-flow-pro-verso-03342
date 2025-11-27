@@ -451,25 +451,29 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [resourceId, previewMode, wysiwyg?.state?.blocks, saveStepBlocks]);
 
-    // 🎯 FASE 3.1: Auto-save DESABILITADO temporariamente para debug de performance
-    // ⚠️ CRÍTICO: Auto-save estava causando re-renders infinitos e travamentos
-    // TODO: Reimplementar com estratégia mais estável após correção do sistema de seleção
-    const autoSave = false ? useAutoSave({
-        key: `editor-autosave:${resourceId}:step-${safeCurrentStep}`,
-        data: wysiwyg?.state?.blocks || [],
-        debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
-        onSave: async (key) => {
-            await saveStepBlocksEnhanced(safeCurrentStep);
-        },
-        enableRecovery: true,
-    }) : {
-        isSaving: false,
-        lastSaved: null,
-        error: null,
-        forceSave: async () => { },
-        recoveredData: null,
-        clearRecovery: () => { },
-    };
+    // 🎯 FASE 3.2: Auto-save reativado com estratégia estável baseada em resourceId
+    // Guards importantes:
+    // - Nunca roda em previewMode === 'live' (evita loops de edição ao vivo)
+    // - Só ativa se houver resourceId (ID canônico do recurso)
+    // - Step atual é passado via saveStepBlocksEnhanced(stepNumber)
+    const autoSave = resourceId && previewMode !== 'live'
+        ? useAutoSave({
+            key: `editor-autosave:${resourceId}`,
+            data: wysiwyg?.state?.blocks || [],
+            debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
+            onSave: async () => {
+                await saveStepBlocksEnhanced(safeCurrentStep);
+            },
+            enableRecovery: true,
+        })
+        : {
+            isSaving: false,
+            lastSaved: null,
+            error: null,
+            forceSave: async () => { },
+            recoveredData: null,
+            clearRecovery: () => { },
+        };
 
     // 💾 Recuperar snapshot no mount
     useEffect(() => {
