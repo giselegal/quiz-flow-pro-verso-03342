@@ -117,6 +117,7 @@
     "test:visual:headed": "playwright test tests/e2e/visual/editor-visual.spec.ts --headed --config=playwright.config.ts",
     "test:visual:debug": "playwright test tests/e2e/visual/editor-visual.spec.ts --debug --config=playwright.config.ts",
     "test:e2e:vercel-prod": "playwright test tests/e2e/vercel-prod.spec.ts --config=playwright.config.ts",
+    "vercel:latest-url": "node tools/vercel-latest-deployment-url.mjs",
     "test:e2e:comprehensive": "playwright test tests/e2e/comprehensive-structure-validation.spec.ts --config=playwright.comprehensive.config.ts",
     "test:e2e:comprehensive:ui": "playwright test tests/e2e/comprehensive-structure-validation.spec.ts --ui --config=playwright.comprehensive.config.ts",
     "test:e2e:comprehensive:headed": "playwright test tests/e2e/comprehensive-structure-validation.spec.ts --headed --config=playwright.comprehensive.config.ts",
