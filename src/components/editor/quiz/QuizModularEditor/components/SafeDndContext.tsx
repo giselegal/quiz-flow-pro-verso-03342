@@ -268,7 +268,7 @@ export function SafeDndContext({
 /**
  * Hook seguro para sensores DnD
  * ✨ FASE 1 FIX: Sensores otimizados para DnD responsivo e acessível
- * ⚠️ IMPORTANTE: Hooks devem ser chamados incondicionalmente (Rules of Hooks)
+ * ⚠️ CORREÇÃO DEFINITIVA: SEMPRE chamar os mesmos 3 hooks na mesma ordem
  */
 export function useSafeDndSensors() {
     if (!useSensor || !useSensors || !PointerSensor) {
@@ -276,49 +276,37 @@ export function useSafeDndSensors() {
     }
 
     try {
-        // ✅ CORREÇÃO: Sempre chamar exatamente 3 useSensor com os MESMOS sensores
-        // A lógica condicional foi REMOVIDA completamente
-        const pointerSensorConfig = {
-            activationConstraint: {
-                distance: 5,
-                tolerance: 5,
-            },
-        };
-
-        const keyboardSensorConfig = KeyboardSensor && sortableKeyboardCoordinates
-            ? { coordinateGetter: sortableKeyboardCoordinates }
-            : { coordinateGetter: () => ({ x: 0, y: 0 }) };
-
-        const touchSensorConfig = {
-            activationConstraint: {
-                delay: 250,
-                tolerance: 10,
-            },
-        };
-
-        // SEMPRE chamar useSensor 3 vezes com OS MESMOS tipos
-        const pointerSensor = useSensor(PointerSensor, pointerSensorConfig);
-        const keyboardSensor = KeyboardSensor
-            ? useSensor(KeyboardSensor, keyboardSensorConfig)
-            : null;
-        const touchSensor = TouchSensor
-            ? useSensor(TouchSensor, touchSensorConfig)
-            : null;
-
-        // Construir array apenas com sensores válidos
-        const sensorsArray = [pointerSensor];
-        if (keyboardSensor) sensorsArray.push(keyboardSensor);
-        if (touchSensor) sensorsArray.push(touchSensor);
-
-        const sensors = useSensors(...sensorsArray);
+        // ✅ SOLUÇÃO CORRETA: SEMPRE chamar useSensors com exatamente 3 argumentos
+        // Usar PointerSensor como fallback para sensores não disponíveis
+        const sensors = useSensors(
+            // Sensor 1: PointerSensor (SEMPRE presente)
+            useSensor(PointerSensor, {
+                activationConstraint: {
+                    distance: 5,
+                    tolerance: 5,
+                },
+            }),
+            // Sensor 2: KeyboardSensor OU PointerSensor (fallback)
+            useSensor(
+                KeyboardSensor || PointerSensor,
+                KeyboardSensor && sortableKeyboardCoordinates
+                    ? { coordinateGetter: sortableKeyboardCoordinates }
+                    : { activationConstraint: { distance: 5, tolerance: 5 } }
+            ),
+            // Sensor 3: TouchSensor OU PointerSensor (fallback)
+            useSensor(
+                TouchSensor || PointerSensor,
+                TouchSensor
+                    ? { activationConstraint: { delay: 250, tolerance: 10 } }
+                    : { activationConstraint: { distance: 5, tolerance: 5 } }
+            )
+        );
         return sensors;
     } catch (error) {
         appLogger.error('❌ [DndWrapper] Erro ao criar sensores DnD:', { data: [error] });
         return [];
     }
-}
-
-/**
+}/**
  * Hooks seguros para sortable e droppable
  */
 let useDroppable: any = null;
