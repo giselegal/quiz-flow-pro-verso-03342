@@ -18,14 +18,14 @@ test.describe('Column 04: Properties Panel', () => {
     await page.waitForSelector('[data-testid="column-canvas"]', { timeout: 15000 });
     await page.waitForTimeout(1500);
     
-    // Tentar selecionar primeiro bloco usando evaluate para evitar conflito com DnD
-    const firstBlock = page.locator('[data-testid="column-canvas"] [data-block-id]').first();
-    const hasBlock = await firstBlock.count() > 0;
-    
-    if (hasBlock) {
-      await firstBlock.evaluate((el) => el.click());
-      await page.waitForTimeout(1000);
-    }
+    // Selecionar primeiro bloco usando dispatchEvent nativo para evitar conflito com DnD
+    await page.evaluate(() => {
+      const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+      if (block) {
+        block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      }
+    });
+    await page.waitForTimeout(800);
   });
 
   // ✅ TESTE 01: Estrutura HTML correta
@@ -58,7 +58,7 @@ test.describe('Column 04: Properties Panel', () => {
   // ✅ TESTE 02: Painel vazio quando nenhum bloco selecionado
   test('04.02 - Empty state quando nada selecionado', async ({ page }) => {
     // Recarregar sem selecionar bloco
-    await page.goto(EDITOR_URL, { waitUntil: 'networkidle', timeout: TIMEOUT });
+    await page.goto(EDITOR_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForTimeout(2000);
     
     // Procurar por mensagem de "Selecione um bloco"

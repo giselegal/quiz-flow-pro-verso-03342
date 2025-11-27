@@ -133,8 +133,11 @@ test.describe('Column 03: Canvas (Editing Area)', () => {
       const firstBlock = blocks.first();
       const blockId = await firstBlock.getAttribute('data-block-id');
       
-      // Click no bloco usando evaluate para evitar conflito com DnD
-      await firstBlock.evaluate((el) => el.click());
+      // Click no bloco usando dispatchEvent nativo
+      await page.evaluate(() => {
+        const block = document.querySelector('[data-testid="column-canvas"] [data-block-id]');
+        if (block) block.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
       await page.waitForTimeout(500);
       
       // Verificar se ficou com border azul ou bg-blue (selecionado)
