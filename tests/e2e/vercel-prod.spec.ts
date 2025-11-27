@@ -84,9 +84,20 @@ test.describe('Vercel Deploy (Produção)', () => {
     }
 
     const res = await request.get(anyAsset);
-    expect([200, 304]).toContain(res.status());
-    const cache = res.headers()['cache-control'] || '';
-    expect(cache.toLowerCase()).toContain('immutable');
-    expect(cache.toLowerCase()).toContain('max-age');
+      const status = res.status();
+      const headers = res.headers();
+      const cache = (headers['cache-control'] || '').toLowerCase();
+      // Debug em caso de falha
+      if (![200, 304].includes(status)) {
+        console.warn('Asset status inválido', { anyAsset, status, headers });
+      }
+      expect([200, 304]).toContain(status);
+      // Aceitar immutable + max-age alto (>= 31536000)
+      expect(cache).toContain('immutable');
+      expect(cache).toContain('max-age');
+      const maxAgeMatch = cache.match(/max-age=(\d+)/);
+      expect(maxAgeMatch, `Cache-Control deve conter max-age numérico. cache=${cache}`).toBeTruthy();
+      const maxAge = maxAgeMatch ? parseInt(maxAgeMatch[1], 10) : 0;
+      expect(maxAge).toBeGreaterThanOrEqual(31536000);
   });
 });
