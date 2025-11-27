@@ -71,7 +71,7 @@ export function useSafeDndSensors() {
   // SOLUÇÃO: Usar apenas 'distance' para mouse (resposta imediata após movimento)
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
-      distance: 8,        // Ativar drag após mover 8px - equilibrio entre click e drag
+      distance: 8,        // Ativar drag após mover 8px - equilíbrio entre click e drag
     },
   });
 

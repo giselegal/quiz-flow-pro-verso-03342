@@ -45,10 +45,9 @@ export function useDndSystem() {
     }
   }, [])
 
-  const handleDragOver = useCallback((event: DragOverEvent) => {
-    // 🆕 G30 FIX: Lógica melhorada de hover para feedback consistente
-    // ⚠️ PERFORMANCE: Logging removido - causava travamentos durante drag
-    // O @dnd-kit já gerencia feedback visual internamente
+  const handleDragOver = useCallback((_event: DragOverEvent) => {
+    // 🆕 G30 FIX: @dnd-kit gerencia feedback visual internamente
+    // Mantido para assinatura do handler de evento
   }, [])
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
