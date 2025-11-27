@@ -955,10 +955,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // ✅ ARQUITETURA: Prefetch de steps vizinhos (otimização separada)
     useEffect(() => {
         const stepIndex = safeCurrentStep;
+        const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
         const controller = new AbortController();
         const { signal } = controller;
 
-        async function prefetchNeighbors() {
+        // ✅ CORREÇÃO 6: Safety timeout para garantir reset de loading
+        const safetyTimeout = setTimeout(() => {
+            setStepLoading(false);
+        }, 3000);
+
+        async function ensureStepBlocks() {
             // Prefetch apenas se não estiver em loading
             if (isLoadingStep) return;
 
@@ -1085,12 +1091,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
             } finally {
                 // 🔥 SEMPRE resetar loading, mesmo se aborted
-                setStepLoading(false);
                 clearTimeout(safetyTimeout);
+                setStepLoading(false);
             }
         }
 
         ensureStepBlocks();
+
         // ✅ FASE 2: Prefetch melhorado com warmup automático de cache
         try {
             // Prefetch vizinhos: N-1, N+1, N+2 (lookahead)

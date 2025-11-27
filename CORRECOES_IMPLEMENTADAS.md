@@ -274,6 +274,97 @@ if (currentIds !== newIds) {
 
 ---
 
+## ✅ Correção 6: Declaração de Variáveis Faltantes (stepId e safetyTimeout)
+
+**Problema**: Variáveis `stepId` e `safetyTimeout` eram usadas sem declaração no useEffect de prefetch
+
+**Solução**: Adicionar declarações no início do useEffect
+
+### Antes
+```typescript
+useEffect(() => {
+    const stepIndex = safeCurrentStep;
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    async function prefetchNeighbors() {
+        // ...
+        console.log('🔥 [DEBUG] ensureStepBlocks INICIOU', {
+            stepId, // ❌ stepId não estava declarado
+            // ...
+        });
+        // ...
+    }
+    // ...
+    return () => {
+        clearTimeout(safetyTimeout); // ❌ safetyTimeout não estava declarado
+        controller.abort();
+        setStepLoading(false);
+    };
+}, [/* deps */]);
+```
+
+### Depois
+```typescript
+useEffect(() => {
+    const stepIndex = safeCurrentStep;
+    const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
+    const controller = new AbortController();
+    const { signal } = controller;
+    
+    // ✅ CORREÇÃO 6: Safety timeout para garantir reset de loading
+    const safetyTimeout = setTimeout(() => {
+        setStepLoading(false);
+    }, 3000);
+
+    async function ensureStepBlocks() {
+        // ...
+        console.log('🔥 [DEBUG] ensureStepBlocks INICIOU', {
+            stepId, // ✅ stepId agora está declarado
+            // ...
+        });
+        // ...
+        } finally {
+            // 🔥 SEMPRE resetar loading, mesmo se aborted
+            clearTimeout(safetyTimeout); // ✅ safetyTimeout agora existe
+            setStepLoading(false);
+        }
+    }
+    
+    ensureStepBlocks();
+    // ...
+    return () => {
+        clearTimeout(safetyTimeout);
+        controller.abort();
+        setStepLoading(false);
+    };
+}, [/* deps */]);
+```
+
+**Benefícios**:
+- ✅ Corrige erro de referência a variável não declarada
+- ✅ Adiciona safety timeout de 3s como nas outras correções
+- ✅ Garante reset de loading mesmo em caso de erro
+- ✅ Mantém consistência com padrão do hook `useStepBlocksLoader`
+- ✅ Renomeia função de `prefetchNeighbors` para `ensureStepBlocks` (nome mais preciso)
+
+---
+
+## 📊 Resumo de Impacto Atualizado
+
+| Correção | Linhas Alteradas | Complexidade Reduzida | Bugs Corrigidos |
+|----------|------------------|----------------------|-----------------|
+| 1. Simplificar extractor | -47 linhas | 6→3 formatos | ✅ |
+| 2. Validar array vazio | +1 guard | N/A | ✅ |
+| 2.1. Melhorar logs | +5 linhas | N/A | - |
+| 3. Fix previewMode (seleção) | 1 linha | N/A | ✅ |
+| 4. Fix previewMode (sync) | 1 linha | N/A | ✅ |
+| 5. Otimizar comparação | +3 linhas | O(n²)→O(n) | ✅ |
+| 6. Declarar stepId/timeout | +5 linhas | N/A | ✅ |
+| **TOTAL** | **-32 linhas** | **3 otimizações** | **6 bugs** |
+
+---
+
 ## 🧪 Próximos Passos
 
 ### 1. Validação Imediata
@@ -343,6 +434,8 @@ templateService.getStep()
 - [x] Comparação de blocos otimizada sem `JSON.stringify`
 - [x] Validação de array vazio adicionada
 - [x] Mensagens de log melhoradas
+- [x] Variáveis `stepId` e `safetyTimeout` declaradas corretamente
+- [x] Safety timeout de 3s implementado no useEffect
 - [ ] Testes E2E executados com sucesso
 - [ ] Validação manual no navegador
 - [ ] Performance monitorada (antes/depois)
