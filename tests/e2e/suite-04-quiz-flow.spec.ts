@@ -80,8 +80,7 @@ test.describe('📝 Suite 04: Fluxo do Quiz', () => {
             '.quiz-container',
             '.question',
             '[role="radiogroup"]',
-            'input[type="radio"]',
-            'button:has-text(/next|próximo|continuar/i)'
+            'input[type="radio"]'
         ];
 
         let foundQuizElements = 0;
