@@ -76,31 +76,20 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
     const handleBlockClick = useCallback((e: React.MouseEvent) => {
         const target = e.target as HTMLElement;
 
-        // Ignorar clicks em botões internos
+        // Ignorar clicks em botões internos (drag handle, delete, etc.)
         if (target.tagName.toLowerCase() === 'button' && target !== e.currentTarget) {
-            console.log('⚠️  [CanvasColumn] Click ignorado: botão interno');
             return;
         }
 
         // Prevenir propagação para evitar seleções múltiplas
         e.stopPropagation();
 
-        console.log('🎯 [CanvasColumn] CLICK CAPTURADO:', {
-            blockId: block.id,
-            blockType: block.type,
-            hasOnSelect: !!onSelect,
-            onSelectType: typeof onSelect
-        });
-
         if (!onSelect) {
-            console.error('❌ [CanvasColumn] onSelect é undefined! Seleção não será propagada.');
             return;
         }
 
-        console.log('✅ [CanvasColumn] Chamando onSelect com blockId:', block.id);
-        onSelect?.(block.id);
-        console.log('✅ [CanvasColumn] onSelect chamado com sucesso');
-    }, [block.id, block.type, onSelect]);
+        onSelect(block.id);
+    }, [block.id, onSelect]);
 
     return (
         <li
@@ -296,27 +285,12 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
         id: 'canvas',
     });
 
-    // Log de diagnóstico quando props.blocks mudar
-    useEffect(() => {
-        const dataSource = blocksFromProps && blocksFromProps.length > 0
-            ? 'PROPS (WYSIWYG)'
-            : shouldFetchFromBackend && fetchedBlocks
-                ? 'BACKEND (React Query)'
-                : 'NENHUM';
-
-        console.log('🎨 [CanvasColumn] Renderização:', {
-            currentStepKey,
-            blocksFromProps: blocksFromProps?.length || 0,
-            fetchedBlocks: fetchedBlocks?.length || 0,
-            finalBlocks: blocks?.length || 0,
-            dataSource,
-            isEditable,
-            shouldFetchFromBackend,
-            propsBlockIds: blocksFromProps?.map(b => b.id).slice(0, 3) || [],
-            fetchedBlockIds: fetchedBlocks?.map(b => b.id).slice(0, 3) || [],
-            finalBlockIds: blocks?.map(b => b.id).slice(0, 3) || [],
-        });
-    }, [blocksFromProps, fetchedBlocks, blocks, currentStepKey, isEditable, shouldFetchFromBackend]);
+    // Log de diagnóstico (desabilitado para performance - descomentar para debug)
+    // useEffect(() => {
+    //     if (import.meta.env.DEV && import.meta.env.VITE_DEBUG_CANVAS === 'true') {
+    //         console.log('🎨 [CanvasColumn] Renderização:', { currentStepKey, blocksCount: blocks?.length });
+    //     }
+    // }, [blocksFromProps, fetchedBlocks, blocks, currentStepKey, isEditable, shouldFetchFromBackend]);
 
     // ✅ SPRINT 1: Usar hook seguro para event listeners
     useSafeEventListener('block-updated', (event: Event) => {
@@ -378,14 +352,7 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
     }
 
     if (!blocks || blocks.length === 0) {
-        console.log('❌ [CanvasColumn] NENHUM BLOCO - Retornando early:', {
-            blocksIsNull: blocks === null,
-            blocksIsUndefined: blocks === undefined,
-            blocksLength: blocks?.length || 0,
-            hasTemplate,
-            blocksFromPropsCount: blocksFromProps?.length || 0,
-            fetchedBlocksCount: fetchedBlocks?.length || 0,
-        });
+        // Debug desabilitado para performance
 
         // ✅ NOVO: Mostrar EmptyCanvasState se não tem template carregado
         if (!hasTemplate && onLoadTemplate) {
@@ -442,43 +409,23 @@ function CanvasColumnInner({ currentStepKey, blocks: blocksFromProps, selectedBl
             )}
             <SafeSortableContext items={blocks.map(b => b.id)}>
                 <ul className="space-y-1">
-                    {(() => {
-                        console.log('🎨 [CanvasColumn] RENDERIZANDO BLOCOS:', {
-                            blocksCount: blocks.length,
-                            normalizedCount: normalizedBlocks.length,
-                            blockIds: blocks.map(b => b.id),
-                            normalizedIds: normalizedBlocks.map(b => b.id),
-                        });
-                        return null;
-                    })()}
-                    {normalizedBlocks.map((b, idx) => {
-                        normalizerLogger.debug(`Rendering normalized block ${b.type}`, {
-                            original: blocks[idx],
-                            normalized: b
-                        });
-                        console.log(`  📦 [CanvasColumn] Renderizando bloco ${idx}:`, {
-                            id: b.id,
-                            type: b.type,
-                            order: b.order,
-                        });
-                        return (
-                            <SortableBlockItem
-                                key={b.id}
-                                block={b}
-                                index={idx}
-                                isSelected={selectedBlockId === b.id}
-                                onSelect={onBlockSelect}
-                                onMoveBlock={isEditable ? ((from, to) => {
-                                    // Clamp 'to' para dentro da lista
-                                    const clampedTo = Math.max(0, Math.min((blocks?.length || 1) - 1, to));
-                                    onMoveBlock?.(from, clampedTo);
-                                }) : undefined}
-                                onRemoveBlock={isEditable ? onRemoveBlock : undefined}
-                                onUpdateBlock={isEditable ? onUpdateBlock : undefined}
-                                isEditable={isEditable}
-                            />
-                        );
-                    })}
+                    {normalizedBlocks.map((b, idx) => (
+                        <SortableBlockItem
+                            key={b.id}
+                            block={b}
+                            index={idx}
+                            isSelected={selectedBlockId === b.id}
+                            onSelect={onBlockSelect}
+                            onMoveBlock={isEditable ? ((from, to) => {
+                                // Clamp 'to' para dentro da lista
+                                const clampedTo = Math.max(0, Math.min((blocks?.length || 1) - 1, to));
+                                onMoveBlock?.(from, clampedTo);
+                            }) : undefined}
+                            onRemoveBlock={isEditable ? onRemoveBlock : undefined}
+                            onUpdateBlock={isEditable ? onUpdateBlock : undefined}
+                            isEditable={isEditable}
+                        />
+                    ))}
                 </ul>
             </SafeSortableContext>
             {/* 🆕 G30 FIX: Drop zone no final da lista quando tem blocos */}

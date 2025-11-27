@@ -577,51 +577,30 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável (sem selectedBlockId nas deps para evitar loop)
     const handleBlockSelect = useCallback((blockId: string | null) => {
-        console.log('🎯 [handleBlockSelect] ENTRADA:', {
-            blockId,
-            tipo: typeof blockId,
-            isNull: blockId === null
-        });
-
         if (!blockId) {
-            console.log('⚠️  [handleBlockSelect] blockId é null/falsy, limpando seleção');
             setSelectedBlock(null);
             return;
         }
 
-        console.log('✅ [handleBlockSelect] Setando selectedBlock:', blockId);
         setSelectedBlock(blockId);
 
         // Auto-scroll suave + highlight visual
         setTimeout(() => {
             const element = document.getElementById(`block-${blockId}`);
             if (element) {
-                console.log('📜 [handleBlockSelect] Fazendo scroll para elemento:', `block-${blockId}`);
                 element.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center',
                     inline: 'nearest'
                 });
-            } else {
-                console.warn('⚠️  [handleBlockSelect] Elemento não encontrado:', `block-${blockId}`);
             }
         }, 100);
     }, [setSelectedBlock]);
 
     // 🚀 PERFORMANCE: Callbacks otimizados para handlers do WYSIWYG (removido wysiwyg.state.selectedBlockId das deps)
     const handleWYSIWYGBlockSelect = useCallback((id: string | null) => {
-        console.log('🖱️  [handleWYSIWYGBlockSelect] ENTRADA:', {
-            id,
-            wysiwygAvailable: !!wysiwyg,
-            actionsAvailable: !!wysiwyg.actions,
-            handleBlockSelectAvailable: !!handleBlockSelect
-        });
-
-        console.log('🔄 [handleWYSIWYGBlockSelect] Chamando wysiwyg.actions.selectBlock');
         wysiwyg.actions.selectBlock(id);
-        console.log('🔄 [handleWYSIWYGBlockSelect] Chamando handleBlockSelect');
         handleBlockSelect(id);
-        console.log('✅ [handleWYSIWYGBlockSelect] Seleção completa');
     }, [wysiwyg.actions, handleBlockSelect]);
 
     const handleWYSIWYGBlockUpdate = useCallback((id: string, updates: Partial<Block>) => {
@@ -1054,61 +1033,25 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 const svc: any = templateService;
                 const templateOrResource = props.templateId ?? resourceId;
 
-                // 🔥 DEBUG FORÇADO
-                console.log('🔥🔥🔥 [DEBUG] ensureStepBlocks INICIOU', {
-                    stepId,
-                    stepIndex,
-                    templateId: props.templateId,
-                    resourceId,
-                    templateOrResource,
-                    temResourceId: !!templateOrResource
-                });
-
                 if (!templateOrResource) {
-                    console.error('❌❌❌ [DEBUG] templateOrResource é UNDEFINED!', {
-                        propsTemplateId: props.templateId,
-                        propsResourceId: props.resourceId,
-                        propsFunnelId: props.funnelId,
-                        resourceId
-                    });
                     appLogger.warn('[QuizModularEditor] ensureStepBlocks chamado sem templateOrResource');
                     setStepLoading(false);
                     return;
                 }
 
-                console.log(`🔍🔍🔍 [DEBUG] Chamando templateService.getStep('${stepId}', '${templateOrResource}')`);
-                appLogger.info(`🔍 [QuizModularEditor] Chamando getStep para ${stepId}, template: ${templateOrResource}`);
-
                 const result = await svc.getStep(stepId, templateOrResource, { signal });
-
-                console.log('📦📦📦 [DEBUG] getStep RAW:', {
-                    success: result?.success,
-                    hasData: !!result?.data,
-                    rawType: typeof result?.data,
-                    isArray: Array.isArray(result?.data),
-                    keys: result?.data ? Object.keys(result.data || {}) : []
-                });
 
                 // Normalização segura
                 const normalizedBlocks = extractBlocksFromStepData(result?.data, stepId);
 
-                console.log('🧪 [QuizModularEditor] Normalização:', {
-                    stepId,
-                    normalizedCount: normalizedBlocks.length,
-                    sample: normalizedBlocks.slice(0, 2).map(b => ({ id: b.id, type: b.type }))
-                });
-
                 // ✅ CORREÇÃO 2: Validar array não-vazio antes de gravar
                 if (!signal.aborted && result?.success && normalizedBlocks && normalizedBlocks.length > 0) {
-                    console.log(`✅ [QuizModularEditor] setStepBlocks(${stepIndex}) com ${normalizedBlocks.length} blocos`);
                     appLogger.info(`✅ [QuizModularEditor] Step carregado: ${normalizedBlocks.length} blocos`);
                     setStepBlocks(stepIndex, normalizedBlocks);
 
                     // 🔥 HOTFIX 4: WYSIWYG Sync Otimizado
                     // ✅ CORREÇÃO 4: Sincronizar em live mode, não em production
-                    if (previewMode === 'production') {
-                        console.log('🚫 [QuizModularEditor] Production mode: ignorando sync WYSIWYG');
-                    } else {
+                    if (previewMode !== 'production') {
                         try {
                             // ✅ CORREÇÃO 5: Comparação otimizada sem JSON.stringify
                             const currentIds = wysiwyg.state.blocks.map(b => b.id).sort().join(',');
@@ -2185,20 +2128,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             >
                                                 <CanvasColumn
                                                     currentStepKey={currentStepKey}
-                                                    blocks={(() => {
-                                                        const blocksToRender = previewMode === 'live'
-                                                            ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
-                                                            : blocks;
-                                                        console.log('📊 [QuizModularEditor] Passando blocks para CanvasColumn:', {
-                                                            previewMode,
-                                                            isVirtualized: virtualization.isVirtualized,
-                                                            wysiwygBlocks: wysiwyg.state.blocks?.length,
-                                                            persistedBlocks: blocks?.length,
-                                                            finalBlocks: blocksToRender?.length,
-                                                            blockIds: blocksToRender?.map(b => b.id).slice(0, 3),
-                                                        });
-                                                        return blocksToRender;
-                                                    })()}
+                                                    blocks={previewMode === 'live'
+                                                        ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
+                                                        : blocks}
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
@@ -2245,38 +2177,27 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     className="h-full border-l bg-white overflow-y-auto"
                                     data-testid="column-properties"
                                 >
-                                    {/* DEBUG removido para limpar console */}
-
                                     {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
-                                    {(() => {
-                                        console.log('🎨 [QuizModularEditor] Renderizando painel:', {
-                                            useSimplePropertiesPanel,
-                                            painel: useSimplePropertiesPanel ? 'PropertiesColumn' : 'PropertiesColumnWithJson',
-                                            selectedBlock: selectedBlock?.id,
-                                            blocksLength: wysiwyg.state.blocks.length
-                                        });
-
-                                        return useSimplePropertiesPanel ? (
-                                            <PropertiesColumn
-                                                selectedBlock={selectedBlock}
-                                                blocks={wysiwyg.state.blocks}
-                                                onBlockSelect={handleWYSIWYGBlockSelect}
-                                                onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                                onClearSelection={handleWYSIWYGClearSelection}
-                                            />
-                                        ) : (
-                                            <PropertiesColumnWithJson
-                                                selectedBlock={selectedBlock}
-                                                blocks={wysiwyg.state.blocks}
-                                                onBlockSelect={handleWYSIWYGBlockSelect}
-                                                onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                                onClearSelection={handleWYSIWYGClearSelection}
-                                                fullTemplate={fullTemplate}
-                                                onTemplateChange={handleTemplateChange}
-                                                templateId={currentStepKey}
-                                            />
-                                        );
-                                    })()}
+                                    {useSimplePropertiesPanel ? (
+                                        <PropertiesColumn
+                                            selectedBlock={selectedBlock}
+                                            blocks={wysiwyg.state.blocks}
+                                            onBlockSelect={handleWYSIWYGBlockSelect}
+                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                            onClearSelection={handleWYSIWYGClearSelection}
+                                        />
+                                    ) : (
+                                        <PropertiesColumnWithJson
+                                            selectedBlock={selectedBlock}
+                                            blocks={wysiwyg.state.blocks}
+                                            onBlockSelect={handleWYSIWYGBlockSelect}
+                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
+                                            onClearSelection={handleWYSIWYGClearSelection}
+                                            fullTemplate={fullTemplate}
+                                            onTemplateChange={handleTemplateChange}
+                                            templateId={currentStepKey}
+                                        />
+                                    )}
                                 </div>
                             </Suspense>
                         </Panel>
