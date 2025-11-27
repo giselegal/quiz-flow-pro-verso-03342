@@ -21,7 +21,8 @@ async function main() {
     limit: '1',
   });
 
-  const res = await fetch(`${base}/v13/deployments?${params.toString()}`, {
+  // Use v6 deployments API (stable)
+  const res = await fetch(`${base}/v6/deployments?${params.toString()}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -34,7 +35,8 @@ async function main() {
   }
 
   const json = await res.json();
-  const deployment = json.deployments?.[0];
+  const deployments = Array.isArray(json.deployments) ? json.deployments : json;
+  const deployment = deployments?.[0];
   if (!deployment) {
     console.error('No READY deployments found for project.');
     process.exit(3);
