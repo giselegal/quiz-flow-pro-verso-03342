@@ -10,6 +10,8 @@
 
 import { test, expect } from '@playwright/test';
 
+const EDITOR_URL = '/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete';
+
 test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => {
     test.beforeEach(async ({ page }) => {
         // Interceptar logs do console para validar
@@ -28,7 +30,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
         });
 
         // Acessar editor com template
-        await page.goto('/editor?funnel=quiz21StepsComplete', { 
+        await page.goto(EDITOR_URL, { 
             waitUntil: 'domcontentloaded',
             timeout: 30000 
         });
@@ -66,7 +68,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
             }
         });
 
-        await page.goto('/editor?funnel=quiz21StepsComplete', { 
+        await page.goto(EDITOR_URL, { 
             waitUntil: 'networkidle',
             timeout: 30000 
         });
@@ -83,7 +85,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
     });
 
     test('CRÍTICO: Editor deve renderizar sidebar com steps', async ({ page }) => {
-        await page.goto('/editor?funnel=quiz21StepsComplete', { 
+        await page.goto(EDITOR_URL, { 
             waitUntil: 'domcontentloaded',
             timeout: 30000 
         });
@@ -110,7 +112,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
             }
         });
 
-        await page.goto('/editor?funnel=quiz21StepsComplete', { 
+        await page.goto(EDITOR_URL, { 
             waitUntil: 'domcontentloaded',
             timeout: 30000 
         });
@@ -196,7 +198,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
             }
         });
 
-        await page.goto('/editor?funnel=quiz21StepsComplete', { 
+        await page.goto(EDITOR_URL, { 
             waitUntil: 'networkidle',
             timeout: 30000 
         });
@@ -220,7 +222,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
         });
 
         // Usar ID legado como template
-        await page.goto('/editor?funnel=quiz-estilo-21-steps', { 
+        await page.goto('/editor?funnel=quiz-estilo-21-steps&template=quiz21StepsComplete', { 
             waitUntil: 'networkidle',
             timeout: 30000 
         });
@@ -254,7 +256,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
 
 test.describe('Validação de Props - Inspeção Direta', () => {
     test('Props resourceId, templateId e funnelId devem ser extraídas da URL', async ({ page }) => {
-        await page.goto('/editor?funnel=quiz21StepsComplete&funnel=test-funnel');
+        await page.goto('/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete&funnel=test-funnel');
 
         // Injetar script para verificar que props foram passadas
         const urlParams = await page.evaluate(() => {
