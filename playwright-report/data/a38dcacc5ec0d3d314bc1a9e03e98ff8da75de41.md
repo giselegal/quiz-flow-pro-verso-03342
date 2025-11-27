@@ -1,0 +1,214 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - banner [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: QuizFlowPro
+          - generic [ref=e18]: Quizzes que convertem
+        - navigation [ref=e19]:
+          - link "Recursos" [ref=e20] [cursor=pointer]:
+            - /url: "#features"
+          - link "Depoimentos" [ref=e21] [cursor=pointer]:
+            - /url: "#testimonials"
+          - link "Planos" [ref=e22] [cursor=pointer]:
+            - /url: "#pricing"
+          - button "Demo" [ref=e23] [cursor=pointer]:
+            - img [ref=e24]
+            - text: Demo
+        - generic [ref=e27]:
+          - button "Entrar" [ref=e28] [cursor=pointer]
+          - button "Começar Teste Grátis" [ref=e29] [cursor=pointer]
+    - main [ref=e30]:
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e37]:
+            - img [ref=e38]
+            - text: QuizFlowPro
+          - generic [ref=e40]:
+            - heading "QuizFlowPro — quizzes que convertem" [level=1] [ref=e41]
+            - paragraph [ref=e42]: Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing.
+          - generic [ref=e43]:
+            - button "Iniciar teste gratuito" [ref=e44] [cursor=pointer]:
+              - img [ref=e45]
+              - text: Iniciar teste gratuito
+            - button "Ver Templates" [ref=e47] [cursor=pointer]:
+              - img [ref=e48]
+              - text: Ver Templates
+            - button "Assistir VSL" [ref=e52] [cursor=pointer]:
+              - img [ref=e53]
+              - text: Assistir VSL
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - img [ref=e57]
+              - generic [ref=e59]: 4.9/5 avaliação
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - generic [ref=e66]: 10.000+ usuários
+            - generic [ref=e67]:
+              - img [ref=e68]
+              - generic [ref=e71]: 5 min configuração
+        - generic [ref=e75]:
+          - generic "Preview do vídeo VSL do QuizFlowPro" [ref=e76]
+          - generic [ref=e77]:
+            - generic [ref=e78]: Preview VSL
+            - button "Assistir" [ref=e79] [cursor=pointer]:
+              - img [ref=e80]
+              - text: Assistir
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - heading "Confiado por líderes do setor" [level=2] [ref=e85]
+          - paragraph [ref=e86]: Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
+        - generic [ref=e87]:
+          - generic [ref=e90]:
+            - img [ref=e92]
+            - generic [ref=e96]: 15K+
+            - generic [ref=e97]: Quizzes criados
+          - generic [ref=e100]:
+            - img [ref=e102]
+            - generic [ref=e105]: 94%
+            - generic [ref=e106]: Taxa de conversão
+          - generic [ref=e109]:
+            - img [ref=e111]
+            - generic [ref=e113]: 2min
+            - generic [ref=e114]: Tempo de configuração
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - heading "Tudo o que você precisa para ter sucesso" [level=2] [ref=e118]
+          - paragraph [ref=e119]: Recursos poderosos projetados para ajudá-lo a criar, otimizar e escalar suas campanhas de quiz
+        - generic [ref=e120]:
+          - generic [ref=e123]:
+            - img [ref=e125]
+            - heading "Editor visual" [level=3] [ref=e129]
+            - paragraph [ref=e130]: Editor visual de arrastar e soltar — crie quizzes sem precisar programar
+          - generic [ref=e133]:
+            - img [ref=e135]
+            - heading "Análises avançadas" [level=3] [ref=e137]
+            - paragraph [ref=e138]: Métricas detalhadas e rastreamento de conversões para otimizar resultados
+          - generic [ref=e141]:
+            - img [ref=e143]
+            - heading "Captação de leads" [level=3] [ref=e148]
+            - paragraph [ref=e149]: Integração com CRMs e ferramentas de automação para qualificar contatos automaticamente
+          - generic [ref=e152]:
+            - img [ref=e154]
+            - heading "Templates prontos" [level=3] [ref=e156]
+            - paragraph [ref=e157]: Biblioteca de layouts profissionais e templates por setor para acelerar o lançamento
+          - generic [ref=e160]:
+            - img [ref=e162]
+            - heading "Teste A/B" [level=3] [ref=e165]
+            - paragraph [ref=e166]: Teste diferentes versões para maximizar engajamento e conversões
+          - generic [ref=e169]:
+            - img [ref=e171]
+            - heading "Totalmente responsivo" [level=3] [ref=e174]
+            - paragraph [ref=e175]: Design e performance otimizados para todos os dispositivos e tamanhos de tela
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - heading "O que nossos clientes dizem" [level=2] [ref=e179]
+          - paragraph [ref=e180]: Empresas de todos os tamanhos usam QuizFlow para crescer mais rápido
+        - generic [ref=e181]:
+          - generic [ref=e184]:
+            - generic [ref=e185]:
+              - img [ref=e186]
+              - img [ref=e188]
+              - img [ref=e190]
+              - img [ref=e192]
+              - img [ref=e194]
+            - paragraph [ref=e196]: Triplicamos a taxa de conversão em 30 dias com quizzes personalizados. A configuração foi rápida e a análise é impecável.
+            - generic [ref=e197]: Mariana, Head de Marketing
+            - generic [ref=e198]: E-commerce de Beleza
+          - generic [ref=e201]:
+            - generic [ref=e202]:
+              - img [ref=e203]
+              - img [ref=e205]
+              - img [ref=e207]
+              - img [ref=e209]
+              - img [ref=e211]
+            - paragraph [ref=e213]: Integração perfeita com nosso CRM. Em poucos minutos, lançamos campanhas que geram leads qualificados diariamente.
+            - generic [ref=e214]: Lucas, Growth Lead
+            - generic [ref=e215]: Startup SaaS
+          - generic [ref=e218]:
+            - generic [ref=e219]:
+              - img [ref=e220]
+              - img [ref=e222]
+              - img [ref=e224]
+              - img [ref=e226]
+              - img [ref=e228]
+            - paragraph [ref=e230]: Ferramenta moderna, rápida e com templates incríveis. Ideal para equipes que prezam por performance e design.
+            - generic [ref=e231]: Aline, Diretora de Produto
+            - generic [ref=e232]: EduTech
+      - generic [ref=e234]:
+        - generic [ref=e235]:
+          - heading "Planos simples e transparentes" [level=2] [ref=e236]
+          - paragraph [ref=e237]: Escolha o plano ideal para seu estágio de crescimento
+        - generic [ref=e238]:
+          - generic [ref=e241]:
+            - generic [ref=e242]: Starter
+            - generic [ref=e243]: R$0/mês
+            - list [ref=e244]:
+              - listitem [ref=e245]:
+                - img [ref=e246]
+                - text: 1 quiz ativo
+              - listitem [ref=e249]:
+                - img [ref=e250]
+                - text: Templates básicos
+              - listitem [ref=e253]:
+                - img [ref=e254]
+                - text: Coleta de leads
+            - button "Começar gratuitamente" [ref=e257] [cursor=pointer]
+          - generic [ref=e260]:
+            - generic [ref=e262]: Mais Popular
+            - generic [ref=e263]: Pro
+            - generic [ref=e264]: R$99/mês
+            - list [ref=e265]:
+              - listitem [ref=e266]:
+                - img [ref=e267]
+                - text: Quizzes ilimitados
+              - listitem [ref=e270]:
+                - img [ref=e271]
+                - text: Templates premium
+              - listitem [ref=e274]:
+                - img [ref=e275]
+                - text: Análises avançadas
+              - listitem [ref=e278]:
+                - img [ref=e279]
+                - text: Teste A/B
+            - button "Assinar Pro" [ref=e282] [cursor=pointer]
+          - generic [ref=e285]:
+            - generic [ref=e286]: Enterprise
+            - generic [ref=e287]: Custom
+            - list [ref=e288]:
+              - listitem [ref=e289]:
+                - img [ref=e290]
+                - text: SLA e suporte dedicado
+              - listitem [ref=e293]:
+                - img [ref=e294]
+                - text: Integrações avançadas
+              - listitem [ref=e297]:
+                - img [ref=e298]
+                - text: Onboarding personalizado
+            - button "Falar com Vendas" [ref=e301] [cursor=pointer]
+      - generic [ref=e303]:
+        - generic [ref=e304]:
+          - heading "Pronto Para Transformar Seu Negócio?" [level=2] [ref=e305]
+          - paragraph [ref=e306]: Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões
+        - generic [ref=e307]:
+          - button "Iniciar teste gratuito" [ref=e308] [cursor=pointer]:
+            - img [ref=e309]
+            - text: Iniciar teste gratuito
+          - button "Falar com Vendas" [ref=e311] [cursor=pointer]:
+            - img [ref=e312]
+            - text: Falar com Vendas
+    - contentinfo [ref=e314]:
+      - generic [ref=e315]:
+        - paragraph [ref=e316]: © 2025 QuizFlowPro. Todos os direitos reservados.
+        - generic [ref=e317]:
+          - link "Produto" [ref=e318] [cursor=pointer]:
+            - /url: "#features"
+          - link "Planos" [ref=e319] [cursor=pointer]:
+            - /url: "#pricing"
+          - button "Suporte" [ref=e320] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+```
