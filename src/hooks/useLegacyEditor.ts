@@ -1,11 +1,33 @@
 /**
+ * @deprecated CAMADA DE COMPATIBILIDADE LEGADA
+ * 
  * 🎯 FASE 2.3: Hook de compatibilidade legado
  * 
- * Substitui LegacyCompatibilityWrapper com hook simples que delega para EditorProviderUnified
- * Mantém compatibilidade com código antigo sem overhead de Provider adicional
+ * Substitui LegacyCompatibilityWrapper com hook simples que delega para EditorProviderUnified.
+ * Mantém compatibilidade com código antigo sem overhead de Provider adicional.
+ * 
+ * ⚠️ STATUS: DEPRECATED - Será removido na v2.0
+ * 
+ * MIGRAÇÃO RECOMENDADA:
+ * ```typescript
+ * // ❌ Antigo (deprecated)
+ * import { useLegacyEditor } from '@/hooks/useLegacyEditor';
+ * 
+ * // ✅ Novo (recomendado)
+ * import { useEditor } from '@/core/contexts/EditorContext';
+ * ```
+ * 
+ * ALTERNATIVA TEMPORÁRIA:
+ * ```typescript
+ * // Para migração gradual
+ * import { useLegacySuperUnified } from '@/hooks/useLegacySuperUnified';
+ * ```
+ * 
+ * @see {@link useEditor} Hook canônico do editor
+ * @see {@link useLegacySuperUnified} Compatibilidade agregada
  */
 
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/contexts/EditorContext';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -30,15 +52,26 @@ export interface LegacyEditorAPI {
  * @param enableWarnings - Habilitar avisos de uso de API legada (default: false)
  * @returns API legada compatível
  */
-export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
+export function useLegacyEditor(enableWarnings = true): LegacyEditorAPI {
     const editorContext = useEditor();
 
     if (!editorContext) {
         throw new Error('useLegacyEditor must be used within an EditorProvider');
     }
 
+    // Sempre mostrar warning em DEV (independente do parâmetro)
+    if (import.meta.env.DEV) {
+        console.warn(
+            '%c⚠️ DEPRECATED: useLegacyEditor()',
+            'color: orange; font-weight: bold;',
+            '\n🔄 Migre para: useEditor() from @/core/contexts/EditorContext'
+        );
+    }
+
     if (enableWarnings) {
-        appLogger.warn('⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditor diretamente.');
+        appLogger.warn('⚠️ [LEGACY] useLegacyEditor em uso. Migre para useEditor() diretamente.', {
+            data: [{ alternative: 'useEditor() from @/core/contexts/EditorContext' }],
+        });
     }
 
     return {

@@ -7,7 +7,7 @@
 
 import React, { useMemo, useCallback } from 'react';
 // Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/contexts/EditorContext';
 import { logger } from '@/lib/utils/debugLogger';
 
 export interface UniversalPropertiesPanelProps {
