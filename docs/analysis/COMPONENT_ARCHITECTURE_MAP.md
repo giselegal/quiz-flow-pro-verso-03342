@@ -136,7 +136,8 @@ graph TD
 
 ### 2. Contexts Layer
 Global state management:
-- **EditorContext** ✅: Current step, dirty flag, undo/redo
+- **EditorContext** ✅: Current step, dirty flag, blocks (CONSOLIDADO - provider duplicado removido)
+- **AutoSaveContext** ✅: Auto-save status isolado (NEW - otimização de performance)
 - **QuizProvider** ⏸️: Quiz state, user responses, navigation
 - **ABTestContext** ❌: A/B testing support (not found)
 

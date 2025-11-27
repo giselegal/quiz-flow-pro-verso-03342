@@ -23,36 +23,15 @@
 import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect, ReactNode } from 'react';
 import { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
-import { useAutoSave } from '@/core/hooks/useAutoSave';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { EditorState, ValidationError, INITIAL_EDITOR_STATE } from '@/types/editor/EditorState';
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-export interface ValidationError {
-    blockId: string;
-    field: string;
-    message: string;
-    severity: 'error' | 'warning';
-}
-
-export interface EditorState {
-    currentStep: number;
-    selectedBlockId: string | null;
-    isPreviewMode: boolean;
-    isEditing: boolean;
-    isLoading: boolean;
-    dragEnabled: boolean;
-    clipboardData: Block | null;
-    stepBlocks: Record<string | number, Block[]>;
-    dirtySteps: Record<number, boolean>;
-    totalSteps: number;
-    validationErrors: ValidationError[];
-    isDirty: boolean;
-    lastSaved: number | null;
-    lastModified: number | null;
-    modifiedSteps: Record<string, number>;
-}
+// Re-export para compatibilidade
+export type { EditorState, ValidationError } from '@/types/editor/EditorState';
 
 type EditorAction =
     | { type: 'SET_CURRENT_STEP'; payload: number }
@@ -97,10 +76,7 @@ export interface EditorContextValue extends EditorState {
     resetEditor: () => void;
     getStepBlocks: (step: number) => Block[];
     isStepDirty: (step: number) => boolean;
-    // ===== AUTO-SAVE STATUS =====
-    isSaving: boolean;
-    autoSaveError: Error | null;
-    forceSave: () => Promise<void>;
+    loadStepBlocks: (stepId: string) => Promise<Block[] | null>;
     // ===== CAMADA UNIFICADA (canonical) =====
     state: EditorState; // espelha o estado completo
     actions: {
@@ -123,30 +99,9 @@ export interface EditorContextValue extends EditorState {
         resetEditor: () => void;
         getStepBlocks: (step: number) => Block[];
         isStepDirty: (step: number) => boolean;
+        loadStepBlocks: (stepId: string) => Promise<Block[] | null>;
     };
 }
-
-// ============================================================================
-// INITIAL STATE
-// ============================================================================
-
-const INITIAL_STATE: EditorState = {
-    currentStep: 1,
-    selectedBlockId: null,
-    isPreviewMode: false,
-    isEditing: false,
-    isLoading: false,
-    dragEnabled: true,
-    clipboardData: null,
-    stepBlocks: {},
-    dirtySteps: {},
-    totalSteps: 21,
-    validationErrors: [],
-    isDirty: false,
-    lastSaved: null,
-    lastModified: null,
-    modifiedSteps: {},
-};
 
 // ============================================================================
 // REDUCER
@@ -333,7 +288,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
             };
 
         case 'RESET_EDITOR':
-            return INITIAL_STATE;
+            return INITIAL_EDITOR_STATE;
 
         default:
             return state;
@@ -361,66 +316,8 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
 }) => {
     const [state, dispatch] = useReducer(
         editorReducer,
-        { ...INITIAL_STATE, ...initialState }
+        { ...INITIAL_EDITOR_STATE, ...initialState }
     );
-
-    // ============================================================================
-    // AUTO-SAVE INTEGRATION
-    // ============================================================================
-
-    const {
-        isSaving,
-        lastSaved: autoSaveTimestamp,
-        error: autoSaveError,
-        forceSave,
-        recoveredData,
-        clearRecovery,
-    } = useAutoSave({
-        key: 'editor-state',
-        data: {
-            stepBlocks: state.stepBlocks,
-            currentStep: state.currentStep,
-            dirtySteps: state.dirtySteps,
-            modifiedSteps: state.modifiedSteps,
-        },
-        debounceMs: 2000,
-        enableRecovery: true,
-        onSave: (key) => {
-            dispatch({ type: 'MARK_SAVED', payload: Date.now() });
-            appLogger.info('[EditorStateProvider] Auto-save concluído', {
-                data: [{ key, timestamp: Date.now() }],
-            });
-        },
-        onError: (error) => {
-            appLogger.error('[EditorStateProvider] Auto-save falhou', {
-                data: [{ error: error.message }],
-            });
-        },
-    });
-
-    // Recovery de dados ao montar
-    useEffect(() => {
-        if (recoveredData && recoveredData.stepBlocks) {
-            appLogger.info('[EditorStateProvider] Recuperando dados salvos', {
-                data: [{ steps: Object.keys(recoveredData.stepBlocks).length }],
-            });
-
-            // Restaurar cada step
-            Object.entries(recoveredData.stepBlocks).forEach(([step, blocks]) => {
-                dispatch({
-                    type: 'SET_STEP_BLOCKS',
-                    payload: { step: Number(step), blocks: blocks as Block[] },
-                });
-            });
-
-            // Restaurar step atual se disponível
-            if (recoveredData.currentStep) {
-                dispatch({ type: 'SET_CURRENT_STEP', payload: recoveredData.currentStep });
-            }
-
-            clearRecovery();
-        }
-    }, [recoveredData, clearRecovery]);
 
     // ============================================================================
     // METHODS
@@ -520,6 +417,42 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
         return state.dirtySteps[step] || false;
     }, [state.dirtySteps]);
 
+    const loadStepBlocks = useCallback(async (stepId: string): Promise<Block[] | null> => {
+        try {
+            appLogger.info('[EditorStateProvider] Carregando blocos do step', {
+                data: [{ stepId }],
+            });
+
+            const result = await hierarchicalTemplateSource.getPrimary(stepId);
+            const blocks = result.data || [];
+
+            const stepNumber = parseInt(stepId.replace('step-', ''), 10);
+
+            if (!isNaN(stepNumber)) {
+                dispatch({
+                    type: 'SET_STEP_BLOCKS',
+                    payload: { step: stepNumber, blocks }
+                });
+
+                dispatch({
+                    type: 'MARK_MODIFIED',
+                    payload: { step: stepId, timestamp: Date.now() }
+                });
+
+                appLogger.info('[EditorStateProvider] Blocos carregados com sucesso', {
+                    data: [{ stepId, blocksCount: blocks.length }],
+                });
+            }
+
+            return blocks;
+        } catch (error) {
+            appLogger.error('[EditorStateProvider] Falha ao carregar blocos', {
+                data: [{ stepId, error: (error as Error)?.message }],
+            });
+            return null;
+        }
+    }, []);
+
     // ============================================================================
     // EFFECTS
     // ============================================================================
@@ -568,16 +501,13 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
                 resetEditor,
                 getStepBlocks,
                 isStepDirty,
+                loadStepBlocks,
             };
             return {
                 ...state, // exposição flat (legado)
                 ...actions, // métodos flat
                 state, // acesso canonical state
                 actions, // acesso canonical actions
-                // Auto-save status
-                isSaving,
-                autoSaveError,
-                forceSave,
             };
         },
         [
@@ -601,9 +531,7 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
             resetEditor,
             getStepBlocks,
             isStepDirty,
-            isSaving,
-            autoSaveError,
-            forceSave,
+            loadStepBlocks,
         ]
     );
 

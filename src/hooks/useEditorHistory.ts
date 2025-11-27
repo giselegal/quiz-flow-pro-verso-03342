@@ -9,8 +9,7 @@
  */
 
 import { useCallback, useMemo, useEffect } from 'react';
-// Migrado para SuperUnifiedProvider: removendo dependência do provider canônico
-import { useLegacySuperUnified } from '@/hooks/useLegacySuperUnified';
+import { useEditor } from '@/core/contexts/EditorContext';
 import { editorMetrics } from '@/lib/utils/editorMetrics';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -45,16 +44,23 @@ export interface UseEditorHistoryReturn extends EditorHistoryState {
  * ```
  */
 export function useEditorHistory(): UseEditorHistoryReturn {
-  // Usar hook legado agregador que expõe undo/redo e estado
-  const superUnified = useLegacySuperUnified();
+  // Usar hook moderno do editor
+  const editor = useEditor();
 
-  const { undo: providerUndo, redo: providerRedo, canUndo: providerCanUndo, canRedo: providerCanRedo } = superUnified;
+  // TODO: Implementar undo/redo real no EditorStateProvider
+  const providerCanUndo = false;
+  const providerCanRedo = false;
+  const providerUndo = () => {
+    appLogger.warn('[useEditorHistory] Undo não implementado ainda');
+  };
+  const providerRedo = () => {
+    appLogger.warn('[useEditorHistory] Redo não implementado ainda');
+  };
 
   // Snapshot de todos os blocos (caso futuro para métricas)
   const getAllStepBlocksSnapshot = useCallback(() => {
-    // state.editor.stepBlocks indexado por número
-    return superUnified.state.editor.stepBlocks as Record<number, any[]>;
-  }, [superUnified.state.editor.stepBlocks]);
+    return editor.state.stepBlocks;
+  }, [editor.state.stepBlocks]);
 
   // Placeholder para compat: tamanho do histórico não exposto diretamente
   const historySize = 0; // Poderá ser integrado a useUnifiedHistory se necessário

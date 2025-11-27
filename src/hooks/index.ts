@@ -82,18 +82,20 @@ export { useUtmParameters } from './useUtmParameters';
 // ============================================================================
 // 🔄 LEGACY COMPATIBILITY HOOKS
 // ============================================================================
-// These hooks provide backward compatibility with legacy code.
-// Use these when migrating from old APIs.
+// These hooks have been REMOVED and moved to archive/deprecated-hooks/
+// Migrate to modern alternatives:
 
 /**
- * @deprecated Use useEditor from EditorContext or useUnifiedEditor
+ * @deprecated REMOVED - Use useEditor from @/core/contexts/EditorContext
+ * Location: archive/deprecated-hooks/useLegacyEditor.ts
  */
-export { useLegacyEditor, useOptionalLegacyEditor } from './useLegacyEditor';
+// export { useLegacyEditor, useOptionalLegacyEditor } from './useLegacyEditor';
 
 /**
- * @deprecated Use individual hooks (useAuth, useTheme, useEditorState, etc.)
+ * @deprecated REMOVED - Use individual hooks (useEditor, useAuth, useUX, etc.)
+ * Location: archive/deprecated-hooks/useLegacySuperUnified.ts
  */
-export { useLegacySuperUnified, useMigrateAuth, useMigrateTheme, useMigrateEditor } from './useLegacySuperUnified';
+// export { useLegacySuperUnified, useMigrateAuth, useMigrateTheme, useMigrateEditor } from './useLegacySuperUnified';
 
 // ============================================================================
 

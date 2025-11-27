@@ -59,9 +59,12 @@ export { SimpleAppProvider, useSimpleApp } from './providers/SimpleAppProvider';
 // NOTA: Import direto recomendado: import { usePureBuilder } from '@/hooks/usePureBuilderCompat'
 
 // ✏️ EDITOR
+// ⚠️ ATUALIZAÇÃO: EditorProvider duplicado removido de /contexts/providers/
+// Use apenas EditorProvider (EditorStateProvider) de /core/contexts/EditorContext/
 export { EditorProvider, useEditor } from './editor/EditorContext';
 export { EditorContext } from './editor/EditorContext';
 // ❌ REMOVIDO: MigrationEditorProvider (use EditorProvider diretamente)
+// ❌ REMOVIDO: EditorProvider de /contexts/providers/ (duplicado - movido para archive)
 // Compat: reexporta useEditor como useUnifiedEditor para manter chamadas existentes funcionando
 export { useEditor as useUnifiedEditor } from './editor/EditorContext';
 // EditorDndContext.tsx está vazio - removido
