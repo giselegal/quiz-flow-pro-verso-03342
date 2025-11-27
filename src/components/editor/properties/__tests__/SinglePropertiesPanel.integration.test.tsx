@@ -231,25 +231,25 @@ describe('SinglePropertiesPanel - Diferentes Tipos de Blocos', () => {
 
   it('deve renderizar para bloco tipo header', () => {
     const block = createMockBlock({ type: 'header' });
-    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} blocks={[block]} />);
+    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} />);
     expect(screen.getByText(/header/i)).toBeInTheDocument();
   });
 
   it('deve renderizar para bloco tipo text', () => {
     const block = createMockBlock({ type: 'text', properties: { text: 'Hello World' } });
-    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} blocks={[block]} />);
+    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} />);
     expect(screen.getByText(/text/i)).toBeInTheDocument();
   });
 
   it('deve renderizar para bloco tipo button', () => {
     const block = createMockBlock({ type: 'button', properties: { label: 'Click me' } });
-    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} blocks={[block]} />);
+    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} />);
     expect(screen.getByText(/button/i)).toBeInTheDocument();
   });
 
   it('deve renderizar fallback para bloco desconhecido', () => {
     const block = createMockBlock({ type: 'unknown-type' });
-    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} blocks={[block]} />);
+    render(<SinglePropertiesPanel {...defaultProps} selectedBlock={block} />);
     // Deve renderizar sem erros mesmo para tipo desconhecido
     expect(screen.getByText(/unknown-type/i)).toBeInTheDocument();
   });

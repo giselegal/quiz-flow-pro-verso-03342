@@ -41,6 +41,7 @@ export interface EditorState {
     selectedBlockId: string | null;
     isPreviewMode: boolean;
     isEditing: boolean;
+    isLoading: boolean;
     dragEnabled: boolean;
     clipboardData: Block | null;
     stepBlocks: Record<number, Block[]>;
@@ -134,6 +135,7 @@ const INITIAL_STATE: EditorState = {
     selectedBlockId: null,
     isPreviewMode: false,
     isEditing: false,
+    isLoading: false,
     dragEnabled: true,
     clipboardData: null,
     stepBlocks: {},
