@@ -436,9 +436,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [resourceId, previewMode, wysiwyg?.state?.blocks, saveStepBlocks]);
 
-    // 🎯 FASE 3.1: Auto-save com hook core (após wysiwyg)
-    // ⚠️ IMPORTANTE: Desabilitar auto-save em modo preview para evitar loops infinitos
-    const autoSave = enableAutoSave && resourceId && previewMode !== 'live' ? useAutoSave({
+    // 🎯 FASE 3.1: Auto-save DESABILITADO temporariamente para debug de performance
+    // ⚠️ CRÍTICO: Auto-save estava causando re-renders infinitos e travamentos
+    // TODO: Reimplementar com estratégia mais estável após correção do sistema de seleção
+    const autoSave = false ? useAutoSave({
         key: `editor-autosave:${resourceId}:step-${safeCurrentStep}`,
         data: wysiwyg?.state?.blocks || [],
         debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),

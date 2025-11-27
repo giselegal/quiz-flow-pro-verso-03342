@@ -72,6 +72,22 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
         cursor: isEditable ? (isDragging ? 'grabbing' : 'grab') : 'default',
     };
 
+    // 🔥 Handler simplificado sem dependências de drag para garantir click
+    const handleBlockClick = useCallback((e: React.MouseEvent) => {
+        const target = e.target as HTMLElement;
+
+        // Ignorar clicks em botões internos
+        if (target.tagName.toLowerCase() === 'button' && target !== e.currentTarget) {
+            return;
+        }
+
+        // Prevenir propagação para evitar seleções múltiplas
+        e.stopPropagation();
+
+        console.log('🎯 CLICK CAPTURADO:', block.id, block.type);
+        onSelect?.(block.id);
+    }, [block.id, block.type, onSelect]);
+
     return (
         <li
             ref={setNodeRef}
@@ -90,26 +106,7 @@ const SortableBlockItem = React.memo(function SortableBlockItem({
                 }
                 ${isDragging ? 'cursor-grabbing' : isEditable ? 'cursor-pointer' : 'cursor-default'}
             `}
-            onClick={e => {
-                const target = e.target as HTMLElement;
-                appLogger.info('🖱️ [CanvasColumn] Click no bloco:', {
-                    data: [{
-                        blockId: block.id,
-                        blockType: block.type,
-                        targetTag: target.tagName,
-                        isButton: target.tagName.toLowerCase() === 'button',
-                        onSelectExists: !!onSelect
-                    }]
-                });
-
-                if (target.tagName.toLowerCase() === 'button') {
-                    appLogger.info('⏭️ Click em button, ignorando seleção');
-                    return;
-                }
-
-                appLogger.info('✅ Chamando onSelect para:', { data: [block.id] });
-                onSelect?.(block.id);
-            }}
+            onClick={handleBlockClick}
             data-block-id={block.id}
         >
             {/* 🆕 G30 FIX: Linha de drop visual quando outro bloco está sobre este */}
