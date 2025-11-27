@@ -9,6 +9,16 @@ export * from './useFunnel';
 export * from './useFunnelState';
 export * from './useFunnelTemplates';
 
+// Additional hooks (migrated from /src/hooks)
+export { useFunnelAI } from './useFunnelAI';
+export { useFunnelAnalytics } from './useFunnelAnalytics';
+export { useFunnelComponents } from './useFunnelComponents';
+export { useFunnelLivePreview } from './useFunnelLivePreview';
+export { useFunnelLoader } from './useFunnelLoader';
+export { useFunnelLoaderRefactored } from './useFunnelLoaderRefactored';
+export { useFunnelNavigation } from './useFunnelNavigation';
+export { useFunnelPublication } from './useFunnelPublication';
+
 // Re-export specific types for convenience
 export type {
     UseFunnelOptions,

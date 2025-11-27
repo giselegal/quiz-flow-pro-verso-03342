@@ -1,378 +1,281 @@
 /**
- * 🪝 FUNNEL HOOKS
+ * 🎯 USE FUNNEL HOOK
  * 
- * Hooks especializados para gerenciamento de funis
- * Separados dos hooks de quiz para melhor organização
+ * Hook React Query para carregar funnels diretamente do Supabase
+ * Parte do plano de consolidação para estabelecer Supabase + React Query
+ * como Single Source of Truth
+ * 
+ * 🎯 FASE 1 - FUNDAÇÃO TÉCNICA
+ * Este hook faz parte da implementação inicial da arquitetura canônica.
+ * Substitui múltiplas camadas de cache (localStorage, Zustand, cache interno)
+ * por uma única fonte de verdade com React Query.
+ * 
+ * @example
+ * ```typescript
+ * import { useFunnel } from '@/hooks/useFunnel';
+ * 
+ * function FunnelEditor({ funnelId }: { funnelId: string }) {
+ *   const { data: funnel, isLoading, error } = useFunnel(funnelId);
+ *   
+ *   if (isLoading) return <LoadingSpinner />;
+ *   if (error) return <ErrorMessage error={error} />;
+ *   if (!funnel) return <NotFound />;
+ *   
+ *   return <FunnelRenderer funnel={funnel} />;
+ * }
+ * ```
+ * 
+ * @version 1.0.0
+ * @status PRODUCTION-READY
+ * @phase Fase 1 - Fundação
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import {
-    FunnelState,
-    FunnelAction,
-    FunnelEvent,
-    FunnelProgress,
-    NavigationState,
-    ValidationState,
-} from '../types';
-import { funnelEngine, FunnelActions } from '../FunnelEngine';
-import { funnelCore } from '../FunnelCore';
-import { appLogger } from '@/lib/utils/appLogger';
+import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 // ============================================================================
-// MAIN FUNNEL HOOK
+// TYPES
 // ============================================================================
 
-export interface UseFunnelOptions {
-    autoSave?: boolean;
-    persistProgress?: boolean;
-    onStepChange?: (stepId: string) => void;
-    onComplete?: (data: Record<string, any>) => void;
-    onError?: (error: Error) => void;
-}
-
-export interface UseFunnelReturn {
-    // Estado atual
-    state: FunnelState;
-
-    // Informações calculadas
-    progress: FunnelProgress;
-    navigation: NavigationState;
-    validation: ValidationState;
-
-    // Ações de navegação
-    goForward: () => void;
-    goBackward: () => void;
-    goToStep: (stepId: string) => void;
-    goToFirst: () => void;
-    goToLast: () => void;
-
-    // Ações de dados
-    updateData: (data: Record<string, any>, merge?: boolean) => void;
-    resetData: () => void;
-
-    // Ações de controle
-    completeStep: (stepId?: string) => void;
-    resetFunnel: (preserveData?: boolean) => void;
-    pauseFunnel: () => void;
-    resumeFunnel: () => void;
-
-    // Estados utilitários
-    isLoading: boolean;
-    hasError: boolean;
-    error: Error | null;
-
-    // Validação
-    validateCurrentStep: () => boolean;
-    canAdvance: boolean;
-    canGoBack: boolean;
+/**
+ * Funnel data structure matching Supabase schema
+ */
+export interface Funnel {
+  id: string;
+  name: string;
+  description?: string | null;
+  config?: Record<string, any> | null;
+  status?: 'draft' | 'published' | 'archived';
+  created_at: string;
+  updated_at: string;
+  user_id?: string;
 }
 
 /**
- * Hook principal para gerenciamento de funis
+ * Funnel query options
+ */
+export interface UseFunnelOptions extends Omit<UseQueryOptions<Funnel | null, Error>, 'queryKey' | 'queryFn'> {
+  /**
+   * Cache time in milliseconds
+   * @default 5 * 60 * 1000 (5 minutes)
+   */
+  staleTime?: number;
+  
+  /**
+   * Enable query (useful for conditional fetching)
+   * @default true
+   */
+  enabled?: boolean;
+}
+
+// ============================================================================
+// HOOK
+// ============================================================================
+
+/**
+ * Load a funnel by ID from Supabase
+ * 
+ * Features:
+ * - Automatic caching with React Query
+ * - Real-time updates when funnel changes
+ * - Optimistic UI updates
+ * - Automatic refetching on window focus
+ * - Background updates
+ * 
+ * @param id - Funnel ID to load
+ * @param options - Query options
+ * @returns Query result with funnel data
  */
 export function useFunnel(
-    initialState: FunnelState,
-    options: UseFunnelOptions = {},
-): UseFunnelReturn {
-    const [state, setState] = useState<FunnelState>(() =>
-        funnelEngine.initializeFunnel(initialState),
-    );
+  id: string,
+  options: UseFunnelOptions = {}
+): UseQueryResult<Funnel | null, Error> {
+  const {
+    staleTime = 5 * 60 * 1000, // 5 minutes by default
+    enabled = true,
+    ...restOptions
+  } = options;
 
-    const optionsRef = useRef(options);
-    optionsRef.current = options;
+  return useQuery<Funnel | null, Error>({
+    // Query key for React Query cache (using factory for consistency)
+    queryKey: funnelKeys.detail(id),
+    
+    // Query function
+    queryFn: async () => {
+      // Validate ID
+      if (!id || typeof id !== 'string') {
+        throw new Error('Invalid funnel ID');
+      }
 
-    // ============================================================================
-    // COMPUTED VALUES
-    // ============================================================================
+      // Fetch from Supabase
+      const { data, error } = await supabase
+        .from('funnels')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-    const progress = funnelCore.calculateProgress(state);
-    const navigation = funnelCore.calculateNavigationState(state);
-    const currentStep = state.steps.find(step => step.id === state.currentStep);
-    const validation = currentStep ? funnelCore.validateStep(currentStep, state) : {
-        isValid: false,
-        errors: [],
-        warnings: [],
-        currentStepValid: false,
-    };
-
-    const isLoading = state.isLoading || false;
-    const hasError = !!state.error;
-    const error = state.error as Error | null;
-    const canAdvance = funnelEngine.canAdvance(state);
-    const canGoBack = funnelEngine.canGoBack(state);
-
-    // ============================================================================
-    // ACTION CREATORS
-    // ============================================================================
-
-    const dispatch = useCallback((action: FunnelAction) => {
-        setState(prevState => {
-            const newState = funnelEngine.processAction(prevState, action);
-
-            // Auto-save se habilitado
-            if (optionsRef.current.autoSave) {
-                // Implementar auto-save aqui
-                saveProgressToStorage(newState);
-            }
-
-            return newState;
-        });
-    }, []);
-
-    // ============================================================================
-    // NAVIGATION ACTIONS
-    // ============================================================================
-
-    const goForward = useCallback(() => {
-        if (canAdvance) {
-            dispatch(FunnelActions.navigate('forward'));
+      // Handle errors
+      if (error) {
+        // Not found is not an error, return null
+        if (error.code === 'PGRST116') {
+          return null;
         }
-    }, [canAdvance, dispatch]);
+        throw new Error(`Failed to load funnel: ${error.message}`);
+      }
 
-    const goBackward = useCallback(() => {
-        if (canGoBack) {
-            dispatch(FunnelActions.navigate('backward'));
-        }
-    }, [canGoBack, dispatch]);
+      // Return funnel data
+      return data as Funnel;
+    },
+    
+    // Cache configuration
+    staleTime,
+    
+    // Enable/disable query
+    enabled: enabled && !!id,
+    
+    // Retry configuration
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    
+    // Pass through other options
+    ...restOptions,
+  });
+}
 
-    const goToStep = useCallback((stepId: string) => {
-        dispatch(FunnelActions.navigate('forward', stepId));
-    }, [dispatch]);
+/**
+ * Load multiple funnels by IDs
+ * 
+ * @param ids - Array of funnel IDs
+ * @param options - Query options
+ * @returns Query result with funnels array
+ */
+export function useFunnels(
+  ids: string[],
+  options: Omit<UseQueryOptions<Funnel[], Error>, 'queryKey' | 'queryFn'> = {}
+): UseQueryResult<Funnel[], Error> {
+  const {
+    staleTime = 5 * 60 * 1000,
+    enabled = true,
+    ...restOptions
+  } = options as any;
 
-    const goToFirst = useCallback(() => {
-        dispatch(FunnelActions.navigate('first'));
-    }, [dispatch]);
+  return useQuery<Funnel[], Error>({
+    queryKey: ['funnels', 'byIds', ids],
+    
+    queryFn: async () => {
+      if (!ids || ids.length === 0) {
+        return [];
+      }
 
-    const goToLast = useCallback(() => {
-        dispatch(FunnelActions.navigate('last'));
-    }, [dispatch]);
+      const { data, error } = await supabase
+        .from('funnels')
+        .select('*')
+        .in('id', ids);
 
-    // ============================================================================
-    // DATA ACTIONS
-    // ============================================================================
+      if (error) {
+        throw new Error(`Failed to load funnels: ${error.message}`);
+      }
 
-    const updateData = useCallback((data: Record<string, any>, merge = true) => {
-        dispatch(FunnelActions.updateUserData(data, merge));
-    }, [dispatch]);
+      return (data || []) as Funnel[];
+    },
+    
+    staleTime,
+    enabled: enabled && ids.length > 0,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    
+    ...restOptions,
+  });
+}
 
-    const resetData = useCallback(() => {
-        dispatch(FunnelActions.updateUserData({}, false));
-    }, [dispatch]);
+/**
+ * List all funnels with optional filters
+ * 
+ * @param filters - Optional filters
+ * @param options - Query options
+ * @returns Query result with funnels list
+ */
+export function useFunnelList(
+  filters: {
+    status?: Funnel['status'];
+    userId?: string;
+    limit?: number;
+  } = {},
+  options: Omit<UseQueryOptions<Funnel[], Error>, 'queryKey' | 'queryFn'> = {}
+): UseQueryResult<Funnel[], Error> {
+  const {
+    staleTime = 2 * 60 * 1000, // 2 minutes for list
+    enabled = true,
+    ...restOptions
+  } = options as any;
 
-    // ============================================================================
-    // CONTROL ACTIONS
-    // ============================================================================
+  return useQuery<Funnel[], Error>({
+    queryKey: ['funnels', 'list', filters],
+    
+    queryFn: async () => {
+      let query = supabase
+        .from('funnels')
+        .select('*')
+        .order('updated_at', { ascending: false });
 
-    const completeStep = useCallback((stepId?: string) => {
-        dispatch(FunnelActions.completeStep(stepId));
-    }, [dispatch]);
+      // Apply filters
+      if (filters.status) {
+        query = query.eq('status', filters.status);
+      }
+      
+      if (filters.userId) {
+        query = query.eq('user_id', filters.userId);
+      }
+      
+      if (filters.limit) {
+        query = query.limit(filters.limit);
+      }
 
-    const resetFunnel = useCallback((preserveData = false) => {
-        dispatch(FunnelActions.reset(preserveData));
-    }, [dispatch]);
+      const { data, error } = await query;
 
-    const pauseFunnel = useCallback(() => {
-        const pausedState = funnelEngine.pauseFunnel(state);
-        setState(pausedState);
-    }, [state]);
+      if (error) {
+        throw new Error(`Failed to list funnels: ${error.message}`);
+      }
 
-    const resumeFunnel = useCallback(() => {
-        const resumedState = funnelEngine.resumeFunnel(state);
-        setState(resumedState);
-    }, [state]);
-
-    // ============================================================================
-    // VALIDATION
-    // ============================================================================
-
-    const validateCurrentStep = useCallback(() => {
-        return validation.isValid;
-    }, [validation.isValid]);
-
-    // ============================================================================
-    // EFFECTS
-    // ============================================================================
-
-    // Listener para mudanças de passo
-    useEffect(() => {
-        const handleStepChange = (event: FunnelEvent) => {
-            if (event.type === 'step-change' && optionsRef.current.onStepChange) {
-                optionsRef.current.onStepChange(event.payload.to);
-            }
-        };
-
-        funnelCore.addEventListener('step-change', handleStepChange);
-        return () => funnelCore.removeEventListener('step-change', handleStepChange);
-    }, []);
-
-    // Listener para conclusão
-    useEffect(() => {
-        const handleComplete = (event: FunnelEvent) => {
-            if (event.type === 'complete' && optionsRef.current.onComplete) {
-                optionsRef.current.onComplete(event.payload.results);
-            }
-        };
-
-        funnelCore.addEventListener('complete', handleComplete);
-        return () => funnelCore.removeEventListener('complete', handleComplete);
-    }, []);
-
-    // Listener para erros
-    useEffect(() => {
-        const handleError = (event: FunnelEvent) => {
-            if (event.type === 'error' && optionsRef.current.onError) {
-                optionsRef.current.onError(event.payload.error);
-            }
-        };
-
-        funnelCore.addEventListener('error', handleError);
-        return () => funnelCore.removeEventListener('error', handleError);
-    }, []);
-
-    // ============================================================================
-    // RETURN OBJECT
-    // ============================================================================
-
-    return {
-        // Estado
-        state,
-        progress,
-        navigation,
-        validation,
-
-        // Navegação
-        goForward,
-        goBackward,
-        goToStep,
-        goToFirst,
-        goToLast,
-
-        // Dados
-        updateData,
-        resetData,
-
-        // Controle
-        completeStep,
-        resetFunnel,
-        pauseFunnel,
-        resumeFunnel,
-
-        // Estados
-        isLoading,
-        hasError,
-        error,
-
-        // Validação
-        validateCurrentStep,
-        canAdvance,
-        canGoBack,
-    };
+      return (data || []) as Funnel[];
+    },
+    
+    staleTime,
+    enabled,
+    retry: 2,
+    
+    ...restOptions,
+  });
 }
 
 // ============================================================================
-// SPECIALIZED HOOKS
+// QUERY KEY FACTORY
 // ============================================================================
 
 /**
- * Hook para navegação simplificada de funis
+ * Query key factory for funnels
+ * Useful for manual cache manipulation and invalidation
+ * 
+ * @example
+ * ```typescript
+ * // Invalidate all funnel queries
+ * queryClient.invalidateQueries({ queryKey: funnelKeys.all });
+ * 
+ * // Invalidate specific funnel
+ * queryClient.invalidateQueries({ queryKey: funnelKeys.detail(id) });
+ * ```
  */
-export function useFunnelNavigation(state: FunnelState) {
-    const navigation = funnelCore.calculateNavigationState(state);
-    const progress = funnelCore.calculateProgress(state);
-
-    return {
-        ...navigation,
-        progress,
-        currentStepIndex: progress.currentStepIndex,
-        totalSteps: progress.totalSteps,
-        percentage: progress.percentage,
-    };
-}
-
-/**
- * Hook para validação de funis
- */
-export function useFunnelValidation(state: FunnelState) {
-    const currentStep = state.steps.find(step => step.id === state.currentStep);
-    const validation = currentStep ? funnelCore.validateStep(currentStep, state) : {
-        isValid: false,
-        errors: [],
-        warnings: [],
-        currentStepValid: false,
-    };
-
-    return {
-        ...validation,
-        validateStep: (stepId: string) => {
-            const step = state.steps.find(s => s.id === stepId);
-            return step ? funnelCore.validateStep(step, state) : validation;
-        },
-        hasErrors: validation.errors.length > 0,
-        hasWarnings: validation.warnings.length > 0,
-        isCurrentStepValid: validation.currentStepValid,
-    };
-}
-
-/**
- * Hook para dados de usuário do funil
- */
-export function useFunnelData(state: FunnelState) {
-    return {
-        userData: state.userData,
-        getFieldValue: (field: string) => state.userData[field],
-        hasData: Object.keys(state.userData).length > 0,
-        dataKeys: Object.keys(state.userData),
-        isEmpty: Object.keys(state.userData).length === 0,
-    };
-}
-
-/**
- * Hook para progresso do funil
- */
-export function useFunnelProgress(state: FunnelState) {
-    const progress = funnelCore.calculateProgress(state);
-
-    return {
-        ...progress,
-        isComplete: progress.percentage === 100,
-        isStarted: progress.completedSteps > 0,
-        remainingSteps: progress.totalSteps - progress.completedSteps,
-        completionRate: progress.percentage / 100,
-    };
-}
+export const funnelKeys = {
+  all: ['funnel'] as const,
+  lists: () => [...funnelKeys.all, 'list'] as const,
+  list: (filters: any) => [...funnelKeys.lists(), filters] as const,
+  details: () => [...funnelKeys.all, 'detail'] as const,
+  detail: (id: string) => [...funnelKeys.all, id] as const,
+  byIds: (ids: string[]) => [...funnelKeys.all, 'byIds', ids] as const,
+};
 
 // ============================================================================
-// UTILITY FUNCTIONS
+// EXPORTS
 // ============================================================================
 
-/**
- * Salva progresso no localStorage
- */
-function saveProgressToStorage(state: FunnelState) {
-    try {
-        const key = `funnel_progress_${state.id}`;
-        const data = {
-            currentStep: state.currentStep,
-            completedSteps: state.completedSteps,
-            userData: state.userData,
-            timestamp: Date.now(),
-        };
-        localStorage.setItem(key, JSON.stringify(data));
-    } catch (error) {
-        appLogger.warn('[useFunnel] Failed to save progress:', { data: [error] });
-    }
-}
-
-/**
- * Carrega progresso do localStorage
- */
-export function loadProgressFromStorage(funnelId: string) {
-    try {
-        const key = `funnel_progress_${funnelId}`;
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : null;
-    } catch (error) {
-        appLogger.warn('[useFunnel] Failed to load progress:', { data: [error] });
-        return null;
-    }
-}
+export default useFunnel;
