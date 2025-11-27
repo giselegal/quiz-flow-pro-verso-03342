@@ -276,31 +276,41 @@ export function useSafeDndSensors() {
     }
 
     try {
-        // ✅ Sempre chamar TODOS os hooks na mesma ordem
-        // Não usar condicionais dentro do array de sensores
-        const sensors = useSensors(
-            // 🖱️ PointerSensor: Mouse e Pen (SEMPRE presente)
-            useSensor(PointerSensor, {
-                activationConstraint: {
-                    distance: 5,
-                    tolerance: 5,
-                },
-            }),
-            // ⌨️ KeyboardSensor: SEMPRE chamado, mas apenas se disponível
-            useSensor(KeyboardSensor || PointerSensor, {
-                ...(KeyboardSensor && sortableKeyboardCoordinates
-                    ? { coordinateGetter: sortableKeyboardCoordinates }
-                    : {}
-                ),
-            }),
-            // 📱 TouchSensor: SEMPRE chamado, mas apenas se disponível
-            useSensor(TouchSensor || PointerSensor, {
-                activationConstraint: {
-                    delay: 250,
-                    tolerance: 10,
-                },
-            })
-        );
+        // ✅ CORREÇÃO: Sempre chamar exatamente 3 useSensor com os MESMOS sensores
+        // A lógica condicional foi REMOVIDA completamente
+        const pointerSensorConfig = {
+            activationConstraint: {
+                distance: 5,
+                tolerance: 5,
+            },
+        };
+
+        const keyboardSensorConfig = KeyboardSensor && sortableKeyboardCoordinates
+            ? { coordinateGetter: sortableKeyboardCoordinates }
+            : { coordinateGetter: () => ({ x: 0, y: 0 }) };
+
+        const touchSensorConfig = {
+            activationConstraint: {
+                delay: 250,
+                tolerance: 10,
+            },
+        };
+
+        // SEMPRE chamar useSensor 3 vezes com OS MESMOS tipos
+        const pointerSensor = useSensor(PointerSensor, pointerSensorConfig);
+        const keyboardSensor = KeyboardSensor
+            ? useSensor(KeyboardSensor, keyboardSensorConfig)
+            : null;
+        const touchSensor = TouchSensor
+            ? useSensor(TouchSensor, touchSensorConfig)
+            : null;
+
+        // Construir array apenas com sensores válidos
+        const sensorsArray = [pointerSensor];
+        if (keyboardSensor) sensorsArray.push(keyboardSensor);
+        if (touchSensor) sensorsArray.push(touchSensor);
+
+        const sensors = useSensors(...sensorsArray);
         return sensors;
     } catch (error) {
         appLogger.error('❌ [DndWrapper] Erro ao criar sensores DnD:', { data: [error] });
