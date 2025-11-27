@@ -68,6 +68,14 @@ import { StepErrorBoundary, ColumnErrorBoundary } from '@/components/error';
 import { appLogger } from '@/lib/utils/appLogger';
 import { EditorLoadingProgress } from '@/components/editor/EditorLoadingProgress';
 
+// 🎨 Skeleton loaders otimizados
+import {
+    StepNavigatorSkeleton,
+    ComponentLibrarySkeleton,
+    CanvasSkeleton,
+    PropertiesPanelSkeleton
+} from './components/EditorSkeletons';
+
 // Dev-only metrics panel
 let MetricsPanel: React.LazyExoticComponent<React.ComponentType<any>> | null = null;
 if (import.meta.env.DEV) {

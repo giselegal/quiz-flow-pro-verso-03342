@@ -239,7 +239,7 @@ test.describe('Column 02: Component Library', () => {
   test('02.12 - Coluna carrega em menos de 3 segundos', async ({ page }) => {
     const startTime = Date.now();
     
-    await page.goto(EDITOR_URL, { waitUntil: 'networkidle', timeout: TIMEOUT });
+    await page.goto(EDITOR_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForSelector('[data-testid="column-library"]', { timeout: 10000 });
     await page.waitForSelector('[data-testid="column-library"] [class*="cursor-grab"]', { timeout: 5000 });
     

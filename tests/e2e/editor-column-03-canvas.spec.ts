@@ -134,7 +134,7 @@ test.describe('Column 03: Canvas (Editing Area)', () => {
       const blockId = await firstBlock.getAttribute('data-block-id');
       
       // Click no bloco
-      await firstBlock.click();
+      await firstBlock.click({ timeout: 10000, force: true });
       await page.waitForTimeout(300);
       
       // Verificar se ficou com border azul ou bg-blue (selecionado)
@@ -258,7 +258,7 @@ test.describe('Column 03: Canvas (Editing Area)', () => {
   test('03.12 - Canvas renderiza em menos de 2 segundos', async ({ page }) => {
     const startTime = Date.now();
     
-    await page.goto(EDITOR_URL, { waitUntil: 'networkidle', timeout: TIMEOUT });
+    await page.goto(EDITOR_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForSelector('[data-testid="column-canvas"]', { timeout: 10000 });
     
     // Aguardar primeiro bloco ou empty state

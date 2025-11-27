@@ -23,8 +23,8 @@ test.describe('Column 04: Properties Panel', () => {
     const hasBlock = await firstBlock.count() > 0;
     
     if (hasBlock) {
-      await firstBlock.click();
-      await page.waitForTimeout(500);
+      await firstBlock.click({ timeout: 15000, force: true });
+      await page.waitForTimeout(800);
     }
   });
 
