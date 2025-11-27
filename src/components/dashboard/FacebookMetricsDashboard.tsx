@@ -75,7 +75,7 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
         leads: 0,
     });
     const { ux } = useEditorContext();
-    const { theme } = ux;
+    const { theme, colors } = ux;
 
     // ============================================================================
     // CARREGAMENTO DE DADOS
@@ -227,8 +227,8 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
         <div
             className="space-y-6 p-6 rounded-lg"
             style={{
-                background: theme.colors.background,
-                color: theme.colors.text,
+                background: colors.background,
+                color: colors.text,
             }}
         >
             {/* Header com Nova Identidade Visual */}
@@ -236,23 +236,23 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                 <h2
                     className="text-2xl font-bold flex items-center gap-2 glow-text"
                     style={{
-                        background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
+                        background: `linear-gradient(135deg, ${colors.detailsMinor} 0%, ${colors.buttons} 100%)`,
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
-                        filter: `drop-shadow(0 0 10px ${theme.colors.detailsMinor}50)`,
+                        filter: `drop-shadow(0 0 10px ${colors.detailsMinor}50)`,
                     }}
                 >
-                    <Facebook className="w-6 h-6" style={{ color: theme.colors.buttons }} />
+                    <Facebook className="w-6 h-6" style={{ color: colors.buttons }} />
                     Facebook Ads Metrics
                     {selectedFunnel !== 'all' && (
                         <Badge
                             variant="outline"
                             className="ml-2 glow-card"
                             style={{
-                                borderColor: theme.colors.detailsMinor,
-                                backgroundColor: `${theme.colors.glowEffect}20`,
-                                color: theme.colors.text,
+                                borderColor: colors.detailsMinor,
+                                backgroundColor: `${colors.glowEffect}20`,
+                                color: colors.text,
                             }}
                         >
                             {funnelMetrics[0]?.funnel_name || selectedFunnel}
@@ -266,10 +266,10 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                             onChange={(e) => setSelectedFunnel(e.target.value)}
                             className="px-3 py-1 border rounded-md glow-card"
                             style={{
-                                backgroundColor: theme.colors.background,
-                                borderColor: `${theme.colors.detailsMinor}50`,
-                                color: theme.colors.text,
-                                boxShadow: `0 0 10px ${theme.colors.glowEffect}20`,
+                                backgroundColor: colors.background,
+                                borderColor: `${colors.detailsMinor}50`,
+                                color: colors.text,
+                                boxShadow: `0 0 10px ${colors.glowEffect}20`,
                             }}
                         >
                             <option value="all">Todos os Funis</option>
@@ -285,10 +285,10 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                         onChange={(e) => setSelectedPeriod(e.target.value as '7d' | '14d' | '30d')}
                         className="px-3 py-1 border rounded-md glow-card"
                         style={{
-                            backgroundColor: theme.colors.background,
-                            borderColor: `${theme.colors.detailsMinor}50`,
-                            color: theme.colors.text,
-                            boxShadow: `0 0 10px ${theme.colors.glowEffect}20`,
+                            backgroundColor: colors.background,
+                            borderColor: `${colors.detailsMinor}50`,
+                            color: colors.text,
+                            boxShadow: `0 0 10px ${colors.glowEffect}20`,
                         }}
                     >
                         <option value="7d">Últimos 7 dias</option>
@@ -302,10 +302,10 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                         disabled={isSyncing}
                         className="glow-button"
                         style={{
-                            background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
-                            borderColor: theme.colors.buttons,
+                            background: `linear-gradient(135deg, ${colors.buttons} 0%, ${colors.detailsMinor} 100%)`,
+                            borderColor: colors.buttons,
                             color: '#ffffff',
-                            boxShadow: `0 0 15px ${theme.colors.buttons}40`,
+                            boxShadow: `0 0 15px ${colors.buttons}40`,
                         }}
                     >
                         <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useEditorContext } from '@/core';
+import { useUX } from '@/contexts/consolidated/UXProvider';
 
 interface ThemeToggleProps {
     size?: 'sm' | 'default' | 'lg';
@@ -12,7 +12,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     size = 'default',
     variant = 'outline',
 }) => {
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme } = useUX();
 
     const toggleTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');

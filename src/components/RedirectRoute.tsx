@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useEditorContext } from '@/core';
+import { useUX } from '@/contexts/consolidated/UXProvider';
 import { LoadingFallback } from './ui/loading-fallback';
 
 interface RedirectRouteProps {
@@ -9,18 +9,18 @@ interface RedirectRouteProps {
 }
 
 /**
- * 🔄 Componente de redirecionamento usando Wouter
+ * 🔄 Componente de redirecionamento usando UX Provider
  * 
  * Substitui chamadas diretas a window.history.replaceState()
- * por navegação adequada via hook useEditorContext.
+ * por navegação adequada via UX context.
  */
 export const RedirectRoute = ({ to, preserveQuery = true, children }: RedirectRouteProps) => {
-    const { navigation } = useEditorContext();
-    const { redirect } = navigation;
+    const { navigate } = useUX();
 
     useEffect(() => {
-        redirect(to, preserveQuery);
-    }, [to, preserveQuery, redirect]);
+        const url = preserveQuery ? `${to}${window.location.search}` : to;
+        navigate(url);
+    }, [to, preserveQuery, navigate]);
 
     // Renderiza children enquanto redireciona, ou fallback de loading
     return children || <LoadingFallback />;
