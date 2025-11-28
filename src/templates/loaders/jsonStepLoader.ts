@@ -94,13 +94,32 @@ function resolveTokens<T>(obj: T): T {
 /**
  * Carrega blocos de um step a partir de JSON dinâmico (v3.2+v4).
  * 
+ * 🆕 FASE 3: Wrapper de compatibilidade para UnifiedTemplateLoader
+ * Este método mantém a interface legada mas delega para o novo sistema.
+ * 
  * @param stepId - ID do step (ex: "step-01")
  * @param templateId - ID do template/funnel (ex: "quiz21StepsComplete")
+ * @deprecated Use unifiedTemplateLoader.loadStep() para novos código
  */
 export async function loadStepFromJson(
   stepId: string,
   templateId: string = 'quiz21StepsComplete'
 ): Promise<Block[] | null> {
+  // 🆕 FASE 3: Tentar UnifiedTemplateLoader primeiro
+  try {
+    const { unifiedTemplateLoader } = await import('@/services/templates/UnifiedTemplateLoader');
+    const result = await unifiedTemplateLoader.loadStep(stepId, {
+      useCache: true,
+      timeout: 5000,
+    });
+    
+    appLogger.info(`✅ [jsonStepLoader] Loaded via UnifiedLoader from ${result.source}`);
+    return result.data;
+  } catch (unifiedError) {
+    appLogger.debug(`⚠️ [jsonStepLoader] UnifiedLoader failed, using legacy path:`, unifiedError);
+  }
+
+  // Fallback: Legacy implementation
   if (!stepId) return null;
 
   // Verificar TemplateCache

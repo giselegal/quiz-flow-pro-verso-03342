@@ -4,11 +4,13 @@
  * Carrega e valida quiz21-v4.json com Zod schemas
  * Substitui carregamento direto de v3
  * 
+ * FASE 3: Integrado com UnifiedTemplateLoader
  * FASE 4: Integração E2E
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { QuizSchemaZ, validateQuizSchema, type QuizSchema, type QuizStep } from '@/schemas/quiz-schema.zod';
+import { type QuizSchema, type QuizStep } from '@/schemas/quiz-schema.zod';
+import { unifiedTemplateLoader } from '@/services/templates/UnifiedTemplateLoader';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface UseQuizV4LoaderOptions {
@@ -50,43 +52,31 @@ export function useQuizV4Loader(options: UseQuizV4LoaderOptions = {}): UseQuizV4
 
   /**
    * Carrega e valida o quiz v4
+   * 🆕 FASE 3: Usa UnifiedTemplateLoader
    */
   const loadQuiz = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      appLogger.info('🔄 Carregando quiz v4...', { data: [templatePath] });
+      appLogger.info('🔄 Carregando quiz v4 via UnifiedTemplateLoader...');
 
-      // Fetch do JSON (bind to window to preserve context)
-      const response = await window.fetch(templatePath);
-      if (!response.ok) {
-        throw new Error(`Falha ao carregar ${templatePath}: ${response.status}`);
-      }
+      // 🆕 Usar UnifiedTemplateLoader
+      const result = await unifiedTemplateLoader.loadFullTemplate('quiz21StepsComplete', {
+        useCache: true,
+        timeout: 10000,
+      });
 
-      const data = await response.json();
-
-      // Validação com Zod
-      const validationResult = validateQuizSchema(data);
-
-      if (!validationResult.success) {
-        appLogger.error('❌ Validação Zod falhou:', { 
-          data: [validationResult.errors.errors] 
-        });
-        throw new Error(
-          `Schema validation failed: ${validationResult.errors.errors
-            .map(e => `${e.path.join('.')}: ${e.message}`)
-            .join('; ')}`
-        );
-      }
-
-      const validatedQuiz = validationResult.data;
+      const validatedQuiz = result.data;
       
       appLogger.info('✅ Quiz v4 carregado e validado', {
         data: [
           `Version: ${validatedQuiz.version}`,
           `Steps: ${validatedQuiz.steps.length}`,
-          `Blocks: ${validatedQuiz.steps.reduce((sum, s) => sum + s.blocks.length, 0)}`,
+          `Blocks: ${validatedQuiz.steps.reduce((sum: number, s: QuizStep) => sum + s.blocks.length, 0)}`,
+          `Source: ${result.source}`,
+          `Load time: ${result.loadTime.toFixed(0)}ms`,
+          `From cache: ${result.fromCache}`,
         ],
       });
 
@@ -127,13 +117,12 @@ export function useQuizV4Loader(options: UseQuizV4LoaderOptions = {}): UseQuizV4
 
   /**
    * Valida schema atual
+   * 🆕 FASE 3: Validação síncrona (UnifiedTemplateLoader valida no load)
    */
   const validateSchema = useCallback((): boolean => {
-    if (!quiz) return false;
-    
-    const result = validateQuizSchema(quiz);
-    return result.success;
-  }, [quiz]);
+    // Já validado durante o load pelo UnifiedTemplateLoader
+    return isValid && quiz !== null;
+  }, [quiz, isValid]);
 
   /**
    * Recarrega o quiz

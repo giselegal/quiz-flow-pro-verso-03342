@@ -530,6 +530,7 @@ export class TemplateService extends BaseCanonicalService {
 
   /**
    * 🎯 NOVO: Obter step usando HierarchicalTemplateSource (FASE 1)
+   * 🆕 FASE 3: Integrado com UnifiedTemplateLoader
    */
   private async getStepFromHierarchicalSource(
     stepId: string,
@@ -544,10 +545,33 @@ export class TemplateService extends BaseCanonicalService {
         throw new Error('Operation aborted');
       }
 
+      // 🆕 FASE 3: Usar UnifiedTemplateLoader como fonte primária
+      try {
+        const { unifiedTemplateLoader } = await import('@/services/templates/UnifiedTemplateLoader');
+        const result = await unifiedTemplateLoader.loadStep(stepId, {
+          useCache: true,
+          signal,
+          funnelId: this.activeFunnelId || undefined,
+        });
+
+        this.log(`✅ [UnifiedLoader] Step ${stepId} loaded from ${result.source} (${result.loadTime.toFixed(1)}ms)`);
+
+        // Track metrics
+        editorMetrics.trackLoadTime(stepId, performance.now() - startTime, {
+          source: result.source,
+          blocksCount: result.data.length,
+          cacheHit: result.fromCache,
+        });
+
+        return this.createResult(result.data);
+      } catch (unifiedError) {
+        this.log(`⚠️ [UnifiedLoader] Failed, falling back to HierarchicalSource:`, unifiedError);
+      }
+
       // Extrair funnelId do contexto se disponível
       const funnelId = this.activeFunnelId || undefined;
 
-      // Usar HierarchicalTemplateSource
+      // Fallback: Usar HierarchicalTemplateSource
       const result = await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
 
       // ✅ Verificar cancelamento após fetch
