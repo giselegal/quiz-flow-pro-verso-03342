@@ -172,80 +172,80 @@ function EditorLayoutV4({
                                     Carregando navegação...
                                 </div>
                             </div>
-                        }>
+                            >
                             <StepNavigatorColumn
                                 steps={[]} // TODO: Integrar steps do context
-                                currentStepKey={editorProps.initialStep || 'step1'}
+                                currentStepKey={editorProps.initialStepKey || 'step1'}
                                 onSelectStep={(key) => appLogger.info('Step selected:', key)}
                                 validationErrors={[]}
                                 validationWarnings={[]}
                             />
                         </Suspense>
-                    </div>
-                </Panel>
+                </div>
+            </Panel>
 
-                <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors" withHandle />
+            <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors" withHandle />
 
-                {/* Coluna 2: Canvas (expandido) */}
-                <Panel defaultSize={52} minSize={40}>
-                    <div className="h-full bg-gray-50 overflow-y-auto">
-                        <Suspense fallback={
-                            <div className="flex items-center justify-center h-full">
-                                <div className="animate-pulse text-sm text-gray-400">
-                                    Carregando canvas...
-                                </div>
+            {/* Coluna 2: Canvas (expandido) */}
+            <Panel defaultSize={52} minSize={40}>
+                <div className="h-full bg-gray-50 overflow-y-auto">
+                    <Suspense fallback={
+                        <div className="flex items-center justify-center h-full">
+                            <div className="animate-pulse text-sm text-gray-400">
+                                Carregando canvas...
                             </div>
-                        }>
-                            <CanvasColumn
-                                currentStepKey={editorProps.initialStep || 'step1'}
-                                blocks={blocks}
-                                selectedBlockId={selectedBlockId}
-                                onBlockSelect={(id) => {
-                                    const selectBlock = (context as any).selectBlock;
-                                    if (selectBlock) selectBlock(id);
-                                }}
-                                hasTemplate={!!editorProps.funnelId}
-                                onLoadTemplate={() => { }}
-                                isEditable={true}
-                            />
+                        </div>
+                        >
+                        <CanvasColumn
+                            currentStepKey={editorProps.initialStepKey || 'step1'}
+                            blocks={blocks}
+                            selectedBlockId={selectedBlockId}
+                            onBlockSelect={(id) => {
+                                const selectBlock = (context as any).selectBlock;
+                                if (selectBlock) selectBlock(id);
+                            }}
+                            hasTemplate={!!editorProps.funnelId}
+                            onLoadTemplate={() => { }}
+                            isEditable={true}
+                        />
                         </Suspense>
-                    </div>
-                </Panel>
-
-                <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors" withHandle />
-
-                {/* Coluna 3: DynamicPropertiesPanel V4 */}
-                <Panel defaultSize={30} minSize={25} maxSize={40}>
-                    <div className="h-full border-l bg-white overflow-y-auto">
-                        {selectedV4Block ? (
-                            <DynamicPropertiesPanelV4
-                                block={selectedV4Block}
-                                onUpdate={(updates) => {
-                                    appLogger.debug('Property update from V4 panel:', updates);
-                                    handleV4Update(selectedV4Block.id, updates);
-                                }}
-                                onClose={() => {
-                                    const clearSelection = (context as any).clearSelection;
-                                    if (clearSelection) clearSelection();
-                                }}
-                            />
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                    <span className="text-2xl">🎨</span>
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                    Nenhum bloco selecionado
-                                </h3>
-                                <p className="text-sm text-gray-500 max-w-xs">
-                                    Clique em um bloco no canvas para editar suas propriedades com controles dinâmicos
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                </Panel>
-            </PanelGroup>
         </div>
+                </Panel >
+
+        <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors" withHandle />
+
+    {/* Coluna 3: DynamicPropertiesPanel V4 */ }
+    <Panel defaultSize={30} minSize={25} maxSize={40}>
+        <div className="h-full border-l bg-white overflow-y-auto">
+            {selectedV4Block ? (
+                <DynamicPropertiesPanelV4
+                    block={selectedV4Block}
+                    onUpdate={(updates: Partial<QuizBlock>) => {
+                        appLogger.debug('Property update from V4 panel:', updates);
+                        handleV4Update(selectedV4Block.id, updates);
+                    }}
+                    onClose={() => {
+                        const clearSelection = (context as any).clearSelection;
+                        if (clearSelection) clearSelection();
+                    }}
+                />
+            ) : (
+                <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                        <span className="text-2xl">🎨</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Nenhum bloco selecionado
+                    </h3>
+                    <p className="text-sm text-gray-500 max-w-xs">
+                        Clique em um bloco no canvas para editar suas propriedades com controles dinâmicos
+                    </p>
+                </div>
+            )}
+        </div>
+    </Panel>
+            </PanelGroup >
+        </div >
     );
 }
 
