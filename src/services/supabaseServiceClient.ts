@@ -1,9 +1,10 @@
-import { getSupabaseClient } from '@/services/supabaseClient';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 let serviceClient: SupabaseClient | null = null
 
 function getEnv(key: string): string | undefined {
   if (typeof process !== 'undefined' && process.env[key]) return process.env[key]
+  if (typeof import.meta !== 'undefined' && (import.meta as any).env && (import.meta as any).env[key]) return (import.meta as any).env[key]
   return undefined
 }
 
