@@ -6,3 +6,6 @@
 
 export * from './blockSchema';
 export * from './stepSchema';
+export * from './navigationSchema';
+export * from './validationSchema';
+export * from './modularStepSchema';
