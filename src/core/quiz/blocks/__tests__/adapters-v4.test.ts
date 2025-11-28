@@ -48,7 +48,7 @@ describe('BlockV3ToV4Adapter', () => {
     it('deve mesclar properties e content em properties unificado', () => {
         const v3Block: Block = {
             id: 'block-2',
-            type: 'heading',
+            type: 'heading' as any,
             order: 1,
             properties: {
                 level: 2,
@@ -85,7 +85,7 @@ describe('BlockV3ToV4Adapter', () => {
     it('deve converter array de blocos', () => {
         const v3Blocks: Block[] = [
             { id: 'b1', type: 'text', order: 0, properties: {}, content: {} },
-            { id: 'b2', type: 'heading', order: 1, properties: {}, content: {} },
+            { id: 'b2', type: 'heading' as any, order: 1, properties: {}, content: {} },
         ];
 
         const v4Blocks = BlockV3ToV4Adapter.convertMany(v3Blocks);
@@ -110,7 +110,7 @@ describe('BlockV3ToV4Adapter', () => {
     it('deve resolver aliases via registry', () => {
         const v3Block: Block = {
             id: 'block-4',
-            type: 'img', // alias para 'image'
+            type: 'img' as any, // alias para 'image'
             order: 0,
             properties: {},
             content: {},
@@ -151,20 +151,26 @@ describe('BlockV4ToV3Adapter', () => {
     it('deve separar properties em properties e content', () => {
         const v4Block: QuizBlock = {
             id: 'block-2',
-            type: 'heading',
+            type: 'heading' as any,
             order: 0,
             properties: {
                 level: 2,
                 text: 'Título muito longo que deveria ir para content porque é uma string grande',
             },
             parentId: null,
-            metadata: {},
+            metadata: {
+                editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
+            },
         };
 
         const v3Block = BlockV4ToV3Adapter.convert(v4Block);
 
         // Level deve estar em properties
-        expect(v3Block.properties.level).toBe(2);
+        expect(v3Block.properties).toBeDefined();
+        expect(v3Block.properties?.level).toBe(2);
 
         // Text longo pode estar em content ou properties dependendo da heurística
         expect(v3Block.content).toBeDefined();
@@ -172,8 +178,8 @@ describe('BlockV4ToV3Adapter', () => {
 
     it('deve converter array de blocos v4 para v3', () => {
         const v4Blocks: QuizBlock[] = [
-            { id: 'b1', type: 'text', order: 0, properties: {}, parentId: null, metadata: {} },
-            { id: 'b2', type: 'heading', order: 1, properties: {}, parentId: null, metadata: {} },
+            { id: 'b1', type: 'text', order: 0, properties: {}, parentId: null, metadata: { editable: true, reorderable: true, reusable: true, deletable: true } },
+            { id: 'b2', type: 'heading' as any, order: 1, properties: {}, parentId: null, metadata: { editable: true, reorderable: true, reusable: true, deletable: true } },
         ];
 
         const v3Blocks = BlockV4ToV3Adapter.convertMany(v4Blocks);
@@ -192,7 +198,12 @@ describe('Type Guards', () => {
             order: 0,
             properties: {},
             parentId: null,
-            metadata: {},
+            metadata: {
+                editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
+            },
         };
 
         expect(isV4Block(v4Block)).toBe(true);
@@ -245,7 +256,12 @@ describe('Utility Functions', () => {
             order: 0,
             properties: {},
             parentId: null,
-            metadata: {},
+            metadata: {
+                editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
+            },
         };
 
         const result = ensureV4Block(v4Block);
@@ -260,7 +276,12 @@ describe('Utility Functions', () => {
             order: 0,
             properties: {},
             parentId: null,
-            metadata: {},
+            metadata: {
+                editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
+            },
         };
 
         const result = ensureV3Block(v4Block);
@@ -280,11 +301,16 @@ describe('Utility Functions', () => {
 
         const v4Block: QuizBlock = {
             id: 'b2',
-            type: 'heading',
+            type: 'heading' as any,
             order: 1,
             properties: {},
             parentId: null,
-            metadata: {},
+            metadata: {
+                editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
+            },
         };
 
         const mixed = [v3Block, v4Block];
@@ -306,11 +332,16 @@ describe('Utility Functions', () => {
 
         const v4Block: QuizBlock = {
             id: 'b2',
-            type: 'heading',
+            type: 'heading' as any,
             order: 1,
             properties: {},
             parentId: null,
-            metadata: {},
+            metadata: {
+                editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
+            },
         };
 
         const mixed = [v3Block, v4Block];
@@ -326,7 +357,7 @@ describe('Conversão Bidirecional', () => {
     it('deve manter dados após conversão v3 → v4 → v3', () => {
         const original: Block = {
             id: 'block-test',
-            type: 'heading',
+            type: 'heading' as any,
             order: 5,
             properties: {
                 level: 2,
@@ -336,6 +367,9 @@ describe('Conversão Bidirecional', () => {
             },
             metadata: {
                 editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
             },
         };
 
@@ -363,6 +397,9 @@ describe('Conversão Bidirecional', () => {
             parentId: null,
             metadata: {
                 editable: false,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
             },
         };
 

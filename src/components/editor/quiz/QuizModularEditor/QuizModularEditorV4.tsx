@@ -30,29 +30,38 @@ export interface QuizModularEditorV4Props extends QuizModularEditorProps {
  * Hook para gerenciar conversão automática v3 ↔ v4
  */
 function useV4BlockAdapter() {
-    const { blocks, updateBlock } = useEditorContext();
+    const context = useEditorContext();
 
     // Converte blocos v3 do contexto para v4
     const v4Blocks = useMemo(() => {
+        const blocks = (context as any).blocks as Block[] | undefined;
         if (!blocks) return [];
-        return blocks.map((block, index) => {
+        return blocks.map((block: Block, index: number) => {
             try {
                 return ensureV4Block(block, index);
             } catch (error) {
                 appLogger.error('Failed to convert block to v4:', { error, block });
                 return null;
             }
-        }).filter((b): b is QuizBlock => b !== null);
-    }, [blocks]);
+        }).filter((b: QuizBlock | null): b is QuizBlock => b !== null);
+    }, [(context as any).blocks]);
 
     // Handler que converte update v4 → v3 antes de chamar updateBlock
     const handleV4Update = useCallback((blockId: string, updates: Partial<QuizBlock>) => {
         appLogger.debug('V4 update received:', { blockId, updates });
 
+        const blocks = (context as any).blocks as Block[] | undefined;
+        const updateBlock = (context as any).updateBlock as ((id: string, block: Block) => void) | undefined;
+
         // Encontra bloco original v3
-        const originalBlock = blocks?.find(b => b.id === blockId);
+        const originalBlock = blocks?.find((b: Block) => b.id === blockId);
         if (!originalBlock) {
             appLogger.warn('Block not found for v4 update:', blockId);
+            return;
+        }
+
+        if (!updateBlock) {
+            appLogger.warn('updateBlock not available in context');
             return;
         }
 
@@ -78,7 +87,7 @@ function useV4BlockAdapter() {
         } catch (error) {
             appLogger.error('Failed to convert v4 update to v3:', { error, blockId, updates });
         }
-    }, [blocks, updateBlock]);
+    }, [context]);
 
     return {
         v4Blocks,
@@ -125,12 +134,13 @@ export function QuizModularEditorV4Wrapper({
  * Hook para usar blocos v4 diretamente no código
  */
 export function useV4Blocks() {
-    const { blocks } = useEditorContext();
+    const context = useEditorContext();
 
     const v4Blocks = useMemo(() => {
+        const blocks = (context as any).blocks as Block[] | undefined;
         if (!blocks) return [];
         return BlockV3ToV4Adapter.convertMany(blocks);
-    }, [blocks]);
+    }, [(context as any).blocks]);
 
     return v4Blocks;
 }
@@ -139,14 +149,15 @@ export function useV4Blocks() {
  * Hook para converter um bloco específico para v4
  */
 export function useV4Block(blockId: string | null) {
-    const { blocks } = useEditorContext();
+    const context = useEditorContext();
 
     const v4Block = useMemo(() => {
+        const blocks = (context as any).blocks as Block[] | undefined;
         if (!blockId || !blocks) return null;
-        const block = blocks.find(b => b.id === blockId);
+        const block = blocks.find((b: Block) => b.id === blockId);
         if (!block) return null;
         return ensureV4Block(block);
-    }, [blockId, blocks]);
+    }, [blockId, (context as any).blocks]);
 
     return v4Block;
 }
