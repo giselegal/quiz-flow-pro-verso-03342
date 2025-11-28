@@ -87,6 +87,9 @@ npm run build:templates
 3. Atualize `totalSteps` em `meta.json`
 4. Build e teste
 
+### Snippet VS Code (rápido)
+- Use o snippet `step-v4` (arquivo `.vscode/step-v4.code-snippets`) ao criar `steps/step-XX.json` para garantir conformidade com o ModularStepSchema v4.0.
+
 ### Remover Step
 1. Delete `steps/step-XX.json`
 2. Atualize `totalSteps` em `meta.json`
@@ -154,6 +157,13 @@ npm run lint:json
 ```bash
 npm run test:template quiz21StepsComplete
 ```
+
+### Testes de Schemas
+```bash
+npm run test -t schemas v4.0
+```
+- Arquivo de testes: `tests/schemas/modularStepSchema.spec.ts`
+- Cobre validações de `ModularStep`, `Navigation` e `Validation`.
 
 ## 📊 Vantagens da Estrutura Modular
 
