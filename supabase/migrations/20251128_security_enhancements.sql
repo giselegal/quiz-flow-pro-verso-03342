@@ -275,10 +275,10 @@ BEGIN
         ADD CONSTRAINT funnels_name_not_empty 
         CHECK (length(trim(name)) > 0);
         
-        -- Status deve ser válido
+        -- is_published deve ser boolean válido
         ALTER TABLE funnels 
-        ADD CONSTRAINT funnels_valid_status 
-        CHECK (status IN ('draft', 'review', 'published', 'paused', 'archived'));
+        ADD CONSTRAINT funnels_valid_published 
+        CHECK (is_published IS NOT NULL);
         
         RAISE NOTICE '✅ Constraints de segurança adicionados em funnels';
     END IF;
