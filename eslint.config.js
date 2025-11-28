@@ -165,14 +165,46 @@ export default [
               group: ['../*/*/*/*', '../../../*', '../../../../*'],
               message: '❌ Imports profundos não são permitidos. Use aliases @/ ao invés de ../../../. Exemplo: import { X } from "@/data/X"',
             },
+            // ===============================================================
+            // AUDITORIA 2025-11-28: Bloquear registries legados
+            // Use: @/core/registry/UnifiedBlockRegistry (925 LOC, fonte única)
+            // Tipos: @/types/core/BlockInterfaces
+            // ===============================================================
             {
               group: [
                 '**/core/runtime/quiz/blocks/BlockRegistry',
                 '**/core/editor/blocks/EnhancedBlockRegistry',
                 '**/types/blockTypes#BlockComponentMap',
                 '**/editor/BlockRegistry',
+                // Novos padrões bloqueados
+                '**/components/editor/blocks/enhancedBlockRegistry',
+                '**/components/editor/quiz/schema/blockRegistry',
+                '**/config/enhancedBlockRegistry',
+                '**/editor/registry/BlockComponentMap',
+                // Apenas bloquear imports do arquivo legado blockRegistry, não UnifiedBlockRegistry
+                '**/core/registry/blockRegistry',
               ],
               message: '❌ Registries legados estão proibidos. Use "@/core/registry/UnifiedBlockRegistry" e tipos de "@/types/core/BlockInterfaces".',
+            },
+            // ===============================================================
+            // AUDITORIA 2025-11-28: Bloquear renderers duplicados
+            // Use: @/components/editor/blocks/UniversalBlockRenderer (principal)
+            // ===============================================================
+            {
+              group: [
+                '**/client/src/components/editor/blocks/UniversalBlockRenderer',
+              ],
+              message: '❌ Renderer duplicado (client/) está proibido. Use "@/components/editor/blocks/UniversalBlockRenderer".',
+            },
+            // ===============================================================
+            // AUDITORIA 2025-11-28: Bloquear tipos Supabase desatualizados
+            // Use: shared/types/supabase.ts (principal)
+            // ===============================================================
+            {
+              group: [
+                '**/services/integrations/supabase/types_updated',
+              ],
+              message: '⚠️ Arquivo types_updated.ts está obsoleto. Use "shared/types/supabase" ou regenere com "npm run supabase:gen:types".',
             },
           ],
         },

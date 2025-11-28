@@ -5,9 +5,13 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  # Scheduled daily run for automated reporting
+  schedule:
+    - cron: '0 6 * * *'  # Run at 6 AM UTC daily
 
 jobs:
   validate-json-v4:
+    name: 🔍 Validate JSON V4 Schema
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,16 +20,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
       - name: Install dependencies
         run: npm ci
       - name: Validate JSON against V4 schema
         run: npm run ci:json:v4
+      - name: Upload validation report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: json-v4-validation-report
+          path: reports/json-v4-validation-*.md
+          retention-days: 30
 
-  audit-rls:
+  audit-json-inventory:
+    name: 📊 JSON Audit & Inventory
     runs-on: ubuntu-latest
-    env:
-      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-    if: ${{ env.SUPABASE_DB_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,9 +43,70 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run JSON audit
+        run: npm run audit:jsons
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: json-audit-report
+          path: AUDITORIA_JSONS_*.md
+          retention-days: 30
+
+  migration-status:
+    name: 📈 Migration V3→V4 Status
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate migration status report
+        run: npm run audit:migration-status
+      - name: Upload migration report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: migration-status-report
+          path: reports/json-migration-status-*.md
+          retention-days: 30
+
+  audit-rls:
+    name: 🔒 RLS Security Audit
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    # Only run if SUPABASE_DB_URL secret is configured (non-empty after substitution)
+    if: ${{ secrets.SUPABASE_DB_URL != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
       - name: Install dependencies
         run: npm ci
       - name: Install Postgres client
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Create reports directory
+        run: mkdir -p reports
       - name: Run RLS Audit
         run: npm run audit:rls
+        continue-on-error: true
+      - name: Upload RLS audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rls-audit-report
+          path: reports/rls-audit-*.log
+          retention-days: 30

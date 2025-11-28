@@ -18,6 +18,7 @@
     "audit:templates:imports": "tsx scripts/audit-template-service-imports.ts",
     "audit:jsons": "node scripts/audit-jsons.mjs",
     "audit:jsons:ci": "node scripts/audit-jsons.mjs --ci",
+    "audit:migration-status": "node scripts/audit/json-migration-status.mjs",
     "validate:json:v4": "node scripts/validate-json-v4.mjs",
     "ci:json:v4": "bash scripts/ci-json-v4.sh",
     "audit:rls": "bash scripts/audit/run-rls-audit.sh",
