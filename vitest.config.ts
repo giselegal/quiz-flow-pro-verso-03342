@@ -96,6 +96,8 @@ export default defineConfig({
             'src/contexts/**/*.{test,spec}.{ts,tsx}',
             'src/hooks/**/*.{test,spec}.tsx', // Hooks com JSX
             'src/testing/**/*.test.ts',
+            // Inclui suites dentro de __tests__ específicas do React
+            'src/**/__tests__/**/*.{test,spec}.{ts,tsx}',
           ],
         },
         // Replica aliases para garantir resolução dentro do projeto 'react'
