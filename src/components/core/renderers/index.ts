@@ -20,4 +20,4 @@ export type { UniversalBlockRendererProps as ConsolidatedBlockRendererProps } fr
 export { default as VisualBlockFallback } from './VisualBlockFallback';
 
 // Registry utilities expostos via config neutra
-export { getBlockComponent as getEnhancedBlockComponent } from '@/config/enhancedBlockRegistry';
+export { getBlockComponent as getEnhancedBlockComponent } from '@/core/registry/UnifiedBlockRegistryAdapter';
