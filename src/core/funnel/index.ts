@@ -40,7 +40,6 @@ export {
 // Hook types
 export type {
     UseFunnelOptions,
-    UseFunnelReturn,
 } from './hooks/useFunnel';
 
 export type {

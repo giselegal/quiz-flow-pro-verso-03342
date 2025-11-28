@@ -291,17 +291,14 @@ function AppCore() {
                                                 return (
                                                     <EditorErrorBoundary>
                                                         <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                            <SuperUnifiedProviderV3>
-                                                                <SuperUnifiedProvider>
-                                                                    <EditorProviderUnified>
-                                                                        <QuizModularEditor
-                                                                            resourceId={resourceId}
-                                                                            templateId={templateParam}
-                                                                            funnelId={funnelId}
-                                                                        />
-                                                                    </EditorProviderUnified>
-                                                                </SuperUnifiedProvider>
-                                                            </SuperUnifiedProviderV3>
+                                                            {/* SuperUnifiedProviderV3 já está no nível App, não duplicar */}
+                                                            <EditorProviderUnified>
+                                                                <QuizModularEditor
+                                                                    resourceId={resourceId}
+                                                                    templateId={templateParam}
+                                                                    funnelId={funnelId}
+                                                                />
+                                                            </EditorProviderUnified>
                                                         </Suspense>
                                                     </EditorErrorBoundary>
                                                 );
