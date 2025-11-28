@@ -188,7 +188,8 @@ export class FunnelExportService {
       
     } catch (err) {
       console.error('[FunnelExportService] Erro ao exportar:', err);
-      throw new Error(`Falha ao exportar funil: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Falha ao exportar funil: ${message}`);
     }
   }
   
