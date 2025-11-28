@@ -66,8 +66,8 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
-// 🎯 EDITOR PRINCIPAL - QuizModularEditor com EditorProviderUnified
-const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
+// 🎯 EDITOR PRINCIPAL - QuizModularEditorV4 com suporte v3↔v4
+const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor/QuizModularEditorV4'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));

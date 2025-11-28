@@ -28,9 +28,9 @@ import { useFeatureFlag } from '@/core/utils/featureFlags';
 import { EditorProvider } from '@/core/contexts/EditorContext';
 import { appLogger } from '@/lib/utils/appLogger';
 
-// Lazy load do editor modular (componente principal)
+// Lazy load do editor modular v4 (componente principal com suporte v3↔v4)
 const QuizModularEditor = React.lazy(() =>
-    import('@/components/editor/quiz/QuizModularEditor')
+    import('@/components/editor/quiz/QuizModularEditor/QuizModularEditorV4')
 );
 
 /**

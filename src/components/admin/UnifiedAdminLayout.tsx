@@ -29,7 +29,7 @@ import { useUserName } from '@/hooks/useUserName';
 const ConsolidatedOverviewPage = React.lazy(() => import('@/pages/admin/ConsolidatedOverviewPage'));
 const MeusFunisPageReal = React.lazy(() => import('@/pages/dashboard/MeusFunisPageReal'));
 const AnalyticsPage = React.lazy(() => import('@/pages/dashboard/AnalyticsPage'));
-const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor').then(m => ({ default: m.default })));
+const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor/QuizModularEditorV4').then(m => ({ default: m.default })));
 
 // ============================================================================
 // INTERFACES
