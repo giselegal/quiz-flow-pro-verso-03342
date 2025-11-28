@@ -14,6 +14,13 @@ import { fileURLToPath } from 'url';
 import { setupLogsEndpoint, setupUtmAnalyticsEndpoint } from './api-endpoints';
 import { setupFunnelSettingsEndpoints } from './funnel-settings';
 import { setupFunnelPublicationEndpoints } from './funnel-publication';
+import { 
+  getStep, 
+  updateStep, 
+  createStep, 
+  deleteStep, 
+  reorderSteps 
+} from './api/controllers/funnel-steps.controller';
 
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
