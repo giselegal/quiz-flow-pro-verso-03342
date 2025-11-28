@@ -5,88 +5,88 @@ import userEvent from '@testing-library/user-event';
 
 // Mock duplicateFunnel adapter
 vi.mock('@/features/editor/model/editorAdapter', () => ({
-  duplicateFunnel: vi.fn(async () => ({ success: true, clonedFunnel: { id: 'cloned-123' }, stats: { clonedBlocks: 10, durationMs: 50 } })),
-  createEditorCommandsAdapter: (legacy: any) => legacy,
+    duplicateFunnel: vi.fn(async () => ({ success: true, clonedFunnel: { id: 'cloned-123' }, stats: { clonedBlocks: 10, durationMs: 50 } })),
+    createEditorCommandsAdapter: (legacy: any) => legacy,
 }));
 
 // Mock feature flags to ensure button uses new flow
 vi.mock('@/core/utils/featureFlags', () => ({
-  getFeatureFlag: (k: string) => (k === 'useFunnelCloneService' ? true : false),
+    getFeatureFlag: (k: string) => (k === 'useFunnelCloneService' ? true : false),
 }));
 
 // Mock EditorLoadingProvider deps to simplify rendering
 vi.mock('@/contexts/EditorLoadingContext', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    EditorLoadingProvider: ({ children }: any) => <div>{children}</div>,
-    useEditorLoading: () => ({ isLoadingTemplate: false, isLoadingStep: false, setTemplateLoading: () => {}, setStepLoading: () => {} }),
-  };
+    const actual = await importOriginal();
+    return {
+        ...actual,
+        EditorLoadingProvider: ({ children }: any) => <div>{children}</div>,
+        useEditorLoading: () => ({ isLoadingTemplate: false, isLoadingStep: false, setTemplateLoading: () => { }, setStepLoading: () => { } }),
+    };
 });
 
 // Mock core unified editor context minimally
 vi.mock('@/core', () => ({
-  useEditorContext: () => ({
-    state: {
-      editor: {
-        currentStep: 1,
-        selectedBlockId: null,
-        isDirty: false,
-        stepBlocks: { 1: [] },
-      },
-      currentFunnel: { id: 'funnel-abc' },
-    },
-    setCurrentStep: () => {},
-    addBlock: () => {},
-    saveFunnel: async () => {},
-    saveStepBlocks: async () => {},
-    publishFunnel: async () => {},
-    getStepBlocks: () => [],
-    setStepBlocks: () => {},
-    setSelectedBlock: () => {},
-    undo: () => {},
-    redo: () => {},
-    canUndo: false,
-    canRedo: false,
-    removeBlock: () => {},
-    reorderBlocks: () => {},
-    updateBlock: () => {},
-    funnel: { createFunnel: async () => ({ id: 'new-funnel' }) },
-    ux: { showToast: () => {} },
-  }),
-  persistenceService: { saveBlocks: async () => ({ success: true }) },
-  validateBlock: () => ({ success: true }),
-  useAutoSave: () => ({ isSaving: false, lastSaved: null, error: null, forceSave: async () => {} }),
+    useEditorContext: () => ({
+        state: {
+            editor: {
+                currentStep: 1,
+                selectedBlockId: null,
+                isDirty: false,
+                stepBlocks: { 1: [] },
+            },
+            currentFunnel: { id: 'funnel-abc' },
+        },
+        setCurrentStep: () => { },
+        addBlock: () => { },
+        saveFunnel: async () => { },
+        saveStepBlocks: async () => { },
+        publishFunnel: async () => { },
+        getStepBlocks: () => [],
+        setStepBlocks: () => { },
+        setSelectedBlock: () => { },
+        undo: () => { },
+        redo: () => { },
+        canUndo: false,
+        canRedo: false,
+        removeBlock: () => { },
+        reorderBlocks: () => { },
+        updateBlock: () => { },
+        funnel: { createFunnel: async () => ({ id: 'new-funnel' }) },
+        ux: { showToast: () => { } },
+    }),
+    persistenceService: { saveBlocks: async () => ({ success: true }) },
+    validateBlock: () => ({ success: true }),
+    useAutoSave: () => ({ isSaving: false, lastSaved: null, error: null, forceSave: async () => { } }),
 }));
 
 // Mock template service
 vi.mock('@/services/canonical/TemplateService', () => ({
-  templateService: {
-    getStep: async () => ({ success: true, data: [] }),
-    steps: { list: async () => ({ success: true, data: [] }) },
-  },
+    templateService: {
+        getStep: async () => ({ success: true, data: [] }),
+        steps: { list: async () => ({ success: true, data: [] }) },
+    },
 }));
 
 // Prevent navigation side-effect
 const originalLocation = window.location;
 beforeEach(() => {
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: { href: '', assign: vi.fn() },
-  });
+    Object.defineProperty(window, 'location', {
+        configurable: true,
+        value: { href: '', assign: vi.fn() },
+    });
 });
 
 import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor';
 
 describe('QuizModularEditor - Duplicar smoke', () => {
-  it('clica no botão Duplicar e chama fluxo com sucesso', async () => {
-    const user = userEvent.setup();
-    render(<QuizModularEditor resourceId="funnel-abc" />);
+    it('clica no botão Duplicar e chama fluxo com sucesso', async () => {
+        const user = userEvent.setup();
+        render(<QuizModularEditor resourceId="funnel-abc" />);
 
-    const btn = await screen.findByRole('button', { name: /duplicar/i });
-    await user.click(btn);
+        const btn = await screen.findByRole('button', { name: /duplicar/i });
+        await user.click(btn);
 
-    // Navegação deve ser acionada para o novo funil
-    expect((window.location as any).href).toContain('/editor/');
-  });
+        // Navegação deve ser acionada para o novo funil
+        expect((window.location as any).href).toContain('/editor/');
+    });
 });
