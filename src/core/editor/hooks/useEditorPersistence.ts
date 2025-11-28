@@ -6,7 +6,7 @@ import type { ContextualFunnelData } from '@/types/funnel';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // Tipo para aceitar valores do enum FunnelContext
-export type FunnelContextType = FunnelContext;
+export type FunnelContextType = typeof FunnelContext[keyof typeof FunnelContext];
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {
@@ -31,7 +31,7 @@ export interface FunnelPage {
   metadata: Record<string, any>;
 }
 
-export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDITOR) => {
+export const useEditorPersistence = (context: FunnelContextType = FunnelContext.EDITOR) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();

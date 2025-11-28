@@ -26,7 +26,7 @@ export {
 export { FunnelContext, generateContextualId, extractContextFromId } from './contexts/FunnelContext';
 
 // ============================================================================
-// HOOKS
+// HOOKS - Exportação completa (mantém compatibilidade)
 // ============================================================================
 export * from './hooks';
 

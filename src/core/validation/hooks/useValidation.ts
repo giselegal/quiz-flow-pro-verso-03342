@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ValidationProps, ValidationResult } from '../types/editor';
+import type { ValidationProps, ValidationResult } from '@/types/editor';
 
 export function useValidation() {
   const [errors, setErrors] = useState<Array<{ path: string; message: string }>>([]);
