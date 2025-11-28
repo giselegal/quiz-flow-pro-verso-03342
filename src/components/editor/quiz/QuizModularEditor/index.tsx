@@ -30,7 +30,6 @@ import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
 import { TemplateHealthPanel } from './components/TemplateHealthPanel';
 // 🎯 FASE 3.1: Novos hooks refatorados
 import { useStepNavigation } from './hooks/useStepNavigation';
-import useEditorAdapter from '@/hooks/useEditorAdapter';
 import { useAutoSave } from '@/core';
 import { useEditorMode as useEditorModeLocal } from './hooks/useEditorMode';
 // 🆕 G20 & G28 FIX: Prefetch inteligente com AbortController
@@ -144,26 +143,19 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         ux, // Access to UX methods (showToast)
     } = unified;
 
-    // Adapter unificado precisa ser inicializado antes de qualquer uso em deps
-    const adapter = useEditorAdapter();
-
-    // Adapter híbrido de comandos (legacy vs unificado)
+    // Adapter híbrido de comandos (usando unified context)
     const legacyCommands = useMemo(() => ({
         addBlock: (stepId: any, block: any) => addBlock(stepId, block),
         updateBlock: (stepId: any, blockId: string, patch: any) => updateBlock(stepId, blockId, patch),
     }), [addBlock, updateBlock]);
 
     const unifiedCommands = useMemo(() => {
-        // Caso exista store unificado exposto via adapter/hooks futuros
-        const maybeAdapterActions = (adapter as any)?.actions;
-        if (maybeAdapterActions?.addBlock && maybeAdapterActions?.updateBlock) {
-            return {
-                addBlock: async (stepId: any, block: any) => maybeAdapterActions.addBlock(stepId, block),
-                updateBlock: async (stepId: any, blockId: string, patch: any) => maybeAdapterActions.updateBlock(blockId, patch),
-            };
-        }
-        return undefined;
-    }, [adapter]);
+        // Usar unified context diretamente (já tem todas as actions necessárias)
+        return {
+            addBlock: async (stepId: any, block: any) => addBlock(stepId, block),
+            updateBlock: async (stepId: any, blockId: string, patch: any) => updateBlock(stepId, blockId, patch),
+        };
+    }, [addBlock, updateBlock]);
 
     const commands = useMemo(() => createEditorCommandsAdapter(legacyCommands, unifiedCommands as any), [legacyCommands, unifiedCommands]);
 
@@ -2187,14 +2179,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
-                                                        adapter.actions.deleteBlock(id);
+                                                        removeBlock(safeCurrentStep, id);
                                                     }) : undefined}
                                                     onMoveBlock={previewMode === 'live' ? ((from, to) => {
                                                         wysiwyg.actions.reorderBlocks(from, to);
                                                     }) : undefined}
                                                     onUpdateBlock={previewMode === 'live' ? ((id, patch) => {
                                                         wysiwyg.actions.updateBlock(id, patch);
-                                                        (adapter.actions.updateBlock ?? ((bid, p) => updateBlock(safeCurrentStep, bid, p)))(id, patch);
+                                                        updateBlock(safeCurrentStep, id, patch);
                                                     }) : undefined}
                                                     onBlockSelect={(id) => {
                                                         if (previewMode === 'live') {
