@@ -7,7 +7,7 @@
   "version": "4.0.0",
   "metadata": {
     "createdAt": "2025-01-13",
-    "updatedAt": "2025-11-28T01:38:34.999Z",
+    "updatedAt": "2025-11-28T02:01:05.450Z",
     "author": "Sistema - Arquitetura Modular v4",
     "structure": "modular",
     "sourceType": "individual-steps",
@@ -44,11 +44,11 @@
     }
   },
   "buildInfo": {
-    "lastBuild": "2025-11-28T01:39:37.277Z",
+    "lastBuild": "2025-11-28T02:01:05.479Z",
     "buildScript": "scripts/build-modular-template.ts",
     "outputPath": "public/templates/quiz21Steps/compiled/full.json",
     "stepsPath": "public/templates/quiz21Steps/steps/",
-    "lastSplit": "2025-11-28T01:38:34.999Z",
+    "lastSplit": "2025-11-28T02:01:05.450Z",
     "splitStats": {
       "totalSteps": 21,
       "successfulSplits": 21,
