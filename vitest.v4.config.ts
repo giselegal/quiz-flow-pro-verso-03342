@@ -14,7 +14,7 @@ export default defineConfig({
         name: 'QuizModularEditorV4',
         globals: true,
         environment: 'jsdom',
-        setupFiles: ['./test-setup.ts'],
+        setupFiles: ['./src/__tests__/test-setup.ts'],
         include: [
             '**/__tests__/**/*.test.{ts,tsx}',
             '**/__tests__/**/*.integration.test.{ts,tsx}',
