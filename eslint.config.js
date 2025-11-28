@@ -166,6 +166,15 @@ export default [
               group: ['../*/*/*/*', '../../../*', '../../../../*'],
               message: '❌ Imports profundos não são permitidos. Use aliases @/ ao invés de ../../../. Exemplo: import { X } from "@/data/X"',
             },
+            {
+              group: [
+                '**/core/runtime/quiz/blocks/BlockRegistry',
+                '**/core/editor/blocks/EnhancedBlockRegistry',
+                '**/types/blockTypes#BlockComponentMap',
+                '**/editor/BlockRegistry',
+              ],
+              message: '❌ Registries legados estão proibidos. Use "@/core/registry/UnifiedBlockRegistry" e tipos de "@/types/core/BlockInterfaces".',
+            },
           ],
         },
       ],
