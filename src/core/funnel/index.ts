@@ -13,12 +13,12 @@ export { FunnelEngine, FunnelActions, funnelEngine } from './FunnelEngine';
 export type * from './types';
 
 // Hooks - explicitly import to avoid conflicts
+// Removidas exportações inexistentes: useFunnelValidation, useFunnelData, useFunnelProgress
 export {
     useFunnel,
-    useFunnelNavigation,
-    useFunnelValidation,
-    useFunnelData,
-    useFunnelProgress,
+    useFunnels,
+    useFunnelList,
+    funnelKeys,
 } from './hooks/useFunnel';
 
 export {
@@ -28,6 +28,10 @@ export {
     useFunnelAnalytics,
     useFunnelComparison,
 } from './hooks/useFunnelState';
+
+export {
+    useFunnelNavigation,
+} from './hooks/useFunnelNavigation';
 
 export {
     useFunnelTemplates,

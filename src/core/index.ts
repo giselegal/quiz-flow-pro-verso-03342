@@ -2,6 +2,7 @@
  * 📦 CORE - Barrel Export Principal
  * 
  * Ponto de entrada único para todos os módulos core.
+ * Exportações explícitas para evitar conflitos de tipos duplicados.
  * 
  * @example
  * ```typescript
@@ -9,17 +10,73 @@
  * ```
  */
 
-// Contexts
-export * from './contexts';
+// ============================================================================
+// CONTEXTS - Exportações seletivas
+// ============================================================================
+export {
+    EditorStateProvider,
+    EditorStateProvider as EditorProvider,
+    useEditorState,
+    useEditor,
+    useEditorCompat,
+    type EditorContextValue,
+    type EditorCompatAPI,
+} from './contexts/EditorContext';
 
-// Hooks
+export { FunnelContext, generateContextualId, extractContextFromId } from './contexts/FunnelContext';
+
+// ============================================================================
+// HOOKS
+// ============================================================================
 export * from './hooks';
 
-// Schemas
-export * from './schemas';
+// ============================================================================
+// SCHEMAS - Use tipos do schema canonical
+// ============================================================================
+export {
+    BlockSchema,
+    BlockTypeSchema,
+    BlockPropertiesSchema,
+    BlockContentSchema,
+    BlockMetadataSchema,
+    BlocksArraySchema,
+    validateBlock,
+    validateBlocks,
+    isBlock,
+    createBlock,
+    type Block,
+    type BlockType,
+} from './schemas/blockSchema';
 
-// Services
+// ============================================================================
+// SERVICES
+// ============================================================================
 export * from './services';
 
-// Utils
+// ============================================================================
+// UTILS
+// ============================================================================
 export * from './utils';
+
+// ============================================================================
+// DOMAINS - Entidades de domínio (fonte única de verdade)
+// ============================================================================
+// Nota: Evitar conflito com Block do schema
+export {
+    Funnel,
+    Page,
+    Quiz,
+    Question,
+    Answer,
+    ResultProfile,
+} from './domains';
+
+// Re-exportar tipos de domínio com namespaces para evitar conflitos
+export type {
+    FunnelMetadata,
+    FunnelSettings,
+    PageType,
+    BlockContent,
+    BlockStyles,
+    BlockSettings,
+} from './domains';

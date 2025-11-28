@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ValidationProps, ValidationResult } from '../types/editor';
+import type { ValidationProps, ValidationResult } from '@/types/editor';
 
 // Interface para validações padrão do editor
 export interface EditorValidations {

@@ -5,6 +5,9 @@ import { ContextualFunnelService } from '@/services/core/ContextualFunnelService
 import type { ContextualFunnelData } from '@/types/funnel';
 import { appLogger } from '@/lib/utils/appLogger';
 
+// Tipo para aceitar valores do enum FunnelContext
+export type FunnelContextType = FunnelContext;
+
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {
   id: string;

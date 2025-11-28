@@ -15,7 +15,8 @@ export { useFunnelAnalytics } from './useFunnelAnalytics';
 export { useFunnelComponents } from './useFunnelComponents';
 export { useFunnelLivePreview } from './useFunnelLivePreview';
 export { useFunnelLoader } from './useFunnelLoader';
-export { useFunnelLoaderRefactored } from './useFunnelLoaderRefactored';
+// Corrigido: useFunnelLoaderRefactored usa default export
+export { default as useFunnelLoaderRefactored } from './useFunnelLoaderRefactored';
 export { useFunnelNavigation } from './useFunnelNavigation';
 export { useFunnelPublication } from './useFunnelPublication';
 
