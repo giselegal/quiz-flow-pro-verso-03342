@@ -1053,42 +1053,40 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     setStepBlocks(stepIndex, normalizedBlocks);
 
                     // 🔥 HOTFIX 4: WYSIWYG Sync Otimizado
-                    // ✅ CORREÇÃO 4: Sincronizar em live mode, não em production
-                    if (previewMode !== 'production') {
-                        try {
-                            // ✅ CORREÇÃO 5: Comparação otimizada sem JSON.stringify
-                            const currentIds = wysiwyg.state.blocks.map(b => b.id).sort().join(',');
-                            const newIds = normalizedBlocks.map((b: any) => b.id).sort().join(',');
+                    // ✅ CORREÇÃO 4: Sempre sincronizar (modo live fixo)
+                    try {
+                        // ✅ CORREÇÃO 5: Comparação otimizada sem JSON.stringify
+                        const currentIds = wysiwyg.state.blocks.map(b => b.id).sort().join(',');
+                        const newIds = normalizedBlocks.map((b: any) => b.id).sort().join(',');
 
-                            if (currentIds !== newIds) {
-                                // Blocos diferentes - fazer reset
-                                appLogger.debug('[WYSIWYG] IDs mudaram, fazendo reset');
-                                wysiwyg.actions.reset(normalizedBlocks);
-                            } else {
-                                // Mesmos IDs - atualização incremental
-                                appLogger.debug('[WYSIWYG] Mesmos IDs, sync incremental');
-                                normalizedBlocks.forEach((block: any) => {
-                                    const existing = wysiwyg.state.blocks.find(b => b.id === block.id);
-                                    // ✅ Comparação shallow ao invés de deep (JSON.stringify)
-                                    if (existing && (existing.type !== block.type || existing.order !== block.order)) {
-                                        wysiwyg.actions.updateBlock(block.id, block);
-                                    }
-                                });
-                            }
-
-                            // Manter ou definir seleção
-                            const keepId = wysiwyg.state.selectedBlockId;
-                            if (keepId && normalizedBlocks.some((b: any) => b.id === keepId)) {
-                                // Seleção atual ainda válida, manter
-                                wysiwyg.actions.selectBlock(keepId);
-                            } else {
-                                // Selecionar primeiro bloco
-                                const first = normalizedBlocks[0];
-                                if (first) wysiwyg.actions.selectBlock(first.id);
-                            }
-                        } catch (e) {
-                            appLogger.warn('[QuizModularEditor] Falha ao sincronizar WYSIWYG', { data: [e] });
+                        if (currentIds !== newIds) {
+                            // Blocos diferentes - fazer reset
+                            appLogger.debug('[WYSIWYG] IDs mudaram, fazendo reset');
+                            wysiwyg.actions.reset(normalizedBlocks);
+                        } else {
+                            // Mesmos IDs - atualização incremental
+                            appLogger.debug('[WYSIWYG] Mesmos IDs, sync incremental');
+                            normalizedBlocks.forEach((block: any) => {
+                                const existing = wysiwyg.state.blocks.find(b => b.id === block.id);
+                                // ✅ Comparação shallow ao invés de deep (JSON.stringify)
+                                if (existing && (existing.type !== block.type || existing.order !== block.order)) {
+                                    wysiwyg.actions.updateBlock(block.id, block);
+                                }
+                            });
                         }
+
+                        // Manter ou definir seleção
+                        const keepId = wysiwyg.state.selectedBlockId;
+                        if (keepId && normalizedBlocks.some((b: any) => b.id === keepId)) {
+                            // Seleção atual ainda válida, manter
+                            wysiwyg.actions.selectBlock(keepId);
+                        } else {
+                            // Selecionar primeiro bloco
+                            const first = normalizedBlocks[0];
+                            if (first) wysiwyg.actions.selectBlock(first.id);
+                        }
+                    } catch (e) {
+                        appLogger.warn('[QuizModularEditor] Falha ao sincronizar WYSIWYG', { data: [e] });
                     }
                 } else {
                     // ✅ CORREÇÃO 2.1: Log mais claro sobre por que step não foi carregado
