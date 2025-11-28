@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
     ENHANCED_BLOCK_REGISTRY,
-    // Test helper import - function used in tests below
-} from '@/config/enhancedBlockRegistry';
-import { generateBlockDefinitions, getBlockComponent } from '@/config/enhancedBlockRegistry';
+    getBlockComponent,
+    AVAILABLE_COMPONENTS,
+} from '@/core/registry/UnifiedBlockRegistryAdapter';
 
 // Contrato simples:
 // - Para cada definição gerada, deve existir uma entry correspondente no registry.
@@ -12,7 +12,13 @@ import { generateBlockDefinitions, getBlockComponent } from '@/config/enhancedBl
 
 describe('enhancedBlockRegistry alignment', () => {
     it('all generated definitions map to registry and resolve to a component', () => {
-        const defs = generateBlockDefinitions();
+                const defs = AVAILABLE_COMPONENTS.map(c => ({
+                    type: c.type,
+                    component: getBlockComponent(c.type),
+                    label: c.label,
+                    name: c.label,
+                    category: c.category,
+                }));
         expect(defs.length).toBeGreaterThan(0);
 
         for (const def of defs) {

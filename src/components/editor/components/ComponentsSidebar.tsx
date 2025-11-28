@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
-import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
+import { AVAILABLE_COMPONENTS } from '@/core/registry/UnifiedBlockRegistryAdapter';
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
@@ -54,22 +54,11 @@ export const getMarginClass = (value: number | string, type: 'top' | 'bottom' | 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   // Fonte única: gerar a partir do registro canônico
   const components = useMemo(() => {
-    try {
-      const defs = generateBlockDefinitions();
-      return defs.map(def => ({
-        type: def.type,
-        label: def.label || def.name || def.type,
-        category: def.category ? `# ${def.category}` : 'Componentes',
-      }));
-    } catch {
-      // Fallback mínimo em caso de erro
-      return [
-        { type: 'text-inline', label: 'Texto', category: 'Conteúdo' },
-        { type: 'button-inline', label: 'Botão', category: 'Ação' },
-        { type: 'image-inline', label: 'Imagem', category: 'Mídia' },
-        { type: 'decorative-bar-inline', label: 'Barra Decorativa', category: 'UI' },
-      ];
-    }
+    return AVAILABLE_COMPONENTS.map(c => ({
+      type: c.type,
+      label: c.label || c.type,
+      category: c.category ? `# ${c.category}` : 'Componentes',
+    }));
   }, []);
 
   return (

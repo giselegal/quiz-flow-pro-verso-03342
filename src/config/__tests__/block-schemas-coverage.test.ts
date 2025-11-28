@@ -13,7 +13,7 @@ describe('Cobertura de Schemas de Blocos', () => {
         },
       };
     }
-    const { ENHANCED_BLOCK_REGISTRY } = await import('@/config/enhancedBlockRegistry');
+    const { ENHANCED_BLOCK_REGISTRY } = await import('@/core/registry/UnifiedBlockRegistryAdapter');
     const registryTypes = Object.keys(ENHANCED_BLOCK_REGISTRY).sort();
     const schemaTypes = Object.keys(blockPropertySchemas);
 
