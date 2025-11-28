@@ -106,10 +106,7 @@ export interface LegacyBlockComponentPropsOld {
     onMoveDown?: () => void;
 }
 
-/**
- * Mapa de componentes de bloco
- */
-export type BlockComponentMap = Record<string, React.ComponentType<BlockComponentProps>>;
+// Deprecated: BlockComponentMap removido
 
 /**
  * Resultado da decomposição de um step
