@@ -7,6 +7,7 @@ import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
 import { useEditorContext, persistenceService, validateBlock } from '@/core';
 import { getFeatureFlag } from '@/core/utils/featureFlags';
+import { createEditorCommandsAdapter, duplicateFunnel } from '@/features/editor/model/editorAdapter';
 import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
@@ -142,6 +143,26 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         funnel, // Access to funnel methods
         ux, // Access to UX methods (showToast)
     } = unified;
+
+    // Adapter híbrido de comandos (legacy vs unificado)
+    const legacyCommands = useMemo(() => ({
+        addBlock: (stepId: any, block: any) => addBlock(stepId, block),
+        updateBlock: (stepId: any, blockId: string, patch: any) => updateBlock(stepId, blockId, patch),
+    }), [addBlock, updateBlock]);
+
+    const unifiedCommands = useMemo(() => {
+        // Caso exista store unificado exposto via adapter/hooks futuros
+        const maybeAdapterActions = (adapter as any)?.actions;
+        if (maybeAdapterActions?.addBlock && maybeAdapterActions?.updateBlock) {
+            return {
+                addBlock: async (stepId: any, block: any) => maybeAdapterActions.addBlock(stepId, block),
+                updateBlock: async (stepId: any, blockId: string, patch: any) => maybeAdapterActions.updateBlock(blockId, patch),
+            };
+        }
+        return undefined;
+    }, [adapter]);
+
+    const commands = useMemo(() => createEditorCommandsAdapter(legacyCommands, unifiedCommands as any), [legacyCommands, unifiedCommands]);
 
     // Helper to adapt showToast signature (UXProvider expects: message, type, duration)
     const toast = useCallback((config: { type: string; title?: string; message: string; duration?: number }) => {
@@ -649,14 +670,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const handleAddBlock = useCallback((type: string) => {
         const stepIndex = safeCurrentStep;
         const currentBlocks = getStepBlocks(stepIndex);
-        addBlock(stepIndex, {
+        (commands.addBlock as any)(stepIndex, {
             type,
             id: `block-${uuidv4()}`,
             properties: {},
             content: {},
             order: currentBlocks.length
         });
-    }, [safeCurrentStep, addBlock, getStepBlocks]);
+    }, [safeCurrentStep, commands.addBlock, getStepBlocks]);
 
     const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
@@ -1996,6 +2017,35 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         >
                             <Download className="w-3 h-3 mr-1" />
                             Exportar v3
+                        </Button>
+                        {/* 🧬 Duplicar funil (novo serviço com fallback) */}
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                                if (!resourceId) {
+                                    toast({ type: 'error', title: 'Duplicação', message: 'resourceId ausente' });
+                                    return;
+                                }
+                                const result = await duplicateFunnel(resourceId);
+                                if (result.success && result.clonedFunnel?.id) {
+                                    toast({
+                                        type: 'success',
+                                        title: 'Funil duplicado',
+                                        message: `${result.stats?.clonedBlocks ?? '?'} blocos em ${result.stats?.durationMs ?? '?'}ms`
+                                    });
+                                    try {
+                                        window.location.href = `/editor/${encodeURIComponent(result.clonedFunnel.id)}`;
+                                    } catch {}
+                                } else {
+                                    toast({ type: 'error', title: 'Duplicação', message: result.error ?? 'Falha ao duplicar' });
+                                }
+                            }}
+                            className="h-7"
+                            title="Duplicar funil"
+                        >
+                            <Download className="w-3 h-3 mr-1" />
+                            Duplicar
                         </Button>
                         <Button
                             size="sm"
