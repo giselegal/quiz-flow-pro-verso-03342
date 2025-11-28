@@ -44,7 +44,7 @@
     }
   },
   "buildInfo": {
-    "lastBuild": "2025-11-28T02:01:05.479Z",
+    "lastBuild": "2025-11-28T03:14:42.963Z",
     "buildScript": "scripts/build-modular-template.ts",
     "outputPath": "public/templates/quiz21Steps/compiled/full.json",
     "stepsPath": "public/templates/quiz21Steps/steps/",
@@ -59,7 +59,7 @@
       "totalSteps": 21,
       "validSteps": 21,
       "invalidSteps": 0,
-      "buildTime": 13,
+      "buildTime": 14,
       "outputSize": "118.56KB"
     }
   }
