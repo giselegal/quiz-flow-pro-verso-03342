@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 
 // Mock duplicateFunnel adapter
@@ -81,7 +82,12 @@ import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor';
 describe('QuizModularEditor - Duplicar smoke', () => {
     it('clica no botão Duplicar e chama fluxo com sucesso', async () => {
         const user = userEvent.setup();
-        render(<QuizModularEditor resourceId="funnel-abc" />);
+        const qc = new QueryClient();
+        render(
+            <QueryClientProvider client={qc}>
+                <QuizModularEditor resourceId="funnel-abc" />
+            </QueryClientProvider>
+        );
 
         const btn = await screen.findByRole('button', { name: /duplicar/i });
         await user.click(btn);
