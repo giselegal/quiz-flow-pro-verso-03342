@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { BlockComponentProps } from '@/editor/registry/BlockRegistry';
+import { BlockComponentProps } from '@/types/core/BlockInterfaces';
 import { cn } from '@/lib/utils';
 
 const TextBlock: React.FC<BlockComponentProps> = React.memo(({

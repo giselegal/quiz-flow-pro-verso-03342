@@ -11,7 +11,7 @@ import FormInputBlock from './FormInputBlock';
 import ButtonBlock from './ButtonBlock';
 
 // Importar registry
-import { registerBlock } from '@/editor/registry/BlockRegistry';
+import { registerBlock } from '@/core/registry/UnifiedBlockRegistry';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
