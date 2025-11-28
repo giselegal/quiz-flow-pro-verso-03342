@@ -341,7 +341,7 @@ export function validateStep(data: unknown): ValidationResult<Step> {
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const validationError = fromError(error);
+      const validationErrorMessage = formatZodError(error);
       const errors = error.errors.map((err) => {
         const path = err.path.join('.');
         return `${path}: ${err.message}`;
