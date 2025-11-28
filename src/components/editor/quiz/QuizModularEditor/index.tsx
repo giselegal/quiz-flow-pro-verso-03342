@@ -315,14 +315,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch { }
     }, [resourceMetadata, setTemplateLoading]);
 
-    // Local UI state
-    const [previewMode, setPreviewMode] = useState<'live' | 'production'>(() => {
-        try {
-            const v = localStorage.getItem('qm-editor:preview-mode');
-            const mode = v === 'production' ? 'production' : 'live';
-            return mode;
-        } catch { return 'live'; }
-    });
+    // Local UI state - 🔥 MODO LIVE FIXO (preview de produção desativado)
+    const previewMode = 'live' as const;
 
     // 🐛 DEBUG: Flag para usar painel de propriedades simples (stateless)
     const [useSimplePropertiesPanel, setUseSimplePropertiesPanel] = useState<boolean>(() => {
@@ -569,28 +563,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
             }
 
-            // Atalhos simples: Ctrl+1/2 (sem Alt)
-            if (isMacOrWin && !e.altKey) {
-                if (e.key === '1') {
-                    e.preventDefault();
-                    setPreviewMode('live');
-                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Edição ao vivo (Ctrl+1)');
-                    return;
-                } else if (e.key === '2') {
-                    e.preventDefault();
-                    setPreviewMode('production');
-                    appLogger.debug('[QuizModularEditor] ⌨️ Atalho: Preview Publicado (Ctrl+2)');
-                    return;
-                }
-            }
-
-            // Atalho legado: Ctrl+Shift+P para toggle entre modos
-            if (!e.ctrlKey || !e.shiftKey) return;
-            const k = String(e.key || '').toLowerCase();
-            if (k === 'p') {
-                e.preventDefault();
-                setPreviewMode(prev => prev === 'live' ? 'production' : 'live');
-            }
+            // 🔥 Atalhos de modo desativados (preview de produção removido)
         };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
@@ -1802,66 +1775,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <div className="w-px h-6 bg-gray-300" /> {/* Separator */}
 
                         <div className="flex items-center gap-2 flex-wrap">
-                            <ToggleGroup
-                                type="single"
-                                value={previewMode}
-                                onValueChange={(val: string) => {
-                                    // ✅ FIX: Sempre manter um valor selecionado (não permitir desmarcação)
-                                    if (!val) return;
-
-                                    // Aplicar mudança de modo
-                                    if (val === 'live') {
-                                        setPreviewMode('live');
-                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Edição ao vivo');
-                                    } else if (val === 'production') {
-                                        setPreviewMode('production');
-                                        appLogger.debug('[QuizModularEditor] Modo alterado para: Publicado');
-                                    }
-                                }}
-                                size="sm"
-                                className="gap-1.5"
-                                aria-label="Modo do canvas"
-                            >
-                                <ToggleGroupItem
-                                    value="live"
-                                    title="Edição ao vivo - mudanças instantâneas (Ctrl+1)"
-                                    aria-label="Edição ao vivo"
-                                    className="min-w-[110px]"
-                                >
-                                    <Edit3 className="w-3 h-3 mr-1" />
-                                    <span className="hidden sm:inline">Edição ao vivo</span>
-                                    <span className="sm:hidden">Live</span>
-                                </ToggleGroupItem>
-                                <ToggleGroupItem
-                                    value="production"
-                                    title="Visualizar dados publicados (Ctrl+2)"
-                                    aria-label="Visualizar publicado"
-                                    className="min-w-[90px]"
-                                >
-                                    <Play className="w-3 h-3 mr-1" />
-                                    <span className="hidden sm:inline">Publicado</span>
-                                    <span className="sm:hidden">Pub</span>
-                                </ToggleGroupItem>
-                            </ToggleGroup>
-
-                            {/* 🎮 Indicador de modo usando state machine */}
-                            <div
-                                className="text-xs px-2 py-1 rounded-md transition-colors hidden md:flex items-center gap-1"
-                                style={{
-                                    backgroundColor: editorMode.badge.color === 'blue' ? 'rgb(219 234 254)' : 'rgb(209 250 229)',
-                                    color: editorMode.badge.color === 'blue' ? 'rgb(30 58 138)' : 'rgb(6 78 59)'
-                                }}
-                                title={editorMode.description}
-                            >
-                                <span>{editorMode.badge.icon}</span>
-                                <span>{editorMode.badge.text}</span>
-                                {editorMode.showDraftIndicator && wysiwyg.state.isDirty && (
-                                    <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" title="Mudanças não salvas" />
-                                )}
-                            </div>
+                            {/* 🔥 MODO LIVE FIXO: Preview de produção desativado */}
+                            <Badge variant="default" className="h-7 px-3 bg-blue-600 text-white flex items-center gap-1.5">
+                                <Edit3 className="w-3 h-3" />
+                                <span>Modo Edição</span>
+                            </Badge>
 
                             {/* 💾 Indicador de Auto-save */}
-                            {resourceId && previewMode !== 'live' && (
+                            {resourceId && (
                                 <AutosaveIndicator
                                     status={autoSave.isSaving ? 'saving' : autoSave.error ? 'error' : autoSave.lastSaved ? 'saved' : wysiwyg.state.isDirty ? 'unsaved' : 'idle'}
                                     errorMessage={autoSave.error?.message}
