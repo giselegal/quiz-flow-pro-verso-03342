@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '@/services/supabaseClient';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 let client: SupabaseClient | null = null
 
