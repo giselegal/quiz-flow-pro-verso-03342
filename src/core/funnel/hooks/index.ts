@@ -22,8 +22,8 @@ export { useFunnelPublication } from './useFunnelPublication';
 
 // Re-export specific types for convenience
 export type {
+    Funnel,
     UseFunnelOptions,
-    UseFunnelReturn,
 } from './useFunnel';
 
 export type {
@@ -35,3 +35,6 @@ export type {
     UseFunnelTemplatesOptions,
     UseFunnelTemplatesReturn,
 } from './useFunnelTemplates';
+
+// Re-export UseQueryResult type for convenience (UseFunnelReturn)
+export type { UseQueryResult } from '@tanstack/react-query';

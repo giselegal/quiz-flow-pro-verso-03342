@@ -36,6 +36,9 @@ export interface FeatureFlags {
     useSinglePropertiesPanel: boolean;
     useCoreDraftHook: boolean;
     
+    // Services
+    useFunnelCloneService: boolean;
+    
     // Performance
     enableLazyLoading: boolean;
     enableAdvancedValidation: boolean;
@@ -72,6 +75,9 @@ const DEFAULT_FLAGS: FeatureFlags = {
     useUnifiedContext: import.meta.env.DEV,
     useSinglePropertiesPanel: import.meta.env.DEV,
     useCoreDraftHook: true, // ✅ Core hook ativado - melhor gestão de drafts
+    
+    // Services
+    useFunnelCloneService: true, // ✅ Serviço de clone ativado
     
     // Performance - Sempre habilitadas
     enableLazyLoading: true,

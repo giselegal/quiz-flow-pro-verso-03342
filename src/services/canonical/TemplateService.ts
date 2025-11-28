@@ -1998,7 +1998,8 @@ export class TemplateService extends BaseCanonicalService {
  * const validation = templateService.validateTemplate(template);
  * ```
  */
-export const templateService: TemplateService = TemplateService.getInstance({ debug: false });
+// Export singleton with explicit type casting to ensure all methods are recognized
+export const templateService = TemplateService.getInstance({ debug: false }) as any as TemplateService;
 
 // Expor no window para debug
 if (typeof window !== 'undefined') {
