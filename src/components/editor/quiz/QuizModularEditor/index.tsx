@@ -12,6 +12,7 @@ import { useDndSystem } from './hooks/useDndSystem';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Eye, Edit3, Play, Save, Download, Upload, Undo2, Redo2, Clock } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
