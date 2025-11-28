@@ -30,9 +30,24 @@ interface ValidationResult {
     warnings: string[];
 }
 
+const projectRoot = path.join(__dirname, '..');
 const TEMPLATES_DIR = path.join(__dirname, '../templates');
+const LEGACY_TEMPLATE_JSON = path.join(projectRoot, 'src/templates/quiz21StepsComplete.json');
 const REQUIRED_FIELDS = ['templateVersion', 'metadata', 'blocks'];
 const REQUIRED_METADATA = ['id', 'name', 'category'];
+let cachedStepMap: Record<string, any> | null = null;
+
+async function loadStepBlocksMap(): Promise<Record<string, any>> {
+    if (cachedStepMap) return cachedStepMap;
+    if (!fs.existsSync(LEGACY_TEMPLATE_JSON)) {
+        throw new Error(`Template JSON não encontrado em ${LEGACY_TEMPLATE_JSON}`);
+    }
+    const raw = fs.readFileSync(LEGACY_TEMPLATE_JSON, 'utf-8');
+    const data = JSON.parse(raw);
+    // Arquivo pode exportar steps em data.steps ou diretamente via chaves step-XX
+    cachedStepMap = data.steps || data;
+    return cachedStepMap;
+}
 
 async function main() {
     const jsonSummary = validateAllJsonTemplatesSafe();
@@ -138,12 +153,23 @@ function validateJsonTemplate(filepath: string): ValidationResult {
  * Parte 2: validar steps efetivos contra o registry de blocos
  */
 async function validateEffectiveStepsAgainstRegistry() {
-    const projectRoot = path.join(__dirname, '..');
     // Carregar módulos TS com tsx via import dinâmico
-    const importsMod = await import(path.join(projectRoot, 'src/templates/imports.ts'));
-    const registryMod = await import(path.join(projectRoot, 'src/registry/UnifiedBlockRegistry.ts'));
-    const getQuiz21StepsTemplate = (importsMod as any).getQuiz21StepsTemplate as () => any;
-    const getStepTemplate = (importsMod as any).getStepTemplate as (id: string) => { step: any; source: string };
+    const stepMap = await loadStepBlocksMap();
+    const registryPathCandidates = [
+        'src/registry/UnifiedBlockRegistry.ts',
+        'src/core/registry/UnifiedBlockRegistry.ts',
+    ];
+    let registryMod: any = null;
+    for (const candidate of registryPathCandidates) {
+        const fullPath = path.join(projectRoot, candidate);
+        if (fs.existsSync(fullPath)) {
+            registryMod = await import(fullPath);
+            break;
+        }
+    }
+    if (!registryMod) {
+        throw new Error('UnifiedBlockRegistry não encontrado nas localizações esperadas');
+    }
     const blockRegistry = (registryMod as any).blockRegistry as {
         has: (t: string) => boolean;
         getComponentAsync: (t: string) => Promise<any>;
@@ -157,21 +183,22 @@ async function validateEffectiveStepsAgainstRegistry() {
         warnings: [] as string[],
         errors: [] as string[],
     };
-
-        const full = getQuiz21StepsTemplate() as any;
     for (let i = 1; i <= 21; i++) {
         const id = `step-${String(i).padStart(2, '0')}`;
         try {
-            const { step, source } = getStepTemplate(id);
-            const effective = step || full?.[id];
+            const raw = stepMap?.[id];
+            const source = 'ts-template';
+            const effective = Array.isArray(raw) ? { blocks: raw } : raw;
             if (!effective) {
                 summary.errors.push(`Step ausente: ${id}`);
                 summary.stepsWithIssues++;
                 continue;
             }
             let blocks: any[] = [];
-            if (Array.isArray(effective.blocks)) blocks = effective.blocks;
-            else if (Array.isArray(effective.sections)) {
+            if (Array.isArray(effective?.blocks)) blocks = effective.blocks;
+            else if (Array.isArray(effective)) {
+                blocks = effective;
+            } else if (Array.isArray(effective?.sections)) {
                         try {
                             const convMod = await import(path.join(projectRoot, 'src/utils/sectionToBlockConverter.ts'));
                             const convertSectionsToBlocks = (convMod as any).convertSectionsToBlocks as (s: any[]) => any[];
@@ -227,42 +254,41 @@ async function validateEffectiveStepsAgainstRegistry() {
  * Parte 3: validar completude de navegação (nextStep)
  */
 async function validateNavigationCompleteness() {
-    const projectRoot = path.join(__dirname, '..');
-    
     // Importar NavigationService e templates
-    const navMod = await import(path.join(projectRoot, 'src/services/NavigationService.ts'));
-    const importsMod = await import(path.join(projectRoot, 'src/templates/imports.ts'));
-    
-    const NavigationService = (navMod as any).NavigationService;
-    const getQuiz21StepsTemplate = (importsMod as any).getQuiz21StepsTemplate as () => any;
-    const getStepTemplate = (importsMod as any).getStepTemplate as (id: string) => { step: any; source: string };
-    
-    const navService = new NavigationService();
-    const steps: any[] = [];
-    
-    // Coletar informações de navegação de todos os steps
-    const full = getQuiz21StepsTemplate() as any;
-    for (let i = 1; i <= 21; i++) {
-        const id = `step-${String(i).padStart(2, '0')}`;
-        try {
-            // Tentar primeiro o template completo que tem nextStep
-            const effective = full?.[id];
-            
-            if (effective) {
-                // nextStep pode estar em effective.nextStep ou effective.navigation.nextStep
-                const nextStep = effective.nextStep ?? effective.navigation?.nextStep;
-                
-                steps.push({
-                    id,
-                    nextStep,
-                    order: i - 1,
-                    type: effective.type || effective.metadata?.type,
-                });
-            }
-        } catch (e) {
-            console.warn(`⚠️  Não foi possível carregar ${id} para validação de navegação`);
+    const navCandidates = [
+        'src/services/NavigationService.ts',
+        'src/core/services/NavigationService.ts',
+    ];
+    let navMod: any = null;
+    for (const candidate of navCandidates) {
+        const fullPath = path.join(projectRoot, candidate);
+        if (fs.existsSync(fullPath)) {
+            navMod = await import(fullPath);
+            break;
         }
     }
+    if (!navMod) {
+        throw new Error('NavigationService não encontrado nas localizações esperadas');
+    }
+    const stepMap = await loadStepBlocksMap();
+    const NavigationService = (navMod as any).NavigationService;
+    const navService = new NavigationService();
+    const steps: any[] = [];
+
+    // Coletar informações de navegação de todos os steps (ordem linear como fallback)
+    const orderedStepIds = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+    orderedStepIds.forEach((id, index) => {
+        const fallbackNext = orderedStepIds[index + 1] ?? null;
+        const template = stepMap?.[id];
+        const nextStep = template?.navigation?.nextStep ?? fallbackNext;
+        const type = template?.metadata?.type || template?.type || template?.[0]?.type;
+        steps.push({
+            id,
+            nextStep,
+            order: index,
+            type,
+        });
+    });
     
     // Construir mapa e validar
     navService.buildNavigationMap(steps);

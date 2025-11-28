@@ -17,7 +17,13 @@ export type BuiltTemplate = any; // TODO: Substituir por tipo adequado quando sc
  * Carrega todos os arquivos JSON de templates em build-time
  * usando import.meta.glob do Vite (eager mode para bundle imediato)
  */
-const modules = import.meta.glob('../../templates/*.json', { eager: true }) as Record<string, any>;
+// Vite expõe import.meta.glob; scripts Node (tsx) não. Evitamos quebrar execução em scripts
+// definindo um fallback que retorna objeto vazio quando glob não está disponível.
+const globFn = (import.meta as any).glob as ((pattern: string, opts?: Record<string, unknown>) => Record<string, any>) | undefined;
+const modules = globFn ? globFn('../../templates/*.json', { eager: true }) : {};
+if (!globFn && typeof process !== 'undefined' && process?.versions?.node) {
+  appLogger.warn('[builtInTemplates] import.meta.glob indisponível; carregamento built-in ignorado (ambiente Node)');
+}
 
 /**
  * Cache de templates built-in indexados por ID
