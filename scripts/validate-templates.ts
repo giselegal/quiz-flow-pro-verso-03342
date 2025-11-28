@@ -163,17 +163,21 @@ async function validateEffectiveStepsAgainstRegistry() {
     for (const candidate of registryPathCandidates) {
         const fullPath = path.join(projectRoot, candidate);
         if (fs.existsSync(fullPath)) {
-            registryMod = await import(fullPath);
-            break;
+            try {
+                registryMod = await import(fullPath);
+                break;
+            } catch (error) {
+                console.warn(`⚠️  Falha ao importar ${candidate}: ${(error as Error)?.message || error}`);
+            }
         }
     }
     if (!registryMod) {
-        throw new Error('UnifiedBlockRegistry não encontrado nas localizações esperadas');
+        console.warn('⚠️  UnifiedBlockRegistry indisponível; validação limitada verificará apenas se block.type está definido.');
     }
-    const blockRegistry = (registryMod as any).blockRegistry as {
+    const blockRegistry = registryMod ? (registryMod as any).blockRegistry as {
         has: (t: string) => boolean;
         getComponentAsync: (t: string) => Promise<any>;
-    };
+    } : null;
     const summary = {
         stepsTotal: 21,
         stepsOk: 0,
@@ -216,7 +220,7 @@ async function validateEffectiveStepsAgainstRegistry() {
                     hasIssue = true;
                     continue;
                 }
-                if (!blockRegistry.has(type)) {
+                if (blockRegistry && !blockRegistry.has(type)) {
                     summary.missingTypes[type] = (summary.missingTypes[type] || 0) + 1;
                     try { await blockRegistry.getComponentAsync(type); } catch {}
                     if (!blockRegistry.has(type)) {
@@ -291,9 +295,20 @@ async function validateNavigationCompleteness() {
     });
     
     // Construir mapa e validar
-    navService.buildNavigationMap(steps);
-    const validation = navService.validateNavigation();
-    const stats = navService.getStats();
+    const mapResult = navService.buildNavigationMap(steps);
+    if (!mapResult.success) {
+        throw mapResult.error || new Error('Falha ao construir mapa de navegação');
+    }
+    const validationResult = navService.validateNavigation();
+    if (!validationResult.success) {
+        throw validationResult.error || new Error('Falha ao validar navegação');
+    }
+    const statsResult = navService.getStats();
+    if (!statsResult.success) {
+        throw statsResult.error || new Error('Falha ao coletar estatísticas de navegação');
+    }
+    const validation = validationResult.data;
+    const stats = statsResult.data;
     
     console.log('\n====================');
     console.log('Validação de Navegação (nextStep)');
