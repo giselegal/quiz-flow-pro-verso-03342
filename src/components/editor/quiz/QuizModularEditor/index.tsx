@@ -2036,7 +2036,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     });
                                     try {
                                         window.location.href = `/editor/${encodeURIComponent(result.clonedFunnel.id)}`;
-                                    } catch {}
+                                    } catch { }
                                 } else {
                                     toast({ type: 'error', title: 'Duplicação', message: result.error ?? 'Falha ao duplicar' });
                                 }
