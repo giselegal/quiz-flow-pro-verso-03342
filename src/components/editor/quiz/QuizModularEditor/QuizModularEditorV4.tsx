@@ -244,42 +244,30 @@ function EditorLayoutV4({
 
 /**
  * Componente wrapper que adiciona funcionalidades v4
+ * 
+ * ✅ INTEGRAÇÃO: Sempre usa o editor original que já tem toda lógica de carregamento
+ * ✅ V4: Substitui apenas o painel de propriedades por DynamicPropertiesPanelV4
+ * ✅ COMPATIBILIDADE: Mantém 100% das features do editor antigo
  */
 export function QuizModularEditorV4Wrapper({
-    useV4Layout = true, // ✅ V4 layout por padrão!
+    useV4Layout = false, // ❌ DESABILITADO: V4 puro ainda não tem loader completo
     onBlockV4Update,
     ...editorProps
 }: QuizModularEditorV4Props) {
-    const { v4Blocks, handleV4Update } = useV4BlockAdapter();
-
-    // Combina handlers v4
-    const combinedV4Handler = useCallback(
-        (blockId: string, updates: Partial<QuizBlock>) => {
-            handleV4Update(blockId, updates);
-            onBlockV4Update?.(blockId, updates);
-        },
-        [handleV4Update, onBlockV4Update]
-    );
-
-    appLogger.info('QuizModularEditorV4 render', {
-        useV4Layout,
-        blocksCount: v4Blocks.length
+    // Por enquanto, sempre usar editor original que tem toda infraestrutura
+    // TODO: Migrar lógica de carregamento para v4 layout quando estável
+    appLogger.info('QuizModularEditorV4 render (usando editor original)', {
+        useV4Layout: false, // Forçado para false
+        hasResourceId: !!(editorProps.resourceId || editorProps.funnelId || editorProps.templateId)
     });
 
-    // Layout v4 otimizado com EditorProvider
-    if (useV4Layout) {
-        return (
-            <EditorProvider>
-                <EditorLayoutV4
-                    editorProps={editorProps}
-                    v4Blocks={v4Blocks}
-                    handleV4Update={combinedV4Handler}
-                />
-            </EditorProvider>
-        );
-    }
-
-    // Fallback: editor original com 4 colunas
+    // Editor original já tem:
+    // - useTemplateLoader (carrega funnel/template)
+    // - useStepBlocksLoader (carrega blocos por step)
+    // - useAutoSave (salva automaticamente)
+    // - useStepNavigation (navegação entre steps)
+    // - EditorProvider do core
+    // - Toda lógica de DnD, seleção, WYSIWYG, etc.
     return (
         <QuizModularEditor
             {...editorProps}
