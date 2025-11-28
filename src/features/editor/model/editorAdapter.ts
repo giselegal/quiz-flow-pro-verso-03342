@@ -30,7 +30,7 @@ export function createEditorCommandsAdapter(legacy: LegacyCommands, unified?: Un
 export async function duplicateFunnel(resourceId: string): Promise<{ success: boolean; clonedFunnel?: any; stats?: any; error?: string }> {
   const useNewClone = getFeatureFlag('useFunnelCloneService');
   if (useNewClone) {
-    const { funnelCloneService } = await import('@/services/funnel/FunnelCloneService');
+    const { funnelCloneService } = await import('@/core/funnel/services/FunnelCloneService');
     try {
       const result = await funnelCloneService.clone(resourceId, { asDraft: true });
       return result;
