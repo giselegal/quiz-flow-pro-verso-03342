@@ -144,6 +144,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         ux, // Access to UX methods (showToast)
     } = unified;
 
+    // Adapter unificado precisa ser inicializado antes de qualquer uso em deps
+    const adapter = useEditorAdapter();
+
     // Adapter híbrido de comandos (legacy vs unificado)
     const legacyCommands = useMemo(() => ({
         addBlock: (stepId: any, block: any) => addBlock(stepId, block),
@@ -209,7 +212,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const currentStepKey = `step-${String(safeCurrentStep).padStart(2, '0')}`;
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
-    const adapter = useEditorAdapter();
+    // adapter já inicializado acima
 
     // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
     useEffect(() => {

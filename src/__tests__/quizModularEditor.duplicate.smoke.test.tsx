@@ -15,15 +15,16 @@ vi.mock('@/core/utils/featureFlags', () => ({
     getFeatureFlag: (k: string) => (k === 'useFunnelCloneService' ? true : false),
 }));
 
+// Mock editor adapter hook to avoid TDZ issues and provide actions
+vi.mock('@/hooks/useEditorAdapter', () => ({
+    default: () => ({ actions: { addBlock: vi.fn(), updateBlock: vi.fn() } })
+}));
+
 // Mock EditorLoadingProvider deps to simplify rendering
-vi.mock('@/contexts/EditorLoadingContext', async (importOriginal) => {
-    const actual = await importOriginal();
-    return {
-        ...actual,
-        EditorLoadingProvider: ({ children }: any) => <div>{children}</div>,
-        useEditorLoading: () => ({ isLoadingTemplate: false, isLoadingStep: false, setTemplateLoading: () => { }, setStepLoading: () => { } }),
-    };
-});
+vi.mock('@/contexts/EditorLoadingContext', () => ({
+    EditorLoadingProvider: ({ children }: any) => <div>{children}</div>,
+    useEditorLoading: () => ({ isLoadingTemplate: false, isLoadingStep: false, setTemplateLoading: () => { }, setStepLoading: () => { } }),
+}));
 
 // Mock core unified editor context minimally
 vi.mock('@/core', () => ({
@@ -66,6 +67,11 @@ vi.mock('@/services/canonical/TemplateService', () => ({
         getStep: async () => ({ success: true, data: [] }),
         steps: { list: async () => ({ success: true, data: [] }) },
     },
+}));
+
+// Simplify StepNavigatorColumn to avoid internal query dependencies
+vi.mock('@/components/editor/quiz/QuizModularEditor/components/StepNavigatorColumn', () => ({
+    default: () => (<div role="navigation">Step Navigator</div>)
 }));
 
 // Prevent navigation side-effect
