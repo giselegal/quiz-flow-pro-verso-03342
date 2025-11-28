@@ -48,6 +48,11 @@ import { ViewportContainer } from '@/components/editor/quiz/ViewportSelector/Vie
 import { useSnapshot } from '@/hooks/useSnapshot';
 import { useVirtualizedBlocks } from '@/hooks/useVirtualizedBlocks';
 
+// ✨ V4: Dynamic Properties Panel com 7 tipos de controles
+import { DynamicPropertiesPanelV4 } from '@/components/editor/properties/DynamicPropertiesPanelV4';
+import { ensureV4Block, BlockV4ToV3Adapter } from '@/core/quiz/blocks/adapters';
+import type { QuizBlock } from '@/schemas/quiz-schema.zod';
+
 // Static import: navigation column
 import StepNavigatorColumn from './components/StepNavigatorColumn';
 
@@ -2212,7 +2217,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors relative group" withHandle />
 
-                    {/* 🎯 FASE 3.1: Painel de propriedades com controle de visibilidade */}
+                    {/* ✨ V4: Dynamic Properties Panel com controles automáticos do BlockRegistry */}
                     {editorModeUI.showProperties && (
                         <Panel defaultSize={25} minSize={20} maxSize={35}>
                             <Suspense
@@ -2222,27 +2227,42 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     className="h-full border-l bg-white overflow-y-auto"
                                     data-testid="column-properties"
                                 >
-                                    {/* ✅ WAVE 1: Usar PropertiesColumn principal com todas as features */}
-                                    {useSimplePropertiesPanel ? (
-                                        <PropertiesColumn
-                                            selectedBlock={selectedBlock}
-                                            blocks={wysiwyg.state.blocks}
-                                            onBlockSelect={handleWYSIWYGBlockSelect}
-                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                            onClearSelection={handleWYSIWYGClearSelection}
-                                        />
-                                    ) : (
-                                        <PropertiesColumnWithJson
-                                            selectedBlock={selectedBlock}
-                                            blocks={wysiwyg.state.blocks}
-                                            onBlockSelect={handleWYSIWYGBlockSelect}
-                                            onBlockUpdate={handleWYSIWYGBlockUpdate}
-                                            onClearSelection={handleWYSIWYGClearSelection}
-                                            fullTemplate={fullTemplate}
-                                            onTemplateChange={handleTemplateChange}
-                                            templateId={currentStepKey}
-                                        />
-                                    )}
+                                    <DynamicPropertiesPanelV4
+                                        selectedBlock={selectedBlock ? (() => {
+                                            try {
+                                                return ensureV4Block(selectedBlock);
+                                            } catch (error) {
+                                                appLogger.error('Erro ao converter bloco para v4:', { error, block: selectedBlock });
+                                                return null;
+                                            }
+                                        })() : null}
+                                        onUpdate={(blockId, updates) => {
+                                            try {
+                                                // Converter updates v4 → v3
+                                                const currentBlock = wysiwyg.state.blocks.find(b => b.id === blockId);
+                                                if (!currentBlock) return;
+
+                                                const v4Block = ensureV4Block(currentBlock);
+                                                const updatedV4Block: QuizBlock = {
+                                                    ...v4Block,
+                                                    ...updates,
+                                                    properties: {
+                                                        ...(v4Block.properties || {}),
+                                                        ...(updates.properties || {}),
+                                                    },
+                                                };
+
+                                                const v3Block = BlockV4ToV3Adapter.convert(updatedV4Block);
+
+                                                // Aplicar update v3
+                                                wysiwyg.actions.updateBlock(blockId, v3Block);
+                                                updateBlock(safeCurrentStep, blockId, v3Block);
+                                            } catch (error) {
+                                                appLogger.error('Erro ao aplicar update v4:', { error, blockId, updates });
+                                            }
+                                        }}
+                                        onClearSelection={handleWYSIWYGClearSelection}
+                                    />
                                 </div>
                             </Suspense>
                         </Panel>
