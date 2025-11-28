@@ -4,33 +4,16 @@
  * ⭐ This is the ONLY canonical service for template management in the system.
  * All template operations MUST go through this service.
  * 
- * Canonical service that consolidates 20+ template services into a unified API.
- * 
- * CONSOLIDATES:
- * - stepTemplateService.ts
- * - UnifiedTemplateRegistry.ts
- * - HybridTemplateService.ts
- * - JsonTemplateService.ts
- * - TemplateEditorService.ts
- * - customTemplateService.ts
- * - templateLibraryService.ts
- * - TemplatesCacheService.ts
- * - AIEnhancedHybridTemplateService.ts
- * - DynamicMasterJSONGenerator.ts
- * - Quiz21CompleteService.ts
- * - UnifiedBlockStorageService.ts
- * - TemplateRegistry.ts
- * - templateThumbnailService.ts
- * ... (6+ more services)
- * 
  * ARCHITECTURE:
- * - Uses HierarchicalTemplateSource for data access
+ * - Uses HierarchicalTemplateSource for data access (4-level priority)
  * - Integrates with React Query for state management
  * - Provides Result pattern for error handling
- * - Supports both Supabase and local storage
+ * - Supports both Supabase (USER_EDIT) and JSON templates
+ * - Smart lazy loading with preload strategies
+ * - Zod validation for v4 templates
  * 
- * @version 4.0.0 - Phase 4 Finalized
- * @status PRODUCTION-READY (Canonical Only)
+ * @version 4.0.0 - Phase 4 Complete
+ * @status PRODUCTION-READY
  */
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
@@ -270,7 +253,6 @@ export class TemplateService extends BaseCanonicalService {
 
   private constructor(options?: ServiceOptions) {
     super('TemplateService', '1.0.0', options);
-    // registry legacy removido; hierarchicalTemplateSource cobre fluxo principal
   }
 
   static getInstance(options?: ServiceOptions): TemplateService {
@@ -281,7 +263,7 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   protected async onInitialize(): Promise<void> {
-    this.log('TemplateService initialized (UnifiedTemplateRegistry removido)');
+    this.log('TemplateService initialized');
 
     // ✅ FASE 1: Preload de steps críticos para eliminar cache MISS
     try {
@@ -684,8 +666,7 @@ export class TemplateService extends BaseCanonicalService {
         return this.createError(new Error(`Invalid template: ${validation.errors.join(', ')}`));
       }
 
-      // Salvar no cache (UnifiedTemplateRegistry não tem setStep, apenas cache)
-      // Usar CacheService diretamente
+      // Salvar no cache
       cacheService.templates.set(template.id, template.blocks);
 
       this.log(`Template saved: ${template.id}`);
@@ -737,6 +718,7 @@ export class TemplateService extends BaseCanonicalService {
       this.error('deleteTemplate failed:', error);
       return this.createError(error as Error);
     }
+  }
 
   // ==================== REGISTRY OPERATIONS ====================
 
@@ -1131,7 +1113,6 @@ export class TemplateService extends BaseCanonicalService {
    */
   clearCache(): void {
     cacheService.clearStore('templates');
-    // UnifiedTemplateRegistry tem clearL1()
     this.registryCompat.clearL1();
     this.loadedSteps.clear(); // 🚀 FASE 3.1: Limpar lazy load
     this.stepLoadPromises.clear();

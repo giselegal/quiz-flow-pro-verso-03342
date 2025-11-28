@@ -50,26 +50,62 @@ export const BlockTypeZ = z.enum([
   'question-progress',
   'question-navigation',
   
-  // Content
-  'question-title',
-  'text-inline',
-  'quiz-intro-header',
-  
-  // Input
-  'form-input',
-  'options-grid',
-  
-  // Results
-  'result-display',
-  'offer-card',
-  
-  // Legacy support
+  // Intro Blocks
   'intro-logo',
+  'intro-logo-header',
   'intro-title',
   'intro-subtitle',
   'intro-description',
+  'intro-image',
   'intro-form',
-  'intro-button'
+  'intro-button',
+  'quiz-intro-header',
+  
+  // Question Blocks
+  'question-title',
+  'question-description',
+  'options-grid',
+  'form-input',
+  
+  // Transition Blocks
+  'transition-title',
+  'transition-text',
+  'transition-button',
+  'transition-image',
+  
+  // Result Blocks
+  'result-header',
+  'result-title',
+  'result-description',
+  'result-image',
+  'result-display',
+  'result-guide-image',
+  
+  // Offer Blocks
+  'offer-hero',
+  'quiz-offer-hero',
+  'offer-card',
+  'benefits-list',
+  'testimonials',
+  'pricing',
+  'guarantee',
+  'urgency-timer',
+  'value-anchoring',
+  'secure-purchase',
+  'cta-button',
+  
+  // Generic Content
+  'text',
+  'text-inline',
+  'heading',
+  'image',
+  'button',
+  
+  // Layout
+  'container',
+  'spacer',
+  'divider',
+  'footer-copyright'
 ]);
 
 export const BlockMetadataZ = z.object({
