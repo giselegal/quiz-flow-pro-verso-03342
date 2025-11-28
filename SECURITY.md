@@ -96,18 +96,23 @@ const safeURL = sanitizeURL('javascript:alert(1)');
 
 ### 2. Autenticação e Autorização ⏳ IN PROGRESS
 
-- [ ] **Supabase RLS policies configuradas**
-  - Status: Policies exist but need comprehensive testing
-  - Location: `supabase/migrations/`
-  - Action: Document all policies and test scenarios
+- [x] **Supabase RLS policies configuradas**
+  - Status: ✅ Policies implemented in migrations
+  - Location: `supabase/migrations/20251110_auth_hardening_rls.sql`
+  - Additional: `supabase/migrations/20251123_critical_rls_policies.sql`
+  - Tables covered: `funnels`, `quiz_production`, `component_instances`, `templates`, `drafts`
 
-- [ ] **Row Level Security testado**
-  - Status: NOT TESTED
-  - Required tests:
-    - User can only access own data
-    - Admin role permissions validated
-    - Public data access works correctly
-    - Edge cases handled (deleted users, shared data)
+- [x] **Row Level Security testado**
+  - Status: ✅ Automated tests implemented
+  - Tests: `tests/integration/rls-policy-validation.test.ts`
+  - CI: `npm run audit:rls` (requires SUPABASE_DB_URL)
+  - Audit script: `scripts/audit/rls-audit.sql`
+
+- [x] **RLS Audit Automation**
+  - Status: ✅ Implemented
+  - Daily CI job: `.github/workflows/validate-json-and-rls.yml`
+  - Reports: `reports/rls-audit-*.log`
+  - Run manually: `npm run audit:rls`
 
 - [ ] **Roles e permissões documentadas**
   - Status: PENDING
@@ -117,11 +122,19 @@ const safeURL = sanitizeURL('javascript:alert(1)');
   - Status: Supabase handles JWT, needs validation
   - Action: Verify token expiration and refresh logic
 
+**RLS Policy Coverage:**
+| Table | SELECT | INSERT | UPDATE | DELETE |
+|-------|--------|--------|--------|--------|
+| funnels | ✅ | ✅ | ✅ | ✅ |
+| quiz_production | ✅ | ✅ | ✅ | ✅ |
+| component_instances | ✅ | ✅ | ✅ | ✅ |
+| templates | ✅ | ✅ | ✅ | ✅ |
+| drafts | ✅ | ✅ | ✅ | ✅ |
+
 **Next Steps:**
-1. Review existing RLS policies in Supabase
-2. Create test suite for RLS policies
-3. Document roles: user, admin, public
-4. Verify JWT token handling
+1. Document roles: user, admin, public
+2. Verify JWT token handling
+3. Add more comprehensive RLS tests
 
 ---
 

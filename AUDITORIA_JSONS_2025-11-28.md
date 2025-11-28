@@ -2,13 +2,13 @@
 
 ## Resumo
 
-- Total de arquivos: 165
-- Válidos: 165
+- Total de arquivos: 164
+- Válidos: 164
 - Inválidos: 0
 - Erros de esquema: 77
 
 ### Maiores arquivos
-- package-lock.json (959 KB)
+- package-lock.json (593 KB)
 - audit_reports/deep_audit.json (255 KB)
 - docs/auditorias/TS_NOCHECK_AUDIT_REPORT.json (127 KB)
 - public/templates/quiz21-complete.json (120 KB)
