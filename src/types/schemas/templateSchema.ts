@@ -11,7 +11,14 @@
  */
 
 import { z } from 'zod';
-import { fromError } from 'zod-validation-error';
+// Substitui dependência externa por formatter interno para evitar erro de subpath './v4'
+function formatZodError(err: z.ZodError): string {
+  const issues = err.issues || err.errors || [] as any[];
+  const first = issues[0];
+  const path = Array.isArray(first?.path) ? first.path.join('.') : '';
+  const message = first?.message || 'Erro de validação Zod';
+  return path ? `${path}: ${message}` : message;
+}
 
 /**
  * Base block schema - all blocks must have id and type
@@ -234,7 +241,7 @@ export function validateTemplate(data: unknown): ValidationResult<Template> {
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const validationError = fromError(error);
+      const validationErrorMessage = formatZodError(error);
       const errors = error.errors.map((err) => {
         const path = err.path.join('.');
         return `${path}: ${err.message}`;
@@ -242,7 +249,7 @@ export function validateTemplate(data: unknown): ValidationResult<Template> {
       
       return {
         success: false,
-        errors: [validationError.message, ...errors],
+        errors: [validationErrorMessage, ...errors],
       };
     }
     
@@ -274,13 +281,13 @@ export function validateStepFile(data: unknown): ValidationResult<StepFile> {
     return { success: true, data: parsed, warnings: warnings.length ? warnings : undefined };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const validationError = fromError(error);
+      const validationErrorMessage = formatZodError(error);
       const errors = error.errors.map((err) => {
         const path = err.path.join('.');
         return `${path}: ${err.message}`;
       });
 
-      return { success: false, errors: [validationError.message, ...errors] };
+      return { success: false, errors: [validationErrorMessage, ...errors] };
     }
 
     return { success: false, errors: [`Erro de validação: ${error instanceof Error ? error.message : 'Erro desconhecido'}`] };
@@ -305,7 +312,7 @@ export function validateTemplateManifest(data: unknown): ValidationResult<Templa
     return { success: true, data: parsed, warnings: warnings.length ? warnings : undefined };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const validationError = fromError(error);
+      const validationErrorMessage = formatZodError(error);
       const errors = error.errors.map((err) => {
         const path = err.path.join('.');
         return `${path}: ${err.message}`;
@@ -342,7 +349,7 @@ export function validateStep(data: unknown): ValidationResult<Step> {
       
       return {
         success: false,
-        errors: [validationError.message, ...errors],
+        errors: [validationErrorMessage, ...errors],
       };
     }
     
@@ -369,7 +376,7 @@ export function validateBlock(data: unknown): ValidationResult<Block> {
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const validationError = fromError(error);
+      const validationErrorMessage = formatZodError(error);
       const errors = error.errors.map((err) => {
         const path = err.path.join('.');
         return `${path}: ${err.message}`;
@@ -377,7 +384,7 @@ export function validateBlock(data: unknown): ValidationResult<Block> {
       
       return {
         success: false,
-        errors: [validationError.message, ...errors],
+        errors: [validationErrorMessage, ...errors],
       };
     }
     

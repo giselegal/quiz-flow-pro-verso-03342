@@ -63,7 +63,6 @@ export default [
     plugins: {
       '@typescript-eslint': tseslint,
       'react-hooks': reactHooks,
-      import: importPlugin,
       'react-refresh': reactRefresh,
       react: reactPlugin,
       // Suporte aos dois namespaces: 'next' e '@next/next'
