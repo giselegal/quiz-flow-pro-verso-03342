@@ -260,9 +260,11 @@ export class UnifiedTemplateLoader {
       if (useCache) {
         this.v4Cache.set(templateId, template);
 
-        // Cache individual steps também
+        // Cache individual steps também (converter QuizBlock[] para Block[])
         template.steps.forEach(step => {
-          this.stepCache.set(step.id, step.blocks);
+          // Type cast: QuizBlock[] from Zod schema is compatible with Block[] from editor types
+          const blocks = step.blocks as any as Block[];
+          this.stepCache.set(step.id, blocks);
         });
       }
 
@@ -338,7 +340,8 @@ export class UnifiedTemplateLoader {
     });
 
     const step = templateResult.data.steps.find(s => s.id === stepId);
-    return step ? step.blocks : null;
+    // Type cast: QuizBlock[] from Zod schema is compatible with Block[] from editor types
+    return step ? (step.blocks as any as Block[]) : null;
   }
 
   /**
