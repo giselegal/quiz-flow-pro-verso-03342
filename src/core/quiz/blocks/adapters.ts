@@ -21,8 +21,8 @@ import { appLogger } from '@/lib/utils/appLogger';
 /**
  * Verifica se é um bloco v4
  */
-export function isV4Block(block: any): block is QuizBlock {
-    return (
+export function isV4Block(block: any): boolean {
+    return !!(
         block &&
         typeof block === 'object' &&
         'id' in block &&
@@ -36,8 +36,8 @@ export function isV4Block(block: any): block is QuizBlock {
 /**
  * Verifica se é um bloco v3
  */
-export function isV3Block(block: any): block is Block {
-    return (
+export function isV3Block(block: any): boolean {
+    return !!(
         block &&
         typeof block === 'object' &&
         'id' in block &&
@@ -57,8 +57,11 @@ export class BlockV3ToV4Adapter {
     /**
      * Converte um único bloco v3 para v4
      */
-    static convert(v3Block: Block, order: number = 0): QuizBlock {
-        appLogger.debug('Converting v3 → v4:', { v3Block, order });
+    static convert(v3Block: Block, order?: number): QuizBlock {
+        // Usa order do bloco original se não fornecido
+        const finalOrder = order !== undefined ? order : (v3Block.order || 0);
+        
+        appLogger.debug('Converting v3 → v4:', { v3Block, order: finalOrder });
 
         // Resolve tipo oficial via registry (pode ter alias)
         const officialType = BlockRegistry.resolveType(v3Block.type);
@@ -78,7 +81,7 @@ export class BlockV3ToV4Adapter {
         const v4Block: QuizBlock = {
             id: v3Block.id,
             type: officialType as any, // Type cast needed for compatibility
-            order,
+            order: finalOrder,
             properties: propertiesWithDefaults,
             parentId: null,
             metadata: {
@@ -209,21 +212,21 @@ export class BlockV4ToV3Adapter {
 /**
  * Detecta automaticamente a versão e converte para v4
  */
-export function ensureV4Block(block: Block | QuizBlock, order?: number): QuizBlock {
+export function ensureV4Block(block: any, order?: number): QuizBlock {
     if (isV4Block(block)) {
-        return block;
+        return block as QuizBlock;
     }
-    return BlockV3ToV4Adapter.convert(block as Block, order);
+    return BlockV3ToV4Adapter.convert(block, order);
 }
 
 /**
  * Detecta automaticamente a versão e converte para v3
  */
-export function ensureV3Block(block: Block | QuizBlock): Block {
+export function ensureV3Block(block: any): Block {
     if (isV3Block(block)) {
-        return block;
+        return block as Block;
     }
-    return BlockV4ToV3Adapter.convert(block as QuizBlock);
+    return BlockV4ToV3Adapter.convert(block);
 }
 
 /**
