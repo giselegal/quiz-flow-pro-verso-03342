@@ -90,7 +90,8 @@ describe('useV4BlockAdapter', () => {
 
         it('deve retornar array vazio quando step não tem blocos', () => {
             mockEditorState.state.currentStep = 2;
-            (mockEditorState.state.stepBlocks as any)[2] = [];
+            const stepBlocks = mockEditorState.state.stepBlocks as Record<number, Block[]>;
+            stepBlocks[2] = [];
 
             // TODO: Testar retorno vazio
         });
@@ -98,11 +99,12 @@ describe('useV4BlockAdapter', () => {
         it('deve filtrar blocos com erro na conversão', () => {
             const invalidBlock = {
                 id: 'invalid',
-                type: 'text' as any, // tipo válido mas simulando erro
+                type: 'text' as any,
                 order: 0,
             };
 
-            mockEditorState.state.stepBlocks[1] = [invalidBlock as Block];
+            const stepBlocks = mockEditorState.state.stepBlocks as Record<number, Block[]>;
+            stepBlocks[1] = [invalidBlock as Block];
 
             // TODO: Verificar que bloco inválido é filtrado
         });
@@ -171,7 +173,8 @@ describe('useV4BlockAdapter', () => {
                 content: {},
             }));
 
-            mockEditorState.state.stepBlocks[1] = manyBlocks as Block[];
+            const stepBlocks = mockEditorState.state.stepBlocks as Record<number, Block[]>;
+            stepBlocks[1] = manyBlocks as Block[];
 
             const startTime = performance.now();
             

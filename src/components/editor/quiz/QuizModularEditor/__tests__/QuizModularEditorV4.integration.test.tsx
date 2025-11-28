@@ -147,7 +147,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
         it('deve lidar com blocos complexos com nested properties', () => {
             const complexBlock: Block = {
                 id: 'complex',
-                type: 'question-single-choice',
+                type: 'question-multiple-step',
                 order: 0,
                 properties: {
                     questionText: 'Qual sua cor favorita?',
@@ -184,7 +184,9 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             // Deve ter defaults do BlockRegistry para 'button'
             expect(v4Block.properties).toBeDefined();
             expect(v4Block.metadata).toBeDefined();
-            expect(v4Block.metadata?.editable).toBe(true);
+            if (v4Block.metadata) {
+                expect(v4Block.metadata.editable).toBe(true);
+            }
         });
     });
 
