@@ -84,7 +84,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-    if: ${{ github.event_name != 'pull_request' || secrets.SUPABASE_DB_URL != '' }}
+    # Only run if SUPABASE_DB_URL secret is configured (non-empty after substitution)
+    if: ${{ secrets.SUPABASE_DB_URL != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

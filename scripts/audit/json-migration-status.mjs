@@ -144,8 +144,9 @@ function generateMarkdown(allResults) {
     totals.total += r.total;
   }
 
-  const migrationPct = totals.total > 0 
-    ? ((totals.v4 / (totals.v4 + totals.v3 + totals.v2)) * 100).toFixed(1) 
+  const totalVersioned = totals.v4 + totals.v3 + totals.v2;
+  const migrationPct = totalVersioned > 0 
+    ? ((totals.v4 / totalVersioned) * 100).toFixed(1) 
     : 0;
 
   lines.push('## 📈 Summary');
@@ -176,8 +177,9 @@ function generateMarkdown(allResults) {
   for (const r of allResults) {
     if (r.total === 0) continue;
     
-    const dirPct = r.total > 0 
-      ? ((r.v4.length / (r.v4.length + r.v3.length + r.v2.length || 1)) * 100).toFixed(0)
+    const dirTotalVersioned = r.v4.length + r.v3.length + r.v2.length;
+    const dirPct = dirTotalVersioned > 0 
+      ? ((r.v4.length / dirTotalVersioned) * 100).toFixed(0)
       : 0;
 
     lines.push(`### \`${r.directory}/\``);
