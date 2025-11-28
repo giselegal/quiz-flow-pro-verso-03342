@@ -318,7 +318,7 @@ export function validateTemplateManifest(data: unknown): ValidationResult<Templa
         return `${path}: ${err.message}`;
       });
 
-      return { success: false, errors: [validationError.message, ...errors] };
+      return { success: false, errors: [validationErrorMessage, ...errors] };
     }
 
     return { success: false, errors: [`Erro de validação: ${error instanceof Error ? error.message : 'Erro desconhecido'}`] };
