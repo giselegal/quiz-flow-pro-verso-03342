@@ -737,7 +737,6 @@ export class TemplateService extends BaseCanonicalService {
       this.error('deleteTemplate failed:', error);
       return this.createError(error as Error);
     }
-  }
 
   // ==================== REGISTRY OPERATIONS ====================
 

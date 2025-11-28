@@ -4,6 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "lint:json": "bash scripts/lint-json.sh",
     "audit:funnel": "node ./scripts/audit-funnel-types.mjs",
     "test:access": "bash scripts/test-access-simple.sh 8080",
     "test:buttons": "bash scripts/test-editor-buttons.sh 8080",
