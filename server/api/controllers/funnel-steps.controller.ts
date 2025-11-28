@@ -11,11 +11,11 @@
 
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServiceClient } from '@/services/supabaseServiceClient';
 
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = getSupabaseServiceClient();
 
 // ==================================================================================
 // Schemas de Validação

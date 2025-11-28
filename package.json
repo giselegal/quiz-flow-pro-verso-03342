@@ -21,6 +21,7 @@
     "ci:json:v4": "bash scripts/ci-json-v4.sh",
     "audit:rls": "bash scripts/audit/run-rls-audit.sh",
     "supabase:prepare:env": "node scripts/supabase/prepare-env.mjs",
+    "codemod:supabase-client": "tsx scripts/migration/codemod-supabase-client.ts",
     "supabase:gen:types": "node scripts/supabase/gen-types.mjs",
     "rpc:verify": "node -r dotenv/config scripts/audit/verifyRpcBatchUpdate.mjs",
     "rpc:steps": "node -r dotenv/config scripts/audit/listStepCounts.mjs",

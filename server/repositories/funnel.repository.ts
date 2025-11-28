@@ -3,7 +3,7 @@
  * Implements data access layer for funnels using Supabase
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { getSupabaseServiceClient } from '@/services/supabaseServiceClient';
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || '';

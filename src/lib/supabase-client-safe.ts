@@ -1,5 +1,5 @@
 import type { Database } from '@/services/integrations/supabase/types';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/services/supabaseClient';
 
 // Configuração segura para SSR - sem chaves hardcoded
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
