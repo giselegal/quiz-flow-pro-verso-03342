@@ -21,18 +21,26 @@
 import { z } from 'zod';
 import { StepTypeSchema, StepMetadataSchema } from './stepSchema';
 import { BlocksArraySchema } from './blockSchema';
-import { NavigationSchema } from './navigationSchema';
+import { NavigationSchema, createNavigation } from './navigationSchema';
 import { ValidationSchema } from './validationSchema';
 
 /**
- * Schema de metadata estendido para steps modulares
+ * Schema de metadata para steps modulares
+ * ⚠️ Não usa .extend(StepMetadataSchema) - tem estrutura diferente
+ * - StepMetadataSchema: optional, campos básicos
+ * - ModularStepMetadataSchema: required com id, name, order
  */
-export const ModularStepMetadataSchema = StepMetadataSchema.extend({
+export const ModularStepMetadataSchema = z.object({
     id: z.string(),
     name: z.string(),
+    order: z.number(),
     description: z.string().optional(),
     category: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    title: z.string().optional(),
+    createdAt: z.number().optional(),
+    updatedAt: z.number().optional(),
+    version: z.string().optional(),
     scoringAddedAt: z.string().optional(),
     scoring: z.object({
         weight: z.number().optional(),
@@ -41,6 +49,7 @@ export const ModularStepMetadataSchema = StepMetadataSchema.extend({
         speedBonusEnabled: z.boolean().optional(),
     }).optional(),
 });
+
 
 /**
  * Schema de theme/styling
@@ -83,10 +92,10 @@ export const ModularStepSchema = z.object({
     type: StepTypeSchema.optional(),
     title: z.string().optional(),
     redirectPath: z.string().optional(),
-    theme: StepThemeSchema,
-    validation: ValidationSchema,
-    behavior: StepBehaviorSchema,
-    navigation: NavigationSchema,
+    theme: StepThemeSchema.optional(),
+    validation: ValidationSchema.optional(),
+    behavior: StepBehaviorSchema.optional(),
+    navigation: NavigationSchema.optional(),
     
     // Metadata modular
     _modular: ModularMetaSchema,
@@ -137,7 +146,7 @@ export function createModularStep(metadata: ModularStepMetadata, overrides?: Par
         theme: {},
         validation: {},
         behavior: {},
-        navigation: {},
+        navigation: createNavigation(),
         ...overrides,
     };
 }
