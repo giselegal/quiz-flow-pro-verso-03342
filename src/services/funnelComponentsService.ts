@@ -472,7 +472,7 @@ export const funnelComponentsService = {
         const results = await Promise.all(updatePromises);
 
         // Verificar se algum update falhou
-        const errors = results.filter(r => r.error);
+        const errors = results.filter((r: any) => r.error);
         if (errors.length > 0) {
           appLogger.error('❌ Erros no batch update (fallback):', { data: [errors] });
           throw new Error(`Batch update falhou: ${errors.length} de ${updates.length} updates falharam`);

@@ -73,14 +73,7 @@ const EFFECTIVE_KEY = SUPABASE_ANON_KEY || LS_KEY;
 const hasEnv = !!(EFFECTIVE_URL && EFFECTIVE_KEY);
 
 export const supabase = (hasEnv && !DISABLE_SUPABASE)
-  ? getSupabaseClient(),
-      auth: {
-        storage: getStorage(),
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-      },
-    })
+  ? getSupabaseClient()
   : (buildMock() as any);
 
 export function setSupabaseCredentials(url: string, anonKey: string) {
