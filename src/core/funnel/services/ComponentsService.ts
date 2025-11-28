@@ -252,7 +252,7 @@ export class ComponentsService {
 
             const results = await Promise.all(updates);
 
-            const hasError = results.some(result => result.error);
+            const hasError = results.some((result: any) => result.error);
             if (hasError) {
                 appLogger.error('❌ Erro ao reordenar alguns componentes');
                 return false;
