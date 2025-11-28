@@ -2228,7 +2228,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     data-testid="column-properties"
                                 >
                                     <DynamicPropertiesPanelV4
-                                        selectedBlock={selectedBlock ? (() => {
+                                        block={selectedBlock ? (() => {
                                             try {
                                                 return ensureV4Block(selectedBlock);
                                             } catch (error) {
@@ -2261,7 +2261,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                 appLogger.error('Erro ao aplicar update v4:', { error, blockId, updates });
                                             }
                                         }}
-                                        onClearSelection={handleWYSIWYGClearSelection}
+                                        onClose={handleWYSIWYGClearSelection}
+                                        onDelete={(blockId) => {
+                                            wysiwyg.actions.removeBlock(blockId);
+                                            removeBlock(safeCurrentStep, blockId);
+                                        }}
                                     />
                                 </div>
                             </Suspense>
