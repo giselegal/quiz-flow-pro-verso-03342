@@ -38,7 +38,6 @@ export async function duplicateFunnel(resourceId: string): Promise<{ success: bo
       return { success: false, error: e?.message ?? 'clone_error' };
     }
   }
-  // Fallback legacy
-  const { legacyCloneFunnel } = await import('@/services/funnel/legacyCloneFunnel');
-  return legacyCloneFunnel(resourceId);
+  // Fallback: sem clone legacy disponível
+  return { success: false, error: 'legacy_clone_not_available' };
 }

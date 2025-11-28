@@ -67,7 +67,7 @@ const mockEditorState = {
 };
 
 vi.mock('@/core', () => ({
-    EditorProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    EditorProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
     useEditorState: () => mockEditorState,
 }));
 
