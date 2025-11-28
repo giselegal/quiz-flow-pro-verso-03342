@@ -200,31 +200,49 @@ BEGIN
     -- Habilitar RLS
     ALTER TABLE quiz_sessions ENABLE ROW LEVEL SECURITY;
 
-    -- SELECT: Users podem ver apenas suas próprias sessões
+    -- SELECT: Users podem ver sessões dos seus funis
     CREATE POLICY "quiz_sessions_select_policy" ON quiz_sessions
       FOR SELECT
       USING (
-        auth.uid()::text = user_id OR
-        user_id IS NULL -- Sessões anônimas (temporário para migração)
+        EXISTS (
+          SELECT 1 FROM funnels
+          WHERE funnels.id = quiz_sessions.funnel_id
+          AND funnels.user_id = auth.uid()::text
+        )
       );
 
-    -- INSERT: Qualquer um pode criar sessões (anônimas ou autenticadas)
+    -- INSERT: Permitir criação de sessões para funis publicados
     CREATE POLICY "quiz_sessions_insert_policy" ON quiz_sessions
       FOR INSERT
-      WITH CHECK (true); -- Permitir criação para anônimos
+      WITH CHECK (
+        EXISTS (
+          SELECT 1 FROM funnels
+          WHERE funnels.id = quiz_sessions.funnel_id
+          AND funnels.is_published = true
+        )
+      );
 
-    -- UPDATE: Users podem atualizar apenas suas próprias sessões
+    -- UPDATE: Owners podem atualizar sessões dos seus funis
     CREATE POLICY "quiz_sessions_update_policy" ON quiz_sessions
       FOR UPDATE
       USING (
-        auth.uid()::text = user_id OR
-        user_id IS NULL -- Permitir update em sessões anônimas
+        EXISTS (
+          SELECT 1 FROM funnels
+          WHERE funnels.id = quiz_sessions.funnel_id
+          AND funnels.user_id = auth.uid()::text
+        )
       );
 
-    -- DELETE: Não permitir delete direto (usar soft delete)
+    -- DELETE: Owners podem deletar sessões dos seus funis
     CREATE POLICY "quiz_sessions_delete_policy" ON quiz_sessions
       FOR DELETE
-      USING (auth.uid()::text = user_id);
+      USING (
+        EXISTS (
+          SELECT 1 FROM funnels
+          WHERE funnels.id = quiz_sessions.funnel_id
+          AND funnels.user_id = auth.uid()::text
+        )
+      );
       
     RAISE NOTICE '✅ RLS policies criadas para quiz_sessions';
   ELSE
