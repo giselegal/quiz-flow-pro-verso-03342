@@ -134,6 +134,9 @@ describe('BlockV4ToV3Adapter', () => {
             parentId: null,
             metadata: {
                 editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
             },
         };
 
