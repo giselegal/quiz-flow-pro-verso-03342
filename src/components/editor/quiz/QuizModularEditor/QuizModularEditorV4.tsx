@@ -18,7 +18,7 @@ import React, { useMemo, useCallback, Suspense, lazy } from 'react';
 import QuizModularEditor, { type QuizModularEditorProps } from './index';
 import { DynamicPropertiesPanelV4 } from '@/components/editor/properties/DynamicPropertiesPanelV4';
 import { BlockV3ToV4Adapter, BlockV4ToV3Adapter, ensureV4Block } from '@/core/quiz/blocks/adapters';
-import { useEditorContext } from '@/core';
+import { EditorProvider, useEditorState } from '@/core';
 import type { Block } from '@/types/editor';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -40,13 +40,14 @@ export interface QuizModularEditorV4Props extends QuizModularEditorProps {
  * Hook para gerenciar conversão automática v3 ↔ v4
  */
 function useV4BlockAdapter() {
-    const context = useEditorContext();
+    const { state, actions } = useEditorState();
 
     // Converte blocos v3 do contexto para v4
     const v4Blocks = useMemo(() => {
-        const blocks = (context as any).blocks as Block[] | undefined;
-        if (!blocks) return [];
-        return blocks.map((block: Block, index: number) => {
+        const currentStepBlocks = actions.getStepBlocks(state.currentStep);
+        if (!currentStepBlocks || currentStepBlocks.length === 0) return [];
+
+        return currentStepBlocks.map((block: Block, index: number) => {
             try {
                 return ensureV4Block(block, index);
             } catch (error) {
@@ -54,24 +55,18 @@ function useV4BlockAdapter() {
                 return null;
             }
         }).filter((b: QuizBlock | null): b is QuizBlock => b !== null);
-    }, [(context as any).blocks]);
+    }, [state.currentStep, state.stepBlocks, actions]);
 
     // Handler que converte update v4 → v3 antes de chamar updateBlock
     const handleV4Update = useCallback((blockId: string, updates: Partial<QuizBlock>) => {
         appLogger.debug('V4 update received:', { blockId, updates });
 
-        const blocks = (context as any).blocks as Block[] | undefined;
-        const updateBlock = (context as any).updateBlock as ((id: string, block: Block) => void) | undefined;
+        const currentStepBlocks = actions.getStepBlocks(state.currentStep);
 
         // Encontra bloco original v3
-        const originalBlock = blocks?.find((b: Block) => b.id === blockId);
+        const originalBlock = currentStepBlocks.find((b: Block) => b.id === blockId);
         if (!originalBlock) {
             appLogger.warn('Block not found for v4 update:', blockId);
-            return;
-        }
-
-        if (!updateBlock) {
-            appLogger.warn('updateBlock not available in context');
             return;
         }
 
@@ -90,14 +85,14 @@ function useV4BlockAdapter() {
             // Converte de volta para v3
             const v3Block = BlockV4ToV3Adapter.convert(updatedV4Block);
 
-            // Atualiza no contexto v3
-            updateBlock(blockId, v3Block);
+            // Atualiza no contexto usando a action do core
+            actions.updateBlock(state.currentStep, blockId, v3Block);
 
             appLogger.info('V4 update converted and applied:', { blockId, v3Block });
         } catch (error) {
             appLogger.error('Failed to convert v4 update to v3:', { error, blockId, updates });
         }
-    }, [context]);
+    }, [state.currentStep, actions]);
 
     return {
         v4Blocks,
@@ -117,9 +112,9 @@ function EditorLayoutV4({
     v4Blocks: QuizBlock[];
     handleV4Update: (blockId: string, updates: Partial<QuizBlock>) => void;
 }) {
-    const context = useEditorContext();
-    const selectedBlockId = (context as any).selectedBlockId as string | null;
-    const blocks = (context as any).blocks as Block[] | undefined || [];
+    const { state, actions } = useEditorState();
+    const selectedBlockId = state.selectedBlockId;
+    const blocks = actions.getStepBlocks(state.currentStep) || [];
 
     // Encontra o bloco v4 selecionado
     const selectedV4Block = useMemo(() => {
@@ -201,8 +196,7 @@ function EditorLayoutV4({
                                 blocks={blocks}
                                 selectedBlockId={selectedBlockId}
                                 onBlockSelect={(id) => {
-                                    const selectBlock = (context as any).selectBlock;
-                                    if (selectBlock) selectBlock(id);
+                                    actions.selectBlock(id);
                                 }}
                                 hasTemplate={!!editorProps.funnelId}
                                 onLoadTemplate={() => { }}
@@ -225,8 +219,7 @@ function EditorLayoutV4({
                                     handleV4Update(blockId, updates);
                                 }}
                                 onClose={() => {
-                                    const clearSelection = (context as any).clearSelection;
-                                    if (clearSelection) clearSelection();
+                                    actions.selectBlock(null);
                                 }}
                             />
                         ) : (
@@ -273,14 +266,16 @@ export function QuizModularEditorV4Wrapper({
         blocksCount: v4Blocks.length
     });
 
-    // Layout v4 otimizado
+    // Layout v4 otimizado com EditorProvider
     if (useV4Layout) {
         return (
-            <EditorLayoutV4
-                editorProps={editorProps}
-                v4Blocks={v4Blocks}
-                handleV4Update={combinedV4Handler}
-            />
+            <EditorProvider>
+                <EditorLayoutV4
+                    editorProps={editorProps}
+                    v4Blocks={v4Blocks}
+                    handleV4Update={combinedV4Handler}
+                />
+            </EditorProvider>
         );
     }
 
@@ -294,13 +289,13 @@ export function QuizModularEditorV4Wrapper({
  * Hook para usar blocos v4 diretamente no código
  */
 export function useV4Blocks() {
-    const context = useEditorContext();
+    const { state, actions } = useEditorState();
 
     const v4Blocks = useMemo(() => {
-        const blocks = (context as any).blocks as Block[] | undefined;
+        const blocks = actions.getStepBlocks(state.currentStep);
         if (!blocks) return [];
         return BlockV3ToV4Adapter.convertMany(blocks);
-    }, [(context as any).blocks]);
+    }, [state.currentStep, state.stepBlocks, actions]);
 
     return v4Blocks;
 }
@@ -309,15 +304,15 @@ export function useV4Blocks() {
  * Hook para converter um bloco específico para v4
  */
 export function useV4Block(blockId: string | null) {
-    const context = useEditorContext();
+    const { state, actions } = useEditorState();
 
     const v4Block = useMemo(() => {
-        const blocks = (context as any).blocks as Block[] | undefined;
+        const blocks = actions.getStepBlocks(state.currentStep);
         if (!blockId || !blocks) return null;
         const block = blocks.find((b: Block) => b.id === blockId);
         if (!block) return null;
         return ensureV4Block(block);
-    }, [blockId, (context as any).blocks]);
+    }, [blockId, state.currentStep, state.stepBlocks, actions]);
 
     return v4Block;
 }
