@@ -1,0 +1,48 @@
+/**
+ * 🧪 SUITE DE TESTES - QuizModularEditorV4
+ * 
+ * Configuração centralizada para rodar todos os testes v4
+ */
+
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+
+export default defineConfig({
+    plugins: [react()],
+    test: {
+        name: 'QuizModularEditorV4',
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: ['./test-setup.ts'],
+        include: [
+            '**/__tests__/**/*.test.{ts,tsx}',
+            '**/__tests__/**/*.integration.test.{ts,tsx}',
+        ],
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'json', 'html'],
+            include: [
+                'src/components/editor/quiz/QuizModularEditor/QuizModularEditorV4.tsx',
+                'src/core/quiz/blocks/adapters.ts',
+                'src/components/editor/properties/DynamicPropertiesPanelV4.tsx',
+            ],
+            exclude: [
+                '**/__tests__/**',
+                '**/*.test.{ts,tsx}',
+                '**/node_modules/**',
+            ],
+            thresholds: {
+                lines: 80,
+                functions: 80,
+                branches: 70,
+                statements: 80,
+            },
+        },
+    },
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, './src'),
+        },
+    },
+});
