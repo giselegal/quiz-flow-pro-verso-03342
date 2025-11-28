@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
     ENHANCED_BLOCK_REGISTRY,
     // Test helper import - function used in tests below
-} from '@/components/editor/blocks/EnhancedBlockRegistry';
+} from '@/config/enhancedBlockRegistry';
 import { generateBlockDefinitions, getBlockComponent } from '@/config/enhancedBlockRegistry';
 
 // Contrato simples:
