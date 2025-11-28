@@ -254,7 +254,8 @@ export class FunnelImportService {
       };
       
     } catch (err) {
-      throw new Error(`Erro ao importar ZIP modular: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Erro ao importar ZIP modular: ${message}`);
     }
   }
   
@@ -337,7 +338,8 @@ export class FunnelImportService {
       };
       
     } catch (err) {
-      throw new Error(`Erro ao importar JSON completo: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Erro ao importar JSON completo: ${message}`);
     }
   }
   
@@ -384,7 +386,8 @@ export class FunnelImportService {
       };
       
     } catch (err) {
-      throw new Error(`Erro ao importar step único: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Erro ao importar step único: ${message}`);
     }
   }
   
