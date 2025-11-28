@@ -77,7 +77,7 @@ export class BlockV3ToV4Adapter {
 
         const v4Block: QuizBlock = {
             id: v3Block.id,
-            type: officialType,
+            type: officialType as any, // Type cast needed for compatibility
             order,
             properties: propertiesWithDefaults,
             parentId: null,
@@ -136,7 +136,7 @@ export class BlockV4ToV3Adapter {
 
         const v3Block: Block = {
             id: v4Block.id,
-            type: v4Block.type,
+            type: v4Block.type as any, // Type cast for BlockType compatibility
             order: v4Block.order,
             properties,
             content,
@@ -241,6 +241,52 @@ export function normalizeToV3(blocks: (Block | QuizBlock)[]): Block[] {
 }
 
 // ============================================================================
+// LEGACY COMPATIBILITY EXPORTS
+// ============================================================================
+
+/**
+ * @deprecated Use BlockV3ToV4Adapter.convert() instead
+ */
+export const adaptLegacyBlock = BlockV3ToV4Adapter.convert;
+
+/**
+ * @deprecated Use BlockV3ToV4Adapter.convertMany() instead
+ */
+export const adaptLegacyBlocks = BlockV3ToV4Adapter.convertMany;
+
+/**
+ * @deprecated Use normalizeToV4() instead
+ */
+export const adaptLegacyStep = (step: any) => {
+    if (step.blocks) {
+        return {
+            ...step,
+            blocks: normalizeToV4(step.blocks),
+        };
+    }
+    return step;
+};
+
+/**
+ * @deprecated Use isV4Block() or isV3Block() instead
+ */
+export const isValidBlockInstance = (block: any): boolean => {
+    return isV4Block(block) || isV3Block(block);
+};
+
+/**
+ * @deprecated Use ensureV4Block() or ensureV3Block() instead
+ */
+export const normalizeBlockInstance = ensureV4Block;
+
+/**
+ * @deprecated Use standard JavaScript spread operator instead
+ */
+export const cloneBlockInstance = (block: Block | QuizBlock) => {
+    return JSON.parse(JSON.stringify(block));
+};
+
+// ============================================================================
 // EXPORTS
 // ============================================================================
 
@@ -253,4 +299,11 @@ export default {
     normalizeToV3,
     isV4Block,
     isV3Block,
+    // Legacy exports
+    adaptLegacyBlock,
+    adaptLegacyBlocks,
+    adaptLegacyStep,
+    isValidBlockInstance,
+    normalizeBlockInstance,
+    cloneBlockInstance,
 };
