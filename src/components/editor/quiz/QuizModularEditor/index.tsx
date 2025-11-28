@@ -654,6 +654,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         overscan: 3
     });
 
+    // 🔥 FIX: Callback memoizado para onBlockSelect do Canvas (evita re-renders)
+    const handleCanvasBlockSelect = useCallback((id: string) => {
+        if (previewMode === 'live') {
+            wysiwyg.actions.selectBlock(id);
+        }
+        handleBlockSelect(id);
+    }, [previewMode, wysiwyg.actions, handleBlockSelect]);
+
     // 🎯 FASE 3.1: Navegação de steps com hook refatorado
     const stepNavigation = useStepNavigation({
         currentStepKey,
@@ -2193,12 +2201,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                         wysiwyg.actions.updateBlock(id, patch);
                                                         updateBlock(safeCurrentStep, id, patch);
                                                     }) : undefined}
-                                                    onBlockSelect={(id) => {
-                                                        if (previewMode === 'live') {
-                                                            wysiwyg.actions.selectBlock(id);
-                                                        }
-                                                        handleBlockSelect(id);
-                                                    }}
+                                                    onBlockSelect={handleCanvasBlockSelect}
                                                     hasTemplate={Boolean(
                                                         loadedTemplate ||
                                                         props.templateId ||
