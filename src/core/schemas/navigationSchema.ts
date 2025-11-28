@@ -20,11 +20,11 @@ import { z } from 'zod';
  * Schema de navegação completo
  */
 export const NavigationSchema = z.object({
-    nextStep: z.string().optional(),
-    prevStep: z.string().optional(),
-    allowBack: z.boolean().default(true),
-    autoAdvance: z.boolean().default(false),
-    autoAdvanceDelay: z.number().positive().optional(),
+    nextStep: z.string().optional().describe('ID do próximo step (step-XX)'),
+    prevStep: z.string().optional().describe('ID do step anterior (step-XX)'),
+    allowBack: z.boolean().default(true).describe('Permite voltar ao step anterior'),
+    autoAdvance: z.boolean().default(false).describe('Avança automaticamente após validação'),
+    autoAdvanceDelay: z.number().min(0).default(0).describe('Delay em ms antes do autoadvance'),
 }).optional();
 
 /**
@@ -43,10 +43,7 @@ export function validateNavigation(data: unknown): { success: true; data: Naviga
 /**
  * Factory para criar navegação com valores padrão
  */
-export function createNavigation(overrides?: Partial<Navigation>): Navigation {
-    return {
-        allowBack: true,
-        autoAdvance: false,
-        ...overrides,
-    };
+export function createNavigation(data: Partial<Navigation> = {}): Navigation {
+    // Usa o schema para aplicar defaults e validar entrada parcial
+    return NavigationSchema.parse(data);
 }
