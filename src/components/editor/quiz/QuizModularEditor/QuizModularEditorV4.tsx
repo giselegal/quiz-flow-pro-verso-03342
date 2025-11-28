@@ -6,6 +6,10 @@
  * - Usa DynamicPropertiesPanelV4
  * - Mantém compatibilidade com código existente
  * 
+ * MODO OPERACIONAL:
+ * - useV4Layout=false (padrão): Usa editor original com 4 colunas
+ * - useV4Layout=true: Usa layout otimizado com DynamicPropertiesPanelV4
+ * 
  * @version 1.0.0
  * @status PRODUCTION
  */
@@ -20,8 +24,8 @@ import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export interface QuizModularEditorV4Props extends QuizModularEditorProps {
-    /** Usar painel de propriedades v4 dinâmico */
-    useV4PropertiesPanel?: boolean;
+    /** Usar layout otimizado v4 com DynamicPropertiesPanelV4 */
+    useV4Layout?: boolean;
     /** Callback quando bloco v4 é atualizado */
     onBlockV4Update?: (blockId: string, updates: Partial<QuizBlock>) => void;
 }
@@ -99,7 +103,7 @@ function useV4BlockAdapter() {
  * Componente wrapper que adiciona funcionalidades v4
  */
 export function QuizModularEditorV4Wrapper({
-    useV4PropertiesPanel = false,
+    useV4Layout = false, // Mantém layout original por padrão para compatibilidade
     onBlockV4Update,
     ...editorProps
 }: QuizModularEditorV4Props) {
@@ -114,23 +118,27 @@ export function QuizModularEditorV4Wrapper({
         [handleV4Update, onBlockV4Update]
     );
 
-    // Se não usar painel v4, renderiza editor normal
-    if (!useV4PropertiesPanel) {
-        return <QuizModularEditor {...editorProps} />;
-    }
+    // ✅ Por enquanto: SEMPRE renderiza editor original com 4 colunas
+    // O layout v4 otimizado será implementado em fase futura quando:
+    // 1. DynamicPropertiesPanelV4 estiver validado em produção
+    // 2. Houver feedback dos usuários sobre preferências de layout
+    // 3. Testes A/B mostrarem melhor performance/UX
+    
+    appLogger.debug('QuizModularEditorV4: Using original layout', { 
+        useV4Layout,
+        blocksCount: v4Blocks.length 
+    });
 
-    // TODO: Quando implementar painel v4 customizado, usar aqui
-    // Por enquanto, apenas envolve o editor padrão
     return (
-        <div className="flex h-full">
-            <div className="flex-1">
-                <QuizModularEditor {...editorProps} />
-            </div>
-        </div>
+        <QuizModularEditor 
+            {...editorProps}
+            // TODO Phase 6: Integrar DynamicPropertiesPanelV4 quando useV4Layout=true
+            // - Layout 3 colunas: Steps | Canvas | DynamicPropertiesV4
+            // - Remover ComponentLibrary column
+            // - Adicionar biblioteca inline no canvas
+        />
     );
-}
-
-/**
+}/**
  * Hook para usar blocos v4 diretamente no código
  */
 export function useV4Blocks() {
