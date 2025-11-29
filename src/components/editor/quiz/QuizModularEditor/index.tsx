@@ -853,33 +853,62 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
     // 🧩 Helper: Normalização SIMPLIFICADA de payload de steps
-    // ✅ CORREÇÃO 1: Reduzido de 6 para 3 formatos principais + validação
+    // ✅ P5 FIX: Normalização robusta com logging detalhado e validação
+    // Suporta 3 formatos principais com fallback explícito
     const extractBlocksFromStepData = useCallback((raw: any, stepId: string): Block[] => {
         try {
-            if (!raw) return [];
+            // Null/undefined check
+            if (!raw) {
+                appLogger.debug(`[extractBlocks] Dados nulos para ${stepId}`);
+                return [];
+            }
 
-            // Caso 1: Array direto (já normalizado)
+            // Caso 1: Array direto (formato mais comum)
             if (Array.isArray(raw)) {
-                return raw.filter((b: any) => b && b.id && b.type) as Block[];
+                const blocks = raw.filter((b: any) => {
+                    const isValid = b && typeof b.id === 'string' && typeof b.type === 'string';
+                    if (!isValid && b) {
+                        appLogger.warn(`[extractBlocks] Bloco inválido ignorado em ${stepId}`, {
+                            hasId: !!b?.id,
+                            hasType: !!b?.type,
+                            keys: Object.keys(b || {}).slice(0, 5)
+                        });
+                    }
+                    return isValid;
+                }) as Block[];
+                appLogger.debug(`[extractBlocks] Array direto: ${blocks.length} blocos válidos para ${stepId}`);
+                return blocks;
             }
 
             // Caso 2: Objeto com propriedade .blocks
             if (raw.blocks && Array.isArray(raw.blocks)) {
-                return raw.blocks.filter((b: any) => b && b.id && b.type) as Block[];
+                const blocks = raw.blocks.filter((b: any) => b && typeof b.id === 'string' && typeof b.type === 'string') as Block[];
+                appLogger.debug(`[extractBlocks] Formato {blocks}: ${blocks.length} blocos válidos para ${stepId}`);
+                return blocks;
             }
 
             // Caso 3: Estrutura aninhada { steps: { stepId: { blocks: [] } } }
             if (raw.steps && raw.steps[stepId]?.blocks && Array.isArray(raw.steps[stepId].blocks)) {
-                return raw.steps[stepId].blocks.filter((b: any) => b && b.id && b.type) as Block[];
+                const blocks = raw.steps[stepId].blocks.filter((b: any) => b && typeof b.id === 'string' && typeof b.type === 'string') as Block[];
+                appLogger.debug(`[extractBlocks] Formato {steps}: ${blocks.length} blocos válidos para ${stepId}`);
+                return blocks;
             }
 
-            // ⚠️ Formato não reconhecido - log para debug
-            appLogger.warn('[extractBlocksFromStepData] Formato não reconhecido', {
-                data: [{ stepId, hasBlocks: !!raw.blocks, hasSteps: !!raw.steps, keys: Object.keys(raw) }]
+            // ⚠️ P5 FIX: Logging detalhado para formato não reconhecido
+            appLogger.error(`[extractBlocks] Formato não reconhecido para ${stepId}`, {
+                dataType: typeof raw,
+                keys: Object.keys(raw || {}).slice(0, 10),
+                hasBlocks: !!raw?.blocks,
+                hasSteps: !!raw?.steps,
+                blocksType: typeof raw?.blocks,
+                stepsType: typeof raw?.steps
             });
             return [];
         } catch (err) {
-            appLogger.error('[extractBlocksFromStepData] Erro ao normalizar', { data: [err] });
+            appLogger.error(`[extractBlocks] Exceção ao normalizar ${stepId}`, { 
+                error: (err as Error)?.message,
+                stack: (err as Error)?.stack?.split('\n').slice(0, 3)
+            });
             return [];
         }
     }, []);
@@ -1013,20 +1042,34 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // 2. Se blocos vazio → reset para [] (evita painel com dados obsoletos)
     // 3. Seleção inicial apenas se não houver seleção válida (previewMode !== 'live')
     // 4. Evita múltiplos efeitos paralelos (remove efeito antigo de auto-select)
+    // ✅ P6 FIX: Comparação robusta usando assinatura de IDs para evitar sync loops
+    const lastSyncSignatureRef = useRef<string>('');
     useEffect(() => {
         try {
             const unified = blocks;
             const current = wysiwyg.state.blocks;
-            const changedLength = unified.length !== current.length;
-            const changedIds = changedLength || unified.some((b, i) => current[i]?.id !== b.id);
+            
+            // ✅ P6 FIX: Usar assinatura de IDs ao invés de comparação por índice
+            // Isso evita loops infinitos quando a referência do array muda sem mudar o conteúdo
+            const unifiedSignature = `${safeCurrentStep}|${unified.length}|${unified.map(b => b.id).join(',')}`;
+            const currentSignature = `${safeCurrentStep}|${current.length}|${current.map(b => b.id).join(',')}`;
+            
+            // Evitar reset se a assinatura não mudou desde o último sync
+            if (unifiedSignature === lastSyncSignatureRef.current && unifiedSignature === currentSignature) {
+                return;
+            }
+            
+            const needsReset = unifiedSignature !== currentSignature;
 
-            if (changedIds) {
+            if (needsReset) {
                 appLogger.debug('[Sync] Reset WYSIWYG ← unified.stepBlocks', {
                     step: safeCurrentStep,
                     unifiedCount: unified.length,
-                    prevCount: current.length
+                    prevCount: current.length,
+                    reason: 'signature_mismatch'
                 });
                 wysiwyg.actions.reset(unified);
+                lastSyncSignatureRef.current = unifiedSignature;
             }
 
             // Seleção inicial integrada (somente modo edição e se há blocos)
