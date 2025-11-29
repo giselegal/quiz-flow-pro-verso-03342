@@ -1,5 +1,6 @@
 import { ValidationResult } from '@/types/validation';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { QuizNavigation } from '../QuizNavigation';
 
@@ -21,6 +22,21 @@ describe('QuizNavigation', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
+
+  // Helper: tests run in StrictMode can produce duplicate nodes — choose
+  // the most appropriate button instance (prefer enabled when expecting enabled)
+  const getButtonByText = (text: string, { disabled }: { disabled?: boolean } = {}) => {
+    // Query visible text nodes (handles aria-label + visible text separately due to
+    // node duplication). Then walk to the closest button element.
+    const nodes = screen.getAllByText(new RegExp(text, 'i'));
+    const buttons = nodes
+      .map((n) => n.closest('button'))
+      .filter(Boolean) as HTMLButtonElement[];
+
+    if (disabled === true) return buttons.find((b) => b.hasAttribute('disabled')) || buttons[0];
+    if (disabled === false) return buttons.find((b) => !b.hasAttribute('disabled')) || buttons[0];
+    return buttons[0];
+  };
 
   describe('Renderização', () => {
     it('deve renderizar informações de progresso', () => {
@@ -84,8 +100,8 @@ describe('QuizNavigation', () => {
 
       render(<QuizNavigation {...defaultProps} onNext={onNext} />);
 
-      const proximoBtn = screen.getByText('Próximo');
-      fireEvent.click(proximoBtn);
+      const proximoBtn = getButtonByText('Próximo', { disabled: false });
+      userEvent.click(proximoBtn);
 
       expect(onNext).toHaveBeenCalledTimes(1);
     });
@@ -95,8 +111,8 @@ describe('QuizNavigation', () => {
 
       render(<QuizNavigation {...defaultProps} onPrevious={onPrevious} />);
 
-      const anteriorBtn = screen.getByText('Anterior');
-      fireEvent.click(anteriorBtn);
+      const anteriorBtn = getButtonByText('Anterior', { disabled: false });
+      userEvent.click(anteriorBtn);
 
       expect(onPrevious).toHaveBeenCalledTimes(1);
     });
@@ -106,8 +122,8 @@ describe('QuizNavigation', () => {
 
       render(<QuizNavigation {...defaultProps} canProceed={false} onNext={onNext} />);
 
-      const proximoBtn = screen.getByText('Próximo');
-      fireEvent.click(proximoBtn);
+      const proximoBtn = getButtonByText('Próximo', { disabled: true });
+      userEvent.click(proximoBtn);
 
       expect(onNext).not.toHaveBeenCalled();
     });
@@ -207,7 +223,7 @@ describe('QuizNavigation', () => {
     it('deve ter foco visível nos botões', () => {
       render(<QuizNavigation {...defaultProps} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+      const proximoBtn = getButtonByText('Próximo', { disabled: false });
       proximoBtn.focus();
 
       expect(proximoBtn).toHaveFocus();
@@ -218,7 +234,7 @@ describe('QuizNavigation', () => {
 
       render(<QuizNavigation {...defaultProps} onNext={onNext} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+      const proximoBtn = getButtonByText('Próximo', { disabled: false });
 
       // Simular Enter
       fireEvent.keyDown(proximoBtn, { key: 'Enter', code: 'Enter' });
