@@ -8,6 +8,7 @@
 import { appLogger } from '@/lib/utils/appLogger';
 import { multiLayerCache } from './MultiLayerCacheStrategy';
 import type { CacheStore } from '../canonical/CacheService';
+import { cacheService } from '../canonical/CacheService';
 
 interface CacheEntry {
   result: any;
@@ -22,7 +23,7 @@ interface CacheOptions {
 }
 
 class ResultCacheService {
-  private readonly STORE: CacheStore = 'results';
+  private readonly STORE: CacheStore = 'generic';
   private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
 
   /**
@@ -116,25 +117,25 @@ class ResultCacheService {
    */
   getStats() {
     try {
-      const cache = this.loadCache();
-      const entries = Object.values(cache);
-      const now = Date.now();
-      
-      const validEntries = entries.filter(
-        entry => now - entry.timestamp <= this.DEFAULT_TTL,
-      );
-
+      const stats = cacheService.getStoreStats(this.STORE);
+      if (!stats.success || !stats.data) {
+        return {
+          totalEntries: 0,
+          validEntries: 0,
+          expiredEntries: 0,
+          cacheSize: 0,
+          oldestEntry: null,
+          newestEntry: null,
+        };
+      }
+      const s = stats.data;
       return {
-        totalEntries: entries.length,
-        validEntries: validEntries.length,
-        expiredEntries: entries.length - validEntries.length,
-        cacheSize: JSON.stringify(cache).length,
-        oldestEntry: entries.length > 0 
-          ? Math.min(...entries.map(e => e.timestamp))
-          : null,
-        newestEntry: entries.length > 0 
-          ? Math.max(...entries.map(e => e.timestamp))
-          : null,
+        totalEntries: s.entriesCount,
+        validEntries: s.entriesCount, // sem noção de expiração por entrada aqui
+        expiredEntries: 0,
+        cacheSize: s.memoryUsage,
+        oldestEntry: null,
+        newestEntry: null,
       };
     } catch (error) {
       appLogger.warn('⚠️ Erro ao obter estatísticas do cache:', { data: [error] });

@@ -68,4 +68,6 @@ class ConfigurationCache {
         return { items: m.l2Items, estimatedSize: m.l2Size };
     }
 }
+const configurationCache = new ConfigurationCache();
 export default configurationCache;
+export { configurationCache };

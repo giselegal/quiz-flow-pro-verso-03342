@@ -6,6 +6,7 @@ import { useLocation } from 'wouter';
 // Substitui hook legado de navegação por integração com QuizFlowProvider
 import { useQuizFlow } from '@/contexts/quiz/QuizFlowProvider';
 import { QuizBackendStatus } from './QuizBackendStatus';
+import { useAppStore, selectors } from '@/state/store';
 
 interface Quiz21StepsNavigationProps {
   position?: 'floating' | 'sticky' | 'static';
@@ -118,16 +119,12 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
     switch (phase) {
       case 'inicio':
         return 'Bem-vindo';
-      case 'quiz':
-        return `Questão ${currentStep - 1} de 10`;
       case 'transicao1':
         return 'Preparando próxima fase';
       case 'estrategicas':
         return `Pergunta estratégica ${currentStep - 12} de 6`;
       case 'transicao2':
         return 'Calculando resultado';
-      case 'resultado':
-        return 'Seu resultado';
       case 'oferta':
         return 'Oferta especial';
       default:
