@@ -1,3 +1,29 @@
+/*
+ ARQUITETURA MODULAR V4 – PIPELINE CENTRAL
+ --------------------------------------------------
+ 1. Mutação única: todas as alterações em blocos passam pelo WYSIWYG (`useWYSIWYGBridge`). Nenhum código deve mutar diretamente `unified.editor.stepBlocks` exceto pelo efeito de flush debounced.
+ 2. Fluxo de dados: `wysiwyg.state.blocks` → (debounce 300ms) → flush → `unified.editor.stepBlocks[stepIndex]`.
+ 3. Persistência: autosave força flush se existir timer pendente, calcula hash (FNV-1a em `computeBlocksHash`). Salva apenas se `currentHash !== lastPersistedHashRef.current`.
+ 4. Seleção: integrada ao efeito de sincronização. Após reset, primeiro bloco é selecionado se nenhum válido (modo edição). Evita efeitos paralelos e loops.
+ 5. Carregamento: `useTemplateLoader` (estrutura de steps) + `useStepBlocksLoader` (blocos por step) = fonte única. Prefetch vizinho via `useStepPrefetch` (debounce 300ms / radius 1).
+ 6. DnD: adicionar/reordenar usa somente `wysiwyg.actions.addBlock|reorderBlocks`; commit acontece no próximo flush (garantindo consistência e evitando race).
+ 7. Undo/Redo: histórico aplicado após flush (estado unificado). Operações devem entrar via WYSIWYG para manter integridade.
+ 8. Validação: opcional e não bloqueante via worker (`useTemplateValidation`) após carregamento de template.
+ 9. Hash: controla saves redundantes e evita escrita quando não houve mudança efetiva (ids/ordem/conteúdo).
+
+ Extensão segura:
+ - Novos tipos de bloco: registrar no registry e mutar via `wysiwyg.actions` (ou `wysiwyg.actions.reset` para batch).
+ - Novas operações atômicas: construir sobre ações existentes (ex: updateBlockProperties) mantendo isolamento.
+
+ Não fazer:
+ - Chamar `setStepBlocks` diretamente em handlers de UI/DnD (exceto restaurações controladas / migrações).
+ - Usar métodos legados de mutação do unified (`addBlock`, `updateBlock`, etc.) fora do adapter `commands`.
+
+ Diagnóstico rápido:
+ - Divergência inesperada? Verificar `lastFlushedSignatureRef` e se timers são limpos corretamente.
+ - Saves repetidos? Inspecionar hash atual comparado com `lastPersistedHashRef.current`.
+ - Seleção incorreta? Confirmar se efeito de sync está resetando e aplicando auto-select apenas quando necessário.
+*/
 import { useAppStore, selectors } from '@/state/store';
 // Exemplo de uso com subscrição seletiva para evitar re-render em cascata
 const useEditorSelectors = () => {
