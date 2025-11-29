@@ -827,11 +827,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, []);
 
-    // 🔥 HOTFIX 1: Hook unificado para carregamento de template (substitui 3 useEffects)
-    // PROBLEMA RESOLVIDO: 3 useEffects diferentes carregavam o mesmo template simultaneamente
-    // - 450-750ms de delay desnecessário eliminados
-    // - Race conditions prevenidas com AbortController
-    // - Deduplicação automática de requisições
+    // 🔄 Carregamento canônico de template: única fonte para lista de steps (sem injeção de blocos)
     const templateLoader = useTemplateLoader({
         templateId: props.templateId,
         funnelId: props.funnelId,
@@ -866,44 +862,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         setTemplateLoading(templateLoader.isLoading);
     }, [templateLoader.isLoading, setTemplateLoading]);
 
-    // 🆕 Auto-injeção pós-carregamento: garante blocos iniciais mesmo quando
-    // o template é carregado via useTemplateLoader (caminho que não passa por handleLoadTemplate)
-    // Situação observada nos testes: template carregado, mas step-01 permanece vazio.
-    const initialStepBlocksInjectedRef = useRef(false);
-    useEffect(() => {
-        if (!loadedTemplate || !activeTemplateId) return;
-        if (initialStepBlocksInjectedRef.current) return;
-        try {
-            const existing = getStepBlocks(1);
-            if (existing && existing.length > 0) {
-                initialStepBlocksInjectedRef.current = true;
-                return;
-            }
-        } catch { /* ignore */ }
-
-        (async () => {
-            try {
-                const res: any = await templateService.getStep('step-01', activeTemplateId);
-                if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
-                    const normalized = res.data.filter((b: any) => b && b.id && b.type);
-                    if (normalized.length > 0) {
-                        setStepBlocks(1, normalized);
-                        appLogger.info('✅ [AutoInject] step-01 blocks injected após templateLoader', {
-                            data: [{ count: normalized.length }]
-                        });
-                    } else {
-                        appLogger.warn('⚠️ [AutoInject] step-01 sem blocos válidos após filtro');
-                    }
-                } else {
-                    appLogger.warn('⚠️ [AutoInject] getStep(step-01) retornou vazio ou sem sucesso', { data: [res] });
-                }
-            } catch (e) {
-                appLogger.warn('[AutoInject] Falha ao injetar blocos iniciais step-01', { data: [e] });
-            } finally {
-                initialStepBlocksInjectedRef.current = true;
-            }
-        })();
-    }, [loadedTemplate, activeTemplateId, getStepBlocks, setStepBlocks]);
+    // 🚫 Removido: auto-injeção duplicada do step-01 (agora apenas useStepBlocksLoader cuida do carregamento)
 
     // 🔥 HOTFIX 3: Hook de validação com Web Worker (não-bloqueante)
     // PROBLEMA RESOLVIDO: Validação bloqueante de 2-5 segundos no main thread
@@ -1125,125 +1084,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     });
 
     // ✅ ARQUITETURA: Prefetch de steps vizinhos (otimização separada)
-    useEffect(() => {
-        const stepIndex = safeCurrentStep;
-        const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
-        const controller = new AbortController();
-        const { signal } = controller;
-
-        // ✅ CORREÇÃO 6: Safety timeout para garantir reset de loading
-        const safetyTimeout = setTimeout(() => {
-            setStepLoading(false);
-        }, 3000);
-
-        async function ensureStepBlocks() {
-            // Prefetch apenas se não estiver em loading
-            if (isLoadingStep) return;
-
-            // debounce small
-            await new Promise(resolve => setTimeout(resolve, 100));
-            if (signal.aborted) return;
-
-            try {
-                const svc: any = templateService;
-                const templateOrResource = activeTemplateId ?? props.templateId ?? resourceId;
-
-                if (!templateOrResource) {
-                    appLogger.warn('[QuizModularEditor] ensureStepBlocks chamado sem templateOrResource');
-                    setStepLoading(false);
-                    return;
-                }
-
-                const result = await svc.getStep(stepId, templateOrResource, { signal });
-
-                // Normalização segura
-                const normalizedBlocks = extractBlocksFromStepData(result?.data, stepId);
-
-                // ✅ CORREÇÃO 2: Validar array não-vazio antes de gravar
-                if (!signal.aborted && result?.success && normalizedBlocks && normalizedBlocks.length > 0) {
-                    appLogger.info(`✅ [QuizModularEditor] Step carregado: ${normalizedBlocks.length} blocos`);
-                    setStepBlocks(stepIndex, normalizedBlocks);
-
-                    // 🔥 HOTFIX 4: WYSIWYG Sync Otimizado
-                    // ✅ CORREÇÃO 4: Sempre sincronizar (modo live fixo)
-                    try {
-                        // ✅ CORREÇÃO 5: Comparação otimizada sem JSON.stringify
-                        const currentIds = wysiwyg.state.blocks.map(b => b.id).sort().join(',');
-                        const newIds = normalizedBlocks.map((b: any) => b.id).sort().join(',');
-
-                        if (currentIds !== newIds) {
-                            // Blocos diferentes - fazer reset
-                            appLogger.debug('[WYSIWYG] IDs mudaram, fazendo reset');
-                            wysiwyg.actions.reset(normalizedBlocks);
-                        } else {
-                            // Mesmos IDs - atualização incremental
-                            appLogger.debug('[WYSIWYG] Mesmos IDs, sync incremental');
-                            normalizedBlocks.forEach((block: any) => {
-                                const existing = wysiwyg.state.blocks.find(b => b.id === block.id);
-                                // ✅ Comparação shallow ao invés de deep (JSON.stringify)
-                                if (existing && (existing.type !== block.type || existing.order !== block.order)) {
-                                    wysiwyg.actions.updateBlock(block.id, block);
-                                }
-                            });
-                        }
-
-                        // Manter ou definir seleção
-                        const keepId = wysiwyg.state.selectedBlockId;
-                        if (keepId && normalizedBlocks.some((b: any) => b.id === keepId)) {
-                            // Seleção atual ainda válida, manter
-                            wysiwyg.actions.selectBlock(keepId);
-                        } else {
-                            // Selecionar primeiro bloco
-                            const first = normalizedBlocks[0];
-                            if (first) wysiwyg.actions.selectBlock(first.id);
-                        }
-                    } catch (e) {
-                        appLogger.warn('[QuizModularEditor] Falha ao sincronizar WYSIWYG', { data: [e] });
-                    }
-                } else {
-                    // ✅ CORREÇÃO 2.1: Log mais claro sobre por que step não foi carregado
-                    const reason = signal.aborted ? 'aborted' :
-                        !result?.success ? 'request_failed' :
-                            normalizedBlocks.length === 0 ? 'empty_blocks' : 'unknown';
-
-                    console.warn('⚠️ [QuizModularEditor] Step não carregado:', {
-                        stepId,
-                        reason,
-                        normalizedCount: normalizedBlocks?.length || 0
-                    });
-
-                    appLogger.warn('[QuizModularEditor] Step sem blocos válidos', {
-                        stepId,
-                        reason,
-                        success: result?.success
-                    });
-                }
-            } catch (e) {
-                console.error('💥💥💥 [DEBUG] ensureStepBlocks ERRO:', e);
-                if (!signal.aborted) {
-                    appLogger.error('[QuizModularEditor] lazyLoadStep falhou:', e);
-                }
-            } finally {
-                // 🔥 SEMPRE resetar loading, mesmo se aborted
-                clearTimeout(safetyTimeout);
-                setStepLoading(false);
-            }
-        }
-
-        ensureStepBlocks();
-
-        // ✅ CORREÇÃO ARQUITETURAL: Prefetch de vizinhos REMOVIDO
-        // useStepPrefetch (linha 206) já faz isso com:
-        // - Debounce de 300ms (evita prefetch em navegação rápida)
-        // - AbortController (cancela requisições obsoletas)
-        // - radius: 1 (steps N-1 e N+1)
-        // Manter dois sistemas causa duplicação de requisições
-        return () => {
-            clearTimeout(safetyTimeout);
-            controller.abort();
-            setStepLoading(false);
-        };
-    }, [safeCurrentStep, props.templateId, resourceId, setStepLoading, setStepBlocks, queryClient, props.funnelId]);
+    // 🔄 Carregamento de step: somente via useStepBlocksLoader (eliminado ensureStepBlocks effect)
 
     // DnD handler (uses desestructured methods)
     const handleDragEnd = useCallback(
@@ -1627,33 +1468,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 steps: templateStepsResult.data,
             });
             setActiveTemplateId(tid);
-            // ✅ Marcar carregamento concluído ANTES da injeção dos blocos para que o badge apareça nos testes rapidamente
+            // ✅ Carregamento simplificado: blocos do step inicial serão carregados pelo hook de step
             setTemplateLoading(false);
-            // ✅ INJEÇÃO IMEDIATA DO STEP INICIAL (step-01) PARA EVITAR CANVAS VAZIO
-            try {
-                const firstStepId = 'step-01';
-                const firstRes: any = await svc.getStep(firstStepId, tid);
-                if (firstRes?.success) {
-                    let initialBlocks: any[] = [];
-                    const raw = firstRes.data;
-                    if (Array.isArray(raw)) initialBlocks = raw.filter((b: any) => b && b.id && b.type);
-                    else if (raw?.blocks && Array.isArray(raw.blocks)) initialBlocks = raw.blocks.filter((b: any) => b && b.id && b.type);
-                    else if (raw?.steps && raw.steps[firstStepId]?.blocks) initialBlocks = raw.steps[firstStepId].blocks.filter((b: any) => b && b.id && b.type);
-
-                    if (initialBlocks.length > 0) {
-                        setStepBlocks(1, initialBlocks as any);
-                        appLogger.info('✅ [handleLoadTemplate] Blocos iniciais carregados imediatamente', {
-                            data: [{ step: firstStepId, count: initialBlocks.length }]
-                        });
-                    } else {
-                        appLogger.warn('⚠️ [handleLoadTemplate] Sem blocos válidos em step-01 no carregamento inicial');
-                    }
-                } else {
-                    appLogger.warn('⚠️ [handleLoadTemplate] getStep(step-01) não retornou sucesso');
-                }
-            } catch (e) {
-                appLogger.warn('[handleLoadTemplate] Falha ao injetar blocos iniciais do step-01', { data: [e] });
-            }
             try {
                 const p = new URLSearchParams(window.location.search);
                 const s = p.get('step');
@@ -1688,7 +1504,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 return u.searchParams.get(key);
             } catch { return null; }
         }
-    }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, unifiedState.editor.currentStep, showToast]);
+    }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, unifiedState.editor.currentStep, toast]);
 
     // 🚀 Auto-load de template/funil quando houver resourceId/funnelId presente
     useEffect(() => {

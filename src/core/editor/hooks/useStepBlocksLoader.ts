@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
+import { normalizeStepPayload } from '@/core/editor/utils/normalizeStepPayload';
 
 interface UseStepBlocksLoaderParams {
   templateOrFunnelId: string | null;
@@ -57,16 +58,7 @@ export function useStepBlocksLoader({
           return;
         }
 
-        // ✅ Normalização simplificada (3 formatos)
-        let blocks: Block[] = [];
-        
-        if (Array.isArray(res.data)) {
-          blocks = res.data.filter((b: any) => b && b.id && b.type);
-        } else if (res.data.blocks && Array.isArray(res.data.blocks)) {
-          blocks = res.data.blocks.filter((b: any) => b && b.id && b.type);
-        } else if (res.data.steps && res.data.steps[stepId]?.blocks) {
-          blocks = res.data.steps[stepId].blocks.filter((b: any) => b && b.id && b.type);
-        }
+        const blocks: Block[] = normalizeStepPayload(res.data, stepId);
 
         // ✅ CORREÇÃO: Validar array não-vazio
         if (blocks.length === 0) {
