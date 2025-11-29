@@ -7,6 +7,7 @@ import { ValidationResultProvider } from '@/contexts/consolidated/ValidationResu
 import { UXProvider } from '@/contexts/consolidated/UXProvider';
 import { FunnelDataProvider } from '@/contexts/funnel/FunnelDataProvider';
 import { QuizStateProvider } from '@/contexts/quiz/QuizStateProvider';
+import { VersioningProvider } from '@/contexts/versioning/VersioningProvider';
 
 // Cria um QueryClient isolado para cada render, evitando estados compartilhados entre testes
 function createTestQueryClient() {
@@ -24,19 +25,16 @@ export function renderWithProviders(ui: React.ReactElement) {
     return render(
         <QueryClientProvider client={client}>
             <AuthStorageProvider>
-                <RealTimeProvider value={{
-                    connected: false,
-                    subscribe: () => () => { },
-                    publish: () => { },
-                    presence: { onlineUsers: 0 },
-                } as any}>
+                <RealTimeProvider>
                     <UXProvider>
                         <FunnelDataProvider>
-                            <QuizStateProvider>
-                                <ValidationResultProvider>
-                                    {ui}
-                                </ValidationResultProvider>
-                            </QuizStateProvider>
+                            <VersioningProvider>
+                                <QuizStateProvider>
+                                    <ValidationResultProvider>
+                                        {ui}
+                                    </ValidationResultProvider>
+                                </QuizStateProvider>
+                            </VersioningProvider>
                         </FunnelDataProvider>
                     </UXProvider>
                 </RealTimeProvider>
