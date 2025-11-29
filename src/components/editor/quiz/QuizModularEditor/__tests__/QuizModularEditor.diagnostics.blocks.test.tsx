@@ -1,6 +1,6 @@
 import React from 'react';
-import { describe, it, vi, beforeEach, waitFor, expect } from 'vitest';
-import { screen } from '@testing-library/react';
+import { describe, it, vi, beforeEach, expect } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/test-utils/renderWithProviders';
 // Removido import direto de jest-dom; usar matchers básicos.
 import QuizModularEditor from '../index';
