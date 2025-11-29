@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { AuthStorageProvider } from '@/contexts/consolidated/AuthStorageProvider';
 import { RealTimeProvider } from '@/contexts/consolidated/RealTimeProvider';
+import { ValidationResultProvider } from '@/contexts/consolidated/ValidationResultProvider';
 
 // Cria um QueryClient isolado para cada render, evitando estados compartilhados entre testes
 function createTestQueryClient() {
@@ -26,7 +27,9 @@ export function renderWithProviders(ui: React.ReactElement) {
                     publish: () => { },
                     presence: { onlineUsers: 0 },
                 } as any}>
-                    {ui}
+                    <ValidationResultProvider>
+                        {ui}
+                    </ValidationResultProvider>
                 </RealTimeProvider>
             </AuthStorageProvider>
         </QueryClientProvider>
