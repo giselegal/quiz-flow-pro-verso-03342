@@ -11,6 +11,19 @@
  * - Order sempre normalizado automaticamente
  * - Validação automática de operações
  * - Suporte a hierarquia parent/child
+ * 
+ * 🔄 Batch & WYSIWYG (Arquitetura V4):
+ * Este hook ainda aplica mutações diretamente sobre a estrutura de steps (unified). No fluxo V4,
+ * o WYSIWYG é a superfície única de mutação. Para operações que afetam MUITOS blocos de uma vez
+ * (ex: inserir snippet, duplicar vários blocos, migrações), recomenda-se migrar para um modo batch:
+ *   - Coletar blocos finais em um array
+ *   - Chamar `wysiwyg.actions.reset(finalBlocks)`
+ *   - Deixar o flush debounced propagar para `unified.stepBlocks`
+ * Isso evita sincronização invertida (unified → WYSIWYG) e reduz custo de comparação de arrays.
+ * 
+ * Próximo passo sugerido (não implementado aqui): adicionar API opcional
+ * `beginBatch()` / `commitBatch()` no bridge WYSIWYG para absorver múltiplas mutações
+ * internas e emitir apenas um reset final quando `commitBatch()` for chamado.
  */
 
 import { useCallback } from 'react';
