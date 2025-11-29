@@ -97,8 +97,8 @@ export type QuizModularEditorProps = {
     resourceId?: string;
     /** Metadata do recurso (fornecida por useEditorResource) */
     editorResource?: EditorResource | null;
-    /** Se o recurso é somente leitura */
-    isReadOnly?: boolean;
+    /** Se o recurso é somente leitura - SEMPRE FALSE, templates são editáveis */
+    isReadOnly?: false;
     /** ID do funnel - padrão para templates editáveis */
     funnelId?: string;
     /** @deprecated - Use funnelId ao invés. Mantido para retrocompatibilidade */
@@ -181,7 +181,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Resource unification (support legacy props)
     // 🔄 PADRONIZAÇÃO: templateId é tratado como funnelId (editável)
     const resourceId = props.resourceId || props.funnelId || props.templateId;
-    const isReadOnly = props.isReadOnly ?? false;
+    // 🔓 EDIÇÃO SEMPRE HABILITADA: Templates e funnels são editáveis por padrão
+    const isReadOnly = false; // Forçar edição habilitada
     const resourceMetadata = props.editorResource ?? null;
 
     // 🔄 DEBUG: Padronização template → funnel
@@ -191,7 +192,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             funnelId: props.funnelId || props.templateId, // templateId = funnelId
             templateId_deprecated: props.templateId,
             resourceIdFinal: resourceId,
-            isEditableModel: true
+            isEditableModel: true,
+            isReadOnly: isReadOnly, // Deve ser sempre false
+            edicaoHabilitada: !isReadOnly // Deve ser sempre true
         }]
     });
 
@@ -1912,8 +1915,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         <Button
                             size="sm"
                             onClick={handleSave}
-                            disabled={isReadOnly}
+                            disabled={false}
                             className="h-7"
+                            title="Salvar alterações no funil"
                         >
                             <Save className="w-3 h-3 mr-1" />
                             Salvar
@@ -1922,7 +1926,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                             size="sm"
                             variant="default"
                             onClick={handlePublish}
-                            disabled={isReadOnly}
+                            disabled={false}
                             className="h-7 bg-emerald-600 hover:bg-emerald-700"
                             title="Publicar este funil"
                         >
