@@ -14,6 +14,7 @@ import React, { createContext, useContext, useState, useCallback, useMemo, React
 import { appLogger } from '@/lib/utils/appLogger';
 import { LogicEngine } from '@/lib/logic-engine';
 import type { Condition } from '@/lib/logic-engine';
+import { useAppStore } from '@/state/store';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -164,6 +165,16 @@ export function QuizStateProvider({
             [questionId]: answer,
         }));
 
+        // 🔗 Bridge para Zustand: refletir seleção no quizSlice
+        try {
+            const setSelections = useAppStore.getState().quiz.setSelections;
+            const current = useAppStore.getState().quiz.selections[questionId] || [];
+            const next = Array.isArray(value) ? value : [String(value)];
+            // Evitar re-render excessivo: somente se mudou
+            const changed = next.join(',') !== current.join(',');
+            if (changed) setSelections(questionId, next);
+        } catch { }
+
         appLogger.info('Answer recorded', {
             component: 'QuizStateProvider',
             questionId,
@@ -182,11 +193,22 @@ export function QuizStateProvider({
             delete newAnswers[questionId];
             return newAnswers;
         });
+
+        // 🔗 Bridge para Zustand: limpar seleção correspondente
+        try {
+            const setSelections = useAppStore.getState().quiz.setSelections;
+            const current = useAppStore.getState().quiz.selections[questionId];
+            if (current && current.length) setSelections(questionId, []);
+        } catch { }
         appLogger.info('Answer cleared', { component: 'QuizStateProvider', questionId });
     }, []);
 
     const clearAllAnswers = useCallback(() => {
         setAnswers({});
+        // 🔗 Bridge para Zustand: resetar seleções globais
+        try {
+            useAppStore.getState().quiz.resetSelections();
+        } catch { }
         appLogger.info('All answers cleared', { component: 'QuizStateProvider' });
     }, []);
 
