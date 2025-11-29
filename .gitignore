@@ -52,6 +52,7 @@ pids/
 
 # Coverage directory used by tools like istanbul
 coverage/
+playwright-report/
 
 # Dependency directories
 jspm_packages/
@@ -68,11 +69,13 @@ jspm_packages/
 
 # Temporary files and audit reports
 tmp/
+audit_reports/
 
 # Test scripts and diagnostics
 test-diagnostics.mjs*.bak
 test-*.html
 test-*.js
+debug-results-page.html
 
 # TRAE.ai
 .trae/
