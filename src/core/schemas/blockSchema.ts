@@ -113,6 +113,8 @@ export const BlockSchema = z.object({
     content: BlockContentSchema,
     properties: BlockPropertiesSchema,
     metadata: BlockMetadataSchema,
+    parentId: z.string().optional(),
+    ephemeral: z.boolean().optional(),
 });
 
 /**
