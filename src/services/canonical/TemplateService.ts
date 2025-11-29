@@ -456,11 +456,13 @@ export class TemplateService extends BaseCanonicalService {
         throw new Error('Operation aborted');
       }
 
-      // 🆕 GARGALO #5 FIX: Deduplicação de cargas (FASE 3)
-      // Se já existe uma promise para este step, retornar ela (evita redundância)
-      const loadKey = `${stepId}-${templateId || 'default'}`;
+      // ✅ P9 FIX: Incluir funnelId na chave de deduplicação
+      // Isso evita retornar dados incorretos para funis diferentes
+      const funnelPart = this.activeFunnelId || 'default-funnel';
+      const loadKey = `${stepId}-${templateId || 'default'}-${funnelPart}`;
+      
       if (this.stepLoadPromises.has(loadKey)) {
-        this.log(`🔄 [DEDUPLICATE] Aguardando load existente: ${stepId}`);
+        this.log(`🔄 [DEDUPLICATE] Aguardando load existente: ${stepId} (funnel: ${funnelPart})`);
         const existingPromise = this.stepLoadPromises.get(loadKey)!;
         try {
           const data = await existingPromise;
@@ -1293,21 +1295,36 @@ export class TemplateService extends BaseCanonicalService {
 
     /**
      * 🎯 FASE 4: Listar informações de steps de forma dinâmica
-     * Usa activeTemplateSteps para mostrar apenas os steps do template carregado
+     * ✅ P8 FIX: Fallback robusto quando activeTemplateSteps não está configurado
      */
     list: (): ServiceResult<StepInfo[]> => {
       try {
         const steps: StepInfo[] = [];
 
-        // 1. Adicionar steps do template (se houver)
-        // 🔧 FIX: Se activeTemplateSteps não foi setado (=0), usar 21 steps por padrão para quiz21StepsComplete
+        // ✅ P8 FIX: Fallback robusto para garantir steps sempre disponíveis
         let totalSteps = this.activeTemplateSteps;
-        if (totalSteps === 0 && this.activeTemplateId === 'quiz21StepsComplete') {
-          totalSteps = 21;
-          appLogger.warn(`⚠️ [TemplateService.steps.list] activeTemplateSteps não setado, usando fallback de 21 steps`);
+        
+        // Se não configurado (0), usar 21 como padrão para templates conhecidos
+        if (totalSteps === 0) {
+          // Detectar template padrão
+          const isKnownTemplate = this.activeTemplateId === 'quiz21StepsComplete' ||
+                                  this.activeTemplateId?.includes('quiz21') ||
+                                  this.activeFunnelId?.includes('quiz21');
+          
+          if (isKnownTemplate) {
+            totalSteps = 21;
+            appLogger.debug('[TemplateService.steps.list] Usando 21 steps para template quiz21');
+          } else {
+            // Default seguro: 21 steps (quiz completo)
+            totalSteps = 21;
+            appLogger.warn('[TemplateService.steps.list] activeTemplateSteps=0, usando fallback de 21 steps', {
+              activeTemplateId: this.activeTemplateId,
+              activeFunnelId: this.activeFunnelId
+            });
+          }
         }
 
-        appLogger.info(`🔍 [TemplateService.steps.list] activeTemplateSteps = ${totalSteps}, activeTemplateId = ${this.activeTemplateId}`);
+        appLogger.debug(`[TemplateService.steps.list] Listando ${totalSteps} steps`);
 
         for (let i = 1; i <= totalSteps; i++) {
           const info = this.STEP_MAPPING[i] || {

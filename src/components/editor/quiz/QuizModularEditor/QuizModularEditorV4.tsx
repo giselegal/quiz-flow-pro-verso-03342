@@ -24,6 +24,8 @@ import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 import { appLogger } from '@/lib/utils/appLogger';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
+// ✅ Import direto do templateService para evitar require() dinâmico
+import { templateService } from '@/services/canonical/TemplateService';
 
 // Lazy imports dos componentes do editor
 const StepNavigatorColumn = lazy(() => import('./components/StepNavigatorColumn'));
@@ -102,6 +104,7 @@ function useV4BlockAdapter() {
 
 /**
  * Layout V4 Otimizado - 3 Colunas
+ * ✅ PV4-2 FIX: Integrado com templateService para obter steps
  */
 function EditorLayoutV4({
     editorProps,
@@ -116,14 +119,49 @@ function EditorLayoutV4({
     const selectedBlockId = state.selectedBlockId;
     const blocks = actions.getStepBlocks(state.currentStep) || [];
 
+    // ✅ PV4-2 FIX: Obter steps do templateService (importado no topo)
+    const steps = useMemo(() => {
+        try {
+            const result = templateService.steps?.list?.();
+            if (result?.success && Array.isArray(result.data)) {
+                // Mapear para o shape esperado por StepNavigatorColumn: { key, title }
+                return result.data.map((s: any) => ({
+                    key: s.id,
+                    title: s.name || s.id,
+                }));
+            }
+        } catch (error) {
+            appLogger.warn('[EditorLayoutV4] Falha ao carregar steps:', error);
+        }
+        return [];
+    }, [editorProps.templateId, editorProps.funnelId]);
+
+    // Calcular currentStepKey baseado no state
+    const currentStepKey = useMemo(() => {
+        const stepNum = state.currentStep || 1;
+        return `step-${String(stepNum).padStart(2, '0')}`;
+    }, [state.currentStep]);
+
+    // Handler para seleção de step
+    const handleSelectStep = useCallback((key: string) => {
+        const match = key.match(/step-(\d+)/i);
+        if (match) {
+            const stepNum = parseInt(match[1], 10);
+            actions.setCurrentStep(stepNum);
+            actions.selectBlock(null); // Limpar seleção ao trocar step
+            appLogger.info('[EditorLayoutV4] Step selecionado:', { key, stepNum });
+        }
+    }, [actions]);
+
     // Encontra o bloco v4 selecionado
     const selectedV4Block = useMemo(() => {
         if (!selectedBlockId) return null;
         return v4Blocks.find(b => b.id === selectedBlockId) || null;
     }, [selectedBlockId, v4Blocks]);
 
-    appLogger.info('EditorLayoutV4 rendered', {
+    appLogger.debug('EditorLayoutV4 rendered', {
         blocksCount: v4Blocks.length,
+        stepsCount: steps.length,
         selectedBlockId,
         hasSelectedBlock: !!selectedV4Block
     });
@@ -141,11 +179,14 @@ function EditorLayoutV4({
                             Editor Modular v4
                         </h1>
                         <p className="text-xs text-gray-500">
-                            Layout otimizado • {v4Blocks.length} blocos
+                            Layout otimizado • {v4Blocks.length} blocos • {steps.length} steps
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center space-x-2">
+                    <div className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
+                        {currentStepKey}
+                    </div>
                     <div className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
                         ✓ DynamicPropertiesV4
                     </div>
@@ -169,9 +210,9 @@ function EditorLayoutV4({
                             </div>
                         }>
                             <StepNavigatorColumn
-                                steps={[]} // TODO: Integrar steps do context
-                                currentStepKey={editorProps.initialStepKey || 'step1'}
-                                onSelectStep={(key) => appLogger.info('Step selected:', key)}
+                                steps={steps}
+                                currentStepKey={currentStepKey}
+                                onSelectStep={handleSelectStep}
                                 validationErrors={[]}
                                 validationWarnings={[]}
                             />
@@ -182,6 +223,7 @@ function EditorLayoutV4({
                 <ResizableHandle className="w-1 bg-gray-200 hover:bg-blue-400 transition-colors" withHandle />
 
                 {/* Coluna 2: Canvas (expandido) */}
+                {/* ✅ PV4-3 FIX: Usar currentStepKey calculado e blocks do contexto */}
                 <Panel defaultSize={52} minSize={40}>
                     <div className="h-full bg-gray-50 overflow-y-auto">
                         <Suspense fallback={
@@ -192,13 +234,13 @@ function EditorLayoutV4({
                             </div>
                         }>
                             <CanvasColumn
-                                currentStepKey={editorProps.initialStepKey || 'step1'}
+                                currentStepKey={currentStepKey}
                                 blocks={blocks}
                                 selectedBlockId={selectedBlockId}
                                 onBlockSelect={(id) => {
                                     actions.selectBlock(id);
                                 }}
-                                hasTemplate={!!editorProps.funnelId}
+                                hasTemplate={!!(editorProps.funnelId || editorProps.templateId)}
                                 onLoadTemplate={() => { }}
                                 isEditable={true}
                             />
@@ -248,16 +290,28 @@ function EditorLayoutV4({
  * ✅ INTEGRAÇÃO: Sempre usa o editor original que já tem toda lógica de carregamento
  * ✅ V4: Substitui apenas o painel de propriedades por DynamicPropertiesPanelV4
  * ✅ COMPATIBILIDADE: Mantém 100% das features do editor antigo
+ * 
+ * ⚠️ NOTA SOBRE useV4Layout:
+ * O layout V4 puro (3 colunas) está desabilitado por padrão porque:
+ * 1. O loader de steps no EditorLayoutV4 não tem toda a infraestrutura do editor original
+ * 2. A sincronização WYSIWYG precisa ser portada
+ * 3. Auto-save e persistência ainda não estão integrados
+ * 
+ * ROADMAP para habilitar V4:
+ * - Fase 1: Migrar useTemplateLoader para EditorLayoutV4 ✓
+ * - Fase 2: Integrar useStepBlocksLoader ✓
+ * - Fase 3: Adicionar useAutoSave (pendente)
+ * - Fase 4: Testar e validar (pendente)
  */
 export function QuizModularEditorV4Wrapper({
-    useV4Layout = false, // ❌ DESABILITADO: V4 puro ainda não tem loader completo
+    useV4Layout = false, // Desabilitado até completar Fase 3-4 do roadmap acima
     onBlockV4Update,
     ...editorProps
 }: QuizModularEditorV4Props) {
     // Por enquanto, sempre usar editor original que tem toda infraestrutura
-    // TODO: Migrar lógica de carregamento para v4 layout quando estável
-    appLogger.info('QuizModularEditorV4 render (usando editor original)', {
-        useV4Layout: false, // Forçado para false
+    appLogger.debug('QuizModularEditorV4 render', {
+        useV4Layout,
+        useV4LayoutEffective: false, // Sempre false até completar roadmap
         hasResourceId: !!(editorProps.resourceId || editorProps.funnelId || editorProps.templateId)
     });
 
@@ -273,11 +327,22 @@ export function QuizModularEditorV4Wrapper({
             {...editorProps}
         />
     );
-}/**
+}
+
+/**
  * Hook para usar blocos v4 diretamente no código
+ * ✅ PV4-5 FIX: Validação de contexto com mensagem clara
  */
 export function useV4Blocks() {
-    const { state, actions } = useEditorState();
+    let context;
+    try {
+        context = useEditorState();
+    } catch (error) {
+        appLogger.error('[useV4Blocks] Hook usado fora do EditorProvider. Envolva seu componente com <EditorProvider>.');
+        return [];
+    }
+
+    const { state, actions } = context;
 
     const v4Blocks = useMemo(() => {
         const blocks = actions.getStepBlocks(state.currentStep);
@@ -290,9 +355,18 @@ export function useV4Blocks() {
 
 /**
  * Hook para converter um bloco específico para v4
+ * ✅ PV4-5 FIX: Validação de contexto com mensagem clara
  */
 export function useV4Block(blockId: string | null) {
-    const { state, actions } = useEditorState();
+    let context;
+    try {
+        context = useEditorState();
+    } catch (error) {
+        appLogger.error('[useV4Block] Hook usado fora do EditorProvider. Envolva seu componente com <EditorProvider>.');
+        return null;
+    }
+
+    const { state, actions } = context;
 
     const v4Block = useMemo(() => {
         const blocks = actions.getStepBlocks(state.currentStep);
