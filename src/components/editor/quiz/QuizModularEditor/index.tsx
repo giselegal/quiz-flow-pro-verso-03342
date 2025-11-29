@@ -333,6 +333,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 🔧 Bootstrap: registrar stores IndexedDB e diagnosticar query params
     const pendingTidRef = useRef<string | null>(null);
+    const [activeTemplateId, setActiveTemplateId] = useState<string | null>(() => {
+        try {
+            return props.templateId ?? resourceId ?? props.funnelId ?? null;
+        } catch { return null; }
+    });
     useEffect(() => {
         try {
             indexedDBCache.registerStores(['funnels', 'steps', 'blocks']).catch(() => { });
@@ -361,6 +366,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     templateService.setActiveFunnel?.(qp.funnel || null);
                 } catch { }
                 pendingTidRef.current = tidFromQuery;
+                setActiveTemplateId(tidFromQuery);
                 // Disparar carregamento assíncrono suave
                 setTimeout(() => {
                     if (pendingTidRef.current) {
@@ -1073,7 +1079,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // ✅ ARQUITETURA: Carregamento de step via hook dedicado
     // (substituiu 150 linhas de lógica fragmentada)
     useStepBlocksLoader({
-        templateOrFunnelId: props.templateId ?? resourceId ?? null,
+        templateOrFunnelId: activeTemplateId ?? props.templateId ?? resourceId ?? null,
         stepIndex: safeCurrentStep,
         setStepBlocks,
         setStepLoading
@@ -1101,7 +1107,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
             try {
                 const svc: any = templateService;
-                const templateOrResource = props.templateId ?? resourceId;
+                const templateOrResource = activeTemplateId ?? props.templateId ?? resourceId;
 
                 if (!templateOrResource) {
                     appLogger.warn('[QuizModularEditor] ensureStepBlocks chamado sem templateOrResource');
@@ -1581,6 +1587,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 name: `Template: ${tid}`,
                 steps: templateStepsResult.data,
             });
+            setActiveTemplateId(tid);
             try {
                 const p = new URLSearchParams(window.location.search);
                 const s = p.get('step');
