@@ -117,8 +117,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'quiz-back-button': () => import('@/components/editor/blocks/QuizBackButtonBlock'),
   'quiz-question-header': () => import('@/components/editor/blocks/QuizQuestionHeaderBlock'),
   'quiz-result-header': () => import('@/components/editor/blocks/QuizResultHeaderBlock'),
-  'quiz-offer-hero': () => import('@/components/editor/blocks/QuizOfferHeroBlock'),
-  'offer-hero': () => import('@/components/editor/blocks/OfferHeroBlock'),
+  // (REMOVIDO: offer hero blocos já importados estaticamente)
 
   // Question Components (Steps 02-11)
   // (REMOVIDO: question atômicos já importados em BlockTypeRenderer)
@@ -156,15 +155,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
       return React.createElement(TransitionHeroSection, normalized);
     },
   })),
-  'pricing': () => Promise.all([
-    import('@/components/sections/offer'),
-    import('@/core/adapters/PropNormalizer')
-  ]).then(([{ PricingSection }, { normalizePricingProps }]) => ({
-    default: (props: any) => {
-      const normalized = normalizePricingProps(props?.block || props);
-      return React.createElement(PricingSection, normalized);
-    },
-  })),
+  // (REMOVIDO: pricing section duplicada; renderer lida com pricing-inline/pricing)
 
   // Container Components
   'container': () => import('@/components/editor/blocks/BasicContainerBlock'),
@@ -210,7 +201,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'fashion-ai-generator': () => import('@/components/blocks/ai').then(m => ({ default: m.FashionAIGeneratorBlock })),
 
   // Atomic Blocks - Footer (MOVIDOS DE STATIC PARA LAZY)
-  'footer-copyright': () => import('@/components/editor/blocks/atomic/FooterCopyrightBlock'),
+  // (REMOVIDO: footer copyright bloco já importado estaticamente)
   'image-display-inline': () => import('@/components/editor/blocks/inline/ImageDisplayInlineBlock'),
 
   // Offer Components (Step 21)
