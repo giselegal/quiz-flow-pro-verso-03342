@@ -13,6 +13,10 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import * as matchers from '@testing-library/jest-dom/matchers';
+
+// Garantir matchers do jest-dom (às vezes o setup global não é aplicado em todos os contextos)
+expect.extend(matchers);
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -20,10 +24,10 @@ import type { ReactNode } from 'react';
 import { ImportTemplateDialog } from '@/components/editor/quiz/dialogs/ImportTemplateDialog';
 import { validateTemplate } from '@/types/schemas/templateSchema';
 
-// Mock do templateSchema
-vi.mock('@/schemas/templateSchema', () => ({
-    validateTemplate: vi.fn(),
-    isValidTemplate: vi.fn(),
+// Mock do validator/normalizer usado pelo componente
+vi.mock('@/templates/validation/validateAndNormalize', () => ({
+    normalizeAndValidateTemplateV3: vi.fn(),
+    isNormalizeSuccess: vi.fn(),
 }));
 
 // Helper para criar wrapper com QueryClient
@@ -122,12 +126,15 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
             },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -137,7 +144,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -159,7 +166,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         );
 
         const file = new File(['texto plano'], 'arquivo.txt', { type: 'text/plain' });
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -183,7 +190,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         const file = new File(['{ invalid json }'], 'invalid.json', {
             type: 'application/json',
         });
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -199,11 +206,12 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
             steps: {},
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: false,
-            errors: ['Template inválido: falta campo id'],
-            warnings: [],
+            errors: [{ path: ['metadata', 'id'], message: 'falta campo id', code: 'schema' }],
+            rawData: invalidTemplate,
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(false);
 
         render(
             <ImportTemplateDialog
@@ -215,7 +223,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         );
 
         const file = createMockJsonFile(invalidTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
