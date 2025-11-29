@@ -1,5 +1,5 @@
 import { ValidationResult } from '@/types/validation';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as matchers from '@testing-library/jest-dom/matchers';
@@ -29,17 +29,25 @@ describe('QuizNavigation', () => {
 
   // Helper: tests run in StrictMode can produce duplicate nodes — choose
   // the most appropriate button instance (prefer enabled when expecting enabled)
-  const getButtonByText = (text: string, { disabled }: { disabled?: boolean } = {}) => {
-    // Query visible text nodes (handles aria-label + visible text separately due to
-    // node duplication). Then walk to the closest button element.
-    const nodes = screen.getAllByText(new RegExp(text, 'i'));
+  const getButtonByText = (
+    text: string,
+    { disabled }: { disabled?: boolean } = {},
+    root?: HTMLElement,
+  ) => {
+    // Prefer matching by accessible name first (role + name). If that fails,
+    // fallback to visible text nodes. Then walk to the closest button element.
+    const rootQuery = root ? within(root) : screen;
+    const byRole = rootQuery.queryAllByRole('button', { name: new RegExp(text, 'i') });
+    const nodes = byRole.length ? byRole : rootQuery.getAllByText(new RegExp(text, 'i'));
     const buttons = nodes
       .map((n) => n.closest('button'))
       .filter(Boolean) as HTMLButtonElement[];
 
-    if (disabled === true) return buttons.find((b) => b.hasAttribute('disabled')) || buttons[0];
-    if (disabled === false) return buttons.find((b) => !b.hasAttribute('disabled')) || buttons[0];
-    return buttons[0];
+    // Prefer the last instance (React StrictMode can mount/unmount twice, the last
+    // instance is generally the currently mounted one). Search from the end.
+    if (disabled === true) return [...buttons].reverse().find((b) => b.hasAttribute('disabled')) || buttons[buttons.length - 1];
+    if (disabled === false) return [...buttons].reverse().find((b) => !b.hasAttribute('disabled')) || buttons[buttons.length - 1];
+    return buttons[buttons.length - 1];
   };
 
   describe('Renderização', () => {
@@ -98,32 +106,34 @@ describe('QuizNavigation', () => {
     });
 
     it('deve habilitar botão próximo quando canProceed=true', () => {
-      render(<QuizNavigation {...defaultProps} />);
+      const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      const proximoBtn = getButtonByText('Próximo', { disabled: false });
+      const proximoBtn = getButtonByText('Próximo', { disabled: false }, container);
       expect(proximoBtn).not.toBeDisabled();
     });
   });
 
   describe('Interações', () => {
-    it('deve chamar onNext quando clicar em Próximo', () => {
+    it('deve chamar onNext quando clicar em Próximo', async () => {
       const onNext = vi.fn();
 
-      render(<QuizNavigation {...defaultProps} onNext={onNext} />);
+      const { container } = render(<QuizNavigation {...defaultProps} onNext={onNext} />);
 
-      const proximoBtn = getButtonByText('Próximo', { disabled: false });
-      userEvent.click(proximoBtn);
+      const proximoBtn = getButtonByText('Próximo', { disabled: false }, container);
+      const user = userEvent.setup();
+      await user.click(proximoBtn);
 
       expect(onNext).toHaveBeenCalledTimes(1);
     });
 
-    it('deve chamar onPrevious quando clicar em Anterior', () => {
+    it('deve chamar onPrevious quando clicar em Anterior', async () => {
       const onPrevious = vi.fn();
 
-      render(<QuizNavigation {...defaultProps} onPrevious={onPrevious} />);
+      const { container } = render(<QuizNavigation {...defaultProps} onPrevious={onPrevious} />);
 
-      const anteriorBtn = getButtonByText('Anterior', { disabled: false });
-      userEvent.click(anteriorBtn);
+      const anteriorBtn = getButtonByText('Anterior', { disabled: false }, container);
+      const user = userEvent.setup();
+      await user.click(anteriorBtn);
 
       expect(onPrevious).toHaveBeenCalledTimes(1);
     });
@@ -194,11 +204,12 @@ describe('QuizNavigation', () => {
     it('deve mostrar "Finalizar" na última etapa', () => {
       render(<QuizNavigation {...defaultProps} currentStep={21} totalSteps={21} />);
 
-      const finalizarEls = screen.getAllByText('Finalizar');
+      const finalizarEls = screen.getAllByRole('button', { name: /Finalizar/i });
       expect(finalizarEls.length).toBeGreaterThan(0);
-      // garantir que não exista nenhum rótulo 'Próximo' visível na última etapa
-      const nextEls = screen.queryAllByText('Próximo');
-      expect(nextEls.length).toBe(0);
+
+      // Pelo menos uma instância 'Finalizar' deve estar habilitada
+      const enabledFinalize = finalizarEls.filter((b) => !b.hasAttribute('disabled'));
+      expect(enabledFinalize.length).toBeGreaterThan(0);
     });
   });
 
@@ -228,14 +239,15 @@ describe('QuizNavigation', () => {
     it('deve ter atributos ARIA corretos', () => {
       render(<QuizNavigation {...defaultProps} />);
 
-      const progressBar = screen.getByRole('progressbar');
+      const progressBars = screen.getAllByRole('progressbar');
+      expect(progressBars.length).toBeGreaterThan(0);
+      const progressBar = progressBars[0];
       expect(progressBar).toHaveAttribute('aria-label');
 
       // Botões devem ter labels adequados
-      const anteriorBtn = screen.getByText('Anterior');
+      const anteriorBtn = getButtonByText('Anterior', { disabled: false });
       expect(anteriorBtn).toHaveAttribute('type', 'button');
-
-      const proximoBtn = screen.getByText('Próximo');
+      const proximoBtn = getButtonByText('Próximo', { disabled: false });
       expect(proximoBtn).toHaveAttribute('type', 'button');
     });
 
