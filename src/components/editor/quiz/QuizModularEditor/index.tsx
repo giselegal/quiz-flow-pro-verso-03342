@@ -57,7 +57,7 @@ import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadin
 import type { EditorResource } from '@/types/editor-resource';
 // Validação e normalização de templates
 import { validateAndNormalizeTemplate, formatValidationErrors } from '@/templates/validation/normalize';
-import extractBlocksFromStepDataHelper from './helpers/normalizeBlocks';
+import { extractBlocksFromStepData as extractBlocksFromStepDataHelper } from './helpers/normalizeBlocks';
 // Import Template Dialog
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 // Autosave feedback visual
@@ -856,33 +856,154 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // normalize order helper
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
-const current = wysiwyg.state.blocks;
+    // usar helper reutilizável (testável)
+    const extractBlocksFromStepData = useCallback((raw: any, stepId: string): Block[] => {
+        return extractBlocksFromStepDataHelper(raw, stepId) as Block[];
+    }, []);
 
-        // ✅ P6 FIX (OTIMIZADO): assinatura leve com count + primeiro/último ID
-        // evita o custo O(n) de join de todos os IDs quando há muitos blocos
-        const unifiedFirst = unified[0]?.id || '';
-        const unifiedLast = unified[unified.length - 1]?.id || '';
-        const currentFirst = current[0]?.id || '';
-        const currentLast = current[current.length - 1]?.id || '';
+    // 🔄 Carregamento canônico de template: única fonte para lista de steps (sem injeção de blocos)
+    const templateLoader = useTemplateLoader({
+        templateId: props.templateId,
+        funnelId: props.funnelId,
+        resourceId,
+        enabled: !!(props.templateId || resourceId),
+        onSuccess: (data) => {
+            setLoadedTemplate(data);
+            setTemplateLoadError(false);
 
-        const unifiedSignature = `${safeCurrentStep}|${unified.length}|${unifiedFirst}|${unifiedLast}`;
-        const currentSignature = `${safeCurrentStep}|${current.length}|${currentFirst}|${currentLast}`;
+            // Definir step inicial se necessário
+            try {
+                const p = new URLSearchParams(window.location.search);
+                const s = p.get('step');
+                const n = s ? parseInt(s, 10) : NaN;
+                const hasUrlStep = !isNaN(n) && n >= 1 && n <= 21;
+                const curr = unifiedState.editor.currentStep;
+                if (!hasUrlStep && (!curr || curr < 1)) {
+                    setCurrentStep(1);
+                }
+            } catch {
+                setCurrentStep(1);
+            }
+        },
+        onError: (error) => {
+            appLogger.error('[useTemplateLoader] Erro ao carregar template:', error);
+            setTemplateLoadError(true);
+        },
+    });
 
-        // Evitar reset se a assinatura não mudou desde o último sync
-        if (unifiedSignature === lastSyncSignatureRef.current && unifiedSignature === currentSignature) {
-            return;
+    // Sincronizar estado de loading
+    useEffect(() => {
+        setTemplateLoading(templateLoader.isLoading);
+    }, [templateLoader.isLoading, setTemplateLoading]);
+
+    // 🚫 Removido: auto-injeção duplicada do step-01 (agora apenas useStepBlocksLoader cuida do carregamento)
+
+    // 🔥 HOTFIX 3: Hook de validação com Web Worker (não-bloqueante)
+    // PROBLEMA RESOLVIDO: Validação bloqueante de 2-5 segundos no main thread
+    // - UI permanece 100% responsiva durante validação
+    // - Progress reporting em tempo real
+    // - Validação em background worker
+    const templateValidation = useTemplateValidation();
+
+    // Validar template quando carregamento completa
+    useEffect(() => {
+        if (!templateLoader.data || !resourceId) return;
+
+        const tid = props.templateId ?? resourceId;
+        const stepCount = templateLoader.data.steps.length || 21;
+
+        // Coletar dados de todos os steps para validação
+        async function validateTemplate() {
+            try {
+                appLogger.info(`🏥 [Validation] Iniciando validação em Web Worker: ${tid} (${stepCount} steps)`);
+
+                // ✅ CORREÇÃO ARQUITETURAL: Carregar todos os steps EM PARALELO
+                // Antes: 21 requisições sequenciais (~21s)
+                // Depois: Promise.all (~1s)
+                const stepsData: Record<string, any> = {};
+                const stepPromises = Array.from({ length: stepCount }, (_, i) => {
+                    const stepId = `step-${String(i + 1).padStart(2, '0')}`;
+                    return templateService.getStep(stepId, tid)
+                        .then(res => {
+                            if (res.success) {
+                                stepsData[stepId] = res.data;
+                            }
+                        })
+                        .catch(err => {
+                            appLogger.warn(`[Validation] Erro ao carregar ${stepId}:`, err);
+                        });
+                });
+
+                await Promise.all(stepPromises);
+
+                // Validar em worker (não-bloqueante)
+                const result = await templateValidation.validate(tid, stepCount, stepsData);
+
+                // Armazenar resultado
+                setValidationResult(result);
+
+                // Exibir toast baseado no resultado
+                const formattedResult = formatValidationResult(result);
+
+                if (!result.isValid) {
+                    appLogger.error(`[Validation] Template inválido:\n${formattedResult}`);
+                    toast({
+                        type: 'error',
+                        title: 'Template Inválido',
+                        message: `${result.errors.filter(e => e.severity === 'critical').length} erros críticos encontrados. Clique no botão "Saúde do Template" para ver detalhes.`,
+                        duration: 8000,
+                    });
+                    // ❌ CORREÇÃO: Não abrir automaticamente para não sobrepor propriedades
+                    // setShowHealthPanel(true);
+                } else if (result.warnings.length > 0 || result.errors.length > 0) {
+                    appLogger.warn(`[Validation] Template com avisos:\n${formattedResult}`);
+                    toast({
+                        type: 'warning',
+                        title: 'Template com Avisos',
+                        message: `${result.warnings.length} avisos, ${result.errors.length} erros menores`,
+                        duration: 5000,
+                    });
+                } else {
+                    appLogger.info(
+                        `[Validation] Template válido: ${result.summary.validSteps}/${result.summary.totalSteps} steps, ${result.summary.totalBlocks} blocos`
+                    );
+                }
+            } catch (error) {
+                appLogger.error('[Validation] Erro ao validar template:', error);
+            }
         }
 
-        const needsReset = unifiedSignature !== currentSignature;
-            if (needsReset) {
+        validateTemplate();
+    }, [templateLoader.data, resourceId, props.templateId, templateValidation, toast]);
+
+    // ✅ CORREÇÃO ARQUITETURAL: Prefetch crítico REMOVIDO
+    // useStepPrefetch (linha 206) já gerencia prefetch de steps vizinhos com debounce
+    // Manter dois sistemas de prefetch causa duplicação e concorrência
+
+    // Blocks from unified - SEMPRE como array para evitar null checks e loops
+    const rawBlocks = getStepBlocks(safeCurrentStep);
+    const blocks: Block[] = Array.isArray(rawBlocks) ? rawBlocks : [];
+
+    // ✅ FASE 2: Sincronização determinística (único ponto) + auto-select integrada
+    // Regras:
+    // 1. Sempre que array de blocos mudar em identidade (length ou IDs) → reset
+    // 2. Se blocos vazio → reset para [] (evita painel com dados obsoletos)
+    // 3. Seleção inicial apenas se não houver seleção válida (somente em modo editável)
+    // 4. Evita múltiplos efeitos paralelos (remove efeito antigo de auto-select)
+    useEffect(() => {
+        try {
+            const unified = blocks;
+            const current = wysiwyg.state.blocks;
+            const changedLength = unified.length !== current.length;
+            const changedIds = changedLength || unified.some((b, i) => current[i]?.id !== b.id);
+
+            if (changedIds) {
                 appLogger.debug('[Sync] Reset WYSIWYG ← unified.stepBlocks', {
                     step: safeCurrentStep,
                     unifiedCount: unified.length,
-                    prevCount: current.length,
-                    reason: 'signature_mismatch'
+                    prevCount: current.length
                 });
                 wysiwyg.actions.reset(unified);
-                lastSyncSignatureRef.current = unifiedSignature;
             }
 
             // Seleção inicial integrada (somente modo edição e se há blocos)
