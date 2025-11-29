@@ -29,7 +29,6 @@
 import type { Funnel } from '../../schemas';
 import { config, loadStep, theme, settings, assets } from './config';
 import metadata from './metadata.json';
-import step01 from './steps/step01';
 
 // ============================================================================
 // CACHE DE STEPS
@@ -79,22 +78,6 @@ export const quiz21StepsComplete: Funnel = {
 } as Funnel;
 
 // ============================================================================
-// VERSÃO COM STEP 01 PRÉ-CARREGADO (Para inicialização rápida)
-// ============================================================================
-
-/**
- * Versão do funnel com apenas step01 pré-carregado
- * 
- * Útil para renderização inicial sem delay
- */
-export const quiz21StepsCompleteWithStep01: Funnel = {
-  ...quiz21StepsComplete,
-  steps: {
-    'step-01': step01,
-  },
-};
-
-// ============================================================================
 // HELPERS DE COMPATIBILIDADE (Legacy Support)
 // ============================================================================
 
@@ -105,15 +88,9 @@ export const quiz21StepsCompleteWithStep01: Funnel = {
  */
 export function getStepTemplate(stepId: string) {
   const stepNumber = parseInt(stepId.replace('step-', ''), 10);
-  
-  if (stepNumber === 1) {
-    return step01;
-  }
-
   console.warn(
-    `[Deprecated] getStepTemplate() is deprecated. Use loadStep(${stepNumber}) instead.`
+    `[Deprecated] getStepTemplate() foi descontinuado. Use loadStep(${stepNumber}) com await (lazy loading).`
   );
-  
   // Retorna null para forçar migração para async
   return null;
 }
@@ -124,8 +101,7 @@ export function getStepTemplate(stepId: string) {
  * Template completo legado (carrega TODOS os steps - pesado!)
  */
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = {
-  'step-01': step01,
-  // Outros steps carregados via loadStep()
+  // Vazio por padrão. Use loadStep() para carregar dinamicamente.
 };
 
 // ============================================================================
